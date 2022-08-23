@@ -16294,7 +16294,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//2018-08-27 강민수92 수신접수 최종 일괄결재시 임시로 recordid에 cabinetSN들어가게 수정
 			if (docSN.equals("undefined")) {
 				logger.debug("docSN is undefined");
-				docSN = getCabinetNum(deptID, "", companyID, docID, lang, tenantID, offSet);
+				/* 2022-08-23 홍승비 - 수신문서 최종결재 완료 시, DOCNUMCODE가 존재하지 않는다면 최종결재자가 아닌 기안(접수)자의 부서ID를 사용하여 RECORDID 문서채번하도록 수정 */
+				docSN = getCabinetNum(writerDeptID, "", companyID, docID, lang, tenantID, offSet);
 				docSN = docSN.replace("<REGNUM>", "").replace("</REGNUM>", "");
 				docSN = docSN.replace("<RESULT>", "").replace("</RESULT>", "");
 				docSN = getNDigitNum(docSN, 6);
