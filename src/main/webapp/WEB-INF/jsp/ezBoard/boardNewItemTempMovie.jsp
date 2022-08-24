@@ -359,17 +359,16 @@
 	                    xmlhttp.open("POST", "/ezBoard/deleteTempItem.do?mode=PHOTO", false);
 	                    xmlhttp.send(strItemID);
 	                    
-						if (strItemID == "")
-						{
+	                    /* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
+						if (pMode == "new") {
 						    xmlhttp = createXMLHttpRequest();
-							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID), false);
+							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 							xmlhttp.send();		
 							xmlhttp = null;
 						}
-						if (pMode == "reply")
-						{
+						if (pMode == "reply") { // 동영상게시물은 답변기능 없으므로, 타지 않는 분기
 						    xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}

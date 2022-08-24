@@ -868,10 +868,11 @@
 		                xmlhttp.open("POST", "/ezBoard/deleteTempItem.do", false);
 		                xmlhttp.send(strItemID);
 		            }
-		
+		            
 		            if (pMode != "temp") {
 		                if (document.getElementById("chk_reservation").checked == false) {
-		                    if (strItemID == "") {
+		                	/* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
+		                    if (strItemID == "" || (strItemID != "" && orgMode == "temp")) {
 		                        xmlhttp = createXMLHttpRequest();
 		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 		                        xmlhttp.send();
