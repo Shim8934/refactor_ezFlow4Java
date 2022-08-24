@@ -430,6 +430,11 @@
 			<version>20090211</version>
 		</dependency>        
         <!-- Azure Auth - end -->
+         <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>9.23</version>
+        </dependency>
         
         <!-- 코린도 zip 암호화 -->
 		<dependency>
