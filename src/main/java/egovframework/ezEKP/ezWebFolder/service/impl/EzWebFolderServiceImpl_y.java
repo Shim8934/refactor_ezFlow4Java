@@ -1367,16 +1367,16 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			// 로그 찍기
 			ezWebFolderService.saveLog("WR", comId, offset, userId, userInfo.getDisplayName1(), userInfo.getDisplayName2(), tenantId, filevo, "", userInfo.getPrimary());
 			
-			// db 업데이트 성공시 기존 파일 delete
-			File file = new File(realPath + commonUtil.detectPathTraversal(filevo.getFilePath()));
-			
-			if (file.exists() && file.isFile()) {
-				if (file.delete()) {
-					LOGGER.debug("delete success.");
-				}
-			} else {
-				LOGGER.debug("file is not exists.");
-			}
+			// db 업데이트 성공시 기존 파일 delete -> ezWebFolderService.incrementFileVersion() 안으로 옮김.
+//			File file = new File(realPath + commonUtil.detectPathTraversal(filevo.getFilePath()));
+//
+//			if (file.exists() && file.isFile()) {
+//				if (file.delete()) {
+//					LOGGER.debug("delete success.");
+//				}
+//			} else {
+//				LOGGER.debug("file is not exists.");
+//			}
 			
 		}
 		result.put("status", "ok");

@@ -1645,6 +1645,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			oldFile.setFileSize(newFile.getFileSize());
 			oldFile.setFilePath(newPath);
 
+			String newFileId = newFile.getFileId();
 			newFile.setFileId(String.valueOf(insertFile(oldFile)));
 
 			// Backup the previous history file and insert the new history
@@ -1671,9 +1672,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			// move 라면 원본 파일 삭제
 			if (isMove) {
 				// use status 부터 T로 바꾸고
-				updateFileUseStatus(userId, newFile.getFileId(), currentTimeUTC, tenantId);
+				updateFileUseStatus(userId, newFileId, currentTimeUTC, tenantId);
 				// 영구삭제
-				ezWebFolderService_m.permanetDeleteSelectedFiles(new String[] {newFile.getFileId()}, new String[0], userInfo, realPath, "");
+				ezWebFolderService_m.permanetDeleteSelectedFiles(new String[] {newFileId}, new String[0], userInfo, realPath, "");
 			}
 			
 			saveLog("WR", companyId, offset, userId, userName1, userName2, tenantId, oldFile, "", userInfo.getPrimary());
@@ -2098,6 +2099,18 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			ezWebFolderDAO.updateFilePathHistory(map);
 
 			nextVersion = latestVersion + 1;
+
+			// db 업데이트 성공시 기존 파일 delete
+			File file = new File(servletContext.getRealPath(commonUtil.detectPathTraversal(latestHistory.getFilePath())));
+
+			if (file.exists() && file.isFile()) {
+				if (file.delete()) {
+					logger.debug("delete success.");
+				}
+			} else {
+				logger.debug("file is not exists.");
+			}
+
 		} else {
 			nextVersion = 1;
 		}
