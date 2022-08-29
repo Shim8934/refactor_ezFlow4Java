@@ -139,7 +139,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
     }
 	
 	public void insertTblUserLocalInfo(Map<String, Object> map) throws Exception {
-	    insertTblUserLocalInfoForJMocha(map);
+//	    insertTblUserLocalInfoForJMocha(map);
 	    
 	    insertTblUserLocalInfoForLocal(map);               
 	}
@@ -185,7 +185,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
     }
 	
 	public void deleteUserLocalInfo(Map<String, Object> map) throws Exception {
-	    deleteUserLocalInfoForJMocha(map);
+//	    deleteUserLocalInfoForJMocha(map);
 	    
 	    deleteUserLocalInfoForLocal(map);               
 	}
