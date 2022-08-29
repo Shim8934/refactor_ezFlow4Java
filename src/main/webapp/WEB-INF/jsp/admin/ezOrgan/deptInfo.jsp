@@ -45,6 +45,9 @@
 			    if(RetValue[1] == ""){
 					subtitle.innerText = "<spring:message code='ezOrgan.t80' />";
 			        ParentID.value = RetValue[0];
+					if(approvalFlag == 'G') {
+				    	document.getElementById("ouDoumentReceiveYN").checked = true;
+					}
 				}else{
 			    	isAdd = false;
 					subtitle.innerText = "<spring:message code='ezOrgan.t209' />";
