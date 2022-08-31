@@ -422,8 +422,8 @@
 	            var watermark = false;
 	            var effect = 0; //0:실제이미지그대로, 1:그레이스케일, 2:흑백효과
 	            //pSizeType 0:원래크기, 1: width,height크기로, 2: width는 셀 width만큼 height는 셀height만큼, 3: 현제셀크기에 맞춰      
-	         
-	            if (HwpCtrl.MoveToField(pFieldName)) {
+
+				if (HwpCtrl.MoveToField(pFieldName, true, false)) {
 	                if (pWidth == 0)
 	                    HwpCtrl.InsertPicture(pImagePath, embeded, pSizeType, reverse, watermark, effect, 0);
 	                else

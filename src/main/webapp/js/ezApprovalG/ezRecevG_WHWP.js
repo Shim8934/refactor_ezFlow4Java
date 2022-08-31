@@ -480,8 +480,9 @@ function getExtInfo()
 				    SignText = SignText + convertDate(getNodeText(tempNode)) + "\15";
 			}
 						
-			var tempNode = SelectSingleNode(Nodes[i], "name");
-			if( tempNode )
+			var name = SelectSingleNode(Nodes[i], "name");
+			var tempNode = SelectSingleNode(Nodes[i], "signimage");
+			if( name && tempNode == null)
 			{
 				if( message.FieldExist("sign" + SignOrder) )
 				{
@@ -491,21 +492,21 @@ function getExtInfo()
 					}
 					else
 					{
-					    message.PutFieldText("sign" + SignOrder, SignText+getNodeText(tempNode));
+					    message.PutFieldText("sign" + SignOrder, SignText+getNodeText(name));
 						//HwpCtrl.AppendFieldText("sign" + SignOrder, SignText, true);
 					}
 				}
 				SignInputFlag = true;
 			}
 
-			var tempNode = SelectSingleNode(Nodes[i], "signimage");
+			// var tempNode = SelectSingleNode(Nodes[i], "signimage");
 			if (tempNode)
 			{
 			    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(SelectSingleNode(tempNode, "img"),"src"));
 				if( message.FieldExist("sign" + SignOrder) ) {
-					message.PutFieldText("sign" + SignOrder, "");
-					message.SetFieldImage("sign" + SignOrder, document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(signPath), 3);
-					message.AppendFieldText("sign" + SignOrder, SignText, true);
+					message.PutFieldText("sign" + SignOrder, SignText, true);
+					message.SetFieldImage("sign" + SignOrder, document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(signPath), 1, 13, 7);
+
 				}
 				SignInputFlag = true;
 			}
