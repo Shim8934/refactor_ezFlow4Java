@@ -20,8 +20,6 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getAddJobList(String companyID, String strLang, String searchType, String searchValue, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception;
 	
 	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception;
-
-	int getAddJobCountInOneDept(String cn, String deptId, int tenantId) throws Exception;
 	
 	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID) throws Exception;
 
@@ -85,8 +83,6 @@ public interface EzOrganAdminService {
 	public void addJob(String userID, String titleInfo, String jobID, int tenantID) throws Exception;
 	
     public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception;	
-
-    public void deleteJob(String userID, String titleInfo, int tenantID, String delJobId, boolean isAddJobMoreInOneDept) throws Exception;
 
 	public void restoreRetireEntry(String cn, String deptID, int tenantID, String offset) throws Exception;
 

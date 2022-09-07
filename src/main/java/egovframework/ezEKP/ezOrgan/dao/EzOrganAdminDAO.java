@@ -108,15 +108,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return getUserAddJobListForLocal(map);       
 	}
 		
-	@SuppressWarnings("unchecked")
-	private int getAddJobCountInOneDeptForLocal(Map<String, Object> map) throws Exception {
-		return (int) select("EzOrganAdminDAO.getAddJobCountInOneDept", map);
-	}
-
-	public int getAddJobCountInOneDept(Map<String, Object> map) throws Exception {
-		return getAddJobCountInOneDeptForLocal(map);
-	}
-
     @SuppressWarnings("unchecked")
     private List<OrganUserVO> getPermissionListForLocal(Map<String, Object> map) throws Exception {
         return (List<OrganUserVO>) list("EzOrganAdminDAO.getPermissionList", map);

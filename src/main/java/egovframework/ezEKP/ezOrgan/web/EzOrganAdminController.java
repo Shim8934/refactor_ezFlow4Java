@@ -2459,8 +2459,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String deleteTitleInfo = "";
 		String jobID = "";
 		String delType = doc.getElementsByTagName("DEPTID").item(0).getTextContent().equals("")? "ALL" : ""; //삭제타입(ALL인경우 전체겸직삭제)
-		String delJobId = ""; // 2022-07-06 이사라 - 한 부서에 겸직이 2개 이상 있는 경우 1개만 삭제 시 삭제하는 jobId가 필요하여 추가
-		boolean isAddJobMoreInOneDept = false;
 		
 		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
 			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
@@ -2504,7 +2502,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             	else { //선택삭제인경우
             		if (deleteTitleInfo.equals("")) {
             			deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
-						delJobId = doc.getElementsByTagName("JOBID").item(i).getTextContent(); // 아이콘 선택삭제는 1개씩 가능하여 else쪽에는 추가 안함
             		} else {
             			deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
             		}
@@ -2514,19 +2511,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		} //for문완료
 		jobID = jobID.substring(0, jobID.length() - 1);
 		
-		// 2022-07-06 이사라 - 한 부서에 겸직이 2개 이상 있는 경우 1개만 삭제 시 rewrite테이블에서 삭제되는 것을 방지하기 위해 이중겸직인지 확인
-		if (StringUtils.isNotEmpty(delJobId)) {
-			isAddJobMoreInOneDept = ezOrganAdminService.getAddJobCountInOneDept(userID, deleteTitleInfo, tenantID) > 1 ? true : false;
-		}
-
 		if (!delType.equals("ALL")) { //전체겸직삭제가 아닌 경우
-			logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo + ",delJobId=" + delJobId + ",isAddJobMoreInOneDept=" + isAddJobMoreInOneDept);
+			logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo);
 			
 			ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
 		}
 		
 		if (!deleteTitleInfo.equals("") && !delType.equals("ALL")) {
-			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID, delJobId, isAddJobMoreInOneDept);
+			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID);
 		} else {
 		    if (!titleInfo.equals("")) {
 		        List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);

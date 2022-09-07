@@ -161,28 +161,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return userAddJobList;
 	}
 	
-	// 2022-07-07 이사라 - 한 부서에 겸직이 2개 이상 있는 경우를 확인
-	@Override
-	public int getAddJobCountInOneDept(String cn, String deleteTitleInfo, int tenantId) throws Exception {
-		logger.debug("getAddJobCountInOneDept started. cn={},deleteTitleInfo={}", cn, deleteTitleInfo);
-
-		String[] deptIdArray = deleteTitleInfo.split(":"); // deleteTitleInfo는 부서id:;부서id: 형태로 부서id만 알아내기 위해서는 :로 배열에 저장한 첫번째 값을 추출하면 됨
-		String deptId = deptIdArray[0];
-		logger.debug("cn=" + cn + ",deptId=" + deptId + ",tenantId=" + tenantId);
-
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put("v_TENANT_ID", tenantId);
-		map.put("v_CN", cn);
-		map.put("v_DEPTID", deptId);
-
-		int addJobCnt = ezOrganAdminDao.getAddJobCountInOneDept(map);
-
-		logger.debug("getAddJobCountInOneDept ended");
-
-		return addJobCnt;
-	}
-
 	@Override
 	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1358,23 +1336,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("addJob ended");
 	}
 
-	@Override
-	public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception {
-		deleteJob(userID, titleInfo, tenantID, "none", false);
-	}
-
-	// 2022-07-07 이사라 - 한 부서에 2개 이상의 겸직이 있는 경우 1개만 삭제를 하기 위해 추가된 파라미터가 있어 deletJob 메소드 오버로딩 함
     @Override
-    public void deleteJob(String userID, String titleInfo, int tenantID, String delJobId, boolean isAddJobMoreInOneDept) throws Exception {
+    public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception {
         logger.debug("deleteJob started");
-        logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",tenantID=" + tenantID + ",delJobId=" + delJobId + ",isAddJobMoreInOneDept=" + isAddJobMoreInOneDept);
+        logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",tenantID=" + tenantID);
         
         OrganUserVO userVO = getUserInfo(userID, "1", tenantID);
         String userDept = userVO.getDepartment();
-		boolean hasJobId = ("none".equalsIgnoreCase(delJobId)) ? false : true; // 2022-07-06 이사라 - 겸직 1개만 삭제할 때만 jobid를 전달 함
         
         String pDeptID = "";
-		int rc = 0;
         
         if (!titleInfo.equals("")) {
             String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1389,10 +1359,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                 String groupAddr = pDeptID + "@" + domain;
                 String mailAddr = userID + "@" + domain;
                 
-				if (!isAddJobMoreInOneDept) { // 한 부서에 여러 겸직이 있는 경우에는 rewrite에서 삭제되는 것을 막음
-					rc = (userDept.equals(pDeptID)) ? 0 : ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
-				}
-
+                int rc = (userDept.equals(pDeptID)) ? 0 : ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
                 logger.debug("updateGroupDel rc=" + rc);
                 
                 if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식 주소를 찾지 못해도 성공으로 봄. 어차피 삭제하려는 것이므로.)
@@ -1401,9 +1368,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                     map.put("v_TENANT_ID", tenantID);
                     map.put("v_CN", userID);
                     map.put("v_DEPTID", pDeptID);
-					if (hasJobId) { // 2022-07-06 이사라 - 겸직 부분 삭제
-						map.put("v_JOBID", delJobId);
-					}
                     
                     String bizmekaResult = "ERROR";
                     
@@ -1427,10 +1391,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                     	
                         ezOrganAdminDao.deleteAddJob(map);   
                     } catch (Exception e) { // Exception이 발생하면 Group Email 주소에 해당 User를 다시 등록한다.
-
-						if (!isAddJobMoreInOneDept) { // 한 부서에 여러 겸직이 있는 경우에는 rewrite에서 삭제하지 않았기때문에 제외
-							ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
-						}
+                        ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
                     }                    
                 }
             }

@@ -5279,21 +5279,6 @@
 		]]>
 	</insert>
 	
-	<select id="EzOrganAdminDAO.getAddJobCountInOneDept" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				count(DEPTID)
-			FROM
-				TBL_ADDJOBMASTER
-			WHERE
-				CN = #v_CN#
-			AND
-				DEPTID = #v_DEPTID#
-			AND
-				TENANT_ID = #v_TENANT_ID#
-		]]>
-	</select>
-
 	<!-- <procedure id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZSP_GETPERMISSIONLISTCOUNT(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -6068,10 +6053,6 @@
 		<isNotNull property="v_CN">
             cn = #v_CN#
         AND 
-        </isNotNull>
-        <isNotNull property="v_JOBID">
-            JOBID = #v_JOBID#
-        AND
         </isNotNull>
             deptid = #v_DEPTID#
         AND 
