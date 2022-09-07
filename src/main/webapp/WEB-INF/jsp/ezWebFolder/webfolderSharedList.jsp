@@ -33,6 +33,7 @@
 		<script type="text/javascript">
 			var folderTypeCheck = "Y";
 			var folderId = "";
+			var folderIdReturnTemp = "";
 			var isShareMode = true;
 			var isSubSearching = "N";
 			var strSuccess  = "<spring:message code='ezWebFolder.t27'/>";
@@ -301,7 +302,7 @@
 							} else {
 								alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
 							}
-							
+							folderId = folderIdReturnTemp;
 							return;
 						}
 						
@@ -498,6 +499,7 @@
 			}
 			
 			function nameFileList(param) {
+				folderIdReturnTemp = folderId;
 				folderId = param;
 				searchContext.clearRequirement();
 				$("#fileTypeSelect").val("");
