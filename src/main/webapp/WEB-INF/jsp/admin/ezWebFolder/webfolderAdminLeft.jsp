@@ -195,6 +195,7 @@
 				
 				clearToggle();
 				document.getElementById("lnbUL2").style.display  = "";
+				companyId         = "<c:out value='${company}'/>";
 				getDepartmentData(companyId, "", "folderTree2");
 			}
 			
