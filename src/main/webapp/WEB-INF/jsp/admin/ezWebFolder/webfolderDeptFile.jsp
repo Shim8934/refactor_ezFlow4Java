@@ -295,9 +295,9 @@
 <%-- 				<c:if test="${level != '0'}"> --%>
 				<li id="uploadBttn" class="important" onclick="fileUpload();"><span><spring:message code='ezWebFolder.t187'/></span></li>
 <%-- 				</c:if> --%>
-				<c:if test="${usePreview}">
+<%-- 				<c:if test="${usePreview}">
 					<li id="previewButton"><span onclick="filePreview()"><spring:message code='main.t4009' /></span></li>
-				</c:if>
+				</c:if> --%>
 				<li id="" onclick="fileRename();"><span><spring:message code='ezWebFolder.t508'/></span></li>
 				<li id="" onclick="fileMove();"><span><spring:message code='ezWebFolder.t120'/></span></li>
 				<c:if test="${useVersionHistory}">
@@ -448,13 +448,13 @@
 		<div id="contextMenuDiv" style="position: absolute; z-index: 6000; display: none;">
 			<table cellpadding="2" cellspacing="1" border="0" class="popuplist">
 				<tbody>
-					<c:if test="${usePreview}">
+<%-- 					<c:if test="${usePreview}">
 					<tr id="previewMenu">
 						<td onclick="filePreview();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/icon_preview.png" align="absmiddle" hspace="5"><spring:message code='main.t4009' /></span>
 						</td>
 					</tr>
-					</c:if>
+					</c:if> --%>
 					<tr id="moveMenu">
 						<td onclick="fileMove();" onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor: pointer; background-color: rgb(255, 255, 255);">
 							<span style="font-size: 12px; width: 100%; display: inline-block;"><img src="/images/ImgIcon/move.gif" align="absmiddle" hspace="5"><spring:message code='ezWebFolder.t251' /></span>
