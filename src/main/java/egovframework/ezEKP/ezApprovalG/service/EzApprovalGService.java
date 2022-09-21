@@ -855,4 +855,7 @@ public interface EzApprovalGService {
 
 	/* 2022-07-20 홍승비 - 기록물철등록부 > 기록물보기로 진입 시 해당 기록물철의 생산년도를 가져오기 위한 메서드 */
 	public String getCabProduceYear(String cabinetClassNo, String companyID, int tenantID) throws Exception;
+	
+	/* 2022-09-21 홍승비 - 전자결재G > 이미 정상적으로 문서번호가 부여된 레코드가 존재하는 경우, TBL_RECORD 중복 삽입 오류 시 현재 문서번호를 롤백하지 않도록 예외처리 레코드 추가 */
+	public void insertRegErrorNoRollbackRecord(String type1, String type2, String type3, int regYear, String sysDate, int regSN, String companyID, int tenantID) throws Exception;
 }

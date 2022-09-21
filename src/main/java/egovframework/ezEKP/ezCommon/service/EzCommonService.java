@@ -387,5 +387,7 @@ public interface EzCommonService {
 	public void createTblAprpreview() throws Exception;
 	
 	void createTblDisableNotiItem();
+
+	public void createTblSerialNoRollback() throws Exception;
 	
 }

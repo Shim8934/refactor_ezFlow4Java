@@ -2369,5 +2369,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
+
+	public void createTblSerialNoRollback() {
+		try {
+			select("EzCommonDAO.chkTblSerialNoRollback");
+		} catch (Exception e) {
+			logger.debug("TBL_SERIAL_NOROLLBACK table doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblSerialNoRollback");
+		}
+	}
 	
 }

@@ -92,6 +92,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory; 
 import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.context.ApplicationContext; 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service; 
 import org.springframework.web.multipart.MultipartFile; 
 import org.w3c.dom.Document; 
@@ -13162,9 +13163,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 		
-		ezApprovalGDAO.spRollbackSN(map);
-
-		logger.debug("rollbackSN ended");
+		/* 2022-09-21 홍승비 - 정상적인 문서번호 채번 뒤의 중복삽입 오류가 발생한 경우, 기존 문서번호를 롤백하지 않도록 카운트 체크 */
+		int noRollbackCnt = ezApprovalGDAO.getNoRollbackRecordCnt(map);
+		if (noRollbackCnt <= 0) { // 롤백하지 않아야 하는 레코드가 없을때만 롤백
+			ezApprovalGDAO.spRollbackSN(map);
+		}
+		
+		logger.debug("rollbackSN ended, noRollbackCnt = " + noRollbackCnt);
 
 		return "TRUE";
 	}
@@ -13416,9 +13421,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 		
-		ezApprovalGDAO.spRollbackSN(map);
-
-		logger.debug("rollbackSN ended");
+		/* 2022-09-21 홍승비 - 정상적인 문서번호 채번 뒤의 중복삽입 오류가 발생한 경우, 기존 문서번호를 롤백하지 않도록 카운트 체크 */
+		int noRollbackCnt = ezApprovalGDAO.getNoRollbackRecordCnt(map);
+		if (noRollbackCnt <= 0) { // 롤백하지 않아야 하는 레코드가 없을때만 롤백
+			ezApprovalGDAO.spRollbackSN(map);
+		}
+		
+		logger.debug("rollbackSN ended, noRollbackCnt = " + noRollbackCnt);
 		
 		return "TRUE";
 	}
@@ -13490,6 +13499,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
+		
 		
 		String result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
@@ -15560,9 +15570,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (rtnVal) {
 			return "TRUE";
 		} else {
-			return "FALSE";
+				return "FALSE";
+			}
 		}
-	}
 
 	private void updateCirculation(String docID, String dirPath, String companyID, LoginVO userInfo) throws Exception {
 		logger.debug("updateCirculation started");
@@ -16821,15 +16831,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_ORIGINREGSN", originRegSN);
 			map.put("v_ELECTRONICRECFLAG", electronicRecFlag);
 			
-			// 기록물 테이블(TBL_RECORD)에 입력
-			ezApprovalGDAO.insertRecord(map);
+			/* 2022-09-15 홍승비 - 이미 정상적으로 문서번호가 부여된 레코드가 존재하는 경우, 중복 삽입 오류 시 현재 문서번호를 롤백하지 않도록 예외처리 */
+			try {
+				// 기록물 테이블(TBL_RECORD)에 입력
+				ezApprovalGDAO.insertRecord(map);
+			} catch (DataIntegrityViolationException e) { // 중복 삽입 시의 예외 catch (중복삽입 이외의 경우 문서번호 롤백을 진행)
+				e.printStackTrace();
+				insertRegErrorNoRollbackRecord("002", deptCode, "", Integer.valueOf(regYear), commonUtil.getTodayUTCTime(""), Integer.valueOf(regSN), companyID, tenantID);
+				
+				return "FALSE";
+			}
+			
 			// 기록물 분리첨부 테이블에 저장
 			subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID, locale, docID, nonElecRecXML);
 			
 			if (subSQL.equals("FALSE")) {
 				return "FALSE";
 			} else {
-				rtnVal ="TRUE";
+				rtnVal = "TRUE";
 			}
 			
 			// 분리첨부 추가 저장
@@ -16865,8 +16884,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}*/
 		} else {
-			// 기록물 테이블(TBL_RECORD)에 입력
-			ezApprovalGDAO.insertRecord(map);
+			try {
+				// 기록물 테이블(TBL_RECORD)에 입력
+				ezApprovalGDAO.insertRecord(map);
+			} catch (DataIntegrityViolationException e) { // 중복 삽입 시의 예외 catch (중복삽입 이외의 경우 문서번호 롤백을 진행)
+				e.printStackTrace();
+				insertRegErrorNoRollbackRecord("002", deptCode, "", Integer.valueOf(regYear), commonUtil.getTodayUTCTime(""), Integer.valueOf(regSN), companyID, tenantID);
+				
+				return "FALSE";
+			}
 			
 			// 기록물 분리첨부 테이블에 저장
 			subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID, locale, docID, "");
@@ -34265,5 +34291,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("getCabProduceYear ended.");
 		return result;	
+	}
+	
+	/* 2022-09-21 홍승비 - 전자결재G > 이미 정상적으로 문서번호가 부여된 레코드가 존재하는 경우, TBL_RECORD 중복 삽입 오류 시 현재 문서번호를 롤백하지 않도록 예외처리 레코드 추가 */
+	@Override
+	public void insertRegErrorNoRollbackRecord(String type1, String type2, String type3, int regYear, String sysDate, int regSN, String companyID, int tenantID) throws Exception {
+		logger.debug("insertRegErrorNoRollbackRecord started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TYPE1", type1);
+		map.put("v_TYPE2", type2);
+		map.put("v_TYPE3", type3);
+		map.put("v_TIMESEP", regYear);
+		map.put("v_SYSDATE", sysDate);
+		map.put("v_REGSERIALNO", regSN);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("insertRegErrorNoRollbackRecord map  ::  " + map.toString());
+		
+		try {
+			ezApprovalGDAO.insertRegErrorNoRollbackRecord(map);
+		} catch (Exception e) { // TBL_SERIAL_NOROLLBACK 테이블 레코드 중복삽입 시 그냥 로그만 찍고 무시
+			e.printStackTrace();
+		}
+		
+		logger.debug("insertRegErrorNoRollbackRecord ended.");
 	}
 }

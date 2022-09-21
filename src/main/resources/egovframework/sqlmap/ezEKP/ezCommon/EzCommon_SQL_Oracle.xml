@@ -4740,5 +4740,28 @@
 			CONSTRAINT "tbl_user_noti_disable_item_fk" FOREIGN KEY (user_id, tenant_id) REFERENCES tbl_usermaster (cn, tenant_id) ON DELETE CASCADE
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.chkTblSerialNoRollback">
+        <![CDATA[
+            SELECT
+                TYPE1
+            FROM
+                TBL_SERIAL_NOROLLBACK
+			WHERE
+				ROWNUM <= 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.createTblSerialNoRollback"> 
+		CREATE TABLE TBL_SERIAL_NOROLLBACK (
+			TYPE1 VARCHAR2(50 CHAR) NOT NULL,
+			TYPE3 VARCHAR2(50 CHAR) NOT NULL,
+			TYPE2 VARCHAR2(50 CHAR) NOT NULL,
+			TIMESEP NUMBER(10,0) NOT NULL,
+			REGSERIALNO NUMBER(19,0) NOT NULL, 
+			TENANT_ID NUMBER(38,0) DEFAULT 0,
+			COMPANYID VARCHAR2(20 BYTE) NOT NULL,
+			CONSTRAINT "TBL_SR_NOROLLBACK_PK" PRIMARY KEY (TYPE1, TYPE3, TYPE2, TIMESEP, REGSERIALNO, TENANT_ID, COMPANYID)
+		)
+	</statement>
 
 </sqlMap>

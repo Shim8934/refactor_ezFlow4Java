@@ -4458,4 +4458,26 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
 
+	<select id="EzCommonDAO.chkTblSerialNoRollback">
+        <![CDATA[
+            SELECT
+                TYPE1
+            FROM
+                TBL_SERIAL_NOROLLBACK
+            LIMIT 1
+        ]]>
+    </select>
+    <statement id="EzCommonDAO.createTblSerialNoRollback">
+		CREATE TABLE TBL_SERIAL_NOROLLBACK (
+			TYPE1 VARCHAR(200) NOT NULL,
+			TYPE3 VARCHAR(200) NOT NULL,
+			TYPE2 VARCHAR(200) NOT NULL,
+			TIMESEP BIGINT(10) NOT NULL,
+			REGSERIALNO DECIMAL(19, 0) NOT NULL, 
+			TENANT_ID DECIMAL(22, 0) NOT NULL DEFAULT 0,
+			COMPANYID VARCHAR(20) NOT NULL,
+			PRIMARY KEY (`TYPE1`, `TYPE3`, `TYPE2`, `TIMESEP`, `REGSERIALNO`, `TENANT_ID`, `COMPANYID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+    
 </sqlMap>

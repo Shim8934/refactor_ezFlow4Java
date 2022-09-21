@@ -2831,4 +2831,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createTblDisableNotiItem();
 	}
 	
+	@Override
+	public void createTblSerialNoRollback() throws Exception {
+		ezCommonDAO.createTblSerialNoRollback();
+	}
 }

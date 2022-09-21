@@ -3864,4 +3864,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getCabProduceYear(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getCabProduceYear", map);
 	}
+
+	/* 2022-09-21 홍승비 - 전자결재G > 이미 정상적으로 문서번호가 부여된 레코드가 존재하는 경우, TBL_RECORD 중복 삽입 오류 시 현재 문서번호를 롤백하지 않도록 예외처리 레코드 추가 */
+	public void insertRegErrorNoRollbackRecord(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRegErrorNoRollbackRecord", map);
+	}
+
+	/* 2022-09-21 홍승비 - 정상적인 문서번호 채번 뒤의 중복삽입 오류가 발생한 경우, 기존 문서번호를 롤백하지 않도록 카운트 체크 */
+	public int getNoRollbackRecordCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getNoRollbackRecordCnt", map);
+	}
 }
