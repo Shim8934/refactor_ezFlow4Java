@@ -1094,7 +1094,7 @@ public class EzEmailUtil {
 	    //    Content-ID: <f_kfxpw01d0>				 
 		boolean isAttachmentWithUnreferencedContentID = false;
 		
-		if (part.isMimeType("application/*") && ((MimePart)part).getContentID() != null) {
+		if (((MimePart)part).getContentID() != null) {
 			String htmlBodyContent = (String)extraMap.get("htmlBody");
 			String contentID = ((MimePart) part).getContentID();
 			
