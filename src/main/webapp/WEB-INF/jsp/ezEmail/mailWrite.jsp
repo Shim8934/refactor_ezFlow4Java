@@ -1453,7 +1453,7 @@
 	        var xmlHTTP = createXMLHttpRequest();
 	        var xmlpara = createXmlDom();
 	        if (Target == "APPROVALG")
-	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx?DocID=" + DocID, false);
+	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApprovalG/formContainer/aspx/aprattachMail.aspx?DocID=" + DocID, false);
 	        else
 	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx?DocID=" + DocID, false);
 	        xmlHTTP.withCredentials = true;
