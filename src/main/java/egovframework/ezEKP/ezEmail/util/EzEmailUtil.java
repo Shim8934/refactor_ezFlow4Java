@@ -1805,7 +1805,9 @@ public class EzEmailUtil {
 					p = mp.getBodyPart(i);
 					
 					if (p.isMimeType("text/plain")) {
-						htmlBody += p.getContent().toString();
+						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
+						htmlBody += tempList.get(0);		
+						break;				
 					}
 				}
 			}
