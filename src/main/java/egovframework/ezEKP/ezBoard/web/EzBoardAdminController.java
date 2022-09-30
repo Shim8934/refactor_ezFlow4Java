@@ -4,9 +4,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -39,6 +44,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -72,6 +79,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardAdminController.class);
 
@@ -1608,4 +1618,270 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("selectTargetGroup ended");
 		return "admin/ezBoard/selectTargetGroup";
 	}
+	
+	
+//////////////////////////////////////관리자단 게시판 트리캐시 일괄생성 코드 시작 //////////////////////////////////////
+	/**
+	 * 2022-09-27 홍승비 - 관리자 > 게시판 > 트리캐시 일괄생성 메뉴 진입
+	 */
+	@RequestMapping(value = "/admin/ezBoard/boardMakeAllTreeCache.do", method = RequestMethod.GET)
+	public String boardMakeAllTreeCache(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("boardMakeAllTreeCache started");
+		// 단순 페이지 호출 동작
+		logger.debug("boardMakeAllTreeCache ended");
+		return "admin/ezBoard/boardMakeAllTreeCache";
+	}
+	
+	/**
+	 * 2022-09-28 홍승비 - 관리자 > 게시판 > 트리캐시 일괄생성 동작
+	 */
+	@RequestMapping(value = "/admin/ezBoard/makeAllTreeCache.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String makeAllTreeCache(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("makeAllTreeCache started");
+		
+		long beforeTime = System.currentTimeMillis();
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
+		// 1) 현재 그룹웨어 상의 모든 사용자 ID를 가져옴
+		List<OrganUserVO> userCnList = ezOrganAdminService.getUserCnList(tenantID);
+		
+		try {
+			// 2) 각 사용자 ID에 대하여 LoginVO를 만든 뒤, 트리캐시 생성 루프를 진행
+			 for (OrganUserVO organUser : userCnList) {
+				 LoginVO userInfoT = new LoginVO();
+				    
+				 userInfoT.setId(organUser.getCn());
+				 userInfoT.setTenantId(tenantID);
+				 userInfoT.setDn("NOPASSWORD");
+				 LoginVO resultVO = loginService.selectUser(userInfoT);
+				 
+				 makeAllTreeCacheForUsers(resultVO);
+			 }
+		}
+		catch (Exception e) {
+			logger.debug("makeAllTreeCache aborted, error occurs!");
+			e.printStackTrace();
+			return "FALSE";
+		}
+		// 전부 완료된 경우 TRUE를 리턴, 도중에 실패하면 지금까지의 DB 레코드 삽입이 롤백되지 않도록 catch 하고 FALSE 리턴
+		
+		logger.debug("makeAllTreeCache ended, all process success! (for [" + userCnList.size() + "] users)");
+		
+		long afterTime = System.currentTimeMillis();
+		long secDiffTime = (afterTime - beforeTime)/1000;
+		
+		logger.debug("makeAllTreeCache process time(s) = " + secDiffTime);
+		
+		return "TRUE";
+	}
+	
+	/**
+	 * 2022-09-29 홍승비 - 접근 가능한 게시판 전체에 대해 트리캐시를 생성하는 메서드 
+	 */
+	public String makeAllTreeCacheForUsers(LoginVO userInfo) throws Exception {
+		logger.debug("makeAllTreeCacheForUsers started, userID = " + userInfo.getId());
+		
+		String pRootBoardID = "top";
+		String pSubFlag = "1";
+		int pSelectBy = 0;
+		String pExcludeBoardID = " ";
+		String isAdminLeft = "";
+		boolean isCompanyAdmin = false;
+		
+		String boardGroupAdmin_FG = "NO";
+		int pMode = 0;
+		
+		if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+			pMode = 0;
+		} else {
+			pMode = 1;
+		}
+		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
+			isCompanyAdmin = true;
+		}
+		
+		String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
+				commonUtil.getMultiData(userInfo.getPrimary(), userInfo.getTenantId()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
+		Document doc = commonUtil.convertStringToDocument(strXML);
+		NodeList nList = doc.getElementsByTagName("NODE");
+		
+		ArrayList<String> accessBoardList = new ArrayList<String>();
+		ArrayList<String> tempBoardList = new ArrayList<String>();
+		ArrayList<String> accessAllBoardList = new ArrayList<String>();
+		
+		for (int i = 0; i < nList.getLength(); i++) {
+			accessBoardList.add(nList.item(i).getChildNodes().item(2).getTextContent());
+		}
+		
+		/* 2019-06-03  홍승비 - 게시판그룹 관리자권한 체크 시 사내겸직 및 하위부서 허용여부 체크하도록 수정 */
+		//접근가능한 게시판
+		while (accessBoardList.size() != 0) {
+			for (int i = 0; i < accessBoardList.size(); i++) {
+				boardGroupAdmin_FG = checkIfBoardGroupAdmin(accessBoardList.get(i), userInfo);
+				pMode = 0;
+				
+				if (userInfo.getRollInfo() != null && (boardGroupAdmin_FG.equals("OK")) || (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+					pMode = 0;
+				} else {
+					pMode = 1;
+				}
+				
+				strXML = ezBoardService.getBoardTree(accessBoardList.get(i), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
+						commonUtil.getMultiData(userInfo.getPrimary(), userInfo.getTenantId()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
+				doc = commonUtil.convertStringToDocument(strXML);
+				nList = doc.getElementsByTagName("NODE");
+				
+				for (int j = 0; j < nList.getLength(); j++) {
+					tempBoardList.add(nList.item(j).getChildNodes().item(2).getTextContent()); 
+					accessAllBoardList.add(nList.item(j).getChildNodes().item(2).getTextContent());  
+				}
+			}
+			
+			accessBoardList.clear();
+			accessBoardList.addAll(tempBoardList);
+			tempBoardList.clear();
+		}
+		
+		logger.debug("makeAllTreeCacheForUsers ended, userID = " + userInfo.getId());
+		return "TRUE";
+	}
+	
+	/** 2022-09-29 홍승비 - 사내겸직, 하위부서 허용여부 판단하여 게시판 그룹의 관리자권한 체크 */
+	public String checkIfBoardGroupAdmin(String pBoardGroupID, LoginVO userInfo) throws Exception {
+		logger.debug("checkIfBoardGroupAdmin started");
+		
+		String result = "NO";
+		String deptPath = userInfo.getDeptPathCode();
+		StringBuilder deptPathOrgan = new StringBuilder();
+		List<String> addJobDeptList = new ArrayList<String>();
+		
+		/* 2019-09-18 홍승비 - 개인ID 이후, 부서ID 이전 위치에 직위+직책ID (사내겸직 직위 포함) 추가 */
+		String userJJID = ezBoardService.getUserJJID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+			if (ch == 0) { // 0 : userID
+				deptPathOrgan.append(deptPath.split(",")[ch].trim());
+				deptPathOrgan.append(",").append(userJJID);
+			} else {
+				deptPathOrgan.append(",").append(deptPath.split(",")[deptPath.split(",").length - (ch)].trim());
+			}
+		}
+		
+		String userDeptPath = deptPathOrgan.toString();
+		addJobDeptList.add(userDeptPath);
+		
+		List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		StringJoiner addJobStr = new StringJoiner(",");
+		addJobStr.add(userInfo.getDeptID());
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr.add(addJobList.get(i));
+				String upperDept = ezBoardService.getUpperDeptID(addJobList.get(i), userInfo.getTenantId());
+				
+				if (upperDept != null && !upperDept.equals("")) {
+					boolean loopContinue = true;
+					StringJoiner upperDeptStr = new StringJoiner(",");
+					upperDeptStr.add(upperDept);
+					
+					while (loopContinue) {
+						String upperDeptLoop = ezBoardService.getUpperDeptID(upperDept, userInfo.getTenantId());
+						if (upperDeptLoop != null && !upperDeptLoop.equals("")) {
+							upperDeptStr.add(upperDeptLoop);
+							upperDept = upperDeptLoop;
+						} else {
+							loopContinue = false;
+						}
+					}
+					addJobDeptList.add(addJobList.get(i) + "," + upperDeptStr.toString());
+				}
+			}
+		}
+		
+		boolean isBoardGroup = false;
+		BoardPropertyVO orgBoardProp = ezBoardService.getBoardProperty(pBoardGroupID, userInfo.getTenantId());
+		if (orgBoardProp != null) {
+			if (orgBoardProp.getBoardGroupID() != null && !orgBoardProp.getBoardGroupID().equals("")) { // 하위게시판
+				isBoardGroup = false;
+			} else { // 게시판그룹
+				isBoardGroup = true;
+			}
+		}
+		
+		// 부서, 회사 / 직위, 직책 Set 추가
+		Set<String> boardGroupAdminFGSetDept = new HashSet<String>();
+		Set<String> boardGroupAdminFGSetJJ = new HashSet<String>();
+		Set<String> userJJIDSet = new HashSet<String>(Arrays.asList(userJJID.split(",")));
+		
+		boolean isUserHasACL = false;
+		String tempDeptList = addJobStr.toString();
+		int addJobDeptListSize = addJobDeptList.size();
+		for (int jl = 0; jl < addJobDeptListSize; jl++) {
+			if (isUserHasACL == false) {
+				int addJobDeptListPathSize = addJobDeptList.get(jl).split(",").length;
+				for (int i = 0; i < addJobDeptListPathSize; i++) {
+					int isEqualDept = 0;
+					for (int j = 0; j < tempDeptList.split(",").length; j++) {
+						if(addJobDeptList.get(jl).split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+							isEqualDept = 1;
+							break;
+						} else {
+							isEqualDept = 0;
+						}
+					}
+					
+					int isDept = ezBoardService.isDeptChk(addJobDeptList.get(jl).split(",")[i].trim(), userInfo.getTenantId());
+					
+					/* 2019-09-20 홍승비 - 권한그룹을 포함하여 게시판그룹 관리자권한 체크 */
+					// 권한그룹 적용 시 개인권한이 다수 존재 가능하므로, 권한을 리스트로 가져온 뒤 '허용(OK)'기준으로 취합한다.
+					List<String> boardGroupAdminNew_FG_List = ezBoardService.checkIfBoardGroupAdminNew(pBoardGroupID, addJobDeptList.get(jl).split(",")[i].trim(), userInfo.getTenantId(), isDept, isEqualDept, isBoardGroup);
+					String boardGroupAdminNew_FG = "";
+					// 전달한 ACCESSID에 대한 게시판 관리자권한 리스트 (OK, NO)
+					if (boardGroupAdminNew_FG_List != null && boardGroupAdminNew_FG_List.size() > 0) { // 권한이 없으면 공백값을 유지 > 다음 루프 진행
+						if (boardGroupAdminNew_FG_List.contains("OK")) { // 동일한 우선순위의 권한에 대해서, OK가 하나라도 존재한다면 OK로 판정
+							boardGroupAdminNew_FG = "OK";
+						} else {
+							boardGroupAdminNew_FG = "NO";
+						}
+					}
+					
+					if (!boardGroupAdminNew_FG.equals("")) {
+						if (addJobDeptList.get(jl).split(",")[i].trim().equals(userInfo.getId())) { // 개인의 권한
+							result = boardGroupAdminNew_FG; // 그룹권한에 포함된 개인권한을 상단에서 취합했으므로, 그대로 사용 가능
+							isUserHasACL = true;
+							break;
+						}
+						else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위, 직책 권한
+							boardGroupAdminFGSetJJ.add(boardGroupAdminNew_FG);
+							isUserHasACL = false;
+							// 직위, 직책권한은 레코드 전부 찾을때까지 break 안함
+						}
+						else { // 부서, 회사의 권한
+							boardGroupAdminFGSetDept.add(boardGroupAdminNew_FG);
+							isUserHasACL = false;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		// 개인권한이 있다면 개인권한을  result로 사용 / 개인권한이 없다면 직위, 직책권한 -> 부서권한 순으로 체크
+		if (isUserHasACL == false) {
+			if (boardGroupAdminFGSetJJ.size() > 0 && boardGroupAdminFGSetJJ.contains("OK")) { // 직위, 직책권한이 존재하고 OK를 가지는 경우
+				result = "OK";
+			} else if (boardGroupAdminFGSetJJ.size() == 0 && boardGroupAdminFGSetDept.contains("OK")) { // 직위, 직책권한이 없고 부서권한이 OK를 가지는 경우
+				result = "OK";
+			} // 이외의 경우는 직위, 직책권한이 존재하고 NO만 가지는 경우 || 직위, 직잭권한이 없고 부서권한이 NO만 가지는 경우 => 즉 result는 NO로 유지되어 리턴
+		}
+		
+		logger.debug("checkIfBoardGroupAdmin ended");
+		return result;
+	}
+	
+//////////////////////////////////////관리자단 게시판 트리캐시 일괄생성 코드 완료 //////////////////////////////////////
+	
 }

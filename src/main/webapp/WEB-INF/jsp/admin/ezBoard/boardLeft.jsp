@@ -303,19 +303,15 @@
 	        }
 
 	        function OpenRightMenu(pIndex) {
-	            if (SelectedBoardID == "" && pIndex == 5 && pIndex != 8) {
-	                alert("<spring:message code='ezBoard.t56' />");
-	                return;
-	            }
-
 	            curMenuIndex = pIndex;
 
-	            if (SelectedBoardID == "" && pIndex != 1 && pIndex != 5 && pIndex != 8) {
+	            // 그룹생성, 배경이미지관리, 트리캐시 일괄생성을 제외한 기능들은 먼저 게시판을 선택해야 함
+	            if (SelectedBoardID == "" && pIndex != 1 && pIndex != 8 && pIndex != 9) {
 	                alert("<spring:message code='ezBoard.t56' />");
 	                return;
 	            }
 
-	            if (SelectedBoardID == SelectedBoardGroupID && pIndex != 1 && pIndex != 2 && pIndex != 3 && pIndex != 5 && pIndex != 6 && pIndex != 7 && pIndex != 8) {
+	            if (SelectedBoardID == SelectedBoardGroupID && pIndex != 1 && pIndex != 2 && pIndex != 3 && pIndex != 5 && pIndex != 6 && pIndex != 7 && pIndex != 8 && pIndex != 9) {
 	                alert("<spring:message code='ezBoard.t138' />");
 	                return;
 	            }
@@ -344,6 +340,10 @@
 	                    break;
 	                case 8:
 	                    window.open("/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID), "board_main");
+	                    break;
+					/* 2022-09-27 홍승비 - 트리캐시 일괄생성기능 추가 */
+	                case 9:
+	                    window.open("/admin/ezBoard/boardMakeAllTreeCache.do", "board_main");
 	                    break;
 	                default:
 	                    break;
@@ -455,6 +455,8 @@
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(4)"><spring:message code="ezBoard.t65" /></span></li>
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(5)"><spring:message code="ezBoard.t66" /></span></li>
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(8)"><spring:message code="ezBoard.t5006" /></span></li>
+                       	<%-- 2022-09-27 홍승비 - 트리캐시 일괄생성기능 추가 --%>
+                       	<li style=""><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(9)"><spring:message code="ezBoard.HSBAt001" /></span></li>
 			        </ul>
 		        </div>
 	        </div>
