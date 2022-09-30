@@ -196,6 +196,12 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 			} else {
 				info.setPrimary("2");				
 			}
+
+			// dhlee : 20220928 - 흔하지는 않지만 PC 그룹웨어에 로그인하지 않은 상태에서 Gateway Server API를 호출하는 경우를 대비해 디폴트값을 설정하도록 함.
+			if (info.getOffSet() == null) {
+				info.setOffSet("235|+09:00");
+			}
+			// dhlee : 20220928 - end
 		}
 		
 		LOGGER.debug("commonInfoWeb ended");

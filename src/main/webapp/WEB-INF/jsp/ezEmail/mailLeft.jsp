@@ -1352,6 +1352,21 @@
                 window.open(url, "right");
 			}
 			
+			function goAdress() {
+				var pheight = window.screen.availHeight;
+	            var conHeight = pheight * 0.8;
+	            var pwidth = window.screen.availWidth;
+	            var conWidth = pwidth * 0.8;
+	            if (conWidth > 890)
+	                conWidth = 890;
+	            var pTop = (pheight - conHeight) / 2;
+	            var pLeft = (pwidth - 890) / 2;
+	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+	            var requestUrl = "/ezEmail/mailMain.do?funCode=2";
+	            
+	            window.open(requestUrl, "", feature);
+			}
+			
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1378,6 +1393,9 @@
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
 	    	<div class="left_title" title="<spring:message code="ezEmail.t99000012" />"><spring:message code="ezEmail.t99000012" />
+	    	<c:if test="${dotNetIntegration eq 'YES'}">
+	    		<span class="sub_iconLNB tree_addressPop" title="<spring:message code="ezEmail.t99000041" />" onclick="goAdress()"></span>
+	    	</c:if>
 	        	<span class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezEmail.t99000044" />" onclick="mail_Config()"></span>
 	        </div>
 	        <div class="btn_writeBox">

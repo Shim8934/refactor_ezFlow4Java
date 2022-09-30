@@ -2363,6 +2363,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .lnb h2 .h2Title {float:none; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .left_title{ position:relative; height:52px; background:#3d8fea; font-family:Malgun Gothic, "맑은 고딕"; line-height:52px; font-size:20px; font-weight:bold; color:#fff; padding: 0px 38px 0px 20px; letter-spacing:-1px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} /* 타이틀 텍스트 공통영역 */
 .tree_leftconfig{ width:16px; height:16px; display:inline-block; background-position:0px 0px; position:absolute; right:20px; top:20px; cursor:pointer;}  /* 환경설정 */
+.tree_addressPop{width:16px;height:20px;display:inline-block;background-position:-363px 4px !important;position:absolute;right:50px;top: 16px;cursor:pointer;}  /*주소록*/
 .btn_writeBox{ height:50px; background:#3d8fea; margin:0px; padding:10px; box-sizing:border-box;} /* 작성버튼 */
 .btn_writeBox .btn_write01{ margin:0px 0px 0px 0px; padding:0px; width:auto; text-align:center; height:30px; line-height:28px; background:#0b56ab; float:none; overflow:hidden; font-family:Malgun Gothic, "맑은 고딕"; font-size:13px; color:#fff; cursor:pointer;}
 .btn_writeBox .btn_write01:hover{ background:#1264c1;}

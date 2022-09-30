@@ -338,6 +338,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		model.addAttribute("isDotNetAdmin", isDotNetAdmin);
 		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		
 		
 		boolean useSpamOut = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useSpamOut", loginInfo.getTenantId()));
