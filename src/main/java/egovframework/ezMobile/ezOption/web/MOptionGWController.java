@@ -177,11 +177,20 @@ public class MOptionGWController extends EgovFileMngUtil {
 
 			int tenantId = info.getTenantId();
 
-			// 20210426 조진호 - pin번호 SHA-256으로 암호화 하여 저장
-			PrivateKey pk = EgovFileScrty.getPrivateKey(egovFileScrty.getPrm(), egovFileScrty.getPre());
-			String pin = EgovFileScrty.decryptRsa(pk, jsonObject.get("pin").toString());
-			if (!"".equals(pin)) {
-				pin = EgovFileScrty.encryptPassword(pin, userId);
+			
+			String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", tenantId);
+			String pin = "", pinState = "", biometric = "";
+			if (dotNetIntegration.equalsIgnoreCase("NO")) {
+				pin = jsonObject.get("pin").toString();
+				pinState = jsonObject.get("pinState").toString();
+				biometric = jsonObject.get("biometric").toString();
+				
+				// 20210426 조진호 - pin번호 SHA-256으로 암호화 하여 저장
+				PrivateKey pk = EgovFileScrty.getPrivateKey(egovFileScrty.getPrm(), egovFileScrty.getPre());
+				pin = EgovFileScrty.decryptRsa(pk, pin);
+				if (!"".equals(pin)) {
+					pin = EgovFileScrty.encryptPassword(pin, userId);
+				}
 			}
 
 			String deviceId = (request.getParameter("deviceID") == null) ? "" : request.getParameter("deviceID");
@@ -190,15 +199,12 @@ public class MOptionGWController extends EgovFileMngUtil {
 					+ jsonObject.get("lang").toString() + ", mainType : " + jsonObject.get("mainType").toString()
 					+ ", listCnt : " + jsonObject.get("listCnt").toString() + ", useSecurity : "
 					+ jsonObject.get("useSecurity").toString() + ", deviceId : " + deviceId
-					+ ", pinState : " + jsonObject.get("pinState").toString() + ", biometric : "
-					+ jsonObject.get("biometric").toString() + ", pin : " + pin);
+					+ ", pinState : " + pinState + ", biometric : " + biometric + ", pin : " + pin);
 
 			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(),
 					jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(),
-					jsonObject.get("listCnt").toString(),
-					jsonObject.get("useSecurity").toString(), tenantId, deviceId, jsonObject.get("pinState").toString(),
-					pin,
-					jsonObject.get("biometric").toString());
+					jsonObject.get("listCnt").toString(), jsonObject.get("useSecurity").toString(), 
+					tenantId, deviceId, pinState, pin, biometric);
 
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
 
