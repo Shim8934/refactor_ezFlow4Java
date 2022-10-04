@@ -1031,16 +1031,24 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("useMailToCommunity", useMailToCommunity); 
 		model.addAttribute("tags", tags);
 
-		if (mailWritePreview) {
-			model.addAttribute("useMailTag", false);
-		} else {
-			// get tag config
-			JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
-			logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+		// 메일 태그를 사용중인지 확인 (미리보기 모드라면 무조건 false)
+		boolean useMailTag = !mailWritePreview && "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", loginInfo.getTenantId()));
 
-			boolean useMailTag = jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
-			model.addAttribute("useMailTag", useMailTag);
+		// 메일 태그를 사용한다면 사용자가 기능을 활성화 했는지 확인
+		if (useMailTag) {
+			try {
+				logger.debug("jgw getTagConfig started.");
+				JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
+				logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+
+				useMailTag = jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+			} catch (Exception e) {
+				logger.error("jgw fetch error", e);
+				useMailTag = false;
+			}
 		}
+
+		model.addAttribute("useMailTag", useMailTag);
 		
 		logger.debug("readMail ended.");
 		

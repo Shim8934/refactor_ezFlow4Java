@@ -236,12 +236,24 @@ public class EzEmailMailListController {
 			importanceColor = mailColor.getImportanceColor();
 		}
 
-		// get tag config
-		String userEmail = userInfo.getId() + "@" + domainName;
-		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
-		logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+		// 메일 태그를 사용중인지 확인
+		boolean useMailTag = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", userInfo.getTenantId()));
 
-		boolean useMailTag = jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+		// 메일 태그를 사용한다면 사용자가 기능을 활성화 했는지 확인
+		if (useMailTag) {
+			try {
+				logger.debug("jgw getTagConfig started.");
+				String userEmail = userInfo.getId() + "@" + domainName;
+				JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
+				logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+
+				useMailTag &= jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
+			} catch (Exception e) {
+				logger.error("jgw fetch error", e);
+				useMailTag = false;
+			}
+		}
+
 		model.addAttribute("useMailTag", useMailTag);
 
 		// set model

@@ -361,21 +361,36 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			model.addAttribute("spamOutLoginURI", spamOutLoginURI);
 		}
 
-		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
-		logger.debug("jgw getTagConfig ended, success={}", jgwResult.succeeded());
+		// 메일 태그를 사용중인지 확인
+		boolean useMailTag = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", loginInfo.getTenantId()));
 
-		boolean useMailTag = jgwResult.succeeded() && jgwResult.getResultAsJsonObject().get("enable").getAsBoolean();
-		model.addAttribute("useMailTag", useMailTag);
-
+		// 메일 태그를 사용한다면 사용자가 기능을 활성화 했는지 확인
 		if (useMailTag) {
-			logger.debug("getMailTag started.");
-			JgwResult result = rest.jgw().url("/jMochaEzEmail/getUserTagList").formParam("userAccount", userEmail).exchangeJgwResult();
-			logger.debug("jgw getUserTagList ended, success={}", result.succeeded());
+			try {
+				logger.debug("jgw getTagConfig started.");
+				JgwResult jgwTagConfig = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
+				logger.debug("jgw getTagConfig ended, success={}", jgwTagConfig.succeeded());
+				boolean enabledUserMailTag = jgwTagConfig.succeeded() && jgwTagConfig.getResultAsJsonObject().get("enable").getAsBoolean();
 
-			if (result.succeeded()) {
-				model.addAttribute("tags", result.getResult());
+				// 활성화된 사용자라면 태그 목록 가져오기
+				if (enabledUserMailTag) {
+					useMailTag = true;
+
+					logger.debug("jgw getUserTagList started.");
+					JgwResult jgwUserTagList = rest.jgw().url("/jMochaEzEmail/getUserTagList").formParam("userAccount", userEmail).exchangeJgwResult();
+					logger.debug("jgw getUserTagList ended, success={}", jgwUserTagList.succeeded());
+
+					if (jgwUserTagList.succeeded()) {
+						model.addAttribute("tags", jgwUserTagList.getResult());
+					}
+				}
+			} catch (Exception e) {
+				logger.error("jgw fetch error", e);
+				useMailTag = false;
 			}
 		}
+
+		model.addAttribute("useMailTag", useMailTag);
 
 		logger.debug("showMailLeft ended.");
 		
