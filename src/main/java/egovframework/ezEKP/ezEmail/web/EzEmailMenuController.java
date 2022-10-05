@@ -370,12 +370,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				logger.debug("jgw getTagConfig started.");
 				JgwResult jgwTagConfig = rest.jgw().url("/jMochaEzEmail/getTagConfig").formParam("userAccount", userEmail).exchangeJgwResult();
 				logger.debug("jgw getTagConfig ended, success={}", jgwTagConfig.succeeded());
-				boolean enabledUserMailTag = jgwTagConfig.succeeded() && jgwTagConfig.getResultAsJsonObject().get("enable").getAsBoolean();
+				// 사용자가 기능을 활성화 했으면 true, 아니라면 false
+				useMailTag = jgwTagConfig.succeeded() && jgwTagConfig.getResultAsJsonObject().get("enable").getAsBoolean();
 
 				// 활성화된 사용자라면 태그 목록 가져오기
-				if (enabledUserMailTag) {
-					useMailTag = true;
-
+				if (useMailTag) {
 					logger.debug("jgw getUserTagList started.");
 					JgwResult jgwUserTagList = rest.jgw().url("/jMochaEzEmail/getUserTagList").formParam("userAccount", userEmail).exchangeJgwResult();
 					logger.debug("jgw getUserTagList ended, success={}", jgwUserTagList.succeeded());
