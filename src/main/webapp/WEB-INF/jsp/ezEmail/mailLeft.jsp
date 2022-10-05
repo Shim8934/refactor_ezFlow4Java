@@ -1433,7 +1433,7 @@
 			}
 			#tagcontent { word-break: break-all; line-height: 215%; }
 			#tagcontent a { padding: 4px; border-radius: 4px; }
-			#tagcontent a:hover { background: #c0ccd5; font-weight: bold; color: #0470e4; }
+			#tagcontent a:hover { background: #c0ccd5; color: #0470e4; }
 		</style>
 	</head>
 	<body class="newLeft">
