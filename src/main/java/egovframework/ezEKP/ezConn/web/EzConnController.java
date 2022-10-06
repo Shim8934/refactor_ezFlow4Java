@@ -180,9 +180,14 @@ public class EzConnController {
 					resultPage = "/ezEmail/mailWrite.do?boardID=" + boardID + "&itemID=" + itemID + "&cmd=boardDotNet";
 				} else if (cmd != null && cmd.equals("docsendDotNet")) {
 					String docID = request.getParameter("docID");
+					String target = request.getParameter("target");
 					String strImgCount = "";
 					
-					resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
+					if ("APPROVALG".equalsIgnoreCase(target)) {
+						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
+					} else {
+						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVAL";
+					}
 				} else if (cmd != null && cmd.equals("CommunityDotNet")) {
 					String boardID = request.getParameter("boardID");
 					String itemID = request.getParameter("itemID");
