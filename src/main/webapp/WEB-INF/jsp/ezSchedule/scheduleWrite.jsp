@@ -601,7 +601,7 @@
 	                            <div class="portlet_tabpart03_top" id="tab1">
 	                                <p id="show1"><span divname="schedule1" id="1tab1"><spring:message code='ezSchedule.t214'/></span></p>
 	                                <p id="show2"><span divname="schedule2" id="1tab2"><spring:message code='ezSchedule.t9990002'/></span></p>
-	                                <c:if test="${scheduleId == '' && checkResourceTab == true}">
+	                                <c:if test="${scheduleId == '' && checkResourceTab == true && isDotNetIntegration}">
 		                                <p id="show3"><span divname="schedule3" id="1tab3"><spring:message code='ezSchedule.t1032'/></span></p>
 		                            </c:if> 
 	                            </div>
