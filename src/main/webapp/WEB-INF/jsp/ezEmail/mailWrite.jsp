@@ -1053,7 +1053,7 @@
 	                GetDocumentInfo(pDocID, docHref, '<c:out value="${docImagCnt}"/>', '<c:out value="${docTarget}"/>');
 	            }
 	            else if (Org_cmd == "docsendDotNet") {
-	                GetDocumentInfo_DotNet(pDocID, docHref, '<c:out value="${docImagCnt}"/>', '<c:out value="${docTarget}"/>');
+	                GetDocumentInfo_DotNet(pDocID, docHref, '<c:out value="${docImagCnt}"/>', '<c:out value="${docTarget}"/>', '<c:out value="${docType}"/>');
 	            }
 	            else if (Org_cmd == "boardDotNet") {
 	                GetBoardItemInfo_DotNet('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>', '<c:out value="${retransType}"/>');
@@ -1411,12 +1411,12 @@
 	    	g_from = val;
 	    }
 	    	    
-	    function GetDocumentInfo_DotNet(DocID, DocHref, ImagCnt, Target) {
+	    function GetDocumentInfo_DotNet(DocID, DocHref, ImagCnt, Target, docType) {
 	        AttachFlag = true;
 	        var docAttach = "";
 
 	        if (DocHref.toLowerCase().indexOf(".doc") == -1 && DocHref.toLowerCase().indexOf(".hwp") == -1) {
-	            if (DocHref == "IMAGE") {
+	            if (DocHref == "IMAGE"  && docType.toLowerCase().indexOf("hwp") == -1) { // 2022-10-07 이사라 - 웹한글기안기 문서는 이미지 제외
 	                var HtmlBody = "<div style='position:relative;display:inline-block' class='margin' id='ezFormProc_div'><hr></hr><div align='center'>";
 	                if (ImagCnt == "") {
 	                    HtmlBody = HtmlBody + "<img src='" + "/Upload_Common" + "/" + GetDateFormatString() + "/" + DocID + ".png' embedding='1'/>";

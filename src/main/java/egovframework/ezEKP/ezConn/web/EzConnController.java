@@ -182,11 +182,12 @@ public class EzConnController {
 					String docID = request.getParameter("docID");
 					String target = request.getParameter("target");
 					String strImgCount = "";
+					String docType = request.getParameter("doctype") != null ? request.getParameter("doctype") : ""; // 2022-10-07 이사라 - 전자결재G 웹한글기안기 문서의 경우 doctype=hwp로 호출
 					
 					if ("APPROVALG".equalsIgnoreCase(target)) {
-						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
+						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG"  + "&docType=" + docType;
 					} else {
-						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVAL";
+						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVAL" + "&docType=" + docType;
 					}
 				} else if (cmd != null && cmd.equals("CommunityDotNet")) {
 					String boardID = request.getParameter("boardID");
