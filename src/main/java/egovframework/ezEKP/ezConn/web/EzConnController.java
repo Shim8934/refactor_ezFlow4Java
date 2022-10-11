@@ -216,8 +216,9 @@ public class EzConnController {
 					resultPage = "/ezEmail/mailConfig.do?flag=email&dotnetFlag=yes";					
 				} else if (cmd != null && cmd.equals("mailRead")) {
 					String mailFullPath = request.getParameter("mailFullPath");
-					
-					resultPage = "/ezEmail/mailRead.do?PNFlag=Y&CONTENTCLASS=IPM.Note&URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
+					// 2022-10-11 이사라 - 포틀릿에서 메일을 클릭하여 읽을 때 지원하지 않는 옵션 제외
+					String pnFlag = request.getParameter("pnFlag") != null ? request.getParameter("pnFlag") : "Y";
+					resultPage = "/ezEmail/mailRead.do?PNFlag=" + pnFlag + "&CONTENTCLASS=IPM.Note&URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
 				} else if (requestUri.equals("/ezConn/portalMain.do")) {
 					resultPage = "/ezNewPortal/newPortalMain.do";
 				} else if (requestUri.equals("/ezConn/scheduleMain.do")) {
