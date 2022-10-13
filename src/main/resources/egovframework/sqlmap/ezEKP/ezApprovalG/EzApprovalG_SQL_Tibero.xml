@@ -20960,7 +20960,7 @@
         	FROM 
         		TBL_APRLINEINFO 
        		WHERE  
-       			aprmembersn < ( SELECT 
+       			aprmembersn > ( SELECT 
        								aprmembersn 
                               	FROM 
                               		TBL_APRLINEINFO 

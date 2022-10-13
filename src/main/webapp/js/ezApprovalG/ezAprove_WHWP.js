@@ -297,7 +297,7 @@ function AprrovMappingSign(ret)
 		}		
 		
 		if (message.FieldExist(signID)) {  	
-			if (DekyulFlag && pAprLineB4type == strAprType4) { // 4: 전결
+			if (DekyulFlag && pAprLineB4type == strAprType4) { // 4: 전결 (대결자 이후 최종결재자로 전결자가 존재하는 경우, 즉 위임전결사항의 대결 처리)
 				message.PutFieldText(signID, strLang6);
 	  			signInfo[signCnt] = signID;
 		        SignName[signCnt] = signID;

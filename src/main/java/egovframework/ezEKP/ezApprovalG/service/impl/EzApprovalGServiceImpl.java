@@ -6509,6 +6509,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strDeptName = "";
 		String drafterDeptName = "";
 		String receiveDeptName = "";
+		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
 		
 		try {
 			// 부재자 설정인 경우 proxySign = '代'
@@ -6636,19 +6637,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					currentAprType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
 					
 					switch (currentAprType) {
-	                case "001": //"결재";
+	                case "001": // "결재";
 	                    lastAprLineSN = lastAprLineSN + 1;
 	                    break;
 	
-	                case "019": //"검토";
+	                case "019": // "검토";
 	                    lastAprLineSN = lastAprLineSN + 1;
 	                    break;
 	
-	                case "004": //"전결";
+	                case "004": // "전결";
 	                    lastAprLineSN = lastAprLineSN + 1;
 	                    break;
 	
-	                case "003": //"결재안함";
+	                case "003": // "결재안함";
 	                    lastAprLineSN = lastAprLineSN + 1;
 	                    break;
 	                }
@@ -6766,15 +6767,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						String tempSign = signAdd + "sign" + tmps;
 						String[] signAry = {messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
 						
+						// 대결자의 서명 부여
 						setHwpText(hwpFile, tempSign, signAry);
 						
+						// 대결자 이후 전결자가 존재하는 경우, 전결자의 서명 부여 (웹과 동일하게 "전결" 문자 하나만 사용)
 						int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, userInfo.getTenantId());
 						
 						if (jeonKyul > 0) {
-							strSign = "sign" + (tmps + 1);
-							signAry[1] = displayName;
+							isJKAprTypeAfterDK = true;
+							strSign = signAdd + "sign" + (tmps + 1); // 대결자 직후 순번의 전결자
+							String[] signAryJK = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale())};
 							
-							setHwpText(hwpFile, strSign, signAry);
+							setHwpText(hwpFile, strSign, signAryJK);
 						}
 						
 						signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
@@ -6866,7 +6870,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				cal.setTime(format.parse(tmpYear));
 				tmpYear = String.valueOf(cal.get(Calendar.YEAR));
 				
-				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
+				/* 2022-10-12 홍승비 - 대결자 직후 전결자가 존재하는 경우, 자동으로 결재완료되어야 하므로 문서번호 생성 진행 */
+				// 대결자 + 전결자로 마감되지 않는 일반적인 결재선인 경우, 현재 결재자가 최종결재자인 경우에만 문서채번 진행 (기존 스펙)
+				if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
 					if (aprStateSign.equals("012")) {
 						strDeptID = receiveDept;
 						strDeptName = receiveDeptName;
@@ -6911,7 +6917,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				/** 수신 일괄결재시 채번 */
-				if (useReceiveDocNo.equals("NO") && totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
+				if (useReceiveDocNo.equals("NO") && (totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
 					strDeptID = receiveDept;
 					strDeptName = receiveDeptName;
 
@@ -6954,7 +6960,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempHwp)));
 				
 				if (aprStateSign.equals("011")) {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
+					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						}
@@ -6962,7 +6968,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						linkCheck = excuteInfoHwp("MIDDLE_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 					}
 				} else {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
+					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						}
@@ -7045,7 +7051,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			docResult = "<PARAMETER>" + docResult + "</PARAMETER>";
 			
-			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && result.equals("A")) {
+			if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && result.equals("A")) {
 				Document paramXML = commonUtil.convertStringToDocument(docResult);
 				String docNumCode = paramXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
 				
@@ -7065,7 +7071,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (result.equals("A")) {
 				if (aprStateSign.equals("011")) {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
+					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							linkCheck = excuteInfoHwp("LAST_SIGN_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						}
@@ -7073,7 +7079,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						linkCheck = excuteInfoHwp("MIDDLE_SIGN_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 					}
 				} else {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
+					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							linkCheck = excuteInfoHwp("LAST_SIGN_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						}
@@ -7106,13 +7112,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
-						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfoHwp("END_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						} else {
 							linkCheck = excuteInfoHwp("MIDDLE_END_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						}
 					} else {
-						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfoHwp("END_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						} else {
 							linkCheck = excuteInfoHwp("MIDDLE_END_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
@@ -7152,13 +7158,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
-						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfoHwp("LAST_END_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						} else {
 							linkCheck = excuteInfoHwp("MIDDLE_END_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						}
 					} else {
-						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfoHwp("LAST_END_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 						} else {
 							linkCheck = excuteInfoHwp("MIDDLE_END_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
@@ -7405,6 +7411,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String signInfo2 = "";
 		String signText2 = "";
 		String signAdd = "";
+		
+		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
+		
 		// 부재자 설정인 경우 proxySign = '代'
 		if (!userID.equals(orgUID)) {
 			proxySign = messageSource.getMessage("ezApproval.t498", userInfo.getLocale());
@@ -7537,19 +7546,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				currentAprType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
 				
 				switch (currentAprType) {
-                case "001": //"결재";
+                case "001": // "결재";
                     lastAprLineSN = lastAprLineSN + 1;
                     break;
 
-                case "019": //"검토";
+                case "019": // "검토";
                     lastAprLineSN = lastAprLineSN + 1;
                     break;
 
-                case "004": //"전결";
+                case "004": // "전결";
                     lastAprLineSN = lastAprLineSN + 1;
                     break;
 
-                case "003": //"결재안함";
+                case "003": // "결재안함";
                     lastAprLineSN = lastAprLineSN + 1;
                     break;
                 }
@@ -7697,12 +7706,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					String tempSign = signAdd + "sign" + tmps;
 					// String tempSem = signAdd + "seumyungdate" + tmps;
 					
+					// 대결자의 서명 부여
 					doc.getElementById(tempSign).html(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 					
+					// 대결자 이후 전결자가 존재하는 경우, 전결자의 서명 부여 (웹과 동일하게 "전결" 문자 하나만 사용)
 					int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, userInfo.getTenantId());
 					
 					if (jeonKyul > 0) {
-						strSign = "sign" + (tmps + 1);
+						isJKAprTypeAfterDK = true;
+						strSign = signAdd + "sign" + (tmps + 1); // 대결자 직후 순번의 전결자
 						doc.getElementById(strSign).html(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()));
 					}
 					
@@ -7795,9 +7807,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 			
+			/* 2022-10-12 홍승비 - 대결자 직후 전결자가 존재하는 경우, 자동으로 결재완료되어야 하므로 문서번호 생성 진행 */
 			//일반 채번문제 수정 2017-05-15
 //			if ((totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
-			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011") && habYuiAprStateFlag) {
+			if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011") && habYuiAprStateFlag) {
 				if (aprStateSign.equals("012")) {
 					strDeptID = receiveDept;
 					strDeptName = receiveDeptName;
@@ -7845,7 +7858,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
             /** 수신 일괄결재시 채번 */
-            if (approvalFlag.equals("G") && useReceiveDocNo.equals("NO") && totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
+            if (approvalFlag.equals("G") && useReceiveDocNo.equals("NO") && (totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
                 strDeptID = receiveDept;
                 strDeptName = receiveDeptName;
 
@@ -7916,13 +7929,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (result.equals("A")) {
 			if (aprStateSign.equals("011")) {
-				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+				if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 				} else {
 					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 				}
 			} else {
-				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+				if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 				} else {
 					linkCheck = excuteInfo("MIDDLE_SIGN_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
@@ -8008,7 +8021,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		docResult = "<PARAMETER>" + docResult + "</PARAMETER>";
 		
-		if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && result.equals("A")) {
+		/* 2022-10-13 홍승비 - 문서번호 부여 시 대결 직후 전결 분기 추가 */
+		if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && result.equals("A")) {
 			Document paramXML = commonUtil.convertStringToDocument(docResult);
 			String docNumCode = paramXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
 			
@@ -8082,13 +8096,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (result.equals("A")) {
 				if (aprStateSign.equals("011")) {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 						linkCheck = excuteInfo("LAST_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
 						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 					}
 				} else {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 						linkCheck = excuteInfo("LAST_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 					} else {
 						linkCheck = excuteInfo("MIDDLE_SIGN_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
@@ -8133,13 +8147,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
-						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfo("END_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 						} else {
 							linkCheck = excuteInfo("MIDDLE_END_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					} else {
-						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfo("END_FAIL", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						} else {
 							linkCheck = excuteInfo("MIDDLE_END_FAIL", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
@@ -8187,7 +8201,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
-						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfo("LAST_END_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 							if (linkCheck) { //근태관리 연동양식 관련된 docId면 근태관리 연동양식 함수 태움.
 								ezAttitudeService.updateApprovalGConnInfo("1", userID, tempXmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent(), companyID, userInfo.getTenantId());
@@ -8196,7 +8210,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							linkCheck = excuteInfo("MIDDLE_END_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId());
 						}
 					} else {
-						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfo("LAST_END_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());
 						} else {
 							linkCheck = excuteInfo("MIDDLE_END_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId());

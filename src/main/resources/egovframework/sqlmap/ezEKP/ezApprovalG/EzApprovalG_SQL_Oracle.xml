@@ -20794,6 +20794,7 @@
         </isNotEqual> 
 	</select>
 	
+	<!-- 2022-10-12 홍승비 - 대결자 이후 전결자를 찾는 경우, 결재순번 값은 현재 대결자보다 커야 하므로 APRMEMBERSN 비교조건 수정 -->
 	<select id="EzApprovalG.getDocInfoJeonKyul" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -20801,7 +20802,7 @@
         	FROM 
         		TBL_APRLINEINFO 
        		WHERE  
-       			aprmembersn < ( SELECT 
+       			aprmembersn > ( SELECT 
        								aprmembersn 
                               	FROM 
                               		TBL_APRLINEINFO 
