@@ -224,6 +224,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String docID = "";
 		String docImagCnt = "";
 		String docTarget = "";
+		String docType = "";
 		String retransType = "";
 		
 		String orgCompanyID = "";
@@ -566,6 +567,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
     		docImagCnt = request.getParameter("imagCnt") == null ? "" : request.getParameter("imagCnt").trim();
     		docTarget = request.getParameter("target") == null ? "" : request.getParameter("target").trim();
+			docType = request.getParameter("docType") == null ? "" : request.getParameter("docType").trim();
     		orgCompanyID = request.getParameter("orgCompanyID") == null ? "" : request.getParameter("orgCompanyID").trim();
     		
         	if (_cmd.equals("docsendDotNet")) {
@@ -1369,6 +1371,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("docID", docID);
 		model.addAttribute("docImagCnt", docImagCnt);
 		model.addAttribute("docTarget", docTarget);
+		model.addAttribute("docType", docType);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("retransType", retransType);
 		model.addAttribute("useMultiLangMail", useMultiLangMail);

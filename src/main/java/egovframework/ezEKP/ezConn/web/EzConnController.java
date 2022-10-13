@@ -182,11 +182,12 @@ public class EzConnController {
 					String docID = request.getParameter("docID");
 					String target = request.getParameter("target");
 					String strImgCount = "";
+					String docType = request.getParameter("doctype") != null ? request.getParameter("doctype") : ""; // 2022-10-07 이사라 - 전자결재G 웹한글기안기 문서의 경우 doctype=hwp로 호출
 					
 					if ("APPROVALG".equalsIgnoreCase(target)) {
-						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
+						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG"  + "&docType=" + docType;
 					} else {
-						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVAL";
+						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVAL" + "&docType=" + docType;
 					}
 				} else if (cmd != null && cmd.equals("CommunityDotNet")) {
 					String boardID = request.getParameter("boardID");
@@ -215,8 +216,9 @@ public class EzConnController {
 					resultPage = "/ezEmail/mailConfig.do?flag=email&dotnetFlag=yes";					
 				} else if (cmd != null && cmd.equals("mailRead")) {
 					String mailFullPath = request.getParameter("mailFullPath");
-					
-					resultPage = "/ezEmail/mailRead.do?PNFlag=Y&CONTENTCLASS=IPM.Note&URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
+					// 2022-10-11 이사라 - 포틀릿에서 메일을 클릭하여 읽을 때 지원하지 않는 옵션 제외
+					String pnFlag = request.getParameter("pnFlag") != null ? request.getParameter("pnFlag") : "Y";
+					resultPage = "/ezEmail/mailRead.do?PNFlag=" + pnFlag + "&CONTENTCLASS=IPM.Note&URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
 				} else if (requestUri.equals("/ezConn/portalMain.do")) {
 					resultPage = "/ezNewPortal/newPortalMain.do";
 				} else if (requestUri.equals("/ezConn/scheduleMain.do")) {
