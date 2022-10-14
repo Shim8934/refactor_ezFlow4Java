@@ -6309,6 +6309,7 @@
 <!-- 	<procedure id="EzApprovalG.getAttachDocInfo" parameterClass="Map" resultClass="ApprGDocAttachInfoVO"> -->
 <!-- 		{CALL EZSP_GETATTACHDOCINFO(#v_DOCID#, #v_MODE#, #v_ORDERBY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+	<!-- 2022-10-14 홍승비 - 결재문서 팝업창 > 문서첨부 리스트 출력 시, 정렬조건이 없다면 첨부순번 ASC로 가져오도록 수정 (먼저 첨부한 문서가 위로, 나중에 첨부한 문서가 아래로 가도록 정렬)  -->
 	<select id="EzApprovalG.getAttachDocInfo" parameterClass="Map" resultClass="ApprGDocAttachInfoVO">
 		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
@@ -6367,7 +6368,7 @@
 		</isGreaterThan>
 		<isLessEqual property="v_ORDERBYLENGTH" compareValue="0">
 				ORDER BY 
-						ATTACHSN DESC 
+						ATTACHSN ASC 
 		</isLessEqual>
 	</select>
 	

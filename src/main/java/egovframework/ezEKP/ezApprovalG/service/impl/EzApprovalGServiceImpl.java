@@ -9953,7 +9953,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORDERBY", orderOption1);
 		map.put("v_ORDERBYLENGTH", orderOption1.length());
 		
-		if ( orderOption1.length() >0) {
+		if ( orderOption1.length() > 0) {
 			map.put("v_ORDERBYVALUE", orderOption1.trim().toLowerCase().substring(0, 8));
 		}
 		
@@ -10068,7 +10068,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (rtnVal.equals("TRUE")) {
 			for (int k = 0; k < docXML.getElementsByTagName("DATA1").getLength(); k++) {
 				if (approvalFlag.equals("G")) {
-					tempSN = docXML.getElementsByTagName("DATA1").getLength() - k;
+					tempSN = (k + 1); // 문서첨부의 순서도 일반첨부와 동일하게 ASC 조정 (먼저 삽입한 문서가 맨 위로 오도록 표출, 최초 순번 1부터 시작)
 					map.put("v_DOCID", docID);
 					map.put("v_TEMPSN", tempSN);
 					map.put("v_AttachDocName", docXML.getElementsByTagName("DATA10").item(k).getTextContent());
@@ -10086,7 +10086,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("companyID", companyID);
 					map.put("v_TENANTID", tenantID);
 				} else {
-					tempSN = docXML.getElementsByTagName("DATA1").getLength() - k;
+					tempSN = (k + 1);
 					map.put("v_DOCID", docID);
 					map.put("v_TEMPSN", tempSN);
 					map.put("v_AttachDocName", docXML.getElementsByTagName("DATA10").item(k).getTextContent());
