@@ -27,8 +27,8 @@
 			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:9px 30px 0px 0px; padding:0px; width:243px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
 		</style>
 	</head>
-	<body>
-		<header id="top"></header>
+	<body class="topBody">
+		<header id="top" class="topHeader"></header>
 		<c:if test="${useActiveX == 'YES'}">
 			<script type="text/javascript">
 				ezIcd_ActiveX("i_icd2");
@@ -1364,6 +1364,15 @@
         		parent.document.getElementById("popupArea").style.display = "none";
         	}
         }
+        
+        /* 2022-10-14 홍승비 - 상단 메뉴 확장버튼 클릭하여 body 전체에 회색 영역 표출 시, 상단 메뉴가 아닌 회색 영역을 클릭하는 경우 확장메뉴 숨김처리 */
+      	$("body").click(function (e) {
+      		// 클릭한 영역에 다른 태그가 없고 topBody 또는 contentlayout topmenulayout 클래스를 가지는 태그만이 존재한다면, 확장된 메뉴 이외의 회색 영역을 클릭한 것이므로 메뉴를 닫는다.
+      		// 회색 영역이 아닌 상단 메뉴 영역을 클릭한 경우, 메뉴가 확장된 상태를 유지한다.
+      		if ($(e.target).hasClass("topBody") || $(e.target).hasClass("contentlayout topmenulayout")) {
+      			subMenuClickEvent('off');
+      		}
+      	});
  		
  		// 시작지점
 		newPortalTopMenuFunc();	
