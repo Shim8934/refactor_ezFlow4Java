@@ -205,10 +205,12 @@
 						<ul></ul>
 					</h2>
 				</c:if>
-				<c:if test="${dotNetIntegration == 'YES'}">
+				<c:if test="${dotNetIntegration == 'YES' && cChk == '1'}">
 					<h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
 					<ul class="on"></ul>
 					</h2>		
+				</c:if>
+				<c:if test="${dotNetIntegration == 'YES'}">
 					<h2 class="off" id="menu2H2">
 						<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="MAIL" onClick="openFolder('menu2')"><spring:message code='ezStatistics.t2' /></span>
 					</h2>
