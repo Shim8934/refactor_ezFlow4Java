@@ -1,4 +1,4 @@
-﻿function PreviewRayerChange(pGubun, pPage) {
+﻿﻿function PreviewRayerChange(pGubun, pPage) {
 	if (pGubun == "NONE") {
 		pGubun = "OFF";
 	}
@@ -16,7 +16,7 @@
     			// 상단 버튼 표출제어 부분 각 결재문서 보기 팝업창 내부로 이동 (화면에 잠시 나타났다가 사라지는 현상 방지)
 /*    			$("#ifrmPreViewH").contents().find("tr:eq(0) #close").css("display", "none");
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu li").css("display", "none");*/
-    			$("#ifrmPreViewH").css("height", $("#PreviewRayerH").css("height"));
+    			$("#ifrmPreViewH").css("height", "738px"); // 미리보기 영역 높이 고정 (화면 전체 스크롤을 위해)
     		/*	var btn_popup = "<ul><li><img src='/images/kr/cm/btn_newpopup.gif' title='새창으로열기' alt='새창으로열기' onclick='return parent.btn_newpopup()'></li></ul>";
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu").append(btn_popup);*/
     		});
@@ -37,12 +37,14 @@
     }
     
     try {
-        if (document.getElementById("previewmail_bar_h") != null)
+        if (document.getElementById("previewmail_bar_h") != null) {
             document.getElementById("previewmail_bar_h").style.cursor = "w-resize";
-
+        }
+        
         if (pGubun == "H" && selobj != null) {
-            if (selobj.childNodes.length != 0)
+            if (selobj.childNodes.length != 0) {
                 selobj.childNodes[2].style.fontWeight = "normal";
+            }
         }
 
         isPreviewChange = true;
@@ -50,7 +52,7 @@
             pPreviewShow_HOW = "OFF";
             document.getElementById("PreviewRayerH").style.display = "none";
             CurrentHeight = document.documentElement.clientHeight - 133;
-            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+           // document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
             g_bPrevShow = false;
         }
@@ -80,9 +82,9 @@
                 }
             }
 
-            document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
-            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
-            document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
+            //document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
+            //document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+            //document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             
             if ($("body").attr("class") == "tabbody") {            
             	document.getElementById("MailListRayer").style.width = pMailListWidthH-20 + "px";
@@ -92,7 +94,7 @@
             
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
             document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
-            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
+            //document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
             
             pPreviewShow_HOW = "H";
             pMailListDiv_H = Math.round((pMailListWidthH / CurrentWidth) * 100);
@@ -942,7 +944,7 @@ function Window_resize() {
                 }
                 
                 // 중간의 미리보기 바 클릭 시 회색 오버 영역
-                document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
+                //document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
                 
                 // 기존 전자결재문서 리스트 영역
                 //document.getElementById("MailListRayer").style.height = CurrentHeight + "px"; // 전체적인 스크롤 발생을 위해, 높이 조정은 하지 않음

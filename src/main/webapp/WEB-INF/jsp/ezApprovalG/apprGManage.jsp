@@ -474,11 +474,6 @@
 		        CurrentWidth = document.documentElement.clientWidth;
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
 		        var reheight = document.documentElement.offsetHeight - parseInt(height);
-		        
-	            /* 2022-08-11 홍승비 - edge 브라우저 대응을 위한 하단 결재선 탭 영역 높이 조정 */
-	            if (navigator.userAgent.toLowerCase().indexOf("edg") > -1) {
-	            	document.getElementById('div_AprLine').style.height = "250px";
-	            }
 	            
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
@@ -2563,7 +2558,7 @@
 		
 		<%-- 리사이즈 바 클릭 시의 음영을 위한 부분 --%>
  		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="ResizeBarPanel"></div>
-	    <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
+	    <div style="width: 8px; height:738px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 			<div class="div_scroll" style="width:100%;HEIGHT:395px; overflow-y:hidden; overflow-x:auto; margin-bottom:10px" id="divList">
 				<div id="lvDocList"></div>
@@ -2588,7 +2583,7 @@
 			  	</div>	
 			</div>
 			
-			<div style="WIDTH:100%;HEIGHT:236px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+			<div style="WIDTH:100%;HEIGHT:241px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 				<div id="lvAprLine" ></div>
 			</div>
 			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
@@ -2602,7 +2597,7 @@
 	    
 	    <%-- 전자결재 우측 미리보기 영역 --%>
 	    <div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-	        <div class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
+	        <div class="previewmail_bar_h" id="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block; height:738px;">
 	            <p class="hbar_dotted">
 	                <img src="/images/prevview_hbar_dotted.gif">
 	            </p>
@@ -2610,7 +2605,7 @@
 	        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
 	            <div class="previewmail"> 
 	            	<div class="previewmail_info"></div>
-	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 738px; border: solid 0px green; display: inline-block;"></iframe>
 	            </div>
 	        </div>
 	    </div>
