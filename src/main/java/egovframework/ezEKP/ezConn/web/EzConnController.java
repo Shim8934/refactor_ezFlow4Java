@@ -131,6 +131,9 @@ public class EzConnController {
 					if (userType.equals("admin")) {
 						// 전체 관리자 권한을 설정한다.
 						organUserVO.setExtensionAttribute1("c=1;k=0;g=0;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
+					} else if (userType.equals("comp_admin")) {
+						// 부서 관리자 권한을 설정한다.
+						organUserVO.setExtensionAttribute1("c=0;k=1;g=0;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
 					} else if (userType.equals("dept_admin")) {
 						// 부서 관리자 권한을 설정한다.
 						organUserVO.setExtensionAttribute1("c=0;k=0;g=1;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
