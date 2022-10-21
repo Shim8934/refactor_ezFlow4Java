@@ -95,6 +95,11 @@ public class EzConnController {
 			if (params.length > 4) {
 				// 235|+09:00 와 같은 형식으로 전달되며 :이 구분자로 사용되는 관계로 URL Encoding 되어 전달되어야 한다.
 				userTimeZone = URLDecoder.decode(params[4], "UTF-8");
+				// 2022-10-21 이사라 - 타임존에 + 기호가 없는 경우 추가 ex.235|09:00
+				if (userTimeZone.indexOf("+") == -1) {
+					String[] resetTimeZone = userTimeZone.split("|");
+					userTimeZone = resetTimeZone[0].concat("|+").concat(resetTimeZone[1]);
+				}
 			}
 						
 			logger.debug("orgId=" + orgId + ",params.length=" + params.length + ",userType="
