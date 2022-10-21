@@ -4693,9 +4693,29 @@ public class EzEmailUtil {
 		Matcher m = p.matcher(src);
 		
 		StringBuffer result = new StringBuffer();
+
 		while (m.find()) {
-			m.appendReplacement(result, Matcher.quoteReplacement(String.format("<a href=\"%s\">%s</a>", m.group(1), m.group(1))));
+			String url = m.group(1);
+			int startPosOfCharacterEntity = url.length();
+			int pos1 = url.indexOf("&gt;");
+			int pos2 = url.indexOf("&nbsp;");
+
+			if (pos1 != -1) {
+				url = url.replace("&gt;", "");
+				startPosOfCharacterEntity = pos1;				
+			}
+
+			if (pos2 != -1) {
+				url = url.replace("&nbsp;", "");
+
+				if (pos2 < startPosOfCharacterEntity) {
+					startPosOfCharacterEntity = pos2;
+				}
+			}
+
+			m.appendReplacement(result, Matcher.quoteReplacement(String.format("<a href=\"%s\">%s</a>%s", url, m.group(1).substring(0, startPosOfCharacterEntity), m.group(1).substring(startPosOfCharacterEntity))));
 		}
+
 		m.appendTail(result);
 		
 		return result.toString();		
