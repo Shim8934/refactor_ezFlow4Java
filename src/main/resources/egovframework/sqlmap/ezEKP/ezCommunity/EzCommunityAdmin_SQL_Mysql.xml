@@ -179,6 +179,8 @@
 			TBL_C_CLUB
 		ON
 			TBL_C_CLUB.c_clubno = C1.c_clubno
+		AND 
+            TBL_C_CLUB.tenant_id = C1.tenant_id
 		WHERE
 			TBL_C_CLUB.companyid = #companyID#
 		AND
