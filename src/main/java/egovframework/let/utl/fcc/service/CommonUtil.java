@@ -792,6 +792,7 @@ public class CommonUtil {
 		replaceData = replaceData.replace("&shy;", "");
 		replaceData = replaceData.replace("\uffff", "");
 		replaceData = replaceData.replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", "");
+		replaceData = replaceData.replace("\ufffe", ""); // 2022-10-25 이사라 - xml 데이터 파싱 오류 수정
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;
