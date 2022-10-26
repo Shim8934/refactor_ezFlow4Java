@@ -407,7 +407,8 @@ public class EzCommonController extends EgovFileMngUtil{
 					}
 				}
 				
-				if (user == null) {
+				// 사용자 아이디가 비어있거나 공유사서함인 경우에도 이메일 주소만 표시하도록 한다.
+				if (user == null  || user.getId() == null || user.getDeptID().startsWith("shared_mailbox")) {
 					parameter = "email=" + URLEncoder.encode(email, "utf-8");
 				} else {
 					parameter = "id=" + URLEncoder.encode(personId, "utf-8") + "&alias=" + URLEncoder.encode(user.getEmail(), "utf-8"); 
