@@ -1094,7 +1094,11 @@ public class EzEmailUtil {
 	    //    Content-ID: <f_kfxpw01d0>				 
 		boolean isAttachmentWithUnreferencedContentID = false;
 		
-		if (((MimePart)part).getContentID() != null) {
+		// 다음과 같이 text/html이면서 Content-ID가 있는 경우가 있어 첨부파일로 취급되지 않도록 text/html을 제외하기 위한 조건을 추가함(text/plain도 함께 추가함).
+		// Content-Type: text/html; charset="ks_c_5601-1987"
+		// Content-ID: <67617439CE1CE54088B6FC9F88EE8937@mobis.co.kr>
+		// Content-Transfer-Encoding: quoted-printable
+		if (!part.isMimeType("text/html") && !part.isMimeType("text/plain") && ((MimePart)part).getContentID() != null) {
 			String htmlBodyContent = (String)extraMap.get("htmlBody");
 			String contentID = ((MimePart) part).getContentID();
 			
