@@ -416,7 +416,7 @@ public class EzCommonController extends EgovFileMngUtil{
 				
 				logger.debug("parameter=" + parameter);
 				
-				return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?" + parameter; 
+				return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?PAGETYPE=POPUP&" + parameter;
 			}
 			
 			if (id.equals("")) {
