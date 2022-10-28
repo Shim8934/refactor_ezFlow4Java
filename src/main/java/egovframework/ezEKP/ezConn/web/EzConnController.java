@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.WebUtils;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezConn.util.EzConnUtil;
@@ -27,6 +29,8 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
 import egovframework.let.utl.fcc.service.ClientUtil;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
  * 
@@ -53,6 +57,12 @@ public class EzConnController {
 	
     @Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+
+	@Autowired
+	private CommonUtil commonUtil;
+
+	@Resource(name = "crypto")
+	private EgovFileScrty egovFileScrty;
 	
 	@RequestMapping(value={
 						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do", "/ezConn/scheduleWrite.do",
@@ -167,7 +177,20 @@ public class EzConnController {
 					}
 				}
 								
-				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+				// 2022-10-27 이사라 - 로그인 정보 저장
+				if (commonUtil.isLoginCookieExists(request, response)) {
+					Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+					String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+
+					if (!decryptedLoginCookie.split("///")[1].equals(orgId)) {
+						commonUtil.updateLoginInfo(request, resultVO);
+						loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+					}
+
+				} else {
+					commonUtil.updateLoginInfo(request, resultVO);
+					loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+				}
 				
 				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
