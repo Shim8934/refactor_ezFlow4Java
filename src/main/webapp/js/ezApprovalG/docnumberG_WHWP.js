@@ -171,6 +171,7 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         	}
         }
     } catch (e) {
+		frontLogging("getDocNumber",e,e.stack);
         if (SN != "") {
         	if (isHWP == "Y") {
         		HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + SN);
@@ -350,6 +351,7 @@ function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
 	        }
 		}
 	} catch (e) {
+		frontLogging("getDocNumberNew", e, e.stack);
 		if (SN != "") {
 			message.PutFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + SN);
 			rollbackDocNumber(pDeptID, pPrefix, pDocID);
@@ -415,6 +417,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     	if (pPrefix === "doc" && message.FieldExist("enforcedate")) {
     	    message.PutFieldText("enforcedate", "");
         }
+		frontLogging("rollbackDocNumber", e, e.stack);
     }
 }
 

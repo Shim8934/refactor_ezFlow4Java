@@ -25,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -824,5 +821,19 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		logger.debug("checkImgExtension ended, result = " + result);
 		return result;
+	}
+
+	@PostMapping(value = "/ezcommon/logging", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String frontLogging(HttpServletRequest request) {
+
+		String logTitle = request.getParameter("logTitle");
+		String logMsg = request.getParameter("logMsg");
+		String stack = request.getParameter("stack");
+
+		logger.debug("logTitle: " + logTitle + " / logMsg: " + logMsg);
+		logger.debug("stack: " + stack);
+
+		return "true";
 	}
 }
