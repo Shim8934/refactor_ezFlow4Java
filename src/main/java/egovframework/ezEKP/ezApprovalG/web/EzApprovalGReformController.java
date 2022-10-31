@@ -88,7 +88,7 @@ public class EzApprovalGReformController extends EgovFileMngUtil {
 		String requestUrl = reformServerUrl + url;
 
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+		httpHeaders.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
 
 		HttpEntity<?> requestEntity = new HttpEntity<>(httpHeaders);
 		UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(requestUrl);
