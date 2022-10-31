@@ -328,6 +328,8 @@
 		            	var open_searchFlag = windowOpen.searchFlag;
 		            	if (open_searchFlag) {
 		            		windowOpen.search_start();            		
+		            	} else if ("left" == windowOpen.frames.name.toLowerCase()) {
+		            		windowOpen.parent.frames["right"].Get_AddressList();
 		            	} else {
 		            		windowOpen.Get_AddressList();
 		            	}
