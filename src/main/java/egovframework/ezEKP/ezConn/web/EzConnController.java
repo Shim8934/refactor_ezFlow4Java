@@ -132,7 +132,7 @@ public class EzConnController {
 			logger.debug("isUserExists=" + isUserExists);
 			
 			if (isUserExists) {
-				if (params.length > 2) {
+				if (!"masteradmin".equals(orgId) && params.length > 2) {
 					OrganUserVO organUserVO = new OrganUserVO();	
 					
 					organUserVO.setTenantId(tenantId);
