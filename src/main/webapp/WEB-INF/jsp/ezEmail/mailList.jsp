@@ -403,6 +403,8 @@
 		    $(document).ready(function() {
 		    	var clickOutside;
 		    	
+		      // 2022-11-02 이사라 - [닷넷연동] 메일 가져오기 실행 시 분기처리 필요하여 추가
+		      <c:if test="${!isDotNetIntegration}">
 		    	if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
 		    	} else {
@@ -412,6 +414,7 @@
 		    	clickOutside.mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+		      </c:if>
 		    	
 		    	$($(window.parent.frames['left'].document)).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
@@ -1272,9 +1275,11 @@
 			    document.getElementById("cancleProgressBtn").style.display = "none";
 				parent.document.getElementById("left").contentWindow.hideProgress();
 				
+			  <c:if test="${!isDotNetIntegration}">
 				if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
 					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
 				} 
+			  </c:if>
 			}
 
 			function ShowMailProgressNew() {
@@ -1288,9 +1293,11 @@
 			    document.getElementById("cancleProgressBtn").style.display = "block";
 			    parent.document.getElementById("left").contentWindow.showProgress();
 			    
+		     <c:if test="${!isDotNetIntegration}">
 			    if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
 					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 				} 
+			 </c:if>
 			}
 
 			function cancleProgress(){
