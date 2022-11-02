@@ -1847,7 +1847,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String repStartDate = request.getParameter("repStartDate") != null ? request.getParameter("repStartDate") : "";
 		
 		// 2022-09-29 이사라 - 닷넷그룹웨어 연동 시 일정작성에서 자원설정 제외
-		boolean isDotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", tenantID) == "YES" ? true : false;
+		boolean isDotNetIntegration = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("dotNetIntegration", tenantID));
 
         String userId = loginVO.getId();            
         String userName  = loginVO.getDisplayName1();
