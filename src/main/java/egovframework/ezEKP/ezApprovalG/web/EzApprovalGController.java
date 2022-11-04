@@ -10230,7 +10230,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자결재S 재발송 페이지 커몬
+	 * 전자결재S 재발송 페이지 (전자결재G에서는 미사용)
 	 */	
 	@RequestMapping(value = "/ezApprovalG/docReSend.do", method = RequestMethod.GET)
 	public String docReSend(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -10262,6 +10262,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docID", docID);
@@ -10271,6 +10272,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("oldYear", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 4));
+		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 		
 		logger.debug("docReSend ended");
 		
