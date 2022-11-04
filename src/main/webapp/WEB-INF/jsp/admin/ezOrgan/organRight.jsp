@@ -2063,12 +2063,7 @@
 			</LISTVIEWDATA>
 		</xml>
 		<h1>
-			<c:if test="${dotNetIntegration != 'YES'}">
-				<spring:message code='main.t56' />
-			</c:if>
-			<c:if test="${dotNetIntegration == 'YES'}">
-				<spring:message code='main.t24' />
-			</c:if>
+			<spring:message code='main.t56' />
 			<span class="searchForm">
 				<select id="search_type" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
 					<option selected value="description"><spring:message code='ezOrgan.t68' /></option>
