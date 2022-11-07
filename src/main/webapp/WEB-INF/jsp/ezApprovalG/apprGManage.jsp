@@ -2136,6 +2136,7 @@
 				    }
 				}
 				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+				// console.log("SQLPARADATA : " + SQLPARADATA);
 		    }
 		
 		    window.onresize = function () {
@@ -2174,22 +2175,48 @@
 		
 		    function search() {
 		        pChackYN = "SEARCH";
+		        
+		        var nowyear = nowDate.substring(0,4);
+	            var nowmonth = nowDate.substring(5,7);
+	            var nowday = nowDate.substring(8,10);      
+		        
 		        if (document.getElementById("txt_keyword").value != "") {
 		            var selectSearch = document.getElementById('selectType');
-					if (approvalFlag == "G") {
+		            /* 2022-11-07 강동주 - 우측 상단 간단검색 시 "최근 1년" 셀렉트박스 값이 적용되지 않는 오류 수정 */
+		            var selectYearVal = document.getElementById('sel_year').value;
+					
+		            if (approvalFlag == "G") {
 			            for (var i = 0; i < 25; i++) {
 			                SearchCond[i] = "";
 			            }
-			
+			            
 			            if (selectSearch.item(0).selected) {
 			                SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
 			            else if (selectSearch.item(1).selected) {
 			                SearchCond[2] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
+			           
+			            // 년도 파라미터 설정 추가
+			            if (selectYearVal != "ALL") {
+							SearchCond[3] = selectYearVal;
+							SearchCond[4] = "01";
+							SearchCond[5] = "01";
+							SearchCond[6] = selectYearVal;
+							SearchCond[7] = "12";
+							SearchCond[8] = "31";
+				        } else { // 최근 1년
+							SearchCond[3] = nowyear - 1;
+							SearchCond[4] = nowmonth;
+							SearchCond[5] = nowday;
+							SearchCond[6] = nowyear;
+							SearchCond[7] = nowmonth;
+							SearchCond[8] = nowday;
+				        }
 					} else {
-						for (i = 0; i < 11; i++)
+						for (i = 0; i < 11; i++) {
 							condition[i] = "";
+						}
 
 		                if (selectSearch.item(0).selected) {
 		                	condition[1] = replaceCond(document.getElementById("txt_keyword").value);
@@ -2197,6 +2224,15 @@
 		                else if (selectSearch.item(1).selected) {
 		                	condition[2] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
+		                
+		                // 년도 파라미터 설정 추가
+				        if (selectYearVal != "ALL") {
+				        	condition[3] = selectYearVal + "-01-01";
+							condition[4] = selectYearVal + "-12-31";
+				        } else { // 최근 1년
+							condition[3] = (nowyear - 1) + "-" + nowmonth + "-" + nowday;
+							condition[4] = nowyear + "-" + nowmonth + "-" + nowday;
+				        }
 					}
 		        }
 		        else {
