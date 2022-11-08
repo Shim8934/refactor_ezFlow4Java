@@ -1341,6 +1341,13 @@ public class EzEmailUtil {
             
             if (!filename.isEmpty()) {
             	filename = commonUtil.normalizeFileName(filename);
+
+				// Content-Disposition: attachment; filename= 2022-11-07 09:10:52_ma_users.zip와 같이
+				// filename 속성의 값이 인용부호로 둘러싸여 있지 않은 경우 공백에 의해 속성값이 종결되어 2022-11-07까지만
+				// 값이 취해지는 문제가 있어 확장자가 없는 경우 originalFilename을 사용하도록 수정함.
+				if (!filename.contains(".")) {
+					filename = originalFilename;
+				}
             }
 			
             // message/rfc822 타입이면서 filename 속성이 없는 경우에는
@@ -1786,9 +1793,9 @@ public class EzEmailUtil {
 					List<String> tempList = null;
 					
 					if (p.isMimeType("multipart/*")) {							
-						tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap, i, depth + 1);
+						tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, i, depth + 1);
 					} else {
-						tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap, order, depth);
+						tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
 					}
 					
 					htmlBody += tempList.get(0);
