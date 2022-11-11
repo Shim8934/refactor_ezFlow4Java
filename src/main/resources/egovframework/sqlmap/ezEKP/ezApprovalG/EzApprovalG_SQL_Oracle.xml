@@ -14218,91 +14218,118 @@
 <!-- 	<procedure id="EzApprovalG.spGetSerialNo" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL spGetSerialNo(#iv_Type1#, #iv_Type2#, #iv_Type3#, #v_AccountYear#, #v_RtnSN,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
+<!-- 2022-11-11 홍승비 - 오라클 쿼리에서 문서번호 셀렉트 시 FOR UPDATE를 사용하기 위해, 가상 칼럼인 MIN(RegSerialNo)이 아닌 기본 컬럼을 가져오도록 쿼리 변경 -->
+<!-- TBL_SERIALNUMGEN 테이블의 PRI KEY는 IDX 칼럼 하나뿐이므로, 기존 Type1 ~ TimeSep 조건을 모두 사용하면서 RegSerialNo값이 가장 작은 레코드의 IDX를 WHERE 조건으로 사용함 -->
 	<select id="EzApprovalG.spGetSerialNo" parameterClass="Map" resultClass="String">
-			SELECT 
-				 MIN(RegSerialNo)  
-		    FROM 
-		    		TBL_SERIALNUMGEN 
-		    WHERE  
-		    		Type1 =  (
-		    					SELECT 
-		    						CASE WHEN ISUsed ='0' THEN '0' 
-		          					ELSE #iv_Type1# 
-		          					END
-		     					FROM (
-		     							SELECT 
-		     									Code ,
-		           								ISUsed 
-		   	  							FROM 
-		   	  									TBL_CABINETCODELIST 
-		   								WHERE  
-		   										CodeType = '007' 
-		   								AND
-		   										TENANT_ID =#v_TENANTID#
-										AND
-		   									COMPANYID = #companyID#)
-		    					WHERE  Code = '1')
-		     AND 
-		     		 Type2 =   (
-		     		 			  SELECT 
-		     		 			  	  CASE WHEN ISUsed ='0' THEN '0' 
-		          					  ELSE #iv_Type2# 
-		          					  END
-							      FROM (
-							      			SELECT 
-							      					Code ,
-							           				ISUsed 
-							   	  			FROM 
-							   	  					TBL_CABINETCODELIST 
-							   	 			WHERE  
-							   	 					CodeType = '007' 
-							   	 			AND
-		   										TENANT_ID =#v_TENANTID#
+	<![CDATA[
+		SELECT
+			RegSerialNo
+		FROM 
+			TBL_SERIALNUMGEN
+		WHERE
+			IDX = (
+				SELECT
+					IDX
+				FROM (
+		            SELECT
+		                ROW_NUMBER() OVER(ORDER BY RegSerialNo ASC) AS RNUM,
+		                TYPE1,
+		                TYPE3,
+		                ROLLBACKFLAG,
+		                TYPE2,
+		                TIMESEP,
+		                RegSerialNo,
+		                TENANT_ID,
+		                COMPANYID,
+		                IDX
+		            FROM 
+		                TBL_SERIALNUMGEN
+					WHERE  
+			    		Type1 =  (
+			    					SELECT 
+			    						CASE WHEN ISUsed ='0' THEN '0' 
+			          					ELSE #iv_Type1# 
+			          					END
+			     					FROM (
+			     							SELECT 
+			     									Code ,
+			           								ISUsed 
+			   	  							FROM 
+			   	  									TBL_CABINETCODELIST 
+			   								WHERE  
+			   										CodeType = '007' 
+			   								AND
+			   										TENANT_ID =#v_TENANTID#
 											AND
-		   										COMPANYID = #companyID#)
-							       WHERE  Code = '2')
-		     AND 
-		     		 Type3 =  (
-		     		 			   SELECT 
-		     		 			   		CASE WHEN ISUsed ='0' THEN '0' 
-		          						ELSE #iv_Type3# 
-		         					 	END
-		     						FROM (
-		     								SELECT 
-		     										Code ,
-		          							 		ISUsed 
-		   	  								FROM 
-		   	  										TBL_CABINETCODELIST 
-		   	 								WHERE  
-		   	 										CodeType = '007' 
-		   	 								AND
-		   										TENANT_ID =#v_TENANTID#
-											AND
-		   										COMPANYID = #companyID#)
-		    						 WHERE  
-		    						 		Code = '3')
-		      AND 
-		      			TimeSep =    (
-		      							SELECT 
-		      								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-		            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end 
-		     							FROM (
-		     									SELECT 
-		     											Code ,
-		           										ISUsed 
-		   	  									FROM 
-		   	  											TBL_CABINETCODELIST 
-		   	 									WHERE  
-		   	 											CodeType = '007'
-		   	 									AND
-		   												TENANT_ID =#v_TENANTID# 
+			   									COMPANYID = #companyID#)
+			    					WHERE  Code = '1')
+			    	AND 
+			     		 Type2 =   (
+			     		 			  SELECT 
+			     		 			  	  CASE WHEN ISUsed ='0' THEN '0' 
+			          					  ELSE #iv_Type2# 
+			          					  END
+								      FROM (
+								      			SELECT 
+								      					Code ,
+								           				ISUsed 
+								   	  			FROM 
+								   	  					TBL_CABINETCODELIST 
+								   	 			WHERE  
+								   	 					CodeType = '007' 
+								   	 			AND
+			   										TENANT_ID =#v_TENANTID#
 												AND
-		   												COMPANYID = #companyID#)
-		   		 						WHERE  Code = '4')
-		   	AND 
-		   				TENANT_ID = #v_TENANTID#
-	  		AND
-		   				COMPANYID = #companyID#
+			   										COMPANYID = #companyID#)
+								       WHERE  Code = '2')
+			     	AND 
+			     		 Type3 =  (
+			     		 			   SELECT 
+			     		 			   		CASE WHEN ISUsed ='0' THEN '0' 
+			          						ELSE #iv_Type3# 
+			         					 	END
+			     						FROM (
+			     								SELECT 
+			     										Code ,
+			          							 		ISUsed 
+			   	  								FROM 
+			   	  										TBL_CABINETCODELIST 
+			   	 								WHERE  
+			   	 										CodeType = '007' 
+			   	 								AND
+			   										TENANT_ID =#v_TENANTID#
+												AND
+			   										COMPANYID = #companyID#)
+			    						 WHERE  
+			    						 		Code = '3')
+					AND 
+			      			TimeSep =    (
+			      							SELECT 
+			      								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
+			            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end 
+			     							FROM (
+			     									SELECT 
+			     											Code ,
+			           										ISUsed 
+			   	  									FROM 
+			   	  											TBL_CABINETCODELIST 
+			   	 									WHERE  
+			   	 											CodeType = '007'
+			   	 									AND
+			   												TENANT_ID =#v_TENANTID# 
+													AND
+			   												COMPANYID = #companyID#)
+			   		 						WHERE  Code = '4')
+					AND 
+			   				TENANT_ID = #v_TENANTID#
+		  			AND
+			   				COMPANYID = #companyID#
+				)
+				WHERE
+	            	RNUM <= 1
+			)
+		FOR UPDATE
+	]]>
 	</select>
 	
 	<insert id="EzApprovalG.insertSerialNo" parameterClass="Map" >
