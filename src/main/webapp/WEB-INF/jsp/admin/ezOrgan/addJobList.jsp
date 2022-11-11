@@ -978,6 +978,7 @@
 			}
 			function searchList() {
 				CurPage = 1;
+				document.getElementById("searchValue").value = document.getElementById("searchValue").value.toLowerCase();
 				AddJob_List();
 			}
 		    function clearSearchVal () {

@@ -2097,7 +2097,9 @@
 					<li class="important"><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></li>
 					<li class="important"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></li>
 					<li id="companybutton2"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></li>
-					<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
+				</c:if>
+				<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
+				<c:if test="${dotNetIntegration != 'YES'}">
 					<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
 					<li id="usermenu8"><span onClick="moveMultiUser()"><spring:message code='ezOrgan.t86' /></span></li>
 					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>

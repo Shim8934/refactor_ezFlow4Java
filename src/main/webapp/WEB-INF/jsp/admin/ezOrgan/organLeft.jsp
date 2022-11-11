@@ -112,10 +112,10 @@
 				<h2>
 					<span class="list_text" id="Addjob" onClick="goPage(13)" style="display:inline-block;width:100%;"><spring:message code='main.t00063' /></span>
 				</h2> 
+			</c:if>
 				<h2>
 					<span class="list_text" id="JobInfo" onClick="goPage(31)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.csj01' /></span>
 				</h2> 
-			</c:if>
 				<h2>
 					<span class="list_text" onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
 				</h2>
