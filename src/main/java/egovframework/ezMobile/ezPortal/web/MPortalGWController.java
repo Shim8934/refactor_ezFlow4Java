@@ -130,14 +130,15 @@ public class MPortalGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+			int tenantId = info.getTenantId();
+			String primary = commonUtil.getPrimaryData(info.getLang(), tenantId);
 			String listCnt = request.getParameter("listCnt");
 			String approvalAccess = request.getParameter("approval");
 			String mailAccess = request.getParameter("mail");
 			String scheduleAccess = request.getParameter("schedule");
 			String boardAccess = request.getParameter("board");
 			String resourceAccess = request.getParameter("resource");
-			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", info.getTenantId());
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 				useExternalMailServer = "NO";
 			}
@@ -168,12 +169,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 					scheduleList = scheduleInfo.get("list");
 					scheduleCnt = scheduleInfo.get("cnt");
 					
-					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
+					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", tenantId);
 					if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
 						useWorkspaceSchedule = "NO";
 					}
 			        if("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
-			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
+			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", tenantId);
 			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
 			        }
 				}
@@ -183,7 +184,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 				Locale locale = new Locale(ld);
 				
-				MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
+				MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
 				if ( opt.getLang().equals("1") ) {
 					locale = new Locale("ko");	
 				} else if ( opt.getLang().equals("3") ) {
@@ -198,12 +199,19 @@ public class MPortalGWController extends EgovFileMngUtil {
 
 					if ("true".equals(mailAccess)) {
 						mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-						mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+
+						// 2022-11-14 이사라 - 기존에 받은편지함만 카운트 하였으나, 포탈 UX/UI 변경으로 모든 메일함의 안 읽은 편지 수를 카운트 하도록 수정
+						if (!"P".equals(type)) {
+							mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+						} else {
+							JSONObject mailCntAll = ezEmailService.getUnreadCountAll(null, userId, locale, tenantId);
+							mailCnt = (int) mailCntAll.get("totalUnreadCountInAllAccounts");
+						}
 
 						// 메일 중요도 색깔 구하기
 						// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
 						if (mailList.stream().anyMatch(mail -> ((JSONObject) mail).get("importance").equals(2))) {
-							String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
+							String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(tenantId))
 									.map(MailColorVO::getImportanceColor).orElse("#ff0000");
 							dataObject.put("importanceColor", importanceColor);
 						}
@@ -219,11 +227,11 @@ public class MPortalGWController extends EgovFileMngUtil {
 				int boardCnt = 0;
 				
 				if (boardAccess.equals("true")) {
-					boardList = mBoardService.getBoardMainList(userId, listCnt, info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet());
+					boardList = mBoardService.getBoardMainList(userId, listCnt, info.getDeptId(), info.getCompanyId(), tenantId, info.getOffSet());
 					
 					/* 2018-07-03 홍승비 - 조건에 companyID 추가 */
 					//새게시물 리스트 카운트
-					boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
+					boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), tenantId, "");
 				}
 				
 				//오늘의자원 리스트
@@ -272,7 +280,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				
 				userInfo.setId(info.getUserId());
 				userInfo.setLocale(locale);
-				userInfo.setTenantId(info.getTenantId());
+				userInfo.setTenantId(tenantId);
 				userInfo.setOffset(info.getOffSet());
 				userInfo.setPrimary(primary);
 		
@@ -310,7 +318,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					// 메일 중요도 색상
 					// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
 					if (hasHighImportance) {
-						String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
+						String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(tenantId))
 								.map(MailColorVO::getImportanceColor).orElse("#ff0000");
 						dataObject.put("importanceColor", importanceColor);
 					}
@@ -363,7 +371,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					String tempEDate = nowDate.substring(0, 10) + " 23:59:59";
 					List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "");
 					
-					String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
+					String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", tenantId);
 					if(useGoogleCalendar.equals("YES")) {
 						userInfo = commonUtil.getUserForGw(userId, serverName);
 						userInfo.setDisplayName(info.getUserName());
@@ -399,12 +407,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 						}
 					}
 					
-					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
+					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", tenantId);
 					if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
 						useWorkspaceSchedule = "NO";
 					}
 					if("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
-			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
+			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", tenantId);
 			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
 			        }
 					
