@@ -2860,12 +2860,13 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("folderQuotaList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("domainName", userInfo.getTenantId());
 		String shareId = request.getParameter("shareId") == null ? "" : request.getParameter("shareId");
-		String email = userInfo.getId() + "@" + userInfo.getEmail().split("@")[1];
+		String email = userInfo.getId() + "@" + domain;
 		logger.debug("userId:'" + userInfo.getId() + "',shareId:'" + shareId + "'");
 		
 		if(shareId == null || !shareId.equals("")) {
-			email = shareId + "@" + userInfo.getEmail().split("@")[1];
+			email = shareId + "@" + domain;
 		}
 		logger.debug("email:" + email);
 		
