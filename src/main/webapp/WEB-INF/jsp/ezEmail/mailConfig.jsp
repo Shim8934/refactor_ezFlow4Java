@@ -369,9 +369,11 @@
 			    document.getElementById("cancleProgressBtn").style.display = "none";
 				parent.document.getElementById("left").contentWindow.hideProgress();
 				
+			  if (dotnetFlag.toLowerCase()  == "YES"){
 				if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
 					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
 				} 
+			  }
 			}
 
 			function ShowMailProgressNew() {
@@ -387,9 +389,11 @@
 			    document.getElementById("cancleProgressBtn").style.display = "block";
 			    parent.document.getElementById("left").contentWindow.showProgress();
 			    
+			  if (dotnetFlag.toLowerCase()  == "YES"){
 			    if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
 					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 				} 
+			  }
 			}
 
 			function cancleProgress(){
@@ -407,9 +411,11 @@
 			    document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
 				parent.document.getElementById("left").contentWindow.showProgress();
 			    
+		      if (dotnetFlag.toLowerCase()  == "YES"){
 			    if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
 					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 				} 
+		      }
 			}
 			
 			function hiddenDim() {
@@ -417,9 +423,11 @@
 				document.getElementById("mailPanel").style.backgroundColor = "";
 				parent.document.getElementById("left").contentWindow.hideProgress();
 				
+			  if (dotnetFlag.toLowerCase()  == "YES"){
 				if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
 					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
 				} 
+			  }
 			}
 			
 			function DivPopUpShow(popUpW, popUpH, URL) {

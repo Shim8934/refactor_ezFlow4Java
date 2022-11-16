@@ -1302,13 +1302,21 @@
 					ulId = "ul_" + shareId;
 				}
 				
-	        	if ($("#" + h2Id).attr("class") == "off") {
+				if ($("[id='"+h2Id+"']").attr("class") == "off") {
+	        		$(".lnb H2").attr("class", "off");
+	        		$(".lnb UL").attr("class", "lnbUL off");
+	        		
+	        		$("[id='"+h2Id+"']").attr("class", "on")
+	        		$("[id='"+ulId+"']").attr("class", "lnbUL");
+	        	}
+				
+	        	/* if ($("#" + h2Id).attr("class") == "off") {
 	        		$(".lnb H2").attr("class", "off");
 	        		$(".lnb UL").attr("class", "lnbUL off");
 	        		
 	        		$("#" + h2Id).attr("class", "on")
 	        		$("#" + ulId).attr("class", "lnbUL");
-	        	}
+	        	} */
 	        }
 			
 			function shareMailAddress(){

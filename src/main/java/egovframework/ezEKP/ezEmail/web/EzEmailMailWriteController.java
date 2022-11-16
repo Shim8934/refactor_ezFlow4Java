@@ -224,6 +224,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String docID = "";
 		String docImagCnt = "";
 		String docTarget = "";
+		String docType = "";
 		String retransType = "";
 		
 		String orgCompanyID = "";
@@ -566,6 +567,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
     		docImagCnt = request.getParameter("imagCnt") == null ? "" : request.getParameter("imagCnt").trim();
     		docTarget = request.getParameter("target") == null ? "" : request.getParameter("target").trim();
+			docType = request.getParameter("docType") == null ? "" : request.getParameter("docType").trim();
     		orgCompanyID = request.getParameter("orgCompanyID") == null ? "" : request.getParameter("orgCompanyID").trim();
     		
         	if (_cmd.equals("docsendDotNet")) {
@@ -1369,6 +1371,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("docID", docID);
 		model.addAttribute("docImagCnt", docImagCnt);
 		model.addAttribute("docTarget", docTarget);
+		model.addAttribute("docType", docType);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("retransType", retransType);
 		model.addAttribute("useMultiLangMail", useMultiLangMail);
@@ -1573,6 +1576,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String[] sFileTitle = new String[cnt];
 		String[] sExt = new String[cnt];
 		String pDirTempPath = "";
+		String comparingExt = "";
 		long bigMaxSize = 0;
 		long changeSize = 0;
 
@@ -1697,6 +1701,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				f.mkdirs();
             }
 			
+			// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
+			if (sExt[i].toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				comparingExt = sExt[i].toLowerCase().replace("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT, "");
+			} else {
+				comparingExt = sExt[i].toLowerCase();
+			}
+
+			logger.debug("comparingExt={}", comparingExt);
+
 			if (fileSize[i] > bigMaxSize && bigMaxSize != 0) {
                 resultUpload[i] = "overflow";
             } else {
@@ -1857,6 +1870,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String[] fileExt = new String[fileCnt];
 		String[] newFileName = new String[fileCnt];
 		boolean[] downloadedFlags = new boolean[fileCnt];
+		String comparingExt = "";
 		
 		int totalFileSize = 0;
 		
@@ -2023,8 +2037,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 	//첨부파일 정보를 XML data로 만든다.
                     String resultUpload = "";
                     
+					// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
+					if (fileExt[i].toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						comparingExt = fileExt[i].toLowerCase().replace("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT, "");
+					} else {
+						comparingExt = fileExt[i].toLowerCase();
+					}
+
+					logger.debug("comparingExt={}", comparingExt);
+
 					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
-    				if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
+    				if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(comparingExt) == -1) && !useExtension.equals("*")) {
                         resultUpload = "denied";
                     } else {
                         resultUpload = "true";
@@ -2089,10 +2112,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						bos.write(buffer, 0, data);
 					}
 					
+					// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
+					if (fileExt[i].toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						comparingExt = fileExt[i].toLowerCase().replace("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT, "");
+					} else {
+						comparingExt = fileExt[i].toLowerCase();
+					}
+
+					logger.debug("comparingExt={}", comparingExt);
+
 					//첨부파일 정보를 XML data로 만든다.
 					String resultUpload = "";
 					
-					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+					if (useExtension.toLowerCase().indexOf(comparingExt) == -1 && !useExtension.equals("*")) {
 	                    resultUpload = "denied";
 	                } else {
 	                    resultUpload = "true";
@@ -2218,6 +2250,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String[] fileExt = new String[fileCnt];
 		String[] newFileName = new String[fileCnt];
 		boolean[] downloadedFlags = new boolean[fileCnt];
+		String comparingExt = "";
+
 		
 		int totalFileSize = 0;
 		
@@ -2375,11 +2409,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fos = new FileOutputStream(file);
 					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
 					
+					// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
+					if (fileExt[i].toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						comparingExt = fileExt[i].toLowerCase().replace("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT, "");
+					} else {
+						comparingExt = fileExt[i].toLowerCase();
+					}
+
+					logger.debug("comparingExt={}", comparingExt);
+
 					//첨부파일 정보를 XML data로 만든다.
 					String resultUpload = "";
 					
 					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
-					if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
+					if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(comparingExt) == -1) && !useExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
 						resultUpload = "true";
@@ -2444,10 +2487,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						bos.write(buffer, 0, data);
 					}
 					
+					// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
+					if (fileExt[i].toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						comparingExt = fileExt[i].toLowerCase().replace("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT, "");
+					} else {
+						comparingExt = fileExt[i].toLowerCase();
+					}
+
+					logger.debug("comparingExt={}", comparingExt);
+
 					//첨부파일 정보를 XML data로 만든다.
 					String resultUpload = "";
 					
-					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+					if (useExtension.toLowerCase().indexOf(comparingExt) == -1 && !useExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
 						resultUpload = "true";
@@ -2567,6 +2619,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String[] fileExt = new String[fileCnt];
 		String[] newFileName = new String[fileCnt];
 		boolean[] downloadedFlags = new boolean[fileCnt];
+		String comparingExt = "";
 		
 		int totalFileSize = 0;
 		
@@ -2733,11 +2786,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fos = new FileOutputStream(file);
 					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
 					
+					// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
+					if (fileExt[i].toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						comparingExt = fileExt[i].toLowerCase().replace("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT, "");
+					} else {
+						comparingExt = fileExt[i].toLowerCase();
+					}
+
+					logger.debug("comparingExt={}", comparingExt);
+
 					//첨부파일 정보를 XML data로 만든다.
 					String resultUpload = "";
 					
 					// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
-					if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
+					if ((fileExt[i].isEmpty() || useExtension.toLowerCase().indexOf(comparingExt) == -1) && !useExtension.equals("*")) {
 						resultUpload = "denied";
 					} else {
 						resultUpload = "true";
@@ -2802,6 +2864,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						bos.write(buffer, 0, data);
 					}
 					
+					// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
+					if (fileExt[i].toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						comparingExt = fileExt[i].toLowerCase().replace("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT, "");
+					} else {
+						comparingExt = fileExt[i].toLowerCase();
+					}
+
+					logger.debug("comparingExt={}", comparingExt);
+
 					//첨부파일 정보를 XML data로 만든다.
 					String resultUpload = "";
 					
@@ -2918,6 +2989,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             String pDate = "";
             String useExtension = "";
             long fileSize = 0;
+            String comparingExt = "";
             
             LoginVO userInfo = commonUtil.userInfo(loginCookie);
             
@@ -2956,8 +3028,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             String saveLocalPath = pDirTempPath + commonUtil.separator + newfilename;
             String orgFileName = sFileTitle + "." + sExt;            
             
+			// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
+			if (sExt.toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				comparingExt = sExt.toLowerCase().replace("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT, "");
+			} else {
+				comparingExt = sExt.toLowerCase();
+			}
+
+			logger.debug("comparingExt={}", comparingExt);
+
             // 지원하지 않는 파일 확장자명을 갖고 있는 경우에는 거부한다.
-            if (useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1 && !useExtension.equals("*")) {
+            if (useExtension.toLowerCase().indexOf(comparingExt) == -1 && !useExtension.equals("*")) {
                 extResult = "denied";
             } else {
                 // 대용량 첨부파일의 경우에는 후에 다운로드 받을 때 파일명을 내려보내기 위해 원 파일명을 저장한다.                

@@ -112,6 +112,8 @@
     	  }
       }
       
+    // 2022-11-02 이사라 - [닷넷연동] 모달 오류나도 넘어가도록 수정
+    try{
       if (parent.parent.frames["left"]) {
     	  if (parent.parent.frames["board_menu"]) {  		  
 			  $(parent.parent.frames["board_menu"].document.body).css("overflow", "");
@@ -124,6 +126,9 @@
 			  $(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
 		  }
       }
+    } catch (e) {
+
+	}
       
       modals.pop();
       this.unblock();

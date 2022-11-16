@@ -1846,6 +1846,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String repeatCount = request.getParameter("repeatCount") != null ? request.getParameter("repeatCount") : "0";
 		String repStartDate = request.getParameter("repStartDate") != null ? request.getParameter("repStartDate") : "";
 		
+		// 2022-09-29 이사라 - 닷넷그룹웨어 연동 시 일정작성에서 자원설정 제외
+		boolean isDotNetIntegration = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("dotNetIntegration", tenantID));
+
         String userId = loginVO.getId();            
         String userName  = loginVO.getDisplayName1();
         String userName2 = loginVO.getDisplayName2();
@@ -2111,6 +2114,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("repStartDate", repStartDate);
         model.addAttribute("isAllRep", isAllRep); // 일정완료 레코드의 전체반복일정 완료여부
         model.addAttribute("completeFG", completeFG); // 일정완료 레코드 존재여부
+        model.addAttribute("isDotNetIntegration", isDotNetIntegration); // 닷넷연동 여부
 
    		return "/ezSchedule/scheduleWrite";
 	}	

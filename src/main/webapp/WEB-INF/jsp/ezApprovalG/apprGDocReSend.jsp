@@ -17,6 +17,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraftCK_Common.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
+<%-- 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/recevG_Susin_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script> --%>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var pDocID = "<c:out value ='${docID}'/>";
 	        var pDocHref = "<c:out value ='${docHref}'/>";
@@ -50,6 +52,7 @@
 	        var g_senderinfo = "<c:out value ='${userInfo.companyName}'/>" + ", " + "<c:out value ='${userInfo.deptName}'/>" + ", " + "<c:out value ='${userInfo.title}'/>";
 	        var pUse_Editor = "<c:out value ='${useEditor}'/>";
 	        var orgCompanyID = "";
+	        var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>"; // 수신처그룹 구분 관련 파라미터
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -197,61 +200,77 @@
 	                chkReceipt = false;
 	                return;
 	            }
+	            
 	            for (i = rows.length - 1; i >= 0; i--) {
 	                var row = rows[i];
 	                var dataNodes = GetChildNodes(row);
+	                
 	                if (recipflag) {
 	                    if (getNodeText(GetChildNodes(rows[i])[3]) == "Y") {
-	                        precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
-	                        precipents = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+	                    	if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+	                            precipent = strLangS68;
+	                            precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+	                        } else {
+								precipent = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+	                            precipents = (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
+	                        }
 	                        recipflag = false;
 	                    }
 	                    else {
-	                        precipent = getNodeText(dataNodes[0]);
-	                        precipents = getNodeText(dataNodes[0]);
+                    	   if (getNodeText(dataNodes[1]).indexOf(preSusinGroupStr) == 0) {
+                               precipent = strLangS68;
+                               precipents = getNodeText(dataNodes[0]);
+                           } else {
+                               precipent = getNodeText(dataNodes[0]);
+                               precipents = getNodeText(dataNodes[0]);
+                           }
 	                        recipflag = false;
 	                    }
 	                }
 	                else {
-	                    precipent = "<spring:message code='ezApproval.t128'/>"
+	                	precipent = strLangS68; // 수신처참조
+	                	
 	                    if (getNodeText(dataNodes[3]) == "Y")
-	                        precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
+	                    	precipents = precipents + ", " + (getNodeText(dataNodes[7]) ? getNodeText(dataNodes[7]) + " " : "") + getNodeText(dataNodes[0]);
 	                    else {
-	                        precipents = precipents + "," + getNodeText(dataNodes[7]);
+							precipents = precipents + ", " + getNodeText(dataNodes[0]);
 	                    }
 	                }
 	            }
-	            var field = message.GetListItem(fields, "recipient")
+	            var field = message.GetListItem(fields, "recipient");
 	            if (field) {
-	                if (precipent == "<spring:message code='ezApproval.t128'/>") {
+	                if (precipent == strLangS68) { // 수신처참조
 	                    setNodeText(field , precipent);
-	                    var field = message.GetListItem(fields, "recipients")
+	                    var field = message.GetListItem(fields, "recipients");
 	                    if (field) {
 	                        setNodeText(field, precipents);
-	                        var field = message.GetListItem(fields, "hrecipients")
+	                        var field = message.GetListItem(fields, "hrecipients");
 	                        if (field)
-	                            setNodeText(field , "<spring:message code='ezApproval.t129'/>");
-	                    }
-	                    else {
-	                        var field = message.GetListItem(fields, "recipient")
-	                        setNodeText(field , precipents);
+	                            setNodeText(field , strLangS70); // 수신처:
 	                    }
 	                }
 	                else {
 	                    setNodeText(field , precipent);
+	                    
 	                    if (precipents == "") {
-	                        var field = message.GetListItem(fields, "hrecipients")
+	                        var field = message.GetListItem(fields, "hrecipients");
 	                        if (field)
 	                            setNodeText(field , " ");
-	                        var field = message.GetListItem(fields, "recipients")
+	                        var field = message.GetListItem(fields, "recipients");
 	                        if (field)
 	                            setNodeText(field , " ");
 	                    }
 	                }
 	            }
-	            var field = message.GetListItem(fields, "recipients")
+	            
+	            // SummaryOuterReceiverList는 G버전의 외부수신처 관련 값이므로 제외
+	            var field = message.GetListItem(fields, "recipients");
 	            if (field) {
-	                setNodeText(field , precipents);
+	            	var precipentsList = precipents.split(",");
+	            	
+	            	if (precipentsList.length > 1) {
+	                    setNodeText(field , precipents);
+	            	}
 	            }
 	        }
 	
@@ -465,7 +484,7 @@
 	                btnApprovalInfo_save(RtnVal);
 	            }
 	        }
-	
+	        
 	        function btnApprovalInfo_save(ret) {
 	        	$.ajax({
             		type : "POST",
@@ -475,15 +494,21 @@
             		data : {
             				aprDeptInfo : ret[2]
             				},
-            		success : function(result){
+            		success : function(result) {
+            			 /* 2022-11-04 홍승비 -  전자결재 S버전 > 문서 재발송 팝업창 내부 > 문서 재발송 시 파일 저장 이전, 선택한 수신처에 맞게 현재 결재양식의 수신처명 필드를 갱신하도록 수정 */
             			if (result == 'TRUE') {
-            				
+            	            try {
+            	            	setRecevInfo(ret[5]); // 문서 맵핑용 수신자 정보 (결재정보 팝업창에서 MakertnVal()로 리턴한 값)
+            	            } catch (e) {
+            	            	console.log(e);
+            	            }
             			} else {
             				alert(strLangS163 + strLangS164);
             			}
             		}
             	});
 	        }
+	        
 	        function AprDeptParameter(pAprNDeptNumber, pAprDeptFlag) {
 	            var xmlpara = createXmlDom();
 	            var objNode;

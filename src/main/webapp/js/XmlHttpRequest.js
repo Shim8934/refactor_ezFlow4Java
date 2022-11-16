@@ -2045,3 +2045,27 @@ function hideLoadingProgress() {
     document.querySelector("#loadingLayer").style.display = "none";
     document.querySelector("#mailPanel").style.display = "none";
 }
+
+// 2022-08-25 박기범 - 분석을 위해 서버 로그로 에러 메세지 전송
+// frontLogging(로깅구분을 위한 제목, e, e.stack)
+function frontLogging(title, msg, stack) {
+    try {
+        $.ajax({
+            type : "POST",
+            dataType : "text",
+            url : "/ezcommon/logging",
+            data : {
+                logTitle : title,
+                logMsg : msg,
+                stack : stack
+            },
+            success: function(string){
+                console.log("logging: " + string);
+                console.log("msg: " + msg);
+                console.log("stack: " + stack);
+            }
+        });
+    } catch (e) {
+        console.log("frontLogging 이 동작 안함");
+    }
+}

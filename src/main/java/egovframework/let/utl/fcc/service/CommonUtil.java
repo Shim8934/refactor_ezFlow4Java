@@ -545,6 +545,35 @@ public class CommonUtil {
 		}
 	}
 	
+	// 2022-10-27 이사라 - 로그인 정보 저장
+	public void updateLoginInfo(HttpServletRequest request, LoginVO loginVO) {
+		logger.debug("updateLoginInfo started.");
+
+		try {
+			String sessionCode = request.getSession().getId();
+			logger.debug("Login sessionCode = " + sessionCode);
+
+			loginVO.setIp(ClientUtil.getClientIP(request));
+			loginVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+			loginVO.setOs(ClientUtil.getClientInfo(request, "os"));
+			loginVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+			loginVO.setStatus("Y");
+			loginVO.setSessionCode(sessionCode);
+
+			if (loginVO.getTitle2() == null) {
+				loginVO.setTitle2("");
+			}
+
+			loginService.updateUser(loginVO); // IP, loginCnt, 시간
+			loginService.insertLog(loginVO); // 로그인히스토리 로그 저장
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("updateLoginInfo ended.");
+	}
+
 	public List<String> getUserIdAndPassword(String loginCookie) {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
@@ -792,6 +821,7 @@ public class CommonUtil {
 		replaceData = replaceData.replace("&shy;", "");
 		replaceData = replaceData.replace("\uffff", "");
 		replaceData = replaceData.replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", "");
+		replaceData = replaceData.replace("\ufffe", ""); // 2022-10-25 이사라 - xml 데이터 파싱 오류 수정
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;

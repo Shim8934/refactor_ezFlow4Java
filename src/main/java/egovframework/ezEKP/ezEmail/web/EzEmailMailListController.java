@@ -31,6 +31,7 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.core.pattern.EqualsIgnoreCaseReplacementConverter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -139,24 +140,25 @@ public class EzEmailMailListController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		int tenantId = userInfo.getTenantId();
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
-		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantId);
 		String useOcs = config.getProperty("config.USE_OCS");
 		boolean isSentItems = false;
-		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", userInfo.getTenantId());
-		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", userInfo.getTenantId());
-		String useReSend = ezCommonService.getTenantConfig("useReSend", userInfo.getTenantId());
-		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", userInfo.getTenantId()); // 수아 수정(useMailWriteSenderClick 추가)
-		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", userInfo.getTenantId());
-		String useMailNewWindow = ezCommonService.getTenantConfig("useMailNewWindow", userInfo.getTenantId()); 
-		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
-		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
-		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", userInfo.getTenantId());
-		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-		String useMailConfirm = ezCommonService.getTenantConfig("useMailConfirm", userInfo.getTenantId());
-		String useHackingMailReport = ezCommonService.getTenantConfig("useHackingMailReport", userInfo.getTenantId());
+		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", tenantId);
+		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", tenantId);
+		String useReSend = ezCommonService.getTenantConfig("useReSend", tenantId);
+		String useMailWriteSenderClick = ezCommonService.getTenantConfig("useMailWriteSenderClick", tenantId); // 수아 수정(useMailWriteSenderClick 추가)
+		String useSearchContent = ezCommonService.getTenantConfig("useSearchContent", tenantId);
+		String useMailNewWindow = ezCommonService.getTenantConfig("useMailNewWindow", tenantId);
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", tenantId);
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
+		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", tenantId);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		String useMailConfirm = ezCommonService.getTenantConfig("useMailConfirm", tenantId);
+		String useHackingMailReport = ezCommonService.getTenantConfig("useHackingMailReport", tenantId);
 		String userTimeSet = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
 		String serverName = userInfo.getServerName();
@@ -166,7 +168,7 @@ public class EzEmailMailListController {
 			logger.debug("shareId=" + shareId);
 			
 			if (shareId != null) {
-				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, tenantId)) {
 					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
 					
 					logger.debug("the user cannot access the shareId.");
@@ -174,7 +176,7 @@ public class EzEmailMailListController {
 					
 					return "ezCommon/error";
 				} else {
-					MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+					MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, tenantId, userInfo.getId());
 					
 					model.addAttribute("shareId", shareId);
 					model.addAttribute("deletePermission", shareVO.getDeletePermission());
@@ -226,11 +228,11 @@ public class EzEmailMailListController {
 		}
 		
 		// retrieve the mail general settings from DB.
-		MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+		MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(tenantId, userInfo.getId()).get(0);
 				
 		// set importanceColor
 		String importanceColor = "#ff0000";
-		MailColorVO mailColor = ezEmailService.getMailColor(userInfo.getTenantId());
+		MailColorVO mailColor = ezEmailService.getMailColor(tenantId);
 		
 		if (mailColor != null && mailColor.getImportanceColor() != null) {
 			importanceColor = mailColor.getImportanceColor();
@@ -255,8 +257,12 @@ public class EzEmailMailListController {
 		}
 
 		model.addAttribute("useMailTag", useMailTag);
+		
+		// 2022-11-02 이사라 - [닷넷연동] 메일 가져오기 실행 시 분기처리 필요하여 추가
+		boolean isDotNetIntegration = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("dotNetIntegration", tenantId));
 
 		// set model
+		model.addAttribute("isDotNetIntegration", isDotNetIntegration);
 		model.addAttribute("folderName", folderName);
 		model.addAttribute("url", url);
 		model.addAttribute("folderType", folderType);

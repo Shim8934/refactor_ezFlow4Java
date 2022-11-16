@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.WebUtils;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezConn.util.EzConnUtil;
@@ -27,6 +29,8 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
 import egovframework.let.utl.fcc.service.ClientUtil;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
  * 
@@ -53,6 +57,12 @@ public class EzConnController {
 	
     @Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+
+	@Autowired
+	private CommonUtil commonUtil;
+
+	@Resource(name = "crypto")
+	private EgovFileScrty egovFileScrty;
 	
 	@RequestMapping(value={
 						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do", "/ezConn/scheduleWrite.do",
@@ -95,6 +105,11 @@ public class EzConnController {
 			if (params.length > 4) {
 				// 235|+09:00 와 같은 형식으로 전달되며 :이 구분자로 사용되는 관계로 URL Encoding 되어 전달되어야 한다.
 				userTimeZone = URLDecoder.decode(params[4], "UTF-8");
+				// 2022-10-21 이사라 - 타임존에 + 기호가 없는 경우 추가 ex.235|09:00
+				if (userTimeZone.indexOf("+") == -1) {
+					String[] resetTimeZone = userTimeZone.split("|");
+					userTimeZone = resetTimeZone[0].concat("|+").concat(resetTimeZone[1]);
+				}
 			}
 						
 			logger.debug("orgId=" + orgId + ",params.length=" + params.length + ",userType="
@@ -117,7 +132,7 @@ public class EzConnController {
 			logger.debug("isUserExists=" + isUserExists);
 			
 			if (isUserExists) {
-				if (params.length > 2) {
+				if (!"masteradmin".equals(orgId) && params.length > 2) {
 					OrganUserVO organUserVO = new OrganUserVO();	
 					
 					organUserVO.setTenantId(tenantId);
@@ -131,6 +146,9 @@ public class EzConnController {
 					if (userType.equals("admin")) {
 						// 전체 관리자 권한을 설정한다.
 						organUserVO.setExtensionAttribute1("c=1;k=0;g=0;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
+					} else if (userType.equals("comp_admin")) {
+						// 회사 관리자 권한을 설정한다.
+						organUserVO.setExtensionAttribute1("c=0;k=1;g=0;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
 					} else if (userType.equals("dept_admin")) {
 						// 부서 관리자 권한을 설정한다.
 						organUserVO.setExtensionAttribute1("c=0;k=0;g=1;a=0;i=0;n=0;l=0;f=0;w=0;m=0;");
@@ -159,8 +177,22 @@ public class EzConnController {
 					}
 				}
 								
-				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+				// 2022-10-27 이사라 - 로그인 정보 저장
+				if (commonUtil.isLoginCookieExists(request, response)) {
+					Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+					String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+
+					if (!decryptedLoginCookie.split("///")[1].equals(orgId)) {
+						commonUtil.updateLoginInfo(request, resultVO);
+					}
+
+				} else {
+					commonUtil.updateLoginInfo(request, resultVO);
+				}
 				
+				// 로그인쿠키는 새로 생성
+				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+
 				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
 				response.setHeader("P3P", "CP=\"Potato\"");
@@ -180,9 +212,15 @@ public class EzConnController {
 					resultPage = "/ezEmail/mailWrite.do?boardID=" + boardID + "&itemID=" + itemID + "&cmd=boardDotNet";
 				} else if (cmd != null && cmd.equals("docsendDotNet")) {
 					String docID = request.getParameter("docID");
+					String target = request.getParameter("target");
 					String strImgCount = "";
+					String docType = request.getParameter("doctype") != null ? request.getParameter("doctype") : ""; // 2022-10-07 이사라 - 전자결재G 웹한글기안기 문서의 경우 doctype=hwp로 호출
 					
-					resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG";
+					if ("APPROVALG".equalsIgnoreCase(target)) {
+						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVALG"  + "&docType=" + docType;
+					} else {
+						resultPage = "/ezEmail/mailWrite.do?docHref=IMAGE&cmd=" + cmd + "&docID=" + docID + "&imageCnt=" + strImgCount + "&target=APPROVAL" + "&docType=" + docType;
+					}
 				} else if (cmd != null && cmd.equals("CommunityDotNet")) {
 					String boardID = request.getParameter("boardID");
 					String itemID = request.getParameter("itemID");
@@ -210,8 +248,9 @@ public class EzConnController {
 					resultPage = "/ezEmail/mailConfig.do?flag=email&dotnetFlag=yes";					
 				} else if (cmd != null && cmd.equals("mailRead")) {
 					String mailFullPath = request.getParameter("mailFullPath");
-					
-					resultPage = "/ezEmail/mailRead.do?PNFlag=Y&CONTENTCLASS=IPM.Note&URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
+					// 2022-10-11 이사라 - 포틀릿에서 메일을 클릭하여 읽을 때 지원하지 않는 옵션 제외
+					String pnFlag = request.getParameter("pnFlag") != null ? request.getParameter("pnFlag") : "Y";
+					resultPage = "/ezEmail/mailRead.do?PNFlag=" + pnFlag + "&CONTENTCLASS=IPM.Note&URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
 				} else if (requestUri.equals("/ezConn/portalMain.do")) {
 					resultPage = "/ezNewPortal/newPortalMain.do";
 				} else if (requestUri.equals("/ezConn/scheduleMain.do")) {

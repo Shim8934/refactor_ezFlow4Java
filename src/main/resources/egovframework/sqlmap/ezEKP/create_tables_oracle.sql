@@ -11945,9 +11945,15 @@ CREATE TABLE "TBL_CAR_FORM" (
 
 --------------------------------------------------------
 --  DDL for Index PK2_TBL_PASSWORD_POLICY_PATTERN
+
+-- 오라클에서는 DB 객체 이름으로 30자까지만 지원하여, ORA-00972: identifier is too long 에러가 남.
+-- 테이블을 포함해 DB 객체의 이름을 정할 때 30자가 넘지 않도록 주의해야 함.
+
+-- ezFlow>sqlmap 아래로 찾아봤을때는 PK2_TBL_PASSWORD_POLICY_PATTERN 를 직접적으로 쓰는 곳은 없는것으로 보여서
+-- _PATTERN => _PATT 으로 변경, 뒤에 세 글자를 지우게 되었음.
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "PK2_TBL_PASSWORD_POLICY_PATTERN" ON "TBL_PASSWORD_POLICY_PATTERN" ("TENANT_ID", "COMPANY_ID", "USE_PATTERN_COUNT") 
+  CREATE UNIQUE INDEX "PK2_TBL_PASSWORD_POLICY_PATT" ON "TBL_PASSWORD_POLICY_PATTERN" ("TENANT_ID", "COMPANY_ID", "USE_PATTERN_COUNT")
   ;
   
 --------------------------------------------------------
@@ -16240,7 +16246,7 @@ END;
 --  Constraints for Table TBL_PASSWORD_POLICY_PATTERN
 --------------------------------------------------------
 
-  ALTER TABLE "TBL_PASSWORD_POLICY_PATTERN" ADD CONSTRAINT "PK2_TBL_PASSWORD_POLICY_PATTERN" PRIMARY KEY ("TENANT_ID", "COMPANY_ID", "USE_PATTERN_COUNT")
+  ALTER TABLE "TBL_PASSWORD_POLICY_PATTERN" ADD CONSTRAINT "PK2_TBL_PASSWORD_POLICY_PATT" PRIMARY KEY ("TENANT_ID", "COMPANY_ID", "USE_PATTERN_COUNT")
   USING INDEX;
   
 --------------------------------------------------------

@@ -127,7 +127,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	
 	private static final String MOBILE_FILEROOT_DOWNLOAD_URL = "/mobile/ezCommon/mFileDown.do?fileName=*.INLINE.*&amp;filePath=/fileroot";
 
-	private static final Pattern MOBILE_DOWNLOAD_IMAGE_PATTERN = Pattern.compile("src=\"/mobile/ezCommon/mFileDown.do\\?fileName=\\*\\.INLINE\\.\\*&amp;filePath=(/fileroot/[^\"]*)");
+	// dhlee : 20221027 - 사이냅 웹에디터를 사용하는 닷넷 모바일에서 이미지 업로드를 지원하기 위해 Upload_Common 폴더 관련 처리를 추가함.
+	private static final Pattern MOBILE_DOWNLOAD_IMAGE_PATTERN
+		= Pattern.compile("src=\"/mobile/ezCommon/mFileDown.do\\?fileName=\\*\\.INLINE\\.\\*&amp;filePath=(/fileroot/[^\"]*)|src=\".*?(/Upload_Common/.*?)\"");
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -2714,7 +2716,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						StringBuffer sb = new StringBuffer();
 
 						while (imageMatcher.find()) {
-							String imagePath = realPath + imageMatcher.group(1);
+							// dhlee : 20221027 - 사이냅 웹에디터를 사용하는 닷넷 모바일에서 이미지 업로드를 지원하기 위해 Upload_Common 폴더 관련 처리를 추가함.
+							String extractedPath = imageMatcher.group(1) != null ? imageMatcher.group(1) : imageMatcher.group(2);
+							String imagePath = realPath + extractedPath;
 							File imageFile = new File(imagePath);
 							String imageExt = FilenameUtils.getExtension(imageFile.getName());
 							String imageName = UUID.randomUUID().toString() + "." + imageExt;
@@ -2744,6 +2748,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							imagePart.setDisposition(Part.INLINE);
 
 							imageParts.add(imagePart);
+
+							// dhlee : 20221027 - 사이냅 웹에디터를 사용하는 닷넷 모바일에서 이미지 업로드를 지원하기 위해 Upload_Common 폴더 관련 처리를 추가함.
+							if (imageMatcher.group(1) == null ) {
+								cid = cid + "\"";
+							}
+
 							imageMatcher.appendReplacement(sb, "src=\"cid:" + cid);
 						}
 

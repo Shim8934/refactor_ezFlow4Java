@@ -629,7 +629,7 @@ function ApprovMappingSign(ret) {
 
         var field = message.GetListItem(fields, signID);
         if (field) {
-            if (DekyulFlag && pAprLineB4type == strAprType4) { // 4: 전결
+            if (DekyulFlag && pAprLineB4type == strAprType4) { // 4: 전결 (대결자 이후 최종결재자로 전결자가 존재하는 경우, 즉 위임전결사항의 대결 처리)
                 field.innerHTML = strLang6;
                 signInfo[signCnt] = signID;
                 SignName[signCnt] = signID;
@@ -1496,7 +1496,7 @@ function getCurApproverAprLine(type) {
             	if (i < 1)
             		pAprLineB4type = "";
             	else
-            		pAprLineB4type = getNodeText(GetLastChildNodes(objNodes[i - 1], params)[11]);
+            		pAprLineB4type = getNodeText(GetLastChildNodes(objNodes[i - 1], params)[11]); // 대결자(016) 이후 최종결재자로 전결자(004)가 존재하는 경우, 즉 위임전결사항의 대결 처리를 위한 플래그
             	
             	if (pAprLineType == strAprType4 || pAprLineType == strAprType16)
             		var pTmpAprLineType = strAprType1;

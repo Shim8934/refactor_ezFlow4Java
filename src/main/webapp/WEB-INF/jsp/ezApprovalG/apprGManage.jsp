@@ -474,11 +474,6 @@
 		        CurrentWidth = document.documentElement.clientWidth;
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
 		        var reheight = document.documentElement.offsetHeight - parseInt(height);
-		        
-	            /* 2022-08-11 홍승비 - edge 브라우저 대응을 위한 하단 결재선 탭 영역 높이 조정 */
-	            if (navigator.userAgent.toLowerCase().indexOf("edg") > -1) {
-	            	document.getElementById('div_AprLine').style.height = "250px";
-	            }
 	            
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
@@ -2141,6 +2136,7 @@
 				    }
 				}
 				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+				// console.log("SQLPARADATA : " + SQLPARADATA);
 		    }
 		
 		    window.onresize = function () {
@@ -2179,22 +2175,48 @@
 		
 		    function search() {
 		        pChackYN = "SEARCH";
+		        
+		        var nowyear = nowDate.substring(0,4);
+	            var nowmonth = nowDate.substring(5,7);
+	            var nowday = nowDate.substring(8,10);      
+		        
 		        if (document.getElementById("txt_keyword").value != "") {
 		            var selectSearch = document.getElementById('selectType');
-					if (approvalFlag == "G") {
+		            /* 2022-11-07 강동주 - 우측 상단 간단검색 시 "최근 1년" 셀렉트박스 값이 적용되지 않는 오류 수정 */
+		            var selectYearVal = document.getElementById('sel_year').value;
+					
+		            if (approvalFlag == "G") {
 			            for (var i = 0; i < 25; i++) {
 			                SearchCond[i] = "";
 			            }
-			
+			            
 			            if (selectSearch.item(0).selected) {
 			                SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
 			            else if (selectSearch.item(1).selected) {
 			                SearchCond[2] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
+			           
+			            // 년도 파라미터 설정 추가
+			            if (selectYearVal != "ALL") {
+							SearchCond[3] = selectYearVal;
+							SearchCond[4] = "01";
+							SearchCond[5] = "01";
+							SearchCond[6] = selectYearVal;
+							SearchCond[7] = "12";
+							SearchCond[8] = "31";
+				        } else { // 최근 1년
+							SearchCond[3] = nowyear - 1;
+							SearchCond[4] = nowmonth;
+							SearchCond[5] = nowday;
+							SearchCond[6] = nowyear;
+							SearchCond[7] = nowmonth;
+							SearchCond[8] = nowday;
+				        }
 					} else {
-						for (i = 0; i < 11; i++)
+						for (i = 0; i < 11; i++) {
 							condition[i] = "";
+						}
 
 		                if (selectSearch.item(0).selected) {
 		                	condition[1] = replaceCond(document.getElementById("txt_keyword").value);
@@ -2202,6 +2224,15 @@
 		                else if (selectSearch.item(1).selected) {
 		                	condition[2] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
+		                
+		                // 년도 파라미터 설정 추가
+				        if (selectYearVal != "ALL") {
+				        	condition[3] = selectYearVal + "-01-01";
+							condition[4] = selectYearVal + "-12-31";
+				        } else { // 최근 1년
+							condition[3] = (nowyear - 1) + "-" + nowmonth + "-" + nowday;
+							condition[4] = nowyear + "-" + nowmonth + "-" + nowday;
+				        }
 					}
 		        }
 		        else {
@@ -2563,7 +2594,7 @@
 		
 		<%-- 리사이즈 바 클릭 시의 음영을 위한 부분 --%>
  		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="ResizeBarPanel"></div>
-	    <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
+	    <div style="width: 8px; height:738px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 			<div class="div_scroll" style="width:100%;HEIGHT:395px; overflow-y:hidden; overflow-x:auto; margin-bottom:10px" id="divList">
 				<div id="lvDocList"></div>
@@ -2588,7 +2619,7 @@
 			  	</div>	
 			</div>
 			
-			<div style="WIDTH:100%;HEIGHT:236px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+			<div style="WIDTH:100%;HEIGHT:241px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 				<div id="lvAprLine" ></div>
 			</div>
 			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
@@ -2602,7 +2633,7 @@
 	    
 	    <%-- 전자결재 우측 미리보기 영역 --%>
 	    <div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-	        <div class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
+	        <div class="previewmail_bar_h" id="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block; height:738px;">
 	            <p class="hbar_dotted">
 	                <img src="/images/prevview_hbar_dotted.gif">
 	            </p>
@@ -2610,7 +2641,7 @@
 	        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
 	            <div class="previewmail"> 
 	            	<div class="previewmail_info"></div>
-	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 738px; border: solid 0px green; display: inline-block;"></iframe>
 	            </div>
 	        </div>
 	    </div>

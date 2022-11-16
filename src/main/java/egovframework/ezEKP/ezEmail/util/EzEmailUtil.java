@@ -1099,7 +1099,11 @@ public class EzEmailUtil {
 	    //    Content-ID: <f_kfxpw01d0>				 
 		boolean isAttachmentWithUnreferencedContentID = false;
 		
-		if (((MimePart)part).getContentID() != null) {
+		// 다음과 같이 text/html이면서 Content-ID가 있는 경우가 있어 첨부파일로 취급되지 않도록 text/html을 제외하기 위한 조건을 추가함(text/plain도 함께 추가함).
+		// Content-Type: text/html; charset="ks_c_5601-1987"
+		// Content-ID: <67617439CE1CE54088B6FC9F88EE8937@mobis.co.kr>
+		// Content-Transfer-Encoding: quoted-printable
+		if (!part.isMimeType("text/html") && !part.isMimeType("text/plain") && ((MimePart)part).getContentID() != null) {
 			String htmlBodyContent = (String)extraMap.get("htmlBody");
 			String contentID = ((MimePart) part).getContentID();
 			
@@ -1342,6 +1346,13 @@ public class EzEmailUtil {
             
             if (!filename.isEmpty()) {
             	filename = commonUtil.normalizeFileName(filename);
+
+				// Content-Disposition: attachment; filename= 2022-11-07 09:10:52_ma_users.zip와 같이
+				// filename 속성의 값이 인용부호로 둘러싸여 있지 않은 경우 공백에 의해 속성값이 종결되어 2022-11-07까지만
+				// 값이 취해지는 문제가 있어 확장자가 없는 경우 originalFilename을 사용하도록 수정함.
+				if (!filename.contains(".")) {
+					filename = originalFilename;
+				}
             }
 			
             // message/rfc822 타입이면서 filename 속성이 없는 경우에는
@@ -1787,9 +1798,9 @@ public class EzEmailUtil {
 					List<String> tempList = null;
 					
 					if (p.isMimeType("multipart/*")) {							
-						tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap, i, depth + 1);
+						tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, i, depth + 1);
 					} else {
-						tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, locale, extraMap, order, depth);
+						tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
 					}
 					
 					htmlBody += tempList.get(0);
@@ -4730,9 +4741,29 @@ public class EzEmailUtil {
 		Matcher m = p.matcher(src);
 		
 		StringBuffer result = new StringBuffer();
+
 		while (m.find()) {
-			m.appendReplacement(result, Matcher.quoteReplacement(String.format("<a href=\"%s\">%s</a>", m.group(1), m.group(1))));
+			String url = m.group(1);
+			int startPosOfCharacterEntity = url.length();
+			int pos1 = url.indexOf("&gt;");
+			int pos2 = url.indexOf("&nbsp;");
+
+			if (pos1 != -1) {
+				url = url.replace("&gt;", "");
+				startPosOfCharacterEntity = pos1;				
+			}
+
+			if (pos2 != -1) {
+				url = url.replace("&nbsp;", "");
+
+				if (pos2 < startPosOfCharacterEntity) {
+					startPosOfCharacterEntity = pos2;
+				}
+			}
+
+			m.appendReplacement(result, Matcher.quoteReplacement(String.format("<a href=\"%s\">%s</a>%s", url, m.group(1).substring(0, startPosOfCharacterEntity), m.group(1).substring(startPosOfCharacterEntity))));
 		}
+
 		m.appendTail(result);
 		
 		return result.toString();		
