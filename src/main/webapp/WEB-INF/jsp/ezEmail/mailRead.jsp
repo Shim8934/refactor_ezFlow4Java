@@ -228,11 +228,15 @@
 		            if (document.body.clientWidth - 20 > 0)
 		                document.getElementById('message').style.width = document.documentElement.clientWidth - 20;
 		
+				var resizeHeight;
 		        if("${pIsCCFg}"!="N")
-		            document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
+					resizeHeight = document.documentElement.clientHeight - 220;
 		        else
-			        document.getElementById("message").style.height = document.documentElement.clientHeight - 190 + "px";
-				
+					resizeHeight = document.documentElement.clientHeight - 190;
+				<c:if test="${useMailTag}">
+				resizeHeight -= document.getElementById("tag_td").clientHeight;
+				</c:if>
+				document.getElementById("message").style.height = resizeHeight + "px";
 		        mailPrevSentDateChk();
 		    }	
 			
@@ -787,12 +791,7 @@
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			
-			if("${pIsCCFg}"!="N") {
-				document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
-			} else {
-		    	document.getElementById("message").style.height = document.documentElement.clientHeight - 190 + "px";
-			}
+			window_onresize();
 		</script>
 		<form name="form1" action="mailReadContent.do" method="post" target="message" >
 			<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
