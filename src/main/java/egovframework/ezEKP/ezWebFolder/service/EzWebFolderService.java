@@ -131,6 +131,8 @@ public interface EzWebFolderService {
 
 	void incrementFileVersion(LoginVO user, String fileId) throws Exception;
 
+	void incrementFileVersion(LoginVO user, String fileId, boolean isdel) throws Exception;
+
 	void revertFileVersion(LoginVO user, String fileId, int version) throws Exception;
 
 	boolean restoreFileVersionFromTrash(LoginVO user, String fileId, int version) throws Exception;

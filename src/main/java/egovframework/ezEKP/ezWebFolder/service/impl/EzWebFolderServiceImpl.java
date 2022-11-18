@@ -2076,8 +2076,14 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		return ezWebFolderDAO.getFileHistory(map);
 	}
 
+	// 2022-11-18 이사라 - 웹폴더 파일 이름변경 시 원본 파일을 삭제하지 않도록 수정
 	@Override
 	public void incrementFileVersion(LoginVO user, String fileId) throws Exception {
+		incrementFileVersion(user, fileId, true);
+	}
+
+	@Override
+	public void incrementFileVersion(LoginVO user, String fileId, boolean isdel) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 
 		map.put("fileId", fileId);
@@ -2103,12 +2109,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			// db 업데이트 성공시 기존 파일 delete
 			File file = new File(servletContext.getRealPath(commonUtil.detectPathTraversal(latestHistory.getFilePath())));
 
-			if (file.exists() && file.isFile()) {
+			if (file.exists() && file.isFile() && isdel) {
 				if (file.delete()) {
 					logger.debug("delete success.");
 				}
 			} else {
-				logger.debug("file is not exists.");
+				logger.debug("the file doesn't exists or is renamed only.");
 			}
 
 		} else {
