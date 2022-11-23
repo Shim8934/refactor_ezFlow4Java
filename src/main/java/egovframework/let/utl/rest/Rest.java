@@ -1,6 +1,8 @@
 package egovframework.let.utl.rest;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,11 +58,18 @@ public class Rest {
 
 	private static final Gson GSON = new Gson();
 
-	@Autowired
-	private Properties config;
+	private final Properties config;
+
+	private final RestTemplate restTemplate;
+
+	private final String jgwServerUrl;
 
 	@Autowired
-	private RestTemplate restTemplate;
+	public Rest(Properties config, RestTemplate restTemplate) {
+		this.config = config;
+		this.restTemplate = restTemplate;
+		this.jgwServerUrl = config.getProperty("config.JGwServerURL");
+	}
 
 	/** GW 호출을 위한 빌더를 반환한다. */
 	public RestBuilder gateway(Module module, ServletRequest request) {
@@ -74,6 +83,11 @@ public class Rest {
 				.header("x-user-host", serverName);
 	}
 
+	public RestBuilder jgw() {
+		return new RestBuilder(jgwServerUrl)
+				.post().header("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+	}
+
 	public RestBuilder builder() {
 		return new RestBuilder("");
 	}
@@ -84,6 +98,27 @@ public class Rest {
 	 * Accept 헤더의 기본값은 application/json 이다.
 	 */
 	public class RestBuilder {
+
+		@SuppressWarnings("serial")
+		private class FormParam extends HashMap<String, Object> {
+
+			@Override
+			public String toString() {
+				StringBuilder sb = new StringBuilder();
+				for (Entry<String, Object> entry : entrySet()) {
+					if (sb.length() > 0) {
+						sb.append('&');
+					}
+					try {
+						sb.append(entry.getKey()).append('=').append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				}
+				return sb.toString();
+			}
+
+		}
 
 		private final String prefixUrl;
 
@@ -184,6 +219,21 @@ public class Rest {
 			return this;
 		}
 
+		/** body에 form 파라미터를 추가한다. */
+		public RestBuilder formParam(String name, Object value) {
+			if (body == null) {
+				body = new FormParam();
+			}
+
+			if (body instanceof FormParam) {
+				((FormParam) body).put(name, value);
+			} else {
+				throw new IllegalStateException("body already exists, not FormParam");
+			}
+
+			return this;
+		}
+
 		/**
 		 * 기존의 body를 대체한다.<br>
 		 * VO, Map, Collecton은 자동으로 json 형식으로 들어간다.
@@ -219,6 +269,11 @@ public class Rest {
 			return exchangeBody(Result.class);
 		}
 
+		/** Rest API를 호출하여 결과를 JgwResult 인스턴스로 넘긴다. */
+		public JgwResult exchangeJgwResult() throws Exception {
+			return exchangeBody(JgwResult.class);
+		}
+
 		/**
 		 * Rest API를 호출하여 결과를 ResponseEntity 인스턴스로 넘긴다.<br>
 		 * 스테이터스 코드나 헤더를 참조해야하는 일이 있을 수 있어 exchangeBody 와 구분지었다.
@@ -231,6 +286,10 @@ public class Rest {
 		 * Rest API를 호출하여 결과를 ResponseEntity 인스턴스로 넘긴다.
 		 */
 		public <T> ResponseEntity<T> exchange(Class<T> clazz) throws Exception {
+			if (body instanceof FormParam) {
+				body = body.toString();
+			}
+
 			HttpEntity<Object> entity = new HttpEntity<>(body, headers);
 			return restTemplate.exchange(createUri(), method, entity, clazz);
 		}

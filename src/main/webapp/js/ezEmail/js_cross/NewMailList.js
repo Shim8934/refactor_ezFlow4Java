@@ -374,6 +374,7 @@ function MakeListInfoHTML(ConentObject) {
                             }
                             
                             _TDColum.innerHTML = p_Subject;
+                            _TDColum.title = p_Subject;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) {
                                 event_listclick(this, event);
@@ -394,6 +395,7 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.minWidth = "70px";
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_ReceiveDT;
+                            _TDColum.title = p_ReceiveDT;
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) { event_listclick(this, event); };
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
@@ -436,6 +438,15 @@ function MakeListInfoHTML(ConentObject) {
                         	}
                         	
                         	break;
+                        case "parentname": // 편지함 위치 컬럼
+                            _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
+                            _TDColum.style.overflow = "hidden";
+                            _TDColum.style.textOverflow = "ellipsis";
+                            _TDColum.style.whiteSpace = "nowrap";
+                            var parentName = SelectSingleNodeValue(XmlRows[Cnt], "parentName");
+                            _TDColum.innerHTML = parentName;
+                            _TDColum.title = parentName;
+                            break;
                     }
                     _TR.appendChild(_TDColum);
                     
@@ -904,7 +915,9 @@ function GetListInfo(HeaderObject, ContentObject) {
     var pOrderyOption = p_ListorderType + " ORDER BY \"" + p_ListOrderby + "\" " + p_ListOrderOption;
 
     createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "FOLDERID", g_moveUrl);
+
+	// 태그 페이지라면 모든 폴더를 대상으로 함 (빈 문자열로 넘기면 모든 편지함)
+	createNodeAndInsertText(xmlpara, objNode, "FOLDERID", window.tagName ? "" : g_moveUrl);
     createNodeAndInsertText(xmlpara, objNode, "SORTTYPE", pOrderyOption);
     pOldSearchKeyword = SearchKeyword;
     if (mailsearchDetail == "N" && document.getElementsByName('keyword').item(0) == ""){
@@ -951,6 +964,7 @@ function GetListInfo(HeaderObject, ContentObject) {
     
     var secureMailFilter = document.getElementById("select").value == "SECUREMAIL" ? 1 : 0;
     createNodeAndInsertText(xmlpara, objNode, "SECUREMAILFILTER", secureMailFilter);
+	createNodeAndInsertText(xmlpara, objNode, "TAGNAME", window.tagName ? tagName : "" );
 
     var _url = "/ezEmail/mailGetList.do";
     
@@ -1348,17 +1362,24 @@ function MailListRefresh() {
     // commented out to maintain the current preview content when the mail list is refreshed : dhlee
 //    prevShow_Clear();
 }
+/** @param pGubun 컬럼 개수가 줄어드는지 여부, 너비가 좁을 때 true가 됨 */
 function BasicViewHeaderChange(pGubun, pFolderType) {
-	var viewXmlFile = pGubun ? "viewXMLFile1_1.xml" : "viewXMLFile1.xml";
+	var viewXmlFile;
 	
 	if (pFolderType == "draft" ||  pFolderType == "sent") {
 		viewXmlFile = pGubun ? "viewXMLFile2_1.xml" : "viewXMLFile2.xml";
+	} else if (pFolderType == "tag") {
+		viewXmlFile = pGubun ? "viewXMLFileTagTableShort.xml" : "viewXMLFileTagTable.xml";
+	} else {
+		viewXmlFile = pGubun ? "viewXMLFile1_1.xml" : "viewXMLFile1.xml";
 	}
-	
-    if (p_HeaderViewXML == "/js/ezEmail/Controls_cross/" + g_userLang + "/" + viewXmlFile)
+
+	var newHeaderXml = "/js/ezEmail/Controls_cross/" + g_userLang + "/" + viewXmlFile;
+
+	if (p_HeaderViewXML == newHeaderXml)
             return;
 
-    p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/" + viewXmlFile;
+    p_HeaderViewXML = newHeaderXml;
 
     listContentArry = new Array();
     listSubContentArry = new Array();

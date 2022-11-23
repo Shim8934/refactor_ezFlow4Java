@@ -102,7 +102,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			}
         	
     		messages = ezEmailUtil.searchFolder(ia, userEmail, folder, "", "", null, new Date(), false, 
-    				isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, null, info.getTenantId());
+    				isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, null, info.getTenantId(), "");
         	
 			for (Message message : messages) {
 				UIDFolder uidFolder = (UIDFolder)message.getFolder();

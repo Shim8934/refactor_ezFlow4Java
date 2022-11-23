@@ -7,15 +7,22 @@
 		<title>${title}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/input-util.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<style> 
-			P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm } 
+			P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }
+			#tag_td { padding: 5px; }
+			#tag_add { height: 22px; }
+			#tag_view > span + img { width: 11px; height: 11px; cursor: pointer; margin: 0 7px 0 4px; }
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/leftmenu-util.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">	
 		    var g_paramURL = "${url}";
@@ -152,7 +159,48 @@
 			    if (mailWritePreview == "true") {
 			    	$("#menu > ul:first-child").css("display","none");
 			    }
-			    
+
+				<c:if test="${useMailTag}">
+					var tagAddInput = document.getElementById("tag_add");
+					// 태그 입력 시 특수문자 입력 못하도록 함
+					inputUtil.makeNotAllowTyping(tagAddInput, /[!@#$%^&()\\\/:*?"<>|'`]/g);
+					inputUtil.makeReplaceTyping(tagAddInput, /\s/g, '_');
+					// 엔터 시 태그로 추가되도록 함
+					tagAddInput.addEventListener("keydown", function(e) {
+						if (e.keyCode == 13) onEnterPreviewTagInput();
+					});
+					document.querySelector("#tag_add + .imgbtn").addEventListener("click", function(e) { onEnterPreviewTagInput(); });
+					// 태그 X 버튼 클릭시 삭제
+					$("#tag_view > img").on("click", function() { removeTag(this.previousElementSibling); });
+
+					// 태그 추가 시 자동완성
+					$(tagAddInput).autocomplete({
+						source: function(request, response) {
+							if (!window.cacheTags) {
+								$.ajax({
+									cache: false,
+									async: false,
+									url: "/ezEmail/getUserTagList.do",
+									success: function(result) {
+										if (result.status == "error") {
+											alert(strLang321);
+											return;
+										}
+										var tags = result.data;
+										window.cacheTags = $.map(tags, function(ul, item) { return ul.name; });
+									}
+								});
+							}
+
+							response($.grep(window.cacheTags, function(tag) {
+								return tag.indexOf(request.term) > -1;
+							}));
+						},
+						minLength: 2,
+						selectFirst: true,
+						autoFocus: true,
+					});
+				</c:if>
 			}
 		    function btnPrint_onClick()
 		    {
@@ -180,11 +228,15 @@
 		            if (document.body.clientWidth - 20 > 0)
 		                document.getElementById('message').style.width = document.documentElement.clientWidth - 20;
 		
+				var resizeHeight;
 		        if("${pIsCCFg}"!="N")
-		            document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
+					resizeHeight = document.documentElement.clientHeight - 220;
 		        else
-			        document.getElementById("message").style.height = document.documentElement.clientHeight - 190 + "px";
-				
+					resizeHeight = document.documentElement.clientHeight - 190;
+				<c:if test="${useMailTag}">
+				resizeHeight -= document.getElementById("tag_td").clientHeight;
+				</c:if>
+				document.getElementById("message").style.height = resizeHeight + "px";
 		        mailPrevSentDateChk();
 		    }	
 			
@@ -581,7 +633,6 @@
 	</head>
 
 	<body id="parentBody" class="popup" onload="javascript:window_onload()"   style="overflow:hidden;"> 
-		<form method="post">
 		<table id="normalScreen" class="layout"> 
 		    <tr> 
 		        <td height="20">
@@ -715,6 +766,20 @@
 		                <span id="LabelSubject">${subject}</span>
 		                </div></td>
 		                </tr>
+						<c:if test="${useMailTag}">
+							<tr>
+								<th><spring:message code='ezEmail.tag' /></th>
+								<td id="tag_td" colspan="4">
+									<input id="tag_add" type="text" />
+									<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+									<div id="tag_view">
+										<c:forEach items="${tags}" var="name">
+											<span>${name}</span><img src="/images/icon/oneline_delete.gif" />
+										</c:forEach>
+									</div>
+								</td>
+							</tr>
+						</c:if>
 		            </table>
 		        </td>
 		    </tr>
@@ -726,14 +791,8 @@
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			
-			if("${pIsCCFg}"!="N") {
-				document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
-			} else {
-		    	document.getElementById("message").style.height = document.documentElement.clientHeight - 190 + "px";
-			}
+			window_onresize();
 		</script>
-		</form>
 		<form name="form1" action="mailReadContent.do" method="post" target="message" >
 			<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
 		    <input  type="hidden" id="iptURL"  name="iptURL" value="">

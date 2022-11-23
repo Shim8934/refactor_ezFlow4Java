@@ -327,6 +327,8 @@ var strLangKSA03 = "Would you like to register for the groupware personal calend
 var strLangKSA04 = "Successfully saved appointment.";
 var strLangKSA05 = "Error occured while saving appointment.";
 
+var strLangTagAlreadyUse = "이미 사용 중인 다른 태그의 이름입니다.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

@@ -327,6 +327,8 @@ var strLangKSA03 = "그룹웨어 개인일정에 등록하시겠습니까?";
 var strLangKSA04 = "일정을 저장하였습니다.";
 var strLangKSA05 = "일정을 저장하는 도중 오류 발생.";
 
+var strLangTagAlreadyUse = "이미 사용 중인 다른 태그의 이름입니다.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

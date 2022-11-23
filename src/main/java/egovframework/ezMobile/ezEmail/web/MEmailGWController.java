@@ -581,7 +581,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				boolean includeContent = false;
 
 				List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, folderId, new String[]{searchField}, new String[]{searchValue}, sd, ed, searchSubFolder, 
-						isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId(), includeContent);
+						isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId(), includeContent, "");
 				
 				totalCount = (int)extraMap.get("totalCount");
 				mailboxMailCount = (int)extraMap.get("mailboxMailCount");
@@ -758,7 +758,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				folder.open(Folder.READ_ONLY);
 				
 				messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, sd, ed, searchSubFolder, 
-						isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId());
+						isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId(), "");
 				
 				totalCount = (int)extraMap.get("totalCount");
 				LOGGER.debug("totalCount=" + totalCount);

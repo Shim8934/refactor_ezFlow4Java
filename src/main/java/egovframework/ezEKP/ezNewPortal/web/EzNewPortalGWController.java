@@ -3557,7 +3557,7 @@ public class EzNewPortalGWController {
 				// mailCount = unreadCount;
 				// }
 
-				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId());
+				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId(), "");
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));

@@ -1338,3 +1338,78 @@ function addIcalSchedule(pURL, shareId) {
 	}
 }
 
+function removeTag(span) {
+	var mailId = g_paramURL.split("/");
+	var folderPath = mailId[0];
+	var mailUid = mailId[1];
+	var tagName = span.innerText;
+	$.ajax({
+		method: "post",
+		url: "/ezEmail/deleteMailTag.do",
+		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
+		success: function(result) {
+			if (result.status == "error") {
+				alert(strLang321);
+				return;
+			}
+
+			if (window.leftMenu) {
+				leftMenu.reloadTags();
+			}
+
+			$(span.nextElementSibling).remove();
+			$(span).remove();
+		},
+		error: function() {
+			alert(strLang321);
+		}
+	});
+}
+
+function appendTag(tagName) {
+	var tagContainer = document.getElementById("tag_view");
+	var tagSpan = document.createElement("span");
+	tagSpan.innerText = tagName;
+	var deleteImg = document.createElement("img");
+	deleteImg.src = "/images/icon/oneline_delete.gif";
+	deleteImg.addEventListener("click", function() { removeTag(tagSpan); });
+	tagContainer.appendChild(tagSpan);
+	tagContainer.appendChild(deleteImg);
+}
+
+function onEnterPreviewTagInput() {
+	var tagInput = document.getElementById("tag_add");
+	var tagName = tagInput.value.trim();
+	if (tagName.length <= 0) return;
+	if ($.grep(document.querySelectorAll("#tag_view > span"), function(span) { return span.innerText == tagName }).length > 0) {
+		alert(strLangTagAlreadyUse);
+		return;
+	}
+
+	var mailId = g_paramURL.split("/");
+	var folderPath = mailId[0];
+	var mailUid = mailId[1];
+	$.ajax({
+		cache: false,
+		async: false,
+		method: 'post',
+		url: "/ezEmail/addMailTag.do",
+		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
+		success: function(result) {
+			if (result.status == "error") {
+				alert(strLang321);
+				return;
+			}
+
+			if (window.leftMenu) {
+				leftMenu.reloadTags();
+			}
+
+			appendTag(tagName);
+			tagInput.value = "";
+		},
+		error: function() {
+			alert(strLang321);
+		}
+	});
+}

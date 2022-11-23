@@ -892,6 +892,7 @@ function event_xmlhttp_mailPreview_Complete() {
             var pCountryCode = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYCODE")[0]);
             var pMailIP =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYIP")[0]);
             var pCountryName =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYNAME")[0]);
+            var pTags =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/TAGS")[0]);
             
             if (pPreviewShow_HOW == "H") {
                 PrevViewFormH.iptURL.value = pItemid;
@@ -1084,6 +1085,14 @@ function event_xmlhttp_mailPreview_Complete() {
                 } else {
                 	document.getElementById("preHSenderImage").src = "/images/kr/main/bestEmployee_pic_none.png";
                 }
+
+				if (useMailTag) {
+					document.getElementById("pre_h_tag_add").value = "";
+					document.getElementById("pre_h_tag_view").innerHTML = "";
+					if (pTags) {
+						pTags.split("|").forEach(function(tagName) { appendTagToPreview(tagName); });
+					}
+				}
             } else {
                 document.getElementById("PreW_subject").setAttribute("itemid", pItemid);
                 document.getElementById("PreW_subject").setAttribute("_contentclass", pContentClass);
@@ -1109,6 +1118,14 @@ function event_xmlhttp_mailPreview_Complete() {
                 } else {
                 	document.getElementById("preWSenderImage").src = "/images/kr/main/bestEmployee_pic_none.png";
                 }
+
+				if (useMailTag) {
+					document.getElementById("pre_w_tag_add").value = "";
+					document.getElementById("pre_w_tag_view").innerHTML = "";
+					if (pTags) {
+						pTags.split("|").forEach(function(tagName) { appendTagToPreview(tagName); });
+					}
+				}
             }
             MailList_ChangeStatus(xmlhttp_mailPreviewObject);
             xmlhttp_mailPreviewObject = null;
@@ -2121,4 +2138,80 @@ function mailConfirm_line() {
 	listContentArry.forEach(function(val, key) {
 		$("#"+val).toggleClass("mail_confirm");
 	});
+}
+
+function appendTagToPreview(tagName) {
+	var tagContainer = pPreviewShow_HOW == "H" ? document.getElementById("pre_h_tag_view") : document.getElementById("pre_w_tag_view");
+	var tagSpan = document.createElement("span");
+	tagSpan.innerText = tagName;
+	var deleteImg = document.createElement("img");
+	deleteImg.src = "/images/icon/oneline_delete.gif";
+	deleteImg.addEventListener("click", function() {
+		var mailId = Old_Preview_Href.split("/");
+		var folderPath = mailId[0];
+		var mailUid = mailId[1];
+		$.ajax({
+			cache: false,
+			method: "post",
+			url: "/ezEmail/deleteMailTag.do",
+			data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
+			success: function(result) {
+				if (result.status == "error") {
+					alert(strLang321);
+					return;
+				}
+
+				onChangeTagList();
+				$(tagSpan).remove();
+				$(deleteImg).remove();
+			},
+			error: function() {
+				alert(strLang321);
+			}
+		});
+	});
+	tagContainer.appendChild(tagSpan);
+	tagContainer.appendChild(deleteImg);
+}
+
+function onEnterPreviewTagInput() {
+	var idPrefix = pPreviewShow_HOW == "H" ? "pre_h_tag_" : "pre_w_tag_";
+	var tagInput = document.getElementById(idPrefix + "add");
+	var tagName = tagInput.value.trim();
+	if (tagName.length <= 0) return;
+	if ($.grep(document.querySelectorAll("#" + idPrefix + "view > span"), function(span) { return span.innerText == tagName }).length > 0) {
+		alert(strLangTagAlreadyUse);
+		return;
+	}
+
+	var mailId = Old_Preview_Href.split("/");
+	var folderPath = mailId[0];
+	var mailUid = mailId[1];
+	$.ajax({
+		cache: false,
+		async: false,
+		method: 'post',
+		url: "/ezEmail/addMailTag.do",
+		data: { folderPath: folderPath, mailUid: mailUid, tagName: tagName },
+		success: function(result) {
+			if (result.status == "error") {
+				alert(strLang321);
+				return;
+			}
+
+			onChangeTagList();
+			appendTagToPreview(tagName);
+			tagInput.value = "";
+		},
+		error: function() {
+			alert(strLang321);
+		}
+	});
+}
+
+function onChangeTagList() {
+	window.cacheTags = null;
+	if (window.leftMenu) {
+		leftMenu.reloadTags();
+	}
 }
