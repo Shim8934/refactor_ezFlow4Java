@@ -2428,4 +2428,16 @@
             ]]>
 	</select>
 	
+	<!--  2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 -->
+	<insert id="MBoardDAO.saveOneLineReply" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_ONELINEREPLY (
+				ITEMID, REPLYID, BOARDID, USERID, USERNAME, USERNAME2, WRITEDATE, CONTENT, PASSWORD, TENANT_ID, COMPANYID
+			)
+        	VALUES (
+        	 	#ITEMID#,  #REPLYID#, #BOARDID#, #USERID#, #USERNAME#, #USERNAME2#, #WRITEDATE#, #CONTENT#,	#PASSWORD#, #TENANTID#, #COMPANYID#
+        	)
+		]]>
+	</insert>
+	
 </sqlMap>
