@@ -1220,7 +1220,7 @@ public class EzWebFolderGWController {
 		String webFlag		= request.getParameter("webFlag")  != null ? request.getParameter("webFlag") : "";
 		JSONObject result   = new JSONObject();
 		
-		logger.debug("UserId: " + userId + " || Servername: " + serverName + " || Newname: " + newName + " || FileId: " + fileId);
+		logger.debug("UserId: " + userId + " || Servername: " + serverName + " || Newname: " + newName + " || FileId: " + fileId + " || webFlag: " + webFlag);
 		
 		if (fileId.equals("") || (fileExt.equals("") && newName.equals("")) || serverName.equals("") || userId.equals("") ) {
 			logger.debug("Parameter error!");
@@ -1336,7 +1336,7 @@ public class EzWebFolderGWController {
 			boolean isEncryptedFile = ezWebFolderService.isEncryptedFile(fileId, tenantId);
 
 			ezWebFolderService.updateFileName(fileId, updateFileName, timeUTC, tenantId);
-			ezWebFolderService.incrementFileVersion(userInfo, fileId);
+			ezWebFolderService.incrementFileVersion(userInfo, fileId, false);
 			ezWebFolderService.saveLog("U", companyId, offset, userId, userName1, userName2, tenantId, fileVO, "", userInfo.getPrimary());
 			
 			if (isEncryptedFile) {
