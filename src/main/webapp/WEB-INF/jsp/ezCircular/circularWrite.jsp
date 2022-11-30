@@ -406,10 +406,11 @@
         				<ul>
         					<c:choose>
         						<c:when test="${mode eq 'reuse'}">
-        							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t183"/></span></li>
+        							<!-- 2022-11-30 민지수 - 회람판 재사용, 수정  화면에서 버튼명 '저장' 으로 변경 -->
+        							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.kbm01"/></span></li>
         						</c:when>
         						<c:when test="${mode eq 'modify'}">
-        							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t184"/></span></li>
+        							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.kbm01"/></span></li>
         						</c:when>
         						<c:otherwise>
         							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezCircular.t28 => t25 -->
