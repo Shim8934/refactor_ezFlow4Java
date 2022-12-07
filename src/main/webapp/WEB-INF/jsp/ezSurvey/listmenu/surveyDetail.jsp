@@ -1334,14 +1334,15 @@
 		var allQuestionWrapper = $(".prevQsWrapper"); // 질문 하나마다 래퍼 클래스 덩어리째로 가져온다. type값을 가지고 있으며, 하위에 질문 세부항목이 존재하여 find로 접근이 가능하다.
 		
 		// 분기처리 이전, 해당 질문 다음 순서인 모든 질문을 임시로 활성화시킨다. (설문종료 이후 다시 다른 분기를 선택하는 경우 대응)
-		// 아래 each 루프를 돌면서 비활성/활성이 다시 설정된다.
+		// enableAllQuestion() 동작 후, 아래의 allQuestionWrapper.each 루프를 돌면서 질문의 비활성/활성이 다시 설정된다.
 		enableAllQuestion("prevQstn" + startID);
 		
 		// 실제 접근이 가능한 질문들. each 루프를 돌며 startID와 같거나 큰 값일때만 동작한다. (분기설정은 자신 이후의 질문만 대상자로 선택 가능하므로)
 		allQuestionWrapper.each (function(index, element) {
 			var id = $(this).attr("id"); // prevQstn1과 같은 질문 래퍼 클래스의 아이디
+			var qstIdx = id.replace("prevQstn", ""); // 각 질문의 고유 순번 저장
 			
-			if (id.replace("prevQstn", "") >= parseInt(startID)) { // 자신과 같거나 그 이후의 질문인 경우, 아래 코드를 실행
+			if (qstIdx >= parseInt(startID)) { // 자신과 같거나 그 이후의 질문인 경우, 아래 코드를 실행
 				var type = $(this).attr("type"); // 설문 유형
 				var skip = $(this).attr("skip"); // 단일분기가 설정된 설문의 경우, 대상 분기 설문 순서값 (id에서 prevQstn 없앤 값이랑 동일)
 				
@@ -1370,7 +1371,8 @@
 				// logic이 -1이면 분기없음이므로 이후 처리 없음
 				else { // skip == -1
 					if (type == "1") { // 단일선택
-						var qstOptions = $(this).find("[name = 'qstn" + startID + "opt'][logic != '-1']"); // 분기가 설정된 세부 라디오 항목이 존재
+						// 현재 루프 중인 질문 자기 자신에 대해, 모든 답변이 가질 수 있는 분기를 체크
+						var qstOptions = $(this).find("[name = 'qstn" + qstIdx + "opt'][logic != '-1']"); // 분기가 설정된 세부 라디오 항목이 존재 (예 : qstn1opt)
 						if (qstOptions.length > 0) {
 							qstOptions.each (function(index, element) {
 								if ($(this).attr("logic") != "0") { // 해당 목표 분기 비활성화 또는 활성화
