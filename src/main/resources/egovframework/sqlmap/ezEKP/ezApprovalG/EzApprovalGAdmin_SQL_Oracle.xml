@@ -5911,5 +5911,83 @@
     		COMPANYID = #v_COMPANYID#
     	]]>
 	</select>
+	
+	<!-- 2022-12-09 홍승비 - 전자결재G > 현재 년도 기준의 종료예정 기록물철을 리스트로 리턴하는 쿼리 (회사ID 조건 사용) -->
+	<select id="EzApprovalGAdminDAO.getCabinetListByExpireYear" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+	            A.CABINETCLASSNO as "v_OrgCabinetClassNo",
+	            '' AS	"v_CabinetClassNo",
+	            '' AS	"v_ProductionYear",
+	            '' AS	"v_RegSerialNo",
+	            '0' AS	"v_TerminateFlag",
+	            A.title AS	"v_Title",
+	            A.title2 AS	"v_Title2",
+	            A.rectypecode AS	"v_RecTypeCode",
+	            '' AS	"v_ExpirationYear",
+	            A.keepingmethod AS	"v_KeepingMethod",
+	            A.keepingplace AS	"v_KeepingPlace",
+	            '' AS	"v_DisplayEndDate",
+	            '' AS	"v_DisplayReason",
+	            A.ownername AS	"v_OwnerName",
+	            A.ownername2 AS	"v_OwnerName2",
+	            A.ownerid AS	"v_OwnerID",
+	            '1' AS	"v_OldCabinetFlag",
+	            '0' AS	"v_SpecialCatalogFlag",
+	            '0' AS	"v_ConfirmFlag",
+	            '' AS	"v_SYSDATE",
+	            A.keepingperiod AS	"v_KeepingPeriod",
+	            A.displayrecflag AS	"v_DisplayRecFlag",
+	            A.processdeptcode AS	"v_ProcessDeptCode",
+	            A.processdeptname AS	"v_ProcessDeptName",
+	            A.processdeptname2 AS	"v_ProcessDeptName2",
+	            A.taskcode AS	"v_TaskCode",
+	            A.taskname AS	"v_TaskName",
+	            A.taskname2 AS	"v_TaskName2",
+	            '0' AS	"v_TransDelayFlag",
+	            TRIM(A.processdeptcode) AS	"v_OwnerDeptID",
+	            A.taskcode AS	"v_OwnerTask",
+	            'N' AS	"v_DelayEndYFlag",
+	            '0' AS	"v_DelFlag",
+	            B.companyid AS	"companyID",
+	            '' AS	"v_TENANTID"
+			FROM
+				TBL_CABINETCLASS A
+			INNER JOIN
+				TBL_CABINET B
+			ON
+				A.CabinetClassNo = B.CabinetClassNo
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.COMPANYID = B.COMPANYID
+			LEFT JOIN
+				TBL_TASKCODE C
+			ON
+				A.TASKCODE = C.TASKCODE
+			AND
+				A.TENANT_ID = C.TENANT_ID
+			AND
+				A.COMPANYID = C.COMPANYID
+			WHERE
+				A.EXPIRATIONYEAR = #v_YEAR#
+			AND
+				A.DELAYENDYFLAG = 'N'
+	 		AND
+				A.DELFLAG = '0'
+			AND
+				B.DELFLAG = '0'
+			AND
+				B.CABINETTRANSFERFLAG != '2'
+			AND
+				B.VOLUMENO = '001'
+			AND
+				C.DELFLAG = '0'
+			AND
+				A.COMPANYID = #v_COMPANYID#
+			AND
+				A.TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
 </sqlMap>
-

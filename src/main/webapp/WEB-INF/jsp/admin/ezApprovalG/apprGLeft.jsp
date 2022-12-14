@@ -122,6 +122,10 @@
 						//감사결재선관리
 						url = "/admin/ezApprovalG/auditApprLineManage.do";
 						break;
+					/* 2022-12-09 홍승비 - 전자결재G > 생산연도 입력받는 기록물철 자동생성 메뉴 추가 */
+					case "autoRegCabinet":
+						url = "/admin/ezApprovalG/registerCabinetSemiAutoManage.do";
+						break;
 				}
 				
 				window.open(url,"right");
@@ -207,6 +211,10 @@
 					<ul></ul>
 				</h2>
 				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(20)"><spring:message code='main.t98'/></span></h2> --%>
+				<%-- 2022-12-09 홍승비 - 전자결재G > 생산연도 입력받는 기록물철 자동생성 메뉴 추가 --%>
+				<c:if test="${approvalFlag == 'G'}">
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage('autoRegCabinet')"><spring:message code='ezApprovalG.HSBAC01'/></span></h2>
+				</c:if>
 			</div>
 		</div>
 	</body>
