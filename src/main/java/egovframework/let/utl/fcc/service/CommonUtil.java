@@ -232,6 +232,8 @@ public class CommonUtil {
 	@Autowired
 	private Rest rest;
 
+	Document emptyDocument;
+
 	/* File separator 공통 함수 */
 	public String separator = "/";
 	
@@ -247,7 +249,8 @@ public class CommonUtil {
     	logger.debug("init started.");
 
     	commonUtilInstance = this;
-//    	loginUsers = new ConcurrentHashMap<String, String>();
+
+		emptyDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
     	
     	logger.debug("init ended.");
     }
@@ -352,7 +355,7 @@ public class CommonUtil {
 
 	public LoginVO userInfo(String loginCookie){
 		if (StringUtils.isEmpty(loginCookie)) {
-			return null;
+			return new LoginVO();
 		}
 
 		try{
@@ -415,7 +418,7 @@ public class CommonUtil {
 			
 			return user;
 		}catch(Exception e){
-			return null;
+			return new LoginVO();
 		}
 	}
 	
@@ -513,7 +516,7 @@ public class CommonUtil {
 			return user;
 		}catch(Exception e){
 			e.printStackTrace();
-			return null;
+			return new LoginVO();
 		}
 	}
 	
@@ -522,12 +525,12 @@ public class CommonUtil {
 			LoginVO user = userInfo(loginCookie);
 	
 			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
-				return null;
+				return new LoginVO();
 			}else{
 				return user;
 			}
 		}catch(Exception e){
-			return null;
+			return new LoginVO();
 		}
 	}
 	
@@ -536,12 +539,12 @@ public class CommonUtil {
 			LoginVO user = aprUserInfo(loginCookie);
 	
 			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
-				return null;
+				return new LoginVO();
 			}else{
 				return user;
 			}
 		}catch(Exception e){
-			return null;
+			return new LoginVO();
 		}
 	}
 	
@@ -825,7 +828,7 @@ public class CommonUtil {
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;
-        Document doc = null;
+        Document doc = emptyDocument;
         
         try {  
             builder = factory.newDocumentBuilder();  
@@ -867,7 +870,7 @@ public class CommonUtil {
 			
 			return output;
 		}catch(Exception e){
-			return null;
+			return "";
 		}
 	}
 	
@@ -1610,7 +1613,7 @@ public class CommonUtil {
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			return null;
+			return new LoginVO();
 		}
 	}
 	
