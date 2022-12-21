@@ -7194,7 +7194,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			e.printStackTrace();
 			
 			if (docNumFlag) {
-				rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+				// Cause: java.sql.SQLTransactionRollbackException: (conn=7146174) Deadlock found when trying to get lock; try restarting transaction
+				// 위와 같이 Deadlock 예외가 발생한 경우엔 MariaDB 클러스터 환경에서 다른 Node에 의해 commit이 된 경우이므로
+				// 채번한 번호에 대한 롤백 처리를 하지 않는다.
+				if (e.getCause().getMessage().indexOf("Deadlock") == -1) {
+					rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+				}
 			} 
 			
 			if (hwpSaveFlag) {
