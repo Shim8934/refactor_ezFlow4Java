@@ -915,6 +915,15 @@
 		        } catch (e) { }
 		    }
 		    
+		    // 22.12.09 전인하 리스트뷰 실습 - 출력하고자 하는 jsp로 get요청보내는 메소드
+		    function movePracBoard() {
+		    	if (typeof window.parent.frames["right"] == "undefined") {	// rightFrame이 선언되어있지 않을 경우 rightFrame 규정
+					rightFrame.src = "/ezBoard/boardItemListPrac.do";
+				} else {
+		        	window.parent.frames["right"].location.href = "/ezBoard/boardItemListPrac.do";	// 있을 경우 리다이렉트    	
+				}
+		    }		    		    
+
 		    function MyBoard() {
 		    	if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardItemListMyList.do";
@@ -1121,6 +1130,10 @@
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>
+				        	
+				        	<!-- 2022.12.09. 전인하 게시판 리스트뷰 실습 변경점 - 메뉴 하나 생성 -->				        	
+				        	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" onclick="movePracBoard()" style="color:red;">실습 게시판</span></li>
+
 				        	<li><span class="sub_iconLNB tree_board_my"></span><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
 							<li><span class="sub_iconLNB tree_board_reservation"></span><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
 							<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
