@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
@@ -71,6 +72,9 @@ public class EzApprovalGRelayScheduler {
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private ServletContext servletContext;
+
 	@Resource(name = "crypto") 
     private EgovFileScrty egovFileScrty;
 
@@ -112,8 +116,8 @@ public class EzApprovalGRelayScheduler {
 			 tenantID = Integer.parseInt(config.getProperty("config.RelaySchedulerTenant"));
 		 }
     	 
-         strRelayFolderPath = config.getProperty("relay_root").trim() + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT").trim();
-         strAprDocPath = config.getProperty("relay_root").trim() + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID).trim(); 
+         strRelayFolderPath = commonUtil.getRealPath(servletContext) + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT").trim();
+         strAprDocPath = commonUtil.getRealPath(servletContext) + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID).trim(); 
          
          if (!strRelayFolderPath.substring(strRelayFolderPath.length() - 1).equals(commonUtil.separator)) {
         	 strRelayFolderPath = strRelayFolderPath + commonUtil.separator;
@@ -504,7 +508,7 @@ public class EzApprovalGRelayScheduler {
 //                                      extXml = null;
         						 
         						 //결재진행문서 정보에 수신문서 정보를 입력해 준다.
-        						 boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(strWriterName, strWriterDept, config.getProperty("relay_root"), strXDocID, strReceiveID, strCompanyID, tenantID);
+        						 boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(strWriterName, strWriterDept, commonUtil.getRealPath(servletContext), strXDocID, strReceiveID, strCompanyID, tenantID);
         						 logger.debug("#수신문서정보입력=" + inputReceiveInfo);
         						 
         						 //수신된 유통문서에 대해 수신(Receive) ACK 발송
@@ -671,8 +675,8 @@ public class EzApprovalGRelayScheduler {
         String strRelayFolderPath = "";
         String strAprDocPath =  "";
         
-		strRelayFolderPath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT");
-		strAprDocPath = config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID); 
+		strRelayFolderPath = commonUtil.getRealPath(servletContext) + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT");
+		strAprDocPath = commonUtil.getRealPath(servletContext) + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID); 
 		
 		if (!strRelayFolderPath.substring(strRelayFolderPath.length() - 1).equals(commonUtil.separator)) {
 			strRelayFolderPath = strRelayFolderPath + commonUtil.separator;
@@ -1364,7 +1368,7 @@ public class EzApprovalGRelayScheduler {
         }
 
         //결재진행문서 정보에 수신문서 정보를 입력해 준다.
-        boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(relayXML.getWriterName(), relayXML.getWriterDept(), config.getProperty("relay_root"), relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
+        boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(relayXML.getWriterName(), relayXML.getWriterDept(), commonUtil.getRealPath(servletContext), relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
         logger.debug("#수신문서정보입력=" + inputReceiveInfo);
 
         //수신된 유통문서에 대해 수신(Receive) ACK 발송
@@ -1447,7 +1451,7 @@ public class EzApprovalGRelayScheduler {
         }
 
         //결재진행문서 정보에 수신문서 정보를 입력해 준다.
-        boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(relayXML.getWriterName(), relayXML.getWriterDept(), config.getProperty("relay_root"), relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
+        boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(relayXML.getWriterName(), relayXML.getWriterDept(), commonUtil.getRealPath(servletContext), relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
         logger.debug("#수신문서정보입력=" + inputReceiveInfo);
 
         //수신된 유통문서에 대해 수신(Receive) ACK 발송
@@ -1649,7 +1653,7 @@ public class EzApprovalGRelayScheduler {
  				 			
  			String strCompanyID = config.getProperty("config.companyNum");
 				
- 			String configRelayRoot = config.getProperty("relay_root").trim();
+ 			String configRelayRoot = commonUtil.getRealPath(servletContext);
  			String configRelaySchedulerTenant = config.getProperty("RelaySchedulerTenant");
  			String configUloadRelayRoot = config.getProperty("upload_relay.ROOT").trim();
  			String separator = commonUtil.separator;
@@ -1972,7 +1976,7 @@ public class EzApprovalGRelayScheduler {
 			logger.debug(sendOutInfoList.toString());
 			
 			//그룹웨에서 문서유통 모듈의 data 폴더에 접근하는 경로 생성
-			String configRelayRoot = config.getProperty("relay_root").trim();
+			String configRelayRoot = commonUtil.getRealPath(servletContext).trim();
 			int configRelaySchedulerTenant = 0;
 			String configUloadRelayRoot = config.getProperty("upload_relay.ROOT").trim();
 			String strRelayFolderPath = configRelayRoot + commonUtil.separator + "fileroot" + commonUtil.separator + configRelaySchedulerTenant + commonUtil.separator + "files" + configUloadRelayRoot;
