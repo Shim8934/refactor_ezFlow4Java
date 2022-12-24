@@ -84,19 +84,7 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.dailyApprFileManage}")
 	public void dailyApprFileManage() throws Exception {
 		logger.debug("dailyApprFileManage scheduler started.");
-		logger.debug("dailyApprFileManage scheduler do nothing!");
-		
-		// choose scheduler running server
-		/*if (!preScheduler("dailyApprFileManage")) {
-			logger.debug("dailyApprFileManage scheduler ended.");
-			return;
-		}
-		
-		String realPath = config.getProperty("data_root");
-		
-		// delete expired big-attachment files (Approval)
-		deleteApprExpireAttach(realPath);*/
-		
+		logger.debug("dailyApprFileManage scheduler do nothing!");				
 		logger.debug("dailyApprFileManage scheduler ended.");
 	}
 	
