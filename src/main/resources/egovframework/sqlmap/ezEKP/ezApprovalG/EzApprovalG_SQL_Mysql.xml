@@ -5404,6 +5404,7 @@
 	</select>
 	
 	<select id="EzApprovalG.getTaskSubCategoryAll" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+	<![CDATA[
 		SELECT 
 		    VTASKCLASS.TASKCODE,
 		    TBL_CABINET.CABINETID,
@@ -5520,6 +5521,9 @@
 	        	TRIM(TBL_CABINETCLASS.OWNERDEPTID) = #deptCode#
 	        AND 
 	        	TBL_CABINETCLASS.EXPIRATIONYEAR >= #accountYear#
+	        AND
+	        	TBL_CABINETCLASS.PRODUCTIONYEAR <= #accountYear#
+	]]>
 	   		<isEqual property="initFlag" compareValue="1">
 	   			<![CDATA[
 			        AND 

@@ -23911,7 +23911,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    cabinetListVO.setTenantID(userInfo.getTenantId());
 
 		switch (cabinetListVO.getListFlag()) {
-		case "0" :	// 기록물철 대장
+		case "0" :	// 기록물철 대장 (기록물철등록부)
 			cabinetListVO.setListType("002");
 			break;
 		case "1" :	// 편철확정대상 기록물철
