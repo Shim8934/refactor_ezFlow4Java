@@ -1767,7 +1767,7 @@
 										<p class="hidden_area" id="PreH_MailCC_Rayer" style="display:none;"><span id="PreH_MailCCDetail"></span></p>
 									</li>
 									<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
-										<input id="pre_h_tag_add" type="text" />
+										<input id="pre_h_tag_add" type="text" maxlength="100" />
 										<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
 										<div id="pre_h_tag_view" style="padding-left: 60px;"></div>
 									</li>
@@ -1834,8 +1834,8 @@
 										<p class="hidden_area" id="PreW_MailCCDetail_Rayer" style="display:none;"><span id="PreW_MailCCDetail"></span></p>
 									</li>
 									<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
-										<input id="pre_w_tag_add" type="text" />
-											<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+										<input id="pre_w_tag_add" type="text" maxlength="100" />
+										<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
 										<div id="pre_w_tag_view" style="padding-left: 60px;"></div>
 									</li>
 								</ul>

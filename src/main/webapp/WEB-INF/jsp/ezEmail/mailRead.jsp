@@ -770,7 +770,7 @@
 							<tr>
 								<th><spring:message code='ezEmail.tag' /></th>
 								<td id="tag_td" colspan="4">
-									<input id="tag_add" type="text" />
+									<input id="tag_add" type="text" maxlength="100" />
 									<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
 									<div id="tag_view">
 										<c:forEach items="${tags}" var="name">

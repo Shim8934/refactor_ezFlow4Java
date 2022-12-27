@@ -795,7 +795,7 @@ function SaveApproveInfo(pApproveFlag, currIdx) {
     xmlhttp.send(xmlpara);
     
     if (xmlhttp != null && xmlhttp.readyState == 4) {
-     	 if (xmlhttp.statusText == "OK") {
+     	 if (xmlhttp.status == 200) {
      	    var dataNodes = GetChildNodes(xmlhttp.responseXML);
      	    return getNodeText(dataNodes[0]);
      	 } else {
@@ -1574,7 +1574,7 @@ function UpdateDocHistory(pHtml) {
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
         if (xmlhttp != null && xmlhttp.readyState == 4) {
-         	 if (xmlhttp.statusText == "OK") {
+         	 if (xmlhttp.status == 200) {
          		
          	 } else {
          		 var pAlertContent = strLang89;

@@ -154,7 +154,9 @@
 
 		function commit() {
 			leftMenu.reloadTags();
-			session.nameTd.innerText = session.input.value.trim();
+			var renamedValue = session.input.value.trim();
+			session.nameTd.innerText = renamedValue;
+			session.nameTd.title = renamedValue;
 			close();
 		}
 
@@ -222,7 +224,7 @@
 			return;
 		}
 
-		if (!confirm("<spring:message code='ezEmail.0hun04' />")) {
+		if (!confirm("<spring:message code='ezEmail.tag.config.delete.confirm' />")) {
 			return;
 		}
 
@@ -266,7 +268,7 @@
 					contentDiv.append("<tr class='non_data'><td colspan='2' style='text-align: center;'><spring:message code='ezEmail.tag.config.nondata' /></td></tr>");
 				} else {
 					tags.forEach(function(tag) {
-						contentDiv.append("<tr id='" + tag.idx + "'><td>" + tag.name + "</td><td>" + tag.count + "</td></tr>");
+						contentDiv.append("<tr id='" + tag.idx + "' title='" + tag.name + "'><td>" + tag.name + "</td><td>" + tag.count + "</td></tr>");
 					});
 					attachRowsEvent();
 				}
