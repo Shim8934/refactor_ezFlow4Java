@@ -211,8 +211,8 @@
 					<ul></ul>
 				</h2>
 				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(20)"><spring:message code='main.t98'/></span></h2> --%>
-				<%-- 2022-12-09 홍승비 - 전자결재G > 생산연도 입력받는 기록물철 자동생성 메뉴 추가 --%>
-				<c:if test="${approvalFlag == 'G'}">
+				<%-- 2022-12-09 홍승비 - 전자결재G > 생산연도 입력받는 기록물철 자동생성 메뉴 추가 (useRegisterCabinetSemiAuto 테넌트 컨피그 체크) --%>
+				<c:if test="${approvalFlag == 'G' && useRegisterCabinetSemiAuto == 'YES'}">
 					<h2><span style="display:inline-block;width:100%;" onClick="goPage('autoRegCabinet')"><spring:message code='ezApprovalG.HSBAC01'/></span></h2>
 				</c:if>
 			</div>

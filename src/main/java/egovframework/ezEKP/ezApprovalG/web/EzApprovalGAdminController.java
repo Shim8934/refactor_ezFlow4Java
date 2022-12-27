@@ -193,6 +193,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         	useAdminBujae = "NO";
         }
         
+        logger.debug("useAdminBujae = " + useAdminBujae);
+        
         String useEnforceSihang = ezCommonService.getTenantConfig("UseEnforceSihang", userInfo.getTenantId());
 		
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -204,8 +206,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("useOpenGov", useOpenGov);
 		
+		/* 2022-12-27 홍승비 - 전자결재G 기록물철 자동생성기능 메뉴 표출 플래그 추가 */
+		String useRegisterCabinetSemiAuto = ezCommonService.getTenantConfig("useRegisterCabinetSemiAuto", userInfo.getTenantId());
+		
+		model.addAttribute("useRegisterCabinetSemiAuto", useRegisterCabinetSemiAuto);
+		
 		logger.debug("apprGLeft ended. approvalFlag = " + approvalFlag);
-		logger.debug("apprGLeft ended. useAdminBujae = " + useAdminBujae);
 		
 		return "/admin/ezApprovalG/apprGLeft";
 	}
