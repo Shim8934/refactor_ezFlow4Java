@@ -5728,4 +5728,188 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			return "error";
 		}
 	}
+	
+	/* 2022-12-09 홍승비 - 전자결재G > 현재 년도 기준의 종료예정 기록물철을 리스트로 리턴하는 메서드 */
+    public List<Map<String, Object>> getCabinetListByExpireYear(String currYear, String companyID, int tenantID) throws Exception {
+    	logger.debug("getCabinetListByExpireYear started");
+    	
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_YEAR", currYear);
+		map.put("v_COMPANYID", companyID);	
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("map for getCabinetListByExpireYear   ::   " + map.toString());
+		
+		List<Map<String, Object>> resultCabList = ezApprovalGAdminDAO.getCabinetListByExpireYear(map);
+		
+		logger.debug("getCabinetListByExpireYear ended, resultCabList size = " + resultCabList.size());
+		
+		return resultCabList;
+    }
+    
+    /* 2022-12-09 홍승비 - 전자결재G > 현재 년도 기준의 종료예정 기록물철을 원하는 생산연도의 기록물철로 삽입하는 메서드 */
+	@Override
+	public int cloneMultipleCabinets(String regYear, List<Map<String, Object>> cabinetList, String strLang, String companyID, int tenantID) throws Exception {
+		logger.debug("registerCabinet started");
+		
+		int sucessCount = 0; // 일괄생성에 성공한 기록물철 개수
+		
+		for (Map<String, Object> map : cabinetList) {
+			String orgCabinetClassNo = (map.get("v_OrgCabinetClassNo") != null) ? String.valueOf(map.get("v_OrgCabinetClassNo")).trim() : ""; // (원)기록물철 ID
+			String deptCode = (map.get("v_ProcessDeptCode") != null) ? String.valueOf(map.get("v_ProcessDeptCode")).trim() : ""; // 생성부서
+			String taskCode = (map.get("v_TaskCode") != null) ? String.valueOf(map.get("v_TaskCode")).trim() : ""; // 단위업무
+			
+			if (!deptCode.isEmpty() && !taskCode.isEmpty()) {
+				// 기록물철의 일련번호를 단위업무별로 부여하기 (type1으로 001을 전달하여 생산연도 기준의 기록물철 일련번호를 가져옴)
+				// 생산연도는 사용자가 입력한 regYear를 그대로 전달함 (이미 페이지단에서 회계연도 체크 완료됨)
+				String regSN = formatSerialNum(getSerialNumRegYear("001", deptCode, taskCode, companyID, strLang, tenantID, regYear));
+				
+				// 생산연도는 사용자가 입력한 값을 그대로 받아 사용 (= 종료연도 동일)
+				String produceY = regYear;
+				
+				// 기록물철 분류번호 : 처리과기관코드 + 단위업무코드 + 생산년도 + 등록일련번호
+				String cabinetClassNO = deptCode + taskCode + produceY + regSN;
+				
+				try {
+					map.put("v_CabinetClassNo", 	cabinetClassNO);
+					map.put("v_ProductionYear", 	produceY);
+					map.put("v_ExpirationYear", 	produceY);
+					map.put("v_RegSerialNo", 		regSN);
+					map.put("v_SYSDATE", 			commonUtil.getTodayUTCTime("")); // 등록일은 현재 시간 그대로 사용 (관리자단에서 임의로 생성했음을 알 수 있음)
+					map.put("v_TENANTID", 			tenantID);
+					
+					logger.debug("map for insertRegCabinetCalss  ::  " + map.toString());
+					
+					// 기록물철 생성 (TBL_CABINETCLASS)
+					ezApprovalGDAO.insertRegCabinetCalss(map);
+					
+					Map<String, Object> map1 = new HashMap<String, Object>();
+					map1.put("v_CABINETCLASSNO",  	cabinetClassNO);
+					map1.put("v_DeptMID",  			map.get("v_OwnerID"));
+					map1.put("v_DeptMName",  		map.get("v_OwnerName"));
+					map1.put("v_DeptMName2",		map.get("v_OwnerName2"));
+					map1.put("v_TENANTID",  		tenantID);
+					map1.put("v_SYSDATE",			commonUtil.getTodayUTCTime(""));
+					map1.put("companyID", 			companyID);
+					
+					logger.debug("map for trigerTbCabinet  ::  " + map1.toString());
+					
+					// 기록물철 메인정보 생성 (TBL_CABINET)
+					ezApprovalGDAO.trigerTbCabinet(map1);
+					
+					// 기록물철 권한정보 생성 (TBL_CABROLEINFO)
+					ezApprovalGDAO.trigerTbCabRoleInfo(map1);
+					
+					Map<String, Object> map2 = new HashMap<String, Object>();
+					map2.put("v_CABINETCLASSNO", 	orgCabinetClassNo);
+					map2.put("v_TENANTID", 			tenantID);
+					map2.put("v_COMPANYID", 		companyID);
+					
+					// 성공 기록물철 개수 증가
+					sucessCount++;
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					// 자동생성 중 오류난 기록물철은 기록물철 일련번호(TYPE1 = '001') 롤백
+					rollbackSN("001", deptCode, taskCode, regSN, companyID, strLang, tenantID, produceY);
+				}
+			}
+		}
+		
+		logger.debug("registerCabinet ended");
+		return sucessCount;
+	}
+	
+	/* 2022-12-09 홍승비 - 전자결재G > 기록물철 자동생성을 위해 오버라이드 없이 구현한 메서드 (기록물철 등록일련번호 가져오기)  */
+	public String getSerialNumRegYear(String snType1, String snType2, String snType3, String companyID, String langType, int tenantID, String regYear) throws Exception {
+		logger.debug("getSerialNum started.");
+		
+
+		String accountYear = regYear;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("iv_Type1", snType1);
+		map.put("iv_Type2", snType2);
+		map.put("iv_Type3", snType3);
+		map.put("v_AccountYear", accountYear);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
+		
+		String result = ezApprovalGDAO.spGetSerialNo(map);
+		map.put("v_CurSN", result);
+		
+		// 생산연도에 대해 기록물철의 일련번호가 완전히 없으면 신규 레코드 생성
+		if (result == null) {
+		    String curSn = "1";
+		    
+            map.put("v_CurSN", curSn);
+    
+            ezApprovalGDAO.insertSerialNo(map);
+            result = curSn;
+		}
+		
+		int rollBackFlag =  ezApprovalGDAO.rollBackFlag(map);
+		
+		if (rollBackFlag == 1) {
+			logger.debug("delete");
+			 ezApprovalGDAO.deleteSerialNo(map);
+		} else {
+			logger.debug("update");
+			ezApprovalGDAO.updateSerialNo(map);
+			result = Integer.toString((Integer.parseInt(result)));
+		}
+		
+		logger.debug("deptID, SerialNum = " + snType2 + ", " + result);
+		logger.debug("getSerialNum ended.");
+		
+		return String.valueOf(result);
+	}
+	
+	/* 2022-12-09 홍승비 - 전자결재G > 기록물철 자동생성을 위해 오버라이드 없이 구현한 메서드 (일련번호 6자리 포맷) */
+	private String formatSerialNum(String strValue) throws Exception {
+		return getNDigitNum(strValue, 6);
+	}
+	
+	public String getNDigitNum(String strValue, int numDigits) {
+		int valueLen = strValue.length();
+		String tempDigit = "";
+		
+		while (valueLen < numDigits) {
+			tempDigit = "0" + "" + tempDigit;
+			valueLen++;
+		}
+		
+		return tempDigit + strValue;
+	}
+	
+	/* 2022-12-09 홍승비 - 전자결재G > 기록물철 자동생성을 위해 오버라이드 없이 구현한 메서드 (일련번호 serialNumber 롤백) */
+	private String rollbackSN(String snType1, String snType2, String snType3, String toSN, String companyID, String strLang, int tenantID, String regYear) throws Exception {
+		logger.debug("rollbackSN started");
+		
+		String accountYear = regYear;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("iv_Type1", snType1);
+		map.put("iv_Type2", snType2);
+		map.put("iv_Type3", snType3);
+		map.put("v_CurSN", toSN);
+		map.put("v_AccountYear", accountYear);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		
+		/* 2022-09-21 홍승비 - 정상적인 문서번호 채번 뒤의 중복삽입 오류가 발생한 경우, 기존 문서번호를 롤백하지 않도록 카운트 체크 */
+		int noRollbackCnt = ezApprovalGDAO.getNoRollbackRecordCnt(map);
+		if (noRollbackCnt <= 0) { // 롤백하지 않아야 하는 레코드가 없을때만 롤백
+			ezApprovalGDAO.spRollbackSN(map);
+		}
+		
+		logger.debug("rollbackSN ended, noRollbackCnt = " + noRollbackCnt);
+
+		return "TRUE";
+	}
+	
+	
 }

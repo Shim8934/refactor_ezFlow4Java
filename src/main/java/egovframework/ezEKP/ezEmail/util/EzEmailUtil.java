@@ -77,6 +77,7 @@ import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 import javax.mail.util.ByteArrayDataSource;
+import javax.servlet.ServletContext;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
@@ -154,6 +155,9 @@ public class EzEmailUtil {
     private Properties config;
 	
 	@Autowired
+	private ServletContext servletContext;
+
+	@Autowired
 	private CommonUtil commonUtil;
 	
 	@Autowired
@@ -166,7 +170,7 @@ public class EzEmailUtil {
 	Rest rest;
 
 	public String getMailHeaderPath(long mailboxId, long mailUid) {
-		String realPath = config.getProperty("data_root");
+		String realPath = commonUtil.getRealPath(servletContext);
 		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
 		String parentFolderName = String.valueOf(mailUid % 100);
 		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
@@ -177,7 +181,7 @@ public class EzEmailUtil {
 	}
 
 	public String getMailBodyPath(long mailboxId, long mailUid) {
-		String realPath = config.getProperty("data_root");
+		String realPath = commonUtil.getRealPath(servletContext);
 		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
 		String parentFolderName = String.valueOf(mailUid % 100);
 		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
@@ -1119,7 +1123,7 @@ public class EzEmailUtil {
 					contentID = contentID.substring(0, contentID.length() - 1);
 				}
 
-				if (!htmlBodyContent.contains("contentId=%3C" + contentID + "%3E")) {
+				if (!htmlBodyContent.contains("contentId=%3C" + URLEncoder.encode(contentID, "UTF-8") + "%3E")) {
 					isAttachmentWithUnreferencedContentID = true;
 				}
 			}
@@ -3229,6 +3233,7 @@ public class EzEmailUtil {
 		} else if (src.isMimeType("multipart/*")) {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
+			boolean isAdded = false;
 			
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
@@ -3236,12 +3241,20 @@ public class EzEmailUtil {
 				if (copyInlineParts(p, dest, includeAttachment, convertInlineImageToAttachment)) {
 					return true;
 				}
+
+				// dhlee : 20221125 - multipart/mixed 안에 인라인 이미지 파트가 있는 메일이 있어 추가함.
+				if (((MimePart)p).getContentID() != null) {
+					isAdded = true;
+				}
 			}
+
+			return isAdded;
 		// related 파트안에 mixed 파트가 있고 mixed 파트 안에 첨부파일이 있는 경우 전달 시
 		// 첨부파일을 추가하기 위해 다음 코드를 추가함
 		// related 파트안에 mixed 파트가 있고 첨부파일이 있는 메일.eml 참고
 		} else if (src instanceof BodyPart) {
 			if (src.getDisposition() != null && src.getDisposition().equalsIgnoreCase(Part.ATTACHMENT) 
+					|| ((MimePart)src).getContentID() != null // dhlee : 20221125 - multipart/mixed 안에 인라인 이미지 파트가 있는 메일이 있어 추가함.
 					|| src.isMimeType("application/*")) {
 				dest.addBodyPart((BodyPart)src);	
 			}			

@@ -30,6 +30,9 @@ var g_searchDate = {
 
 var cabProduceY = ""; // 기록물철등록부에서 기록물보기로 진입한 경우, 선택된 기록물철분류의 생산년도를 담는 변수
 
+/* 2022-12-27 홍승비 - 기록물철 검색 시 생산연도 조건 없는 경우, 반드시 회계연도 '이하' 조건을 사용하기 위한 회계연도 전역변수 추가 */
+var accountYearForCabList = getAccountingYear();
+
 function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
@@ -676,6 +679,20 @@ function GetCaninetListXml() {
     {
         var oSParam = loadXMLString(g_CabSearchParamXml);
         xmlpara.documentElement.appendChild(oSParam.documentElement);
+    }
+    
+    /* 2022-12-27 홍승비 - 기록물철등록부에서 진입 + 특정 생산연도 '이하' 검색조건이 없다면 반드시 현재 회계연도를 생산연도 검색조건으로 체크하도록 수정 */
+    // 현재 회계연도와 같거나 이하인 생산연도의 기록물철만 기본으로 표출함
+    var eProduceYear = xmlpara.getElementsByTagName("EPRODUCEY")[0];
+    if (ListTypeFlag == "0") {
+    	// 생산연도 검색조건 태그 자체가 없음 -> 검색조건 태그를 신규 삽입
+    	if (typeof(eProduceYear) == "undefined" || eProduceYear == null) {
+    		createNodeAndInsertText(xmlpara, objNode, "EPRODUCEY", accountYearForCabList);
+    	}
+    	// 생산연도 검색조건 태그는 존재하나 내부에 값이 없음 -> 검색조건 태그 내부의 값을 치환
+    	else if (eProduceYear.innerHTML.trim() == "") {
+    		eProduceYear.innerHTML = accountYearForCabList;
+    	}
     }
 
     g_szParamXml = getXmlString(xmlpara);

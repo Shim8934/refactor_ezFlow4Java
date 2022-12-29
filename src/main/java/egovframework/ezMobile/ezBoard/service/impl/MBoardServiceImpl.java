@@ -1826,4 +1826,28 @@ public class MBoardServiceImpl implements MBoardService {
 		return list;
 	}
 	
+	/* 2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 */
+	@Override
+	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content) throws Exception {
+		logger.debug("saveOneLineReply started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("ITEMID", itemID);
+		map.put("REPLYID", replyID);
+		map.put("BOARDID", boardID);
+		map.put("USERID", userID);
+		map.put("USERNAME", displayName);
+		map.put("USERNAME2", displayName2);
+		map.put("CONTENT", content);
+		map.put("PASSWORD", ""); // 모바일은 익명게시판의 댓글작성 불가능 (게시암호 공백으로 전달)
+		map.put("TENANTID", tenantID);
+		map.put("COMPANYID", companyID);
+		map.put("WRITEDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		
+		mBoardDAO.saveOneLineReply(map);
+
+		logger.debug("saveOneLineReply ended");
+	}
+	
 }

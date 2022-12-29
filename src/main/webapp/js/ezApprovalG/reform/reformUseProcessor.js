@@ -29,7 +29,7 @@ reformUseProc.executeQuery = function(dataBindControlID, documentOfDataBindContr
 	} else {
 		var xmlhttp = createXMLHttpRequest();
 		xmlhttp.open("POST", reformServerUrl, false);
-		xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+		xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 		xmlhttp.send(postData);
 		if (xmlhttp.readyState == 4) {
 			if (xmlhttp.status == 200) {

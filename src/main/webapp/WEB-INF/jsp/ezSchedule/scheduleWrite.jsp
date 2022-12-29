@@ -6,7 +6,17 @@
 <html ondragover="bodydragover(event)">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezSchedule.t357' /></title>
+		
+		<%-- 2022-12-01 이유정 - 수정 또는 신규 작성에 따라 다르게 title 부여 --%>
+		<c:choose>
+			<c:when test="${scheduleId != ''}">
+				<title><spring:message code='ezSchedule.lyjSm001' /></title>
+			</c:when>
+			<c:otherwise>
+				<title><spring:message code='ezSchedule.t357' /></title>
+			</c:otherwise>
+		</c:choose>
+		
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Tab.css')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >

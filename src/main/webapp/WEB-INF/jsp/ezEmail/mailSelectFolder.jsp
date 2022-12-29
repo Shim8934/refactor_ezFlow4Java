@@ -109,6 +109,8 @@
 	            DivPopUpShow_sub(330, 150, "/ezEmail/inputNameDlg.do");
 	        }
 	        function add_onclick_Complete(szName) {
+                szName = szName.replace("&", "＆");
+                szName = szName.replace("'", "＇");				
 	            DivPopUpHidden_sub();
 	            if (typeof (szName) == "undefined" || szName.trim() == "") {
 	                return;
@@ -143,7 +145,7 @@
 	        }
 	        
 	        function checkBadFolderName(szName) {
-	            var szBadChars = /[\<\>\~\#\%\&\'\"\*\+\|\\\.\/]/g;
+	            var szBadChars = /[\<\>\#\%\"\*\+\|\\\.\/]/g;
 	            var szChangedName = szName.replace(szBadChars, "");
 	
 	            if (szChangedName != szName) {

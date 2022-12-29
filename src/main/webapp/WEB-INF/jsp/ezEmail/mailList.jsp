@@ -1885,7 +1885,7 @@
 				                    </li>
 									<c:if test="${useMailTag}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
-											<input id="pre_h_tag_add" type="text" />
+											<input id="pre_h_tag_add" type="text" maxlength="100" />
 											<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
 											<div id="pre_h_tag_view" style="padding-left: 60px;"></div>
 										</li>
@@ -1954,7 +1954,7 @@
 				                    </li>
 									<c:if test="${useMailTag}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
-											<input id="pre_w_tag_add" type="text" />
+											<input id="pre_w_tag_add" type="text" maxlength="100" />
 											<a class="imgbtn"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
 											<div id="pre_w_tag_view" style="padding-left: 60px;"></div>
 										</li>

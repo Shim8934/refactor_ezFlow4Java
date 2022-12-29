@@ -709,4 +709,10 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void removeMyTaskCode(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdminDAO.removeMyTaskCode", map);
 	}
+	
+	/* 2022-12-09 홍승비 - 전자결재G > 현재 년도 기준의 종료예정 기록물철을 리스트로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getCabinetListByExpireYear(Map<String, Object> map) throws Exception {
+		return (List<Map<String, Object>>) list("EzApprovalGAdminDAO.getCabinetListByExpireYear", map);
+	}
 }

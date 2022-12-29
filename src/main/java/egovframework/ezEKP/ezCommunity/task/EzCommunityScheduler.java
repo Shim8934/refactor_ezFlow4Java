@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezCommunity.task;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +13,19 @@ import org.springframework.stereotype.Component;
 
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
+import egovframework.let.utl.fcc.service.CommonUtil;
 	
 @Component
 public class EzCommunityScheduler {
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private ServletContext servletContext;
+
+	@Autowired
+	private CommonUtil commonUtil;
+
 	@Resource(name = "EzCommunityService")
 	private EzCommunityService ezCommunityService;
 	
@@ -36,7 +44,7 @@ public class EzCommunityScheduler {
 			return;
 		}
 
-		String realPath = config.getProperty("data_root");
+		String realPath = commonUtil.getRealPath(servletContext);
 		
 		ezCommunityService.deleteExpiredItems(realPath);
 		ezCommunityService.deleteReservedBoard(realPath);

@@ -49,7 +49,7 @@ public class EzApprovalGReformController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value = "/reform/executeQuery.do", method = RequestMethod.POST, params = { "dataSource", "sqlQuery", "sqlParamList" }, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/reform/executeQuery.do", method = RequestMethod.POST, params = { "dataSource", "sqlQuery", "sqlParamList" }, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public String executeSqlQuery(HttpServletRequest request, @RequestParam String dataSource, @RequestParam String sqlQuery, @RequestParam String sqlParamList) throws Exception {
 		logger.debug("executeSqlQuery started.");

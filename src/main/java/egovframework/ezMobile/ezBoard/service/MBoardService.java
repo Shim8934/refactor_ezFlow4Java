@@ -98,4 +98,6 @@ public interface MBoardService {
 	/* 2020-04-13 홍승비 - QNA게시판 게시물 카운트 추가 */
 	int getQNABoardItemListCount(String boardID, MBoardInfoVO mBoardInfoVO, String userID, String guBun, int tenantID, String pSearchText) throws Exception;
 
+	/* 2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 */
+	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content) throws Exception;
 }

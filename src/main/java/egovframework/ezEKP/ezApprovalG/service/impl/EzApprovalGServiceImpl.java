@@ -7194,7 +7194,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			e.printStackTrace();
 			
 			if (docNumFlag) {
-				rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+				// Cause: java.sql.SQLTransactionRollbackException: (conn=7146174) Deadlock found when trying to get lock; try restarting transaction
+				// 위와 같이 Deadlock 예외가 발생한 경우엔 MariaDB 클러스터 환경에서 다른 Node에 의해 commit이 된 경우이므로
+				// 채번한 번호에 대한 롤백 처리를 하지 않는다.
+				if (e.getCause().getMessage().indexOf("Deadlock") == -1) {
+					rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+				}
 			} 
 			
 			if (hwpSaveFlag) {
@@ -23906,7 +23911,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    cabinetListVO.setTenantID(userInfo.getTenantId());
 
 		switch (cabinetListVO.getListFlag()) {
-		case "0" :	// 기록물철 대장
+		case "0" :	// 기록물철 대장 (기록물철등록부)
 			cabinetListVO.setListType("002");
 			break;
 		case "1" :	// 편철확정대상 기록물철
@@ -29343,7 +29348,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			//regnumber
-			Document relayXML = commonUtil.xmlLod(config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocXML" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strXToCode + ".xml");
+			Document relayXML = commonUtil.xmlLod(commonUtil.getRealPath(servletContext) + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocXML" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strXToCode + ".xml");
 			
 			String regNumber = relayXML.getElementsByTagName("regnumber").item(0).getTextContent();
 			logger.debug("#문서번호: " + regNumber);
@@ -29486,7 +29491,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
              
-             strSamplePath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator + "dtd" + commonUtil.separator + "sample.xml";
+             strSamplePath = commonUtil.getRealPath(servletContext) + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator + "dtd" + commonUtil.separator + "sample.xml";
              strSendOrgCode = config.getProperty("config.companyNum");
              strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", tenantID);
 
@@ -29529,7 +29534,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strResult = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
              strResult = strResult + strTemp.replace("&amp;", "&");
              
-             File ackFile = new File(commonUtil.detectPathTraversal(config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName));
+             File ackFile = new File(commonUtil.detectPathTraversal(commonUtil.getRealPath(servletContext) + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName));
              
          	if( ackFile.exists()) {
          		ackFile.delete();
@@ -29550,7 +29555,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	private String getFileName(String strFileName, String strFolderName, int tenantID) throws Exception {
-		String strPath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files"
+		String strPath = commonUtil.getRealPath(servletContext) + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files"
 				+ config.getProperty("upload_relay.ROOT") + commonUtil.separator + "data" + commonUtil.separator + strFolderName + commonUtil.separator;
 		String strResult = "";
 
