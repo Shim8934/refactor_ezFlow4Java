@@ -302,6 +302,9 @@ var strLangJYH01 = "Not selected mail.";
 var strLangKSA01 = "(The same email address is already stored : \n %s)";
 var strLangKSA02 = "You do not have permission to send mail.";
 var strLangPYY01 = "Please select a mail account to be automatically forwarded.";
+var strLangLS01 = "No mail selected. \nAre you sure you want to save all mail in that mailbox?"
+var strLangLS02 = "No mail selected. \nAre you sure you want to save all retrieved mails?"
+var strLangLS03 = "All mails in that mailbox will be downloaded as a single compressed zip file.\nThis may take a long time. Would you like to proceed?"
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "This post can be viewed on ";

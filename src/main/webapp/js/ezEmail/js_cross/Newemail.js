@@ -1,4 +1,4 @@
-﻿var PreviewH_Move = false;
+﻿﻿var PreviewH_Move = false;
 function PreviewH_onMouserDown(e) {
     curevent = (typeof event == 'undefined' ? e : event)
 
@@ -1625,9 +1625,34 @@ var PcSaveArrayList = new Array();
 function mail_export() {
 	var type = "MAIL";
 	
-	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
-        alert(strLang42);
-        return;
+	if (listContentArry.length == 0 && listSubContentArry.length == 0 && searchMode) {
+		if (!confirm(strLangLS02)) {
+        	return;
+        } else {
+			if (!confirm(strLangLS03)) {
+				return;
+			} else {
+				try {
+	            	setTimeout(function() {
+		            searchedMailExportZip();
+			        }, 1000);
+		        } catch (e) {
+		           	console.log("searchedMailExportZip error!");
+		        }
+			}
+		}
+	} else if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+        if (!confirm(strLangLS01)) {
+        	return;
+        } else {
+			try {
+            	setTimeout(function() {
+	            mailbox_export();
+		        }, 1000);
+	        } catch (e) {
+	           	console.log("mailbox_export error!");
+	        }
+		}
     } else {
         PcSaveArrayList = new Array();
        
@@ -1638,12 +1663,12 @@ function mail_export() {
         for (var i = 0; i < listSubContentArry.length; i++) {
             PcSaveArrayList[PcSaveArrayList.length] = document.getElementById(listSubContentArry[i]);
         }
-    }
 
-	if (useEncryptZipForEmail == "YES") {
-		mailExportOption_onClick(type);
-	} else {
-		mailExport_start();
+		if (useEncryptZipForEmail == "YES") {
+			mailExportOption_onClick(type);
+		} else {
+			mailExport_start();
+		}
 	}
 	
 	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
@@ -1726,6 +1751,76 @@ function mailExport_start(pwd){
 	
 }
 
+function searchedMailExportZip() {
+	var HeaderObject = document.getElementById("MailHeader");
+    var ContentObject = document.getElementById("MailList");
+    var pOrderyOption = p_ListorderType + " ORDER BY \"" + p_ListOrderby + "\" " + p_ListOrderOption;
+    var attachStatus = "all";
+	var andorStatus = "and";
+	var end = parseInt(document.getElementById("MailList").getAttribute("MaxCount"));
+	var secureMailFilter = document.getElementById("select").value == "SECUREMAIL" ? 1 : 0;
+
+	if(mailsearchDetail == "Y"){
+		if(document.querySelector("input[name=attachment]:checked").value != null ){
+			attachStatus = document.querySelector("input[name=attachment]:checked").value;
+		} 
+
+		if(document.querySelector("input[name=andor]:checked").value != null ){
+			andorStatus = document.querySelector("input[name=andor]:checked").value;
+		}
+	}
+
+	var jsonData = {"FOLDERID" : window.tagName ? '' : g_moveUrl,
+					"SORTTYPE" : pOrderyOption,
+					"SEARCH" : SearchKeyword,
+					"KEYWORD" : searchRequiredKeyword,
+					"CATEGORY" : searchRequiredCategory,
+					"START" : "0",
+					"STARTDATE" : startDate,
+					"ENDDATE" : endDate,
+					"ATTACHSTATUS" : attachStatus,
+					"ANDORSTATUS" : andorStatus,
+					"VIEWSELECTINDEX" : document.getElementById("select").selectedIndex.toString(),
+					"END" : end.toString(),
+					"SECUREMAILFILTER" : secureMailFilter.toString(),
+					"TAGNAME" : window.tagName ? tagName : "",
+					"SHAREDID" : shareId
+					};
+
+    var _url = "/ezEmail/searchedMailExportZip.do";
+ 
+	$.ajax({
+		cache: false,
+		method: "post",
+		url: _url,
+		data: JSON.stringify(jsonData),
+		contentType : "application/json",
+		complete: function(){
+			HiddenMailProgress();
+		},
+		success: function(result){
+			if (result != "") {
+				var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + "";
+				
+				if (typeof(shareId) != "undefined" && shareId != "") {
+					fullpath += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+
+				AttachDownFrame.location.href = fullpath;
+				AttachDownFrame.target = "_blank";
+			} else {
+				alert(strLang104);
+			}
+		},
+		error: function() {
+			alert(strLang321);
+		}
+	});
+
+    GetListInfo_HeaderObject = HeaderObject;
+    GetListInfo_ContentObject = ContentObject;
+}
+
 function HiddenContextMenu() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("ContextMenuDiv").style.display = "none";
@@ -1749,7 +1844,7 @@ function ContextMenuHidden() {
 	    $("#searchButton").css("display", "none");   
 	    document.getElementsByName("keyword")[0].disabled = false;
 	    document.getElementById("searchCheck").disabled = false;
-	    document.getElementById("searchCheck").style.backgroundColor="white";
+	    document.getElementById("searchCheck").style.backgroundColor="rgb(248 248 248)";
     }
 }
 function PopUpPreMail() {

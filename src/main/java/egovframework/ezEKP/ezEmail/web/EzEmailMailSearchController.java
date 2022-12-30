@@ -102,6 +102,7 @@ public class EzEmailMailSearchController {
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String mailSearchPeriod = "";
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -170,6 +171,12 @@ public class EzEmailMailSearchController {
 			}
 			
 			logger.debug("topLevelFolderNames=" + topLevelFolderNames);
+
+			// 2022-12-19 이사라 : 검색기간의 디폴트 기간을 메일 환경설정에서 설정한 값으로 세팅하기 위해 추가
+			MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+			mailSearchPeriod = mailGeneral.getMailSearchPeriod();
+
+			logger.debug("mailSearchPeriod=" + mailSearchPeriod);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -190,6 +197,7 @@ public class EzEmailMailSearchController {
 		model.addAttribute("searchCheck", request.getParameter("searchCheck"));
 		model.addAttribute("keywordFromList", request.getParameter("keywordFromList"));
 		model.addAttribute("searchFromList", request.getParameter("searchFromList"));
+		model.addAttribute("mailSearchPeriod", mailSearchPeriod);
 		
 		logger.debug("mailSearchView ended.");
 		
