@@ -130,6 +130,12 @@
 			var endDate = "";
 			var listType = "mailList";
 			var useMailTag = true;
+			var mailSearchPeriod = "${mailGeneral.mailSearchPeriod}";
+			var mailSearchPeriodLang = "";
+			var mailSearchPeriodSDate = "";
+			var searchRequiredKeyword = [];
+			var searchRequiredCategory = [];
+			var searchRequirement = [];
 
 			function defineHost(protocol){
 				var host = "";
@@ -165,12 +171,65 @@
 					buttonImage: "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly: true
 				});
+
+		        $("#SdatepickerSimple").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+
+		        $("#EdatepickerSimple").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+
+		        switch (mailSearchPeriod) {
+			        case 'oneWeek':
+			        	mailSearchPeriodLang = "<spring:message code='ezEmail.pyy17' />";
+			        	mailSearchPeriodSDate = "-1w";
+			        	break;
+			        case 'oneMonth' :
+			        	mailSearchPeriodLang = "<spring:message code='ezEmail.pyy18' />";
+			        	mailSearchPeriodSDate = "-1m";
+			        	break;
+			        case 'threeMonth' :
+			        	mailSearchPeriodLang = "<spring:message code='ezEmail.pyy19' />";
+			        	mailSearchPeriodSDate = "-3m";
+			        	break;
+			        case 'sixMonth' :
+			        	mailSearchPeriodLang = "<spring:message code='ezEmail.ls001' />";
+			        	mailSearchPeriodSDate = "-6m";
+			        	break;
+			        case 'oneYear' :
+			        	mailSearchPeriodLang = "<spring:message code='ezEmail.ls002' />";
+			        	mailSearchPeriodSDate = "-1y";
+			        	break;
+			        default :
+			        	mailSearchPeriodLang = "<spring:message code='ezEmail.ls001' />";
+			        	mailSearchPeriodSDate = "-6m";
+		        }
+
+		        document.getElementById("keywordSearch").placeholder= "<spring:message code='ezEmail.ls005' /> " + mailSearchPeriodLang + " <spring:message code='ezEmail.ls006' />";
+
 				var NowDate = utcDate2(offsetMin);
 				$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-				$("#Sdatepicker").datepicker('setDate', NowDate);
+				$("#Sdatepicker").datepicker('setDate', mailSearchPeriodSDate);
 				$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 				$("#Edatepicker").datepicker('setDate', NowDate);
 				$(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
+
+		        $("#SdatepickerSimple").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#SdatepickerSimple").datepicker('setDate', mailSearchPeriodSDate);
+		        $("#EdatepickerSimple").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#EdatepickerSimple").datepicker('setDate', NowDate);
+		        $(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
 			});
 
 			$(function () {
@@ -424,6 +483,10 @@
 			}
 
 			function mailGeneralSave() {
+		    	// 2022-12-29 이사라 : Search 후 페이지를 벗어날 때 검색조건을 비움
+		    	searchRequiredKeyword = [];
+		    	searchRequiredCategory = [];
+
 				var _pPreview;
 
 				if (g_bPrevShow)
@@ -452,6 +515,7 @@
 				createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
 				createNodeAndInsertText(xmlpara, objNode, "PREVIEWSUBTREE", previewSubTree);
 				createNodeAndInsertText(xmlpara, objNode, "PREVIEWMAILIMAGE", previewMailImage);
+	            createNodeAndInsertText(xmlpara, objNode, "MAILSEARCHPERIOD", mailSearchPeriod);
 				createNodeAndInsertText(xmlpara, objNode, "TEXTOPTION", "${mailGeneral.textOption}");
 
 				xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
@@ -504,10 +568,12 @@
 				}
 
 				if (inputkeyword.value == "") {
-					alert(strLang254);
-					return;
+			        // 2022-12-29 이사라 : 기본검색 시 검색기간을 추가하여 keyword 없이도 검색이 가능하도록 수정
+					//alert(strLang254);
+					//return;
 				}
-				startDate = "", endDate = "";
+				startDate = $("#SdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+				endDate = $("#EdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
 
 				var searchField = document.getElementById("searchCheck");
 				SearchKeyword = searchField.value + "=" + inputkeyword.value;
@@ -1368,7 +1434,7 @@
 					$("#searchButton").css("display", "none");
 					document.getElementsByName("keyword")[0].disabled = false;
 					document.getElementById("searchCheck").disabled = false;
-					document.getElementById("searchCheck").style.backgroundColor="white";
+					document.getElementById("searchCheck").style.backgroundColor="rgb(248 248 248)";
 				} 
 			}
 			function doLayerPopup() {
@@ -1399,10 +1465,10 @@
 				$("#all").val("FROM");
 				$('input:radio[name="attachment"][id="all"]').prop('checked', true);
 				$('input:radio[name="andor"][value="and"]').prop('checked', true);
-				$("#selectRange").val("All");
+				$("#selectRange").val("sixMonth");
 				$("input:text[name='prekeyword']").val("");
 				var today = new Date();
-				$("#Sdatepicker").datepicker('setDate', today);
+				$("#Sdatepicker").datepicker('setDate', '-6m');
 				$("#Edatepicker").datepicker('setDate', today);
 				changeLangeEvent();
 			}
@@ -1471,7 +1537,13 @@
 	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<c:set var="tagNameSpan" ><span id='tag_subtitle' title='<c:out value="${tag.name}"/>'><c:out value="${tag.name}"/></span></c:set>
 		<h1><spring:message code="ezEmail.tag.title" arguments="${tagNameSpan}" argumentSeparator="|"/><span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
-			<span class="searchForm" style="margin-right:53px;">
+			<span class="searchForm" style="margin-right:0px;">
+				<!-- 2022-12-29 이사라 : 기본검색 시 검색기간을 추가 -->
+				<span id="datepickerSimple" style="display:none;">
+					<input type="text" id="SdatepickerSimple" style="height:30px;" disabled="" readonly size="10" readonly> ~ 
+					<input type="text" id="EdatepickerSimple" style="height:30px;" size="10" disabled="" readonly>
+				</span>
+
 				<select name="searchCheck searchFilter" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
 					<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
 					<c:if test="${isSentItems != true}">
@@ -1485,9 +1557,10 @@
 					</c:if>
 				</select>
 
-				<input name="keyword" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"onmousedown="keyword_Clear();" /> 
-				<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="start_search2()"></a>
-				<a class="searchFilterBtn"><img src="/images/bsearch_new2_filter.gif" border="0" onclick="addSearch()"></a>
+				<input name="keyword" id="keywordSearch" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"onmousedown="keyword_Clear();"
+				placeholder="";/> 
+				<a class="searchBtn"><img src="/images/bsearch_new2.png" border="0" onclick="start_search2()"></a>
+				<a class="searchFilterBtn"><img src="/images/bsearch_new2_filter.png" border="0" onclick="addSearch()"></a>
 				<div class="layerPopup_new" id="moreSearch" style="display:none;z-index:6000;" >
 					<ul class="content_layout">
 						<li class="content_layout_left">
@@ -1588,10 +1661,12 @@
 							<ul class="content_layout">
 								<li class="content_layout_left mr10">
 									<select name="select" class="text" id="selectRange" onchange="changeLangeEvent()" style="height: 25px;margin-right: 5px;width: 86px;">
-										<option selected value="All">ALL</option> 
-										<option value="oneWeek"><spring:message code="ezEmail.pyy17" /></option> 
-										<option value="oneMonth"><spring:message code="ezEmail.pyy18" /></option> 
-										<option value="threeMonth"><spring:message code="ezEmail.pyy19" /></option> 
+										<option value="oneWeek" <c:if test="${mailGeneral.mailSearchPeriod == 'oneWeek'}">selected</c:if>><spring:message code="ezEmail.pyy17" /></option>
+										<option value="oneMonth" <c:if test="${mailGeneral.mailSearchPeriod == 'oneMonth'}">selected</c:if>><spring:message code="ezEmail.pyy18" /></option>
+										<option value="threeMonth" <c:if test="${mailGeneral.mailSearchPeriod == 'threeMonth'}">selected</c:if>><spring:message code="ezEmail.pyy19" /></option>
+										<option value="sixMonth" <c:if test="${mailGeneral.mailSearchPeriod == 'sixMonth'}">selected</c:if>><spring:message code="ezEmail.ls001" /></option>
+										<option value="oneYear" <c:if test="${mailGeneral.mailSearchPeriod == 'oneYear'}">selected</c:if>><spring:message code="ezEmail.ls002" /></option>
+										<option value="all">ALL</option>
 										<option value="direct"><spring:message code="ezEmail.pyy20" /></option> 
 									</select>
 								</li>
@@ -1958,7 +2033,8 @@
 		searchCArray = [];
 		searchKArray = [];
 		var usepostDate = document.getElementById("selectRange").value;
-		if(usepostDate == "All"){
+
+		if(usepostDate == "all"){
 			this.usepostDate = false;	
 		} else {
 			this.usepostDate = true;
@@ -1999,7 +2075,7 @@
 			$("#Sdatepicker").datepicker('enable');
 			$("#Edatepicker").datepicker('enable');
 			$(".ui-datepicker-trigger").style="margin-left:5px;margin-top:0px;margin-bottom:3px;vertical-align:middle;cursor:pointer";
-		} else if(usepostDate == "All"){
+		} else if(usepostDate == "all"){
 			$("#Sdatepicker").datepicker('disable');
 			$(".ui-datepicker-trigger").style="opacity: 0.5; cursor: default;";
 			$("#Edatepicker").datepicker('disable');
@@ -2021,6 +2097,14 @@
 			break;
 			case "threeMonth":
 				$("#Sdatepicker").datepicker('setDate', '-3m');
+				$("#Edatepicker").datepicker('setDate', today);
+			break;
+			case "sixMonth":
+				$("#Sdatepicker").datepicker('setDate', '-6m');
+				$("#Edatepicker").datepicker('setDate', today);
+			break;
+			case "oneYear":
+				$("#Sdatepicker").datepicker('setDate', '-12m');
 				$("#Edatepicker").datepicker('setDate', today);
 			break;
 		}
