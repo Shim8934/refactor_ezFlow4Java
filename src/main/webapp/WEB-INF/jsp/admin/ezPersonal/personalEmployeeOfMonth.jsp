@@ -18,6 +18,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/slick.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezPersonal.h1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/admin/adminManageEmployeeOfMonth.js')}"></script>
+		<style>
+		/* 2022-12-02 민지수 - slick-list 클래스에 margin을 주어 prev, next 버튼과 공간을 만들어 버튼 클릭이 되도록 수정 */
+		.slick-list {
+			margin-left: 25px;
+		    margin-right: 25px;
+		}
+		</style>
+		
 		<script type="text/javascript">
 			var nowYear = new Date().getFullYear();
 			var popup;
