@@ -128,6 +128,7 @@
 			var startDate = "";
 			var endDate = "";
 			var listType = "mailList";
+			var tagName = "<c:out value='${tagName}' />";
 			var useMailTag = ${useMailTag};
 			var mailSearchPeriod = "${mailGeneral.mailSearchPeriod}";
 			var mailSearchPeriodLang = "";
@@ -328,6 +329,9 @@
 		            	g_foldertype = "sent";
 		            	g_moveUrl = "${sentFolderId}";
 		            	break;
+					case "tag":
+						p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFileTagTable.xml";
+						break;
 		        }
 		        
 		        if (g_foldertype != "sent" && g_foldertype != "draft") {
@@ -442,6 +446,8 @@
                     if (!useReceivingChk) {
                     	if (g_foldertype == "sent" || g_foldertype == "draft") {
                 			p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile2_1.xml";
+						} else if (g_foldertype == "tag") {
+							p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFileTagTableShort.xml";
                 		} else {
                         	p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
                 		}
@@ -1627,14 +1633,25 @@
 		    
 		</script>	
 		<style>
+			<c:if test="${useMailTag}">
 			.tagli > span:first-child { width: 55px; display: inline-block; }
 			.tagli > input { height: 22px; vertical-align: middle; }
 			.tagli > input + .imgbtn { margin: 0px; vertical-align: middle; }
 			#pre_h_tag_view > img, #pre_w_tag_view > img { width: 11px; height: 11px; cursor: pointer; margin: 0 7px 0 4px; }
+			<c:if test="${not empty tagName}">
+			#tag_subtitle { display: inline-block; max-width: 400px; text-overflow: ellipsis; overflow: hidden; word-break: keep-all; vertical-align: middle; }
+			</c:if>
+			</c:if>
 		</style>
 	</head>
 	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+		<c:if test="${not empty tagName}">
+		<c:set var="tagNameSpan" ><span id='tag_subtitle' title='<c:out value="${tagName}"/>'><c:out value="${tagName}"/></span></c:set>
+		<h1><spring:message code="ezEmail.tag.title" arguments="${tagNameSpan}" argumentSeparator="|"/><span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
+		</c:if>
+		<c:if test="${empty tagName}">
 		<h1><c:out value='${folderName}'/><span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
+		</c:if>
 		<span id ="searchDate" style="display:;font-weight:normal;"></span>
 			<span class="searchForm" style="margin-right:0px;">
 				<!-- 2022-12-29 이사라 : 기본검색 시 검색기간을 추가 -->
