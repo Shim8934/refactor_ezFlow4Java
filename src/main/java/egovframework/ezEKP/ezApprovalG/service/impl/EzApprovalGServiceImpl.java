@@ -529,6 +529,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()));
 		
+		/* 2023-01-03 홍승비 - 전자결재 일반(S) > 분류코드 즐겨찾기 셀렉트 시 종료연도를 조건으로 사용하던 오류 수정 (일반버전의 분류코드는 종료연도 조건 필요없음) */
 		List<ApprGTaskVO> apprGTaskVOList = ezApprovalGDAO.getMyTaskCode(map);
 		
 		resultXML.append("<ROWS>");
@@ -10404,6 +10405,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DEPTID", deptID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		
+		/* 2023-01-03 홍승비 - 전자결재G > 기산월을 체크하는 회계연도 조건을 미리 만들어서 전달하도록 수정 (쿼리 상에서 년-월 조건 분리된 부분 제거) */
+		// 사용자에게 표출되는 기록물철의 종료연도는 현재 기준으로 계산된 회계년도보다 크거나 같아야 함
+		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, lang, tenantID);
+		map.put("v_ACCOUNTYEAR", accountYear);
 		
 		List<ApprGTaskVO> apprGTaskVOList = ezApprovalGDAO.getMyTaskCode(map);
 		
