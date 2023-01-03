@@ -193,6 +193,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         	useAdminBujae = "NO";
         }
         
+        logger.debug("useAdminBujae = " + useAdminBujae);
+        
         String useEnforceSihang = ezCommonService.getTenantConfig("UseEnforceSihang", userInfo.getTenantId());
 		
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -204,8 +206,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("useOpenGov", useOpenGov);
 		
+		/* 2022-12-27 홍승비 - 전자결재G 기록물철 자동생성기능 메뉴 표출 플래그 추가 */
+		String useRegisterCabinetSemiAuto = ezCommonService.getTenantConfig("useRegisterCabinetSemiAuto", userInfo.getTenantId());
+		
+		model.addAttribute("useRegisterCabinetSemiAuto", useRegisterCabinetSemiAuto);
+		
 		logger.debug("apprGLeft ended. approvalFlag = " + approvalFlag);
-		logger.debug("apprGLeft ended. useAdminBujae = " + useAdminBujae);
 		
 		return "/admin/ezApprovalG/apprGLeft";
 	}
@@ -5208,4 +5214,139 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("setChaebunDeptList ended.");
 		return result;
 	}
+	
+	/**
+	 * 2022-12-09 홍승비 - 전자결재G > 생산연도 입력을 받아 현재 년도 기준의 종료예정 기록물철을 내년도로 자동 생성하기 위한 페이지 호출 (자동 생성이지만 사용자의 입력 및 확인 후 동작)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/registerCabinetSemiAutoManage.do", method = RequestMethod.GET)
+	public String registerCabinetSemiAutoManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("registerCabinetSemiAutoManage started.");
+
+		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
+		// 생산연도를 전달하여 회계연도 가져오기 (1월 ~ 12월이 아닌 3월 ~ 익년 2월인 경우 대비)
+		// 올해 1월 1일 ~ 12월 31일까지를 회계연도로 가지는 경우는 현재 날짜에 -0 (변함없음)
+		// 올해 3월 1일 ~ 내년 2월 28/29일까지를 회계연도로 가지는 경우는 현재 날짜에 -2개월 감소 보정
+		//    -2개월 감소 보정의 예) 2022년 2월 10일 = -2개월 감소 보정 => 현재 연도 2021년으로 취급 (2021년 12월 10일)
+		//    -2개월 감소 보정의 예) 2023년 3월 1일 = -2개월 감소 보정 => 현재 연도 2023년으로 취급 (2023년 1월 1일)
+		String nowYear = ezApprovalGService.getAccountingYear(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		// 회계종료월
+		String accountLastMonth = ezApprovalGService.getCode2Name("A30", "003", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		// 회계종료월 값이 이상한 경우(12개월을 초과하는 값이 존재하는 경우)에 대한 예외처리
+		int accountLastMonthTemp = Integer.parseInt(accountLastMonth);
+		if (accountLastMonthTemp > 12) {
+			accountLastMonthTemp = (accountLastMonthTemp % 12); // 12로 나눈 나머지를 월 값으로 계산
+		}
+		// 상단의 예외처리 후, 기본적인 종료 월 단위 환산 (0 = 12월의 마지막, 2 = 2월의 마지막...)
+		if (accountLastMonthTemp == 0) {
+			accountLastMonthTemp = 12;
+		}
+		
+		// 회계종료 예정 연도
+		int accountYear = Integer.parseInt(nowYear);
+		
+		// 만약 회계종료월이 12월이 아니라면, 내년도의 2월이 되므로 연도에 + 1 처리
+		if (accountLastMonthTemp != 12) {
+			accountYear += 1;
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList); // 그룹사 개념 + 회사 선택을 위해 추가
+		model.addAttribute("nowYear", nowYear);
+		model.addAttribute("accountYear", accountYear);
+		model.addAttribute("accountLastMonth", String.valueOf(accountLastMonthTemp));
+		
+		logger.debug("registerCabinetSemiAutoManage ended.");
+
+		return "/admin/ezApprovalG/apprGRegisterCabinetSemiAutoManage";
+	}
+	
+	/**
+	 * 2022-12-09 홍승비 - 전자결재G > 생산연도 입력을 받아 현재 년도 기준의 종료예정 기록물철을 내년도로 자동 생성하는 기능
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/registCabinetSemiAutoManual.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String registCabinetSemiAutoManual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("registCabinetSemiAutoManual started.");
+		
+		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()); // 현재 사용자가 아닌 시스템 기준으로 기본 언어를 선택
+		String regYear = request.getParameter("regYear");
+		String companyID = request.getParameter("companyID");
+		String retVal = "";
+		int successCount = 0;
+		
+		// 종료연도(현재 연도)와 선택한 회사ID를 조건으로 자동 생성할 기록물철을 찾아서 전달
+		String currYear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 4);
+		
+		List<Map<String, Object>> cabinetList = ezApprovalGAdminService.getCabinetListByExpireYear(currYear, companyID, tenantID);
+		
+		if (cabinetList.size() > 0) {
+			successCount = ezApprovalGAdminService.cloneMultipleCabinets(regYear, cabinetList, primaryLang, companyID, tenantID);
+		}
+		
+		// 일부 기록물철 자동 생성 시 오류가 발생한 경우, 실패한 갯수를 전달
+		if (cabinetList.size() != successCount) {
+			retVal = "FALSE;" + (cabinetList.size() - successCount);
+		}
+		else if (cabinetList.size() == successCount && cabinetList.size() != 0) {
+			retVal = "TRUE";
+		}
+		else if (cabinetList.size() == 0) {
+			retVal = "EMPTY";
+		}
+		
+		logger.debug("registCabinetSemiAutoManual result : " + retVal);
+		logger.debug("registCabinetSemiAutoManual ended.");
+		
+		return retVal;
+	}
+	
+	/* 2022-12-13 홍승비 - 기산일 적용된 현재 기준의 회계종료 연월 가져오기 (회사ID 파라미터 전달) */
+	@RequestMapping(value = "/admin/ezApprovalG/getAccountingYMByCompanyID.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAccountingYMByCompanyID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getAccountingYMByCompanyID started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String companyID = request.getParameter("companyID");
+
+		String result = ezApprovalGService.getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, userInfo.getLang(), userInfo.getTenantId());
+		String accountLastMonth = ezApprovalGService.getCode2Name("A30", "003", companyID, userInfo.getLang(), userInfo.getTenantId());
+		
+		// 회계종료월 값이 이상한 경우(12개월을 초과하는 값이 존재하는 경우)에 대한 예외처리
+		int accountLastMonthTemp = Integer.parseInt(accountLastMonth);
+		if (accountLastMonthTemp > 12) {
+			accountLastMonthTemp = (accountLastMonthTemp % 12); // 12로 나눈 나머지를 월 값으로 계산
+		}
+		// 상단의 예외처리 후, 기본적인 종료 월 단위 환산 (0 = 12월의 마지막, 2 = 2월의 마지막...)
+		if (accountLastMonthTemp == 0) {
+			accountLastMonthTemp = 12;
+		}
+		
+		result += (";" + String.valueOf(accountLastMonthTemp)); // 현재 기준의 회계종료 "연;월" 형식으로 반환
+		
+		logger.debug("getAccountingYMByCompanyID ended, result = " + result);
+		
+		return result;
+	}
+	
 }

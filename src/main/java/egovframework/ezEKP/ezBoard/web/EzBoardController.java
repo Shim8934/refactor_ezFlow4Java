@@ -3787,7 +3787,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardInfo.getBoardName2() != null && !boardInfo.getBoardName2().equals("")) {
 			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
 		}
-		//2017.12.29 강민수92 댓글 갯수 구하기
+		// 2017.12.29 강민수92 댓글 갯수 구하기
 		if (boardPropertyVO.getOneLineReply() != null && !boardPropertyVO.getOneLineReply().equals("") && !boardPropertyVO.getOneLineReply().equals("0")) {
 			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
 			model.addAttribute("commentCount", commentCount);
@@ -5834,7 +5834,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardItem.setEndDate(commonUtil.getDateStringInUTC(boardItem.getEndDate(), userInfo.getOffset(), false));
 		boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
 		
-		//2017.12.29 강민수92 댓글 갯수 구하기
+		// 2017.12.29 강민수92 댓글 갯수 구하기
 		if (boardProperty.getOneLineReply() != null && !boardProperty.getOneLineReply().equals("") && !boardProperty.getOneLineReply().equals("0")) {
 			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
 			model.addAttribute("commentCount", commentCount);
@@ -9353,8 +9353,8 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
 		
-		//2017.12.29 강민수92 댓글 갯수 구하기
-		if (boardProperty.getOneLineReply().equals("1")) {
+		// 2017.12.29 강민수92 댓글 갯수 구하기
+		if (boardProperty.getOneLineReply() != null && !boardProperty.getOneLineReply().equals("") && !boardProperty.getOneLineReply().equals("0")) {
 			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
 			model.addAttribute("commentCount", commentCount);
 		}

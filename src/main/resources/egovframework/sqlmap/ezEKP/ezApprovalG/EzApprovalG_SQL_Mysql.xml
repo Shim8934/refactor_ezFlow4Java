@@ -5404,6 +5404,7 @@
 	</select>
 	
 	<select id="EzApprovalG.getTaskSubCategoryAll" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+	<![CDATA[
 		SELECT 
 		    VTASKCLASS.TASKCODE,
 		    TBL_CABINET.CABINETID,
@@ -5520,6 +5521,9 @@
 	        	TRIM(TBL_CABINETCLASS.OWNERDEPTID) = #deptCode#
 	        AND 
 	        	TBL_CABINETCLASS.EXPIRATIONYEAR >= #accountYear#
+	        AND
+	        	TBL_CABINETCLASS.PRODUCTIONYEAR <= #accountYear#
+	]]>
 	   		<isEqual property="initFlag" compareValue="1">
 	   			<![CDATA[
 			        AND 
@@ -6738,8 +6742,12 @@
 <!-- 	<procedure id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETMYTASKCODE(#v_USERID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+<!-- 2023-01-03 홍승비 - 전자결재G > 기산월을 체크하는 회계연도 조건을 미리 만들어서 전달하도록 수정 (쿼리 상에서 년-월 조건 분리된 부분 제거) -->
+<!-- 2023-01-03 홍승비 - 전자결재 일반(S) >  분류코드 즐겨찾기 셀렉트 시 종료연도를 조건으로 사용하던 오류 수정 (일반버전의 분류코드는 종료연도 조건 필요없음) -->
 	<select id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+		<!-- G버전 -->
 		<isEmpty property="approvalFlag">
+		<![CDATA[
 			SELECT 
 				DISTINCT TBL_CABINET.CabinetID , 
 				TBL_CABINETCLASS.TaskCode ,
@@ -6789,7 +6797,9 @@
 				VTASKCLASS.TENANT_ID = TBL_MYTASKCODE.TENANT_ID
 			AND
 				VTASKCLASS.COMPANYID = TBL_MYTASKCODE.COMPANYID
+		]]>
 <!-- 		        AND VTASKCLASS.ProcessDeptCode = TBMYTASKCODE.DEPTID -->
+		<![CDATA[
 			WHERE  
 				TBL_CABINET.DelFlag = '0'
 			AND 
@@ -6819,13 +6829,14 @@
 			AND
 				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
 			AND 
-				NOT (YEAR(SYSDATE()) > TBL_CABINETCLASS.EXPIRATIONYEAR 
-					AND MONTH(SYSDATE()) > (SELECT NAME FROM TBL_CODELIST 
-											WHERE CODE1 = 'A30' AND CODE2 = '003' AND COMPANYID = #companyID# AND TENANT_ID = #v_TENANTID#))				
+				TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_ACCOUNTYEAR#
 			ORDER BY 
 				TBL_CABINETCLASS.Title 
+		]]>
 		</isEmpty>
+		<!-- S버전 -->
 		<isNotEmpty property="approvalFlag">
+		<![CDATA[
 			SELECT 
 				DISTINCT TBL_CABINET.CabinetID , 
 				SVTASKCLASS.TaskCode ,
@@ -6893,13 +6904,10 @@
 			AND
 				TBL_CABINETCLASS.COMPANYID = #companyID#
 			AND
-				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
-			AND 
-				NOT (YEAR(SYSDATE()) > TBL_CABINETCLASS.EXPIRATIONYEAR 
-					AND MONTH(SYSDATE()) > (SELECT NAME FROM TBL_CODELIST 
-											WHERE CODE1 = 'A30' AND CODE2 = '003' AND COMPANYID = #companyID# AND TENANT_ID = #v_TENANTID#))				
+				TBL_MYTASKCODE.DEPTID = #v_DEPTID#		
 			ORDER BY 
 				TBL_CABINETCLASS.Title 
+		]]>
 		</isNotEmpty>
 	</select>
 	

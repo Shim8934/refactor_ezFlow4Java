@@ -111,23 +111,37 @@ public class MLoginGWController {
     	LOGGER.debug("=========================================== G/W login ============================================");
     	
     	JSONObject result = new JSONObject();
-    	
+
     	try {
-    		PrivateKey pk = EgovFileScrty.getPrivateKey(egovFileScrty.getPrm(), egovFileScrty.getPre());
-    		
-    		String uid = EgovFileScrty.decryptRsa(pk, userId);
-    		
-    		if (uid == null || uid.equals("")) {
-    			LOGGER.debug("invalid uid=" + uid);
-    			
-    			result.put("status", "error");
-    			result.put("code", "2");			
-    			result.put("data", "invalid uid");
-    			
-    		    return result;
-    		}
-    		
-    		String rpwd = EgovFileScrty.decryptRsa(pk, request.getParameter("pw"));
+			// SSO 솔루션없이 기간계와의 모바일 자동 로그인 처리를 위한 SLO(Single Log On) 처리 여부를 나타냄.			
+			String SLOParam = request.getParameter("SLO");
+			boolean isSLOSupport = "yes".equalsIgnoreCase(SLOParam);
+			String uid = "";
+			String rpwd = "";
+			PrivateKey pk = EgovFileScrty.getPrivateKey(egovFileScrty.getPrm(), egovFileScrty.getPre());			
+    	
+			if (!isSLOSupport) {				
+				uid = EgovFileScrty.decryptRsa(pk, userId);
+				
+				if (uid == null || uid.equals("")) {
+					LOGGER.debug("invalid uid=" + uid);
+					
+					result.put("status", "error");
+					result.put("code", "2");			
+					result.put("data", "invalid uid");
+					
+					return result;
+				}
+				
+				rpwd = EgovFileScrty.decryptRsa(pk, request.getParameter("pw"));
+			} else {
+				// SLO의 경우엔 암호화하지 않은 아이디가 ezMobile로부터 전달됨.
+				// 기간계에서 암호화해서 전달한 아이디를 ezMobile이 복호화한 후 Mobile GW 서버로 전송하는 것임.
+				uid = userId;
+			}
+
+			LOGGER.debug("isSLOSupport={},uid={}", isSLOSupport, uid);
+
     		String pwd = "";
     		
     		String serverName = request.getHeader("x-user-host");
@@ -186,7 +200,7 @@ public class MLoginGWController {
 				if (!ipAddressChk) {
 					result.put("status", "error");
 	    			result.put("code", "7");			
-	    			result.put("data", "user does not exist");
+	    			result.put("data", "IPAddress Not Allowed");
 	    			
 	    			// 2021-12-29 이사라 : ip 주소 check 실패인 경우 접속실패 로그 저장
 					resultVO.setAgent(agent);
@@ -383,7 +397,7 @@ public class MLoginGWController {
     			// 사용자 ID를 사용해 로그인하는 경우
     			if (uid.equals(resultVO.getId())) {
     				loginVO.setId(uid);
-    				if (pinLoginAuth) { // pinLogin 인증 통과
+    				if (pinLoginAuth || isSLOSupport) { // pinLogin 인증 통과 혹은 기간계와의 SLO 연동의 경우
     					loginVO.setDn("NOPASSWORD");
     				}
     				else {
@@ -485,7 +499,7 @@ public class MLoginGWController {
                 		//비밀번호 변경 팝업 상태 값 초기화
         				int diff = 1;
         				
-        				if (resultVO.getLoginCnt() == 0) {
+        				if (resultVO.getLoginCnt() == 0 && !isSLOSupport) { // SLO의 경우에는 First Login도 성공으로 처리한다.
         					LOGGER.debug("isFirstLogin");
         					
         					// 2021-12-28 이사라 : 접속로그 실패 저장

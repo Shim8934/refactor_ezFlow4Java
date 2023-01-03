@@ -46,6 +46,7 @@ import javax.mail.search.ComparisonTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
+import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.simple.JSONArray;
@@ -92,6 +93,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 
+	@Autowired
+	private ServletContext servletContext;
+		
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
 
@@ -448,7 +452,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				
 				String password = jspw;
 	
-				String realPath = config.getProperty("data_root");
+				String realPath = commonUtil.getRealPath(servletContext);
 				
 				String userId = userAccount.split("@")[0];
 				String domainName = userAccount.split("@")[1];
@@ -461,7 +465,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				logger.debug("locale=" + locale + ",offset=" + offset + ",sentMailStoredInSentBox=" + sentMailStoredInSentBox);
 				
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
-				pDirPath = realPath + commonUtil.separator + pDirPath;
+				pDirPath = realPath + pDirPath;
 	
 				f = new File(pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
 				logger.debug("filePath=" + pDirPath + commonUtil.separator + vo.getMessageId() + ".eml");
@@ -1110,7 +1114,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		//get tenantIdList
 		List<TenantVO> tenantList = ezCommonService.getTenantList();
 		
-		String realPath = config.getProperty("data_root");
+		String realPath = commonUtil.getRealPath(servletContext);
 		
 		//delete expired big-attachment files
 		deleteExpireAttach(tenantList, realPath);

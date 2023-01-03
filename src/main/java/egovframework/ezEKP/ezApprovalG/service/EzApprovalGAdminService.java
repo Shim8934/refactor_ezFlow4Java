@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -263,4 +264,11 @@ public interface EzApprovalGAdminService {
 	public String getChaebunDeptList(String deptID, String companyID, LoginVO userInfo) throws Exception;
 
 	public String setChaebunDeptList(Document doc, LoginVO userInfo) throws Exception;
+	
+	/* 2022-12-09 홍승비 - 전자결재G > 현재 년도 기준의 종료예정 기록물철을 리스트로 리턴하는 메서드 */
+    public List<Map<String, Object>> getCabinetListByExpireYear(String currYear, String companyID, int tenantID) throws Exception;
+    
+    /* 2022-12-09 홍승비 - 전자결재G > 현재 년도 기준의 종료예정 기록물철을 원하는 생산연도의 기록물철로 복사하여 삽입하는 메서드 */
+	public int cloneMultipleCabinets(String regYear, List<Map<String, Object>> cabinetList, String strLang, String companyID, int tenantID) throws Exception;
+	
 }

@@ -529,6 +529,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()));
 		
+		/* 2023-01-03 홍승비 - 전자결재 일반(S) > 분류코드 즐겨찾기 셀렉트 시 종료연도를 조건으로 사용하던 오류 수정 (일반버전의 분류코드는 종료연도 조건 필요없음) */
 		List<ApprGTaskVO> apprGTaskVOList = ezApprovalGDAO.getMyTaskCode(map);
 		
 		resultXML.append("<ROWS>");
@@ -7194,7 +7195,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			e.printStackTrace();
 			
 			if (docNumFlag) {
-				rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+				// Cause: java.sql.SQLTransactionRollbackException: (conn=7146174) Deadlock found when trying to get lock; try restarting transaction
+				// 위와 같이 Deadlock 예외가 발생한 경우엔 MariaDB 클러스터 환경에서 다른 Node에 의해 commit이 된 경우이므로
+				// 채번한 번호에 대한 롤백 처리를 하지 않는다.
+				if (e.getCause().getMessage().indexOf("Deadlock") == -1) {
+					rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+				}
 			} 
 			
 			if (hwpSaveFlag) {
@@ -10399,6 +10405,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DEPTID", deptID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		
+		/* 2023-01-03 홍승비 - 전자결재G > 기산월을 체크하는 회계연도 조건을 미리 만들어서 전달하도록 수정 (쿼리 상에서 년-월 조건 분리된 부분 제거) */
+		// 사용자에게 표출되는 기록물철의 종료연도는 현재 기준으로 계산된 회계년도보다 크거나 같아야 함
+		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, lang, tenantID);
+		map.put("v_ACCOUNTYEAR", accountYear);
 		
 		List<ApprGTaskVO> apprGTaskVOList = ezApprovalGDAO.getMyTaskCode(map);
 		
@@ -23906,7 +23917,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    cabinetListVO.setTenantID(userInfo.getTenantId());
 
 		switch (cabinetListVO.getListFlag()) {
-		case "0" :	// 기록물철 대장
+		case "0" :	// 기록물철 대장 (기록물철등록부)
 			cabinetListVO.setListType("002");
 			break;
 		case "1" :	// 편철확정대상 기록물철
@@ -29343,7 +29354,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			//regnumber
-			Document relayXML = commonUtil.xmlLod(config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocXML" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strXToCode + ".xml");
+			Document relayXML = commonUtil.xmlLod(commonUtil.getRealPath(servletContext) + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID) + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocXML" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strXToCode + ".xml");
 			
 			String regNumber = relayXML.getElementsByTagName("regnumber").item(0).getTextContent();
 			logger.debug("#문서번호: " + regNumber);
@@ -29486,7 +29497,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
              
-             strSamplePath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator + "dtd" + commonUtil.separator + "sample.xml";
+             strSamplePath = commonUtil.getRealPath(servletContext) + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator + "dtd" + commonUtil.separator + "sample.xml";
              strSendOrgCode = config.getProperty("config.companyNum");
              strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", tenantID);
 
@@ -29529,7 +29540,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strResult = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
              strResult = strResult + strTemp.replace("&amp;", "&");
              
-             File ackFile = new File(commonUtil.detectPathTraversal(config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName));
+             File ackFile = new File(commonUtil.detectPathTraversal(commonUtil.getRealPath(servletContext) + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName));
              
          	if( ackFile.exists()) {
          		ackFile.delete();
@@ -29550,7 +29561,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	private String getFileName(String strFileName, String strFolderName, int tenantID) throws Exception {
-		String strPath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files"
+		String strPath = commonUtil.getRealPath(servletContext) + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files"
 				+ config.getProperty("upload_relay.ROOT") + commonUtil.separator + "data" + commonUtil.separator + strFolderName + commonUtil.separator;
 		String strResult = "";
 

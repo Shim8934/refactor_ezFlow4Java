@@ -238,4 +238,9 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public List<MBoardItemVO> getQNABoardItemList(Map<String, Object> map) throws Exception {
 		return (List<MBoardItemVO>) list("MBoardDAO.getQNABoardItemList", map);
 	}
+
+	/* 2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 */
+	public void saveOneLineReply(Map<String, Object> map) throws Exception {
+		insert("MBoardDAO.saveOneLineReply", map);
+	}
 }

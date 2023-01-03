@@ -43,6 +43,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
+import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -326,6 +327,11 @@ public class MBoardGWController {
 				return result;
 			}
 			
+			/* 2022-11-16 홍승비 - 모바일 게시물 보기 시 댓글기능 추가 (댓글 카운트 전달) */
+			String commentCount = "0";
+			if (boardInfo.getOneLineReply() != null && !boardInfo.getOneLineReply().equals("") && !boardInfo.getOneLineReply().equals("0")) {
+				commentCount = ezBoardService.getOneLineReplyCount(boardId, contentId, info.getTenantId());
+			}
 			
 			//mht 파일 가져오기
 			String realPath = commonUtil.getRealPath(request);
@@ -351,6 +357,7 @@ public class MBoardGWController {
 			data.put("content", mhtContent);
 			data.put("boardInfo", boardInfo);
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
+			data.put("commentCount", commentCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -416,6 +423,12 @@ public class MBoardGWController {
 				return result;
 			}
 			
+			/* 2022-11-16 홍승비 - 모바일 게시물 보기 시 댓글기능 추가 (댓글 카운트 전달) */
+			String commentCount = "0";
+			if (boardInfo.getOneLineReply() != null && !boardInfo.getOneLineReply().equals("") && !boardInfo.getOneLineReply().equals("0")) {
+				commentCount = ezBoardService.getOneLineReplyCount(boardId, contentId, info.getTenantId());
+			}
+			
 			List<MBoardAttachVO> photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 			
 			for (MBoardAttachVO photo : photoList) {
@@ -429,6 +442,7 @@ public class MBoardGWController {
 			data.put("boardItem", boardItem);
 			data.put("boardInfo", boardInfo);
 			data.put("photoList", photoList);
+			data.put("commentCount", commentCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1224,6 +1238,12 @@ public class MBoardGWController {
 				return result;
 			}
 			
+			/* 2022-11-16 홍승비 - 모바일 게시물 보기 시 댓글기능 추가 (댓글 카운트 전달) */
+			String commentCount = "0";
+			if (boardInfo.getOneLineReply() != null && !boardInfo.getOneLineReply().equals("") && !boardInfo.getOneLineReply().equals("0")) {
+				commentCount = ezBoardService.getOneLineReplyCount(boardId, contentId, info.getTenantId());
+			}
+			
 			List<MBoardAttachVO> movieAttachVO = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 			
 			LOGGER.debug("movieAttachVO : " + movieAttachVO.get(0));
@@ -1233,6 +1253,7 @@ public class MBoardGWController {
 			data.put("boardItem", boardItem);
 			data.put("boardInfo", boardInfo);
 			data.put("movieAttachVO", movieAttachVO.get(0));
+			data.put("commentCount", commentCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1660,4 +1681,161 @@ public class MBoardGWController {
 		LOGGER.debug("accessListViewFGCheck for userID[" + userID + "] ended. rtv   ::   " + rtv);
 		return rtv;
     }
+	
+	/**
+	 * 2022-11-16 홍승비 - 모바일 G/W 게시판 [GET] 게시물 댓글 리스트 (JSON 형식으로 리턴)
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/comment-list", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCommentList(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/comment-list] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String gubun = request.getParameter("gubun");
+			String userName = "";
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+			
+			LOGGER.debug("serverName = " + serverName + " | userId = " + userID);
+			
+			userName = "USERNAME" + commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
+	    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardId, contentId, userName, gubun, info.getCompanyId(), info.getTenantId());
+	    	
+	    	// 댓글의 작성일자 UTC시간 계산하여 각 VO에 설정
+	    	for (BoardLineReplyVO reply : boardLineReplyVOList) {
+	    		reply.setWriteDate(commonUtil.getDateStringInUTC(reply.getWriteDate(), info.getOffSet(), false));
+	    	}
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", boardLineReplyVOList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/comment-list] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 2022-11-18 홍승비 - 모바일 G/W 게시판 [POST] 게시물 댓글 작성 및 저장
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject saveBoardComment(@PathVariable String boardId, @PathVariable String contentId, @PathVariable String replyID, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String content = request.getParameter("content");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+			
+			LOGGER.debug("serverName = " + serverName + " | userId = " + userID);
+			
+			content = content.replace("'", "''");
+			
+			mBoardService.saveOneLineReply(contentId, replyID, boardId, userID, info.getUserName(), info.getUserName2(), info.getTenantId(), info.getCompanyId(), content);
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
+		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 2022-11-18 홍승비 - 모바일 G/W 게시판 [GET] 게시물 댓글 카운트 반환
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/comment-count", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject saveBoardComment(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/comment-count] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+			
+			LOGGER.debug("serverName = " + serverName + " | userId = " + userID);
+			
+			String commentCount = ezBoardService.getOneLineReplyCount(boardId, contentId, info.getTenantId());
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", commentCount);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/comment-count] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 2022-11-18 홍승비 - 모바일 G/W 게시판 [DELETE] 게시물 댓글 삭제
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}", method=RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject deleteBoardComment(@PathVariable String boardId, @PathVariable String contentId, @PathVariable String replyID, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String gubun = request.getParameter("gubun");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+			
+			LOGGER.debug("serverName = " + serverName + " | userId = " + userID);
+			
+			// 모바일 게시판에서는 익명게시물에 댓글을 작성하거나 삭제할 수 없으며, 이후 모바일 게시물에 암호기능이 추가되는 경우 이 주석을 해제하여 사용 가능
+			/*
+			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("n=1") > -1) {
+				gubun = "2";
+			}
+			*/
+			
+			String resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId());
+			
+	        result.put("status", resStr);
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
+		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] ended.");
+		
+		return result;
+	}
+	
 }

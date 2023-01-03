@@ -63,6 +63,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -181,6 +182,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private ServletContext servletContext;
+
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
@@ -10427,7 +10431,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		StringBuffer sb = new StringBuffer();
 		
 		for (String deptID : reqDeptIDs) {
-			String filePath = config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExOpinion" + commonUtil.separator + docID + deptID.split(":")[0] + "return.txt";
+			String filePath = commonUtil.getRealPath(servletContext) + commonUtil.getUploadPath("upload_relay.R_DocPath", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExOpinion" + commonUtil.separator + docID + deptID.split(":")[0] + "return.txt";
 			//기관명 명시해주기 
 			sb.append(deptID.split(":")[1] + " : ");
 			

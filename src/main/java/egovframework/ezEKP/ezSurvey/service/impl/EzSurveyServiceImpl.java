@@ -1108,6 +1108,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 			}
 			
+			/* 2022-12-02 홍승비 - 전자설문의 질답 분기처리를 전부 페이지단에서 처리하도록 개선하였으므로, 불필요한 분기처리 동작 제거 (참고를 위해 주석으로 남김) */
+			// firstpath(remainPath)는 2022-12-02 기준 어디에서도 쓰이지 않음
+			// logicPath와 currentPath는 result로 전달되지 않으며, logicMap은 travelNode() 메서드 내부에서 변형되지 않음
+			/*
 			if (logicFlag) {
 				//Make logic path
 				List<List<Long>> logicPath = new ArrayList<>();
@@ -1123,6 +1127,11 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 				
 				result.put("firstpath", remainPath);
+				result.put("logicmap" , logicMap);
+			}
+			*/
+			
+			if (logicFlag) {
 				result.put("logicmap" , logicMap);
 			}
 		}

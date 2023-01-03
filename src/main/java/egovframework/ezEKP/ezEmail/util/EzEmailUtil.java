@@ -77,6 +77,7 @@ import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 import javax.mail.util.ByteArrayDataSource;
+import javax.servlet.ServletContext;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
@@ -154,6 +155,9 @@ public class EzEmailUtil {
     private Properties config;
 	
 	@Autowired
+	private ServletContext servletContext;
+
+	@Autowired
 	private CommonUtil commonUtil;
 	
 	@Autowired
@@ -166,7 +170,7 @@ public class EzEmailUtil {
 	Rest rest;
 
 	public String getMailHeaderPath(long mailboxId, long mailUid) {
-		String realPath = config.getProperty("data_root");
+		String realPath = commonUtil.getRealPath(servletContext);
 		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
 		String parentFolderName = String.valueOf(mailUid % 100);
 		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
@@ -177,7 +181,7 @@ public class EzEmailUtil {
 	}
 
 	public String getMailBodyPath(long mailboxId, long mailUid) {
-		String realPath = config.getProperty("data_root");
+		String realPath = commonUtil.getRealPath(servletContext);
 		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
 		String parentFolderName = String.valueOf(mailUid % 100);
 		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 

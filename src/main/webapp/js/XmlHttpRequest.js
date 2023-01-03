@@ -2020,7 +2020,9 @@ function getAccountingYear() {
         success : function(result) {
             res = result;
         },
-        error : function(){}
+        error : function(e) {
+        	console.log(e);
+        }
     });
     return res;
 }
