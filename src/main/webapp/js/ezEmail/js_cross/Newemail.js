@@ -1759,6 +1759,8 @@ function searchedMailExportZip() {
 	var andorStatus = "and";
 	var end = parseInt(document.getElementById("MailList").getAttribute("MaxCount"));
 	var secureMailFilter = document.getElementById("select").value == "SECUREMAIL" ? 1 : 0;
+	var maxCount = parseInt(document.getElementById("MailList").getAttribute("MaxCount"));
+	socketUserkey = mailbox_getUserKey();
 
 	if(mailsearchDetail == "Y"){
 		if(document.querySelector("input[name=attachment]:checked").value != null ){
@@ -1784,11 +1786,17 @@ function searchedMailExportZip() {
 					"END" : end.toString(),
 					"SECUREMAILFILTER" : secureMailFilter.toString(),
 					"TAGNAME" : window.tagName ? tagName : "",
-					"SHAREDID" : shareId
+					"SHAREDID" : shareId,
+					"MAXCOUNT" : maxCount,
+					"USERKEY" : socketUserkey
 					};
 
     var _url = "/ezEmail/searchedMailExportZip.do";
  
+ 	ShowMailProgressNew();
+	ShowPercent(0);
+	mailboxProgressFun(true, socketUserkey);
+      
 	$.ajax({
 		cache: false,
 		method: "post",
@@ -1799,7 +1807,9 @@ function searchedMailExportZip() {
 			HiddenMailProgress();
 		},
 		success: function(result){
-			if (result != "") {
+			if (result == "CANCEL") {
+				console.log('User Cancel');
+			} else if (result != "") {
 				var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + "";
 				
 				if (typeof(shareId) != "undefined" && shareId != "") {
@@ -1814,6 +1824,10 @@ function searchedMailExportZip() {
 		},
 		error: function() {
 			alert(strLang321);
+		},
+		complete : function() {
+        	HiddenMailProgressNew();
+            mailboxProgressFun(false); // progress percent
 		}
 	});
 

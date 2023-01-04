@@ -1408,6 +1408,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String tagName = (String) requestObject.get("TAGNAME") == null ? "" : (String) requestObject.get("TAGNAME");
 		boolean isRequireMailboxPath = !tagName.isEmpty();
 		String shareId = "";
+		int maxCount = (Integer) requestObject.get("MAXCOUNT");
+		String userkey = (String) requestObject.get("USERKEY");
 
 		List listCategory = (ArrayList) requestObject.get("CATEGORY");
 		List listKeyword = (ArrayList) requestObject.get("KEYWORD");
@@ -1580,7 +1582,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 				String realPath = commonUtil.getRealPath(request);
 
-				returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath);
+				returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath, maxCount, userkey);
 			}
 
 		} catch (Exception e) {
@@ -1593,6 +1595,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 	/**
 	 * 여러개의 메일파일을 zip파일로 서버에 저장하기 실행 함수
+	 * 2022-12-29 이사라 : 중복코드를 피하기 위해 mailExportZipExcute 함수와 분리
 	 */
 	@RequestMapping(value="/ezEmail/mailExportZip.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -1604,7 +1607,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		Map<String, String[]> urlMap = request.getParameterMap();
 
 		try {
-			returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath);
+			returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath, 0, ""); // maxCount와 userkey가 불필요하여 디폴트 값을 넣어 줌
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1613,9 +1616,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		return returnValue;
 	}
 
-	public String mailExportZipExcute(String loginCookie, Locale locale, String shareId, Map<String, String[]> urlMap, String realPath) throws Exception {
+	public String mailExportZipExcute(String loginCookie, Locale locale, String shareId, Map<String, String[]> urlMap, String realPath, int maxCount, String userkey) throws Exception {
 		logger.debug("mailExportZipExcute started.");
-		String returnValue = "";
 		
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userIdAndPassword.get(1);
@@ -1669,6 +1671,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		ZipOutputStream zos = null;
 		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
 		
+		String returnValue = guid;
+
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, password, egovMessageSource, locale, ezEmailUtil);
@@ -1686,8 +1690,15 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			boolean isRead = false;
+			int currCount = 1;
+			long lastTime = System.currentTimeMillis();
+
 			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName(charSet));
 			
+			if (StringUtils.isNotBlank(userkey) && maxCount > 0) {
+				ezEmailService.setMailboxProgress(userkey, userInfo.getId(), "EXPORT", userInfo.getTenantId(), 0);
+			}
+
 			for (String folderPath : folderList) {
 				String uids = urlMap.get(folderPath)[0];
 				String[] uidArr = uids.split(",");
@@ -1724,6 +1735,38 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 							zos.closeEntry();
 						}
+
+						// 진행율 클라이언트에게 전송
+						if (StringUtils.isNotBlank(userkey) && maxCount > 0) {
+							long currTime = System.currentTimeMillis();
+							int interval = (int) (currTime - lastTime);
+							int percent = (int) ((double) currCount / (double) maxCount * 100.0);
+
+							if (interval >= 2000) {
+
+								try {
+									int resultInt = ezEmailService.updateMailboxProgress(userkey, percent);
+									if (resultInt <= 0) {
+										throw new IllegalStateException();
+									}
+								} catch (IllegalStateException e) {
+									File file = new File(pDirTempPath + ".zip");
+
+									if (file.exists()) {
+										file.delete();
+									}
+
+									returnValue = "CANCEL";
+
+									e.printStackTrace();
+									break;
+								}
+
+								lastTime = currTime;
+							}
+
+							currCount = currCount + 1; // 현재 메일 카운트
+						}
 					}
 					
 					folder.close(true);
@@ -1734,9 +1777,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			zos.close();
 			zos = null;
 			
-			returnValue = guid;
 		} catch (Exception e) {
 			File file = new File(pDirTempPath + ".zip");
+			returnValue = "";
 			
 			if (file.exists()) {
 				file.delete();

@@ -53,7 +53,7 @@
 		    var g_userLang = "${userLang}";
 		    var USE_OCS = "${useOcs}";
 		    var g_useremail = g_loginID + "@${domainName}";	    
-		    var searchMode = false;
+		    var searchMode = ${not empty tagName};
 		    var SearchKeyword = "";
 		    var g_loginID = "${userId}";
 		    var SecurityMailReadUndo = true;
