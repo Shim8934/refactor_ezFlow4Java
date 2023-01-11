@@ -235,7 +235,7 @@ public class LoginVO implements Serializable {
 		this.dn = dn;
 	}	
 	public String getDisplayName() {
-		return displayName;
+		return displayName != null ? displayName : displayName1;
 	}
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
