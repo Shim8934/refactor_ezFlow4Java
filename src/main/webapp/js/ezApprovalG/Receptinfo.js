@@ -1999,6 +1999,9 @@ function AprDeptDel_onclick() {
         document.getElementById("inputSummaryOuterReceiverList").value = "";
         document.getElementById("btnaddress").style.display = "";
     }
+    
+    /* 2023-01-12 홍승비 - 결재정보 > 수신처 ROW 제거 시, 수기입력된 수신처ID를 전체적으로 갱신 ("Address" + 숫자 형태의 ID를 가지는 경우에만) */
+    refreshAllDeptAddressRowID();
 }
 
 //############################################################################################################################## 민원인 주소
@@ -2234,6 +2237,8 @@ function CheckLen(pStr, pSize) {
     else
         return true;
 }
+
+// 결재정보 > 수신자 수기입력 완료 > 수신자 리스트에 ROW 삽입 함수
 function AprLineAddDeptAddress(AddressName) {
 	//2017-03-28 이효민
     //Resultxml.async = false;
@@ -2246,11 +2251,12 @@ function AprLineAddDeptAddress(AddressName) {
     var listview = new ListView();
     listview.SetID("lvRECEPTLIST");
     listview.SetRowOnDblClick("AprDeptDel_onclick");
-
+    
     var DeptAddIndex = listview.GetDataRows().length;
-    if (DeptAddIndex == 0 || listview.GetDataRows()[0].id.indexOf("noItems") == -1)
+    if (DeptAddIndex == 0 || listview.GetDataRows()[0].id.indexOf("noItems") == -1) {
         DeptAddIndex = DeptAddIndex + 1;
-
+    }
+    
     var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW/CELL");
     setNodeText(GetChildNodes(objNodes[0])[0], DeptAddIndex);
     setNodeText(GetChildNodes(objNodes[0])[1], "Address" + DeptAddIndex);
@@ -2307,7 +2313,10 @@ function AprLineAddDeptAddress(AddressName) {
     if (useReceiveInfoName == '0') {
 	    document.getElementById("btnaddressChange").style.display = "";
 	}
-	
+    
+    /* 2023-01-12 홍승비 - 결재정보 > 수신자 수기입력 완료 후 ROW 추가 시, 수기입력된 수신처ID를 전체적으로 갱신 ("Address" + 숫자 형태의 ID를 가지는 경우에만) */
+    refreshAllDeptAddressRowID();
+    
     return true;
 }
 /******************************모두추가/모두제거/추가/제거 버튼 관련 function******************************/
@@ -3104,4 +3113,18 @@ function checkDuplicationRecept(lv, addReceptId) {
     }
 
     return result;
+}
+
+/* 2023-01-12 홍승비 - 결재정보 > 수신자 수기입력 관련 > 수기입력된 수신처ID를 전체적으로 갱신하는 함수 ("Address" + 숫자 형태의 ID를 가지는 경우에만) */
+// 수기입력이 아닌 부서 중에서 "Address" 로 시작하는 부서ID가 존재할 수 있으나, 조직도 상의 부서와 수기입력은 수신자 리스트에 함께 사용할 수 없으므로 사이드 이펙트는 없음
+function refreshAllDeptAddressRowID() {
+	var deptAddressRows = $("#lvRECEPTLIST").find("tr[data1^='Address']"); // 수기입력된 수신자 리스트 TR 추출
+	var deptAddressRowLength = deptAddressRows.length;
+	
+	// 수기입력된 수신자 Row 중 최하단이 Address1, 최상단이 제일 큰 Address값을 가지도록 data1 세팅
+	if (deptAddressRowLength > 0) {
+		deptAddressRows.each(function(index, item) {
+			item.setAttribute("data1", "Address" + (parseInt(deptAddressRowLength) - parseInt(index)));
+		});
+	}
 }
