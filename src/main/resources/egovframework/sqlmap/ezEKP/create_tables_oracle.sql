@@ -11780,6 +11780,12 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_EXPENDAPRLINE_PK" ON "TBL_EXPENDAPRLINE" ("TENANT_ID", "COMPANYID", "ORGUSERID", "APRMEMBERSN", "DOCID") 
   ;
 --------------------------------------------------------
+--  DDL for Index TBL_EXPENDAPRLINE_LINEJOINIDX
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "TBL_EXPENDAPRLINE_LINEJOINIDX" ON "TBL_EXPENDAPRLINE" ("TENANT_ID", "COMPANYID", "APRMEMBERSN", "DOCID") 
+  ;
+--------------------------------------------------------
 --  DDL for Index TBL_FORMCONNINFO_PK
 --------------------------------------------------------
 

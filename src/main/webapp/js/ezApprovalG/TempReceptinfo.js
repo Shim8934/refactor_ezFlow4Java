@@ -361,6 +361,9 @@ function btn_AprDeptTempletAdd_onclick()
         	checkOuterReceiver();
         }
     }
+    
+	/* 2023-01-12 홍승비 - 결재정보 > 수신자 즐겨찾기 적용으로 ROW 추가 시, 수기입력된 수신처ID를 전체적으로 갱신 ("Address" + 숫자 형태의 ID를 가지는 경우에만) */
+	refreshAllDeptAddressRowID();
 }
 function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
 	var result = "";

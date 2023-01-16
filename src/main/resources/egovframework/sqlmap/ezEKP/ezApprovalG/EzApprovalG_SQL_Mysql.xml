@@ -19869,13 +19869,13 @@
 <!-- 	<procedure id="EzApprovalG.confirmClassify" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_CONFRIMCLASSIFY(#v_DEPTCODE#)} -->
 <!-- 	</procedure> -->
+<!-- 2023-01-11 홍승비 - 기록물철 편철확정 시 종료연도(EXPIRATIONYEAR)를 현재 년도 기준으로 -1 처리하지 않도록 수정 -->
 	<update id="EzApprovalG.confirmClassify" parameterClass="Map">
 	 	UPDATE 
 	 		TBL_CABINETCLASS 
         SET 
         	CONFIRMFLAG = '1', 
-            CONFIRMYEAR = #v_SYSDATE#, 
-            EXPIRATIONYEAR = #v_SYSDATE# -1
+            CONFIRMYEAR = #v_SYSDATE#
         WHERE 
         	CABINETCLASSNO IN (
         						SELECT 
@@ -21834,7 +21834,7 @@
 		  		  </isEqual>
 		  		  <isEqual property="listFlag" compareValue="10">
 		  		  		AND 
-		  		  			TBL_CABINETCLASS.ExpirationYear = #accountYear#
+		  		  			TBL_CABINETCLASS.TerminateFlag = '0'
 		  		  </isEqual>
 		  		  <isEqual property="listFlag" compareValue="11">
 		  		  		AND 
