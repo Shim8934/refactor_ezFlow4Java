@@ -515,11 +515,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
 
-		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId(), userInfo.getOffset());
+		// 2023-01-16 전인하 - 빠른설문 > DB에 들어가는 값이 UTC 시간으로 변경됨에 따라 타임존 처리 추가
+		String offset = userInfo.getOffset();
+		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId(), offset);
 		if(progressFlagVO != null) {
 			progressPollFlag = "true";
-			progressSDate = progressFlagVO.getStartDate();
-			progressEDate = progressFlagVO.getEndDate();
+			progressSDate = commonUtil.getDateStringInUTC(progressFlagVO.getStartDate(), offset, false);
+			progressEDate = commonUtil.getDateStringInUTC(progressFlagVO.getEndDate(), offset, false);
 		}
 
 		int totalCount = ezPersonalAdminService.getPollCount(companyID, userInfo.getTenantId());
@@ -534,6 +536,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		for (int i = 0; i < list.size(); i++) {
 			PersonalLightPollVO vo = list.get(i);
+			String startDate = commonUtil.getDateStringInUTC(vo.getStartDate(), offset, false);
+			String endDate = commonUtil.getDateStringInUTC(vo.getEndDate(), offset, false);
+
 			result.append("<ROW>");
 			result.append("<CELL>"); 
 			result.append("<VALUE>" + vo.getItemSeq() +"</VALUE>");
@@ -546,10 +551,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");		// title
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getStartDate().substring(0, 10) + "</VALUE>");	// startDate
+			result.append("<VALUE>" + startDate.substring(0, 10) + "</VALUE>");	// startDate
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getEndDate().substring(0, 10) + "</VALUE>");
+			result.append("<VALUE>" + endDate.substring(0, 10) + "</VALUE>");
 			result.append("</CELL>");
 
 			// 진행여부
@@ -583,7 +588,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("addPoll started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String flag = "";
@@ -594,20 +599,26 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("itemSeq") != null) {
 			itemSeq = request.getParameter("itemSeq");
 			infoVO = ezPersonalAdminService.getPollInfo(itemSeq, userInfo.getTenantId());
-			
-			String startDate = infoVO.getStartDate();
-			String endDate = infoVO.getEndDate();
-			
+
+			/* 2023-01-17 전인하 - 빠른설문 > DB에 들어가는 값이 UTC 시간으로 변경됨에 따라 가져오는 값에 시간대 적용 */
+			String offset = userInfo.getOffset();
+			String startDate = commonUtil.getDateStringInUTC(infoVO.getStartDate(), offset, false);
+			String endDate = commonUtil.getDateStringInUTC(infoVO.getEndDate(), offset, false);
+
+			// commonUtil.getDateStringInUTC()을 사용하여 시간 포맷팅을 먼저 진행 > "." 문자로 자르는 분기 주석처리
+			/*
 			if (startDate != null && startDate.indexOf(".") > -1) {
 				startDate = startDate.substring(0, startDate.indexOf("."));
-				infoVO.setStartDate(startDate);
 			}
 			
 			if (endDate != null && endDate.indexOf(".") > -1) {
 				endDate = endDate.substring(0, endDate.indexOf("."));
-				infoVO.setStartDate(endDate);
 			}
-			
+			*/
+
+			infoVO.setStartDate(startDate);
+			infoVO.setStartDate(endDate);
+
 			model.addAttribute("infoVO", infoVO);
 		} 
 		
@@ -633,12 +644,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		itemSeq = doc.getElementsByTagName("ITEMSEQ").item(0).getTextContent();
 		
 		String result = "";
-		if(itemSeq.equals("")){
+
+		/* 2023-01-17 전인하 - 빠른설문 삽입 및 갱신 시 UTC시간 사용을 위한 Offset 추가 */
+		if (itemSeq.equals("")) {
 			// 생성
-			result = ezPersonalAdminService.insertPoll(doc, userInfo.getTenantId());
+			result = ezPersonalAdminService.insertPoll(doc, userInfo.getOffset(), userInfo.getTenantId());
 		} else {
 			// 수정
-			result = ezPersonalAdminService.updatePoll(doc, userInfo.getTenantId());
+			result = ezPersonalAdminService.updatePoll(doc, userInfo.getOffset(), userInfo.getTenantId());
 		}
 
 		logger.debug("savePoll ended");
@@ -1497,6 +1510,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		PersonalLightPollVO pollVO = ezPersonalAdminService.getPollInfo(itemseq, userInfo.getTenantId());
+
+		/* 2023-01-17 전인하 - 빠른설문 > DB에 들어가는 값이 UTC 시간으로 변경됨에 따라 비교조건도 UTC 시간으로 수정 */
+		String offset = userInfo.getOffset();
+		pollVO.setStartDate(commonUtil.getDateStringInUTC(pollVO.getStartDate(), offset, false));
+		pollVO.setEndDate(commonUtil.getDateStringInUTC(pollVO.getEndDate(), offset, false));
 		
 		// 다국어 처리
 		if (userInfo.getPrimary().equals("2") && pollVO.getPollTitle2() != null) {

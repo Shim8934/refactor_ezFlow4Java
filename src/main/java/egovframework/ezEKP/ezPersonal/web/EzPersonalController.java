@@ -608,13 +608,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 			isPollEmpty = true;
 		} else {
 			/* 2021-09-01 홍승비 - 빠른설문의 시작일, 종료일 시간단위는 처음 생성 시 UTC시간이 아니라 00:00:01, 23:59:59로 고정되어 저장되므로 UTC시간 변경하지 않음 */
+            // 2023-01-13 전인하 - 타임존을 적용하여 UTC 시간으로 수정 (빠른설문 > DB에 들어가는 값이 UTC 시간으로 변경됨에 따라 비교조건도 UTC 시간으로 수정)
 			for (int i=0; i<list.size(); i++) {
 				if (commonUtil.getDateStringInUTC(list.get(i).getEndDate(), userInfo.getOffset(), false).indexOf("1900-01-01") > -1) {
 					list.get(i).setEndDate(egovMessageSource.getMessage("ezPersonal.t244",locale));
 				} else {
-					list.get(i).setEndDate(list.get(i).getEndDate().substring(0, 10));
+                    list.get(i).setEndDate(commonUtil.getDateStringInUTC(list.get(i).getEndDate(), userInfo.getOffset(), false).substring(0, 10));
 				}
-				list.get(i).setStartDate(list.get(i).getStartDate().substring(0, 10));
+                list.get(i).setStartDate(commonUtil.getDateStringInUTC(list.get(i).getStartDate(), userInfo.getOffset(), false).substring(0, 10));
 				
 				if (userInfo.getPrimary().equals("2") && list.get(i).getPollTitle2() != null && !list.get(i).getPollTitle2().equals("")) {
 					list.get(i).setPollTitle(list.get(i).getPollTitle2());

@@ -46,7 +46,7 @@ public interface EzPersonalAdminService {
 	
 	String getQuickLinkACL(String quickLinkID, int tenantID) throws Exception;
 	
-	String insertPoll(Document doc, int tenantID) throws Exception;
+	String insertPoll(Document doc, String offset, int tenantID) throws Exception;
 	
 	String deletePoll(String itemSeq, int tenantID) throws Exception;
 	
@@ -94,7 +94,7 @@ public interface EzPersonalAdminService {
 
 	void updateSliderImageOrder(JSONArray sliderImageList, int tenantId) throws Exception;
 
-	String updatePoll(Document doc, int tenantID) throws Exception;
+	String updatePoll(Document doc, String offset, int tenantID) throws Exception;
 
 	String checkJoinPoll(String userId, int tenantID, String itemSeq) throws Exception;
 	

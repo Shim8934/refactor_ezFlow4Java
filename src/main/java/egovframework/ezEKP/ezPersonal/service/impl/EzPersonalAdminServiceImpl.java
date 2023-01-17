@@ -336,15 +336,20 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String insertPoll(Document doc, int tenantID) throws Exception {
+	public String insertPoll(Document doc, String offset, int tenantID) throws Exception {
 		logger.debug("insertPoll started");
-
+		
 		String companyID = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 		String selectCount = doc.getElementsByTagName("NUM").item(0).getTextContent();
 		String pollTitle = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 		String pollTitle2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
-		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
-		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+
+		/* 2023-01-17 전인하 - 빠른설문 > DB에 들어가는 값이 UTC 시간으로 변경됨에 따라 비교조건도 UTC 시간으로 수정 */
+		String tempStartDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String tempEndDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String startDate = commonUtil.getDateStringInUTC(tempStartDate, offset, true);
+		String endDate = commonUtil.getDateStringInUTC(tempEndDate, offset, true);
+		String nowDate = commonUtil.getTodayUTCTime("");
 
 		if (pollTitle2.equals("")) {
 			pollTitle2 = pollTitle;
@@ -358,11 +363,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pPollTitle2", pollTitle2);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
-
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
-
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
 
@@ -1007,17 +1007,22 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String updatePoll(Document doc, int tenantID) throws Exception {
+	public String updatePoll(Document doc, String offset, int tenantID) throws Exception {
 		logger.debug("updatePoll started");
 
 		String companyID = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 		String selectCount = doc.getElementsByTagName("NUM").item(0).getTextContent();
 		String pollTitle = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 		String pollTitle2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
-		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
-		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		String itemSeq = doc.getElementsByTagName("ITEMSEQ").item(0).getTextContent();
 		String updateFlag = doc.getElementsByTagName("UPDATEFLAG").item(0).getTextContent();
+
+		/* 2023-01-17 전인하 - 빠른설문 > DB에 들어가는 값이 UTC 시간으로 변경됨에 따라 비교조건도 UTC 시간으로 수정 */
+		String tempStartDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String tempEndDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String startDate = commonUtil.getDateStringInUTC(tempStartDate, offset, true);
+		String endDate = commonUtil.getDateStringInUTC(tempEndDate, offset, true);
+		String nowDate = commonUtil.getTodayUTCTime("");
 
 		if (pollTitle2.equals("")) {
 			pollTitle2 = pollTitle;
@@ -1032,11 +1037,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("itemSeq", itemSeq);
-
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
-
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
 

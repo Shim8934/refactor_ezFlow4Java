@@ -281,7 +281,10 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		logger.debug("getCurrentPoll started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false); 
+
+		/* 2023-01-17 전인하 - 빠른설문 > DB에 들어가는 값이 UTC 시간으로 변경됨에 따라 비교조건도 UTC 시간으로 수정 */
+		String nowDate = commonUtil.getTodayUTCTime("");
+		//String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 
 		map.put("v_pUserID", pUserID);
 		map.put("v_pCompanyID", pCompanyID);

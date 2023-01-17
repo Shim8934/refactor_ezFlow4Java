@@ -95,9 +95,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public PersonalLightPollVO getPollPortlet(String companyId, int tenantId, String userId, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		//String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-		// 2018-11-23 황윤호 offset 적용 
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		/* 2023-01-17 전인하 - 빠른설문 > DB에 들어가는 값이 UTC 시간으로 변경됨에 따라 비교조건도 UTC 시간으로 수정 */
+		String nowDate = commonUtil.getTodayUTCTime("");
+		// 2018-11-23 황윤호 offset 적용
+		// String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
