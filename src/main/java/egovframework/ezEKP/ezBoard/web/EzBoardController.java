@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -1266,7 +1265,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	
     	userInfo = commonUtil.userInfo(loginCookie);
     	
-    	String boardID = boardVO.getBoardId() != null ? boardVO.getBoardId() : "";    	
+    	String boardID = boardVO.getBoardId() != null ? boardVO.getBoardId() : "";
     	String boardType = boardVO.getBoardType() != null ? boardVO.getBoardType() : "0";
     	String mode = boardVO.getMode();
     	String type = "1";
@@ -1307,6 +1306,7 @@ public class EzBoardController extends EgovFileMngUtil{
     			resultXML = getBoardListItem(boardVO, userInfo, type);
     		}
     	}
+
     	logger.debug("getBoardList ended");
         return resultXML.toString();
     }
@@ -6828,67 +6828,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		logger.debug("imageDownload ended");
 		return "ezBoard/boardImagedownload";
-	}
-	
-	/**
-	 * 22.12.19 전인하 게시판 리스트뷰 실습
-	 */
-	@RequestMapping(value = "/ezBoard/boardItemListPrac.do", method = RequestMethod.GET)
-	public String boardItemListPrac(HttpServletRequest request, LoginVO userInfo, BoardPropertyVO boardPropertyVO, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		logger.debug("boardItemListPrac started");
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String pBoardID = "{e3f5c6ea-a17a-4b94-9f15-cd24bd999dc3}";
-		String pBoardName = "일반게시판 하위승인/하위익명";
-		
-		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, userInfo);
-		
-		if (boardPropertyVO.getAdminType() == null) {
-			boardInfo.setAdminType("");
-		} else {
-			boardInfo.setAdminType(boardPropertyVO.getAdminType());
-		}
-		
-		if (boardPropertyVO.getButtonHidden() == null) {
-			boardInfo.setButtonHidden("N");
-		} else {
-			boardInfo.setButtonHidden(commonUtil.stripScriptTags(boardPropertyVO.getButtonHidden()));
-		}
-		
-		if (boardPropertyVO.getBoardType() == null) {
-			boardInfo.setBoardType("0");
-			// 데이터 값이 잘못 넘어오는 부분 -> 해결한 부분. 그러나 왜 빈문자열이 넘어왔는지는 모르겠음. 
-		} else if (boardPropertyVO.getBoardType().equals("")) {
-			boardInfo.setBoardType("0");
-		} else {
-			boardInfo.setBoardType(commonUtil.stripScriptTags(boardPropertyVO.getBoardType()));
-		}
-		
-		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
-		
-		if (boardInfo.getListView_FG().equals("true")) {
-			if (request.getParameter("page") == null || request.getParameter("page").equals("")) {
-				boardInfo.setPage(1);
-			} else {
-				boardInfo.setPage(boardPropertyVO.getPage());
-			}
-			
-			if (boardPropertyVO.getSortBy() != null) {
-				boardInfo.setSortBy(boardPropertyVO.getSortBy());
-			}
-			
-			if (boardInfo.getBoardName() != null) {
-				pBoardName = boardInfo.getBoardName();
-			}
-		}		
-		model.addAttribute("boardInfo", boardInfo);
-		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName).replace("\\", "&#92;"));
-		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
-		model.addAttribute("userInfo", userInfo);
-		
-		logger.debug("boardItemListPrac ended");
-		return "ezBoard/boardItemListPrac";
 	}
 	
 	/**
