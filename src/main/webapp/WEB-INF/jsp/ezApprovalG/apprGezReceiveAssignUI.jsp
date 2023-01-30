@@ -87,6 +87,8 @@
 	                listview.SetID("OrganList");
 	                listview.SetMulSelectable(false);
 	                listview.SetRowOnDblClick("btnAssign_onclick");
+	                /* 2023-01-30 홍승비 - 부서수신함 > 접수 > 수신자 지정 레이어 팝업 > 리스트뷰의 첫번째 row가 자동선택되지 않도록 수정 (대부분의 사용자지정화면 리스트뷰 UI와 통일, 지정 실수 방지) */
+	                listview.SetSelectFlag(false);
 	
 	                if (CrossYN())
 	                    listview.DataSource(listviewheader);
@@ -313,6 +315,7 @@
          if (SelectNodes(xml, "LISTVIEWDATA/ROWS/ROW").length > 0) {
              var listview = new ListView();
              listview.LoadFromID("OrganList");
+             listview.SetSelectFlag(false);
              listview.DataSource(xml);
              listview.RowDataBind();
          }
@@ -322,6 +325,7 @@
              listview.SetID("OrganList");
              listview.SetMulSelectable(false);
              listview.SetRowOnDblClick("btnAssign_onclick");
+             listview.SetSelectFlag(false);
              listview.DataSource(listviewheader);
              listview.DataBind("OrganListView");
          }
