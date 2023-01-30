@@ -4,18 +4,6 @@
 <head> 
 <% 
 	request.setCharacterEncoding("UTF-8");  // 한글깨지면 주석제거
-	
-// 	String confmKey = ${confirmKey}; // 검색API 승인키
-
-	boolean isSecure = request.isSecure();
-
-	String domain = "http://www.juso.go.kr"; // 인터넷망
-	if (isSecure) {
-		domain = "https://www.juso.go.kr";
-	}
-	
-	// ※ 행정망 내에서 운영되는 시스템도 이용 가능합니다. 행정망 서비스를 위한 API 요청URL은 별도로 문의 주시기 바랍니다.(1588-0061)
-	String resultType = "4"; // 검색결과 화면 출력유(1 : 도로명, 2 : 도로명+지번, 3 : 도로명+상세건물명, 4 : 도로명+지번+상세건물명)
 %>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezAddress/addrlink.js')}"></script>
@@ -23,7 +11,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>주소정보연계 | 도로명주소 안내시스템</title>
 <script language="javascript">
-	var confirmKey = "${confirmKey}";
 	//특수문자, 특정문자열(sql예약어) 제거
 	function checkSearchedWord(obj){
 		obj.value = obj.value+" ";
@@ -64,24 +51,17 @@
 		$("#keyword").val(regExpCheckJuso($("#keyword").val()));
 		
 		$.ajax({
-			 url :"<%=domain %>/addrlink/addrLinkApiJsonp.do"  //인터넷망
+			 url :"/ezAddress/addressZipCodeListOpen.do"
 			,type:"post"
 			,data:$("#AKCFrm").serialize()
-			,dataType:"jsonp"
-			,crossDomain:true
+			,dataType:"xml"
 			,success:function(xmlStr){
-				if(navigator.appName.indexOf("Microsoft") > -1){
-					var xmlData = new ActiveXObject("Microsoft.XMLDOM");
-					xmlData.loadXML(xmlStr.returnXml)
-				}else{
-					var xmlData = xmlStr.returnXml;
-				}
 				$(".popSearchNoResult").html("");
-				var errCode = $(xmlData).find("errorCode").text();
-				var errDesc = $(xmlData).find("errorMessage").text();
+				var errCode = $(xmlStr).find("errorCode").text();
+				var errDesc = $(xmlStr).find("errorMessage").text();
 				
-				var totalCount = $(xmlData).find("totalCount").text();
-				var currentPage = $(xmlData).find("currentPage").text();
+				var totalCount = $(xmlStr).find("totalCount").text();
+				var currentPage = $(xmlStr).find("currentPage").text();
 				
 				if( parseInt(totalCount) > 1000 && currentPage == "1" )
 					alert("검색 결과가 너무 많습니다(1,000건 이상)\n검색어 예를 참조하여 검색하시기 바랍니다.");
@@ -90,7 +70,7 @@
 					alert(errDesc);
 				}else{
 					if(xmlStr != null){
-						makeList(xmlData);
+						makeList(xmlStr);
 					}
 				}
 			}
@@ -142,7 +122,7 @@
 			$(xmlStr).find("juso").each(function(){
 				num++;
 				
-				var resultType = "<%= resultType%>"; 
+				var resultType = "${resultType}";
 	
 				htmlStr += '<tr>';
 				htmlStr +='	<td class="subj" style="text-align:center;">'+(listNum++)+'</td>';
@@ -443,8 +423,6 @@
 		});
 		$('#roadNameList2').children().css('display','none');
 		$('#roadNameList2').scroll(function(){prevPosition = this.scrollTop;});
-		
-		document.querySelector("[name='confmKey']").value = confirmKey;
 	});
 	window.onresize = placeHolderPoint;
 	
@@ -603,10 +581,9 @@
 
 	<form name="AKCFrm" id="AKCFrm" method="post">
 		<input type="hidden" name="iframe"  value=""   />
-		<input type="hidden" name="confmKey" value="" />
 		<input type="hidden" name="encodingType"   value=""   />
 		<input type="hidden" name="cssUrl" value="" />
-		<input type="hidden" name="resultType" value="<%=resultType %>" />
+		<input type="hidden" name="resultType" value="${resultType}" />
 		<input type="hidden" name="currentPage" id="currentPage" value="1" />
 		<input type="hidden" name="countPerPage" value="5" />
 		

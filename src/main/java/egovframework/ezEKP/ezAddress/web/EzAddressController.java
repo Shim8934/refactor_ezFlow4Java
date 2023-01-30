@@ -1,9 +1,12 @@
 package egovframework.ezEKP.ezAddress.web;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -88,13 +91,49 @@ public class EzAddressController{
 	public String addressZipCodePopupOpen(Model model) throws Exception {
 		logger.debug("addressZipCodePopupOpen started.");
 		
-		String confirmKey = config.getProperty("config.ConfirmKey");
-		
-		model.addAttribute("confirmKey", confirmKey);
+		// ※ 행정망 내에서 운영되는 시스템도 이용 가능합니다. 행정망 서비스를 위한 API 요청URL은 별도로 문의 주시기 바랍니다.(1588-0061)
+		model.addAttribute("resultType", "4"); // 검색결과 화면 출력유형 (1 : 도로명, 2 : 도로명+지번, 3 : 도로명+상세건물명, 4 : 도로명+지번+상세건물명)
 		
 		logger.debug("addressZipCodePopupOpen ended.");
 		
 		return "ezAddress/addressZipSelectInternet";
+	}
+
+	/**
+	 * 도로명 주소 검색 실행 함수 (Open API)
+	 * (참고) 어플리케이션 호출 소스 보기 -> https://business.juso.go.kr/addrlink/openApi/searchApi.do
+	 */
+	@RequestMapping(value = "/ezAddress/addressZipCodeListOpen.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	public void addressZipCodeListOpen(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("addressZipCodeListOpen started.");
+
+		String currentPage = request.getParameter("currentPage");
+		String countPerPage = request.getParameter("countPerPage");
+		String confmKey = config.getProperty("config.ConfirmKey");
+		String keyword = request.getParameter("keyword");
+
+		logger.debug("currentPage: {} || currentPage: {} || confmKey: {} || keyword: {}", currentPage, currentPage, confmKey, keyword);
+
+		String isSecure = request.isSecure()? "https" : "http";
+		String apiUrl = isSecure + "://business.juso.go.kr/addrlink/addrLinkApi.do?currentPage=" + currentPage
+				+ "&countPerPage=" + countPerPage + "&keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&confmKey=" + confmKey;
+
+		URL url = new URL(apiUrl);
+		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+		StringBuffer sb = new StringBuffer();
+		String tempStr = null;
+		while (true) {
+			tempStr = br.readLine();
+			if (tempStr == null)
+				break;
+			sb.append(tempStr);
+		}
+		br.close();
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/xml");
+		response.getWriter().write(sb.toString());
+
+		logger.debug("addressZipCodeListOpen ended.");
 	}
 	
 	/**
