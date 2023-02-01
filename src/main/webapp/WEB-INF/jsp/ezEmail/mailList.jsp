@@ -1573,10 +1573,10 @@
 				$("#all").val("FROM");
 				$('input:radio[name="attachment"][id="all"]').prop('checked', true);
 				$('input:radio[name="andor"][value="and"]').prop('checked', true);
-				$("#selectRange").val("sixMonth");
+				$("#selectRange").val(mailSearchPeriod);
 				$("input:text[name='prekeyword']").val("");
 				var today = new Date();
-				$("#Sdatepicker").datepicker('setDate', '-6m');
+				$("#Sdatepicker").datepicker('setDate', mailSearchPeriodSDate);
 				$("#Edatepicker").datepicker('setDate', today);
 				changeLangeEvent();
 			}
