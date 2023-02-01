@@ -143,263 +143,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/portalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		return "redirect:/ezNewPortal/newPortalMain.do";
-		
-		/*logger.debug("portalMain Start");
-				
-		String companyID = req.getParameter("companyID");
-		String deptID = req.getParameter("deptID");
-		if (companyID != null && !companyID.equals("") && deptID != null && !deptID.equals("")) {
-			loginCookie = changeCompany(loginCookie, deptID, companyID, resp);
-		}
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		if (companyID != null && !companyID.equals("") && deptID != null && !deptID.equals("")) {
-			Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(userInfo.getDeptID(), "utf-8"));
-	    	cookieID0.setPath("/");
-	    	resp.addCookie(cookieID0);
-	    	
-	    	Cookie cookieID1 = new Cookie("APRUI1", URLEncoder.encode(userInfo.getDeptName(), "utf-8"));
-	    	cookieID1.setPath("/");
-	    	resp.addCookie(cookieID1);
-	    	
-	    	Cookie cookieID2 = new Cookie("APRUI2", URLEncoder.encode(userInfo.getDeptName2(), "utf-8"));
-	    	cookieID2.setPath("/");
-	    	resp.addCookie(cookieID2);
-	    	
-	    	Cookie cookieID3 = new Cookie("APRUI3", URLEncoder.encode(userInfo.getCompanyName(), "utf-8"));
-	    	cookieID3.setPath("/");
-	    	resp.addCookie(cookieID3);
-	    	
-	    	Cookie cookieID4 = new Cookie("APRUI4", URLEncoder.encode(userInfo.getCompanyName2(), "utf-8"));
-	    	cookieID4.setPath("/");
-	    	resp.addCookie(cookieID4);
-	    	
-	    	Cookie cookieID5 = new Cookie("APRUI5", URLEncoder.encode(userInfo.getTitle(), "utf-8"));
-	    	cookieID5.setPath("/");
-	    	resp.addCookie(cookieID5);
-	    	
-	    	Cookie cookieID6 = new Cookie("APRUI6", URLEncoder.encode(userInfo.getTitle2(), "utf-8"));
-	    	cookieID6.setPath("/");
-	    	resp.addCookie(cookieID6);
-	    	
-	    	Cookie cookieID7 = new Cookie("APRUI7", URLEncoder.encode(userInfo.getCompanyID(), "utf-8"));
-	    	cookieID7.setPath("/");
-	    	resp.addCookie(cookieID7);
-		}
-		
-		String pageID = "";
-		String skinID = "1";
-		String mainUrl = "";
-		String topUrl = "";
-		String topHeight = "78";
-		
-		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, "1c", "view", userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
-		
-		Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
-		logger.debug("userPortalPage="+userPortalPage);
-		String pUserThemeUID = "";
-		if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
-			pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
-		} else {
-			//searchMyPortalPage
-			String portalPageXml = ezPortalService.searchMyPortalPage("1", "view", userInfo, userInfo.getCompanyID());
-			logger.debug("portalPageXml="+portalPageXml);
-			xmlDom = commonUtil.convertStringToDocument(portalPageXml);
-			if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
-				for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
-					if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().equals("Y")) {
-						pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent();
-						break;
-					}
-				}
-			} else if (xmlDom.getElementsByTagName("ROW").getLength() == 1) {
-				pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
-			} else {
-				if (pUserThemeUID == null || pUserThemeUID.equals("")) {
-					String commentHtml = "<!DOCTYPE html><HTML>" +
-							"<HEAD>" +
-                            "<link href=\""+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
-                            "<style type='text/css'>" +
-                            "<!--" +
-                            ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:malgun gothic, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
-                            ".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}" +
-                            ".warnintxt01 { position:relative }" +
-                            ".warningimg { position:absolute; top:0px; left:0px;}" +
-                            ".warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}" +
-                            ".warningdl dt { height:40px; margin-top:10px;text-align:left;}" +
-                            ".warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left;}" +
-                            ".warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}" +
-                            "-->" +
-                            "</style>" +
-                            "</HEAD>" +
-                            "<BODY>" +
-                            "<div class='warningbox01' style='margin-top:100px;'>" +
-                            "  <div class='warningbox02'>" +
-                            "    <div class='warnintxt01' >";
-							if (userInfo.getRollInfo().indexOf("c=1") > -1) {
-								commentHtml += "<span class='warningimg'><img src='/images/notify/admin_img.png' width='112' height='112'></span><dl class='warningdl'>";
-								commentHtml += "<dt><img src='/images/admin/top_admin.gif' width='183' height='27'></dt>";
-							} else {
-								commentHtml += "<span class='warningimg'><img src='/images/notify/warning02.gif' width='136' height='112'></span><dl class='warningdl'>";
-								commentHtml += "<dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>";
-							}					
-							commentHtml += "<dd>";
-							if (userInfo.getRollInfo().indexOf("c=1") > -1) {
-								commentHtml += "<a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"_parent\", \"\")'>▒ " + egovMessageSource.getMessage("ezPortal.t410", locale) + " " + egovMessageSource.getMessage("main.t00043", locale) +"</span></a> ";
-							} else {
-								commentHtml += egovMessageSource.getMessage("ezPortal.t286", locale);
-							}
-							commentHtml += "</dd>" +
-							"    </dl>" +
-							"    </div>" +
-							"    </div>" +
-							"</div>" +
-							"</BODY>" +
-							"</HTML>";
-							resp.setCharacterEncoding("UTF-8");
-							resp.setContentType("text/html; charset=UTF-8");
-							resp.getWriter().write(commentHtml);
-							resp.getWriter().flush();
-				}
-			}
-		}
-		
-		String strXML = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
-		xmlDom = commonUtil.convertStringToDocument(strXML);
-
-		if (xmlDom.getElementsByTagName("UID_").getLength() > 0) {
-			Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-
-			String myTopID = "";
-			if (xmlDomTop != null && xmlDomTop.getElementsByTagName("UID_").getLength() != 0) {
-				myTopID = xmlDomTop.getElementsByTagName("UID_").item(0).getTextContent().trim();
-			}
-			
-			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
-				if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim().equals(myTopID)) {
-					//기본 페이지 ID
-					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-
-					xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-					//사용자 정보
-					if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
-						skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
-					}
-				}
-			}
-
-			if (pageID == null || pageID.trim().equals("")) {
-				for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
-					if (pUserThemeUID.equals(xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent().trim())) {
-						pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-						xmlDom = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-							
-						if (xmlDom.getElementsByTagName("USERID").getLength() > 0) {
-							skinID = xmlDom.getElementsByTagName("SKINNUM").item(0).getTextContent();
-						}
-					}
-				}
-			}
-		} else {   // 다국어로 설정된 페이지가 없는경우 첫번째 사용으로 되어 있는 레이아웃 보여준다.
-			String strXML2 = ezPortalService.searchTopMenu("", "Y", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
-			
-			Document xmlDom2 = commonUtil.convertStringToDocument(strXML2);
-			if (xmlDom2.getElementsByTagName("UID_").getLength() > 0) {
-				Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-				
-				String myTopID = "";
-				if (xmlDomTop.getElementsByTagName("UID_").getLength() != 0) {
-					myTopID = xmlDomTop.getElementsByTagName("UID_").item(0).getTextContent().trim();
-				}
-				
-				for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
-					if (xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim().equals(myTopID)) {
-						pageID = xmlDom2.getElementsByTagName("UID_").item(i).getTextContent();
-						xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-						if (xmlDom2.getElementsByTagName("USERID").getLength() > 0) {
-							skinID = xmlDom2.getElementsByTagName("SKINNUM").item(0).getTextContent();
-						}
-					}
-				}
-				
-				if (pageID != null && pageID.equals("")) {
-					pageID = xmlDom2.getElementsByTagName("UID_").item(0).getTextContent();
-					xmlDom2 = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
-					if (xmlDom2.getElementsByTagName("USERID").getLength() > 0) {
-						skinID = xmlDom2.getElementsByTagName("SKINNUM").item(0).getTextContent();
-					}
-				}
-			}
-		}
-		
-		String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3",userInfo.getTenantId(), userInfo.getCompanyID());
-		
-		Document xmlDomACL = commonUtil.convertStringToDocument(themeInfoXml);
-		logger.debug("themeInfoXml="+themeInfoXml);
-		
-		if (xmlDomACL != null) {
-			if  (xmlDomACL.getElementsByTagName("TOPHEIGHT").getLength() != 0 && !xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent().equals("")) {
-				topHeight = xmlDomACL.getElementsByTagName("TOPHEIGHT").item(0).getTextContent();
-			}
-			
-			if  (xmlDomACL.getElementsByTagName("TOPURL").getLength() != 0 && !xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent().equals("")) {
-				topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
-				topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
-			}
-			
-		}
-		
-		//masterAdmin nullPoint처리
-		//topUrl = xmlDomACL.getElementsByTagName("TOPURL").item(0).getTextContent();
-		//topUrl += "?mode=view&pageID=" + pageID + "&skinNum=" + skinID;
-		
-		String useStartPageURL = ezPortalService.useStartPageChack2(userInfo.getId(), userInfo.getCompanyID(), pageID, userInfo.getTenantId());
-		String mode = req.getParameter("mode");
-		
-		if (mode != null && mode.equals("new")) {
-			mainUrl = "/myoffice/main/index_environment2.htm";
-		} else if (mode != null && mode.equals("mail")) {
-			mainUrl = "/ezEmail/mailMain.do";
-		} else if (mode != null && mode.equals("approval")) {
-			mainUrl = "/ezApprovalG/apprGMain.do";
-		} else if (!useStartPageURL.trim().equals("NO")) {
-			mainUrl = useStartPageURL;
-		} else {
-			mainUrl = "/ezPortal/myPortal.do";
-		}
-		
-		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-		
-		if (packageType.equals(CommonUtil.PT_MAIL) || packageType.equals(CommonUtil.PT_BASIC)) {
-			mainUrl = "/ezEmail/mailMain.do";
-		}
-		
-		if (userInfo.getLang().equals("1")) {
-			//responseCookie
-		} else if (userInfo.getLang().equals("2")) {
-			//
-		} else if (userInfo.getLang().equals("3")) {
-			
-		} else if (userInfo.getLang().equals("4")) {
-			
-		}
-		
-		// 2018-08-03 황윤호 추가
-        String memoFlag = "";
-        
-        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
-        	memoFlag = "YES";
-        } else {
-        	memoFlag = "NO";
-        }
-
-		model.addAttribute("mainUrl", mainUrl);
-		model.addAttribute("topUrl", topUrl);
-		model.addAttribute("topHeight", topHeight);
-		model.addAttribute("memoFlag", memoFlag);
-		
-		return "/ezPortal/portalMain";*/
 	}
 	
 	/**
@@ -438,13 +181,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		mode = "edit";
 		
 		if (req.getParameter("pageID") != null) {
-			pageID = req.getParameter("pageID");
+			pageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pageID")));
 		} else {
 			pageID = UUID.randomUUID().toString();
 		}
 		
 		if (req.getParameter("parentPageID") != null) {
-			parentPageID = req.getParameter("parentPageID");
+			parentPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("parentPageID")));
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 				parentPageID = ezPortalService.getTopMenuConfigItem("ParentUID", pageID,userInfo.getTenantId());
@@ -479,7 +222,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//미리보기
 		if (req.getParameter("viewMode") != null && !req.getParameter("viewMode").equals("")) {
-			viewMode = req.getParameter("viewMode");
+			viewMode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("viewMode")));
 		}
 		
 		//미리보기인 경우 자기의 캐쉬정보를 삭제한다
@@ -489,7 +232,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//스킨정보
 		if (req.getParameter("skinNum") != null && !req.getParameter("skinNum").equals("")) {
-			skinNum = req.getParameter("skinNum");
+			skinNum = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("skinNum")));
 		}
 		
 		if (userInfo.getLang().equals("1")) {
@@ -690,14 +433,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 페이지 ID
 		if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
-			pageID = req.getParameter("pageID");
+			pageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pageID")));
 		} else {
 			pageID = UUID.randomUUID().toString();
 		}
 		
 		// 부모 페이지 ID
 		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("")) {
-			parentPageID = req.getParameter("parentPageID");
+			parentPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("parentPageID")));
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
 				parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID, userInfo.getTenantId(), userInfo.getCompanyID()); 
@@ -708,11 +451,11 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 마이포탈페이지 ID
 		if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
-			myPortalPageID = req.getParameter("myPortalPageID");
+			myPortalPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("myPortalPageID")));
 		}
 		
 		if (req.getParameter("mode") != null && !req.getParameter("mode").trim().equals("")) {
-			mode = req.getParameter("mode");
+			mode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("mode")));
 		}
 		
 		if (mode.equals("edit")) {
@@ -726,7 +469,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 미리보기
 		if (req.getParameter("viewMode") != null &&  !req.getParameter("viewMode").trim().equals("")) {
-			viewMode = req.getParameter("viewMode");
+			viewMode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("viewMode")));
 		}
 		
 		// 스킨폴더 정의
@@ -760,8 +503,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 부문홈에서 호출한 경우 부문홈ID
 		if (req.getParameter("pClassID") != null && !req.getParameter("pClassID").trim().equals("")) {
-			pClassID = req.getParameter("pClassID");
-			pClassName = req.getParameter("pClassName").replace("\"", "\\\"");
+			pClassID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pClassID")));
+			pClassName = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pClassName"))).replace("\"", "\\\"");
 		}
 		
 		// 부문포탈에서 호출한 경우 USERID, DISPLAYNAME 노드를 부문포탈의 정보로 변경
@@ -916,7 +659,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			mode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("mode")));
 		}
 		if (req.getParameter("gubunFlag") != null && !(req.getParameter("gubunFlag")).equals("")) {
-			gubunFlag = req.getParameter("gubunFlag");
+			gubunFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("gubunFlag")));
 		}
 		if (req.getParameter("resetMyParentPageID") != null && !req.getParameter("resetMyParentPageID").equals("")) {
 			resetMyParentPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("resetMyParentPageID")));
@@ -1063,7 +806,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String uID = "";
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
-			uID = req.getParameter("uID");
+			uID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("uID")));
 		}
 		
 		String pMoveURL = "";
@@ -1071,7 +814,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pUserID = userInfo.getId();
 		
 		if (req.getParameter("userID") != null && !req.getParameter("userID").equals("")) {
-			pUserID = req.getParameter("userID");
+			pUserID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("userID")));
 		}
 		
 		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID())); 
@@ -1111,7 +854,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			/* 2018-08-24 새로운 포탈 */
-			String type = req.getParameter("type");
+			String type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("type")));
 			
 			if (type != null && !type.equals("")) {
 				if (pMoveURL.indexOf("?") == -1) {
@@ -1317,7 +1060,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("checkBrowser", checkBrowser);
-		model.addAttribute("type", req.getParameter("type"));
+		model.addAttribute("type", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("type"))));
 		model.addAttribute("sliderList", sliderList);
 		model.addAttribute("companyList", companyList);
 		model.addAttribute("loginIP", loginIP);
@@ -1398,19 +1141,19 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
-			pCompanyBoard = req.getParameter("companyBoardID");
+			pCompanyBoard = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("companyBoardID")));
 			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
 			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
-			pDeptBoardID = req.getParameter("deptBoardID");
+			pDeptBoardID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("deptBoardID")));
 			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
 			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
-			pNewsBoardID = req.getParameter("newsBoardID");
+			pNewsBoardID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("newsBoardID")));
 			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
 			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
@@ -1455,19 +1198,19 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pNewsType = "";
 		
 		if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
-			pCompanyBoard = req.getParameter("companyBoardID");
+			pCompanyBoard = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("companyBoardID")));
 			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
 			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
-			pDeptBoardID = req.getParameter("deptBoardID");
+			pDeptBoardID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("deptBoardID")));
 			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
 			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
-			pNewsBoardID = req.getParameter("newsBoardID");
+			pNewsBoardID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("newsBoardID")));
 			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
 			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
@@ -1515,7 +1258,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String kind = "000"; // 양식종류 전체에 해당하는 value 값, Portal에 양식종류 선택하는 셀렉트 박스 제작시 "000" 하드코딩을 빼고 req로 값 불러올 것
 		String searchType = "";
 		String searchName = "";
-		String type = req.getParameter("type");
+		String type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("type")));
 		int listType = 1;
 		String nowDate = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
 		nowDate = nowDate.substring(0, 16);
@@ -1908,7 +1651,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pPhotoGalleryID = "";
 		
 		if (req.getParameter("photoGalleryID") != null && !req.getParameter("photoGalleryID").equals("")) {
-			pPhotoGalleryID = req.getParameter("photoGalleryID");
+			pPhotoGalleryID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("photoGalleryID")));
 		}
 		
 		if (pPhotoGalleryID != null && !pPhotoGalleryID.equals("")) {
@@ -1949,7 +1692,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pPhotoGalleryID = "";
 			
 		if (req.getParameter("photoGalleryID") != null && !req.getParameter("photoGalleryID").equals("")) {
-			pPhotoGalleryID = req.getParameter("photoGalleryID");
+			pPhotoGalleryID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("photoGalleryID")));
 		}
 		
 		model.addAttribute("curMon", curMon);	
@@ -1971,7 +1714,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		int noViewCnt = 0;
 		int cnt = 0;
-		int page = Integer.parseInt(req.getParameter("page"));
+		int page = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("page"))));
 		
 		String[] noViewArrayID = new String[1000];
 		String[] arrayID = new String[1000];
@@ -2293,7 +2036,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pPhotoGalleryID = "";
 		
 		if (req.getParameter("photoGalleryID") != null && !req.getParameter("photoGalleryID").equals("")) {
-			pPhotoGalleryID = req.getParameter("photoGalleryID");
+			pPhotoGalleryID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("photoGalleryID")));
 		}
 		
 		String boardString = ezBoardService.getThumbListXML(userInfo, "4", pPhotoGalleryID, 1, "", "");
@@ -2434,14 +2177,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 페이지 ID
 		if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
-			pageID = req.getParameter("pageID");
+			pageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pageID")));
 		} else {
 			pageID = UUID.randomUUID().toString();
 		}
 		
 		// 부모 페이지 ID
 		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("")) {
-			parentPageID = req.getParameter("parentPageID");
+			parentPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("parentPageID")));
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
 				parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID, userInfo.getTenantId(), userInfo.getCompanyID()); 
@@ -2452,11 +2195,11 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 마이포탈페이지 ID
 		if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
-			myPortalPageID = req.getParameter("myPortalPageID");
+			myPortalPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("myPortalPageID")));
 		}
 		
 		if (req.getParameter("mode") != null && !req.getParameter("mode").trim().equals("")) {
-			mode = req.getParameter("mode");
+			mode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("mode")));
 		}
 		
 		if (mode.equals("edit")) {
@@ -2470,7 +2213,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 미리보기
 		if (req.getParameter("viewMode") != null &&  !req.getParameter("viewMode").trim().equals("")) {
-			viewMode = req.getParameter("viewMode");
+			viewMode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("viewMode")));
 		}
 		
 		// 스킨폴더 정의
@@ -2503,8 +2246,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 부문홈에서 호출한 경우 부문홈ID
 		if (req.getParameter("pClassID") != null && !req.getParameter("pClassID").trim().equals("")) {
-			pClassID = req.getParameter("pClassID");
-			pClassName = req.getParameter("pClassName").replace("\"", "\\\"");
+			pClassID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pClassID")));
+			pClassName = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pClassName"))).replace("\"", "\\\"");
 		}
 		
 		// 부문포탈에서 호출한 경우 USERID, DISPLAYNAME 노드를 부문포탈의 정보로 변경
@@ -2630,13 +2373,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		mode = "edit";
 		
 		if (req.getParameter("pageID") != null) {
-			pageID = req.getParameter("pageID");
+			pageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pageID")));
 		} else {
 			pageID = UUID.randomUUID().toString();
 		}
 		
 		if (req.getParameter("parentPageID") != null) {
-			parentPageID = req.getParameter("parentPageID");
+			parentPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("parentPageID")));
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 				parentPageID = ezPortalService.getTopMenuConfigItem("ParentUID", pageID,userInfo.getTenantId());
@@ -2646,7 +2389,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
-			mode = req.getParameter("mode");
+			mode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("mode")));
 		}
 		
 		if (mode.equals("edit")) {
@@ -2666,7 +2409,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//미리보기
 		if (req.getParameter("viewMode") != null && !req.getParameter("viewMode").equals("")) {
-			viewMode = req.getParameter("viewMode");
+			viewMode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("viewMode")));
 		}
 		
 		//미리보기인 경우 자기의 캐쉬정보를 삭제한다
@@ -2676,7 +2419,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//스킨정보
 		if (req.getParameter("skinNum") != null && !req.getParameter("skinNum").equals("")) {
-			skinNum = req.getParameter("skinNum");
+			skinNum = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("skinNum")));
 		}
 		
 		Cookie skinCookie = null;
@@ -2839,7 +2582,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
 		if (req.getParameter("funCode") != null && !req.getParameter("funCode").equals("")) {
-			funCode = req.getParameter("funCode");
+			funCode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("funCode")));
 		}
 		
 		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
@@ -2884,7 +2627,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
-			parentPageID = req.getParameter("parentPageID");
+			parentPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("parentPageID")));
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 				parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID, userInfo.getTenantId(), userInfo.getCompanyID());
@@ -2930,7 +2673,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {
-			intPage = Integer.parseInt(req.getParameter("intPage"));
+			intPage = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("intPage"))));
 		}
 		
 		int listPageSize = 15;
@@ -3118,11 +2861,11 @@ public class EzPortalController extends EgovFileMngUtil {
 		String oldUID = "";
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
-			uID = req.getParameter("uID");
+			uID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("uID")));
 		}
 		
 		if (req.getParameter("oldUID") != null && !req.getParameter("oldUID").equals("")) {
-			oldUID = req.getParameter("oldUID");
+			oldUID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("oldUID")));
 		}
 		
 		logger.debug("uID="+uID+", oldUID="+oldUID);
@@ -3148,7 +2891,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String gubunFlag = "1c";
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
-			uID = req.getParameter("uID");
+			uID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("uID")));
 		}
 		
 		String result = ezPortalService.setUseMyPortalPage(uID, userInfo.getId(), userInfo.getCompanyID(), gubunFlag, userInfo.getTenantId());
@@ -3192,14 +2935,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 페이지 ID
 		if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
-			pageID = req.getParameter("pageID");
+			pageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pageID")));
 		} else {
 			pageID = UUID.randomUUID().toString();
 		}
 		
 		// 부모 페이지 ID
 		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("")) {
-			parentPageID = req.getParameter("parentPageID");
+			parentPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("parentPageID")));
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
 				parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID, userInfo.getTenantId(), userInfo.getCompanyID()); 
@@ -3212,11 +2955,11 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 마이포탈페이지 ID
 		if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
-			myPortalPageID = req.getParameter("myPortalPageID");
+			myPortalPageID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("myPortalPageID")));
 		}
 		
 		if (req.getParameter("mode") != null && !req.getParameter("mode").trim().equals("")) {
-			mode = req.getParameter("mode");
+			mode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("mode")));
 		}
 		
 		if (mode.equals("edit")) {
@@ -3230,7 +2973,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 미리보기
 		if (req.getParameter("viewMode") != null &&  !req.getParameter("viewMode").trim().equals("")) {
-			viewMode = req.getParameter("viewMode");
+			viewMode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("viewMode")));
 		}
 		
 		// 스킨폴더 정의
@@ -3262,9 +3005,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 부문홈에서 호출한 경우 부문홈ID
 		if (req.getParameter("pClassID") != null && !req.getParameter("pClassID").trim().equals("")) {
-			pClassID = req.getParameter("pClassID");
+			pClassID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pClassID")));
 			
-			pClassName = req.getParameter("pClassName").replace("\"", "\\\"");
+			pClassName = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pClassName"))).replace("\"", "\\\"");
 		}
 		
 		// 부문포탈에서 호출한 경우 USERID, DISPLAYNAME 노드를 부문포탈의 정보로 변경
@@ -3358,7 +3101,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String strHTML = "";
 		
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
-			mode = req.getParameter("mode");
+			mode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("mode")));
 		} else {
 			mode = "";
 		}
@@ -3438,13 +3181,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		String mode = "";
 		
 		if (req.getParameter("pPageType") != null && !req.getParameter("pPageType").equals("")) {
-			pPageType = req.getParameter("pPageType");
+			pPageType = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pPageType")));
 		}
 		if (req.getParameter("pType") != null && !req.getParameter("pType").equals("")) {
-			pType = req.getParameter("pType");
+			pType = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pType")));
 		}
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
-			mode = req.getParameter("mode");
+			mode = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("mode")));
 		}
 		
 		String strXML = ezPortalService.searchPortletCheckRight("", pType, pPageType, mode, 1, 100, userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), locale);
@@ -3463,7 +3206,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String uID = "";
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
-			uID = req.getParameter("uID");
+			uID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("uID")));
 		}
 		
 		List<PortalTBLPortalACLVO> list = ezPortalService.getAclItems(uID, userInfo.getTenantId());
@@ -3484,7 +3227,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String topMenuID = "";
 		
 		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
-			topMenuID = req.getParameter("topMenuID");
+			topMenuID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("topMenuID")));
 		}
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -3578,7 +3321,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String id = "";
 		
 		if (req.getParameter("id") != null && !req.getParameter("id").equals("")) {
-			id = req.getParameter("id");
+			id = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("id")));
 		}
 		
 		model.addAttribute("lang", userInfo.getLang());
@@ -3948,7 +3691,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String uID = "";
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
-			uID = req.getParameter("uID");
+			uID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("uID")));
 		}
 		
 		String htmlData = ezPortalService.htmlPortlet(uID, userInfo.getTenantId());
@@ -3968,7 +3711,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String uID = "";
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
-			uID = req.getParameter("uID");
+			uID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("uID")));
 		}
 		
 		PortalImagePortletVO result = ezPortalService.imagePortlet(uID, userInfo.getTenantId(), userInfo.getCompanyID());
@@ -4002,7 +3745,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String uID = "";
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
-			uID = req.getParameter("uID");
+			uID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("uID")));
 		}
 		
 		String pBoardID = "";
@@ -4013,7 +3756,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pUserID = userInfo.getId();
 		
 		if (req.getParameter("userID") != null && !req.getParameter("userID").equals("")) {
-			pUserID = req.getParameter("userID");
+			pUserID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("userID")));
 		}
 		
 		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID())); 
@@ -4085,14 +3828,16 @@ public class EzPortalController extends EgovFileMngUtil {
 	@ResponseBody
 	public void setPopupCookie(HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("setPopupCookie is started.");
-		String cookieName = request.getParameter("cookieName");
-		String cookieValue = request.getParameter("cookieValue");
+		/* Old 포털로 사용되지 않는 것으로 보여 보안 취약점 대응을 위해 주석 처리함.
+		String cookieName = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("cookieName")));
+		String cookieValue = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("cookieValue")));
 		logger.debug("cookeName = " + cookieName);
 		logger.debug("cookieValue = " + cookieValue);
 		Cookie popupCookie = new Cookie(cookieName, cookieValue);
 		popupCookie.setPath("/");
 		popupCookie.setMaxAge(60*60*24);
     	response.addCookie(popupCookie);
+		*/
 		logger.debug("setPopupCookie is ended.");
 	}
 	
@@ -4105,7 +3850,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("totalSearch is started.");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String keyword = req.getParameter("keyword") != null ? req.getParameter("keyword") : "";
+		String keyword = req.getParameter("keyword") != null ? commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("keyword"))) : "";
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("keyword", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(keyword)));
@@ -4130,7 +3875,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("totalSearchRight is started.");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String keyword = req.getParameter("keyword") != null ? req.getParameter("keyword") : "";
+		String keyword = req.getParameter("keyword") != null ? commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("keyword"))) : "";
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("keyword", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(keyword)));
