@@ -5294,8 +5294,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String retVal = "";
 		int successCount = 0;
 		
-		// 종료연도(현재 연도)와 선택한 회사ID를 조건으로 자동 생성할 기록물철을 찾아서 전달
-		String currYear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 4);
+		// 종료연도(기산일 적용된 현재 기준의 연도)와 선택한 회사ID를 조건으로 자동 생성할 기록물철을 찾아서 전달
+		String currYear = ezApprovalGService.getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		List<Map<String, Object>> cabinetList = ezApprovalGAdminService.getCabinetListByExpireYear(currYear, companyID, tenantID);
 		
