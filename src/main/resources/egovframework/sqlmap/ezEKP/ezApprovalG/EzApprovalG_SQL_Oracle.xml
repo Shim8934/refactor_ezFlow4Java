@@ -35363,4 +35363,28 @@
          	COMPANYID = #companyID#
 	</select>
 	
+	<!-- 2023-02-02 홍승비 - 부서수신함 > 접수 > 수신문 지정 시, 완료된 원문서의 수신자 정보를 갱신 (동일 부서에 대하여 새롭게 지정된 수신자 "개인"의 정보로 갱신 / 승인상태는 "대기"로 유지) -->
+	<update id="EzApprovalG.updateSusinEndReceiptPointInfoForJiJung" parameterClass="Map">
+		<![CDATA[
+	   		UPDATE 
+	   			TBL_ENDRECEIPTPOINTINFO 
+	   		SET 
+	   			PROCESSYN = 'N',
+	   			PROCESSDATE = NULL,
+	   			RECEIPTMEMBERID = #v_PROCESSORID#, 
+	   			RECEIPTMEMBERNAME = #v_PROCESSORNAME#, 
+	   			RECEIPTMEMBERNAME2 = #v_PROCESSORNAME2#,
+	   			RECEIPTMEMBERJOBTITLE = #v_PROCESSORJOBTITLE#,
+	   			RECEIPTMEMBERJOBTITLE2 = #v_PROCESSORJOBTITLE2#
+	   		WHERE 
+	   			DOCID = #v_ORGDOCID# 
+			AND 
+				RECEIPTPOINTID = #v_RECEIVEDDEPTID# 
+			AND 
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+		]]>
+   </update>
+	
 </sqlMap>

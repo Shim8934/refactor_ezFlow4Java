@@ -3874,4 +3874,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public int getNoRollbackRecordCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getNoRollbackRecordCnt", map);
 	}
+
+	/* 2023-02-02 홍승비 - 부서수신함 > 접수 > 수신문 지정 시, 완료된 원문서의 수신자 정보를 갱신 (동일 부서에 대하여 새롭게 지정된 수신자 "개인"의 정보로 갱신 / 승인상태는 "대기"로 유지) */
+	public void updateSusinEndReceiptPointInfoForJiJung(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateSusinEndReceiptPointInfoForJiJung", map);
+	}
 }
