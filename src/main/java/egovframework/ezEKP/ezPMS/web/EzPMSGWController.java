@@ -4241,37 +4241,39 @@ public class EzPMSGWController {
 
 			String imageFileType = "PNG,JPEG,BMP,GIF,JPG";
 
-			for (int i = 0; i < boardList.size(); i++) {
-				int fileCount = boardList.get(i).getFileCNT();
-				if (fileCount > 0) {
-					String filePath = "";
+			if (boardList != null) {
+				for (int i = 0; i < boardList.size(); i++) {
+					int fileCount = boardList.get(i).getFileCNT();
+					if (fileCount > 0) {
+						String filePath = "";
 
-					List<Map<String, Object>> filePathList = ezPMSService
-							.getFilePath(boardList.get(i).getItemId(),
-									info.getTenantId());
+						List<Map<String, Object>> filePathList = ezPMSService
+								.getFilePath(boardList.get(i).getItemId(),
+										info.getTenantId());
 
-					for (int j = 0; j < filePathList.size(); j++) {
-						String fileName = filePathList.get(j).get("fileName")
-								.toString();
+						for (int j = 0; j < filePathList.size(); j++) {
+							String fileName = filePathList.get(j).get("fileName")
+									.toString();
 
-						if (fileName.indexOf(".") != -1) {
-							fileName = fileName.substring(
-									fileName.indexOf(".") + 1,
-									fileName.length()).toUpperCase();
+							if (fileName.indexOf(".") != -1) {
+								fileName = fileName.substring(
+										fileName.indexOf(".") + 1,
+										fileName.length()).toUpperCase();
 
-							if (imageFileType.contains(fileName)) {
-								filePath = filePathList.get(j).get("filePath")
-										.toString().substring(1);
-								String realPath = commonUtil.getUploadPath(
-										"upload_project.ROOT",
-										info.getTenantId())
-										+ commonUtil.separator
-										+ uploadPathName
-										+ commonUtil.separator + filePath;
+								if (imageFileType.contains(fileName)) {
+									filePath = filePathList.get(j).get("filePath")
+											.toString().substring(1);
+									String realPath = commonUtil.getUploadPath(
+											"upload_project.ROOT",
+											info.getTenantId())
+											+ commonUtil.separator
+											+ uploadPathName
+											+ commonUtil.separator + filePath;
 
-								boardList.get(i).setImageFilePath(
-										"/ezCommon/downloadAttach.do?filePath="
-												+ realPath);
+									boardList.get(i).setImageFilePath(
+											"/ezCommon/downloadAttach.do?filePath="
+													+ realPath);
+								}
 							}
 						}
 					}

@@ -1881,24 +1881,26 @@ public class EzAddressController{
 			sb.append("<PAGECOUNT>" + pageCount + "</PAGECOUNT>");
 			sb.append("<DATA>");
 			
-			for (AddressVO addressInfo : addressList) {
-				String sType = addressInfo.getsType();
-				String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(addressInfo.getsEmail());
-				
-				sb.append("<ROW>");
-				sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
-				sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
-				sb.append("<MODIFIERID>" + addressInfo.getModifierId() + "</MODIFIERID>");
-				sb.append("<HASATTACH>" + addressInfo.getHasAttach() + "</HASATTACH>");
-				sb.append("<HASCOMMENT>" + addressInfo.getHasComment() + "</HASCOMMENT>");
-				sb.append("<SNAME>" + commonUtil.cleanValue(addressInfo.getsName()) + "</SNAME>");
-				sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
-				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
-				sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
-				sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
-				sb.append("<STYPE>" + sType + "</STYPE>");
-				sb.append("<FOLDERTYPE>" + folderType + "</FOLDERTYPE>");
-				sb.append("</ROW>");
+			if (addressList != null) {
+				for (AddressVO addressInfo : addressList) {
+					String sType = addressInfo.getsType();
+					String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(addressInfo.getsEmail());
+					
+					sb.append("<ROW>");
+					sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
+					sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
+					sb.append("<MODIFIERID>" + addressInfo.getModifierId() + "</MODIFIERID>");
+					sb.append("<HASATTACH>" + addressInfo.getHasAttach() + "</HASATTACH>");
+					sb.append("<HASCOMMENT>" + addressInfo.getHasComment() + "</HASCOMMENT>");
+					sb.append("<SNAME>" + commonUtil.cleanValue(addressInfo.getsName()) + "</SNAME>");
+					sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
+					sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
+					sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
+					sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
+					sb.append("<STYPE>" + sType + "</STYPE>");
+					sb.append("<FOLDERTYPE>" + folderType + "</FOLDERTYPE>");
+					sb.append("</ROW>");
+				}
 			}
 			
 			sb.append("</DATA>");

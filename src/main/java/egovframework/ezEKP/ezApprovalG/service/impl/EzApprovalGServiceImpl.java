@@ -615,7 +615,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			apprGTaskVOs = ezApprovalGDAO.getTaskSubCategory(map);
 		}
 		
-		if (apprGTaskVOs.size() > 0) {
+		if (apprGTaskVOs != null && apprGTaskVOs.size() > 0) {
 			sb.append("<NODES>");
 			
 			for (ApprGTaskVO k : apprGTaskVOs) {

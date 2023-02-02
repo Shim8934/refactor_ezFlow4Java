@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
+import java.util.Optional;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -91,7 +92,7 @@ public class EgovFileScrty {
 					byte[] data = new byte[length];
 					System.arraycopy(buffer, 0, data, 0, length);
 					output.write(encodeBinary(data).getBytes());
-					output.write(System.getProperty("line.separator").getBytes());
+					output.write(Optional.ofNullable(System.getProperty("line.separator")).orElse("\n").getBytes());
 				}
 
 				result = true;

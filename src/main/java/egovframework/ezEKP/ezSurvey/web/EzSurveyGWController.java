@@ -460,7 +460,7 @@ public class EzSurveyGWController {
 				return result;
 			}
 			
-			logger.debug("ServerName: " + serverName + " || survey id: " + surveyId + " || draft mode: " + draftMode + " || User id: " + userId + " || question list: " + questions.toJSONString() + " || survey information: " + infor.toJSONString());
+			logger.debug("ServerName: " + serverName + " || survey id: " + surveyId + " || draft mode: " + draftMode + " || User id: " + userId + " || question list: " + (questions != null ? questions.toJSONString() : "") + " || survey information: " + infor.toJSONString());
 			
 			String title            = infor.get("title")      != null ? infor.get("title").toString()              : "";
 			String purpose          = infor.get("purpose")    != null ? infor.get("purpose").toString()            : "";

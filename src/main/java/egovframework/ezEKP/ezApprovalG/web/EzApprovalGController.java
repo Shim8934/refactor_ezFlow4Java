@@ -9284,25 +9284,26 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		OutputStream bos = null;
 		
 		try {
-		File file = new File(commonUtil.detectPathTraversal(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
-		
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		
-		String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht";
-	
-			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
+			File file = new File(commonUtil.detectPathTraversal(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
 			
-			bos = new FileOutputStream(commonUtil.detectPathTraversal(saveFileName));
-			
-			int bytesRead = 0;
-			byte[] buffer = new byte[BUFF_SIZE];
-			
-			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-				bos.write(buffer, 0, bytesRead);
+			if (!file.exists()) {
+				file.mkdirs();
 			}
 			
+			String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht";
+	
+			if (formText != null) {
+				stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
+				
+				bos = new FileOutputStream(commonUtil.detectPathTraversal(saveFileName));
+				
+				int bytesRead = 0;
+				byte[] buffer = new byte[BUFF_SIZE];
+				
+				while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+					bos.write(buffer, 0, bytesRead);
+				}
+			}
 		} catch (Exception e) {
 		} finally {
 			   if (bos != null) {

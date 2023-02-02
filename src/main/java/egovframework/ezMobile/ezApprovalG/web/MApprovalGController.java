@@ -353,15 +353,17 @@ public class MApprovalGController {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, JSONObject.class);
 		}
 		
-		String status = result.getBody().get("status").toString();
-		
-		if (status.equals("ok")) {
-			String code = result.getBody().get("code").toString();
+		if (result != null) {
+			String status = result.getBody().get("status").toString();
 			
-			//code로 삽입, 삭제, 수정이 잘되었는지 확인하기
-			model.addAttribute("code", code);
-		} else {
-			return "에러페이지라고 하면 될려나";
+			if (status.equals("ok")) {
+				String code = result.getBody().get("code").toString();
+				
+				//code로 삽입, 삭제, 수정이 잘되었는지 확인하기
+				model.addAttribute("code", code);
+			} else {
+				return "status=" + status;
+			}
 		}
 		
 		LOGGER.debug("mSetOpinionInfo ended");

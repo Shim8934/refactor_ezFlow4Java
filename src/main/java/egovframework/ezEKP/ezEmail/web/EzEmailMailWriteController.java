@@ -5914,88 +5914,88 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 			}
 			
-			for (int i=0; i<resultArray.size(); i++) {
-				JSONObject address = (JSONObject)resultArray.get(i);
-				String pCn = (String)address.get("cn");
-				String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
-				isUser = (String)address.get("class");
-				String displayName = (String) address.get("displayName");
-				
-				if (domain.equals(pCnDomain)) {
-					pCn = pCn.substring(0, pCn.indexOf("@"));
-				} else {
-					isUser = "distributionSub";
-				}
-
-				logger.debug("pCn=" + pCn + ", isUser=" + isUser + ", displayName=" + displayName);
-				
-				if(isUser.equals("group")) {
-					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
-
-					Map<String, String> map = new HashMap<String, String>();
+			if (resultArray != null) {
+				for (int i=0; i<resultArray.size(); i++) {
+					JSONObject address = (JSONObject)resultArray.get(i);
+					String pCn = (String)address.get("cn");
+					String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
+					isUser = (String)address.get("class");
+					String displayName = (String) address.get("displayName");
 					
-					if (dept != null) { // 부서
-						map.put("displayName", dept.getDisplayName());
-						map.put("mail", dept.getMail());
-						map.put("company", dept.getExtensionAttribute3());
-						map.put("dept", dept.getDisplayName());
-						map.put("title", "");
-					} else { // 공용배포그룹
-						String email = (String)address.get("cn");
-						String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyID(), "DomainName");
+					if (domain.equals(pCnDomain)) {
+						pCn = pCn.substring(0, pCn.indexOf("@"));
+					} else {
+						isUser = "distributionSub";
+					}
+
+					logger.debug("pCn=" + pCn + ", isUser=" + isUser + ", displayName=" + displayName);
+					
+					if(isUser.equals("group")) {
+						OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+
+						Map<String, String> map = new HashMap<String, String>();
 						
-						// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소로 전달한다.								
-						if (!companyDomainName.isEmpty()) {
-				        	String emailId = null;
-				        	
-			        		int atSignIndex = email.indexOf("@");
-			        		
-			        		if (atSignIndex != -1) {
-			        			emailId = email.substring(0, atSignIndex);
-								email = emailId + "@" + companyDomainName;			        			
-			        		}							
+						if (dept != null) { // 부서
+							map.put("displayName", dept.getDisplayName());
+							map.put("mail", dept.getMail());
+							map.put("company", dept.getExtensionAttribute3());
+							map.put("dept", dept.getDisplayName());
+							map.put("title", "");
+						} else { // 공용배포그룹
+							String email = (String)address.get("cn");
+							String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyID(), "DomainName");
+							
+							// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소로 전달한다.								
+							if (!companyDomainName.isEmpty()) {
+								String emailId = null;
+								
+								int atSignIndex = email.indexOf("@");
+								
+								if (atSignIndex != -1) {
+									emailId = email.substring(0, atSignIndex);
+									email = emailId + "@" + companyDomainName;			        			
+								}							
+							}
+							
+							map.put("displayName", displayName); // 배포그룹 이름
+							map.put("mail", email);  // 메일
+							map.put("company", companyName); // 배포그룹 이름
+							map.put("dept", egovMessageSource.getMessage("ezEmail.t57",
+									locale));  //배포그룹이름
+							map.put("title", ""); // ""
+						}
+						list.add(map);
+					} else if (isUser.equals("user")) {
+						OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+						
+						if (user != null) {
+							Map<String, String> map = new HashMap<String, String>();
+							map.put("displayName", user.getDisplayName());
+							map.put("mail", user.getMail());
+							map.put("company", user.getCompany());
+							map.put("dept", user.getDescription());
+							map.put("title", user.getTitle());
+							
+							list.add(map);
 						}
 						
-						map.put("displayName", displayName); // 배포그룹 이름
-						map.put("mail", email);  // 메일
-						map.put("company", companyName); // 배포그룹 이름
-						map.put("dept", egovMessageSource.getMessage("ezEmail.t57",
-								locale));  //배포그룹이름
-						map.put("title", ""); // ""
-					}
-					list.add(map);
-				} else if (isUser.equals("user")) {
-					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
-					
-					if (user != null) {
-						Map<String, String> map = new HashMap<String, String>();
-						map.put("displayName", user.getDisplayName());
-						map.put("mail", user.getMail());
-						map.put("company", user.getCompany());
-						map.put("dept", user.getDescription());
-						map.put("title", user.getTitle());
+					} else {
+						MailDistributionVO distributionSubVO = ezEmailService
+							.getDistributionSub(cn, pCn, userInfo.getCompanyID(), userInfo.getTenantId());
 						
-						list.add(map);
-					}
-					
-				} else {
-					MailDistributionVO distributionSubVO = ezEmailService
-						.getDistributionSub(cn, pCn, userInfo.getCompanyID(), userInfo.getTenantId());
-					
-					if (distributionSubVO != null) {
-						Map<String, String> map = new HashMap<String, String>();
-						map.put("displayName", distributionSubVO.getName());
-						map.put("mail", distributionSubVO.getMail());
-						map.put("company", "");
-						map.put("dept", "");
-						map.put("title", "");
-						
-						list.add(map);
-					}
+						if (distributionSubVO != null) {
+							Map<String, String> map = new HashMap<String, String>();
+							map.put("displayName", distributionSubVO.getName());
+							map.put("mail", distributionSubVO.getMail());
+							map.put("company", "");
+							map.put("dept", "");
+							map.put("title", "");
+							
+							list.add(map);
+						}
+					}				
 				}
-				
-			}
-			
+			}			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

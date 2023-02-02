@@ -1183,8 +1183,8 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				
 				hashMap.put("DOCID", newDocId);
 				mApprovalGDAO.insertDocLineInfoEx(hashMap);
-				
-				System.out.println("expEndDocLine: " + hashMap.toString());
+
+				System.out.println("expEndDocLine: " + hashMap);
 
 			}
 			
@@ -1198,9 +1198,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				hashMap.put("PROCESSDATE", null);
 				
 				mApprovalGDAO.insertDocRecvInfo(hashMap);
-				
-				System.out.println("endReceiptInfo: " + hashMap.toString());
-				
+
+				System.out.println("endReceiptInfo: " + hashMap);
+
 			}
 			
 			//파일생성

@@ -912,8 +912,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 		if (isReply) {
 			parentFile = getFileByFileId(parentId, offset, tenantId);
-			logger.info("is reply file. parentFile is: id: {}, rootId: {}, depth: {}, hierarchicalPath: {}",
-					parentId, parentFile.getRootId(), parentFile.getDepth(), parentFile.getHierarchicalPath());
+
+			if (parentFile != null) {
+				logger.info("is reply file. parentFile is: id: {}, rootId: {}, depth: {}, hierarchicalPath: {}",
+						parentId, parentFile.getRootId(), parentFile.getDepth(), parentFile.getHierarchicalPath());
+			} else {
+				logger.info("is reply file. parentFile is null.");
+			}
 		}
 
 		for (int i = 0; i < cnt; i++) {
@@ -964,10 +969,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 				// 파일 답글 처리
 				if (isReply) {
-					fileVO.setDepth(parentFile.getDepth() + 1);
-					fileVO.setRootId(parentFile.getRootId());
-					fileVO.setParentId(parentId);
-					fileVO.setHierarchicalPath(parentFile.getHierarchicalPath() + "." + fileId);
+					if (parentFile != null) {
+						fileVO.setDepth(parentFile.getDepth() + 1);
+						fileVO.setRootId(parentFile.getRootId());
+						fileVO.setParentId(parentId);
+						fileVO.setHierarchicalPath(parentFile.getHierarchicalPath() + "." + fileId);
+					}
 				} else {
 					fileVO.setDepth(1);
 					fileVO.setRootId(fileId);

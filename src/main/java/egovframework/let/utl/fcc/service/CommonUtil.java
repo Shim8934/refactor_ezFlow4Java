@@ -1078,7 +1078,7 @@ public class CommonUtil {
 		
 		if (dateStr == null) {
 			logger.error("dateStr is null.");
-			return null;
+			return "";
 		}
 		
 		if (dateStr.equals("0")) {			

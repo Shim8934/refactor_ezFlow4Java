@@ -453,15 +453,17 @@ public class EzLadderController {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
 		}
 		
-		JSONParser jp = new JSONParser();
-		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+		if (result != null) {
+			JSONParser jp = new JSONParser();
+			JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+			
+			String status = jsonResult.get("status").toString();
 		
-		String status = jsonResult.get("status").toString();
-	
-		if (status.equals("ok")) {
-			model.addAttribute("status", status);
-		} else {
-			return "error";
+			if (status.equals("ok")) {
+				model.addAttribute("status", status);
+			} else {
+				return "error";
+			}
 		}
 		
 		logger.debug("getLadderBM ended.");
@@ -560,21 +562,23 @@ public class EzLadderController {
 			retDestination = "/lad/cmt/deleteCmt/" + ladderId;
 		}
 
-		JSONParser jp = new JSONParser();
-		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+		if (result != null) {
+			JSONParser jp = new JSONParser();
+			JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+			
+			String status = jsonResult.get("status").toString();
 		
-		String status = jsonResult.get("status").toString();
-	
-		if (status.equals("ok")) {
-			model.addAttribute("status", status);
-			
-			JSONObject commentInfo = new JSONObject();
-			commentInfo.put("flag", flag);
-			commentInfo.put("commentId", commentId);
-			
-			this.template.convertAndSend(retDestination, commentInfo);
-		} else {
-			return "error";
+			if (status.equals("ok")) {
+				model.addAttribute("status", status);
+				
+				JSONObject commentInfo = new JSONObject();
+				commentInfo.put("flag", flag);
+				commentInfo.put("commentId", commentId);
+				
+				this.template.convertAndSend(retDestination, commentInfo);
+			} else {
+				return "error";
+			}
 		}
 		
 		logger.debug("setLadderComment ended.");

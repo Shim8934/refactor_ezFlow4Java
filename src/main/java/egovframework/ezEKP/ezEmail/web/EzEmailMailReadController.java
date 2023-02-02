@@ -1372,8 +1372,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
-		String htmlBody = bodyInfoList.get(0);
-		model.addAttribute("htmlBody", htmlBody);
+		if (bodyInfoList != null) {
+			String htmlBody = bodyInfoList.get(0);
+			model.addAttribute("htmlBody", htmlBody);
+		}
 		
 		logger.debug("readMailOriginal ended.");
 		
@@ -4498,10 +4500,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					//TODO
 				}
 				
-				model.addAttribute("htmlBody", bodyInfoList.get(0));
-				model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
-				model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
-				model.addAttribute("isAttach", bodyInfoList.get(4));
+				if (bodyInfoList != null) {
+					model.addAttribute("htmlBody", bodyInfoList.get(0));
+					model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
+					model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
+					model.addAttribute("isAttach", bodyInfoList.get(4));
+				}
 				
 				model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
 				model.addAttribute("t246", egovMessageSource.getMessage("main.t246", locale));

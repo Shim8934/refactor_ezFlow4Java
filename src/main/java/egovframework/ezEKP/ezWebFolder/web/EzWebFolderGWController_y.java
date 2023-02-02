@@ -1159,9 +1159,9 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				return result;
 			}
 			
-			if (nameArray.size() != multiFileLists.size() || fileIdArray.size() != multiFileLists.size()) {
-				System.out.println(fileIdArray.size());
-				System.out.println(nameArray.size());
+			if ((nameArray != null ? nameArray.size() : 0) != multiFileLists.size() || (fileIdArray != null ? fileIdArray.size() : 0) != multiFileLists.size()) {
+				System.out.println(fileIdArray != null ? fileIdArray.size() : 0);
+				System.out.println(nameArray != null ? nameArray.size() : 0);
 				System.out.println(multiFileLists.size());
 				LOGGER.debug("Some files upload failed!");
 				result.put("status", "error");
