@@ -2065,7 +2065,7 @@
 		<h1>
 			<spring:message code='main.t56' />
 			<span class="searchForm">
-				<select id="search_type" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+				<select id="search_type" class="text"; style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
 					<option selected value="description"><spring:message code='ezOrgan.t68' /></option>
 					<option value="displayname"><spring:message code='ezOrgan.t67' /></option>
 					<option value="cn"><spring:message code='ezOrgan.t94' /></option>
@@ -2082,9 +2082,9 @@
                     </c:if>
 					<option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100' /></option>
 				</select>
-				<input id="keyword" class="organSearchKeyword" onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;"/>
-				<a class=searchBtn>
-					<img src="/images/bsearch_new2.gif" onClick="search_click()" border="0">
+				<input id="keyword" class="organSearchKeyword searchinputBox"; onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb;"/>
+				<a class="searchBtn nofilter">
+					<img src="/images/bsearch_new2.png" onClick="search_click()" border="0">
 				</a>
 			</span>
 		</h1>

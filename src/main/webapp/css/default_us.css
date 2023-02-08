@@ -3680,3 +3680,6 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 /* voc#80238 [영문] 커뮤니티>게시판>공지사항>글조회>인쇄>칸 ui 수정 필요 */
 .boardItemViewPrint_cssThEn{width:500px !important; text-align: center !important}
 .boardItemViewPrint_cssTdEn{width:80% !important;}
+
+/* Search 20230208 */
+.searchBtn.nofilter{right:12px;}

@@ -3693,3 +3693,5 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .textbox_design.textbox_Success input[type="text"]::-webkit-input-placeholder{border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}
 .textbox_design.textbox_Success input[type="text"]::-moz-placeholder {border-color:#5dc560 !important; background-color:#f1fbf1 !important; color:#5dc560 !important;}
 
+/* Search 20230208 */
+.searchBtn.nofilter{right:12px;}
