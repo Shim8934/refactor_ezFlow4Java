@@ -4217,8 +4217,8 @@ public class EzPMSGWController {
 
 					boardList.forEach(boardVO -> boardVO.setNotice(true));
 
-					if (noticeCNT < startRow + listCnt) {
-						listCnt = (startRow + listCnt) - noticeCNT;
+					if (noticeCNT < Math.addExact(startRow, listCnt)) {
+						listCnt = Math.subtractExact(Math.addExact(startRow, listCnt), noticeCNT);
 						startRow = 0;
 						boardList.addAll(ezPMSService.getBoardList(tenantId,
 								Long.parseLong(projectId), folderId, userId,

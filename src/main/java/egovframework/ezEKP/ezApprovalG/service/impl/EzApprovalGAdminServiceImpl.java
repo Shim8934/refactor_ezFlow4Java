@@ -5298,8 +5298,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String auditApprLineId = request.getParameter("auditApprLineId");
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
-		int startRow = (pageSize * (pageNum - 1)) + 1;
-        int endRow = pageSize * pageNum;
+		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(pageNum, 1)), 1);
+        int endRow = Math.multiplyExact(pageSize, pageNum);
         
 		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		

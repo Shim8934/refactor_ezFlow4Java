@@ -382,7 +382,7 @@ public class EzSystemAdminController {
 		
 		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -547,7 +547,7 @@ public class EzSystemAdminController {
 		
 		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;

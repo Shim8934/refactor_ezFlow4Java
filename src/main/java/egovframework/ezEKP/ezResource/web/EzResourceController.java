@@ -511,8 +511,8 @@ public class EzResourceController extends EgovFileMngUtil {
 					
 				resultXML1 += "<root>";
 				for (int i=0; i<tempXML.getElementsByTagName("appointment").getLength(); i++) {
-					int startCount = (page -1) * 20;
-					int endCount = page * 20;
+					int startCount = Math.multiplyExact(Math.subtractExact(page, 1), 20);
+					int endCount = Math.multiplyExact(page, 20);
 
 					if (Integer.parseInt(tempXML.getElementsByTagName("count").item(i).getTextContent()) >= startCount && Integer.parseInt(tempXML.getElementsByTagName("count").item(i).getTextContent())< endCount) {
 						resultXML1 += "<appointment>";
@@ -708,9 +708,9 @@ public class EzResourceController extends EgovFileMngUtil {
 			totalPage = 1;
 		}
 
-		int topCount = (Integer.parseInt(curPage.trim()) * pageSize);
+		int topCount = Math.multiplyExact(Integer.parseInt(curPage.trim()), pageSize);
 		
-		int start = (Integer.parseInt(curPage.trim()) - 1) * pageSize;
+		int start = Math.multiplyExact(Math.subtractExact(Integer.parseInt(curPage.trim()), 1), pageSize);
 		
 		String brdNmStr = "";
 		String ownDeptNm = "";

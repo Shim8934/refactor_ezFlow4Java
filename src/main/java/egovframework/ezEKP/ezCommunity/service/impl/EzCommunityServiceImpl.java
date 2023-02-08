@@ -686,8 +686,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				pPage = Integer.parseInt(request.getParameter("page"));
 			}
 			
-			int pStartRow = (pPage - 1) * boardInfo.getSs_Board_MaxRows() + 1;
-			int pEndRow = pPage * boardInfo.getSs_Board_MaxRows();
+			int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(pPage, 1), boardInfo.getSs_Board_MaxRows()), 1);
+			int pEndRow = Math.multiplyExact(pPage, boardInfo.getSs_Board_MaxRows());
 			
 			if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 				totalCount = getNewItemListCount(userInfo.getId(), userInfo.getTenantId());
@@ -3700,8 +3700,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         			bbsEditOkSet2(bName.toUpperCase(), myRef, myStep, code, userInfo.getTenantId());
         		}
         		
-        		newStep = myStep + 1;
-        		newLevel = myLevel + 1;
+        		newStep = Math.addExact(myStep, 1);
+        		newLevel = Math.addExact(myLevel, 1);
         	}
         	
         	String dirPath = "";

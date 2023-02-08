@@ -177,7 +177,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		int totalCount = ezPersonalAdminService.getNoticeCount(companyID, userInfo.getTenantId());
 		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
-		int iSn = totalCount - ((currentPage -1 ) * 12);
+		int iSn = Math.subtractExact(totalCount, Math.multiplyExact(Math.subtractExact(currentPage, 1), 12));
 		
 		result.append("<LISTVIEWDATA>");
 		result.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
@@ -185,7 +185,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
 		result.append("<CNT>" + cnt + "</CNT>");
 		
-		List<PersonalNoticeVO> list = ezPersonalAdminService.getNoticeList(companyID, totalCount, pageSize, (currentPage-1) * pageSize, userInfo.getTenantId());
+		List<PersonalNoticeVO> list = ezPersonalAdminService.getNoticeList(companyID, totalCount, pageSize, Math.multiplyExact(Math.subtractExact(currentPage, 1), pageSize), userInfo.getTenantId());
 		
 		result.append("<ROWS>");
 		
@@ -526,7 +526,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		int totalCount = ezPersonalAdminService.getPollCount(companyID, userInfo.getTenantId());
 		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
-		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollList(companyID, totalCount, pageSize, (currentPage - 1) * pageSize, userInfo.getTenantId());
+		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollList(companyID, totalCount, pageSize, Math.multiplyExact(Math.subtractExact(currentPage, 1), pageSize), userInfo.getTenantId());
 
 		result.append("<LISTVIEWDATA>");
 		result.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
@@ -545,7 +545,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");								// itemSeq
 			result.append("</CELL>");
 			result.append("<CELL>"); 
-			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");	// number
+			result.append("<VALUE>" + Math.subtractExact(totalCount, Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(currentPage, 1)), i)) + "</VALUE>");	// number
 			result.append("</CELL>");
 			result.append("<CELL>");
 			result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");		// title
@@ -805,7 +805,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		int totalCount = ezPersonalAdminService.getPopupCount(companyID, userInfo.getTenantId());
 		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
 		
-		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID, totalCount, pageSize, (currentPage - 1 ) * pageSize, userInfo.getTenantId());
+		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID, totalCount, pageSize, Math.multiplyExact(Math.subtractExact(currentPage, 1), pageSize), userInfo.getTenantId());
 		
 		StringBuilder result = new StringBuilder();
 		
@@ -831,7 +831,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<CELL>");
 			//2018-08-08  김보미 - rownumber추가
 //			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
-			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");
+			result.append("<VALUE>" + Math.subtractExact(totalCount, Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(currentPage, 1)), i)) + "</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			

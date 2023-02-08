@@ -6432,8 +6432,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String g_ImageUrl = "";
 		int imageCnt = 10;
 		int page = Integer.parseInt(request.getParameter("page")); // page = 0인 경우, photoViewDB에서 분기 체크하여 모든 이미지를 가져오도록 함
-		int pStartRow = (page - 1) * imageCnt + 1;
-		int pEndRow = page * imageCnt;
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), imageCnt), 1);
+		int pEndRow = Math.multiplyExact(page, imageCnt);
 		
 		int imageCount = ezBoardService.photoViewDBCount(itemID, boardID, userInfo.getTenantId());
 		
@@ -6543,8 +6543,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String listImages = "";
 		String mainFg = "";
 		int imageCnt = 10;
-		int pStartRow = (page - 1) * imageCnt + 1;
-		int pEndRow = page * imageCnt;
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), imageCnt), 1);
+		int pEndRow = Math.multiplyExact(page, imageCnt);
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
@@ -6981,7 +6981,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo("", userInfo);
 		
-		int startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
+		int startRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), boardInfo.getSs_board_maxRows()), 1);
 		int endRow = page * boardInfo.getSs_board_maxRows();
 		
 		List<BoardListVO> reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -6989,7 +6989,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (reservedList == null && page > 1) {
 			page -= 1;
-			startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
+			startRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), boardInfo.getSs_board_maxRows()), 1);
 			endRow = page * boardInfo.getSs_board_maxRows();
 			reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
 		}
@@ -9444,8 +9444,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String movieUrl = "";
 		String moviePath = "";
 		int imageCnt = 10;
-		int pStartRow = (page - 1) * imageCnt + 1;
-		int pEndRow = page * imageCnt;
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), imageCnt), 1);
+		int pEndRow = Math.multiplyExact(page, imageCnt);
 		
 		List<BoardAttachVO> movieList = ezBoardService.photoViewDB(itemID, boardID, pStartRow, pEndRow, userInfo.getTenantId());
 		

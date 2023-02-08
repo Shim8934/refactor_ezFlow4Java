@@ -1574,7 +1574,9 @@ public class CommonUtil {
 			int count = fileNameMap.get(fileNameLowerCase);
 			
 			while (true) {
-				if (!fileNameMap.containsKey((fileNameWithoutExt + " (" + ++count + ")" + ext).toLowerCase())) {
+				count = Math.addExact(count, 1);
+
+				if (!fileNameMap.containsKey((fileNameWithoutExt + " (" + count + ")" + ext).toLowerCase())) {
 					break;
 				}
 			}

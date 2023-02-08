@@ -1777,13 +1777,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		int lastSize = 0;
 		
-		if (page+5 >= realList.size()) {
+		if (Math.addExact(page, 5) >= realList.size()) {
 			lastSize = realList.size();
 		} else {
-			lastSize = page+5;
+			lastSize = Math.addExact(page, 5);
 		}
 		
-		for (int z=page; z < lastSize; z++) {
+		for (int z=page; z < lastSize; z=Math.addExact(z, 1)) {
 			result.append(commonUtil.getQueryResult(realList.get(z)));
 		}
 		
@@ -2696,8 +2696,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		totalPage = (recordCnt - 1) / listPageSize + 1;
 		int pStartRow = 0;
 		int pEndRow = 0;
-		pStartRow = intPage * listPageSize - listPageSize + 1;
-		pEndRow = intPage * listPageSize;
+		pStartRow = Math.addExact(Math.subtractExact(Math.multiplyExact(intPage, listPageSize), listPageSize), 1);
+		pEndRow = Math.multiplyExact(intPage, listPageSize);
 		
 		searchNewMyPortalPageList = ezPortalService.searchMyPortal(userInfo.getId(), gubunFlag, pStartRow, pEndRow, userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("searchNewMyPortalPageList="+searchNewMyPortalPageList);
@@ -2727,8 +2727,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
-		int startPage = ((intPage - 1) / 10) * 10 + 1;
-		int endPage = startPage + 10 - 1;
+		int startPage = Math.addExact(Math.multiplyExact((Math.subtractExact(intPage, 1) / 10), 10), 1);
+		int endPage = Math.subtractExact(Math.addExact(startPage, 10), 1);
 		
 		if (endPage > totalPage) {
 		    endPage = totalPage;

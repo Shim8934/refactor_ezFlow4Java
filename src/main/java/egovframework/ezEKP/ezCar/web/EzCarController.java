@@ -1210,7 +1210,7 @@ public class EzCarController extends EgovFileMngUtil {
 			logger.debug("addCarForm started");
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			int count = Integer.parseInt(request.getParameter("count"))-1;
+			int count = Math.subtractExact(Integer.parseInt(request.getParameter("count")), 1);
 			
 			
 			String[] sdatepicker = request.getParameterValues("Sdatepicker");
@@ -1382,7 +1382,7 @@ public class EzCarController extends EgovFileMngUtil {
 			String carID = "";
 			int car_form_id = 0;
 			
-			int count = Integer.parseInt(request.getParameter("count"))-1;
+			int count = Math.subtractExact(Integer.parseInt(request.getParameter("count")), 1);
 			String[] sdatepicker = request.getParameterValues("Sdatepicker");
 			String[] stimepicker = request.getParameterValues("Stimepicker");
 			String[] etimepicker = request.getParameterValues("Etimepicker");
