@@ -21,13 +21,13 @@
 			<c:out value='${cabinet.cabinetName}'/>
 			<span id="cabinetInfo" class="cabTtlInf"></span>
 			<span class="searchForm">
-				<select id="searchCheck">
+				<select id="searchCheck" class="text">
 					<option value="title" selected><spring:message code='ezCabinet.t51'/></option>
 					<option value="summary"       ><spring:message code='ezCabinet.t52'/></option>
 				</select>
 				
-				<input name="keyword" type="text" id="ssInput">
-				<a id="searchBttn" class="searchBtn"><img src="/images/bsearch_new2.gif"></a>
+				<input name="keyword" class="searchinputBox" type="text" id="ssInput">
+				<a id="searchBttn" class="searchBtn nofilter"><img src="/images/bsearch_new2.png"></a>
 			</span>
 		</h1>
 		
