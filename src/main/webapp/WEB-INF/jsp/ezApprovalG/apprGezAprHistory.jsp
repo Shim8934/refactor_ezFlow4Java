@@ -47,10 +47,17 @@
 		            pUrl = "DocViewerWord.aspx?DocHref=" + escapenew(Arguments[0]);
 		        }
 		        else if (fileExt == "hwp") {
-		        	//hwp사용안함
+		        	/* 2023-02-08 홍승비 - WHWP 결재문서 편집모드 적용 후 수정이력 비교화면 구현, 기존 코드 분기처리 */
+		        	// hwp사용안함 (docViewerHWP.do > 내부적으로 WHWP 문서보기 팝업으로 연결됨)
 		            if (CrossYN()) {
-// 		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
-		            	pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + encodeURI(Arguments[0]);
+		            	var beforeDocUrl = oArrRows[0].getAttribute("BEFOREDOCURL");
+		            	if (beforeDocUrl != null && beforeDocUrl != "") {
+		                	pUrl = "/ezApprovalG/docViewerWHWPCompare.do?docHrefAfter=" + encodeURI(Arguments[0]) + "&docHrefBefore=" + encodeURI(beforeDocUrl);
+		                	openwindow2(pUrl);
+		                	return;
+		            	} else {
+		            		pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + encodeURI(Arguments[0]);
+		            	}
 		            }
 		            else {
 		                pUrl = "/ezApprovalG/docViewerHWP.do?docHref=" + encodeURI(Arguments[0]);

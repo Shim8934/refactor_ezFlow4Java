@@ -2707,4 +2707,21 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	}
 ////////////////////// 일괄기안 코드 끝 ///////////////////////
 	
+	/**
+	 * 2023-02-08 홍승비 - 전자결재 WHWP > 변경내역(문서변경정보) > 결재문서이력 상세보기 (수정사항 비교가능)
+	 */	
+	@RequestMapping(value = "/ezApprovalG/docViewerWHWPCompare.do", method = RequestMethod.GET)
+	public String docViewerCompare(HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("docViewerWHWPCompare started");
+
+		String pDocHrefAfter = request.getParameter("docHrefAfter");
+		String pDocHrefBefore = request.getParameter("docHrefBefore");
+		
+		model.addAttribute("docHrefAfter", commonUtil.cleanValue(pDocHrefAfter));
+		model.addAttribute("docHrefBefore", commonUtil.cleanValue(pDocHrefBefore));
+		
+		LOGGER.debug("docViewerCompare ended");
+		return "ezApprovalG/apprGdocViewerWHWPCompare";
+	}
+	
 }
