@@ -2347,8 +2347,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 		int currentPage = Integer.parseInt(request.getParameter("page")); 
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));
-		int startRow = (pageSize * (currentPage - 1)) + 1;
-		int endRow = pageSize * currentPage;
+		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(currentPage, 1)), 1);
+		int endRow = Math.multiplyExact(pageSize, currentPage);
 		
 		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		
@@ -2769,8 +2769,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String searchValue = request.getParameter("searchValue");
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
-		int startRow = (pageSize * (pageNum - 1)) + 1;
-        int endRow = pageSize * pageNum;
+		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(pageNum, 1)), 1);
+        int endRow = Math.multiplyExact(pageSize, pageNum);
         
 		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		
@@ -4119,8 +4119,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String searchValue = request.getParameter("searchValue");
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
-		int startRow = (pageSize * (pageNum - 1)) + 1;
-        int endRow = pageSize * pageNum;
+		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(pageNum, 1)), 1);
+        int endRow = Math.multiplyExact(pageSize, pageNum);
         
         searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
                 
@@ -5047,7 +5047,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(currentPage, 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;

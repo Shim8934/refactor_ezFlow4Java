@@ -571,8 +571,8 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		else {
 			if (currPage < totalPages) {				
-				int startPoint = (currPage - 1)*pageSize;
-				int endPoint = currPage*pageSize;
+				int startPoint = Math.multiplyExact(Math.subtractExact(currPage, 1), pageSize);
+				int endPoint = Math.multiplyExact(currPage, pageSize);
 				List<PollQuestionVO> listRenderQuestions = listTotalQuestions.subList(startPoint, endPoint);	
 				model.addAttribute("list", listRenderQuestions);
 			}
@@ -580,7 +580,7 @@ public class EzPollController extends EgovFileMngUtil {
 				if (currPage > totalPages) {
 					currPage = totalPages;
 				}
-				int startPoint = (currPage - 1) * pageSize;
+				int startPoint = Math.multiplyExact(Math.subtractExact(currPage, 1), pageSize);
 				int endPoint = totalQuestions;
 				List<PollQuestionVO> listRenderQuestions = listTotalQuestions.subList(startPoint, endPoint);
 				model.addAttribute("list", listRenderQuestions);

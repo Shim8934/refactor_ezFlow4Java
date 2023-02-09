@@ -600,7 +600,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		int totalCount = ezPersonalService.getPollCount(userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		List<PersonalLightPollVO> list = ezPersonalService.getPollListUser(userInfo.getCompanyID(), totalCount, pageSize, (currentPage - 1) * pageSize, userInfo.getTenantId());
+		List<PersonalLightPollVO> list = ezPersonalService.getPollListUser(userInfo.getCompanyID(), totalCount, pageSize, Math.multiplyExact(Math.subtractExact(currentPage, 1), pageSize), userInfo.getTenantId());
 		
 		int pageCount = ((totalCount + pageSize - 1) / pageSize);
 		
@@ -1850,7 +1850,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		totalCount = ezPersonalAdminService.getNoticeCountUser(userInfo.getCompanyID(), userInfo.getTenantId());
-		List<PersonalNoticeVO> list = ezPersonalService.getNoticeListUser(userInfo.getCompanyID(), totalCount, pageSize, (currentPage-1) * pageSize, userInfo.getTenantId());
+		List<PersonalNoticeVO> list = ezPersonalService.getNoticeListUser(userInfo.getCompanyID(), totalCount, pageSize, Math.multiplyExact(Math.subtractExact(currentPage, 1), pageSize), userInfo.getTenantId());
 		
 		int pageCount = (totalCount + pageSize -1) / pageSize; 
 		

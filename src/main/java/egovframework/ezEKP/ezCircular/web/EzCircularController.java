@@ -582,8 +582,8 @@ public class EzCircularController extends EgovFileMngUtil {
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
-		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
-        endRow = (personalCount * Integer.parseInt(pageNum));
+		startRow = Math.addExact(Math. multiplyExact(personalCount, Math.subtractExact(Integer.parseInt(pageNum), 1)), 1);
+        endRow = Math. multiplyExact(personalCount, Integer.parseInt(pageNum));
 		
         int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getOffset(), userInfo.getTenantId(), userInfo.getCompanyID());
         
@@ -694,8 +694,8 @@ public class EzCircularController extends EgovFileMngUtil {
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
-		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
-        endRow = (personalCount * Integer.parseInt(pageNum));
+		startRow = Math.addExact(Math.multiplyExact(personalCount, Math.subtractExact(Integer.parseInt(pageNum), 1)), 1);
+        endRow = Math.multiplyExact(personalCount, Integer.parseInt(pageNum));
 		
         int totalCount = ezCircularService.getCircularCompleteListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getOffset(), userInfo.getTenantId(), userInfo.getCompanyID());
 
@@ -799,8 +799,8 @@ public class EzCircularController extends EgovFileMngUtil {
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
-		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
-        endRow = (personalCount * Integer.parseInt(pageNum));
+		startRow = Math.addExact(Math.multiplyExact(personalCount, Math.subtractExact(Integer.parseInt(pageNum), 1)), 1);
+        endRow = Math.multiplyExact(personalCount, Integer.parseInt(pageNum));
 		
         int totalCount = ezCircularService.getCircularTempListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getOffset(), userInfo.getTenantId(), userInfo.getCompanyID());
         
@@ -908,8 +908,8 @@ public class EzCircularController extends EgovFileMngUtil {
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
-		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
-        endRow = (personalCount * Integer.parseInt(pageNum));
+		startRow = Math.addExact(Math.multiplyExact(personalCount, Math.subtractExact(Integer.parseInt(pageNum), 1)), 1);
+        endRow = Math.multiplyExact(personalCount, Integer.parseInt(pageNum));
 		
         int totalCount = ezCircularService.getMyCircularListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getOffset(), userInfo.getTenantId(), userInfo.getCompanyID());
         
@@ -1013,8 +1013,8 @@ public class EzCircularController extends EgovFileMngUtil {
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
-		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
-        endRow = (personalCount * Integer.parseInt(pageNum));
+		startRow = Math.addExact(Math.multiplyExact(personalCount, Math.subtractExact(Integer.parseInt(pageNum), 1)), 1);
+        endRow = Math.multiplyExact(personalCount, Integer.parseInt(pageNum));
 		
         int totalCount = ezCircularService.getCircularTDListCount(userInfo.getId(), searchValue, searchType, userInfo.getTenantId(), userInfo.getCompanyID());
         
@@ -2263,8 +2263,8 @@ public class EzCircularController extends EgovFileMngUtil {
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 
 		int personalCount = config.getListCnt();
-		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
-        endRow = (personalCount * Integer.parseInt(pageNum));
+		startRow = Math.addExact(Math.multiplyExact(personalCount, Math.subtractExact(Integer.parseInt(pageNum), 1)), 1);
+        endRow = Math.multiplyExact(personalCount, Integer.parseInt(pageNum));
 		
         int totalCount = ezCircularService.getFolderCircularListCount(folderId, userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getOffset(), userInfo.getTenantId(), userInfo.getCompanyID());
         

@@ -1602,7 +1602,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             pageCount = pageCount - 1;
         }
         
-        int iStart = (pCurrPage - 1) * pPageSize;
+        int iStart = Math.multiplyExact(Math.subtractExact(pCurrPage, 1), pPageSize);
         /** EZSP_RESULTSUBJECTIVELIST*/
         List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveList(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
         
@@ -1623,7 +1623,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             
             iDataCount++;
             int iCurrNumber = 0;
-            iCurrNumber = iDataCount + (pCurrPage - 1) * pPageSize;
+            iCurrNumber = Math.addExact(iDataCount, Math.multiplyExact(Math.subtractExact(pCurrPage, 1), pPageSize));
             
             Node ivalue = xmlMainDom.createTextNode(Integer.toString(iCurrNumber));
             No.appendChild(ivalue);
@@ -1770,7 +1770,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             pageCount = pageCount - 1;
         }
         
-        int iStart = (pCurrPage - 1) * pPageSize;
+        int iStart = Math.multiplyExact(Math.subtractExact(pCurrPage, 1), pPageSize);
         /** EZSP_RESULTSUBJECTIVELIST*/
         List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveListAll(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
         
@@ -1788,7 +1788,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             
             iDataCount++;
             int iCurrNumber = 0;
-            iCurrNumber = iDataCount + (pCurrPage - 1) * pPageSize;
+            iCurrNumber = Math.addExact(iDataCount, Math.multiplyExact(Math.subtractExact(pCurrPage, 1), pPageSize));
             
             Node ivalue = xmlMainDom.createTextNode(Integer.toString(iCurrNumber));
             No.appendChild(ivalue);

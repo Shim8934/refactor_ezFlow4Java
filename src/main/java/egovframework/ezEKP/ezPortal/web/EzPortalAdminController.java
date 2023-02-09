@@ -774,8 +774,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		int pStartRow = 0;
 		int pEndRow = 0;
-		pStartRow = intPage * listPageSize - listPageSize + 1;
-		pEndRow = intPage * listPageSize;
+		pStartRow = Math.addExact(Math.subtractExact(Math.multiplyExact(intPage, listPageSize), listPageSize), 1);
+		pEndRow = Math.multiplyExact(intPage, listPageSize);
 		
 		String strXML = ezPortalAdminService.searchPortalPage(pSearchString, "", portalGubun, pStartRow, pEndRow, "", userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("searchPortalPage="+strXML);
@@ -1110,8 +1110,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		int pStartRow = 0;
 		int pEndRow = 0;
-		pStartRow = intPage * listPageSize - listPageSize + 1;
-		pEndRow = intPage * listPageSize;
+		pStartRow = Math.addExact(Math.subtractExact(Math.multiplyExact(intPage, listPageSize), listPageSize), 1);
+		pEndRow = Math.multiplyExact(intPage, listPageSize);
 		
 		String strXML = ezPortalAdminService.searchPortlet(pSearchString, portalGubun, portalPageGubun, pStartRow, pEndRow, "", userInfo.getCompanyID(), userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
