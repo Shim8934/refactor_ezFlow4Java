@@ -255,7 +255,7 @@ public class MCommonGWController {
 
 			}
 		} catch (Exception e) {
-
+			LOGGER.debug("e.message=" + e.getMessage());
 		}
 
 		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/decryptFiledown] ended.");

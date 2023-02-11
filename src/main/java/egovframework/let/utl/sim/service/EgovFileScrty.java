@@ -348,7 +348,7 @@ public class EgovFileScrty {
    	 		decryptedValue = new String(decryptedBytes, "utf-8"); // 문자 인코딩 주의.
    	 		
    	 	}catch(Exception e){
-   	 		
+			LOGGER.debug("e.message=" + e.getMessage());   	 		
    	 	}
    		return decryptedValue;
     } 
@@ -450,10 +450,10 @@ public class EgovFileScrty {
             
         } finally {
             if (output != null) {
-                try { output.close(); } catch (IOException ie) {}
+                try { output.close(); } catch (IOException e) {LOGGER.debug("e.message=" + e.getMessage());}
             }
             if (input != null) {
-                try { input.close(); } catch (IOException ie) {}
+                try { input.close(); } catch (IOException e) {LOGGER.debug("e.message=" + e.getMessage());}
             }
         }
     }

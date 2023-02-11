@@ -1661,7 +1661,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				bos.write(buffer, 0, bytesRead);
 			}
 		} catch (Exception e) {
-			
+			logger.debug("e.message=" + e.getMessage());
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();

@@ -180,7 +180,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	        IOUtils.copy(is,response.getOutputStream());
         } catch(Exception e) {
-
+			logger.debug("e.message=" + e.getMessage());
         } finally {
         	if (is != null) {
         		is.close();
@@ -491,6 +491,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             	}
             } catch (IOException e) {
                 //url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
+				logger.debug("e.message=" + e.getMessage());
             } finally {
                 if (tempIn != null) {
                     tempIn.close();
@@ -2198,7 +2199,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.insertMobileAttitudeConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			// 근태관리 GPS 테넌트 컨피그 추가
@@ -2210,7 +2211,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.insertAttitudeGPSConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 		}
 		
@@ -2247,7 +2248,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.createMenuTenantConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			map.put("propertyName", "useBoard");
@@ -2257,7 +2258,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.createMenuTenantConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			map.put("propertyName", "useResource");
@@ -2267,7 +2268,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.createMenuTenantConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			map.put("propertyName", "useToDo");
@@ -2277,7 +2278,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.createMenuTenantConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 		}
 		

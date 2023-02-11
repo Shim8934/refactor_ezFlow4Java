@@ -4441,13 +4441,15 @@ public class EzBoardController extends EgovFileMngUtil{
 				if (bos != null) {
 					try {
 						bos.close();
-					} catch (Exception ignore) {
+					} catch (Exception e) {
+						logger.debug("e.message=" + e.getMessage());
 					}
 				}
 				if (stream != null) {
 					try {
 						stream.close();
-					} catch (Exception ignore) {
+					} catch (Exception e) {
+						logger.debug("e.message=" + e.getMessage());
 					}
 				}
 			}
@@ -4543,13 +4545,15 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (bos != null) {
 				try {
 					bos.close();
-				} catch (Exception ignore) {
+				} catch (Exception e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			if (stream != null) {
 				try {
 					stream.close();
-				} catch (Exception ignore) {
+				} catch (Exception e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 		}

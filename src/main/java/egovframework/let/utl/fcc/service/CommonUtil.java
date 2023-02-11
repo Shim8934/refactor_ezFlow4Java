@@ -854,7 +854,7 @@ public class CommonUtil {
 	        }
 			doc = convertStringToDocument(sb.toString());
 			
-		} catch(Exception e){}
+		} catch(Exception e){logger.debug("e.message=" + e.getMessage());}
 		
 		return doc;		
 	}

@@ -881,7 +881,7 @@ public class EzEmailAdminLetterController {
 			returnJsonArr = ezEmailAdminLetterService.selectAllLeter(letterBoxNo);
 			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		logger.debug("readLetterList ended.");

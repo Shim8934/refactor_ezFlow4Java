@@ -612,7 +612,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        		e.printStackTrace();
     		        	} finally {
     						if (fos != null) {
-    							try { fos.close(); } catch (IOException e) {}
+    							try { fos.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
     						}
     					}
     		        	

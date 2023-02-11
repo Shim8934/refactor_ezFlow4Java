@@ -2448,7 +2448,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
                     bRet = true;
                     break;
             }
-        }catch (Exception Ex){ }
+        }catch (Exception e){LOGGER.debug("e.message=" + e.getMessage());}
         return bRet;
     }
     

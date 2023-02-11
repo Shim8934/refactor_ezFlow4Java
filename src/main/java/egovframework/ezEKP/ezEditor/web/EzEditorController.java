@@ -596,7 +596,8 @@ public class EzEditorController extends EgovFileMngUtil {
 			} finally {
 				try {
 					fileOuputStream.close();
-				} catch (Exception e2) {
+				} catch (Exception e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 
@@ -839,6 +840,7 @@ public class EzEditorController extends EgovFileMngUtil {
 						try {
 							fileOuputStream.close();
 						} catch (Exception e) {
+							logger.debug("e.message=" + e.getMessage());
 						}
 					}
 				} else {

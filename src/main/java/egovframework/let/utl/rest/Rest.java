@@ -248,7 +248,7 @@ public class Rest {
 				} else if (obj instanceof Collection) {
 					obj = jsonStr;
 				}
-			} catch (Exception ex) {}
+			} catch (Exception ex) {ex.printStackTrace();}
 
 			body = obj;
 			return this;

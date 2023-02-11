@@ -671,6 +671,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         		try {
         			os.close();
         		} catch(Exception e) {
+					LOGGER.debug("e.message=" + e.getMessage());
         		}
         	}
         	
@@ -678,6 +679,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         		try {
         			bis.close();
         		} catch(Exception e) {
+					LOGGER.debug("e.message=" + e.getMessage());
         		}
         	}
         }

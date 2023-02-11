@@ -2335,6 +2335,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		} catch (FileNotFoundException e) {
 			// 수정 시, 이미 업로드되어있는 파일들은 upload폴더에 옮겨져있기 때문에 tempUpload폴더에서 찾을 수 없다.
 			// 따라서 Exception 발생하지만 문제되지 않음
+			LOGGER.debug("e.message=" + e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

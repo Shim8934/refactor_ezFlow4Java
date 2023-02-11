@@ -1146,16 +1146,16 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				if (fileInputStream != null) {
 					try {
 						fileInputStream.close();
-					} catch (Exception e) {}
+					} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 				}
 
 				if (zipOutputStream != null) {
 					try {
 						zipOutputStream.closeEntry();
-					} catch (Exception e) {}
+					} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 					try {
 						zipOutputStream.close();
-					} catch (Exception e) {}
+					} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 				}
 			}
 		}

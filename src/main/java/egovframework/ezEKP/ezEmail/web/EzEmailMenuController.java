@@ -831,7 +831,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						} finally {
 							try {
 								inputStream.close();
-							} catch (Exception e) {} 
+							} catch (Exception e) {logger.debug("e.message=" + e.getMessage());} 
 						}
 						
 						if (message != null) {
@@ -1054,8 +1054,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				logger.debug("charset is changed as ms949.");
 				
 				if (zis1 != null) {
-					try { zis1.closeEntry(); } catch (Exception e1) {}
-					try { zis1.close(); } catch (Exception e1) {}
+					try { zis1.closeEntry(); } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
+					try { zis1.close(); } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
 				}
 				
 				if (zipFilePath != null) {
@@ -1073,8 +1073,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				}
 			} finally {
 				if (zis1 != null) {
-					try { zis1.closeEntry(); } catch (Exception e1) {}
-					try { zis1.close(); } catch (Exception e1) {}
+					try { zis1.closeEntry(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+					try { zis1.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 					
 					zis1 = null;
 				}
@@ -1231,12 +1231,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			
 		} finally {
 			if (ia != null) {
-				try { ia.close(); } catch (Exception e) {}
+				try { ia.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			
 			if (zis != null) {
-				try { zis.closeEntry(); } catch (Exception e) {}
-				try { zis.close(); } catch (Exception e) {}
+				try { zis.closeEntry(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+				try { zis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 	
@@ -1344,6 +1344,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						message.writeTo(outputStream);
 						
 					} catch(IOException e){
+						logger.debug("e.message=" + e.getMessage());
 					} finally {
 						if (outputStream != null) {
 							outputStream.close();

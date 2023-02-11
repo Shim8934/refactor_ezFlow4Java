@@ -632,6 +632,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		    		response.addCookie(ssoLoginCookie);
 		    	}
 			}catch(Exception e){
+				logger.debug("e.message=" + e.getMessage());
 			}
 			logger.debug("changeCompany end");
 			return loginCookie;

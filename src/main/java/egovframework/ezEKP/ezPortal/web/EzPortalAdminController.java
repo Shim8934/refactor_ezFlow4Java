@@ -414,6 +414,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
         		        bis = new BufferedInputStream(new FileInputStream(imageFile));
         		        contentType = URLConnection.guessContentTypeFromStream(bis);
         	        } catch(Exception e) {
+						logger.debug("e.message=" + e.getMessage());
         	        } finally {
         	        	if (bis != null) {
         	        		bis.close();

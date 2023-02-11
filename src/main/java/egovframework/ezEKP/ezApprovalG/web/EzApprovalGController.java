@@ -9305,6 +9305,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			}
 		} catch (Exception e) {
+			logger.debug("e.message=" + e.getMessage());
 		} finally {
 			   if (bos != null) {
 					try {

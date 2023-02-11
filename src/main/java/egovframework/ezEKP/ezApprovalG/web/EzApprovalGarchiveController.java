@@ -2585,7 +2585,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (fop != null) {
-				try { fop.close(); } catch (Exception e) { }
+				try { fop.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		

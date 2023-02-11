@@ -23829,11 +23829,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 			//등록대장 : listType=0일때는 들어갈 필요가 없다.NullPointException 무시하려고 try..catch
 			docType = xmlDom.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();	// 18
-		} catch(Exception e) { }
+		} catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 	    try {
 	    	visualAudioDesc = xmlDom.getElementsByTagName("VISUALAUDIODESC").item(0).getTextContent().trim();	// 19
 			visualAudioType = xmlDom.getElementsByTagName("VISUALAUDIOTYPE").item(0).getTextContent().trim();	// 20
-	    } catch(Exception e) {  }
+	    } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 		String originRegSn = xmlDom.getElementsByTagName("ORIGINREGSN").item(0).getTextContent().trim();	// 23
 
 		// 특수목록 정보 노드

@@ -183,8 +183,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 			try {
 				newDate = formatter.format(new Date(Long.parseLong(newDate)));
-			} catch (Exception ex) {
-				// ignore
+			} catch (Exception e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 		} else if (newDate.length() == 21) {
 			newDate = newDate.substring(0, 19);
@@ -198,11 +198,11 @@ public class EzWebFolderController extends EgovFileMngUtil {
 
 		try {
 			newSize = humanReadableByteCount(Long.parseLong(newSize));
-		} catch (Exception ignore) {}
+		} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 
 		try {
 			oldSize = humanReadableByteCount(Long.parseLong(oldSize));
-		} catch (Exception ignore) {}
+		} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("newDate", newDate);
@@ -317,8 +317,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 				}
 				
 				useOriginalFileNames = false;
-			} catch (Exception ex) {
-				// ignore
+			} catch (Exception e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 		}
 		

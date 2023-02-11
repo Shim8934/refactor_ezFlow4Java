@@ -1407,6 +1407,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	        bis = new BufferedInputStream(new FileInputStream(file));
 	        contentType = URLConnection.guessContentTypeFromStream(bis);
         } catch(Exception e) {
+			logger.debug("e.message=" + e.getMessage());
         } finally {
         	if (bis != null) {
         		bis.close();
