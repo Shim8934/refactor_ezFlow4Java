@@ -3588,7 +3588,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		ezQuestionService.changePermission(qstUserPermissionVO, qstUserPollItemVO, loginVO.getTenantId());
 		
-		resp.sendRedirect("/ezQuestion/qstChangePermission.do?endpoll="+qstUserPermissionVO.getEndFlg()+"&itemNo="+qstUserPermissionVO.getItemNo()+"&"+commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("Receve_str2")))+"&save=OK");
+		String redirectUrl = "/ezQuestion/qstChangePermission.do?endpoll="+qstUserPermissionVO.getEndFlg()+"&itemNo="+qstUserPermissionVO.getItemNo()+"&"+commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("Receve_str2")))+"&save=OK";
+		// CWE-113 보안 취약점 대응
+		redirectUrl = redirectUrl.replaceAll("\r", "").replaceAll("\n", "");
+
+		resp.sendRedirect(redirectUrl);
 
 		logger.debug("callChangePermission ended");
 	}

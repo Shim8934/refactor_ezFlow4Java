@@ -8363,7 +8363,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String pFileName = EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptName() + "_" + messageSource.getMessage("ezApprovalG.kms01", locale).replace(" ", "_") + ".xls";
 		response.setContentType("application/ms-excel");
 		response.setCharacterEncoding("utf-8");
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName) + "\"");
+		// CWE-113 보안 취약점 대응
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName.replaceAll("\r", "").replaceAll("\n", "")) + "\"");
 		
 		workbook.write(response.getOutputStream());
 		  
