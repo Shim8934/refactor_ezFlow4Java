@@ -205,7 +205,6 @@ public class EgovProperties{
 				java.util.Properties props = new java.util.Properties();
 				fis  = new FileInputStream(src);
 				props.load(new java.io.BufferedInputStream(fis));
-				fis.close();
 
 				int i = 0;
 				Enumeration<?> plist = props.propertyNames();

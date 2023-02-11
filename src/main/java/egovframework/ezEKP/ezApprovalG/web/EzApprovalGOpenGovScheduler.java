@@ -73,24 +73,24 @@ public class EzApprovalGOpenGovScheduler {
             return;
         }
         
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFilePath.toFile()), "euc-kr"));
+        // CWE-404 보안 취약점 대응
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFilePath.toFile()), "euc-kr"))) {
+            //발송
+            for (String csv : Optional.ofNullable(csvList).orElse(Collections.emptyList())) {
+                bw.write(csv);
+                bw.newLine();
+            }
 
-        //발송
-        for (String csv : Optional.ofNullable(csvList).orElse(Collections.emptyList())) {
-            bw.write(csv);
-            bw.newLine();
+            //재발송
+            for (String csv : Optional.ofNullable(resendCSVList).orElse(Collections.emptyList())) {
+                bw.write(csv);
+                bw.newLine();
+            }
+
+            String endLine = "END_TOT_COUNT |" + csvList.size();
+
+            bw.write(endLine);
         }
-
-        //재발송
-        for (String csv : Optional.ofNullable(resendCSVList).orElse(Collections.emptyList())) {
-            bw.write(csv);
-            bw.newLine();
-        }
-
-        String endLine = "END_TOT_COUNT |" + csvList.size();
-
-        bw.write(endLine);
-        bw.close();
 
 //		어제 csv는 센드플래그 Y로 인서트해줌
 //		센드플래그를 Y로 바꿔줌

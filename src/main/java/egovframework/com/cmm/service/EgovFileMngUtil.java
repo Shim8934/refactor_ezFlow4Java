@@ -763,12 +763,9 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 					}
 
 					zos.closeEntry();
-					fis.close();
 				}
 			}
-			
-			fis = null;
-			
+						
 			zos.close();
 			zos = null;
 		} catch (Exception e) {
@@ -833,9 +830,6 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			while ((strLine = br.readLine()) != null) {
 				sb.append(strLine + "\n");
 			}
-			
-			br.close();
-			br = null;
 		} finally {
 			if (br != null) {
 				try {br.close();} catch(Exception e) {}

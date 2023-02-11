@@ -671,10 +671,6 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			            secureMessage.setHeader("X-JMocha-Secure-Mail-ID", String.valueOf(secureId));
 			            
 			            message = secureMessage;
-	            		
-			            fis.close();
-				        fis = null;
-			            
 					} else {
 						if (!retryFlag && sentMailStoredInSentBox.equalsIgnoreCase("YES")) {
 							//보낸편지함에 저장

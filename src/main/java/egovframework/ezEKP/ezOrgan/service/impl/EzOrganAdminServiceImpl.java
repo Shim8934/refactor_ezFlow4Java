@@ -2453,7 +2453,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		try {
 			fileOut = new FileOutputStream(filePath);
 			workbook.write(fileOut);
-			fileOut.close();
 		}
 		catch (Exception e) {
 			throw e;

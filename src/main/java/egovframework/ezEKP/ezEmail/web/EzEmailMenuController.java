@@ -1050,13 +1050,16 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					messageCount++;
 				}
 			} catch (Exception e) {
-				charset = Charset.forName("ms949");
-				logger.debug("charset is changed as ms949.");
-				
-				if (zis1 != null) {
-					try { zis1.closeEntry(); } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
-					try { zis1.close(); } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
-				}
+				// CWE-404 보안 취약점 대응
+				try {
+					charset = Charset.forName("ms949");
+					logger.debug("charset is changed as ms949.");
+				} finally {
+					if (zis1 != null) {
+						try { zis1.closeEntry(); } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
+						try { zis1.close(); } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
+					}
+				}	
 				
 				if (zipFilePath != null) {
 					fis = new FileInputStream(zipFilePath);

@@ -836,19 +836,24 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			
 			if (!newFile.exists()) {
 				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
-				InputStream orgFileInputStream;
+				InputStream orgFileInputStream = null;
 
-				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
-				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
-					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
-				} else {
-					orgFileInputStream = new FileInputStream(orgFile);
+				// CWE-404 보안 취약점 대응
+				try {
+					// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
+					if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+						byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
+						orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
+					} else {
+						orgFileInputStream = new FileInputStream(orgFile);
+					}
+					
+					Files.copy(orgFileInputStream, newFile.toPath());
+				} finally {
+					if (orgFileInputStream != null) {
+						orgFileInputStream.close();
+					}
 				}
-				
-				Files.copy(orgFileInputStream, newFile.toPath());
-				orgFileInputStream.close();
-				//FileUtils.copyFile(orgFile, newFile);
 			}
 		}
 		
@@ -1759,19 +1764,24 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			
 			if (!newFile.exists()) {
 				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
-				InputStream orgFileInputStream;
+				InputStream orgFileInputStream = null;
 
-				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
-				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
-					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
-				} else {
-					orgFileInputStream = new FileInputStream(orgFile);
+				// CWE-404 보안 취약점 대응
+				try {
+					// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
+					if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+						byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
+						orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
+					} else {
+						orgFileInputStream = new FileInputStream(orgFile);
+					}
+					
+					Files.copy(orgFileInputStream, newFile.toPath());
+				} finally {
+					if (orgFileInputStream != null) {
+						orgFileInputStream.close();
+					}
 				}
-				
-				Files.copy(orgFileInputStream, newFile.toPath());
-				orgFileInputStream.close();
-				//FileUtils.copyFile(orgFile, newFile);
 			}
 		}
 		

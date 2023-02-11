@@ -29028,26 +29028,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							bytes = commonUtil.readBytesFromFile(file.toPath());
 							bytes = klibUtil.decrypt(bytes);
 						} else {
-                        
-                    		InputStream is = new FileInputStream(file);
-
-                    	    long length = file.length();
-                    	    if (length > Integer.MAX_VALUE) {
-                    	        // File is too large
-                    	    }
-                    	    bytes = new byte[(int)length];
-                    	    
-                    	    int offset = 0;
-                    	    int numRead = 0;
-                    	    while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-                    	        offset = Math.addExact(offset, numRead);
-                    	    }
-                    	    
-                    	    is.close();
-
-                    	    if (offset < bytes.length) {
-                    	        throw new IOException("Could not completely read file "+file.getName());
-                    	    }
+							// CWE-404 보안 취약점 대응
+                    		try (InputStream is = new FileInputStream(file)) {
+								long length = file.length();
+								if (length > Integer.MAX_VALUE) {
+									// File is too large
+								}
+								bytes = new byte[(int)length];
+								
+								int offset = 0;
+								int numRead = 0;
+								while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+									offset = Math.addExact(offset, numRead);
+								}
+								
+								if (offset < bytes.length) {
+									throw new IOException("Could not completely read file "+file.getName());
+								}
+							}
 						}
                     	    
                     		byte[] encoded = Base64.encodeBase64(bytes);
@@ -29077,12 +29075,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          }
          
  		try {
-
- 			FileOutputStream fop = new FileOutputStream(FI);
- 			// get the content in bytes
- 			fop.write(strRtnXML.replace("\n", "").replace("\t", "").getBytes("euc-kr"));
- 			fop.flush();
- 			fop.close();
+			// CWE-404 보안 취약점 대응
+ 			try (FileOutputStream fop = new FileOutputStream(FI)) {
+				// get the content in bytes
+				fop.write(strRtnXML.replace("\n", "").replace("\t", "").getBytes("euc-kr"));
+				fop.flush();
+			}
  		} catch (Exception e) {
  			e.printStackTrace();
  		} 
@@ -29132,11 +29130,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    	fos.delete();
 			}
 		    
-			FileOutputStream fop = new FileOutputStream(fos);
-			// get the content in bytes
-			fop.write(strXML.getBytes("euc-kr"));
-			fop.flush();
-			fop.close();
+			// CWE-404 보안 취약점 대응
+			try (FileOutputStream fop = new FileOutputStream(fos)) {
+				// get the content in bytes
+				fop.write(strXML.getBytes("euc-kr"));
+				fop.flush();
+			}
 			
 			result = "OK";
 			fileState = "success";
@@ -29572,17 +29571,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          		ackFile.delete();
          	}
              
-			FileOutputStream fop = new FileOutputStream(ackFile);
-			// get the content in bytes
-			fop.write(strResult.getBytes("euc-kr"));
-			fop.flush();
-			fop.close();
+			// CWE-404 보안 취약점 대응
+			try (FileOutputStream fop = new FileOutputStream(ackFile)) {
+				// get the content in bytes
+				fop.write(strResult.getBytes("euc-kr"));
+				fop.flush();
+			}
 
-             return true;
+            return true;
          }
          catch (Exception Ex) {
-        	 Ex.printStackTrace();
-             return false;
+        	Ex.printStackTrace();
+            return false;
          } 
 	}
 
@@ -31240,52 +31240,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getStoragePeriodName ended | result:" + rtnVal);
 		return rtnVal;
 	}
-
-//	@Override
-//	public JSONObject convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
-//		logger.debug("convertDocumentToImg started");
-//		
-//		String originalFilename = file.getOriginalFilename();
-//		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
-//		
-//		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
-////		String filePath = URLEncoder.encode("222.106.242.180:"+tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
-//		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fEa1FIQeYI3%252BPB33JlY%252BCLJjVjx1iVJebmrlmJl1TgrI%253D";
-////		String filePath = URLEncoder.encode("/home/jmocha/temp/" + originalFilename, "UTF-8"); // 테스트용
-//		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
-//		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
-//		
-//		String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do?"
-//					   + "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
-//		
-//		logger.debug("image converting requestURL : " + address);
-//		
-//		URL url = new URL(address);
-//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();	
-//		conn.setRequestMethod("GET");
-//		
-//		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//		String line;
-//		StringBuffer response = new StringBuffer();
-//		
-//		while((line = br.readLine()) != null) {			
-//			response.append(line);						
-//		}
-//		
-//		JSONObject res = (JSONObject) new JSONParser().parse(response.toString());
-//		String hash = (String) res.get("hash");
-//		
-//		br.close();
-//		
-//		JSONObject convertedImgInfo = getConvertedImgInfo(hash);
-//
-//		// 컨버팅 후, 오피스 문서 파일 삭제
-//		File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
-//		tempFile.delete();
-//		
-//		logger.debug("convertDocumentToImg ended");
-//		return convertedImgInfo;	
-//	}
 	
 	@Override
 	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
@@ -31308,25 +31262,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();	
 		conn.setRequestMethod("GET");
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		String line;
-		StringBuffer response = new StringBuffer();
+		// CWE-404 보안 취약점 대응
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+			String line;
+			StringBuffer response = new StringBuffer();
+			
+			while((line = br.readLine()) != null) {			
+				response.append(line);						
+			}
 		
-		while((line = br.readLine()) != null) {			
-			response.append(line);						
+			// 2021-01-14 이혁진 넘어온 response값을 가지고 이미지URL생성
+			String convertedImgInfo = config.getProperty("config.officeConverterServerURL") + "/DG_viewer" + response;
+			
+			// 컨버팅 후, 오피스 문서 파일 삭제
+			File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
+			tempFile.delete();
+			
+			logger.debug("convertDocumentToImg ended");
+			return convertedImgInfo;	
 		}
-		
-		br.close();
-		
-		// 2021-01-14 이혁진 넘어온 response값을 가지고 이미지URL생성
-		String convertedImgInfo = config.getProperty("config.officeConverterServerURL") + "/DG_viewer" + response;
-		
-		// 컨버팅 후, 오피스 문서 파일 삭제
-		File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
-		tempFile.delete();
-		
-		logger.debug("convertDocumentToImg ended");
-		return convertedImgInfo;	
 	}
 
 	@Override

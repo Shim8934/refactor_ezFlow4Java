@@ -3849,8 +3849,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					File file = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 					fos = new FileOutputStream(file);
 					part.saveFile(file);
-					fos.close();
-					fos = null;
 					
 					File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 					egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
@@ -4175,8 +4173,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						fos = new FileOutputStream(file);
 						originalPart.saveFile(file);
-						fos.close();
-						fos = null;
 						
 						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
 						
@@ -4328,8 +4324,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						fos = new FileOutputStream(file);
 						originalPart.saveFile(file);
-						fos.close();
-						fos = null;
 						
 						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
 						
@@ -4477,8 +4471,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						File file = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						fos = new FileOutputStream(file);
 						part.saveFile(file);
-						fos.close();
-						fos = null;
 						
 						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
@@ -5266,11 +5258,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 				
 				File file = new File(filePath + commonUtil.separator + md5FileName);
-				FileOutputStream fos = new FileOutputStream(file);
-				
-				fos.write(decoder.decode(bytes));
-				fos.close();
-				fos = null;
+				// CWE-404 보안 취약점 대응
+				try (FileOutputStream fos = new FileOutputStream(file)) {				
+					fos.write(decoder.decode(bytes));
+				}
 				
 				filePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) 
 				+ commonUtil.separator + "tempFileUpload" + commonUtil.separator + userInfo.getId() + commonUtil.separator + md5FileName;

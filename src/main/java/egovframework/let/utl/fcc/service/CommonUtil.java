@@ -2538,7 +2538,6 @@ public class CommonUtil {
 	@SuppressWarnings("unchecked")
 	public JSONObject unidocsFileDown(String filePath, String realPath, String filePathFlag, int tenantId){
 		InputStream inputStream = null;
-		OutputStream outputStream = null;
 		JSONObject result = new JSONObject();
 		String status = "ERROR";
 		int code = 0;
@@ -2608,21 +2607,21 @@ public class CommonUtil {
 				pdfFile.getParentFile().mkdirs();
 			}
 
-			outputStream = new FileOutputStream(decryptFile);
-			
-			// webfolder는 암호화 하는 폴더가 있기 때문에 klib 복호화 코드 추가 
-			if ((filePathFlag.equals("webfolder") && ezWebFolderService.isEncryptedFilePath(filePath)) || (filePathFlag.equals("approval") && fileExtension.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT))) {
-				logger.debug("fileOldPath=" + filePath);
-				logger.debug("pdfFilePath=" + pdfFilePath);
-				byte[] encryptedBytes = readBytesFromFile(file.toPath());
-				byte[] decryptedBytes = kilbUtil.decrypt(encryptedBytes);
-				inputStream = new ByteArrayInputStream(decryptedBytes);
-				
-				FileCopyUtils.copy(inputStream, outputStream);
-			} else {
-				Files.copy(file.toPath(), outputStream);
+			// CWE-404 보안 취약점 대응
+			try (OutputStream outputStream = new FileOutputStream(decryptFile)) {			
+				// webfolder는 암호화 하는 폴더가 있기 때문에 klib 복호화 코드 추가 
+				if ((filePathFlag.equals("webfolder") && ezWebFolderService.isEncryptedFilePath(filePath)) || (filePathFlag.equals("approval") && fileExtension.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT))) {
+					logger.debug("fileOldPath=" + filePath);
+					logger.debug("pdfFilePath=" + pdfFilePath);
+					byte[] encryptedBytes = readBytesFromFile(file.toPath());
+					byte[] decryptedBytes = kilbUtil.decrypt(encryptedBytes);
+					inputStream = new ByteArrayInputStream(decryptedBytes);
+					
+					FileCopyUtils.copy(inputStream, outputStream);
+				} else {
+					Files.copy(file.toPath(), outputStream);
+				}
 			}
-			outputStream.close();
 
 			if(fileExtension.equalsIgnoreCase("pdf")){
 				FileCopyUtils.copy(decryptFile, pdfFile);
@@ -2645,13 +2644,6 @@ public class CommonUtil {
 			if (inputStream != null) {
 				try {
 					inputStream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
-			if (outputStream != null) {
-				try {
-					outputStream.close();
 				} catch (Exception ignore) {
 					logger.debug("IGNORED: {}", ignore.getMessage());
 				}

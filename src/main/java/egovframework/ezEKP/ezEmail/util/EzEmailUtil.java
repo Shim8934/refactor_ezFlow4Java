@@ -4907,7 +4907,6 @@ public class EzEmailUtil {
 		String name ;
 		File target ;
 		int nWritten = 0;
-		BufferedOutputStream bos ;
 		byte [] buf = new byte[1024 * 8];
 
 		ensureDestDir(destDir);
@@ -4922,13 +4921,13 @@ public class EzEmailUtil {
 				ensureDestDir(target);
 			} else {
 				target.createNewFile();
-				bos = new BufferedOutputStream(new FileOutputStream(target));
-				
-				while ((nWritten = zis.read(buf)) >= 0 ){
-					bos.write(buf, 0, nWritten);
+
+				// CWE-404 보안 취약점 대응
+				try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(target))) {				
+					while ((nWritten = zis.read(buf)) >= 0 ){
+						bos.write(buf, 0, nWritten);
+					}				
 				}
-				
-				bos.close();
 			}
 		}
 		

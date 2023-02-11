@@ -2008,24 +2008,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				BufferedOutputStream bos = null;
                 
 				try {
-                	// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
-					bis = new BufferedInputStream(fis);
-					
-					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
-					bos = new BufferedOutputStream(fos);
-					
-					int data = 0;
-					byte[] buffer = new byte[BUFF_SIZE];
-					
-					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
-						bos.write(buffer, 0, data);
+					// CWE-404 보안 취약점 대응
+					try {
+						// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+						fis = new FileInputStream(filePath[i]);
+						bis = new BufferedInputStream(fis);
+						
+						fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+						bos = new BufferedOutputStream(fos);
+						
+						int data = 0;
+						byte[] buffer = new byte[BUFF_SIZE];
+						
+						while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+							bos.write(buffer, 0, data);
+						}
+					} finally {					
+						bos.close(); bos = null;
+						bis.close(); bis = null;
+						fos.close(); fos = null;
+						fis.close(); fis = null;
 					}
-					
-					bos.close(); bos = null;
-					bis.close(); bis = null;
-					fos.close(); fos = null;
-					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
                 	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
@@ -2383,24 +2386,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				BufferedOutputStream bos = null;
 				
 				try {
-					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
-					bis = new BufferedInputStream(fis);
-					
-					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
-					bos = new BufferedOutputStream(fos);
-					
-					int data = 0;
-					byte[] buffer = new byte[BUFF_SIZE];
-					
-					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
-						bos.write(buffer, 0, data);
+					// CWE-404 보안 취약점 대응
+					try {
+						// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+						fis = new FileInputStream(filePath[i]);
+						bis = new BufferedInputStream(fis);
+						
+						fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+						bos = new BufferedOutputStream(fos);
+						
+						int data = 0;
+						byte[] buffer = new byte[BUFF_SIZE];
+						
+						while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+							bos.write(buffer, 0, data);
+						}
+					} finally {					
+						bos.close(); bos = null;
+						bis.close(); bis = null;
+						fos.close(); fos = null;
+						fis.close(); fis = null;
 					}
-					
-					bos.close(); bos = null;
-					bis.close(); bis = null;
-					fos.close(); fos = null;
-					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
 					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
@@ -2760,24 +2766,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				BufferedOutputStream bos = null;
 				
 				try {
-					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
-					bis = new BufferedInputStream(fis);
-					
-					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
-					bos = new BufferedOutputStream(fos);
-					
-					int data = 0;
-					byte[] buffer = new byte[BUFF_SIZE];
-					
-					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
-						bos.write(buffer, 0, data);
+					// CWE-404 보안 취약점 대응
+					try {
+						// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+						fis = new FileInputStream(filePath[i]);
+						bis = new BufferedInputStream(fis);
+						
+						fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+						bos = new BufferedOutputStream(fos);
+						
+						int data = 0;
+						byte[] buffer = new byte[BUFF_SIZE];
+						
+						while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+							bos.write(buffer, 0, data);
+						}
+					} finally {					
+						bos.close(); bos = null;
+						bis.close(); bis = null;
+						fos.close(); fos = null;
+						fis.close(); fis = null;
 					}
-					
-					bos.close(); bos = null;
-					bis.close(); bis = null;
-					fos.close(); fos = null;
-					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
 					String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));

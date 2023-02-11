@@ -5811,7 +5811,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 				
 				zout.closeEntry();
-				inpStream.close();
 			}
 		} catch (FileNotFoundException fnfe) {
 			logger.debug("fnfe: {}", fnfe);
