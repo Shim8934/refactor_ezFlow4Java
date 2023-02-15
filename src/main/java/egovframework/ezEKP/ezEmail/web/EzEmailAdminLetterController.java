@@ -569,10 +569,11 @@ public class EzEmailAdminLetterController {
 				file.mkdirs();
 			}
 
-			BufferedWriter fw = new BufferedWriter(new FileWriter(file + commonUtil.separator + fileName));
-			fw.write(letterContent);
-			fw.flush();
-			fw.close();
+			// CWE-404 보안 취약점 대응
+			try (BufferedWriter fw = new BufferedWriter(new FileWriter(file + commonUtil.separator + fileName))) {
+				fw.write(letterContent);
+				fw.flush();
+			}
 
 			if (file.exists()) {
 				ezEmailAdminLetterService.addLetter(displayname, displayname2, letterBoxNo, letterId);
@@ -644,10 +645,11 @@ public class EzEmailAdminLetterController {
 				fileHtml.delete();
 			}
 
-			BufferedWriter fw = new BufferedWriter(new FileWriter(file + commonUtil.separator + fileName));
-			fw.write(letterContent);
-			fw.flush();
-			fw.close();
+			// CWE-404 보안 취약점 대응
+			try (BufferedWriter fw = new BufferedWriter(new FileWriter(file + commonUtil.separator + fileName))) {
+				fw.write(letterContent);
+				fw.flush();
+			}
 
 			ezEmailAdminLetterService.updateDisplayNameLetter(displayname, displayname2, letterNo);
 		} catch (Exception e) {
@@ -763,36 +765,33 @@ public class EzEmailAdminLetterController {
 		// file, originPath, path
 
 		String resultReturn = "OK";
-		FileReader reader = null;
-		FileWriter writer = null;
 		String result = null;
 		try {
-			reader = new FileReader(htmlFile);
-			result = "";
+			// CWE-404 보안 취약점 대응
+			try (FileReader reader = new FileReader(htmlFile);
+				FileWriter writer = new FileWriter(htmlFile)) {
+				result = "";
 
-			int c;
+				int c;
 
-			while (true) {
-				c = reader.read();
-				if (c == -1) {
-					break;
+				while (true) {
+					c = reader.read();
+					if (c == -1) {
+						break;
+					}
+					result += String.valueOf((char) c);
 				}
-				result += String.valueOf((char) c);
-			}
 
-			String replaceResult = "";
-			if (result != null && result.length() > 0) {
-				if (result.contains("<img src=\"")) {
-					replaceResult = result.replaceAll(originPath, copyPath);
+				String replaceResult = "";
+				if (result != null && result.length() > 0) {
+					if (result.contains("<img src=\"")) {
+						replaceResult = result.replaceAll(originPath, copyPath);
+					}
 				}
+
+				writer.write(replaceResult);
+				writer.flush();
 			}
-
-			writer = new FileWriter(htmlFile);
-			writer.write(replaceResult);
-			writer.flush();
-			writer.close();
-			reader.close();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultReturn = "ERROR";
@@ -881,7 +880,7 @@ public class EzEmailAdminLetterController {
 			returnJsonArr = ezEmailAdminLetterService.selectAllLeter(letterBoxNo);
 			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		logger.debug("readLetterList ended.");
@@ -924,13 +923,12 @@ public class EzEmailAdminLetterController {
 				if (popUpType != null && popUpType.equals("modify")) {
 					String letterHtml = "";
 					String letterHtmlTemp = "";
-					BufferedReader br = new BufferedReader(new FileReader(file));
-
-					while ((letterHtmlTemp = br.readLine()) != null) {
-						letterHtml += letterHtmlTemp;
+					// CWE-404 보안 취약점 대응
+					try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+						while ((letterHtmlTemp = br.readLine()) != null) {
+							letterHtml += letterHtmlTemp;
+						}
 					}
-
-					br.close();
 					returnJson.put("letterHtml", letterHtml);
 					logger.debug("letterHtml=" + letterHtml);
 				}

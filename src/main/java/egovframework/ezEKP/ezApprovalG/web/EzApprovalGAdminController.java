@@ -1169,14 +1169,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		try {
 			File file = new File(commonUtil.detectPathTraversal(path));
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
-	
-			while ((line = br.readLine()) != null) {
-				result.append(line);
+			// CWE-404 보안 취약점 대응
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+				String line = null;
+		
+				while ((line = br.readLine()) != null) {
+					result.append(line);
+				}				
 			}
-			
-			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2884,10 +2884,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 			
 			File file = new File(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + companyID + commonUtil.separator + "encodeinfo.xml"));
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
-			writer.write(returnString);
-			writer.flush();
-			writer.close();
+			// CWE-404 보안 취약점 대응
+			try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
+				writer.write(returnString);
+				writer.flush();
+			}
 			
 			logger.debug("saveOptionInfo success.");
 

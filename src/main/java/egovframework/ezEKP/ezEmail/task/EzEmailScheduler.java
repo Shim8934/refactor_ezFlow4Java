@@ -612,7 +612,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        		e.printStackTrace();
     		        	} finally {
     						if (fos != null) {
-    							try { fos.close(); } catch (IOException e) {}
+    							try { fos.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
     						}
     					}
     		        	
@@ -671,10 +671,6 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			            secureMessage.setHeader("X-JMocha-Secure-Mail-ID", String.valueOf(secureId));
 			            
 			            message = secureMessage;
-	            		
-			            fis.close();
-				        fis = null;
-			            
 					} else {
 						if (!retryFlag && sentMailStoredInSentBox.equalsIgnoreCase("YES")) {
 							//보낸편지함에 저장

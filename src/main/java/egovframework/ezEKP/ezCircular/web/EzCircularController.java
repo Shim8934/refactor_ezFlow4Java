@@ -2810,6 +2810,7 @@ public class EzCircularController extends EgovFileMngUtil {
 				try {
 					zos.close();
 				} catch (Exception e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 		}

@@ -1297,7 +1297,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                     bRet = true;
                     break;
             }
-        }catch (Exception Ex){ }
+        }catch (Exception e){logger.debug("e.message=" + e.getMessage());}
         return bRet;
     }
 	

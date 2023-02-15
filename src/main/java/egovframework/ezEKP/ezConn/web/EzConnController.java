@@ -296,7 +296,8 @@ public class EzConnController {
 		
 		logger.debug("mailMain ended.");
 		
-		response.sendRedirect(resultPage);
+		// CWE-113 보안 취약점 대응
+		response.sendRedirect(resultPage.replaceAll("\r", "").replaceAll("\n", ""));
 	}
 	
 	private LoginVO getUserInfo(String id, String pw, int tenantId) throws Exception {

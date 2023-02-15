@@ -600,7 +600,8 @@ public class EzStatisticsMailLogController {
 		}
 		
 		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+		// CWE-113 보안 취약점 대응
+		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName.replaceAll("\r", "").replaceAll("\n", "") + ".xls");
 		response.setContentType("application/vnd.ms-excel");
 		
 		workbook.write(response.getOutputStream());

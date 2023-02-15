@@ -77,7 +77,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			try {
 				CheckName.valueOf(list.get(i).getName());
 				afterList.add(list.get(i));
-			} catch (IllegalArgumentException e){}
+			} catch (IllegalArgumentException e){logger.debug("e.message=" + e.getMessage());}
 		}
 
 		logger.debug("getSysParam ended");

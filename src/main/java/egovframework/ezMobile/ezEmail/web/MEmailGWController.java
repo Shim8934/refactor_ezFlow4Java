@@ -3956,7 +3956,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							}
 							
 							if (input != null) {
-								try { input.close(); } catch (IOException e1) {}
+								try { input.close(); } catch (IOException e) {LOGGER.debug("e.message=" + e.getMessage());}
 							}
 						}						
 					}

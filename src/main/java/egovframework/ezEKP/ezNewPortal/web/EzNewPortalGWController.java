@@ -4703,7 +4703,7 @@ public class EzNewPortalGWController {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					unreadMailCount = ia.getUnreadCount(folderName);
 				} catch (Exception e) {
-
+					LOGGER.debug("e.message=" + e.getMessage());
 				} finally {
 					if (ia != null) {
 						ia.close();

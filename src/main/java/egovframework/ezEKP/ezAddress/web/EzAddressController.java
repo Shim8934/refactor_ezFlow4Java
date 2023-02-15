@@ -2157,7 +2157,7 @@ public class EzAddressController{
 			if (csvWriter != null) {
 				try {
 					csvWriter.close();
-				} catch(IOException e) {}
+				} catch(IOException e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (writer != null) {
 				writer.close();
@@ -2287,19 +2287,19 @@ public class EzAddressController{
         	if (csvReader != null) {
         		try {
         			csvReader.close();
-        		} catch (IOException e) {}
+        		} catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
         	}
         	
         	if (reader != null) {
         		try {
         			reader.close();
-        		} catch (IOException e) {}
+        		} catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
         	}
         	
         	if (stream != null) {
         		try {
         			stream.close();
-        		} catch (IOException e) {}
+        		} catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
         	}
 		}
         
@@ -2400,7 +2400,7 @@ public class EzAddressController{
 	        		} else {
 	        			logger.error(i + "th line is null.");
 	        		}
-        		} catch (Exception e1) {}
+        		} catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
         		
         		e.printStackTrace();
         	}
@@ -2482,7 +2482,7 @@ public class EzAddressController{
 			if (csvWriter != null) {
 				try {
 					csvWriter.close();
-				} catch(IOException e) {}
+				} catch(IOException e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (writer != null) {
 				writer.close();

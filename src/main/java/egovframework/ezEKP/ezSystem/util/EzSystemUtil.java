@@ -33,94 +33,106 @@ public class EzSystemUtil {
 		BufferedReader br = null;
 		BufferedReader cbr = null;
 		BufferedReader mbr = null;
-		/**
-		 * 설정 아이피에 따라 로컬 테스트\
-		 * builder -> OS 관련 정보
-		 * cBuilder -> CPU 정보
-		 * mBuilder -> 메모리 정보
-		 */
-		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
-			/* 2020-03-12 홍승비 - 시스템 모니터링 grep 명령어 파라미터 수정 */
-			ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
-			ProcessBuilder cBuilder = new ProcessBuilder("grep", "model\\ name", "/proc/cpuinfo");
-			ProcessBuilder mBuilder = new ProcessBuilder("cat", "/proc/meminfo");
-			
-			Process process = builder.start();				
-			InputStreamReader isr = new InputStreamReader(process.getInputStream());
-			br = new BufferedReader(isr);
-			
-			Process cprocess = cBuilder.start();
-			InputStreamReader cisr = new InputStreamReader(cprocess.getInputStream());
-			cbr = new BufferedReader(cisr);
-			
-			Process mprocess = mBuilder.start();
-			InputStreamReader misr = new InputStreamReader(mprocess.getInputStream());
-			mbr = new BufferedReader(misr);
-			
-		} else {
-			String filePath = "D:/test/unamemain.txt";
-			String cpuFile = "D:/test/cpuinfo.txt";
-			String memFile = "D:/test/meminfo.txt";
-			FileReader fr = new FileReader(filePath);
-			FileReader cf = new FileReader(cpuFile);
-			FileReader mr = new FileReader(memFile);
-			br = new BufferedReader(fr);			
-			cbr	= new BufferedReader(cf);
-			mbr = new BufferedReader(mr);			
-		}
 
-		JSONObject jObj = new JSONObject();
-		JSONArray jArr = new JSONArray();
-		JSONObject tmpObj = new JSONObject();
-		
-		while (true) {
-			String line = br.readLine();
-//			logger.debug("write unameInfo");
-//			logger.debug("<<<!!br.readLine : " + line); 
-			if (line == null) {
-				break;
+		// CWE-404 보안 취약점 대응
+		try {
+			/**
+			 * 설정 아이피에 따라 로컬 테스트\
+			 * builder -> OS 관련 정보
+			 * cBuilder -> CPU 정보
+			 * mBuilder -> 메모리 정보
+			 */
+			if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
+				/* 2020-03-12 홍승비 - 시스템 모니터링 grep 명령어 파라미터 수정 */
+				ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
+				ProcessBuilder cBuilder = new ProcessBuilder("grep", "model\\ name", "/proc/cpuinfo");
+				ProcessBuilder mBuilder = new ProcessBuilder("cat", "/proc/meminfo");
+				
+				Process process = builder.start();				
+				InputStreamReader isr = new InputStreamReader(process.getInputStream());
+				br = new BufferedReader(isr);
+				
+				Process cprocess = cBuilder.start();
+				InputStreamReader cisr = new InputStreamReader(cprocess.getInputStream());
+				cbr = new BufferedReader(cisr);
+				
+				Process mprocess = mBuilder.start();
+				InputStreamReader misr = new InputStreamReader(mprocess.getInputStream());
+				mbr = new BufferedReader(misr);
+				
 			} else {
-				//JSONObject tmpObj = new JSONObject();
-				String[] tmp = line.trim().split("\\s+");
+				String filePath = "D:/test/unamemain.txt";
+				String cpuFile = "D:/test/cpuinfo.txt";
+				String memFile = "D:/test/meminfo.txt";
+				FileReader fr = new FileReader(filePath);
+				FileReader cf = new FileReader(cpuFile);
+				FileReader mr = new FileReader(memFile);
+				br = new BufferedReader(fr);			
+				cbr	= new BufferedReader(cf);
+				mbr = new BufferedReader(mr);			
+			}
+
+			JSONObject jObj = new JSONObject();
+			JSONArray jArr = new JSONArray();
+			JSONObject tmpObj = new JSONObject();
+			
+			while (true) {
+				String line = br.readLine();
+	//			logger.debug("write unameInfo");
+	//			logger.debug("<<<!!br.readLine : " + line); 
+				if (line == null) {
+					break;
+				} else {
+					//JSONObject tmpObj = new JSONObject();
+					String[] tmp = line.trim().split("\\s+");
+					
+					tmpObj.put("hostname", tmp[0]);
+					tmpObj.put("version", tmp[1]);
+					tmpObj.put("os", tmp[2]);
+					
+					//jArr.add(tmpObj);
+				}
+			}
+			
+			for (int i = 0; i < 1; i ++) {
+				String cline = cbr.readLine();
+	//			logger.debug("write cpuinfo");
+	//			logger.debug("<<<!!cbr.readLine : " + cline); 
+				String[] tmp = cline.trim().split(":");
+				tmpObj.put("cpu", tmp[1].trim());		
+			}
+			
+			for (int i = 0; i < 1; i ++) {
+				String mline = mbr.readLine();
+	//			logger.debug("write meminfo");
+	//			logger.debug("<<<!!mbr.readLine : " + mline); 
+				String[] tmp = mline.trim().split("\\s+");
 				
-				tmpObj.put("hostname", tmp[0]);
-				tmpObj.put("version", tmp[1]);
-				tmpObj.put("os", tmp[2]);
-				
-				//jArr.add(tmpObj);
+				tmpObj.put("memory", tmp[1]);
+			}
+			
+			br.close();
+			cbr.close();
+			mbr.close();
+			
+			jArr.add(tmpObj);
+			
+			jObj.put("getSysInfo", jArr);		
+					
+			return jObj.toString();
+		} finally {
+			if (br != null) {
+				br.close();
+			}
+
+			if (cbr != null) {
+				cbr.close();
+			}
+
+			if (mbr != null) {
+				mbr.close();
 			}
 		}
-		
-		for (int i = 0; i < 1; i ++) {
-			String cline = cbr.readLine();
-//			logger.debug("write cpuinfo");
-//			logger.debug("<<<!!cbr.readLine : " + cline); 
-			String[] tmp = cline.trim().split(":");
-			tmpObj.put("cpu", tmp[1].trim());		
-		}
-		
-		for (int i = 0; i < 1; i ++) {
-			String mline = mbr.readLine();
-//			logger.debug("write meminfo");
-//			logger.debug("<<<!!mbr.readLine : " + mline); 
-			String[] tmp = mline.trim().split("\\s+");
-			
-			tmpObj.put("memory", tmp[1]);
-		}
-		
-		br.close();
-		cbr.close();
-		mbr.close();
-		
-		jArr.add(tmpObj);
-		
-		jObj.put("getSysInfo", jArr);		
-		
-//		logger.debug(jObj.toString());	
-		
-//		logger.debug("getSysInfo ended");
-		
-		return jObj.toString();
 	}
 	
 	/**
@@ -132,64 +144,69 @@ public class EzSystemUtil {
 //		logger.debug("getCpuInfo started.");
 
 		BufferedReader br = null;
-		/**
-		 * 설정 아이피에 따라 로컬 테스트
-		 */
-		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
-			ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
-			Process process = builder.start();
-			InputStreamReader isr = new InputStreamReader(process.getInputStream());
-			br = new BufferedReader(isr);			
-		} else {
-			String filePath = "D:/test/iostat.txt";
-			FileReader fr = new FileReader(filePath);
-			br = new BufferedReader(fr);			
-		}
-		
-		JSONObject jObj = new JSONObject();
-		JSONArray jArr = new JSONArray();
-		int cnt = 0;
-		int cpuCnt = 0;
-		
-		while (true) {
-		String line = br.readLine();
-		if (line == null) {
-				break;
-			} else {                          
-				JSONObject tmpObj = new JSONObject();
-				
-				if (line.contains("avg")) {
-					cpuCnt++;
-				}
-				
-				if ( cpuCnt == 2 ) {	
-					if ( cnt == 1 ) {
-						logger.debug(line);
-						String[] tmp = line.trim().split("\\s+");
-//						logger.debug("tmp[0] : " + tmp[0]);
-//						logger.debug("tmp[2] : " + tmp[2]);
-						double usedPer = Double.parseDouble(tmp[0]) + Double.parseDouble(tmp[2]);
-						tmpObj.put("user", tmp[0]);
-						tmpObj.put("system", tmp[2]);
-						tmpObj.put("iowait", tmp[3]);
-						tmpObj.put("idle", tmp[5]);
-						tmpObj.put("totalUsedPer", usedPer);        // 총사용량(%)
-						
-						jArr.add(tmpObj);
-					}
-					cnt ++;
-				}
-			}
-		}		
 
-		br.close();
-		
-		jObj.put("getCpuInfo", jArr);		
-		
-//		logger.debug(jObj.toString());
-//		logger.debug("getCpuInfo ended.");
-		
-		return jObj.toString();
+		// CWE-404 보안 취약점 대응
+		try {
+			/**
+			 * 설정 아이피에 따라 로컬 테스트
+			 */
+			if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
+				ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
+				Process process = builder.start();
+				InputStreamReader isr = new InputStreamReader(process.getInputStream());
+				br = new BufferedReader(isr);			
+			} else {
+				String filePath = "D:/test/iostat.txt";
+				FileReader fr = new FileReader(filePath);
+				br = new BufferedReader(fr);			
+			}
+			
+			JSONObject jObj = new JSONObject();
+			JSONArray jArr = new JSONArray();
+			int cnt = 0;
+			int cpuCnt = 0;
+			
+			while (true) {
+			String line = br.readLine();
+			if (line == null) {
+					break;
+				} else {                          
+					JSONObject tmpObj = new JSONObject();
+					
+					if (line.contains("avg")) {
+						cpuCnt++;
+					}
+					
+					if ( cpuCnt == 2 ) {	
+						if ( cnt == 1 ) {
+							logger.debug(line);
+							String[] tmp = line.trim().split("\\s+");
+	//						logger.debug("tmp[0] : " + tmp[0]);
+	//						logger.debug("tmp[2] : " + tmp[2]);
+							double usedPer = Double.parseDouble(tmp[0]) + Double.parseDouble(tmp[2]);
+							tmpObj.put("user", tmp[0]);
+							tmpObj.put("system", tmp[2]);
+							tmpObj.put("iowait", tmp[3]);
+							tmpObj.put("idle", tmp[5]);
+							tmpObj.put("totalUsedPer", usedPer);        // 총사용량(%)
+							
+							jArr.add(tmpObj);
+						}
+						cnt ++;
+					}
+				}
+			}		
+
+			br.close();
+			
+			jObj.put("getCpuInfo", jArr);		
+					
+			return jObj.toString();
+		} finally {
+			if (br != null) {
+				br.close();
+			}
+		}
 	}	
 
 	/**
@@ -201,50 +218,53 @@ public class EzSystemUtil {
 //		logger.debug("getMemoryInfo started." );
 
 		BufferedReader br = null;
-		/**
-		 * 설정 아이피에 따라 로컬 테스트
-		 */
-		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
-			ProcessBuilder builder = new ProcessBuilder("cat", "/proc/meminfo");
-			Process process = builder.start();
-			InputStreamReader isr = new InputStreamReader(process.getInputStream());
-			br = new BufferedReader(isr);			
-		} else {
-			String filePath = "D:/test/meminfo.txt";
-			FileReader fr = new FileReader(filePath);
-			br = new BufferedReader(fr);			
-		}				
-		
-		JSONObject jObj = new JSONObject();
-		JSONArray jArr = new JSONArray();
-		int cnt = 0;
-		String result = "";
 
-		while (true) {
-			String line = br.readLine();
-		
-			if (line == null) {
-				break;
-			} else if (cnt < 5) {
-				JSONObject tmpObj = new JSONObject();
-				String[] tmp = line.trim().split("\\s+");
-				
-				tmpObj.put(tmp[0].toLowerCase().replaceAll(":", ""), tmp[1]);
+		// CWE-404 보안 취약점 대응
+		try {
+			/**
+			 * 설정 아이피에 따라 로컬 테스트
+			 */
+			if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
+				ProcessBuilder builder = new ProcessBuilder("cat", "/proc/meminfo");
+				Process process = builder.start();
+				InputStreamReader isr = new InputStreamReader(process.getInputStream());
+				br = new BufferedReader(isr);			
+			} else {
+				String filePath = "D:/test/meminfo.txt";
+				FileReader fr = new FileReader(filePath);
+				br = new BufferedReader(fr);			
+			}				
 			
-				jArr.add(tmpObj);
-			}
-			cnt ++;
-		}
+			JSONObject jObj = new JSONObject();
+			JSONArray jArr = new JSONArray();
+			int cnt = 0;
+			String result = "";
 
-		br.close();
-		
-		jObj.put("getMemoryInfo", jArr);	
-		result = jObj.toString().replaceAll("\\},\\{", ",");
-		
-//		logger.debug(result);
-//		logger.debug("getMemoryInfo ended.");
-		
-		return result;
+			while (true) {
+				String line = br.readLine();
+			
+				if (line == null) {
+					break;
+				} else if (cnt < 5) {
+					JSONObject tmpObj = new JSONObject();
+					String[] tmp = line.trim().split("\\s+");
+					
+					tmpObj.put(tmp[0].toLowerCase().replaceAll(":", ""), tmp[1]);
+				
+					jArr.add(tmpObj);
+				}
+				cnt ++;
+			}
+			
+			jObj.put("getMemoryInfo", jArr);	
+			result = jObj.toString().replaceAll("\\},\\{", ",");
+					
+			return result;
+		} finally {
+			if (br != null) {
+				br.close();
+			}
+		}
 	}
 	
 	/**
@@ -256,53 +276,57 @@ public class EzSystemUtil {
 //		logger.debug("getFileSysInfo started.");
 	
 		BufferedReader br = null;
-		/**
-		 * 설정 아이피에 따라 로컬 테스트
-		 */
-		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
-			ProcessBuilder builder = new ProcessBuilder("df", "-h");
-			Process process = builder.start();
-			InputStreamReader isr = new InputStreamReader(process.getInputStream());
-			br = new BufferedReader(isr);			
-		} else {
-			String filePath = "D:/test/filesys.txt";
-			FileReader fr = new FileReader(filePath);
-			br = new BufferedReader(fr);			
-		}	
-		
-		JSONObject jObj = new JSONObject();
-		JSONArray jArr = new JSONArray();
-		int cnt = 0;
 
-		while (true) {
-			String line = br.readLine();
+		// CWE-404 보안 취약점 대응
+		try {
+			/**
+			 * 설정 아이피에 따라 로컬 테스트
+			 */
+			if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
+				ProcessBuilder builder = new ProcessBuilder("df", "-h");
+				Process process = builder.start();
+				InputStreamReader isr = new InputStreamReader(process.getInputStream());
+				br = new BufferedReader(isr);			
+			} else {
+				String filePath = "D:/test/filesys.txt";
+				FileReader fr = new FileReader(filePath);
+				br = new BufferedReader(fr);			
+			}	
 			
-			if (line == null){
-				break;
-			} else if (cnt > 0){
-				JSONObject tmpObj = new JSONObject();
-				String[] tmp = line.trim().split("\\s+");
+			JSONObject jObj = new JSONObject();
+			JSONArray jArr = new JSONArray();
+			int cnt = 0;
+
+			while (true) {
+				String line = br.readLine();
 				
-				if (tmp[0].contains("/dev")){
-					tmpObj.put("diskName", tmp[0]);
-					tmpObj.put("total", tmp[1]);
-					tmpObj.put("used", tmp[2]);
-					tmpObj.put("avail", tmp[3]);
-					tmpObj.put("usedPer", tmp[4]);
+				if (line == null){
+					break;
+				} else if (cnt > 0){
+					JSONObject tmpObj = new JSONObject();
+					String[] tmp = line.trim().split("\\s+");
 					
-					jArr.add(tmpObj);
+					if (tmp[0].contains("/dev")){
+						tmpObj.put("diskName", tmp[0]);
+						tmpObj.put("total", tmp[1]);
+						tmpObj.put("used", tmp[2]);
+						tmpObj.put("avail", tmp[3]);
+						tmpObj.put("usedPer", tmp[4]);
+						
+						jArr.add(tmpObj);
+					}
 				}
+				cnt ++;
 			}
-			cnt ++;
+			
+			jObj.put("getFileSysInfo", jArr);	
+					
+			return jObj.toString();
+		} finally {
+			if (br != null) {
+				br.close();
+			}
 		}
-		br.close();
-		
-		jObj.put("getFileSysInfo", jArr);	
-		
-//		logger.debug(jObj.toString());
-//		logger.debug("getFileSysInfo ended.");
-		
-		return jObj.toString();
 	}
 	
 	/**
@@ -314,77 +338,81 @@ public class EzSystemUtil {
 //		logger.debug("getDiskioInfo started.");
 		
 		BufferedReader br = null;
-		/**
-		 * 설정 아이피에 따라 로컬 테스트
-		 */
-		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
-			ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
-			Process process = builder.start();
-			InputStreamReader isr = new InputStreamReader(process.getInputStream());
-			br = new BufferedReader(isr);			
-		} else {
-			String filePath = "D:/test/iostat.txt";
-			FileReader fr = new FileReader(filePath);
-			br = new BufferedReader(fr);			
-		}	
 		
-		DecimalFormat f = new DecimalFormat("#.##");
-		JSONObject jObj = new JSONObject();
-		JSONArray jArr = new JSONArray();
-		int cnt = 0;
-		int cpuCnt = 0;
-		double diskioMax = 0;
-		String result ="";
+		// CWE-404 보안 취약점 대응
+		try {
+			/**
+			 * 설정 아이피에 따라 로컬 테스트
+			 */
+			if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
+				ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
+				Process process = builder.start();
+				InputStreamReader isr = new InputStreamReader(process.getInputStream());
+				br = new BufferedReader(isr);			
+			} else {
+				String filePath = "D:/test/iostat.txt";
+				FileReader fr = new FileReader(filePath);
+				br = new BufferedReader(fr);			
+			}	
+			
+			DecimalFormat f = new DecimalFormat("#.##");
+			JSONObject jObj = new JSONObject();
+			JSONArray jArr = new JSONArray();
+			int cnt = 0;
+			int cpuCnt = 0;
+			double diskioMax = 0;
+			String result ="";
 
-		while (true) {
-			String line = br.readLine();
-			if (line == null) {
-					break;
-			} else {                          
-				JSONObject tmpObj = new JSONObject();					
-				if (line.contains("avg")) {
-					cpuCnt++;
-				}					
-				if ( cpuCnt == 2 ) {	
-					if ( cnt > 3 ) {
-//						logger.debug(line);
-						String[] tmp = line.trim().split("\\s+");
-						if (!tmp[0].equalsIgnoreCase("")) {        // 마지막 줄은 공백이라 불필요
-							double tmpVal = 0;
-							double readVal = Double.parseDouble(tmp[2]) / 1024;
-							double writeVal = Double.parseDouble(tmp[3]) / 1024;
-//							logger.debug("readVal : " + readVal);
-//							logger.debug("writeVal : " + writeVal);
-							if ( readVal >= writeVal ) {
-								tmpVal = readVal;
-							} else {
-								tmpVal = writeVal;
+			while (true) {
+				String line = br.readLine();
+				if (line == null) {
+						break;
+				} else {                          
+					JSONObject tmpObj = new JSONObject();					
+					if (line.contains("avg")) {
+						cpuCnt++;
+					}					
+					if ( cpuCnt == 2 ) {	
+						if ( cnt > 3 ) {
+	//						logger.debug(line);
+							String[] tmp = line.trim().split("\\s+");
+							if (!tmp[0].equalsIgnoreCase("")) {        // 마지막 줄은 공백이라 불필요
+								double tmpVal = 0;
+								double readVal = Double.parseDouble(tmp[2]) / 1024;
+								double writeVal = Double.parseDouble(tmp[3]) / 1024;
+	//							logger.debug("readVal : " + readVal);
+	//							logger.debug("writeVal : " + writeVal);
+								if ( readVal >= writeVal ) {
+									tmpVal = readVal;
+								} else {
+									tmpVal = writeVal;
+								}
+								if (tmpVal > diskioMax) {
+									diskioMax = tmpVal;
+								}
+	//							logger.debug("diskioMax : " + diskioMax);
+								//tmpObj.put("read_" + tmp[0], tmp[2]);
+								//tmpObj.put("write_"+ tmp[0], tmp[3]);
+								tmpObj.put("read_" + tmp[0], f.format(readVal));
+								tmpObj.put("write_"+ tmp[0], f.format(writeVal));							
+								jArr.add(tmpObj);							
 							}
-							if (tmpVal > diskioMax) {
-								diskioMax = tmpVal;
-							}
-//							logger.debug("diskioMax : " + diskioMax);
-							//tmpObj.put("read_" + tmp[0], tmp[2]);
-							//tmpObj.put("write_"+ tmp[0], tmp[3]);
-							tmpObj.put("read_" + tmp[0], f.format(readVal));
-							tmpObj.put("write_"+ tmp[0], f.format(writeVal));							
-							jArr.add(tmpObj);							
 						}
+						cnt ++;
 					}
-					cnt ++;
 				}
+			}			
+			
+			jObj.put("getDiskioInfo", jArr);	
+			jObj.put("diskioMax", diskioMax);
+			result = jObj.toString().replaceAll("\\},\\{", ",");
+					
+			return result;
+		} finally {
+			if (br != null) {
+				br.close();
 			}
-		}			
-		br.close();
-		
-		jObj.put("getDiskioInfo", jArr);	
-		jObj.put("diskioMax", diskioMax);
-		result = jObj.toString().replaceAll("\\},\\{", ",");
-		
-//		logger.debug(result);		
-//		logger.debug("getDiskioInfo ended.");
-		
-		return result;
+		}
 	}
 	
 	/**
@@ -396,56 +424,59 @@ public class EzSystemUtil {
 //		logger.debug("getNetDataInfo started.");
 		
 		BufferedReader br = null;
-		/**
-		 * 설정 아이피에 따라 로컬 테스트
-		 */
-		if (!ip.equalsIgnoreCase("192.168.56.1") && !ip.equalsIgnoreCase("10.0.120.142")) {
-			ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
-			Process process = builder.start();
-			InputStreamReader isr = new InputStreamReader(process.getInputStream());
-			br = new BufferedReader(isr);			
-		} else {
-			String filePath = "D:/test/netInter.txt";
-			FileReader fr = new FileReader(filePath);
-			br = new BufferedReader(fr);			
-		}	
-		
-		JSONObject jObj = new JSONObject();
-		JSONArray jArr = new JSONArray();
-		int cnt = 0;		
-		
-		while (true) {
-			String line = br.readLine();
+
+		// CWE-404 보안 취약점 대응
+		try {
+			/**
+			 * 설정 아이피에 따라 로컬 테스트
+			 */
+			if (!ip.equalsIgnoreCase("192.168.56.1") && !ip.equalsIgnoreCase("10.0.120.142")) {
+				ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
+				Process process = builder.start();
+				InputStreamReader isr = new InputStreamReader(process.getInputStream());
+				br = new BufferedReader(isr);			
+			} else {
+				String filePath = "D:/test/netInter.txt";
+				FileReader fr = new FileReader(filePath);
+				br = new BufferedReader(fr);			
+			}	
 			
-			if (line == null) {
-				break;
-			} else if (cnt > 1) {
-				JSONObject tmpObj = new JSONObject();
-				String[] tmp = line.trim().split("\\s+");
+			JSONObject jObj = new JSONObject();
+			JSONArray jArr = new JSONArray();
+			int cnt = 0;		
+			
+			while (true) {
+				String line = br.readLine();
 				
-				// 1. 마지막 라인 제거
-				// 2. local 제거
-				// 3. 사용하지 않는 인터페이스 제거
-				if (!tmp[0].equalsIgnoreCase("") 
-						&& !tmp[0].equalsIgnoreCase("lo:") 
-						&& !tmp[1].equalsIgnoreCase("0")) {
-					tmpObj.put("interface", tmp[0].substring(0, tmp[0].length()-1));
-					tmpObj.put("rBytes", tmp[1]);
-					tmpObj.put("tBytes", tmp[9]);
+				if (line == null) {
+					break;
+				} else if (cnt > 1) {
+					JSONObject tmpObj = new JSONObject();
+					String[] tmp = line.trim().split("\\s+");
 					
-					jArr.add(tmpObj);
+					// 1. 마지막 라인 제거
+					// 2. local 제거
+					// 3. 사용하지 않는 인터페이스 제거
+					if (!tmp[0].equalsIgnoreCase("") 
+							&& !tmp[0].equalsIgnoreCase("lo:") 
+							&& !tmp[1].equalsIgnoreCase("0")) {
+						tmpObj.put("interface", tmp[0].substring(0, tmp[0].length()-1));
+						tmpObj.put("rBytes", tmp[1]);
+						tmpObj.put("tBytes", tmp[9]);
+						
+						jArr.add(tmpObj);
+					}
 				}
+				cnt ++;
 			}
-			cnt ++;
+		
+			jObj.put("getNetDataInfo", jArr);
+					
+			return jObj.toString();
+		} finally {
+			if (br != null) {
+				br.close();
+			}
 		}
-		br.close();
-		
-		jObj.put("getNetDataInfo", jArr);
-		
-//		logger.debug(jObj.toString());
-		
-//		logger.debug("getNetDataInfo ended.");
-		
-		return jObj.toString();
 	}
 }

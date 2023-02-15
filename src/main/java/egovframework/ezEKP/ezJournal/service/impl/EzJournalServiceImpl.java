@@ -773,12 +773,12 @@ public class EzJournalServiceImpl implements EzJournalService {
 						destFilePath = commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + reuseFileName);
 						
 						FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
-					} catch (Exception e) { }
+					} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 				}
 			
 				try {
 					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
-				} catch (FileNotFoundException e) { }
+				} catch (FileNotFoundException e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			
 		}
@@ -1009,7 +1009,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				
 				try {
 					fileMove(beforeFilePath, afterFilePath);	// Temp 폴더에서 첨부파일 이동
-				} catch (FileNotFoundException e) { }
+				} catch (FileNotFoundException e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		

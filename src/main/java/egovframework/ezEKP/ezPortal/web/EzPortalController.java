@@ -235,6 +235,9 @@ public class EzPortalController extends EgovFileMngUtil {
 			skinNum = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("skinNum")));
 		}
 		
+		// CWE-113 보안 취약점 대응
+		skinNum = skinNum.replaceAll("\r", "").replaceAll("\n", "");
+
 		if (userInfo.getLang().equals("1")) {
 			//currSkin = skinNum;
 			Cookie skinCookie = new Cookie("skinNum", skinNum);
@@ -621,17 +624,9 @@ public class EzPortalController extends EgovFileMngUtil {
 				
 		    	Cookie cookieID = new Cookie("loginCookie", loginCookie);
 		    	cookieID.setPath("/");
-		    	response.addCookie(cookieID);
-		    	
-		    	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
-		    	
-		    	if (!("NO".equalsIgnoreCase(useSSOCookie) || "".equals(useSSOCookie))) {
-		    		Cookie ssoLoginCookie = new Cookie("loginCookieSSO", loginCookie);
-		    		ssoLoginCookie.setPath("/");
-		    		ssoLoginCookie.setDomain(useSSOCookie);
-		    		response.addCookie(ssoLoginCookie);
-		    	}
+		    	response.addCookie(cookieID);		    	
 			}catch(Exception e){
+				logger.debug("e.message=" + e.getMessage());
 			}
 			logger.debug("changeCompany end");
 			return loginCookie;
@@ -2422,6 +2417,9 @@ public class EzPortalController extends EgovFileMngUtil {
 			skinNum = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("skinNum")));
 		}
 		
+		// CWE-113 보안 취약점 대응
+		skinNum = skinNum.replaceAll("\r", "").replaceAll("\n", "");
+
 		Cookie skinCookie = null;
 		
 		switch (userInfo.getLang()) {
@@ -3658,14 +3656,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		path = realPath + commonUtil.separator + path;
 		try {
 			File file = new File(path);
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
-	
-			while ((line = br.readLine()) != null) {
-				result.append(line);
+			// CWE-404 보안 취약점 대응
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+				String line = null;
+		
+				while ((line = br.readLine()) != null) {
+					result.append(line);
+				}
 			}
-			
-			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

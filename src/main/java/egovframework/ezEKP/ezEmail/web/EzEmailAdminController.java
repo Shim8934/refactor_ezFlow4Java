@@ -2428,7 +2428,7 @@ public class EzEmailAdminController {
 			returnJsonArr = ezEmailService.selectAllSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()));
 			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		logger.debug("readSignList ended.");
@@ -2457,7 +2457,7 @@ public class EzEmailAdminController {
 			returnJsonArr = ezEmailService.selectSearchSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()), search, userInfo.getPrimary());
 			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		logger.debug("searchSignList ended.");
@@ -2529,7 +2529,7 @@ public class EzEmailAdminController {
 			}
 			
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		logger.debug("signaturePreview ended.");
@@ -2574,7 +2574,7 @@ public class EzEmailAdminController {
 				displayname2 = obj.get("displayname2").toString();
 				
 			} catch (Exception e) {
-				// e.printStackTrace();
+				logger.debug("e.message=" + e.getMessage());
 			}
 		} 
 		

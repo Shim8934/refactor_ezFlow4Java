@@ -2352,12 +2352,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String FileText = "";
 		StringBuilder result = new StringBuilder();
 
-		BufferedReader br = new BufferedReader(new FileReader(file));
-
-		while ((FileText = br.readLine()) != null) {
-			result.append(FileText);
+		// CWE-404 보안 취약점 대응
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			while ((FileText = br.readLine()) != null) {
+				result.append(FileText);
+			}
 		}
-		br.close();
 		logger.debug("getencodeinfoxXML ended");
 		return result.toString();
 	}
@@ -2447,11 +2447,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			saveXML.toString().getChars(0, saveXML.toString().length(), intxt, 0); // 입력하고자 하는 문자열을 문자 배열 intxt에 저장
 
 			File file = new File(commonUtil.detectPathTraversal(realPath + savePath));
-			FileOutputStream fop = new FileOutputStream(file);
-			// get the content in bytes
-			fop.write(saveXML.toString().getBytes("euc-kr"));
-			fop.flush();
-			fop.close();
+			// CWE-404 보안 취약점 대응
+			try (FileOutputStream fop = new FileOutputStream(file)) {
+				// get the content in bytes
+				fop.write(saveXML.toString().getBytes("euc-kr"));
+				fop.flush();
+			}
 
 			saveFlag = true;
 		} catch (Exception e) {
@@ -2585,7 +2586,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (fop != null) {
-				try { fop.close(); } catch (Exception e) { }
+				try { fop.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		

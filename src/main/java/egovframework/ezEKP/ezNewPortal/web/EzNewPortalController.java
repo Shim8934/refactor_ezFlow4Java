@@ -808,14 +808,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			path = commonUtil.detectPathTraversal(path);
 			
 			File file = new File(path);
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
-	
-			while ((line = br.readLine()) != null) {
-				result.append(line);
+			// CWE-404 보안 취약점 대응
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+				String line = null;
+		
+				while ((line = br.readLine()) != null) {
+					result.append(line);
+				}
 			}
-			
-			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

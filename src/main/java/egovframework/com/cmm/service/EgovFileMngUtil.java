@@ -671,6 +671,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         		try {
         			os.close();
         		} catch(Exception e) {
+					LOGGER.debug("e.message=" + e.getMessage());
         		}
         	}
         	
@@ -678,6 +679,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         		try {
         			bis.close();
         		} catch(Exception e) {
+					LOGGER.debug("e.message=" + e.getMessage());
         		}
         	}
         }
@@ -761,12 +763,9 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 					}
 
 					zos.closeEntry();
-					fis.close();
 				}
 			}
-			
-			fis = null;
-			
+						
 			zos.close();
 			zos = null;
 		} catch (Exception e) {
@@ -831,9 +830,6 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			while ((strLine = br.readLine()) != null) {
 				sb.append(strLine + "\n");
 			}
-			
-			br.close();
-			br = null;
 		} finally {
 			if (br != null) {
 				try {br.close();} catch(Exception e) {}

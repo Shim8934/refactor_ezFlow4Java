@@ -96,7 +96,7 @@ public class EzUCMessengerController {
 			e.printStackTrace();
 		} finally {
 			if (writer != null) {
-				try { writer.close(); } catch(Exception e) {}
+				try { writer.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		

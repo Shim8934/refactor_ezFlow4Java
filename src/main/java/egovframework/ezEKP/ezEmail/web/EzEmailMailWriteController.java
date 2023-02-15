@@ -2008,24 +2008,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				BufferedOutputStream bos = null;
                 
 				try {
-                	// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
-					bis = new BufferedInputStream(fis);
-					
-					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
-					bos = new BufferedOutputStream(fos);
-					
-					int data = 0;
-					byte[] buffer = new byte[BUFF_SIZE];
-					
-					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
-						bos.write(buffer, 0, data);
+					// CWE-404 보안 취약점 대응
+					try {
+						// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+						fis = new FileInputStream(filePath[i]);
+						bis = new BufferedInputStream(fis);
+						
+						fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+						bos = new BufferedOutputStream(fos);
+						
+						int data = 0;
+						byte[] buffer = new byte[BUFF_SIZE];
+						
+						while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+							bos.write(buffer, 0, data);
+						}
+					} finally {					
+						bos.close(); bos = null;
+						bis.close(); bis = null;
+						fos.close(); fos = null;
+						fis.close(); fis = null;
 					}
-					
-					bos.close(); bos = null;
-					bis.close(); bis = null;
-					fos.close(); fos = null;
-					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
                 	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
@@ -2065,16 +2068,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 	e.printStackTrace();
                 } finally {
                 	if (bos != null) {
-                		try { bos.close(); } catch(Exception e) {}
+                		try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
                 	}
                 	if (bis != null) {
-                		try { bis.close(); } catch(Exception e) {}
+                		try { bis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
                 	}
                 	if (fos != null) {
-                		try { fos.close(); } catch(Exception e) {}
+                		try { fos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
                 	}
                 	if (fis != null) {
-                		try { fis.close(); } catch(Exception e) {}
+                		try { fis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
                 	}
                 }                
             }            
@@ -2142,16 +2145,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					e.printStackTrace();
 				} finally {
 					if (bos != null) {
-                		try { bos.close(); } catch(Exception e) {}
+                		try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
                 	}
                 	if (bis != null) {
-                		try { bis.close(); } catch(Exception e) {}
+                		try { bis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
                 	}
 					if (fos != null) {
-						try { fos.close(); } catch(Exception e){}
+						try { fos.close(); } catch(Exception e){logger.debug("e.message=" + e.getMessage());}
 					}
 					if (fis != null) {
-						try { fis.close(); } catch(Exception e){}
+						try { fis.close(); } catch(Exception e){logger.debug("e.message=" + e.getMessage());}
 					}
 				}
 			}			
@@ -2191,7 +2194,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     		e.printStackTrace();
     	} finally {
     		if (outWrite != null) {
-    			try { outWrite.close(); } catch (Exception e) {}
+    			try { outWrite.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
     		}
     	}
 		
@@ -2383,24 +2386,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				BufferedOutputStream bos = null;
 				
 				try {
-					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
-					bis = new BufferedInputStream(fis);
-					
-					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
-					bos = new BufferedOutputStream(fos);
-					
-					int data = 0;
-					byte[] buffer = new byte[BUFF_SIZE];
-					
-					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
-						bos.write(buffer, 0, data);
+					// CWE-404 보안 취약점 대응
+					try {
+						// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+						fis = new FileInputStream(filePath[i]);
+						bis = new BufferedInputStream(fis);
+						
+						fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+						bos = new BufferedOutputStream(fos);
+						
+						int data = 0;
+						byte[] buffer = new byte[BUFF_SIZE];
+						
+						while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+							bos.write(buffer, 0, data);
+						}
+					} finally {					
+						bos.close(); bos = null;
+						bis.close(); bis = null;
+						fos.close(); fos = null;
+						fis.close(); fis = null;
 					}
-					
-					bos.close(); bos = null;
-					bis.close(); bis = null;
-					fos.close(); fos = null;
-					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
 					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
@@ -2440,16 +2446,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					e.printStackTrace();
 				} finally {
 					if (bos != null) {
-						try { bos.close(); } catch(Exception e) {}
+						try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (bis != null) {
-						try { bis.close(); } catch(Exception e) {}
+						try { bis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (fos != null) {
-						try { fos.close(); } catch(Exception e) {}
+						try { fos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (fis != null) {
-						try { fis.close(); } catch(Exception e) {}
+						try { fis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 				}                
 			}            
@@ -2518,16 +2524,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					e.printStackTrace();
 				} finally {
 					if (bos != null) {
-						try { bos.close(); } catch(Exception e) {}
+						try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (bis != null) {
-						try { bis.close(); } catch(Exception e) {}
+						try { bis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (fos != null) {
-						try { fos.close(); } catch(Exception e){}
+						try { fos.close(); } catch(Exception e){logger.debug("e.message=" + e.getMessage());}
 					}
 					if (fis != null) {
-						try { fis.close(); } catch(Exception e){}
+						try { fis.close(); } catch(Exception e){logger.debug("e.message=" + e.getMessage());}
 					}
 				}
 			}			
@@ -2567,7 +2573,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (outWrite != null) {
-				try { outWrite.close(); } catch (Exception e) {}
+				try { outWrite.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		
@@ -2760,24 +2766,27 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				BufferedOutputStream bos = null;
 				
 				try {
-					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
-					bis = new BufferedInputStream(fis);
-					
-					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
-					bos = new BufferedOutputStream(fos);
-					
-					int data = 0;
-					byte[] buffer = new byte[BUFF_SIZE];
-					
-					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
-						bos.write(buffer, 0, data);
+					// CWE-404 보안 취약점 대응
+					try {
+						// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+						fis = new FileInputStream(filePath[i]);
+						bis = new BufferedInputStream(fis);
+						
+						fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+						bos = new BufferedOutputStream(fos);
+						
+						int data = 0;
+						byte[] buffer = new byte[BUFF_SIZE];
+						
+						while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+							bos.write(buffer, 0, data);
+						}
+					} finally {					
+						bos.close(); bos = null;
+						bis.close(); bis = null;
+						fos.close(); fos = null;
+						fis.close(); fis = null;
 					}
-					
-					bos.close(); bos = null;
-					bis.close(); bis = null;
-					fos.close(); fos = null;
-					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
 					String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
@@ -2817,16 +2826,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					e.printStackTrace();
 				} finally {
 					if (bos != null) {
-						try { bos.close(); } catch(Exception e) {}
+						try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (bis != null) {
-						try { bis.close(); } catch(Exception e) {}
+						try { bis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (fos != null) {
-						try { fos.close(); } catch(Exception e) {}
+						try { fos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (fis != null) {
-						try { fis.close(); } catch(Exception e) {}
+						try { fis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 				}                
 			}            
@@ -2895,16 +2904,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					e.printStackTrace();
 				} finally {
 					if (bos != null) {
-						try { bos.close(); } catch(Exception e) {}
+						try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (bis != null) {
-						try { bis.close(); } catch(Exception e) {}
+						try { bis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
 					if (fos != null) {
-						try { fos.close(); } catch(Exception e){}
+						try { fos.close(); } catch(Exception e){logger.debug("e.message=" + e.getMessage());}
 					}
 					if (fis != null) {
-						try { fis.close(); } catch(Exception e){}
+						try { fis.close(); } catch(Exception e){logger.debug("e.message=" + e.getMessage());}
 					}
 				}
 			}			
@@ -2944,7 +2953,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (outWrite != null) {
-				try { outWrite.close(); } catch (Exception e) {}
+				try { outWrite.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		
@@ -3080,13 +3089,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                     if (bos != null) {
                         try {
                             bos.close();
-                        } catch (Exception ignore) {
+                        } catch (Exception e) {
+							logger.debug("e.message=" + e.getMessage());
                         }
                     }
                     if (stream != null) {
                         try {
                             stream.close();
-                        } catch (Exception ignore) {
+                        } catch (Exception e) {
+							logger.debug("e.message=" + e.getMessage());
                         }
                     }
                 }
@@ -6665,7 +6676,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			model.addAttribute("susinList", jsonList);
 		} catch (Exception e) {
-
+			logger.debug("e.message=" + e.getMessage());
 		}
 
 		logger.debug("autoCompleteList ended.");

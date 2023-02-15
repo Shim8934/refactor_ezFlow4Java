@@ -210,7 +210,7 @@ function new_mail_onclick(fromE) {
 	}
 	
 	var pheight = window.screen.availHeight;
-    var conHeight = pheight * 0.8;
+    var conHeight = Math.max(pheight * 0.8, 840);
     var pwidth = window.screen.availWidth;
     var conWidth = pwidth * 0.8;
     if (conWidth > 890)
@@ -236,7 +236,7 @@ function new_mail_onclick(fromE) {
 }
 function ReSend(pURL, pEmail) {
     var pheight = window.screen.availHeight;
-    var conHeight = pheight * 0.8;
+    var conHeight = Math.max(pheight * 0.8, 840);
     var pwidth = window.screen.availWidth;
     var conWidth = pwidth * 0.8;
     if (conWidth > 890)
@@ -282,7 +282,7 @@ function reply_mail_onclick() {
         	pSelectItem = currentFixingId;
         }
         var pheight = window.screen.availHeight;
-        var conHeight = pheight * 0.8;
+        var conHeight = Math.max(pheight * 0.8, 840);
         var pwidth = window.screen.availWidth;
         var conWidth = pwidth * 0.8;
         if (conWidth > 890)
@@ -326,7 +326,7 @@ function all_reply_mail_onclick() {
         	pSelectItem = currentFixingId;
         }
         var pheight = window.screen.availHeight;
-        var conHeight = pheight * 0.8;
+        var conHeight = Math.max(pheight * 0.8, 840);
         var pwidth = window.screen.availWidth;
         var conWidth = pwidth * 0.8;
         if (conWidth > 890)
@@ -394,7 +394,7 @@ function transmission_mail_onclick() {
         	pSelectItem = currentFixingId;
         }
         var pheight = window.screen.availHeight;
-        var conHeight = pheight * 0.8;
+        var conHeight = Math.max(pheight * 0.8, 840);
         var pwidth = window.screen.availWidth;
         var conWidth = pwidth * 0.8;
         if (conWidth > 890)
