@@ -854,8 +854,11 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 					contentBuilder.append("</td></tr></table>");
 				}
 				
-				ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
-
+				/* 2023-02-15 홍승비 - 모바일에서 회수 시, 회수알림메일의 대상자가 존재하는 경우에만 메일을 발송하도록 수정 */
+				if (toList.size() > 0) {
+					ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
+				}
+				
 				break;
 
 			default:
