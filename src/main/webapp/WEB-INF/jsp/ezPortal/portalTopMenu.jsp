@@ -1417,7 +1417,7 @@
 			// 직원조회
 			function Emp_Search() {
 			    if (document.getElementById('input_search').value != "") {
-			        var wHeight = 560;
+			        var wHeight = 670;
 			        var wWidth = 750;
 			        var wVertical = Math.floor(screen.height / 2) - (wHeight / 2);
 			        var wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
@@ -1486,14 +1486,14 @@
 						}
 						
 						if (url == "/ezPersonal/personSearch.do") {
-							option = GetOpenWindowfeature(750, 550);
+							option = GetOpenWindowfeature(750, 670);
 						}
 						
 						window.open(url, location, option);
 					});
 				} else {
 					if (url == "/ezPersonal/personSearch.do") {
-						option = GetOpenWindowfeature(750, 550);
+						option = GetOpenWindowfeature(750, 670);
 					}
 					
 					window.open(url, location, option);
