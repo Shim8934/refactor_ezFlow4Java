@@ -700,18 +700,30 @@
 					var month = newDate.getMonth() + 1;
 					var day = newDate.getDate();
 					
-					if(month < 10) {
+					if (month < 10) {
 						month = "0" + month;
 					}
 					
-					if(day < 10) {
+					if (day < 10) {
 						day = "0" + day;
 					}
 					
-					var curDate = year + '-' + month + '-' + day; 
-
-					if (date <= curDate) {
-						DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date + "&startDate=" + startdate);
+					var curDate = year + '-' + month + '-' + day;
+					var pStartdate = "";
+					
+					/* 2023-02-16 홍승비 - 진행상태 변경 > 시작일과 오늘 날짜의 비교 시 갱신된 시작일(또는 선택된 반복일정의 날짜)을 사용하도록 수정 */
+					// 반복일정이 아닌 개인(1) / 지시(2) / 협조(3) 일정
+					if (tasktype == 1 || tasktype == 2 ||  tasktype == 3) {
+						pStartdate = startdate.substr(0, 10); // 업무정보 수정 등으로 실시간 갱신된 시작일
+					}
+					// 반복일정인 개인(4) / 지시(5) / 협조(6) 일정
+					else if (tasktype == 4 || tasktype == 5 ||  tasktype == 6) {
+						pStartdate = document.getElementById("prog1").innerText;
+					}
+					
+					// 현재 시간과 비교하여 같거나 더 작은(이전) 시작일의 진행상태만 변경 가능 (startdate는 서버단에서 시간대 부분만 사용하도록 substring(10, 19) 처리되므로 그대로 유지)
+					if (new Date(pStartdate) <= new Date(curDate)) {
+						DivPopUpShow(410, 430, "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + pStartdate + "&startDate=" + startdate);
 					}
 					else {
 						alert("<spring:message code='ezTask.t200911' />");
