@@ -86,6 +86,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -97,6 +98,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2819,5 +2821,88 @@ public class CommonUtil {
 		Gson gson = new Gson();
 		JsonParser jsonParser = new JsonParser();
 		return jsonParser.parse(gson.toJson(voList)).getAsJsonArray();
+	}
+	
+	/**
+	 * 2023-02-14 홍승비 - 서버 간 REST 통신으로 XML 문자열을 받은 경우, JSON으로 변환하여 리턴하기 위한 메서드 추가
+	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드 (XML -> org.json.JSONObject -> simpleJSON로 변환하여 리턴)
+	 * @param resteUrl
+	 * @param param
+	 * @param request
+	 * @return
+	 */
+	public JSONObject getXML2JsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam, int connectionTimeout, int readTimeout) {
+		logger.debug("getXML2JsonFromRestApi started.");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.TEXT_HTML_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for (String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = null;
+		
+		if (methodType.equals("patch")) {
+			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			rest = new RestTemplate(httpRequestFactory);
+		} else if (connectionTimeout > 0 || readTimeout > 0) {
+			HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			httpRequestFactory.setConnectTimeout(connectionTimeout);
+			httpRequestFactory.setReadTimeout(readTimeout);
+			rest = new RestTemplate(httpRequestFactory);
+		} else {
+			rest = new RestTemplate();
+		}
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		case "patch":
+			method = HttpMethod.PATCH;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONObject resultBody = null;
+		org.json.JSONObject resultBodyTemp = null;
+		JSONParser jp = new JSONParser();
+		
+		try {
+			// XML -> org.json.JSONObject
+			resultBodyTemp = XML.toJSONObject(result.getBody());
+			
+			// org.json.JSONObject -> simpleJSON
+			resultBody = (JSONObject) jp.parse(resultBodyTemp.toString());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getXML2JsonFromRestApi ended.");
+		return resultBody;
 	}
 }

@@ -4293,4 +4293,143 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 
 		return json;
 	}
+	
+	/** 2023-02-14 홍승비 - 통합검색엔진 XTEN 전용 검색어 생성 메서드 분리
+	 *  통합검색 - 검색엔진 URL 만들기 (XTEN)
+	 *  w : 검색영역 (TOTAL로 고정)
+	 *	q : 검색어 (색인별 검색 사용하므로 *로 고정)
+	 * 	section : 검색결과로 출력할 게시판 / 전자결재 컬렉션 (APPROVAL / BOARD / 미입력시 전체출력)
+	 *	csq : 제목, 내용, 첨부에서 찾을 내용 (색인별 검색, 다중검색 가능)
+	 *	outmax : 출력 갯수 (반환될 검색결과 수)
+	 *	pg : page 번호
+	 *	d1 : 기간검색범위 (YYYYMMDDHHmmss~YYYYMMDDHHmmss 형태)
+	 *	dsort : 날짜 기준 정렬 (오름차순 정렬 : 10 / 내림차순 정렬 : 11)
+	 * */
+	public String getTotalSearchURL_XTEN(LoginVO userInfo, Map<String, Object> param) throws Exception {
+		
+		// logger.debug("param in getTotalSearchURL_XTEN  ::  " + param.toString());
+		
+		StringBuffer queryStr = new StringBuffer();
+		String section = (String) param.get("type") != null ? (String) param.get("type") : "";
+		String keyword = (String) param.get("keyword") != null ? (String) param.get("keyword") : "";
+		String searchRange = (String) param.get("searchRange") != null ? (String) param.get("searchRange") : "";
+		String startDate = (String) param.get("startDate") != null ? (String) param.get("startDate") : "";
+		String endDate = (String) param.get("endDate") != null ? (String) param.get("endDate") : "";
+		String automax = (String) param.get("automax") != null ? (String) param.get("automax") : "";
+		String userID = userInfo.getId();
+		String page = (String) param.get("page") != null ? (String) param.get("page") : "";
+		int tenantID = (int) userInfo.getTenantId() ;
+		String companyID = (String) userInfo.getCompanyID();
+		
+		// w : 검색영역 (TOTAL로 고정)
+		queryStr.append("?w=TOTAL");
+		
+		// section : 검색 결과 컬렉션 (APPROVAL / BOARD / 미입력시 전체출력) 
+		if (section.equalsIgnoreCase("approval")) {
+			queryStr.append("&section=APPROVAL");
+		} else if (section.equalsIgnoreCase("board")) {
+			queryStr.append("&section=BOARD");
+		}
+		
+		// base64 : base64 디코더를 사용하지 않는 경우 "n"값 필수
+		queryStr.append("&base64=n");
+		
+		// outmax : 한 페이지에 출력되는 리스트 갯수 (반환될 검색결과 수) / default : 10
+		if (automax != ""){
+			queryStr.append("&outmax=").append(automax);
+		}
+		
+		// pg : 페이지 번호
+		queryStr.append("&pg=").append(page);		
+		
+		// dsort : 날짜 정렬 (10 : 오름차순 / 11 : 내림차순)
+		queryStr.append("&dsort=11");		
+		
+		// q : 검색어(키워드)는 필수값
+		queryStr.append("&q=*");
+		
+		// 단일 또는 다중 검색조건 (제목, 내용, 작성자, 첨부)
+		// 검색범위가 ALL(모두)인 경우, 각 검색범위를 "|"로 이어서 전부 사용
+		if (searchRange.equalsIgnoreCase("ALL")) {
+			searchRange = "TITLE|CONTENTS|WRITER|ATTACH";
+		}
+		
+		StringBuffer csq = new StringBuffer();
+		String range[] = searchRange.split("\\|");
+		List<String> rangeList = new ArrayList<String>();
+
+		// 게시판, 전자결재 별로 일부 색인칼럼명이 다르기 때문에 전부 기재
+		for (int i = 0; i < range.length; i++) {
+			// 제목
+			if (range[i].equalsIgnoreCase("TITLE")) {
+					rangeList.add("{DOCTITLE:" + keyword + "}"); // APPROVAL
+					rangeList.add("{TITLE:" + keyword + "}"); // BOARD
+			}
+			// 내용 (직접 파일 내부에 접근 -> 본문 내용을 인식하여 검색함)
+			else if (range[i].equalsIgnoreCase("CONTENTS")) {
+					rangeList.add("{CONTENTSPATH:" + keyword + "}"); // APPROVAL
+					rangeList.add("{CONTENTLOCATION:" + keyword + "}"); // BOARD
+			}
+			// 작성자
+			else if (range[i].equalsIgnoreCase("WRITER")) {
+				rangeList.add("{WRITERNAME:" + keyword + "}");
+			}
+			// 첨부
+			else if (range[i].equalsIgnoreCase("ATTACH")) {
+				rangeList.add("{FILENAME:" + keyword + "}");
+			}
+
+		}
+		
+		csq.append("&csq=");
+		
+		// 검색어 조건을 각각 OR로 묶기 위해 괄호처리
+		csq.append("(");
+		
+		for (int i = 0; i < rangeList.size(); i++) {
+			if (i == 0) {
+				csq.append(rangeList.get(i));
+			} else {
+				csq.append(" ^[OR ");
+				csq.append(rangeList.get(i));
+			}
+		}
+			
+		csq.append(")");
+		
+		// TENANT_ID, COMPANYID 조건은 AND로 묶음
+		csq.append(" ^[AND {TENANT_ID:").append(String.valueOf(tenantID)).append("}");
+		csq.append(" ^[AND {COMPANY_ID:").append(companyID).append("}");
+		
+		queryStr.append(csq);
+		
+		// 통합검색 내부 쿼리로 접근가능한 사용자ID 권한을 체크
+		// "MemberId"라고 하는 권한있는 사용자들의 집합 칼럼값이 통합검색 측에 있음. 색인 추가하여 검색어 사용하도록 추가수정 예정
+		// 권한 체크
+/*		if(queryStr.toString().contains("&csq=")) {
+			queryStr.append(" ^[AND {view:"+userID+"}");
+		} else {
+			queryStr.append("&csq={view:"+userID+"}");
+		}*/
+		
+		// 검색기간 (작성일, 완료일) > DB 테이블과 동일하게 UTC 시간으로 검색
+		if (startDate != "" && endDate != "" ) {
+			String dateRange = "";
+			
+			startDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", userInfo.getOffset(), true);
+			endDate = commonUtil.getDateStringInUTC(endDate + " 23:59:59", userInfo.getOffset(), true);
+			
+			startDate = startDate.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+			endDate = endDate.replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+			
+			dateRange = startDate + "~" + endDate;
+			queryStr.append("&d1=");
+			queryStr.append(dateRange);
+		}
+		
+		logger.debug("getTotalSearchURL_XTEN queryStr :: " + queryStr.toString());
+		
+		return queryStr.toString();
+	}
+	
 }

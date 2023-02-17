@@ -93,6 +93,10 @@ if(typeof totalSearch === 'undefined') {
 	totalSearch.board = {};
 }
 
+/* 2023-02-10 홍승비 - 통합검색엔진 종류 테넌트 컨피그로 분리, 웹한글기안기 사용여부 변수 추가 */
+var totalSearchEngineType = "<c:out value='${totalSearchEngineType}' />";
+var useWebHWP = "<c:out value='${useWebHWP}' />";
+
 /*
  * Jquery ReadyFunc.
  */
@@ -190,11 +194,20 @@ $(document).ready(function(){
 		$("#mouseoverRow").prop("id", "");
     });        
     
-    $("#approvalResult").delegate("tr", "dblclick", function(){
-		if(this.id !== "noData") {
-    		dblClickApproval($(this).attr("docid"));
-		}
-    });
+    if (totalSearchEngineType == "XTEN") {
+	    $("#approvalResult").delegate("tr", "dblclick", function(){
+			if(this.id !== "noData") {
+	    		dblClickApproval_XTEN($(this).attr("docid"), $(this).attr("href"));
+			}
+	    });
+    }
+    else {
+	    $("#approvalResult").delegate("tr", "dblclick", function(){
+			if(this.id !== "noData") {
+	    		dblClickApproval($(this).attr("docid"));
+			}
+	    });
+    }
     /* 전자결재리스트 관련 이벤트 끝 */
     
     /* 게시판 관련 이벤트 시작 */
@@ -210,11 +223,20 @@ $(document).ready(function(){
 		$("#mouseoverRow").prop("id", "");
     });      
     
-    $("#boardResult").delegate("tr", "dblclick", function(){
-    	if(this.id !== "noData") {
-    		dblClickBoard($(this).attr("boardid"), $(this).attr("itemid"));
-    	}
-    });
+    if (totalSearchEngineType == "XTEN") {
+	    $("#boardResult").delegate("tr", "dblclick", function(){
+	    	if(this.id !== "noData") {
+	    		dblClickBoard_XTEN($(this).attr("boardid"), $(this).attr("itemid"), $(this).attr("gubun"));
+	    	}
+	    });
+    }
+    else {
+	    $("#boardResult").delegate("tr", "dblclick", function(){
+	    	if(this.id !== "noData") {
+	    		dblClickBoard($(this).attr("boardid"), $(this).attr("itemid"));
+	    	}
+	    });
+    }
     /* 게시판 관련 이벤트 끝 */
     
     /* 웹폴더 관련 이벤트 시작 */
@@ -362,7 +384,7 @@ function dblClickBoard(boardID, itemID) {
 	
 	readAuthor = "true";
 	
-	if(readAuthor === "true") {
+	if (readAuthor === "true") {
 		boardList.filter(function(e){
 			return e.boardId === boardID && e.itemId === itemID ? gubun = e.gubun : "";
 		});
@@ -617,8 +639,8 @@ function btn_searchStart() {
 		검색범위 확인
 	*/
 	var isAllChk = $("#chkAllRange").prop("checked");
-	if(isAllChk) {
-		searchRange = "ALL";
+	if (isAllChk) {
+			searchRange = "ALL";
 	} else {
 		$("#chkRange input").each(function(i, elem){
 			$(elem).prop("checked") && i > 1 ? searchRange += "|" : "";
@@ -678,20 +700,27 @@ function btn_searchStart() {
 function callSearchController() {
 	var data = totalSearch.data;
 	
+	/* 2023-02-10 홍승비 - 통합검색엔진 종류 테넌트 컨피그로 분리 */
+	var totalSearchURL = "/ezPortal/getTotalSearchList.do";
+	
+	if (totalSearchEngineType == "XTEN") {
+		totalSearchURL = "/ezPortal/getTotalSearchList_XTEN.do";
+	}
+	
 	// 검색어 데이터가 있을 때만 동작
-	if(data.keyword !== undefined) {
+	if (data.keyword !== undefined) {
 		/**
 			검색 시작
 		*/
 		$.ajax({
 			method : "POST",
-			url : "/ezPortal/getTotalSearchList.do",
+			url : totalSearchURL, // 검색엔진 종류에 따라 다르게 동작하도록 URL 분기처리, 변수로 전달
 			type : "json",
 			contentType : "application/json",
 			data : JSON.stringify(data),
 			success : function (res) {
 				
-				console.log(res);
+		//		console.log(res);
 				
 				if (res == null) {
 					alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
@@ -708,100 +737,106 @@ function callSearchController() {
 				var boardList;
 				var webfolderList;
 				
-				if (data.type == "all") {
-					for (var i = 0; i < res.result.length; i++) {
-						if (res.result[i].type == "board") {
-							boardList = res.result[i];
-						} else if (res.result[i].type == "approval"){
-							approvalList = res.result[i];
-						} else if (res.result[i].type == "webfolder"){
-							webfolderList = res.result[i];
+				/* 2023-02-10 홍승비 - 통합검색엔진 종류 테넌트 컨피그로 분리, 검색엔진에 따라 다른 방식으로 결과값 파싱 및 표출 */
+				if (totalSearchEngineType == "XTEN") {
+					XTENDataAssembler(data, res);
+				}
+				else { // default
+					if (data.type == "all") {
+						for (var i = 0; i < res.result.length; i++) {
+							if (res.result[i].type == "board") {
+								boardList = res.result[i];
+							} else if (res.result[i].type == "approval"){
+								approvalList = res.result[i];
+							} else if (res.result[i].type == "webfolder"){
+								webfolderList = res.result[i];
+							}
 						}
+					} else if (data.type == "board") {
+						boardList = res.result[0];
+					} else if (data.type == "approval") {
+						approvalList = res.result[0];
+					} else if (data.type == "webfolder") {
+						webfolderList = res.result[0];
 					}
-				} else if (data.type == "board") {
-					boardList = res.result[0];
-				} else if (data.type == "approval") {
-					approvalList = res.result[0];
-				} else if (data.type == "webfolder") {
-					webfolderList = res.result[0];
-				}
-				
-				var listCnt = 1;
-				
-				$("#approvalResult").empty();
-				$("#boardResult").empty();	
-				$("#webfolderResult").empty();	
-				
-				//리스트에 출력하는 로직.
-				if(approvalList !== undefined && approvalList.doc.length > 0) {
-					$("#approvalResultCnt").empty().append(approvalList.totcnt);
- 					$(approvalList.doc).each(function(i, e){
-						$("#approvalResult").append(approvalDataAssembler(this));
-					});
- 					
-					//리스트 갯수
-					listCnt = approvalList.totcnt*1;
 					
-					//결과 담아두기.
-					totalSearch.approval = approvalList.doc;
-				} else {
-					$("#approvalResultCnt").empty().append("0");
-					$("#approvalResult").append(noData());
-				}
-				
-				if(boardList != undefined && boardList.doc.length > 0) {
-					$("#boardResultCnt").empty().append(boardList.totcnt);
- 					$(boardList.doc).each(function(i, e){
-						$("#boardResult").append(boardDataAssembler(this));
-					});
+					var listCnt = 1;
 					
-					//리스트 갯수
-					listCnt = boardList.totcnt*1;
+					$("#approvalResult").empty();
+					$("#boardResult").empty();	
+					$("#webfolderResult").empty();	
 					
-					//결과 담아두기.
-					totalSearch.board = boardList.doc;				
-				} else {
-					$("#boardResultCnt").empty().append("0");
-					$("#boardResult").append(noData());
-				}
-				
-				if(webfolderList != undefined && webfolderList.doc.length > 0) {
-					$("#webfolderResultCnt").empty().append(webfolderList.totcnt);
- 					$(webfolderList.doc).each(function(i, e){
-						$("#webfolderResult").append(webfolderDataAssembler(this));
-					});
+					//리스트에 출력하는 로직.
+					if (approvalList !== undefined && approvalList.doc.length > 0) {
+						$("#approvalResultCnt").empty().append(approvalList.totcnt);
+	 					$(approvalList.doc).each(function(i, e){
+							$("#approvalResult").append(approvalDataAssembler(this));
+						});
+	 					
+						//리스트 갯수
+						listCnt = approvalList.totcnt*1;
 					
-					//리스트 갯수
-					listCnt = webfolderList.totcnt*1;
+						//결과 담아두기.
+						totalSearch.approval = approvalList.doc;
+					} else {
+						$("#approvalResultCnt").empty().append("0");
+						$("#approvalResult").append(noData());
+					}
 					
-					//결과 담아두기.
-					totalSearch.webfolder = webfolderList.doc;				
-				} else {
-					$("#webfolderResultCnt").empty().append("0");
-					$("#webfolderResult").append(noData());
+					if (boardList != undefined && boardList.doc.length > 0) {
+						$("#boardResultCnt").empty().append(boardList.totcnt);
+	 					$(boardList.doc).each(function(i, e){
+							$("#boardResult").append(boardDataAssembler(this));
+						});
+						
+						//리스트 갯수
+						listCnt = boardList.totcnt*1;
+						
+						//결과 담아두기.
+						totalSearch.board = boardList.doc;				
+					} else {
+						$("#boardResultCnt").empty().append("0");
+						$("#boardResult").append(noData());
+					}
+					
+					if (webfolderList != undefined && webfolderList.doc.length > 0) {
+						$("#webfolderResultCnt").empty().append(webfolderList.totcnt);
+	 					$(webfolderList.doc).each(function(i, e){
+							$("#webfolderResult").append(webfolderDataAssembler(this));
+						});
+						
+						//리스트 갯수
+						listCnt = webfolderList.totcnt*1;
+						
+						//결과 담아두기.
+						totalSearch.webfolder = webfolderList.doc;				
+					} else {
+						$("#webfolderResultCnt").empty().append("0");
+						$("#webfolderResult").append(noData());
+					}
+					
+					if (data.type !== "all") {
+						// pagenation.
+						pagenation(pageObj(listCnt));
+					}
+					
+					var totalCount = 0;
+	
+					if (approvalList) {
+						totalCount += approvalList.totcnt;
+					}
+					
+					if (boardList) {
+						totalCount += boardList.totcnt;
+					}
+					
+					if (webfolderList) {
+						totalCount += webfolderList.totcnt;
+					}
+					
+					//전체 검색량
+					$("#totalCnt").empty().append(totalCount);
 				}
-				
-				if (data.type !== "all") {
-					// pagenation.
-					pagenation(pageObj(listCnt));
-				}
-				
-				var totalCount = 0;
-
-				if (approvalList) {
-					totalCount += approvalList.totcnt;
-				}
-
-				if (boardList) {
-					totalCount += boardList.totcnt;
-				}
-
-				if (webfolderList) {
-					totalCount += webfolderList.totcnt;
-				}
-
-				//전체 검색량
-				$("#totalCnt").empty().append(totalCount);
 			},
 			beforeSend : function() {
 				setTimeout(function(){ //순식간에 나오는 데이터들은 딱히 보여줄 필요가 없을 것 같아서 settimeout 처리
@@ -820,7 +855,6 @@ function callSearchController() {
 				alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
 			}
 		});	
-	
 	}
 }
 
@@ -907,7 +941,7 @@ function approvalDataAssembler(data) {
 	
 	str += "<td>"+ endDateStr + "</td>";
 	
-	if(data.hasAttachYN === "Y") {
+	if (data.hasAttachYN === "Y") {
 		str += "<td><img src='/images/newAttach.gif'></td>";
 	} else {
 		str += "<td></td>";
@@ -1081,6 +1115,314 @@ function ConvMakeXMLString(str) {
     str = ReplaceText(str, "&amp;", "&");	    
     return str;
 }
+
+
+///////////////////////////////////////////////// XTEN 통합검색 코드 시작 /////////////////////////////////////////////////
+/* 2023-02-10 홍승비 - 통합검색엔진 종류 테넌트 컨피그로 분리, 검색엔진에 따라 다른 방식으로 결과값 파싱 및 표출 */
+function XTENDataAssembler(data, res) {
+	
+	// console.log(res);
+	
+	// 결과값에서 각 세션(APPROVAL, BOARD...)별 컬렉션 추출
+	var resSection = res.meta_storage_list.section;
+	
+	// "모든" 탭 또는 전자결재, 게시판 탭에 따라 다르게 section값 확인
+	if (data.type == "all") {
+		for (var i = 0; i < resSection.length; i++) {
+			// 각 section에 대한 결과값을 구분
+			 if (resSection[i].name == "APPROVAL") {
+				approvalList = resSection[i];
+			}
+			else if (resSection[i].name == "BOARD") {
+				boardList = resSection[i];
+			}
+		}
+	}
+	else if (data.type == "approval") {
+		approvalList = resSection;
+	}
+	else if (data.type == "board") {
+		boardList = resSection;
+	}
+	
+	var apprListCnt = 1;
+	var boardListCnt = 1;
+	
+	$("#approvalResult").empty();
+	$("#boardResult").empty();
+	
+	// 리스트에 출력 (doc 값이 undefined가 아닌 경우, 반드시 최소 1개의 값을 가짐)
+	if (approvalList !== undefined && approvalList.doc !== undefined) {
+		$("#approvalResultCnt").empty().append(approvalList.totcnt);
+			$(approvalList.doc).each(function(i, e) {
+			$("#approvalResult").append(approvalDataAssembler_XTEN(this.att));
+		});
+			
+		apprListCnt = approvalList.totcnt * 1; // 리스트 갯수 (페이지네이션용)
+	} else {
+		$("#approvalResultCnt").empty().append("0");
+		$("#approvalResult").append(noData());
+	}
+	
+	// 리스트에 출력 (doc 값이 undefined가 아닌 경우, 반드시 최소 1개의 값을 가짐)
+	if (boardList != undefined && boardList.doc != undefined) {
+		$("#boardResultCnt").empty().append(boardList.totcnt);
+			$(boardList.doc).each(function(i, e) {
+			$("#boardResult").append(boardDataAssembler_XTEN(this.att));
+		});
+		
+		boardListCnt = boardList.totcnt * 1; // 리스트 갯수 (페이지네이션용)
+	} else {
+		$("#boardResultCnt").empty().append("0");
+		$("#boardResult").append(noData());
+	}
+	
+	// 페이지 처리는 게시판, 전자결재 탭 내부에서만 진행 ("모든"탭은 페이지네이션 표출 없음)
+	if (data.type == "approval") {
+		pagenation(pageObj(apprListCnt));
+	}
+	else if (data.type == "board") {
+		pagenation(pageObj(boardListCnt));
+	}
+	
+	var totalCount = 0;
+
+	if (approvalList) {
+		totalCount += approvalList.totcnt;
+	}
+	if (boardList) {
+		totalCount += boardList.totcnt;
+	}
+	
+	// 전체 검색 건수
+	$("#totalCnt").empty().append(totalCount);
+}
+
+/* 전자결재 결재완료문서 리스트 출력 (XTEN) */
+function approvalDataAssembler_XTEN(data) {
+	var str = "";
+	var offset = ("<c:out value='${userInfo.offset}'/>").split("|")[1];
+	var cal = offset.substring(0, 1);
+	var offsetMilliSec = cal + ((parseInt(offset.substring(1, 3)) * 60) + parseInt(offset.substring(4, 6))) * 60000;
+	
+	// 전자결재문서 JSON 객체 내부를 루프하며, 필요한 값을 가져와 세팅
+	var tDocID = "";
+	var tDocNo = "";
+	var tDocTitle = "";
+	var tWriterDeptName = "";
+	var tWriterName = "";
+	var tEndDate = "";
+	var tHasAttachYN = "";
+	var tHref = "";
+	
+	var keys = Object.keys(data);
+	for (var i = 0; i < keys.length; i++) {
+		if (data[i].name.toUpperCase().indexOf("DOCID") > -1) {
+			tDocID = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("DOCNO") > -1) {
+			tDocNo = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("DOCTITLE") > -1) {
+			tDocTitle = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("WRITERDEPTNAME") > -1) {
+			tWriterDeptName = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("WRITERNAME") > -1) {
+			tWriterName = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("ENDDATE") > -1) {
+			tEndDate = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("HASATTACHYN") > -1) {
+			tHasAttachYN = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("HREF") > -1) {
+			tHref = data[i].content;
+		}
+	}
+	
+	str += "<tr docid='" + tDocID + "' href='" + tHref + "'>";
+	str += "<td>"+ tDocNo + "</td>";
+	str += "<td>"+ tDocTitle + "</td>";
+	str += "<td>"+ tWriterDeptName + "</td>";
+	str += "<td>"+ tWriterName + "</td>";
+	
+	var endDateTmp = tEndDate;
+	
+	if (endDateTmp != null && endDateTmp != undefined) {
+		var endDate = new Date(endDateTmp.substring(0,4), parseInt(endDateTmp.substring(4,6)) - 1, endDateTmp.substring(6,8), endDateTmp.substring(8,10), endDateTmp.substring(10,12), endDateTmp.substring(12,14));
+		var endDateTime = endDate.getTime();
+		endDate = new Date(endDateTime + parseInt(offsetMilliSec));
+		var endDateStr = "";
+		var sYear = endDate.getFullYear();
+		var sMonth = endDate.getMonth() + 1;
+		var sDate = endDate.getDate();
+		
+		sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
+		sDate  = sDate > 9 ? sDate : "0" + sDate;
+		endDateStr = sYear + "-" + sMonth + "-" + sDate;
+	}
+	else { // 공람문서인 경우, 진행중 테이블에 있으므로 endDate는 공백으로 처리
+		endDateStr = "";
+	}
+	
+	str += "<td>"+ endDateStr + "</td>";
+	
+	if (tHasAttachYN === "Y") {
+		str += "<td><img src='/images/newAttach.gif'></td>";
+	} else {
+		str += "<td></td>";
+	}
+	str += "</tr>";
+	
+	return str;
+}
+
+/* 게시판 게시물 리스트 출력 (XTEN) */
+function boardDataAssembler_XTEN(data) {
+	var str = "";	
+	var offset = ("<c:out value='${userInfo.offset}'/>").split("|")[1];
+	var cal = offset.substring(0, 1); // 오프셋의 +, - 여부
+	var offsetMilliSec = cal + ((parseInt(offset.substring(1, 3)) * 60) + parseInt(offset.substring(4, 6))) * 60000; // 오프셋을 밀리세컨드 단위로 변경한 뒤 +, -를 세팅
+	
+	// 게시물 JSON 객체 내부를 루프하며, 필요한 값을 가져와 세팅
+	var tBoardID = "";
+	var tItemID = "";
+	var tBoardName = "";
+	var tTitle = "";
+	var tWriterDeptName = "";
+	var tWriterName = "";
+	var tWriteDate = "";
+	var tAttachments = "";
+	var tGubun= "";
+	
+	var keys = Object.keys(data);
+	for (var i = 0; i < keys.length; i++) {
+		if (data[i].name.toUpperCase().indexOf("BOARDID") > -1) {
+			tBoardID = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("ITEMID") > -1) {
+			tItemID = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("BOARDNAME") > -1) {
+			tBoardName = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("TITLE") > -1) {
+			tTitle = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("WRITERDEPTNAME") > -1) {
+			tWriterDeptName = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("WRITERNAME") > -1) {
+			tWriterName = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("WRITEDATE") > -1) {
+			tWriteDate = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("ATTACHMENTS") > -1) {
+			tAttachments = data[i].content;
+		}
+		else if (data[i].name.toUpperCase().indexOf("GUBUN") > -1) {
+			tGubun = data[i].content;
+		}
+	}
+	
+	str += "<tr boardid='" + tBoardID + "' itemid='" + tItemID + "' gubun='" + tGubun + "'>";
+	str += "<td>"+ tBoardName + "</td>";
+	str += "<td>"+ tTitle + "</td>";
+	str += "<td>"+ tWriterDeptName + "</td>";
+	str += "<td>"+ tWriterName + "</td>";
+	
+	var writeDateTmp = tWriteDate; // YYYYMMDDHHmmss
+	var writeDate = new Date(writeDateTmp.substring(0,4), parseInt(writeDateTmp.substring(4,6)) - 1, writeDateTmp.substring(6,8), writeDateTmp.substring(8,10), writeDateTmp.substring(10,12), writeDateTmp.substring(12,14));
+	var writeDateTime = writeDate.getTime(); // 게시일자를 밀리세컨드 단위로 반환
+	writeDate = new Date(writeDateTime + parseInt(offsetMilliSec)); // UTC시간 -> 사용자 그룹웨어 시간대로 변경
+	var writeDateStr = "";
+	var sYear = writeDate.getFullYear();
+	var sMonth = writeDate.getMonth() + 1;
+	var sDate = writeDate.getDate();
+	
+	sMonth = sMonth > 9 ? sMonth : "0" + sMonth;
+	sDate  = sDate > 9 ? sDate : "0" + sDate;
+	writeDateStr = sYear + "-" + sMonth + "-" + sDate;
+		
+	str += "<td>"+ writeDateStr + "</td>";
+	
+	if (tAttachments != 0) {
+		str += "<td><img src='/images/newAttach.gif'></td>";	
+	} else {
+		str += "<td></td>";
+	}
+	str += "</tr>";	
+	
+	return str;
+}
+
+/* 전자결재 상세 팝업 (XTEN)*/
+function dblClickApproval_XTEN(docID, href) {
+	var url = "/ezApprovalG/contDocView.do";
+	var docHref = href;
+	var formUrlExt = docHref.substr(docHref.length - 3, docHref.length).toLowerCase();
+	
+	if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+		if (useWebHWP != "YES") {
+			if (CrossYN() && isIE()) {
+				url = "/ezApprovalG/ezViewEnd_HWP.do";
+			} else {
+				var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+				alert(pAlertContent);
+				return;
+			}
+    	} else {
+    		url = "/ezApprovalG/ezViewEnd_WHWP.do";
+    	}
+	}
+	
+	url += "?docID=" + encodeURI(docID) + "&docHref=" + encodeURI(docHref);
+	
+	openwindow(url, "", "", "");
+}
+
+/* 게시판 게시물 상세 팝업 (XTEN) */
+function dblClickBoard_XTEN(boardID, itemID, gubun) {
+	var pheight = window.screen.availHeight;
+	var pwidth = window.screen.availWidth;
+	var pTop = (pheight - 720) / 2;
+	var pLeft = (pwidth - 790) / 2;
+	var url = "";
+	var popupH = "";
+	var popupW = "";
+	
+	//포토게시판:3, 썸네일게시판:4
+	if (gubun == "3" || gubun == "4") {
+		url = "/ezBoard/boardItemViewPhoto.do";
+		pTop = (pheight - 789) / 2;
+		pLeft = (pwidth - 790) / 2;
+		popupH = 789;
+		popupW = 790;
+	}
+	else if (gubun == "7") { // 동영상게시판 : 7
+		url = "/ezBoard/boardItemViewMovie.do";
+		pTop = (pheight - 679) / 2;
+		pLeft = (pwidth - 765) / 2;
+		popupH = 679;
+		popupW = 765
+	}
+	else {
+		url = "/ezBoard/boardItemView.do";
+		pTop = (pheight - 720) / 2;
+		pLeft = (pwidth - 765) / 2;
+		popupH = 720;
+		popupW = 765;
+	}
+	
+	/* 2020-06-25 홍승비 - 동영상게시판 분기 추가, 게시판 팝업 보기 시의 창 크기 분리 */
+	url += "?itemID=" + itemID +"&boardID=" + boardID + "&location=GENERAL";
+	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupH + ",width=" + popupW + ",top=" + pTop + ",left=" + pLeft, "");		
+}
+///////////////////////////////////////////////// XTEN 통합검색 코드 종료 /////////////////////////////////////////////////
 
 </script>
 <body class="mainbody">
@@ -1315,6 +1657,7 @@ function ConvMakeXMLString(str) {
         </div>
         <!-- //웹폴더 -->
         </c:if>
+        
         <br />
         <br>
         <div id="tblPageRayer">

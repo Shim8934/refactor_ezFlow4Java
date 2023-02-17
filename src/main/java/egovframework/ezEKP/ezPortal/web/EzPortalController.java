@@ -3887,6 +3887,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("keyword", commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(keyword)));
 		model.addAttribute("useWebfolder", ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId())); // 20210607 조진호 - 웹폴더 사용유무
+		model.addAttribute("totalSearchEngineType", ezCommonService.getTenantConfig("totalSearchEngineType", userInfo.getTenantId())); // 2023-02-10 홍승비 - 통합검색엔진 종류 테넌트 컨피그로 분리
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId())); // 한글 웹기안기 사용여부
+		
 		logger.debug("totalSearchRight is ended.");
 		return "/ezPortal/totalSearchRight";
 	}
@@ -3974,5 +3977,45 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		logger.debug("chkBoardReadAuthor is ended.");
 		return readAuthor;
+	}
+	
+	/**
+	 * 포탈 - 통합검색 검색리스트 (XTEN)
+	 * */
+	@RequestMapping(value="/ezPortal/getTotalSearchList_XTEN.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public JSONObject getTotalSearchList_XTEN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo , Locale locale, @RequestBody Map<String, Object> paramData, HttpServletRequest req) throws Exception {
+		logger.debug("getTotalSearchList_XTEN is started.");
+		logger.debug("paramData : " + paramData.toString());
+		
+		JSONObject result;
+		
+		try {
+			userInfo = commonUtil.userInfo(loginCookie);
+			String totalSearchURL = config.getProperty("config.totalSearchURL");
+			totalSearchURL += ezPortalService.getTotalSearchURL_XTEN(userInfo, paramData);
+			
+			// logger.debug("totalSearchURL (encoded keyword param)   ::   " + totalSearchURL);
+			
+			try {
+				result = commonUtil.getXML2JsonFromRestApi(totalSearchURL, "", null, req, "post", null, 4000, 8000);
+			}
+			catch (Exception ex) {
+				ex.printStackTrace();
+				logger.debug("totalSearch_XTEN retry...");
+				result = commonUtil.getXML2JsonFromRestApi(totalSearchURL, "", null, req, "post", null, 4000, 8000);
+			}
+			
+			logger.debug("result : {}", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Map<String, String> resultMap = new HashMap<>();
+			resultMap.put("error", "internal server error");
+			result = new JSONObject(resultMap);
+		}
+		
+		// logger.debug("result json in getTotalSearchList_XTEN   ::   " + result.toString());
+		logger.debug("getTotalSearchList_XTEN is ended.");
+		return result;
 	}
 }
