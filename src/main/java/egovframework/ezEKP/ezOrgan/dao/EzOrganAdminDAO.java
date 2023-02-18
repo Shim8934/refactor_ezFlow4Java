@@ -1444,6 +1444,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	sc.setSearchScope(SearchControls.SUBTREE_SCOPE);//조직도 뎁스 관련    	    	
     	sc.setReturningAttributes(new String[] {"cn", "distinguishedName", column});
     	
+        // CWE-90 (LDAP 쿼리에 사용 된 특수 요소의 부적절한 무효화) 보안 취약점 대응
+        filter = filter.replaceAll("\\*", "");
     	NamingEnumeration results = ctx.search(searchBase, filter, sc);
     	
     	
@@ -1528,6 +1530,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	/**
     	 * filter를 이용한 쿼리 작성
     	 * */
+        // CWE-90 (LDAP 쿼리에 사용 된 특수 요소의 부적절한 무효화) 보안 취약점 대응
+        filter = filter.replaceAll("\\*", "");
     	NamingEnumeration results = ctx.search(defaultPath, filter, sc);
 
     	while (results.hasMoreElements()) {
