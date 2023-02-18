@@ -13,6 +13,7 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -4622,7 +4623,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	public String getPermissionGroupID(){
 		// 권한그룹의 id를 숫자와 문자를 랜덤상수를 이용하여 생성
-		Random rnd = new Random();
+		Random rnd = new SecureRandom();
 		StringBuffer sb = new StringBuffer();
 
 		for (int i = 0; i < 15; i++) {
