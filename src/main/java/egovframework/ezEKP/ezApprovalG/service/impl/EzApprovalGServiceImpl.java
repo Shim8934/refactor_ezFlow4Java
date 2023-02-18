@@ -31300,22 +31300,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
 			
-			OutputStream os = conn.getOutputStream();
-			os.write(body.getBytes("UTF-8"));
-			os.flush();
-			
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String line;
-			StringBuffer response = new StringBuffer();
-			
-			while((line = br.readLine()) != null) {
-				response.append(line);
+			// CWE-404 보안 취약점 대응
+			try (OutputStream os = conn.getOutputStream()) {
+				os.write(body.getBytes("UTF-8"));
+				os.flush();
 			}
 			
-			br.close();	
-			os.close();
-			
-			result = (JSONObject) new JSONParser().parse(response.toString());
+			// CWE-404 보안 취약점 대응
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+				String line;
+				StringBuffer response = new StringBuffer();
+				
+				while((line = br.readLine()) != null) {
+					response.append(line);
+				}
+						
+				result = (JSONObject) new JSONParser().parse(response.toString());
+			}			
+
 			Long pageTotal = result.get("page_total") != null ? (Long) result.get("page_total") : -1L;
 			int fileCNT = ((JSONArray)result.get("dirnmL")).size();
 			

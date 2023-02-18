@@ -110,11 +110,7 @@ public class EzSystemUtil {
 				
 				tmpObj.put("memory", tmp[1]);
 			}
-			
-			br.close();
-			cbr.close();
-			mbr.close();
-			
+						
 			jArr.add(tmpObj);
 			
 			jObj.put("getSysInfo", jArr);		
@@ -196,8 +192,6 @@ public class EzSystemUtil {
 					}
 				}
 			}		
-
-			br.close();
 			
 			jObj.put("getCpuInfo", jArr);		
 					
