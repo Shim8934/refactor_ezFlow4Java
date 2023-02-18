@@ -4167,7 +4167,7 @@ public class EzEmailUtil {
     	
     	if (emailAddress != null && !emailAddress.equals("")) {
     		
-    		
+    		/* 보안 취약점 조치를 위해 제거함
 	    	byte[] keyBytes = apb.getBytes("UTF-8");
 	    	byte[] ivBytes = "mekaGW02".getBytes("UTF-8");
 	    	byte[] input = emailAddress.getBytes("UTF-8");
@@ -4182,6 +4182,8 @@ public class EzEmailUtil {
 	    	enc_len += cipher.doFinal(encrypted, enc_len);  
 	    	
 	    	credential = toHexString(encrypted);
+			*/
+			credential = "";
     	}
     	
     	return credential;

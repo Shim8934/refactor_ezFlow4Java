@@ -5243,7 +5243,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				String filePath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload"
 											+ commonUtil.separator + userInfo.getId();
 
-				MessageDigest md2 = MessageDigest.getInstance("MD5");
+				MessageDigest md2 = MessageDigest.getInstance("SHA-256");
 				md2.update(filename.substring(0, filename.lastIndexOf(".")).getBytes());
 				byte mdDate2[] = md2.digest();
 				StringBuffer sb2 = new StringBuffer();

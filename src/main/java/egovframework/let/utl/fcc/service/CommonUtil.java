@@ -2547,7 +2547,7 @@ public class CommonUtil {
 			String unidocsFilerootPath = ezCommonService.getTenantConfig("unidocsFilerootPath", tenantId);
 			File file       = new File(realPath + detectPathTraversal(filePath));
 			
-			MessageDigest md2 = MessageDigest.getInstance("MD5");
+			MessageDigest md2 = MessageDigest.getInstance("SHA-256");
 			md2.update(filePath.getBytes());
 			byte mdDate2[] = md2.digest();
 			StringBuffer sb2 = new StringBuffer();
