@@ -148,6 +148,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 상단 화면 호출 함수
 	 */
+	/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	@RequestMapping(value = "/ezPortal/topMenu.do", method = RequestMethod.GET)
 	public String topMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("topMenu started");
@@ -335,7 +336,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 			
-			/* 2018-12-27 홍승비 - 공지사항 팝업 스크립트 수정 */
+			// 2018-12-27 홍승비 - 공지사항 팝업 스크립트 수정
 			if (popUp != null && !popUp.equals("")) {
 				script1 = popUp;
 			}
@@ -399,7 +400,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("topMenu ended");
 		return "/ezPortal/portalTopMenu";
 	}
+	*/
 	
+	/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	@RequestMapping(value = "/ezPortal/portalPage.do", method = RequestMethod.GET)
 	public String portalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalPage started");
@@ -631,7 +634,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			logger.debug("changeCompany end");
 			return loginCookie;
 	    }
-	
+	*/
 	/**
 	 * 포탈 - 마이포탈 호출 함수
 	 */
@@ -2126,6 +2129,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 테마1 포탈페이지 화면 호출 함수
 	 */
+	/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	@RequestMapping(value = "/ezPortal/theme1/portalPage.do", method = RequestMethod.GET)
 	public String theme1PortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("theme1PortalPage started");
@@ -2332,10 +2336,12 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("theme1PortalPage ended");
 		return "/ezPortal/portalTheme1PortalPage";
 	}
+	*/
 	
 	/**
 	 * 포탈 상단 화면 호출 함수
 	 */
+	/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	@RequestMapping(value = "/ezPortal/theme1/topMenu.do", method = RequestMethod.GET)
 	public String theme1topMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("theme1topMenu started");
@@ -2562,6 +2568,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("theme1topMenu ended");
 		return "/ezPortal/theme1/portalTheme1TopMenu";
 	}
+	*/
 	
 	/**
 	 * 포탈 - 환경설정 메인 화면 호출 함수
@@ -2898,6 +2905,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	@RequestMapping(value = "/ezPortal/myPortalPage.do", method = RequestMethod.GET)
 	public String myPortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("myPortalPage started");
@@ -3084,6 +3092,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("myPortalPage ended");
 		return "/ezPortal/portalMyPortalPage";
 	}
+	*/
 	
 	/**
 	 * 포탈 - 환경설정 마이포탈페이지 portalPageSearch 실행 함수

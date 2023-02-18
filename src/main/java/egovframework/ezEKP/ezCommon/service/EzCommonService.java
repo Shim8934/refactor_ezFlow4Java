@@ -51,7 +51,9 @@ public interface EzCommonService {
 	
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception;
 	
+	/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	*/
 	
 	public void insertTblUserLocalInfo(String userID, String timeZone, String lang, int tenantID) throws Exception;
 
