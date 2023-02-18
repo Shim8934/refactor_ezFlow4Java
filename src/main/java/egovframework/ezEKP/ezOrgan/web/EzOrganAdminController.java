@@ -1365,11 +1365,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	
         	return "EMAIL_ERROR";
         }
-        
-		// 현재 관리자의 암호를 구한다.
-		/* List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
-		String adminPassword = userCookieInfo.get(1); */
-        
+                
         // UUID로 pass 변경
         String adminPassword = UUID.randomUUID().toString();
         
