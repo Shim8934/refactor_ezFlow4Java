@@ -244,6 +244,10 @@ public class KlibUtil {
 	private void debugBytes(String byteArrayName, byte[] bytes) {
 		boolean isGreaterThanEllipsis = bytes.length > DEBUG_BYTE_SIZE;
 		int debugSize = isGreaterThanEllipsis ? DEBUG_BYTE_SIZE : bytes.length;
+
+		// CWE-190 보안 취약점 관련 조치
+		debugSize = debugSize < 0 ? DEBUG_BYTE_SIZE : debugSize;
+		
 		byte[] ellipsisBytes = new byte[debugSize];
 
 		System.arraycopy(bytes, 0, ellipsisBytes, 0, debugSize);

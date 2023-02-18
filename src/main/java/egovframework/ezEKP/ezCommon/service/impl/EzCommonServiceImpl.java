@@ -285,12 +285,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         SecureRandom Rnd = new SecureRandom();
 
         while (strBoundary.length() < 39) {
-            int nch = Rnd.nextInt(9)+1;
+            int nch = Math.addExact(Rnd.nextInt(9), 1);
 
             if (nch < 26) {
-                strBoundary += (char)(65 + nch);
+                strBoundary += (char)(Math.addExact(65, nch));
             } else {
-                strBoundary += (char)(97 + nch - 26);
+                strBoundary += (char)(Math.subtractExact(Math.addExact(97, nch), 26));
             }
         }
         return strBoundary;
