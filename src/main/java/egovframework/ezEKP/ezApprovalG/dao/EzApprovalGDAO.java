@@ -3879,4 +3879,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateSusinEndReceiptPointInfoForJiJung(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateSusinEndReceiptPointInfoForJiJung", map);
 	}
+
+	/* 2023-02-21 홍승비 - 완료문서 재사용 > 문서의 모든 내용 재사용 시, 첨부파일의 히스토리도 첨부파일 기반으로 추가 (첨부자 정보는 기안자 정보로 통일) */
+	public void insertReuseAttachHistory(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertReuseAttachHistory", map);	
+	}
 }

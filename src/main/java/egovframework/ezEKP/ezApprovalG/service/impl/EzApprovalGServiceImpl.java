@@ -10203,8 +10203,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			apprGDocListVOList.get(0).setHasOpinionYn("N");
 			
 			String apprReuseConfig = ezCommonService.getTenantConfig("apprReuseConfig", userInfo.getTenantId());
-			if ( apprReuseConfig != null && !apprReuseConfig.equals("1") ){
+			if (apprReuseConfig != null && !apprReuseConfig.equals("1")) {
 				ezApprovalGDAO.insertReuseAttachFileInfo(map);
+				
+				/* 2023-02-21 홍승비 - 완료문서 재사용 > 문서의 모든 내용 재사용 시, 첨부파일의 히스토리도 첨부파일 기반으로 추가 (첨부자 정보는 기안자 정보로 통일) */
+				// 변경내용(MODIFYFLAG) = 추가(001) / 변경일자 = 현재시간(v_SYSDATE) / 변경자 = 기안자
+				map.put("v_ATTACHUSERID", userInfo.getId());
+				map.put("v_ATTACHUSERNAME", userInfo.getDisplayName());
+				map.put("v_ATTACHUSERNAME2", userInfo.getDisplayName2());
+				map.put("v_ATTACHUSERJOBTITLE", userInfo.getTitle());
+				map.put("v_ATTACHUSERJOBTITLE2", userInfo.getTitle2());
+				map.put("v_ATTACHUSERDEPTID", userInfo.getDeptID());
+				map.put("v_ATTACHUSERDEPTNAME", userInfo.getDeptName());
+				map.put("v_ATTACHUSERDEPTNAME2", userInfo.getDeptName2());
+				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+				ezApprovalGDAO.insertReuseAttachHistory(map);
 			}
 		}
 		
