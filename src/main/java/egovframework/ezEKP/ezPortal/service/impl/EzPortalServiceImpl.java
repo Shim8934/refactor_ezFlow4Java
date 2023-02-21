@@ -4378,7 +4378,6 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			else if (range[i].equalsIgnoreCase("ATTACH")) {
 				rangeList.add("{FILENAME:" + keyword + "}");
 			}
-
 		}
 		
 		csq.append("&csq=");
@@ -4403,14 +4402,8 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		
 		queryStr.append(csq);
 		
-		// 통합검색 내부 쿼리로 접근가능한 사용자ID 권한을 체크
-		// "MemberId"라고 하는 권한있는 사용자들의 집합 칼럼값이 통합검색 측에 있음. 색인 추가하여 검색어 사용하도록 추가수정 예정
-		// 권한 체크
-/*		if(queryStr.toString().contains("&csq=")) {
-			queryStr.append(" ^[AND {view:"+userID+"}");
-		} else {
-			queryStr.append("&csq={view:"+userID+"}");
-		}*/
+		// 통합검색 내부 쿼리로 접근가능한 사용자ID 권한을 체크 (게시판, 전자결재문서 접근 권한자 쿼리는 검색엔진측에 제공함)
+		queryStr.append(" ^[AND {MEMBERID:" + userID + "}");
 		
 		// 검색기간 (작성일, 완료일) > DB 테이블과 동일하게 UTC 시간으로 검색
 		if (startDate != "" && endDate != "" ) {
