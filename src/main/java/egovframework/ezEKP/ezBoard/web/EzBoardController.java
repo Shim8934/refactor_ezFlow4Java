@@ -6986,7 +6986,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardPropertyVO boardInfo = getBoardInfo("", userInfo);
 		
 		int startRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), boardInfo.getSs_board_maxRows()), 1);
-		int endRow = page * boardInfo.getSs_board_maxRows();
+		int endRow = Math.multiplyExact(page, boardInfo.getSs_board_maxRows());
 		
 		List<BoardListVO> reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
 		totalCount = ezBoardService.getReservedItemListCount(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -6994,7 +6994,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (reservedList == null && page > 1) {
 			page -= 1;
 			startRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), boardInfo.getSs_board_maxRows()), 1);
-			endRow = page * boardInfo.getSs_board_maxRows();
+			endRow = Math.multiplyExact(page, boardInfo.getSs_board_maxRows());
 			reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		

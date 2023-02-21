@@ -130,6 +130,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		return ezCommonDAO.getApprovPWD(userInfo);
 	}
 
+	/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	@Override
 	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception{
         String isUTF8 = "0";
@@ -217,6 +218,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         return pOrgFileName + pOrgFileExt;
 	}
+	*/
 
 	/**
 	 * html -> mht 변환 실행 Method
@@ -285,12 +287,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         SecureRandom Rnd = new SecureRandom();
 
         while (strBoundary.length() < 39) {
-            int nch = Rnd.nextInt(9)+1;
+            int nch = Math.addExact(Rnd.nextInt(9), 1);
 
             if (nch < 26) {
-                strBoundary += (char)(65 + nch);
+                strBoundary += (char)(Math.addExact(65, nch));
             } else {
-                strBoundary += (char)(97 + nch - 26);
+                strBoundary += (char)(Math.subtractExact(Math.addExact(97, nch), 26));
             }
         }
         return strBoundary;

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezLadder.service.impl;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -706,7 +707,7 @@ public class EzLadderServiceImpl implements EzLadderService {
 		logger.debug("getLineArray started.");
 		logger.debug("size : " + size);
 		logger.debug("lineCnt : " + lineCnt);
-		Random random = new Random();
+		Random random = new SecureRandom();
 		int[] choice = new int[lineCnt];// 선택된 선 번호
 	
 		lineCnt = 0;

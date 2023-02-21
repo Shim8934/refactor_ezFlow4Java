@@ -1661,6 +1661,8 @@ public class EzOrganServiceImpl implements EzOrganService {
             constraints.setReturningAttributes(attrIDs);
         }
         
+		// CWE-90 (LDAP 쿼리에 사용 된 특수 요소의 부적절한 무효화) 보안 취약점 대응
+		strFilter = strFilter.replaceAll("\\*", "");
         m_ne = dirCtx.search(strBaseDN + config.getProperty("R_LBaseDN"), strFilter, constraints); 
         
         dirCtx.close(); 

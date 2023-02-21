@@ -773,12 +773,12 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			
 		} finally {
 			if (fis != null) {
-				try { fis.close(); } catch (Exception e) {}
+				try { fis.close(); } catch (Exception e) {LOGGER.debug("e.message=" + e.getMessage());}
 			}
 			
 			if (zos != null) {
-				try { zos.closeEntry(); } catch (Exception e) {}
-				try { zos.close(); } catch (Exception e) {}
+				try { zos.closeEntry(); } catch (Exception e) {LOGGER.debug("e.message=" + e.getMessage());}
+				try { zos.close(); } catch (Exception e) {LOGGER.debug("e.message=" + e.getMessage());}
 			}
 			
 		}
@@ -832,7 +832,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			}
 		} finally {
 			if (br != null) {
-				try {br.close();} catch(Exception e) {}
+				try {br.close();} catch(Exception e) {LOGGER.debug("e.message=" + e.getMessage());}
 			}
 		}
 		

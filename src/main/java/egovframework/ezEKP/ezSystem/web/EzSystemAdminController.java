@@ -681,7 +681,7 @@ public class EzSystemAdminController {
 		logger.debug("config=" + config);
 		
 		int maxItemPerPage = 20; 
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;

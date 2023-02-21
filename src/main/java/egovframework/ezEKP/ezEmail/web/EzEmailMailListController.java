@@ -1874,7 +1874,7 @@ public class EzEmailMailListController {
 			}
 		}
 		
-		if (uid == 0 || folderPath == null || folderPath.trim().equals("")) {
+		if (uid == 0 || folderPath == null || "".equals(folderPath.trim())) {
 			logger.error("cannot get request data");
 			logger.debug("mailGetFromEmail ended.");
 			return "ERROR";
