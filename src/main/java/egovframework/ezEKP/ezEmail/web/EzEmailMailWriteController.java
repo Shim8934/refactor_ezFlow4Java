@@ -2213,7 +2213,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * <pre>
 	 * 메일 DragAndDrop 첨부파일 업로드 실행 함수
-	 * - 게시판/커뮤니티/전자결재에서 메일로 전송 시.
+	 * - 업무일지에서 메일로 전송 시.
 	 * - 서버에 이미 업로드 되어있는 첨부파일을 복사해옴.
 	 * - 일반 첨부파일에만 해당됨.
 	 * </pre>
@@ -2224,7 +2224,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			@CookieValue("loginCookie") String loginCookie, 
 			@RequestBody String bodyData,
 			HttpServletRequest request) throws Exception {
-		logger.debug("mailInterUploadCopy started.");
+		logger.debug("mailInterUploadCopyFromJournal started.");
 		logger.debug("bodyData=" + bodyData);
 		
 		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
@@ -2241,16 +2241,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		// String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String realPath = commonUtil.getRealPath(request);
-		
-		String ezJournalPath = realPath + commonUtil.getUploadPath("upload_journal.ROOT", userInfo.getTenantId())+ commonUtil.separator +"uploadFile";
-		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String realPath = commonUtil.getRealPath(request);		
+		String ezJournalPath = realPath + commonUtil.getUploadPath("upload_journal.ROOT", userInfo.getTenantId())+ commonUtil.separator +"uploadFile";		
 		String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
 		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
 		
+		// 2018-10-08 분리된 대용량파일(largeFile) 폴더 사용 여부
+		String largeFilePath = uploadMailRootPath;
+		String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+
+		if (useSeparatedLargeFileFolder.equals("YES")) {
+			largeFilePath += commonUtil.separator + "largeFile";
+		}
+
 		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		
 		int fileCnt = doc.getElementsByTagName("ROW").getLength();
@@ -2259,9 +2264,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		long[] fileSize = new long[fileCnt];
 		String[] fileExt = new String[fileCnt];
 		String[] newFileName = new String[fileCnt];
-		boolean[] downloadedFlags = new boolean[fileCnt];
 		String comparingExt = "";
-
 		
 		int totalFileSize = 0;
 		
@@ -2271,10 +2274,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			return "NODATA";
 		}
-		
-		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
-		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
-		
+				
 		for (int i = 0; i < fileCnt; i++) {
 			String filePathValue = doc.getElementsByTagName("DATA2").item(i).getTextContent();		
 			filePathValue = filePathValue != null ? filePathValue : "";
@@ -2285,48 +2285,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //				filePathValue = "/" + filePathValue;
 //			}
 			
-			filePath[i] = ezJournalPath + filePathValue;
-			
-			if (dotNetIntegration.equals("YES")) {
-				try {
-					File f = new File(filePath[i]);
-					
-					// 닷넷 연동 시 첨부 파일이 존재하지 않으면 암호화된 파일일 수 있으므로 복호화 URL을 호출하여 다운로드를 시도해 본다.
-					if (!f.exists()) {						
-						String downloadUrl = dotNetUrl + "/myoffice/Common/DownloadAttach_java.aspx?filename=placeholder"
-								+ "&filepath=" + URLEncoder.encode(filePathValue, "UTF-8");
-						
-						logger.debug("downloadUrl=" + downloadUrl);
-						
-						// 다운로드된 파일을 저장할 로컬 파일명을 임의로 생성한다.
-						String localFilePath = pTempFileUploadPath + commonUtil.separator + UUID.randomUUID().toString();
-						File localFile = new File(localFilePath);
-						
-						// URL로부터 다운로드를 시도한다.
-						FileUtils.copyURLToFile(new URL(downloadUrl), localFile);
-						
-						logger.debug("downloaded File Size is " + localFile.length());
-						
-						if (localFile.length() != 0) {
-							// 다운로드한 파일의 Path로 filePath를 변경한다.
-							filePath[i] = localFilePath;
-							// 다운로드한 파일을 사용 후 삭제하기 위해 다운로드한 파일임을 표시한다.
-							downloadedFlags[i] = true;
-							// 파일 크기가 0인 경우는 다운로드가 되지 않은 경우이므로 생성된 파일을 삭제한다.
-						} else {
-							localFile.delete();
-						}
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
+			filePath[i] = ezJournalPath + filePathValue;						
 			File f = new File(filePath[i]);
 			
 			if (f.exists()) {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
 				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
+				fileName[i] = commonUtil.normalizeFileName(fileName[i]);				
 				
 				if (fileName[i].lastIndexOf(".") > -1) {
 					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
@@ -2335,7 +2300,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fileExt[i] = "";
 					newFileName[i] = UUID.randomUUID().toString();
 				}
-//				newFileName[i] = newFileName[i].substring(newFileName[i].lastIndexOf(";")+1);
 				
 				fileSize[i] = f.length();
 				totalFileSize += fileSize[i];
@@ -2348,21 +2312,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		// 총 파일의 크기가 대용량첨부 제한크기를 넘는지 체크한다.
 		if (bigMaxSize != 0 && totalFileSize > bigMaxSize) {
 			logger.debug("totalFileSize is over bigMaxSize. Return OVERFLOW.");
-			
-			if (dotNetIntegration.equals("YES")) {
-				for (int i = 0; i < fileCnt; i++) {
-					// 복호화 URL을 통해 다운로드한 임시 파일들을 삭제한다.
-					if (downloadedFlags[i]) {
-						logger.debug("deleting " + filePath[i]);
 						
-						File localFile = new File(filePath[i]);
-						
-						localFile.delete();
-					}
-				}
-			}
-			
-			logger.debug("mailInterUploadCopy ended.");
+			logger.debug("mailInterUploadCopyFromJournal ended.");
 			
 			return "OVERSIZE";
 		}
@@ -2375,7 +2326,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			// 현재 날짜의 폴더가 없으면 생성한다.
 			String folderDate = EgovDateUtil.getToday("");
-			String bigAttachFolderPath = uploadMailRootPath + commonUtil.separator + folderDate;
+			String bigAttachFolderPath = largeFilePath + commonUtil.separator + folderDate;
 			File file = new File(bigAttachFolderPath);
 			
 			if (!file.exists()) {
@@ -2389,38 +2340,32 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 				FileInputStream fis = null;
 				FileOutputStream fos = null;
+				FileOutputStream fos2 = null;				
 				BufferedInputStream bis = null;
 				BufferedOutputStream bos = null;
 				
 				try {
 					// CWE-404 보안 취약점 대응
-					try {
-						// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-						fis = new FileInputStream(filePath[i]);
-						bis = new BufferedInputStream(fis);
-						
-						fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
-						bos = new BufferedOutputStream(fos);
-						
-						int data = 0;
-						byte[] buffer = new byte[BUFF_SIZE];
-						
-						while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
-							bos.write(buffer, 0, data);
-						}
-					} finally {					
-						bos.close(); bos = null;
-						bis.close(); bis = null;
-						fos.close(); fos = null;
-						fis.close(); fis = null;
+					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+					fis = new FileInputStream(filePath[i]);
+					bis = new BufferedInputStream(fis);
+					
+					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+					bos = new BufferedOutputStream(fos);
+					
+					int data = 0;
+					byte[] buffer = new byte[BUFF_SIZE];
+					
+					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+						bos.write(buffer, 0, data);
 					}
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
 					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
 					
-					file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
-					fos = new FileOutputStream(file);
-					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
+					File fileForName = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
+					fos2 = new FileOutputStream(fileForName);
+					fos2.write(base64OrgFileName.getBytes("ISO-8859-1"));
 					
 					// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
 					if (fileExt[i].toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -2461,6 +2406,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					if (fos != null) {
 						try { fos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
+                	if (fos2 != null) {
+                		try { fos2.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
+                	}
 					if (fis != null) {
 						try { fis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 					}
@@ -2547,20 +2495,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		
 		sb.append("</NODES></ROOT>");
-		
-		if (dotNetIntegration.equals("YES")) {
-			for (int i = 0; i < fileCnt; i++) {
-				// 복호화 URL을 통해 다운로드한 임시 파일들을 삭제한다.
-				if (downloadedFlags[i]) {
-					logger.debug("deleting " + filePath[i]);
-					
-					File localFile = new File(filePath[i]);
-					
-					localFile.delete();
-				}
-			}
-		}
-		
+				
 		// templist폴더에 메일에 대한 첨부파일 정보를 가지고있는 txt파일 생성한다.
 		File f = new File(pTempListPath);
 		
@@ -2584,7 +2519,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("mailInterUploadCopy ended.");
+		logger.debug("mailInterUploadCopyFromJournal ended.");
 		
 		return sb.toString();
 	}
