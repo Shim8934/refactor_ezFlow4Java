@@ -2361,7 +2361,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					}
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
+					String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
 					
 					File fileForName = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
 					fos2 = new FileOutputStream(fileForName);
