@@ -17933,7 +17933,7 @@
 			     	    TBL_CABINETCLASS.COMPANYID = #companyID#
 			     ORDER BY 
 			     		ConfirmFlag ASC) A
-			   WHERE  ConfirmFlag = '0'
+
 		</select>
 		
 		<select id="EzApprovalG.transferCabinetType2" parameterClass="Map" resultClass="int">
@@ -17991,7 +17991,7 @@
 			    						WHERE  
 			    							Code = '1') F	)
 	            AND 
-	            	Type2 = ( #v_DDeptCode#	)
+	            	Type2 = #v_TYPE2#
 	            AND 
 	            	Type3 = ( 
 	    						SELECT CASE WHEN ISUsed = 0 THEN '0'
@@ -18070,7 +18070,7 @@
 									AND
 										COMPANYID = #companyID#) E	 
    						WHERE  
-   							Code = '1') F ), #v_DDeptCode#, 
+   							Code = '1') F ), #v_TYPE2#, 
 		   												(SELECT 
 		        											CASE WHEN ISUsed = 0 THEN 0
 		    							   					ELSE ISUsed
@@ -18116,11 +18116,13 @@
 															    								WHERE  
 															    									Code = '4') B ), $v_RtnSN$, 0 , #v_TENANTID#, #companyID#)
 		</insert>
+		
+		<!-- 2023-02-23 홍승비 - 전자결재G > 기록물철 인계 > 여러개의 기록물철 인계 시, 루프 내부에서 쿼리가 실행되므로 시리얼번호 +1 갱신으로 수정 -->
 		<update id="EzApprovalG.updateTbSerialNumGen" parameterClass="Map">
 			UPDATE 
 				TBL_SERIALNUMGEN
 			SET 
-				RegSerialNo = #v_RtnSN# + #v_numRows#
+				RegSerialNo = #v_RtnSN# + 1
 			WHERE  
 				Type1 = (
 						  SELECT 
@@ -18146,12 +18148,12 @@
 		   						WHERE  
 		   							Code = '1') E)
 			AND 
-				Type2 = #v_DDeptCode#
+				Type2 = #v_TYPE2#
 			AND 
 				Type3 =  (
 							SELECT 
 								CASE WHEN ISUsed = 0 THEN 0
-		   					    ELSE $v_numRows$
+		   					    ELSE #v_numRows#
 		  					    END 
 						    FROM (
  						           SELECT 
@@ -18196,7 +18198,7 @@
 					 		 WHERE  
 					 			  Code = '4') B )
 			AND 
-				RegSerialNo = $v_RtnSN$
+				RegSerialNo = #v_RtnSN#
 			AND 
 				TENANT_ID = #v_TENANTID#
 			AND
@@ -18304,9 +18306,7 @@
 			     AND
 			     		TBL_CABINETCLASS.COMPANYID = #companyID#
 			     ORDER BY 
-			     		ConfirmFlag ASC) A
-        WHERE 
-        	 ConfirmFlag = '0' )
+			     		ConfirmFlag ASC) A )
 		</insert>
 		
 		<insert id="EzApprovalG.trigerTbCabinet" parameterClass="Map">
@@ -18427,9 +18427,7 @@
 													     AND
 													     		TBL_CABINETCLASS.COMPANYID = #companyID#
 													     ORDER BY 
-													     		ConfirmFlag ASC)A
-                                                   WHERE  
-                                                   		ConfirmFlag = '0' )
+													     		ConfirmFlag ASC)A)
                AND
                		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
                AND
@@ -18564,8 +18562,7 @@
 			     AND
 			     	    TBL_CABINETCLASS.COMPANYID = #companyID#
 			     ORDER BY 
-			     		ConfirmFlag ASC ) C
-           WHERE  ConfirmFlag = '0' )
+			     		ConfirmFlag ASC ) C )
 		</insert>
 		
 		<insert  id="EzApprovalG.insertTbSpecialCatalogInfo2" parameterClass="Map">
@@ -18717,8 +18714,6 @@
                                                    	AND
                                                    		TBL_SPECIALCATALOGINFO_CAB.COMPANYID = tt_tmpClassInfo.COMPANYID
                                                     WHERE  
-                                                    	ConfirmFlag = '0'
-                                                    AND 
                                                     	SerialNo = '000'
                                                     AND 
                                                     	tt_tmpClassInfo.SpecialCatalogFlag = #v_NewSCFlag#
@@ -18843,8 +18838,6 @@
               AND
               	TBL_OLDCABINETEXTRAINFO.COMPANYID = tt_tmpClassInfo.COMPANYID
         	  WHERE  
-        	  	ConfirmFlag = '0'
-        	  AND
         	  	TBL_OLDCABINETEXTRAINFO.TENANT_ID = #v_TENANTID# 
         	  AND
         	  	TBL_OLDCABINETEXTRAINFO.COMPANYID = #companyID#)
@@ -18951,8 +18944,6 @@
 	        WHERE  
 	        	TBL_CABINET.VolumeNo != '001'
 	        AND 
-	        	ConfirmFlag = '0'
-	        AND
 	        	TBL_CABINET.TENANT_ID = #v_TENANTID# 
 	        AND
 	        	TBL_CABINET.COMPANYID = #companyID#)
@@ -19064,8 +19055,6 @@
                  AND
                  	tt_tmpClassInfo.COMPANYID = TBL_CABINET.COMPANYID
                  WHERE  
-                 	tt_tmpClassInfo.ConfirmFlag = '0' 
-                 AND
                  	tt_tmpClassInfo.TENANT_ID = #v_TENANTID#
                  AND
                  	tt_tmpClassInfo.COMPANYID = #companyID#) CabClass
@@ -19433,8 +19422,6 @@
                                                	AND
                                                		tt_tmpClassInfo.COMPANYID = TBL_CABINET.COMPANYID
                                            		WHERE  
-                                           			tt_tmpClassInfo.ConfirmFlag = '0'
-                                           		AND
                                            			tt_tmpClassInfo.TENANT_ID = #v_TENANTID#
                                            		AND
                                            			tt_tmpClassInfo.COMPANYID = #companyID#)
@@ -19541,8 +19528,6 @@
 		       	AND
 		       		tt_tmpClassInfo.COMPANYID = TBL_CABINETHISTORY.COMPANYID
 		        WHERE  
-		        	tt_tmpClassInfo.ConfirmFlag = '0'
-		        AND
 		        	tt_tmpClassInfo.TENANT_ID = #v_TENANTID#
 		        AND
 		        	tt_tmpClassInfo.COMPANYID = #companyID# )
@@ -21611,11 +21596,10 @@
 		  		  	  			  ConfirmFlag = '1') 
 		  		  	  		)
 		  		  </isEqual>
+		  		  <!-- 2023-02-22 홍승비 - 인계목록 메뉴가 아닌 경우, 인계한 기록물철은 편철확정여부와 상관없이 인계부서에서 표출하지 않도록 ConfirmFlag = '0' 조건 제거 -->
 		  		  <isNotEqual property="listFlag" compareValue="9">
 		  		  	  AND 
-		  		  	  		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
-		  		  	  				AND 
-		  		  	  			 ConfirmFlag = '0')	
+		  		  	  		TBL_CABINET.CabinetTransferFlag != '2'
 	  		  	    <isNotEmpty property="deptCode">
 	  		  	      AND 
 	  		  	      		TBL_CABINETCLASS.OwnerDeptID = #deptCode# 

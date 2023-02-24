@@ -5516,6 +5516,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String transferCabinet(Document xmlDom, int tenantID) throws Exception {
 		logger.debug("transferCabinet started");
 
+		// 인수부서의 데이터 (인수부서 이름, 인수부서 ID, 인수받을 기록물철이 등록될 단위업무코드, 단위업무명...)
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String deptCode = xmlDom.getElementsByTagName("DDEPTCODE").item(0).getTextContent();
 		String deptName = xmlDom.getElementsByTagName("DDEPTNAME").item(0).getTextContent();
@@ -5527,8 +5528,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String deptMName = xmlDom.getElementsByTagName("DDEPTMNAME").item(0).getTextContent();
 		String deptMName2 = xmlDom.getElementsByTagName("DDEPTMNAME2").item(0).getTextContent();
 		
-		String cabIDList = "";
+		String cabIDList = ""; // 기록물철은 여러개 인계 가능
 		
+		// 쿼리에서 CabinetID IN 조건으로 사용하기 위해 ''문자로 이어붙임 (실제로는 하단 for 루프 내부에서 CabinetID 배열 하나씩 잘라 조건으로 사용)
 		for (int k = 0; k < xmlDom.getElementsByTagName("ID").getLength(); k++) {
 			if (k == 0) {
 				cabIDList += "'" + xmlDom.getElementsByTagName("ID").item(k).getTextContent().trim() + "' ";
@@ -5556,48 +5558,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int numRows = ezApprovalGDAO.transferCabinet(map);
 		map.put("v_numRows", numRows);
 		
+		// 채번 구분필드2 이용여부 (부서별 채번 또는 회사별 채번 여부 / 기록물철의 고유 시리얼 번호 생성 시 TYPE2를 조건으로 사용)
 		int type2Sn = ezApprovalGDAO.transferCabinetType2(map);
-		if ( type2Sn == 0) {
-			deptCode = "0";
-			map.put("v_DDeptCode", deptCode);
-		} 
+		if (type2Sn == 0) {
+			map.put("v_TYPE2", "0");
+		} else {
+			map.put("v_TYPE2", deptCode);
+		}
 		
-//        String year = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, "1", tenantID);
-//		map.put("v_YEAR", year);
-//		map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
-//		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-//		
-//		String curSN = ezApprovalGDAO.transferCabinetSn(map);
-//		
-//		if (curSN == null) {
-//			curSN = "1";
-//			map.put("v_RtnSN", curSN);
-//			ezApprovalGDAO.insertTbSerialNumGen(map);
-//		} else {
-//			map.put("v_RtnSN", curSN);
-//		}
-//		
-//		ezApprovalGDAO.updateTbSerialNumGen(map);
+		// 인계할 기록물철 리스트 배열로 분리
+		String cabList[] = cabIDList.split(",");
 		
-		StringBuffer rowID = new StringBuffer();
-		
-//				 인수기록물철 분류정보(TBCABINETCLASS)를 생성한다.
-		for (int j=0; j<numRows; j++) {
-			String cabList[] =cabIDList.split(",");
-            
+		// 인계할 기록물철의 개수만큼 루프를 돌면서 인수기록물철 분류정보(TBCABINETCLASS)를 생성한다.
+		for (int j = 0; j < numRows; j++) {
             Map<String, Object> serialNumMap = new HashMap<>();
             serialNumMap.put("v_CABINETID", cabList[j].replace("'", "").trim());
             serialNumMap.put("v_TENANTID", tenantID);
             serialNumMap.put("companyID", companyID);
             List<ApprGTaskVO> orgCabinet = ezApprovalGDAO.getCabinetInfo(serialNumMap);
             
+            // 기록물철 인계 시 생산연도는 동일하게 유지 (등록일자는 현재 시간)
             String productionYear = orgCabinet.get(0).getProductionYear();
             map.put("v_YEAR", productionYear);
-            map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
+            map.put("v_MONTH", String.format("%03d", Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
             map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-
+            
             String curSN = ezApprovalGDAO.transferCabinetSn(map);
- 
+            
             if (curSN == null) {
                 curSN = "1";
                 map.put("v_RtnSN", curSN);
@@ -5605,47 +5592,61 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             } else {
                 map.put("v_RtnSN", curSN);
             }
-
+            
             ezApprovalGDAO.updateTbSerialNumGen(map);
             
-			map.put("v_cabList",cabList[j]);
+			map.put("v_cabList", cabList[j]);
 			map.put("v_SN", j);
 			map.put("v_CNT", String.format("%06d", Integer.parseInt(curSN)));
-			map.put("v_CABINETCLASSNO", deptCode + taskCode + productionYear + String.format("%06d", Integer.parseInt(curSN) + j));
+			
+			// SerialNumGen 테이블에서 기록물철 생성을 위한 고유 번호를 가져왔으므로, CABINETCLASSNO용 추가 계산(+j) 동작 제거
+			map.put("v_CABINETCLASSNO", deptCode + taskCode + productionYear + String.format("%06d", Integer.parseInt(curSN)));
+			
+			// 인수부서에 새로운 기록물철을 생성
 			ezApprovalGDAO.insertTbCabinetClass(map);
+			
+			// TBL_CABINET 테이블은 TBL_CABINETCLASS의  TENANT_ID, COMPANYID, CABINETCLASSNO 칼럼을 외부 키로 가지므로,
+			// TBL_CABINETCLASS 테이블에 먼저 레코드를 삽입한 다음 TBL_CABINET 테이블에 레코드를 삽입
 			ezApprovalGDAO.trigerTbCabinet(map);
 			ezApprovalGDAO.trigerTbCabRoleInfo(map);
 			
+			// 인계할 기록물철 리스트의 목표 단위업무 정보를 확인 (*인수부서가 선택한 단위업무의 정보를 가져옴)
 			List<ApprGCabinetVO> apprExistUnitList = ezApprovalGDAO.selectExistUnit(map);
-			if(apprExistUnitList.size() > 0) {
-				rowID.append(apprExistUnitList.get(0).getCabinetClassNo().trim());
-				map.put("v_rowID", rowID.toString());
+			
+			if (apprExistUnitList.size() > 0) {
+				map.put("v_rowID", apprExistUnitList.get(0).getCabinetClassNo().trim());
 				map.put("KeepingPeriod", apprExistUnitList.get(0).getKeepingPeriod());
 				map.put("KeepingMethod", apprExistUnitList.get(0).getKeepingPlace());
 				map.put("KeepingPlace", apprExistUnitList.get(0).getKeepingMethod());
 				map.put("DisplayRecFlag", apprExistUnitList.get(0).getDisplayRecFlag());
 				map.put("SpecialCatalogFlag", apprExistUnitList.get(0).getSpecialCatalogFlag());
+				
+				// 인수부서에 새롭게 생성된 기록물철에 인수부서 단위업무 기준으로 보존기간, 보존방법, 보존장소 등 분류정보를 갱신 
 				ezApprovalGDAO.updateExistUnit(map);
 			}
 			
-			//특수목록 입력
+			// 특수목록 입력
 			String spFlag = ezApprovalGDAO.selectTbSpecialCatalogInfo(map);
-			if(spFlag == null) {
+			if (spFlag == null) {
 				map.put("v_NewSCFlag", 0);
-			} else if (!spFlag.equals("0")){
+			} else if (!spFlag.equals("0")) {
 				map.put("v_NewSCFlag", spFlag);
 				
 				ezApprovalGDAO.insertTbSpecialCatalogInfo(map);
-				//특수목록 플래그가 같고 특수목록 이름이 같으면 데이터를 복사한다.
+				// 특수목록 플래그가 같고 특수목록 이름이 같으면 데이터를 복사한다.
 				ezApprovalGDAO.insertTbSpecialCatalogInfo2(map);
 			}
-			//구기록물철 정보 저장
+			
+			// 구기록물철 정보 저장
 			ezApprovalGDAO.insertTbOldCabinetExtraInfo(map);
-			//인수 기록물철 테이블(TBCABINET)에 생성한다.
-			//권호수가 1권이 아닐경우-> 기록물철을 생성
+			// 인수 기록물철 테이블(TBCABINET)에 생성한다.
+			// 권호수가 1권이 아닐경우 -> 권호수에 따른 기록물철도 함께 생성
 			ezApprovalGDAO.insertTbCabinetInfo(map);
+			
+			// 새롭게 생성된 인수부서의 기록물철 리스트 셀렉트
 			List<ApprGCabinetVO> apprCabinetTransferList = ezApprovalGDAO.selectCabinetTransfer(map);
-			if(apprCabinetTransferList.size() > 0) {
+			
+			if (apprCabinetTransferList.size() > 0) {
 				map.put("v_rowID", apprCabinetTransferList.get(0).getRow_id().trim());
 				map.put("ProcessDeptCode", apprCabinetTransferList.get(0).getProcessDeptCode());
 				map.put("TaskCode", apprCabinetTransferList.get(0).getTaskCode());
@@ -5657,7 +5658,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("Title2", apprCabinetTransferList.get(0).getTitle2());
 				map.put("ProcessDeptName", apprCabinetTransferList.get(0).getProcessDeptName());
 				map.put("ProcessDeptName2", apprCabinetTransferList.get(0).getProcessDeptName2());
-				map.put("TaskName", apprCabinetTransferList.get(0).getTaskName());;
+				map.put("TaskName", apprCabinetTransferList.get(0).getTaskName());
 				map.put("TaskName2", apprCabinetTransferList.get(0).getTaskName2());
 				map.put("CatalogTransferFlag", apprCabinetTransferList.get(0).getCatalogTransferFlag());
 				map.put("CatalogTransferYear", apprCabinetTransferList.get(0).getCatalogTransferYear());
@@ -5665,24 +5666,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("DocTransferYear", apprCabinetTransferList.get(0).getDocTransferYear());
 				map.put("ProdReportFlag", apprCabinetTransferList.get(0).getProdReportFlag());
 				
-				ezApprovalGDAO.updateTbCabinetInfo(map);
+				ezApprovalGDAO.updateTbCabinetInfo(map); // 인수부서의 기록물철 CabinetTransferFlag = '1' 로 업데이트 (인수)
 			}
-			ezApprovalGDAO.updateTbCabinetInfo2(map);
-			ezApprovalGDAO.updateTbCabinetInfo3(map);
-			ezApprovalGDAO.updateTbCabinetClass(map);
 			
+			// 인계부서의 기록물철 CabinetTransferFlag = '2' 로 업데이트 (인계)
+			ezApprovalGDAO.updateTbCabinetInfo2(map); // 편철확정 "되지 않은" 기록물철의 TBL_CABINET 업데이트
+			ezApprovalGDAO.updateTbCabinetInfo3(map); // 편철확정 "된" 기록물철의 TBL_CABINET 업데이트
+			
+			// 아래의 쿼리는 인수부서에서 인계부서의 기존 철을 표출하게 하는 오류를 발생시키므로 주석처리함
+			// ezApprovalGDAO.updateTbCabinetClass(map); // 편철확정 "된" 기록물철의 TBL_CABINETCLASS => OwnerDeptID, OwnerTask를 인수부서의 데이터로 업데이트
+			
+			// 분리첨부 레코드 => 인수부서의 분리첨부가 되도록 CabinetID를 인수부서 기록물철의 CabinetID로 갱신 
 			List<ApprGCabinetVO> apprTbSeperateAttachList = ezApprovalGDAO.selectTbSeperateAttach(map);
-			StringBuffer rowID3 = new StringBuffer();
 			
-			if(apprTbSeperateAttachList.size() > 0) {
-				rowID3.append(apprTbSeperateAttachList.get(0).getRecordID().trim());
-				map.put("v_rowID3", rowID3.toString());
+			if (apprTbSeperateAttachList.size() > 0) {
+				map.put("v_rowID3", apprTbSeperateAttachList.get(0).getRecordID().trim());
 				map.put("v_CABINETID", apprTbSeperateAttachList.get(0).getCabinetID());
 				
 				ezApprovalGDAO.updateTbSeperateAttach(map);
 			}
+			
 			ezApprovalGDAO.insertTbCabinetHistory(map);
 		}
+		
 		rtnVal = "<RESULT>TRUE</RESULT>";
 
 		logger.debug("transferCabinet ended");
