@@ -2014,38 +2014,32 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             	
             	FileInputStream fis = null;
 				FileOutputStream fos = null;
+				FileOutputStream fos2 = null;
 				BufferedInputStream bis = null;
 				BufferedOutputStream bos = null;
                 
 				try {
 					// CWE-404 보안 취약점 대응
-					try {
-						// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-						fis = new FileInputStream(filePath[i]);
-						bis = new BufferedInputStream(fis);
-						
-						fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
-						bos = new BufferedOutputStream(fos);
-						
-						int data = 0;
-						byte[] buffer = new byte[BUFF_SIZE];
-						
-						while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
-							bos.write(buffer, 0, data);
-						}
-					} finally {					
-						bos.close(); bos = null;
-						bis.close(); bis = null;
-						fos.close(); fos = null;
-						fis.close(); fis = null;
+					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+					fis = new FileInputStream(filePath[i]);
+					bis = new BufferedInputStream(fis);
+					
+					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+					bos = new BufferedOutputStream(fos);
+					
+					int data = 0;
+					byte[] buffer = new byte[BUFF_SIZE];
+					
+					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+						bos.write(buffer, 0, data);
 					}
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
                 	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
                 	
-                	file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
-                	fos = new FileOutputStream(file);
-                	fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
+                	File fileForName = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
+                	fos2 = new FileOutputStream(fileForName);
+                	fos2.write(base64OrgFileName.getBytes("ISO-8859-1"));
                 	
                 	//첨부파일 정보를 XML data로 만든다.
                     String resultUpload = "";
@@ -2085,6 +2079,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 	}
                 	if (fos != null) {
                 		try { fos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
+                	}
+                	if (fos2 != null) {
+                		try { fos2.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
                 	}
                 	if (fis != null) {
                 		try { fis.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
