@@ -1576,7 +1576,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String[] sFileTitle = new String[cnt];
 		String[] sExt = new String[cnt];
 		String pDirTempPath = "";
-		String comparingExt = "";
 		long bigMaxSize = 0;
 		long changeSize = 0;
 
@@ -1597,6 +1596,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		// 업로드 허용 파일 확장자 설정을 조회
 		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		
 		if (useExtension == null) {
@@ -1606,12 +1606,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
 			boolean isEmpty = false;
 			String _pFileName = "";
-			for (int i=0; i<cnt; i++) {
+
+			// 파일명과 확장자를 구한다.
+			for (int i = 0; i < cnt; i++) {
 				_pFileName = multiFile.get(i).getOriginalFilename();
+
+				// 폴더 경로를 제외한 파일명만을 구한다.
 				if (_pFileName.indexOf(commonUtil.separator) > 0) {
 					_pFileName = _pFileName.split(commonUtil.separator)[_pFileName.split(commonUtil.separator).length - 1];
 				}
+
 				pFileName[i] = _pFileName;
+
+				// 파일 확장자를 구한다.
 				if (pFileName[i].lastIndexOf(".") > -1) {
 					sFileTitle[i] = pFileName[i].substring(0, pFileName[i].lastIndexOf("."));
 					sExt[i] = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
@@ -1646,10 +1653,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
 		
-		// check the upload mail root folder and create it if it isn't exist.
+		// check the upload mail root folder and create it if it doesn't exist.
 		File uploadMailRootFolder = new File(pDirPath);
+
 		if (!uploadMailRootFolder.exists()) {
 			logger.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
+
 			uploadMailRootFolder.mkdirs();
 		}
 		
@@ -1661,8 +1670,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			largeFilePath += commonUtil.separator + "largeFile";
 		}
 		
-		for (int i=0; i<cnt; i++) {
+		for (int i = 0; i < cnt; i++) {
 			fileSize[i] = multiFile.get(i).getSize();
+
+			// 대용량 첨부 파일의 경우
 			if (fileSize[i] > changeSize || isBigYN.equals("Y")) {
                 String pDate = EgovDateUtil.getToday("");
                 folderDate = pDate;
@@ -1681,6 +1692,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 FileOutputStream fos = null;
                 
                 try {
+					// 대용량 첨부 파일명을 저장하는 파일
                 	File f = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt"));
                 	fos = new FileOutputStream(f);
                     fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
@@ -1691,25 +1703,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 		fos.close();
                 	}
                 }
+			// 일반 첨부 파일의 경우
             } else {
                 pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
                 pBigFileUpload = "N";
             }
 			
 			File f = new File(pDirTempPath);
+
 			if (!f.exists()) {
 				f.mkdirs();
             }
 			
-			// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
-			if (sExt[i].toLowerCase().endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-				comparingExt = sExt[i].toLowerCase().replace("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT, "");
-			} else {
-				comparingExt = sExt[i].toLowerCase();
-			}
-
-			logger.debug("comparingExt={}", comparingExt);
-
 			if (fileSize[i] > bigMaxSize && bigMaxSize != 0) {
                 resultUpload[i] = "overflow";
             } else {
@@ -1717,11 +1722,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 if ((sExt[i].isEmpty() || useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1) && !useExtension.equals("*")) {
                     resultUpload[i] = "denied";
                 } else {
+					// Multipart 형식으로 업로드된 파일을 복사한다.
                     writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
                     fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
                     resultUpload[i] = "true";
                 }
                 
+				// 업로드된 파일에 대한 정보를 XML 형식으로 클라이언트에게 반환한다.
                 strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
                 strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
                 strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
@@ -1734,6 +1741,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
                 strXML2 += "</NODE>";
             }
+
             pDirTempPath = "";
 		}
 		
@@ -1741,10 +1749,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
         String xmlPath = pDirPath + commonUtil.separator + "templist";
         File f = new File(xmlPath);
+
         if (!f.exists()) {
 			f.mkdirs();
         }
 
+		// 업로드된 파일에 대한 정보를 누적해서 저장하는 파일
         xmlPath += commonUtil.separator + tempFolderName + ".txt";
         f = new File(xmlPath);
         
