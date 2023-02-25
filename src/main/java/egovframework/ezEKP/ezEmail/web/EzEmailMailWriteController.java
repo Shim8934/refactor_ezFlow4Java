@@ -2923,10 +2923,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		NodeList bigs = xmldom.getElementsByTagName("BIG");
 		boolean hasAttachFile = false;
 		
-		if (bigs != null) {
-			
-			for (int i = 0; i < bigs.getLength(); i++) {
-				
+		if (bigs != null) {			
+			for (int i = 0; i < bigs.getLength(); i++) {				
 				if (bigs.item(i).getTextContent().equals("N")) {
 				    // 일반첨부파일이 있는 경우
 					hasAttachFile = true;
@@ -2975,8 +2973,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		Folder folder = null;
 		Multipart multipart = null;
 		
-		try {
-			
+		try {			
 			if (hasAttachFile) {
 				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 						userEmail, password);
@@ -3025,16 +3022,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
 										multipart.addBodyPart(p);
 									} else {
-									relatedPart.addBodyPart(p);
-								}
+										relatedPart.addBodyPart(p);
+									}
 								}
 								
 								// relatedPart에 속한 파트가 하나도 없는 경우 삽입하면 메시지가
 								// 정상적으로 생성되지 않는다.
 								if (relatedPart.getCount() > 0) {
-								MimeBodyPart wrap = new MimeBodyPart();
-								wrap.setContent(relatedPart);
-								multipart.addBodyPart(wrap, 0);
+									MimeBodyPart wrap = new MimeBodyPart();
+									wrap.setContent(relatedPart);
+									multipart.addBodyPart(wrap, 0);
 								}
 							} else if (oldMessage.isMimeType("multipart/alternative")) {
 							    logger.debug("oldMessage is multipart/alternative");
@@ -3049,8 +3046,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                            MimeBodyPart wrap = new MimeBodyPart();
 	                            wrap.setContent(alternativePart);
 	                            multipart.addBodyPart(wrap, 0);							    
-							} else {
-								
+							} else {								
 								for (int i = 0; i < count; i++) {
 									p = mp.getBodyPart(i);
 									multipart.addBodyPart(p);
@@ -3132,10 +3128,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 				        //TODO: fileName parameter를 attachCount로 바꿔야 할것같음. 또는 (filename, attachCount).
 				        //메일에서 첨부파일 삭제할 때 attachCount 필요함.
-				        childNodes.item(4).setTextContent(fileName);
-				        
-					} else {
-						
+				        childNodes.item(4).setTextContent(fileName);				        
+					} else {						
 						if (!path.equals("")) {
 							String[] newPath = path.split("\\|!\\|");
 							childNodes.item(1).setTextContent(newPath[1]);
@@ -3151,8 +3145,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					
 					uid = uids[0].uid;
 					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uid));
-				} else {
-					
+				} else {					
 					if (uid == 0) {
 						xmldom.getElementsByTagName("URL").item(0).setTextContent("");
 					} else {
@@ -3180,13 +3173,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        folder.close(true);
 			}
 			
-			returnValue = commonUtil.convertDocumentToString(xmldom);
-			
+			returnValue = commonUtil.convertDocumentToString(xmldom);			
 		} catch (MessagingException e) {
 			returnValue = e.getMessage();
 			e.printStackTrace();
-		} finally {
-			
+		} finally {			
 			if (ia != null) {
 				ia.close();
 			}
