@@ -885,9 +885,9 @@ public class EzEditorController extends EgovFileMngUtil {
 				if (type.equals("MAILLETTER")) {
 					String reProtocol = request.getScheme() + "://";
 					String reServer = request.getServerName()
-							+ ("http".equals(reProtocol)
+							+ ("http".equals(request.getScheme())
 								&& request.getServerPort() == 80
-								|| "https".equals(reProtocol)
+								|| "https".equals(request.getScheme())
 								&& request.getServerPort() == 443 ? "" : ":"
 								+ request.getServerPort());
 					String hostTmp = reProtocol + reServer;
