@@ -1,19 +1,14 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Resource;
@@ -1135,8 +1130,38 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("companyOracleStr", companyOracleStr);
 
 		logger.debug("getPermissionChHistCount ended.");
-
 		return ezSystemAdminDAO.getPermissionChHistCount(params);
 	}
 
+	@Override
+	public String getFileExtension(int tenantId) throws Exception {
+		logger.debug("getFileExtension started");
+
+		String fileExtension = ezSystemAdminDAO.getFileExtension(tenantId);
+		String[] fileExtensionList = fileExtension.split(",");
+		Arrays.sort(fileExtensionList);
+		String result = "";
+
+		for (String file : fileExtensionList) {
+			result += file+",";
+		}
+
+		logger.debug("getFileExtension ended");
+
+		return result;
+	}
+
+	@Override
+	public String updateFileExtension(int tenantId, String updateFileExtension) throws Exception {
+		logger.debug("updateFileExtension service started");
+
+		Map<String,Object> map = new HashMap<>();
+		map.put("tenantId", tenantId);
+		map.put("fileExtension", updateFileExtension);
+
+		ezSystemAdminDAO.updateFileExtension(map);
+
+		logger.debug("updateFileExtension service ended");
+		return "OK";
+	}
 }
