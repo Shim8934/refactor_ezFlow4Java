@@ -1222,6 +1222,45 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("deleteDBData ended.");
 	}
 
+    /**
+     * 사용자 프로필 삭제 함수		// 인사연동 소스에서 따옴.
+     *
+     * 프로필을 사진삭제를 해야하는 부분은 다음 3가지가 있다.
+     * 현재 효율성으로 extensionAttribute2값만 ""으로 update하고 있는데, 퇴직자 삭제의 경우는 파일을 실제 삭제하므로 이 함수를 사용한다.
+     * (1)/admin/ezOrgan/delUser.do 퇴직자 삭제
+     * (2)/ezPersonal/deletePicture.do 사용자가 사진삭제
+     * (3)/admin/ezOrgan/userInfo.do->function deleteImg()->/admin/ezOrgan/saveUserInfo.do 관리자가 사진삭제
+     *
+     * ※ 만약 2,3의 경우에도 파일 실제 삭제를 원한다면 해당 controller에서 이 함수를 추가하면 됨.
+     * ※ thumbnailFile을 삭제하는 것은 그냥 범용적으로 둔 것인데, 현재는 썸네일을 사용하지 않는다고 알고 있다. 사이트에 따라 필요하다고 판단하면 주석처리를 풀면 된다.
+     * */
+	@Override
+	public void deleteDestUserProfileImage(String cn, int tenantID, String realPath) throws Exception {
+		logger.debug("deleteDestUserProfileImage started. cn={}", cn);
+
+	    String photoPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTO", tenantID) + "/files/upload_personal/photo";
+		String thumbnailPath = photoPath + "/thumbnail";
+
+		try {
+			File photoFile = new File(photoPath + "/" + cn + ".jpg");
+			if (photoFile.exists()) {
+				photoFile.delete();
+				logger.debug("photoFile delete.");
+			}
+			/*
+			File thumbnailFile = new File(thumbnailPath + "/" + cn + ".jpg");
+			if (thumbnailFile.exists()) {
+				thumbnailFile.delete();
+				logger.debug("thumbnailFile delete.");
+			}
+			*/
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("deleteDestUserProfileImage ended");
+	}
+
 	@Override
 	public OrganUserVO getUserInfo(String cn, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();		

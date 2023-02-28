@@ -1591,6 +1591,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (userExists == 0) { // 이메일 계정이 존재하지 않음.
 				// 로컬 시스템 계정을 삭제한다.
 				ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
+				ezOrganAdminService.deleteDestUserProfileImage(cn[i], tenantID, realPath); // 2023-02-28 김은실 : 프로필 이미지  삭제
 			} else if (userExists == 1 || userExists == 2) { // 1은 유효한 이메일 계정. 2는 퇴직자 계정. (주의: 2는 더이상 사용되지 않으나 그대로 둠)
 				List<String> distributionList = null;
 				String groupAddr = null;
@@ -1662,6 +1663,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 										
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
+					ezOrganAdminService.deleteDestUserProfileImage(cn[i], tenantID, realPath); // 2023-02-28 김은실 : 프로필 이미지  삭제
 				} catch (Exception e) {
 					e.printStackTrace();
 					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
