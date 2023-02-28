@@ -1238,17 +1238,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public void deleteDestUserProfileImage(String cn, int tenantID, String realPath) throws Exception {
 		logger.debug("deleteDestUserProfileImage started. cn={}", cn);
 
-	    String photoPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTO", tenantID) + "/files/upload_personal/photo";
-		String thumbnailPath = photoPath + "/thumbnail";
+	    String photoPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTO", tenantID) + commonUtil.separator;
+		String thumbnailPath = photoPath + "thumbnail" + commonUtil.separator;
 
 		try {
-			File photoFile = new File(photoPath + "/" + cn + ".jpg");
+			String photoFilePath = photoPath + cn + ".jpg";
+			logger.debug("photoFilePath={}", photoFilePath);
+
+			File photoFile = new File(commonUtil.detectPathTraversal(photoFilePath));
 			if (photoFile.exists()) {
 				photoFile.delete();
 				logger.debug("photoFile delete.");
 			}
 			/*
-			File thumbnailFile = new File(thumbnailPath + "/" + cn + ".jpg");
+			String thumbnailFilePath = thumbnailPath + cn + ".jpg";
+			logger.debug("thumbnailFilePath={}", thumbnailFilePath);
+
+			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailFilePath));
 			if (thumbnailFile.exists()) {
 				thumbnailFile.delete();
 				logger.debug("thumbnailFile delete.");
