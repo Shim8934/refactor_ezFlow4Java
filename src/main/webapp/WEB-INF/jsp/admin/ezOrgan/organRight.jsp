@@ -2025,6 +2025,57 @@
 				});
 			}
 			
+			function trash_dept() {
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+
+				if (TreeView.selectedIndex == -1){
+					alert("<spring:message code='ezOrgan.t32'/>");
+					return;
+				}
+
+				if(treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")){
+					alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh01'/>");
+					return;
+				}
+				
+				if (!confirm("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh02'/>")){
+					return;
+				}
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/trashDept",
+					async : false,
+					data : {cn : treeNode.GetNodeData("CN"),
+							EXTENSIONATTRIBUTE2 : treeNode.GetNodeData("EXTENSIONATTRIBUTE2")},
+					success : function (result) {
+						
+						if (result == "HASCHILD"){
+							alert("<spring:message code='ezOrgan.kdh03'/>");
+						} else if (result == "EMAIL_ERROR") {
+							alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh04'/>");
+						} else if (result == "SAME") {
+							alert("<spring:message code='ezOrgan.t21' />");
+						} else if (result == "DIFF_COMPANY") {
+							alert("<spring:message code='ezOrgan.lhm4' />");
+						} else {
+							alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh05'/>");
+							getDeptFullTree(topid);
+						}
+						
+					},
+					error : function () {
+						alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t36'/>");
+					}
+				});
+			}
+			
 		</script>
 		<style>
 			.OrganListView {width:100%;}
@@ -2098,6 +2149,7 @@
 					<li class="important"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></li>
 					<li id="companybutton2"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></li>
 				</c:if>
+				<li id="usermenu11"><span onclick="trash_dept()"><spring:message code='ezOrgan.kdh06' /></span></li>
 				<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
 				<c:if test="${dotNetIntegration != 'YES'}">
 					<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>

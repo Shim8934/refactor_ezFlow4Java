@@ -5424,4 +5424,87 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("downloadExcelReport end");
 	}
 	
+	@RequestMapping(value = "/admin/ezOrgan/trashDept")
+	@ResponseBody
+	public String trashDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("trashDept started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "EMAIL_ERROR";
+		}
+
+		int tenantId = userInfo.getTenantId();
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String cn = request.getParameter("cn");
+		String company = request.getParameter("EXTENSIONATTRIBUTE2");
+		String trashDeptId = "trash_dept_" + company;
+		String mailAddr = trashDeptId + "@" + domain;
+
+		logger.debug("tenantId={}, cn={}, company={}, trashDeptId={}, mailAddr={}", tenantId,cn,company,trashDeptId,mailAddr);
+		
+		String result = "EMAIL_ERROR";
+		
+		try {
+			// 제거하고자 하는 회사 혹은 부서 바로 아래에 위치한 자식 부서의 수를 구한다.
+			int cnt = ezOrganAdminService.companyChildCheck(cn, tenantId);
+
+			// 제거하고자 하는 회사 혹은 부서에 속한 사원의 수를 반환한다.
+			int usercnt = ezOrganAdminService.userCountCheck(cn, tenantId);
+
+			logger.debug("cnt=" + cnt + ",usercnt=" + usercnt);
+
+			if (cnt > 0) {
+				result = "HASCHILD";
+			} else if (usercnt > 0) {
+				result = "HASCHILD";
+			} else {
+				// 페지부서가 있는지 확인
+				int cntUserCheck = ezOrganAdminService.userCheck(trashDeptId, tenantId);
+
+				if (cntUserCheck <= 0) {
+					logger.debug("create trashDept started");
+					// 폐지부서가 없을시 폐지부서 생성
+					OrganDeptVO trashDeptVO = new OrganDeptVO();
+					trashDeptVO.setTenantId(tenantId);
+					trashDeptVO.setParentCn(company);
+					trashDeptVO.setCn(trashDeptId);
+					trashDeptVO.setDisplayName("폐지부서");
+					trashDeptVO.setDisplayName2("폐지부서");
+					trashDeptVO.setMail(mailAddr);
+					// 회사 바로 아래 맨 마지막에 위치시킨다.
+					trashDeptVO.setExtensionAttribute15("9999");
+					// 인사연동 시 공유 사서함 부서를 폐지시키지 않기 위해 manualFlag를 Y로 설정한다.
+					trashDeptVO.setManualFlag("Y");
+					
+					int rc = ezEmailUserAdminService.addGroup(mailAddr);
+					
+					if (rc != 0) {
+						logger.debug("TarashDept add Fail");
+						return result;
+					}
+					
+					ezOrganAdminService.insertDBData_dept(trashDeptVO);
+
+					logger.debug("create trashDept ended");
+				} 
+				
+				OrganDeptVO vo = new OrganDeptVO();
+				vo.setTenantId(tenantId);
+				vo.setCn(cn);
+				vo.setExtensionAttribute1(trashDeptId);
+				
+				logger.debug("cn={}, parentCN={}", cn, trashDeptId);
+				
+				result = ezOrganAdminService.moveEntry(trashDeptId,cn,"group",userInfo.getOffset(),tenantId);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("trashDept ended");
+		return result;
+	}
 }
