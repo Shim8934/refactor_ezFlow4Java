@@ -21412,7 +21412,7 @@
 		  		  	  		TBL_CABINET.CabinetTransferFlag = '2'
 		  		  	  AND 
 		  		  	  		( 
-		  		  	  			( OwnerDeptID = #deptCode#
+		  		  	  			( TRIM(OwnerDeptID) = #deptCode#
 		  		  	  				AND
 		  		  	  			  ConfirmFlag = '0' ) 
 		  		  	  			OR 
@@ -21427,7 +21427,7 @@
 		  		  	  		TBL_CABINET.CabinetTransferFlag != '2'
 	  		  	    <isNotEmpty property="deptCode">
 	  		  	      AND 
-	  		  	      		TBL_CABINETCLASS.OwnerDeptID = #deptCode# 
+	  		  	      		TRIM(TBL_CABINETCLASS.OwnerDeptID) = #deptCode# 
 	  		  	    </isNotEmpty>
 		  		  </isNotEqual>
 		  		  <isNotEmpty property="title">
@@ -21732,7 +21732,7 @@
 	  	  		TBL_CABINET.CabinetTransferFlag = '2'
 	  	  AND 
 	  	  		( 
-	  	  			( OwnerDeptID = #deptCode#
+	  	  			( TRIM(OwnerDeptID) = #deptCode#
 	  	  				AND
 	  	  			  ConfirmFlag = '0' ) 
 	  	  			OR 
@@ -21748,7 +21748,7 @@
 	  	  			 ConfirmFlag = '0')	
 	 	    <isNotEmpty property="deptCode">
 	 	      AND 
-	 	      		TBL_CABINETCLASS.OwnerDeptID = #deptCode# 
+	 	      		TRIM(TBL_CABINETCLASS.OwnerDeptID) = #deptCode# 
 	 	    </isNotEmpty>
 	  </isNotEqual>
 	  <isNotEmpty property="title">
