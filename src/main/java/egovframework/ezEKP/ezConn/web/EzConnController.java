@@ -445,6 +445,8 @@ public class EzConnController {
 	 * @param response
 	 * @return
 	 */
+	// 필요시에만 주석을 풀어 사용함
+	/*
 	@RequestMapping(value="/ezConn/getSSOAuthString.do", method=RequestMethod.GET)
 	@ResponseBody
 	public String getSSOAuthString(@RequestParam String userId, HttpServletRequest request, HttpServletResponse response) {
@@ -491,6 +493,7 @@ public class EzConnController {
 		
 		return result;
 	}
+	*/
 	
 	/**
 	 * 암호화된 자체 방식 SSO 인증 스트링을 전달 받아 복화화해 사용자를 확인한 후 로그인 처리를 수행한다.

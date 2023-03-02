@@ -953,5 +953,24 @@
 			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 		</isEqual>
 	</select>
-	
+
+	<select id="EzSystemAdminDAO.getFileExtension" parameterClass="Integer" resultClass="String">
+		SELECT PROPERTY_VALUE value
+		FROM TBL_TENANT_CONFIG
+		WHERE TENANT_ID = #tenantID#
+		  AND PROPERTY_NAME like 'USE_FileExtension'
+	</select>
+
+	<update id="EzSystemAdminDAO.updateFileExtension" parameterClass="Map">
+		<![CDATA[
+		UPDATE
+			TBL_TENANT_CONFIG
+		SET
+			PROPERTY_VALUE=#fileExtension#
+		WHERE
+			PROPERTY_NAME='USE_FileExtension'
+		  AND
+			TENANT_ID=#tenantId#
+		]]>
+	</update>
 </sqlMap>

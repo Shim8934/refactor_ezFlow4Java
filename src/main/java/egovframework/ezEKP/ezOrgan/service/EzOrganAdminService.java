@@ -31,6 +31,8 @@ public interface EzOrganAdminService {
 
 	public int getUserCount(int tenantID) throws Exception;
 	
+	public void deleteDestUserProfileImage(String cn, int tenantID, String realPath) throws Exception;
+
 	public OrganUserVO getUserInfo(String cn, String lang, int tenantID) throws Exception;
 	
 	public OrganUserVO getRetireEntryInfo(String cn, String lang, int tenantID) throws Exception;
