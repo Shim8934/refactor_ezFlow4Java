@@ -5945,7 +5945,7 @@
 						   			TBL_CABINETCLASS.ConfirmFlag = '0')
 						  <isNotEqual property="tempDeptCode" compareValue="ALL">
 							  AND 
-							  		OwnerDeptID = #tempDeptCode#
+							  		TRIM(OwnerDeptID) = #tempDeptCode#
 						  </isNotEqual>
 						</isEmpty> 
 				  		<isNotEmpty property="cabinetIDs">
@@ -5990,7 +5990,7 @@
 					  </isEqual>
 					  <isEqual property="listFlag" compareValue="6">
 					  	  AND 
-					  	  		OwnerDeptID = #tempDeptCode# 
+					  	  		TRIM(OwnerDeptID) = #tempDeptCode# 
 					  	  AND 
 					  	  		TBL_CABINETCLASS.KeepingPlace = '1' 
 					  	  AND 	
@@ -6122,7 +6122,7 @@
 				<isEqual property="listFlag" compareValue="9" prepend="AND">
 						( TBL_RECORD.DocID IS NOT NULL 
 							AND 
-						  TBL_CABINETCLASS.OwnerDeptID = #deptCode# 
+						  TRIM(TBL_CABINETCLASS.OwnerDeptID) = #deptCode# 
 							AND 
 						  SeperateAttachNo = '00')
 				</isEqual>
@@ -13647,7 +13647,7 @@
 				   			ConfirmFlag = '0')
 				<isNotEqual property="tempDeptCode" compareValue="ALL">
 				  AND 
-				  		OwnerDeptID = #tempDeptCode#
+				  		TRIM(OwnerDeptID) = #tempDeptCode#
 				</isNotEqual>
 				</isEmpty> 
 		  		<isNotEmpty property="cabinetIDs">
@@ -13836,7 +13836,7 @@
 		<isEqual property="listFlag" compareValue="9" prepend="AND">
 				( TBL_RECORD.DocID IS NOT NULL 
 					AND 
-				  TBL_CABINET.OwnerDeptID = #deptCode# 
+				  TRIM(TBL_CABINET.OwnerDeptID) = #deptCode# 
 					AND 
 				  SeperateAttachNo = '00')
 		</isEqual>
