@@ -3274,6 +3274,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String checkLine = "";
 		
+		/* 2023-03-08 홍승비 - 통합PC저장으로 결재문서와 첨부파일 다운로드 후, 임시 생성된 .zip파일 삭제 */
+		String isToDelFG = request.getParameter("isToDelFG") == null ? "" : request.getParameter("isToDelFG");
+		
 		if (StringUtils.isBlank(fileName)) {
 		    fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
 		}
@@ -3449,6 +3452,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 			logger.debug("downloadAttach ended. result = " + result);
+		}
+		
+		// 2023-03-08 홍승비 - isToDelFG 플래그값이 Y인 경우, 첨부파일 다운로드 후 해당 파일을 삭제함 (통합PC저장 등, 임시 생성된 파일 삭제 시 사용)
+		if (isToDelFG.equalsIgnoreCase("Y")) {
+			File delFile = new File(commonUtil.detectPathTraversal(realPath + filePath));
+			
+			if (delFile.exists()) {
+				delFile.delete();
+			}
 		}
 	}
 	
