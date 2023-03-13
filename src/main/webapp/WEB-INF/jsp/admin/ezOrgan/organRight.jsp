@@ -2061,17 +2061,17 @@
 				var treeNode = new TreeNode();
 				treeNode.LoadFromID(nodeIdx.NodeID);
 
-				if (TreeView.selectedIndex == -1){
+				if (TreeView.selectedIndex == -1) {
 					alert("<spring:message code='ezOrgan.t32'/>");
 					return;
 				}
 
-				if(treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")){
+				if (treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")) {
 					alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh01'/>");
 					return;
 				}
 				
-				if (!confirm("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh02'/>")){
+				if (!confirm("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh02'/>")) {
 					return;
 				}
 				
@@ -2084,7 +2084,7 @@
 							EXTENSIONATTRIBUTE2 : treeNode.GetNodeData("EXTENSIONATTRIBUTE2")},
 					success : function (result) {
 						
-						if (result == "HASCHILD"){
+						if (result == "HASCHILD") {
 							alert("<spring:message code='ezOrgan.kdh03'/>");
 						} else if (result == "EMAIL_ERROR") {
 							alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh04'/>");
@@ -2204,7 +2204,7 @@
 				<c:if test="${dotNetIntegration != 'YES'}">
 				<li id="companyBtnList" class="newSelect on">
 					<p class="newSelectView" style="margin: 0;" onclick="organMenuListView(this)" mode = "off">
-					<span>회사</span>
+					<span><spring:message code='ezPersonal.t67' /></span>
 					<span class="icon_sel collapse_down"></span>
 					</p>
 					<ul class="option_horizontal_list" style="display: none;">
@@ -2216,7 +2216,7 @@
 				
 				<li id="deptBtnList" class="newSelect on" >
 					<p class="newSelectView" style="margin: 0;" onclick="organMenuListView(this)" mode = "off">
-						<span>부서</span>
+						<span><spring:message code='ezApprovalG.share05' /></span>
 						<span class="icon_sel collapse_down"></span>
 					</p>
 					<ul class="option_horizontal_list" style="display: none;">
@@ -2234,7 +2234,7 @@
 
 				<li id="userBtnList" class="newSelect on">
 					<p class="newSelectView" style="margin: 0;" onclick="organMenuListView(this)" mode = "off">
-					<span>사원</span>
+					<span><spring:message code='ezPersonal.kdh01' /></span>
 					<span class="icon_sel collapse_down"></span>
 					</p>
 					<ul class="option_horizontal_list" style="display: none;">
