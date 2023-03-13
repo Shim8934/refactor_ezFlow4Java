@@ -22,7 +22,7 @@ function selToggleList(ulEl, selPTab, selTab, flag)
     }
     
     if (selTab1EI.length > 0) {
-    	selTab1EI.item(0).className = "on";
+    	selTab1EI.item(0).className = selTab1EI.item(0).className.replace('off','on');
     }
      
     //KMS에서 사용합니다.
@@ -227,7 +227,8 @@ function mouseOver_Sub()
 		if (this.className.indexOf("important") > -1) {
 			this.className = "important on ing";
 		} else {
-			this.className = "on ing";
+			//this.className = "on ing";
+			this.className = this.className.replace('off','on ing');
 		}
 	}
 }
@@ -239,7 +240,7 @@ function mouseOut_Sub()
 		if (this.className.indexOf("important") > -1) {
 			this.className = "important off";
 		} else {
-			this.className = "off";
+			this.className = this.className.replace('off','on ing');
 		}
 	}
 }

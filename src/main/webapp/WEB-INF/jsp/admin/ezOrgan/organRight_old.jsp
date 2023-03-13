@@ -54,34 +54,6 @@
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 				windowResize();
 				functionSetting();
-
-				var clickOutside;
-
-				<c:if test="${!isDotNetIntegration}">
-				if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) {
-					clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
-				} else {
-					clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
-				}
-
-				clickOutside.mouseup(function (e) {
-					OrganBtnListHidden(e);
-				});
-				</c:if>
-
-				$($(window.parent.frames['lef'])).mouseup(function (e) {
-					OrganBtnListHidden(e);
-				});
-
-				$(parent.document).mouseup(function (e) {
-					OrganBtnListHidden(e);
-				});
-				
-				//2023.03.13 김대현 event bubbling을 사용하기 위해 jquery가 아닌 javaScript 사용
-				document.addEventListener('click',function (e) {
-					OrganBtnListHidden(e);
-				})
-				
 			});
 			
 			window.onresize = function(event) {
@@ -2103,37 +2075,6 @@
 					}
 				});
 			}
-
-			function organMenuListView(obj) {
-				let spanClassName = obj.getElementsByClassName('icon_sel').item(0).className;
-				let ulClassName = obj.parentElement.getElementsByClassName('option_horizontal_list').item(0).className;
-				
-				if (obj.getAttribute('mode') == "off") {
-					// 먼저 열려있는 list를 닫아주는 부분
-					OrganBtnListHidden();
-					obj.getElementsByClassName('icon_sel').item(0).className = spanClassName.replace('collapse_down', 'collapse_up');
-					obj.parentElement.getElementsByClassName('option_horizontal_list').item(0).style.display = 'block';
-					obj.setAttribute("mode","on");
-					// list를 펼치고 이벤트 끝내는 부분
-					event.stopPropagation();
-				}
-				
-			}
-
-			function OrganBtnListHidden(e) {
-				let list = document.getElementsByClassName('newSelectView');
-				
-				for (let btnObj of list) {
-					
-					if (btnObj.getAttribute('mode') == 'on') {
-						let spanClassName = btnObj.getElementsByClassName('icon_sel').item(0).className;
-						btnObj.getElementsByClassName('icon_sel').item(0).className = spanClassName.replace('collapse_up', 'collapse_down');
-						btnObj.parentElement.getElementsByClassName('option_horizontal_list').item(0).style.display = 'none';
-						btnObj.setAttribute("mode","off");
-					}
-				}
-				
-			}
 			
 		</script>
 		<style>
@@ -2199,85 +2140,6 @@
 			</span>
 		</h1>
 
-		<div id="mainmenu" class="organMainmenu newSelect_div">
-			<ul style="height:33px;" class="on selectUL" id="selectUL">
-				<c:if test="${dotNetIntegration != 'YES'}">
-				<li id="companyBtnList" class="newSelect on">
-					<p class="newSelectView" style="margin: 0;" onclick="organMenuListView(this)" mode = "off">
-					<span>회사</span>
-					<span class="icon_sel collapse_down"></span>
-					</p>
-					<ul class="option_horizontal_list" style="display: none;">
-						<li id="companybutton1" class="important"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></li>
-						<li id="companybutton2"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></li>
-					</ul>
-				</li>
-				</c:if>
-				
-				<li id="deptBtnList" class="newSelect on" >
-					<p class="newSelectView" style="margin: 0;" onclick="organMenuListView(this)" mode = "off">
-						<span>부서</span>
-						<span class="icon_sel collapse_down"></span>
-					</p>
-					<ul class="option_horizontal_list" style="display: none;">
-						<c:if test="${dotNetIntegration != 'YES'}">
-						<li class="important"><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></li>
-						<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
-						</c:if>
-						<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
-						<c:if test="${useExternalMailServer == 'NO' }">
-						<li id="usermenu6"><span onClick="deptMail_manage()"><spring:message code='ezEmail.multiDomain.ksa22' /></span></li>
-						</c:if>
-						<li id="usermenu11"><span onclick="trash_dept()"><spring:message code='ezOrgan.kdh06' /></span></li>
-					</ul>
-				</li>
-
-				<li id="userBtnList" class="newSelect on">
-					<p class="newSelectView" style="margin: 0;" onclick="organMenuListView(this)" mode = "off">
-					<span>사원</span>
-					<span class="icon_sel collapse_down"></span>
-					</p>
-					<ul class="option_horizontal_list" style="display: none;">
-						<c:if test="${dotNetIntegration != 'YES'}">
-						<li class="important"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></li>
-						<li id="usermenu8"><span onClick="moveMultiUser()"><spring:message code='ezOrgan.t86' /></span></li>
-						<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
-						</c:if>
-						<c:if test="${useExternalMailServer == 'NO' }">
-							<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
-							<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
-						</c:if>
-					</ul>
-				</li>
-				<c:if test="${dotNetIntegration != 'YES'}">
-					<li id="companybutton3" class="important"><span onClick="check_info()"><spring:message code='ezOrgan.hyh06' /></span></li>
-				</c:if>
-				<c:if test="${useSyncServer == 'YES'}">
-					<li id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></li>
-				</c:if>
-				<c:if test="${useBizmekaTalk == 'YES'}">
-					<li id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></li>
-				</c:if>
-				
-				<c:if test="${useDisablePopImap == 'YES' && useExternalMailServer == 'NO'}">
-					<li id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></li>
-				</c:if>
-				<c:if test="${useMobileManagemant == 'YES' }">
-					<li id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></span></li>
-				</c:if>
-				
-				<li id="btnSave"><span onClick="excelExport()"><spring:message code='ezStatistics.t1003' /></span></li>
-				<dl class="organList">
-					<dt class="organListDT">
-						<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
-						<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
-					</dt>
-				</dl>
-			</ul>
-		</div>
-		<%--
-		23-03-13 김대현 menu 각 버튼 list로 묶기전
-		
 		<div id="mainmenu" class="organMainmenu">
 			<ul style="height:33px;">
 				<c:if test="${dotNetIntegration != 'YES'}">
@@ -2320,7 +2182,6 @@
 				</dl>
 			</ul>
 		</div>
-		--%>
 		<div>
 			<div style="border: 1px solid #ddd; height: 530px; width: 25%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
 			<div id="organListDIv" style="width: 74%; float:right;">
