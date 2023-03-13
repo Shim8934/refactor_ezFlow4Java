@@ -11468,6 +11468,18 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE INDEX "TBL_APRDOCINFO_DOCSTATE_IDX" ON "TBL_APRDOCINFO" ("DOCSTATE")
   ;
 --------------------------------------------------------
+--  DDL for Index TBL_APRDOCINFO_FORMID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_APRDOCINFO_FORMID_IDX" ON "TBL_APRDOCINFO" ("FORMID")
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_APRDOCINFO_WRITERID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_APRDOCINFO_WRITERID_IDX" ON "TBL_APRDOCINFO" ("WRITERID")
+  ;
+--------------------------------------------------------
 --  DDL for Index TBL_APRLINEINFO_PK
 --------------------------------------------------------
 
@@ -11502,6 +11514,18 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "TBL_APRRECEIPTPROCESSINFO_PK" ON "TBL_APRRECEIPTPROCESSINFO" ("TENANT_ID", "COMPANYID", "RECEIVESN", "DOCID", "RECEIVEDDEPTID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_ARPI_APRSTATE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ARPI_APRSTATE_IDX" ON "TBL_APRRECEIPTPROCESSINFO" ("APRSTATE")
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_ARPI_RECEIVEDDEPTID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ARPI_RECEIVEDDEPTID_IDX" ON "TBL_APRRECEIPTPROCESSINFO" ("RECEIVEDDEPTID")
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_ATTITUDE_ANNUAL_CANAPPL_PK
