@@ -469,26 +469,36 @@ function AprDeptAdd_onclick(Type) {
                     OpenAlertUI(pAlertContent);
                     return;
                 }
-                if (DuplicateFlag)
+                if (DuplicateFlag) {
                     AprLineAddDept(nodeIdx, "");
-                else {
+                } else {
                     var pAlertContent = linealt13;
                     OpenAlertUI(pAlertContent);
                 }
             }
         }
-        else {
+        else { // USER
             var listview = new ListView();
             listview.LoadFromID("lvUserList2");
             var pCurSelRow = listview.GetSelectedRows();
+            
             if (pCurSelRow.length != 0) {
-                var DuplicateFlag = DuplicateAprDeptCheck(RECEPTLIST, pCurSelRow[0].getAttribute("DATA3"));
-                if (DuplicateFlag)
-                    AprLineAddDept_User(pCurSelRow[0]);
-                else {
-                    var pAlertContent = linealt13;
-                    OpenAlertUI(pAlertContent);
-                }
+            	/* 2023-03-09 홍승비 - 전자결재G > 결재문서를 수신하지 않는 부서의 소속 사원은 수신자로 지정 불가능하도록 수정 */
+            	var userDeptID = pCurSelRow[0].getAttribute("DATA3");
+            	
+            	if (GetEntryInfo(userDeptID) == "N") { // 결재문서를 수신하지 않는 부서 체크
+            		OpenAlertUI(strLang1105);
+            	}
+            	else { // 수신자 중복부서 체크
+	                var DuplicateFlag = DuplicateAprDeptCheck(RECEPTLIST, userDeptID);
+	                
+	                if (DuplicateFlag) {
+	                    AprLineAddDept_User(pCurSelRow[0]);
+	                } else {
+	                    var pAlertContent = linealt13;
+	                    OpenAlertUI(pAlertContent);
+	                }
+            	}
             }
         }
     }
