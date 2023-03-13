@@ -4318,7 +4318,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String userID = docID.split("@")[0];
 		String sn = docID.split("@")[1];
-		String path = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String path = commonUtil.getRealPath(request);
 		
 		String result = ezApprovalGService.deleteTmpDocInfo(userID, sn, path, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
