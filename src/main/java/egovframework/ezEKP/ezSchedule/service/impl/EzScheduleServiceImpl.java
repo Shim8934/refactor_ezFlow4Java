@@ -1971,7 +1971,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			orgFileName  = attachList.get(i).getFileName();
 			orgFilePath  = attachList.get(i).getFilePath();
 			orgFileDot   = orgFileName.indexOf(".");
-			destFilePath = commonUtil.separator + "{" + UUID.randomUUID() + "}_" + orgFileName.substring(orgFileDot);
+			destFilePath = attachPath + commonUtil.separator + "{" + UUID.randomUUID() + "}_" + orgFileName.substring(orgFileDot);
 			
 			attachMap.put("v_SCHEDULEID", scheduleId);
 			attachMap.put("v_FILENAME", attachList.get(i).getFileName());
