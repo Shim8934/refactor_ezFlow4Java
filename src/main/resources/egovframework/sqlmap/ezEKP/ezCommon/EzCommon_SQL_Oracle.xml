@@ -2228,15 +2228,6 @@
 			ON 
 				(A.DEPTID = TD.CN AND A.TENANT_ID  = TD.TENANT_ID)
 			WHERE 
-				TD.EXTENSIONATTRIBUTE2 <> (SELECT 
-												PHYSICALDELIVERYOFFICENAME 
-											FROM 
-												TBL_USERMASTER 
-											WHERE 
-												CN = #userID# 
-											AND 
-												TENANT_ID = #tenantID#) 
-			AND
 				A.CN = #userID#
 			AND 
 				A.TENANT_ID = #tenantID#
