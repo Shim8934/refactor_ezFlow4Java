@@ -22259,9 +22259,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getAprDocList(String listType, String userID, String deptID, String userIDs, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder, String basicOrderReverse, String subQuery, Document dueryData, String companyID, int tenantID, List<ApprGProxyVO> proxyList) throws Exception{
 		logger.debug("getAprDocList started.");
 		
-		//결재할 문서와 공유결재문서의 쿼리를 같이쓰기 위한 flag
+		// 결재할 문서(1)와 공유결재문서(11), 반송된문서(24)의 쿼리를 같이쓰기 위한 flag
 		String listTypeFlag = "false";
-				
+		
+		// 결재할문서와 반송된문서의 FUNCTIONTYPE(004) 조건만을 분기처리하기 위한 flag
+		String isDoOrRejectFG = "false";
+		
 		Map<Object, Object> map = new HashMap<Object, Object>();
 		map.put("v_LISTTYPE", listType);
 		map.put("v_USERID", userID);
@@ -22316,11 +22319,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SWRITERDEPTNAME", "");
 		}
 		
-		if (listType.equals("1") || listType.equals("11")) {
+		if (listType.equals("1") || listType.equals("11") || listType.equals("24")) {
 			listTypeFlag = "true";
 		}
 		
 		map.put("v_LISTTYPEFLAG", listTypeFlag);
+		
+		/* 2023-03-17 양지혜 - 결재할문서와 반송된문서의 FUNCTIONTYPE(004) 조건만을 분기처리하기 위한 플래그 추가 */
+		if (listType.equals("1") || listType.equals("24")) {
+			isDoOrRejectFG = "true";
+		}
+		
+		map.put("v_ISDOORREJECTFG", isDoOrRejectFG);
 		
 		// 2018-07-05 임시보관함 헤더소팅 시 순번으로 재 소팅하여 안되는 현상 제거 
 		// 21 : 서버 저장문서 
@@ -22329,7 +22339,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //			map.put("v_ORDEROPTION2", orderOption2);
 //		}
 		
-		logger.debug("getAprDocList Param : v_LISTTYPE =" + listType + ", v_LISTTYPEFLAG=" + listTypeFlag + ", v_USERID=" + userID + ", v_USERIDS=" + userIDs + ", v_PAGESIZE=" + querySize + ", v_PAGESIZE2=" + querySize2 +", v_ORDEROPTION=" + orderOption1 +", v_ORDEROPTION2=" + orderOption2 +", v_BASICORDER=" + basicOrder +", v_BASICORDER2=" + basicOrderReverse +", v_SPSUBQUERY=" + subQuery.trim() + ", v_TENANTID=" + tenantID);
+		logger.debug("getAprDocList Param : v_LISTTYPE =" + listType + ", v_LISTTYPEFLAG=" + listTypeFlag + ", v_ISDOORREJECTFG=" + isDoOrRejectFG + ", v_USERID=" + userID + ", v_USERIDS=" + userIDs + ", v_PAGESIZE=" + querySize + ", v_PAGESIZE2=" + querySize2 +", v_ORDEROPTION=" + orderOption1 +", v_ORDEROPTION2=" + orderOption2 +", v_BASICORDER=" + basicOrder +", v_BASICORDER2=" + basicOrderReverse +", v_SPSUBQUERY=" + subQuery.trim() + ", v_TENANTID=" + tenantID);
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getAprDocList(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -22348,9 +22358,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public int getAprDocListCount(String listType, String userID, String deptID, String userIDs, String deptIDs, String searchQuery, Document dueryData, String companyID, int tenantID, List<ApprGProxyVO> proxyList) throws Exception{
 		logger.debug("getAprDocListCount started.");
-		
-		// 결재할 문서와 공유결재문서의 쿼리를 같이쓰기 위한 Flag
+
+        // 결재할 문서(1)와 공유결재문서(11), 반송된문서(24)의 쿼리를 같이쓰기 위한 flag
 		String listTypeFlag = "false";
+
+        // 결재할문서와 반송된문서의 FUNCTIONTYPE(004) 조건만을 분기처리하기 위한 flag
+        String isDoOrRejectFG = "false";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTTYPE", listType);
@@ -22389,13 +22402,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SWRITERDEPTNAME", "");
 		}
 		
-		if (listType.equals("1") || listType.equals("11")) {
+		if (listType.equals("1") || listType.equals("11") || listType.equals("24")) {
 			listTypeFlag = "true"; 
 		}
 		
 		map.put("v_LISTTYPEFLAG", listTypeFlag);
-		
-		logger.debug("getAprDocListCount param : v_LISTTYPE=" + listType +", v_LISTTYPEFLAG=" + listTypeFlag + ", v_SPSUBQUERYLENGTH="+ searchQuery.trim().length() + ", v_USERID=" + userID + ", v_USERIDS=" + userIDs + ", v_SPSUBQUERY=" + searchQuery + ", v_TENANTID=" + tenantID);
+
+        /* 2023-03-17 양지혜 - 결재할문서와 반송된문서의 FUNCTIONTYPE(004) 조건만을 분기처리하기 위한 플래그 추가 */
+        if (listType.equals("1") || listType.equals("24")) {
+            isDoOrRejectFG = "true";
+        }
+
+        map.put("v_ISDOORREJECTFG", isDoOrRejectFG);
+
+		logger.debug("getAprDocListCount param : v_LISTTYPE=" + listType +", v_LISTTYPEFLAG=" + listTypeFlag +", v_ISDOORREJECTFG=" + isDoOrRejectFG + ", v_SPSUBQUERYLENGTH="+ searchQuery.trim().length() + ", v_USERID=" + userID + ", v_USERIDS=" + userIDs + ", v_SPSUBQUERY=" + searchQuery + ", v_TENANTID=" + tenantID);
 		
 		return ezApprovalGDAO.getAprDocListCount(map);
 	}

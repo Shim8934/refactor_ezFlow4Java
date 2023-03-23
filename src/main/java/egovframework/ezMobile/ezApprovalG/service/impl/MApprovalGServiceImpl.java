@@ -94,6 +94,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", userIDS);
+		/* 2024-05-22 양지혜 - SQL Injection 처리 */
+		String[] userIds = userIDS.replace(" ", "").replace("\'", "").split(",");
+		map.put("userIds", userIds);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffSet()));
@@ -131,6 +134,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", userIDS);
+		/* 2024-05-22 양지혜 - SQL Injection 처리 */
+		String[] userIds = userIDS.replace(" ", "").replace("\'", "").split(",");
+		map.put("userIds", userIds);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		map.put("searchText", searchText);
@@ -440,6 +446,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", userIDS);
+		/* 2024-05-22 양지혜 - SQL Injection 처리 */
+		String[] userIds = userIDS.replace(" ", "").replace("\'", "").split(",");
+		map.put("userIds", userIds);
 		map.put("userId", userId);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());

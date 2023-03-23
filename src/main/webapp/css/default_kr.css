@@ -2500,6 +2500,7 @@ div#txtContent table {margin:auto;}
 .tree_appr_record10{background-position: -234px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물철인계 */
 .tree_appr_record11{background-position: -260px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 종료연기승인 */
 .tree_appr_record12{background-position: -286px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 편철확정 */
+.tree_appr_return{background-position: -288px -26px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px;} /* tree 반송된문서 */
 
 .tree_pims_all{ background-position:-26px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 모든일정 */
 .tree_pims_individual{ background-position:-52px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 개인일정 */
