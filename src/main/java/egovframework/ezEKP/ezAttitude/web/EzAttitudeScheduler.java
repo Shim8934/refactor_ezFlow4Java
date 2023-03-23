@@ -120,6 +120,12 @@ public class EzAttitudeScheduler {
 	@Scheduled(cron = "${config.cron.autoSetDailyWork}")
 	public void autoSetDailyWork() throws Exception {
 		logger.debug("autoSetDailyWork scheduler started.");
+
+		if (!ezEmailScheduler.preScheduler("autoSetDailyWork")) {
+			logger.debug("autoSetDailyWork scheduler ended.");
+			return;
+		}
+
 		ezAttitudeService.autoSetDailyWork();
 		logger.debug("autoSetDailyWork scheduler ended.");
 	}

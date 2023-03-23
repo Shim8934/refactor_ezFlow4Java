@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezDoc24.dao.EzDoc24DAO;
+import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.JsonUtil;
@@ -45,6 +46,9 @@ public class EzDoc24Scheduler {
 	@Autowired
 	private EzApprovalGService ezApprovalGService;
 	
+	@Autowired
+	private EzEmailScheduler ezEmailScheduler;
+
 	@Resource(name="ezDoc24DAO")
 	private EzDoc24DAO ezDoc24Dao;
 	
@@ -53,6 +57,11 @@ public class EzDoc24Scheduler {
 	public void doc24Scheduler() throws Exception {
 		logger.debug("doc24Scheduler started.");
 		
+		if (!ezEmailScheduler.preScheduler("doc24Scheduler")) {
+			logger.debug("doc24Scheduler ended.");
+			return;
+		}
+
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			Calendar cal = Calendar.getInstance();
