@@ -2990,7 +2990,7 @@
 					AND
 						A.modappl <> 5
 					ORDER BY
-						date_format(startdate, '%Y-%m-%d') DESC,
+						TO_DATE(startdate, 'YYYY-MM-DD') DESC,
 						writerid,
 						starttime DESC
 				]]>
