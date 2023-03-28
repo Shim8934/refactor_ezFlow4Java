@@ -160,6 +160,7 @@ import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO; 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService; 
 import egovframework.ezEKP.ezOrgan.service.EzOrganService; 
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO; 
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
@@ -29723,11 +29724,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String getRelayInfo(String docID, LoginVO userInfo) throws Exception {
 		logger.debug("getRelayInfo started");
+		
 		StringBuilder result = new StringBuilder();
 		Map <String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docID);
-		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		/* 2023-03-28 홍승비 - 대외수신함에서 중계문서를 접수하는 경우, 사용자의 현재 부서에 따라 회사ID를 가져오도록 수정 (사간겸직 대응) */
+		map.put("v_CN", userInfo.getDeptID());
+		map.put("v_LANGDATA", userInfo.getPrimary());
+		
+		OrganDeptVO currDeptVO = ezOrganDAO.getTBLDeptMaster(map);
+		
+		map.put("companyID", currDeptVO.getExtensionAttribute2());
+		
+		logger.debug("map for getRelayInfo  ::  " + map.toString());
 		
 		List<ApprGRelayVO> relayDocList = ezApprovalGDAO.getRelayInfo(map);
 		
