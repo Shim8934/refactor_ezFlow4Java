@@ -2673,10 +2673,18 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getRelayDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("getRelayDocInfo started");
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.getRelayInfo(docID,userInfo);
+		String currCompanyID = request.getParameter("companyID"); // 2023-03-29 홍승비 - 전자결재 사간겸직 상태에서 겸직부서의 대외수신문서 접근 시, 해당 회사의 ID 사용 
+		
+		if (currCompanyID != null && !currCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(currCompanyID);
+		}
+		
+		String result = ezApprovalGService.getRelayInfo(docID, userInfo);
+		
 		logger.debug("getRelayDocInfo ended");
 		return result;
 	}
