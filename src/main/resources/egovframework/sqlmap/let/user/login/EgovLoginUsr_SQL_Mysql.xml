@@ -176,6 +176,34 @@
    		]]>
    </update>
  
+ 	<!-- OTP 서치 -->
+ 	<select id="loginDAO.searchOtpKey" parameterClass="loginVO" resultClass="Integer">
+ 		SELECT
+ 			count(USER_ID)
+ 		FROM
+ 			tbl_user_config tuc
+ 		WHERE
+ 			USER_ID = #id#
+ 		AND
+ 			PROPERTY_NAME = 'otpKey'
+ 		AND
+ 			TENANT_ID = #tenantId#
+ 	</select>
+
+ 	<!-- OTP 개인 키 확인 -->
+ 	<select id="loginDAO.getOtpKey" parameterClass="loginVO" resultClass="String">
+ 		SELECT
+ 			PROPERTY_VALUE
+ 		FROM
+ 			tbl_user_config tuc
+ 		WHERE
+ 			USER_ID = #id#
+ 		AND
+ 			PROPERTY_NAME = 'otpKey'
+ 		AND
+ 			TENANT_ID = #tenantId#
+ 	</select>
+
     <!-- 일반 로그인 -->
     <select id="loginDAO.selectUser" resultMap="login">
         <!-- 일반회원 -->       
@@ -434,6 +462,18 @@
         ]]>
     </update>
     
+	<update id="loginDAO.updateUserForReduceLoginCnt" parameterClass="loginVO">
+        <![CDATA[
+            UPDATE TBL_USERMASTER
+            SET
+                ipaddress = #ip#,
+                lastlogin = utc_timestamp(),
+                logincnt = logincnt - 1
+            WHERE
+                cn = #id# AND tenant_id = #tenantId#
+        ]]>
+    </update>
+
     <update id="loginDAO.updatePassword" parameterClass="loginVO">
         <![CDATA[
             UPDATE TBL_USERMASTER

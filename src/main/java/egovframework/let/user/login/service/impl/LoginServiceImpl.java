@@ -20,11 +20,14 @@ import egovframework.com.cmm.EgovMessageSource;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.taimos.totp.TOTP;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -185,12 +188,29 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     	return result;
     }
 
+	@Override
+	public boolean searchOtpKey(LoginVO vo) throws Exception {
+		boolean result = loginDAO.searchOtpKey(vo) > 0 ? true : false;
+
+		return result;
+	}
+
+	@Override
+	public String getOtpKey(LoginVO vo) throws Exception {
+		String result = loginDAO.getOtpKey(vo);
+
+		return result;
+	}
 
 	@Override
 	public void updateUser(LoginVO vo) throws Exception {
 		loginDAO.updateUser(vo);
 	}
 
+	@Override
+	public void updateUserForReduceLoginCnt(LoginVO vo) throws Exception {
+		loginDAO.updateUserForReduceLoginCnt(vo);
+	}
 
 	@Override
 	public void insertLog(LoginVO vo) throws Exception {

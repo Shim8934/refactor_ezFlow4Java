@@ -384,6 +384,19 @@
 		    <artifactId>spring-webmvc</artifactId>
 		    <version>${spring.maven.artifact.version}</version>
 		</dependency>   
+
+		<!-- Google OTP -->
+		<dependency>
+		    <groupId>de.taimos</groupId>
+		    <artifactId>totp</artifactId>
+		    <version>1.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>javase</artifactId>
+		    <version>3.2.1</version>
+		</dependency>
+		<!-- commons-codec 은 기존 것 사용-->
         
         <!-- 웹 소켓 -->
         <dependency>

@@ -26,7 +26,8 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 
 .logo{width:288px; height:38px; margin:70px auto 56px; text-align:center;}
 .id { width: 306px; height: 55px; margin: 0px auto 15px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_id.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
-.pw { width: 306px; height: 55px; margin: 0px auto 25px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_pw.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
+.pw { width: 306px; height: 55px; margin: 0px auto 15px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_pw.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
+.otp { width: 306px; height: 55px; margin: 0px auto 25px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_pw.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
 .btn_login  { margin:0px; padding:0px; }
 .login_form .btn_login { display: block; width: 306px; height: 65px; line-height: 65px; margin: 0px auto 0px auto; padding: 0px 0px 0px 0px; background: #1543a9; text-align: center; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; box-sizing: border-box; cursor: pointer; font-size: 24px; color: #fff; }
 .login_form .btn_login:hover { background: #0e2e74; }
@@ -34,6 +35,7 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 
 #uid { background: url(/images/kr/login/txt_id.gif) no-repeat 0px 20px; width: 215px; height: 54px; margin: 0px 0px 0px 55px; padding: 0px 5px 0px 5px; color: #ffffff; font-size: 18px; border: 0px solid #fff; border-radius: 0px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
 #upw { background: url(/images/kr/login/txt_pw.gif) no-repeat 0px 20px; width: 215px; height: 54px; margin: 0px 0px 0px 55px; padding: 0px 5px 0px 5px; color: #ffffff; font-size: 18px; border: 0px solid #fff; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
+#uotp { background: #96a4aa; width: 215px; height: 54px; margin: 0px 0px 0px 55px; padding: 0px 5px 0px 5px; color: #ffffff; font-size: 18px; border: 0px solid #fff; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
 
 .input_text.focus,
 .input_text.focusnot { background: #96a4aa !important; }
