@@ -2374,7 +2374,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
         String docID = request.getParameter("docID");
-		String result = ezApprovalGService.getDocInfo(docID, "END", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+        String orgCompanyID = request.getParameter("orgCompanyID") != null ? request.getParameter("orgCompanyID") : userInfo.getCompanyID();
+
+        String result = ezApprovalGService.getDocInfo(docID, "END", "ALL", userInfo, orgCompanyID, userInfo.getTenantId(), "", "");
 
 		logger.debug("getEndDocInfo ended");
 		return result;

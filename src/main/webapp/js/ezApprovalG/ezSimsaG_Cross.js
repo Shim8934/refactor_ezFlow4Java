@@ -34,7 +34,8 @@ function GetEndDocInfo() {
 		async : false,
 		url : "/ezApprovalG/getEndDocInfo.do",
 		data : {
-			docID : pOrgDocID
+			docID : pOrgDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			result = xml;
