@@ -2343,7 +2343,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getencodeinfoxXML(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("getencodeinfoxXML started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
         String realPath = commonUtil.getRealPath(request);
 		String filePath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "encodeinfo.xml";
@@ -2371,7 +2371,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getEndDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("getEndDocInfo started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
         String docID = request.getParameter("docID");
         String orgCompanyID = request.getParameter("orgCompanyID") != null ? request.getParameter("orgCompanyID") : userInfo.getCompanyID();
@@ -2400,7 +2400,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getContentXml(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("getContentXml started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		
         String fontFamily = request.getParameter("fontFamily");
@@ -2421,7 +2421,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getLineInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
 		logger.debug("getLineInfo started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
@@ -2435,7 +2435,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String simsaGUpload(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
 		logger.debug("simsaGUpload started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		String docID = request.getParameter("docID");
 		StringBuilder saveXML = new StringBuilder("<?xml version=\"1.0\" encoding=\"euc-kr\"?><?xml-stylesheet type=\"text/xsl\" href=\"siheng.xsl\"?><!DOCTYPE pubdoc SYSTEM \"pubdoc.dtd\">");
@@ -2476,7 +2476,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String checkPubDocXML(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("checkPubDocXML started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		String xmlPath = request.getParameter("xmlPath");
 		String mapPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID();
@@ -2490,7 +2490,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String sendMsg2(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("sendMsg2 started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
  
 		String extXML = request.getParameter("extXML");
 		Document xmlDom = commonUtil.convertStringToDocument(extXML);
@@ -2524,7 +2524,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String sendMsg(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("sendMsg started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		 
 		String extXML = request.getParameter("extXML");
 		Document xmlDom = commonUtil.convertStringToDocument(extXML);
@@ -2676,14 +2676,14 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	public String getRelayDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("getRelayDocInfo started");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String currCompanyID = request.getParameter("companyID"); // 2023-03-29 홍승비 - 전자결재 사간겸직 상태에서 겸직부서의 대외수신문서 접근 시, 해당 회사의 ID 사용 
+/*		String currCompanyID = request.getParameter("companyID"); // 2023-03-29 홍승비 - 전자결재 사간겸직 상태에서 겸직부서의 대외수신문서 접근 시, 해당 회사의 ID 사용 
 		
 		if (currCompanyID != null && !currCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(currCompanyID);
-		}
+		}*/
 		
 		String result = ezApprovalGService.getRelayInfo(docID, userInfo);
 		
@@ -2696,7 +2696,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String loadDocXML(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("loadDocXML started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String result = "";
 		String xmlPath = request.getParameter("XMLPATH");
 		String strContent = "";
@@ -2730,7 +2730,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String setHref(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("setHref started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String fileType = request.getParameter("fileType");
@@ -2745,7 +2745,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String setRecvDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("setRecvDocInfo started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String fileType = request.getParameter("fileType");
@@ -2771,7 +2771,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String setRecvComplete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("setRecvComplete started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("tempDocID");
 		String docNo = request.getParameter("tempDocNo");
@@ -2815,7 +2815,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String sendAckforReSend(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("sendAckforReSend started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String type = request.getParameter("type");
