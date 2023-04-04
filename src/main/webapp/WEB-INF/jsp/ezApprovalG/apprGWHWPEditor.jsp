@@ -22,11 +22,19 @@
 	        }
 	
 		    window.onload = function () {
-		    	if(type == "") {
+		    	if (type == "") {
 		    		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete(); });
 				} else if (type == "form") {
 					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Form_Complete(); });
-				} else {
+				}
+		    	/* 2023-02-08 홍승비 - WHWP 파일 > 편집모드로 수정한 문서의 변경이력 비교를 위한 분기 추가 */
+				else if (type == "compareBefore") { // 편집 전 문서
+					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete_Compare(); });
+				}
+				else if (type == "compareAfter") { // 편집 후 문서
+					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete_Compare2(); });
+				}
+				else {
 					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete2(); });
 				}
 	    	}
@@ -36,7 +44,6 @@
                if (typeof (parent.Editor_Complete) != "undefined") {
             	   parent.Editor_Complete()
                } else {
-
                    if (typeof (parent.Editor_Complete) != "undefined") {
                        parent.Editor_Complete();
                    }
@@ -76,7 +83,33 @@
 					ec2Count++;
 				}
 			}
+			
+	        function Editor_Complete_Compare() {
+				if (typeof (parent.Editor_Complete_Compare) != "undefined") {
+					parent.Editor_Complete_Compare()
+				} else {
+					if (typeof (parent.Editor_Complete_Compare) != "undefined") {
+						parent.Editor_Complete();
+					}
+					else {
+						setTimeout(Editor_Complete_Compare, 100);
+					}
+				}
+			}
 
+	        function Editor_Complete_Compare2() {
+				if (typeof (parent.Editor_Complete_Compare2) != "undefined") {
+					parent.Editor_Complete_Compare2()
+				} else {
+					if (typeof (parent.Editor_Complete_Compare2) != "undefined") {
+						parent.Editor_Complete_Compare2();
+					}
+					else {
+						setTimeout(Editor_Complete_Compare2, 100);
+					}
+				}
+			}
+	        
 			function isLoadedEditor1() {
 				return parent.Editor_Complete2 && parent.message.FieldExist && parent.message.FieldExist("doctitle") && parent.message.FieldExist("body");
 			}

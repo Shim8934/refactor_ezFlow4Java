@@ -4165,7 +4165,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}						
 		
 		logger.debug("getUserDistributionApplyList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-		logger.debug(resultArray.toString());
 		
 		return resultArray;
 	}

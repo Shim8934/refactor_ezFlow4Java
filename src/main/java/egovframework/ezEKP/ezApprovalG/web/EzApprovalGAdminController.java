@@ -1169,14 +1169,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		try {
 			File file = new File(commonUtil.detectPathTraversal(path));
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line = null;
-	
-			while ((line = br.readLine()) != null) {
-				result.append(line);
+			// CWE-404 보안 취약점 대응
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+				String line = null;
+		
+				while ((line = br.readLine()) != null) {
+					result.append(line);
+				}				
 			}
-			
-			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2884,10 +2884,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 			
 			File file = new File(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + companyID + commonUtil.separator + "encodeinfo.xml"));
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
-			writer.write(returnString);
-			writer.flush();
-			writer.close();
+			// CWE-404 보안 취약점 대응
+			try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
+				writer.write(returnString);
+				writer.flush();
+			}
 			
 			logger.debug("saveOptionInfo success.");
 
@@ -3640,7 +3641,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		int totalcnt = 0;
 		int maxItemPerPage = 15; 
 		int currentPage = Integer.parseInt(pageNum);
-		int startRow = (Integer.parseInt(pageNum) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(currentPage, 1), maxItemPerPage);
 		if (pageNum.equals("-1")) {
 			startRow = -1;
 		}
@@ -5294,8 +5295,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String retVal = "";
 		int successCount = 0;
 		
-		// 종료연도(현재 연도)와 선택한 회사ID를 조건으로 자동 생성할 기록물철을 찾아서 전달
-		String currYear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 4);
+		// 종료연도(기산일 적용된 현재 기준의 연도)와 선택한 회사ID를 조건으로 자동 생성할 기록물철을 찾아서 전달
+		String currYear = ezApprovalGService.getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		List<Map<String, Object>> cabinetList = ezApprovalGAdminService.getCabinetListByExpireYear(currYear, companyID, tenantID);
 		

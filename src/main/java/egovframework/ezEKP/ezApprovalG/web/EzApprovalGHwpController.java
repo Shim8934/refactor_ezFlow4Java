@@ -836,19 +836,24 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			
 			if (!newFile.exists()) {
 				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
-				InputStream orgFileInputStream;
+				InputStream orgFileInputStream = null;
 
-				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
-				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
-					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
-				} else {
-					orgFileInputStream = new FileInputStream(orgFile);
+				// CWE-404 보안 취약점 대응
+				try {
+					// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
+					if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+						byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
+						orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
+					} else {
+						orgFileInputStream = new FileInputStream(orgFile);
+					}
+					
+					Files.copy(orgFileInputStream, newFile.toPath());
+				} finally {
+					if (orgFileInputStream != null) {
+						orgFileInputStream.close();
+					}
 				}
-				
-				Files.copy(orgFileInputStream, newFile.toPath());
-				orgFileInputStream.close();
-				//FileUtils.copyFile(orgFile, newFile);
 			}
 		}
 		
@@ -1759,19 +1764,24 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			
 			if (!newFile.exists()) {
 				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
-				InputStream orgFileInputStream;
+				InputStream orgFileInputStream = null;
 
-				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
-				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
-					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
-				} else {
-					orgFileInputStream = new FileInputStream(orgFile);
+				// CWE-404 보안 취약점 대응
+				try {
+					// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
+					if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+						byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
+						orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
+					} else {
+						orgFileInputStream = new FileInputStream(orgFile);
+					}
+					
+					Files.copy(orgFileInputStream, newFile.toPath());
+				} finally {
+					if (orgFileInputStream != null) {
+						orgFileInputStream.close();
+					}
 				}
-				
-				Files.copy(orgFileInputStream, newFile.toPath());
-				orgFileInputStream.close();
-				//FileUtils.copyFile(orgFile, newFile);
 			}
 		}
 		
@@ -2706,5 +2716,22 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGviewAprAllContent_WHWP";
 	}
 ////////////////////// 일괄기안 코드 끝 ///////////////////////
+	
+	/**
+	 * 2023-02-08 홍승비 - 전자결재 WHWP > 변경내역(문서변경정보) > 결재문서이력 상세보기 (수정사항 비교가능)
+	 */	
+	@RequestMapping(value = "/ezApprovalG/docViewerWHWPCompare.do", method = RequestMethod.GET)
+	public String docViewerCompare(HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("docViewerWHWPCompare started");
+
+		String pDocHrefAfter = request.getParameter("docHrefAfter");
+		String pDocHrefBefore = request.getParameter("docHrefBefore");
+		
+		model.addAttribute("docHrefAfter", commonUtil.cleanValue(pDocHrefAfter));
+		model.addAttribute("docHrefBefore", commonUtil.cleanValue(pDocHrefBefore));
+		
+		LOGGER.debug("docViewerCompare ended");
+		return "ezApprovalG/apprGdocViewerWHWPCompare";
+	}
 	
 }

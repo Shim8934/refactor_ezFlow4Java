@@ -13,6 +13,7 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1364,11 +1365,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	
         	return "EMAIL_ERROR";
         }
-        
-		// 현재 관리자의 암호를 구한다.
-		/* List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
-		String adminPassword = userCookieInfo.get(1); */
-        
+                
         // UUID로 pass 변경
         String adminPassword = UUID.randomUUID().toString();
         
@@ -1594,6 +1591,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (userExists == 0) { // 이메일 계정이 존재하지 않음.
 				// 로컬 시스템 계정을 삭제한다.
 				ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
+				ezOrganAdminService.deleteDestUserProfileImage(cn[i], tenantID, realPath); // 2023-02-28 김은실 : 프로필 이미지  삭제
 			} else if (userExists == 1 || userExists == 2) { // 1은 유효한 이메일 계정. 2는 퇴직자 계정. (주의: 2는 더이상 사용되지 않으나 그대로 둠)
 				List<String> distributionList = null;
 				String groupAddr = null;
@@ -1665,6 +1663,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 										
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
+					ezOrganAdminService.deleteDestUserProfileImage(cn[i], tenantID, realPath); // 2023-02-28 김은실 : 프로필 이미지  삭제
 				} catch (Exception e) {
 					e.printStackTrace();
 					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
@@ -2148,13 +2147,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (bos != null) {
 				try {
 					bos.close();
-				} catch (Exception ignore) {
+				} catch (Exception e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			if (stream != null) {
 				try {
 					stream.close();
-				} catch (Exception ignore) {
+				} catch (Exception e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			returnVal = "OK_"+ fileName;
@@ -2347,8 +2348,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 		int currentPage = Integer.parseInt(request.getParameter("page")); 
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));
-		int startRow = (pageSize * (currentPage - 1)) + 1;
-		int endRow = pageSize * currentPage;
+		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(currentPage, 1)), 1);
+		int endRow = Math.multiplyExact(pageSize, currentPage);
 		
 		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		
@@ -2769,8 +2770,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String searchValue = request.getParameter("searchValue");
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
-		int startRow = (pageSize * (pageNum - 1)) + 1;
-        int endRow = pageSize * pageNum;
+		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(pageNum, 1)), 1);
+        int endRow = Math.multiplyExact(pageSize, pageNum);
         
 		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		
@@ -4119,8 +4120,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String searchValue = request.getParameter("searchValue");
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
-		int startRow = (pageSize * (pageNum - 1)) + 1;
-        int endRow = pageSize * pageNum;
+		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(pageNum, 1)), 1);
+        int endRow = Math.multiplyExact(pageSize, pageNum);
         
         searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
                 
@@ -4620,7 +4621,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	public String getPermissionGroupID(){
 		// 권한그룹의 id를 숫자와 문자를 랜덤상수를 이용하여 생성
-		Random rnd = new Random();
+		Random rnd = new SecureRandom();
 		StringBuffer sb = new StringBuffer();
 
 		for (int i = 0; i < 15; i++) {
@@ -5047,7 +5048,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(currentPage, 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -5423,4 +5424,87 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("downloadExcelReport end");
 	}
 	
+	@RequestMapping(value = "/admin/ezOrgan/trashDept")
+	@ResponseBody
+	public String trashDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("trashDept started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "EMAIL_ERROR";
+		}
+
+		int tenantId = userInfo.getTenantId();
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String cn = request.getParameter("cn");
+		String company = request.getParameter("EXTENSIONATTRIBUTE2");
+		String trashDeptId = "trash_dept_" + company;
+		String mailAddr = trashDeptId + "@" + domain;
+
+		logger.debug("tenantId={}, cn={}, company={}, trashDeptId={}, mailAddr={}", tenantId,cn,company,trashDeptId,mailAddr);
+		
+		String result = "EMAIL_ERROR";
+		
+		try {
+			// 제거하고자 하는 회사 혹은 부서 바로 아래에 위치한 자식 부서의 수를 구한다.
+			int cnt = ezOrganAdminService.companyChildCheck(cn, tenantId);
+
+			// 제거하고자 하는 회사 혹은 부서에 속한 사원의 수를 반환한다.
+			int usercnt = ezOrganAdminService.userCountCheck(cn, tenantId);
+
+			logger.debug("cnt=" + cnt + ",usercnt=" + usercnt);
+
+			if (cnt > 0) {
+				result = "HASCHILD";
+			} else if (usercnt > 0) {
+				result = "HASCHILD";
+			} else {
+				// 페지부서가 있는지 확인
+				int cntUserCheck = ezOrganAdminService.userCheck(trashDeptId, tenantId);
+
+				if (cntUserCheck <= 0) {
+					logger.debug("create trashDept started");
+					// 폐지부서가 없을시 폐지부서 생성
+					OrganDeptVO trashDeptVO = new OrganDeptVO();
+					trashDeptVO.setTenantId(tenantId);
+					trashDeptVO.setParentCn(company);
+					trashDeptVO.setCn(trashDeptId);
+					trashDeptVO.setDisplayName("폐지부서");
+					trashDeptVO.setDisplayName2("폐지부서");
+					trashDeptVO.setMail(mailAddr);
+					// 회사 바로 아래 맨 마지막에 위치시킨다.
+					trashDeptVO.setExtensionAttribute15("9999");
+					// 인사연동 시 공유 사서함 부서를 폐지시키지 않기 위해 manualFlag를 Y로 설정한다.
+					trashDeptVO.setManualFlag("Y");
+					
+					int rc = ezEmailUserAdminService.addGroup(mailAddr);
+					
+					if (rc != 0) {
+						logger.debug("TarashDept add Fail");
+						return result;
+					}
+					
+					ezOrganAdminService.insertDBData_dept(trashDeptVO);
+
+					logger.debug("create trashDept ended");
+				} 
+				
+				OrganDeptVO vo = new OrganDeptVO();
+				vo.setTenantId(tenantId);
+				vo.setCn(cn);
+				vo.setExtensionAttribute1(trashDeptId);
+				
+				logger.debug("cn={}, parentCN={}", cn, trashDeptId);
+				
+				result = ezOrganAdminService.moveEntry(trashDeptId,cn,"group",userInfo.getOffset(),tenantId);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("trashDept ended");
+		return result;
+	}
 }

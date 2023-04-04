@@ -1372,7 +1372,7 @@ public class EzWebFolderGWController_m {
 			return result;
 		}
 		
-		if (hasNameList && fileNameArray.length != fileIDList.length) {
+		if (hasNameList && (fileNameArray == null || fileNameArray.length != fileIDList.length)) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", "1");

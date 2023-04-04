@@ -534,7 +534,7 @@
 	    }
 	    function delAttachListFile(filedate) {
 	    	var xmlhttp = createXMLHttpRequest();
-	        xmlhttp.open("GET", "/ezEmail/delAttachListFile.do?&delid=" + filedate, false);
+	        xmlhttp.open("GET", "/ezEmail/delAttachListFile.do?&delid=" + filedate, true);
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;

@@ -623,8 +623,8 @@ public class EzCommunityController extends EgovFileMngUtil{
         	return "cmm/error/egovError";
         }
         
-        int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
-        int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
+        int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(pPage, 1), boardInfo.getSs_SearchBoard_MaxRows()), 1);
+        int pEndRow = Math.multiplyExact(pPage, boardInfo.getSs_SearchBoard_MaxRows());
         String startDateTime = "";
         String endDateTime = "";
         
@@ -1371,8 +1371,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		boardInfo.setSs_Board_MaxRows(10);
 		
-		int pStartRow =  (pPage - 1) * boardInfo.getSs_Board_MaxRows() + 1;
-		int pEndRow = pPage * boardInfo.getSs_Board_MaxRows();
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(pPage, 1), boardInfo.getSs_Board_MaxRows()), 1);
+		int pEndRow = Math.multiplyExact(pPage, boardInfo.getSs_Board_MaxRows());
 
 		String strXML = ezCommunityService.getReservedItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getOffset());
 		int totalCount = ezCommunityService.getReservedItemListCount(userInfo.getId(), userInfo.getTenantId());
@@ -3281,8 +3281,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			multiBoardName = boardInfo.getBoardName2();
 		}
 		
-		int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
-        int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(pPage, 1), boardInfo.getSs_SearchBoard_MaxRows()), 1);
+        int pEndRow = Math.multiplyExact(pPage, boardInfo.getSs_SearchBoard_MaxRows());
 
         if (!searchStart.equals("")) {
         	startDateTime = searchStart + " 00:00:00";
@@ -3691,7 +3691,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		/* 2020-11-11 홍승비 - 오버플로우 대응 (페이지 기본값 1) */
 		int page = commonUtil.isIntNumber(request.getParameter("page"), 1);
-		int startRow = 2 * (page - 1);
+		int startRow = Math.multiplyExact(2, Math.subtractExact(page, 1));
 		int endRow = 2;
 		
 		//logger.debug("page : " + page + ", startRow : " + startRow + ", endRow : " + endRow);
@@ -4143,9 +4143,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		//logger.debug("type = " + type + " || mode = " + mode + " || page = " + page);
 		
-		int startRow = (5 * (page - 1)) + 1;
-		int endRow = 5 * page;
-		int mariaStart = (5 * (page - 1));
+		int startRow = Math.addExact(Math.multiplyExact(5, Math.subtractExact(page, 1)), 1);
+		int endRow = Math.multiplyExact(5, page);
+		int mariaStart = Math.multiplyExact(5, Math.subtractExact(page, 1));
 		int mariaEnd = 5;
 		
 		/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 표출 companyID 조건 추가 */
@@ -4179,8 +4179,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		/* 2020-11-11 홍승비 - 오버플로우 대응 (페이지 기본값 1) */
 		int page = commonUtil.isIntNumber(request.getParameter("page"), 1);
 		
-		int startRow = (5 * (page - 1)) + 1;
-		int endRow = 5 * page;
+		int startRow = Math.addExact(Math.multiplyExact(5, Math.subtractExact(page, 1)), 1);
+		int endRow = Math.multiplyExact(5, page);
 		
 		if (option.equals("NAME")) {
 			if (userInfo.getPrimary().equals("1")) {
@@ -4262,8 +4262,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
-		int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
-	    int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(pPage, 1), boardInfo.getSs_SearchBoard_MaxRows()), 1);
+	    int pEndRow = Math.multiplyExact(pPage, boardInfo.getSs_SearchBoard_MaxRows());
 	    
 	    if (boardInfo.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 	    	strXML = ezCommunityService.getNewItemListXML(userInfo, pStartRow, pEndRow, pSortBy);

@@ -712,7 +712,6 @@ public class EzScheduleAdminController {
 		
 		int maxItemPerPage = 10; 
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
 		
 	
 		String searchType2  = request.getParameter("searchType2") != null ? request.getParameter("searchType2") : "" ;
@@ -774,7 +773,7 @@ public class EzScheduleAdminController {
 			
 			int maxItemPerPage = 10; 
 			int currentPage = Integer.parseInt(currPage);
-			int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+			int startRow = Math.multiplyExact(Math.subtractExact(currentPage, 1), maxItemPerPage);
 			
 			
 			

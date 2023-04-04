@@ -1454,7 +1454,6 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		try {
 			fileOut = new FileOutputStream(filePath);
 			workbook.write(fileOut);
-			fileOut.close();
 		}
 		catch (Exception e) {
 			throw e;
@@ -1469,27 +1468,28 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	
 	@SuppressWarnings("unused")
 	private void drawPictureInExcel(Workbook workbook, Sheet sheet1, String picturePath, int colNum, int rowNum) throws Exception {
-		InputStream inputStream = new FileInputStream(picturePath);
-		byte[] imageBytes       = IOUtils.toByteArray(inputStream);
-		int pictureureIdx       = workbook.addPicture(imageBytes, Workbook.PICTURE_TYPE_PNG);
-		inputStream.close();
-		
-		CreationHelper helper   = workbook.getCreationHelper();
-		Drawing drawing         = sheet1.createDrawingPatriarch();
-		ClientAnchor anchor     = helper.createClientAnchor();
-		
-		anchor.setCol1(colNum);
-		anchor.setRow1(rowNum);
-		anchor.setRow2(rowNum);
-		anchor.setCol2(colNum );
-		
-		anchor.setDx1(Units.toEMU(5));
-		anchor.setDy1(Units.toEMU(5));
-		anchor.setDx2(Units.toEMU(19));
-		anchor.setDy2(Units.toEMU(21));
-		anchor.setAnchorType(AnchorType.MOVE_AND_RESIZE);
-		
-		drawing.createPicture(anchor, pictureureIdx);
+		// CWE-404 보안 취약점 대응
+		try (InputStream inputStream = new FileInputStream(picturePath)) {
+			byte[] imageBytes       = IOUtils.toByteArray(inputStream);
+			int pictureureIdx       = workbook.addPicture(imageBytes, Workbook.PICTURE_TYPE_PNG);
+			
+			CreationHelper helper   = workbook.getCreationHelper();
+			Drawing drawing         = sheet1.createDrawingPatriarch();
+			ClientAnchor anchor     = helper.createClientAnchor();
+			
+			anchor.setCol1(colNum);
+			anchor.setRow1(rowNum);
+			anchor.setRow2(rowNum);
+			anchor.setCol2(colNum );
+			
+			anchor.setDx1(Units.toEMU(5));
+			anchor.setDy1(Units.toEMU(5));
+			anchor.setDx2(Units.toEMU(19));
+			anchor.setDy2(Units.toEMU(21));
+			anchor.setAnchorType(AnchorType.MOVE_AND_RESIZE);
+			
+			drawing.createPicture(anchor, pictureureIdx);
+		}
 	}
 	
 	private String formatFileSize(double fileSize) {

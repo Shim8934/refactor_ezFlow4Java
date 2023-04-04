@@ -19,6 +19,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
     <script type="text/javascript">
 	var cChk = ${cChk};
+	var fileExtensionViewType = 0;
 	
 	document.onselectstart = function () {
         if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -78,6 +79,11 @@
 	    	case "PASSWORDPOLICY":
 	    		parent.frames[1].location.href = "/admin/ezSystem/passwordPolicyMain.do";
 	    		break;
+    		// 2022-12-23 김대현  파일 업로드 허용 확장자명 분기처리
+			case "FILEEXTENSION":
+				fileExtensionViewType = 0;
+				parent.frames[1].location.href = "/admin/ezSystem/systemFileExtension.do";
+				break;
 	    }
     }
 
@@ -135,6 +141,7 @@
 	            <c:if test="${useModuleUsage == 'YES'}">
 	            	<h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh21' /></span></h2>
 	            </c:if>
-            </div>
+				<h2><span id="FILEEXTENSION" style="display:inline-block;width:100%;" onClick="menu_change('FILEEXTENSION')" ><spring:message code='ezSystem.x0009' /></span></h2>
+			</div>
       	</div>
     </body>

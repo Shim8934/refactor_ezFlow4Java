@@ -615,7 +615,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			apprGTaskVOs = ezApprovalGDAO.getTaskSubCategory(map);
 		}
 		
-		if (apprGTaskVOs.size() > 0) {
+		if (apprGTaskVOs != null && apprGTaskVOs.size() > 0) {
 			sb.append("<NODES>");
 			
 			for (ApprGTaskVO k : apprGTaskVOs) {
@@ -5516,6 +5516,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String transferCabinet(Document xmlDom, int tenantID) throws Exception {
 		logger.debug("transferCabinet started");
 
+		// 인수부서의 데이터 (인수부서 이름, 인수부서 ID, 인수받을 기록물철이 등록될 단위업무코드, 단위업무명...)
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String deptCode = xmlDom.getElementsByTagName("DDEPTCODE").item(0).getTextContent();
 		String deptName = xmlDom.getElementsByTagName("DDEPTNAME").item(0).getTextContent();
@@ -5527,8 +5528,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String deptMName = xmlDom.getElementsByTagName("DDEPTMNAME").item(0).getTextContent();
 		String deptMName2 = xmlDom.getElementsByTagName("DDEPTMNAME2").item(0).getTextContent();
 		
-		String cabIDList = "";
+		String cabIDList = ""; // 기록물철은 여러개 인계 가능
 		
+		// 쿼리에서 CabinetID IN 조건으로 사용하기 위해 ''문자로 이어붙임 (실제로는 하단 for 루프 내부에서 CabinetID 배열 하나씩 잘라 조건으로 사용)
 		for (int k = 0; k < xmlDom.getElementsByTagName("ID").getLength(); k++) {
 			if (k == 0) {
 				cabIDList += "'" + xmlDom.getElementsByTagName("ID").item(k).getTextContent().trim() + "' ";
@@ -5556,48 +5558,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int numRows = ezApprovalGDAO.transferCabinet(map);
 		map.put("v_numRows", numRows);
 		
+		// 채번 구분필드2 이용여부 (부서별 채번 또는 회사별 채번 여부 / 기록물철의 고유 시리얼 번호 생성 시 TYPE2를 조건으로 사용)
 		int type2Sn = ezApprovalGDAO.transferCabinetType2(map);
-		if ( type2Sn == 0) {
-			deptCode = "0";
-			map.put("v_DDeptCode", deptCode);
-		} 
+		if (type2Sn == 0) {
+			map.put("v_TYPE2", "0");
+		} else {
+			map.put("v_TYPE2", deptCode);
+		}
 		
-//        String year = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, "1", tenantID);
-//		map.put("v_YEAR", year);
-//		map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
-//		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-//		
-//		String curSN = ezApprovalGDAO.transferCabinetSn(map);
-//		
-//		if (curSN == null) {
-//			curSN = "1";
-//			map.put("v_RtnSN", curSN);
-//			ezApprovalGDAO.insertTbSerialNumGen(map);
-//		} else {
-//			map.put("v_RtnSN", curSN);
-//		}
-//		
-//		ezApprovalGDAO.updateTbSerialNumGen(map);
+		// 인계할 기록물철 리스트 배열로 분리
+		String cabList[] = cabIDList.split(",");
 		
-		StringBuffer rowID = new StringBuffer();
-		
-//				 인수기록물철 분류정보(TBCABINETCLASS)를 생성한다.
-		for (int j=0; j<numRows; j++) {
-			String cabList[] =cabIDList.split(",");
-            
+		// 인계할 기록물철의 개수만큼 루프를 돌면서 인수기록물철 분류정보(TBCABINETCLASS)를 생성한다.
+		for (int j = 0; j < numRows; j++) {
             Map<String, Object> serialNumMap = new HashMap<>();
             serialNumMap.put("v_CABINETID", cabList[j].replace("'", "").trim());
             serialNumMap.put("v_TENANTID", tenantID);
             serialNumMap.put("companyID", companyID);
             List<ApprGTaskVO> orgCabinet = ezApprovalGDAO.getCabinetInfo(serialNumMap);
             
+            // 기록물철 인계 시 생산연도는 동일하게 유지 (등록일자는 현재 시간)
             String productionYear = orgCabinet.get(0).getProductionYear();
             map.put("v_YEAR", productionYear);
-            map.put("v_MONTH", String.format("%03d",Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
+            map.put("v_MONTH", String.format("%03d", Integer.parseInt(commonUtil.getTodayUTCTime("").substring(6,7))).toString());
             map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-
+            
             String curSN = ezApprovalGDAO.transferCabinetSn(map);
- 
+            
             if (curSN == null) {
                 curSN = "1";
                 map.put("v_RtnSN", curSN);
@@ -5605,47 +5592,61 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             } else {
                 map.put("v_RtnSN", curSN);
             }
-
+            
             ezApprovalGDAO.updateTbSerialNumGen(map);
             
-			map.put("v_cabList",cabList[j]);
+			map.put("v_cabList", cabList[j]);
 			map.put("v_SN", j);
 			map.put("v_CNT", String.format("%06d", Integer.parseInt(curSN)));
-			map.put("v_CABINETCLASSNO", deptCode + taskCode + productionYear + String.format("%06d", Integer.parseInt(curSN) + j));
+			
+			// SerialNumGen 테이블에서 기록물철 생성을 위한 고유 번호를 가져왔으므로, CABINETCLASSNO용 추가 계산(+j) 동작 제거
+			map.put("v_CABINETCLASSNO", deptCode + taskCode + productionYear + String.format("%06d", Integer.parseInt(curSN)));
+			
+			// 인수부서에 새로운 기록물철을 생성
 			ezApprovalGDAO.insertTbCabinetClass(map);
+			
+			// TBL_CABINET 테이블은 TBL_CABINETCLASS의  TENANT_ID, COMPANYID, CABINETCLASSNO 칼럼을 외부 키로 가지므로,
+			// TBL_CABINETCLASS 테이블에 먼저 레코드를 삽입한 다음 TBL_CABINET 테이블에 레코드를 삽입
 			ezApprovalGDAO.trigerTbCabinet(map);
 			ezApprovalGDAO.trigerTbCabRoleInfo(map);
 			
+			// 인계할 기록물철 리스트의 목표 단위업무 정보를 확인 (*인수부서가 선택한 단위업무의 정보를 가져옴)
 			List<ApprGCabinetVO> apprExistUnitList = ezApprovalGDAO.selectExistUnit(map);
-			if(apprExistUnitList.size() > 0) {
-				rowID.append(apprExistUnitList.get(0).getCabinetClassNo().trim());
-				map.put("v_rowID", rowID.toString());
+			
+			if (apprExistUnitList.size() > 0) {
+				map.put("v_rowID", apprExistUnitList.get(0).getCabinetClassNo().trim());
 				map.put("KeepingPeriod", apprExistUnitList.get(0).getKeepingPeriod());
 				map.put("KeepingMethod", apprExistUnitList.get(0).getKeepingPlace());
 				map.put("KeepingPlace", apprExistUnitList.get(0).getKeepingMethod());
 				map.put("DisplayRecFlag", apprExistUnitList.get(0).getDisplayRecFlag());
 				map.put("SpecialCatalogFlag", apprExistUnitList.get(0).getSpecialCatalogFlag());
+				
+				// 인수부서에 새롭게 생성된 기록물철에 인수부서 단위업무 기준으로 보존기간, 보존방법, 보존장소 등 분류정보를 갱신 
 				ezApprovalGDAO.updateExistUnit(map);
 			}
 			
-			//특수목록 입력
+			// 특수목록 입력
 			String spFlag = ezApprovalGDAO.selectTbSpecialCatalogInfo(map);
-			if(spFlag == null) {
+			if (spFlag == null) {
 				map.put("v_NewSCFlag", 0);
-			} else if (!spFlag.equals("0")){
+			} else if (!spFlag.equals("0")) {
 				map.put("v_NewSCFlag", spFlag);
 				
 				ezApprovalGDAO.insertTbSpecialCatalogInfo(map);
-				//특수목록 플래그가 같고 특수목록 이름이 같으면 데이터를 복사한다.
+				// 특수목록 플래그가 같고 특수목록 이름이 같으면 데이터를 복사한다.
 				ezApprovalGDAO.insertTbSpecialCatalogInfo2(map);
 			}
-			//구기록물철 정보 저장
+			
+			// 구기록물철 정보 저장
 			ezApprovalGDAO.insertTbOldCabinetExtraInfo(map);
-			//인수 기록물철 테이블(TBCABINET)에 생성한다.
-			//권호수가 1권이 아닐경우-> 기록물철을 생성
+			// 인수 기록물철 테이블(TBCABINET)에 생성한다.
+			// 권호수가 1권이 아닐경우 -> 권호수에 따른 기록물철도 함께 생성
 			ezApprovalGDAO.insertTbCabinetInfo(map);
+			
+			// 새롭게 생성된 인수부서의 기록물철 리스트 셀렉트
 			List<ApprGCabinetVO> apprCabinetTransferList = ezApprovalGDAO.selectCabinetTransfer(map);
-			if(apprCabinetTransferList.size() > 0) {
+			
+			if (apprCabinetTransferList.size() > 0) {
 				map.put("v_rowID", apprCabinetTransferList.get(0).getRow_id().trim());
 				map.put("ProcessDeptCode", apprCabinetTransferList.get(0).getProcessDeptCode());
 				map.put("TaskCode", apprCabinetTransferList.get(0).getTaskCode());
@@ -5657,7 +5658,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("Title2", apprCabinetTransferList.get(0).getTitle2());
 				map.put("ProcessDeptName", apprCabinetTransferList.get(0).getProcessDeptName());
 				map.put("ProcessDeptName2", apprCabinetTransferList.get(0).getProcessDeptName2());
-				map.put("TaskName", apprCabinetTransferList.get(0).getTaskName());;
+				map.put("TaskName", apprCabinetTransferList.get(0).getTaskName());
 				map.put("TaskName2", apprCabinetTransferList.get(0).getTaskName2());
 				map.put("CatalogTransferFlag", apprCabinetTransferList.get(0).getCatalogTransferFlag());
 				map.put("CatalogTransferYear", apprCabinetTransferList.get(0).getCatalogTransferYear());
@@ -5665,24 +5666,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("DocTransferYear", apprCabinetTransferList.get(0).getDocTransferYear());
 				map.put("ProdReportFlag", apprCabinetTransferList.get(0).getProdReportFlag());
 				
-				ezApprovalGDAO.updateTbCabinetInfo(map);
+				ezApprovalGDAO.updateTbCabinetInfo(map); // 인수부서의 기록물철 CabinetTransferFlag = '1' 로 업데이트 (인수)
 			}
-			ezApprovalGDAO.updateTbCabinetInfo2(map);
-			ezApprovalGDAO.updateTbCabinetInfo3(map);
-			ezApprovalGDAO.updateTbCabinetClass(map);
 			
+			// 인계부서의 기록물철 CabinetTransferFlag = '2' 로 업데이트 (인계)
+			ezApprovalGDAO.updateTbCabinetInfo2(map); // 편철확정 "되지 않은" 기록물철의 TBL_CABINET 업데이트
+			ezApprovalGDAO.updateTbCabinetInfo3(map); // 편철확정 "된" 기록물철의 TBL_CABINET 업데이트
+			
+			// 아래의 쿼리는 인수부서에서 인계부서의 기존 철을 표출하게 하는 오류를 발생시키므로 주석처리함
+			// ezApprovalGDAO.updateTbCabinetClass(map); // 편철확정 "된" 기록물철의 TBL_CABINETCLASS => OwnerDeptID, OwnerTask를 인수부서의 데이터로 업데이트
+			
+			// 분리첨부 레코드 => 인수부서의 분리첨부가 되도록 CabinetID를 인수부서 기록물철의 CabinetID로 갱신 
 			List<ApprGCabinetVO> apprTbSeperateAttachList = ezApprovalGDAO.selectTbSeperateAttach(map);
-			StringBuffer rowID3 = new StringBuffer();
 			
-			if(apprTbSeperateAttachList.size() > 0) {
-				rowID3.append(apprTbSeperateAttachList.get(0).getRecordID().trim());
-				map.put("v_rowID3", rowID3.toString());
+			if (apprTbSeperateAttachList.size() > 0) {
+				map.put("v_rowID3", apprTbSeperateAttachList.get(0).getRecordID().trim());
 				map.put("v_CABINETID", apprTbSeperateAttachList.get(0).getCabinetID());
 				
 				ezApprovalGDAO.updateTbSeperateAttach(map);
 			}
+			
 			ezApprovalGDAO.insertTbCabinetHistory(map);
 		}
+		
 		rtnVal = "<RESULT>TRUE</RESULT>";
 
 		logger.debug("transferCabinet ended");
@@ -10203,8 +10209,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			apprGDocListVOList.get(0).setHasOpinionYn("N");
 			
 			String apprReuseConfig = ezCommonService.getTenantConfig("apprReuseConfig", userInfo.getTenantId());
-			if ( apprReuseConfig != null && !apprReuseConfig.equals("1") ){
+			if (apprReuseConfig != null && !apprReuseConfig.equals("1")) {
 				ezApprovalGDAO.insertReuseAttachFileInfo(map);
+				
+				/* 2023-02-21 홍승비 - 완료문서 재사용 > 문서의 모든 내용 재사용 시, 첨부파일의 히스토리도 첨부파일 기반으로 추가 (첨부자 정보는 기안자 정보로 통일) */
+				// 변경내용(MODIFYFLAG) = 추가(001) / 변경일자 = 현재시간(v_SYSDATE) / 변경자 = 기안자
+				map.put("v_ATTACHUSERID", userInfo.getId());
+				map.put("v_ATTACHUSERNAME", userInfo.getDisplayName());
+				map.put("v_ATTACHUSERNAME2", userInfo.getDisplayName2());
+				map.put("v_ATTACHUSERJOBTITLE", userInfo.getTitle());
+				map.put("v_ATTACHUSERJOBTITLE2", userInfo.getTitle2());
+				map.put("v_ATTACHUSERDEPTID", userInfo.getDeptID());
+				map.put("v_ATTACHUSERDEPTNAME", userInfo.getDeptName());
+				map.put("v_ATTACHUSERDEPTNAME2", userInfo.getDeptName2());
+				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+				ezApprovalGDAO.insertReuseAttachHistory(map);
 			}
 		}
 		
@@ -12252,7 +12271,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (code == null ) {
 				code = "";
 			}
-			if(docState.equals("015") || code.equals("015")) {
+			if (docState.equals("015") || code.equals("015")) {
 				ezApprovalGDAO.jiJungUpdateReceiptProInfo3(map);
 			} else {
 				ezApprovalGDAO.jiJungUpdateReceiptProInfo4(map);
@@ -12269,7 +12288,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		ezApprovalGDAO.aprDeleteDocInfo(map);
 		ezApprovalGDAO.aprDeleteDocInfo2(map);*/
-
+		
+		/* 2023-02-02 홍승비 - 부서수신함 > 접수 > 수신문 지정 시, 완료된 원문서의 수신자 정보를 갱신 (동일 부서에 대하여 새롭게 지정된 수신자 "개인"의 정보로 갱신 / 승인상태는 "대기"로 유지) */
+		map.put("docID", docID);
+		map.put("tenantID", tenantID);
+		
+		String orgDocID = ezApprovalGDAO.getOrgDocID(map);
+		
+		if (orgDocID != null && !orgDocID.equals("")) {
+			logger.debug("find ended orgDocID in setJijung, map for updateSusinEndReceiptPointInfoForJiJung  ::  " + map.toString());
+			
+			map.put("v_ORGDOCID", orgDocID);
+			
+			ezApprovalGDAO.updateSusinEndReceiptPointInfoForJiJung(map);
+		} else {
+			logger.debug("can't find ended orgDocID in setJijung, updateSusinEndReceiptPointInfoForJiJung skiped...");
+		}
+		
 		sendMsg(docID, processorID, "JIJUNG", companyID, lang, tenantID);
 		
 		logger.debug("setJijung ended");
@@ -13940,10 +13975,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_USERID", userID);
 			map.put("v_SN", sn);
+			map.put("v_PSN", sn);
 			map.put("v_DOCID", oldDocID);
 			map.put("companyID", companyID);
 			map.put("v_TENANTID", tenantID);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
+			// [경기대학교] 2021.12.01 - 강승구 : 임시저장시 저장이 안되는 오류수정
+			ezApprovalGDAO.deleteTmpReceiptPointInfo(map);
+			ezApprovalGDAO.deleteTmpAprOpinionInfo(map);
+			ezApprovalGDAO.deleteTmpAprDocAttachInfo(map);
+			ezApprovalGDAO.deleteTmpAttachInfo(map);
+			ezApprovalGDAO.deleteTmpExpAprLine(map);
+			ezApprovalGDAO.deleteTmpAprLineInfo(map);
+			ezApprovalGDAO.deleteTmpExpAprDocInfo(map);
 
 			ezApprovalGDAO.insertTmpReceiptPointInfo(map);
 			ezApprovalGDAO.insertTmpAprOpinionInfo(map);
@@ -23803,11 +23848,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 			//등록대장 : listType=0일때는 들어갈 필요가 없다.NullPointException 무시하려고 try..catch
 			docType = xmlDom.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();	// 18
-		} catch(Exception e) { }
+		} catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 	    try {
 	    	visualAudioDesc = xmlDom.getElementsByTagName("VISUALAUDIODESC").item(0).getTextContent().trim();	// 19
 			visualAudioType = xmlDom.getElementsByTagName("VISUALAUDIOTYPE").item(0).getTextContent().trim();	// 20
-	    } catch(Exception e) {  }
+	    } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 		String originRegSn = xmlDom.getElementsByTagName("ORIGINREGSN").item(0).getTextContent().trim();	// 23
 
 		// 특수목록 정보 노드
@@ -29002,26 +29047,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							bytes = commonUtil.readBytesFromFile(file.toPath());
 							bytes = klibUtil.decrypt(bytes);
 						} else {
-                        
-                    		InputStream is = new FileInputStream(file);
-
-                    	    long length = file.length();
-                    	    if (length > Integer.MAX_VALUE) {
-                    	        // File is too large
-                    	    }
-                    	    bytes = new byte[(int)length];
-                    	    
-                    	    int offset = 0;
-                    	    int numRead = 0;
-                    	    while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-                    	        offset += numRead;
-                    	    }
-                    	    
-                    	    is.close();
-
-                    	    if (offset < bytes.length) {
-                    	        throw new IOException("Could not completely read file "+file.getName());
-                    	    }
+							// CWE-404 보안 취약점 대응
+                    		try (InputStream is = new FileInputStream(file)) {
+								long length = file.length();
+								if (length > Integer.MAX_VALUE) {
+									// File is too large
+								}
+								bytes = new byte[(int)length];
+								
+								int offset = 0;
+								int numRead = 0;
+								while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+									offset = Math.addExact(offset, numRead);
+								}
+								
+								if (offset < bytes.length) {
+									throw new IOException("Could not completely read file "+file.getName());
+								}
+							}
 						}
                     	    
                     		byte[] encoded = Base64.encodeBase64(bytes);
@@ -29051,12 +29094,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          }
          
  		try {
-
- 			FileOutputStream fop = new FileOutputStream(FI);
- 			// get the content in bytes
- 			fop.write(strRtnXML.replace("\n", "").replace("\t", "").getBytes("euc-kr"));
- 			fop.flush();
- 			fop.close();
+			// CWE-404 보안 취약점 대응
+ 			try (FileOutputStream fop = new FileOutputStream(FI)) {
+				// get the content in bytes
+				fop.write(strRtnXML.replace("\n", "").replace("\t", "").getBytes("euc-kr"));
+				fop.flush();
+			}
  		} catch (Exception e) {
  			e.printStackTrace();
  		} 
@@ -29106,11 +29149,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    	fos.delete();
 			}
 		    
-			FileOutputStream fop = new FileOutputStream(fos);
-			// get the content in bytes
-			fop.write(strXML.getBytes("euc-kr"));
-			fop.flush();
-			fop.close();
+			// CWE-404 보안 취약점 대응
+			try (FileOutputStream fop = new FileOutputStream(fos)) {
+				// get the content in bytes
+				fop.write(strXML.getBytes("euc-kr"));
+				fop.flush();
+			}
 			
 			result = "OK";
 			fileState = "success";
@@ -29546,17 +29590,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          		ackFile.delete();
          	}
              
-			FileOutputStream fop = new FileOutputStream(ackFile);
-			// get the content in bytes
-			fop.write(strResult.getBytes("euc-kr"));
-			fop.flush();
-			fop.close();
+			// CWE-404 보안 취약점 대응
+			try (FileOutputStream fop = new FileOutputStream(ackFile)) {
+				// get the content in bytes
+				fop.write(strResult.getBytes("euc-kr"));
+				fop.flush();
+			}
 
-             return true;
+            return true;
          }
          catch (Exception Ex) {
-        	 Ex.printStackTrace();
-             return false;
+        	Ex.printStackTrace();
+            return false;
          } 
 	}
 
@@ -29678,11 +29723,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String getRelayInfo(String docID, LoginVO userInfo) throws Exception {
 		logger.debug("getRelayInfo started");
+		
 		StringBuilder result = new StringBuilder();
 		Map <String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docID);
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		logger.debug("map for getRelayInfo  ::  " + map.toString());
 		
 		List<ApprGRelayVO> relayDocList = ezApprovalGDAO.getRelayInfo(map);
 		
@@ -31214,52 +31262,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getStoragePeriodName ended | result:" + rtnVal);
 		return rtnVal;
 	}
-
-//	@Override
-//	public JSONObject convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
-//		logger.debug("convertDocumentToImg started");
-//		
-//		String originalFilename = file.getOriginalFilename();
-//		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
-//		
-//		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
-////		String filePath = URLEncoder.encode("222.106.242.180:"+tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
-//		String filePath = "L5Ldk4d4cYj7T1prexjnEbBfF%252F9qJ2lSTneSPg3UnTlQ7oFjLsfnZgMq4%252BJlVu4fEa1FIQeYI3%252BPB33JlY%252BCLJjVjx1iVJebmrlmJl1TgrI%253D";
-////		String filePath = URLEncoder.encode("/home/jmocha/temp/" + originalFilename, "UTF-8"); // 테스트용
-//		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
-//		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
-//		
-//		String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do?"
-//					   + "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
-//		
-//		logger.debug("image converting requestURL : " + address);
-//		
-//		URL url = new URL(address);
-//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();	
-//		conn.setRequestMethod("GET");
-//		
-//		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//		String line;
-//		StringBuffer response = new StringBuffer();
-//		
-//		while((line = br.readLine()) != null) {			
-//			response.append(line);						
-//		}
-//		
-//		JSONObject res = (JSONObject) new JSONParser().parse(response.toString());
-//		String hash = (String) res.get("hash");
-//		
-//		br.close();
-//		
-//		JSONObject convertedImgInfo = getConvertedImgInfo(hash);
-//
-//		// 컨버팅 후, 오피스 문서 파일 삭제
-//		File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
-//		tempFile.delete();
-//		
-//		logger.debug("convertDocumentToImg ended");
-//		return convertedImgInfo;	
-//	}
 	
 	@Override
 	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
@@ -31282,25 +31284,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();	
 		conn.setRequestMethod("GET");
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		String line;
-		StringBuffer response = new StringBuffer();
+		// CWE-404 보안 취약점 대응
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+			String line;
+			StringBuffer response = new StringBuffer();
+			
+			while((line = br.readLine()) != null) {			
+				response.append(line);						
+			}
 		
-		while((line = br.readLine()) != null) {			
-			response.append(line);						
+			// 2021-01-14 이혁진 넘어온 response값을 가지고 이미지URL생성
+			String convertedImgInfo = config.getProperty("config.officeConverterServerURL") + "/DG_viewer" + response;
+			
+			// 컨버팅 후, 오피스 문서 파일 삭제
+			File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
+			tempFile.delete();
+			
+			logger.debug("convertDocumentToImg ended");
+			return convertedImgInfo;	
 		}
-		
-		br.close();
-		
-		// 2021-01-14 이혁진 넘어온 response값을 가지고 이미지URL생성
-		String convertedImgInfo = config.getProperty("config.officeConverterServerURL") + "/DG_viewer" + response;
-		
-		// 컨버팅 후, 오피스 문서 파일 삭제
-		File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
-		tempFile.delete();
-		
-		logger.debug("convertDocumentToImg ended");
-		return convertedImgInfo;	
 	}
 
 	@Override
@@ -31320,22 +31322,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
 			
-			OutputStream os = conn.getOutputStream();
-			os.write(body.getBytes("UTF-8"));
-			os.flush();
-			
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String line;
-			StringBuffer response = new StringBuffer();
-			
-			while((line = br.readLine()) != null) {
-				response.append(line);
+			// CWE-404 보안 취약점 대응
+			try (OutputStream os = conn.getOutputStream()) {
+				os.write(body.getBytes("UTF-8"));
+				os.flush();
 			}
 			
-			br.close();	
-			os.close();
-			
-			result = (JSONObject) new JSONParser().parse(response.toString());
+			// CWE-404 보안 취약점 대응
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+				String line;
+				StringBuffer response = new StringBuffer();
+				
+				while((line = br.readLine()) != null) {
+					response.append(line);
+				}
+						
+				result = (JSONObject) new JSONParser().parse(response.toString());
+			}			
+
 			Long pageTotal = result.get("page_total") != null ? (Long) result.get("page_total") : -1L;
 			int fileCNT = ((JSONArray)result.get("dirnmL")).size();
 			
@@ -33053,8 +33057,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
-		int startRow = (pageSize * (pageNum - 1)) + 1;
-        int endRow = pageSize * pageNum;
+		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(pageNum, 1)), 1);
+        int endRow = Math.multiplyExact(pageSize, pageNum);
         int tenantID = userInfo.getTenantId();
         int docCount = 0;
         

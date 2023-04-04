@@ -3735,3 +3735,25 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 	position: relative; top: 13px;"
 }
 
+/* 20230306 셀렉트 수정 */
+.organMainmenu ul li.newSelect{float: left; margin: 0 5px 0 0; padding: 0 15px; height: 34px; font-size: 14px; line-height: 32px; background: #fff; color: #000; border: 1px solid #babec7; border-radius: 3px; box-sizing: border-box; cursor: pointer; position: relative;}
+.icon_sel{background-image: url(../images/arrow_iconset.png) !important ;background-size: 8px; display: inline-block; width: 16px !important; height: 16px !important; line-height: 0px !important; padding: 0px !important; margin: 6px 0px 0px 0px;background-repeat: no-repeat; background-color: transparent !important; box-shadow: none !important; border: 0px none !important; border-radius: 0px !important; vertical-align: top !important; overflow: hidden;}
+.collapse_down {background-position: 0px -13px !important; margin: 6px 0px 0px 0px; cursor: pointer;}
+.collapse_up {background-position: 0px 5px !important; margin: 6px 0px 0px 0px; cursor: pointer;}
+
+.organMainmenu ul.selectUL li ul.option_horizontal_list{position: absolute; left: 0px; top: 28px; min-width: 100px; /*max-width: 180px;*/ list-style: none; margin: 0px; padding: 0px 0px; background: #ffffff; border: 1px solid #808080; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; box-shadow: 2px 2px 10px rgb(0 0 0 / 18%); z-index: 10000; display: block; height: auto !important; overflow: auto !important; max-height: 200px !important;width: auto !important;}
+.organMainmenu ul.selectUL li .option_horizontal_list li{float: none !important; height: 28px !important; line-height: 30px; margin: 0px !important; padding: 0px 10px !important; font-size: 12px; color: #444; vertical-align: top; box-sizing: border-box; border: 0px none; border-radius: 0px; background: transparent; box-shadow: none; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; border: none !important;}
+.organMainmenu ul.selectUL li .option_horizontal_list li:hover{background: #e2ecfa; border: 0 none; color: #333333;}
+#mainmenu ul.selectUL{overflow:visible; max-height: 220px;}
+.organMainmenu ul li.newSelect{border-radius: 0px;}
+.organMainmenu ul li.newSelect span{padding: 0px 10px !important;}
+
+.newSelect_div ul li p .on{display: block}
+.newSelect_div ul li p .off{display: none}
+/* 스크롤바 커스텀 */
+.organMainmenu ul.selectUL li .option_horizontal_list::-webkit-scrollbar {width: 8px;}
+.organMainmenu ul.selectUL li .option_horizontal_list::-webkit-scrollbar-thumb {height: 30%;background: #d9d9d9;border-radius: 10px;}
+.organMainmenu ul.selectUL li .option_horizontal_list::-webkit-scrollbar-track{background: #f1f1f1;}
+/* //스크롤바 커스텀 */
+
+/* //20230306 셀렉트 수정 */

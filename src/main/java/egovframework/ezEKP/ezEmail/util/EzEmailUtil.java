@@ -547,6 +547,7 @@ public class EzEmailUtil {
 			}			
 		} 
 		catch (MessagingException e) {			
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		return addressStr;
@@ -596,8 +597,10 @@ public class EzEmailUtil {
 				}
 			}			
 		} catch (MessagingException e) {
+			logger.debug("e.message=" + e.getMessage());
 		} 
-		catch (UnsupportedEncodingException e) {			
+		catch (UnsupportedEncodingException e) {		
+			logger.debug("e.message=" + e.getMessage());	
 		}		
 		
 		return fullFromAddressStr;
@@ -619,6 +622,7 @@ public class EzEmailUtil {
 					try {
 						addressStr = MimeUtility.decodeText(addressStr);
 					} catch (UnsupportedEncodingException e) {
+						logger.debug("e.message=" + e.getMessage());
 					}
 				}						
 				addressBuilder.append(addressStr);
@@ -657,6 +661,7 @@ public class EzEmailUtil {
 							name = MimeUtility.decodeText(name);
 						}
 					} catch (UnsupportedEncodingException e) {
+						logger.debug("e.message=" + e.getMessage());
 					}
 					
 					if (name != null) {
@@ -721,6 +726,7 @@ public class EzEmailUtil {
 							name = MimeUtility.decodeText(name);
 						}
 					} catch (UnsupportedEncodingException e) {
+						logger.debug("e.message=" + e.getMessage());
 					}
 					
 					if (name != null) {
@@ -995,6 +1001,7 @@ public class EzEmailUtil {
 				logger.debug("unknown encoding");														
 			}		
 		} catch (UnsupportedEncodingException e) {			
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		return result;
@@ -2428,6 +2435,7 @@ public class EzEmailUtil {
 				            }
 				        } 
 				        catch (Exception e) {
+							logger.debug("e.message=" + e.getMessage());
 				        }
 				        
 				        return false;
@@ -2496,7 +2504,8 @@ public class EzEmailUtil {
 				                return true;
 				            }
 				    	}
-				    	catch (MessagingException e) {					    		
+				    	catch (MessagingException e) {		
+							logger.debug("e.message=" + e.getMessage());			    		
 				    	}
 				        
 				        return false;
@@ -2554,6 +2563,7 @@ public class EzEmailUtil {
                             }
                         } 
                         catch (Exception e) {
+							logger.debug("e.message=" + e.getMessage());
                         }
                         
                         return false;
@@ -2577,6 +2587,7 @@ public class EzEmailUtil {
 				            }
 				        } 
 				        catch (Exception e) {
+							logger.debug("e.message=" + e.getMessage());
 				        }
 				        
 				        return false;
@@ -2600,6 +2611,7 @@ public class EzEmailUtil {
 				            }
 				        } 
 				        catch (Exception e) {
+							logger.debug("e.message=" + e.getMessage());
 				        }
 				        
 				        return false;
@@ -4155,7 +4167,7 @@ public class EzEmailUtil {
     	
     	if (emailAddress != null && !emailAddress.equals("")) {
     		
-    		
+    		/* 보안 취약점 조치를 위해 제거함
 	    	byte[] keyBytes = apb.getBytes("UTF-8");
 	    	byte[] ivBytes = "mekaGW02".getBytes("UTF-8");
 	    	byte[] input = emailAddress.getBytes("UTF-8");
@@ -4170,6 +4182,8 @@ public class EzEmailUtil {
 	    	enc_len += cipher.doFinal(encrypted, enc_len);  
 	    	
 	    	credential = toHexString(encrypted);
+			*/
+			credential = "";
     	}
     	
     	return credential;
@@ -4883,7 +4897,7 @@ public class EzEmailUtil {
 				return true;
 			}
 			
-		} catch (MessagingException e) {	}
+		} catch (MessagingException e) {logger.debug("e.message=" + e.getMessage());}
 			
 		return false;
 	}
@@ -4895,7 +4909,6 @@ public class EzEmailUtil {
 		String name ;
 		File target ;
 		int nWritten = 0;
-		BufferedOutputStream bos ;
 		byte [] buf = new byte[1024 * 8];
 
 		ensureDestDir(destDir);
@@ -4910,13 +4923,13 @@ public class EzEmailUtil {
 				ensureDestDir(target);
 			} else {
 				target.createNewFile();
-				bos = new BufferedOutputStream(new FileOutputStream(target));
-				
-				while ((nWritten = zis.read(buf)) >= 0 ){
-					bos.write(buf, 0, nWritten);
+
+				// CWE-404 보안 취약점 대응
+				try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(target))) {				
+					while ((nWritten = zis.read(buf)) >= 0 ){
+						bos.write(buf, 0, nWritten);
+					}				
 				}
-				
-				bos.close();
 			}
 		}
 		

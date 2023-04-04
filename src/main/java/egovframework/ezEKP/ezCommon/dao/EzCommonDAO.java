@@ -2128,7 +2128,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
             if (cnt == 0) {
                 insert("EzCommonDAO.insertTblCodelistA54002");
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
     }
     
     public void addTblAdminReceiptGroupSubExtReceptYnColumn() {

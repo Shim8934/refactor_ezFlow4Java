@@ -531,6 +531,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				InternetAddress internetAddress = new InternetAddress(forwardAddress);
 				strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());
 			} catch (AddressException e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 		}
 		else {
@@ -736,7 +737,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				returnJsonArr = ezEmailService.selectAllSignatureTemplate(userInfo.getCompanyID(), Integer.toString(userInfo.getTenantId()));
 				logger.debug("jsonArr=" + returnJsonArr);
 			} catch (Exception e) {
-				// e.printStackTrace();
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			List<MailSignatureTemplateVO> resultList = new ArrayList<MailSignatureTemplateVO>();

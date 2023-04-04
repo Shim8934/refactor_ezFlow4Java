@@ -654,6 +654,7 @@ public class IMAPAccess {
 				first = m1.getSubject();
 				second = m2.getSubject();
 			} catch (MessagingException e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			first = first != null ? first.trim() : "";
@@ -668,6 +669,7 @@ public class IMAPAccess {
 						rc = d1.compareTo(d2);
 					}
 				} catch (MessagingException e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			
@@ -697,6 +699,7 @@ public class IMAPAccess {
 					addresses = msg.getRecipients(Message.RecipientType.TO);
 				}
 			} catch (MessagingException e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 			if (addresses != null) {
 				if (isSender) {
@@ -768,6 +771,7 @@ public class IMAPAccess {
 						rc = d1.compareTo(d2);
 					}
 				} catch (MessagingException e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			
@@ -792,6 +796,7 @@ public class IMAPAccess {
 						rc = d1.compareTo(d2);
 					}
 				} catch (MessagingException e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			
@@ -809,7 +814,8 @@ public class IMAPAccess {
 			try {
 				unread1 = !m1.isSet(Flags.Flag.SEEN) ? 1 : 0;
 				unread2 = !m2.isSet(Flags.Flag.SEEN) ? 1 : 0;
-			} catch (MessagingException e1) {
+			} catch (MessagingException e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 						
 			int rc = unread1 - unread2;
@@ -821,6 +827,7 @@ public class IMAPAccess {
 						rc = d1.compareTo(d2);
 					}
 				} catch (MessagingException e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			
@@ -838,7 +845,8 @@ public class IMAPAccess {
 			try {
 				flagged1 = m1.isSet(Flags.Flag.FLAGGED) ? 1 : 0;
 				flagged2 = m2.isSet(Flags.Flag.FLAGGED) ? 1 : 0;
-			} catch (MessagingException e1) {
+			} catch (MessagingException e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 						
 			int rc = flagged1 - flagged2;
@@ -850,6 +858,7 @@ public class IMAPAccess {
 						rc = d1.compareTo(d2);
 					}
 				} catch (MessagingException e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			
@@ -865,6 +874,7 @@ public class IMAPAccess {
 			try {
 				headers = msg.getHeader("X-Priority");
 			} catch (MessagingException e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 			String header = headers != null ? headers[0] : "normal";
 			int importance = 1;
@@ -894,6 +904,7 @@ public class IMAPAccess {
 						rc = d1.compareTo(d2);
 					}
 				} catch (MessagingException e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			
@@ -911,7 +922,8 @@ public class IMAPAccess {
 			try {
 				size1 = m1.getSize();
 				size2 = m2.getSize();
-			} catch (MessagingException e1) {
+			} catch (MessagingException e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 						
 			int rc = size1 - size2;
@@ -923,6 +935,7 @@ public class IMAPAccess {
 						rc = d1.compareTo(d2);
 					}
 				} catch (MessagingException e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			
@@ -943,6 +956,7 @@ public class IMAPAccess {
 					rc = d1.compareTo(d2);
 				}
 			} catch (MessagingException e) {
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			return rc;

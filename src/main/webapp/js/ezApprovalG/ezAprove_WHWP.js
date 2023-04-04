@@ -1466,8 +1466,9 @@ function setRecevInfo(ret) {
     }
 }
 
+/* 2023-02-08 홍승비 - WHWP 문서의 수정이력 비교 기능을 위해 isBeforeDoc, beforeDocURL 파라미터 추가 */
 /* 2020-02-27 홍승비 - mht 문서 수정이력 비교용 파라미터 추가 (데이터 삽입 시 오류 방지) */
-function UpdateDocHistory(pHtml) {
+function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
 	var xmlhttp2 = createXMLHttpRequest();
 	var xmlpara = createXmlDom();
 	var objNode;
@@ -1475,7 +1476,7 @@ function UpdateDocHistory(pHtml) {
 	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
 	createNodeAndInsertText(xmlpara, objNode, "pHtml", pHtml);
 	createNodeAndInsertText(xmlpara, objNode, "mode", "hwp");
-    createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
+    createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
 
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
 	xmlhttp2.send(xmlpara);
@@ -1497,14 +1498,15 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", ConvMakeXMLString(arr_userinfo[16]));
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
-        createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", "");
-        createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", "");
+        createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
+        createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", beforeDocURL);
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
+        
         if (xmlhttp != null && xmlhttp.readyState == 4) {
          	 if (xmlhttp.status == 200) {
-         		
+         		returnURL = xmlhttp.responseText;
          	 } else {
          		 var pAlertContent = strLang89;
                 OpenAlertUI(pAlertContent);
@@ -1514,6 +1516,8 @@ function UpdateDocHistory(pHtml) {
        var pAlertContent = strLang90;
        OpenAlertUI(pAlertContent);
    }
+    
+    return returnURL;
 }
 
 function setPublicFlag2() {

@@ -160,7 +160,8 @@
 	            xmlhttp.send(xmlpara);
 	            var URL = xmlhttp.responseText;
 
-	            AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(URL);
+	            /* 2023-03-08 홍승비 - 통합PC저장으로 결재문서와 첨부파일 다운로드 후, 임시 생성된 .zip파일 삭제 */
+	            AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(URL) + "&isToDelFG=Y";
 	        }
 	
 	        var strPathInfo = "";
@@ -232,6 +233,7 @@
 				alert(strLang1139);
 				window_close();
 		    }
+	        
 	    </script>
 	</head>
 	<body class="popup">

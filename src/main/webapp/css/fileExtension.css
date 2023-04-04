@@ -1,0 +1,39 @@
+﻿/* 관리자 포탈 첨부확장자 설정 목록 Style */
+/*.ExtensionUL_LIST {padding-left: 0px;}
+.ExtensionUL_LIST > li {border-bottom: 1px solid #f5f5f6;list-style: none;padding: 0px;margin-right: 0px;}
+.ExtensionUL_LIST > li > input[type="checkbox"] {margin:11px 10px 0px 10px; float:left;}
+.ExtensionUL_LIST > li > input[type="checkbox"] + label{display:block; padding:10px;}
+.ExtensionUL_LIST > li > label > a {margin-left: 5px;float: right;margin-top: -3px;}
+.ExtensionUL_BOX {padding-left: 0px;}
+.ExtensionUL_BOX > li {display: inline-block;width: 123px;margin-bottom: 10px;margin-right: 10px;}
+.ExtensionUL_BOX > li > input[type="checkbox"] {margin-right: 10px; display:none;}
+.ExtensionUL_BOX > li > input[type="checkbox"] + label{display:block; border: 1px solid #333333;border-radius: 5px;list-style: none;padding: 10px;}
+.ExtensionUL_BOX > li > input[type="checkbox"]:checked + label {color: rgb(4, 112, 227);border-color: rgb(4, 112, 227);background: #f1f8ff;}
+.ExtensionUL_BOX > li > label > span {font-weight: bold;font-size: larger;}
+.ExtensionUL_BOX > li > label > a {vertical-align: top;margin-left: 5px;float: right;}
+.imgbtn01 .icon16_delete{margin-top:1px;}*/
+
+/* 관리자 포탈 첨부확장자 설정 목록 Style */
+.ExtensionUL_LIST {padding-left: 0px;}
+.ExtensionUL_LIST > li {border-bottom: 1px solid #f5f5f6;list-style: none;padding: 0px;margin-right: 0px;}
+.ExtensionUL_LIST > li > input[type="checkbox"] {margin:11px 10px 0px 10px; float:left;}
+.ExtensionUL_LIST > li > input[type="checkbox"] + label{display:block; padding:10px;}
+.ExtensionUL_LIST > li > label > a {margin-left: 5px;float: right;margin-top: -3px;}
+.ExtensionUL_BOX {padding-left: 0px;}
+.ExtensionUL_BOX > li {display: inline-block;width: 123px;margin-bottom: 10px;margin-right: 10px;}
+.ExtensionUL_BOX > li > input[type="checkbox"] {margin-right: 10px; display:none;}
+.ExtensionUL_BOX > li > input[type="checkbox"] + label{display:block; border: 1px solid #333333;border-radius: 5px;list-style: none;padding: 10px;}
+.ExtensionUL_BOX > li > input[type="checkbox"]:checked + label {color: rgb(4, 112, 227);border-color: rgb(4, 112, 227);background: #f1f8ff;}
+.ExtensionUL_BOX > li > label > span {font-weight: bold;font-size: larger;}
+.ExtensionUL_BOX > li > label > a {vertical-align: top;margin-left: 5px;float: right;}
+.imgbtn01 .icon16_delete{margin-top:1px;}
+#mainmenu ul .leftViewTypeUL{margin-bottom:0px !important;}
+#mainmenu ul .leftViewTypeUL > li{border:0px none; background:none;}
+#mainmenu ul .leftViewTypeUL > li:hover{background:none;}
+#mainmenu ul .leftViewTypeUL > li > span{display:block; width:31px; height:31px; vertical-align:top;}
+#mainmenu ul .leftViewTypeUL > li .leftViewType_box{background:url(../images/ImgIcon/btn_imglistNew.gif) no-repeat left top;}
+#mainmenu ul .leftViewTypeUL > li .leftViewType_list{background:url(../images/ImgIcon/btn_listNew.gif) no-repeat left top;}
+#mainmenu ul .leftViewTypeUL > li.on .leftViewType_box,
+#mainmenu ul .leftViewTypeUL > li:hover .leftViewType_box{background:url(../images/ImgIcon/btn_onimglistNew.gif) no-repeat left top;}
+#mainmenu ul .leftViewTypeUL > li.on .leftViewType_list,
+#mainmenu ul .leftViewTypeUL > li:hover .leftViewType_list{background:url(../images/ImgIcon/btn_onlistNew.gif) no-repeat left top;}

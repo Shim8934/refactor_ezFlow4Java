@@ -592,133 +592,135 @@ public class EzEmailAdminController {
 			sb.append("<DATA>");
 			sb.append("<MAIL>" + mail + "</MAIL>");
 			
-			for (int i = 0; i < resultArray.size(); i++) {
-				JSONObject address = (JSONObject) resultArray.get(i);
-				String pCn = (String) address.get("cn");
-				String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
-				String pClass = (String) address.get("class");
-				String displayName = (String) address.get("displayName"); //
-				
-				if (domain.equals(pCnDomain)) {
-					pCn = pCn.substring(0, pCn.indexOf("@"));
-				} else {
-					pClass = "distributionSub";
-				}
-				
-				logger.debug("pCn=" + pCn + ", pClass=" + pClass + ", displayName=" + displayName);
-
-				if (pClass.equals("group")) {
-					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn,
-							userInfo.getPrimary(), userInfo.getTenantId());
-					if (dept != null) {
-						sb.append("<ROW>");
-						sb.append("<CLASS>" + pClass + "</CLASS>");
-						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
-						sb.append("<DISPLAYNAME>"
-								+ commonUtil.cleanValue(dept.getDisplayName())
-								+ "</DISPLAYNAME>");
-						sb.append("<MAIL>"
-								+ commonUtil.cleanValue(dept.getMail())
-								+ "</MAIL>");
-						sb.append("<COMPANY>"
-								+ commonUtil.cleanValue(dept
-										.getExtensionAttribute3())
-								+ "</COMPANY>");
-						sb.append("<DEPT>"
-								+ egovMessageSource.getMessage("ezOrgan.t68",
-										locale) + "</DEPT>");
-						sb.append("<TITLE>"
-								+ egovMessageSource.getMessage("ezOrgan.t68",
-										locale) + "</TITLE>");
-						sb.append("</ROW>");
+			if (resultArray != null) {
+				for (int i = 0; i < resultArray.size(); i++) {
+					JSONObject address = (JSONObject) resultArray.get(i);
+					String pCn = (String) address.get("cn");
+					String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
+					String pClass = (String) address.get("class");
+					String displayName = (String) address.get("displayName"); //
+					
+					if (domain.equals(pCnDomain)) {
+						pCn = pCn.substring(0, pCn.indexOf("@"));
 					} else {
-						sb.append("<ROW>");
-						sb.append("<CLASS>" + "distribution" + "</CLASS>");
-						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
-						sb.append("<DISPLAYNAME>"
-								+ commonUtil.cleanValue(displayName)
-								+ "</DISPLAYNAME>");
-						sb.append("<MAIL>"
-								+ commonUtil.cleanValue(cn)
-								+ "</MAIL>");
-						sb.append("<DEPT>"
-								+ egovMessageSource.getMessage("ezEmail.t57",
-										locale) + "</DEPT>");
-						sb.append("</ROW>");
-						}
+						pClass = "distributionSub";
+					}
+					
+					logger.debug("pCn=" + pCn + ", pClass=" + pClass + ", displayName=" + displayName);
 
-				} else if (pClass.equals("user")) { // user or jobmst
-					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn,
-							userInfo.getPrimary(), userInfo.getTenantId());
-					if (user != null) {
-						sb.append("<ROW>");
-						sb.append("<CLASS>" + pClass + "</CLASS>");
-						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
-						sb.append("<DISPLAYNAME>"
-								+ commonUtil.cleanValue(user.getDisplayName())
-								+ "</DISPLAYNAME>");
-						sb.append("<MAIL>"
-								+ commonUtil.cleanValue(user.getMail())
-								+ "</MAIL>");
-						sb.append("<COMPANY>"
-								+ commonUtil.cleanValue(user.getCompany())
-								+ "</COMPANY>");
-						sb.append("<DEPT>"
-								+ commonUtil.cleanValue(user.getDescription())
-								+ "</DEPT>");
-						sb.append("<TITLE>"
-								+ commonUtil.cleanValue(user.getTitle())
-								+ "</TITLE>");
-						sb.append("</ROW>");
-					} else {
-						String jobId        = pCn.split("__")[1]; // 직위/직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
-						OrganJobVO jobVO    = ezOrganAdminService.getTitleByJobID(jobId, userLang, userInfo.getTenantId());
-						
-						if (jobVO != null && !jobVO.getJobID().equals("")) {
-							String jobType    = jobVO.getType(); // 001직위, 002직책
-							String jobMail    = pCn + "@" + pCnDomain;
-							String jobTitle   = jobType.equals("001") ? "main.t77" : "ezPersonal.t175"; 
-							String jobClass   = "jobmst";
-							logger.debug("jobType={}, jobMail={}", jobType, jobMail);
-							
+					if (pClass.equals("group")) {
+						OrganDeptVO dept = ezOrganService.getDeptInfo(pCn,
+								userInfo.getPrimary(), userInfo.getTenantId());
+						if (dept != null) {
 							sb.append("<ROW>");
-							sb.append("<CLASS>" + jobClass + "</CLASS>");
-							sb.append("<CN>" + commonUtil.cleanValue(jobVO.getJobID()) + "</CN>");
+							sb.append("<CLASS>" + pClass + "</CLASS>");
+							sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
 							sb.append("<DISPLAYNAME>"
-									+ commonUtil.cleanValue(jobVO.getDisplayName())
+									+ commonUtil.cleanValue(dept.getDisplayName())
 									+ "</DISPLAYNAME>");
 							sb.append("<MAIL>"
-									+ commonUtil.cleanValue(jobMail)
+									+ commonUtil.cleanValue(dept.getMail())
 									+ "</MAIL>");
-							sb.append("<COMPANY></COMPANY>");
+							sb.append("<COMPANY>"
+									+ commonUtil.cleanValue(dept
+											.getExtensionAttribute3())
+									+ "</COMPANY>");
 							sb.append("<DEPT>"
-									+ egovMessageSource.getMessage(jobTitle, locale)
+									+ egovMessageSource.getMessage("ezOrgan.t68",
+											locale) + "</DEPT>");
+							sb.append("<TITLE>"
+									+ egovMessageSource.getMessage("ezOrgan.t68",
+											locale) + "</TITLE>");
+							sb.append("</ROW>");
+						} else {
+							sb.append("<ROW>");
+							sb.append("<CLASS>" + "distribution" + "</CLASS>");
+							sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+							sb.append("<DISPLAYNAME>"
+									+ commonUtil.cleanValue(displayName)
+									+ "</DISPLAYNAME>");
+							sb.append("<MAIL>"
+									+ commonUtil.cleanValue(cn)
+									+ "</MAIL>");
+							sb.append("<DEPT>"
+									+ egovMessageSource.getMessage("ezEmail.t57",
+											locale) + "</DEPT>");
+							sb.append("</ROW>");
+							}
+
+					} else if (pClass.equals("user")) { // user or jobmst
+						OrganUserVO user = ezOrganAdminService.getUserInfo(pCn,
+								userInfo.getPrimary(), userInfo.getTenantId());
+						if (user != null) {
+							sb.append("<ROW>");
+							sb.append("<CLASS>" + pClass + "</CLASS>");
+							sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+							sb.append("<DISPLAYNAME>"
+									+ commonUtil.cleanValue(user.getDisplayName())
+									+ "</DISPLAYNAME>");
+							sb.append("<MAIL>"
+									+ commonUtil.cleanValue(user.getMail())
+									+ "</MAIL>");
+							sb.append("<COMPANY>"
+									+ commonUtil.cleanValue(user.getCompany())
+									+ "</COMPANY>");
+							sb.append("<DEPT>"
+									+ commonUtil.cleanValue(user.getDescription())
 									+ "</DEPT>");
-							sb.append("<TITLE>" // 구성원 목록 TR ATTRIBUTE JOBTYPE으로 사용
-									+ jobType
+							sb.append("<TITLE>"
+									+ commonUtil.cleanValue(user.getTitle())
 									+ "</TITLE>");
 							sb.append("</ROW>");
+						} else {
+							String jobId        = pCn.split("__")[1]; // 직위/직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
+							OrganJobVO jobVO    = ezOrganAdminService.getTitleByJobID(jobId, userLang, userInfo.getTenantId());
+							
+							if (jobVO != null && !jobVO.getJobID().equals("")) {
+								String jobType    = jobVO.getType(); // 001직위, 002직책
+								String jobMail    = pCn + "@" + pCnDomain;
+								String jobTitle   = jobType.equals("001") ? "main.t77" : "ezPersonal.t175"; 
+								String jobClass   = "jobmst";
+								logger.debug("jobType={}, jobMail={}", jobType, jobMail);
+								
+								sb.append("<ROW>");
+								sb.append("<CLASS>" + jobClass + "</CLASS>");
+								sb.append("<CN>" + commonUtil.cleanValue(jobVO.getJobID()) + "</CN>");
+								sb.append("<DISPLAYNAME>"
+										+ commonUtil.cleanValue(jobVO.getDisplayName())
+										+ "</DISPLAYNAME>");
+								sb.append("<MAIL>"
+										+ commonUtil.cleanValue(jobMail)
+										+ "</MAIL>");
+								sb.append("<COMPANY></COMPANY>");
+								sb.append("<DEPT>"
+										+ egovMessageSource.getMessage(jobTitle, locale)
+										+ "</DEPT>");
+								sb.append("<TITLE>" // 구성원 목록 TR ATTRIBUTE JOBTYPE으로 사용
+										+ jobType
+										+ "</TITLE>");
+								sb.append("</ROW>");
+							}
 						}
+					} else {//distribution_sub에서 가져오기(주소록, 직접입력)
+						MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(cn, pCn, companyId, userInfo.getTenantId());
+						
+						if (distributionSubVO != null) {
+							sb.append("<ROW>");
+							sb.append("<CLASS>" + pClass + "</CLASS>");
+							sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+							sb.append("<DISPLAYNAME>"
+									+ commonUtil.cleanValue(distributionSubVO.getName())
+									+ "</DISPLAYNAME>");
+							sb.append("<MAIL>"
+									+ commonUtil.cleanValue(distributionSubVO.getMail())
+									+ "</MAIL>");
+							sb.append("<DEPT>"
+									+ commonUtil.cleanValue(distributionSubVO.getMail())
+									+ "</DEPT>");
+							sb.append("</ROW>");
+						} 
+						
 					}
-				} else {//distribution_sub에서 가져오기(주소록, 직접입력)
-					MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(cn, pCn, companyId, userInfo.getTenantId());
-					
-					if (distributionSubVO != null) {
-						sb.append("<ROW>");
-						sb.append("<CLASS>" + pClass + "</CLASS>");
-						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
-						sb.append("<DISPLAYNAME>"
-								+ commonUtil.cleanValue(distributionSubVO.getName())
-								+ "</DISPLAYNAME>");
-						sb.append("<MAIL>"
-								+ commonUtil.cleanValue(distributionSubVO.getMail())
-								+ "</MAIL>");
-						sb.append("<DEPT>"
-								+ commonUtil.cleanValue(distributionSubVO.getMail())
-								+ "</DEPT>");
-						sb.append("</ROW>");
-					} 
-					
 				}
 			}
 
@@ -1136,7 +1138,7 @@ public class EzEmailAdminController {
 		String iMAPPort = config.getProperty("config.IMAPPort");
 
 		int maxItemPerPage = 20;
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -1200,7 +1202,7 @@ public class EzEmailAdminController {
 
 		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -1328,7 +1330,7 @@ public class EzEmailAdminController {
 		String currPage = request.getParameter("pageNum");
 
 		int maxItemPerPage = 20;
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -2426,7 +2428,7 @@ public class EzEmailAdminController {
 			returnJsonArr = ezEmailService.selectAllSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()));
 			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		logger.debug("readSignList ended.");
@@ -2455,7 +2457,7 @@ public class EzEmailAdminController {
 			returnJsonArr = ezEmailService.selectSearchSignatureTemplate(companyId, Integer.toString(userInfo.getTenantId()), search, userInfo.getPrimary());
 			logger.debug("jsonArr=" + returnJsonArr);
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		logger.debug("searchSignList ended.");
@@ -2527,7 +2529,7 @@ public class EzEmailAdminController {
 			}
 			
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.debug("e.message=" + e.getMessage());
 		}
 		
 		logger.debug("signaturePreview ended.");
@@ -2572,7 +2574,7 @@ public class EzEmailAdminController {
 				displayname2 = obj.get("displayname2").toString();
 				
 			} catch (Exception e) {
-				// e.printStackTrace();
+				logger.debug("e.message=" + e.getMessage());
 			}
 		} 
 		

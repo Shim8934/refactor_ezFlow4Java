@@ -158,41 +158,40 @@ public class MessagePropertyTest {
 		
 		boolean isMsgKo = MSG_FILE_NM_KO.equals(file.getName());
 		
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		
-		String line;
-		
-		while((line = br.readLine()) != null) {
-			if(isPropertyLine(line)) {
-				String propertyNm = line.split("=")[0].trim();
-				String value = convertString(line.split("=")[1].trim());
-				
-				if(duplicatedMap.containsKey(propertyNm)) {
-					duplicatedMap.put(propertyNm, duplicatedMap.get(propertyNm) + 1);
-				} else {
-					duplicatedMap.put(propertyNm, 1);
-					result.add(propertyNm);
-				}
-				
-				if(value.length() == 0) {
-					emptyList.add(propertyNm);
-				}
-				
-				// 한글 메세지 프로퍼티가 아닐 때만 시행
-				if(!isMsgKo) {
-					for(int i = 0; i < value.length(); i++) {
-						
-						if(isKorean(value.charAt(i))) {
-							untranslatedList.add(propertyNm);
-							break;
+		// CWE-404 보안 취약점 대응
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {		
+			String line;
+			
+			while((line = br.readLine()) != null) {
+				if(isPropertyLine(line)) {
+					String propertyNm = line.split("=")[0].trim();
+					String value = convertString(line.split("=")[1].trim());
+					
+					if(duplicatedMap.containsKey(propertyNm)) {
+						duplicatedMap.put(propertyNm, duplicatedMap.get(propertyNm) + 1);
+					} else {
+						duplicatedMap.put(propertyNm, 1);
+						result.add(propertyNm);
+					}
+					
+					if(value.length() == 0) {
+						emptyList.add(propertyNm);
+					}
+					
+					// 한글 메세지 프로퍼티가 아닐 때만 시행
+					if(!isMsgKo) {
+						for(int i = 0; i < value.length(); i++) {
+							
+							if(isKorean(value.charAt(i))) {
+								untranslatedList.add(propertyNm);
+								break;
+							}
 						}
 					}
 				}
 			}
 		}
-		
-		br.close();
-		
+				
 		List<String> duplicatedList = duplicatedMap.entrySet().stream().filter(elem -> elem.getValue() > 1)
 										.map(elem -> elem.getKey() + " (" + elem.getValue() + " times)").sorted().collect(Collectors.toList());
 		

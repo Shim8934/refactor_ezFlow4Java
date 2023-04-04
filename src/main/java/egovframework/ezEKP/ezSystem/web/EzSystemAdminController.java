@@ -382,7 +382,7 @@ public class EzSystemAdminController {
 		
 		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -547,7 +547,7 @@ public class EzSystemAdminController {
 		
 		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -681,7 +681,7 @@ public class EzSystemAdminController {
 		logger.debug("config=" + config);
 		
 		int maxItemPerPage = 20; 
-		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		int startRow = Math.multiplyExact(Math.subtractExact(Integer.parseInt(currPage), 1), maxItemPerPage);
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -2688,4 +2688,53 @@ public class EzSystemAdminController {
 		logger.debug("permissionChHistExcelExport controller ended.");
 	}
 
+	@RequestMapping(value = "/admin/ezSystem/systemFileExtension.do", method=RequestMethod.GET)
+	public String fileExtension(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("fileExtension controller started.");
+
+		// 관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		logger.debug("tenantID={}", userInfo.getTenantId());
+
+		String fileExtension = ezSystemAdminService.getFileExtension(userInfo.getTenantId());
+		logger.debug("fileExtension={}", fileExtension);
+
+		model.addAttribute("fileExtension",fileExtension);
+
+		logger.debug("fileExtension controller ended.");
+		return "/ezSystem/systemFileExtension";
+	}
+
+	@RequestMapping(value = "/admin/ezSystem/updateFileExtension.do")
+	@ResponseBody
+	public String updateFileExtension(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("updateFileExtension controller started");
+
+		// 관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "adminDenied";
+		}
+
+		logger.debug("tenantID={}",userInfo.getTenantId());
+		int tenantId = userInfo.getTenantId();
+
+		String updateFileExtension = request.getParameter("updateFileExtension");
+		String message = "fail";
+
+		try {
+			message = ezSystemAdminService.updateFileExtension(tenantId, updateFileExtension);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("updateFileExtension controller ended");
+		return message;
+	}
 }

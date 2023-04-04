@@ -75,6 +75,10 @@
 					$("#startDatepicker").datepicker('setDate', nowDate);
 					$("#endDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 					$("#endDatepicker").datepicker('setDate', nowDate);
+					
+					/* 2023-02-15 홍승비 - 초기 로딩 시 검색기간 사용하지 않음 > 데이트피커 선택불가 상태를 유지 */
+					$("#startDatepicker").datepicker('disable');
+					$("#endDatepicker").datepicker('disable');
 				});
 				
 				
@@ -599,12 +603,12 @@
 			function dateSearch() {
 				if (usepostDate){
 					usepostDate = false;
-						$("#startDatepicker").datepicker('disable');
-						$("#endDatepicker").datepicker('disable');
+					$("#startDatepicker").datepicker('disable');
+					$("#endDatepicker").datepicker('disable');
 				} else {
 					usepostDate = true;
-						$("#startDatepicker").datepicker('enable');
-						$("#endDatepicker").datepicker('enable');
+					$("#startDatepicker").datepicker('enable');
+					$("#endDatepicker").datepicker('enable');
 				}
 			}
 			

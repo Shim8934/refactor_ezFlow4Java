@@ -64,7 +64,7 @@ public class EzLadderGWController {
 		if( currPage > pages[0]) {
 			currPage = pages[0];
 		}
-		pages[1] = (currPage-1)* block; // startPoint
+		pages[1] = Math.multiplyExact(Math.subtractExact(currPage, 1), block); // startPoint
 		pages[2] = 0;	//endPoint
 		if(currPage == pages[0]) {
 			pages[2] = total%block;

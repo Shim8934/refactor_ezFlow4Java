@@ -365,9 +365,12 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		    					loginService.insertLog(resultVO);	    					
 								loginController.createLoginCookie(userId, " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
 								
-		    		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
+								// CWE-113 보안 취약점 대응
+								/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
+		    		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1().replaceAll("\r", "").replaceAll("\n", ""), "utf-8"));
 		    		        	cookieName.setPath("/");
 		    		        	response.addCookie(cookieName);
+								*/
 								
 								response.sendRedirect(request.getRequestURI());	
 							} else {

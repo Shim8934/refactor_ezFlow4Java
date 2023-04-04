@@ -793,7 +793,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		int page = Integer.parseInt(req.getParameter("page"));
 		int photoCount = Integer.parseInt(req.getParameter("photoCount"));
-		int startRow = (page - 1) * photoCount;
+		int startRow = Math.multiplyExact(Math.subtractExact(page, 1), photoCount);
 		String portletId = req.getParameter("portletId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();

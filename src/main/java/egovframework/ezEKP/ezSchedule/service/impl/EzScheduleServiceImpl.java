@@ -1661,7 +1661,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				bos.write(buffer, 0, bytesRead);
 			}
 		} catch (Exception e) {
-			
+			logger.debug("e.message=" + e.getMessage());
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();
@@ -1971,7 +1971,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			orgFileName  = attachList.get(i).getFileName();
 			orgFilePath  = attachList.get(i).getFilePath();
 			orgFileDot   = orgFileName.indexOf(".");
-			destFilePath = commonUtil.separator + "{" + UUID.randomUUID() + "}_" + orgFileName.substring(orgFileDot);
+			destFilePath = attachPath + commonUtil.separator + "{" + UUID.randomUUID() + "}_" + orgFileName.substring(orgFileDot);
 			
 			attachMap.put("v_SCHEDULEID", scheduleId);
 			attachMap.put("v_FILENAME", attachList.get(i).getFileName());

@@ -144,118 +144,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezQuestion/qstList.do", method = RequestMethod.GET)
 	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, QstListVO qstListVO) throws Exception{
-		logger.debug("qstList Start");
-		
-		// 사용되지 않으므로 웹취약점 점검으로 인해 리턴하도록 함.
-		/*		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
-		String brdID = "5", title = "", responseRange = "", pollStartDate = "", pollEndDate = "";
-		String currPage = "1";
-		int pageSize = 15;
-		qstListVO.setUserID(userInfo.getId());
-		String adminYN = "N";
-		
-		if(request.getParameter("brdID") != null){
-			brdID = request.getParameter("brdID");
-		}
-		if(request.getParameter("title") != null){
-			title = request.getParameter("title");
-		}
-		if(request.getParameter("responseRange") != null){
-			responseRange = request.getParameter("responseRange");
-		}
-		if(request.getParameter("pollStartDate") != null && !request.getParameter("pollStartDate").equals("")){
-			pollStartDate = request.getParameter("pollStartDate");
-			pollStartDate = commonUtil.makeDate(pollStartDate.substring(0,4), pollStartDate.substring(5,7), pollStartDate.substring(8,10), true);
-		}
-		if(request.getParameter("pollEndDate") != null && !request.getParameter("pollEndDate").equals("")){
-			pollEndDate = request.getParameter("pollEndDate");
-			pollEndDate = commonUtil.makeDate(pollEndDate.substring(0,4), pollEndDate.substring(5,7), pollEndDate.substring(8,10), false);
-		}
-		if(request.getParameter("currPage") != null && !request.getParameter("currPage").equals("")){
-			currPage = request.getParameter("currPage");
-		}
-		
-		if(userInfo.getRollInfo().contains("c=1") || userInfo.getRollInfo().contains("k=1") || userInfo.getRollInfo().contains("l=1")){ 
-			adminYN = "Y";
-		}
-		
-		qstListVO.setBrdID(Integer.parseInt(brdID));
-		qstListVO.setTitle(title);
-		qstListVO.setResponseRange(responseRange);
-		qstListVO.setPollStartDate(commonUtil.getDateStringInUTC(pollStartDate, userInfo.getOffset(), true));
-		qstListVO.setPollEndDate(commonUtil.getDateStringInUTC(pollEndDate, userInfo.getOffset(), true));
-		qstListVO.setLang(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
-		qstListVO.setCurrPage(Integer.parseInt(currPage));
-		qstListVO.setPageSize(pageSize);
-		qstListVO.setCompanyID(userInfo.getCompanyID());
-		
-		String receve = "brdID=" + qstListVO.getBrdID() +
-						"&title=" + commonUtil.cleanValue(qstListVO.getTitle()) +
-		                "&responseRange=" + qstListVO.getResponseRange() +
-		                "&pollStartDate=" + qstListVO.getPollStartDate() +
-		                "&pollEndDate=" + qstListVO.getPollEndDate() +
-		                "&currPage=" + qstListVO.getCurrPage();
-		
-		qstListVO.setTotalCnt(ezQuestionService.getQstListCnt(qstListVO, userInfo.getTenantId()));
-		
-		if(qstListVO.getTotalPage()==0){
-			qstListVO.setTotalPage((qstListVO.getTotalCnt()+qstListVO.getPageSize()-1)/qstListVO.getPageSize());
-		}
-		
-		List<QstListVO> list = ezQuestionService.getQstList(qstListVO, userInfo.getTenantId());		
-		StringBuilder strbuilder;
-		
-		for(QstListVO qst : list){
-			if(qst.getReceve()==null){
-				strbuilder = new StringBuilder();
-				strbuilder.append(receve);
-				strbuilder.append("&itemNo="+qst.getItemNo());
-				qst.setReceve(strbuilder.toString());
-			}
-		}
-		
-		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-		Date endDate;
-		Date sysDate;
-		sysDate = new Date();
-		int compareEnd;
-		
-		for(QstListVO qst : list){
-			endDate=formatter.parse(commonUtil.getDateStringInUTC(qst.getPollEndDate(), userInfo.getOffset(), false));
-			compareEnd = endDate.compareTo(sysDate);
-			strbuilder = new StringBuilder();
-			
-			if(compareEnd >= 0){
-				//설문조사 즉시 완료 후, 완료된 당일에 정보를 수정하는 경우, 목록에서 진행중으로 뜨지 않도록 설정 
-				if (qst.getEndFlg().equals("1")) {
-					strbuilder.append(egovMessageSource.getMessage("ezQuestion.t563", userInfo.getLocale()));
-					strbuilder.append(qst.getTitle());
-					qst.setTitle(strbuilder.toString());
-				} else {
-					strbuilder.append(egovMessageSource.getMessage("ezQuestion.t562", userInfo.getLocale()));
-					strbuilder.append(qst.getTitle()); 
-					qst.setTitle(strbuilder.toString());
-				}
-			}else{
-				strbuilder.append(egovMessageSource.getMessage("ezQuestion.t563", userInfo.getLocale()));
-				strbuilder.append(qst.getTitle());
-				qst.setTitle(strbuilder.toString());
-			}				
-		}
-		
-		// 2018-10-10 홍승비 - 전자설문 검색결과가 없는 경우 메세지 변경을 위해 title 인자 추가
-		logger.debug("receve="+receve);
-		model.addAttribute("qstListVO", qstListVO);
-		model.addAttribute("adminYN", adminYN);
-		model.addAttribute("list", list);
-		model.addAttribute("receve", receve);
-		model.addAttribute("titleSearch", title);
-			
-		logger.debug("qstList End");
-		*/
+		logger.debug("qstList Start");		
 		
 		return "/ezQuestion/qstList";
 	}
@@ -268,26 +157,26 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public void pollOpen(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response, QstUserPollItemVO qstUserPollItemVO, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		logger.debug("pollOpen started");
 
-		String receve = "brdID=" + request.getParameter("brdID") +
-				"&itemNo=" + request.getParameter("itemNo") +
+		String receve = "brdID=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID"))) +
+				"&itemNo=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo"))) +
 				"&title=" + commonUtil.cleanValue(request.getParameter("title")) +
-				"&responseRange=" + request.getParameter("responseRange") +
-				"&pollStartDate=" + request.getParameter("pollStartDate") +
-				"&pollEndDate=" + request.getParameter("pollEndDate") +
-				"&currPage=" + request.getParameter("currPage");
+				"&responseRange=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("responseRange"))) +
+				"&pollStartDate=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pollStartDate"))) +
+				"&pollEndDate=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pollEndDate"))) +
+				"&currPage=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("currPage")));
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userID = loginVO.getId();
 		/**UserPollItem*/
-		qstUserPollItemVO.setBrdID(Integer.parseInt(request.getParameter("brdID")));
-		qstUserPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstUserPollItemVO.setBrdID(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")))));
+		qstUserPollItemVO.setItemNo(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")))));
 		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO, loginVO.getTenantId());
 		/** 결과값없으면 Error처리*/
 		if(qstUserPollItemVO.getTitle().equals(null)){
 			response.sendRedirect("cmm/error/egovError");
 		}
 		/**UserPermission*/
-		qstUserPermissionVO.setBrdID(Integer.parseInt(request.getParameter("brdID")));
-		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstUserPermissionVO.setBrdID(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")))));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")))));
 		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO, loginVO.getTenantId());
 		/**ResponseCnt*/
 		int responseCnt = ezQuestionService.getUserResponseCnt(qstUserPermissionVO,userID, loginVO.getTenantId());
@@ -411,10 +300,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 		int responseCnt = 0;
 		
 		if (request.getParameter("brdID") != null){
-			brdID = request.getParameter("brdID");
+			brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
 		}
 		if (request.getParameter("itemNo") != null){
-			itemNo = request.getParameter("itemNo");
+			itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
 		}
 		
 		if(loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1") || loginVO.getRollInfo().contains("l=1")){ 
@@ -487,15 +376,15 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String qstResponse(@CookieValue("loginCookie") String loginCookie, QstUserPermissionVO qstUserPermissionVO, ModelMap model, HttpServletRequest request, QstVO qstVO) throws Exception{
 		logger.debug("qstResponse started");
 
-		String receve = "brdID=" + request.getParameter("brdID") +
-				"&title=" + request.getParameter("title") +
-				"&responseRange=" + request.getParameter("responseRange") +
-				"&pollStartDate=" + request.getParameter("pollStartDate") +
-				"&pollEndDate=" + request.getParameter("pollEndDate") +
-				"&currPage=" + request.getParameter("currPage");
+		String receve = "brdID=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID"))) +
+				"&title=" + commonUtil.cleanValue(request.getParameter("title")) +
+				"&responseRange=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("responseRange"))) +
+				"&pollStartDate=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pollStartDate"))) +
+				"&pollEndDate=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pollEndDate"))) +
+				"&currPage=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("currPage")));
 		
-		qstVO.setBrdID(Integer.parseInt(request.getParameter("brdID")));
-		qstVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstVO.setBrdID(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")))));
+		qstVO.setItemNo(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")))));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userID = userInfo.getId();
@@ -503,8 +392,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		int responseCnt = 0;
 		
 		/**UserPermission*/
-		qstUserPermissionVO.setBrdID(Integer.parseInt(request.getParameter("brdID")));
-		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstUserPermissionVO.setBrdID(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")))));
+		qstUserPermissionVO.setItemNo(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")))));
 		qstUserPermissionVO=ezQuestionService.getUserPermission(qstUserPermissionVO, userInfo.getTenantId());
 		
 		if(qstUserPermissionVO.getMultiResponseFlg().equals("1")){
@@ -517,11 +406,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 		}
 		
-		responseCnt = ezQuestionService.resCount(request.getParameter("brdID"),request.getParameter("itemNo"), userInfo.getTenantId());
+		responseCnt = ezQuestionService.resCount(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID"))),commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo"))), userInfo.getTenantId());
 		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
-		qstUserPollItemVO.setBrdID(Integer.parseInt(request.getParameter("brdID")));
-		qstUserPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
+		qstUserPollItemVO.setBrdID(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")))));
+		qstUserPollItemVO.setItemNo(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")))));
 		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO, userInfo.getTenantId());
 		
 		if(qstUserPollItemVO.getUserID() != userID){
@@ -657,12 +546,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 		int eleCnt = 0;
 		
 		
-		eleCnt = Integer.parseInt(request.getParameter("hidEleCnt"));		
-		brdID = request.getParameter("brdID");
-		itemNo = request.getParameter("itemNo");
-		tableAnswer = request.getParameter("tableAnswer");
+		eleCnt = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("hidEleCnt"))));		
+		brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
+		itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
+		tableAnswer = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("tableAnswer")));
 		responseUserIp = request.getRemoteAddr();
-		receve = request.getParameter("receve").replace("&amp;", "&");
+		receve = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("receve"))).replace("&amp;", "&");
 		
 		qstUserPermissionVO.setBrdID(Integer.parseInt(brdID));
 		qstUserPermissionVO.setItemNo(Integer.parseInt(itemNo));
@@ -783,7 +672,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 					}
 				}else{
 					tmp = "rdo" + qstVO.getQuestionNo();
-					String SingleQ = request.getParameter(tmp);
+					String SingleQ = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter(tmp)));
 					qstResponseVO.setAnswerObjectivity(Integer.parseInt(SingleQ));
 					ezQuestionService.insertResponse(qstResponseVO, loginVO.getTenantId());
 				}
@@ -796,7 +685,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}else if(qstVO.getAnswerType() == 4){
 				/** EZSP_INSERTRESPONSE2*/
 				tmp = "txt" + qstVO.getQuestionNo();
-				answerSubjectivity = request.getParameter(tmp).replaceAll("\r\n", " ");
+				answerSubjectivity = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter(tmp))).replaceAll("\r\n", " ");
 				qstResponseVO.setAnswerSubjectivity(answerSubjectivity);
 				ezQuestionService.insertResponse2(qstResponseVO, loginVO.getTenantId());
 			}else if(qstVO.getAnswerType() == 5){
@@ -822,7 +711,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				ezQuestionService.insertResponse2(qstResponseVO, loginVO.getTenantId());
 			}else{
 				tmp = "sel" + qstVO.getQuestionNo();
-				String answerViewSelect = request.getParameter(tmp);
+				String answerViewSelect = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter(tmp)));
 				qstResponseVO.setAnswerObjectivity(Integer.parseInt(answerViewSelect));
 				ezQuestionService.insertResponse(qstResponseVO, loginVO.getTenantId());
 			}
@@ -877,21 +766,21 @@ public class EzQuestionController extends EgovFileMngUtil {
 		int percent = 0;
 		
 		if(request.getParameter("brdID")!=null)
-			brdID = request.getParameter("brdID");
+			brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
 		if(request.getParameter("brdNm")!=null)
-			brdNm = request.getParameter("brdNm");
+			brdNm = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdNm")));
 		if(request.getParameter("itemNo")!=null)
-			itemNo = request.getParameter("itemNo");
+			itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
 		if(request.getParameter("title")!=null)
 			title = request.getParameter("title");
 		if(request.getParameter("responseRange")!=null)
-			responseRange = request.getParameter("responseRange");
+			responseRange = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("responseRange")));
 		if(request.getParameter("pollStartDate")!=null)
-			pollStartDate = request.getParameter("pollStartDate");
+			pollStartDate = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pollStartDate")));
 		if(request.getParameter("pollEndDate")!=null)
-			pollEndDate = request.getParameter("pollEndDate");
+			pollEndDate = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pollEndDate")));
 		if(request.getParameter("currPage")!=null)
-			currPage = Integer.parseInt(request.getParameter("currPage"));
+			currPage = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("currPage"))));
 		
 		String receve = "brdID=" + brdID +
 				"&itemNo=" + itemNo +
@@ -1045,9 +934,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String strGenderACL0="",strGenderACL1="",strGenderACL2="";
 		
 		if(req.getParameter("brdID") != null)
-			brdID = req.getParameter("brdID");
+			brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID")));
 		if(req.getParameter("itemNo") != null)
-			itemID = req.getParameter("itemNo");
+			itemID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemNo")));
 		
 		strGenderACL0 = "checked";
 		strGenderACL1 = "";
@@ -1183,7 +1072,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				}
 			}
 			if(req.getParameter("DataIndex") != null) {
-				pEditIndex = String.valueOf(req.getParameter("DataIndex"));
+				pEditIndex = String.valueOf(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("DataIndex"))));
 			}
 		}
 		
@@ -1294,23 +1183,23 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String attachModeIndex = "";
 		
 		if(req.getParameter("idName") != null) {
-			idName = String.valueOf(req.getParameter("idName"));
+			idName = String.valueOf(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("idName"))));
 		}
 		
 		if(req.getParameter("m_AttachInfo") != null) {
-			attachInfo = String.valueOf(req.getParameter("m_AttachInfo"));
+			attachInfo = String.valueOf(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("m_AttachInfo"))));
 		}
 		
 		if(req.getParameter("m_AttachType") != null) {
-			attachType = String.valueOf(req.getParameter("m_AttachType"));
+			attachType = String.valueOf(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("m_AttachType"))));
 		}
 		
 		if(req.getParameter("m_AttachMode") != null) {
-			attachMode = String.valueOf(req.getParameter("m_AttachMode"));
+			attachMode = String.valueOf(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("m_AttachMode"))));
 		}
 		
 		if(req.getParameter("m_AttachModIndex") != null) {
-			attachModeIndex = String.valueOf(req.getParameter("m_AttachModIndex"));
+			attachModeIndex = String.valueOf(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("m_AttachModIndex"))));
 		}
 		
 		model.addAttribute("idName", idName);
@@ -1337,9 +1226,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String mode = "";
 		
 		if(req.getParameter("QstType") != null)
-			type = String.valueOf(req.getParameter("QstType"));
+			type = String.valueOf(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("QstType"))));
 		if(req.getParameter("mode") != null)
-			mode = String.valueOf(req.getParameter("mode"));
+			mode = String.valueOf(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("mode"))));
 		
 		String pFileName = "";
 		MultipartFile file = req.getFile("cmuds");
@@ -1397,13 +1286,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String pQstPath = "";
 		
 		if (req.getParameter("QstType_delFile") != null && !req.getParameter("QstType_delFile").equals("")) {
-			pQstType = req.getParameter("QstType_delFile");
+			pQstType = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("QstType_delFile")));
 		}
 		if (req.getParameter("QstPath_delFile") != null && !req.getParameter("QstPath_delFile").equals("")) {
-			pQstPath = commonUtil.detectPathTraversal(req.getParameter("QstPath_delFile"));
+			pQstPath = commonUtil.detectPathTraversal(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("QstPath_delFile"))));
 		}
 		if (req.getParameter("QstIndex_delFile") != null && !req.getParameter("QstIndex_delFile").equals("")) {
-			pIndex = req.getParameter("QstIndex_delFile");
+			pIndex = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("QstIndex_delFile")));
 		}
 		
 		if (pQstPath != null && !pQstPath.trim().equals("")) {
@@ -1499,25 +1388,25 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String strAttID = "";
 		
 		if (request.getParameter("type") != null){
-			type = request.getParameter("type");
+			type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
 		}
 		if (request.getParameter("boardID") != null){
-			vBrdID = request.getParameter("boardID");
+			vBrdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("boardID")));
 		}
 		if (request.getParameter("itemNo") != null){
-			vItemNo = request.getParameter("itemNo");
+			vItemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
 		}
 		if (request.getParameter("qstNo") != null){
-			strQuestionNo = request.getParameter("qstNo");
+			strQuestionNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("qstNo")));
 		}
 		if (request.getParameter("ansNo") != null){
-			strAnswer = request.getParameter("ansNo");
+			strAnswer = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("ansNo")));
 		}
 		if (request.getParameter("attID") != null){
-			strAttID = request.getParameter("attID");
+			strAttID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("attID")));
 		}
 		if (request.getParameter("href") != null){
-			href=request.getParameter("href");
+			href=commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("href")));
 		}
 		
 		QstAttachVO qstAttachVO = ezQuestionService.getAttachInfo2(vBrdID, vItemNo, strQuestionNo, strAnswer, strAttID, loginVO.getTenantId());
@@ -1572,17 +1461,17 @@ public class EzQuestionController extends EgovFileMngUtil {
         String pFileName = "";
         String pFilePath = "";
 		 
-        pType = request.getParameter("type");
-        pBoardID = request.getParameter("boardID");
-        pItemID = request.getParameter("itemID");
-        pQstNo = request.getParameter("qstNo");
-        pAnsNo = request.getParameter("ansNo");
-        pAttID = request.getParameter("attID");
+        pType = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
+        pBoardID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("boardID")));
+        pItemID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemID")));
+        pQstNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("qstNo")));
+        pAnsNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("ansNo")));
+        pAttID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("attID")));
         
         String realPath = commonUtil.getRealPath(request);
         
         if(request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")){
-        	pFileName = request.getParameter("fileName");
+        	pFileName = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("fileName")));
         }
         
         if(pType.equals("QUESTION")){
@@ -1622,17 +1511,17 @@ public class EzQuestionController extends EgovFileMngUtil {
         String pFileName = "";
         String pFilePath = "";
 		 
-        pType = request.getParameter("type");
-        pBoardID = request.getParameter("boardID");
-        pItemID = request.getParameter("itemID");
-        pQstNo = request.getParameter("qstNo");
-        pAnsNo = request.getParameter("ansNo");
-        pAttID = request.getParameter("attID");
+        pType = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
+        pBoardID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("boardID")));
+        pItemID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemID")));
+        pQstNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("qstNo")));
+        pAnsNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("ansNo")));
+        pAttID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("attID")));
         
         String realPath = commonUtil.getRealPath(request);
         
         if (request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")) {
-        	pFileName = request.getParameter("fileName");
+        	pFileName = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("fileName")));
         }
         
         if (pType.equals("QUESTION")) {
@@ -1649,7 +1538,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             if (pFilePath != null && !pFilePath.equals("")) {
             	pFilePath = pFilePath.split(",")[0];
             	if (request.getParameter("trName")!=null && !request.getParameter("trName").equals("")) {
-            		pFileName = request.getParameter("trName")+"."+pFilePath.split("\\.")[1];
+            		pFileName = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("trName")))+"."+pFilePath.split("\\.")[1];
             		//2018-07-13 김보미 - 파일명 깨지는 버그 수정
             		pFileName = URLDecoder.decode(pFileName, "utf-8");
             	}
@@ -1677,15 +1566,15 @@ public class EzQuestionController extends EgovFileMngUtil {
         String pAnsType = "";
         
         if (request.getParameter("brdID") != null)
-            brdID = request.getParameter("brdID");
+            brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
         if (request.getParameter("itemNo") != null)
-            itemNo = request.getParameter("itemNo");
+            itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
         if (request.getParameter("questionNo") != null)
-            questionNo = request.getParameter("questionNo");
+            questionNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("questionNo")));
         if (request.getParameter("pageCount") != null)
-            pageCount = Integer.parseInt(request.getParameter("pageCount"));        
+            pageCount = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pageCount"))));        
         if (request.getParameter("page") != null){
-            pCurrPage = Integer.parseInt(request.getParameter("page"));
+            pCurrPage = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("page"))));
         }else{
             pCurrPage = 1;
         }
@@ -1713,7 +1602,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             pageCount = pageCount - 1;
         }
         
-        int iStart = (pCurrPage - 1) * pPageSize;
+        int iStart = Math.multiplyExact(Math.subtractExact(pCurrPage, 1), pPageSize);
         /** EZSP_RESULTSUBJECTIVELIST*/
         List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveList(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
         
@@ -1734,7 +1623,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             
             iDataCount++;
             int iCurrNumber = 0;
-            iCurrNumber = iDataCount + (pCurrPage - 1) * pPageSize;
+            iCurrNumber = Math.addExact(iDataCount, Math.multiplyExact(Math.subtractExact(pCurrPage, 1), pPageSize));
             
             Node ivalue = xmlMainDom.createTextNode(Integer.toString(iCurrNumber));
             No.appendChild(ivalue);
@@ -1845,15 +1734,15 @@ public class EzQuestionController extends EgovFileMngUtil {
         String pAnsType = "";
         
         if (request.getParameter("brdID") != null)
-            brdID = request.getParameter("brdID");
+            brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
         if (request.getParameter("itemNo") != null)
-            itemNo = request.getParameter("itemNo");
+            itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
         if (request.getParameter("questionNo") != null)
-            questionNo = request.getParameter("questionNo");
+            questionNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("questionNo")));
         if (request.getParameter("pageCount") != null)
-            pageCount = Integer.parseInt(request.getParameter("pageCount"));        
+            pageCount = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pageCount"))));        
         if (request.getParameter("page") != null){
-            pCurrPage = Integer.parseInt(request.getParameter("page"));
+            pCurrPage = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("page"))));
         }else{
             pCurrPage = 1;
         }
@@ -1881,7 +1770,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             pageCount = pageCount - 1;
         }
         
-        int iStart = (pCurrPage - 1) * pPageSize;
+        int iStart = Math.multiplyExact(Math.subtractExact(pCurrPage, 1), pPageSize);
         /** EZSP_RESULTSUBJECTIVELIST*/
         List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveListAll(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
         
@@ -1899,7 +1788,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             
             iDataCount++;
             int iCurrNumber = 0;
-            iCurrNumber = iDataCount + (pCurrPage - 1) * pPageSize;
+            iCurrNumber = Math.addExact(iDataCount, Math.multiplyExact(Math.subtractExact(pCurrPage, 1), pPageSize));
             
             Node ivalue = xmlMainDom.createTextNode(Integer.toString(iCurrNumber));
             No.appendChild(ivalue);
@@ -2005,8 +1894,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String pBrdID = "";
 		String itemNo = "";
 		
-		pBrdID = req.getParameter("brdID");
-		itemNo = req.getParameter("itemNo");
+		pBrdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID")));
+		itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemNo")));
 		
 		model.addAttribute("pBrdID", pBrdID);
 		model.addAttribute("itemNo", itemNo);
@@ -2073,7 +1962,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String itemList = request.getParameter("itemList");
+		String itemList = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemList")));
 		
 		ezQuestionService.deleteItemList(itemList, commonUtil.getRealPath(request), userInfo.getTenantId());
 
@@ -2091,7 +1980,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		String pBrdID = "";
 		if(req.getParameter("brdID") != null) {
-			pBrdID = req.getParameter("brdID");
+			pBrdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID")));
 		}
 		model.addAttribute("pBrdID", pBrdID);
 		
@@ -2115,23 +2004,23 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String pAnsType = "";
 		
 		if (request.getParameter("brdID") != null){
-			brdID = request.getParameter("brdID");
+			brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
 		}
 		if (request.getParameter("itemNo") != null){
-			itemNo = request.getParameter("itemNo");
+			itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
 		}
 		if (request.getParameter("responseYN") != null){
-			responseYN = request.getParameter("responseYN");
+			responseYN = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("responseYN")));
 		}
 		if (request.getParameter("pageCount") != null){
-			if (request.getParameter("pageCount").equals("")){
+			if (commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pageCount"))).equals("")){
 				pageCount = 1;
 			}else{
 				pageCount = pageCount-1;
 			}
 		}
 		if (request.getParameter("page") != null){
-			pCurPage = Integer.parseInt(request.getParameter("page"));
+			pCurPage = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("page"))));
 		} else {
 			pCurPage = 1;
 		}
@@ -2211,10 +2100,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String pBrdID = "", pItemNo = "", pCurrPage = "", pAnswerType="";
 		String pPubFlag = "";
 		
-		pBrdID = request.getParameter("brdID");
-		pItemNo = request.getParameter("itemNo");
-		pPubFlag = request.getParameter("pubFlag");
-		pCurrPage = request.getParameter("currPage");
+		pBrdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
+		pItemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
+		pPubFlag = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pubFlag")));
+		pCurrPage = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("currPage")));
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
@@ -2263,9 +2152,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String questionNo = "", quesContent = "", multiSelect = "", answerType = "";
 		int resCnt = 0, responseCnt = 0;
 		
-		vBrdID = request.getParameter("brdID");
-		vItemNo = request.getParameter("itemNo");
-		vQuesNo = request.getParameter("quesNo");
+		vBrdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
+		vItemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
+		vQuesNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("quesNo")));
 		
 		Document resultXML =  commonUtil.convertStringToDocument("<ROWS></ROWS>");
 		Node rNodes = resultXML.getFirstChild();
@@ -2482,9 +2371,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
 		String title="", answer="", qPercent="", responNum="";
 		
-		vBrdID = request.getParameter("brdID");
-		vItemNo = request.getParameter("itemNo");
-		vQuesNo = request.getParameter("quesNo");
+		vBrdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
+		vItemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
+		vQuesNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("quesNo")));
 		
 		if(vQuesNo.length()==0){
 			vQuesNo="0";
@@ -2666,9 +2555,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
 		String title="", answer="", qPercent="", responNum="";
 		
-		vBrdID = request.getParameter("brdID");
-		vItemNo = request.getParameter("itemNo");
-		vQuesNo = request.getParameter("quesNo");
+		vBrdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
+		vItemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
+		vQuesNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("quesNo")));
 		
 		if(vQuesNo.length()==0){
 			vQuesNo="0";
@@ -2848,9 +2737,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
 		String title="", answer="", qPercent="", responNum="";
 		
-		vBrdID = request.getParameter("brdID");
-		vItemNo = request.getParameter("itemNo");
-		vQuesNo = request.getParameter("quesNo");
+		vBrdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
+		vItemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
+		vQuesNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("quesNo")));
 		
 		if(vQuesNo.length()==0){
 			vQuesNo="0";
@@ -3024,7 +2913,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String hidRType2 = "";
 		
 		if(request.getParameter("hidRType2") != null){
-			hidRType2 = request.getParameter("hidRType2");
+			hidRType2 = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("hidRType2")));
 		}
 		
 		//@SuppressWarnings("resource")
@@ -3050,7 +2939,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		String StrAnalysisDate = request.getParameter("AnalysisData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+		String StrAnalysisDate = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("AnalysisData"))).trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		
 		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
 		
@@ -3178,7 +3067,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		Row row;
 		Cell cell;
 		
-		itemNo = request.getParameter("itemNo");
+		itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
 		
 		if (!itemNo.equals("")) {
 			row = sheet.createRow(0);
@@ -3483,7 +3372,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		String pBrdID = "";
 		if(req.getParameter("brdID") != null) {
-			pBrdID = req.getParameter("brdID");
+			pBrdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID")));
 		}
 		int getItemNo = 0;
 		int maxNo = ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID), loginVO.getTenantId());
@@ -3526,21 +3415,21 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstListVO.setUserID(loginVO.getId());
 		
 		if(req.getParameter("brdID") != null) 
-			brdID = req.getParameter("brdID");
+			brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID")));
 		if(req.getParameter("itemNo") != null) 
-			itemID = req.getParameter("itemNo");
+			itemID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemNo")));
 		if(req.getParameter("save") != null) 
-			saveFlg = req.getParameter("save");
+			saveFlg = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("save")));
 		if(req.getParameter("title")!=null)
 			title = req.getParameter("title");
 		if(req.getParameter("responseRange")!=null)
-			responseRange = req.getParameter("responseRange");
+			responseRange = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("responseRange")));
 		if(req.getParameter("pollStartDate")!=null)
-			pollStartDate = req.getParameter("pollStartDate");
+			pollStartDate = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pollStartDate")));
 		if(req.getParameter("pollEndDate")!=null)
-			pollEndDate = req.getParameter("pollEndDate");
+			pollEndDate = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("pollEndDate")));
 		if(req.getParameter("currPage")!=null)
-			currPage = req.getParameter("currPage");
+			currPage = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("currPage")));
 		
 		if(itemID == null || itemID.equals("")) {
 			itemID = "0";
@@ -3590,7 +3479,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		logger.debug("brdID="+brdID);
 		logger.debug("itemNo="+itemID);
 		
-		Integer responseNo = ezQuestionService.getQstResponse(req.getParameter("brdID"), req.getParameter("itemNo"), loginVO.getTenantId());
+		Integer responseNo = ezQuestionService.getQstResponse(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID"))), commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemNo"))), loginVO.getTenantId());
 		
         if(responseNo >= 1) {
         	resultYN = true;
@@ -3671,22 +3560,22 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String brdID = "5";
 		String itemID = "";
 		if(req.getParameter("itemNo") != null) 
-			itemID = req.getParameter("itemNo");
+			itemID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemNo")));
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdID(Integer.parseInt(brdID));
 		qstUserPollItemVO.setItemNo(Integer.parseInt(itemID));
 		qstUserPollItemVO.setTitle(req.getParameter("txtSubject"));
 		qstUserPollItemVO.setContent(req.getParameter("txtContent"));
-		qstUserPollItemVO.setPostTerm(Integer.parseInt(req.getParameter("txtExpiredate")));
-		qstUserPollItemVO.setPollStartDate(commonUtil.getDateStringInUTC(req.getParameter("hidStartDate"), loginVO.getOffset(), true));
-		qstUserPollItemVO.setPollEndDate(commonUtil.getDateStringInUTC(req.getParameter("hidEndDate"), loginVO.getOffset(), true));
+		qstUserPollItemVO.setPostTerm(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("txtExpiredate")))));
+		qstUserPollItemVO.setPollStartDate(commonUtil.getDateStringInUTC(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidStartDate"))), loginVO.getOffset(), true));
+		qstUserPollItemVO.setPollEndDate(commonUtil.getDateStringInUTC(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidEndDate"))), loginVO.getOffset(), true));
 		
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		qstUserPermissionVO.setBrdID(Integer.parseInt(brdID));
 		qstUserPermissionVO.setItemNo(Integer.parseInt(itemID));
-		qstUserPermissionVO.setPublicResultFlg(req.getParameter("hidopenResult"));
-		qstUserPermissionVO.setPublicFlg(req.getParameter("hidanonymity"));
-		qstUserPermissionVO.setMultiResponseFlg(req.getParameter("hidMultiResponse"));
+		qstUserPermissionVO.setPublicResultFlg(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidopenResult"))));
+		qstUserPermissionVO.setPublicFlg(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidanonymity"))));
+		qstUserPermissionVO.setMultiResponseFlg(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidMultiResponse"))));
 		
 		// 설문 마감 이후에도 정보를 수정할 수 있도록 설정
 		if (req.getParameter("hidendpoll").equals("1")) {
@@ -3695,11 +3584,15 @@ public class EzQuestionController extends EgovFileMngUtil {
 			qstUserPermissionVO.setEndFlg("0");
 		}
 		
-		qstUserPermissionVO.setResponseRange(req.getParameter("hidTarget"));
+		qstUserPermissionVO.setResponseRange(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidTarget"))));
 		
 		ezQuestionService.changePermission(qstUserPermissionVO, qstUserPollItemVO, loginVO.getTenantId());
 		
-		resp.sendRedirect("/ezQuestion/qstChangePermission.do?endpoll="+qstUserPermissionVO.getEndFlg()+"&itemNo="+qstUserPermissionVO.getItemNo()+"&"+req.getParameter("Receve_str2")+"&save=OK");
+		String redirectUrl = "/ezQuestion/qstChangePermission.do?endpoll="+qstUserPermissionVO.getEndFlg()+"&itemNo="+qstUserPermissionVO.getItemNo()+"&"+commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("Receve_str2")))+"&save=OK";
+		// CWE-113 보안 취약점 대응
+		redirectUrl = redirectUrl.replaceAll("\r", "").replaceAll("\n", "");
+
+		resp.sendRedirect(redirectUrl);
 
 		logger.debug("callChangePermission ended");
 	}
@@ -3719,13 +3612,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String receveStr2 = "";
 		
 		if(req.getParameter("brdID") != null) 
-			brdID = req.getParameter("brdID");
+			brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID")));
 		
 		if(req.getParameter("itemNo") != null) 
-			itemNo = req.getParameter("itemNo");
+			itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemNo")));
 		
 		if(req.getParameter("receveStr2") != null) 
-			receveStr2 = req.getParameter("receveStr2");
+			receveStr2 = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("receveStr2")));
 		
 		if(req.getParameter("hidEndPoll").equals("1")){
 			//endDate = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new java.util.Date()).toString();
@@ -3738,7 +3631,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		logger.debug("endDate="+endDate);
 		//ezQuestionService.updatePollEndDate(Integer.parseInt(brdID), Integer.parseInt(itemNo), endDate, req.getParameter("hidEndPoll"));
 		ezQuestionService.updateTblPollItem(endDate, Integer.parseInt(brdID), Integer.parseInt(itemNo), loginVO.getTenantId());
-		ezQuestionService.updateTblPollPermission(req.getParameter("hidEndPoll"), Integer.parseInt(brdID), Integer.parseInt(itemNo), loginVO.getTenantId());
+		ezQuestionService.updateTblPollPermission(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidEndPoll"))), Integer.parseInt(brdID), Integer.parseInt(itemNo), loginVO.getTenantId());
 
 		logger.debug("callEndPoll ended");
 		return "redirect:/ezQuestion/qstList.do?"+receveStr2;
@@ -3756,11 +3649,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String brdID = "";
 		String itemID = "";
 		if(req.getParameter("brdID") != null) 
-			brdID = req.getParameter("brdID");
+			brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdID")));
 		if(req.getParameter("itemID") != null)
-			itemID = req.getParameter("itemID");
-		String brdNm = req.getParameter("brdNm");
-		String brdPostterm = req.getParameter("brdPostterm");
+			itemID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemID")));
+		String brdNm = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdNm")));
+		String brdPostterm = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("brdPostterm")));
 		//String[] pDate  = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()).split("-");
 		//String curDate = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 		
@@ -3798,28 +3691,28 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		String oldItemNum = "";
 		if(req.getParameter("oldItemNum") != null) {
-			oldItemNum = req.getParameter("oldItemNum"); 
+			oldItemNum = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("oldItemNum"))); 
 		}
 		String itemID = "";
 		if(req.getParameter("itemNo") != null) {
-			itemID = req.getParameter("itemNo"); 
+			itemID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemNo"))); 
 		}
 		
 		StringBuilder pStep1DataXML = new StringBuilder();
 		pStep1DataXML.append("<PARAMETER>");
 		pStep1DataXML.append("<SUBJECT><![CDATA[" + req.getParameter("txtSubject") + "]]></SUBJECT>");
 		pStep1DataXML.append("<CONTENT><![CDATA[" + req.getParameter("txtContent") + "]]></CONTENT>");
-		pStep1DataXML.append("<STARTDATE>" + req.getParameter("hidStartDate")+"</STARTDATE>");
-		pStep1DataXML.append("<ENDDATE>" + req.getParameter("hidEndDate")+"</ENDDATE>");
-		pStep1DataXML.append("<EXPIREDATE>" + req.getParameter("txtExpiredate")+"</EXPIREDATE>");
-		pStep1DataXML.append("<ANONYMITY>" + req.getParameter("hidAnonymity")+"</ANONYMITY>");
-		pStep1DataXML.append("<OPENRESULT>" + req.getParameter("hidOpenResult")+"</OPENRESULT>");
-		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("hidMultiResponse")+"</MULTIRESPONSE>");
-		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
-		pStep1DataXML.append("<TARGET>" + req.getParameter("hidTarget")+"</TARGET>");
+		pStep1DataXML.append("<STARTDATE>" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidStartDate")))+"</STARTDATE>");
+		pStep1DataXML.append("<ENDDATE>" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidEndDate")))+"</ENDDATE>");
+		pStep1DataXML.append("<EXPIREDATE>" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("txtExpiredate")))+"</EXPIREDATE>");
+		pStep1DataXML.append("<ANONYMITY>" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidAnonymity")))+"</ANONYMITY>");
+		pStep1DataXML.append("<OPENRESULT>" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidOpenResult")))+"</OPENRESULT>");
+		pStep1DataXML.append("<MULTIRESPONSE>" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidMultiResponse")))+"</MULTIRESPONSE>");
+		pStep1DataXML.append("<IMPORTANT>" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("importance")))+"</IMPORTANT>");
+		pStep1DataXML.append("<TARGET>" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("hidTarget")))+"</TARGET>");
 		
 		if(req.getParameter("RangeXMLStr") != null) {
-			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&quot;", "\"").replace("\"", "\'"));
+			pStep1DataXML.append(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("RangeXMLStr"))).trim().replace("&quot;", "\"").replace("\"", "\'"));
 		}
 		
 		pStep1DataXML.append("</PARAMETER>");
@@ -3852,7 +3745,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String strQuestion = "";
 		
 		if(req.getParameter("itemID") != null && req.getParameter("itemID").length() != 0) {
-			itemNo = Integer.parseInt(req.getParameter("itemID"));
+			itemNo = Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemID"))));
 		}
 		
 		//2018-07-30 배현상, 재사용 시 기존 데이터 삭제하는 로직 제거
@@ -4095,7 +3988,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		int itemNo = 0;
 		
 		if(req.getParameter("itemID") != null && req.getParameter("itemID").length() != 0) {
-			itemID = req.getParameter("itemID");
+			itemID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(req.getParameter("itemID")));
 			
 			itemNo = Integer.parseInt(itemID);
 		}
@@ -4139,21 +4032,21 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String qstMsgAdminConfirm(HttpServletRequest request,ModelMap model) throws Exception {
 		logger.debug("qstMsgAdminConfirm started");
 
-		String receve = "brdID=" + request.getParameter("brdID") +
+		String receve = "brdID=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID"))) +
 				"&title=" + commonUtil.cleanValue(request.getParameter("title")) +
-				"&responseRange=" + request.getParameter("responseRange") +
-				"&pollStartDate=" + request.getParameter("pollStartDate") +
-				"&pollEndDate=" + request.getParameter("pollEndDate") +
-				"&currPage=" + request.getParameter("currPage")+
-				"&itemNo=" + request.getParameter("itemNo");
+				"&responseRange=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("responseRange"))) +
+				"&pollStartDate=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pollStartDate"))) +
+				"&pollEndDate=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pollEndDate"))) +
+				"&currPage=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("currPage")))+
+				"&itemNo=" + commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
 		
-		model.addAttribute("brdID",request.getParameter("brdID"));
+		model.addAttribute("brdID",commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID"))));
 		model.addAttribute("title",commonUtil.cleanValue(request.getParameter("title")));
-		model.addAttribute("responseRange",request.getParameter("responseRange"));
-		model.addAttribute("postDate",request.getParameter("postDate"));
-		model.addAttribute("pollEndDate",request.getParameter("pollEndDate"));
-		model.addAttribute("currPage",request.getParameter("currPage"));
-		model.addAttribute("itemNo",request.getParameter("itemNo"));		
+		model.addAttribute("responseRange",commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("responseRange"))));
+		model.addAttribute("postDate",commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("postDate"))));
+		model.addAttribute("pollEndDate",commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("pollEndDate"))));
+		model.addAttribute("currPage",commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("currPage"))));
+		model.addAttribute("itemNo",commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo"))));		
 		model.addAttribute("receve", receve);
 		
 		logger.debug("qstMsgAdminConfirm ended");

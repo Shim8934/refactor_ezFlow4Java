@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -76,6 +77,9 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
     private EgovFileScrty egovFileScrty;
 	
 	@Autowired
+	private EzEmailScheduler ezEmailScheduler;
+
+	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
 	/**
@@ -91,8 +95,14 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "00 0/1 * * * *")
 	public void susinScheduler() throws Exception{
 		if(checkTimer()) {
-			int tryCnt = 0;
 			logger.debug("susinScheduler started.");
+						
+			if (!ezEmailScheduler.preScheduler("susinScheduler")) {
+				logger.debug("susinScheduler ended.");
+				return;
+			}
+	
+			int tryCnt = 0;
 			List<HashMap<String, Object>> susinScheduleList = null;
 			susinScheduleList = ezApprovalGService.susinScheduleList();
 			int idx = 0;

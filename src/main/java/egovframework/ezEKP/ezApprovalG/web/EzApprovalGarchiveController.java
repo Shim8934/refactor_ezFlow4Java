@@ -2352,12 +2352,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String FileText = "";
 		StringBuilder result = new StringBuilder();
 
-		BufferedReader br = new BufferedReader(new FileReader(file));
-
-		while ((FileText = br.readLine()) != null) {
-			result.append(FileText);
+		// CWE-404 보안 취약점 대응
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			while ((FileText = br.readLine()) != null) {
+				result.append(FileText);
+			}
 		}
-		br.close();
 		logger.debug("getencodeinfoxXML ended");
 		return result.toString();
 	}
@@ -2374,7 +2374,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
         String docID = request.getParameter("docID");
-		String result = ezApprovalGService.getDocInfo(docID, "END", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+        String orgCompanyID = request.getParameter("orgCompanyID") != null ? request.getParameter("orgCompanyID") : userInfo.getCompanyID();
+
+        String result = ezApprovalGService.getDocInfo(docID, "END", "ALL", userInfo, orgCompanyID, userInfo.getTenantId(), "", "");
 
 		logger.debug("getEndDocInfo ended");
 		return result;
@@ -2447,11 +2449,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			saveXML.toString().getChars(0, saveXML.toString().length(), intxt, 0); // 입력하고자 하는 문자열을 문자 배열 intxt에 저장
 
 			File file = new File(commonUtil.detectPathTraversal(realPath + savePath));
-			FileOutputStream fop = new FileOutputStream(file);
-			// get the content in bytes
-			fop.write(saveXML.toString().getBytes("euc-kr"));
-			fop.flush();
-			fop.close();
+			// CWE-404 보안 취약점 대응
+			try (FileOutputStream fop = new FileOutputStream(file)) {
+				// get the content in bytes
+				fop.write(saveXML.toString().getBytes("euc-kr"));
+				fop.flush();
+			}
 
 			saveFlag = true;
 		} catch (Exception e) {
@@ -2585,7 +2588,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (fop != null) {
-				try { fop.close(); } catch (Exception e) { }
+				try { fop.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		
@@ -2672,10 +2675,18 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getRelayDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("getRelayDocInfo started");
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.getRelayInfo(docID,userInfo);
+		String currCompanyID = request.getParameter("companyID"); // 2023-03-29 홍승비 - 전자결재 사간겸직 상태에서 겸직부서의 대외수신문서 접근 시, 해당 회사의 ID 사용 
+		
+		if (currCompanyID != null && !currCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(currCompanyID);
+		}
+		
+		String result = ezApprovalGService.getRelayInfo(docID, userInfo);
+		
 		logger.debug("getRelayDocInfo ended");
 		return result;
 	}

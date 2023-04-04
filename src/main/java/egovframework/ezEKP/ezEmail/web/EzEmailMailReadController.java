@@ -1236,7 +1236,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
                     
                     try {
                         Thread.sleep(1000);
-                    } catch (Exception ex) {}
+                    } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
                 }                   			
     		} finally {
     			if (ia != null) {
@@ -1372,8 +1372,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
-		String htmlBody = bodyInfoList.get(0);
-		model.addAttribute("htmlBody", htmlBody);
+		if (bodyInfoList != null) {
+			String htmlBody = bodyInfoList.get(0);
+			model.addAttribute("htmlBody", htmlBody);
+		}
 		
 		logger.debug("readMailOriginal ended.");
 		
@@ -1574,6 +1576,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 										try {
 											input.close();
 										} catch (Exception e) {
+											logger.debug("e.message=" + e.getMessage());
 										}
 									}
 								}
@@ -1757,16 +1760,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								output.write(buffer, 0, byteRead);
 							}
 						} catch(IOException e) {
+							logger.debug("e.message=" + e.getMessage());
 						} finally {
 							if (ia != null) {
 								ia.close();
 							}
 							if (input != null) {
-								try { input.close(); } catch (IOException e1) {}
+								try { input.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
 							}
 							if (output != null) {
-								try { output.flush(); } catch (IOException e1) {}
-								try { output.close(); } catch (IOException e1) {}
+								try { output.flush(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
+								try { output.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
 							}
 						}
 						
@@ -1975,6 +1979,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							try {
 								output.close();
 							} catch (IOException e1) {
+								logger.debug("e.message=" + e1.getMessage());
 							}
 							
 							if (ia != null) {
@@ -1987,11 +1992,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						try {
 							output.flush();
 						} catch (IOException e) {
+							logger.debug("e.message=" + e.getMessage());
 						}
 						
 						try {
 							output.close();
 						} catch (IOException e) {
+							logger.debug("e.message=" + e.getMessage());
 						}
 					}
 				}
@@ -2071,6 +2078,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							try {
 								output.close();
 							} catch (IOException e1) {
+								logger.debug("e.message=" + e1.getMessage());
 							}
 							
 							if (ia != null) {
@@ -2083,11 +2091,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						try {
 							output.flush();
 						} catch (IOException e) {
+							logger.debug("e.message=" + e.getMessage());
 						}
 						
 						try {
 							output.close();
 						} catch (IOException e) {
+							logger.debug("e.message=" + e.getMessage());
 						}
 					}
 				}
@@ -2291,7 +2301,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				// 메일 중요도
 				try {
 					importance = Integer.parseInt(mailInfo.get("IMPORTANCE"));
-				} catch (Exception ex) {						
+				} catch (Exception ex) {			
+					logger.debug("ex.message=" + ex.getMessage());			
 				}
 				
 				logger.debug("importance=" + importance);		
@@ -2902,7 +2913,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
                     
                     try {
                         Thread.sleep(1000);
-                    } catch (Exception ex) {}
+                    } catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
                 }    			
     		} finally {
     			if (ia != null) {
@@ -3838,8 +3849,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					File file = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 					fos = new FileOutputStream(file);
 					part.saveFile(file);
-					fos.close();
-					fos = null;
 					
 					File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 					egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
@@ -4063,13 +4072,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
-				try { fis.close(); } catch (Exception e) {}
+				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (fos != null) {
-				try { fos.close(); } catch (Exception e) {}
+				try { fos.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (ia != null) {
-				try { ia.close(); } catch (Exception e) {}
+				try { ia.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		
@@ -4164,8 +4173,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						fos = new FileOutputStream(file);
 						originalPart.saveFile(file);
-						fos.close();
-						fos = null;
 						
 						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
 						
@@ -4210,16 +4217,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									output.write(buffer, 0, byteRead);
 								}
 							} catch(IOException e) {
+								logger.debug("e.message=" + e.getMessage());
 							} finally {
 								if (ia != null) {
 									ia.close();
 								}
 								if (input != null) {
-									try { input.close(); } catch (IOException e1) {}
+									try { input.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
 								}
 								if (output != null) {
-									try { output.flush(); } catch (IOException e1) {}
-									try { output.close(); } catch (IOException e1) {}
+									try { output.flush(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
+									try { output.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
 								}
 							}
 						}
@@ -4235,13 +4243,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
-				try { fis.close(); } catch (Exception e) {}
+				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (fos != null) {
-				try { fos.close(); } catch (Exception e) {}
+				try { fos.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (ia != null) {
-				try { ia.close(); } catch (Exception e) {}
+				try { ia.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		
@@ -4316,8 +4324,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						fos = new FileOutputStream(file);
 						originalPart.saveFile(file);
-						fos.close();
-						fos = null;
 						
 						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
 						
@@ -4351,6 +4357,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								try {
 									output.close();
 								} catch (IOException e1) {
+									logger.debug("e.message=" + e1.getMessage());
 								}
 								
 								if (ia != null) {
@@ -4363,11 +4370,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							try {
 								output.flush();
 							} catch (IOException e) {
+								logger.debug("e.message=" + e.getMessage());
 							}
 							
 							try {
 								output.close();
 							} catch (IOException e) {
+								logger.debug("e.message=" + e.getMessage());
 							}
 						}
 						
@@ -4382,13 +4391,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
-				try { fis.close(); } catch (Exception e) {}
+				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (fos != null) {
-				try { fos.close(); } catch (Exception e) {}
+				try { fos.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (ia != null) {
-				try { ia.close(); } catch (Exception e) {}
+				try { ia.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		
@@ -4462,8 +4471,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						File file = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						fos = new FileOutputStream(file);
 						part.saveFile(file);
-						fos.close();
-						fos = null;
 						
 						File decryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 						egovFileScrty.cryptFile(Cipher.DECRYPT_MODE, file, decryptedFile);
@@ -4498,10 +4505,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					//TODO
 				}
 				
-				model.addAttribute("htmlBody", bodyInfoList.get(0));
-				model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
-				model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
-				model.addAttribute("isAttach", bodyInfoList.get(4));
+				if (bodyInfoList != null) {
+					model.addAttribute("htmlBody", bodyInfoList.get(0));
+					model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
+					model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
+					model.addAttribute("isAttach", bodyInfoList.get(4));
+				}
 				
 				model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
 				model.addAttribute("t246", egovMessageSource.getMessage("main.t246", locale));
@@ -4517,13 +4526,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
-				try { fis.close(); } catch (Exception e) {}
+				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (fos != null) {
-				try { fos.close(); } catch (Exception e) {}
+				try { fos.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (ia != null) {
-				try { ia.close(); } catch (Exception e) {}
+				try { ia.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		
@@ -5136,16 +5145,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								output.write(buffer, 0, byteRead);
 							}
 						} catch(IOException e) {
+							logger.debug("e.message=" + e.getMessage());
 						} finally {
 							if (ia != null) {
 								ia.close();
 							}
 							if (input != null) {
-								try { input.close(); } catch (IOException e1) {}
+								try { input.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
 							}
 							if (output != null) {
-								try { output.flush(); } catch (IOException e1) {}
-								try { output.close(); } catch (IOException e1) {}
+								try { output.flush(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
+								try { output.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
 							}
 						}
 						
@@ -5233,7 +5243,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				String filePath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload"
 											+ commonUtil.separator + userInfo.getId();
 
-				MessageDigest md2 = MessageDigest.getInstance("MD5");
+				MessageDigest md2 = MessageDigest.getInstance("SHA-256");
 				md2.update(filename.substring(0, filename.lastIndexOf(".")).getBytes());
 				byte mdDate2[] = md2.digest();
 				StringBuffer sb2 = new StringBuffer();
@@ -5248,11 +5258,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 				
 				File file = new File(filePath + commonUtil.separator + md5FileName);
-				FileOutputStream fos = new FileOutputStream(file);
-				
-				fos.write(decoder.decode(bytes));
-				fos.close();
-				fos = null;
+				// CWE-404 보안 취약점 대응
+				try (FileOutputStream fos = new FileOutputStream(file)) {				
+					fos.write(decoder.decode(bytes));
+				}
 				
 				filePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) 
 				+ commonUtil.separator + "tempFileUpload" + commonUtil.separator + userInfo.getId() + commonUtil.separator + md5FileName;

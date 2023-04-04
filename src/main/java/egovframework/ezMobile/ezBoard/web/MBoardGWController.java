@@ -67,7 +67,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @RestController
 public class MBoardGWController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MBoardController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MBoardGWController.class);
 	
 	public static final int BUFF_SIZE = 2048;
 	

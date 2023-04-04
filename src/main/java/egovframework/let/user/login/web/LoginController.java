@@ -443,9 +443,11 @@ public class LoginController {
 				//로그인 쿠기 생성
 				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
 				
+				/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
+				*/
 	        	
 	        	return "redirect:/ezNewPortal/newPortalMain.do";
         		
@@ -595,9 +597,11 @@ public class LoginController {
     	
     					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
     		        	
+						/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
     		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
     		        	cookieName.setPath("/");
     		        	response.addCookie(cookieName);
+						*/
     		        	
     		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
     		        	//session = request.getSession();
@@ -912,6 +916,7 @@ public class LoginController {
     	response.addCookie(cookieID);
     	
     	// loginCookieSSO 라는 이름으로 쿠키를 추가로 생성할 것인지
+		/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
     	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
     	
     	if (!useSSOCookie.trim().isEmpty() && !"NO".equalsIgnoreCase(useSSOCookie)) {
@@ -920,6 +925,7 @@ public class LoginController {
     		ssoLoginCookie.setDomain(useSSOCookie);
     		response.addCookie(ssoLoginCookie);
     	}
+		*/
 
     	String multiLoginTime = "";
     	if(!request.getRequestURI().matches("(/ezConn|/ezTalkGate|/ezUCMessenger).+")) { // 외부 로그인으로 접근시에는 멀티로그인 옵션 무시
@@ -972,10 +978,12 @@ public class LoginController {
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
+				/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
     			if (cookie.getName().equals("loginCookieSSO")) {
     				String ssoDomain = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
     				cookie.setDomain(ssoDomain);
     			}
+				*/
     			
     			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")){
     				cookie.setMaxAge(0);

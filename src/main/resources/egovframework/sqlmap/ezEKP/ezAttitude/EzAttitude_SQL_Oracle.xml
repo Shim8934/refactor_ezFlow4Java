@@ -2308,7 +2308,7 @@
 		SELECT
 		  	DISTINCT
 		  	A.TENANT_ID AS TENANT_ID,
-			A.PHYSICALDELIVERYOFFICENAME AS companyId  
+			A.PHYSICALDELIVERYOFFICENAME AS PHYSICALDELIVERYOFFICENAME  
 		FROM
 			TBL_USERMASTER A
 		JOIN
@@ -2990,7 +2990,7 @@
 					AND
 						A.modappl <> 5
 					ORDER BY
-						date_format(startdate, '%Y-%m-%d') DESC,
+						TO_DATE(startdate, 'YYYY-MM-DD') DESC,
 						writerid,
 						starttime DESC
 				]]>

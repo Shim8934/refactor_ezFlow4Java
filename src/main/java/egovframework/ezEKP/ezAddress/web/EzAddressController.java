@@ -1881,24 +1881,26 @@ public class EzAddressController{
 			sb.append("<PAGECOUNT>" + pageCount + "</PAGECOUNT>");
 			sb.append("<DATA>");
 			
-			for (AddressVO addressInfo : addressList) {
-				String sType = addressInfo.getsType();
-				String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(addressInfo.getsEmail());
-				
-				sb.append("<ROW>");
-				sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
-				sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
-				sb.append("<MODIFIERID>" + addressInfo.getModifierId() + "</MODIFIERID>");
-				sb.append("<HASATTACH>" + addressInfo.getHasAttach() + "</HASATTACH>");
-				sb.append("<HASCOMMENT>" + addressInfo.getHasComment() + "</HASCOMMENT>");
-				sb.append("<SNAME>" + commonUtil.cleanValue(addressInfo.getsName()) + "</SNAME>");
-				sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
-				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
-				sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
-				sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
-				sb.append("<STYPE>" + sType + "</STYPE>");
-				sb.append("<FOLDERTYPE>" + folderType + "</FOLDERTYPE>");
-				sb.append("</ROW>");
+			if (addressList != null) {
+				for (AddressVO addressInfo : addressList) {
+					String sType = addressInfo.getsType();
+					String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(addressInfo.getsEmail());
+					
+					sb.append("<ROW>");
+					sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
+					sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
+					sb.append("<MODIFIERID>" + addressInfo.getModifierId() + "</MODIFIERID>");
+					sb.append("<HASATTACH>" + addressInfo.getHasAttach() + "</HASATTACH>");
+					sb.append("<HASCOMMENT>" + addressInfo.getHasComment() + "</HASCOMMENT>");
+					sb.append("<SNAME>" + commonUtil.cleanValue(addressInfo.getsName()) + "</SNAME>");
+					sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
+					sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
+					sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
+					sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
+					sb.append("<STYPE>" + sType + "</STYPE>");
+					sb.append("<FOLDERTYPE>" + folderType + "</FOLDERTYPE>");
+					sb.append("</ROW>");
+				}
 			}
 			
 			sb.append("</DATA>");
@@ -2155,7 +2157,7 @@ public class EzAddressController{
 			if (csvWriter != null) {
 				try {
 					csvWriter.close();
-				} catch(IOException e) {}
+				} catch(IOException e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (writer != null) {
 				writer.close();
@@ -2285,19 +2287,19 @@ public class EzAddressController{
         	if (csvReader != null) {
         		try {
         			csvReader.close();
-        		} catch (IOException e) {}
+        		} catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
         	}
         	
         	if (reader != null) {
         		try {
         			reader.close();
-        		} catch (IOException e) {}
+        		} catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
         	}
         	
         	if (stream != null) {
         		try {
         			stream.close();
-        		} catch (IOException e) {}
+        		} catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
         	}
 		}
         
@@ -2398,7 +2400,7 @@ public class EzAddressController{
 	        		} else {
 	        			logger.error(i + "th line is null.");
 	        		}
-        		} catch (Exception e1) {}
+        		} catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
         		
         		e.printStackTrace();
         	}
@@ -2480,7 +2482,7 @@ public class EzAddressController{
 			if (csvWriter != null) {
 				try {
 					csvWriter.close();
-				} catch(IOException e) {}
+				} catch(IOException e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			if (writer != null) {
 				writer.close();

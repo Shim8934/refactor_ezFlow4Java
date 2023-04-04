@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
+import java.util.Optional;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -91,7 +92,7 @@ public class EgovFileScrty {
 					byte[] data = new byte[length];
 					System.arraycopy(buffer, 0, data, 0, length);
 					output.write(encodeBinary(data).getBytes());
-					output.write(System.getProperty("line.separator").getBytes());
+					output.write(Optional.ofNullable(System.getProperty("line.separator")).orElse("\n").getBytes());
 				}
 
 				result = true;
@@ -217,48 +218,6 @@ public class EgovFileScrty {
 	public static String decode(String data) throws Exception {
 		return new String(decodeBinary(data));
 	}
-
-    /**
-     * 비밀번호를 암호화하는 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용).
-     * 
-     * deprecated : 보안 강화를 위하여 salt로 ID를 지정하는 encryptPassword(password, id) 사용
-     *
-     * @param String data 암호화할 비밀번호
-     * @return String result 암호화된 비밀번호
-     * @exception Exception
-     */
-    @Deprecated
-    public static String encryptPassword(String data) throws Exception {
-
-		if (data == null) {
-		    return "";
-		}
-	
-		byte[] plainText = null; // 평문
-		byte[] hashValue = null; // 해쉬값
-		plainText = data.getBytes();
-	
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-		
-		// 변경 시 기존 hash 값에 검증 불가.. => deprecated 시키고 유지
-		/*	
-	    // Random 방식의 salt 추가
-	    SecureRandom ng = new SecureRandom();
-	    byte[] randomBytes = new byte[16];
-	    ng.nextBytes(randomBytes);
-	    
-	    md.reset();
-	    md.update(randomBytes);
-	    
-		*/		
-		hashValue = md.digest(plainText);
-		
-		/*
-		BASE64Encoder encoder = new BASE64Encoder();
-		return encoder.encode(hashValue);
-		*/
-		return new String(Base64.encodeBase64(hashValue));
-    }
     
     /**
      * 비밀번호를 암호화하는 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용)
@@ -347,7 +306,7 @@ public class EgovFileScrty {
    	 		decryptedValue = new String(decryptedBytes, "utf-8"); // 문자 인코딩 주의.
    	 		
    	 	}catch(Exception e){
-   	 		
+			LOGGER.debug("e.message=" + e.getMessage());   	 		
    	 	}
    		return decryptedValue;
     } 
@@ -449,10 +408,10 @@ public class EgovFileScrty {
             
         } finally {
             if (output != null) {
-                try { output.close(); } catch (IOException ie) {}
+                try { output.close(); } catch (IOException e) {LOGGER.debug("e.message=" + e.getMessage());}
             }
             if (input != null) {
-                try { input.close(); } catch (IOException ie) {}
+                try { input.close(); } catch (IOException e) {LOGGER.debug("e.message=" + e.getMessage());}
             }
         }
     }

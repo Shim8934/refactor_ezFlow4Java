@@ -2589,9 +2589,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					strBeforeMHT = FileUtils.readFileToString(file);
 				}
 
-				FileWriter fw = new FileWriter(file);
-				fw.append(formMhtInfo);
-				fw.close();
+				// CWE-404 보안 취약점 대응
+				try (FileWriter fw = new FileWriter(file)) {
+					fw.append(formMhtInfo);
+				}
 			} catch (Exception e) {
 				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
 			}
@@ -2880,9 +2881,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					new File(commonUtil.detectPathTraversal(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator)))).mkdirs();
 				}
 
-				FileWriter fw = new FileWriter(file);
-				fw.append(formMhtInfo);
-				fw.close();
+				// CWE-404 보안 취약점 대응
+				try (FileWriter fw = new FileWriter(file)) {
+					fw.append(formMhtInfo);
+				}
 				
 				// FornBuilder
 				if (useReform) {
@@ -3023,10 +3025,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			if (file.exists()) {
 				strBeforeMHT = FileUtils.readFileToString(file);
 			}
-			
-			FileWriter fw = new FileWriter(file);
-			fw.append(formMHT);
-			fw.close();
+
+			// CWE-404 보안 취약점 대응
+			try (FileWriter fw = new FileWriter(file)) {
+				fw.append(formMHT);
+			}
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_DOCID", docID);
@@ -3117,8 +3120,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			saveFileFolder = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form";
 			saveFileName = saveFileFolder + commonUtil.separator + formID + ".hwp";
 			
-			FileOutputStream stream = null;
-			
 			try {
 				File fileFolder = new File(commonUtil.detectPathTraversal(saveFileFolder));
 				File file = new File(commonUtil.detectPathTraversal(saveFileName));
@@ -3131,9 +3132,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					strBeforeMHT = FileUtils.readFileToString(file);
 				}
 				
-				stream = new FileOutputStream(file);
-				stream.write(Base64.decodeBase64(formMhtInfo));
-				stream.close();
+				// CWE-404 보안 취약점 대응
+				try (FileOutputStream stream = new FileOutputStream(file)) {
+					stream.write(Base64.decodeBase64(formMhtInfo));
+				}
 			} catch (Exception e) {
 				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
 			}
@@ -5298,8 +5300,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String auditApprLineId = request.getParameter("auditApprLineId");
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
-		int startRow = (pageSize * (pageNum - 1)) + 1;
-        int endRow = pageSize * pageNum;
+		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(pageNum, 1)), 1);
+        int endRow = Math.multiplyExact(pageSize, pageNum);
         
 		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		

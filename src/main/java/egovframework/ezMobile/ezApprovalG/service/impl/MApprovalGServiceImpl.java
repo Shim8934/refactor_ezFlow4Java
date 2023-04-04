@@ -854,8 +854,11 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 					contentBuilder.append("</td></tr></table>");
 				}
 				
-				ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
-
+				/* 2023-02-15 홍승비 - 모바일에서 회수 시, 회수알림메일의 대상자가 존재하는 경우에만 메일을 발송하도록 수정 */
+				if (toList.size() > 0) {
+					ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
+				}
+				
 				break;
 
 			default:
@@ -1078,23 +1081,23 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			
 			//가장 최근 완료문서 조회
 			HashMap<String, Object> lastDocInfo = mApprovalGDAO.getLastDocInfo(map);
-			
-			System.out.println("testGetLastDocInfo lastDocInfo: " + lastDocInfo.toString());
-			
+
+			LOGGER.debug("testGetLastDocInfo lastDocInfo: " + lastDocInfo.toString());
+
 			map.put("v_DOCID", lastDocInfo.get("DOCID"));
 			
 			//문서아이디 발급 및 진행문서 정보 생성
 			String newDocId = ezApprovalGService.createNewDoc(formId, companyId, tenantId);
-			System.out.println(" newDocId: " + newDocId);
-			
+			LOGGER.debug(" newDocId: " + newDocId);
+
 			//mht 파일 생성 경로
 			String thisYear = ezApprovalGService.getDocHrefYear(newDocId, companyId, tenantId);
-			System.out.println("oldYear: " + thisYear);
+			LOGGER.debug("oldYear: " + thisYear);
 			String extension = ".mht";
 			String filePath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId) + commonUtil.separator + companyId + commonUtil.separator + "doc" + commonUtil.separator + thisYear + 
 					commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(newDocId);
 			String fileName = newDocId + extension;
-			System.out.println("filePath: " + filePath);
+			LOGGER.debug("filePath: " + filePath);
 
 			map.put("realPath", realPath);
 			map.put("filePath", filePath);
@@ -1135,17 +1138,17 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			endDocInfo.put("HASATTACHYN", hasAttachYn);
 			
 			int sqlResult = mApprovalGDAO.updateDocInfo(endDocInfo);
-			
-			System.out.println("sqlResult: " + sqlResult);
-			
+
+			LOGGER.debug("sqlResult: " + sqlResult);
+
 			HashMap<String, Object> expEndDocInfo = mApprovalGDAO.getEndDocInfoEx(map);
 			
 			expEndDocInfo.put("DOCID", newDocId);
 			
 			sqlResult = mApprovalGDAO.updateDocInfoEx(expEndDocInfo);
-			
-			System.out.println("sqlResult: " + sqlResult);
-			
+
+			LOGGER.debug("sqlResult: " + sqlResult);
+
 			List<HashMap> endDocLineInfo = mApprovalGDAO.getEndDocLineInfo(map);
 			
 			for (HashMap hashMap : endDocLineInfo) {
@@ -1171,9 +1174,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				}
 				
 				mApprovalGDAO.insertDocLineInfo(hashMap);
-				
-				System.out.println("endDocLineInfo: " + hashMap);
-				
+
+				LOGGER.debug("endDocLineInfo: " + hashMap);
+
 			}
 			
 			
@@ -1183,8 +1186,8 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				
 				hashMap.put("DOCID", newDocId);
 				mApprovalGDAO.insertDocLineInfoEx(hashMap);
-				
-				System.out.println("expEndDocLine: " + hashMap.toString());
+
+				LOGGER.debug("expEndDocLine: " + hashMap);
 
 			}
 			
@@ -1198,9 +1201,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				hashMap.put("PROCESSDATE", null);
 				
 				mApprovalGDAO.insertDocRecvInfo(hashMap);
-				
-				System.out.println("endReceiptInfo: " + hashMap.toString());
-				
+
+				LOGGER.debug("endReceiptInfo: " + hashMap);
+
 			}
 			
 			//파일생성
@@ -1252,7 +1255,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		HashMap<String, Object> formInfo = mApprovalGDAO.getFormInfo(map);
 		String formURL = realPath + formInfo.get("FORMFILELOCATION");
 		String loadMht = ezCommonService.loadMHTFile(formURL); // 결재문서 가져오기
-		System.out.println("loadMht: " + loadMht);
+		LOGGER.debug("loadMht: " + loadMht);
 
 		Locale locale = new Locale("ko");		
 		String m_strMHT = "";
@@ -1261,7 +1264,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		if(!Folder.exists()) {
 			Folder.mkdir();
-			System.out.println("폴더 생성 완료!!!");
+			LOGGER.debug("폴더 생성 완료!!!");
 		}
 		
 		//양식을 가져와서 데이터를 매핑한 후 문서를 생성
@@ -1297,7 +1300,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			boolean isUTF8;
 			
 			strBoundary = getBoundaryText(m_strMHT);
-			System.out.println("strBoundary="+strBoundary);
+			LOGGER.debug("strBoundary="+strBoundary);
 
 			if (m_strMHT != null && !m_strMHT.equals("")) {
 				if (strBoundary.equals("error")) {
@@ -1344,24 +1347,24 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						
 						
 					}
-					
-					//System.out.println("doc: " + doc.toString());
-					
+
+					//LOGGER.debug("doc: " + doc.toString());
+
 					StringBuilder mhtBuilder = new StringBuilder();
 					StringBuilder htmlBuilder = new StringBuilder(doc.toString());
 					
 					doHtmlEncoding( htmlBuilder, mhtBuilder, strBoundary);
-					
-					//System.out.println("mhtBuilder: " + mhtBuilder.toString());
-					
-					System.out.println("m_Mimechunk size: " + m_Mimechunk.length);
-					
+
+					//LOGGER.debug("mhtBuilder: " + mhtBuilder.toString());
+
+					LOGGER.debug("m_Mimechunk size: " + m_Mimechunk.length);
+
 					m_Mimechunk[1] = mhtBuilder.toString();
 					
 					for (int i = 0; i < m_Mimechunk.length; i++) {
-						
-						//System.out.println("m_Mimechunk index " + i + " : " + m_Mimechunk[i].toString());
-						
+
+						//LOGGER.debug("m_Mimechunk index " + i + " : " + m_Mimechunk[i].toString());
+
 						if(i == (m_Mimechunk.length - 1)) {
 							r_strMHT = r_strMHT + strBoundary + m_Mimechunk[i];
 						} else {
@@ -1556,5 +1559,4 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		LOGGER.debug("getAprMemberBySn ended");
 		return result;
 	}
-		
 }

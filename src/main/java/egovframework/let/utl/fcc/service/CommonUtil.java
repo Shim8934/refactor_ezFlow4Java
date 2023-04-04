@@ -86,6 +86,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -97,6 +98,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -854,7 +856,7 @@ public class CommonUtil {
 	        }
 			doc = convertStringToDocument(sb.toString());
 			
-		} catch(Exception e){}
+		} catch(Exception e){logger.debug("e.message=" + e.getMessage());}
 		
 		return doc;		
 	}
@@ -1078,7 +1080,7 @@ public class CommonUtil {
 		
 		if (dateStr == null) {
 			logger.error("dateStr is null.");
-			return null;
+			return "";
 		}
 		
 		if (dateStr.equals("0")) {			
@@ -1574,7 +1576,9 @@ public class CommonUtil {
 			int count = fileNameMap.get(fileNameLowerCase);
 			
 			while (true) {
-				if (!fileNameMap.containsKey((fileNameWithoutExt + " (" + ++count + ")" + ext).toLowerCase())) {
+				count = Math.addExact(count, 1);
+
+				if (!fileNameMap.containsKey((fileNameWithoutExt + " (" + count + ")" + ext).toLowerCase())) {
 					break;
 				}
 			}
@@ -2536,7 +2540,6 @@ public class CommonUtil {
 	@SuppressWarnings("unchecked")
 	public JSONObject unidocsFileDown(String filePath, String realPath, String filePathFlag, int tenantId){
 		InputStream inputStream = null;
-		OutputStream outputStream = null;
 		JSONObject result = new JSONObject();
 		String status = "ERROR";
 		int code = 0;
@@ -2546,7 +2549,7 @@ public class CommonUtil {
 			String unidocsFilerootPath = ezCommonService.getTenantConfig("unidocsFilerootPath", tenantId);
 			File file       = new File(realPath + detectPathTraversal(filePath));
 			
-			MessageDigest md2 = MessageDigest.getInstance("MD5");
+			MessageDigest md2 = MessageDigest.getInstance("SHA-256");
 			md2.update(filePath.getBytes());
 			byte mdDate2[] = md2.digest();
 			StringBuffer sb2 = new StringBuffer();
@@ -2606,21 +2609,21 @@ public class CommonUtil {
 				pdfFile.getParentFile().mkdirs();
 			}
 
-			outputStream = new FileOutputStream(decryptFile);
-			
-			// webfolder는 암호화 하는 폴더가 있기 때문에 klib 복호화 코드 추가 
-			if ((filePathFlag.equals("webfolder") && ezWebFolderService.isEncryptedFilePath(filePath)) || (filePathFlag.equals("approval") && fileExtension.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT))) {
-				logger.debug("fileOldPath=" + filePath);
-				logger.debug("pdfFilePath=" + pdfFilePath);
-				byte[] encryptedBytes = readBytesFromFile(file.toPath());
-				byte[] decryptedBytes = kilbUtil.decrypt(encryptedBytes);
-				inputStream = new ByteArrayInputStream(decryptedBytes);
-				
-				FileCopyUtils.copy(inputStream, outputStream);
-			} else {
-				Files.copy(file.toPath(), outputStream);
+			// CWE-404 보안 취약점 대응
+			try (OutputStream outputStream = new FileOutputStream(decryptFile)) {			
+				// webfolder는 암호화 하는 폴더가 있기 때문에 klib 복호화 코드 추가 
+				if ((filePathFlag.equals("webfolder") && ezWebFolderService.isEncryptedFilePath(filePath)) || (filePathFlag.equals("approval") && fileExtension.equals(EzApprovalGKlibService.ENCRYPTED_FILE_EXT))) {
+					logger.debug("fileOldPath=" + filePath);
+					logger.debug("pdfFilePath=" + pdfFilePath);
+					byte[] encryptedBytes = readBytesFromFile(file.toPath());
+					byte[] decryptedBytes = kilbUtil.decrypt(encryptedBytes);
+					inputStream = new ByteArrayInputStream(decryptedBytes);
+					
+					FileCopyUtils.copy(inputStream, outputStream);
+				} else {
+					Files.copy(file.toPath(), outputStream);
+				}
 			}
-			outputStream.close();
 
 			if(fileExtension.equalsIgnoreCase("pdf")){
 				FileCopyUtils.copy(decryptFile, pdfFile);
@@ -2643,13 +2646,6 @@ public class CommonUtil {
 			if (inputStream != null) {
 				try {
 					inputStream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
-			if (outputStream != null) {
-				try {
-					outputStream.close();
 				} catch (Exception ignore) {
 					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
@@ -2825,5 +2821,88 @@ public class CommonUtil {
 		Gson gson = new Gson();
 		JsonParser jsonParser = new JsonParser();
 		return jsonParser.parse(gson.toJson(voList)).getAsJsonArray();
+	}
+	
+	/**
+	 * 2023-02-14 홍승비 - 서버 간 REST 통신으로 XML 문자열을 받은 경우, JSON으로 변환하여 리턴하기 위한 메서드 추가
+	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드 (XML -> org.json.JSONObject -> simpleJSON로 변환하여 리턴)
+	 * @param resteUrl
+	 * @param param
+	 * @param request
+	 * @return
+	 */
+	public JSONObject getXML2JsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam, int connectionTimeout, int readTimeout) {
+		logger.debug("getXML2JsonFromRestApi started.");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.TEXT_HTML_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for (String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = null;
+		
+		if (methodType.equals("patch")) {
+			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			rest = new RestTemplate(httpRequestFactory);
+		} else if (connectionTimeout > 0 || readTimeout > 0) {
+			HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			httpRequestFactory.setConnectTimeout(connectionTimeout);
+			httpRequestFactory.setReadTimeout(readTimeout);
+			rest = new RestTemplate(httpRequestFactory);
+		} else {
+			rest = new RestTemplate();
+		}
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		case "patch":
+			method = HttpMethod.PATCH;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONObject resultBody = null;
+		org.json.JSONObject resultBodyTemp = null;
+		JSONParser jp = new JSONParser();
+		
+		try {
+			// XML -> org.json.JSONObject
+			resultBodyTemp = XML.toJSONObject(result.getBody());
+			
+			// org.json.JSONObject -> simpleJSON
+			resultBody = (JSONObject) jp.parse(resultBodyTemp.toString());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getXML2JsonFromRestApi ended.");
+		return resultBody;
 	}
 }

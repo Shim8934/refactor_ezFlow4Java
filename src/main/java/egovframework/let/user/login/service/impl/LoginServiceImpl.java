@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -617,7 +618,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     
     // 20200424 조진호 - SMS 솔루션 6자리 인증번호 생성
     public String getAutoNumber() throws Exception {
-    	Random random = new Random(System.currentTimeMillis());
+    	Random random = new SecureRandom();
     	
     	int certNumLength = 6;
     	

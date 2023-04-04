@@ -4441,13 +4441,15 @@ public class EzBoardController extends EgovFileMngUtil{
 				if (bos != null) {
 					try {
 						bos.close();
-					} catch (Exception ignore) {
+					} catch (Exception e) {
+						logger.debug("e.message=" + e.getMessage());
 					}
 				}
 				if (stream != null) {
 					try {
 						stream.close();
-					} catch (Exception ignore) {
+					} catch (Exception e) {
+						logger.debug("e.message=" + e.getMessage());
 					}
 				}
 			}
@@ -4543,13 +4545,15 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (bos != null) {
 				try {
 					bos.close();
-				} catch (Exception ignore) {
+				} catch (Exception e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 			if (stream != null) {
 				try {
 					stream.close();
-				} catch (Exception ignore) {
+				} catch (Exception e) {
+					logger.debug("e.message=" + e.getMessage());
 				}
 			}
 		}
@@ -6145,148 +6149,150 @@ public class EzBoardController extends EgovFileMngUtil{
 			serverPath = dirPath + commonUtil.separator;
 		}
 		
-		/* 2021-12-08 홍승비 - 포토, 썸네일 게시물 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
-		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
-		boolean isExtOK = true;
-		for (int i = 0; i < multiFile.size(); i++) {
-			String orgName = multiFile.get(i).getOriginalFilename();
-			fileExt = orgName.substring(orgName.lastIndexOf(".") + 1, orgName.length());
-			logger.debug("imageUpload file extension is : " + fileExt);
-			
-			if (commonUtil.checkImgExtension(fileExt.toLowerCase()) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
-				isExtOK = false;
-				break;
-			}
-		}
-		if (isExtOK == false) {
-			logger.debug("imageUpload failed, checkImgExtension return false");
-			
-			return "UPLOAD_EXT_ERROR;" + multiFile.size();	
-		}
-		
-		String uniqueName = "";
-		File file = new File(commonUtil.detectPathTraversal(serverPath));
-		
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		
 		StringBuffer strXML = new StringBuffer();
-		
-		strXML.append("<ROOT><NODES>");
-		
-		if (pFileLimit == null || pFileLimit.equals("0") || pFileLimit.equals("")) {
-			pFileLimit = "2";
-		}
-		
-		long fileLimit = Long.parseLong(pFileLimit) * 1024 * 1024;
-		
-		for (int i = 0; i < multiFile.size(); i++) {
-			fileSize = multiFile.get(i).getSize();
-			if (fileSize > fileLimit) {
-				resultUpload = "overflow";
-				strXML.append("<NODE><PUPLOADSN><![CDATA[" + uniqueName + "]]></PUPLOADSN>");
-				strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
-				strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
-				strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
-				strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
-				strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
-				strXML.append("</NODE>");
-			} else {
-				if (multiFile.get(i).getOriginalFilename() != null && !multiFile.get(i).getOriginalFilename().equals("")) {
-					String pFileName = multiFile.get(i).getOriginalFilename();
-					
-					if (pFileName.indexOf(commonUtil.separator.toString()) > 0) {
-						pFileName = pFileName.split("/")[pFileName.split("/").length - 1];
-					}
-					
-					fileName = commonUtil.cleanValue(pFileName);
+
+		if (multiFile != null) {
+			/* 2021-12-08 홍승비 - 포토, 썸네일 게시물 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
+			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+			boolean isExtOK = true;
+			for (int i = 0; i < multiFile.size(); i++) {
+				String orgName = multiFile.get(i).getOriginalFilename();
+				fileExt = orgName.substring(orgName.lastIndexOf(".") + 1, orgName.length());
+				logger.debug("imageUpload file extension is : " + fileExt);
+				
+				if (commonUtil.checkImgExtension(fileExt.toLowerCase()) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+					isExtOK = false;
+					break;
 				}
-//				fileName = fileName.replace("+", "%2b");
-//				fileName = fileName.replace(";", "%3b");
-				
-				/* 2018-09-20 홍승비 - 이미지 등록 시 3자리 이상 확장자 잘리는 문제 수정 */
-				String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-				String guid = "{" + UUID.randomUUID().toString() + "}";
-				
-				uniqueName = guid + "." + extension;
-				thumbnailName = "s_" + guid + "." + extension;
-				
-				writeUploadedFile(multiFile.get(i), uniqueName, serverPath); // 원본 파일을 업로드한 뒤, 아래 코드에서 이미지 형식으로 변환함
-				fileLocation = uniqueName;
-				File imageFile = new File(commonUtil.detectPathTraversal(serverPath + uniqueName));	
-				
-				int nImgWidth = 0;
-				int nImgHeight = 0;
-				
-				if (imageFile.exists()) {
-					BufferedImage bi = ImageIO.read(imageFile);		
-					
-					nImgWidth = bi.getWidth();
-					nImgHeight = bi.getHeight();
-					int nWidth = 0, nHeight = 0;
-					
-					if (nImgWidth > nImgHeight) {
-						nWidth = 200;
-						nHeight = (bi.getHeight() * nWidth) / bi.getWidth();
-					} else {
-						nHeight = 200;
-						nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
-					}
-					
-					BufferedImage bufferedImage = null;
-					BufferedImage bufferedImageS = null;
-					
-					if (extension.toUpperCase().equals("TIF") || extension.toUpperCase().equals("TIFF")) {
-						extension = "png";
-					}
-					
-					// 기존 이미지가 파일 형태로 업로드되었으므로, 다시 이미지 형태로 저장
-					if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
-						bufferedImage = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-					} else {
-						bufferedImage = new BufferedImage(bi.getWidth(), bi.getHeight(), bi.getType());
-					}
-					bufferedImage.createGraphics().drawImage(bi, 0, 0, bi.getWidth(), bi.getHeight(), null);
-					isImage = ImageIO.write(bufferedImage, extension, new File(commonUtil.detectPathTraversal(serverPath + uniqueName)));
-					
-					// 썸네일 저장
-					/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
-					if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
-						bufferedImageS = new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_4BYTE_ABGR);
-					} else {
-						bufferedImageS = new BufferedImage(nWidth, nHeight, bi.getType());
-					}
-					bufferedImageS.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
-					isImage = ImageIO.write(bufferedImageS, extension, new File(commonUtil.detectPathTraversal(serverPath + thumbnailName)));
-					
-					bi.flush();
-					bi = null;
-					bufferedImage.flush();
-					bufferedImage = null;
-					bufferedImageS.flush();
-					bufferedImageS = null;
-				}
-				
-				if(isImage) {
-					resultUpload = "true";
-				} else {
-					resultUpload = "Not Image file";
-				}
-				
-				strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailName + "]]></THUMBNAILNAME>");
-				strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
-				strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
-				strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
-				strXML.append("<FILELOCATION><![CDATA[" + serverPath + thumbnailName + "]]></FILELOCATION>");
-				strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
-				strXML.append("<UNIQUEID><![CDATA[" + uniqueName + "]]></UNIQUEID>");
-				strXML.append("<OFILENAME><![CDATA[" + multiFile.get(i).getOriginalFilename() + "]]></OFILENAME>");
-				strXML.append("</NODE>");
 			}
+			if (isExtOK == false) {
+				logger.debug("imageUpload failed, checkImgExtension return false");
+				
+				return "UPLOAD_EXT_ERROR;" + multiFile.size();	
+			}
+			
+			String uniqueName = "";
+			File file = new File(commonUtil.detectPathTraversal(serverPath));
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+						
+			strXML.append("<ROOT><NODES>");
+			
+			if (pFileLimit == null || pFileLimit.equals("0") || pFileLimit.equals("")) {
+				pFileLimit = "2";
+			}
+			
+			long fileLimit = Long.parseLong(pFileLimit) * 1024 * 1024;
+			
+			for (int i = 0; i < multiFile.size(); i++) {
+				fileSize = multiFile.get(i).getSize();
+				if (fileSize > fileLimit) {
+					resultUpload = "overflow";
+					strXML.append("<NODE><PUPLOADSN><![CDATA[" + uniqueName + "]]></PUPLOADSN>");
+					strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+					strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
+					strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
+					strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
+					strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
+					strXML.append("</NODE>");
+				} else {
+					if (multiFile.get(i).getOriginalFilename() != null && !multiFile.get(i).getOriginalFilename().equals("")) {
+						String pFileName = multiFile.get(i).getOriginalFilename();
+						
+						if (pFileName.indexOf(commonUtil.separator.toString()) > 0) {
+							pFileName = pFileName.split("/")[pFileName.split("/").length - 1];
+						}
+						
+						fileName = commonUtil.cleanValue(pFileName);
+					}
+	//				fileName = fileName.replace("+", "%2b");
+	//				fileName = fileName.replace(";", "%3b");
+					
+					/* 2018-09-20 홍승비 - 이미지 등록 시 3자리 이상 확장자 잘리는 문제 수정 */
+					String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+					String guid = "{" + UUID.randomUUID().toString() + "}";
+					
+					uniqueName = guid + "." + extension;
+					thumbnailName = "s_" + guid + "." + extension;
+					
+					writeUploadedFile(multiFile.get(i), uniqueName, serverPath); // 원본 파일을 업로드한 뒤, 아래 코드에서 이미지 형식으로 변환함
+					fileLocation = uniqueName;
+					File imageFile = new File(commonUtil.detectPathTraversal(serverPath + uniqueName));	
+					
+					int nImgWidth = 0;
+					int nImgHeight = 0;
+					
+					if (imageFile.exists()) {
+						BufferedImage bi = ImageIO.read(imageFile);		
+						
+						nImgWidth = bi.getWidth();
+						nImgHeight = bi.getHeight();
+						int nWidth = 0, nHeight = 0;
+						
+						if (nImgWidth > nImgHeight) {
+							nWidth = 200;
+							nHeight = (bi.getHeight() * nWidth) / bi.getWidth();
+						} else {
+							nHeight = 200;
+							nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
+						}
+						
+						BufferedImage bufferedImage = null;
+						BufferedImage bufferedImageS = null;
+						
+						if (extension.toUpperCase().equals("TIF") || extension.toUpperCase().equals("TIFF")) {
+							extension = "png";
+						}
+						
+						// 기존 이미지가 파일 형태로 업로드되었으므로, 다시 이미지 형태로 저장
+						if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+							bufferedImage = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+						} else {
+							bufferedImage = new BufferedImage(bi.getWidth(), bi.getHeight(), bi.getType());
+						}
+						bufferedImage.createGraphics().drawImage(bi, 0, 0, bi.getWidth(), bi.getHeight(), null);
+						isImage = ImageIO.write(bufferedImage, extension, new File(commonUtil.detectPathTraversal(serverPath + uniqueName)));
+						
+						// 썸네일 저장
+						/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
+						if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+							bufferedImageS = new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_4BYTE_ABGR);
+						} else {
+							bufferedImageS = new BufferedImage(nWidth, nHeight, bi.getType());
+						}
+						bufferedImageS.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
+						isImage = ImageIO.write(bufferedImageS, extension, new File(commonUtil.detectPathTraversal(serverPath + thumbnailName)));
+						
+						bi.flush();
+						bi = null;
+						bufferedImage.flush();
+						bufferedImage = null;
+						bufferedImageS.flush();
+						bufferedImageS = null;
+					}
+					
+					if(isImage) {
+						resultUpload = "true";
+					} else {
+						resultUpload = "Not Image file";
+					}
+					
+					strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailName + "]]></THUMBNAILNAME>");
+					strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+					strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
+					strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
+					strXML.append("<FILELOCATION><![CDATA[" + serverPath + thumbnailName + "]]></FILELOCATION>");
+					strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
+					strXML.append("<UNIQUEID><![CDATA[" + uniqueName + "]]></UNIQUEID>");
+					strXML.append("<OFILENAME><![CDATA[" + multiFile.get(i).getOriginalFilename() + "]]></OFILENAME>");
+					strXML.append("</NODE>");
+				}
+			}
+			
+			strXML.append("</NODES></ROOT>");
 		}
-		
-		strXML.append("</NODES></ROOT>");
 
 		logger.debug("imageUpload ended");
 		return strXML.toString();
@@ -6430,8 +6436,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String g_ImageUrl = "";
 		int imageCnt = 10;
 		int page = Integer.parseInt(request.getParameter("page")); // page = 0인 경우, photoViewDB에서 분기 체크하여 모든 이미지를 가져오도록 함
-		int pStartRow = (page - 1) * imageCnt + 1;
-		int pEndRow = page * imageCnt;
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), imageCnt), 1);
+		int pEndRow = Math.multiplyExact(page, imageCnt);
 		
 		int imageCount = ezBoardService.photoViewDBCount(itemID, boardID, userInfo.getTenantId());
 		
@@ -6541,8 +6547,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String listImages = "";
 		String mainFg = "";
 		int imageCnt = 10;
-		int pStartRow = (page - 1) * imageCnt + 1;
-		int pEndRow = page * imageCnt;
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), imageCnt), 1);
+		int pEndRow = Math.multiplyExact(page, imageCnt);
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
@@ -6979,16 +6985,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo("", userInfo);
 		
-		int startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
-		int endRow = page * boardInfo.getSs_board_maxRows();
+		int startRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), boardInfo.getSs_board_maxRows()), 1);
+		int endRow = Math.multiplyExact(page, boardInfo.getSs_board_maxRows());
 		
 		List<BoardListVO> reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
 		totalCount = ezBoardService.getReservedItemListCount(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (reservedList == null && page > 1) {
 			page -= 1;
-			startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
-			endRow = page * boardInfo.getSs_board_maxRows();
+			startRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), boardInfo.getSs_board_maxRows()), 1);
+			endRow = Math.multiplyExact(page, boardInfo.getSs_board_maxRows());
 			reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		
@@ -9116,80 +9122,82 @@ public class EzBoardController extends EgovFileMngUtil{
 			serverPath = dirPath + commonUtil.separator;
 		}
 		
-		/* 2021-12-08 홍승비 - 동영상게시물 영상 업로드 시 서버단에서도 확장자 체크 진행 */
-		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
-		String orgName = multiFile.getOriginalFilename();
-		fileExt = orgName.substring(orgName.lastIndexOf(".") + 1, orgName.length());
-		logger.debug("MovieUpload file extension is : " + fileExt);
-		
-		if (commonUtil.checkMovExtension(fileExt) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
-			logger.debug("MovieUpload failed, checkMovExtension return false");
-			
-			return "UPLOAD_EXT_ERROR";
-		}
-		
-		String uniqueName = "";
-		File file = new File(serverPath);
-		
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		
 		StringBuffer strXML = new StringBuffer();
-		
-		strXML.append("<ROOT><NODES>");
-		
-		if (pFileLimit != null && (pFileLimit.equals("0") || pFileLimit.equals(""))) {
-			pFileLimit = "2";
-		}
-		
-		long fileLimit = Long.parseLong(pFileLimit) * 1024 * 1024;
-		
-		fileSize = multiFile.getSize();
-		if (fileSize > fileLimit) {
-			resultUpload = "overflow";
-			strXML.append("<NODE><PUPLOADSN><![CDATA[" + uniqueName + "]]></PUPLOADSN>");
-			strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
-			strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
-			strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
-			strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
-			strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
-			strXML.append("</NODE>");
-		} else {
-			if (multiFile.getOriginalFilename() != null && !multiFile.getOriginalFilename().equals("")) {
-				String pFileName = multiFile.getOriginalFilename();
+
+		if (multiFile != null) {
+			/* 2021-12-08 홍승비 - 동영상게시물 영상 업로드 시 서버단에서도 확장자 체크 진행 */
+			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+			String orgName = multiFile.getOriginalFilename();
+			fileExt = orgName.substring(orgName.lastIndexOf(".") + 1, orgName.length());
+			logger.debug("MovieUpload file extension is : " + fileExt);
+			
+			if (commonUtil.checkMovExtension(fileExt) == false || (!useExtension.equals("*") && useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+				logger.debug("MovieUpload failed, checkMovExtension return false");
 				
-				if (pFileName.indexOf(commonUtil.separator.toString()) > 0) {
-					pFileName = pFileName.split("/")[pFileName.split("/").length - 1];
-				}
-				
-				fileName = commonUtil.cleanValue(pFileName);
+				return "UPLOAD_EXT_ERROR";
 			}
 			
-			/* 2018-09-20 홍승비 - 이미지 등록 시 3자리 이상 확장자 잘리는 문제 수정 */
-			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+			String uniqueName = "";
+			File file = new File(serverPath);
 			
-			// 동영상과 썸네일은 동일한 guid 사용(앞부분의 s_로 파일 구분)
-			String guid = "{" + UUID.randomUUID().toString() + "}";
-			uniqueName = guid + "." + extension;
-			thumbnailName = "s_" + guid + "." + extension;
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+						
+			strXML.append("<ROOT><NODES>");
 			
-			writeUploadedFile(multiFile, uniqueName, serverPath);
+			if (pFileLimit != null && (pFileLimit.equals("0") || pFileLimit.equals(""))) {
+				pFileLimit = "2";
+			}
 			
-			resultUpload = "true";
+			long fileLimit = Long.parseLong(pFileLimit) * 1024 * 1024;
 			
-			strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailName + "]]></THUMBNAILNAME>");
-			strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
-			strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
-			strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
-			strXML.append("<FILELOCATION><![CDATA[" + serverPath + thumbnailName + "]]></FILELOCATION>");
-			strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
-			strXML.append("<UNIQUEID><![CDATA[" + uniqueName + "]]></UNIQUEID>");
-			strXML.append("<OFILENAME><![CDATA[" + multiFile.getOriginalFilename() + "]]></OFILENAME>");
-			strXML.append("</NODE>");
+			fileSize = multiFile.getSize();
+			if (fileSize > fileLimit) {
+				resultUpload = "overflow";
+				strXML.append("<NODE><PUPLOADSN><![CDATA[" + uniqueName + "]]></PUPLOADSN>");
+				strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+				strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
+				strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
+				strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
+				strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
+				strXML.append("</NODE>");
+			} else {
+				if (multiFile.getOriginalFilename() != null && !multiFile.getOriginalFilename().equals("")) {
+					String pFileName = multiFile.getOriginalFilename();
+					
+					if (pFileName.indexOf(commonUtil.separator.toString()) > 0) {
+						pFileName = pFileName.split("/")[pFileName.split("/").length - 1];
+					}
+					
+					fileName = commonUtil.cleanValue(pFileName);
+				}
+				
+				/* 2018-09-20 홍승비 - 이미지 등록 시 3자리 이상 확장자 잘리는 문제 수정 */
+				String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+				
+				// 동영상과 썸네일은 동일한 guid 사용(앞부분의 s_로 파일 구분)
+				String guid = "{" + UUID.randomUUID().toString() + "}";
+				uniqueName = guid + "." + extension;
+				thumbnailName = "s_" + guid + "." + extension;
+				
+				writeUploadedFile(multiFile, uniqueName, serverPath);
+				
+				resultUpload = "true";
+				
+				strXML.append("<NODE><THUMBNAILNAME><![CDATA[" + thumbnailName + "]]></THUMBNAILNAME>");
+				strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+				strXML.append("<PFILENAME><![CDATA[" + fileName + "]]></PFILENAME>");
+				strXML.append("<FILESIZE>" + fileSize + "</FILESIZE>");
+				strXML.append("<FILELOCATION><![CDATA[" + serverPath + thumbnailName + "]]></FILELOCATION>");
+				strXML.append("<MODE><![CDATA[" + mode + "]]></MODE>");
+				strXML.append("<UNIQUEID><![CDATA[" + uniqueName + "]]></UNIQUEID>");
+				strXML.append("<OFILENAME><![CDATA[" + multiFile.getOriginalFilename() + "]]></OFILENAME>");
+				strXML.append("</NODE>");
+			}
+			
+			strXML.append("</NODES></ROOT>");
 		}
-		
-		strXML.append("</NODES></ROOT>");
 
 		logger.debug("MovieUpload ended");
 		return strXML.toString();
@@ -9440,8 +9448,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String movieUrl = "";
 		String moviePath = "";
 		int imageCnt = 10;
-		int pStartRow = (page - 1) * imageCnt + 1;
-		int pEndRow = page * imageCnt;
+		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), imageCnt), 1);
+		int pEndRow = Math.multiplyExact(page, imageCnt);
 		
 		List<BoardAttachVO> movieList = ezBoardService.photoViewDB(itemID, boardID, pStartRow, pEndRow, userInfo.getTenantId());
 		

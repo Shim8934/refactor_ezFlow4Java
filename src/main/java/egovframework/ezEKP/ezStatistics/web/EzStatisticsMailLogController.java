@@ -194,7 +194,7 @@ public class EzStatisticsMailLogController {
 		int currentPage = Integer.parseInt(pageNo);
 		
 		if ( Integer.valueOf(pageNo) != -1 ) {
-			pageNo = String.valueOf((Integer.parseInt(pageNo) -1) * pageSize);
+			pageNo = String.valueOf(Math.multiplyExact(Math.subtractExact(Integer.parseInt(pageNo), 1), pageSize));
 		}
 		
 		String mailLogType = request.getParameter("mailLogType");
@@ -600,7 +600,8 @@ public class EzStatisticsMailLogController {
 		}
 		
 		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+		// CWE-113 보안 취약점 대응
+		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName.replaceAll("\r", "").replaceAll("\n", "") + ".xls");
 		response.setContentType("application/vnd.ms-excel");
 		
 		workbook.write(response.getOutputStream());

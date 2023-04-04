@@ -2,11 +2,14 @@ var g_progresswin;
 var g_fileList;
 var pAttachListXml="";
 
+/*  2023-02-21 홍승비 - 첨부파일의 사이즈 총합을 계산하여 업로드 제한하도록 수정 (게시판 모듈과 통일) */
+var uploadedFileSize = 0; // 첨부파일 사이즈의 총합 계산용 전역변수
+
 function btn_AttachAdd_onclick() {
 	document.getElementById("boardID").value = pBoardID;
     document.getElementById("maxSize").value = parseInt(AttachLimit) * 1024 * 1024;
     document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
-			
+    
     if (document.getElementById("cnt").value > 0) {
     	var formData = new FormData();
     	
@@ -29,32 +32,47 @@ function btn_AttachAdd_onclick() {
             	  return ;
               }
     	}
-       	
+    	
+    	var tempFileSize = 0;
+    	
     	// 특수문자 파싱 이후 파일명 길이를 기준으로 체크
        	$.each($('#file1')[0].files, function(i, file) {
        		if (MakeXMLString(file.name).length > attachFileNameMaxLength) {
        			alert(strLang84 + attachFileNameMaxLength + strLangLHM01);
        			return;
-       		} else {
-       			formData.append('file-' + i, file);
+       		}
+       		else { // 새롭게 추가된 모든 첨부파일들을 루프하며 사이즈를 합산
+       			tempFileSize += parseInt(file.size);
        		}
        	});
+       	
+		// 현재 첨부된 파일과 기존 첨부된 파일의 사이즈 총합을 비교
+		if ((tempFileSize + uploadedFileSize) / 1024 / 1024 > parseInt(AttachLimit)) {
+			alert(strLang27 + AttachLimit + "MB" + strLang28);
+			return;
+		}
+		else {
+			$.each($('#file1')[0].files, function(i, file) {
+				formData.append('file-' + i, file);
+			});
+		}
        	
        	formData.append('mode',  document.getElementById('mode').value);
        	formData.append("boardID", document.getElementById("boardID").value);
        	formData.append("maxSize", document.getElementById("maxSize").value);
        	formData.append("cnt", document.getElementById("cnt").value);
        	
-			$.ajax({
-				url : "/ezCommunity/upload.do",
-				type : "POST",
-				processData : false,
-				contentType : false,
-				data : formData,
-				success : function(data){
-					returnvalue(data);
-				}
-			});
+		$.ajax({
+			url : "/ezCommunity/upload.do",
+			type : "POST",
+			processData : false,
+			contentType : false,
+			data : formData,
+			success : function(data){
+				returnvalue(data);
+				uploadedFileSize += tempFileSize; // 업로드 성공 후 첨부파일 사이즈 총합 갱신
+			}
+		});
        	
         document.form.file1.value = "";
     }
@@ -145,7 +163,7 @@ function btn_ImgDel_onclick(){
 
 
 
-
+/* 2023-02-21 홍승비 - 첨부파일 삭제 시 사이즈 계산 로직 추가 */
 function btn_AttachDel_onclick()
 {
 	try

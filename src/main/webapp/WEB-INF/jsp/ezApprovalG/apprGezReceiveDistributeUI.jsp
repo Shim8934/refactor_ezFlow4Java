@@ -107,31 +107,36 @@
 	                isReDraft = RetValue[6];
 	                orgCompanyID = RetValue[7];
 	                
-	                if (pReceiveSN == "s")
+	                if (pReceiveSN == "s") {
 	                    pReceiveSN = "1";
-	                else
+	                } else {
 	                    pReceiveSN = pReceiveSN.replace("s", "");
-	
+	                }
+	                
 	                InitTreeVal = arr_userinfo[4];
 	                Tree_setconfig();
 	                initTreeInfo();
 	                AprLineInit();
 	
-	                if (!CrossYN())
+	                if (!CrossYN()) {
 	                    window.returnValue = "cancel";
+	                }
 	            } catch (ErrMsg) {
 	                alert(ErrMsg.description);
 	            }
 	        };
+	        
 	        function Tree_setconfig() {
 	            var xmlHTTP = createXMLHttpRequest();
 	            xmlHTTP.open("GET", "/xml/organtree_config.xml", false);
 	            xmlHTTP.send();
+	            
 	            if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
 	                var treeView = new TreeView();
 	                treeView.SetConfig(xmlHTTP.responseXML);
 	            }
 	        }
+	        
 	        function AprLineInit() {
 	            var strXML;
 	            var objXML = createXmlDom();
@@ -139,6 +144,7 @@
 	            strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t428'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
 	            strXML = strXML + "</HEADERS><ROWS> </ROWS></LISTVIEWDATA>";
 	            objXML = loadXMLString(strXML);
+	            
 	            var listview = new ListView();
 	            listview.SetTableWidth = 170 - 14;
 	            listview.SetID("listAPRLINE1");
@@ -147,6 +153,7 @@
 	            listview.DataSource(objXML);
 	            listview.DataBind("APRLINE1");
 	        }
+	        
 	        function initTreeInfo() {
 	            try {
 	                TreeViewinitialize(InitTreeVal, "<c:out value ='${userInfo.companyID}'/>", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
@@ -154,23 +161,26 @@
 	                alert(ErrMsg.description);
 	            }
 	        }
-	    function initListInfo1() {
-	        try {
-	            var strXML;
-	            var objXML = createXmlDom();
-	            strXML = "<LISTVIEWDATA><HEADERS>";
-	            strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t249'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
-	            strXML = strXML + "</HEADERS></LISTVIEWDATA>";
-	            objXML = loadXMLString(strXML);
-	            var listview = new ListView();
-	            listview.LoadFromID("listAPRLINE1");
-	            listview.SetTableWidth = 170 - 14;
-	            listview.DataSource(objXML);
-	            listview.DataBind("APRLINE1");
-	        } catch (ErrMsg) {
-	            alert(ErrMsg.description);
-	        }
-	    }
+	        
+		    function initListInfo1() {
+		        try {
+		            var strXML;
+		            var objXML = createXmlDom();
+		            strXML = "<LISTVIEWDATA><HEADERS>";
+		            strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t249'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
+		            strXML = strXML + "</HEADERS></LISTVIEWDATA>";
+		            objXML = loadXMLString(strXML);
+		            
+		            var listview = new ListView();
+		            listview.LoadFromID("listAPRLINE1");
+		            listview.SetTableWidth = 170 - 14;
+		            listview.DataSource(objXML);
+		            listview.DataBind("APRLINE1");
+				} catch (ErrMsg) {
+		            alert(ErrMsg.description);
+		        }
+			}
+		    
 	    function btnAssign_onclick() {
 	        try {
 	        	var result = "";
@@ -205,29 +215,31 @@
 	            var listview = new ListView();
 	            listview.LoadFromID("listAPRLINE1");
 	            var oArrRows = listview.GetDataRows();
+	            
 	            if (oArrRows[0].textContent != strLang944) {
 	                var RtnVal = setReceiveDistribute();
+	                
 	                if (RtnVal == "TRUE") {
 	                    if (ReturnFunction != null) {
-	                            var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
-	                            if (CrossYN()) {
-	                        ReturnFunction("true");
-	                        window.close();
-	                            } else {
-	                                OpenAlertUI(pAlertContent);
-	                                try { opener.btnDistribute_onclick_Complete(true); } catch (e) { }
-	                    }
-	                            window.close();
-	                        } else {
+							var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
+							if (CrossYN()) {
+		                        ReturnFunction("true");
+		                        window.close();
+                            } else {
+                                OpenAlertUI(pAlertContent);
+                                try { opener.btnDistribute_onclick_Complete(true); } catch (e) { console.log(e); }
+							}
+							window.close();
+                        } else {
 	                        window.returnValue = "true";
 	                        window.close();
 	                    }
-	                    } else {
+                    } else {
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t426'/>" + RtnVal;
 	                    OpenAlertUI(pAlertContent);
 	                    return;
 	                }
-	                } else {
+                } else {
 	                var pAlertContent = "<spring:message code='ezApprovalG.t429'/>";
 	                OpenAlertUI(pAlertContent);
 	                return;
@@ -236,16 +248,18 @@
 	            alert(ErrMsg.description);
 	        }
 	    }
-	        function btnCancel_onclick() {
-	            if (ReturnFunction != null) {
-	                ReturnFunction("cancel");
-	                window.close();
-	            }
-	            else {
-	                window.returnValue = "cancel";
-	                window.close();
-	            }
+	    
+        function btnCancel_onclick() {
+            if (ReturnFunction != null) {
+                ReturnFunction("cancel");
+                window.close();
+            }
+            else {
+                window.returnValue = "cancel";
+                window.close();
+            }
 	    }
+	        
 	    function setReceiveDistribute(pCurSelRow) {
 	        try {
 	            var xmlpara = createXmlDom();
@@ -255,12 +269,14 @@
 	            var xmlhttp = createXMLHttpRequest();
 	            var pSelRows = listview.GetDataRows();
 	            var i;
+	            
 	            objRoot = createNodeInsert(xmlpara, objRoot, "ROWS");
 	            SetAttribute(objRoot, "DocID", pDocID);
 	            SetAttribute(objRoot, "ReceiveSN", pReceiveSN);
 	            SetAttribute(objRoot, "SendDeptID", psentDeptID);
 	            SetAttribute(objRoot, "DocState", pAprSate);
 	            SetAttribute(objRoot, "ReceivedDeptID", pReceivedDeptID);
+	            
 	            for (i = 0; i < pSelRows.length; i++) {
 	                var SelRow = pSelRows[i];
 	
@@ -269,16 +285,20 @@
 	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME", SelRow.getAttribute("DATA4"));
 	                custData = createNodeAndAppandNodeText(xmlpara, objRow, custData, "RECEIVEDEPTNAME2", SelRow.getAttribute("DATA5"));
 	            }
-	            if ("<c:out value ='${mode}'/>" == "add") 
+	            
+	            if ("<c:out value ='${mode}'/>" == "add") {
 	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", false);
-	            else
+	            } else {
 	                xmlhttp.open("POST", "/ezApprovalG/setBebu.do", false);
+	            }
+	            
 	            xmlhttp.send(xmlpara);
 	            return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
 	        } catch (ErrMsg) {
 	            alert(ErrMsg.description);
 	        }
 	    }
+	    
 	    function list1_onSel_DBclick() {
 	        try {
 	            var selnode = window.event.result;
@@ -288,6 +308,7 @@
 	            alert(ErrMsg.description);
 	        }
 	    }
+	    
 	    function GetEntryInfo(_DEPTID) {
         	var result = "";
 	        var ReceiveDocument = "";
@@ -306,15 +327,13 @@
         			result = loadXMLString(xml);
         		}        			
         	});
-	        	
-	
+        	
             XmlDom = result;
             ReceiveDocument = SelectSingleNodeValueNew(XmlDom, "DATA/EXTENSIONATTRIBUTE11").trim();
-	
+            
 	        return ReceiveDocument;
 	    }
-	
-	
+	    
 	    function TreeViewNodeDbClick() {
 	        var strXML;
 	        var objXML = createXmlDom();
@@ -338,7 +357,7 @@
 	        }
 	
 // 	        if (MakeXMLString(treeView.GetSelectNode().GetNodeData("CN")) == arr_userinfo[4]) {
-// 	            var pAlertContent = "<spring:message code='ezApprovalG.t2000'/>";
+// 	            var pAlertContent = "<spring:message code='ezApprovalG.t2000'/>"; // 자신의 부서는 추가 할 수 없습니다.
 // 	            OpenAlertUI(pAlertContent);
 // 	            return;
 // 	        }
@@ -373,13 +392,14 @@
 	            strXML = strXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
 	            objXML = loadXMLString(strXML);
 	            document.getElementById("APRLINE1").innerHTML = "";
+	            
 	            var listview = new ListView();
 	            listview.SetID("listAPRLINE1");
 	            listview.SetMulSelectable(false);
 	            listview.SetRowOnDblClick("btn_DeptDel_onclick");
 	            listview.DataSource(objXML);
 	            listview.DataBind("APRLINE1");
-	            } else {
+            } else {
 	            var listview = new ListView();
 	            listview.LoadFromID("listAPRLINE1");
 	            var InitTr = listview.GetDataRows();
@@ -397,6 +417,7 @@
 	            strXML = strXML + "<DATA4>" + MakeXMLString(treeView.GetSelectNode().GetNodeData("DISPLAYNAME1")) + "</DATA4>";
 	            strXML = strXML + "<DATA5>" + MakeXMLString(treeView.GetSelectNode().GetNodeData("DISPLAYNAME2")) + "</DATA5>";
 	            strXML = strXML + "</CELL></ROW>";
+	            
 	            if (listview.GetSelectedRows().length == 0) {
 	                var objTr = listview.AddRow(0);
 	                SetAttribute(objTr, "id", "listAPRLINE1" + "_TR_" + eval(MaxID + 1));
@@ -409,6 +430,7 @@
 	            }
 	        }
 	    }
+	    
 	    function btn_DeptDel_onclick() {
 	        var listview = new ListView();
 	        listview.LoadFromID("listAPRLINE1");
@@ -418,10 +440,11 @@
 	        }
 	        /* 2018-10-15 김민성 - 데이터 없을 때 문구 뜨도록 수정 */
 	        var totalRows = listview.GetDataRows();
-		    if(totalRows.length == 0) {
+		    if (totalRows.length == 0) {
 		    	setDeleteRow("listAPRLINE1");
 		    }
 	    }
+	    
 	    function btn_searchDept_onclick() {
 	        try {
 	            var strSearch = textDept.value + "";
@@ -443,6 +466,7 @@
 	                xmlhttp.open("POST", "aspx/GetDeptListVInfo.aspx", false);
 	                xmlhttp.send(xmlpara);
 	                xmlRtn = loadXMLString(xmlhttp.responseXML);
+	                
 	                var NodeList = SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW");
 	                if (NodeList.length != "0") {
 	                    var listview = new ListView();
@@ -450,6 +474,7 @@
 	                    listview.SetTableWidth = 170 - 14;
 	                    listview.DataSource(xmlRtn);
 	                    listview.RowDataBind();
+	                    
 	                    if (listview.GetDataRows().length == 0) {
 	                        var pAlertContent = "<spring:message code='ezApprovalG.t431'/>";
 	                        OpenAlertUI(pAlertContent);
@@ -472,10 +497,11 @@
 	
 	        if (CrossYN()) {
 	            ezapralert_cross_dialogArguments[0] = parameter;
-	            if (CompleteFunction != undefined)
+	            if (CompleteFunction != undefined) {
 	                ezapralert_cross_dialogArguments[1] = CompleteFunction;
-	            else
+	            } else {
 	                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+	            }
 	            DivPopUpShow(330, 205, url);
 	        }
 	        else {
@@ -535,18 +561,20 @@
 	
 	        if (CrossYN()) {
 	            ezapropinion_cross_dialogArguments[0] = parameter;
-	            if (CompleteFunction != undefined)
+	            if (CompleteFunction != undefined) {
 	                ezapropinion_cross_dialogArguments[1] = CompleteFunction;
-	            else
+	            } else {
 	                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+	            }
 	            DivPopUpShow(330, 205, url);
 	        }
 	        else {
 	            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	            feature = feature + GetShowModalPosition(330, 205);
 	            var RtnVal = window.showModalDialog(url, parameter, feature);
-	            if (RtnVal && CompleteFunction != undefined)
+	            if (RtnVal && CompleteFunction != undefined) {
 	                CompleteFunction(RtnVal);
+	            }
 	        }
 	        return RtnVal;
 	    }
@@ -588,9 +616,10 @@
 	                var pAlertContent = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
 	                var Ans = OpenInformationUI(pAlertContent);
 	
-	                if (!Ans)
+	                if (!Ans) {
 	                    return;
-	
+	                }
+	                
 	                nodeIdx = treeView.GetSelectNodeID();
 	                insertInnerDept(treeView.GetSelectNode().GetNodeData("CN"), treeView.GetSelectNode().GetNodeData("VALUE"));
 	            }
@@ -598,26 +627,27 @@
 	            alert("ezReceiveDistributeUI_Cross_AddReceptAll::" + e.description);
 	        }
 	    }
+	    
 	    function Complete_AddReceptAll(ret) {
 	        DivPopUpHidden();
-	        if (!ret)
+	        if (!ret) {
 	            return;
-	
+	        }
+	        
 	        var treeView = new TreeView();
 	        treeView.LoadFromID("FromTreeView");
 	        nodeIdx = treeView.GetSelectNodeID();
 	        insertInnerDept(treeView.GetSelectNode().GetNodeData("CN"), treeView.GetSelectNode().GetNodeData("VALUE"));
 	    }
+	    
 	    function insertInnerDept(innserdeptid, innserdeptname) {
-	
 	        var selfInsert = false;
 	
 	        try {
-	
 	            if (innserdeptid == arr_userinfo[4] && "<c:out value ='${USE_SELFDISTRIBUTE}'/>" == "N") {
 	                selfInsert = true;
 	            }
-	
+	            
 	            if (nodeIdx != "") {
 	                if (isExistDept(true)) {
 	                    var pAlertContent = strLang244 + "</br>" + strLang245;
@@ -627,9 +657,10 @@
 	                var treeNode = new TreeNode();
 	                treeNode.LoadFromID(nodeIdx);
 	                var DuplicateFlag = DuplicateAprDeptCheck(APRLINE1, innserdeptid);
-	                if (DuplicateFlag && !selfInsert)
+	                if (DuplicateFlag && !selfInsert) {
 	                    addInnerDept(innserdeptid, innserdeptname);
-	
+	                }
+	                
 	                var xmlHTTP = createXMLHttpRequest();
 	                var xmlpara = createXmlDom();
 	
@@ -656,8 +687,8 @@
 	        }
 	        catch (e) { alert(e.description); }
 	    }
+	    
 	    function addInnerDept(STRDEPTID, STRDEPTNAME) {
-	
 	        var strXML;
 	        var objXML = createXmlDom();
 	        var chkDuplflag = false;
@@ -666,12 +697,14 @@
 	        var treeView = new TreeView();
 	        treeView.LoadFromID("FromTreeView");
 	        var lastRowIdx = listview.GetDataRows().length;
+	        
 	        if (lastRowIdx == 1) {
 	            var tr = listview.GetDataRows();
-	            if (tr[0].id.indexOf("noItems") > 0)
+	            if (tr[0].id.indexOf("noItems") > 0) {
 	                lastRowIdx = 0;
+	            }
 	        }
-	
+	        
 	        if (lastRowIdx != 0) {
 	            for (var i = 0; i < lastRowIdx; i++) {
 	                if (listview.GetDataRows()[i].getAttribute("DATA1") == STRDEPTID) {
@@ -699,6 +732,7 @@
 		            strXML = strXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
 		            objXML = loadXMLString(strXML);
 		            document.getElementById("APRLINE1").innerHTML = "";
+		            
 		            var listview = new ListView();
 		            listview.SetID("listAPRLINE1");
 		            listview.SetMulSelectable(false);
@@ -741,25 +775,30 @@
 	            listview.LoadFromID("listAPRLINE1");
 	            var CurSelRow = listview.GetDataRows();
 	            var rtnVal = false;
+	            
 	            for (i = 0; i < CurSelRow.length; i++) {
 	                if (ExtFlag) {
-	                    if (GetAttribute(CurSelRow[0], "DATA3") == "Y")
+	                    if (GetAttribute(CurSelRow[0], "DATA3") == "Y") {
 	                        rtnVal = true;
+	                    }
 	                }
 	                else {
-	                    if (GetAttribute(CurSelRow[0], "DATA3") == "N")
+	                    if (GetAttribute(CurSelRow[0], "DATA3") == "N") {
 	                        rtnVal = true;
+	                    }
 	                }
-	
+	                
 	                if (GetAttribute(CurSelRow[0], "DATA1") == "Address") {
 	                    rtnVal = true;
 	                }
 	            }
+	            
 	            return rtnVal;
 	        } catch (e) {
 	            alert("ezReceiveDistributeUI_Cross_isExistDept::" + e.description);
 	        }
 	    }
+	    
 	    function DuplicateAprDeptCheck(APRDEPT, arrUserInfo) {
 	        var listview = new ListView();
 	        listview.LoadFromID("listAPRLINE1");
@@ -778,6 +817,7 @@
 	        }
 	        return true;
 	    }
+	    
 	    function isgetUser(DeptID) {
 	        var rtnVal = true;
 	        var xmlhttp = createXMLHttpRequest();
@@ -792,7 +832,9 @@
 	        xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", false);
 	        xmlhttp.send(xmlpara);
 	
-	        if (getXmlString(xmlhttp.responseXML) == "") rtnVal = false;
+	        if (getXmlString(xmlhttp.responseXML) == "") {
+	        	rtnVal = false;
+	        }
 	        var nodes = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
 	        if (rtnVal) {
 	            nodeCnt = nodes.length;
@@ -828,8 +870,9 @@
 	        for (var i = 0; i < CurSelRow.length; i++) {
 	            try {
 	                DeleteState = DeptRowDelelte(listview.GetSelectedIndexes().split(',')[0], listview.GetDataRows());
-	                if (DeleteState == "Y")
+	                if (DeleteState == "Y") {
 	                    listview.DeleteRow(GetAttribute(CurSelRow[i], "id"));
+	                }
 	            } catch (e) {
 	                alert(e.description);
 	            }
@@ -840,33 +883,36 @@
 		    	setDeleteRow("listAPRLINE1");
 		    }
 	    }
+	    
 	    function DeptRowDelelte(SelectIndex, ColRow) {
 	        var RowDelCheck;
 	        var ReturnVal = "N";
 	        TIndex = ColRow.length;
 	        NIndex = SelectIndex;
+	        
 	        for (i = 0; i <= NIndex; i++) {
 	            RowDelCheck = ColRow[i].cells[0].innerText;
-	            if (CrossYN())
+	            if (CrossYN()) {
 	                ColRow[i].childNodes[0].textContent = RowDelCheck - 1;
-	            else
+	            } else {
 	                ColRow[i].cells[0].innerText = RowDelCheck - 1;
-	
+	            }
+	            
 	            var ReturnVal = "Y";
 	        }
 	        return ReturnVal;
 	    }
+	    
 	    var aprdepttempletname_cross_dialogArguments = new Array();
 	    var tempmode;
 	    function btn_AprDeptTempletSave_onclick(mode) {
-	
 	        try {
 	            tempmode = mode;
-	
+	            
 	            if (isExistDept(true)) {
 	                return;
 	            }
-	
+	            
 	            var templistviewsn = "";
 	            var templisttviewname = "";
 	            var ListViewLen = "";
@@ -880,11 +926,11 @@
 	            }
 	            if (ListViewLen.length == 1) {
 	                if (GetAttribute(ListViewLen[0], "id") == "listAPRLINE1_TR_noItems") {
-	                	if(tempmode == 'MODIFY'){
+	                	if (tempmode == 'MODIFY') {
 		                    OpenAlertUI("<spring:message code='ezApprovalG.pjj31'/>");
 		                    return;
 	                	}
-	                	if(tempmode == 'NEW'){
+	                	if (tempmode == 'NEW') {
 		                    OpenAlertUI("<spring:message code='ezApprovalG.psb31'/>");
 		                    return;
 	                	}
@@ -916,10 +962,12 @@
 	                dialogValue[1] = pFormID;
 	                dialogValue[2] = "";
 	                dialogValue[3] = "";
+	                
 	                if (mode == "MODIFY") {
 	                    dialogValue[2] = templistviewsn;
 	                    dialogValue[3] = templisttviewname;
 	                }
+	                
 	                if (CrossYN()) {
 	                	aprdepttempletname_cross_dialogArguments[0] = dialogValue;
 	                	aprdepttempletname_cross_dialogArguments[1] = btn_AprDeptTempletSave_onclick_Complete;
@@ -930,11 +978,12 @@
 	
 	                    var ret = window.showModalDialog(windowName, dialogValue, parameter);
 	                    if (ret != "cancel") {
-	                        if (mode == "NEW")
+	                        if (mode == "NEW") {
 	                            pAprDeptTempletUseFlag = true;
-	                        else
+	                        } else {
 	                            pAprDeptTempletUseFlag = false;
-	
+	                        }
+	                        
 	                        CreateNewAprDeptTemplet(ret);
 	                    }
 	                }
@@ -946,22 +995,25 @@
 	            alert("ezReceiveDistributeUI_Cross_btn_AprDeptTempletSave_onclick::" + e.description);
 	        }
 	    }
+	    
 	    var pAprDeptTempletUseFlag;
 	    function btn_AprDeptTempletSave_onclick_Complete(ret) {
 	        try {
 	            DivPopUpHidden();
 	            if (ret != "cancel") {
-	                if (tempmode == "NEW")
+	                if (tempmode == "NEW") {
 	                    pAprDeptTempletUseFlag = true;
-	                else
+	                } else {
 	                    pAprDeptTempletUseFlag = false;
-	
+	                }
+	                
 	                CreateNewAprDeptTemplet(ret);
 	            }
 	        } catch (e) {
 	            alert("ezReceiveDistributeUI_Cross_btn_AprDeptTempletSave_onclick_Complete::" + e.description);
 	        }
 	    }
+	    
 	    function CreateNewAprDeptTemplet(p_AprDeptTempletName) {
 	        try {
 	            var AprDeptTemplet = createXmlDom();
@@ -991,8 +1043,9 @@
 	            if (xmlhttp != null && xmlhttp.readyState == 4) {
 					if (xmlhttp.status == 200 && RtnVal == "TRUE") {
 						OpenAlertUI(strLang814, CreateNewAprDeptTemplet_Complete);
-		                if (!CrossYN())
+		                if (!CrossYN()) {
 		                    GetReceptTempletList();
+		                }
 					} else {
 						OpenAlertUI(strLang131);
 					}
@@ -1014,7 +1067,6 @@
 	            if (pAprDeptTempletUseFlag) {
 	                p_AprDeptSN = "";
 	            } else {
-	
 	                var pAPRTemplist = new ListView();
 	                pAPRTemplist.LoadFromID("lvRecSaveList");
 	                var ListViewLen = pAPRTemplist.GetSelectedRows();
@@ -1033,6 +1085,7 @@
 	            alert("ezReceiveDistributeUI_Cross_AprDeptTempletXmlParsing::" + e.description);
 	        }
 	    }
+	    
 	    function APRDeptXMLParsing(APRDEPT, pDocID) {
 	        try {
 	            var listview = new ListView();
@@ -1044,11 +1097,13 @@
 	            var j;
 	            var GetXml;
 	
-	            if (AprDeptRow.length == 0)
+	            if (AprDeptRow.length == 0) {
 	                return;
-	            if (AprDeptRow[0].getAttribute("id") == "listAPRLINE1_TR_noItems")
+	            }
+	            if (AprDeptRow[0].getAttribute("id") == "listAPRLINE1_TR_noItems") {
 	                return;
-	
+	            }
+	            
 	            GetXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLang170 + "</NAME><WIDTH>150</WIDTH></HEADER><HEADER><NAME>" + strLang171 + "</NAME><WIDTH>600</WIDTH></HEADER></HEADERS>";
 	            GetXml = GetXml + "<ROWS>";
 	
@@ -1083,6 +1138,7 @@
 	            alert("ezReceiveDistributeUI_Cross_APRDeptXMLParsing::" + e.description);
 	        }
 	    }
+	    
 	    var xmlhttp;
 	    function GetReceptTempletList() {
 	        try {
@@ -1103,6 +1159,7 @@
 	            alert("ezReceiveDistributeUI_Cross_GetReceptTempletList::" + e.description);
 	        }
 	    }
+	    
 	    function event_GetReceptTempletList(text) {
 	        try {
 	            if (document.getElementById("RecSaveList").innerHTML != "") document.getElementById("RecSaveList").innerHTML = "";
@@ -1126,6 +1183,7 @@
 	            alert("ezReceiveDistributeUI_Cross_event_GetReceptTempletList::" + e.description);
 	        }
 	    }
+	    
 	    function lvRecSaveList_onSel_Click() {
 	        try {
 	            var liveView = new ListView();
@@ -1162,8 +1220,9 @@
 	    }
 	    function event_GetReceptTempletInfo(text) {
 	        try {
-	            if (document.getElementById("RecSaveDetail").innerHTML != "")
+	            if (document.getElementById("RecSaveDetail").innerHTML != "") {
 	                document.getElementById("RecSaveDetail").innerHTML = "";
+	            }
 	            var pAPRTEMP = new ListView();
 	            pAPRTEMP.SetID("lvRecSaveDetail");
 	            pAPRTEMP.SetMulSelectable(false);
@@ -1211,10 +1270,12 @@
 	
 	    function btn_AprDeptTempletDel_onclick_Complete(rtn) {
 	    	DivPopUpHidden();
-	        if (rtn == "" || rtn == undefined)
+	        if (rtn == "" || rtn == undefined) {
 	            return;
+	        }
 	        DelAprDeptTempletList(pUserID, pFormID, temp_CheckAprDeptTempletSN);
 	    }
+	    
 	    function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
 	        try {
 	        	var result = "";
@@ -1241,6 +1302,7 @@
 	            alert("ezReceiveDistributeUI_Cross_DelAprDeptTempletList::" + e.description);
 	        }
 	    }
+	    
 	    function btn_AprDeptTempletAdd_onclick() {
 	        var p_CheckAprDeptTempletSN;
 	        var pAPRTemplist = new ListView();
@@ -1260,6 +1322,7 @@
 	            pAprDeptTempletUseFlag = false;
 	        }
 	    }
+	    
 	    function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
 	        try {
 	        	var result = "";
@@ -1284,10 +1347,10 @@
 	            alert("ezReceiveDistributeUI_Cross_AddToAprDeptFromAprDeptTemplet::" + e.description);
 	        }
 	    }
+	    
 	    function SetBaeBuList(pstrXML) {
 	        try {
 	            var listnodes = SelectNodes(pstrXML, "LISTVIEWDATA/ROWS/ROW");
-	
 	            var strXML;
 	            var objXML = createXmlDom();
 	            var listview = new ListView();
@@ -1333,14 +1396,16 @@
 	
 	                    for (var j = 0  ; j < InitTr.length  ; j++) {
 	                        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                        if (MaxID < curnum)
+	                        if (MaxID < curnum) {
 	                            MaxID = curnum;
+	                        }
 	                    }
 	
 	                    if (tr.length == 0) {
 	                        if (InitTr.length == 0) {
-	                            if (document.getElementById("APRLINE1").innerHTML != "")
+	                            if (document.getElementById("APRLINE1").innerHTML != "") {
 	                                document.getElementById("APRLINE1").innerHTML = "";
+	                            }
 	
 	                            var listview = new ListView();
 	                            listview.SetID("listAPRLINE1");
@@ -1385,10 +1450,11 @@
 	    		}
 	    	});
 	    	
-	    	if(result == "false") 
+	    	if (result == "false") { 
 	    	    return false;
-	    	else
+	    	} else {
 	    	    return true;
+	    	}
 	    }
 		
 		//배부창에서 참조할 수 없는 함수를 호출하고 있어서 추가. 2020-05-18 홍대표.

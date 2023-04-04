@@ -63,4 +63,7 @@ public interface EzSystemAdminService {
 
 	int getPermissionChHistCount(int tenantID, String offset, String keyword, String keycode, String keycodeForRoll, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
 
+    public String getFileExtension(int tenantId) throws Exception;
+
+	public String updateFileExtension(int tenantId, String updateFileExtension) throws Exception;
 }

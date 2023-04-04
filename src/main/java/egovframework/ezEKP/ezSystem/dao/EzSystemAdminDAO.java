@@ -218,4 +218,11 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzSystemAdminDAO.getPermissionChHistCount", map);
 	}
 
+	public String getFileExtension(int tenentID) throws  Exception {
+		return (String) select("EzSystemAdminDAO.getFileExtension", tenentID);
+	}
+
+	public void updateFileExtension(Map<String,Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateFileExtension", map);
+	}
 }

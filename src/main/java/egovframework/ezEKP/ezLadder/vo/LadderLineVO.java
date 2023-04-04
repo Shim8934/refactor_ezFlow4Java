@@ -204,9 +204,6 @@ public class LadderLineVO {
 	public void setItems(ArrayList<String> items) {
 		this.items = (String[]) items.toArray(new String[items.size()]);
 	}
-	public int[] getLadderOrders() {
-		return ladderOrders;
-	}
 	public void setLadderOrders(int[] ladderOrders) {
 		this.ladderOrders = ladderOrders;
 	}

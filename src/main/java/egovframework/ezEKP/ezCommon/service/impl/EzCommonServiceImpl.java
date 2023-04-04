@@ -130,6 +130,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		return ezCommonDAO.getApprovPWD(userInfo);
 	}
 
+	/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	@Override
 	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception{
         String isUTF8 = "0";
@@ -180,7 +181,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	        IOUtils.copy(is,response.getOutputStream());
         } catch(Exception e) {
-
+			logger.debug("e.message=" + e.getMessage());
         } finally {
         	if (is != null) {
         		is.close();
@@ -217,6 +218,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         return pOrgFileName + pOrgFileExt;
 	}
+	*/
 
 	/**
 	 * html -> mht 변환 실행 Method
@@ -285,12 +287,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         SecureRandom Rnd = new SecureRandom();
 
         while (strBoundary.length() < 39) {
-            int nch = Rnd.nextInt(9)+1;
+            int nch = Math.addExact(Rnd.nextInt(9), 1);
 
             if (nch < 26) {
-                strBoundary += (char)(65 + nch);
+                strBoundary += (char)(Math.addExact(65, nch));
             } else {
-                strBoundary += (char)(97 + nch - 26);
+                strBoundary += (char)(Math.subtractExact(Math.addExact(97, nch), 26));
             }
         }
         return strBoundary;
@@ -491,6 +493,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             	}
             } catch (IOException e) {
                 //url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
+				logger.debug("e.message=" + e.getMessage());
             } finally {
                 if (tempIn != null) {
                     tempIn.close();
@@ -2198,7 +2201,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.insertMobileAttitudeConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			// 근태관리 GPS 테넌트 컨피그 추가
@@ -2210,7 +2213,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.insertAttitudeGPSConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 		}
 		
@@ -2247,7 +2250,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.createMenuTenantConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			map.put("propertyName", "useBoard");
@@ -2257,7 +2260,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.createMenuTenantConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			map.put("propertyName", "useResource");
@@ -2267,7 +2270,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.createMenuTenantConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 			
 			map.put("propertyName", "useToDo");
@@ -2277,7 +2280,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			try {
 				ezCommonDAO.createMenuTenantConfig(map);
 			} catch (Exception e) {
-				// ignore
+				logger.debug("e.message=" + e.getMessage());
 			}
 		}
 		

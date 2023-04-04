@@ -438,9 +438,14 @@
 		    }
 	
 		    function process_AfterApprove(mode) {
-		        if (FirstHtml != "")
-		            UpdateDocHistory(FirstHtml);
-		
+		    	
+		    	/*  2023-02-08 홍승비 - WHWP 문서의 편집모드 적용 후 수정이력 비교 기능을 위해 isBeforeDoc, beforeDocURL 파라미터 추가 */
+		    	// MHT 문서와는 다르게 편집모드 적용 시 수정이력이 *바로 반영되지 않으므로* 주의 (2023-02-09 기준, 필요 시 차후 동일 스펙으로 수정 가능)
+		        if (FirstHtml != "") {
+					var beforeDocURL = UpdateDocHistory(FirstHtml, "Y", ""); // 수정전 문서 이력저장
+					UpdateDocHistory(SaveHtml, "N", beforeDocURL); // 수정후 문서 이력저장
+		        }
+		        
 		        if (mode == "1") {
 		            if (allFlag == "1" || allFlag == "2") {
 		                LoadNextDocument("\n<spring:message code='ezApprovalG.t1375'/>");

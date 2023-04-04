@@ -634,7 +634,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			int curPage = Integer.parseInt(request.getParameter("birthdayCurPage"));
 			int count = Integer.parseInt(request.getParameter("birthdayCount"));
-			int startRow = curPage * count;
+			int startRow = Math.multiplyExact(curPage, count);
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
@@ -651,7 +651,7 @@ public class EzNewPortalGWController {
 				if (page == curPage) {
 					curPage = 0;
 				} else {
-					curPage += 1;
+					curPage = Math.addExact(curPage, 1);
 				}
 			}
 
@@ -4703,7 +4703,7 @@ public class EzNewPortalGWController {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					unreadMailCount = ia.getUnreadCount(folderName);
 				} catch (Exception e) {
-
+					LOGGER.debug("e.message=" + e.getMessage());
 				} finally {
 					if (ia != null) {
 						ia.close();

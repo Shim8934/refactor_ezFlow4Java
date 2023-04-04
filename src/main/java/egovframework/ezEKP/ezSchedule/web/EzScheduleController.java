@@ -3788,7 +3788,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			logger.debug("Error");
 			e.printStackTrace();
 		} finally {
-			if (fin != null) { try { fin.close(); } catch (IOException e) {} }
+			if (fin != null) { try { fin.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());} }
 		}
 		
 		model.addAttribute("result", result);

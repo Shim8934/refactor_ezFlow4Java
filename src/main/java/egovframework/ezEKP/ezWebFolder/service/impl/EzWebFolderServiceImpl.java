@@ -912,8 +912,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 		if (isReply) {
 			parentFile = getFileByFileId(parentId, offset, tenantId);
-			logger.info("is reply file. parentFile is: id: {}, rootId: {}, depth: {}, hierarchicalPath: {}",
-					parentId, parentFile.getRootId(), parentFile.getDepth(), parentFile.getHierarchicalPath());
+
+			if (parentFile != null) {
+				logger.info("is reply file. parentFile is: id: {}, rootId: {}, depth: {}, hierarchicalPath: {}",
+						parentId, parentFile.getRootId(), parentFile.getDepth(), parentFile.getHierarchicalPath());
+			} else {
+				logger.info("is reply file. parentFile is null.");
+			}
 		}
 
 		for (int i = 0; i < cnt; i++) {
@@ -964,10 +969,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 				// 파일 답글 처리
 				if (isReply) {
-					fileVO.setDepth(parentFile.getDepth() + 1);
-					fileVO.setRootId(parentFile.getRootId());
-					fileVO.setParentId(parentId);
-					fileVO.setHierarchicalPath(parentFile.getHierarchicalPath() + "." + fileId);
+					if (parentFile != null) {
+						fileVO.setDepth(parentFile.getDepth() + 1);
+						fileVO.setRootId(parentFile.getRootId());
+						fileVO.setParentId(parentId);
+						fileVO.setHierarchicalPath(parentFile.getHierarchicalPath() + "." + fileId);
+					}
 				} else {
 					fileVO.setDepth(1);
 					fileVO.setRootId(fileId);
@@ -1069,7 +1076,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			Date today = new Date();
 			String fileName = "webfolder_download_" + formatter.format(today) + ".zip";
 			ZipOutputStream zipOutputStream = null;
-			FileInputStream fileInputStream = null;
 
 			try {
 				//Setting headers
@@ -1116,11 +1122,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 					}
 
 					zipOutputStream.putNextEntry(new ZipEntry(zFileName));
-					fileInputStream = new FileInputStream(file);
-
-					IOUtils.copy(fileInputStream, zipOutputStream);
-
-					fileInputStream.close();
+					// CWE-404 보안 취약점 대응
+					try (FileInputStream fileInputStream = new FileInputStream(file)) {
+						IOUtils.copy(fileInputStream, zipOutputStream);
+					}
 					zipOutputStream.closeEntry();
 
 					updateDownCnt(fileVO.getFileId(), tenantId);
@@ -1131,24 +1136,16 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				for (int i = 0; i < folderIdList.length; i++) {
 					packFolder(folderNameList, folderIdList[i], "", zipOutputStream, userName1, userName2, offset, userInfo.getPrimary(), userId, deptId, companyId, realPath, tenantId);
 				}
-
-				zipOutputStream.close();
 			} catch (Exception e) {
 				throw e;
 			} finally {
-				if (fileInputStream != null) {
-					try {
-						fileInputStream.close();
-					} catch (Exception e) {}
-				}
-
 				if (zipOutputStream != null) {
 					try {
 						zipOutputStream.closeEntry();
-					} catch (Exception e) {}
+					} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 					try {
 						zipOutputStream.close();
-					} catch (Exception e) {}
+					} catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 				}
 			}
 		}
@@ -1165,7 +1162,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			return;
 		}
 
-		FileInputStream fileInputStream = null;
 		HashSet<String> inernameList    = new HashSet<>();
 		FolderVO folder                 = getFolderByFolderId(folderId, offset, tenantId);
 		List<FolderVO> listSubFolder    = getAllSubFolders(folderId, offset, tenantId);
@@ -1225,11 +1221,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			}
 			
 			zipOutputStream.putNextEntry(new ZipEntry(newPath + zFileName));
-			fileInputStream = new FileInputStream(file);
-			
-			IOUtils.copy(fileInputStream, zipOutputStream);
-			
-			fileInputStream.close();
+			// CWE-404 보안 취약점 대응
+			try (FileInputStream fileInputStream = new FileInputStream(file)) {			
+				IOUtils.copy(fileInputStream, zipOutputStream);
+			}
 			zipOutputStream.closeEntry();
 			
 			updateDownCnt(innerFile.getFileId(), tenantId);

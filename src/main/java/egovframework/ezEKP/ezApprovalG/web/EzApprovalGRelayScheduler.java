@@ -385,11 +385,12 @@ public class EzApprovalGRelayScheduler {
         								 gpkFile.delete();
         							 }
         							 
-        							 FileOutputStream fop = new FileOutputStream(gpkFile);
-        							 // get the content in bytes
-        							 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
-        							 fop.flush();
-        							 fop.close();
+									 // CWE-404 보안 취약점 대응
+        							 try (FileOutputStream fop = new FileOutputStream(gpkFile)) {
+										// get the content in bytes
+										fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
+										fop.flush();
+									 }
         							 
         							 ezApprovalGService.fieldUpdate("emlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
         							 ezApprovalGService.fieldUpdate("isPKI", "Y", strXDocID, strReceiveID, strCompanyID, tenantID);
@@ -406,11 +407,12 @@ public class EzApprovalGRelayScheduler {
         								 recFile.delete();
         							 }
         							 
-        							 FileOutputStream fop = new FileOutputStream(recFile);
-        							 // get the content in bytes
-        							 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
-        							 fop.flush();
-        							 fop.close();
+									 // CWE-404 보안 취약점 대응
+        							 try (FileOutputStream fop = new FileOutputStream(recFile)) {
+										// get the content in bytes
+										fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
+										fop.flush();
+									 }
         							 
         							 logger.debug("#pack파일생성= OK");
         							 
@@ -731,14 +733,16 @@ public class EzApprovalGRelayScheduler {
 					trans.transform(source, result);
 					String xmlString = sw.toString();
 					
-					OutputStream fos = new FileOutputStream(sendTempFile);
-					byte[] buf = xmlString.getBytes();
-					
-					for (int i = 0; i < buf.length; i++) {
-						fos.write(buf[i]);
+					// CWE-404 보안 취약점 대응
+					try (OutputStream fos = new FileOutputStream(sendTempFile)) {
+						byte[] buf = xmlString.getBytes();
+						
+						for (int i = 0; i < buf.length; i++) {
+							fos.write(buf[i]);
+						}
+
+						buf = null;
 					}
-					fos.close();
-					buf = null;
 					
 					String newFileName = strReceiveID + strSendID + strFileName.substring(strFileName.length() - 20, strFileName.length() - 4) + ".xml";
 					sendTempFile.renameTo(new File(receiveTempDir.getAbsolutePath() + commonUtil.separator  + newFileName));
@@ -761,10 +765,11 @@ public class EzApprovalGRelayScheduler {
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
-			
-	        FileOutputStream fos = new FileOutputStream(commonUtil.detectPathTraversal(pFilePath + commonUtil.separator + fileName));
-	        fos.write(strCont.getBytes());
-	        fos.close();
+
+			// CWE-404 보안 취약점 대응
+	        try (FileOutputStream fos = new FileOutputStream(commonUtil.detectPathTraversal(pFilePath + commonUtil.separator + fileName))) {
+				fos.write(strCont.getBytes());
+			}
 
 	        result = true;
 		} catch (Exception e) {
@@ -918,9 +923,10 @@ public class EzApprovalGRelayScheduler {
 				dir.mkdirs();
 			}
 			
-	        FileOutputStream fos = new FileOutputStream(commonUtil.detectPathTraversal(pFilePath + commonUtil.separator + fileName));
-	        fos.write(content);
-	        fos.close();
+			// CWE-404 보안 취약점 대응
+	        try (FileOutputStream fos = new FileOutputStream(commonUtil.detectPathTraversal(pFilePath + commonUtil.separator + fileName))) {
+				fos.write(content);
+			}
 
 	        result = true;
 		} catch (Exception e) {
@@ -965,14 +971,15 @@ public class EzApprovalGRelayScheduler {
 
 		FileInputStream fis = new FileInputStream(new File(commonUtil.detectPathTraversal(strFilePath))); 
 		InputStreamReader isr = new InputStreamReader(fis,"UTF-8"); 
-		BufferedReader br = new BufferedReader(isr);	
 		String text = "";
-		
-		while(true){
-			if(br.readLine() == null) break;
-			text += br.readLine();
+
+		// CWE-404 보안 취약점 대응
+		try (BufferedReader br = new BufferedReader(isr)) {			
+			while(true){
+				if(br.readLine() == null) break;
+				text += br.readLine();
+			}
 		}
-		br.close();
 		try {
 			if (pUseRegex) {
 				Pattern pattern = Pattern.compile(pRegexPattern);
@@ -984,11 +991,12 @@ public class EzApprovalGRelayScheduler {
 			}
 			
 			File file = new File(commonUtil.detectPathTraversal(strFilePath));
-			FileOutputStream fop = new FileOutputStream(file);
-			// get the content in bytes
-			fop.write(text.getBytes("UTF-8"));
-			fop.flush();
-			fop.close();
+			// CWE-404 보안 취약점 대응
+			try (FileOutputStream fop = new FileOutputStream(file)) {
+				// get the content in bytes
+				fop.write(text.getBytes("UTF-8"));
+				fop.flush();
+			}
 			
 			return true;
 		} catch (Exception e) {
@@ -1020,11 +1028,12 @@ public class EzApprovalGRelayScheduler {
 			}
 			
 			File file = new File(commonUtil.detectPathTraversal(pFilePath + commonUtil.separator + fileName));
-			FileOutputStream fop = new FileOutputStream(file);
-			// get the content in bytes
-			fop.write(content.getBytes("EUC-KR"));
-			fop.flush();
-			fop.close();
+			// CWE-404 보안 취약점 대응
+			try (FileOutputStream fop = new FileOutputStream(file)) {
+				// get the content in bytes
+				fop.write(content.getBytes("EUC-KR"));
+				fop.flush();
+			}
 
 			result = true;
 		} catch (Exception e) {
@@ -1323,11 +1332,12 @@ public class EzApprovalGRelayScheduler {
                 gpkFile.delete();
             }
 
-            FileOutputStream fop = new FileOutputStream(gpkFile);
-            // get the content in bytes
-            fop.write(commonUtil.convertDocumentToString(relayXML.getXmlDoc()).getBytes("UTF-8"));
-            fop.flush();
-            fop.close();
+			// CWE-404 보안 취약점 대응
+            try (FileOutputStream fop = new FileOutputStream(gpkFile)) {
+				// get the content in bytes
+				fop.write(commonUtil.convertDocumentToString(relayXML.getXmlDoc()).getBytes("UTF-8"));
+				fop.flush();
+			}
 
             ezApprovalGService.fieldUpdate("emlURL", relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getReceiveID() + ".xml", relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
             ezApprovalGService.fieldUpdate("isPKI", "Y", relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
@@ -1344,11 +1354,12 @@ public class EzApprovalGRelayScheduler {
                 recFile.delete();
             }
 
-            FileOutputStream fop = new FileOutputStream(recFile);
-            // get the content in bytes
-            fop.write(commonUtil.convertDocumentToString(relayXML.getXmlDoc()).getBytes("UTF-8"));
-            fop.flush();
-            fop.close();
+			// CWE-404 보안 취약점 대응
+            try (FileOutputStream fop = new FileOutputStream(recFile)) {
+				// get the content in bytes
+				fop.write(commonUtil.convertDocumentToString(relayXML.getXmlDoc()).getBytes("UTF-8"));
+				fop.flush();
+			}
 
             logger.debug("#pack파일생성= OK");
 
@@ -1406,11 +1417,12 @@ public class EzApprovalGRelayScheduler {
                 gpkFile.delete();
             }
 
-            FileOutputStream fop = new FileOutputStream(gpkFile);
-            // get the content in bytes
-            fop.write(commonUtil.convertDocumentToString(relayXML.getXmlDoc()).getBytes("UTF-8"));
-            fop.flush();
-            fop.close();
+			// CWE-404 보안 취약점 대응
+            try (FileOutputStream fop = new FileOutputStream(gpkFile)) {
+				// get the content in bytes
+				fop.write(commonUtil.convertDocumentToString(relayXML.getXmlDoc()).getBytes("UTF-8"));
+				fop.flush();
+			}
 
             ezApprovalGService.fieldUpdate("emlURL", relayXML.getxDocID().replace("/", "_").replace("#", "_") + relayXML.getReceiveID() + ".xml", relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
             ezApprovalGService.fieldUpdate("isPKI", "Y", relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
@@ -1427,11 +1439,12 @@ public class EzApprovalGRelayScheduler {
                 recFile.delete();
             }
 
-            FileOutputStream fop = new FileOutputStream(recFile);
-            // get the content in bytes
-            fop.write(commonUtil.convertDocumentToString(relayXML.getXmlDoc()).getBytes("UTF-8"));
-            fop.flush();
-            fop.close();
+			// CWE-404 보안 취약점 대응
+            try (FileOutputStream fop = new FileOutputStream(recFile)) {
+				// get the content in bytes
+				fop.write(commonUtil.convertDocumentToString(relayXML.getXmlDoc()).getBytes("UTF-8"));
+				fop.flush();
+			}
 
             logger.debug("#pack파일생성= OK");
 

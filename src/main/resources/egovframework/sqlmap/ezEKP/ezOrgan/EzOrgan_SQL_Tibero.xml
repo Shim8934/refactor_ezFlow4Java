@@ -2435,8 +2435,6 @@
 			CN = #userID#
 		AND
 			TENANT_ID = #tenantID#		
-		AND
-			PHYSICALDELIVERYOFFICENAME = #companyID#		
 	</select>
 	<update id="EzOrganDAO.updateAddJobProxy" parameterClass="Map">
 		<![CDATA[
@@ -2478,10 +2476,8 @@
 			,DEPARTMENT
 			,TITLE
         FROM TBL_USERMASTER 
-       	WHERE 1=1
-        AND CN = #userID#
+       	WHERE CN = #userID#
         AND TENANT_ID = #tenantID#
-        AND PHYSICALDELIVERYOFFICENAME = #companyID# 
 	</select>
 
 	<select id="EzOrganDAO.getCompanyId" parameterClass="Map" resultClass="String">
