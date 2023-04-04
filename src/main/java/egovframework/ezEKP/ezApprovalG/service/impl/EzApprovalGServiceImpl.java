@@ -6514,6 +6514,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String receiveDeptName = "";
 		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
 		
+        String signInfo = "";
+        String signInfo2 = "";
+        String signText2 = "";
+        boolean signSaveFlag = false;
+        
 		try {
 			// 부재자 설정인 경우 proxySign = '代'
 			if (!userID.equals(orgUID)) {
@@ -6728,13 +6733,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							}
 						}
 						
+                        signInfo = strSign;
 						signText = proxySign + displayName;
+                        signInfo2 = strSeumyungDate;
+                        signText2 = commonUtil.getTodayUTCTime("");
+                        
 					} else if (aprType.equals("008") || aprType.equals("009")) {
 						int tmps = signCnt - habResult;
 						String habSign = signAdd + "habyuisign" + tmps;
 						String habSem = signAdd + "habyuidate" + tmps;
 						
+                        signInfo = habSign;
 						signText = proxySign + displayName;
+                        signInfo2 = habSem;
+                        signText2 = commonUtil.getTodayUTCTime("");
 						
 						setHwpText(habSign, signText, hwpFile);
 						setHwpText(habSem, signText, hwpFile);
@@ -6753,15 +6765,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							setHwpText(tempSign, proxySign + displayName, hwpFile);
 							setHwpText(tempSeumyungDate, lastCnt, hwpFile);
 							
+                            signInfo = tempSign;
 							signText = proxySign + displayName;
+                            signInfo2 = tempSeumyungDate;
+                            signText2 = commonUtil.getTodayUTCTime("");
 						} else if (junGyulFlag.equals("4")) {
 							int tmps = signCnt - refResult;
+                            String tempSign = signAdd + "sign" + lastSignNum;
 							String tempSeumyungDate = signAdd + "seumyungdate" + tmps;
 							
 							setHwpText(signAdd + "sign" + tmps, proxySign + displayName, hwpFile);
 							setHwpText(tempSeumyungDate, lastCnt, hwpFile);
 							
+                            signInfo = tempSign;
 							signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + commonUtil.CRLF + proxySign + displayName;
+                            signInfo2 = tempSeumyungDate;
+                            signText2 = commonUtil.getTodayUTCTime("");
 						}
 					}
 				} else { // 전자결재 G
@@ -6784,6 +6803,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							setHwpText(hwpFile, strSign, signAryJK);
 						}
 						
+                        signInfo = tempSign;
 						signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
 					} else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
 						String lastCnt = "";
@@ -6823,13 +6843,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							}
 						}
 						
+                        signInfo = strSign;
 						signText = lastCnt + proxySign + displayName;
 					} else if (aprType.equals("008") || aprType.equals("009")) { // 개인순차협조 || 개인병렬협조
 						int tmps = signCnt - habResult;
 						String habSign = signAdd + "habyuisign" + tmps;
 						String habSem = signAdd + "habyuidate" + tmps;
 						
+                        signInfo = habSign;
 						signText = proxySign + displayName;
+                        signInfo2 = habSem;
+                        signText2 = commonUtil.getTodayUTCTime("");
 						
 						String[] signAry = {tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), signText};
 						
@@ -6857,6 +6881,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						setHwpText(hwpFile, tempSign, signAry);
 						
+                        signInfo = tempSign;
 						signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
 					} else if (aprType.equals("015")) { // 후열
 						gongRamUpdate(docID, userID, companyID, strLang, userInfo.getTenantId());
@@ -7072,6 +7097,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				docResult = commonUtil.convertDocumentToString(paramXML);
 			}
 			
+            StringBuilder resultXML = new StringBuilder();
+            resultXML.append("<SIGNINFOS>");
+            
+            if (!signInfo.isEmpty()) {
+                resultXML.append("<SIGNINFO>");
+                resultXML.append("<DOCID>" + docID + "</DOCID>");
+                resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
+                resultXML.append("<SIGNNAME>" + signInfo + "</SIGNNAME>");
+                resultXML.append("<CONTENT>" + signText + "</CONTENT>");
+                resultXML.append("</SIGNINFO>");
+            }
+            if (!signInfo2.isEmpty()) {
+                resultXML.append("<SIGNINFO>");
+                resultXML.append("<DOCID>" + docID + "</DOCID>");
+                resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
+                resultXML.append("<SIGNNAME>" + signInfo2 + "</SIGNNAME>");
+                resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText2) + "</CONTENT>");
+                resultXML.append("</SIGNINFO>");
+            }
+            
+            resultXML.append("</SIGNINFOS>");
+            
 			if (result.equals("A")) {
 				if (aprStateSign.equals("011")) {
 					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
@@ -7090,6 +7137,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						linkCheck = excuteInfoHwp("MIDDLE_SIGN_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 					}
 				}
+                updateSignInfo(resultXML, companyID, "SET", userInfo.getTenantId());
+                signSaveFlag = true;
 			}
 			
 			if (!linkCheck) {
@@ -7100,6 +7149,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (hwpSaveFlag) {
 					rollBackHwp(formURL, tempHwp);
 				}
+				
+                if (signSaveFlag) {
+                    rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+                }
 			}
 			
 			Document tempXmlDom = commonUtil.convertStringToDocument(docResult);
@@ -7112,6 +7165,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!xmlResult2.getElementsByTagName("RESULT").item(0).getTextContent().equals("TRUE")) {
 				linkCheck = true;
+                signSaveFlag = true;
 				
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
@@ -7144,6 +7198,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						rollBackHwp(formURL, tempHwp);
 					}
 					
+                    if (signSaveFlag) {
+                        rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+                    }
+					
 					return "Link ERROR";
 				}
 				
@@ -7154,6 +7212,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (hwpSaveFlag) {
 					rollBackHwp(formURL, tempHwp);
 				}
+				
+                if (signSaveFlag) {
+                    rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+                }
 				
 				return "ERROR";
 			} else {
@@ -7190,6 +7252,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						rollBackHwp(formURL, tempHwp);
 					}
 					
+                    if (signSaveFlag) {
+                        rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+                    }
+					
 					return "Link ERROR";
 				}
 				
@@ -7212,6 +7278,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (hwpSaveFlag) {
 				rollBackHwp(formURL, tempHwp);
 			}
+			
+            if (signSaveFlag) {
+                rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+            }
 			
 			return "ERROR";
 		}
