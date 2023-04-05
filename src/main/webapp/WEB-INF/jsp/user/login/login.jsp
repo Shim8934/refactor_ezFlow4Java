@@ -474,8 +474,8 @@
 	                        </p>
 	                        <c:choose>
 	                        <c:when test="${useOTP}">
-		                        <p class="otp">
-		                        	<input id="uotp" placeholder="OTP" name="otp" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
+		                        <p class="otp" title="<spring:message code="info.otp.msg" />">
+		                        	<input id="uotp" name="otp" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
 		                        </p>
 	                        </c:when>
 	                        <c:otherwise>

@@ -286,7 +286,7 @@ public class LoginController {
         // 사용자 ID 혹은 사원번호가 발견된 경우
 		} else {
 			// OTP Key 유무 확인
-			if (hasOTP) {
+			if (useOTP && hasOTP) {
 				String otpKey = loginService.getOtpKey(loginVO);
 				String otpCode = "";
 
@@ -303,6 +303,10 @@ public class LoginController {
 					model.addAttribute("message", "setflagTFA:" + _uid);
 					return "forward:/user/login/login.do";
 				}
+			} else if (useOTP && !hasOTP) {
+				logger.debug("hasn't set OTP key.");
+				model.addAttribute("message", "setflagTFA:" + _uid);
+				return "forward:/user/login/login.do";
 			}
 
 			resultVO.setIp(ClientUtil.getClientIP(request));
