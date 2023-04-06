@@ -1237,7 +1237,7 @@
 	            fd.append("fileToUpload", filelist[0]);
 	            
 	            xhr.addEventListener("load", uploadComplete, false);
-	            xhr.open("POST", "/ezApprovalG/uploadAttachForHwp.do");
+	            xhr.open("POST", "/ezApprovalG/uploadAttachForHwp.do?companyID=" + companyID);
 	            xhr.send(fd); 
 			}
 			
@@ -1260,7 +1260,8 @@
 		                type : 'POST',
 		                dataType : 'text',
 		                data : {
-							fileName : file
+							fileName : file,
+							companyID : companyID
 		                },
 		                success: function() {
 		                	document.getElementById("hidfileNM").value = "";
