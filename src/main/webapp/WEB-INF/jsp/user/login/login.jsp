@@ -27,6 +27,14 @@
 			.warning_wrap dd.count .pointRed{ color:#ff0000; font-weight:bold; display:inline-block; font-family: Malgun Gothic, Meiryo UI; font-size:15px;}
 			.warning_wrap dd{color:#8e8e8e; font-size:12px; padding:0px 0px 2px 0px; margin:0px;letter-spacing:-1px;}
 			
+			.otp_qr{ overflow:hidden; width:575px; margin: 0 auto}
+			.otp_qr p{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; text-align:center; float:left;}
+			.otp_qr dl{ width: 100%; margin:7px 0px 0px 0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; float:left; overflow:hidden;}
+			.otp_qr dt{ font-size:18px; color:#000; padding:0px 0px 13px 14px; margin:0px; font-weight:bold; border-bottom:1px solid #d7d7d7;}
+			.otp_qr dd.count{ color:#000; font-weight:normal; font-size:15px; padding:10px 0px;}
+			.otp_qr dd.count .pointRed{ color:#ff0000; font-weight:bold; display:inline-block; font-family: Malgun Gothic, Meiryo UI; font-size:15px;}
+			.otp_qr dd{text-align: center; color:#797979; font-size:15px; padding:0px 0px 5px 0px; margin:0px;letter-spacing:-1px;}
+			
 			.password_reset{ margin:0 auto; padding:0px; width:405px;}
 			.password_reset .passwordTitle{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; font-size:17px; color:#000; text-align:center; line-height:25px;}
 			.password_reset .passwordTitle span{ display:inline-block; color:#006be4; font-family:Malgun Gothic, Meiryo UI; font-size:17px;}
@@ -312,8 +320,13 @@
 		    		url : "/user/login/setTFA.do",
 		    		success: function(result){
 		    			if (result != "fail") {
+		    				var resultArr = result.split("::");
+		    				var otpKey = resultArr[0];
+		    				var qrImagePath = resultArr[1];
 		    				$("#exDiv8").modal();
-		    				document.getElementById("otpkey").innerText = result;
+		    				
+		    				document.getElementById("otpkey").innerText = otpKey;
+		    				document.getElementById("qr").innerHTML = "<image src=" + qrImagePath + " />";
 		    			    document.loginForm.message.value = "";
 		    			} else {
 			    			alert("<spring:message code='login.ls004'/>");
@@ -755,13 +768,13 @@
 		</div>
 		
 		<%-- 2023-03-23 이사라 - OTP 셋업 레이어팝업 출력 --%>
-		<div id="exDiv8" style="display:none;max-width:620px;height:250px;padding-top:27px;margin-bottom:100px">
+		<div id="exDiv8" style="display:none;max-width:620px;padding-top:27px;margin-bottom:100px">
 			<div id="close">
 	            <ul>
 	                <li><a rel="modal:close"><span></span></a></li>
 	            </ul>
 	        </div>
-			<div class="warning_wrap" style="padding-left:20px">
+			<div class="warning_wrap otp_qr" style="padding-left:">
 		        <dl>
 		        	<dt><spring:message code='login.ls001' /></dt>
 		        	<br>
@@ -769,13 +782,10 @@
 		            <dd><spring:message code='login.ls003' /></dd>
 		            <dd>
 		            	<br>
-		            	<span id=otpkey></span>
+		            	<span id=otpkey style='font-size: 13px; letter-spacing: 0.7px'></span>
 		            </dd>
-		            <dd>${otpKey}</dd>
+		            <dd><span id=qr></span></dd>
 		        </dl>
-		        <%--<a class="imgbtn" onclick="set()">
-					<span><spring:message code='login.ls005' /></span>
-				</a>--%>
 			</div>
 		</div>
 	</body>

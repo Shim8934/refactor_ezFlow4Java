@@ -1,5 +1,9 @@
 package egovframework.let.user.login.web;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
@@ -40,6 +44,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.google.api.client.googleapis.util.Utils;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 
 import de.taimos.totp.TOTP;
 import egovframework.com.cmm.EgovMessageSource;
@@ -303,7 +314,7 @@ public class LoginController {
 					model.addAttribute("message", "setflagTFA:" + _uid);
 					return "forward:/user/login/login.do";
 				}
-			} else if (useOTP && !hasOTP) {
+			} else if (useOTP && !hasOTP && resultVO.getLoginCnt() > 0) {
 				logger.debug("hasn't set OTP key.");
 				model.addAttribute("message", "setflagTFA:" + _uid);
 				return "forward:/user/login/login.do";
@@ -1035,6 +1046,39 @@ public class LoginController {
 		return base32.encodeToString(bytes);
 	}
 
+	// 2023-04-10 이사라 : [TFA] OTP QR코드 생성을 위한 구글바코드 생성
+	public String getGoogleAuthenticatorBarCode(String otpKey, String mail, String companyId) {
+	    try {
+	        return "otpauth://totp/"
+	                + URLEncoder.encode(companyId + ":" + mail, "UTF-8").replace("+", "%20")
+	                + "?secret=" + URLEncoder.encode(otpKey, "UTF-8").replace("+", "%20")
+	                + "&issuer=" + URLEncoder.encode(companyId, "UTF-8").replace("+", "%20");
+	    } catch (UnsupportedEncodingException e) {
+	    	logger.error("getGoogleAuthenticatorBarCode Encoding Exception : ", e);
+	    	return "";
+	    }
+	}
+
+	// 2023-04-10 이사라 : [TFA] OTP QR코드 생성
+	public void createQRCode(String id, int tenantId, HttpServletRequest request, String barCodeData) throws Exception {
+
+		// QR을 저장할 위치
+		String filePath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", tenantId) + commonUtil.separator + "qr";//commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,10).replace("-", "") ;
+		File file = new File(commonUtil.detectPathTraversal(filePath));
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+			
+		// QR 생성 및 저장
+	    BitMatrix matrix = new MultiFormatWriter().encode(barCodeData, BarcodeFormat.QR_CODE, 200, 200);
+	    filePath += commonUtil.separator.concat(id).concat(".png");
+
+	    try (FileOutputStream out = new FileOutputStream(filePath)) {
+	        MatrixToImageWriter.writeToStream(matrix, "png", out);
+	    }
+	}
+
     public void createLoginCookie(
     				String userId, String userPw, String encryptedUserPw, int tenantId, 
     				HttpServletRequest request, HttpServletResponse response, String deptID, String companyID
@@ -1159,11 +1203,12 @@ public class LoginController {
 	// 2023-03-22 이사라 : [TFA] 2-factor 설정화면
 	@RequestMapping(value = "/user/login/setTFA.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String setTFA(HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public String setTFA(HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
 		logger.debug("setTFA started.");
 
 		boolean hasOTP = false;
 		String otpKey = "";
+		String qrImagePath = "";
 		String prm = egovFileScrty.getPrm();
 		String pre = egovFileScrty.getPre();
 		String encUserId = request.getParameter("userId");
@@ -1177,12 +1222,12 @@ public class LoginController {
 		LoginVO loginVO = new LoginVO();
 		loginVO.setId(userId);
 		loginVO.setTenantId(tenantId);
-
-		// QR 코드 생성은 나중에
+		loginVO.setDn("NOPASSWORD");
+		LoginVO resultVO = loginService.selectUser(loginVO);
 
 		try {
 			// otp를 등록한 사용자인지 체크
-			hasOTP = loginService.searchOtpKey(loginVO);
+			hasOTP = loginService.searchOtpKey(resultVO);
 			otpKey = generateSecretKey();
 			logger.debug("setTFA userId={}, tenantId={}, otpKey={}, hasOTP={}", userId, tenantId, otpKey, hasOTP);
 
@@ -1194,6 +1239,12 @@ public class LoginController {
 				ezCommonService.insertUserConfigInfo(tenantId, userId, "otpKey", otpKey);
 			}
 
+			// QR 코드 생성
+			String barCodeUrl = getGoogleAuthenticatorBarCode(otpKey, resultVO.getEmail(), resultVO.getCompanyID());
+			qrImagePath = commonUtil.getRealPath(request).concat(commonUtil.getUploadPath("upload_common.ROOT", tenantId)).concat(commonUtil.separator).concat("qr").concat(commonUtil.separator).concat(userId).concat(".png");
+
+			createQRCode(userId, tenantId, request, barCodeUrl);
+			
 		} catch (Exception e) {
 			logger.debug("setTFA error. otpKey={}", otpKey);
 			// 오류가 발생한 경우 로그인카운트를 -1을 함
@@ -1205,7 +1256,7 @@ public class LoginController {
 		}
 
 		logger.debug("setTFA ended. otpKey={}", otpKey);
-		return otpKey;
+		return otpKey.concat("::").concat(qrImagePath);
 	}
 
     /**
