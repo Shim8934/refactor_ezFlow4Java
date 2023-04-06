@@ -4878,4 +4878,30 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("deleteUserMailTemplate ended.");
 		return resultInt;
 	}
+	
+	// 2023-04-04 김대현 메일 전달기능 등록한 주소가 내부domainList에 등록된 주소인지 확인 로직
+	@Override
+	public String checkInnerDomain(String forwardAddress, int tenantId) throws Exception {
+		logger.debug("checkInnerDomain started.");
+	
+		String result = "OK";
+		String innerDomain = getMultiDomainList(tenantId); // 도메인 가져오는거 ;으로 구분됨
+		
+		logger.debug("forwardAddress={}, innerDomain={}",forwardAddress,innerDomain);
+		
+		List<String> forwardAddressList = Arrays.asList(forwardAddress.split(";")); //전달할 메일계정 List
+		List<String> innerDomainList = Arrays.asList(innerDomain.split(";")); //내부도메인List
+		
+		for (String email : forwardAddressList) {
+			String domainName = email.split("@")[1];
+			
+			if (!innerDomainList.contains(domainName)) {
+				result = "FAIL";
+				break;
+			}
+		}
+		
+		logger.debug("checkInnerDomain ended. result = {}",result);
+		return result;
+	}
 }

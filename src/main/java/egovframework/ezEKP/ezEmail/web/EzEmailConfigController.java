@@ -519,7 +519,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
-
+		String useBlockExternalForwardAddress =ezCommonService.getTenantConfig("useBlockExternalForwardAddress" ,userInfo.getTenantId()); 
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 
 		String forwardAddress = doc.getElementsByTagName("ADDRESS").item(0).getTextContent();
@@ -534,7 +535,22 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (!checkMyAddress.equalsIgnoreCase(userEmail)) {
 			try {				
 				InternetAddress internetAddress = new InternetAddress(forwardAddress);
-				strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());
+				
+				if ("YES".equals(useBlockExternalForwardAddress)) {
+					//2023-04-04 김대현 외부 주소 허용 여부
+					String isInnerDomain = ezEmailService.checkInnerDomain(forwardAddress,userInfo.getTenantId());
+					
+					if (!"OK".equals(isInnerDomain)) {
+						// 내부메일도메인리스트에 없는경우 등록 불가
+						strResult = "BlockExternalAddress";
+					} else {
+						// 외부 주소 허용 && 내부메일도메인리스에도 있는 경우 등록
+						strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());
+					}
+					
+				} else {
+					strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());
+				}
 			} catch (AddressException e) {
 				logger.debug("e.message=" + e.getMessage());
 			}
@@ -1089,7 +1105,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String useBlockExternalForwardAddress =ezCommonService.getTenantConfig("useBlockExternalForwardAddress" ,userInfo.getTenantId());
+		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -1110,6 +1127,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				}
 			}
 		}
+		// 2023_04-05 메일환경설정>자동분류에서 useBlockExternalForwardAddress 사용유무 판단을 위해 담아줌
+		model.addAttribute("useBlockExternalForwardAddress", useBlockExternalForwardAddress);
 		
 		logger.debug("mailNewInboxRule ended.");
 		return "ezEmail/mailNewInboxRule";
@@ -3124,5 +3143,24 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("deleteTag ended.");
 		return jgwResult.succeeded() ? Result.success() : Result.failure();
 	}
-
+	
+	@PostMapping("/ezEmail/checkBlockExternalAddress.do")
+	@ResponseBody
+	public String checkBlockExternalAddress (@CookieValue("loginCookie") String loginCookie, @RequestParam String forwardAddress) throws Exception{
+		logger.debug("checkBlockExternalAddress started. forwardAddress = {}",forwardAddress);
+	
+		String result = "OK";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		try {
+			result = ezEmailService.checkInnerDomain(forwardAddress, tenantId);
+		}catch (Exception e) {
+			result = "ERROR";
+			e.printStackTrace();
+		}
+		
+		logger.debug("checkBlockExternalAddress ended.");
+		return result;
+	}
 }

@@ -415,7 +415,9 @@
 		        var _exp = "";
 		        var _value = "";
 		        var _displaynames = "";
-		        if (Conitems.children.length == 0) {
+				let useBlockExternalForwardAddress = "${useBlockExternalForwardAddress}";
+				
+				if (Conitems.children.length == 0) {
 		
 		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value=''><nobr><u>" + strLang219 + "</u></nobr></span>";
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
@@ -438,6 +440,34 @@
                         _value += ";" + MakeXMLString(TrimText(Conitems.children.item(i).textContent));
 		            }
 		        }
+				//2023-04-05 김대현 useBlockExternalForwardAddress이 YES 면 외부도메인 사용을 막는 로직
+				let blockAddress = "FAIL";
+				
+				if(_curCellObj.getAttribute('name') === 'ActS' && "YES" === useBlockExternalForwardAddress) {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/ezEmail/checkBlockExternalAddress.do",
+						async: false,
+						data : {
+							forwardAddress : _value
+						},
+						success : function(result){
+							blockAddress = result;
+						},
+						error : function(error){
+							alert("<spring:message code='ezEmail.kdh02'/>" + error);
+						}
+					});
+					
+					if ("FAIL" === blockAddress) {
+						alert("<spring:message code='ezEmail.kdh01'/>" );
+						return;
+					} else if ("ERROR" === blockAddress) {
+						alert("<spring:message code='ezEmail.kdh02'/>" );
+						return;
+					}
+				}
 		        if (_curCellObj != null) {
 		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + _value + "'><nobr><u></u></nobr></span>";
 		            $(_curCellObj).find("span nobr u").text(_exp);
