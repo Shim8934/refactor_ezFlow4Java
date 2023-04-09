@@ -203,7 +203,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
         
         String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
-        LOGGER.debug("strHTML : " + strHTML);
+//        LOGGER.debug("strHTML : " + strHTML);
 
 		LOGGER.debug("getMHTBody ended");
 		
