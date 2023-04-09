@@ -1241,7 +1241,7 @@ public class LoginController {
 
 			// QR 코드 생성
 			String barCodeUrl = getGoogleAuthenticatorBarCode(otpKey, resultVO.getEmail(), resultVO.getCompanyID());
-			qrImagePath = commonUtil.getRealPath(request).concat(commonUtil.getUploadPath("upload_common.ROOT", tenantId)).concat(commonUtil.separator).concat("qr").concat(commonUtil.separator).concat(userId).concat(".png");
+			qrImagePath = commonUtil.getUploadPath("upload_common.ROOT", tenantId).concat(commonUtil.separator).concat("qr").concat(commonUtil.separator).concat(userId).concat(".png");
 
 			createQRCode(userId, tenantId, request, barCodeUrl);
 			
