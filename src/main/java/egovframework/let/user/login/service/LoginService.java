@@ -57,8 +57,6 @@ public interface LoginService {
 	
 	boolean searchOtpKey(LoginVO vo) throws Exception;
 
-	String getOtpKey(LoginVO vo) throws Exception;
-
 	public void updateUser(LoginVO vo) throws Exception;
 	
 	void updateUserForReduceLoginCnt(LoginVO vo) throws Exception;

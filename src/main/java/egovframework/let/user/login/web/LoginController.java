@@ -298,7 +298,7 @@ public class LoginController {
 		} else {
 			// OTP Key 유무 확인
 			if (useOTP && hasOTP) {
-				String otpKey = loginService.getOtpKey(loginVO);
+				String otpKey = ezCommonService.getUserConfigInfo(tenantId, _uid, "otpKey");
 				String otpCode = "";
 
 				if (StringUtils.isNotBlank(otpKey)) {
@@ -1247,9 +1247,8 @@ public class LoginController {
 			
 		} catch (Exception e) {
 			logger.debug("setTFA error. otpKey={}", otpKey);
-			// 오류가 발생한 경우 로그인카운트를 -1을 함
-			// 첫로그인 사용자가 설정 중 오류가 발생한다면 로그인카운트가 0이 되어서 다시 설정 진행이 가능하도록 처리 함
-			loginService.updateUserForReduceLoginCnt(loginVO);
+			// 오류가 발생한 경우 otpKey 비워 줌
+			ezCommonService.updateUserConfigInfo(tenantId, userId, "otpKey", "");
 
 			e.printStackTrace();
 			return "fail";

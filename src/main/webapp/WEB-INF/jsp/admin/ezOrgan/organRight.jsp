@@ -641,6 +641,69 @@
 		        }
 		    }
 		    
+			// 2023-04-10 이사라 : [TFA] 2-factor 인증 - otp key 초기화
+			function otpReset(){
+				var listview = new ListView();
+		        var otpResetMultiUserlist = "";
+
+		        listview.LoadFromID("lvUserList");
+		        var len = listview.GetSelectedRows().length;
+
+		        if (len == 0) {
+		            alert("<spring:message code='ezOrgan.ls003' />");
+		            return;
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+		        }
+
+				// 다수일 때와 한명일 떄 confirm 내용 분기처리
+		        if (len > 1) {
+		        	if (!confirm(len + "<spring:message code='ezOrgan.ls004' />")){
+						return;
+					}
+		        } else {
+		        	if (!confirm("<spring:message code='ezOrgan.ls005' />")){
+						return;
+					}
+		        }
+
+				for (i = 0; i < len; i++) {
+					otpResetMultiUserlist += listview.GetSelectedRows()[i].getAttribute("DATA2").concat(",");
+				}
+
+				// 조직도 load
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+				document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
+
+		        $.ajax({
+	            	type : "POST",
+	            	dataType : "html",
+	            	url : "/admin/ezOrgan/otpReset.do",
+	            	async : false,
+	            	data : {
+	            		otpResetMultiUserlist : otpResetMultiUserlist
+	            	},
+	            	success : function(result) {
+	            		if (result == "OK") {
+	            			alert("<spring:message code='ezOrgan.ls006' />");
+	            		} else if (result == "EMAIL_ERROR") {
+							alert("<spring:message code='ezOrgan.t302' />");
+	            		} else {
+	            			alert("<spring:message code='ezOrgan.ls007' />");
+	            		}
+	            	},
+	            	error : function() {
+	            		alert("<spring:message code='ezOrgan.ls007' />");
+	            	}
+	            });
+			}
+			
 		    function search_press(){
 				if (window.event.keyCode == "13"){
 					search_click();
@@ -2247,6 +2310,7 @@
 							<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
 							<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
 						</c:if>
+						<li id="usermenu8"><span onClick="otpReset()"><spring:message code='ezOrgan.ls002' /></span></li>
 					</ul>
 				</li>
 				<c:if test="${dotNetIntegration != 'YES'}">

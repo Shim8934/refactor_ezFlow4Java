@@ -785,7 +785,7 @@ public class MLoginGWController {
     						String code = "0";
         					
 							if (useOTP && hasOTP) {
-								String otpKey = loginService.getOtpKey(loginVO);
+								String otpKey = ezCommonService.getUserConfigInfo(tenantId, uid, "otpKey");
 								code = "11";
 
 								if (StringUtils.isBlank(otpKey)) {
@@ -985,7 +985,7 @@ public class MLoginGWController {
 
 			// OTP Key 유무 확인
 			if (hasOTP) {
-				String otpKey = loginService.getOtpKey(resultVO);
+				String otpKey = ezCommonService.getUserConfigInfo(tenantId, uid, "otpKey");
 				String otpCode = "";
 
 				if (StringUtils.isNotBlank(otpKey)) {

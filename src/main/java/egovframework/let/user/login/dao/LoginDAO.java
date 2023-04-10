@@ -93,14 +93,6 @@ public class LoginDAO extends EgovAbstractDAO {
 		return searchOtpKeyForLocal(vo);
 	}
 
-	private String getOtpKeyForLocal(LoginVO vo) throws Exception {
-		return (String) select("loginDAO.getOtpKey", vo);
-	}
-
-	public String getOtpKey(LoginVO vo) throws Exception {
-		return getOtpKeyForLocal(vo);
-	}
-
     private void updatePasswordForLocal(LoginVO vo) throws Exception {
         update("loginDAO.updatePassword", vo);
     }

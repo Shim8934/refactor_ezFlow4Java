@@ -196,13 +196,6 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 
 	@Override
-	public String getOtpKey(LoginVO vo) throws Exception {
-		String result = loginDAO.getOtpKey(vo);
-
-		return result;
-	}
-
-	@Override
 	public void updateUser(LoginVO vo) throws Exception {
 		loginDAO.updateUser(vo);
 	}
