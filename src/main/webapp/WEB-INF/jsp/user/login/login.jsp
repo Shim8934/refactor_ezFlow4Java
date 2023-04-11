@@ -190,7 +190,7 @@
 			    		+ "\nInternet Explorer 10 <spring:message code='main.t0632'/>"
 			    		+ "\n(<spring:message code='main.t0633'/> : Internet Explorer 11)");
 			    	return false;
-				// setTFA를 호출하는 flag 형태로 사용, setflagTFA가 null인 경우를 발생 시키지 않도록 메시지형태로 전달하도록 함
+				// setTFA를 호출하는 flag 형태로 사용
 			    } else if (message.includes("setflagTFA")) {
 			    	var setArr = message.split(":");
 			    	document.loginForm.message.value = "";

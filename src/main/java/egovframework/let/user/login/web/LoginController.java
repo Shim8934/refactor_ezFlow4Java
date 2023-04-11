@@ -314,7 +314,8 @@ public class LoginController {
 					model.addAttribute("message", "setflagTFA:" + _uid);
 					return "forward:/user/login/login.do";
 				}
-			} else if (useOTP && !hasOTP && resultVO.getLoginCnt() > 0) {
+			// OTP 초기화한 사용자는 설정화면을 제공, masteradmin 계정은 OTP 인증을 제외 함
+			} else if (useOTP && !hasOTP && resultVO.getLoginCnt() > 0 && !resultVO.getId().equalsIgnoreCase("masteradmin")) {
 				logger.debug("hasn't set OTP key.");
 				model.addAttribute("message", "setflagTFA:" + _uid);
 				return "forward:/user/login/login.do";
@@ -359,7 +360,7 @@ public class LoginController {
     				if (!masteradminLogin) {
 						// 2023-03-22 이사라 : [TFA] 사용자 ID or 사원번호가 발견되었으나 첫번째 로그인 혹은 초기화된 사용자가 아닌데 OTP를 입력하지 않은 경우
 						if (useOTP && "".equals(loginOtp) && (resultVO.getLoginCnt() > 0 || hasOTP)) {
-							logger.debug("It isn't a first login or otpKey hasn't been reset, but otp is not submitted.");
+							logger.debug("It isn't the first login and otpKey hasn't been reset either, but otp is not submitted.");
 							model.addAttribute("message", "emptyOtp");
 
 							return "forward:/user/login/login.do";
@@ -421,7 +422,7 @@ public class LoginController {
     					if (!masteradminLogin) {
 							// 2023-03-22 이사라 : [TFA] 사용자 ID or 사원번호가 발견되었으나 첫번째 로그인 혹은 초기화된 사용자가 아닌데 OTP를 입력하지 않은 경우
 							if (useOTP && "".equals(loginOtp) && (resultVO.getLoginCnt() > 0 || hasOTP)) {
-								logger.debug("It isn't a first login or otpKey hasn't been reset, but otp is not submitted.");
+								logger.debug("It isn't the first login and otpKey hasn't been reset either, but otp is not submitted.");
 								model.addAttribute("message", "emptyOtp");
 
 								return "forward:/user/login/login.do";
