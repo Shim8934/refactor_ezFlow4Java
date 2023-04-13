@@ -29891,6 +29891,7 @@
 			APRSTATE = '001'
    </update>
    
+   <!-- 2023-04-13 홍승비 - 결재문서의 진행/완료 여부를 체크하는 경우, 문서가 소속된 ORGCOMPANYID가 아닌 사용자의 사간겸직 회사 전체를 확인하는 오류 조건 수정 -->
    <select  id="EzApprovalG.getLineAprMode" parameterClass="Map" resultClass="int">
 		<isEqual property="v_APRSTATE" compareValue="APR">
 			SELECT
@@ -29900,35 +29901,10 @@
 			WHERE
 				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID IN (
-							SELECT 
-								EXTENSIONATTRIBUTE2 
-							FROM 
-								TBL_DEPTMASTER 
-							INNER JOIN 
-								TBL_ADDJOBMASTER 
-							ON
-								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-								AND 
-								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-							WHERE 
-								TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-							AND 
-								TBL_ADDJOBMASTER.CN = #v_PUSERID#
-							UNION ALL
-							SELECT 
-								PHYSICALDELIVERYOFFICENAME
-							FROM
-								TBL_USERMASTER
-							WHERE
-								CN = #v_PUSERID#
-							AND
-								TENANT_ID = #v_TENANTID# 
-							)
+				COMPANYID = #companyID#
 			AND
 				DOCID = #v_DOCID#
 		</isEqual>
-		
 		<isEqual property="v_APRSTATE" compareValue="END">
 			SELECT
 				COUNT(*)
@@ -29937,31 +29913,7 @@
 			WHERE
 				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID IN (
-							SELECT 
-								EXTENSIONATTRIBUTE2 
-							FROM 
-								TBL_DEPTMASTER 
-							INNER JOIN 
-								TBL_ADDJOBMASTER 
-							ON
-								(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
-								AND 
-								TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
-							WHERE 
-								TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID# 
-							AND 
-								TBL_ADDJOBMASTER.CN = #v_PUSERID#
-							UNION ALL
-							SELECT 
-								PHYSICALDELIVERYOFFICENAME
-							FROM
-								TBL_USERMASTER
-							WHERE
-								CN = #v_PUSERID#
-							AND
-								TENANT_ID = #v_TENANTID# 
-							)
+				COMPANYID = #companyID#
 			AND
 				DOCID = #v_DOCID#
 		</isEqual>
