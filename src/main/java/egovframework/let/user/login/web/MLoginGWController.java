@@ -1164,7 +1164,7 @@ public class MLoginGWController {
 				}
 
 				// 20180711 조진호 - 로그인 성공시 로그인실패 횟수 초기화
-				// ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginFailCount", "0");
+				ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginFailCount", "0");
 
 				/* 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO */
 				String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
