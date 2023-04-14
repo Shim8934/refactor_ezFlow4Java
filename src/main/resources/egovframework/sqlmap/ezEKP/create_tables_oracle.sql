@@ -13341,11 +13341,9 @@ END;
 --  Constraints for Table JAMES_MAIL_BLOB
 --------------------------------------------------------
 
-  ALTER TABLE "JAMES_MAIL_BLOB" MODIFY ("HEADER_BYTES" NOT NULL ENABLE);
   ALTER TABLE "JAMES_MAIL_BLOB" ADD CONSTRAINT "JAMES_MAIL_BLOB_PK" PRIMARY KEY ("MAIL_BLOB_ID")
   USING INDEX;
   ALTER TABLE "JAMES_MAIL_BLOB" MODIFY ("MAIL_BLOB_ID" NOT NULL ENABLE);
-  ALTER TABLE "JAMES_MAIL_BLOB" MODIFY ("MAIL_BYTES" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JAMES_MAIL_DELETED_ID
 --------------------------------------------------------
