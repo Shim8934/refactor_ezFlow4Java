@@ -1817,12 +1817,12 @@ Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',8,'상태','Status','ステータス',NULL,'STATUS',75,0);
 
 -- ------------------------ 업무일지 ---------------------------------
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t05','Top',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t06','Top',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t07','Top',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t08','Top',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t09','Top',0);
-Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t10','Top',0);
+Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t05','Top',0);
+Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t06','Top',0);
+Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t07','Top',0);
+Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t08','Top',0);
+Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t09','Top',0);
+Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t10','Top',0);
 
 Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'일일업무일지(기본)',
 '<div>
