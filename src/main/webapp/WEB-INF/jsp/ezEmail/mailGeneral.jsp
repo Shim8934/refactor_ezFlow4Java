@@ -120,6 +120,7 @@
 				                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
 				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
 				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>" +
+				                "<MAILSEARCHPERIOD>" + document.getElementById("searchPeriod").value + "</MAILSEARCHPERIOD>" +
 				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>";
 				
                 if (usePreviewSubTree == "YES") {
@@ -469,6 +470,18 @@
 		          <select id="textOptionSlb" style="width:100px;">
 		              <option value="HTML">HTML</option>
 		              <option value="PLAIN" <c:if test="${textOption eq 'PLAIN'}">selected</c:if>>Plain Text</option>
+		          </select>
+		      </td>
+		  </tr>
+		  <tr>
+		      <th><spring:message code="ezEmail.ls004"/></th>
+		      <td>
+		          <select id="searchPeriod" style="width:100px;">
+		            <option value=oneWeek <c:if test="${mailSearchPeriod == 'oneWeek'}">selected</c:if>><spring:message code="ezEmail.pyy17" /></option>
+		            <option value=oneMonth <c:if test="${mailSearchPeriod == 'oneMonth'}">selected</c:if>><spring:message code="ezEmail.pyy18" /></option>
+		            <option value=threeMonth <c:if test="${mailSearchPeriod == 'threeMonth'}">selected</c:if>><spring:message code="ezEmail.pyy19" /></option>
+		            <option value=sixMonth <c:if test="${mailSearchPeriod == 'sixMonth'}">selected</c:if>><spring:message code="ezEmail.ls001" /></option>
+		            <option value=oneYear <c:if test="${mailSearchPeriod == 'oneYear'}">selected</c:if>><spring:message code="ezEmail.ls002" /></option>
 		          </select>
 		      </td>
 		  </tr>

@@ -49,7 +49,7 @@ h2 {margin:2px 0; font-size:14px;}
 
 .file td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
 .file2 td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
-select {-webkit-appearance: none; border:1px solid #dedede;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat right 1px center; padding-right:18px;background-color: white}
+select {-webkit-appearance: none; border:1px solid #dedede;min-height:20px;margin:0;padding: .1em .1em; background: url(../images/next.gif) no-repeat right 5px center; padding-right:18px;background-color: white}/*20221216*/
 select::-ms-expand {
     display: none;
 }
@@ -3509,9 +3509,14 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
 
 /* 검색 */
-.searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:17px;}
-.searchBtn{ position:absolute; right:-19px; top:-2px;}
-.searchinputBox{width:135px;}
+.searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:0px; display:flex;}/*20221216*/
+.searchBtn{ position:absolute; right:43px; top:7px; height:16px;}/*20221216*/
+.searchBtn > img{vertical-align:top;}/*20221216*/
+.searchinputBox{width:250px; height:29px !important; padding:0px 36px 0px 10px; box-sizing:border-box;}/*20221216*/
+.searchForm > select.text{background-color:#F8F8F8; min-width:90px; height:29px !important; box-sizing:border-box;}/*20221216*/
+.searchForm > .searchFilterBtn{position:initial; right:0; top:0; margin-left:3px;}/*20221216*/
+.searchForm > .searchFilterBtn > img{vertical-align:top;}/*20221216*/
+
 
 /* 유은정 - 메뉴명 개수 | 회사 선택 이미지 위치*/
 .title_bar {margin-left:5px;vertical-align:middle;}
@@ -3606,7 +3611,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 /* 20200608 검색필터 추가 */
 .searchForm.searchFilter{position:relative; margin-right:48px;}
 .searchFilterBtn{position:absolute; right:-50px; top:-2px;}
-.layerPopup_new{display:none; position:absolute; right:-48px; top:39px; width:400px; height:395px; padding:20px; border:1px solid #999999; background:#ffffff; box-shadow:2px 3px 4px rgba(0,0,0,0.1); box-sizing:border-box;}
+.layerPopup_new{display:none; position:absolute; right:0px; top:39px; width:372px; height:350px; padding:20px; border:1px solid #cbcbcb; background:#ffffff; box-shadow:2px 3px 4px rgba(0,0,0,0.1); box-sizing:border-box;}/*20221216*/
 .layerPopup_new select{width:75px; height:30px;}
 .content_layout{clear:both; margin:0px; padding:0px; list-style:none; overflow:hidden;}
 .content_layout_left{float:left;}
@@ -3615,18 +3620,22 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .content_layout_center > .content_layout {margin-bottom:13px;}
 .content_layout_center > .content_layout > .content_layout_center > .textbox_design{width:100%;}
 .content_layout_center > .content_layout > .content_layout_center > .textbox_design > input{width:100%;}
+.layerPopup_new .content_layout:nth-child(1) .content_layout_center > .content_layout{margin-bottom:5px;}/*20221216*/
+.layerPopup_new .content_layout:nth-child(1) .content_layout_center > .content_layout:first-child{margin-bottom:13px;}/*20221216*/
+.layerPopup_new .content_layout:nth-child(1) .content_layout_center > .content_layout:last-child{margin-bottom:13px;}/*20221216*/
+.layerPopup_new .content_layout:nth-child(3) .content_layout_center > .content_layout:first-child{margin-bottom:5px;}/*20221216*/
 .hasDatepicker{height:30px;}
 .content_layout_center > .checkbox_design,
 .content_layout_center > .radio_design{margin-right:20px;}
 .text_th{width:90px; height:30px; line-height:28px; margin:0px; padding:0px; color:#383838; font-size:14px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .text_th > .point_red{color:#f92828; font-size:14px;}
-.layerPopup_button{position:absolute; left:0px; bottom:0px; width:100%; height:66px; background:#f1f3f5;}
+.layerPopup_button{position:absolute; left:0px; bottom:0px; width:100%; height:66px; background:#ffffff; border-top:1px solid #E5E5E5;}/*20221216*/
 .layerPopup_button > .content_layout{padding:15px 20px 0px 20px; box-sizing:border-box;}
 .layerPopup_button .button_style01{display:block; min-width:113px; height:36px; line-height:34px; padding:0px 20px; background-color:#3d8fea; font-size:14px; color:#ffffff; text-align:center; box-sizing:border-box; cursor:pointer;}
 .layerPopup_button .button_style01:hover{background-color:#0470e4;}
 .layerPopup_button .button_style02{display:block; min-width:113px; height:36px; line-height:34px; padding:0px 20px; background-color:#e2e3e6; font-size:14px; color:#666666; text-align:center; box-sizing:border-box; cursor:pointer;}
 .layerPopup_button .button_style02:hover{color:#000000; background-color:#dedede;}
-.layerPopup_button .button_style03{display:block; min-width:113px; height:36px; line-height:34px; padding:0px 20px; font-size:14px; color:#333333; text-decoration:underline; text-align:center; box-sizing:border-box; cursor:pointer;}
+.layerPopup_button .button_style03{display:block; min-width:113px; height:36px; line-height:34px; padding:0px 0px; font-size:14px; color:#333333; text-decoration:underline; text-align:center; box-sizing:border-box; cursor:pointer;}/*20221216*/
 .layerPopup_button .button_style03:hover{color:#3d8fea;}
 
 /* input[type="checkbox"] new design 20200608 */
@@ -3706,3 +3715,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 /* //스크롤바 커스텀 */
 
 /* //20230306 셀렉트 수정 */
+
+/* Search 20230208 */
+.searchBtn.nofilter{right:12px;}
+.searchForm .text{border-right:0 !important;}

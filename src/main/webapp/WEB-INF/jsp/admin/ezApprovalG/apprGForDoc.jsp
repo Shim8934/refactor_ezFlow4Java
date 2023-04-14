@@ -1003,13 +1003,13 @@
 		
 	    <h1><spring:message code = 'ezApprovalG.t1324' /><span id="mailBoxInfo"></span>
 	        <span class="searchForm">
-	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+	        	<select id="selectType" class="text"; style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
 		    		<option value="rad_Department"><spring:message code='ezApproval.t437'/></option>
 		    	</select>
-			  	<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	          	<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>
+			  	<input id="txt_keyword" class="searchinputBox searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	          	<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">

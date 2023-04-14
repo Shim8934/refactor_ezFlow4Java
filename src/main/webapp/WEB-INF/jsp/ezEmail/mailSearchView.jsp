@@ -45,6 +45,7 @@
 			var searchKArray = new Array();
 			var shareId = "${shareId}";
 			var listType = "searchList";
+			var mailSearchPeriodSDate = "";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -69,9 +70,30 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
+		        
+		        switch ("${mailSearchPeriod}") {
+			        case 'oneWeek':
+			        	mailSearchPeriodSDate = "-1w";
+			        	break;
+			        case 'oneMonth' :
+			        	mailSearchPeriodSDate = "-1m";
+			        	break;
+			        case 'threeMonth' :
+			        	mailSearchPeriodSDate = "-3m";
+			        	break;
+			        case 'sixMonth' :
+			        	mailSearchPeriodSDate = "-6m";
+			        	break;
+			        case 'oneYear' :
+			        	mailSearchPeriodSDate = "-1y";
+			        	break;
+			        default :
+			        	mailSearchPeriodSDate = "-6m";
+		        }
+		        
 		        var NowDate = utcDate2(offsetMin);
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Sdatepicker").datepicker('setDate', NowDate);
+		        $("#Sdatepicker").datepicker('setDate', mailSearchPeriodSDate);
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker('setDate', NowDate);
 		    });
@@ -987,6 +1009,14 @@
 						$("#Sdatepicker").datepicker('setDate', '-3m');
 						$("#Edatepicker").datepicker('setDate', today);
 					break;
+					case "sixMonth":
+						$("#Sdatepicker").datepicker('setDate', '-6m');
+						$("#Edatepicker").datepicker('setDate', today);
+					break;
+					case "oneYear":
+						$("#Sdatepicker").datepicker('setDate', '-12m');
+						$("#Edatepicker").datepicker('setDate', today);
+					break;
 				}
 		    }
 		</script>
@@ -1114,10 +1144,12 @@
 			    <td style="height: 40px;">
 			    	<div style="margin: 0px 5px 0px 5px;padding: 3px;">
 						<select name="select" class="text" id="selectRange" onchange="changeLangeEvent()" style="height: 25px;margin-right: 5px;width: 86px;">
-							<option selected value="All">ALL</option> 
-							<option value="oneWeek"><spring:message code="ezEmail.pyy17" /></option> 
-							<option value="oneMonth"><spring:message code="ezEmail.pyy18" /></option> 
-							<option value="threeMonth"><spring:message code="ezEmail.pyy19" /></option> 
+							<option value="oneWeek" <c:if test="${mailSearchPeriod == 'oneWeek'}">selected</c:if>><spring:message code="ezEmail.pyy17" /></option> 
+							<option value="oneMonth" <c:if test="${mailSearchPeriod == 'oneMonth'}">selected</c:if>><spring:message code="ezEmail.pyy18" /></option> 
+							<option value="threeMonth" <c:if test="${mailSearchPeriod == 'threeMonth'}">selected</c:if>><spring:message code="ezEmail.pyy19" /></option> 
+							<option value="sixMonth" <c:if test="${mailSearchPeriod == 'sixMonth'}">selected</c:if>><spring:message code="ezEmail.ls001" /></option>
+							<option value="oneYear" <c:if test="${mailSearchPeriod == 'oneYear'}">selected</c:if>><spring:message code="ezEmail.ls002" /></option>
+							<option value="All">ALL</option>
 							<option value="direct"><spring:message code="ezEmail.pyy20" /></option> 
 						</select>
 				    	<span id="datepickerData" style="display:none;"><input type="text" id="Sdatepicker" style="width:80px;text-align:center;margin-top:-5px;" readonly> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;margin-top:-5px;" readonly></span>
