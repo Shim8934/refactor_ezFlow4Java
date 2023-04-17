@@ -28,26 +28,12 @@ function onDrop(evt) {
 		evt.preventDefault();
 		
 		if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
-			
-			if (window.folderLevel) {
-				if (folderLevel == "0" && folderType == "company"){ return; } 
-			}
 			if (evt.dataTransfer.files.length == 0) {
 				alert(messages.strLangDragNDrop);
 				return;
 			}
 			
-			var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
-			
-			if (filelist.length == 0) {
-				return;
-			}
-			
-			for (var i = 0; i < filelist.length; i++) {
-				file[i] = filelist[i];
-			}
-			
-			fileupload();
+			fileupload_check(evt);
 		} else {
 			var length = evt.dataTransfer.items.length;
 			
@@ -55,22 +41,7 @@ function onDrop(evt) {
 		    	var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
 		    	
 		    	if (entry.isFile) {
-		    		var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
-		    		
-		    		
-		    		if (window.folderLevel) {
-						if (folderLevel == "0" && folderType == "company"){ return; } 
-					}
-		    		
-		    		if (filelist.length == 0) {
-		    			return;
-		    		}
-		    		
-		    		for (var i = 0; i < filelist.length; i++) {
-		    			file[i] = filelist[i];
-		    		}
-		    		
-		    		fileupload();
+					fileupload_check(evt);
 		    	} else if (entry.isDirectory) {
 		    		alert(messages.strLangDragNDrop);
 		      		return;
@@ -78,23 +49,40 @@ function onDrop(evt) {
 		  	}
 		}
 	} else {
-		var filelist = (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
-		
-		if (window.folderLevel) {
-			if (folderLevel == "0" && folderType == "company"){ return; } 
-		}
-		
-		if (filelist.length == 0) {
-			return;
-		}
-		
-		for (var i = 0; i < filelist.length; i++) {
-			file[i] = filelist[i];
-		}
-		
-		fileupload();
+		fileupload_check(evt);
 	}
 	
+}
+
+/**
+ * 공통 로직이어서 함수로 묶음.
+ * (혹시나, evt.dataTransfer.files.length에서 문제가 생긴다면, 첫째 분기에서의 fileupload_check(evt);는 revert를 해주세요)
+ */
+function fileupload_check(evt) {
+	if (window.folderLevel) {
+		if (folderLevel == "0" && folderType == "company"){ return; }
+	}
+
+	var filelist = fileupload_getFilelist(evt);
+
+	if (filelist.length == 0) {
+		return;
+	}
+
+	for (var i = 0; i < filelist.length; i++) {
+		file[i] = filelist[i];
+	}
+
+	fileupload();
+}
+
+/**
+ * java-script는 가장 마지막에 정의된 함수를 최종 선택한다.
+ * filelist를 다른 형식으로 부르고자 한다면: script 영역 가장 아래에, 같은 이름의 함수를 추가해주면 된다.
+ * ex) webfolderFileUploadParent.js > fileupload_getFilelist()
+ */
+function fileupload_getFilelist(evt) {
+	return (evt == undefined) ? document.getElementById("file").files : evt.dataTransfer.files;
 }
 
 function fileupload() {	
@@ -241,7 +229,7 @@ function realUpload() {
 	fd.append("encrypt", uploadData.noDownloadChecked);
 	
 	for (var i = 0; i < uploadData.uploadableFiles.length; i++) {
-		fd.append("fileToUpload", uploadData.uploadableFiles[i]);
+		appendFileForUpload(fd, "fileToUpload", uploadData.uploadableFiles[i]);
 	}
 	
 	if (uploadData.isReply) {
@@ -320,9 +308,27 @@ function realUpload() {
 	});
 }
 
+/**
+ * 실제 파일 삽입내용을 재정의 할 수 있다. 같은 이름의 함수를 더 뒤에 정의하면 됨.
+ * duplicate-file.js에도 같은 내용이 있는데, 혹여나 다르게 작동할 가능성을 염두해 메소드명을 달리했다.
+ * ex) webfolderFileUploadParent.js > appendFileForUpload()
+ */
+function appendFileForUpload(fd, paramKey, paramObj){
+	// (1)웹폴더 > 파일업로드 : MultipartFile
+		fd.append(paramKey, paramObj);
+
+	// (2)메일 > 첨부파일 > 웹폴더에 업로드 : JSONObject(:파일정보객체. 실제 데이터는 back에서 MimeBodyPart를 불러야 한다.)
+	// (3)메일 > (이미 저장이 되어 있는)대용량첨부 > 웹폴더에 업로드 : File로 예상
+	// 와 같이 다양한 형태로 재정의 될 수 있음.
+}
+
 function ajaxUploadXhr() {
 	//upload Progress
-	document.getElementById('progress-wrp').style.display = "";
+	var progressWrp = document.getElementById('progress-wrp');		// progress-wrp가 없어도 오류가 나지 않도록 수정함.
+
+	if (progressWrp) {
+		document.getElementById('progress-wrp').style.display = "";
+	}
 	
 	var xhr = $.ajaxSettings.xhr();
 	if (xhr.upload) {
@@ -333,9 +339,12 @@ function ajaxUploadXhr() {
 			if (event.lengthComputable) {
 				percent = Math.ceil(position / total * 100);
 			}
+
 			//update progressbar
-			$("#progress-wrp .progress-bar").css("width", + percent +"%");
-			$("#progress-wrp .status").text(percent == 100 ? percent +"%  -  Processing..." : percent +"%");
+			if (progressWrp) {
+				$("#progress-wrp .progress-bar").css("width", + percent +"%");
+				$("#progress-wrp .status").text(percent == 100 ? percent +"%  -  Processing..." : percent +"%");
+			}
 		}, true);
 	}
 	return xhr;

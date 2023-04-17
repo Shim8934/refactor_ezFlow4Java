@@ -41,6 +41,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,6 +103,7 @@ import com.sun.mail.imap.IMAPMessage;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -163,6 +165,9 @@ public class EzEmailUtil {
 	@Autowired
 	private EzAddressService ezAddressService;
 	
+	@Autowired
+	private EzEmailService ezEmailService;
+
 	@Value("#{cryptos['EzEmailUtil.apb']}")
 	private String apb;
 
@@ -1075,6 +1080,7 @@ public class EzEmailUtil {
 		boolean includeInlineAsAttachment = false;
 		String shareId = null;
 		String useImageConvertServer = null;	// 20200312 조진호 - 메일 읽기 > 첨부파일 미리 보기 기능 옵션 처리 추가
+		boolean useWebfolder = false;			// 20230418 김은실 - 메일 읽기 > 첨부파일 웹폴더에 저장 기능 추가
 		
 		// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
 		// ContentID 없이 Content-Dispostion이 inline으로 첨부된
@@ -1098,6 +1104,7 @@ public class EzEmailUtil {
 			if (extraMap.get("includeInlineAsAttachment") != null) includeInlineAsAttachment = (boolean)extraMap.get("includeInlineAsAttachment");
 			if (extraMap.get("shareId") != null) shareId = (String)extraMap.get("shareId");
 			if (extraMap.get("useImageConvertServer") != null) useImageConvertServer = (String)extraMap.get("useImageConvertServer");
+			if (extraMap.get("useWebfolder") != null) useWebfolder = (boolean)extraMap.get("useWebfolder");
 		}
 		
 		// 첨부 파일이면서 Content-ID가 있는 경우 실제 HTML 본문에서 참조되고 있는 파트인지 확인하기 위해 추가함(Gmail에서 보낸 메일).
@@ -1390,15 +1397,23 @@ public class EzEmailUtil {
 				
 				attachedFileList.add(attachedFileInfo);
 			} 
+
+			// appendPreviewImage까지- filename의 변경이 없고, 여러번 수행되고 있으므로 변수 생성하여 사용하도록 함.
+			String filename_spclStr = this.getSpclStrCnvr2(filename); // 네 경우 모두 사용
 			
 			if (forPrint) {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
-				pAttachListHtml += "<span><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >";
-				pAttachListHtml += this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></br>";
+				pAttachListHtml += "<span><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >";
+				pAttachListHtml += filename_spclStr + " (" + strSize + ")</span></span></br>";
 			} else if (secureKey != null) {
-				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename, "UTF-8") + "&index=" + bodyPartIndex;
+				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename,"UTF-8") + "&index=" + bodyPartIndex;
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></li>";
+				/*	(개선) 보안메일도 가능하도록
+				if (useWebfolder) {
+					pAttachListHtml += webfolderCommonSpan + " >" + webfolderCommonImg + "></span>";
+				}
+				*/
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span></li>";
 			} else if (mobile) {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
@@ -1409,19 +1424,31 @@ public class EzEmailUtil {
 				aitem += "','" + order + "','" + depth;
 				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
-				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
+				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " </p>";
 			} else {
-				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
+				String filename_egovSpclStr = EgovStringUtil.getSpclStrCnvr2(filename);
+				String folderPath_URLEnc = URLEncoder.encode(folderPath,"UTF-8");
+
+				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+folderPath_URLEnc+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
 				
 				if (shareId != null) {
 					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' class='imgSpan' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename=\"" + filename_egovSpclStr + "\" id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' class='imgSpan' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
+
+				// 2023-04-18 김은실 - 메일 & 웹폴더 연계 기능
+				if (useWebfolder) {
+					String webfolderCommonSpan = " <span onclick=\"webfolderUpload_open(this);\" title='" + egovMessageSource.getMessage("ezWebFolder.kes065", locale) + "' _filesize='" + (int) size + "' _filetype='" + part.getContentType().toLowerCase() + "' _filename=\"" + filename_egovSpclStr + "\" _folderPath=\"" + folderPath + "\" _uid='" + uid + "' _index='" + bodyPartIndex + "' id='MailAttachDownloadItems_webfolder' name='MailAttachDownloadItems_webfolder' style='cursor:pointer;'";
+					String webfolderCommonImg = "<img src='/images/icon_adddownload_webfolder.gif' width='16' height='16'";
+
+					pAttachListHtml += webfolderCommonSpan + " class='imgSpan' >" + webfolderCommonImg + " style='vertical-align: top;'></span>";
+				}
+
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title=\"" + filename_spclStr + " (" + strSize + ")" + "\" class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";
 				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
-					pAttachListHtml += " <span class='icon_rbtn2' style='right: 30px;' title='" + egovMessageSource.getMessage("ezEmail.t487", locale) + "' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Preview('" + URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + bodyPartIndex + "','" + EgovStringUtil.getSpclStrCnvr2(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align: top'></span>";
+					pAttachListHtml += " <span class='icon_rbtn2' style='right: 30px;' title='" + egovMessageSource.getMessage("ezEmail.t487", locale) + "' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Preview('" + folderPath_URLEnc + "','" + uid + "','" + bodyPartIndex + "','" + filename_egovSpclStr + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align: top'></span>";
 				}
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16' style='vertical-align: top'></span></li>";
 			}
@@ -1437,7 +1464,7 @@ public class EzEmailUtil {
 				String aitem = "?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
 				previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + "/ezEmail/readAttachIamge.do" + aitem + "'>";
 				previewImageListHtml += " <img src='" + "/ezEmail/downloadAttach.do" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' style='cursor:pointer;'></a></p>";
-				previewImageListHtml += " <p onclick=\"DownloadAttach('" + "/ezEmail/downloadAttach.do" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</p></div>";
+				previewImageListHtml += " <p onclick=\"DownloadAttach('" + "/ezEmail/downloadAttach.do" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</p></div>";
 			}
 
 			isAttach = "OK";
@@ -2175,6 +2202,110 @@ public class EzEmailUtil {
             
         return resultList;
     }
+
+    /**
+     * IMAPAccess를 생성해주는 Util.
+     * : folder.close()전에야 MimeBodyPart를 이용한 수행이 가능.
+     * @param callback : (folder를 이용할 작업을 할 ) callback함수를 매개변수로 전해주면 된다.
+     * @param userAccount : getUserAccount()로 구해주면 됨. (extraMap를 callback함수에서 써야 할 수 있으므로, 해당 함수에서 통합하지 않았다. //getMailMessage()에서 extraMap필요.)
+     * ex) EzWebfolderUtil.addListMailAttachArray()를 참고 바람.
+     */
+	public void useIMAPAccessWithCallback(Consumer<IMAPAccess> callback, String userAccount, Locale locale) {
+		logger.debug("useIMAPAccessWithCallback started. userAccount={}, locale={}", userAccount, locale);
+		String password = commonUtil.getMailPassword(); // _jmocha_101
+		IMAPAccess ia = null;
+
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale, this);
+
+			callback.accept(ia);
+
+		} catch (Exception e) {
+			logger.error("useIMAPAccessWithCallback exception", e);
+
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		logger.debug("useIMAPAccessWithCallback ended.");
+	}
+
+	/**
+	 * mailbox의 계정은 : 사용자뿐아니라, 공유사서함을 고려하여 다음과 같이 구한다.
+	 */
+	public String getUserAccount(String userId, String shareId, int tenantId, Map<String, Object> extraMap) throws Exception {
+		logger.debug("getUserAccount started. userId={}, shareId={}, tenantId={}, extraMap={}", userId, shareId, tenantId, extraMap.toString());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domainName;
+
+		if ("YES".equalsIgnoreCase(useSharedMailbox) && !"".equals(shareId)) {
+				if (!ezEmailService.checkUserShareId(userId, shareId, tenantId)) {
+					logger.debug("the user cannot access the shareId.");
+
+					logger.debug("getUserAccount ended. userId={}, userAccount={}", userId, userAccount);
+					return "";
+				}
+
+				userAccount = shareId + "@" + domainName;
+				extraMap.put("shareId", shareId);
+		}
+
+		logger.debug("getUserAccount ended. userId={}, userAccount={}", userId, userAccount);
+		return userAccount;
+	}
+
+	/**
+	 * Message 생성하기 위한 함수.
+	 * @param f : open()된 folder를 사용할 것.
+	 * 		// Floder가 Close되면 message를 사용할 수 없다. com.sun.mail.util.FolderClosedIOException: null
+	 * @param folderPath : url 		   	// ex. url/index = "INBOX/4"
+	 * @param attachedFileList : 필요하면 getMailMessage() 밖에서 선언해주면 된다.
+	 */
+	public Message getMailMessage(Folder f, long uid, String folderPath, List<Map<String, String>> attachedFileList
+			, Locale locale, Map<String, Object> extraMap) throws Exception {
+		logger.debug("getMailMessage started. Folder={}, uid={}, folderPath={}, attachedFileList.size()={}, locale={}, extraMap={}"
+											, f.toString(), uid, folderPath, (attachedFileList != null)? attachedFileList.size() : "", locale, extraMap.toString());
+		Message message = null;
+		message = ((IMAPFolder) f).getMessageByUID(uid);
+
+		if (message != null) {
+			FetchProfile fp = new FetchProfile();
+
+			fp.add(FetchProfile.Item.ENVELOPE);
+			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+			fp.add(FetchProfile.Item.SIZE);
+			fp.add(FetchProfile.Item.FLAGS);
+			fp.add("Subject");
+			fp.add("From");
+			fp.add("To");
+			fp.add("Cc");
+			fp.add("Bcc");
+
+			Message[] fetchMessages = new Message[] { message };
+			f.fetch(fetchMessages, fp);
+
+			// subject
+			String subject = getSubject(message);
+			if (subject != null && !subject.equals("")) {
+				String[] rawHeaders = message.getHeader("subject");
+				String rawHeader = rawHeaders[0];
+
+				if (!isPureAscii(rawHeader)) {
+					byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+
+					subject = decodeNonAsciiBytes(rawBytes);
+				}
+			}
+
+			getBodyInfo(message, folderPath, uid, -1, attachedFileList, locale, extraMap);
+		}
+
+		logger.debug("getMailMessage ended. message.toString={}", (message == null) ? "null" : message.toString());
+		return message;
+	}
     
     public Message[] searchFolder(IMAPAccess ia, String userAccount, Folder folder, String searchField, String searchValue, 
     		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 

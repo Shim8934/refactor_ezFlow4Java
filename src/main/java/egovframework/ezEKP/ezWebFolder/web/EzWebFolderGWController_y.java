@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -41,6 +42,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileHistoryVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileUploadVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -1136,7 +1138,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload-overwrite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject postFileUploadOverWrite(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) {
+	public JSONObject postFileUploadOverWrite(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiPartFileLists, Locale locale, HttpServletRequest request) {
 		logger.debug("postFileUploadOverWrite start");
 		JSONParser jp          = new JSONParser();
 		JSONObject jsonObject;
@@ -1149,6 +1151,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String userId          = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId")       : "";
 			String folderId        = jsonObject.get("folderId")     != null ? (String) jsonObject.get("folderId")     : "";
 			JSONArray fileIdArray  = jsonObject.get("fileIdArray")   	!= null ? (JSONArray) jsonObject.get("fileIdArray")	  : null;
+			String[] mailAttachArray = Optional.ofNullable(request.getParameterValues("filesMailAttach")).orElse(new String[0]);
 			
 			logger.debug("Servername: " + serverName + " || UserId: " + userId + " || FolderId: " + folderId ); 
 			
@@ -1159,6 +1162,12 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				return result;
 			}
 			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			String realPath  = request.getServletContext().getRealPath("");
+
+			List<FileUploadVO> multiFileLists = webfolderUtil.convertFileUploadVOFromRequest(multiPartFileLists, mailAttachArray, userId, tenantId, locale);
+
 			if ((nameArray != null ? nameArray.size() : 0) != multiFileLists.size() || (fileIdArray != null ? fileIdArray.size() : 0) != multiFileLists.size()) {
 				System.out.println(fileIdArray != null ? fileIdArray.size() : 0);
 				System.out.println(nameArray != null ? nameArray.size() : 0);
@@ -1168,10 +1177,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				result.put("code", 1);
 				return result;
 			}
-			
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			int tenantId = userInfo.getTenantId();
-			String realPath  = request.getServletContext().getRealPath("");
 			
 			if (!webfolderUtil.isWebfolderAdmin(userInfo)){
 				JSONObject permissionResult = service.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, null, userInfo.getTenantId());

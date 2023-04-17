@@ -15,18 +15,22 @@
 		'open'		: function(param) {
 			filePick.confirmBT = param.confirmBT;
 			filePick.cancelBT = param.cancelBT;
-			fileListPick.popupOpen(url);
+			fileListPick.popupOpen(url + "&mode=" + param.mode);
 		}
 	}
 	var fileListPick = {
 			'event' : {
-				'confirm' : function(filePickArr) {
+				'confirm' : function(mode, param) {
 					fileListPick.popupClose();
-					getFileInfo(filePickArr);
+
+					if (mode == 'pickup') {
+						getFileInfo(param);		// param = filePickArr
+						param = selectedInfo;
+					}
 					
 					var callback = filePick.confirmBT;
 					if(callback) {
-						callback(selectedInfo);
+						callback(param);
 					}
 				},
 				'cancel' : function() {
