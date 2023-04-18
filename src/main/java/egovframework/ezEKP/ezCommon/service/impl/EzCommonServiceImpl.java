@@ -1083,9 +1083,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	public int setPrevPwd(int tenantID, String userID, String propertyValue) throws Exception {
-		String proValue = getUserConfigInfo(tenantID, userID, "prevPwd");
+		boolean hasUserConfigProperty  = checkHasUserConfigProperty(tenantID, userID, "prevPwd");
 		
-		if (!proValue.isEmpty()) {
+		if (hasUserConfigProperty) {
 			return updateUserConfigInfo(tenantID, userID, "prevPwd", propertyValue);
 		} else {
 			insertUserConfigInfo(tenantID, userID, "prevPwd", propertyValue);
@@ -1108,6 +1108,24 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         return propertyValue;
 
+	}
+
+	@Override
+	public boolean checkHasUserConfigProperty(int tenantID, String userID, String propertyName) throws Exception {
+		boolean result = false;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenant_id", tenantID);
+		map.put("user_id", userID);
+		map.put("property_name", propertyName);
+
+		int propertyNameCount = ezCommonDAO.checkHasUserConfigProperty(map);
+
+		if (propertyNameCount > 0) {
+			result = true;
+		}
+
+		return result;
 	}
 
 	@Override

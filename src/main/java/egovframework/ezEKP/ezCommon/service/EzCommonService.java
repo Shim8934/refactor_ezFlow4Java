@@ -61,6 +61,8 @@ public interface EzCommonService {
 	
 	public String getUserConfigInfo(int tenantID, String userID, String propertyName) throws Exception;
 	
+	public boolean checkHasUserConfigProperty(int tenantID, String userID, String propertyName) throws Exception;
+
 	public int updateUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;
 	
 	public void insertUserConfigInfo(int tenantID, String userID, String propertyName, String propertyValue) throws Exception;

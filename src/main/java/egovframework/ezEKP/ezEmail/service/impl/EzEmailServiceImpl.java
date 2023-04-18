@@ -152,6 +152,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         	JSONObject obj = (JSONObject)object.get("result");
         	if (obj != null) {
         		MailGeneralVO mailGeneral = new MailGeneralVO();
+        		String mailSearchPeriod = (String)obj.get("mailSearchPeriod") == null ? "sixMonth" : (String)obj.get("mailSearchPeriod");
         		String textOption = (String)obj.get("textOption");
         		
         		if (textOption == null || textOption.trim().equals("")) {
@@ -174,6 +175,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setPreviewSubTree((String)obj.get("previewSubTree"));
         		mailGeneral.setPreviewMailImage((String)obj.get("previewMailImage"));
         		mailGeneral.setTextOption(textOption);
+        		mailGeneral.setMailSearchPeriod(mailSearchPeriod);
         		
         		mailGeneralList.add(mailGeneral);
         	}
@@ -200,6 +202,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setPreviewSubTree("N");
 			mailGeneral.setPreviewMailImage("Y");
 			mailGeneral.setTextOption(textOption);
+			mailGeneral.setMailSearchPeriod("sixMonth");
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -230,6 +233,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
 		String previewMailImageParam = "previewMailImage=" + URLEncoder.encode(mailGeneral.getPreviewMailImage(), "UTF-8");
 		String textOptionParam = "textOption=" + URLEncoder.encode(mailGeneral.getTextOption(), "UTF-8");
+		String mailSearchPeriodParam = "mailSearchPeriod=" + URLEncoder.encode(mailGeneral.getMailSearchPeriod(), "UTF-8");
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -238,7 +242,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
-				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + textOptionParam;
+				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + textOptionParam
+				+ "&" + mailSearchPeriodParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailGeneral", inputParams);

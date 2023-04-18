@@ -122,6 +122,22 @@
 		]]>
 	</select>
 
+	<select id="EzCommonDAO.checkHasUserConfigProperty" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+			COUNT
+					(USER_ID)
+			FROM
+					TBL_USER_CONFIG
+			WHERE
+					TENANT_ID = #tenant_id#
+			AND
+					USER_ID = #user_id#
+			AND
+					PROPERTY_NAME = #property_name#
+		]]>
+	</select>
+
 	<insert id="EzCommonDAO.insertTblUserLocalInfo" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_USERLOCALINFO (

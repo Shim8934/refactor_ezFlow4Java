@@ -229,6 +229,10 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.getUserConfig", map);
 	}
 	
+	public int checkHasUserConfigProperty(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommonDAO.checkHasUserConfigProperty", map);
+	}
+
 	public int updateUserConfigInfo(Map<String, Object> map) throws Exception {
 		return update("EzCommonDAO.updateUserConfigInfo", map);
 	}

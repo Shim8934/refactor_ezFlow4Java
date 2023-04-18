@@ -444,49 +444,6 @@
                 cn = #id# AND tenant_id = #tenantId#                                  
         ]]>
     </update>
-    
-    <!-- 2021-10-27 이사라 : prev비번 chk 후 insert or update -->
-    <insert id="loginDAO.updatePrevPassword" parameterClass="loginVO">
-		<selectKey keyProperty="identify" resultClass="String">
-			SELECT 
-				'OK' 
-        	FROM 
-        		DUAL
-       		WHERE 
-       			EXISTS (SELECT 
-							user_id 
-		          		FROM 
-		          	 		tbl_user_config
-		          		WHERE
-							user_id = #id#
-						AND
-							tenant_id = #tenantId#)
-		</selectKey>
-		
-		<isEqual property="identify" compareValue="OK">
-			UPDATE
-				tbl_user_config
-         	SET 
-             	prev_pwd = #prevPassword#
-       		WHERE
-       			user_id = #id#  
-       		AND
-       			tenant_id = #tenantId#
-		</isEqual>
-	
-		<isNotEqual property="identify" compareValue="OK">
-			INSERT INTO tbl_user_config
-				(tenant_id,
-				 user_id,
-				 property_name,
-				 prev_pwd)
-        	VALUES
-        		(#tenantId#,
-        		 #id#,
-        		 'chkPrevPwd',
-        		 #prevPassword#)
-		</isNotEqual>
-	</insert> 
  
     <select id="loginDAO.selectTenantServerName" parameterClass="Map" resultMap="tenantServerName">
         <![CDATA[

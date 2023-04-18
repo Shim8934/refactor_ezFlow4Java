@@ -127,7 +127,8 @@ public class EzEmailMailListController {
 	public String showMailList(@CookieValue("loginCookie") String loginCookie, 
 			Locale locale,
 			HttpServletRequest request,
-			Model model) throws Exception {
+			Model model,
+			@RequestParam(required = false) String tagName) throws Exception {
 		logger.debug("showMailList started.");
 		
 		// retrieve the passed in parameters
@@ -136,7 +137,7 @@ public class EzEmailMailListController {
 		String url = request.getParameter("url");
 		url = (url != null) ? url : "INBOX";
 		url = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(url));
-		logger.debug("dispname=" + dispname + ",url=" + url);
+		logger.debug("dispname={},url={},tagName={}", dispname, url, tagName);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -215,7 +216,9 @@ public class EzEmailMailListController {
 			folderName = dispname;
 		}
 		
-		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale)) || folderName.equals(egovMessageSource.getMessage("ezEmail.t516", locale))) {
+		if (StringUtils.isNotEmpty(tagName)) {
+			folderType = "tag";
+		} else if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale)) || folderName.equals(egovMessageSource.getMessage("ezEmail.t516", locale))) {
 			folderType = "sent";
 			isSentItems = true;
 		}
@@ -256,6 +259,7 @@ public class EzEmailMailListController {
 			}
 		}
 
+		model.addAttribute("tagName", tagName);
 		model.addAttribute("useMailTag", useMailTag);
 		
 		// 2022-11-02 이사라 - [닷넷연동] 메일 가져오기 실행 시 분기처리 필요하여 추가

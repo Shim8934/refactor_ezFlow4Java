@@ -26,6 +26,16 @@ public class MailGeneralVO {
 	
 	private String textOption;
 	
+	private String mailSearchPeriod;
+	
+	public String getMailSearchPeriod() {
+		return mailSearchPeriod;
+	}
+
+	public void setMailSearchPeriod(String mailSearchPeriod) {
+		this.mailSearchPeriod = mailSearchPeriod;
+	}
+
 	public String getListCount() {
 		return listCount;
 	}
@@ -128,6 +138,7 @@ public class MailGeneralVO {
 		return "listCount=" + listCount + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength
 				+ ",previewMode=" + previewMode + ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent + ",mailSenderNm=" + mailSenderNm
-				+ ",previewSubtree=" + previewSubTree + ",previewmailImage=" + previewMailImage + ",textOption=" + textOption;
+				+ ",previewSubtree=" + previewSubTree + ",previewmailImage=" + previewMailImage + ",textOption=" + textOption
+				+ ",mailSearchPeriod=" + mailSearchPeriod;
 	}
 }

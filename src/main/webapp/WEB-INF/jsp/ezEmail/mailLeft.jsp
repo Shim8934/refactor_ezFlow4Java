@@ -1392,7 +1392,7 @@
 
 			function attachTagClickEvent() {
 				$("#tagcontent a").on("click", function() {
-					window.open("/ezEmail/mailTagView.do?idx=" + this.getAttribute("data-idx"), "right");
+					window.open("/ezEmail/mailList.do?tagName=" + encodeURIComponent(this.innerText), "right");
 				});
 			}
 

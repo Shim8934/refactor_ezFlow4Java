@@ -705,6 +705,11 @@ function Send_onClick() {
         return;
     }
     
+	if (window.dadiframe && dadiframe.isfileup) {
+		alert(strLang86);
+		return;
+	}
+
     NameCertify_onClick(Send_onClick_Complete);
 }
 
@@ -852,6 +857,11 @@ function Save_onClick(savemode) {
         return;
     }
     
+	if (window.dadiframe && dadiframe.isfileup) {
+		alert(strLang86);
+		return;
+	}
+
     //Save_onClick을 탈 때(발송, 저장, 미리보기) 할 때, 첨부파일 순서를 저장하도록 수정. 2020-03-19 홍대표.
     callMoveAttachFileOrder();
     
