@@ -334,7 +334,23 @@
 		                    j++;
 		                }
 		            }
-		            
+
+					var updateResultNodes = SelectNodes(tempxmldom, "ROOT/NODES/NODE");
+
+					// 업로드 실패 시 size 변수에서 빼기
+					for (var i = 0; i < updateResultNodes.length; i++) {
+						var node = updateResultNodes[i];
+
+						if ("true" != node.querySelector("RESULTUPLOADA").textContent) {
+							var errorFileSize = Number(node.querySelector("FILESIZE").textContent);
+							if ("Y" == node.querySelector("PBIGFILEUPLOAD").textContent) {
+								bigfilesize -= errorFileSize;
+							} else {
+								filesize -= errorFileSize;
+							}
+						}
+					}
+
 		            AttatchReturnValue = null;
 		            AttatchReturnValue = window.parent.FileUpdateAfter(xhr.responseText);
 		            FileUpdataAfterComplete();

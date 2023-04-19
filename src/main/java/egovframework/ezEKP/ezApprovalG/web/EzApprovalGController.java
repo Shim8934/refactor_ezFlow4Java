@@ -571,8 +571,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String nonElecRecType = ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) != null ? ezCommonService.getTenantConfig("ApprNonElecRecType", userInfo.getTenantId()) : "HWP";
 		
 		// 전자결재 미리보기영역 관련 설정 추가
-		String previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId()); // 미리보기 영역 사용설정 (OFF, H)
+		String previewInfo = "OFF";
 		String useAprPreview = ezCommonService.getTenantConfig("useAprPreview", userInfo.getTenantId()); // 미리보기 영역 사용여부 테넌트 컨피그
+		
+		/* 2023-04-18 홍승비 - 전자결재 > 미리보기 영역의 설정값 반환 이전, 미리보기 영역 사용여부를 먼저 체크 (사용하지 않으면 OFF 유지) */
+		if (useAprPreview.equalsIgnoreCase("YES")) {
+			previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId()); // 미리보기 영역 사용설정 (OFF, H)
+		}
 		
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -7473,8 +7478,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("share", "share");
 		}
 		
-		String previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId());
+		String previewInfo = "OFF";
 		String useAprPreview = ezCommonService.getTenantConfig("useAprPreview", userInfo.getTenantId()); // 미리보기 영역 사용여부 테넌트 컨피그
+		
+		/* 2023-04-18 홍승비 - 전자결재 > 미리보기 영역의 설정값 반환 이전, 미리보기 영역 사용여부를 먼저 체크 (사용하지 않으면 OFF 유지) */
+		if (useAprPreview.equalsIgnoreCase("YES")) {
+			previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId()); // 미리보기 영역 사용설정 (OFF, H)
+		}
 		
 		model.addAttribute("useEnforceSihang", useEnforceSihang);
 		model.addAttribute("buJaeInfo", buJaeInfo);
