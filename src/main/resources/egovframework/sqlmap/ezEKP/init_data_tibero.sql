@@ -71,6 +71,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'UseInitInboxRule', '초기 메일 자동분류 등록여부', 'NO', '사용자 생성 시 메일 자동분류 테이블에 들어있는 초기 자동분류 룰을 해당 사용자의 자동분류 룰로 등록한다. 룰에 포함된 편지함이 사용자에게 없을 경우 편지함을 자동 생성한다.YES: 사용NO: 사용안함 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useImapMoveCommand', '메일 이동 시 IMAP MOVE 커맨드 사용여부', 'YES', '메일 이동 시 IMAP MOVE 커맨드를 사용한다. 사용하지 않으면 IMAP COPY 커맨드를 사용한다.YES: 사용NO: 사용안함 (default: YES)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useHWP', 'HWP 양식작성기 사용유무', 'NO', 'HWP 양식을 작성하고 사용할 수 있다.YES: 사용NO: 사용안함 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useWebHWP', '웹 한글 기안기 사용유무', 'YES', 'useHWP가 YES인 경우 웹한글기안기 사용유무. YES: 사용 NO: 사용안함 (default : YES)', TO_DATE('2020-10-08 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'webHWPUrl', '웹 한글 기안기 url', 'http://hedit.kaoni.com:8080/webhwpctrl/', '웹 한글 기안기 url', TO_DATE('2020-02-26 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'UseEncryptZipForEmail', '메일 내보내기/가져오기 암호화 사용여부', 'NO', '메일 내보내기/가져오기 시 압축파일을 암호화한다. YES: 사용NO: 사용안함 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'UseEmpNumberLogin', '사번 로그인', 'NO', '사용자 아이디 대신 사번으로 로그인한다.YES: 사용NO: 사용안함*tbl_usermaster 테이블의 extensionAttribute14 컬럼 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useEditApprDoc', '전체 진행문서 편집기능 사용여부', 'NO', '전체문서조회(진행문서)에서 편집모드로 들어가 편집이 가능하다.YES: 사용NO: 사용안함 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
@@ -203,7 +205,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useRDBOnlyMailList', '메일목록 표시 RDB 쿼리 사용', 'YES', '메일목록 표시 RDB 쿼리 사용 여부 YES: 사용 / NO: 사용안함 (default: YES)', TO_DATE('2020-12-28 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useShareApproval', '전자결재 공유결재자', 'NO', '전자결재 공유결재자 사용 유무. YES: 사용 NO: 사용안함',  TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useSyncServer', '수동 인사정보 동기화 사용 여부', 'NO', '수동 인사정보 동기화 사용 여부. YES: 사용 NO: 사용안함', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '연동');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'ezSyncServerUrl', 'ezSyncServer 인사정보 동기화 호출 url', 'http://127.0.0.1:9091/ezSyncServer/syncAccounts', 'ezSyncServer 인사정보 동기화 요청 url', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '연동');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'ezSyncServerUrl', 'ezSyncServer 인사정보 동기화 호출 url', 'http://127.0.0.1:9091/ezSyncServer/std/syncAccounts', 'ezSyncServer 인사정보 동기화 요청 url', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '연동');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useModuleUsage', '모듈별 모니터링 사용여부', 'NO', '관리자>시스템에서 모듈별 사용량을 조회하는 모니터링 기능을 사용한다. (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useActiveX', 'ActiveX 사용여부', 'NO', '그룹웨어 접속 시 ActiveX를 설치하고 사용한다. (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'systemCountryCode', '현재국가코드', 'KR', '메일리스트 > 국기표시시 현재국가코드 나타냄 (default: KR)', TO_DATE('2018-12-20 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
@@ -278,11 +280,28 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useOrgListCheckBox', '조직도 리스트 체크박스 표시', 'NO', '조직도 리스트 체크박스 표시 (메일,주소록) (default:NO)', TO_DATE('2021-11-10 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 
+-- 전자결재G 일괄기안 테넌트 컨피그 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(0, 'useDraftAll', '일괄기안 사용여부', 'NO', 'YES: 사용 NO: 사용안함 (default : NO)', TO_DATE('2022-02-25 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재G');
+
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'androidAppVersion', 'Mobile App Android Version', '1.0.0', 'Mobile App Android Version', TO_DATE('2021-11-10 00:00:00','yyyy-mm-dd hh24:mi:ss'), '모바일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'iosAppVersion', 'Mobile App IOS Version', '1.0.0', 'Mobile App IOS Version', TO_DATE('2021-11-10 00:00:00','yyyy-mm-dd hh24:mi:ss'), '모바일');
 
 -- 메일 자동전달 외부 주소 허용 여부 설정
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'useBlockExternalForwardAddress', '외부주소 사용여부', 'NO', 'YES: 외부주소 허용하지 않음, NO: 외부주소 허용 (기본값: NO)',TO_DATE('2023-04-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
+-- 전자결재 리스트 우측 미리보기 테넌트 컨피그 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'useAprPreview', '전자결재 리스트 우측 미리보기 사용여부', 'YES', '전자결재 리스트 우측에 미리보기 영역을 표출한다. YES: 사용  NO: 사용안함 (default: NO)', TO_DATE('2022-07-01 09:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
+
+-- 전자결재 기록물 등록 시 결재권자 칼럼(APRMEMBERTITLE)에 최종결재자명 또는 최종결재자 직위를 삽입하는 옵션 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'recordAprMemberTitleType', '전자결재 기록물등록 시 결재권자 칼럼에 결재자명 또는 직위를 삽입', 'TITLE', '전자결재 기록물등록 시 결재권자 칼럼에 결재자명 또는 직위를 삽입한다. NAME: 최종결재자명  TITLE: 최종결재자직위 (default: NAME)', TO_DATE('2022-07-26 09:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
+
+-- 메일 태그 기능 사용 여부 설정
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'useMailTag', '메일 태그 기능 사용 여부', 'NO', '메일 태그 기능 사용 여부 (기본값: NO)', TO_DATE('2022-10-05 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
+
+-- 전자결재G 관리자단 좌측메뉴 기록물철 자동생성 메뉴 표출여부 테넌트 컨피그 추가 (스케줄러가 아닌 반자동 생성)
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(0, 'useRegisterCabinetSemiAuto', '전자결재G 관리자단 좌측메뉴 기록물철 자동생성 메뉴 표출여부', 'NO', '전자결재G 관리자단 좌측메뉴에 기록물철 자동생성 메뉴를 표출한다. (현재 연도의 종료 예정 기록물철을 그대로 복사하여 원하는 생산연도의 기록물철로 생성하는 기능 사용 여부) YES: 사용  NO: 사용안함 (default: NO)', TO_DATE('2022-12-27 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재G');
+
+-- 전자결재 가변결재선 기본 컨피그 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(0, 'UseDynamicAprLine', '전자결재 가변결재선 사용여부', '0', '0/1 (0:사용안함, 1:사용함) (default: 0)', TO_DATE('2022-12-29 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
 
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'ExpirePassPeriod', '0');
@@ -1274,12 +1293,6 @@ INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DT
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('006',8,'이관',30,'TBL_EXPENDAPRDOCINFO','EDMSYN',null,'NoUse','문서함문서','EDMS이관여부','Transfer','移管','移交','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('006',9,'첨부',30,'TBL_EXPENDAPRDOCINFO','HASATTACHYN',null,null,'문서함문서','첨부','Attach','添付','附件','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('006',10,'공개',30,'TBL_EXPENDAPRDOCINFO','ISPUBLIC',null,null,'문서함문서','공개','Public','公開','公开','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('007',1,'제목',300,'TBL_ENDAPRDOCINFO','DocTitle',null,null,'발송대기문서','제목','Title','タイトル','标题','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('007',2,'발신의뢰부서',150,'TBL_ENDAPRDOCINFO','WriterDeptName',null,null,'발송대기문서','기안부서','Dept.(draft)','送信依頼部門','傳出部門委託','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('007',3,'발신의뢰자',150,'TBL_ENDAPRDOCINFO','WriterName',null,null,'발송대기문서','기안자','Drafter','送信依頼者','傳出贊助商','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('007',4,'발신의뢰일자',150,'TBL_ENDAPRDOCINFO','EndDate',null,null,'발송대기문서','완료일자','Date(draft)','送信依頼日','日期的傳出請求','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('007',5,'상태',100,'TBL_ENDRECEIPTPOINTINFO','ProcessYN',null,null,'발송대기문서','발송대기상태','Status','ステータス','状态','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('007',6,'양식명',150,'TBL_ENDAPRDOCINFO','FormName',null,null,'발송대기문서','양식명','Form title','様式名','样式名','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('007',1,'제목',300,'TBL_ENDAPRDOCINFO','DocTitle',null,null,'발송대기문서','제목','Title','タイトル','标题','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('007',2,'발신의뢰부서',150,'TBL_ENDAPRDOCINFO','WriterDeptName',null,null,'발송대기문서','기안부서','Dept.(draft)','送信依頼部門','傳出部門委託','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('007',3,'발신의뢰자',150,'TBL_ENDAPRDOCINFO','WriterName',null,null,'발송대기문서','기안자','Drafter','送信依頼者','傳出贊助商','Top',0);
@@ -2368,7 +2381,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2378,7 +2391,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2491,7 +2504,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2501,7 +2514,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2614,7 +2627,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2624,7 +2637,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2737,7 +2750,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2747,7 +2760,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2860,7 +2873,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2870,7 +2883,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>
@@ -2983,7 +2996,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                      <tr>
@@ -2993,7 +3006,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
                            </p>
                         </td>
                         <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
-                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
                         </td>
                      </tr>
                   </tbody>

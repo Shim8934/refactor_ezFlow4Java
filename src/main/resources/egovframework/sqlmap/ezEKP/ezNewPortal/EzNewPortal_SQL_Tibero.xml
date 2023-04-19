@@ -1541,6 +1541,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 ]]>
 </insert>
 
+<!-- 2023-01-18 전인하 - 게시판 포틀릿에서 익명 게시판을 조회할 때 조인조건으로 불필요한 companyID 제거 -->
 <select id="ezNewPortal.getBoardPortletInfo" parameterClass="Map" resultClass="BoardListVO">
 	<![CDATA[
 		SELECT 
@@ -1579,8 +1580,6 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 						A.BOARDID = C.BOARDID
 					AND 
 						A.TENANT_ID = C.TENANT_ID
-					AND 
-						(A.WRITERCOMPANYID = C.COMPANYID OR C.COMPANYID IS NULL)
 					WHERE
 						A.TENANT_ID = #tenantId#
 					AND
@@ -1691,7 +1690,9 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 						AND
 							DOCINFO.startdate >= ADD_MONTHS(SYSDATE,-12)
                         AND
-                            DOCINFO.startdate <= SYSDATE							
+                            DOCINFO.startdate <= SYSDATE		
+                        AND
+							NVL(GRP.TABSN, 1) = 1						
 						ORDER BY
 							DOCINFO.startdate DESC
 				) INFO
@@ -1762,7 +1763,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 					INFO.*, ROWNUM AS RNUM
 				FROM (
 						SELECT
-							docid,
+							TBL_APRDOCINFO.docid,
 						    docstate,
 						    functiontype,
 						    doctitle,
@@ -1771,13 +1772,21 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 						    writername,
 						    writername2,
 						    href,
-						    companyid
+						    TBL_APRDOCINFO.companyid
 						FROM
 							TBL_APRDOCINFO
-						WHERE
-							tenant_id = #tenantId#
+						LEFT OUTER JOIN
+							TBL_APRDOCGROUPINFO GRP
+						ON
+							TBL_APRDOCINFO.TENANT_ID = GRP.TENANT_ID
 						AND
-							companyid IN (SELECT
+							TBL_APRDOCINFO.COMPANYID = GRP.COMPANYID
+						AND
+							TBL_APRDOCINFO.DOCID = GRP.DOCID
+						WHERE
+							TBL_APRDOCINFO.tenant_id = #tenantId#
+						AND
+							TBL_APRDOCINFO.companyid IN (SELECT
 												extensionattribute2
 											FROM
 												TBL_DEPTMASTER
@@ -1809,6 +1818,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 							startdate >= ADD_MONTHS(SYSDATE,-12)
                         AND
                             startdate <= SYSDATE
+                        AND
+							NVL(GRP.TABSN, 1) = 1	
 						ORDER BY
 							startdate DESC
 					) INFO
@@ -1856,6 +1867,14 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 							DOCINFO.companyid = LINEINFO.companyid
 						AND
 							DOCINFO.docid = LINEINFO.docid
+						LEFT OUTER JOIN
+							TBL_APRDOCGROUPINFO GRP
+						ON
+							DOCINFO.TENANT_ID = GRP.TENANT_ID
+						AND
+							DOCINFO.COMPANYID = GRP.COMPANYID
+						AND
+							DOCINFO.DOCID = GRP.DOCID
 						WHERE
 							DOCINFO.tenant_id = #tenantId#
 						AND
@@ -1897,6 +1916,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 							DOCINFO.startdate >= ADD_MONTHS(SYSDATE,-12)
                         AND
                             DOCINFO.startdate <= SYSDATE
+                        AND
+							NVL(GRP.TABSN, 1) = 1
 						ORDER BY
 							STARTDATE DESC
 					) INFO
@@ -1905,7 +1926,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				P.RNUM <= 5
 		]]>
 	</select>
-	
+
 	<select id="ezNewPortal.getApprovalDoingListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
@@ -1920,6 +1941,14 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				DOCINFO.companyid = LINEINFO.companyid
 			AND
 				DOCINFO.docid = LINEINFO.docid
+			LEFT OUTER JOIN
+				TBL_APRDOCGROUPINFO GRP
+			ON
+				DOCINFO.TENANT_ID = GRP.TENANT_ID
+			AND
+				DOCINFO.COMPANYID = GRP.COMPANYID
+			AND
+				DOCINFO.DOCID = GRP.DOCID
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
 			AND
@@ -1957,6 +1986,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				DOCINFO.docstate not in ('015')   
 			AND
 				DOCINFO.startdate >= ADD_MONTHS(SYSDATE,-12)
+			AND
+				NVL(GRP.TABSN, 1) = 1
 			ORDER BY
 				DOCINFO.startdate DESC
 		]]>
@@ -2556,6 +2587,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	]]>
 </select>
 
+<!-- 2023-02-17 전인하 - 즐겨찾기 게시판 포틀릿에서 익명 게시판을 조회할 때 조인조건으로 불필요한 companyID 제거 -->
 <select id="ezNewPortal.getItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
 	<![CDATA[
 		SELECT 
@@ -2584,8 +2616,6 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 					A.BOARDID = B.BOARDID
 				AND
 					A.TENANT_ID = B.TENANT_ID
-				AND
-					(A.WRITERCOMPANYID = B.COMPANYID OR B.COMPANYID IS NULL)
 				WHERE
 					A.BOARDID = #boardId#
 				AND
@@ -3043,8 +3073,6 @@ ORDER BY
 				    TBL_WEBFOLDER_FILE
 				WHERE
 					FOLDER_ID = #folderId#
-				AND
-					TYPE_ID NOT IN ('21')
 				AND
 					USE_STATUS = 'Y'
 				AND

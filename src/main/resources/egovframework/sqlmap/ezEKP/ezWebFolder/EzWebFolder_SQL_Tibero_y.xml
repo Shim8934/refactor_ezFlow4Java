@@ -300,7 +300,7 @@
 		WHERE CN = #ownerId#
 		AND TENANT_ID = #tenantId#
 		<selectKey keyProperty="id" resultClass="Integer">
-			SELECT SEQ_FOLDERID.currval as newFolderId FROM dual
+				SELECT SEQ_FOLDERID.currval as newFolderId FROM dual
 		</selectKey>
 	</insert>
 	
