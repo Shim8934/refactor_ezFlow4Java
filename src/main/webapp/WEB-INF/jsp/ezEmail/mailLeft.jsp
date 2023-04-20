@@ -237,12 +237,11 @@
                  	   
                  	   //용량 체크(색깔로)
                  	   if (percent >= 80) {
-                 		  $("#myBar").addClass("danger");
+                 		  $("#myBar").removeClass().addClass("mailBar danger");
                  	   } else if (percent >= 70) {
-                 		  $("#myBar").addClass("warning");
+                 		  $("#myBar").removeClass().addClass("mailBar warning");
                  	   } else {
-							$("#myBar").removeClass();
-							$("#myBar").addClass("mailBar");
+							$("#myBar").removeClass().addClass("mailBar");
                  	   }               		   
                     }
                 });        	    
