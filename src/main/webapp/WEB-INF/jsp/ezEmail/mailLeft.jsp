@@ -237,12 +237,11 @@
                  	   
                  	   //용량 체크(색깔로)
                  	   if (percent >= 80) {
-                 		  $("#myBar").addClass("danger");
+                 		  $("#myBar").removeClass().addClass("mailBar danger");
                  	   } else if (percent >= 70) {
-                 		  $("#myBar").addClass("warning");
+                 		  $("#myBar").removeClass().addClass("mailBar warning");
                  	   } else {
-							$("#myBar").removeClass();
-							$("#myBar").addClass("mailBar");
+							$("#myBar").removeClass().addClass("mailBar");
                  	   }               		   
                     }
                 });        	    
@@ -1392,7 +1391,7 @@
 
 			function attachTagClickEvent() {
 				$("#tagcontent a").on("click", function() {
-					window.open("/ezEmail/mailTagView.do?idx=" + this.getAttribute("data-idx"), "right");
+					window.open("/ezEmail/mailList.do?tagName=" + encodeURIComponent(this.innerText), "right");
 				});
 			}
 

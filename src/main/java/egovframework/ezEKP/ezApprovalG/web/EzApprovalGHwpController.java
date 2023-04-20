@@ -2011,6 +2011,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		MultipartFile multiFile = request.getFile("fileToUpload"); 
+		String companyID = request.getParameter("companyID") != null ? request.getParameter("companyID") : userInfo.getCompanyID();
 		
 		String realPath = request.getServletContext().getRealPath("");
 		String pFileName = "";
@@ -2032,7 +2033,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         pFileName = pFileName.replace("%3b", ";");
         
         String pDirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
-        pDirPath = realPath + pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
+        pDirPath = realPath + pDirPath + commonUtil.separator + companyID + commonUtil.separator;
         LOGGER.debug("pDirPath : " + pDirPath);
         
         File tempFile = new File(pDirPath + "tempUploadFile");
@@ -2065,7 +2066,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String fileName = request.getParameter("fileName");
-		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile";
+		String companyID = request.getParameter("companyID") != null ? request.getParameter("companyID") : userInfo.getCompanyID();
+		
+		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID + commonUtil.separator + "tempUploadFile";
 		
 		LOGGER.debug("filePath : " + (pDirPath + commonUtil.separator + fileName));
 		

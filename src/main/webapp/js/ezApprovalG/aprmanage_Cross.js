@@ -682,7 +682,8 @@ function getAprLine(tr) {
     			async : false,
     			url : "/ezApprovalG/getLineMode.do",
     			data : {
-    					docID : pDocID
+    					docID : pDocID,
+    					orgCompanyID : orgCompanyID
     					},
     			success: function(xml){
     				if (xml == "APR") {
@@ -914,7 +915,8 @@ function openApprovUI(allFlag) {
         			async : false,
         			url : "/ezApprovalG/getLineMode.do",
         			data : {
-        					docID : pArgument[0]
+        					docID : pArgument[0],
+        					orgCompanyID : orgCompanyID
         					},
         			success: function(xml){
         				mode = xml;

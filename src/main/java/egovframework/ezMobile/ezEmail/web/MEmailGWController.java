@@ -16,6 +16,8 @@ import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Decoder;
@@ -437,13 +439,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			@RequestParam(value="end", required=true) String end,
 			@RequestParam(value="searchField", required=false) String searchField,
 			@RequestParam(value="search", required=false) String search,
+			@RequestParam(value="searchPeriod", required=false) String searchPeriod,
 			@RequestParam(value="filter", required=false) String filter,
 			@RequestParam(value="startDate", required=false) String startDate,
 			@RequestParam(value="endDate", required=false) String endDate,
 			@RequestParam(value="includeSubFolders", required=false) String includeSubFolders) {
 		LOGGER.debug("MOBILE G/W MAIL mMailFolderMailList started.");
 		LOGGER.debug("folderId=" + folderId + ",userId=" + userId + ",start=" + start + ",end=" + end);
-		LOGGER.debug("searchField=" + searchField + ",search=" + search + ",filter=" + filter);
+		LOGGER.debug("searchField=" + searchField + ",search=" + search  + ",searchPeriod=" + searchPeriod + ",filter=" + filter);
 		LOGGER.debug("startDate=" + startDate + ",endDate=" + endDate);
 		LOGGER.debug("includeSubFolders=" + includeSubFolders);
 
@@ -459,6 +462,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				search = "";
 			}
 			
+			if (searchPeriod == null) {
+				searchPeriod = "";
+			}
+
 			if (filter == null) {
 				filter = "";
 			}
@@ -504,6 +511,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        senderReceiverFlag = folderId.equals(sendName) || folderId.equals(tempName) ? true : false;
 	        
 	        LOGGER.debug("folderId : " + folderId + ", senderReceiverFlag : " + senderReceiverFlag);
+
+			// 2023-02-14 이사라 - 모바일은 기간 선택 시 직접입력이 없기 때문에 오늘날짜 기준으로 검색기간을 설정
+			if (!searchPeriod.equals("")) {
+				String now = LocalDate.now().toString().concat(" 00:00:00");
+				startDate = adjustDate(now, searchPeriod);
+			}
 
 			if (!startDate.equals("")) {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -573,6 +586,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				ed = new Date();
 			}
 			
+			// 2023-02-14 이사라 - 검색기간의 디폴트 기간을 메일 환경설정에서 설정한 값으로 세팅하기 위해 추가
+			MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(info.getTenantId(), userId).get(0);
+			String generalMailSearchPeriod = mailGeneral.getMailSearchPeriod();
+			LOGGER.debug("generalMailSearchPeriod=" + generalMailSearchPeriod);
+
+			result.put("generalMailSearchPeriod", generalMailSearchPeriod);
+
 			String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", info.getTenantId());
 			
 			if (useRDBOnlyMailList.equals("YES")) {
@@ -6462,5 +6482,47 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		}
 
 		return html.replace("/fileroot", MOBILE_FILEROOT_DOWNLOAD_URL);
+	}
+
+	private String adjustDate(String date, String period) throws Exception {
+		LOGGER.debug("adjustDate started. date={}, period={}", date, period);
+
+		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String result = "";
+		int year = 0;
+		int month = 0;
+		int week = 0;
+
+		switch (period) {
+			case "oneWeek":
+				week = -1;
+				break;
+			case "oneMonth":
+				month = -1;
+				break;
+			case "threeMonth":
+				month = -3;
+				break;
+			case "sixMonth":
+				month = -6;
+				break;
+			case "oneYear":
+				year = -1;
+				break;
+			case "all":
+				break;
+		}
+
+		Calendar cal = Calendar.getInstance();
+		Date dt = dtFormat.parse(date);
+		cal.setTime(dt);
+		cal.add(Calendar.YEAR, year);
+		cal.add(Calendar.MONTH, month);
+		cal.add(Calendar.DATE, 7 * week);
+
+		result = dtFormat.format(cal.getTime());
+		LOGGER.debug("adjustDate ended. result={}", result);
+
+		return result;
 	}
 }

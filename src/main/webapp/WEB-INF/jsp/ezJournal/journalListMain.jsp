@@ -1074,14 +1074,14 @@
 		</c:otherwise>
 	</c:choose>
 	<span class="searchForm">
-		<select id="searchKey" name="searchKey" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; width: 80px;">    
+		<select id="searchKey" class="text" name="searchKey" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; width: 80px;">    
            	<option value="journalTitle"><spring:message code='ezJournal.t56' /></option>
 			<c:if test="${listType eq 'department' or listType eq 'recv' }">
 	       		<option value="journalWriter"><spring:message code='ezJournal.t34' /></option>
        		</c:if>
        	</select>
-		<input id="searchValue" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
-		<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="quickSearch()"></a>
+		<input id="searchValue" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
+		<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onclick="quickSearch()"></a>
 	</span>
 	</h1>
 	<div id="mainmenu">

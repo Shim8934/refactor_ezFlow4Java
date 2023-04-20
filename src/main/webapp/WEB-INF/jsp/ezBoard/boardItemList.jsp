@@ -1427,14 +1427,14 @@
 			<c:when test="${boardInfo.adminType != 'y'}">
 				<h1>${boardName}<span id="mailBoxInfo"></span>
 					<span class="searchForm">
-				         <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+				         <select id="selectType" class="text" style="width:80px; height:27px; border-color: #c8c8c8;">
 			    			<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 			    			<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 			    			<%-- 2021-12-29 홍승비 - 게시판 간단검색 시 내용검색 옵션 추가 (상세검색 조건과 동일하게 읽기권한 없어도 표출됨) --%>
 			    			<option value="rad_Content"><spring:message code='ezBoard.garm01'/></option>
 		    			</select>
-					  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-			          <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
+					  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			          <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
 			        </span>
 				</h1>
 			</c:when>
@@ -1443,13 +1443,13 @@
 			        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" + "<span id='mailBoxInfo'></span>";
 			    </script>
 			    <span class="searchForm" style="display:none;">
-		          <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+		          <select id="selectType" class="text" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 	    			<option value="rad_Content"><spring:message code='ezBoard.garm01'/></option>
 				  </select>
-				  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
+				  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		          <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
 		        </span>
 			    <br />
 			</c:otherwise>

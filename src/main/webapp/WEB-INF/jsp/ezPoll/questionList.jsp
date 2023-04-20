@@ -494,7 +494,7 @@
 		</c:choose>
 			<span id="mailBoxInfo"></span>
 			<span class="searchForm">
-				<select id="selectType">
+				<select id="selectType" class="text">
 					<c:if test="${mode1 != 'wri'}">
 						<option name="searchCheck" id="radio1" value="sub" selected> <span><spring:message code="ezPoll.t106"/></span>
 						<option name="searchCheck" id="radio2" value="wri" > <span><spring:message code="ezPoll.t107"/></span>
@@ -507,7 +507,7 @@
 					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
 					<%-- <a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a> --%>
 					<input type="text" class="searchinputBox" name="searchInput" id="searchInput" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
-					<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="menu_Search()"></a>
+					<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onclick="menu_Search()"></a>
 			</span>
 		</h1>
 		<div id="mainmenu">

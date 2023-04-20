@@ -684,14 +684,14 @@
 	    <h1><c:out value='${folderName}'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span class="searchForm">
 	        	<!-- 2018-07-12 김민성 - 회람판 검색 select box로 수정 -->
-	        	<select id="searchType" style="width: 65px; height: 27px; border: 1px solid #c8c8c8;">
+	        	<select id="searchType" class="text" style="width: 65px; height: 27px; border: 1px solid #c8c8c8;">
 	        		<option value="subject"><spring:message code='ezCircular.t32'/></option>
 	        		<option value="writer"><spring:message code='ezCircular.t166'/></option>
 	        	</select>
 	        	<%-- <input name="searchType" id="Radio1" type="radio" value="subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t32'/>
 				<input name="searchType" id="Radio2" type="radio" value="writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/> --%>
-				<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-				<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
+				<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">

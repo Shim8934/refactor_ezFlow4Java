@@ -1,4 +1,4 @@
-﻿var XmlHeader;
+﻿﻿var XmlHeader;
 var XmlHeader_SUB;
 var BlockSize = 10;
 var p_ListOrderObject = null;
@@ -924,6 +924,10 @@ function GetListInfo(HeaderObject, ContentObject) {
     	searchKArray = [];
     	searchCArray = [];
     }
+
+    searchRequiredKeyword = [];
+    searchRequiredCategory =[];
+
     for (var i = 0 ; i < searchCArray.length; i++ ){
     	// 2021-06-22 김은실 - 이미 변경된 단어를 새로고침시 다시 변경하여, 직접 변경하기 보다 -> 그때만 변경하여 넘겨는 것이 좋을 것으로 보임. (&lt; -> &amp;lt; 등이 되는 경우가 있음.)
     	var searchKTemp = searchKArray[i];
@@ -933,6 +937,8 @@ function GetListInfo(HeaderObject, ContentObject) {
     	searchKTemp = ReplaceText(searchKTemp, "'", "''");
     	createNodeAndInsertText(xmlpara, objNode, "KEYWORD", searchKTemp);
     	createNodeAndInsertText(xmlpara, objNode, "CATEGORY", searchCArray[i]);
+    	searchRequiredKeyword.push(searchKTemp);
+    	searchRequiredCategory.push(searchCArray[i]);
     }
     createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);

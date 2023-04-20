@@ -1036,14 +1036,14 @@
 	            </select>
 	            
 	            <span class="searchForm">
-	            	<select id="searchType" style="width:80px;height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+	            	<select id="searchType" class="text"; style="width:80px;height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
 						<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
 						<option value="cn"><spring:message code='ezOrgan.t218' /></option>
 						<option value="description"><spring:message code='ezOrgan.t68' /></option>
 					</select>
 					
-					<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;">
-					<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="searchList()"></a>
+					<input id="searchValue" class="searchinputBox" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb;">
+					<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onclick="searchList()"></a>
 				</span>
 		    </h1>
 		    <div id="mainmenu">
