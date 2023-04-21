@@ -330,6 +330,9 @@
     		$(document).ready(function() {
                 pDraftFlag = DraftFlag; // 모든 문서 공통이므로 ready 시 바로 부여
                 
+                getDraftUserInfo(); // 기안자 정보
+    			SendName = getDeptSendName(arr_userinfo[4]); // 부서발신명의
+                
 				if (DraftFlag == "REDRAFT" && !reDraftFlag) {
 					// 1안을 의미하는 [1] 인덱스 부터 배열 데이터가 들어가도록, [0]에는 공백 데이터를 부여함
 					DocSNAry.push("");
@@ -348,11 +351,15 @@
 	        		reDraftFlag = true;
 	        		
 	        		/* 2023-04-20 홍승비 - 각 안별 탭 생성 및 웹에디터 로딩 이전, 순차실행이 보장되도록 결재문서 데이터를 가져와 각 안이 사용할 수 있게 분리 */
-        			getLineModeAll(pDocIDAry[1]); // 결재진행중/완료여부 체크
-        			getDocInfoAll(pDocIDAry); // 결재문서 기본 정보
-        			getAttachInfoAll(pDocIDAry); // 첨부파일 정보
-        			getDraftUserInfo(); // 기안자 정보
-        			SendName = getDeptSendName(arr_userinfo[4]); // 부서발신명의
+	        		if (ListType == "21") { // 임시저장된 문서
+	        			getLineModeAll(DocSNAry[1]); // 결재진행중/완료여부 체크
+	        			getDocInfoAll(DocSNAry); // 결재문서 기본 정보
+	        			getAttachInfoAll(DocSNAry); // 첨부파일 정보
+	        		} else { // 반송된 문서 재기안
+	        			getLineModeAll(pDocIDAry[1]);
+	        			getDocInfoAll(pDocIDAry);
+	        			getAttachInfoAll(pDocIDAry);
+	        		}
         			
 	        		makeTabs(); // 기존 pDocIDAry에 문서정보가 있는 경우(재기안 시), 각 문서의 안을 만들어준다.
                 }
@@ -2227,24 +2234,30 @@
 	        
 			/* 2023-04-20 홍승비 - 일괄기안된 문서는 모든 안에 대해 결재선이 동일하므로, 부모창에서 한번만 호출 */
 			function getLineModeAll(pDocID) {
-				// 기본적으로 결재(APR)이나, 공통적으로 사용하는 함수이므로 명시적으로 pMode를 가져오도록 한번 호출 (일괄기안문서는 결재완료 시 각 안이 분리됨)
-				$.ajax({
-		 			type : "POST",
-		 			dataType : "text",
-		 			async : false,
-		 			url : "/ezApprovalG/getLineMode.do",
-		 			data : {
-		 					docID : pDocID,
-		 					orgCompanyID : orgCompanyID
-		 					},
-		 			success : function(xml) {
-		 				pModeForAllDocInfo = xml;
-		 				pModeForAllAttachInfo = xml;
-		 			},
-		    		error : function (e) {
-		    			console.log(e);
-		    		}
-				});
+				// 재기안(APR), 임시저장(TMP) 분기처리
+				if (DraftFlag == "REDRAFT" && ListType == "21") {
+					pModeForAllDocInfo = "TMP";
+	 				pModeForAllAttachInfo = "TMP";
+				}
+				else {
+					$.ajax({
+			 			type : "POST",
+			 			dataType : "text",
+			 			async : false,
+			 			url : "/ezApprovalG/getLineMode.do",
+			 			data : {
+			 					docID : pDocID,
+			 					orgCompanyID : orgCompanyID
+			 					},
+			 			success : function(xml) {
+			 				pModeForAllDocInfo = xml;
+			 				pModeForAllAttachInfo = xml;
+			 			},
+			    		error : function (e) {
+			    			console.log(e);
+			    		}
+					});
+				}
 			}
 			
 			function getDocInfoAll(pDocIDAry) {
