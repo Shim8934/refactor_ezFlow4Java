@@ -53,6 +53,11 @@
 			var pDocState = "";
 			var SignInfoFlag = "";
 			var approvalFlag = "";
+			
+			/* 2023-04-20 홍승비 - 일괄기안된 문서는 모든 안에 대해 결재선이 동일하므로, 부모창의 값을 자식 프레임에서 그대로 사용 */
+			var pModeForAllDocInfo = "APR";
+			var pModeForAllAttachInfo = "APR";
+			var xmluserInfo = createXmlDom();
 	    
 	    	$(document).ready(function() {
 	    		// 1안 추가 시에 최초로 동작하는 부모창의 draftFlag 등 부여 함수
@@ -69,6 +74,10 @@
 	            SignInfoFlag = parent.SignInfoFlag;
 	            DeptSymbol = parent.DeptSymbol;
 	            approvalFlag = parent.approvalFlag;
+	            
+	            pModeForAllDocInfo = parent.pModeForAllDocInfo;
+	            pModeForAllAttachInfo = parent.pModeForAllAttachInfo;
+	            xmluserInfo = parent.xmluserInfo;
 	            
                 parent.ShowMailProgress(); // 문서 로딩중 이미지 표출
                 
@@ -133,9 +142,10 @@
 	        function FieldsAvailable(isTrue) {
 	            try {
 	                if (isTrue) {
-	                	getDraftUserInfo();
+	                	// 기안자 정보 xmluserInfo 변수는 onload 시 부모 페이지에서 가져온 값을 그대로 사용 (하단의 SetAutoPropertyValue에서 사용됨)
+	                	// getDraftUserInfo();
 	                	SetAutoPropertyValue(frameNum);
-	
+	                	
 	                    process_AfterOpen();
 	                    // 현재 안 탭의 정보를 부모페이지에도 저장
 	                    parent.setTabInfo(frameNum);
@@ -246,7 +256,8 @@
 			                GetAprDocFormID();
 		                    parent.pFormIDAry[frameNum] = pFormID;
 		                    
-			                setAttachInfo(pDocID, "APR", parent.lstAttachLink);
+		                    /* 2023-04-21 홍승비 - 일괄기안 문서 재기안 시, 기존 첨부파일 정보를 각 안마다 가져오는 부분을 부모 페이지로 이동하여 한번에 가져옴 */
+							setAttachInfoAll(pDocID, pModeForAllAttachInfo, parent.document.getElementById("lstAttachLink")); // 각 안 별 첨부파일 플래그 세팅
 			                getDocInfo(frameNum); // 현재 페이지에 새롭게 선언한 함수로 변경
 			            }
 			            // 1안 이후에 추가된 경우, 기존 원문공개와 결재선 정보를 가져온다.
@@ -873,54 +884,40 @@
 	        
 	        // 각 안에 맞는 배열 인덱스에 데이터를 삽입하기 위한 함수 분리
 			function getDocInfo(currIdx) {
-				var result = "";
-				
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezApprovalG/getDocInfo.do",
-					data : {
-						docID : pDocID
-					},
-					success: function(xml){
-						result = loadXMLString(xml);
-					}        			
-				});
-				
-			    xmldoc = result;
+			    var xmldoc = loadXMLString(parent.pDocInfoAry[currIdx]);
 			    var objNodes = xmldoc.documentElement.childNodes;
+			    
 			    if (objNodes) {
-			        if (SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(result, "DATA/HASOPINIONYN") == "O") {
+			        if (SelectSingleNodeValueNew(xmldoc, "DATA/HASOPINIONYN") == "Y" || SelectSingleNodeValueNew(xmldoc, "DATA/HASOPINIONYN") == "O") {
 			        	parent.pHasOpinionYNAry[currIdx] = "Y";
 			        } else {
 			        	parent.pHasOpinionYNAry[currIdx] = "N";
 			        }
 			        
-			        parent.tempSecurity = SelectSingleNodeValueNew(result, "DATA/SECURITYCODE");
-			        parent.tempKeep = SelectSingleNodeValueNew(result, "DATA/STORAGEPERIOD");
-			        parent.tempUrgent= SelectSingleNodeValueNew(result, "DATA/URGENTAPPROVAL");
-			        parent.tempPublic = SelectSingleNodeValueNew(result, "DATA/ISPUBLIC");
-			        parent.tempKeyword = SelectSingleNodeValueNew(result, "DATA/KEYWORD");
-			        parent.tempItemCode = SelectSingleNodeValueNew(result, "DATA/ITEMCODE");
-			        parent.tempItemName = SelectSingleNodeValueNew(result, "DATA/ITEMNAME");
-			        parent.pSummery = SelectSingleNodeValueNew(result, "DATA/SUMMARY");
-			        parent.pSpecialRecordCode = SelectSingleNodeValueNew(result, "DATA/SPECIALRECORDCODE");
-			        parent.pPublicityCode = SelectSingleNodeValueNew(result, "DATA/PUBLICITYCODE");
-			        parent.pPublicityYN = SelectSingleNodeValueNew(result, "DATA/PUBLICITYYN");
-			        parent.pLimitRange = SelectSingleNodeValueNew(result, "DATA/LIMITRANGE");
-			        parent.pPageNum = SelectSingleNodeValueNew(result, "DATA/PAGENUM");
-			        parent.cabinetID = SelectSingleNodeValueNew(result, "DATA/CABINETID");
-			        parent.TaskCode = SelectSingleNodeValueNew(result, "DATA/TASKCODE");
-			        parent.tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
+			        parent.tempSecurity = SelectSingleNodeValueNew(xmldoc, "DATA/SECURITYCODE");
+			        parent.tempKeep = SelectSingleNodeValueNew(xmldoc, "DATA/STORAGEPERIOD");
+			        parent.tempUrgent= SelectSingleNodeValueNew(xmldoc, "DATA/URGENTAPPROVAL");
+			        parent.tempPublic = SelectSingleNodeValueNew(xmldoc, "DATA/ISPUBLIC");
+			        parent.tempKeyword = SelectSingleNodeValueNew(xmldoc, "DATA/KEYWORD");
+			        parent.tempItemCode = SelectSingleNodeValueNew(xmldoc, "DATA/ITEMCODE");
+			        parent.tempItemName = SelectSingleNodeValueNew(xmldoc, "DATA/ITEMNAME");
+			        parent.pSummery = SelectSingleNodeValueNew(xmldoc, "DATA/SUMMARY");
+			        parent.pSpecialRecordCode = SelectSingleNodeValueNew(xmldoc, "DATA/SPECIALRECORDCODE");
+			        parent.pPublicityCode = SelectSingleNodeValueNew(xmldoc, "DATA/PUBLICITYCODE");
+			        parent.pPublicityYN = SelectSingleNodeValueNew(xmldoc, "DATA/PUBLICITYYN");
+			        parent.pLimitRange = SelectSingleNodeValueNew(xmldoc, "DATA/LIMITRANGE");
+			        parent.pPageNum = SelectSingleNodeValueNew(xmldoc, "DATA/PAGENUM");
+			        parent.cabinetID = SelectSingleNodeValueNew(xmldoc, "DATA/CABINETID");
+			        parent.TaskCode = SelectSingleNodeValueNew(xmldoc, "DATA/TASKCODE");
+			        parent.tempSecurityDate = SelectSingleNodeValueNew(xmldoc, "DATA/SECURITYAPPROVAL");
 			        
 			        if (useOpenGov == "YES") {
-			        	parent.basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
-			        	parent.reason = SelectSingleNodeValueNew(result, "DATA/REASON");
-			        	parent.listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
-			        	parent.fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
-			        	parent.fileOpenFlagListArr[currIdx] = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
-			        	parent.limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+			        	parent.basis = SelectSingleNodeValueNew(xmldoc, "DATA/BASIS");
+			        	parent.reason = SelectSingleNodeValueNew(xmldoc, "DATA/REASON");
+			        	parent.listOpenFlag = SelectSingleNodeValueNew(xmldoc, "DATA/LISTOPENFLAG");
+			        	parent.fileOpenFlagList = SelectSingleNodeValueNew(xmldoc, "DATA/FILEOPENFLAGLIST");
+			        	parent.fileOpenFlagListArr[currIdx] = SelectSingleNodeValueNew(xmldoc, "DATA/FILEOPENFLAGLIST");
+			        	parent.limitDate = SelectSingleNodeValueNew(xmldoc, "DATA/LIMITDATE");
 			        }
 			    }
 			}

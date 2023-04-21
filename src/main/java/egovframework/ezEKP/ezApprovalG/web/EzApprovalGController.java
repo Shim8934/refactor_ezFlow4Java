@@ -12011,4 +12011,105 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getAprOrEndStr ended, docID = " + docID + " / result = " + result);
 		return result;
 	}
+	
+	/**
+	 * 2023-04-20 홍승비 - 일괄기안된 문서의 문서정보를 ArrayList로 리턴하기 위해 기능 분리 (반복호출 제거, 속도향상 관련)
+	 */
+	@RequestMapping(value = "/ezApprovalG/getApproveDocInfoAll.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public ArrayList<String> getApproveDocInfoAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getApproveDocInfoAll started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		ArrayList<String> resultArrList = new ArrayList<String>(); 
+		String[] docIDArr = request.getParameterValues("docIDArr[]");
+		int docIDArrLength = docIDArr.length;
+		String mode = request.getParameter("mode");
+		String chamState = request.getParameter("chamState");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
+		resultArrList.add(""); // 0번 인덱스는 사용하지 않음, 공백 값을 부여
+		
+		// 각 배열애 대하여 순차적으로 루프, 1안 ~ 마지막 안까지의 순서를 유지
+		for (int i = 1; i < docIDArrLength; i++) {
+			String result = ezApprovalGService.getApproveDocInfo(userInfo, docIDArr[i], userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), mode, chamState);
+			resultArrList.add(result);
+		}
+		
+		logger.debug("getApproveDocInfoAll ended");
+		
+		return resultArrList;
+	}
+	
+	/**
+	 * 2023-04-20 홍승비 - 일괄기안된 문서의 첨부파일 정보를 ArrayList로 리턴하기 위해 기능 분리 (반복호출 제거, 속도향상 관련)
+	 */
+	@RequestMapping(value = "/ezApprovalG/getTotalAttachInfoAll.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public ArrayList<String> getTotalAttachInfoAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getTotalAttachInfoAll started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		ArrayList<String> resultArrList = new ArrayList<String>(); 
+		String[] docIDArr = request.getParameterValues("docIDArr[]");
+		int docIDArrLength = docIDArr.length;
+		String mode = request.getParameter("mode");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		userInfo.setRealPath(commonUtil.getRealPath(request));
+		
+		// 문서기안창, 진행중문서보기창, 문서결재창 내부에서만 해당 첨부파일 정보에 접근 가능하므로 권한체크는 필요하지 않음
+		// 권한체크 로직은 문서를 리스트 상에서 클릭했을 때, 하단 결재선/의견/첨부파일 등을 표출할지 여부에 대한 것이므로 이미 권한체크 완료된 상태에서 문서가 열렸을때는 추가 권한 체크 불필요함
+		resultArrList.add(""); // 0번 인덱스는 사용하지 않음, 공백 값을 부여
+		
+		for (int i = 1; i < docIDArrLength; i++) {
+			String result = ezApprovalGService.getAttachInfo(docIDArr[i], mode, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+			resultArrList.add(result);
+		}
+		
+		logger.debug("getTotalAttachInfoAll ended");
+		
+		return resultArrList;
+	}
+	
+	/**
+	 * 2023-04-21 홍승비 - 일괄기안된 문서의 기본 문서정보를 ArrayList로 리턴하기 위해 기능 분리 (반복호출 제거, 속도향상 관련)
+	 */
+	@RequestMapping(value = "/ezApprovalG/getDocInfoAll.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public ArrayList<String> getDocInfoAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getDocInfoAll started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		ArrayList<String> resultArrList = new ArrayList<String>(); 
+		String[] docIDArr = request.getParameterValues("docIDArr[]");
+		int docIDArrLength = docIDArr.length;
+		
+		resultArrList.add(""); // 0번 인덱스는 사용하지 않음, 공백 값을 부여
+		
+		for (int i = 1; i < docIDArrLength; i++) {
+			String result = ezApprovalGService.getDocInfo(docIDArr[i], "APR", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+			resultArrList.add(result);
+		}
+		
+		logger.debug("getDocInfoAll ended");
+		
+		return resultArrList;
+	}
+	
 }
