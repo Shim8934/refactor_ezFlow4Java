@@ -56,7 +56,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @RestController
 public class EzWebFolderGWController_y extends EgovFileMngUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderGWController_y.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController_y.class);
 	
 	@Autowired
 	private EzWebFolderAdminService ezWebFolderAdminService;
@@ -94,10 +94,10 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkRootFolder", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkRootFolder(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("checkRootFolder started.");
+		logger.debug("checkRootFolder started.");
 		
 		String serverName = orElse(request.getHeader("x-user-host"), "");
-		LOGGER.debug("userId: " + userId + " || serverName: " + serverName);
+		logger.debug("userId: " + userId + " || serverName: " + serverName);
 		
 		JSONObject result = new JSONObject();
 		
@@ -106,7 +106,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);
 			
-			LOGGER.debug("parameter error. checkRootFolder ended.");
+			logger.debug("parameter error. checkRootFolder ended.");
 			return result;
 		}
 		
@@ -129,7 +129,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			result.put("code", 2);
 		}
 		
-		LOGGER.debug("checkRootFolder ended.");
+		logger.debug("checkRootFolder ended.");
 		return result;
 	}
 	
@@ -139,12 +139,12 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/folder-tree", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFolderTree(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("getFolderTree started.");
+		logger.debug("getFolderTree started.");
 		
 		String serverName 	= orElse(request.getHeader("x-user-host"), "");
 		String folderType 	= orElse(request.getParameter("folderType"), "");
 		boolean isAdmin 	= Boolean.valueOf(orElse(request.getParameter("isAdmin"), "false"));
-		LOGGER.debug("userId: " + userId + " || serverName: " + serverName + "|| folderType: " + folderType + "|| isAdmin: " + isAdmin);
+		logger.debug("userId: " + userId + " || serverName: " + serverName + "|| folderType: " + folderType + "|| isAdmin: " + isAdmin);
 
 		JSONObject jsonObj = new JSONObject();
 		
@@ -154,7 +154,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("code", 1);
 			jsonObj.put("data", "");
 			
-			LOGGER.debug("parameter error. getFolderTree ended.");
+			logger.debug("parameter error. getFolderTree ended.");
 			return jsonObj;
 		}
 		
@@ -178,7 +178,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("data", "");
 		}
 		
-		LOGGER.debug("getFolderTree ended.");
+		logger.debug("getFolderTree ended.");
 		return jsonObj;
 	}
 	
@@ -186,7 +186,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping ( value="/rest/ezwebfolder/folders" , method= RequestMethod.POST , produces = "application/json;charset=utf-8")
 	public JSONObject folderInsert (HttpServletRequest request,@RequestBody JSONObject jsonObject) {
-		LOGGER.debug("folderInsert started");
+		logger.debug("folderInsert started");
 		JSONObject jsonObj = new JSONObject();
 		String serverName 			= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
 		String userId 				= (String) jsonObject.get("userId");
@@ -204,15 +204,15 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date                  	= new Date();
 			String timeUTC             	= commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-			LOGGER.debug("timeUTC"+ timeUTC);
+			logger.debug("timeUTC"+ timeUTC);
 			
 			String checkPermission = service.checkPermission(userId, deptId, comId, folderUppId, "D", tenantId);
 			
 			if ( checkPermission.equals("fail")) {
-				LOGGER.debug("checkPermission is fail. ");
+				logger.debug("checkPermission is fail. ");
 				jsonObj.put("status", "error");
 				jsonObj.put("code"	, 3);
-				LOGGER.debug("folderInsert method ended");
+				logger.debug("folderInsert method ended");
 				return jsonObj;
 			}
 			
@@ -220,7 +220,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			List<DuplicateInfoVO> duplicateInfoList = ezWebFolderService.getAllDuplicateInfo(newFolderName1, folderUppId, offset, tenantId);
 			
 			if (duplicateInfoList.size() > 0) {
-				LOGGER.debug("Duplicate folder name: {}", newFolderName1);
+				logger.debug("Duplicate folder name: {}", newFolderName1);
 				
 				jsonObj.put("status", "error");
 				jsonObj.put("duplicateInfoArray", duplicateInfoList);
@@ -251,7 +251,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("data", "");
 		}
 		
-		LOGGER.debug("folderInsert ended");
+		logger.debug("folderInsert ended");
 		return jsonObj;
 	}
 	
@@ -259,7 +259,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping (value = "/rest/ezwebfolder/folders/{folderId:.+}", method = RequestMethod.PUT , produces = "application/json;charset=utf-8")
 	public JSONObject folderUpdate (@PathVariable String folderId, HttpServletRequest request,@RequestBody JSONObject jsonObject)  {
-		LOGGER.debug("folderUpdate started");
+		logger.debug("folderUpdate started");
 		JSONObject jsonObj = new JSONObject();
 		String serverName 	= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
 		String userId 		= (String) jsonObject.get("userId");
@@ -281,10 +281,10 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 					|| service.checkCreator(folderId, tenantId, comId, userId) == 1;
 			
 			if (!isPermitted) {
-				LOGGER.debug("checkPermission is fail. ");
+				logger.debug("checkPermission is fail. ");
 				jsonObj.put("status", "error");
 				jsonObj.put("code"	, 3);
-				LOGGER.debug("folderUpdate method ended");
+				logger.debug("folderUpdate method ended");
 				return jsonObj;
 			}
 			
@@ -293,7 +293,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			List<DuplicateInfoVO> duplicateInfoList = ezWebFolderService.getAllDuplicateInfo(newFolderName1, targetFolderVO.getFolderUpper(), offset, tenantId);
 			
 			if (duplicateInfoList.size() > 0) {
-				LOGGER.debug("Duplicate folder name: {}", newFolderName1);
+				logger.debug("Duplicate folder name: {}", newFolderName1);
 				
 				jsonObj.put("status", "error");
 				jsonObj.put("duplicateInfoArray", duplicateInfoList);
@@ -311,7 +311,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("code", 2);
 		}
 
-		LOGGER.debug("folderUpdate ended");
+		logger.debug("folderUpdate ended");
 		return jsonObj;
 	}
 	
@@ -319,7 +319,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping ( value = "/rest/ezwebfolder/folders/{folderId}/{mode:.+}" , method = RequestMethod.PUT , produces ="application/json;charset=utf-8")
 	public JSONObject folderCopy (@PathVariable String folderId,@PathVariable String mode, HttpServletRequest request ,Locale locale ,@RequestBody JSONObject jsonObject ) {
-		LOGGER.debug("folderCopy started");
+		logger.debug("folderCopy started");
 		String serverName	= request.getHeader("x-user-host")      != null ?	request.getHeader("x-user-host") 		: "";
 		String userId		= (String) jsonObject.get("userId") 	!= null ?	(String) jsonObject.get("userId")		: "";
 		String uppId		= (String) jsonObject.get("uppFolderId")!= null ?	(String) jsonObject.get("uppFolderId") 	: "";
@@ -332,13 +332,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String comId = common.getCompanyId();
 			String offset = common.getOffSet();
 			String deptId = common.getDeptId();
-			LOGGER.debug("folderId :" + folderId + ", serverName : "+ serverName + ", userId : " +userId + ", tenantId : " + tenantId
+			logger.debug("folderId :" + folderId + ", serverName : "+ serverName + ", userId : " +userId + ", tenantId : " + tenantId
 					+ ", comId : " + comId + ", offset" + offset);
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			if (folderId.equals("") || serverName.equals("") || uppId.equals("") || offset.equals("") || mode.equals("") ) {
-				LOGGER.debug("Parameter error!");
+				logger.debug("Parameter error!");
 				result.put("status", "error");
 				result.put("code", 1);
 				return result;
@@ -347,24 +347,24 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
 			
 			if ( checkPermission.equals("fail")) {
-				LOGGER.debug("checkPermission is fail. ");
+				logger.debug("checkPermission is fail. ");
 				result.put("status", "error");
 				result.put("code"	, 3);
-				LOGGER.debug("folderCopy method ended");
+				logger.debug("folderCopy method ended");
 				return result;
 			}
 			
 			FolderVO folder     = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			FolderVO destFolder = ezWebFolderService.getFolderByFolderId(uppId, offset, tenantId);
 			int checkSbCreater = 0;
-			LOGGER.debug("mode : " + mode + ", folderId : " + folderId + ", destFolder.getFolderPath() : " + destFolder.getFolderPath());
+			logger.debug("mode : " + mode + ", folderId : " + folderId + ", destFolder.getFolderPath() : " + destFolder.getFolderPath());
 			
 			if (mode.equals("folder-move")) {
 				
 				// 하위의 있는 폴더가 모두 자신의 것이 아닐때
 				checkSbCreater = service.checkCreator(folderId, tenantId, comId, userId);
 				if (checkSbCreater != 1) {
-					LOGGER.debug("subFolder or SubFile is not mine!");
+					logger.debug("subFolder or SubFile is not mine!");
 					result.put("status", "ok");
 					result.put("code", 4);
 					return result;
@@ -406,7 +406,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
 				
 				if (folderSize > (totalCapa - totalUsed)) {
-					LOGGER.debug("Not enough storage to move/copy this folder!");
+					logger.debug("Not enough storage to move/copy this folder!");
 					result.put("status", "error");
 					result.put("code", 7);
 					result.put("data", "");
@@ -433,7 +433,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 2);
 		}
-		LOGGER.debug("folderCopy ended");
+		logger.debug("folderCopy ended");
 		return result;
 	}
 	
@@ -441,14 +441,14 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value ="/rest/ezwebfolder/folders/{folderId:.+}", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
 	public JSONObject folderDelete (@PathVariable String folderId , HttpServletRequest request,@RequestBody JSONObject jsonObject) {
-		LOGGER.debug("folderDelete started");
+		logger.debug("folderDelete started");
 		JSONObject jsonObj = new JSONObject();
 		String serverName = request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
 //		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
 		String userId = (String) jsonObject.get("userId");
-		LOGGER.debug((String)jsonObject.get("userId"));
+		logger.debug((String)jsonObject.get("userId"));
 		MCommonVO common;
 		try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
@@ -475,7 +475,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 		}
-		LOGGER.debug("folderDelete ended");
+		logger.debug("folderDelete ended");
 		return jsonObj;
 	}
 	
@@ -483,7 +483,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value ="/rest/ezwebfolder/folder-delete", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
 	public JSONObject folderDelete2 ( HttpServletRequest request,@RequestBody JSONObject jsonObject) {
-		LOGGER.debug("folderDelete started");
+		logger.debug("folderDelete started");
 		JSONObject jsonObj 			= new JSONObject();
 		String serverName 			= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
 		SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -492,7 +492,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String listFolderId   		= (String) jsonObject.get("folderId") != null ? (String) jsonObject.get("folderId") : "";
 		String[] folderIDList 		= listFolderId.split(",");
 		
-		LOGGER.debug((String)jsonObject.get("userId"));
+		logger.debug((String)jsonObject.get("userId"));
 		MCommonVO common;
 		try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
@@ -507,10 +507,10 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				checkPermission = service.checkPermission(userId, deptId, comId, folderIDList[i], "D", tenantId);
 				
 				if ( checkPermission.equals("fail")) {
-					LOGGER.debug("checkPermission is fail. ");
+					logger.debug("checkPermission is fail. ");
 					jsonObj.put("status", "error");
 					jsonObj.put("code"	, 3);
-					LOGGER.debug("fileList method ended");
+					logger.debug("fileList method ended");
 					return jsonObj;
 				}
 			}
@@ -531,7 +531,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 		}
-		LOGGER.debug("folderDelete ended");
+		logger.debug("folderDelete ended");
 		return jsonObj;
 	}
 	
@@ -539,7 +539,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/folders/{folderId}/file-list", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
 	public JSONObject fileList (@PathVariable String folderId, HttpServletRequest request)  {
-		LOGGER.debug("fileList method started");
+		logger.debug("fileList method started");
 		
 		JSONObject jsonObj = new JSONObject();
 		String serverName = request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
@@ -557,8 +557,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
    		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
    		searchCreateName = commonUtil.getWildcardEscapedString(searchCreateName, dbName);
 		
-		LOGGER.debug("searchExt : " + searchExt + " || searchFileName : " + searchFileName);
-		LOGGER.debug("searchFileType : " + searchFileType + " || searchCreateName : " + searchCreateName);
+		logger.debug("searchExt : " + searchExt + " || searchFileName : " + searchFileName);
+		logger.debug("searchFileType : " + searchFileType + " || searchCreateName : " + searchCreateName);
 		
 		int totalCount = request.getParameter("totalCount") 				!= null ? Integer.parseInt(request.getParameter("totalCount"))	: 0;
 		int currPage = request.getParameter("currPage") 					!= null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
@@ -568,11 +568,11 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		JSONObject data = new JSONObject();
 		
 		if (folderId.equals("") || userId.equals("") ) {
-			LOGGER.debug("Parameter error!");
+			logger.debug("Parameter error!");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
 			
-			LOGGER.debug("fileList method ended");
+			logger.debug("fileList method ended");
 			return jsonObj;
 		}
 		
@@ -587,18 +587,18 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
 			
 			if ( checkPermission.equals("fail")) {
-				LOGGER.debug("checkPermission is fail. ");
+				logger.debug("checkPermission is fail. ");
 				jsonObj.put("status", "error");
 				jsonObj.put("code"	, 3);
-				LOGGER.debug("fileList method ended");
+				logger.debug("fileList method ended");
 				return jsonObj;
 			}
 			
 			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
 			int usrListCnt = service.getUsrListCount(tenantId, userId);
 			
-			LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
-			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
+			logger.debug("offset : " + commonUtil.getMinuteUTC(offset));
+			logger.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
 			
 			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
 			
@@ -613,16 +613,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				service.insertEnv(userId, tenantId, listCount);
 			}
 			
-			LOGGER.debug("listCount : " + listCount + " || currPage : " + currPage+ " || totalpages : "+ totalpages + " || pEnd : " + pEnd );
-			LOGGER.debug("folderId : " + folderId + " || deptId : "+ deptId + " || offset : " + offset );
-			LOGGER.debug("pStart : " + pStart + " || pEnd : " + pEnd);
+			logger.debug("listCount : " + listCount + " || currPage : " + currPage+ " || totalpages : "+ totalpages + " || pEnd : " + pEnd );
+			logger.debug("folderId : " + folderId + " || deptId : "+ deptId + " || offset : " + offset );
+			logger.debug("pStart : " + pStart + " || pEnd : " + pEnd);
 			
 			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
 			Map<String, Integer> cnt = service.getFileToTalCount(folderId, userId, deptId, tenantId, comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset , primary);
 			
-			LOGGER.debug("fileListSize : " + cnt + " || searchStartDate : " + searchStartDate + " || searchEndDate : " + searchEndDate );
+			logger.debug("fileListSize : " + cnt + " || searchStartDate : " + searchStartDate + " || searchEndDate : " + searchEndDate );
 			
 			int fileCnt = cnt.get("fileTotalCnt");
 			int fldCnt  = cnt.get("fldTotalCnt");
@@ -645,7 +645,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset, primary);
 			
-			LOGGER.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
+			logger.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
 			
 			
 			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
@@ -654,7 +654,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			folderPath            = folderPath.substring(1, folderPath.length() - 1);
 			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
 			
-			LOGGER.debug("OriginalPath: " + originalPath);
+			logger.debug("OriginalPath: " + originalPath);
 					
 			Map<String, String> filePathMap = new LinkedHashMap<String, String>();
 
@@ -696,7 +696,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 			FolderVO fldDetail = service.getFolderDetail(folderId, userId, tenantId, comId);
 			
-			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
+			logger.debug("-------folderUpp" + fldDetail.getFolderUpper());
 			
 			data.put("folderUpp", fldDetail.getFolderUpper());
 			data.put("createDate", fldDetail.getCreateDate());
@@ -739,13 +739,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.debug(" fail ");
+			logger.debug(" fail ");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 			jsonObj.put("data", "");
 		}
 		
-		LOGGER.debug("fileList method ended");
+		logger.debug("fileList method ended");
 		return jsonObj;
 	}
 
@@ -753,7 +753,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/folders/{folderId}/file-list2", method=RequestMethod.GET, produces ="application/json;charset=utf-8")
 	public JSONObject fileList2 (@PathVariable String folderId, HttpServletRequest request)  {
-		LOGGER.debug("fileList method started");
+		logger.debug("fileList method started");
 		
 		JSONObject jsonObj = new JSONObject();
 		String serverName = request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
@@ -774,8 +774,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		searchFileName = commonUtil.getWildcardEscapedString(searchFileName, dbName);
 		searchCreateName = commonUtil.getWildcardEscapedString(searchCreateName, dbName);
 		
-		LOGGER.debug("searchExt : " + searchExt + " || searchFileName : " + searchFileName);
-		LOGGER.debug("searchFileType : " + searchFileType + " || searchCreateName : " + searchCreateName);
+		logger.debug("searchExt : " + searchExt + " || searchFileName : " + searchFileName);
+		logger.debug("searchFileType : " + searchFileType + " || searchCreateName : " + searchCreateName);
 		
 		int totalCount = request.getParameter("totalCount") 				!= null ? Integer.parseInt(request.getParameter("totalCount"))	: 0;
 		int currPage = request.getParameter("currPage") 					!= null ? Integer.parseInt(request.getParameter("currPage")) 	: 1;
@@ -785,7 +785,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		JSONObject data = new JSONObject();
 		
 		if (folderId.equals("") || userId.equals("") ) {
-			LOGGER.debug("Parameter error!");
+			logger.debug("Parameter error!");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
 		}
@@ -800,10 +800,10 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
 			
 			if ( checkPermission.equals("fail")) {
-				LOGGER.debug("checkPermission is fail. ");
+				logger.debug("checkPermission is fail. ");
 				jsonObj.put("status", "error");
 				jsonObj.put("code"	, 3);
-				LOGGER.debug("fileList2 method ended");
+				logger.debug("fileList2 method ended");
 				return jsonObj;
 			}
 			
@@ -816,8 +816,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				usrListCnt = 10000;
 			}
 			
-			LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
-			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
+			logger.debug("offset : " + commonUtil.getMinuteUTC(offset));
+			logger.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
 			
 			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
 			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
@@ -834,16 +834,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				}
 			}
 			
-			LOGGER.debug("listCount : " + listCount + " || currPage : " + currPage+ " || totalpages : "+ totalpages + " || pEnd : " + pEnd );
-			LOGGER.debug("folderId : " + folderId + " || deptId : "+ deptId + " || offset : " + offset );
-			LOGGER.debug("pStart : " + pStart + " || pEnd : " + pEnd);
+			logger.debug("listCount : " + listCount + " || currPage : " + currPage+ " || totalpages : "+ totalpages + " || pEnd : " + pEnd );
+			logger.debug("folderId : " + folderId + " || deptId : "+ deptId + " || offset : " + offset );
+			logger.debug("pStart : " + pStart + " || pEnd : " + pEnd);
 			
 			// fileCnt : 파일 개수 , fldCnt : 폴더 개수 , totalCount : 파일, 폴더 둘다 합한 개수 ( 페이징 하기 위해 필요 ) 
 			Map<String, Integer> cnt = service.getFileToTalCount2(folderId, userId, deptId, tenantId, comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset , primary);
 			
-			LOGGER.debug("fileListSize : " + cnt + " || searchStartDate : " + searchStartDate + " || searchEndDate : " + searchEndDate );
+			logger.debug("fileListSize : " + cnt + " || searchStartDate : " + searchStartDate + " || searchEndDate : " + searchEndDate );
 			
 			int fileCnt = cnt.get("fileTotalCnt");
 			int fldCnt  = cnt.get("fldTotalCnt");
@@ -865,7 +865,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
 					searchPageCount, pStart, pEnd, offset, primary, sortType, sortColumn);
 			
-			LOGGER.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
+			logger.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
 			
 			
 			FolderVO folder       = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
@@ -874,7 +874,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			folderPath            = folderPath.substring(1, folderPath.length() - 1);
 			String originalPath   = ezWebFolderService.getFolderPath(folderPath.split("\\|"), primary, tenantId);
 			
-			LOGGER.debug("OriginalPath: " + originalPath);
+			logger.debug("OriginalPath: " + originalPath);
 			
 			Map<String, String> filePathMap = new LinkedHashMap<String, String>();
 			
@@ -915,7 +915,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 			FolderVO fldDetail = service.getFolderDetail(folderId, userId, tenantId, comId);
 			
-			LOGGER.debug("-------folderUpp" + fldDetail.getFolderUpper());
+			logger.debug("-------folderUpp" + fldDetail.getFolderUpper());
 			
 			data.put("folderUpp", fldDetail.getFolderUpper());
 			data.put("createDate", fldDetail.getCreateDate());
@@ -958,13 +958,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.debug(" fail ");
+			logger.debug(" fail ");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 			jsonObj.put("data", "");
 		}
 		
-		LOGGER.debug("fileList method ended");
+		logger.debug("fileList method ended");
 		return jsonObj;
 	}
 	
@@ -979,13 +979,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkpermission", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject checkPermission (@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request)  {
-		LOGGER.debug("checkPermission started.");
+		logger.debug("checkPermission started.");
 		
 		String serverName 	= orElse(request.getHeader("x-user-host"), "");
 		
 		List<Map<String, Object>> checkList = (List<Map<String, Object>>) jsonObject.get("checkList");
 		
-		LOGGER.debug("userId: " + userId + " || serverName: " + serverName);
+		logger.debug("userId: " + userId + " || serverName: " + serverName);
 		
 		JSONObject jsonObj = new JSONObject();
 		
@@ -993,7 +993,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("status"	, "error");
 			jsonObj.put("code"		, 1);
 			jsonObj.put("data"		, "");
-			LOGGER.debug("parameter error. checkPermission ended.");
+			logger.debug("parameter error. checkPermission ended.");
 			return jsonObj;
 		}
 		
@@ -1012,13 +1012,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				checkResult = service.checkPermission(userId, deptId, comId, checkId, checkType, tenantId);
 				
 				if (checkResult.equals("fail")) {
-					LOGGER.debug("this folder conection is not permission ");
+					logger.debug("this folder conection is not permission ");
 					jsonObj.put("status", "error");
 					jsonObj.put("code"	, 3);
-					LOGGER.debug("checkPermission method Ended ");
+					logger.debug("checkPermission method Ended ");
 					return jsonObj;
 				}
-				LOGGER.debug(checkResult);
+				logger.debug(checkResult);
 				
 			}
 			
@@ -1031,7 +1031,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("code"		, 2);
 		}
 		
-		LOGGER.debug("checkPermission ended.");
+		logger.debug("checkPermission ended.");
 		return jsonObj;
 
 	}
@@ -1039,7 +1039,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/users/{userId}/checkpermissions", method=RequestMethod.POST, produces ="application/json;charset=utf-8")
 	public JSONObject checkPermissions(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) {
-		LOGGER.debug("checkPermissions started.");
+		logger.debug("checkPermissions started.");
 
 		String serverName = orElse(request.getHeader("x-user-host"), "");
 
@@ -1047,7 +1047,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String folderList = jsonObject.get("folderList").toString();
 		boolean isAdminCheck = jsonObject.get("adminCheck") != null;
 
-		LOGGER.debug("userId: " + userId + " || serverName: " + serverName);
+		logger.debug("userId: " + userId + " || serverName: " + serverName);
 
 		JSONObject jsonObj = new JSONObject();
 
@@ -1055,7 +1055,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
 			jsonObj.put("data", "");
-			LOGGER.debug("parameter error. checkPermissions ended.");
+			logger.debug("parameter error. checkPermissions ended.");
 			return jsonObj;
 		}
 
@@ -1078,7 +1078,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("code", 2);
 		}
 
-		LOGGER.debug("checkPermissions ended.");
+		logger.debug("checkPermissions ended.");
 		return jsonObj;
 	}
 
@@ -1088,7 +1088,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/fldfile/{fldfile}/fldfile-detail", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFldFileDetail(@PathVariable String fldfile, HttpServletRequest request) {
-		LOGGER.debug("getFldFileDetail started.");
+		logger.debug("getFldFileDetail started.");
 		
 		JSONObject jsonObj = new JSONObject();
 		String serverName 	= request.getHeader("x-user-host")      			!= null ? request.getHeader("x-user-host") 			: "" ;
@@ -1099,11 +1099,11 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		JSONObject data = new JSONObject();
 		
 		if (fldfile.equals("") || userId.equals("") || fldFileId.equals("")) {
-			LOGGER.debug("Parameter error!");
+			logger.debug("Parameter error!");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
 			
-			LOGGER.debug("getFldFileDetail method ended");
+			logger.debug("getFldFileDetail method ended");
 			return jsonObj;
 		}
 		
@@ -1124,20 +1124,20 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.debug(" fail ");
+			logger.debug(" fail ");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 			jsonObj.put("data", "");
 		}
 		
-		LOGGER.debug("getFldFileDetail method ended");
+		logger.debug("getFldFileDetail method ended");
 		return jsonObj;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload-overwrite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject postFileUploadOverWrite(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) {
-		LOGGER.debug("postFileUploadOverWrite start");
+		logger.debug("postFileUploadOverWrite start");
 		JSONParser jp          = new JSONParser();
 		JSONObject jsonObject;
 		JSONObject result      = new JSONObject();
@@ -1150,10 +1150,10 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String folderId        = jsonObject.get("folderId")     != null ? (String) jsonObject.get("folderId")     : "";
 			JSONArray fileIdArray  = jsonObject.get("fileIdArray")   	!= null ? (JSONArray) jsonObject.get("fileIdArray")	  : null;
 			
-			LOGGER.debug("Servername: " + serverName + " || UserId: " + userId + " || FolderId: " + folderId ); 
+			logger.debug("Servername: " + serverName + " || UserId: " + userId + " || FolderId: " + folderId ); 
 			
 			if (nameArray == null || serverName.equals("") || userId.equals("") || folderId.equals("") || fileIdArray == null ) {
-				LOGGER.debug("Parameter error!");
+				logger.debug("Parameter error!");
 				result.put("status", "error");
 				result.put("code", 1);
 				return result;
@@ -1163,7 +1163,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				System.out.println(fileIdArray != null ? fileIdArray.size() : 0);
 				System.out.println(nameArray != null ? nameArray.size() : 0);
 				System.out.println(multiFileLists.size());
-				LOGGER.debug("Some files upload failed!");
+				logger.debug("Some files upload failed!");
 				result.put("status", "error");
 				result.put("code", 1);
 				return result;
@@ -1198,13 +1198,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 			UserCapacityVO userCapacity = ezWebFolderAdminService.getCapacity(folderId, userInfo.getPrimary(), userInfo.getTenantId());
-			LOGGER.debug("userCapacity!");
+			logger.debug("userCapacity!");
 			
 			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
 			double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
 			
 			if (totalUploadSize > (totalCapa - totalUsed)) {
-				LOGGER.debug("Not enough storage to upload these files!");
+				logger.debug("Not enough storage to upload these files!");
 				result.put("status", "error");
 				result.put("code", 5);
 				return result;
@@ -1228,7 +1228,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			result.put("code", 2);
 		}
 
-		LOGGER.debug("postFileUploadOverWrite end");
+		logger.debug("postFileUploadOverWrite end");
 		return result;
 	}
 	
@@ -1241,8 +1241,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@RequestMapping(value="/rest/ezwebfolder/login", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public JSONObject webfolderLogin(HttpServletRequest request, @RequestBody String requestBody) {
 		JSONObject result = new JSONObject();
-		LOGGER.debug("webfolderLogin start.");
-		LOGGER.debug("requestBody=" + requestBody);
+		logger.debug("webfolderLogin start.");
+		logger.debug("requestBody=" + requestBody);
 		
 		try {
 			JSONObject requestObject = new JSONObject();
@@ -1256,12 +1256,12 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	    	int tenantId = 0;
 	    	
 	    	// postMan으로 원하는 encrypt를 원할시 테스트하기 위함.  
-	    	// LOGGER.debug(webfolderUtil.encryptAES(userIde));
-	    	// LOGGER.debug(webfolderUtil.encryptAES(pwe));
+	    	// logger.debug(webfolderUtil.encryptAES(userIde));
+	    	// logger.debug(webfolderUtil.encryptAES(pwe));
 	    	
 	    	userId = webfolderUtil.decryptAES(userId);
 			pw = webfolderUtil.decryptAES(pw);
-			LOGGER.debug("userId=" + userId + ",pw=" + pw);
+			logger.debug("userId=" + userId + ",pw=" + pw);
 		
 			String encryptedPw = EgovFileScrty.encryptPassword(pw, userId);
 			
@@ -1278,13 +1278,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy");
 			String createdToken = UUID.randomUUID().toString() + userId + sdf.format(new Date());
 			createdToken = Base64.encodeBase64String(createdToken.getBytes());
-			LOGGER.debug("createdToken=" + createdToken);
+			logger.debug("createdToken=" + createdToken);
 			
 			// table은 tbl_webfolder_token
 			// table에 insert할 데이터 : userId, 토큰, 등록날짜(디비에 있는 서버 utc사용 ), companyId, tenantId(PK), divice 
 			
 			String resultToken = service.setAuthLoginTokenSql(userId, createdToken, tenantId, 0);
-			LOGGER.debug("resultToken=" + resultToken);
+			logger.debug("resultToken=" + resultToken);
 			
 			if (resultToken == null) {
 				throw new Exception("resultToken is null");
@@ -1307,7 +1307,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("webfolderLogin end.");
+		logger.debug("webfolderLogin end.");
 		return result;
 	}
 	
@@ -1321,14 +1321,14 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String userId       = (String) orElse(jsonObject.get("userId"), "");
 		String adminId   	= (String) orElse(jsonObject.get("adminId"), "");
 		
-		LOGGER.debug("deleteUserAllFileAndFolder Started.");
-		LOGGER.debug("userId : " + userId  + " || serverName : " + serverName);
+		logger.debug("deleteUserAllFileAndFolder Started.");
+		logger.debug("userId : " + userId  + " || serverName : " + serverName);
 		String[] fileIDList = fileList.split(",");
 		String[] folderIDList = folderList.split(",");
 		String realPath = request.getServletContext().getRealPath("");
 		
 		if (serverName.equals("") || userId.equals("")) {
-			LOGGER.debug("Parameter error!");
+			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
 			return result;
@@ -1343,7 +1343,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			/* 2020-10-27 김은실 - 사용자 삭제 시 웹폴더 구성원 삭제 동작 추가 */
 			ezWebFolderAdminService.deleteFolderUsersByUserId(userId, "USER", userInfo.getCompanyID(), userInfo.getTenantId());
 			if (folderIdTypeU == null){
-	            LOGGER.debug("The user folder does not exist.");
+	            logger.debug("The user folder does not exist.");
 	            result.put("status", "ok");
 	            result.put("code", 3);
 	            return result;
@@ -1363,7 +1363,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			result.put("code", 2);
 		}
 		
-		LOGGER.debug("filePermanetDelete ended");
+		logger.debug("filePermanetDelete ended");
 		
 		result.put("status", "ok");
 		result.put("code", 0);
@@ -1374,7 +1374,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	@RequestMapping(value="/rest/ezwebfolder/folderidbyuserid-foldertype", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public JSONObject folderIdByUserIdAndFolderType(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception{
 		
-		LOGGER.debug("folderIdByUserIdAndFolderType start.");
+		logger.debug("folderIdByUserIdAndFolderType start.");
 		JSONParser parser  = new JSONParser();
 		JSONObject json = new JSONObject();
 		String folderId = "";
@@ -1382,7 +1382,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String folderType = (String) jsonObject.get("folderType");
 		
 		try {
-			LOGGER.debug("userId=" + jsonObject.get("ownerId").toString() + ",tenantId=" + jsonObject.get("tenantId").toString() 
+			logger.debug("userId=" + jsonObject.get("ownerId").toString() + ",tenantId=" + jsonObject.get("tenantId").toString() 
 					+ ",folderType=" + jsonObject.get("folderType").toString());
 //			folderId = service.folderIdByUserIdAndFolderType(jsonObject.get("ownerId").toString(), Integer.parseInt(jsonObject.get("tenantId").toString())
 //					, jsonObject.get("folderType").toString());
@@ -1403,19 +1403,19 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			return json;
 		}
 		
-		LOGGER.debug("folderId=" + folderId);
+		logger.debug("folderId=" + folderId);
 		json.put("folderInfo", folderInfo);
 		json.put("folderId", folderId);
 		json.put("status", "ok");
 		json.put("code", 0);
-		LOGGER.debug("folderIdByUserIdAndFolderType end.");
+		logger.debug("folderIdByUserIdAndFolderType end.");
 		return json ;
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolder/selectwebfolderfiletoanother", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public JSONObject selectWebfolderFiletoAnother(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception{
 		
-		LOGGER.debug("folderIdByUserIdAndFolderType start.");
+		logger.debug("folderIdByUserIdAndFolderType start.");
 		ArrayList<Map<String, Object>> fileList = new ArrayList<Map<String,Object>>();
 		JSONObject result = new JSONObject();
 		
@@ -1427,7 +1427,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		
 		// 퍼미션 체크 해야함 
 		try {
-			LOGGER.debug("userId=" + userId + ",list=" + list + ",tenantId=" + tenantId);
+			logger.debug("userId=" + userId + ",list=" + list + ",tenantId=" + tenantId);
 			
 			fileList = service.selectWebfolderFiletoAnother(userId, list, tenantId);
 			
@@ -1441,14 +1441,14 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		result.put("fileList", fileList);
 		result.put("status", "ok");
 		result.put("code", 0);
-		LOGGER.debug("folderIdByUserIdAndFolderType end.");
+		logger.debug("folderIdByUserIdAndFolderType end.");
 		return result ;
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolder/selectedfolder-checkpermission", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public JSONObject selectFolderCheckPermission(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception{
 		
-		LOGGER.debug("selectFolderCheckPermission start.");
+		logger.debug("selectFolderCheckPermission start.");
 		JSONObject jsonObj = new JSONObject();
 		
 		LoginVO user = commonUtil.getUserForGw(jsonObject.get("userId").toString(), request.getHeader("x-user-host"));
@@ -1476,7 +1476,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, fileFolderType, tenantId);
 			
 			if ( checkPermission.equals("fail")) {
-				LOGGER.debug("checkPermission is fail. ");
+				logger.debug("checkPermission is fail. ");
 				jsonObj.put("status", "error");
 				jsonObj.put("code"	, 3);
 				return jsonObj;
@@ -1491,7 +1491,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		
 		jsonObj.put("status", "ok");
 		jsonObj.put("code", 0);
-		LOGGER.debug("selectFolderCheckPermission end.");
+		logger.debug("selectFolderCheckPermission end.");
 		return jsonObj;
 	}
 	
@@ -1499,7 +1499,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	public JSONObject changeUserFileORFolder(HttpServletRequest request, @PathVariable(value="targetId") String targetId,
 			@PathVariable(value="targetType") String targetType, @RequestBody JSONObject jsonObject) throws Exception{
 		
-		LOGGER.debug("changeUserFileORFolder start.");
+		logger.debug("changeUserFileORFolder start.");
 		JSONObject jsonObj = new JSONObject();
 		LoginVO user = commonUtil.getUserForGw(jsonObject.get("userId").toString(), request.getHeader("x-user-host"));
 		
@@ -1538,11 +1538,11 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			deleteUser.add(deleteUserJSON.get(i).toString());
 		}
 		
-		LOGGER.debug("serverName: {}, userId: {}, folderUsers: {}, deleteUser: {}, addUser: {}",
+		logger.debug("serverName: {}, userId: {}, folderUsers: {}, deleteUser: {}, addUser: {}",
 				serverName, userId, folderUsers, deleteUser, addUser);
 		
 		if (targetId.equals("") || userId.equals("") || folderUsers.equals("") || serverName.equals("")) {
-			LOGGER.debug("Parameter error!");
+			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
 			return result;
@@ -1575,14 +1575,14 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 2);
 		}
-		LOGGER.debug("changeUserFileORFolder end.");
+		logger.debug("changeUserFileORFolder end.");
 		return result;
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolder/webfolderFileDownForUnidocs", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
 	public JSONObject webfolderFileDownForUnidocs(HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception{
 		
-		LOGGER.debug("webfolderFileDownForUnidocs start.");
+		logger.debug("webfolderFileDownForUnidocs start.");
 		
 		JSONObject result = new JSONObject();
 		String userId = jsonObject.get("userId").toString();
@@ -1594,7 +1594,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String offset = userInfo.getOffset();
 		
 		try {
-			LOGGER.debug("userId=" + userId );
+			logger.debug("userId=" + userId );
 			LoginVO user = commonUtil.getUserForGw(userId, request.getHeader("x-user-host"));
 			int tenantId = user.getTenantId();
 			String fileId = jsonObject.get("fileId").toString();
@@ -1603,7 +1603,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			if(!"admin".equalsIgnoreCase(adminPage)){
 				String checkPermission = service.checkPermission(userId, user.getDeptID(), user.getCompanyID(), fileId, "F", tenantId);
 				if ("fail".equals(checkPermission)) {
-					LOGGER.debug("checkPermission is fail. ");
+					logger.debug("checkPermission is fail. ");
 					result.put("status", "error");
 					result.put("code"	, 3);
 					return result;
@@ -1622,7 +1622,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				filePath = filevo.getFilePath();
 			}
 			
-			LOGGER.debug("filevo.setFileName:" + filevo.getFileName());
+			logger.debug("filevo.setFileName:" + filevo.getFileName());
 			String realPath  = request.getServletContext().getRealPath("");
 			JSONObject fileDownStatus = commonUtil.unidocsFileDown(filePath, realPath, "webfolder", tenantId);
 			String status = fileDownStatus.get("status").toString().toLowerCase();
@@ -1645,7 +1645,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			return result;
 		}
 		
-		LOGGER.debug("webfolderFileDownForUnidocs end.");
+		logger.debug("webfolderFileDownForUnidocs end.");
 		return result ;
 	}
 }

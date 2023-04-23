@@ -50,7 +50,7 @@ public class EgovFileScrty {
 	// 버퍼사이즈
 	static final int BUFFER_SIZE = 1024;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileScrty.class);
+	private static final Logger logger = LoggerFactory.getLogger(EgovFileScrty.class);
 	
 	@Value("${CRYPTO.prm}")
 	public String prm;	
@@ -102,14 +102,14 @@ public class EgovFileScrty {
 				try {
 					input.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORE: {}" + ignore);
+					logger.debug("IGNORE: {}" + ignore);
 				}
 			}
 			if (output != null) {
 				try {
 					output.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORE: {}" + ignore);
+					logger.debug("IGNORE: {}" + ignore);
 				}
 			}
 		}
@@ -157,14 +157,14 @@ public class EgovFileScrty {
 				try {
 					input.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORE: {}" + ignore);
+					logger.debug("IGNORE: {}" + ignore);
 				}
 			}
 			if (output != null) {
 				try {
 					output.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORE: {}" + ignore);
+					logger.debug("IGNORE: {}" + ignore);
 				}
 			}
 		}
@@ -306,7 +306,7 @@ public class EgovFileScrty {
    	 		decryptedValue = new String(decryptedBytes, "utf-8"); // 문자 인코딩 주의.
    	 		
    	 	}catch(Exception e){
-			LOGGER.debug("e.message=" + e.getMessage());   	 		
+			logger.debug("e.message=" + e.getMessage());   	 		
    	 	}
    		return decryptedValue;
     } 
@@ -408,10 +408,10 @@ public class EgovFileScrty {
             
         } finally {
             if (output != null) {
-                try { output.close(); } catch (IOException e) {LOGGER.debug("e.message=" + e.getMessage());}
+                try { output.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
             }
             if (input != null) {
-                try { input.close(); } catch (IOException e) {LOGGER.debug("e.message=" + e.getMessage());}
+                try { input.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
             }
         }
     }

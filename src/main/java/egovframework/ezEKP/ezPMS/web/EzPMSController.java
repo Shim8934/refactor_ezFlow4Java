@@ -67,7 +67,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @Controller
 public class EzPMSController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzPMSController.class);
 
 	public static final int BUFF_SIZE = 2048;
 
@@ -92,8 +92,8 @@ public class EzPMSController {
 	 */
 	@RequestMapping(value = "/ezPMS/pmsMain.do")
 	public String main() {
-		LOGGER.debug("ezPMS main page started");
-		LOGGER.debug("ezPMS main page ended");
+		logger.debug("ezPMS main page started");
+		logger.debug("ezPMS main page ended");
 		return "ezPMS/pmsMain";
 	}
 
@@ -105,9 +105,9 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/pmsLeft.do")
 	public String left(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS left page started");
+		logger.debug("ezPMS left page started");
 		model.addAttribute("mode", request.getParameter("mode"));
-		LOGGER.debug("ezPMS left page ended");
+		logger.debug("ezPMS left page ended");
 		return "ezPMS/pmsLeft";
 	}
 
@@ -118,7 +118,7 @@ public class EzPMSController {
 	public String projectList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
 
-		LOGGER.debug("ezPMS projectList started");
+		logger.debug("ezPMS projectList started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -137,14 +137,14 @@ public class EzPMSController {
 			model.addAttribute("userId", userId);
 		}
 
-		LOGGER.debug("ezPMS projectList ended");
+		logger.debug("ezPMS projectList ended");
 		return "ezPMS/pmsProjectListMain";
 	}
 
 	@RequestMapping(value = "/ezPMS/getProjectList.do")
 	public String getProjectList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param,
 			HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		LOGGER.debug("ezPMS getProjectList started");
+		logger.debug("ezPMS getProjectList started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -219,9 +219,9 @@ public class EzPMSController {
 			}
 		}
 
-		LOGGER.debug("[result] projectSort : " + projectSort + ", projectLsitCount : " + projectListCount
+		logger.debug("[result] projectSort : " + projectSort + ", projectLsitCount : " + projectListCount
 				+ ", currentPage : " + currentPage + ", listNumber : " + listNumber);
-		LOGGER.debug("ezPMS getProjectList ended");
+		logger.debug("ezPMS getProjectList ended");
 		return "ezPMS/pmsProjectList" + viewType;
 	}
 
@@ -231,8 +231,8 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/pmsMyTask.do")
 	public String myTaskPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS MyTask page started");
-		LOGGER.debug("ezPMS MyTask page ended");
+		logger.debug("ezPMS MyTask page started");
+		logger.debug("ezPMS MyTask page ended");
 		return "ezPMS/pmsMyTask";
 	}
 
@@ -242,7 +242,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/pmsSetting.do")
 	public String pmsSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS Setting started");
+		logger.debug("ezPMS Setting started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 
@@ -258,10 +258,10 @@ public class EzPMSController {
 			JSONObject setting = (JSONObject) result.get("data");
 
 			model.addAttribute("setting", setting);
-			LOGGER.debug("[result] list setting number : " + setting.get("listNumber"));
+			logger.debug("[result] list setting number : " + setting.get("listNumber"));
 		}
 
-		LOGGER.debug("ezPMS Setting started");
+		logger.debug("ezPMS Setting started");
 		return "ezPMS/pmsSetting";
 	}
 
@@ -271,7 +271,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getProjectDetails.do")
 	public String getProjectDetails(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getProjectDetails started");
+		logger.debug("ezPMS getProjectDetails started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
 		String userId = userInfo.getId();
@@ -286,10 +286,10 @@ public class EzPMSController {
 
 			// 프로젝트 정보 호출
 			model.addAttribute("project", project);
-			LOGGER.debug("[result] project id : " + project.get("projectId"));
+			logger.debug("[result] project id : " + project.get("projectId"));
 		}
 
-		LOGGER.debug("ezPMS getProjectDetails ended");
+		logger.debug("ezPMS getProjectDetails ended");
 		return "ezPMS/pmsProjectDetails";
 	}
 
@@ -300,7 +300,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/newProject.do")
 	public String newProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS addNewProject started");
+		logger.debug("ezPMS addNewProject started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userName = userInfo.getDisplayName1();
@@ -340,7 +340,7 @@ public class EzPMSController {
 				model.addAttribute("project", project);
 				model.addAttribute("groupId", groupId);
 
-				LOGGER.debug("[result] project projectName : " + project.get("projectName"));
+				logger.debug("[result] project projectName : " + project.get("projectName"));
 			}
 
 		}
@@ -351,7 +351,7 @@ public class EzPMSController {
 		model.addAttribute("planStartDate", planStartDate);
 		model.addAttribute("planEndDate", planEndDate);
 
-		LOGGER.debug("ezPMS addNewProject ended");
+		logger.debug("ezPMS addNewProject ended");
 		return "ezPMS/newProject";
 	}
 
@@ -364,7 +364,7 @@ public class EzPMSController {
 	public JSONObject addNewProject(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model)
 			throws Exception {
-		LOGGER.debug("ezPMS addNewProject started");
+		logger.debug("ezPMS addNewProject started");
 
 		long projectId = 0;
 		long groupId = 0;
@@ -413,13 +413,13 @@ public class EzPMSController {
 			json.put("projectId", projectId);
 			json.put("groupId", groupId);
 
-			LOGGER.debug("projectId : " + projectId + ", groupId : " + groupId);
+			logger.debug("projectId : " + projectId + ", groupId : " + groupId);
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.debug("ERROR : " + e.getMessage());
+			logger.debug("ERROR : " + e.getMessage());
 		}
 
-		LOGGER.debug("ezPMS addNewProject ended");
+		logger.debug("ezPMS addNewProject ended");
 		return json;
 	}
 
@@ -437,7 +437,7 @@ public class EzPMSController {
 	@ResponseBody
 	public String deleteProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param,
 			HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS deleteProject started");
+		logger.debug("ezPMS deleteProject started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -450,8 +450,8 @@ public class EzPMSController {
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
 		String data = result.get("data").toString();
 
-		LOGGER.debug("[result] data : " + data);
-		LOGGER.debug("ezPMS deleteProject ended");
+		logger.debug("[result] data : " + data);
+		logger.debug("ezPMS deleteProject ended");
 		return data;
 	}
 
@@ -470,7 +470,7 @@ public class EzPMSController {
 	public String updateMainSetting(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model)
 			throws Exception {
-		LOGGER.debug("ezPMS updateMainSetting started");
+		logger.debug("ezPMS updateMainSetting started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -479,7 +479,7 @@ public class EzPMSController {
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
 		String status = result.get("status").toString();
 
-		LOGGER.debug("ezPMS updateMainSetting ended");
+		logger.debug("ezPMS updateMainSetting ended");
 		return status;
 	}
 
@@ -489,8 +489,8 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/changeProjectStatus.do")
 	public String changeProjectStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS changeProjectStatus started");
-		LOGGER.debug("ezPMS changeProjectStatus ended");
+		logger.debug("ezPMS changeProjectStatus started");
+		logger.debug("ezPMS changeProjectStatus ended");
 		return "ezPMS/changeProjectStatus";
 	}
 
@@ -509,7 +509,7 @@ public class EzPMSController {
 	public String updateProjectStatus(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model)
 			throws Exception {
-		LOGGER.debug("ezPMS updateProjectStatus started");
+		logger.debug("ezPMS updateProjectStatus started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String changeDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
@@ -528,7 +528,7 @@ public class EzPMSController {
 			data = result.get("data").toString();
 		}
 
-		LOGGER.debug("ezPMS updateProjectStatus ended");
+		logger.debug("ezPMS updateProjectStatus ended");
 		return data;
 	}
 
@@ -545,7 +545,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getProjectOverview.do")
 	public String getProjectOverview(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getProjectOverview started");
+		logger.debug("ezPMS getProjectOverview started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String projectId = request.getParameter("projectId");
@@ -571,10 +571,10 @@ public class EzPMSController {
 			model.addAttribute("userRole", userRole);
 			model.addAttribute("mainSetting", mainSetting);
 			model.addAttribute("userId", userId);
-			LOGGER.debug("[result] kanbanOrder : " + kanbanOrder + ", userRole : " + userRole);
+			logger.debug("[result] kanbanOrder : " + kanbanOrder + ", userRole : " + userRole);
 		}
 
-		LOGGER.debug("ezPMS getProjectOverview ended");
+		logger.debug("ezPMS getProjectOverview ended");
 		return "ezPMS/pmsProjectOverview";
 	}
 
@@ -591,7 +591,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getProjectMember.do")
 	public String getProjectMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getProjectMember started");
+		logger.debug("ezPMS getProjectMember started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String projectId = request.getParameter("projectId");
@@ -615,10 +615,10 @@ public class EzPMSController {
 			model.addAttribute("roleId", roleId);
 			model.addAttribute("memberList", memberList);
 			model.addAttribute("memberCount", memberCount);
-			LOGGER.debug("[result] memberCount : " + memberCount);
+			logger.debug("[result] memberCount : " + memberCount);
 		}
 
-		LOGGER.debug("ezPMS getProjectMember ended");
+		logger.debug("ezPMS getProjectMember ended");
 		return "ezPMS/pmsProjectMember";
 	}
 
@@ -638,7 +638,7 @@ public class EzPMSController {
 	public JSONObject getTaskList(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model)
 			throws Exception {
-		LOGGER.debug("ezPMS getTaskList started");
+		logger.debug("ezPMS getTaskList started");
 		Long startMillis = System.currentTimeMillis();
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -650,7 +650,7 @@ public class EzPMSController {
 		String countUrl = "/rest/ezPMS/projects/" + projectId + "/tasks/count";
 		JSONObject json = new JSONObject();
 
-		LOGGER.debug("kanbanOrder : " + kanbanOrder);
+		logger.debug("kanbanOrder : " + kanbanOrder);
 
 		if (!kanbanOrder.equals("") || kanbanOrder != null) {
 			String[] kanbanStatus = kanbanOrder.split(",");
@@ -726,8 +726,8 @@ public class EzPMSController {
 			}
 		}
 		Long endMillis = System.currentTimeMillis();
-		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
-		LOGGER.debug("ezPMS getTaskList ended");
+		logger.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
+		logger.debug("ezPMS getTaskList ended");
 		return json;
 	}
 
@@ -737,8 +737,8 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/kanbanSetting.do")
 	public String kanbanSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model mode) throws Exception {
-		LOGGER.debug("ezPMS kanbanSetting started");
-		LOGGER.debug("ezPMS kanbanSetting ended");
+		logger.debug("ezPMS kanbanSetting started");
+		logger.debug("ezPMS kanbanSetting ended");
 		return "ezPMS/pmsKanbanSetting";
 	}
 
@@ -757,7 +757,7 @@ public class EzPMSController {
 	public String changeKanbanOrder(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model)
 			throws Exception {
-		LOGGER.debug("ezPMS changeKanbanOrder started");
+		logger.debug("ezPMS changeKanbanOrder started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = param.get("projectId").toString();
 		String userId = userInfo.getId();
@@ -765,7 +765,7 @@ public class EzPMSController {
 
 		commonUtil.getJsonFromRestApi(url, param, request, "put", null);
 
-		LOGGER.debug("ezPMS changeKanbanOrder ended");
+		logger.debug("ezPMS changeKanbanOrder ended");
 		return null;
 	}
 
@@ -784,7 +784,7 @@ public class EzPMSController {
 	public String addFavoriteProject(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model)
 			throws Exception {
-		LOGGER.debug("ezPMS addFavoriteProject started");
+		logger.debug("ezPMS addFavoriteProject started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectIdList = param.get("projectList").toString();
 		String userId = userInfo.getId();
@@ -799,7 +799,7 @@ public class EzPMSController {
 			addResult = result.get("data").toString();
 		}
 
-		LOGGER.debug("ezPMS addFavoriteProject ended");
+		logger.debug("ezPMS addFavoriteProject ended");
 		return addResult;
 	}
 
@@ -817,7 +817,7 @@ public class EzPMSController {
 	public String deleteFavoriteProject(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model)
 			throws Exception {
-		LOGGER.debug("ezPMS deleteFavoriteProject started");
+		logger.debug("ezPMS deleteFavoriteProject started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = param.get("projectList").toString();
 		String userId = userInfo.getId();
@@ -826,7 +826,7 @@ public class EzPMSController {
 
 		commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
 
-		LOGGER.debug("ezPMS deleteFavoriteProject ended");
+		logger.debug("ezPMS deleteFavoriteProject ended");
 		return null;
 	}
 
@@ -843,7 +843,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/addTaskLog.do")
 	public String addTaskLog(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param,
 			HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS addTaskLog started");
+		logger.debug("ezPMS addTaskLog started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		long projectId = Long.parseLong(param.get("projectId").toString());
 		String userId = userInfo.getId();
@@ -856,7 +856,7 @@ public class EzPMSController {
 
 		commonUtil.getJsonFromRestApi(url, param, request, "post", null);
 
-		LOGGER.debug("ezPMS addTaskLog ended");
+		logger.debug("ezPMS addTaskLog ended");
 
 		return null;
 	}
@@ -874,7 +874,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getTaskLogMain.do")
 	public String getTaskLogMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getTaskLogMain started");
+		logger.debug("ezPMS getTaskLogMain started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String projectId = request.getParameter("projectId");
@@ -897,7 +897,7 @@ public class EzPMSController {
 
 		model.addAttribute("projectId", request.getParameter("projectId"));
 
-		LOGGER.debug("ezPMS getTaskLogMain ended");
+		logger.debug("ezPMS getTaskLogMain ended");
 		return "ezPMS/pmsTaskLogMain";
 	}
 
@@ -914,7 +914,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getTaskLogList.do")
 	public String getTaskLogList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param,
 			HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getTaskLogList started");
+		logger.debug("ezPMS getTaskLogList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		long projectId = Long.parseLong(param.get("projectId").toString());
 		String userId = userInfo.getId();
@@ -988,7 +988,7 @@ public class EzPMSController {
 				}
 			}
 		}
-		LOGGER.debug("ezPMS getTaskLogList ended");
+		logger.debug("ezPMS getTaskLogList ended");
 		return "ezPMS/pmsTaskLogList";
 	}
 
@@ -998,7 +998,7 @@ public class EzPMSController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/pmsSelectAuth.do")
 	public String selectAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezPMS selectAuth started");
+		logger.debug("ezPMS selectAuth started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -1044,7 +1044,7 @@ public class EzPMSController {
 			rtnStr = "/ezPMS/pmsSelectAuth";
 		}
 
-		LOGGER.debug("ezPMS selectAuth ended");
+		logger.debug("ezPMS selectAuth ended");
 		return rtnStr;
 	}
 
@@ -1053,7 +1053,7 @@ public class EzPMSController {
 	 */
 	@RequestMapping(value = "/ezPMS/userList.do")
 	public String userList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS userList started");
+		logger.debug("ezPMS userList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -1062,8 +1062,8 @@ public class EzPMSController {
 		param.put("value", request.getParameter("value"));
 		param.put("userId", userInfo.getId());
 
-		LOGGER.debug(request.getParameter("key"));
-		LOGGER.debug(request.getParameter("value"));
+		logger.debug(request.getParameter("key"));
+		logger.debug(request.getParameter("value"));
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/users", param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -1090,7 +1090,7 @@ public class EzPMSController {
 			model.addAttribute("userCount", userCount);
 		}
 
-		LOGGER.debug("ezPMS userList ended");
+		logger.debug("ezPMS userList ended");
 		return "ezPMS/userList";
 	}
 
@@ -1100,8 +1100,8 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/selectHeadManager.do")
 	public String selectHeadManager(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS selectHeadManager started");
-		LOGGER.debug("ezPMS selectHeadManager ended");
+		logger.debug("ezPMS selectHeadManager started");
+		logger.debug("ezPMS selectHeadManager ended");
 		return "ezPMS/selectHeadManager";
 	}
 
@@ -1113,7 +1113,7 @@ public class EzPMSController {
 	@ResponseBody
 	public JSONObject getDeptUserList(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getDeptUserList started");
+		logger.debug("ezPMS getDeptUserList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -1123,8 +1123,8 @@ public class EzPMSController {
 		param.put("userId", userInfo.getId());
 		param.put("lang", userInfo.getLang());
 
-		LOGGER.debug(request.getParameter("key"));
-		LOGGER.debug(request.getParameter("value"));
+		logger.debug(request.getParameter("key"));
+		logger.debug(request.getParameter("value"));
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/users", param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -1138,7 +1138,7 @@ public class EzPMSController {
 
 		}
 
-		LOGGER.debug("ezPMS getDeptUserList ended");
+		logger.debug("ezPMS getDeptUserList ended");
 		return result;
 	}
 
@@ -1150,7 +1150,7 @@ public class EzPMSController {
 	@ResponseBody
 	public String sendNotiMail(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS sendNotiMail Started.");
+		logger.debug("ezPMS sendNotiMail Started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String mode = param.get("mode").toString();
@@ -1263,11 +1263,11 @@ public class EzPMSController {
 			}
 			
 		} catch (Exception e) {
-			LOGGER.debug("sendNotiMail ERROR : " + e.getMessage());
+			logger.debug("sendNotiMail ERROR : " + e.getMessage());
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS sendNotiMail Ended.");
+		logger.debug("ezPMS sendNotiMail Ended.");
 		return "";
 	}
 
@@ -1286,7 +1286,7 @@ public class EzPMSController {
 	public InternetAddress[] getToArrMailList(List<Map<String, Object>> nameList, Map<String, Object> param,
 			HttpServletRequest request, String projectName, long projectId, String authName,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getToArrMailList started");
+		logger.debug("ezPMS getToArrMailList started");
 
 		ArrayList<InternetAddress> toArrList = new ArrayList<InternetAddress>();
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1310,7 +1310,7 @@ public class EzPMSController {
 					toManager.setAddress((String) manager.get("userMail"));
 					toManager.setPersonal((String) manager.get("userName"));
 
-					LOGGER.debug("userMail : " + (String) manager.get("userMail") + ", userName : "	+ (String) manager.get("userName"));
+					logger.debug("userMail : " + (String) manager.get("userMail") + ", userName : "	+ (String) manager.get("userName"));
 					toArrList.add(toManager);
 				}
 			}
@@ -1361,11 +1361,11 @@ public class EzPMSController {
 
 			ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
 
-			LOGGER.debug("ezPMS getToArrMailList ended");
+			logger.debug("ezPMS getToArrMailList ended");
 			return toArr;
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.debug("ezPMS getToArrMailList ERROR : " + e.getMessage());
+			logger.debug("ezPMS getToArrMailList ERROR : " + e.getMessage());
 			return null;
 		}
 	}
@@ -1383,7 +1383,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getProjectNameList.do")
 	public String getProjectNameList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse response, Model model) throws Exception {
-		LOGGER.debug("ezPMS getProjectNameList Started.");
+		logger.debug("ezPMS getProjectNameList Started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -1406,7 +1406,7 @@ public class EzPMSController {
 			model.addAttribute("projectNameList", nameList);
 		}
 
-		LOGGER.debug("ezPMS getProjectNameList Ended.");
+		logger.debug("ezPMS getProjectNameList Ended.");
 		return "ezPMS/projectNameList";
 	}
 
@@ -1427,7 +1427,7 @@ public class EzPMSController {
 	public JSONObject getHeadManagerList(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse response,
 			Model model) throws Exception {
-		LOGGER.debug("ezPMS getHeadManagerList started");
+		logger.debug("ezPMS getHeadManagerList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 
@@ -1456,7 +1456,7 @@ public class EzPMSController {
 			userList.put("userList", result.get("data"));
 		}
 
-		LOGGER.debug("ezPMS getHeadManagerList ended");
+		logger.debug("ezPMS getHeadManagerList ended");
 		return userList;
 	}
 
@@ -1477,7 +1477,7 @@ public class EzPMSController {
 	public JSONObject getOverviewContent(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse response,
 			Model model) throws Exception {
-		LOGGER.debug("ezPMS getOverviewContent started");
+		logger.debug("ezPMS getOverviewContent started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		long projectId = Long.parseLong(param.get("projectId").toString());
@@ -1506,7 +1506,7 @@ public class EzPMSController {
 			overviewContent.put("commentList", commentData);
 		}
 
-		LOGGER.debug("ezPMS getOverviewContent ended");
+		logger.debug("ezPMS getOverviewContent ended");
 		return overviewContent;
 
 	}
@@ -1523,7 +1523,7 @@ public class EzPMSController {
 	public String getProjectTaskList(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS projectTaskList started");
+		logger.debug("ezPMS projectTaskList started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		long projectId = Long.parseLong(param.get("projectId").toString());
@@ -1618,8 +1618,8 @@ public class EzPMSController {
 			}
 		}
 
-		LOGGER.debug("[result] taskListCount : " + taskListCount);
-		LOGGER.debug("ezPMS projectTaskList ended");
+		logger.debug("[result] taskListCount : " + taskListCount);
+		logger.debug("ezPMS projectTaskList ended");
 
 		return "/ezPMS/pmsTaskList";
 	}
@@ -1636,7 +1636,7 @@ public class EzPMSController {
 	public String getTaskListMain(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS taskListMain started");
+		logger.debug("ezPMS taskListMain started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -1686,7 +1686,7 @@ public class EzPMSController {
 
 		model.addAttribute("projectId", request.getParameter("projectId"));
 
-		LOGGER.debug("ezPMS taskListMain ended");
+		logger.debug("ezPMS taskListMain ended");
 		return "/ezPMS/pmsTaskListMain";
 	}
 
@@ -1695,7 +1695,7 @@ public class EzPMSController {
 	 */
 	@RequestMapping(value = "/ezPMS/deleteTask.do")
 	public String deleteTask(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS deleteTask started");
+		logger.debug("ezPMS deleteTask started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -1717,10 +1717,10 @@ public class EzPMSController {
 			model.addAttribute("checkPermission", checkPermission);
 			double projectProgress = (double) result.get("projectProgress");
 			model.addAttribute("projectProgress", projectProgress);
-			LOGGER.debug("projectProgress : " + projectProgress);
+			logger.debug("projectProgress : " + projectProgress);
 		}
 
-		LOGGER.debug("ezPMS deleteTask ended");
+		logger.debug("ezPMS deleteTask ended");
 
 		return "json";
 	}
@@ -1731,7 +1731,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getGroupList.do")
 	public String getMyGroupList(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getMyGroupList started");
+		logger.debug("ezPMS getMyGroupList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String projectId = param.get("projectId").toString();
@@ -1777,7 +1777,7 @@ public class EzPMSController {
 			}
 		}
 
-		LOGGER.debug("ezPMS getMyGroupList ended");
+		logger.debug("ezPMS getMyGroupList ended");
 		return "ezPMS/pmsTaskList";
 	}
 
@@ -1793,7 +1793,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getMyProjectList.do")
 	public String getMyProjectList(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getMyProjectList started");
+		logger.debug("ezPMS getMyProjectList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 
@@ -1854,7 +1854,7 @@ public class EzPMSController {
 			model.addAttribute("projectListCount", projectListCount);
 		}
 
-		LOGGER.debug("ezPMS getMyProjectList ended");
+		logger.debug("ezPMS getMyProjectList ended");
 		return "ezPMS/pmsMyProjectList";
 	}
 
@@ -1875,7 +1875,7 @@ public class EzPMSController {
 	// public JSONObject updateTaskDate(@RequestBody Map<String, Object> param,
 	// HttpServletRequest request, Model model, @CookieValue("loginCookie")
 	// String loginCookie) {
-	// LOGGER.debug("ezPMS updateTaskDate started");
+	// logger.debug("ezPMS updateTaskDate started");
 	// LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	// String userId = userInfo.getId();
 	//
@@ -1895,10 +1895,10 @@ public class EzPMSController {
 	// json.put("roleCheck", roleCheck);
 	// json.put("endDate", endDate);
 	//
-	// LOGGER.debug("[result] roleCheck : " + roleCheck);
+	// logger.debug("[result] roleCheck : " + roleCheck);
 	// }
 	//
-	// LOGGER.debug("ezPMS updateTaskDate ended");
+	// logger.debug("ezPMS updateTaskDate ended");
 	// return json;
 	// }
 
@@ -1909,7 +1909,7 @@ public class EzPMSController {
 	@ResponseBody
 	public String addPreTaskRel(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS addPreTaskRel started");
+		logger.debug("ezPMS addPreTaskRel started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 
@@ -1925,8 +1925,8 @@ public class EzPMSController {
 			roleCheck = result.get("data").toString();
 		}
 
-		LOGGER.debug("[result] roleCheck : " + roleCheck);
-		LOGGER.debug("ezPMS addPreTaskRel ended");
+		logger.debug("[result] roleCheck : " + roleCheck);
+		logger.debug("ezPMS addPreTaskRel ended");
 		return roleCheck;
 	}
 
@@ -1938,7 +1938,7 @@ public class EzPMSController {
 	@ResponseBody
 	public String changeGanttOrder(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS changeGanttOrder started");
+		logger.debug("ezPMS changeGanttOrder started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		long projectId = Long.parseLong(param.get("projectId").toString());
@@ -1962,7 +1962,7 @@ public class EzPMSController {
 			roleCheck = result.get("data").toString();
 		}
 
-		LOGGER.debug("ezPMS changeGanttOrder ended");
+		logger.debug("ezPMS changeGanttOrder ended");
 		return roleCheck;
 	}
 
@@ -1972,7 +1972,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getGroupDetails.do")
 	public String getGroupDetails(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getGroupDetails started");
+		logger.debug("ezPMS getGroupDetails started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		long projectId = Long.parseLong(request.getParameter("projectId"));
@@ -2005,7 +2005,7 @@ public class EzPMSController {
 		}
 
 		model.addAttribute("target", "group");
-		LOGGER.debug("ezPMS getGroupDetails ended");
+		logger.debug("ezPMS getGroupDetails ended");
 		return "ezPMS/pmsTaskDetails";
 	}
 
@@ -2017,7 +2017,7 @@ public class EzPMSController {
 	@ResponseBody
 	public String updateGroupInfo(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS updateGroupInfo started");
+		logger.debug("ezPMS updateGroupInfo started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		long groupId = Long.parseLong(param.get("groupId").toString());
@@ -2045,8 +2045,8 @@ public class EzPMSController {
 			roleCheck = result.get("data").toString();
 		}
 
-		LOGGER.debug("[result] roleCheck : " + roleCheck);
-		LOGGER.debug("ezPMS updateGroupInfo ended");
+		logger.debug("[result] roleCheck : " + roleCheck);
+		logger.debug("ezPMS updateGroupInfo ended");
 		return roleCheck;
 	}
 
@@ -2061,7 +2061,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getMemberSchedule.do")
 	public String getMemberSchedule(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getMemberSchedule started");
+		logger.debug("ezPMS getMemberSchedule started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		long projectId = Long.parseLong(request.getParameter("projectId"));
@@ -2083,7 +2083,7 @@ public class EzPMSController {
 			model.addAttribute("projectId", projectId);
 		}
 
-		LOGGER.debug("ezPMS getMemberSchedule ended");
+		logger.debug("ezPMS getMemberSchedule ended");
 		return "ezPMS/pmsMemberSchedule";
 	}
 
@@ -2100,7 +2100,7 @@ public class EzPMSController {
 	@ResponseBody
 	public List<String> getDateTaskList(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getDateTaskList started");
+		logger.debug("ezPMS getDateTaskList started");
 		List<String> taskList = new ArrayList<String>();
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2121,7 +2121,7 @@ public class EzPMSController {
 			taskList = (List<String>) result.get("data");
 		}
 
-		LOGGER.debug("ezPMS getDateTaskList started");
+		logger.debug("ezPMS getDateTaskList started");
 		return taskList;
 	}
 
@@ -2138,7 +2138,7 @@ public class EzPMSController {
 	public String projectTaskTree(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS projectTaskTree started");
+		logger.debug("ezPMS projectTaskTree started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -2159,7 +2159,7 @@ public class EzPMSController {
 			model.addAttribute("data", treeData);
 		}
 
-		LOGGER.debug("ezPMS projectTaskTree ended");
+		logger.debug("ezPMS projectTaskTree ended");
 
 		return "json";
 	}
@@ -2177,7 +2177,7 @@ public class EzPMSController {
 	public String goAddTask(HttpServletRequest request, Model model, ProjectTaskVO vo,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS addTask started");
+		logger.debug("ezPMS addTask started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -2209,7 +2209,7 @@ public class EzPMSController {
 		model.addAttribute("writerName", writerName);
 		model.addAttribute("writerDeptName", writerDeptName);
 
-		LOGGER.debug("ezPMS addTask ended");
+		logger.debug("ezPMS addTask ended");
 
 		return "/ezPMS/pmsAddTask";
 	}
@@ -2228,7 +2228,7 @@ public class EzPMSController {
 	public String addTask(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
 
-		LOGGER.debug("ezPMS addTask started");
+		logger.debug("ezPMS addTask started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
@@ -2260,7 +2260,7 @@ public class EzPMSController {
 			model.addAttribute("projectProgress", projectProgress);
 		}
 
-		LOGGER.debug("ezPMS addTask ended");
+		logger.debug("ezPMS addTask ended");
 
 		return "json";
 	}
@@ -2278,7 +2278,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getProjectMemberList.do")
 	public String getProjectMemberList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getProjectMemberList started");
+		logger.debug("ezPMS getProjectMemberList started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -2308,7 +2308,7 @@ public class EzPMSController {
 			model.addAttribute("memberList", memberList);
 		}
 
-		LOGGER.debug("ezPMS getProjectMemberList ended");
+		logger.debug("ezPMS getProjectMemberList ended");
 
 		return "ezPMS/memberList";
 	}
@@ -2325,7 +2325,7 @@ public class EzPMSController {
 	public String goProjectMemberList(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS goProjectMemberList started");
+		logger.debug("ezPMS goProjectMemberList started");
 
 		String projectId = request.getParameter("projectId");
 		String groupId = request.getParameter("groupId");
@@ -2335,7 +2335,7 @@ public class EzPMSController {
 		model.addAttribute("groupId", groupId);
 		model.addAttribute("type", type);
 
-		LOGGER.debug("ezPMS goProjectMemberList ended");
+		logger.debug("ezPMS goProjectMemberList ended");
 
 		return "/ezPMS/pmsSetTaskMember";
 	}
@@ -2351,13 +2351,13 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/goGroupTree.do")
 	public String goGroupTree(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS goGroupTree started");
+		logger.debug("ezPMS goGroupTree started");
 
 		String projectId = request.getParameter("projectId");
 
 		model.addAttribute("projectId", projectId);
 
-		LOGGER.debug("ezPMS goGroupTree ended");
+		logger.debug("ezPMS goGroupTree ended");
 
 		return "/ezPMS/groupTree";
 	}
@@ -2374,7 +2374,7 @@ public class EzPMSController {
 	public String getProjectForGantt(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS getProjectForGantt started");
+		logger.debug("ezPMS getProjectForGantt started");
 		
 		Long startMillis = System.currentTimeMillis();
 		
@@ -2427,8 +2427,8 @@ public class EzPMSController {
 		model.addAttribute("projectId", projectId);
 		
 		Long endMillis = System.currentTimeMillis();
-		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
-		LOGGER.debug("ezPMS getProjectForGantt ended");
+		logger.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
+		logger.debug("ezPMS getProjectForGantt ended");
 
 		return "/ezPMS/taskListGantt";
 	}
@@ -2445,7 +2445,7 @@ public class EzPMSController {
 	public String getTaskDetails(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS getTaskDetails started");
+		logger.debug("ezPMS getTaskDetails started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -2485,7 +2485,7 @@ public class EzPMSController {
 			model.addAttribute("weightData", weightData);
 		}
 
-		LOGGER.debug("ezPMS getTaskDetails ended");
+		logger.debug("ezPMS getTaskDetails ended");
 
 		return "/ezPMS/pmsTaskDetails";
 	}
@@ -2502,7 +2502,7 @@ public class EzPMSController {
 	public String getTaskDetailsTab(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS getTaskDetailsTab started");
+		logger.debug("ezPMS getTaskDetailsTab started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -2535,7 +2535,7 @@ public class EzPMSController {
 			}
 		}
 
-		LOGGER.debug("ezPMS getTaskDetailsTab ended");
+		logger.debug("ezPMS getTaskDetailsTab ended");
 
 		return "/ezPMS/pmsTaskInfoTab";
 	}
@@ -2551,7 +2551,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/goUpdateTaskInfo.do")
 	public String goTaskInfo(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS goTaskInfo started");
+		logger.debug("ezPMS goTaskInfo started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -2610,7 +2610,7 @@ public class EzPMSController {
 
 		model.addAttribute("target", request.getParameter("target"));
 
-		LOGGER.debug("ezPMS goUpdateTaskInfo ended");
+		logger.debug("ezPMS goUpdateTaskInfo ended");
 
 		return "/ezPMS/pmsTaskInfoUpdate";
 	}
@@ -2629,7 +2629,7 @@ public class EzPMSController {
 	public String updateTaskInfo(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS updateTaskInfo started");
+		logger.debug("ezPMS updateTaskInfo started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -2653,8 +2653,8 @@ public class EzPMSController {
 			roleCheck = resultBody.get("data").toString();
 		}
 
-		LOGGER.debug("[result] roleCheck : " + roleCheck);
-		LOGGER.debug("ezPMS updateTaskInfo ended");
+		logger.debug("[result] roleCheck : " + roleCheck);
+		logger.debug("ezPMS updateTaskInfo ended");
 
 		return roleCheck;
 	}
@@ -2671,8 +2671,8 @@ public class EzPMSController {
 	public String goTaskStatus(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS goUpdateTaskStatus started");
-		LOGGER.debug("ezPMS goUpdateTaskStatus ended");
+		logger.debug("ezPMS goUpdateTaskStatus started");
+		logger.debug("ezPMS goUpdateTaskStatus ended");
 
 		return "/ezPMS/pmsTaskStatusUpdate";
 	}
@@ -2689,7 +2689,7 @@ public class EzPMSController {
 	public String updateTaskStatus(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS updateTaskStatus started");
+		logger.debug("ezPMS updateTaskStatus started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String taskId = (String) param.get("taskId");
@@ -2703,7 +2703,7 @@ public class EzPMSController {
 			model.addAttribute("projectProgress", projectProgress);
 		}
 
-		LOGGER.debug("ezPMS updateTaskStatus ended");
+		logger.debug("ezPMS updateTaskStatus ended");
 
 		return "json";
 	}
@@ -2720,7 +2720,7 @@ public class EzPMSController {
 	public String getBoardListTab(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS getBoardListTab started");
+		logger.debug("ezPMS getBoardListTab started");
 
 		String taskId = request.getParameter("taskId");
 		String projectId = request.getParameter("projectId");
@@ -2736,7 +2736,7 @@ public class EzPMSController {
 		model.addAttribute("groupId", groupId);
 		model.addAttribute("taskId", taskId);
 
-		LOGGER.debug("ezPMS getBoardListTab ended");
+		logger.debug("ezPMS getBoardListTab ended");
 
 		return "/ezPMS/pmsBoardListTab";
 	}
@@ -2753,7 +2753,7 @@ public class EzPMSController {
 	public String getTaskLogListTab(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS getTaskLogListTab started");
+		logger.debug("ezPMS getTaskLogListTab started");
 
 		String projectId = request.getParameter("projectId");
 		String groupId = request.getParameter("groupId");
@@ -2763,7 +2763,7 @@ public class EzPMSController {
 		model.addAttribute("groupId", groupId);
 		model.addAttribute("taskId", taskId);
 
-		LOGGER.debug("ezPMS getTaskLogListTab ended");
+		logger.debug("ezPMS getTaskLogListTab ended");
 
 		return "/ezPMS/pmsTaskLogListTab";
 	}
@@ -2779,13 +2779,13 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/goAddGroup.do")
 	public String goAddGroup(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS goAddGroup started");
+		logger.debug("ezPMS goAddGroup started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("userName", userInfo.getDisplayName());
 
-		LOGGER.debug("ezPMS goAddGroup ended");
+		logger.debug("ezPMS goAddGroup ended");
 
 		return "/ezPMS/pmsAddGroup";
 	}
@@ -2803,7 +2803,7 @@ public class EzPMSController {
 	public String addGroup(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS addGroup started");
+		logger.debug("ezPMS addGroup started");
 
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2829,7 +2829,7 @@ public class EzPMSController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS addGroup ended");
+		logger.debug("ezPMS addGroup ended");
 
 		return "json";
 	}
@@ -2847,7 +2847,7 @@ public class EzPMSController {
 	public String deleteGroup(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS deleteGroup started");
+		logger.debug("ezPMS deleteGroup started");
 
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2864,7 +2864,7 @@ public class EzPMSController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS deleteGroup ended");
+		logger.debug("ezPMS deleteGroup ended");
 
 		return "json";
 	}
@@ -2881,7 +2881,7 @@ public class EzPMSController {
 	public String updateTaskWeight(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS updateTaskWeight started");
+		logger.debug("ezPMS updateTaskWeight started");
 
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2896,7 +2896,7 @@ public class EzPMSController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS updateTaskWeight ended");
+		logger.debug("ezPMS updateTaskWeight ended");
 
 		return "json";
 	}
@@ -2913,7 +2913,7 @@ public class EzPMSController {
 	public String updateTaskProgress(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) {
 
-		LOGGER.debug("ezPMS updateTaskProgress started");
+		logger.debug("ezPMS updateTaskProgress started");
 
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2934,7 +2934,7 @@ public class EzPMSController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS updateTaskProgress ended");
+		logger.debug("ezPMS updateTaskProgress ended");
 
 		return "json";
 	}
@@ -2951,7 +2951,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getBoardMain.do")
 	public String getBoardMain(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getBoardMain started");
+		logger.debug("ezPMS getBoardMain started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
@@ -2982,7 +2982,7 @@ public class EzPMSController {
 
 		model.addAttribute("projectId", projectId);
 
-		LOGGER.debug("ezPMS getBoardMain ended");
+		logger.debug("ezPMS getBoardMain ended");
 
 		return "/ezPMS/pmsBoardMain";
 	}
@@ -3000,7 +3000,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/goAddBoard.do")
 	public String goAddBoard(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie)
 			throws Exception {
-		LOGGER.debug("ezPMS goAddBoard started");
+		logger.debug("ezPMS goAddBoard started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -3042,7 +3042,7 @@ public class EzPMSController {
 			model.addAttribute("folderName", folderDetails.get("text"));
 			model.addAttribute("projectName", folderDetails.get("projectName"));
 			model.addAttribute("folderId", folderDetails.get("id"));
-			LOGGER.debug("folderName : " + folderDetails.get("folderName"));
+			logger.debug("folderName : " + folderDetails.get("folderName"));
 		}
 
 		if (mode.equals("modify")) { // 게시물을 수정할 때
@@ -3071,7 +3071,7 @@ public class EzPMSController {
 						file.put("resultUpload", "true");
 						fileList.set(i, file);
 
-						LOGGER.debug("File Name : " + file.get("fileName"));
+						logger.debug("File Name : " + file.get("fileName"));
 					}
 
 					model.addAttribute("fileList",
@@ -3105,7 +3105,7 @@ public class EzPMSController {
 			model.addAttribute(parameterName, request.getParameter(parameterName));
 		}
 
-		LOGGER.debug("ezPMS goAddBoard ended");
+		logger.debug("ezPMS goAddBoard ended");
 
 		return "/ezPMS/pmsAddBoard";
 	}
@@ -3124,8 +3124,8 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/addBoard.do")
 	public String addBoard(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("ezPMS addBoard started");
-		LOGGER.debug("folderId : " + jsonParam.get("folderId"));
+		logger.debug("ezPMS addBoard started");
+		logger.debug("folderId : " + jsonParam.get("folderId"));
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
@@ -3161,7 +3161,7 @@ public class EzPMSController {
 												// 결정하기 위함
 		}
 
-		LOGGER.debug("ezPMS addBoard ended");
+		logger.debug("ezPMS addBoard ended");
 
 		return "json";
 	}
@@ -3177,7 +3177,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/goMoveBoards.do")
 	public String goMoveBoards(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS goMoveBoards started");
+		logger.debug("ezPMS goMoveBoards started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
@@ -3195,7 +3195,7 @@ public class EzPMSController {
 			model.addAttribute("data", treeData);
 		}
 
-		LOGGER.debug("ezPMS goMoveBoards ended");
+		logger.debug("ezPMS goMoveBoards ended");
 
 		return "/ezPMS/pmsMoveBoards";
 	}
@@ -3213,7 +3213,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/moveBoards.do")
 	public String moveBoards(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS moveBoards started");
+		logger.debug("ezPMS moveBoards started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -3229,7 +3229,7 @@ public class EzPMSController {
 			model.addAttribute("data", "success");
 		}
 
-		LOGGER.debug("ezPMS moveBoards ended");
+		logger.debug("ezPMS moveBoards ended");
 
 		return "json";
 	}
@@ -3247,7 +3247,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/deleteBoard.do")
 	public String deleteBoard(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS deleteBoard started");
+		logger.debug("ezPMS deleteBoard started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -3263,7 +3263,7 @@ public class EzPMSController {
 			model.addAttribute("data", "success");
 		}
 
-		LOGGER.debug("ezPMS deleteBoard ended");
+		logger.debug("ezPMS deleteBoard ended");
 
 		return "json";
 	}
@@ -3280,7 +3280,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getTaskSelectionTree.do")
 	public String getTaskSelectionTree(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("ezPMS getTaskSelectionTree started");
+		logger.debug("ezPMS getTaskSelectionTree started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
@@ -3299,7 +3299,7 @@ public class EzPMSController {
 			model.addAttribute("data", treeData);
 		}
 
-		LOGGER.debug("ezPMS getTaskSelectionTree ended");
+		logger.debug("ezPMS getTaskSelectionTree ended");
 
 		return "/ezPMS/pmsTaskSelectionTree";
 	}
@@ -3317,7 +3317,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getBoardList.do")
 	public String getBoardList(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("ezPMS getBoardList started");
+		logger.debug("ezPMS getBoardList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		int boardCount = 0;
@@ -3379,10 +3379,10 @@ public class EzPMSController {
 			model.addAttribute("data", boardList);
 			model.addAttribute("folderName", folderName);
 
-			LOGGER.debug("[result] folderName : " + folderName);
+			logger.debug("[result] folderName : " + folderName);
 		}
 
-		LOGGER.debug("ezPMS getBoardList ended");
+		logger.debug("ezPMS getBoardList ended");
 
 		return "/ezPMS/pmsBoardList";
 	}
@@ -3399,7 +3399,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/dragAndDrop.do")
 	public String projectDragAndDrop(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("ezPMS projectDragAndDrop started");
+		logger.debug("ezPMS projectDragAndDrop started");
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String attachFileNameMaxLength = commonUtil.getTenantConfigRest("attachFileNameMaxLength", userInfo.getId(),
@@ -3424,7 +3424,7 @@ public class EzPMSController {
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("mode", mode);
 		model.addAttribute("projectId", projectId);
-		LOGGER.debug("ezPMS projectDragAndDrop ended");
+		logger.debug("ezPMS projectDragAndDrop ended");
 
 		return "/ezPMS/pmsDragAndDrop";
 	}
@@ -3443,7 +3443,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/uploadProjectAttach.do", produces = "text/plain; charset=utf-8")
 	public String uploadProjectAttach(MultipartHttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("ezPMS uploadProjectAttach started");
+		logger.debug("ezPMS uploadProjectAttach started");
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 
@@ -3455,7 +3455,7 @@ public class EzPMSController {
 		List<MultipartFile> files = request.getFiles("fileToUpload");
 		int cnt = files.size();
 		int maxSize = 0;
-		LOGGER.debug("###files : " + files + ", cnt: " + cnt);
+		logger.debug("###files : " + files + ", cnt: " + cnt);
 
 		Long[] fileSize = new Long[cnt];
 		String[] resultUpload = new String[cnt];
@@ -3476,7 +3476,7 @@ public class EzPMSController {
 			projectId = request.getParameter("projectId");
 		}
 
-		LOGGER.debug("mode : " + mode + " | projectId : " + projectId);
+		logger.debug("mode : " + mode + " | projectId : " + projectId);
 
 		for (int i = 0; i < cnt; i++) {
 			resultUpload[i] = "false";
@@ -3529,8 +3529,8 @@ public class EzPMSController {
 			model.addAttribute("data", data.toString());
 		}
 
-		LOGGER.debug("status: " + status);
-		LOGGER.debug("uploadProjectAttach ended");
+		logger.debug("status: " + status);
+		logger.debug("uploadProjectAttach ended");
 
 		return data.toString();
 	}
@@ -3548,7 +3548,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/uploadFileDelete.do")
 	public String uploadFileDelete(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("ezPMS uploadFileDelete started");
+		logger.debug("ezPMS uploadFileDelete started");
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 
@@ -3556,7 +3556,7 @@ public class EzPMSController {
 
 		String filePath = "";
 
-		LOGGER.debug("fileList : " + fileList);
+		logger.debug("fileList : " + fileList);
 
 		filePath = "tempUploadFile";
 
@@ -3571,10 +3571,10 @@ public class EzPMSController {
 		String status = resultBody.get("status").toString();
 
 		if (status.equals("ok")) {
-			LOGGER.debug("status : " + status);
+			logger.debug("status : " + status);
 		}
 
-		LOGGER.debug("ezPMS uploadFileDelete ended");
+		logger.debug("ezPMS uploadFileDelete ended");
 
 		return status;
 	}
@@ -3591,7 +3591,7 @@ public class EzPMSController {
 	@ResponseBody
 	public void downloadFile(HttpServletRequest request, HttpServletResponse response,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("ezPMS downloadFile started");
+		logger.debug("ezPMS downloadFile started");
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 
@@ -3627,7 +3627,7 @@ public class EzPMSController {
 				response.getOutputStream().flush();
 				response.getOutputStream().close();
 			} catch (Exception e) {
-				LOGGER.debug("ezPMS downloadFile error");
+				logger.debug("ezPMS downloadFile error");
 			}
 		} else if (status.equals("fileNotFound")) {
 			response.setCharacterEncoding("UTF-8");
@@ -3644,7 +3644,7 @@ public class EzPMSController {
 
 		}
 
-		LOGGER.debug("ezPMS downloadFile ended");
+		logger.debug("ezPMS downloadFile ended");
 	}
 
 	/**
@@ -3658,7 +3658,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getBoardDetail.do")
 	public String getBoardDetail(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getBoardDetail started");
+		logger.debug("ezPMS getBoardDetail started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
@@ -3690,7 +3690,7 @@ public class EzPMSController {
 
 		model.addAttribute("userId", userId);
 
-		LOGGER.debug("ezPMS getBoardDetail ended");
+		logger.debug("ezPMS getBoardDetail ended");
 
 		return "/ezPMS/pmsBoardDetail";
 	}
@@ -3706,7 +3706,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getBoardViewerList.do")
 	public String getBoardViewerList(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getBoardViewerList started");
+		logger.debug("ezPMS getBoardViewerList started");
 
 		int totalCount = 0;
 		int currentPage = 1;
@@ -3728,7 +3728,7 @@ public class EzPMSController {
 			totalCount = Integer.parseInt((String) resultBody.get("data"));
 		}
 
-		LOGGER.debug("totalCount : " + totalCount);
+		logger.debug("totalCount : " + totalCount);
 
 		String currentPageStr = request.getParameter("currentPage");
 
@@ -3753,7 +3753,7 @@ public class EzPMSController {
 			}
 		}
 
-		LOGGER.debug("ezPMS getBoardViewerList ended");
+		logger.debug("ezPMS getBoardViewerList ended");
 
 		return "/ezPMS/pmsBoardViewerList";
 	}
@@ -3771,7 +3771,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/boardDetailJSON.do")
 	public JSONObject getboardJSON(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getboardJSON started");
+		logger.debug("ezPMS getboardJSON started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -3795,7 +3795,7 @@ public class EzPMSController {
 			board.put("boardContent", boardContent);
 		}
 
-		LOGGER.debug("ezPMS getboardJSON ended");
+		logger.debug("ezPMS getboardJSON ended");
 
 		return board;
 	}
@@ -3806,7 +3806,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getCommentMain.do")
 	public String getCommentMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getCommentMain started");
+		logger.debug("ezPMS getCommentMain started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
@@ -3829,7 +3829,7 @@ public class EzPMSController {
 
 		model.addAttribute("projectId", projectId);
 
-		LOGGER.debug("ezPMS getCommentMain ended");
+		logger.debug("ezPMS getCommentMain ended");
 		return "ezPMS/pmsCommentMain";
 	}
 
@@ -3846,7 +3846,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getCommentList.do")
 	public String getCommentList(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("ezPMS getCommentList started");
+		logger.debug("ezPMS getCommentList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		int totalCount = 0;
@@ -3905,7 +3905,7 @@ public class EzPMSController {
 			model.addAttribute("userRole", userRole);
 		}
 
-		LOGGER.debug("ezPMS getCommentList ended");
+		logger.debug("ezPMS getCommentList ended");
 
 		return "/ezPMS/pmsCommentList";
 	}
@@ -3924,7 +3924,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/addComment.do")
 	public String addComment(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("ezPMS addComment started");
+		logger.debug("ezPMS addComment started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
@@ -3949,7 +3949,7 @@ public class EzPMSController {
 													// 여부를 결정하기 위함
 		}
 
-		LOGGER.debug("ezPMS addComment ended");
+		logger.debug("ezPMS addComment ended");
 
 		return "json";
 	}
@@ -3967,7 +3967,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/deleteComment.do")
 	public String deleteComment(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS deleteComment started");
+		logger.debug("ezPMS deleteComment started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -3983,7 +3983,7 @@ public class EzPMSController {
 			model.addAttribute("data", "success");
 		}
 
-		LOGGER.debug("ezPMS deleteComment ended");
+		logger.debug("ezPMS deleteComment ended");
 
 		return "json";
 	}
@@ -4001,7 +4001,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/modifyComment.do")
 	public String modifyComment(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS modifyComment started");
+		logger.debug("ezPMS modifyComment started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -4016,7 +4016,7 @@ public class EzPMSController {
 			model.addAttribute("data", "success");
 		}
 
-		LOGGER.debug("ezPMS modifyComment ended");
+		logger.debug("ezPMS modifyComment ended");
 
 		return "json";
 	}
@@ -4033,7 +4033,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getCommentListTab.do")
 	public String getCommentListTab(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			Model model) throws Exception {
-		LOGGER.debug("ezPMS getCommentListTab started");
+		logger.debug("ezPMS getCommentListTab started");
 
 		String projectId = request.getParameter("projectId");
 		String groupId = request.getParameter("groupId");
@@ -4043,7 +4043,7 @@ public class EzPMSController {
 		model.addAttribute("groupId", groupId);
 		model.addAttribute("taskId", taskId);
 
-		LOGGER.debug("ezPMS getCommentListTab ended");
+		logger.debug("ezPMS getCommentListTab ended");
 		return "ezPMS/pmsCommentListTab";
 	}
 
@@ -4058,7 +4058,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/goPreTaskSelectionTree.do")
 	public String goPreTaskSelectionTree(HttpServletRequest request, Model model,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS goPreTaskSelectionTree started");
+		logger.debug("ezPMS goPreTaskSelectionTree started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
@@ -4078,7 +4078,7 @@ public class EzPMSController {
 			model.addAttribute("data", treeData);
 		}
 
-		LOGGER.debug("ezPMS goPreTaskSelectionTree ended");
+		logger.debug("ezPMS goPreTaskSelectionTree ended");
 		return "/ezPMS/pmsPreTaskSelectionTree";
 	}
 
@@ -4095,13 +4095,13 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/checkIfBoardHasReplies.do")
 	public String checkIfBoardHasReplies(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS checkIfHasReplies started");
+		logger.debug("ezPMS checkIfHasReplies started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		jsonParam.put("userId", userInfo.getId());
 
 		// List<String> itemIds = (List<String>) jsonParam.get("itemIds");
-		// LOGGER.debug("itemIds : " + itemIds);
+		// logger.debug("itemIds : " + itemIds);
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/checkIfHasReplies", null, request,
 				"post", jsonParam);
@@ -4112,7 +4112,7 @@ public class EzPMSController {
 			model.addAttribute("data", ifBoardHasReplies);
 		}
 
-		LOGGER.debug("ezPMS checkIfHasReplies ended");
+		logger.debug("ezPMS checkIfHasReplies ended");
 		return "json";
 	}
 
@@ -4130,7 +4130,7 @@ public class EzPMSController {
 	// public String checkIfExistPreTaskRel(HttpServletRequest request, Model
 	// model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie")
 	// String loginCookie) {
-	// LOGGER.debug("ezPMS checkIfExistPreTaskRel started");
+	// logger.debug("ezPMS checkIfExistPreTaskRel started");
 	//
 	// LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	// jsonParam.put("userId", userInfo.getId());
@@ -4145,7 +4145,7 @@ public class EzPMSController {
 	// model.addAttribute("data", ifExistPreTaskRel);
 	// }
 	//
-	// LOGGER.debug("ezPMS checkIfExistPreTaskRel ended");
+	// logger.debug("ezPMS checkIfExistPreTaskRel ended");
 	// return "json";
 	// }
 
@@ -4162,7 +4162,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/deletePretaskRel.do")
 	public String deletePretaskRel(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS deletePretaskRel started");
+		logger.debug("ezPMS deletePretaskRel started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		jsonParam.put("userId", userInfo.getId());
@@ -4175,7 +4175,7 @@ public class EzPMSController {
 			model.addAttribute("roleCheck", resultBody.get("data"));
 		}
 
-		LOGGER.debug("ezPMS deletePretaskRel ended");
+		logger.debug("ezPMS deletePretaskRel ended");
 		return "json";
 	}
 
@@ -4191,7 +4191,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/updateAllSchedules.do")
 	public String updateAllSchedules(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS updateAllSchedules started");
+		logger.debug("ezPMS updateAllSchedules started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -4206,7 +4206,7 @@ public class EzPMSController {
 			model.addAttribute("projectProgress", projectProgress);
 		}
 
-		LOGGER.debug("ezPMS updateAllSchedules ended");
+		logger.debug("ezPMS updateAllSchedules ended");
 		return "json";
 	}
 
@@ -4222,7 +4222,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/getAllGanttItems.do")
 	public String getAllGanttItems(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getAllGanttItems started");
+		logger.debug("ezPMS getAllGanttItems started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -4263,7 +4263,7 @@ public class EzPMSController {
 			model.addAttribute("groupList", resultBodyGroup.get("data"));
 		}
 
-		LOGGER.debug("ezPMS getAllGanttItems ended");
+		logger.debug("ezPMS getAllGanttItems ended");
 		return "json";
 	}
 
@@ -4272,7 +4272,7 @@ public class EzPMSController {
 	@ResponseBody
 	public JSONObject mailWrite(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param,
 			@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS mailWrite started");
+		logger.debug("ezPMS mailWrite started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		Long projectId = Long.parseLong(param.get("projectId").toString());
@@ -4333,7 +4333,7 @@ public class EzPMSController {
 			}
 		}
 
-		LOGGER.debug("ezPMS mailWrite ended");
+		logger.debug("ezPMS mailWrite ended");
 		return result;
 	}
 
@@ -4345,8 +4345,8 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/folderSetting.do")
 	public String getFolderSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getFolderSetting started");
-		LOGGER.debug("ezPMS getFolderSetting ended");
+		logger.debug("ezPMS getFolderSetting started");
+		logger.debug("ezPMS getFolderSetting ended");
 		return "ezPMS/folderSetting";
 	}
 
@@ -4359,7 +4359,7 @@ public class EzPMSController {
 	@ResponseBody
 	public JSONArray getFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getFolderList started");
+		logger.debug("ezPMS getFolderList started");
 		JSONArray data = new JSONArray();
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -4378,7 +4378,7 @@ public class EzPMSController {
 			data = (JSONArray) resultBody.get("data");
 		}
 
-		LOGGER.debug("ezPMS getFolderList ended");
+		logger.debug("ezPMS getFolderList ended");
 		return data;
 	}
 
@@ -4391,7 +4391,7 @@ public class EzPMSController {
 	@ResponseBody
 	public String deleteFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS getFolderList started");
+		logger.debug("ezPMS getFolderList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String userId = userInfo.getId();
@@ -4411,7 +4411,7 @@ public class EzPMSController {
 			roleCheck = resultBody.get("data").toString();
 		}
 
-		LOGGER.debug("ezPMS getFolderList ended");
+		logger.debug("ezPMS getFolderList ended");
 		return roleCheck;
 	}
 
@@ -4423,7 +4423,7 @@ public class EzPMSController {
 	@RequestMapping(value = "/ezPMS/inputFolderName.do")
 	public String inputFolderName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS inputFolderName started");
+		logger.debug("ezPMS inputFolderName started");
 		model.addAttribute("mode", request.getParameter("mode"));
 
 		String mode = request.getParameter("mode");
@@ -4449,7 +4449,7 @@ public class EzPMSController {
 			model.addAttribute("folderDetails", "{}");
 		}
 
-		LOGGER.debug("ezPMS inputFolderName ended");
+		logger.debug("ezPMS inputFolderName ended");
 		return "ezPMS/pmsSetFolderName";
 	}
 
@@ -4462,7 +4462,7 @@ public class EzPMSController {
 	@ResponseBody
 	public String setFolderName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("ezPMS setFolderName started");
+		logger.debug("ezPMS setFolderName started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -4496,7 +4496,7 @@ public class EzPMSController {
 			}
 		}
 
-		LOGGER.debug("ezPMS setFolderName ended");
+		logger.debug("ezPMS setFolderName ended");
 		return roleCheck;
 	}
 
@@ -4505,7 +4505,7 @@ public class EzPMSController {
 	@ResponseBody
 	public void exportGanttExcel(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS exportGanttExcel started.");
+		logger.debug("ezPMS exportGanttExcel started.");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		Long projectId = Long.parseLong(request.getParameter("projectId"));
@@ -4514,7 +4514,7 @@ public class EzPMSController {
 		JSONArray groupList = new JSONArray();
 		JSONArray holidayList = new JSONArray();
 
-		LOGGER.debug("projectId : " + projectId);
+		logger.debug("projectId : " + projectId);
 
 		// 순서와 레벨 매칭
 		String taskId = request.getParameter("taskId");
@@ -5395,7 +5395,7 @@ public class EzPMSController {
 		workbook.write(response.getOutputStream());
 
 		workbook.close();
-		LOGGER.debug("ezPMS exportGanttExcel ended.");
+		logger.debug("ezPMS exportGanttExcel ended.");
 	}
 	
 	/**
@@ -5409,7 +5409,7 @@ public class EzPMSController {
 	@ResponseBody
 	public String updateTaskName(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
 		
-		LOGGER.debug("ezPMS updateTaskName started");
+		logger.debug("ezPMS updateTaskName started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -5426,15 +5426,15 @@ public class EzPMSController {
 			roleCheck = resultBody.get("data").toString();
 		}
 		
-		LOGGER.debug("[result] roleCheck : " + roleCheck);
-		LOGGER.debug("ezPMS updateTaskName ended");
+		logger.debug("[result] roleCheck : " + roleCheck);
+		logger.debug("ezPMS updateTaskName ended");
 		
 		return roleCheck;
 	}
 	
 	@RequestMapping(value="/ezPMS/updateGroupRealStartEndDate.do")
 	public String updateGroupRealStartEndDate(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS updateGroupRealStartEndDate started");
+		logger.debug("ezPMS updateGroupRealStartEndDate started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		param.put("userId", userInfo.getId());
@@ -5451,7 +5451,7 @@ public class EzPMSController {
 		String url = "/rest/ezPMS/groups/" + groupId + "/realStartEndDate";
 		commonUtil.getJsonFromRestApi(url, param, request, "put", null);
 		
-		LOGGER.debug("ezPMS updateGroupRealStartEndDate ended");
+		logger.debug("ezPMS updateGroupRealStartEndDate ended");
 		return "json";
 	}
 }

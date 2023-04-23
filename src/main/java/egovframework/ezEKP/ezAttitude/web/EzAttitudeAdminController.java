@@ -71,7 +71,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  */
 @Controller
 public class EzAttitudeAdminController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzAttitudeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzAttitudeController.class);
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -93,7 +93,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeMain.do", method = RequestMethod.GET)
 	public String attitudeMain(@CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("attitudeMain started");
+		logger.debug("attitudeMain started");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 
@@ -101,7 +101,7 @@ public class EzAttitudeAdminController {
 			return "cmm/error/adminDenied";
 		}
 
-		LOGGER.debug("attitudeMain ended");
+		logger.debug("attitudeMain ended");
 		return "/admin/ezAttitude/attitudeMain";
 	}
 
@@ -130,7 +130,7 @@ public class EzAttitudeAdminController {
 			@RequestParam(required=false)String apprUserName,
 			@RequestParam(required=false)String startDate,
 			@RequestParam(required=false)String endDate) throws Exception {
-		LOGGER.debug("adminAttModAppList started");
+		logger.debug("adminAttModAppList started");
 
 		int totalAtt = 0;
 		int currentPage = 1;
@@ -183,7 +183,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
@@ -208,7 +208,7 @@ public class EzAttitudeAdminController {
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		
-		LOGGER.debug("attModAppList ended");
+		logger.debug("attModAppList ended");
 		
 		return "/admin/ezAttitude/attModAppList";
 	}
@@ -218,7 +218,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeConfig.do", method = RequestMethod.GET)
 	public String attitudeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("attitudeConfig started.");
+		logger.debug("attitudeConfig started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -261,7 +261,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("adminCompany", adminCompany);
 		}
 		
-		LOGGER.debug("attitudeConfig ended.");
+		logger.debug("attitudeConfig ended.");
 		
 		return "/admin/ezAttitude/attitudeConfig";
 	}
@@ -271,7 +271,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeConfigInfo.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject attitudeConfigInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("attitudeConfigInfo started.");
+		logger.debug("attitudeConfigInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -303,7 +303,7 @@ public class EzAttitudeAdminController {
 			dataObject = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("attitudeConfigInfo ended.");
+		logger.debug("attitudeConfigInfo ended.");
 		
 		return dataObject;
 	}
@@ -313,7 +313,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/updateAttitudeConfInfo.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateAttitudeConfInfo(AttitudeConfigVO attitudeConfigVO, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("updateAttitudeConfInfo started.");
+		logger.debug("updateAttitudeConfInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String workStartTime = request.getParameter("workStartTime");
@@ -354,7 +354,7 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}
 		
-		LOGGER.debug("updateAttitudeConfInfo ended.");
+		logger.debug("updateAttitudeConfInfo ended.");
 		
 		return resultStatus;
 	}
@@ -364,7 +364,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfig.do", method = RequestMethod.GET)
 	public String attitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("attitudeTypeConfig started.");
+		logger.debug("attitudeTypeConfig started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -406,7 +406,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("adminCompany", adminCompany);
 		}
 		
-		LOGGER.debug("attitudeTypeConfig ended.");
+		logger.debug("attitudeTypeConfig ended.");
 		
 		return "/admin/ezAttitude/attitudeTypeConfig";
 	}
@@ -417,7 +417,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfigInfo.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONArray attitudeTypeConfigInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("attitudeTypeConfigInfo started.");
+		logger.debug("attitudeTypeConfigInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -450,7 +450,7 @@ public class EzAttitudeAdminController {
 			dataList = (JSONArray) resultBody.get("data");
 		}
 		
-		LOGGER.debug("attitudeTypeConfigInfo ended.");
+		logger.debug("attitudeTypeConfigInfo ended.");
 		
 		return dataList;
 	}
@@ -460,7 +460,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeTypeConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveAttitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("saveAttitudeTypeConfig started.");
+		logger.debug("saveAttitudeTypeConfig started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String typeConfigList = request.getParameter("typeList");
@@ -493,8 +493,8 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}
 		
-		LOGGER.debug("status :" + status);
-		LOGGER.debug("saveAttitudeTypeConfig ended.");
+		logger.debug("status :" + status);
+		logger.debug("saveAttitudeTypeConfig ended.");
 		
 		return resultStatus;
 	}
@@ -504,7 +504,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/addAttitudeType.do", method = RequestMethod.GET)
 	public String addAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("addAttitudeType started.");
+		logger.debug("addAttitudeType started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -515,7 +515,7 @@ public class EzAttitudeAdminController {
 		
 		model.addAttribute("companyId", companyId);
 		
-		LOGGER.debug("addAttitudeType ended.");
+		logger.debug("addAttitudeType ended.");
 		
 		return "/admin/ezAttitude/saveAttitudeType";
 	}
@@ -525,7 +525,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/showAttitudeType.do", method = RequestMethod.GET)
 	public String  showAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("showAttitudeType started.");
+		logger.debug("showAttitudeType started.");
 				
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String attitudetypeId = request.getParameter("typeId");
@@ -566,7 +566,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("companyId", companyId);
 		}
 		
-		LOGGER.debug("showAttitudeType ended.");
+		logger.debug("showAttitudeType ended.");
 		
 		return "/admin/ezAttitude/saveAttitudeType";
 	}
@@ -577,7 +577,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeType.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("saveAttutideType started.");
+		logger.debug("saveAttutideType started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -628,7 +628,7 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}
 		
-		LOGGER.debug("saveAttutideType ended.");
+		logger.debug("saveAttutideType ended.");
 		
 		return resultStatus;
 	}
@@ -638,7 +638,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeType.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("saveAttutideType started.");
+		logger.debug("saveAttutideType started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -665,14 +665,14 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		String isUse = "";
 		if (status.equals("ok")) {			
 			isUse = (String) resultBody.get("data");
 		}
 		
-		LOGGER.debug("saveAttutideType ended.");
+		logger.debug("saveAttutideType ended.");
 		
 		return isUse;
 	}
@@ -682,7 +682,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConf.do", method = RequestMethod.GET)
 	public String attitudeUserConf(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
-		LOGGER.debug("/admin/ezAttitude/attitudeUserConf started");
+		logger.debug("/admin/ezAttitude/attitudeUserConf started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -711,7 +711,7 @@ public class EzAttitudeAdminController {
 		
 		String status = resultBody.get("status").toString();
 		
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
@@ -722,7 +722,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("adminCompany", adminCompany);
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/attitudeUserConf ended");
+		logger.debug("/admin/ezAttitude/attitudeUserConf ended");
 		
 		return "/admin/ezAttitude/attitudeUserConf";
 	}
@@ -733,7 +733,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getAttitudeUserConfList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/admin/ezAttitude/attitudeUserConfList started");
+		logger.debug("/admin/ezAttitude/attitudeUserConfList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -750,7 +750,7 @@ public class EzAttitudeAdminController {
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		LOGGER.debug("userName : " + searchUserName + " || deptName : " + searchDeptName + " + || searchTitle = " + searchTitle + " || searchStartTime = " + searchStartTime + " || searchEndTime = " + searchEndTime + " || searchGubun = " + searchGubun + " || pageNum : " + pageNum + " || listSize : " + listSize + " || orderCell : " + orderCell + " || orderOption : " + orderOption);
+		logger.debug("userName : " + searchUserName + " || deptName : " + searchDeptName + " + || searchTitle = " + searchTitle + " || searchStartTime = " + searchStartTime + " || searchEndTime = " + searchEndTime + " || searchGubun = " + searchGubun + " || pageNum : " + pageNum + " || listSize : " + listSize + " || orderCell : " + orderCell + " || orderOption : " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/user-attitude-confs";
@@ -784,7 +784,7 @@ public class EzAttitudeAdminController {
 		
 		String status = resultBody.get("status").toString();
 		
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONObject jObject = new JSONObject();
 		
@@ -792,7 +792,7 @@ public class EzAttitudeAdminController {
 			jObject = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/attitudeUserConfList ended");
+		logger.debug("/admin/ezAttitude/attitudeUserConfList ended");
 		
 		return jObject;
 	}
@@ -802,7 +802,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConf.do", method = RequestMethod.GET)
 	public String saveAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("/admin/ezAttitude/editAttitudeUserConf started");
+		logger.debug("/admin/ezAttitude/editAttitudeUserConf started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String selectedUserIdList = request.getParameter("selectedUserIdList");
@@ -812,7 +812,7 @@ public class EzAttitudeAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		LOGGER.debug("selectedUserIdList = " + selectedUserIdList);
+		logger.debug("selectedUserIdList = " + selectedUserIdList);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
@@ -835,7 +835,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONObject jObject = new JSONObject();
 		
@@ -862,7 +862,7 @@ public class EzAttitudeAdminController {
 		resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		jObject = new JSONObject();
 		
@@ -875,7 +875,7 @@ public class EzAttitudeAdminController {
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("selectedUserIdList", selectedUserIdList);
 		
-		LOGGER.debug("/admin/ezAttitude/editAttitudeUserConf ended");
+		logger.debug("/admin/ezAttitude/editAttitudeUserConf ended");
 		
 		return "/admin/ezAttitude/editAttitudeUserConf";
 	}
@@ -886,7 +886,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String editAttitudeUserConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("editAttitudeUserConfig started");
+		logger.debug("editAttitudeUserConfig started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -919,8 +919,8 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		LOGGER.debug("editAttitudeUserConfig ended");
+		logger.debug("status : " + status);
+		logger.debug("editAttitudeUserConfig ended");
 		
 		return status;
 	}
@@ -930,7 +930,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheck.do", method = RequestMethod.GET)
 	public String attitudeCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf started");
+		logger.debug("/admin/ezAttitude/attitudeDeptConf started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offset = userInfo.getOffset();
@@ -971,7 +971,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
@@ -1008,7 +1008,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf ended");
+		logger.debug("/admin/ezAttitude/attitudeDeptConf ended");
 		
 		return "/admin/ezAttitude/attitudeCheck";
 	}
@@ -1019,7 +1019,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/admin/ezAttitude/attitudeCheckList started.");
+		logger.debug("/admin/ezAttitude/attitudeCheckList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -1036,7 +1036,7 @@ public class EzAttitudeAdminController {
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
+		logger.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
 				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
@@ -1071,14 +1071,14 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONObject jObject = new JSONObject();
 		if(status.equals("ok")){
 			jObject = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/attitudeCheckList ended");
+		logger.debug("/admin/ezAttitude/attitudeCheckList ended");
 		
 		return jObject;
 	}
@@ -1088,7 +1088,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAbsented.do", method = RequestMethod.GET)
 	public String attitudeAbsented(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/admin/ezAttitude/attitudeAbsented.do");
+		logger.debug("/admin/ezAttitude/attitudeAbsented.do");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offset = userInfo.getOffset();
@@ -1133,7 +1133,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONArray list = new JSONArray();
 		JSONObject data = new JSONObject();
@@ -1150,7 +1150,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("useExternalMailServer", useExternalMailServer);
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/attitudeAbsented.do");
+		logger.debug("/admin/ezAttitude/attitudeAbsented.do");
 		
 		return "/admin/ezAttitude/attitudeAbsented";
 	}
@@ -1161,7 +1161,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = {"/admin/ezAttitude/getAttitudeAbsentedList.do", "/ezAttitude/getAttitudeAbsentedList.do"}, method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getAttitudeAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getAttitudeAbsentedList started.");
+		logger.debug("getAttitudeAbsentedList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -1218,7 +1218,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONObject jObject = new JSONObject();
 		
@@ -1226,7 +1226,7 @@ public class EzAttitudeAdminController {
 			jObject = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("getAttitudeAbsentedList ended.");
+		logger.debug("getAttitudeAbsentedList ended.");
 		
 		return jObject;
 	}
@@ -1237,7 +1237,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = {"/ezAttitude/absentedListSendMail.do"}, method = RequestMethod.GET)
 	@ResponseBody
 	public String absentedListSendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("absentedListSendMail started.");
+		logger.debug("absentedListSendMail started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -1291,8 +1291,8 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		LOGGER.debug("absentedListSendMail ended.");
+		logger.debug("status : " + status);
+		logger.debug("absentedListSendMail ended.");
 		
 		return status;
 	}
@@ -1302,7 +1302,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorManage.do", method = RequestMethod.GET)
 	public String attitudeAuthorManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("attitudeTypeConfig started.");
+		logger.debug("attitudeTypeConfig started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1345,7 +1345,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("adminCompany", adminCompany);
 		}
 		
-		LOGGER.debug("attitudeTypeConfig ended.");
+		logger.debug("attitudeTypeConfig ended.");
 		
 		return "/admin/ezAttitude/attitudeAuthorManage";
 	}
@@ -1357,7 +1357,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthList.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONArray getAttitudeAuthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/admin/ezAttitude/getAttitudeAuthList started");
+		logger.debug("/admin/ezAttitude/getAttitudeAuthList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -1382,7 +1382,7 @@ public class EzAttitudeAdminController {
 		
 		String status = resultBody.get("status").toString();
 		
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONArray jArray = new JSONArray();
 		
@@ -1399,7 +1399,7 @@ public class EzAttitudeAdminController {
 			}
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/getAttitudeAuthList ended");
+		logger.debug("/admin/ezAttitude/getAttitudeAuthList ended");
 		
 		return jArray;
 	} 
@@ -1410,7 +1410,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeAuth.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/admin/ezAttitude/deleteAttitudeAuth started");
+		logger.debug("/admin/ezAttitude/deleteAttitudeAuth started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String selectUserId = request.getParameter("selectUserId");
@@ -1444,9 +1444,9 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}	
 		
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
-		LOGGER.debug("/admin/ezAttitude/deleteAttitudeAuth ended");
+		logger.debug("/admin/ezAttitude/deleteAttitudeAuth ended");
 		
 		return resultStatus;
 	}
@@ -1456,7 +1456,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuth.do", method = RequestMethod.GET)
 	public String saveAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("saveAttitudeAuth started.");
+		logger.debug("saveAttitudeAuth started.");
 		
 		String userId = request.getParameter("userId");
 		String userName = request.getParameter("userName");
@@ -1499,7 +1499,7 @@ public class EzAttitudeAdminController {
 		
 		model.addAttribute("companyId", companyId);
 		
-		LOGGER.debug("saveAttitudeAuth ended.");
+		logger.debug("saveAttitudeAuth ended.");
 
 		return "/admin/ezAttitude/saveAttitudeAuth";
 	}
@@ -1510,7 +1510,7 @@ public class EzAttitudeAdminController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthor.do", method = RequestMethod.GET)
 	public String selectAttitudeAuthor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("/admin/ezAttitude/selectAttitudeAuthor started");
+		logger.debug("/admin/ezAttitude/selectAttitudeAuthor started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -1537,7 +1537,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 				
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) resultBody.get("data");
@@ -1563,7 +1563,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("companyId", companyId);
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/selectAttitudeAuthor ended");
+		logger.debug("/admin/ezAttitude/selectAttitudeAuthor ended");
 		
 		return "/admin/ezAttitude/selectAttitudeAuthor";
 	}
@@ -1574,7 +1574,7 @@ public class EzAttitudeAdminController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthorDept.do", method = RequestMethod.GET)
 	public String selectAttitudeAuthorDept(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
-		LOGGER.debug("selectAttitudeAuthorDept started");
+		logger.debug("selectAttitudeAuthorDept started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -1609,7 +1609,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) resultBody.get("data");
@@ -1634,7 +1634,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("deptList", deptList);
 		}
 		
-		LOGGER.debug("selectAttitudeAuthorDept ended");
+		logger.debug("selectAttitudeAuthorDept ended");
 		
 		return "/admin/ezAttitude/selectAttitudeAuthorDept";
 	}
@@ -1645,7 +1645,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorDeptList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONArray attitudeAuthorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("attitudeAuthorDeptList started");
+		logger.debug("attitudeAuthorDeptList started");
 		
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
@@ -1679,7 +1679,7 @@ public class EzAttitudeAdminController {
 			authorDeptList = (JSONArray) resultBody.get("data");
 		}
 		
-		LOGGER.debug("attitudeAuthorDeptList ended");
+		logger.debug("attitudeAuthorDeptList ended");
 		
 		return authorDeptList;
 	}
@@ -1690,7 +1690,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuthor.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveAttitudeAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception {
-		LOGGER.debug("saveAttitudeAuthor started");
+		logger.debug("saveAttitudeAuthor started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String selectedUser = request.getParameter("selectedUser");
@@ -1728,9 +1728,9 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}
 		
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
-		LOGGER.debug("saveAttitudeAuthor ended");
+		logger.debug("saveAttitudeAuthor ended");
 		
 		return resultStatus;
 	}
@@ -1742,7 +1742,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = {"/admin/ezAttitude/attitudeHistoryList.do", "/ezAttitude/attitudeHistoryList.do"}, method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject attitudeHistoryList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
+		logger.debug("/ezAttitude/attitudeHistoryList.do");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -1765,7 +1765,7 @@ public class EzAttitudeAdminController {
 			isAdmin = "Y";
 		}
 		
-		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
+		logger.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || searchStartDate = " + searchStartDate
 				+ " || searchEndDate = " + searchEndDate + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||deptId =" + deptId);
 		
@@ -1801,14 +1801,14 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONObject data = new JSONObject();
 		if(status.equals("ok")){
 			data = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
+		logger.debug("/ezAttitude/attitudeHistoryList.do");
 		
 		return data;
 	}
@@ -1816,7 +1816,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/ezAttitude/getTotalAttCount.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String getTotalAttCount(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getTotalAttCount started.");
+		logger.debug("getTotalAttCount started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String isAllDept = "";
@@ -1866,7 +1866,7 @@ public class EzAttitudeAdminController {
 			totalAtt = resultBody.get("data").toString();
 		}
 		
-		LOGGER.debug("getTotalAttCount ended.");
+		logger.debug("getTotalAttCount ended.");
 		
 		return totalAtt;
 	}
@@ -1877,7 +1877,7 @@ public class EzAttitudeAdminController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConf.do", method = RequestMethod.GET)
 	public String editAttitudeDeptConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("/admin/ezAttitude/editAttitudeDeptConf started");
+		logger.debug("/admin/ezAttitude/editAttitudeDeptConf started");
 		
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1905,7 +1905,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 				
 		JSONObject jObject = new JSONObject();
 		if (status.equals("ok")) {
@@ -1954,7 +1954,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("companyEndTime", jObject.get("workEndTime"));
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/editAttitudeDeptConf ended");
+		logger.debug("/admin/ezAttitude/editAttitudeDeptConf ended");
 		
 		return "/admin/ezAttitude/editAttitudeDeptConf";
 	}
@@ -1965,7 +1965,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String editAttitudeDeptConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("editAttitudeDeptConfig started");
+		logger.debug("editAttitudeDeptConfig started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -1998,8 +1998,8 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		LOGGER.debug("editAttitudeDeptConfig ended");
+		logger.debug("status : " + status);
+		logger.debug("editAttitudeDeptConfig ended");
 		
 		return status;
 	}
@@ -2014,7 +2014,7 @@ public class EzAttitudeAdminController {
 			@RequestParam(required=false)String applCnt,
 			@RequestParam(required=false)String adminFlag,
 			@RequestParam(required=false)String pageInfo) throws Exception {
-		LOGGER.debug("attModAppDetail started");
+		logger.debug("attModAppDetail started");
 		
 		@SuppressWarnings("unused")
 		String attModDeptId = "";
@@ -2081,7 +2081,7 @@ public class EzAttitudeAdminController {
 			resultBody = (JSONObject) jp.parse(result.getBody());
 			
 			status = resultBody.get("status").toString();
-			LOGGER.debug("status : " + status);
+			logger.debug("status : " + status);
 			
 			JSONObject attitudeConfigVO = new JSONObject();
 			if (status.equals("ok")) {
@@ -2102,7 +2102,7 @@ public class EzAttitudeAdminController {
 		model.addAttribute("pageInfo", pageInfo);
 		model.addAttribute("companyId", companyId);
 		
-		LOGGER.debug("attModAppDetail ended");
+		logger.debug("attModAppDetail ended");
 		
 		return "/admin/ezAttitude/attModAppDetail";
 	}
@@ -2112,7 +2112,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualManage.do")
 	public String attitudeAnnualManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("attitudeAnnualManage started.");
+		logger.debug("attitudeAnnualManage started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -2191,7 +2191,7 @@ public class EzAttitudeAdminController {
 		model.addAttribute("userTimeSet", offset);
 		model.addAttribute("offsetMin", offsetMin);
 		
-		LOGGER.debug("attitudeAnnualManage ended.");
+		logger.debug("attitudeAnnualManage ended.");
 		
 		return "/admin/ezAttitude/attitudeAnnualManage";
 	}
@@ -2201,7 +2201,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/modifyAllAnnualPop.do")
 	public String modifyAllAnnualPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("modifyAllAnnualPop started.");
+		logger.debug("modifyAllAnnualPop started.");
 		
 		String userId = request.getParameter("userId");
 		String userName = request.getParameter("userName");
@@ -2244,7 +2244,7 @@ public class EzAttitudeAdminController {
 		
 		model.addAttribute("companyId", companyId);
 		
-		LOGGER.debug("modifyAllAnnualPop ended.");
+		logger.debug("modifyAllAnnualPop ended.");
 
 		return "/admin/ezAttitude/modifyAllAnnualPop";
 	}
@@ -2255,7 +2255,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/modifyPrsnAnnualPop.do")
 	public String modifyPrsnAnnualPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("modifyPrsnAnnualPop started.");
+		logger.debug("modifyPrsnAnnualPop started.");
 		
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
@@ -2271,7 +2271,7 @@ public class EzAttitudeAdminController {
 		model.addAttribute("userDeptName", userDeptName);
 		model.addAttribute("additionalAnnualCnt", additionalAnnualCnt);
 		
-		LOGGER.debug("modifyPrsnAnnualPop ended.");
+		logger.debug("modifyPrsnAnnualPop ended.");
 		
 		return "/admin/ezAttitude/modifyPrsnAnnualPop";
 	}
@@ -2291,7 +2291,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/excelAnnualFormatDownload.do")
 	@ResponseBody
 	public void excelAnnualFormatDownload(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
-		LOGGER.debug("excelAnnualFormatDownload started."); 
+		logger.debug("excelAnnualFormatDownload started."); 
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	
@@ -2357,7 +2357,7 @@ public class EzAttitudeAdminController {
 		
 		workbook.close();
 		
-		LOGGER.debug("excelAnnualFormatDownload ended.");
+		logger.debug("excelAnnualFormatDownload ended.");
 	}
 	
 	/**
@@ -2368,7 +2368,7 @@ public class EzAttitudeAdminController {
 	@ResponseBody
 	public JSONObject annualExcelUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
 		
-		LOGGER.debug("annualExcelUpload started.");
+		logger.debug("annualExcelUpload started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -2384,7 +2384,7 @@ public class EzAttitudeAdminController {
 		
 		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
 		if (!fileExt.equals("xls") || (!useExtension.equals("*") && (fileExt.isEmpty() || useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0))) {
-			LOGGER.debug("annualExcelUpload ended, xls check failed");
+			logger.debug("annualExcelUpload ended, xls check failed");
 			
 			String resultStr = "{\"status\":\"UPLOAD_EXT_ERROR\"}";
 			JSONParser jp         = new JSONParser();
@@ -2446,7 +2446,7 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}
 		
-		LOGGER.debug("annualExcelUpload ended.");
+		logger.debug("annualExcelUpload ended.");
 		
 		return resultBody;
 	}
@@ -2456,7 +2456,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/annualHistoryPop.do")
 	public String annualHistoryPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("annualHistoryPop started.");
+		logger.debug("annualHistoryPop started.");
 		
 		@SuppressWarnings("unused")
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -2494,7 +2494,7 @@ public class EzAttitudeAdminController {
 			
 		}
 		
-		LOGGER.debug("annualHistoryPop ended.");
+		logger.debug("annualHistoryPop ended.");
 		
 		return "/admin/ezAttitude/annualHistoryPop";
 	}
@@ -2505,7 +2505,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getAttitudeAnnualList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/admin/ezAttitude/attitudeAnnualList started.");
+		logger.debug("/admin/ezAttitude/attitudeAnnualList started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -2521,7 +2521,7 @@ public class EzAttitudeAdminController {
 		String userId = userInfo.getId();
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || pageNum = " + pageNum + " || listSize = " + listSize
+		logger.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -2555,14 +2555,14 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONObject jObject = new JSONObject();
 		if(status.equals("ok")){
 			jObject = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("/admin/ezAttitude/attitudeAnnualList ended");
+		logger.debug("/admin/ezAttitude/attitudeAnnualList ended");
 		
 		return jObject;
 	}
@@ -2573,7 +2573,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/changeAllAnnual.do")
 	@ResponseBody
 	public String changeAllAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("changeAllAnnual started.");
+		logger.debug("changeAllAnnual started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String searchUserName = request.getParameter("userName");
@@ -2622,7 +2622,7 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}
 		
-		LOGGER.debug("changeAllAnnual ended.");
+		logger.debug("changeAllAnnual ended.");
 		
 		return resultStatus;
 	}
@@ -2634,7 +2634,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/changePrsnAnnual.do")
 	@ResponseBody
 	public String changePrsnAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("changePrsnAnnual started.");
+		logger.debug("changePrsnAnnual started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
@@ -2679,7 +2679,7 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}
 		
-		LOGGER.debug("changePrsnAnnual ended.");
+		logger.debug("changePrsnAnnual ended.");
 		
 		return resultStatus;
 	}
@@ -2690,7 +2690,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/excelAnnualListExport.do")
 	@ResponseBody
 	public void excelAnnualListExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
-		LOGGER.debug("excelAnnualListExport started."); 
+		logger.debug("excelAnnualListExport started."); 
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2709,7 +2709,7 @@ public class EzAttitudeAdminController {
 		Locale locale = userInfo.getLocale();
 		
 		
-		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || listSize = " + listSize
+		logger.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + " || orderOption = " + orderOption);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -2742,7 +2742,7 @@ public class EzAttitudeAdminController {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
+		logger.debug("status : " + status);
 		
 		JSONObject data = new JSONObject();
 		
@@ -2845,12 +2845,12 @@ public class EzAttitudeAdminController {
 		
 		workbook.close();
 		
-		LOGGER.debug("excelAnnualListExport ended.");
+		logger.debug("excelAnnualListExport ended.");
 	}
 	
 	@RequestMapping(value = "/admin/ezAttitude/useAnnualHistoryPop.do")
 	public String useAnnualHistoryPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("useAnnualHistoryPop started.");
+		logger.debug("useAnnualHistoryPop started.");
 		//해당 사원 정보 (사원이름 직위 부서), 지각 수, 연차 수, 반차들 수, 연차 리스트
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
@@ -2912,13 +2912,13 @@ public class EzAttitudeAdminController {
 			}
 		}
 		
-		LOGGER.debug("useAnnualHistoryPop ended.");
+		logger.debug("useAnnualHistoryPop ended.");
 		return "/admin/ezAttitude/useAnnualHistoryPop";
 	}
 	
 	@RequestMapping(value = "/admin/ezAttitude/useAnnualHistoryList.do")
 	public String useAnnualHistoryList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		LOGGER.debug("useAnnualHistoryList started.");
+		logger.debug("useAnnualHistoryList started.");
 		//해당 사원 정보 (사원이름 직위 부서), 지각 수, 연차 수, 반차들 수, 연차 리스트
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
@@ -2963,7 +2963,7 @@ public class EzAttitudeAdminController {
 			}
 		}
 		
-		LOGGER.debug("useAnnualHistoryList ended.");
+		logger.debug("useAnnualHistoryList ended.");
 		
 		return "json";
 	}
@@ -2971,7 +2971,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/setJoinDatePop.do")
 	public String setJoinDatePop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		
-		LOGGER.debug("setJoinDatePop started.");
+		logger.debug("setJoinDatePop started.");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
@@ -2987,7 +2987,7 @@ public class EzAttitudeAdminController {
 		model.addAttribute("mode", mode);
 		model.addAttribute("date", date);
 		
-		LOGGER.debug("setJoinDatePop ended.");
+		logger.debug("setJoinDatePop ended.");
 
 		return "/admin/ezAttitude/setJoinDatePop";
 	}
@@ -2998,7 +2998,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/saveJoinDate.do")
 	@ResponseBody
 	public String saveJoinDate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("saveJoinDate started.");
+		logger.debug("saveJoinDate started.");
 		
 		@SuppressWarnings("unused")
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -3040,7 +3040,7 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}
 		
-		LOGGER.debug("saveJoinDate ended.");
+		logger.debug("saveJoinDate ended.");
 		
 		return resultStatus;
 	}
@@ -3050,7 +3050,7 @@ public class EzAttitudeAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualConfig.do")
 	public String attitudeAnnualConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("attitudeAnnualConfig started.");
+		logger.debug("attitudeAnnualConfig started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3093,7 +3093,7 @@ public class EzAttitudeAdminController {
 			model.addAttribute("adminCompany", adminCompany);
 		}
 		
-		LOGGER.debug("attitudeAnnualConfig ended.");
+		logger.debug("attitudeAnnualConfig ended.");
 		
 		return "/admin/ezAttitude/attitudeAnnualConfig";
 	}
@@ -3104,7 +3104,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualConfigInfo.do")
 	@ResponseBody
 	public JSONObject attitudeAnnualConfigInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("attitudeAnnualConfigInfo started.");
+		logger.debug("attitudeAnnualConfigInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -3136,7 +3136,7 @@ public class EzAttitudeAdminController {
 			dataObject = (JSONObject) resultBody.get("data");
 		}
 		
-		LOGGER.debug("attitudeAnnualConfigInfo ended.");
+		logger.debug("attitudeAnnualConfigInfo ended.");
 		
 		return dataObject;
 	}
@@ -3147,7 +3147,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value = "/admin/ezAttitude/updateAnnualConfInfo.do")
 	@ResponseBody
 	public String updateAnnualConfInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("updateAnnualConfInfo started.");
+		logger.debug("updateAnnualConfInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String annualCancelRule = request.getParameter("annualCancelRule");
@@ -3192,7 +3192,7 @@ public class EzAttitudeAdminController {
 			resultStatus = "error";
 		}
 		
-		LOGGER.debug("updateAnnualConfInfo ended.");
+		logger.debug("updateAnnualConfInfo ended.");
 		
 		return resultStatus;
 	}
@@ -3232,7 +3232,7 @@ public class EzAttitudeAdminController {
 	@RequestMapping(value="/admin/ezAttitude/setDailyWork.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String setDailyWork(HttpServletRequest request) throws ParseException {
-		LOGGER.debug("setDailyWork started.");
+		logger.debug("setDailyWork started.");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/attitudes/daliyWork";
@@ -3254,8 +3254,8 @@ public class EzAttitudeAdminController {
 		
 		String status = resultBody.get("status").toString();
 
-		LOGGER.debug("###setDailyWork status=" + status);		
-		LOGGER.debug("setDailyWork ended.");
+		logger.debug("###setDailyWork status=" + status);		
+		logger.debug("setDailyWork ended.");
 		return status;
 	}
 }

@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 public class EgovProperties{
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovProperties.class);
+	private static final Logger logger = LoggerFactory.getLogger(EgovProperties.class);
 
 	//프로퍼티값 로드시 에러발생하면 반환되는 에러문자열
 	public static final String ERR_CODE =" EXCEPTION OCCURRED";
@@ -222,7 +222,7 @@ public class EgovProperties{
 	 */
 	private static void debug(Object obj) {
 		if (obj instanceof java.lang.Exception) {
-			LOGGER.debug("IGNORED: {}", ((Exception)obj).getMessage());
+			logger.debug("IGNORED: {}", ((Exception)obj).getMessage());
 		}
 	}
 }

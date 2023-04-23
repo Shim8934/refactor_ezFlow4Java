@@ -42,7 +42,7 @@ import egovframework.let.utl.fcc.service.MimeTypes;
 
 @RestController
 public class MCommonGWController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MCommonGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MCommonGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -62,12 +62,12 @@ public class MCommonGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezcommon/filedown", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mFileDown(HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] started.");
 		
 		String filePath = request.getParameter("filePath");
-		LOGGER.debug("filePath = " + filePath);
+		logger.debug("filePath = " + filePath);
 		String fileName = (request.getParameter("fileName") == null) ? "" : request.getParameter("fileName");
-		LOGGER.debug("fileName = " + fileName);
+		logger.debug("fileName = " + fileName);
 		String realPath = commonUtil.getRealPath(request);
 		
 		filePath = realPath + filePath;
@@ -118,7 +118,7 @@ public class MCommonGWController {
 			return result;
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] ended.");
 		
 		return result;
 	}
@@ -126,13 +126,13 @@ public class MCommonGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezcommon/getTenantConfigWithServerName", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getTenantConfigWithServerName(HttpServletRequest request) throws Exception {
-		LOGGER.debug("MCommonGWController getTenantConfigWithServerName started");
+		logger.debug("MCommonGWController getTenantConfigWithServerName started");
 		
 		String serverName = request.getHeader("x-user-host");
 		int tenantId = loginService.getTenantId(serverName);
 		String tenantConfig = request.getParameter("tenantConfig");		
 		
-		LOGGER.debug("serverName=" + serverName + ",tenantId=" + tenantId + ",tenantConfig=" + tenantConfig);
+		logger.debug("serverName=" + serverName + ",tenantId=" + tenantId + ",tenantConfig=" + tenantConfig);
 						
 		String config = ezCommonService.getTenantConfig(tenantConfig, tenantId);
 		
@@ -142,7 +142,7 @@ public class MCommonGWController {
 		result.put("code", 0);
 		result.put("data", config);
 
-		LOGGER.debug("MCommonGWController getTenantConfigWithServerName ended");
+		logger.debug("MCommonGWController getTenantConfigWithServerName ended");
 		
 		return result;
 	}
@@ -153,7 +153,7 @@ public class MCommonGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezcommon/tenantconfigs/{tenantconfig:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
     public JSONObject getTenantConfigMobileGW(HttpServletRequest request) throws Exception {
-    	LOGGER.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW started");
+    	logger.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW started");
     	
     	JSONObject result = new JSONObject();
     	
@@ -163,7 +163,7 @@ public class MCommonGWController {
 			String resultTC = ezCommonService.getTenantConfig(tenantConfig, tenantID);
 			
 			if (resultTC != null) {
-				LOGGER.debug("resultTC : " + resultTC);
+				logger.debug("resultTC : " + resultTC);
 			} else {
 				resultTC = "";
 			}
@@ -175,7 +175,7 @@ public class MCommonGWController {
 			e.printStackTrace();
 			result.put("status", "error");
 		}
-		LOGGER.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW ended.");
+		logger.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW ended.");
     	return result;
     }
 	
@@ -183,22 +183,22 @@ public class MCommonGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezcommon/getTenantConfig", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getTenantConfig(HttpServletRequest request) throws Exception {
-		LOGGER.debug("MCommonGWController getTenantConfig Start");
+		logger.debug("MCommonGWController getTenantConfig Start");
 		
 		int tenantId = Integer.parseInt(request.getParameter("tenantID"));
 		String tenantConfig = request.getParameter("tenantConfig");
-		LOGGER.debug("tenantID=" + tenantId + ", tenantConfig=" + tenantConfig);
+		logger.debug("tenantID=" + tenantId + ", tenantConfig=" + tenantConfig);
 		
 		String config = ezCommonService.getTenantConfig(tenantConfig, tenantId);
 		config = config == null ? "" : config;
-		LOGGER.debug("config=" + config);
+		logger.debug("config=" + config);
 		
 		JSONObject result = new JSONObject();
 		result.put("status", "ok");
 		result.put("code", 0);
 		result.put("data", config);
 
-		LOGGER.debug("MCommonGWController getTenantConfig End");
+		logger.debug("MCommonGWController getTenantConfig End");
 		return result;
 	}
 	
@@ -206,12 +206,12 @@ public class MCommonGWController {
 	@RequestMapping(value = "/mobile/ezcommon/decryptFiledown", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public void mFileDown_decrypt(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/decryptFiledown] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/decryptFiledown] started.");
 
 		String filePath = request.getParameter("filePath");
-		LOGGER.debug("filePath = " + filePath);
+		logger.debug("filePath = " + filePath);
 		String fileName = (request.getParameter("fileName") == null) ? "" : request.getParameter("fileName");
-		LOGGER.debug("fileName = " + fileName);
+		logger.debug("fileName = " + fileName);
 		String realPath = commonUtil.getRealPath(request);
 
 		filePath = realPath + filePath;
@@ -255,10 +255,10 @@ public class MCommonGWController {
 
 			}
 		} catch (Exception e) {
-			LOGGER.debug("e.message=" + e.getMessage());
+			logger.debug("e.message=" + e.getMessage());
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/decryptFiledown] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/decryptFiledown] ended.");
 
 	}
 	

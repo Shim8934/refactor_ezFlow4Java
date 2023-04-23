@@ -56,25 +56,25 @@ public class EzPMSScheduler {
 	@Resource(name = "jspw")
     private String jspw;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSScheduler.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzPMSScheduler.class);
 	
 	//예정 종료일을 넘어선 경우에는 진행 프로젝트의 상태를 지연으로 변경 (진행 프로젝트만 해당 됨)
 //	@Scheduled(cron = "${config.crone.pmsUpdateLateStatus}")
 	// PMS가 아직 퍼스널에 정식 머지된 상황이 아니기 때문에 주석처리. jmocha_scheduler_server에서 삭제하는 방법을 취해보려 했으나 일단 이메일 스케쥴러를 타게 되면 자동으로 insert되기 때문에 이 방법밖에는 없음
 	// 향후 별도의 config으로 사용하지 않을 경우 돌지 않게할 필요가 있음. 이 모듈을 사용하지 않는 사이트의 경우 불필요한 리소스 낭비 2020-01-02 임민석
 	public void updateLateStatus() throws Exception {
-		LOGGER.debug("updateLateStatus started.");
+		logger.debug("updateLateStatus started.");
 		
 		//choose scheduler running server
 		if (!ezEmailScheduler.preScheduler("pmsUpdateLateStatus")) {
-			LOGGER.debug("updateLateStatus scheduler ended.");
+			logger.debug("updateLateStatus scheduler ended.");
 			return;
 		}
 		
 //		String searchStatus = "P";
 //		
 //		List<ProjectInfoVO> projectList = ezPMSService.getProgressProject(searchStatus, "P");
-//		LOGGER.debug("projectList : " + projectList);
+//		logger.debug("projectList : " + projectList);
 //		
 //		Date nowDate = new SimpleDateFormat("yyyy-MM-dd").parse(commonUtil.getTodayUTCTime(""));
 //		
@@ -82,32 +82,32 @@ public class EzPMSScheduler {
 //			Date planEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(projectList.get(i).getPlanEndDate());
 //			
 //			if (planEndDate.before(nowDate)) {
-//				LOGGER.debug(projectList.get(i).getProjectName() + " is late");
+//				logger.debug(projectList.get(i).getProjectName() + " is late");
 //				ezPMSService.updateProjectStatus(projectList.get(i).getProjectId(), "L", projectList.get(i).getTenantId(), projectList.get(i).getRealStartDate(), projectList.get(i).getPlanEndDate());
 //			} else {
-//				LOGGER.debug(projectList.get(i).getProjectName() + " is not late");
+//				logger.debug(projectList.get(i).getProjectName() + " is not late");
 //			}
 //		}
 		ezPMSService.updateProjectStatusScheduler();
 		
-		LOGGER.debug("updateLateStatus ended.");
+		logger.debug("updateLateStatus ended.");
 	}
 	
 	//종료 알림 메일 전송
 	@Scheduled(cron = "${config.crone.pmsUpdateLateStatus}")
 	public void sendEndAlamMail() throws Exception {
-		LOGGER.debug("sendEndAlamMail started.");
+		logger.debug("sendEndAlamMail started.");
 		
 		//choose scheduler running server
 		if (!ezEmailScheduler.preScheduler("pmsUpdateLateStatus")) {
-			LOGGER.debug("updateLateStatus scheduler ended.");
+			logger.debug("updateLateStatus scheduler ended.");
 			return;
 		}
 		
 		String searchStatus = "P";
 		
 		List<ProjectInfoVO> projectList = ezPMSService.getProgressProject(searchStatus, "P");
-		LOGGER.debug("projectList : " + projectList);
+		logger.debug("projectList : " + projectList);
 		
 		Date nowDate = new SimpleDateFormat("yyyy-MM-dd").parse(commonUtil.getTodayUTCTime(""));
 		
@@ -134,7 +134,7 @@ public class EzPMSScheduler {
 				if (nowDate.equals(endAlamDay) || 
 						(projectList.get(i).getMailRepeat() == 1 && cal.getTimeInMillis() < endDateCal.getTimeInMillis() && nowCal.getTimeInMillis() < endDateCal.getTimeInMillis() 
 						&& cal.getTimeInMillis() < nowCal.getTimeInMillis())) {
-					LOGGER.debug(projectList.get(i).getProjectName() + " should get AlamMail");
+					logger.debug(projectList.get(i).getProjectName() + " should get AlamMail");
 					
 					int isGantt = 1;
 					List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectList.get(i).getProjectId(), 4, "", projectList.get(i).getTenantId(), isGantt);
@@ -147,7 +147,7 @@ public class EzPMSScheduler {
 						toMember.setAddress(member.getUserMail());
 						toMember.setPersonal(member.getUserName());
 						
-						LOGGER.debug("userMail : " + member.getUserMail() + ", userName : " + member.getUserName());
+						logger.debug("userMail : " + member.getUserMail() + ", userName : " + member.getUserName());
 						toArrList.add(toMember);
 					}
 					
@@ -167,7 +167,7 @@ public class EzPMSScheduler {
 					int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 					String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 					Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
-					LOGGER.debug("userAccount : " + userAccount + ", locale=" + locale);
+					logger.debug("userAccount : " + userAccount + ", locale=" + locale);
 					
 					String subject = "";
 					String content = "";
@@ -204,17 +204,17 @@ public class EzPMSScheduler {
 			}
 		}
 		
-		LOGGER.debug("sendEndAlamMail ended.");
+		logger.debug("sendEndAlamMail ended.");
 	}
 	
 	//예정 종료일을 넘어선 경우에는 업무의 상태를 지연으로 변경 (진행 업무만 해당 됨)
 	@Scheduled(cron = "${config.crone.pmsUpdateLateStatus}")
 	public void updateLateTaskStatus() throws Exception {
-		LOGGER.debug("updateLateTaskStatus started.");
+		logger.debug("updateLateTaskStatus started.");
 		
 		//choose scheduler running server
 		if (!ezEmailScheduler.preScheduler("pmsUpdateLateStatus")) {
-			LOGGER.debug("updateLateStatus scheduler ended.");
+			logger.debug("updateLateStatus scheduler ended.");
 			return;
 		}
 		
@@ -222,17 +222,17 @@ public class EzPMSScheduler {
 		
 		ezPMSService.updateTaskStatusScheduler();
 		
-		LOGGER.debug("updateLateTaskStatus ended.");
+		logger.debug("updateLateTaskStatus ended.");
 	}
 	
 	//프로젝트의 남은 기간 계산 (완료인 프로젝트 제외)
 	@Scheduled(cron = "${config.crone.pmsUpdateLateStatus}")
 	public void updateProjectRestDueday() throws Exception {
-		LOGGER.debug("updateProjectRestDueday started.");
+		logger.debug("updateProjectRestDueday started.");
 		
 		//choose scheduler running server
 		if (!ezEmailScheduler.preScheduler("pmsUpdateLateStatus")) {
-			LOGGER.debug("updateProjectRestDueday scheduler ended.");
+			logger.debug("updateProjectRestDueday scheduler ended.");
 			return;
 		}
 		
@@ -264,7 +264,7 @@ public class EzPMSScheduler {
 					lang = "";
 				}
 				
-				LOGGER.debug("companyId : " + companyId);
+				logger.debug("companyId : " + companyId);
 				
 				if (startDate.before(now)) {
 					restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId, lang);
@@ -278,6 +278,6 @@ public class EzPMSScheduler {
 
 		
 		
-		LOGGER.debug("updateProjectRestDueday ended.");
+		logger.debug("updateProjectRestDueday ended.");
 	}
 }

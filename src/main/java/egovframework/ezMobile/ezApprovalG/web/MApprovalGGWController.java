@@ -64,7 +64,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @RestController
 public class MApprovalGGWController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MApprovalGGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MApprovalGGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -96,7 +96,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/main-list/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
 	public JSONObject mApprovalMainList(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/main-list/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/main-list/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -105,7 +105,7 @@ public class MApprovalGGWController {
 			String listSize = "10"; //리스트사이즈 임시로 10개 차후 디비에서 가져와야함
 			String lastDate = commonUtil.getTodayUTCTime("");
 			
-			LOGGER.debug("listSize : " + listSize);
+			logger.debug("listSize : " + listSize);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -120,7 +120,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/main-list/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/main-list/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -131,7 +131,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/{type}/list/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalList(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -141,9 +141,9 @@ public class MApprovalGGWController {
 			String lastDate = request.getParameter("lastDate");
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("searchText : " + searchText);
-			LOGGER.debug("listSize : " + listSize);
-			LOGGER.debug("lastDate : " + lastDate);
+			logger.debug("searchText : " + searchText);
+			logger.debug("listSize : " + listSize);
+			logger.debug("lastDate : " + lastDate);
 			
 			searchText = searchText.replace("%", "\\%").replace("_", "\\_");
 			
@@ -179,7 +179,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -190,7 +190,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/{type}/list-count/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalListCount(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list-count/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list-count/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -198,8 +198,8 @@ public class MApprovalGGWController {
 			String searchText = request.getParameter("searchText");
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("searchText : " + searchText);
+			logger.debug("serverName : " + serverName);
+			logger.debug("searchText : " + searchText);
 			
 			searchText = searchText.replace("%", "\\%").replace("_", "\\_");
 			
@@ -216,7 +216,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list-count/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list-count/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -227,7 +227,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDoc(@PathVariable String docId, HttpServletRequest request, Locale locale) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -238,10 +238,10 @@ public class MApprovalGGWController {
 			String mode = request.getParameter("mode");
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("type : " + type);
-			LOGGER.debug("mode : " + mode);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("type : " + type);
+			logger.debug("mode : " + mode);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
@@ -285,7 +285,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "] ended.");
 		
 		return result;
 	}
@@ -296,7 +296,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/line-list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalLineList(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/line-list] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/line-list] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -307,10 +307,10 @@ public class MApprovalGGWController {
 			String serverName = request.getHeader("x-user-host");
 			String companyID = request.getParameter("companyID");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("type : " + type);
-			LOGGER.debug("mode : " + mode);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("type : " + type);
+			logger.debug("mode : " + mode);
 			
 			if (mode != null && mode.equals("END")) {
 				type = "END";
@@ -336,7 +336,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/line-list] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/line-list] ended.");
 		
 		return result;
 	}
@@ -347,7 +347,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalOpinionCount(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion-count] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion-count] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -357,10 +357,10 @@ public class MApprovalGGWController {
 			String type = request.getParameter("type");
 			String mode = request.getParameter("mode");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("type : " + type);
-			LOGGER.debug("mode : " + mode);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("type : " + type);
+			logger.debug("mode : " + mode);
 			
 			if (mode != null && mode.equals("END")) {
 				type = "END";
@@ -385,7 +385,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion-count] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion-count] ended.");
 		
 		return result;
 	}
@@ -396,7 +396,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/attach-list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalAttachList(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/attach-list] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/attach-list] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -406,10 +406,10 @@ public class MApprovalGGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("type : " + type);
-			LOGGER.debug("mode : " + mode);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("type : " + type);
+			logger.debug("mode : " + mode);
 			
 			if (mode != null && mode.equals("END")) {
 				type = "END";
@@ -433,7 +433,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/attach-list] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/attach-list] ended.");
 		
 		return result;
 	}
@@ -444,7 +444,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -454,9 +454,9 @@ public class MApprovalGGWController {
 			String type = request.getParameter("type");
 			String mode = request.getParameter("mode");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("mode : " + mode);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("mode : " + mode);
 			
 			if (mode != null && mode.equals("END")) {
 				type = "END";
@@ -480,7 +480,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -491,7 +491,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalInsertOpinionInfo(@RequestBody JSONObject jsonParam, @PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/docs/" + docId + "/opinion] started.");
+		logger.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -501,10 +501,10 @@ public class MApprovalGGWController {
 			String opinionGB = jsonParam.get("opinionGB").toString();
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("content : " + content);
-			LOGGER.debug("opinionGB : " + opinionGB);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("content : " + content);
+			logger.debug("opinionGB : " + opinionGB);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -531,7 +531,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
+		logger.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -542,7 +542,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalUpdateOpinionInfo(@RequestBody JSONObject jsonParam, @PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/docs/" + docId + "/opinion] started.");
+		logger.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -552,10 +552,10 @@ public class MApprovalGGWController {
 			String opinionGB = jsonParam.get("opinionGB").toString();
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("content : " + content);
-			LOGGER.debug("opinionGB : " + opinionGB);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("content : " + content);
+			logger.debug("opinionGB : " + opinionGB);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -575,7 +575,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
+		logger.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -586,7 +586,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDeleteOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/docs/" + docId + "/opinion] started.");
+		logger.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -594,8 +594,8 @@ public class MApprovalGGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -615,7 +615,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
+		logger.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -626,15 +626,15 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalAbsenteeInfo(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/absentee/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/absentee/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			// 2021-02-15 박기범 : 겸직부재중정보 호출 서비스로 교체
@@ -660,7 +660,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}	
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/absentee/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/absentee/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -672,15 +672,15 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalSetAbsenteeInfo(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) {
-		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			JSONParser jp = new JSONParser();
@@ -705,7 +705,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -716,15 +716,15 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDelAbsenteeInfo(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/absentee/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/absentee/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -746,7 +746,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/absentee/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/absentee/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -757,7 +757,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/pwd-check/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalCheckPassword(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/pwd-check/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/pwd-check/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -765,8 +765,8 @@ public class MApprovalGGWController {
 			String rsaEncPassword = request.getParameter("password");
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -789,7 +789,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/pwd-check/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/pwd-check/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -800,7 +800,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/approve/{type:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDoApprove(@PathVariable String docId, @PathVariable String type, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -816,8 +816,8 @@ public class MApprovalGGWController {
 				mode = "APR";
 			}
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
@@ -955,7 +955,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] ended.");
 		
 		return result;
 	}
@@ -963,15 +963,15 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/left-count/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalLeftCount(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -986,7 +986,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -995,7 +995,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/AprMemberSN/{docId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAprMemberSN(@PathVariable String docId, HttpServletRequest request, Locale locale) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -1005,10 +1005,10 @@ public class MApprovalGGWController {
 			String type = request.getParameter("type");
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("type : " + type);
-			LOGGER.debug("DocID : " + DocID);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("type : " + type);
+			logger.debug("DocID : " + DocID);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			@SuppressWarnings("unused")
@@ -1038,7 +1038,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "] ended.");
 		
 		return result;
 	}
@@ -1047,7 +1047,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/AprMemberSN/{docId}/checkAprState", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCheckAprState(@PathVariable String docId, HttpServletRequest request, Locale locale) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "/checkAprState] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "/checkAprState] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1078,7 +1078,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 			e.printStackTrace();
 		}
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "/checkAprState] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "/checkAprState] ended.");
 		return result;
 	}
 	
@@ -1088,7 +1088,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/gwDraft", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwDraft(@RequestBody JSONObject jsonParam, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/gwDraft" + " started.");
+		logger.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/gwDraft" + " started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1096,8 +1096,8 @@ public class MApprovalGGWController {
 			String userId = jsonParam.get("userId").toString();
 			String serverName = request.getHeader("x-user-host");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 
 			String realPath = commonUtil.getRealPath(request);
@@ -1111,7 +1111,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/gwDraft" + " ended.");
+		logger.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/gwDraft" + " ended.");
 		
 		return result;
 	}
@@ -1122,7 +1122,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/checkAccessYNG", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject checkAccessYNG(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkAccessYNG] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkAccessYNG] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -1157,7 +1157,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkAccessYNG] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkAccessYNG] ended.");
 		
 		return result;
 	}
@@ -1168,7 +1168,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/checkProxyDoc", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject checkProxyDoc(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkProxyDoc] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkProxyDoc] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -1195,7 +1195,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkProxyDoc] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkProxyDoc] ended.");
 		
 		return result;
 	}
@@ -1206,7 +1206,7 @@ public class MApprovalGGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/checkIsGroupDoc", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject checkIsGroupDoc(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkIsGroupDoc] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkIsGroupDoc] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -1227,7 +1227,7 @@ public class MApprovalGGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkIsGroupDoc] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkIsGroupDoc] ended.");
 		
 		return result;
 	}

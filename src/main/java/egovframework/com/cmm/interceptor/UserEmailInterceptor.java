@@ -35,7 +35,7 @@ public class UserEmailInterceptor extends WebContentInterceptor {
 	@Autowired
 	private EzEmailService ezEmailService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserEmailInterceptor.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserEmailInterceptor.class);
 
 	private static final String EMAIL_ALIAS_PAGE = "/user/login/email.do";
 
@@ -77,7 +77,7 @@ public class UserEmailInterceptor extends WebContentInterceptor {
 				String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 				String userEmail = new StringBuilder(userId).append("@").append(domainName).toString();
 				ezEmailService.updatePrimaryIndividualAlias(userEmail, "", userPrimaryEmail, tenantId);
-				LOGGER.debug("auto alias apply. userEmail: {}, aliasEmail: {}", userEmail, userPrimaryEmail);
+				logger.debug("auto alias apply. userEmail: {}, aliasEmail: {}", userEmail, userPrimaryEmail);
 			} else if (!isEmailPage) {
 				response.sendRedirect(EMAIL_ALIAS_PAGE);
 				return false;

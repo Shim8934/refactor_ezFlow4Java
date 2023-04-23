@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 public class EgovStringUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovStringUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(EgovStringUtil.class);
 
 	/**
 	 * 빈 문자열 <code>""</code>.
@@ -824,7 +824,7 @@ public class EgovStringUtil {
 			rtnStr = strTxt.toString();
 
 		} catch (Exception e) {
-			LOGGER.debug("{}", e);
+			logger.debug("{}", e);
 		}
 
 		return rtnStr;
@@ -868,7 +868,7 @@ public class EgovStringUtil {
 			rtnStr = strTxt.toString();
 	
 		} catch (Exception e) {
-			LOGGER.debug("{}", e);
+			logger.debug("{}", e);
 		}
 	
 		return rtnStr;

@@ -23,7 +23,7 @@ import egovframework.let.utl.rest.Result;
 @RestController
 public class MWebfolderGWController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MWebfolderGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MWebfolderGWController.class);
 
 	@Autowired
 	private MOptionService mOptionService;
@@ -45,8 +45,8 @@ public class MWebfolderGWController {
 			@PathVariable String userId, @PathVariable String pageType, @RequestParam(defaultValue = "") String folderId,
 			@RequestParam int page, @RequestParam int size, @RequestParam int offset,
 			@RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String filter) {
-		LOGGER.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/files/{pageType}] started.");
-		LOGGER.debug("userId: {}, pageType: {}, folderId: {}", userId, pageType, folderId);
+		logger.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/files/{pageType}] started.");
+		logger.debug("userId: {}, pageType: {}, folderId: {}", userId, pageType, folderId);
 
 		Result result;
 
@@ -69,7 +69,7 @@ public class MWebfolderGWController {
 			result = Result.failure();
 		}
 
-		LOGGER.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/files/{pageType}] ended.");
+		logger.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/files/{pageType}] ended.");
 		return result;
 	}
 
@@ -78,8 +78,8 @@ public class MWebfolderGWController {
 	 */
 	@RequestMapping(value = "/mobile/ezwebfolder/users/{userId}/tree/{pageType:company|department|user|shared|sharing|favorite}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public Result getFolderTree(@PathVariable String userId, @PathVariable String pageType, @RequestParam(defaultValue = "") String folderId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/tree/{pageType}] started.");
-		LOGGER.debug("userId: {}, pageType: {}, folderId: {}", userId, pageType, folderId);
+		logger.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/tree/{pageType}] started.");
+		logger.debug("userId: {}, pageType: {}, folderId: {}", userId, pageType, folderId);
 
 		Result result;
 
@@ -94,7 +94,7 @@ public class MWebfolderGWController {
 			result = Result.failure();
 		}
 
-		LOGGER.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/tree/{pageType}] ended.");
+		logger.debug("MOBILE G/W WEBFOLDER [GET /mobile/ezwebfolder/users/{userId}/tree/{pageType}] ended.");
 		return result;
 	}
 

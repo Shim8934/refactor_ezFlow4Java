@@ -94,7 +94,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @RestController
 public class EzNewPortalGWController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzNewPortalGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzNewPortalGWController.class);
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -169,7 +169,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/settingInfo/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserPortalSetting(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getUserPortalSetting started.");
+		logger.debug("ezNewPortal G/W getUserPortalSetting started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -182,12 +182,12 @@ public class EzNewPortalGWController {
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
-			LOGGER.debug("primaryLang=" + primaryLang);
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", portletLang : " + portletLang + ", deptPath : " + deptPath);
+			logger.debug("primaryLang=" + primaryLang);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", portletLang : " + portletLang + ", deptPath : " + deptPath);
 			
 			// 사용자 설정 테마/프레임 가져오기
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, portletLang);
-			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
+			logger.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
 			
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(userThemeSetting.getUsedTheme(), portletLang, userId, tenantId, companyId, deptId, false);
 			
@@ -216,7 +216,7 @@ public class EzNewPortalGWController {
 			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
 			String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
 			
-			LOGGER.debug("[config] useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useMemo : " + useMemo + ", useCabinet : " + useCabinet
+			logger.debug("[config] useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useMemo : " + useMemo + ", useCabinet : " + useCabinet
 						+ ", useVote : " + useVote + ", useJournal : " + useJournal + ", useCircular : " + useCircular + ", useAttitue : " + useAttitude
 						+ ", useWebfolder : " + useWebfolder + ", useEzPMS : " + useEzPMS + ", useCommunity : " + useCommunity + ", useEzWorkspace : " + useEzWorkspace
 						+ ", useMail : " + useExternalMailServer);
@@ -362,7 +362,7 @@ public class EzNewPortalGWController {
 			
 			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
 			String useInternet = config.getProperty("config.useInternet");
-			LOGGER.debug("useInternet=" + useInternet);
+			logger.debug("useInternet=" + useInternet);
 			if (useInternet.equals("NO")) {
 				portletOrder.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
@@ -515,16 +515,16 @@ public class EzNewPortalGWController {
 				useMail = "YES";
 			}
 			
-			LOGGER.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useCircular : " + useCircular);
-			LOGGER.debug("useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
+			logger.debug("useAttitude : " + useAttitude + ", useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useCircular : " + useCircular);
+			logger.debug("useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
 			// =================================== 여기까지 end
 
 			//2019-08-07  자동리프레시 가져오기
 			String usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", tenantId);
-			LOGGER.debug("usePortalAutoRefreshInterval : " + usePortalAutoRefreshInterval);
+			logger.debug("usePortalAutoRefreshInterval : " + usePortalAutoRefreshInterval);
 			
 			if (usePortalAutoRefreshInterval == null || usePortalAutoRefreshInterval.equals("")) {
-				LOGGER.debug("userPortalAutoRefreshInterval is none!");
+				logger.debug("userPortalAutoRefreshInterval is none!");
 				String propertyName = "usePortalAutoRefreshInterval";
 				String propertyValue = "5";
 				String description = "포탈 자동 새로고침 간격, 단 0이면 새로고침 사용안함";
@@ -576,7 +576,7 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 			e.printStackTrace();
 		}
-		LOGGER.debug("ezNewPortal G/W getUserPortalSetting ended.");
+		logger.debug("ezNewPortal G/W getUserPortalSetting ended.");
 		return result;
 	}
 
@@ -586,7 +586,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/order/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updatePortletOrder(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updatePortletOrder started.");
+		logger.debug("ezNewPortal G/W updatePortletOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -601,8 +601,8 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
-			LOGGER.debug("themeId : " + themeId);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
+			logger.debug("themeId : " + themeId);
 			
 			ezNewPortalService.updatePortletOrderUser(userId, companyId, tenantId, portletOrder, portletLang, themeId);
 
@@ -613,7 +613,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updatePortletOrder ended.");
+		logger.debug("ezNewPortal G/W updatePortletOrder ended.");
 		return result;
 	}
 
@@ -623,7 +623,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/birthday/months/{month:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMonthlyBirthdayEmployees(HttpServletRequest request, @PathVariable int month) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getMonthlyBirthdayEmployees started.");
+		logger.debug("ezNewPortal G/W getMonthlyBirthdayEmployees started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -637,13 +637,13 @@ public class EzNewPortalGWController {
 			int startRow = Math.multiplyExact(curPage, count);
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
-			LOGGER.debug("curPage : " + curPage + ", count : " + count + ", startRow : " + startRow + ", lang : " + lang);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			logger.debug("curPage : " + curPage + ", count : " + count + ", startRow : " + startRow + ", lang : " + lang);
 			
 			int birthdayListCount = ezNewPortalService.getMonthlyBirthdayEmployeesCount(companyId, tenantId, month);
 			List<PortalUserInfoVO> birthdayList = ezNewPortalService.getMonthlyBirthdayEmployees(companyId, tenantId, month, count, startRow, lang);
 			
-			LOGGER.debug("birthdayListCount : " + birthdayListCount);
+			logger.debug("birthdayListCount : " + birthdayListCount);
 
 			if (birthdayListCount != 0) {
 				int page = birthdayListCount / 6;
@@ -668,7 +668,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getMonthlyBirthdayEmployees ended.");
+		logger.debug("ezNewPortal G/W getMonthlyBirthdayEmployees ended.");
 		return result;
 	}
 
@@ -678,7 +678,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/bestEmployee/months/{month:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMonthlyBestEmployee(HttpServletRequest request, @PathVariable int month) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getMonthlyBestEmployee started.");
+		logger.debug("ezNewPortal G/W getMonthlyBestEmployee started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -693,7 +693,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
-			LOGGER.debug("yearAndMonth : " + yearAndMonth);
+			logger.debug("yearAndMonth : " + yearAndMonth);
 			PortalUserInfoVO bestEmployee = ezNewPortalService.getMonthlyBestEmployee(yearAndMonth, companyId, tenantId, lang);
 
 			result.put("status", "ok");
@@ -704,7 +704,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getMonthlyBestEmployee ended.");
+		logger.debug("ezNewPortal G/W getMonthlyBestEmployee ended.");
 		return result;
 	}
 
@@ -714,7 +714,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/themes/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserThemeList(HttpServletRequest request, @PathVariable String userId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getUserThemeList started.");
+		logger.debug("ezNewPortal G/W getUserThemeList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -728,7 +728,7 @@ public class EzNewPortalGWController {
 			// deptpath 구하기
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", deptPath : " + deptPath + ", lang : " + lang);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", deptPath : " + deptPath + ", lang : " + lang);
 			
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
@@ -769,7 +769,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getUserThemeList ended.");
+		logger.debug("ezNewPortal G/W getUserThemeList ended.");
 		return result;
 	}
 
@@ -779,7 +779,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/menus/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserMenuList(HttpServletRequest request, @PathVariable String userId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getUserMenuList started.");
+		logger.debug("ezNewPortal G/W getUserMenuList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -804,7 +804,7 @@ public class EzNewPortalGWController {
 				logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + logoUrl;
 			}
 			
-			LOGGER.debug("logoUrl : " + logoUrl);
+			logger.debug("logoUrl : " + logoUrl);
 
 			/**
 			 * 2) 메인메뉴 및 서브메뉴 - 권한체크 - user 순서가 없을 경우 회사 순서로 진행
@@ -1038,7 +1038,7 @@ public class EzNewPortalGWController {
 			//end
 			
 
-			LOGGER.debug("TopMenu Data : " + data.toJSONString());
+			logger.debug("TopMenu Data : " + data.toJSONString());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -1048,7 +1048,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getUserMenuList ended.");
+		logger.debug("ezNewPortal G/W getUserMenuList ended.");
 		return result;
 	}
 
@@ -1058,7 +1058,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/menus/order/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserMenuOrder(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jObj) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateUserMenuOrder started.");
+		logger.debug("ezNewPortal G/W updateUserMenuOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1078,7 +1078,7 @@ public class EzNewPortalGWController {
 //			List<MenuInfoVO> resultMenuList = new ArrayList<MenuInfoVO>();
 //			for (MenuInfoVO mVO : userMenuList) {
 //				boolean resultAuth = ezNewPortalService.getCheckAuth(mVO.getMenuId(), userId, deptId, companyId, tenantId);
-//				LOGGER.debug(mVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
+//				logger.debug(mVO.getMenuId() + "번의 resultAuth 결과 : " + resultAuth);
 //				if (resultAuth) {
 //					resultMenuList.add(mVO);
 //				}
@@ -1207,7 +1207,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateUserMenuOrder ended.");
+		logger.debug("ezNewPortal G/W updateUserMenuOrder ended.");
 		return result;
 	}
 
@@ -1217,7 +1217,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/menus/order/users/{userId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteUserMenuOrder(HttpServletRequest request, @PathVariable String userId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W deleteUserMenuOrder started.");
+		logger.debug("ezNewPortal G/W deleteUserMenuOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1355,7 +1355,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W deleteUserMenuOrder ended.");
+		logger.debug("ezNewPortal G/W deleteUserMenuOrder ended.");
 		return result;
 	}
 
@@ -1365,7 +1365,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/quickLink/company/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getQuickLinkList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getQuickLinkList started.");
+		logger.debug("ezNewPortal G/W getQuickLinkList started.");
 		JSONObject result = new JSONObject();
 		try {
 			String serverName = request.getHeader("x-user-host");
@@ -1393,7 +1393,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getQuickLinkList ended.");
+		logger.debug("ezNewPortal G/W getQuickLinkList ended.");
 		return result;
 	}
 
@@ -1403,7 +1403,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/frames/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserFrameList(HttpServletRequest request, @PathVariable String userId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getUserFrameList started.");
+		logger.debug("ezNewPortal G/W getUserFrameList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1424,7 +1424,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getUserFrameList ended.");
+		logger.debug("ezNewPortal G/W getUserFrameList ended.");
 		return result;
 	}
 
@@ -1434,7 +1434,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/frames/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserFrame(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jObj) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateUserFrame started.");
+		logger.debug("ezNewPortal G/W updateUserFrame started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1452,7 +1452,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateUserFrame ended.");
+		logger.debug("ezNewPortal G/W updateUserFrame ended.");
 		return result;
 	}
 
@@ -1462,7 +1462,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPortletList(HttpServletRequest request, @PathVariable String userId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getPortletList started.");
+		logger.debug("ezNewPortal G/W getPortletList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1610,7 +1610,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getPortletList ended.");
+		logger.debug("ezNewPortal G/W getPortletList ended.");
 		return result;
 	}
 
@@ -1620,7 +1620,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserPortletSetting(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jObj) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateUserPortletSetting started.");
+		logger.debug("ezNewPortal G/W updateUserPortletSetting started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1639,7 +1639,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateUserPortletSetting ended.");
+		logger.debug("ezNewPortal G/W updateUserPortletSetting ended.");
 		return result;
 	}
 
@@ -1649,7 +1649,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/themes/{themeId}/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserThemeSetting(HttpServletRequest request, @PathVariable String userId, @PathVariable int themeId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateUserThemeSetting started.");
+		logger.debug("ezNewPortal G/W updateUserThemeSetting started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1658,8 +1658,8 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			int frameDefault = Integer.parseInt(request.getParameter("frameDefault"));
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
-			LOGGER.debug("usedTheme : " + themeId + "usedFrame : " + frameDefault);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			logger.debug("usedTheme : " + themeId + "usedFrame : " + frameDefault);
 			
 			ezNewPortalService.updateUserThemeSetting(themeId, frameDefault, userId, tenantId, companyId);
 			
@@ -1670,7 +1670,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateUserThemeSetting ended.");
+		logger.debug("ezNewPortal G/W updateUserThemeSetting ended.");
 		return result;
 	}
 
@@ -1680,7 +1680,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/themes/users/{userId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteUserThemeSetting(HttpServletRequest request, @PathVariable String userId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W deleteUserThemeSetting started.");
+		logger.debug("ezNewPortal G/W deleteUserThemeSetting started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1688,7 +1688,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			ezNewPortalService.deleteUserThemeSetting(userId, tenantId, companyId);
 			
@@ -1699,7 +1699,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W deleteUserThemeSetting ended.");
+		logger.debug("ezNewPortal G/W deleteUserThemeSetting ended.");
 		return result;
 	}
 
@@ -1710,7 +1710,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/settingInfo/unreadCounts/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUnreadCounts(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getUnreadCounts started.");
+		logger.debug("ezNewPortal G/W getUnreadCounts started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1735,11 +1735,11 @@ public class EzNewPortalGWController {
 			String useSchedule = request.getParameter("useSchedule");
 			//2020-02-24 김정언
 			String useAnnualScheduleYN = ezCommonService.getTenantConfig("useAnnualScheduleYN", tenantId);
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			JSONObject data = new JSONObject();
 
-			LOGGER.debug("useSurvey : " + useSurvey + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
+			logger.debug("useSurvey : " + useSurvey + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
 
 			// 전자 설문 개수 불러오기
 //			if (useQuestion.equals("YES")) {
@@ -1886,7 +1886,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getUserPortalSetting ended.");
+		logger.debug("ezNewPortal G/W getUserPortalSetting ended.");
 		return result;
 	}
 	
@@ -1894,7 +1894,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getUserStartPage started.");
+		logger.debug("ezNewPortal G/W getUserStartPage started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1905,10 +1905,10 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 			String deptId = info.getDeptId();
 			
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			MenuInfoVO startPage = ezNewPortalService.getUserStartPage(userId, tenantId, companyId);
-			//LOGGER.debug("startMenuId : " + startPage.getMenuId());
+			//logger.debug("startMenuId : " + startPage.getMenuId());
 
 			boolean memoAuth = ezNewPortalService.getCheckAuth(18, userId, deptId, companyId, tenantId);
 			String useMemo = "";
@@ -1936,7 +1936,7 @@ public class EzNewPortalGWController {
 				useContextmenu = "YES";
 			}
 			
-			LOGGER.debug("useMemo : " + useMemo + ", useExternalMailServer : " + useExternalMailServer);
+			logger.debug("useMemo : " + useMemo + ", useExternalMailServer : " + useExternalMailServer);
 			
 			String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", tenantId);
 			if (useWebHWP == null || useWebHWP.equals("")) {
@@ -1957,7 +1957,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getUserStartPage ended.");
+		logger.debug("ezNewPortal G/W getUserStartPage ended.");
 		return result;
 	}
 	
@@ -1965,7 +1965,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/startpage/menus/{menuId}/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserStartPage (HttpServletRequest request, @PathVariable String userId, @PathVariable int menuId) {
-		LOGGER.debug("ezNewPortal G/W getUserStartPage started.");
+		logger.debug("ezNewPortal G/W getUserStartPage started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -1973,8 +1973,8 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
-			LOGGER.debug("menuId : " + menuId);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			logger.debug("menuId : " + menuId);
 			
 			ezNewPortalService.updateUserStartPage(menuId, userId, tenantId, companyId);
 			
@@ -1985,7 +1985,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getUserStartPage ended.");
+		logger.debug("ezNewPortal G/W getUserStartPage ended.");
 		return result;
 	}
 	// ///관리자///////
@@ -1995,7 +1995,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezportal/companies", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyList started.");
+		logger.debug("ezNewPortal G/W getCompanyList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2061,7 +2061,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyList ended.");
+		logger.debug("ezNewPortal G/W getCompanyList ended.");
 		return result;
 	}
 
@@ -2071,7 +2071,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezportal/themes/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyThemes(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyThemes} started.");
+		logger.debug("ezNewPortal G/W getCompanyThemes} started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2091,7 +2091,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyThemes ended.");
+		logger.debug("ezNewPortal G/W getCompanyThemes ended.");
 		return result;
 	}
 
@@ -2101,7 +2101,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyThemeInfo started.");
+		logger.debug("ezNewPortal G/W getCompanyThemeInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2133,7 +2133,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyThemeInfo ended.");
+		logger.debug("ezNewPortal G/W getCompanyThemeInfo ended.");
 		return result;
 	}
 
@@ -2143,7 +2143,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyThemeInfo(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateCompanyThemeInfo started.");
+		logger.debug("ezNewPortal G/W updateCompanyThemeInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2155,7 +2155,7 @@ public class EzNewPortalGWController {
 			
 			JSONObject themeInfo = (JSONObject) jsonParam.get("themeInfo");
 			JSONArray frameInfos = (JSONArray) jsonParam.get("frameInfos");
-			LOGGER.debug("frameInfos = " + frameInfos.toString());
+			logger.debug("frameInfos = " + frameInfos.toString());
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
@@ -2170,7 +2170,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateCompanyThemeInfo ended.");
+		logger.debug("ezNewPortal G/W updateCompanyThemeInfo ended.");
 		return result;
 	}
 
@@ -2180,7 +2180,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/default/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyDefaultTheme(HttpServletRequest request, @PathVariable int themeId, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateCompanyDefaultTheme started.");
+		logger.debug("ezNewPortal G/W updateCompanyDefaultTheme started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2197,7 +2197,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateCompanyDefaultTheme ended.");
+		logger.debug("ezNewPortal G/W updateCompanyDefaultTheme ended.");
 		return result;
 	}
 
@@ -2207,7 +2207,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyMenus(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyMenus started.");
+		logger.debug("ezNewPortal G/W getCompanyMenus started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2396,7 +2396,7 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezNewPortal G/W getCompanyMenus ended.");
+		logger.debug("ezNewPortal G/W getCompanyMenus ended.");
 		
 		return result;
 	}
@@ -2407,7 +2407,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/order/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyMenuOrder(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateCompanyMenuOrder started.");
+		logger.debug("ezNewPortal G/W updateCompanyMenuOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2430,7 +2430,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateCompanyMenuOrder ended.");
+		logger.debug("ezNewPortal G/W updateCompanyMenuOrder ended.");
 		return result;
 	}
 	
@@ -2440,7 +2440,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyMenuInfo(HttpServletRequest request, @PathVariable String companyId, @PathVariable int menuId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyMenuInfo started.");
+		logger.debug("ezNewPortal G/W getCompanyMenuInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2497,7 +2497,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyMenuInfo ended.");
+		logger.debug("ezNewPortal G/W getCompanyMenuInfo ended.");
 		return result;
 	}
 
@@ -2507,7 +2507,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyMenuInfo(HttpServletRequest request, @PathVariable String companyId, @PathVariable int menuId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateCompanyMenuInfo started.");
+		logger.debug("ezNewPortal G/W updateCompanyMenuInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2532,7 +2532,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateCompanyMenuInfo ended.");
+		logger.debug("ezNewPortal G/W updateCompanyMenuInfo ended.");
 		return result;
 	}
 
@@ -2542,7 +2542,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/authorities/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyMenuAuth(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyMenuAuth started.");
+		logger.debug("ezNewPortal G/W getCompanyMenuAuth started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2567,7 +2567,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyMenuAuth ended.");
+		logger.debug("ezNewPortal G/W getCompanyMenuAuth ended.");
 		return result;
 	}
 
@@ -2577,7 +2577,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/authorities/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyMenuAuth(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateCompanyMenuAuth started.");
+		logger.debug("ezNewPortal G/W updateCompanyMenuAuth started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2600,7 +2600,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateCompanyMenuAuth ended.");
+		logger.debug("ezNewPortal G/W updateCompanyMenuAuth ended.");
 		return result;
 	}
 
@@ -2610,7 +2610,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/companies/{companyId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertCompanyMenu(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W insertCompanyMenu started.");
+		logger.debug("ezNewPortal G/W insertCompanyMenu started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2636,7 +2636,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W insertCompanyMenu ended.");
+		logger.debug("ezNewPortal G/W insertCompanyMenu ended.");
 		return result;
 	}
 
@@ -2646,7 +2646,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/{menuId}/companies/{companyId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteCompanyMenu(HttpServletRequest request, @PathVariable int menuId, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W deleteCompanyMenu started.");
+		logger.debug("ezNewPortal G/W deleteCompanyMenu started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2664,7 +2664,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W deleteCompanyMenu ended.");
+		logger.debug("ezNewPortal G/W deleteCompanyMenu ended.");
 		return result;
 	}
 	
@@ -2674,7 +2674,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyPortletList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyPortletList started.");
+		logger.debug("ezNewPortal G/W getCompanyPortletList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2903,7 +2903,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyPortletList ended.");
+		logger.debug("ezNewPortal G/W getCompanyPortletList ended.");
 		return result;
 	}
 
@@ -2913,7 +2913,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/order/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyPortletOrder(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateCompanyPortletOrder started.");
+		logger.debug("ezNewPortal G/W updateCompanyPortletOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2935,7 +2935,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateCompanyPortletOrder ended.");
+		logger.debug("ezNewPortal G/W updateCompanyPortletOrder ended.");
 		return result;
 	}
 
@@ -2945,7 +2945,7 @@ public class EzNewPortalGWController {
 	/*@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPortletInfo(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyPortletInfo started.");
+		logger.debug("ezNewPortal G/W getCompanyPortletInfo started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2959,7 +2959,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyPortletInfo ended.");
+		logger.debug("ezNewPortal G/W getCompanyPortletInfo ended.");
 		return result;
 	}*/
 
@@ -2969,7 +2969,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/companies/{companyId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertPortlet(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W insertCompanyPortlet started.");
+		logger.debug("ezNewPortal G/W insertCompanyPortlet started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -2999,7 +2999,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W insertCompanyPortlet ended.");
+		logger.debug("ezNewPortal G/W insertCompanyPortlet ended.");
 		return result;
 	}
 
@@ -3009,7 +3009,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deletePortlet(HttpServletRequest request, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W deleteCompanyPortlet started.");
+		logger.debug("ezNewPortal G/W deleteCompanyPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3028,7 +3028,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W deleteCompanyPortlet ended.");
+		logger.debug("ezNewPortal G/W deleteCompanyPortlet ended.");
 		return result;
 	}
 
@@ -3038,7 +3038,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updatePortletInfo(HttpServletRequest request, @RequestBody JSONObject jsonParam, @PathVariable int portletId, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updatePortletInfo started.");
+		logger.debug("ezNewPortal G/W updatePortletInfo started.");
 		JSONObject result = new JSONObject();
 		JSONParser jp = new JSONParser();
 		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
@@ -3069,7 +3069,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updatePortletInfo ended.");
+		logger.debug("ezNewPortal G/W updatePortletInfo ended.");
 		return result;
 	}
 
@@ -3079,7 +3079,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/boards/tree/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getBoardTree(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getBoardTree started.");
+		logger.debug("ezNewPortal G/W getBoardTree started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3120,7 +3120,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getBoardTree ended.");
+		logger.debug("ezNewPortal G/W getBoardTree ended.");
 		return result;
 	}
 
@@ -3130,7 +3130,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyLogo(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCompanyLogo started.");
+		logger.debug("ezNewPortal G/W getCompanyLogo started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3201,7 +3201,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCompanyLogo ended.");
+		logger.debug("ezNewPortal G/W getCompanyLogo ended.");
 		return result;
 	}
 
@@ -3211,7 +3211,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/logos/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateCompanyLogo(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateCompanyLogo started.");
+		logger.debug("ezNewPortal G/W updateCompanyLogo started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3233,7 +3233,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateCompanyLogo ended.");
+		logger.debug("ezNewPortal G/W updateCompanyLogo ended.");
 		return result;
 	}
 	
@@ -3243,7 +3243,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/logos/{logoType}/companies/{companyId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteLogo(HttpServletRequest request, @PathVariable String logoType, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W deleteLogo started.");
+		logger.debug("ezNewPortal G/W deleteLogo started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3260,7 +3260,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W deleteLogo ended.");
+		logger.debug("ezNewPortal G/W deleteLogo ended.");
 		return result;
 	}
 	
@@ -3271,7 +3271,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/boardFavorites", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFavoriteBoardPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortlet started.");
+		logger.debug("ezNewPortal G/W getFavoriteBoardPortlet started.");
 		JSONObject result = new JSONObject();
 
 		String boardId = request.getParameter("boardId");
@@ -3291,7 +3291,7 @@ public class EzNewPortalGWController {
 				List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), limit, offset);
 
 				for (FavoriteBoardVO fvo : favNewList) {
-					LOGGER.debug("resultList : " + fvo.getItemId());
+					logger.debug("resultList : " + fvo.getItemId());
 				}
 
 				data.put("favList", favNewList);
@@ -3301,7 +3301,7 @@ public class EzNewPortalGWController {
 				List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), limit, offset);
 
 				for (FavoriteBoardVO fvo : favList) {
-					LOGGER.debug("resultList : " + fvo.getItemId());
+					logger.debug("resultList : " + fvo.getItemId());
 				}
 
 				data.put("favList", favList);
@@ -3316,7 +3316,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortlet ended.");
+		logger.debug("ezNewPortal G/W getFavoriteBoardPortlet ended.");
 		return result;
 	}
 
@@ -3326,7 +3326,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/boardFavorites/lists", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFavoriteBoardPortletList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortletList started.");
+		logger.debug("ezNewPortal G/W getFavoriteBoardPortletList started.");
 		JSONObject result = new JSONObject();
 		String userId = request.getParameter("userId");
 		String mode = request.getParameter("mode");
@@ -3345,7 +3345,7 @@ public class EzNewPortalGWController {
 					fvo.setBoardName(fvo.getBoardName2());
 				}
 				
-				LOGGER.debug("resultList : " + fvo.getBoardId());
+				logger.debug("resultList : " + fvo.getBoardId());
 			}
 
 			JSONObject data = new JSONObject();
@@ -3360,7 +3360,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getFavoriteBoardPortletList ended.");
+		logger.debug("ezNewPortal G/W getFavoriteBoardPortletList ended.");
 		return result;
 	}
 
@@ -3370,7 +3370,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/community", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCommunityPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCommunityPortlet started.");
+		logger.debug("ezNewPortal G/W getCommunityPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3446,7 +3446,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCommunityPortlet ended.");
+		logger.debug("ezNewPortal G/W getCommunityPortlet ended.");
 		return result;
 	}
 
@@ -3456,7 +3456,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/community/permits", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject communityPermit(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCommunityPortlet started.");
+		logger.debug("ezNewPortal G/W getCommunityPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3481,7 +3481,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getCommunityPortlet ended.");
+		logger.debug("ezNewPortal G/W getCommunityPortlet ended.");
 		return result;
 	}
 
@@ -3491,7 +3491,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/receivedMail", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getReceivedMainPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getReceivedMainPortlet started.");
+		logger.debug("ezNewPortal G/W getReceivedMainPortlet started.");
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 
@@ -3515,7 +3515,7 @@ public class EzNewPortalGWController {
 				String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 				String userAccount = userId + "@" + domainName;
 
-				LOGGER.debug("userEmail=" + userAccount);
+				logger.debug("userEmail=" + userAccount);
 
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, password, egovMessageSource, locale, 40 * 1000,
 						20 * 1000, ezEmailUtil);
@@ -3537,7 +3537,7 @@ public class EzNewPortalGWController {
 					mailboxQuotaStr = mailUse[2];
 				}
 
-				LOGGER.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);
+				logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);
 
 				Folder folder = ia.getFolder(folderPath);
 				
@@ -3628,7 +3628,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getReceivedMainPortlet ended.");
+		logger.debug("ezNewPortal G/W getReceivedMainPortlet ended.");
 		return result;
 	}
 
@@ -3638,7 +3638,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/vote", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getVotePortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getVotePortlet started.");
+		logger.debug("ezNewPortal G/W getVotePortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3663,7 +3663,7 @@ public class EzNewPortalGWController {
 				PollQuestionVO pollQuestion = ezNewPortalService.getVotePortletInfo(userId, companyId, deptPath, tenantId);
 				int qstId = pollQuestion.getQstId();
 
-				LOGGER.debug("qstId : " + qstId);
+				logger.debug("qstId : " + qstId);
 				List<PollAnswerVO> pollAnswer = ezNewPortalService.getVotePortletAnswer(qstId, tenantId);
 				int pollAnswerCount = 0;
 
@@ -3685,7 +3685,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getVotePortlet ended.");
+		logger.debug("ezNewPortal G/W getVotePortlet ended.");
 		return result;
 	}
 
@@ -3695,7 +3695,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/photoBoard", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPhotoBoardPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getPhotoBoardPortlet started.");
+		logger.debug("ezNewPortal G/W getPhotoBoardPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3746,7 +3746,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getPhotoBoardPortlet ended.");
+		logger.debug("ezNewPortal G/W getPhotoBoardPortlet ended.");
 		return result;
 	}
 
@@ -3756,7 +3756,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/notice", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getNoticePortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getNoticePortlet started.");
+		logger.debug("ezNewPortal G/W getNoticePortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3815,7 +3815,7 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 			e.printStackTrace();
 		}
-		LOGGER.debug("ezNewPortal G/W getNoticePortlet ended.");
+		logger.debug("ezNewPortal G/W getNoticePortlet ended.");
 		return result;
 	}
 
@@ -3825,7 +3825,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/poll", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPollPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getPollPortlet started.");
+		logger.debug("ezNewPortal G/W getPollPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3856,7 +3856,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getPollPortlet ended.");
+		logger.debug("ezNewPortal G/W getPollPortlet ended.");
 		return result;
 	}
 
@@ -3866,7 +3866,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/approvallist", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getApprovalListPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getApprovalListPortlet started.");
+		logger.debug("ezNewPortal G/W getApprovalListPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3889,7 +3889,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getApprovalListPortlet ended.");
+		logger.debug("ezNewPortal G/W getApprovalListPortlet ended.");
 		return result;
 	}
 
@@ -3899,7 +3899,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/favoriteforms", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFavoriteForms(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getFavoriteForms started.");
+		logger.debug("ezNewPortal G/W getFavoriteForms started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3929,7 +3929,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getFavoriteForms ended.");
+		logger.debug("ezNewPortal G/W getFavoriteForms ended.");
 		return result;
 	}
 
@@ -3939,7 +3939,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/approvalstatistics", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getApprovalStatisticsPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getApprovalStatisticsPortlet started.");
+		logger.debug("ezNewPortal G/W getApprovalStatisticsPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3964,7 +3964,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getApprovalStatisticsPortlet ended.");
+		logger.debug("ezNewPortal G/W getApprovalStatisticsPortlet ended.");
 		return result;
 	}
 
@@ -3974,7 +3974,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/schedulelist", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getSchedulePortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getSchedulePortlet started.");
+		logger.debug("ezNewPortal G/W getSchedulePortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -4122,7 +4122,7 @@ public class EzNewPortalGWController {
 			
 			Collections.sort(sList, new EzScheduleCompareUtil());
 			
-			LOGGER.debug("sList : " + sList.toString());
+			logger.debug("sList : " + sList.toString());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", sList);
@@ -4131,7 +4131,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getSchedulePortlet ended.");
+		logger.debug("ezNewPortal G/W getSchedulePortlet ended.");
 		return result;
 	}
 	
@@ -4141,7 +4141,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/weather", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getWeatherPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getWeatherPortlet started.");
+		logger.debug("ezNewPortal G/W getWeatherPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -4205,13 +4205,13 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getWeatherPortlet ended.");
+		logger.debug("ezNewPortal G/W getWeatherPortlet ended.");
 		return result;
 	}
 
 	// //////board 권한 체크
 	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) throws Exception {
- 		LOGGER.debug("boardAuthCheck started");
+ 		logger.debug("boardAuthCheck started");
 		boolean authCheck = false;
 		String[] deptPathSplit = deptPath.split(",");
 		int deptPathCount = deptPathSplit.length;
@@ -4263,11 +4263,11 @@ public class EzNewPortalGWController {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.debug("boardAuthCheck error");
+			logger.debug("boardAuthCheck error");
 		}
 
-		LOGGER.debug("authCheck : " + authCheck);
-		LOGGER.debug("boardAuthCheck ended");
+		logger.debug("authCheck : " + authCheck);
+		logger.debug("boardAuthCheck ended");
 		return authCheck;
 	}
 	
@@ -4277,7 +4277,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/slideimages", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getslideimagesPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getslideimagesPortlet started.");
+		logger.debug("ezNewPortal G/W getslideimagesPortlet started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -4295,7 +4295,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getslideimagesPortlet ended.");
+		logger.debug("ezNewPortal G/W getslideimagesPortlet ended.");
 		return result;
 	}
 	
@@ -4305,7 +4305,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/userinfomations", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getuserInfomationsPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getuserInfomationsPortlet started.");
+		logger.debug("ezNewPortal G/W getuserInfomationsPortlet started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -4390,7 +4390,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getuserInfomationsPortlet ended.");
+		logger.debug("ezNewPortal G/W getuserInfomationsPortlet ended.");
 		return result;
 	}
 
@@ -4400,7 +4400,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/count/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCountPortlet(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getCountPortlet started.");
+		logger.debug("ezNewPortal G/W getCountPortlet started.");
 
 		JSONObject result = new JSONObject();
 
@@ -4521,11 +4521,11 @@ public class EzNewPortalGWController {
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 			String password = jspw;
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			JSONObject data = new JSONObject();
 
-			LOGGER.debug("useSurvey : " + useSurvey + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
+			logger.debug("useSurvey : " + useSurvey + ", useCircular : " + useCircular + ", useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
 
 			// 전자 설문 개수 불러오기
 			/*
@@ -4661,7 +4661,7 @@ public class EzNewPortalGWController {
 					susinAdmin = "admin";
 				}
 				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offsetMin);
-				LOGGER.debug("approvalTotalCount : " + approvalTotalCount);
+				logger.debug("approvalTotalCount : " + approvalTotalCount);
 				
 				Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);
 				
@@ -4703,7 +4703,7 @@ public class EzNewPortalGWController {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					unreadMailCount = ia.getUnreadCount(folderName);
 				} catch (Exception e) {
-					LOGGER.debug("e.message=" + e.getMessage());
+					logger.debug("e.message=" + e.getMessage());
 				} finally {
 					if (ia != null) {
 						ia.close();
@@ -4728,7 +4728,7 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 			e.printStackTrace();
 		}
-		LOGGER.debug("ezNewPortal G/W getCountPortlet ended.");
+		logger.debug("ezNewPortal G/W getCountPortlet ended.");
 		return result;
 	}
 
@@ -4738,7 +4738,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/board", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getBoardPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getBoardPortlet started.");
+		logger.debug("ezNewPortal G/W getBoardPortlet started.");
 
 		JSONObject result = new JSONObject();
 
@@ -4795,7 +4795,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getBoardPortlet ended.");
+		logger.debug("ezNewPortal G/W getBoardPortlet ended.");
 
 		return result;
 	}
@@ -4805,7 +4805,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezportal/slideimages/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getSlideImages(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getSlideImages started.");
+		logger.debug("ezNewPortal G/W getSlideImages started.");
 		JSONObject result = new JSONObject();
 							
 		try {
@@ -4825,7 +4825,7 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezNewPortal G/W getSlideImages ended.");
+		logger.debug("ezNewPortal G/W getSlideImages ended.");
 		return result;
 	}
 	
@@ -4835,7 +4835,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezportal/slideimages/companies/{companyId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertSlideImage(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W insertSlideImage started.");
+		logger.debug("ezNewPortal G/W insertSlideImage started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -4856,7 +4856,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W insertSlideImage ended.");
+		logger.debug("ezNewPortal G/W insertSlideImage ended.");
 		return result;
 	}
 	/**
@@ -4865,7 +4865,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getSlideImageInfo(HttpServletRequest request, @PathVariable String companyId, @PathVariable String slideId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getSlideImageInfo started.");
+		logger.debug("ezNewPortal G/W getSlideImageInfo started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -4883,7 +4883,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getSlideImageInfo ended.");
+		logger.debug("ezNewPortal G/W getSlideImageInfo ended.");
 		return result;
 	}
 	/**
@@ -4892,7 +4892,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateSlideImage(HttpServletRequest request, @PathVariable String slideId, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateSlideImage started.");
+		logger.debug("ezNewPortal G/W updateSlideImage started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -4913,7 +4913,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateSlideImage ended.");
+		logger.debug("ezNewPortal G/W updateSlideImage ended.");
 		return result;
 	}
 	
@@ -4923,7 +4923,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezportal/slideimages/{slideId}/companies/{companyId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteSlideImage(HttpServletRequest request, @PathVariable String companyId, @PathVariable String slideId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W deleteSlideImage started.");
+		logger.debug("ezNewPortal G/W deleteSlideImage started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -4941,7 +4941,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W deleteSlideImage ended.");
+		logger.debug("ezNewPortal G/W deleteSlideImage ended.");
 		return result;
 	}
 	
@@ -4951,7 +4951,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/slideimages/order/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateSlideOrder(HttpServletRequest request, @PathVariable String companyId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateSlideOrder started.");
+		logger.debug("ezNewPortal G/W updateSlideOrder started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -4974,7 +4974,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateSlideOrder ended.");
+		logger.debug("ezNewPortal G/W updateSlideOrder ended.");
 		return result;
 	}
 	
@@ -4984,7 +4984,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/portlets/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getThemePortletList(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getThemePortletList started.");
+		logger.debug("ezNewPortal G/W getThemePortletList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5130,7 +5130,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getThemePortletList ended.");
+		logger.debug("ezNewPortal G/W getThemePortletList ended.");
 		return result;
 	}
 	
@@ -5140,7 +5140,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/portlets/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateThemePortletUsed(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateThemePortletUsed started.");
+		logger.debug("ezNewPortal G/W updateThemePortletUsed started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5164,7 +5164,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W updateThemePortletUsed ended.");
+		logger.debug("ezNewPortal G/W updateThemePortletUsed ended.");
 		return result;
 	}
 	
@@ -5174,7 +5174,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/titles/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTitleList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getTitleList started.");
+		logger.debug("ezNewPortal G/W getTitleList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5197,7 +5197,7 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezNewPortal G/W getTitleList ended.");
+		logger.debug("ezNewPortal G/W getTitleList ended.");
 		return result;
 	}
 
@@ -5207,7 +5207,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/getWebFolderFileList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getWebFolderFileList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet started.");
+		logger.debug("ezNewPortal G/W getWebFolderPortlet started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -5234,7 +5234,7 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet ended.");
+		logger.debug("ezNewPortal G/W getWebFolderPortlet ended.");
 		return result;
 	}
 
@@ -5242,7 +5242,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getThemeAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getThemeAuth started.");
+		logger.debug("ezNewPortal G/W getThemeAuth started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5268,14 +5268,14 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getThemeAuth ended.");
+		logger.debug("ezNewPortal G/W getThemeAuth ended.");
 		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateThemeAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updateThemeAuth started.");
+		logger.debug("ezNewPortal G/W updateThemeAuth started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5300,7 +5300,7 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezNewPortal G/W updateThemeAuth ended.");
+		logger.debug("ezNewPortal G/W updateThemeAuth ended.");
 		return result;
 	}
 	
@@ -5310,7 +5310,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menus/authorities/groups/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getGroupList(HttpServletRequest request, @PathVariable String companyId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getGroupList started.");
+		logger.debug("ezNewPortal G/W getGroupList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5331,14 +5331,14 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getGroupList ended.");
+		logger.debug("ezNewPortal G/W getGroupList ended.");
 		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/checks/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject checkThemeAuthNoList(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W checkThemeAuthNoList started.");
+		logger.debug("ezNewPortal G/W checkThemeAuthNoList started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5365,11 +5365,11 @@ public class EzNewPortalGWController {
 							String deptPath = authInfo.getDeptPathCode();
 							
 							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, authId, deptPath, themeId, lang);
-							LOGGER.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
+							logger.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
 						} else if (themeAuth.get("userType").toString().equals("false")) {
 							String deptPath = ezOrganService.getDeptPath(authId, tenantId);
 							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, null, deptPath, themeId, lang);
-							LOGGER.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
+							logger.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
 						}
 						
 						if (!checkThemeAuth) {
@@ -5390,14 +5390,14 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W checkThemeAuthNoList ended.");
+		logger.debug("ezNewPortal G/W checkThemeAuthNoList ended.");
 		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int portletId) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getPortletAuth started.");
+		logger.debug("ezNewPortal G/W getPortletAuth started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5424,14 +5424,14 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W getPortletAuth ended.");
+		logger.debug("ezNewPortal G/W getPortletAuth ended.");
 		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updatePortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int portletId, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezNewPortal G/W updatePortletAuth started.");
+		logger.debug("ezNewPortal G/W updatePortletAuth started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5456,7 +5456,7 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezNewPortal G/W updatePortletAuth ended.");
+		logger.debug("ezNewPortal G/W updatePortletAuth ended.");
 		return result;
 	}
 	
@@ -5464,7 +5464,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/menu/access", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject checkMenuAuth(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W checkMenuAuth started.");
+		logger.debug("ezNewPortal G/W checkMenuAuth started.");
 		JSONObject result = new JSONObject();
 
 		try {
@@ -5492,7 +5492,7 @@ public class EzNewPortalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezNewPortal G/W checkMenuAuth ended.");
+		logger.debug("ezNewPortal G/W checkMenuAuth ended.");
 		return result;
 	}
 
@@ -5502,7 +5502,7 @@ public class EzNewPortalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/tabBoard", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTabBoardPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getTabBoardPortlet started.");
+		logger.debug("ezNewPortal G/W getTabBoardPortlet started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -5575,7 +5575,7 @@ public class EzNewPortalGWController {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("ezNewPortal G/W getTabBoardPortlet ended.");
+		logger.debug("ezNewPortal G/W getTabBoardPortlet ended.");
 		return result;
 	}
 }

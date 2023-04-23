@@ -44,7 +44,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 public class MAttitudeGWController extends EgovFileMngUtil {
 
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MAttitudeGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MAttitudeGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -70,7 +70,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezattitude/companies/{companyId}/holidays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getHolidayList(@PathVariable String companyId, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /mobile/ezattitude/companies/" + companyId + "/holidays] started.");
+		logger.debug("G/W EzAttitude [GET /mobile/ezattitude/companies/" + companyId + "/holidays] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -113,7 +113,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /mobile/ezattitude/companies/" + companyId + "/holidays] ended.");
+		logger.debug("G/W EzAttitude [GET /mobile/ezattitude/companies/" + companyId + "/holidays] ended.");
 		return result;
 	}
 
@@ -125,7 +125,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezattitude/attitudes/checkIsAttitude", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCheckIsAttitude(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /mobile/ezattitude/attitudes/checkIsAttitude] started.");
+		logger.debug("G/W EzAttitude [GET /mobile/ezattitude/attitudes/checkIsAttitude] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -148,7 +148,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /mobile/ezattitude/attitudes/checkIsAttitude] ended.");
+		logger.debug("G/W EzAttitude [GET /mobile/ezattitude/attitudes/checkIsAttitude] ended.");
 		return result;
 	}
 	
@@ -158,7 +158,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezattitude/users/{userId}/attitudes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject registeAttitude(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /mobile/ezattitude/users/" + userId + "/attitudes] started.");
+		logger.debug("G/W EzAttitude [POST /mobile/ezattitude/users/" + userId + "/attitudes] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -220,7 +220,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);
 		}
-		LOGGER.debug("G/W EzAttitude [POST /mobile/ezattitude/users/" + userId + "/attitudes] ended.");
+		logger.debug("G/W EzAttitude [POST /mobile/ezattitude/users/" + userId + "/attitudes] ended.");
 		return result;
 	}
 	
@@ -231,7 +231,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 	@RequestMapping(value = "/mobile/ezattitude/attitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeMainList(HttpServletRequest request) {
 		
-		LOGGER.debug("G/W EzAttitude [GET /mobile/ezattitude/attitudes] started.");
+		logger.debug("G/W EzAttitude [GET /mobile/ezattitude/attitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -273,7 +273,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /mobile/ezattitude/attitudes] ended.");
+		logger.debug("G/W EzAttitude [GET /mobile/ezattitude/attitudes] ended.");
 		return result;
 	}
 

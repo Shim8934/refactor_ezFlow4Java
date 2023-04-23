@@ -67,7 +67,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @RestController
 public class EzJournalGWController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzJournalGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzJournalGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -96,7 +96,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezjournal/types", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public Object makeJournalTypeList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W JOURNAL [POST /rest/ezjournal/types] started.");
+		logger.debug("G/W JOURNAL [POST /rest/ezjournal/types] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -106,7 +106,7 @@ public class EzJournalGWController {
 			
 			String companyId = request.getParameter("companyId");
 			
-			LOGGER.debug("companyId : " + companyId);
+			logger.debug("companyId : " + companyId);
 			ArrayList<String> typeList = new ArrayList<String>();
 			for (int i = 5; i < 11; i++) {
 				String num = "";
@@ -129,7 +129,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W JOURNAL [POST /rest/ezjournal/types] ended.");
+		logger.debug("G/W JOURNAL [POST /rest/ezjournal/types] ended.");
 		
 		return result;
 	}
@@ -140,7 +140,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezjournal/types", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public Object removeJournalTypeList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W JOURNAL [DELETE /rest/ezjournal/types] started.");
+		logger.debug("G/W JOURNAL [DELETE /rest/ezjournal/types] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -149,7 +149,7 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			String companyId = request.getParameter("companyId");
-			LOGGER.debug("companyId : " + companyId);
+			logger.debug("companyId : " + companyId);
 			
 			ezJournalService.deleteJournaltype(companyId, info.getTenantId());
 			
@@ -162,7 +162,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W JOURNAL [DELETE /rest/ezjournal/types] ended.");
+		logger.debug("G/W JOURNAL [DELETE /rest/ezjournal/types] ended.");
 		
 		return result;
 	}
@@ -173,7 +173,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezjournal/types", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public Object journalTypeList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W JOURNAL [GET /rest/ezjournal/types] started.");
+		logger.debug("G/W JOURNAL [GET /rest/ezjournal/types] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -187,7 +187,7 @@ public class EzJournalGWController {
 				companyId = info.getCompanyId();
 			}
 			
-			LOGGER.debug("companyId : " + companyId);
+			logger.debug("companyId : " + companyId);
 
 			List<JournaltypeVO> typeList = ezJournalService.getJournaltypeList(companyId, info.getTenantId(), used);
 	
@@ -200,7 +200,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("G/W JOURNAL [GET /rest/ezjournal/types] ended.");
+		logger.debug("G/W JOURNAL [GET /rest/ezjournal/types] ended.");
 		
 		return result;
 	}
@@ -211,7 +211,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezjournal/types", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public Object journalTypeUpdate(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W JOURNAL [PUT /rest/ezjournal/types] started.");
+		logger.debug("G/W JOURNAL [PUT /rest/ezjournal/types] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -232,7 +232,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("G/W JOURNAL [PUT /rest/ezjournal/types] ended.");
+		logger.debug("G/W JOURNAL [PUT /rest/ezjournal/types] ended.");
 		
 		return result;
 	}	
@@ -243,8 +243,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object journalFormList(HttpServletRequest request, @PathVariable String typeId) throws Exception {
-		LOGGER.debug("ezJournal G/W journalFormList started.");
-		LOGGER.debug("typeId=" + typeId);
+		logger.debug("ezJournal G/W journalFormList started.");
+		logger.debug("typeId=" + typeId);
 
 		JSONObject result = new JSONObject();
 		
@@ -277,7 +277,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("ezJournal G/W journalFormList ended.");
+		logger.debug("ezJournal G/W journalFormList ended.");
 		
 		return result;
 	}
@@ -288,8 +288,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject insertForm(@PathVariable String typeId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W insertForm started.");
-		LOGGER.debug("typeId=" + typeId);
+		logger.debug("ezJournal G/W insertForm started.");
+		logger.debug("typeId=" + typeId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -309,7 +309,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W insertForm ended.");
+		logger.debug("ezJournal G/W insertForm ended.");
 		return result;
 	}
 	
@@ -319,8 +319,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms/{formId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateForm(@PathVariable String typeId, @PathVariable String formId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W updateForm started.");
-		LOGGER.debug("typeId=" + typeId + ",formId=" + formId);
+		logger.debug("ezJournal G/W updateForm started.");
+		logger.debug("typeId=" + typeId + ",formId=" + formId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -340,7 +340,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W updateForm ended.");
+		logger.debug("ezJournal G/W updateForm ended.");
 		return result;
 	}
 	
@@ -350,8 +350,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms/{formId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteForm(@PathVariable String typeId, @PathVariable String formId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W deleteForm started.");
-		LOGGER.debug("typeId=" + typeId + ",formId=" + formId);
+		logger.debug("ezJournal G/W deleteForm started.");
+		logger.debug("typeId=" + typeId + ",formId=" + formId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -372,7 +372,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W deleteForm ended.");
+		logger.debug("ezJournal G/W deleteForm ended.");
 		return result;
 	}
 	
@@ -382,8 +382,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/forms/{formId:.+}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject viewForm(@PathVariable String typeId, @PathVariable String formId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W viewForm started.");
-		LOGGER.debug("typeId=" + typeId + ",formId=" + formId);
+		logger.debug("ezJournal G/W viewForm started.");
+		logger.debug("typeId=" + typeId + ",formId=" + formId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -396,7 +396,7 @@ public class EzJournalGWController {
 				companyId = info.getCompanyId();
 			}
 			
-			LOGGER.debug("companyId : " + companyId);
+			logger.debug("companyId : " + companyId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			// 마지막 사용양식 id 가져오기
 			if (request.getParameter("isGetForm") != null ) {
@@ -419,7 +419,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W viewForm ended.");
+		logger.debug("ezJournal G/W viewForm ended.");
 		return result;
 	}
 	
@@ -429,7 +429,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/authors", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject authorsList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W authorsList started.");
+		logger.debug("ezJournal G/W authorsList started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -450,7 +450,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W authorsList ended.");
+		logger.debug("ezJournal G/W authorsList ended.");
 		return result;
 	}
 	
@@ -460,8 +460,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/author-depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject authorDepts(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W authorDepts started.");
-		LOGGER.debug("userId=" + userId);
+		logger.debug("ezJournal G/W authorDepts started.");
+		logger.debug("userId=" + userId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -480,7 +480,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W authorDepts ended.");
+		logger.debug("ezJournal G/W authorDepts ended.");
 		return result;
 	}
 	
@@ -490,7 +490,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/authors", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject insertAuthorDepts(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W insertAuthorDepts started.");
+		logger.debug("ezJournal G/W insertAuthorDepts started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -509,7 +509,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 			
 		}
-		LOGGER.debug("ezJournal G/W insertAuthorDepts ended.");
+		logger.debug("ezJournal G/W insertAuthorDepts ended.");
 		return result;
 	}
 	
@@ -519,7 +519,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/authors", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteAuthorDepts(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W deleteAuthorDepts started.");
+		logger.debug("ezJournal G/W deleteAuthorDepts started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -538,7 +538,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W deleteAuthorDepts ended.");
+		logger.debug("ezJournal G/W deleteAuthorDepts ended.");
 		return result;
 	}
 	
@@ -548,7 +548,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject typeJournalList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W journals started.");
+		logger.debug("ezJournal G/W journals started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -575,7 +575,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 		}
 		
-		LOGGER.debug("ezJournal G/W journals ended.");
+		logger.debug("ezJournal G/W journals ended.");
 		return result;
 	}
 	
@@ -585,7 +585,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject folderJournalList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W journals-count started.");
+		logger.debug("ezJournal G/W journals-count started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -611,7 +611,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 		}
 		
-		LOGGER.debug("ezJournal G/W journals-count ended.");
+		logger.debug("ezJournal G/W journals-count ended.");
 		return result;
 	}
 	
@@ -621,8 +621,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject insertJournal(@PathVariable String typeId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W insertJournal started.");
-		LOGGER.debug("typeId=" + typeId);
+		logger.debug("ezJournal G/W insertJournal started.");
+		logger.debug("typeId=" + typeId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -643,7 +643,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 		}
 		
-		LOGGER.debug("ezJournal G/W insertJournal ended.");
+		logger.debug("ezJournal G/W insertJournal ended.");
 		return result;
 	}
 	
@@ -653,7 +653,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals-sum", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject journalsSumContent(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W journalsSumContent started.");
+		logger.debug("ezJournal G/W journalsSumContent started.");
 		Gson gson = new Gson();
 		JSONObject result = new JSONObject();
 		
@@ -667,7 +667,7 @@ public class EzJournalGWController {
 			
 			List<String> journalIdList = gson.fromJson(journalIdArray, new TypeToken<List<String>>(){}.getType());
 			
-			LOGGER.debug("companyId : " + companyId);
+			logger.debug("companyId : " + companyId);
 			
 			JournalFormInfoVO journalFormInfoVO = ezJournalService.getJournalDivideThisNext(journalIdList, formId, companyId,userId, info.getTenantId());
 			
@@ -681,7 +681,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W journalsSumContent ended.");
+		logger.debug("ezJournal G/W journalsSumContent ended.");
 		return result;
 	}
 	
@@ -691,8 +691,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId:.+}", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject viewJournal(@PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W viewJournal started.");
-		LOGGER.debug("journalId=" + journalId);
+		logger.debug("ezJournal G/W viewJournal started.");
+		logger.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -725,7 +725,7 @@ public class EzJournalGWController {
 					
 					fileTotalSizeLong+=vo.getFileSize();
 					
-					LOGGER.debug("##fileType: " + vo.getFileType() + ", EncodeFileName: " + vo.getFileEncodeName() + ", transSize: " + vo.getFileTransSize());
+					logger.debug("##fileType: " + vo.getFileType() + ", EncodeFileName: " + vo.getFileEncodeName() + ", transSize: " + vo.getFileTransSize());
 				}
 				
 				journal.setFileList(fileList);
@@ -743,7 +743,7 @@ public class EzJournalGWController {
 			
 		}
 		
-		LOGGER.debug("ezJournal G/W viewJournal ended.");
+		logger.debug("ezJournal G/W viewJournal ended.");
 		return result;
 	}
 	
@@ -753,8 +753,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/types/{typeId}/journals/{journalId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateJournal(@PathVariable String typeId, @PathVariable String journalId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W updateJournal started.");
-		LOGGER.debug("typeId=" + typeId + ",journalId=" + journalId);
+		logger.debug("ezJournal G/W updateJournal started.");
+		logger.debug("typeId=" + typeId + ",journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -764,7 +764,7 @@ public class EzJournalGWController {
 			String realPath = commonUtil.getRealPath(request);
 			
 			String mode = jsonParam.get("mode").toString();
-			LOGGER.debug("mode : " + mode);
+			logger.debug("mode : " + mode);
 			
 			ezJournalService.updateJournal(commonUtil.detectPathTraversal(journalId), jsonParam, info.getTenantId(), realPath);
 			
@@ -778,7 +778,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 		}
 		
-		LOGGER.debug("ezJournal G/W updateJournal ended.");
+		logger.debug("ezJournal G/W updateJournal ended.");
 		return result;
 	}
 	
@@ -788,7 +788,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteJournalList(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W deleteJournalList started.");
+		logger.debug("ezJournal G/W deleteJournalList started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -805,7 +805,7 @@ public class EzJournalGWController {
 			} else {
 				journalIdList.add(journalId);
 			}
-			LOGGER.debug("journalIdList : " + journalIdList);
+			logger.debug("journalIdList : " + journalIdList);
 			
 			String pDirPath = "";
 			pDirPath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
@@ -816,7 +816,7 @@ public class EzJournalGWController {
 			}
 			
 			String listType = jsonParam.get("listType").toString();
-			LOGGER.debug("listType : " + listType);
+			logger.debug("listType : " + listType);
 			
 			if (listType.equals("recv")) {
 				ezJournalService.updateJournalStatus(journalIdList, info.getUserId(), info.getTenantId());
@@ -833,7 +833,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W deleteJournalList ended.");
+		logger.debug("ezJournal G/W deleteJournalList ended.");
 		return result;
 	}
 	
@@ -843,8 +843,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/viewers/{userId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject receiveOKJournal(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W receiveOKJournal started.");
-		LOGGER.debug("userId=" + userId);
+		logger.debug("ezJournal G/W receiveOKJournal started.");
+		logger.debug("userId=" + userId);
 		
 		Gson gson = new Gson();
 		JSONObject result = new JSONObject();
@@ -857,7 +857,7 @@ public class EzJournalGWController {
 		
 			List<String> journalIdList = gson.fromJson(journalIdArray, new TypeToken<List<String>>(){}.getType());
 		
-			LOGGER.debug("journalIdList : " + journalIdList);
+			logger.debug("journalIdList : " + journalIdList);
 	
 			ezJournalService.saveJournalViewInfo(journalIdList, info.getUserId(), info.getTenantId());
 		
@@ -870,7 +870,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W receiveOKJournal ended.");
+		logger.debug("ezJournal G/W receiveOKJournal ended.");
 		return result;
 	}
 	
@@ -880,7 +880,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/attachfiles", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject uploadFile(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W uploadFile started.");
+		logger.debug("ezJournal G/W uploadFile started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -909,7 +909,7 @@ public class EzJournalGWController {
 				userId = (String) jsonParam.get("userId");
 			}
 			
-			LOGGER.debug("####cnt:" + cnt + ", maxSize:" + maxSize + ", userId:" + userId);
+			logger.debug("####cnt:" + cnt + ", maxSize:" + maxSize + ", userId:" + userId);
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
@@ -1031,7 +1031,7 @@ public class EzJournalGWController {
 			result.put("code", 0);
 		}
 		
-		LOGGER.debug("ezJournal G/W uploadFile ended.");
+		logger.debug("ezJournal G/W uploadFile ended.");
 		return result;
 	}
 	
@@ -1044,7 +1044,7 @@ public class EzJournalGWController {
      * @throws Exception
      */
     public void journalWriteUploadedFile(String bytearray, String newName, String stordFilePath) throws Exception {
-    	LOGGER.debug("journalWriteUploadedFile started.");
+    	logger.debug("journalWriteUploadedFile started.");
     	
 		InputStream stream = null;
 		OutputStream bos = null;
@@ -1061,34 +1061,34 @@ public class EzJournalGWController {
 		    }
 	
 		    bos = new FileOutputStream(stordFilePathReal + File.separator + commonUtil.detectPathTraversal(newName));
-		    LOGGER.debug("###" + stordFilePathReal + File.separator + newName + "###");
+		    logger.debug("###" + stordFilePathReal + File.separator + newName + "###");
 		    Decoder decoder = Base64.getDecoder();
 
 		    bos.write(decoder.decode(bytearray));
 
 		} catch (FileNotFoundException fnfe) {
-			LOGGER.debug("fnfe: {}", fnfe);
+			logger.debug("fnfe: {}", fnfe);
 		} catch (IOException ioe) {
-			LOGGER.debug("ioe: {}", ioe);
+			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
-			LOGGER.debug("e: {}", e);
+			logger.debug("e: {}", e);
 		} finally {
 		    if (bos != null) {
 				try {
 				    bos.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
 		    if (stream != null) {
 				try {
 				    stream.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
 		}
-		LOGGER.debug("journalWriteUploadedFile ended.");
+		logger.debug("journalWriteUploadedFile ended.");
     }
 	
 	
@@ -1098,8 +1098,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/attachfiles", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteFile(@PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W deleteFile started.");
-		LOGGER.debug("journalId=" + journalId);
+		logger.debug("ezJournal G/W deleteFile started.");
+		logger.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1116,7 +1116,7 @@ public class EzJournalGWController {
 			String filePath = commonUtil.detectPathTraversal(request.getParameter("filePath"));
 			String fileList = request.getParameter("fileList");
 			
-			LOGGER.debug("pDirPath : " + pDirPath + " | fileList : " + fileList);
+			logger.debug("pDirPath : " + pDirPath + " | fileList : " + fileList);
 			
 			// journalId가 temp이면 임시파일 삭제의 의미
 			if (journalId.equals("temp")) {
@@ -1127,7 +1127,7 @@ public class EzJournalGWController {
 						String sGUID = commonUtil.detectPathTraversal(data[i].split(":")[0]);
 						String fileName = commonUtil.detectPathTraversal(data[i].split(":")[1]);
 						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
-						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
+						logger.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						if(file.exists()){
@@ -1144,7 +1144,7 @@ public class EzJournalGWController {
 						String sGUID = commonUtil.detectPathTraversal(data[i].split(":")[0]);
 						String fileName = commonUtil.detectPathTraversal(data[i].split(":")[1]);
 						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
-						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
+						logger.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						
@@ -1162,7 +1162,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W deleteFile ended.");
+		logger.debug("ezJournal G/W deleteFile ended.");
 		return result;
 	}
 	
@@ -1172,8 +1172,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/allattachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject downloadFile(@PathVariable String journalId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LOGGER.debug("ezJournal G/W downloadFile started.");
-		LOGGER.debug("journalId=" + journalId);
+		logger.debug("ezJournal G/W downloadFile started.");
+		logger.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1204,7 +1204,7 @@ public class EzJournalGWController {
 					
 					String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.detectPathTraversal(filePath);
 					
-					LOGGER.debug("fullFilePath : " + fullFilePath);
+					logger.debug("fullFilePath : " + fullFilePath);
 					
 					File file = new File(fullFilePath);
 					
@@ -1266,7 +1266,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W downloadFile ended.");
+		logger.debug("ezJournal G/W downloadFile ended.");
 		return result;
 	}
 	
@@ -1276,8 +1276,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject downloadAllFile(@PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W downloadFile started.");
-		LOGGER.debug("journalId=" + journalId);
+		logger.debug("ezJournal G/W downloadFile started.");
+		logger.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1288,7 +1288,7 @@ public class EzJournalGWController {
 			String uploadFilePath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
 			String filePath = request.getParameter("filePath");
 			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.detectPathTraversal(filePath);
-			LOGGER.debug("fullFilePath : " + fullFilePath);
+			logger.debug("fullFilePath : " + fullFilePath);
 			
 			File file = new File(fullFilePath);
 			
@@ -1321,7 +1321,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W downloadFile ended.");
+		logger.debug("ezJournal G/W downloadFile ended.");
 		return result;
 	}
 	
@@ -1331,8 +1331,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/receivers", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getReceiverList(@PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getReceiverList started.");
-		LOGGER.debug("journalId=" + journalId);
+		logger.debug("ezJournal G/W getReceiverList started.");
+		logger.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1354,7 +1354,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getReceiverList ended.");
+		logger.debug("ezJournal G/W getReceiverList ended.");
 		return result;
 	}
 	
@@ -1364,8 +1364,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/receivers-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getReceiverCount(@PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getReceiverCount started.");
-		LOGGER.debug("journalId=" + journalId);
+		logger.debug("ezJournal G/W getReceiverCount started.");
+		logger.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1387,7 +1387,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getReceiverCount ended.");
+		logger.debug("ezJournal G/W getReceiverCount ended.");
 		return result;
 	}
 	
@@ -1397,8 +1397,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getFavoriteList(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getFavoriteList started.");
-		LOGGER.debug("userId=" + userId);
+		logger.debug("ezJournal G/W getFavoriteList started.");
+		logger.debug("userId=" + userId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1417,7 +1417,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getFavoriteList ended.");
+		logger.debug("ezJournal G/W getFavoriteList ended.");
 		return result;
 	}
 	
@@ -1427,8 +1427,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveFavorite(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W saveFavorite started.");
-		LOGGER.debug("userId=" + userId);
+		logger.debug("ezJournal G/W saveFavorite started.");
+		logger.debug("userId=" + userId);
 		
 		JSONObject result = new JSONObject();
 
@@ -1448,7 +1448,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W saveFavorite ended.");
+		logger.debug("ezJournal G/W saveFavorite ended.");
 		return result;
 	}
 	
@@ -1458,8 +1458,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject updateFavorite(@PathVariable String userId, @PathVariable String favoriteId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W updateFavorite started.");
-		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
+		logger.debug("ezJournal G/W updateFavorite started.");
+		logger.debug("userId=" + userId + ",favoriteId=" + favoriteId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1480,7 +1480,7 @@ public class EzJournalGWController {
 			
 		}
 		
-		LOGGER.debug("ezJournal G/W updateFavorite ended.");
+		logger.debug("ezJournal G/W updateFavorite ended.");
 		return result;
 	}
 	
@@ -1490,8 +1490,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteFavorite(@PathVariable String userId, @PathVariable String favoriteId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W deleteFavorite started.");
-		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
+		logger.debug("ezJournal G/W deleteFavorite started.");
+		logger.debug("userId=" + userId + ",favoriteId=" + favoriteId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1511,7 +1511,7 @@ public class EzJournalGWController {
 			
 		}
 		
-		LOGGER.debug("ezJournal G/W deleteFavorite ended.");
+		logger.debug("ezJournal G/W deleteFavorite ended.");
 		return result;
 	}
 	
@@ -1521,8 +1521,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/favorites/{favoriteId}/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getFavoriteUserList(@PathVariable String userId, @PathVariable String favoriteId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getFavoriteUserList started.");
-		LOGGER.debug("userId=" + userId + ",favoriteId=" + favoriteId);
+		logger.debug("ezJournal G/W getFavoriteUserList started.");
+		logger.debug("userId=" + userId + ",favoriteId=" + favoriteId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1542,7 +1542,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getFavoriteUserList ended.");
+		logger.debug("ezJournal G/W getFavoriteUserList ended.");
 		return result;
 	}
 	
@@ -1552,8 +1552,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getReplies(@PathVariable String journalId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getReplies started.");
-		LOGGER.debug("journalId=" + journalId);
+		logger.debug("ezJournal G/W getReplies started.");
+		logger.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1574,7 +1574,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 		}
 		
-		LOGGER.debug("ezJournal G/W getReplies ended.");
+		logger.debug("ezJournal G/W getReplies ended.");
 		return result;
 	}
 	
@@ -1584,8 +1584,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveReply(@PathVariable String journalId,  HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W saveReply started.");
-		LOGGER.debug("journalId=" + journalId);
+		logger.debug("ezJournal G/W saveReply started.");
+		logger.debug("journalId=" + journalId);
 		
 		JSONObject result = new JSONObject();
 		try {
@@ -1608,7 +1608,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 		}
 		
-		LOGGER.debug("ezJournal G/W saveReply ended.");
+		logger.debug("ezJournal G/W saveReply ended.");
 		return result;
 	}
 	
@@ -1618,8 +1618,8 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/replies/{replyId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	public JSONObject deleteReply(@PathVariable String journalId, @PathVariable String replyId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W deleteReply started.");
-		LOGGER.debug("journalId=" + journalId + ",replyId=" + replyId);
+		logger.debug("ezJournal G/W deleteReply started.");
+		logger.debug("journalId=" + journalId + ",replyId=" + replyId);
 		
 		JSONObject result = new JSONObject();
 		
@@ -1640,7 +1640,7 @@ public class EzJournalGWController {
 			result.put("code", 1);
 		}
 		
-		LOGGER.debug("ezJournal G/W deleteReply ended.");
+		logger.debug("ezJournal G/W deleteReply ended.");
 		return result;
 	}
 	
@@ -1650,7 +1650,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/options", method= RequestMethod.POST, produces="application/json;charset=UTF-8")
 	public JSONObject saveOption(@RequestParam Map<String,Object> param, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W saveOption started.");
+		logger.debug("ezJournal G/W saveOption started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -1671,7 +1671,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W saveOption ended.");
+		logger.debug("ezJournal G/W saveOption ended.");
 		return result;
 	}
 	
@@ -1681,7 +1681,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/options", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getOption(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getOption started.");
+		logger.debug("ezJournal G/W getOption started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1706,7 +1706,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getOption ended.");
+		logger.debug("ezJournal G/W getOption ended.");
 		return result;
 	}
 	
@@ -1716,7 +1716,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users/{userId}/recv-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getRecvJournalCount(@PathVariable String userId,HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getRecvJournalCount started.");
+		logger.debug("ezJournal G/W getRecvJournalCount started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1735,7 +1735,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getRecvJournalCount ended.");
+		logger.debug("ezJournal G/W getRecvJournalCount ended.");
 		return result;
 	}
 	
@@ -1745,7 +1745,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/viewer", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getViewerList(@PathVariable String journalId,HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getRecvJournalCount started.");
+		logger.debug("ezJournal G/W getRecvJournalCount started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1767,7 +1767,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getRecvJournalCount ended.");
+		logger.debug("ezJournal G/W getRecvJournalCount ended.");
 		return result;
 	}
 	
@@ -1777,7 +1777,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/viewer-count", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getViewerCount(@PathVariable String journalId,HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getRecvJournalCount started.");
+		logger.debug("ezJournal G/W getRecvJournalCount started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1797,7 +1797,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getRecvJournalCount ended.");
+		logger.debug("ezJournal G/W getRecvJournalCount ended.");
 		return result;
 	}
 	
@@ -1807,7 +1807,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/auth", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject checkJournalAuth(@PathVariable String journalId,HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W checkJournalAuth started.");
+		logger.debug("ezJournal G/W checkJournalAuth started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1827,7 +1827,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W checkJournalAuth ended.");
+		logger.debug("ezJournal G/W checkJournalAuth ended.");
 		return result;
 	}
 	
@@ -1838,7 +1838,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/companies", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getCompanyList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getCompanyList started.");
+		logger.debug("ezJournal G/W getCompanyList started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1862,7 +1862,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getCompanyList ended.");
+		logger.debug("ezJournal G/W getCompanyList ended.");
 		return result;
 	}
 	
@@ -1872,7 +1872,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getDeptList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getDeptList started.");
+		logger.debug("ezJournal G/W getDeptList started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1881,7 +1881,7 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			LOGGER.debug("userId : " + userId);
+			logger.debug("userId : " + userId);
 			String companyId = request.getParameter("companyId");
 			
 			if (companyId == null || companyId.equals("")) {
@@ -1899,7 +1899,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getDeptList ended.");
+		logger.debug("ezJournal G/W getDeptList ended.");
 		return result;
 	}
 	
@@ -1909,7 +1909,7 @@ public class EzJournalGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getUserList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezJournal G/W getUserList started.");
+		logger.debug("ezJournal G/W getUserList started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1948,7 +1948,7 @@ public class EzJournalGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("ezJournal G/W getUserList ended.");
+		logger.debug("ezJournal G/W getUserList ended.");
 		return result;
 	}
 	

@@ -74,7 +74,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @RestController
 public class EzPMSGWController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzPMSGWController.class);
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -109,7 +109,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/projects/userId/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getProjectList(@PathVariable String userId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId
 				+ "] started.");
 
 		JSONObject result = new JSONObject();
@@ -170,7 +170,7 @@ public class EzPMSGWController {
 				projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, search, lang, request.getParameter("position"), companyId);
 			}
 
-			LOGGER.debug("projectList Count : " + projectList.size());
+			logger.debug("projectList Count : " + projectList.size());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -182,7 +182,7 @@ public class EzPMSGWController {
 			result.put("data", e.getMessage());
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId + "] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId + "] ended.");
 		return result;
 	}
 
@@ -198,7 +198,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/projects", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addNewProject(@RequestBody JSONObject json,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects] started.");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/projects] started.");
 
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -240,7 +240,7 @@ public class EzPMSGWController {
 
 			Long projectId = ezPMSService.addNewProject(project);
 
-			LOGGER.debug("addNewProject projectId : " + projectId);
+			logger.debug("addNewProject projectId : " + projectId);
 
 			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
 			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
@@ -263,7 +263,7 @@ public class EzPMSGWController {
 			project.put("sortOrder", 0);
 			project.put("groupName", request.getParameter("projectName"));
 			long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId, lang);
-			LOGGER.debug("addNewProject groupId : " + groupId);
+			logger.debug("addNewProject groupId : " + groupId);
 
 			data.put("projectId", projectId);
 			data.put("groupId", groupId);
@@ -291,7 +291,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects] ended.");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/projects] ended.");
 		return result;
 	}
 
@@ -306,7 +306,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteProject(@PathVariable String projectId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "] started.");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -318,7 +318,7 @@ public class EzPMSGWController {
 			int tenantId = info.getTenantId();
 			String deptId = info.getDeptId();
 
-			LOGGER.debug("status : " + status + ", " + "userId : " + userId + ", tenantId : " + tenantId + ", deptId : " + deptId);
+			logger.debug("status : " + status + ", " + "userId : " + userId + ", tenantId : " + tenantId + ", deptId : " + deptId);
 
 			String[] projectIdList = projectId.split("_");
 			String roleCheck = "";
@@ -327,7 +327,7 @@ public class EzPMSGWController {
 			if (request.getParameter("admin") == null || !request.getParameter("admin").equals("true")) {
 				for (int i = 0; i < projectIdList.length; i++) {
 					int userRole = ezPMSService.getUserProjectRole(userId, tenantId, Long.parseLong(projectIdList[i]), deptId);
-					LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
+					logger.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
 
 					if (userRole != 1) {
 						roleCheck = "rejected";
@@ -352,7 +352,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "] ended.");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "] ended.");
 		return result;
 	}
 
@@ -367,7 +367,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/users/{userId}/setting", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMainSetting(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/setting] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/setting] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -386,7 +386,7 @@ public class EzPMSGWController {
 
 			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, tenantId, userIdType);
 
-			LOGGER.debug("projectSetting : " + projectSetting.getViewType());
+			logger.debug("projectSetting : " + projectSetting.getViewType());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", projectSetting);
@@ -396,7 +396,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/setting] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/setting] ended.");
 		return result;
 	}
 
@@ -411,7 +411,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/users/{userId}/setting", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateMainSetting(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/users/" + userId + "/setting] started.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/users/" + userId + "/setting] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -431,7 +431,7 @@ public class EzPMSGWController {
 			project.setListProjectStatus(request.getParameter("listProjectStatus"));
 			project.setUserId(userId);
 
-			LOGGER.debug("[parameter] viewType : " + project.getViewType()
+			logger.debug("[parameter] viewType : " + project.getViewType()
 					+ ", progressColor : " + project.getProgressColor()
 					+ ", completeColor : " + project.getCompleteColor()
 					+ ", overdueColor : " + project.getOverdueColor()
@@ -451,7 +451,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/users/" + userId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/users/" + userId
 				+ "/setting] ended.");
 		return result;
 	}
@@ -467,7 +467,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/status", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateProjectStatus(@PathVariable String projectId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/status] started.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/status] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -483,7 +483,7 @@ public class EzPMSGWController {
 			String changeDate = request.getParameter("changeDate");
 			String companyId = info.getCompanyId();
 
-			LOGGER.debug("nowStatus : " + nowStatus + ", status : " + status + ", " + "userId : " + userId + ", tenantId : " + tenantId
+			logger.debug("nowStatus : " + nowStatus + ", status : " + status + ", " + "userId : " + userId + ", tenantId : " + tenantId
 					+ ", deptId : " + deptId);
 
 			String[] projectIdList = projectId.split("_");
@@ -497,7 +497,7 @@ public class EzPMSGWController {
 					int userRole = ezPMSService.getUserProjectRole(userId,
 							tenantId, Long.parseLong(projectIdList[i]), deptId);
 
-					LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
+					logger.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
 
 					if (userRole != 1) {
 						roleCheck = "rejected";
@@ -514,7 +514,7 @@ public class EzPMSGWController {
 					ProjectInfoVO project = ezPMSService.getProjectDetails(Long.parseLong(projectIdList[i]), userId, info.getTenantId(), "new", lang, deptId, companyId);
 					String planEndDate = project.getPlanEndDate();
 
-					LOGGER.debug("planEndDate : " + planEndDate);
+					logger.debug("planEndDate : " + planEndDate);
 
 					ezPMSService.updateProjectStatus(Long.parseLong(projectIdList[i]), status, info.getTenantId(), changeDate, planEndDate);
 
@@ -533,13 +533,13 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", roleCheck);
 		} catch (Exception e) {
-			LOGGER.debug("ERROR : " + e.getMessage());
+			logger.debug("ERROR : " + e.getMessage());
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", e.getMessage());
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/status] ended.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/status] ended.");
 		return result;
 	}
 
@@ -555,7 +555,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/userId/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getProjectOverview(@PathVariable Long projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -590,7 +590,7 @@ public class EzPMSGWController {
 					}
 				}
 
-				LOGGER.debug("kanbanOrder : " + kanbanOrder + ", userRole : " + userRole);
+				logger.debug("kanbanOrder : " + kanbanOrder + ", userRole : " + userRole);
 
 				data.put("project", project);
 				data.put("kanbanOrder", kanbanOrder);
@@ -608,7 +608,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "] ended.");
 		return result;
 	}
 
@@ -624,7 +624,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateProject(@RequestBody JSONObject json, @PathVariable Long projectId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "] started.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -658,7 +658,7 @@ public class EzPMSGWController {
 			String planStartDate = request.getParameter("planStartDate");
 			int projectListCount = ezPMSService.getTaskOverProjectDate(projectId, tenantId, planEndDate, planStartDate);
 
-			LOGGER.debug("taskOverProjectEndDate Count : " + projectListCount);
+			logger.debug("taskOverProjectEndDate Count : " + projectListCount);
 
 			if (projectListCount <= 0) {
 				ezPMSService.updateProject(project, tenantId, companyId, lang);
@@ -716,7 +716,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "] ended.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "] ended.");
 		return result;
 	}
 
@@ -732,7 +732,7 @@ public class EzPMSGWController {
 	@SuppressWarnings({ "unchecked", "null" })
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/roles/{roleId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getProjectMember(@PathVariable Long projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -743,7 +743,7 @@ public class EzPMSGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			int isGantt = Integer.parseInt(request.getParameter("isGantt"));
 			
-			LOGGER.debug("[Parameter] projectId : " + projectId + ", roleId : " + roleId + ", isGantt : " + isGantt);
+			logger.debug("[Parameter] projectId : " + projectId + ", roleId : " + roleId + ", isGantt : " + isGantt);
 			
 			List<ProjectMemberVO> memberList = ezPMSService.getProjectMemberList(projectId, roleId, lang, tenantId, isGantt);
 
@@ -779,7 +779,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "] ended.");
 		return result;
 	}
 
@@ -795,7 +795,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/userId/{userId}/order", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject changeKanbanOrder(@PathVariable Long projectId, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "/order] started.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "/order] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -822,7 +822,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "/order] ended.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/userId/" + userId + "/order] ended.");
 		return result;
 	}
 
@@ -838,7 +838,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/userId/{userId}/favorites/{projectId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addFavoriteProject(@PathVariable String userId, @PathVariable String projectId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] started.");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -859,7 +859,7 @@ public class EzPMSGWController {
 				addResult = 0;
 			}
 
-			LOGGER.debug("addFavoriteResult : " + addResult);
+			logger.debug("addFavoriteResult : " + addResult);
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", addResult);
@@ -870,7 +870,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] ended.");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] ended.");
 		return result;
 	}
 
@@ -886,7 +886,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/userId/{userId}/favorites/{projectId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteFavoriteProject(@PathVariable String userId, @PathVariable String projectId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] started.");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -908,7 +908,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] ended.");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/userId/" + userId + "/favorites/" + projectId + "] ended.");
 		return result;
 	}
 
@@ -923,7 +923,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/logs", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addTaskLog(@PathVariable long projectId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId + "/logs] started.");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId + "/logs] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -968,7 +968,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId + "/logs] ended.");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId + "/logs] ended.");
 		return result;
 	}
 
@@ -983,7 +983,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/logs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTaskLogList(@PathVariable Long projectId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/logs] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/logs] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1049,7 +1049,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/logs] ended.");
 		return result;
 	}
@@ -1065,7 +1065,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/userId/{userId}/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getProjectListCount(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId + "/count] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId + "/count] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1106,7 +1106,7 @@ public class EzPMSGWController {
 
 			String deptId = info.getDeptId();
 
-			LOGGER.debug("status : " + project.getStatus() + ", deptId : " + deptId);
+			logger.debug("status : " + project.getStatus() + ", deptId : " + deptId);
 			int projectListCount;
 
 			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 넘겨서 모든 프로젝트 검색이 가능하도록
@@ -1117,7 +1117,7 @@ public class EzPMSGWController {
 				projectListCount = ezPMSService.getProjectListCount(project, info.getTenantId(), userId, deptId, lang, request.getParameter("position"));
 			}
 
-			LOGGER.debug("projectListCount : " + projectListCount);
+			logger.debug("projectListCount : " + projectListCount);
 
 			JSONObject data = new JSONObject();
 			data.put("projectListCount", projectListCount);
@@ -1132,7 +1132,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId + "/count] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/userId/" + userId + "/count] ended.");
 		return result;
 	}
 
@@ -1148,7 +1148,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/tasks/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTaskListCount(@PathVariable Long projectId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/tasks/count] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/tasks/count] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1166,7 +1166,7 @@ public class EzPMSGWController {
 				roleId = ezPMSService.getUserProjectRole(userId, info.getTenantId(), projectId, info.getDeptId());
 			}
 
-			LOGGER.debug("roleId : " + roleId);
+			logger.debug("roleId : " + roleId);
 
 			if (request.getParameter("groupId") != null) {
 				groupId = Long.parseLong(request.getParameter("groupId"));
@@ -1188,7 +1188,7 @@ public class EzPMSGWController {
 
 			int taskListCount = ezPMSService.getTaskListCount(search, userId, roleId, deptId);
 
-			LOGGER.debug("taskListCount : " + taskListCount);
+			logger.debug("taskListCount : " + taskListCount);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1199,7 +1199,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/tasks/count] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/tasks/count] ended.");
 		return result;
 	}
 
@@ -1214,7 +1214,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/logs/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTaskLogListCount(@PathVariable long projectId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/tasks/count] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/tasks/count] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1252,7 +1252,7 @@ public class EzPMSGWController {
 			JSONObject data = new JSONObject();
 			data.put("taskLogListCount", taskLogListCount);
 
-			LOGGER.debug("taskLogListCount : " + taskLogListCount);
+			logger.debug("taskLogListCount : " + taskLogListCount);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1264,7 +1264,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/logs/count] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/logs/count] ended.");
 		return result;
 	}
 
@@ -1280,7 +1280,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/roles/{roleId}/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMemberCount(@PathVariable Long projectId, @PathVariable int roleId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "/count] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "/count] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1293,7 +1293,7 @@ public class EzPMSGWController {
 			JSONObject data = new JSONObject();
 			data.put("memberCount", memberCount);
 
-			LOGGER.debug("memberCount : " + memberCount);
+			logger.debug("memberCount : " + memberCount);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1304,7 +1304,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "/count] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/roles/" + roleId + "/count] ended.");
 		return result;
 	}
 
@@ -1320,7 +1320,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/users/{userId}/groups/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getGroupCount(@PathVariable String userId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/groups/count] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/groups/count] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1339,7 +1339,7 @@ public class EzPMSGWController {
 
 			int groupCount = ezPMSService.getGroupCount(search, info.getTenantId(), userId);
 
-			LOGGER.debug("groupCount : " + groupCount);
+			logger.debug("groupCount : " + groupCount);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1350,7 +1350,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/groups/count] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/users/" + userId + "/groups/count] ended.");
 		return result;
 	}
 
@@ -1362,7 +1362,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/companies", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject getCompanyList(HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/companies] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/companies] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1386,7 +1386,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/companies] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/companies] ended.");
 		return result;
 	}
 
@@ -1396,7 +1396,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/depts", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject getDeptList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/depts] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/depts] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1405,7 +1405,7 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 
-			LOGGER.debug("userId : " + userId);
+			logger.debug("userId : " + userId);
 			String companyId = request.getParameter("companyId");
 
 			if (companyId == null || companyId.equals("")) {
@@ -1425,7 +1425,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/depts] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/depts] started.");
 		return result;
 	}
 
@@ -1435,7 +1435,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/users", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject getUserList(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/users] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1482,7 +1482,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/users] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/users] started.");
 		return result;
 	}
 
@@ -1493,7 +1493,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/list/users", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public JSONObject getHeadManagerList(@RequestBody JSONObject json,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/list/users] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/list/users] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -1565,7 +1565,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/list/users] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/list/users] ended.");
 		return result;
 	}
 
@@ -1577,7 +1577,7 @@ public class EzPMSGWController {
 	public JSONObject deleteTask(@PathVariable String taskId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId
 				+ "/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -1620,7 +1620,7 @@ public class EzPMSGWController {
 				}
 			}
 
-			LOGGER.debug("DELETETASK ROLECHECK : " + roleCheck);
+			logger.debug("DELETETASK ROLECHECK : " + roleCheck);
 
 			if (roleCheck.equals("permitted")) {
 				for (int i = 0; i < taskIdList.length; i++) {
@@ -1649,7 +1649,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId
 				+ "/users/" + userId + "] ended.");
 		return result;
 	}
@@ -1661,7 +1661,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/items/{itemId}/files", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFilePath(@PathVariable long itemId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/items/" + itemId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/items/" + itemId
 				+ "/files] started.");
 
 		JSONObject result = new JSONObject();
@@ -1697,7 +1697,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/items/" + itemId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/items/" + itemId
 				+ "/files] ended.");
 		return result;
 	}
@@ -1716,7 +1716,7 @@ public class EzPMSGWController {
 	public JSONObject getUserProjectRole(@PathVariable Long projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/users/" + userId + "/role] started.");
 
 		JSONObject result = new JSONObject();
@@ -1728,7 +1728,7 @@ public class EzPMSGWController {
 			int userRole = ezPMSService.getUserProjectRole(userId, tenantId,
 					projectId, info.getDeptId());
 
-			LOGGER.debug("userRole : " + userRole);
+			logger.debug("userRole : " + userRole);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1739,7 +1739,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/users/" + userId + "/role] ended.");
 		return result;
 	}
@@ -1759,7 +1759,7 @@ public class EzPMSGWController {
 	public JSONObject addPreTaskRel(@PathVariable long taskId,
 			@PathVariable int preTaskId, @PathVariable String type,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId
 				+ "/preTasks/" + preTaskId + "/type/" + type + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -1799,7 +1799,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId
 				+ "/preTasks/" + preTaskId + "/type/" + type + "] ended.");
 		return result;
 	}
@@ -1818,7 +1818,7 @@ public class EzPMSGWController {
 	public JSONObject changeGanttOrder(@PathVariable long projectId,
 			HttpServletRequest request, @RequestBody JSONObject json)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/project/" + projectId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/project/" + projectId
 				+ "/gantt/order] started.");
 
 		JSONObject result = new JSONObject();
@@ -1845,7 +1845,7 @@ public class EzPMSGWController {
 				roleCheck = "rejected";
 			}
 
-			LOGGER.debug("changeganttorder ROLECHECK : " + roleCheck);
+			logger.debug("changeganttorder ROLECHECK : " + roleCheck);
 
 			if (roleCheck.equals("permitted")) {
 				// 순서 변경된 taskId의 groupId변경 (groupId가 -1이면 변경 X)
@@ -1910,7 +1910,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/project/" + projectId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/project/" + projectId
 				+ "/gantt/order] ended.");
 		return result;
 	}
@@ -1927,7 +1927,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/management/members", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMemberSchedule(@PathVariable long projectId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/management/members] started.");
 
 		JSONObject result = new JSONObject();
@@ -2012,7 +2012,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId
 				+ "/management/members] ended.");
 		return result;
 	}
@@ -2032,7 +2032,7 @@ public class EzPMSGWController {
 	public JSONObject getDateTaskList(@PathVariable long projectId,
 			@PathVariable String date, @PathVariable String selUserId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId
 				+ "/dates/" + date + "/users/" + selUserId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -2058,7 +2058,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/project/" + projectId
 				+ "/dates/" + date + "/users/" + selUserId + "] ended.");
 		return result;
 	}
@@ -2072,7 +2072,7 @@ public class EzPMSGWController {
 	public JSONObject getTaskList(@PathVariable Long projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
 				+ "/users/" + userId + "/myTask] started.");
 		Long startMillis = System.currentTimeMillis();
 
@@ -2229,9 +2229,9 @@ public class EzPMSGWController {
 		}
 
 		Long endMillis = System.currentTimeMillis();
-		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
+		logger.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
 				+ " sec");
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
 				+ "/users/" + userId + "/myTask] ended.");
 		return result;
 	}
@@ -2244,7 +2244,7 @@ public class EzPMSGWController {
 	public JSONObject getTaskList2(@PathVariable long projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
 				+ "/users/" + userId + "] started.");
 		Long startMillis = System.currentTimeMillis();
 
@@ -2375,9 +2375,9 @@ public class EzPMSGWController {
 		}
 
 		Long endMillis = System.currentTimeMillis();
-		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
+		logger.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
 				+ " sec");
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
 				+ "/users/" + userId + "] ended.");
 		return result;
 	}
@@ -2390,7 +2390,7 @@ public class EzPMSGWController {
 	public JSONObject addTask(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/" + projectId
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/tasks/" + projectId
 				+ "/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -2498,7 +2498,7 @@ public class EzPMSGWController {
 			result.put("data", "fail");
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/" + projectId
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/tasks/" + projectId
 				+ "/users/" + userId + "] ended.");
 		return result;
 	}
@@ -2511,7 +2511,7 @@ public class EzPMSGWController {
 	public JSONObject getTaskDetail(@PathVariable String taskId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/users/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/users/"
 				+ userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -2585,7 +2585,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/users/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/users/"
 				+ userId + "] ended.");
 		return result;
 	}
@@ -2596,7 +2596,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateTask(@PathVariable String taskId, @PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] started.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -2730,7 +2730,7 @@ public class EzPMSGWController {
 							planEndDate = sdf.format(newEndDate);
 						}
 
-						LOGGER.debug("By Pretask Change => planStartDate : " + planStartDate + ", planEndDate : " + planEndDate);
+						logger.debug("By Pretask Change => planStartDate : " + planStartDate + ", planEndDate : " + planEndDate);
 					}
 				}
 
@@ -2794,7 +2794,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
 		return result;
 	}
 
@@ -2806,7 +2806,7 @@ public class EzPMSGWController {
 	public JSONObject getGroupList(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId	+ "/groups/users/" + userId + "] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId	+ "/groups/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -2863,7 +2863,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/groups/users/" + userId + "] ended.");
 		return result;
 	}
@@ -2876,7 +2876,7 @@ public class EzPMSGWController {
 	public JSONObject addGroup(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/groups/" + projectId
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/groups/" + projectId
 				+ "/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -2986,7 +2986,7 @@ public class EzPMSGWController {
 			result.put("data", "fail");
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/groups/" + projectId
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/groups/" + projectId
 				+ "/users/" + userId + "] ended.");
 		return result;
 	}
@@ -2999,7 +2999,7 @@ public class EzPMSGWController {
 	public JSONObject getGroupDetails(@PathVariable long groupId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/groups/" + groupId + "/users/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/groups/" + groupId + "/users/"
 				+ userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -3037,7 +3037,7 @@ public class EzPMSGWController {
 				}
 			}
 
-			LOGGER.debug("User Group Role Id : " + userProjectRole);
+			logger.debug("User Group Role Id : " + userProjectRole);
 
 			JSONObject data = new JSONObject();
 			data.put("groupDetails", groupVO);
@@ -3052,7 +3052,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/groups/" + groupId + "/users/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/groups/" + groupId + "/users/"
 				+ userId + "] ended.");
 		return result;
 	}
@@ -3065,7 +3065,7 @@ public class EzPMSGWController {
 	public JSONObject updateGroup(@PathVariable long groupId,
 			@PathVariable String userId, HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId + "/users/"
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId + "/users/"
 				+ userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -3204,14 +3204,14 @@ public class EzPMSGWController {
 								pregroupEndate, 1, companyId, tenantId);
 					}
 
-					LOGGER.debug("oldGroupStartDate : "
+					logger.debug("oldGroupStartDate : "
 							+ sdf.format(oldGroupStartDate)
 							+ ", newGroupStartDate : "
 							+ sdf.format(newGroupStartDate));
 
 					int offset = ezPMSService.getWorkingDays(oldGroupStartDate,
 							newGroupStartDate, companyId, tenantId, lang) - 1;
-					LOGGER.debug("offset : " + offset);
+					logger.debug("offset : " + offset);
 
 					List<ProjectTaskVO> tasksInGroup = ezPMSService
 							.getTaskListByGroupId(tenantId, groupId);
@@ -3230,10 +3230,10 @@ public class EzPMSGWController {
 								.addWorkingDays(oldEndDate, offset, companyId,
 										tenantId));
 
-						LOGGER.debug("oldStartDate : "
+						logger.debug("oldStartDate : "
 								+ sdf.format(oldStartDate)
 								+ ", newStartDate : " + newStartDate);
-						LOGGER.debug("oldEndDate   : " + sdf.format(oldEndDate)
+						logger.debug("oldEndDate   : " + sdf.format(oldEndDate)
 								+ ", newEndDate   : " + newEndDate);
 
 						taskVO.setTenantId(tenantId);
@@ -3271,7 +3271,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId + "/users/"
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId + "/users/"
 				+ userId + "] ended.");
 		return result;
 	}
@@ -3284,7 +3284,7 @@ public class EzPMSGWController {
 	public JSONObject deleteGroup(@PathVariable long projectId,
 			@PathVariable long groupId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId
 				+ "/groups/" + groupId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -3319,7 +3319,7 @@ public class EzPMSGWController {
 				}
 			}
 
-			LOGGER.debug("DELETEGROUP ROLECHECK : " + roleCheck);
+			logger.debug("DELETEGROUP ROLECHECK : " + roleCheck);
 
 			if (roleCheck.equals("permitted")) {
 				ezPMSService.deleteGroup(projectId, groupId, tenantId);
@@ -3334,7 +3334,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId
 				+ "/groups/" + groupId + "] ended.");
 		return result;
 	}
@@ -3347,7 +3347,7 @@ public class EzPMSGWController {
 	public JSONObject getProjectTaskTree(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tree/" + projectId + "/users/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/tree/" + projectId + "/users/"
 				+ userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -3363,7 +3363,7 @@ public class EzPMSGWController {
 					request.getParameter("onlyGroup"), location, tenantId,
 					userId);
 
-			LOGGER.debug(list.get(0).getText());
+			logger.debug(list.get(0).getText());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -3375,7 +3375,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tree/" + projectId + "/users/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/tree/" + projectId + "/users/"
 				+ userId + "] ended.");
 		return result;
 	}
@@ -3387,7 +3387,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/weight/{projectId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getRemainingWeight(@PathVariable String projectId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/weight/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/weight/" + projectId
 				+ "] started.");
 
 		JSONObject result = new JSONObject();
@@ -3409,7 +3409,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/weight/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/weight/" + projectId
 				+ "] ended.");
 		return result;
 	}
@@ -3422,7 +3422,7 @@ public class EzPMSGWController {
 	public JSONObject getProjectDetailsforGantt(@PathVariable Long projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/users/" + userId + "/gantt] started.");
 		Long startMillis = System.currentTimeMillis();
 		JSONObject result = new JSONObject();
@@ -3454,7 +3454,7 @@ public class EzPMSGWController {
 					project.getPlanStartDate(), project.getPlanEndDate(),
 					info.getTenantId(), info.getCompanyId(), lang);
 
-			LOGGER.debug("holidayList : " + holidayList);
+			logger.debug("holidayList : " + holidayList);
 			JSONObject data = new JSONObject();
 			data.put("project", project);
 			data.put("holidayList", holidayList);
@@ -3470,9 +3470,9 @@ public class EzPMSGWController {
 		}
 
 		Long endMillis = System.currentTimeMillis();
-		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
+		logger.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
 				+ " sec");
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/users/" + userId + "/gantt] ended.");
 		return result;
 	}
@@ -3485,7 +3485,7 @@ public class EzPMSGWController {
 	public JSONObject updateTaskStatus(@PathVariable long taskId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/"
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/"
 				+ userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -3572,7 +3572,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/"
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/"
 				+ userId + "] ended.");
 		return result;
 	}
@@ -3585,7 +3585,7 @@ public class EzPMSGWController {
 //	public JSONObject getGroupListForGantt(@PathVariable String projectId,
 //			@PathVariable String userId, HttpServletRequest request)
 //			throws Exception {
-//		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+//		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 //				+ "/groups/users/" + userId + "/gantt] started.");
 //		Long startMillis = System.currentTimeMillis();
 //		JSONObject result = new JSONObject();
@@ -3694,9 +3694,9 @@ public class EzPMSGWController {
 //		}
 //
 //		Long endMillis = System.currentTimeMillis();
-//		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
+//		logger.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
 //				+ " sec");
-//		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+//		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 //				+ "/groups/users/" + userId + "] ended.");
 //		return result;
 //	}
@@ -3709,7 +3709,7 @@ public class EzPMSGWController {
 	public JSONObject getGroupListForGantt(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/groups/users/" + userId + "/gantt] started.");
 		Long startMillis = System.currentTimeMillis();
 		JSONObject result = new JSONObject();
@@ -3795,9 +3795,9 @@ public class EzPMSGWController {
 		}
 
 		Long endMillis = System.currentTimeMillis();
-		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
+		logger.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
 				+ " sec");
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/groups/users/" + userId + "] ended.");
 		return result;
 	}
@@ -3809,7 +3809,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/weight", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateTaskWeight(@PathVariable String taskId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
 				+ "/weight] started.");
 
 		JSONObject result = new JSONObject();
@@ -3846,7 +3846,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
 				+ "/weight] ended.");
 		return result;
 	}
@@ -3858,7 +3858,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/progress", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateTaskProgress(@PathVariable String taskId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
 				+ "/progress] started.");
 
 		JSONObject result = new JSONObject();
@@ -3917,7 +3917,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
 				+ "/progress] ended.");
 		return result;
 	}
@@ -3930,7 +3930,7 @@ public class EzPMSGWController {
 	public JSONObject getTaskMemberListInGroup(@PathVariable Long groupId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/member-list/group/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/tasks/member-list/group/"
 				+ groupId + "/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -3953,7 +3953,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/member-list/group/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/tasks/member-list/group/"
 				+ groupId + "/users/" + userId + "] ended.");
 		return result;
 	}
@@ -3970,7 +3970,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/boards", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addBoard(HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/boards] started");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/boards] started");
 
 		JSONObject result = new JSONObject();
 
@@ -3994,7 +3994,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/boards] ended");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/boards] ended");
 		return result;
 	}
 
@@ -4009,7 +4009,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/boards", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject modifyBoard(HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/boards] started");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/boards] started");
 
 		JSONObject result = new JSONObject();
 
@@ -4033,7 +4033,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/boards] ended");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/boards] ended");
 		return result;
 	}
 
@@ -4048,7 +4048,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/moveBoards", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject moveBoards(HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/moveBoards] started");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/moveBoards] started");
 
 		JSONObject result = new JSONObject();
 
@@ -4073,7 +4073,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/moveBoards] ended");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/moveBoards] ended");
 		return result;
 	}
 
@@ -4088,7 +4088,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/boards", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteBoard(HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/boards] started");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/boards] started");
 
 		JSONObject result = new JSONObject();
 
@@ -4108,7 +4108,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/boards] ended");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/boards] ended");
 		return result;
 	}
 
@@ -4124,7 +4124,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/boards/list/{projectId}/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getBoardList(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/list/" + projectId
 				+ "/users/" + userId + "] started");
 		JSONObject result = new JSONObject();
 
@@ -4160,7 +4160,7 @@ public class EzPMSGWController {
 			//
 			// while (parameterNames.hasMoreElements()) {
 			// String parameterName = parameterNames.nextElement();
-			// LOGGER.debug(parameterName + " : " +
+			// logger.debug(parameterName + " : " +
 			// request.getParameter(parameterName));
 			// }
 
@@ -4288,7 +4288,7 @@ public class EzPMSGWController {
 				folderName = folder.getText();
 			}
 
-			LOGGER.debug("folderName : " + folderName);
+			logger.debug("folderName : " + folderName);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -4302,7 +4302,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/list/" + projectId
 				+ "/users/" + userId + "] ended");
 		return result;
 	}
@@ -4319,7 +4319,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/boards/list-count/{projectId}/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getBoardListCount(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count/"
 				+ projectId + "/users/" + userId + "] started");
 		JSONObject result = new JSONObject();
 
@@ -4397,7 +4397,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count/"
 				+ projectId + "/users/" + userId + "] ended");
 		return result;
 	}
@@ -4414,7 +4414,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/attachfiles", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public JSONObject uploadFile(HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] started");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] started");
 
 		JSONObject result = new JSONObject();
 
@@ -4446,7 +4446,7 @@ public class EzPMSGWController {
 				userId = (String) jsonParam.get("userId");
 			}
 
-			LOGGER.debug("####cnt:" + cnt + ", maxSize:" + maxSize
+			logger.debug("####cnt:" + cnt + ", maxSize:" + maxSize
 					+ ", userId:" + userId);
 
 			String serverName = request.getHeader("x-user-host");
@@ -4570,7 +4570,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] ended.");
 		return result;
 	}
 
@@ -4584,7 +4584,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/attachfiles", method = RequestMethod.DELETE, produces = "application/json;charset=UTF-8")
 	public JSONObject deleteFile(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/attachfiles] started.");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/attachfiles] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -4599,7 +4599,7 @@ public class EzPMSGWController {
 			String filePath = request.getParameter("filePath");
 			String fileList = request.getParameter("fileList");
 
-			LOGGER.debug("pDirPath : " + pDirPath + " | filePath : " + filePath
+			logger.debug("pDirPath : " + pDirPath + " | filePath : " + filePath
 					+ " | fileList : " + fileList);
 
 			if (fileList.length() != 0) {
@@ -4610,7 +4610,7 @@ public class EzPMSGWController {
 					String fileName = data[i].split(":")[1];
 					String extension = fileName.substring(fileName
 							.lastIndexOf(".") + 1);
-					LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
+					logger.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 
 					File file = new File(pDirPath + commonUtil.separator
 							+ filePath + commonUtil.separator + sGUID + "."
@@ -4629,7 +4629,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 			e.printStackTrace();
 		}
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/attachfiles] ended.");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/attachfiles] ended.");
 		return result;
 	}
 
@@ -4642,7 +4642,7 @@ public class EzPMSGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/attachfiles", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject downloadFile(HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] started.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -4657,7 +4657,7 @@ public class EzPMSGWController {
 			realPath += uploadFilePath + commonUtil.separator + "uploadFile"
 					+ filePath;
 
-			LOGGER.debug("filePath on download : " + realPath);
+			logger.debug("filePath on download : " + realPath);
 
 			File file = new File(realPath);
 
@@ -4689,7 +4689,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] ended.");
 		return result;
 	}
 
@@ -4704,7 +4704,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/boards/{itemId:.+}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject getBoardDetail(@PathVariable int itemId,
 			HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
 				+ "] started.");
 
 		JSONObject result = new JSONObject();
@@ -4735,7 +4735,7 @@ public class EzPMSGWController {
 			int authority = ezPMSService.getUserProjectRole(userId,
 					info.getTenantId(), projectId, info.getDeptId());
 
-			LOGGER.debug("authority : " + authority);
+			logger.debug("authority : " + authority);
 
 			result.put("authority", authority);
 			result.put("data", boardVO);
@@ -4747,7 +4747,7 @@ public class EzPMSGWController {
 			result.put("code", 1);
 			e.printStackTrace();
 		}
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "] ended.");
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "] ended.");
 		return result;
 	}
 
@@ -4761,7 +4761,7 @@ public class EzPMSGWController {
 	 */
 	public void uploadFile(String byteArray, String newName,
 			String storedFilePath) throws Exception {
-		LOGGER.debug("ezPMS uploadFile started.");
+		logger.debug("ezPMS uploadFile started.");
 
 		OutputStream bos = null;
 		String storedFilePathReal = (storedFilePath == null ? ""
@@ -4780,17 +4780,17 @@ public class EzPMSGWController {
 
 			bos = new FileOutputStream(storedFilePathReal + File.separator
 					+ newName);
-			LOGGER.debug("###" + storedFilePathReal + File.separator + newName
+			logger.debug("###" + storedFilePathReal + File.separator + newName
 					+ "###");
 			Decoder decoder = Base64.getDecoder();
 
 			bos.write(decoder.decode(byteArray));
 		} catch (FileNotFoundException fnfe) {
-			LOGGER.debug("fnfe: {}", fnfe);
+			logger.debug("fnfe: {}", fnfe);
 		} catch (IOException ioe) {
-			LOGGER.debug("ioe: {}", ioe);
+			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
-			LOGGER.debug("e: {}", e);
+			logger.debug("e: {}", e);
 		} finally {
 
 			if (bos != null) {
@@ -4798,11 +4798,11 @@ public class EzPMSGWController {
 				try {
 					bos.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 			}
 		}
-		LOGGER.debug("ezPMS uploadFile ended.");
+		logger.debug("ezPMS uploadFile ended.");
 	}
 
 	/**
@@ -4816,7 +4816,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/boards/{itemId}/viewer-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getBoardViewerCount(@PathVariable String itemId,
 			HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
 				+ "/viewer-count] started.");
 
 		JSONObject result = new JSONObject();
@@ -4840,7 +4840,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
 				+ "/viewer-count] ended.");
 
 		return result;
@@ -4857,7 +4857,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/boards/{itemId}/viewers", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getBoardViewerList(@PathVariable String itemId,
 			HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
 				+ "/viewers] started.");
 
 		JSONObject result = new JSONObject();
@@ -4879,7 +4879,7 @@ public class EzPMSGWController {
 			while (parameterNames.hasMoreElements()) {
 				String parameterName = parameterNames.nextElement();
 				param.put(parameterName, request.getParameter(parameterName));
-				// LOGGER.debug(parameterName + " : " +
+				// logger.debug(parameterName + " : " +
 				// request.getParameter(parameterName));
 			}
 
@@ -4895,7 +4895,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId
 				+ "/viewers] ended.");
 
 		return result;
@@ -4913,7 +4913,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/comments/list/{projectId}/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCommentList(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/comments/list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/comments/list/" + projectId
 				+ "/users/" + userId + "] started");
 		JSONObject result = new JSONObject();
 
@@ -4937,7 +4937,7 @@ public class EzPMSGWController {
 			while (parameterNames.hasMoreElements()) {
 				String parameterName = parameterNames.nextElement();
 				param.put(parameterName, request.getParameter(parameterName));
-				// LOGGER.debug(parameterName + " : " +
+				// logger.debug(parameterName + " : " +
 				// request.getParameter(parameterName));
 			}
 
@@ -4961,7 +4961,7 @@ public class EzPMSGWController {
 			String taskId = request.getParameter("taskId");
 			String groupId = request.getParameter("groupId");
 
-			LOGGER.debug("taskId : " + taskId + ", groupId : " + groupId);
+			logger.debug("taskId : " + taskId + ", groupId : " + groupId);
 
 			if (taskId != null && groupId != null) {
 
@@ -4989,7 +4989,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/comments/list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/comments/list/" + projectId
 				+ "/users/" + userId + "] ended");
 		return result;
 	}
@@ -5006,7 +5006,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/comments/list-count/{projectId}/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCommentListCount(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/comments/list-count/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/comments/list-count/"
 				+ projectId + "/users/" + userId + "] started");
 		JSONObject result = new JSONObject();
 
@@ -5026,7 +5026,7 @@ public class EzPMSGWController {
 			while (parameterNames.hasMoreElements()) {
 				String parameterName = parameterNames.nextElement();
 				param.put(parameterName, request.getParameter(parameterName));
-				// LOGGER.debug(parameterName + " : " +
+				// logger.debug(parameterName + " : " +
 				// request.getParameter(parameterName));
 			}
 
@@ -5059,7 +5059,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/comments/list-count/"
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/comments/list-count/"
 				+ projectId + "/users/" + userId + "] ended");
 		return result;
 	}
@@ -5075,12 +5075,12 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/comments", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addComment(HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/comments] started");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/comments] started");
 
 		JSONObject result = new JSONObject();
 
 		// Stream keyStream = jsonParam.keySet().stream().sorted();
-		// keyStream.forEach(key -> LOGGER.debug(key + " : " +
+		// keyStream.forEach(key -> logger.debug(key + " : " +
 		// jsonParam.get(key)));
 
 		try {
@@ -5101,7 +5101,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/comments] ended");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/comments] ended");
 		return result;
 	}
 
@@ -5116,12 +5116,12 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/comments", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteComment(HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/comments] started");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/comments] started");
 
 		JSONObject result = new JSONObject();
 
 		// Stream keyStream = jsonParam.keySet().stream().sorted();
-		// keyStream.forEach(key -> LOGGER.debug(key + " : " +
+		// keyStream.forEach(key -> logger.debug(key + " : " +
 		// jsonParam.get(key)));
 
 		try {
@@ -5140,7 +5140,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/comments] ended");
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/comments] ended");
 		return result;
 	}
 
@@ -5155,12 +5155,12 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/comments", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject modifyComment(HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/comments] started");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/comments] started");
 
 		JSONObject result = new JSONObject();
 
 		// Stream keyStream = jsonParam.keySet().stream().sorted();
-		// keyStream.forEach(key -> LOGGER.debug(key + " : " +
+		// keyStream.forEach(key -> logger.debug(key + " : " +
 		// jsonParam.get(key)));
 
 		try {
@@ -5179,7 +5179,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/comments] ended");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/comments] ended");
 		return result;
 	}
 
@@ -5195,7 +5195,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/sysParams/{userId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject getSysParam(@PathVariable String userId,
 			HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/sysParams/" + userId
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/sysParams/" + userId
 				+ "] started");
 
 		JSONObject result = new JSONObject();
@@ -5217,7 +5217,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/sysParams/" + userId
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/sysParams/" + userId
 				+ "] ended");
 
 		return result;
@@ -5234,12 +5234,12 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/boards/checkIfHasReplies", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject checkIfBoardHasReplies(HttpServletRequest request,
 			@RequestBody JSONObject jsonParam) {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/boards/checkIfHasReplies] started");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/boards/checkIfHasReplies] started");
 
 		JSONObject result = new JSONObject();
 
 		// Stream keyStream = jsonParam.keySet().stream().sorted();
-		// keyStream.forEach(key -> LOGGER.debug(key + " : " +
+		// keyStream.forEach(key -> logger.debug(key + " : " +
 		// jsonParam.get(key)));
 
 		try {
@@ -5261,7 +5261,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/boards/checkIfHasReplies] ended");
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/boards/checkIfHasReplies] ended");
 		return result;
 	}
 
@@ -5280,7 +5280,7 @@ public class EzPMSGWController {
 	// public JSONObject checkIfPreTaskRelExist(HttpServletRequest request,
 	// @RequestBody JSONObject jsonParam,
 	// @PathVariable int pretaskId) {
-	// LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/"
+	// logger.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/"
 	// + pretaskId + "] started");
 	//
 	// JSONObject result = new JSONObject();
@@ -5304,7 +5304,7 @@ public class EzPMSGWController {
 	// e.printStackTrace();
 	// }
 	//
-	// LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/"
+	// logger.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/"
 	// + pretaskId + "] ended");
 	// return result;
 	// }
@@ -5323,13 +5323,13 @@ public class EzPMSGWController {
 	public JSONObject deletePreTaskRel(@PathVariable long taskId,
 			@PathVariable int pretaskId, @RequestBody JSONObject jsonParam,
 			HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId
 				+ "/pretasks/" + pretaskId + "] started");
 
 		JSONObject result = new JSONObject();
 
 		// Stream keyStream = jsonParam.keySet().stream().sorted();
-		// keyStream.forEach(key -> LOGGER.debug(key + " : " +
+		// keyStream.forEach(key -> logger.debug(key + " : " +
 		// jsonParam.get(key)));
 
 		try {
@@ -5370,7 +5370,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId
 				+ "/pretasks/" + pretaskId + "] ended");
 		return result;
 	}
@@ -5387,13 +5387,13 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/allSchedules/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAllSchedules(@PathVariable String userId,
 			@RequestBody JSONObject jsonParam, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/allSchedules/users/" + userId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/allSchedules/users/" + userId
 				+ "] started");
 
 		JSONObject result = new JSONObject();
 
 		// Stream keyStream = jsonParam.keySet().stream().sorted();
-		// keyStream.forEach(key -> LOGGER.debug(key + " : " +
+		// keyStream.forEach(key -> logger.debug(key + " : " +
 		// jsonParam.get(key)));
 
 		try {
@@ -5430,7 +5430,7 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/allSchedules/users/" + userId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/allSchedules/users/" + userId
 				+ "] ended");
 		return result;
 	}
@@ -5447,7 +5447,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/member-list/{projectId}/groupId/{groupId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getGroupMemberList(@PathVariable Long projectId,
 			@PathVariable Long groupId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/member-list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/member-list/" + projectId
 				+ "/groupId/" + groupId + "] started");
 
 		JSONObject result = new JSONObject();
@@ -5473,7 +5473,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/member-list/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/member-list/" + projectId
 				+ "/groupId/" + groupId + "] ended");
 		return result;
 	}
@@ -5490,7 +5490,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFolderList(@PathVariable Long projectId,
 			HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/board/folders] started");
 
 		JSONObject result = new JSONObject();
@@ -5517,7 +5517,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
 				+ "/board/folders] ended");
 		return result;
 	}
@@ -5534,7 +5534,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject addBoardFolder(@PathVariable Long projectId,
 			HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId
 				+ "/board/folders] started");
 
 		JSONObject result = new JSONObject();
@@ -5571,7 +5571,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId
 				+ "/board/folders] ended");
 		return result;
 	}
@@ -5588,7 +5588,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders/{folderId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getBoardFolder(@PathVariable Long projectId,
 			@PathVariable Long folderId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId
 				+ "/board/folders/" + folderId + "] started");
 
 		JSONObject result = new JSONObject();
@@ -5613,7 +5613,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId
 				+ "/board/folders/" + folderId + "] started");
 		return result;
 	}
@@ -5630,7 +5630,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders/{folderId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateFolder(@PathVariable Long projectId,
 			@PathVariable Long folderId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId
 				+ "/board/folders/" + folderId + "] started");
 
 		JSONObject result = new JSONObject();
@@ -5671,7 +5671,7 @@ public class EzPMSGWController {
 				roleCheck = "permitted";
 			}
 
-			LOGGER.debug("roleCheck : " + roleCheck);
+			logger.debug("roleCheck : " + roleCheck);
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", roleCheck);
@@ -5682,7 +5682,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId
 				+ "/board/folders/" + folderId + "] started");
 		return result;
 	}
@@ -5699,7 +5699,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders/{folderId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteFolder(@PathVariable Long projectId,
 			@PathVariable Long folderId, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId
 				+ "/board/folders/" + folderId + "] started");
 
 		JSONObject result = new JSONObject();
@@ -5737,7 +5737,7 @@ public class EzPMSGWController {
 				roleCheck = "permitted";
 			}
 
-			LOGGER.debug("roleCheck : " + roleCheck);
+			logger.debug("roleCheck : " + roleCheck);
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", roleCheck);
@@ -5748,7 +5748,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId
+		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId
 				+ "/board/folders/" + folderId + "] ended");
 		return result;
 	}
@@ -5761,7 +5761,7 @@ public class EzPMSGWController {
 	public JSONObject updateTaskName(@PathVariable String taskId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
 				+ "/name/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
@@ -5849,7 +5849,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
 				+ "/name/users/" + userId + "] ended.");
 		return result;
 	}
@@ -5865,7 +5865,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/groups/{groupId}/realStartEndDate", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateGroupRealStartEndDate(@PathVariable Long groupId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId
 				+ "/realStartEndDate] started.");
 
 		JSONObject result = new JSONObject();
@@ -5893,8 +5893,8 @@ public class EzPMSGWController {
 
 				Date realStartDate = (Date) minMaxDates.get("realStartDate");
 				Date realEndDate = (Date) minMaxDates.get("realEndDate");
-				LOGGER.debug("min realStartDate : " + realStartDate);
-				LOGGER.debug("max realEndDate   : " + realEndDate);
+				logger.debug("min realStartDate : " + realStartDate);
+				logger.debug("max realEndDate   : " + realEndDate);
 
 				if (realStartDate != null) {
 					map.put("realStartDate", realStartDate);
@@ -5905,7 +5905,7 @@ public class EzPMSGWController {
 				int completedTaskCount = (int) list.stream()
 						.filter(vo -> vo.getStatus().equals("C")).count();
 
-				LOGGER.debug("completedTaskCount : " + completedTaskCount
+				logger.debug("completedTaskCount : " + completedTaskCount
 						+ ", list.size() : " + list.size());
 
 				if (realEndDate != null && completedTaskCount == list.size()) {
@@ -5926,7 +5926,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId
 				+ "/realStartEndDate] ended.");
 		return result;
 	}

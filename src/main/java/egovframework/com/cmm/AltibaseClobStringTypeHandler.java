@@ -46,7 +46,7 @@ import egovframework.rte.psl.orm.ibatis.support.AbstractLobTypeHandler;
 @SuppressWarnings("deprecation")
 public class AltibaseClobStringTypeHandler extends AbstractLobTypeHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AltibaseClobStringTypeHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(AltibaseClobStringTypeHandler.class);
 
 	/**
 	 * Constructor used by iBATIS: fetches config-time LobHandler from
@@ -85,7 +85,7 @@ public class AltibaseClobStringTypeHandler extends AbstractLobTypeHandler {
 				read_data.append(buf, 0, read_length);
 			}
 	    } catch (IOException ie) {
-	    	LOGGER.debug("ie: {}", ie);//SQLException sqle = new SQLException(ie.getMessage());
+	    	logger.debug("ie: {}", ie);//SQLException sqle = new SQLException(ie.getMessage());
 	    	//throw sqle;
     	// 2011.10.10 보안점검 후속조치
 	    } finally {
@@ -93,7 +93,7 @@ public class AltibaseClobStringTypeHandler extends AbstractLobTypeHandler {
 			try {
 			    rd.close();
 			} catch (Exception ignore) {
-				LOGGER.debug("IGNORE: {}", ignore.getMessage());
+				logger.debug("IGNORE: {}", ignore.getMessage());
 			}
 		    }
 		}

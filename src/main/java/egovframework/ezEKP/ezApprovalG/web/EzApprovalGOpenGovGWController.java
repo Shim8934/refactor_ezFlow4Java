@@ -40,13 +40,13 @@ public class EzApprovalGOpenGovGWController {
     @Autowired
     EzApprovalGOpenGovService ezApprovalGOpenGovService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGOpenGovGWController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EzApprovalGOpenGovGWController.class);
 
     //원문공개 요청
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/openGov/{docId}/file/{fileId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public JSONObject getOpenGovDocInfo(@PathVariable String docId, @PathVariable String fileId, HttpServletRequest request, Locale locale) {
-        LOGGER.debug("G/W OPENGOV [POST /openGov/" + docId + "/file/" + fileId + "] started.");
+        logger.debug("G/W OPENGOV [POST /openGov/" + docId + "/file/" + fileId + "] started.");
 
         JSONObject result = new JSONObject();
 
@@ -61,7 +61,7 @@ public class EzApprovalGOpenGovGWController {
 
             if (!companyID.equals(config.getProperty("openGov_companyNum"))) {
                 resultCode = "ERR_300";
-                LOGGER.debug(getMessage(resultCode) + " ::::: " + "COMPANYID error");
+                logger.debug(getMessage(resultCode) + " ::::: " + "COMPANYID error");
                 data = getMessage(resultCode);
 
                 result.put("status", "fail");
@@ -74,7 +74,7 @@ public class EzApprovalGOpenGovGWController {
                 String openFlag = ezApprovalGOpenGovService.getOpenGovDocOpenFlag(docID);
                 if (openFlag == null || openFlag.equals("")) {
                     resultCode = "ERR_801";
-                    LOGGER.debug(getMessage(resultCode) + " ::::: " + "DOCINFO EMPTY");
+                    logger.debug(getMessage(resultCode) + " ::::: " + "DOCINFO EMPTY");
                     data = getMessage(resultCode);
 
                     result.put("status", "fail");
@@ -85,7 +85,7 @@ public class EzApprovalGOpenGovGWController {
                 } else {
                     if (openFlag.equals("3")) {
                         resultCode = "ERR_802";
-                        LOGGER.debug(getMessage(resultCode) + " ::::: " + getMessage(resultCode));
+                        logger.debug(getMessage(resultCode) + " ::::: " + getMessage(resultCode));
                         data = getMessage(resultCode);
 
                         result.put("status", "fail");
@@ -99,7 +99,7 @@ public class EzApprovalGOpenGovGWController {
                             href = ezApprovalGOpenGovService.getOpenGovDocHref(docID);
                             if (href == null) {
                                 resultCode = "ERR_801";
-                                LOGGER.debug(getMessage(resultCode) + " ::::: " + "DOC empty");
+                                logger.debug(getMessage(resultCode) + " ::::: " + "DOC empty");
                                 data = getMessage(resultCode);
 
                                 result.put("status", "fail");
@@ -113,7 +113,7 @@ public class EzApprovalGOpenGovGWController {
                             href = ezApprovalGOpenGovService.getOpenGovAttachHref(docID, sn);
                             if (href == null || !Paths.get(commonUtil.getRealPath(request), href).toFile().exists()) {
                                 resultCode = "ERR_801";
-                                LOGGER.debug(getMessage(resultCode) + " ::::: " + "ATTACH FILE empty");
+                                logger.debug(getMessage(resultCode) + " ::::: " + "ATTACH FILE empty");
                                 data = getMessage(resultCode);
 
                                 result.put("status", "fail");
@@ -124,11 +124,11 @@ public class EzApprovalGOpenGovGWController {
                             }
                         }
 
-                        LOGGER.debug("href = " + href);
+                        logger.debug("href = " + href);
 
                         String fileHref = commonUtil.detectPathTraversal(commonUtil.getRealPath(request) + href);
 
-                        LOGGER.debug("fileType = " + href.substring(href.length() - 3, href.length()));
+                        logger.debug("fileType = " + href.substring(href.length() - 3, href.length()));
 
                         //	문서가 한글일때
                         if (href.substring(href.length() - 3, href.length()).equals("hwp")) {
@@ -157,13 +157,13 @@ public class EzApprovalGOpenGovGWController {
                 }
             }
         } catch (Exception e) {
-            LOGGER.debug(e.getMessage());
+            logger.debug(e.getMessage());
             e.printStackTrace();
             result.put("status", "error");
             result.put("code", "1");
         }
 
-        LOGGER.debug("G/W OPENGOV [POST /openGov/" + docId + "/file/" + fileId + "] ended.");
+        logger.debug("G/W OPENGOV [POST /openGov/" + docId + "/file/" + fileId + "] ended.");
 
         return result;
     }
@@ -172,9 +172,9 @@ public class EzApprovalGOpenGovGWController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value = "/openGovComplete/{docId}/file/{fileId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public JSONObject openGovComplete(@PathVariable String docId, @PathVariable String fileId, HttpServletRequest request, Locale locale) {
-        LOGGER.debug("G/W OPENGOV [POST /openGovComplete/" + docId + "/file/" + fileId + "] started.");
+        logger.debug("G/W OPENGOV [POST /openGovComplete/" + docId + "/file/" + fileId + "] started.");
 
-        LOGGER.debug("docId = " + docId + ", fileId = " + fileId);
+        logger.debug("docId = " + docId + ", fileId = " + fileId);
 
         JSONObject result = new JSONObject();
 
@@ -189,7 +189,7 @@ public class EzApprovalGOpenGovGWController {
             result.put("code", "1");
         }
 
-        LOGGER.debug("G/W OPENGOV [POST /openGovComplete/" + docId + "/file/" + fileId + "] ended.");
+        logger.debug("G/W OPENGOV [POST /openGovComplete/" + docId + "/file/" + fileId + "] ended.");
         return result;
     }
 

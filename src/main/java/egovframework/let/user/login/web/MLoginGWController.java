@@ -94,7 +94,7 @@ public class MLoginGWController {
 	private EzSystemAdminService ezSystemAdminService;
 	
     /** Logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(MLoginGWController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MLoginGWController.class);
     
     @Autowired
     private EzEmailUtil ezEmailUtil;
@@ -108,7 +108,7 @@ public class MLoginGWController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezUser/login/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
     public JSONObject login(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
-    	LOGGER.debug("=========================================== G/W login ============================================");
+    	logger.debug("=========================================== G/W login ============================================");
     	
     	JSONObject result = new JSONObject();
 
@@ -124,7 +124,7 @@ public class MLoginGWController {
 				uid = EgovFileScrty.decryptRsa(pk, userId);
 				
 				if (uid == null || uid.equals("")) {
-					LOGGER.debug("invalid uid=" + uid);
+					logger.debug("invalid uid=" + uid);
 					
 					result.put("status", "error");
 					result.put("code", "2");			
@@ -140,7 +140,7 @@ public class MLoginGWController {
 				uid = userId;
 			}
 
-			LOGGER.debug("isSLOSupport={},uid={}", isSLOSupport, uid);
+			logger.debug("isSLOSupport={},uid={}", isSLOSupport, uid);
 
     		String pwd = "";
     		
@@ -163,7 +163,7 @@ public class MLoginGWController {
     		int numberOfLoginFailPermit = 0;
     		// 로그인 실패 최대 허용 횟수를 구한다.
     		String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId, "MaxAllowedCountOfLoginFail");
-    		LOGGER.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
+    		logger.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
 			// String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
 					
 			if (!maxAllowedCountOfLoginFail.equals("")) {
@@ -175,7 +175,7 @@ public class MLoginGWController {
 			}
 			
     		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
-    			LOGGER.debug("user does not exist :" + uid);
+    			logger.debug("user does not exist :" + uid);
             	
     			result.put("status", "error");
     			result.put("code", "3");			
@@ -190,12 +190,12 @@ public class MLoginGWController {
 				
 				resultVO.setIp(ip);
 
-				LOGGER.debug("request.getHeader: {}, ClientUtil.getClientIP: {}, finally ip: {}",
+				logger.debug("request.getHeader: {}, ClientUtil.getClientIP: {}, finally ip: {}",
 						request.getHeader("ip"), ClientUtil.getClientIP(request), ip);
         		
     			// 로그인 후 IP 주소 체크
 				boolean ipAddressChk = ipAccessCheck(resultVO);
-				LOGGER.debug("ipAddressChk=" + ipAddressChk);
+				logger.debug("ipAddressChk=" + ipAddressChk);
 				
 				if (!ipAddressChk) {
 					result.put("status", "error");
@@ -230,7 +230,7 @@ public class MLoginGWController {
     				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
     				
     				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-    					LOGGER.debug("cannot use mobile login. userId=" + uid);
+    					logger.debug("cannot use mobile login. userId=" + uid);
     					
     					result.put("status", "error");
     					result.put("code", "6");
@@ -256,17 +256,17 @@ public class MLoginGWController {
     					
     					if (!deviceId.equals("")) {
     						String inputParams = "userId=" + uid + "&deviceId=" + deviceId;
-    						LOGGER.debug("userId=" + uid + ",deviceId=" + deviceId);
+    						logger.debug("userId=" + uid + ",deviceId=" + deviceId);
     						
     						String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
     						String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
-    						LOGGER.debug("getResult=" + getResult);
+    						logger.debug("getResult=" + getResult);
     						
     						JSONParser parser = new JSONParser();
     						JSONObject resultObj = (JSONObject) parser.parse(getResult);
 
     						if (Integer.valueOf(String.valueOf(resultObj.get("data"))) > 0) {
-    							LOGGER.debug("this device cannot use. userId=" + uid);
+    							logger.debug("this device cannot use. userId=" + uid);
     							
     							result.put("status", "error");
     							result.put("code", "6");			
@@ -297,7 +297,7 @@ public class MLoginGWController {
     		    				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
     						
     		    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-    		    					LOGGER.debug("cannot use mobile login. oldUserId=" + oldUserId);
+    		    					logger.debug("cannot use mobile login. oldUserId=" + oldUserId);
     		    					
     		    					result.put("status", "error");
     		    					result.put("code", "6");
@@ -337,10 +337,10 @@ public class MLoginGWController {
 
 									if (!userInputPin.equals("") && !authPin.equals("") && authPin.equals(userInputPin)) {
 										pinLoginAuth = true;
-										LOGGER.debug("pin Login Auth Successed.");
+										logger.debug("pin Login Auth Successed.");
 									}
 									else {
-										LOGGER.debug("pin Login Auth Failed.");
+										logger.debug("pin Login Auth Failed.");
 									}
 								}
     						}
@@ -352,11 +352,11 @@ public class MLoginGWController {
 					
 					if (!deviceId.equals("")) {
 						String inputParams = "userId=" + uid + "&deviceId=" + deviceId;
-						LOGGER.debug("userId=" + uid + ",deviceId=" + deviceId);
+						logger.debug("userId=" + uid + ",deviceId=" + deviceId);
 						
 						String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
 						String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
-						LOGGER.debug("getResult=" + getResult);
+						logger.debug("getResult=" + getResult);
 						
 						JSONParser parser = new JSONParser();
 						JSONObject resultObj = (JSONObject) parser.parse(getResult);
@@ -380,14 +380,14 @@ public class MLoginGWController {
 							if (pinState.equalsIgnoreCase("Y")) {
 								if (!userInputPin.equals("") && !authPin.equals("") && authPin.equals(userInputPin)) {
 									pinLoginAuth = true;
-									LOGGER.debug("pin Login Auth Successed.");
+									logger.debug("pin Login Auth Successed.");
 								}
 								else {
-									LOGGER.debug("pin Login Auth Failed.");
+									logger.debug("pin Login Auth Failed.");
 								}
 							}
 							else {
-								LOGGER.debug("pin Login not useded.");
+								logger.debug("pin Login not useded.");
 							}
 						}
 					}
@@ -438,7 +438,7 @@ public class MLoginGWController {
 			         // 사원번호를 사용한 로그인을 허용하지 않는 경우
 					} else {
 						//This kind of login is not allowed in his/her tenant
-						LOGGER.debug("user does not exist :" + uid);
+						logger.debug("user does not exist :" + uid);
 		            	
 		    			result.put("status", "error");
 		    			result.put("code", "3");			
@@ -453,7 +453,7 @@ public class MLoginGWController {
     	    		
     	    		if (useSharedMailbox.equals("YES")) {
     	    			if (resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
-    	    				LOGGER.debug("Cannot login with shared mailbox account.");
+    	    				logger.debug("Cannot login with shared mailbox account.");
     	    				
     	    				result.put("status", "error");
     		    			result.put("code", "3");			
@@ -469,7 +469,7 @@ public class MLoginGWController {
     	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
     	        		int flag = checkStopUser(tenantId, resultVO.getId());
     	        		if(flag > 0) {
-    	        			LOGGER.debug("stopUser");
+    	        			logger.debug("stopUser");
     	        			result.put("status", "error");
         					result.put("code", "8");			
         					result.put("data", "stopUser");
@@ -500,7 +500,7 @@ public class MLoginGWController {
         				int diff = 1;
         				
         				if (resultVO.getLoginCnt() == 0 && !isSLOSupport) { // SLO의 경우에는 First Login도 성공으로 처리한다.
-        					LOGGER.debug("isFirstLogin");
+        					logger.debug("isFirstLogin");
         					
         					// 2021-12-28 이사라 : 접속로그 실패 저장
     						resultVO.setIp(ip);
@@ -544,17 +544,17 @@ public class MLoginGWController {
     								passwordUpdateDT = resultVO.getUpdateDT();
     							}
     		            	
-    							LOGGER.debug("passwordUpdateDT=" + passwordUpdateDT);
-    							LOGGER.debug("baseDT=" + baseDT);
+    							logger.debug("passwordUpdateDT=" + passwordUpdateDT);
+    							logger.debug("baseDT=" + baseDT);
         						
         						//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
         						diff = EgovDateUtil.getDaysDiff(baseDT, passwordUpdateDT);	    			
-    							LOGGER.debug("diff=" + diff);
+    							logger.debug("diff=" + diff);
         					}	        	
         				}        	        	
         				//0보다 작아지면 패스워드 변경기한 Expired
         				if (diff <= 0) {
-        					LOGGER.debug("isExpireDate");
+        					logger.debug("isExpireDate");
         					
         					// 2021-12-28 이사라 : 접속로그 실패 저장
     						resultVO.setIp(ip);
@@ -604,7 +604,7 @@ public class MLoginGWController {
         					
         					// 2021-12-28 이사라 : 세션ID를 세션코드로 입력 
         					String sessionCode = request.getHeader("mSessionId") == null ? ClientUtil.getClientIP(request) : request.getHeader("mSessionId");
-        		        	LOGGER.debug("Login sessionCode = " + sessionCode);
+        		        	logger.debug("Login sessionCode = " + sessionCode);
         		        	
         					//접속 로그정보 저장
         					resultVO.setIp(mIp);
@@ -894,7 +894,7 @@ public class MLoginGWController {
       @SuppressWarnings("unchecked")
   	  @RequestMapping(value="/mobile/ezUser/logout/sessions/{mSessionId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
       public JSONObject logout(@PathVariable String mSessionId, HttpServletRequest request, Locale locale) throws Exception {
-      	LOGGER.debug("=========================================== G/W logout ============================================");
+      	logger.debug("=========================================== G/W logout ============================================");
       	
       	JSONObject result = new JSONObject();
       	String serverName = request.getHeader("x-user-host");
@@ -903,7 +903,7 @@ public class MLoginGWController {
       	
       	try {
       		if (mSessionId == null || mSessionId.equals("")) {
-      			LOGGER.debug("invalid mSessionId= " + mSessionId);
+      			logger.debug("invalid mSessionId= " + mSessionId);
       			
       			result.put("status", "error");
       			result.put("code", "2");			
@@ -914,7 +914,7 @@ public class MLoginGWController {
       		       	
            	loginVO.setSessionCode(mSessionId);
            	loginVO.setTenantId(tenantId);
-           	LOGGER.debug("G/W logout sessionCode : " + mSessionId);
+           	logger.debug("G/W logout sessionCode : " + mSessionId);
            	
            	loginService.updateLog(loginVO);
       		
@@ -937,7 +937,7 @@ public class MLoginGWController {
     @SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezUser/loginFromAzure/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
     public JSONObject loginFromAzure(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
-    	LOGGER.debug("loginFromAzure started. userId=" + userId);
+    	logger.debug("loginFromAzure started. userId=" + userId);
     	
     	JSONObject result = new JSONObject();
     	
@@ -945,7 +945,7 @@ public class MLoginGWController {
     		String uid = userId;
     		
     		if (uid == null || uid.equals("")) {
-    			LOGGER.debug("invalid uid=" + uid);
+    			logger.debug("invalid uid=" + uid);
     			
     			result.put("status", "error");
     			result.put("code", "2");			
@@ -970,7 +970,7 @@ public class MLoginGWController {
     		result.put("useLoginCookieSSO", useSSOCookie);
     					
     		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
-    			LOGGER.debug("user does not exist :" + uid);
+    			logger.debug("user does not exist :" + uid);
             	
     			result.put("status", "error");
     			result.put("code", "3");			
@@ -984,12 +984,12 @@ public class MLoginGWController {
 				String browser = request.getHeader("browser") == null ? ClientUtil.getClientInfo(request, "browser") : request.getHeader("browser");
 				resultVO.setIp(ip);
 
-				LOGGER.debug("request.getHeader: {}, ClientUtil.getClientIP: {}, finally ip: {}",
+				logger.debug("request.getHeader: {}, ClientUtil.getClientIP: {}, finally ip: {}",
 						request.getHeader("ip"), ClientUtil.getClientIP(request), ip);
         		
     			// 로그인 후 IP 주소 체크
 				boolean ipAddressChk = ipAccessCheck(resultVO);
-				LOGGER.debug("ipAddressChk=" + ipAddressChk);
+				logger.debug("ipAddressChk=" + ipAddressChk);
 				
 				if (!ipAddressChk) {
 					result.put("status", "error");
@@ -1023,7 +1023,7 @@ public class MLoginGWController {
     				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
     				
     				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-    					LOGGER.debug("cannot use mobile login. userId=" + uid);
+    					logger.debug("cannot use mobile login. userId=" + uid);
     					
     					result.put("status", "error");
     					result.put("code", "6");
@@ -1049,17 +1049,17 @@ public class MLoginGWController {
     					
     					if (!deviceId.equals("")) {
     						String inputParams = "userId=" + uid + "&deviceId=" + deviceId;
-    						LOGGER.debug("userId=" + uid + ",deviceId=" + deviceId);
+    						logger.debug("userId=" + uid + ",deviceId=" + deviceId);
     						
     						String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
     						String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
-    						LOGGER.debug("getResult=" + getResult);
+    						logger.debug("getResult=" + getResult);
     						
     						JSONParser parser = new JSONParser();
     						JSONObject resultObj = (JSONObject) parser.parse(getResult);
 
     						if (Integer.valueOf(String.valueOf(resultObj.get("data"))) > 0) {
-    							LOGGER.debug("this device cannot use. userId=" + uid);
+    							logger.debug("this device cannot use. userId=" + uid);
     							
     							result.put("status", "error");
     							result.put("code", "6");			
@@ -1090,7 +1090,7 @@ public class MLoginGWController {
     		    				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
     						
     		    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-    		    					LOGGER.debug("cannot use mobile login. oldUserId=" + oldUserId);
+    		    					logger.debug("cannot use mobile login. oldUserId=" + oldUserId);
     		    					
     		    					result.put("status", "error");
     		    					result.put("code", "6");
@@ -1122,7 +1122,7 @@ public class MLoginGWController {
 	    		
 	    		if (useSharedMailbox.equals("YES")) {
 	    			if (resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
-	    				LOGGER.debug("Cannot login with shared mailbox account.");
+	    				logger.debug("Cannot login with shared mailbox account.");
 	    				
 	    				result.put("status", "error");
 		    			result.put("code", "3");			
@@ -1162,7 +1162,7 @@ public class MLoginGWController {
 	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
 	        		int flag = checkStopUser(tenantId, resultVO.getId());
 	        		if(flag > 0) {
-	        			LOGGER.debug("stopUser");
+	        			logger.debug("stopUser");
 	        			result.put("status", "error");
     					result.put("code", "8");			
     					result.put("data", "stopUser");
@@ -1214,7 +1214,7 @@ public class MLoginGWController {
 				
 				// 2021-12-28 이사라 : 세션ID를 세션코드로 입력 
 				String sessionCode = request.getHeader("mSessionId") == null ? ClientUtil.getClientIP(request) : request.getHeader("mSessionId");
-	        	LOGGER.debug("Login sessionCode = " + sessionCode);
+	        	logger.debug("Login sessionCode = " + sessionCode);
 	        	
 				//접속 로그정보 저장
 				resultVO.setIp(mIp);
@@ -1338,7 +1338,7 @@ public class MLoginGWController {
 				result.put("data", map);
 				result.put("dataSSO", mapSSO);
 				
-				LOGGER.debug("loginFromAzure ended.");
+				logger.debug("loginFromAzure ended.");
 				
 				return result;
     		}
@@ -1360,7 +1360,7 @@ public class MLoginGWController {
     @ResponseBody
     public JSONObject updateLoginDeviceInfo(@RequestBody String bodyData, 
     		HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	LOGGER.debug("updateLoginDeviceInfo started.");
+    	logger.debug("updateLoginDeviceInfo started.");
     	
     	int resultCnt = -1;
     	String responseObj = null;
@@ -1395,30 +1395,30 @@ public class MLoginGWController {
     				"&" + badge + "&" + state + "&" + pushState + "&" + isLogin + "&" + startMenu + 
     				"&" + loginLock + "&" + isPasswordChange + "&" + extension1 + "&" + extension2 + 
     				"&" + tenantIdParmas + "&" + pin + "&" + pinState + "&" + biometric;
-    		LOGGER.debug("inputParams=" + inputParams);
+    		logger.debug("inputParams=" + inputParams);
     		
     		String requestURL = "/ezTalkGate/updateLoginDeviceInfo";
     		
     		responseObj = ezEmailUtil.getWebServiceResult(
     							config.getProperty("config.JGwServerURL") + requestURL, inputParams);
-    		LOGGER.debug("responseObj=" + responseObj);
+    		logger.debug("responseObj=" + responseObj);
     		
     		JSONObject resultObj = (JSONObject) jsonParser.parse(responseObj);
     		resultCnt = Integer.valueOf(String.valueOf(resultObj.get("resultCnt")));
-			LOGGER.debug("resultCnt=" + resultCnt);
+			logger.debug("resultCnt=" + resultCnt);
 			
 			if (resultCnt > 0 && resultObj.get("resultCode").equals("OK")) {
 				result.put("status", "ok");
 				result.put("code", "0");
 				result.put("data", resultCnt);
 
-				LOGGER.debug("device info updated ok.");
+				logger.debug("device info updated ok.");
 			} else {
 				result.put("status", "error");
 				result.put("code", "1");
 				result.put("data", "device info update fail");
 
-				LOGGER.debug("device info update fail." + userId + ", devId=" + devId);
+				logger.debug("device info update fail." + userId + ", devId=" + devId);
 			}
 			
 		} catch (Exception e) {
@@ -1429,14 +1429,14 @@ public class MLoginGWController {
 			e.printStackTrace();
 		}
     	
-    	LOGGER.debug("updateLoginDeviceInfo ended.");
+    	logger.debug("updateLoginDeviceInfo ended.");
 
     	return result;
     }
     
 	@RequestMapping(value="/mobile/ezUser/login/users/{userId}/multilogin", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject validMultiLogin(@PathVariable String userId, @RequestParam String multiLoginTime, HttpServletRequest request) throws Exception {
-		LOGGER.debug("validMultiLogin started.");
+		logger.debug("validMultiLogin started.");
 
 		Map<String, String> result = new HashMap<>();
 
@@ -1459,7 +1459,7 @@ public class MLoginGWController {
 			result.put("data", "server error: " + e.getMessage());
 		}
 
-		LOGGER.debug("validMultiLogin ended.");
+		logger.debug("validMultiLogin ended.");
 
 		return new JSONObject(result);
 	}
@@ -1467,7 +1467,7 @@ public class MLoginGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezUser/login/users/{userId}/valid", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject valid(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
-		LOGGER.debug("valid started.");
+		logger.debug("valid started.");
 		JSONObject result = new JSONObject();
 
 		String serverName = request.getHeader("x-user-host");
@@ -1483,7 +1483,7 @@ public class MLoginGWController {
 			adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
 
 			if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-				LOGGER.debug("cannot use mobile login. userId={}", userId);
+				logger.debug("cannot use mobile login. userId={}", userId);
 
 				result.put("status", "error");
 				result.put("code", "6");
@@ -1499,17 +1499,17 @@ public class MLoginGWController {
 			}
 
 			String inputParams = "userId=" + userId + "&deviceId=" + deviceId;
-			LOGGER.debug("userId=" + userId + ",deviceId=" + deviceId);
+			logger.debug("userId=" + userId + ",deviceId=" + deviceId);
 
 			String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
 			String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
-			LOGGER.debug("getResult=" + getResult);
+			logger.debug("getResult=" + getResult);
 
 			JSONParser parser = new JSONParser();
 			JSONObject resultObj = (JSONObject) parser.parse(getResult);
 
 			if (Integer.valueOf(String.valueOf(resultObj.get("data"))) > 0) {
-				LOGGER.debug("this device cannot use. userId=" + userId);
+				logger.debug("this device cannot use. userId=" + userId);
 
 				result.put("status", "error");
 				result.put("code", "6");
@@ -1526,7 +1526,7 @@ public class MLoginGWController {
 			adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
 
 			if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-				LOGGER.debug("cannot use mobile login. oldUserId=" + oldUserId);
+				logger.debug("cannot use mobile login. oldUserId=" + oldUserId);
 
 				result.put("status", "error");
 				result.put("code", "6");
@@ -1538,14 +1538,14 @@ public class MLoginGWController {
 
 		result.put("status", "ok");
 		result.put("code", "0");
-		LOGGER.debug("valid ended.");
+		logger.debug("valid ended.");
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezUser/pinLogin", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPinLoginInfo(HttpServletRequest request, Locale locale) throws Exception {
-		LOGGER.debug("pinLogin started.");
+		logger.debug("pinLogin started.");
 
 		JSONObject result = new JSONObject();
     	String deviceId = request.getParameter("deviceId");
@@ -1571,14 +1571,14 @@ public class MLoginGWController {
 			e.printStackTrace();
     	}
     	
-    	LOGGER.debug("pinLogin ended.");
+    	logger.debug("pinLogin ended.");
 		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezUser/pinLogin/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject pinLogin(@PathVariable String userId, HttpServletRequest request, Locale locale) throws Exception {
-		LOGGER.debug("pinLogin started.");
+		logger.debug("pinLogin started.");
 
 		JSONObject result = new JSONObject();
     	String deviceId = request.getParameter("deviceId");
@@ -1590,7 +1590,7 @@ public class MLoginGWController {
     		String uid = EgovFileScrty.decryptRsa(pk, userId);
     		
     		if (uid == null || uid.equals("")) {
-    			LOGGER.debug("invalid uid=" + uid);
+    			logger.debug("invalid uid=" + uid);
     			
     			result.put("status", "error");
     			result.put("code", "2");			
@@ -1635,7 +1635,7 @@ public class MLoginGWController {
 			e.printStackTrace();
     	}
     	
-    	LOGGER.debug("pinLogin ended.");
+    	logger.debug("pinLogin ended.");
 		return result;
 	}
 	
@@ -1672,14 +1672,14 @@ public class MLoginGWController {
     }
     
     public boolean ipAccessCheck(LoginVO loginVO) throws Exception {
-    	LOGGER.debug("ipAccessCheck start");
+    	logger.debug("ipAccessCheck start");
     	
     	String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", loginVO.getTenantId());
     	useIPAccess = useIPAccess.equals("") ? "NO" : useIPAccess;
 		boolean returnValue = false;
     	
     	if (useIPAccess.equals("NO")) {
-    		LOGGER.debug("ipAccessCheck ended.");
+    		logger.debug("ipAccessCheck ended.");
     		return true;
     	} else { // uerIPAccess 사용하면 IP, ID 체크
     		String topID = loginVO.getCompanyID();
@@ -1696,7 +1696,7 @@ public class MLoginGWController {
     			for (int i = 0; i < accessIdList.size(); i++) {
     				String getListId = accessIdList.get(i).getCn();
     				if (loginVO.getId().equals(getListId)) {
-    					LOGGER.debug("id checked");
+    					logger.debug("id checked");
     					return true;
     				}
     			}
@@ -1707,7 +1707,7 @@ public class MLoginGWController {
     			for (int i = 0; i < accessDeptList.size(); i++) {
     				String getListDept = accessDeptList.get(i).getCn();
     				if (deptID.equals(getListDept) || topID.equals(getListDept)) {
-    					LOGGER.debug("dept checked");
+    					logger.debug("dept checked");
     					return true;
     				}
     			}
@@ -1751,7 +1751,7 @@ public class MLoginGWController {
         			loginCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginVO.getTenantId());
         		} else { // 2.아니면 db에서 어떤 국가인지 체크
             		long changeIP = changeIPtoInteger(loginVO.getIp());
-            		LOGGER.debug("changeIP=" + changeIP);
+            		logger.debug("changeIP=" + changeIP);
             		
             		CountryVO countryVo = loginService.getLoginIPCountry(changeIP);
             		if (countryVo != null){
@@ -1760,8 +1760,8 @@ public class MLoginGWController {
             		}
         		} // localIPChk end
 
-    			LOGGER.debug("countryCodeList=" + countryCodeList);
-    			LOGGER.debug("LoginIpCountry=" + loginCountryCode + ":" + loginCountryName);
+    			logger.debug("countryCodeList=" + countryCodeList);
+    			logger.debug("LoginIpCountry=" + loginCountryCode + ":" + loginCountryName);
     			
     			if (countryCodeList.indexOf(loginCountryCode) > -1){
     				returnValue = true;
@@ -1770,7 +1770,7 @@ public class MLoginGWController {
     		
     	}
 
-    	LOGGER.debug("ipAccessCheck ended.");
+    	logger.debug("ipAccessCheck ended.");
     	return returnValue;
     }
     

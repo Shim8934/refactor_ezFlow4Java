@@ -74,7 +74,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     @Resource(name = "egovFileIdGnrService")
     private EgovIdGnrService idgenService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileMngUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(EgovFileMngUtil.class);
     
     @Autowired
 	private CommonUtil commonUtil;
@@ -176,7 +176,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				targetFile.delete();
 			}
 		} catch (Exception e) {
-			LOGGER.debug("FILE DELETE ERROR: {}", e.getMessage());
+			logger.debug("FILE DELETE ERROR: {}", e.getMessage());
 		}
     }
 
@@ -213,24 +213,24 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    	bos.write(buffer, 0, bytesRead);
 		    }
 		} catch (FileNotFoundException fnfe) {
-			LOGGER.debug("fnfe: {}", fnfe);
+			logger.debug("fnfe: {}", fnfe);
 		} catch (IOException ioe) {
-			LOGGER.debug("ioe: {}", ioe);
+			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
-			LOGGER.debug("e: {}", e);
+			logger.debug("e: {}", e);
 		} finally {
 		    if (bos != null) {
 				try {
 				    bos.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
 		    if (stream != null) {
 				try {
 				    stream.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
 		}
@@ -250,7 +250,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			file.getParentFile().mkdirs();
 			Files.copy(stream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (Exception ex) {
-			LOGGER.debug("ex: {}", ex);
+			logger.debug("ex: {}", ex);
 		}
 	}
 	
@@ -263,13 +263,13 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	 */
 	protected void writeUploadedFileEncryptKlib(MultipartFile multipartFile, String filePath) {
 		try {
-			LOGGER.debug("writeUploadedFileEncryptKlib: {}", filePath);
+			logger.debug("writeUploadedFileEncryptKlib: {}", filePath);
 			File file = new File(filePath);
 			file.getParentFile().mkdirs();
 			byte[] encryptedBytes = klibUtil.encrypt(multipartFile.getBytes());
 			commonUtil.writeBytesToFile(file.toPath(), encryptedBytes);
 		} catch (Exception ex) {
-			LOGGER.debug("ex: ", ex);
+			logger.debug("ex: ", ex);
 		}
 	}
 	
@@ -332,14 +332,14 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				try {
 				    outs.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
 		    if (fin != null) {
 				try {
 				    fin.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
 		}
@@ -408,24 +408,24 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    	bos.write(buffer, 0, bytesRead);
 		    }
 		} catch (FileNotFoundException fnfe) {
-			LOGGER.debug("fnfe: {}", fnfe);
+			logger.debug("fnfe: {}", fnfe);
 		} catch (IOException ioe) {
-			LOGGER.debug("ioe: {}", ioe);
+			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
-			LOGGER.debug("e: {}", e);
+			logger.debug("e: {}", e);
 		} finally {
 		    if (bos != null) {
 				try {
 				    bos.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
 		    if (stream != null) {
 				try {
 				    stream.close();
 				} catch (Exception ignore) {
-					LOGGER.debug("IGNORED: {}", ignore.getMessage());
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
 		    }
 		}
@@ -496,7 +496,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				    try {
 				    	in.close();
 				    } catch (Exception ignore) {
-				    	LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				    	logger.debug("IGNORED: {}", ignore.getMessage());
 				    }
 				}
 		    }
@@ -571,7 +571,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
      * @throws Exception
      */
     private void downFileForKlib(HttpServletRequest request, HttpServletResponse response, String streFileNm, String orignFileNm) throws Exception {
-    	LOGGER.debug("downFileForKlib started.");
+    	logger.debug("downFileForKlib started.");
 	    String downFileName = EgovStringUtil.isNullToString(streFileNm);
 		String orgFileName = EgovStringUtil.isNullToString(orignFileNm);
 		
@@ -607,7 +607,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    response.getOutputStream().close();
 		}
 		
-		LOGGER.debug("downFileForKlib ended.");
+		logger.debug("downFileForKlib ended.");
     }
     
     /**
@@ -618,7 +618,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     	// 본래 /fileroot로 시작해야 정상이나 혹 //fileroot 등과 같이 사용되는 경우를 대비하여
     	// contains를 사용함.
     	if (!isValidFilePath(filePath)) {
-    		LOGGER.debug("filePath=" + filePath + " doesn't contain fileroot.");
+    		logger.debug("filePath=" + filePath + " doesn't contain fileroot.");
     		
     		return;
     	}
@@ -657,7 +657,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	        response.setContentType(contentType);
 	        response.setHeader("Content-Length", Long.toString(fileSize));
 	        
-	        LOGGER.debug("contentType=" + contentType + ",fileSize=" + fileSize);
+	        logger.debug("contentType=" + contentType + ",fileSize=" + fileSize);
 	        
 	        os = response.getOutputStream();
 	        
@@ -671,7 +671,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         		try {
         			os.close();
         		} catch(Exception e) {
-					LOGGER.debug("e.message=" + e.getMessage());
+					logger.debug("e.message=" + e.getMessage());
         		}
         	}
         	
@@ -679,7 +679,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
         		try {
         			bis.close();
         		} catch(Exception e) {
-					LOGGER.debug("e.message=" + e.getMessage());
+					logger.debug("e.message=" + e.getMessage());
         		}
         	}
         }
@@ -729,7 +729,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	 * @throws Exception
 	 */
 	public String zipFolder(String path, String fileName, boolean isDelete) throws Exception {
-		LOGGER.debug("zipFolder started. path=" + path + ",fileName=" + fileName + ",isDelete=" + isDelete);
+		logger.debug("zipFolder started. path=" + path + ",fileName=" + fileName + ",isDelete=" + isDelete);
 		File dir = new File(path);
 
 		List<File> fileList = new ArrayList<File>();
@@ -750,7 +750,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 					fis = new FileInputStream(file);
 					String zipFilePath = file.getPath().substring(dir.getPath().length() + 1, file.getPath().length());
 					
-					LOGGER.debug("zipFilePath=" + zipFilePath);
+					logger.debug("zipFilePath=" + zipFilePath);
 					
 					ZipEntry zipEntry = new ZipEntry(zipFilePath);
 					zos.putNextEntry(zipEntry);
@@ -773,26 +773,26 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			
 		} finally {
 			if (fis != null) {
-				try { fis.close(); } catch (Exception e) {LOGGER.debug("e.message=" + e.getMessage());}
+				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			
 			if (zos != null) {
-				try { zos.closeEntry(); } catch (Exception e) {LOGGER.debug("e.message=" + e.getMessage());}
-				try { zos.close(); } catch (Exception e) {LOGGER.debug("e.message=" + e.getMessage());}
+				try { zos.closeEntry(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
+				try { zos.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 			
 		}
 		
 		File zipFile = new File(path + ".zip");
-		LOGGER.debug(zipFile.getName() + " is created. size=" + zipFile.length() + "byte");
+		logger.debug(zipFile.getName() + " is created. size=" + zipFile.length() + "byte");
 		
 		if (isDelete) {
 			if (deleteDirectory(dir)) {
-				LOGGER.debug(dir.getName() + " folder is deleted.");
+				logger.debug(dir.getName() + " folder is deleted.");
 			}
 		}
 		
-		LOGGER.debug("zipFolder ended. returnValue=" + zipFile.getPath());
+		logger.debug("zipFolder ended. returnValue=" + zipFile.getPath());
 		return zipFile.getPath();
 	}
 	
@@ -832,7 +832,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			}
 		} finally {
 			if (br != null) {
-				try {br.close();} catch(Exception e) {LOGGER.debug("e.message=" + e.getMessage());}
+				try {br.close();} catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
 		}
 		

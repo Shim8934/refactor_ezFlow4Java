@@ -62,7 +62,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @RestController
 public class MScheduleGWController extends EgovFileMngUtil {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MScheduleGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MScheduleGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -90,7 +90,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */	
 	@RequestMapping(value="/mobile/ezschedule/list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleList(@PathVariable String userId, HttpServletRequest request){
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -103,7 +103,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String searchColumn = request.getParameter("searchColumn");
 			String searchData = request.getParameter("searchData");
 			
-			LOGGER.debug("searchTitle: " + searchTitle);
+			logger.debug("searchTitle: " + searchTitle);
 			
 			if (startDate != null && !startDate.equals("")) {
 				String[] sDate = startDate.split("-");
@@ -160,7 +160,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			e.printStackTrace();
 		}
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] ended.");
 		
 		return result;
 	}
@@ -170,7 +170,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/list-count/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleListCount(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -232,7 +232,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] ended.");
 		
 		return result;
 	}
@@ -242,7 +242,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleDetail(@PathVariable String scheduleId, HttpServletRequest request, Locale locale) throws Exception {
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -321,7 +321,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			dataObject.put("scheduleInfo", vo);
 		
 			String itemID = vo.getContentPath();
-			LOGGER.debug("itemID: " + itemID);
+			logger.debug("itemID: " + itemID);
 			String type = "SCHEDULECONTENT";
 			String realPath = commonUtil.getRealPath(request);
 	        String scheme = "http://";
@@ -331,7 +331,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	    	}
 	
 			String mhtToHtml = ezCommonService.getMHTtoHTML(type, itemID, info.getTenantId(), realPath, request, locale, scheme);
-			LOGGER.debug("mhtToHtml: " + mhtToHtml);			
+			logger.debug("mhtToHtml: " + mhtToHtml);			
 	        Document doc = Jsoup.parse(mhtToHtml);	        
 	        Elements elems = doc.select("[src]");
 			
@@ -394,7 +394,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}				
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] ended.");
 		
 		return result;
 	}
@@ -404,7 +404,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}/attach-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleAttachList(@PathVariable String scheduleId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attach-list] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attach-list] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -436,7 +436,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			e.printStackTrace();
 		} 
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attach-list] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attach-list] ended.");
 		
 		return result;
 	}
@@ -446,7 +446,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/type-List/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleTypeList(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/type-List] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/type-List] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -537,7 +537,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}    	
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/type-List] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/type-List] ended.");
 		
 		return result;
 	}
@@ -547,7 +547,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId}/attendance-List", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleAttendanceList(@PathVariable String scheduleId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attendance-List] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attendance-List] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -569,7 +569,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attendance-List] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attendance-List] ended.");
 		
 		return result;
 	}
@@ -579,7 +579,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */	
 	@RequestMapping(value="/mobile/ezschedule/schedules", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleInsert(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] started.");
+		logger.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -638,7 +638,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}	   			
 
-		LOGGER.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] ended.");
 		
 		return result;
 	}
@@ -648,7 +648,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleUpdate(@PathVariable String scheduleId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] started.");
+		logger.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -684,11 +684,11 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        String realPath = commonUtil.getRealPath(request);
 	        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
 	    	
-	        LOGGER.debug("contentPath: " + contentPath);
+	        logger.debug("contentPath: " + contentPath);
 	        
 	        List<AttachListVO> aList = ezScheduleService.getAttachList(scheduleId, info.getTenantId());
 	        
-	        LOGGER.debug("aList.size: " + aList.size());
+	        logger.debug("aList.size: " + aList.size());
 	        
 	        if(aList.size() > 0) {
 	        	jsonParam.put("hasAttach", "Y");
@@ -723,7 +723,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] ended.");
 		
 		return result;
 	}
@@ -733,7 +733,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */	
 	@RequestMapping(value="/mobile/ezschedule/schedules/{scheduleId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleDelete(@PathVariable String scheduleId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] started.");
+		logger.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] started.");
 		
 		JSONObject result = new JSONObject();
 						
@@ -760,7 +760,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] ended.");
 		
 		return result;
 	}
@@ -770,7 +770,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/week-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleWeekList(@PathVariable String userId, HttpServletRequest request, Locale locale){
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -838,7 +838,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				if(d.length() == 1) d = "0" + d; 
 			   
 				arrYMD[i] = y + "-" + m + "-" +d;
-				LOGGER.debug("ymd = "+ y + "-" + m + "-" +d);
+				logger.debug("ymd = "+ y + "-" + m + "-" +d);
 			   
 			}
 			
@@ -952,7 +952,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			e.printStackTrace();
 		}
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/week-list/users/{userId}] ended.");
 		
 		return result;
 	}
@@ -962,7 +962,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */	
 	@RequestMapping(value="/mobile/ezschedule/board-schedules", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject mBoardScheduleInsert(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] started.");
+		logger.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] started.");
 		
 		JSONObject result = new JSONObject();
 						
@@ -1007,7 +1007,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] ended.");
 		
 		return result;
 	}
@@ -1017,13 +1017,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/users/{userId:.+}/attendant/invitationList", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleAttendantInvitationList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/invitationList] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/invitationList] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		
 		try {
-			LOGGER.debug("userId : " + userId);
+			logger.debug("userId : " + userId);
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
@@ -1031,12 +1031,12 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String companyId = info.getCompanyId();
 			
-			LOGGER.debug("tenantId : " + tenantId + "  offSetMin : " + offSetMin + "  companyId : " + companyId);
+			logger.debug("tenantId : " + tenantId + "  offSetMin : " + offSetMin + "  companyId : " + companyId);
 			
 			List<ScheduleReceiveListVO> scheduleReceiveList = ezScheduleService.getReceiveList(userId, tenantId, offSetMin, companyId);
 			
 			for (ScheduleReceiveListVO scheduleReceiveListVO : scheduleReceiveList) {
-				LOGGER.debug("scheduleId : " + scheduleReceiveListVO.getScheduleId());
+				logger.debug("scheduleId : " + scheduleReceiveListVO.getScheduleId());
 			}
 			
 			data.put("scheduleReceiveList", scheduleReceiveList);
@@ -1051,7 +1051,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/invitationList] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/invitationList] ended.");
 		
 		return result;
 	}
@@ -1061,13 +1061,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/users/{userId:.+}/group/invitationList", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleGroupInvitationList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/invitationList] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/invitationList] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
 		
 		try {
-			LOGGER.debug("userId : " + userId);
+			logger.debug("userId : " + userId);
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
@@ -1075,12 +1075,12 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String companyId = info.getCompanyId();
 			
-			LOGGER.debug("tenantId : " + tenantId + "  offSetMin : " + offSetMin + "  companyId : " + companyId);
+			logger.debug("tenantId : " + tenantId + "  offSetMin : " + offSetMin + "  companyId : " + companyId);
 			
 			List<ScheduleGroupListVO> scheduleGroupList = ezScheduleService.getInviteScheduleGroupList(userId, tenantId, offSetMin, companyId);
 			
 			for (ScheduleGroupListVO ScheduleGroupListVO : scheduleGroupList) {
-				LOGGER.debug("groupId : " + ScheduleGroupListVO.getGroupId());
+				logger.debug("groupId : " + ScheduleGroupListVO.getGroupId());
 			}
 			
 			data.put("scheduleGroupList", scheduleGroupList);
@@ -1095,7 +1095,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/invitationList] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/invitationList] ended.");
 		
 		return result;
 	}
@@ -1106,12 +1106,12 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/users/{userId:.+}/attendant/status", method= RequestMethod.PATCH, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleIsAcceqptAttendantInvitation(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/status] started.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/status] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
-			LOGGER.debug("userId : " + userId);
+			logger.debug("userId : " + userId);
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
@@ -1122,9 +1122,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String status = jsonParam.get("status").toString();
 			
 			for (String scheduleId : scheduleIdList) {
-				LOGGER.debug("scheduleId : " + scheduleId);
+				logger.debug("scheduleId : " + scheduleId);
 			}
-			LOGGER.debug("tenantId : " + tenantId + "  displayName : " + displayName + "  status : " + status);
+			logger.debug("tenantId : " + tenantId + "  displayName : " + displayName + "  status : " + status);
 			
 			for (int i=0; i < scheduleIdList.length; i++) {
 				ezScheduleService.updateAttendant(scheduleIdList[i], userId, displayName, displayName2, status, tenantId);
@@ -1139,7 +1139,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/status] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/status] ended.");
 		
 		return result;
 	}
@@ -1149,7 +1149,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/schedules/users/{userId:.+}/group/status", method= RequestMethod.PATCH, produces="application/json;charset=utf-8")
 	public JSONObject mScheduleIsAcceqptGroupInvitation(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/status.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/status.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1162,9 +1162,9 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String status = jsonParam.get("status").toString();
 			
 			for (String groupId : groupIdList) {
-				LOGGER.debug("groupId : " + groupId);
+				logger.debug("groupId : " + groupId);
 			}
-			LOGGER.debug("tenantId : " + tenantId + "  status : " + status);
+			logger.debug("tenantId : " + tenantId + "  status : " + status);
 			
 			for (int i=0; i < groupIdList.length; i++) {
 				ezScheduleService.updateScheduleMember(groupIdList[i], userId, status, tenantId);
@@ -1180,7 +1180,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/status] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/status] ended.");
 		
 		return result;
 	}
@@ -1190,7 +1190,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezschedule/list/workspace/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mWorkspaceScheduleGetList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/list/workspace/{userId:.+}.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/list/workspace/{userId:.+}.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1240,14 +1240,14 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/list/workspace/{userId:.+}] ended.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/list/workspace/{userId:.+}] ended.");
 		
 		return result;
 	}
 	
 	@RequestMapping(value="/mobile/ezschedule/config/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getScheduleGetRegi(@PathVariable String userId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/config/{userId:.+}.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/config/{userId:.+}.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1267,7 +1267,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/config/{userId:.+}.");
+		logger.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/config/{userId:.+}.");
 		
 		return result;
 	}

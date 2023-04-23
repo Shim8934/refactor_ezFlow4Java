@@ -63,7 +63,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzNewPortalService")
 public class EzNewPortalServiceImpl implements EzNewPortalService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzNewPortalServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzNewPortalServiceImpl.class);
 	
 	@Resource(name = "EzNewPortalDAO")
 	private EzNewPortalDAO ezNewPortalDAO;
@@ -153,18 +153,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	public String getPortalLogoInfo(String companyId, int tenantId, String logoType) throws Exception {
-		LOGGER.debug("[Service] getPortalLogoInfo started");
+		logger.debug("[Service] getPortalLogoInfo started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("logoType", logoType);
-		LOGGER.debug("[Service] getPortalLogoInfo ended");
+		logger.debug("[Service] getPortalLogoInfo ended");
 		return ezNewPortalDAO.getPortalLogoInfo(map);
 	}
 	
 	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
-		LOGGER.debug("[Service] getUserMenuList started");
+		logger.debug("[Service] getUserMenuList started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -250,14 +250,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		});
 
-		LOGGER.debug("[Service] getUserMenuList ended");
+		logger.debug("[Service] getUserMenuList ended");
 		return result;
 	}
 	
 	// 사용자 메뉴 순서 변경
 	@SuppressWarnings("unchecked")
 	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception {
-		LOGGER.debug("[Serivce] updateUserMenuOrder Started");
+		logger.debug("[Serivce] updateUserMenuOrder Started");
 
 		// 사용자 메뉴가 존재할 경우, 존재하지 않을 경우로 분기
 		Map<String, Object> cntMap = new HashMap<String, Object>();
@@ -283,12 +283,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				ezNewPortalDAO.updateUserMenuOrder(map);
 			}
 		}
-		LOGGER.debug("[Serivce] updateUserMenuOrder Ended");
+		logger.debug("[Serivce] updateUserMenuOrder Ended");
 	}
 	
 	// 사용자 메뉴 순서 삭제
 	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception {
-		LOGGER.debug("[Serivce] deleteUserMenuOrder Started");
+		logger.debug("[Serivce] deleteUserMenuOrder Started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -297,12 +297,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ezNewPortalDAO.deleteUserMenuOrder(map);
 		
-		LOGGER.debug("[Serivce] deleteUserMenuOrder Ended");
+		logger.debug("[Serivce] deleteUserMenuOrder Ended");
 	}
 	
 	// 퀵링크 가져오기
 	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception {
-		LOGGER.debug("[Serivce] getQuickLinkList Started");
+		logger.debug("[Serivce] getQuickLinkList Started");
 		
 		int offset = (page-1) * limit;
 
@@ -314,12 +314,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("userId", userId);
 		map.put("deptId", deptId);
 		
-		LOGGER.debug("[Serivce] getQuickLinkList Ended");
+		logger.debug("[Serivce] getQuickLinkList Ended");
 		return ezNewPortalDAO.getQuickLinkList(map);
 	}
 	// 퀵링크 전체 페이지 개수 가져오기
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit, String userId, String deptId) throws Exception {
-		LOGGER.debug("[Serivce] getQuickLinkTotalPageCnt Started");
+		logger.debug("[Serivce] getQuickLinkTotalPageCnt Started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -331,12 +331,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		float pageCnt = (float)totalCnt / (float)limit;
 		
-		LOGGER.debug("[Serivce] getQuickLinkTotalPageCnt Ended");
+		logger.debug("[Serivce] getQuickLinkTotalPageCnt Ended");
 		return (int) Math.ceil(pageCnt);
 	}
 	
 	public List<?> getUserFrameListAndSelectedFrame(String companyId, int tenantId, String userId) throws Exception {
-		LOGGER.debug("[Serivce] getUserFrameListAndSelectedFrame Started");
+		logger.debug("[Serivce] getUserFrameListAndSelectedFrame Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -360,13 +360,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			frameList = userFrame;
 		}
 
-		LOGGER.debug("[Serivce] getUserFrameListAndSelectedFrame Ended");
+		logger.debug("[Serivce] getUserFrameListAndSelectedFrame Ended");
 		return frameList;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void updateUserUsedFrame(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception {
-		LOGGER.debug("[Serivce] updateUserUsedFrame Started");
+		logger.debug("[Serivce] updateUserUsedFrame Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
 		
@@ -378,17 +378,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("isDefault", 1);
 		map.put("usedTheme", param.get("themeId"));
 		
-		LOGGER.debug("map.toString() : " + map.toString());
+		logger.debug("map.toString() : " + map.toString());
 		
 		ezNewPortalDAO.updateUserUsedFrame(map);
 		//ezNewPortalDAO.updateUserThemeSetting(map);
 		
-		LOGGER.debug("[Serivce] updateUserUsedFrame Ended");
+		logger.debug("[Serivce] updateUserUsedFrame Ended");
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception {
-		LOGGER.debug("[Serivce] updateUserUsedPortlet Started");
+		logger.debug("[Serivce] updateUserUsedPortlet Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
 		// 유저 포틀릿은 delete & insert로 진행
@@ -400,10 +400,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		/*ezNewPortalDAO.deleteUserUsedPortlet(map);*/
 		
 		List<Map<String, Object>> portletList = (List<Map<String, Object>>) param.get("portletList");
-		LOGGER.debug("portletList: " + portletList.toString());
+		logger.debug("portletList: " + portletList.toString());
 		
 		for (int i=0; i<portletList.size(); i++) {
-			LOGGER.debug(portletList.get(i).toString());
+			logger.debug(portletList.get(i).toString());
 			Map<String, Object> portletMap = new HashMap<String, Object>();
 			portletMap.put("userId", userId);
 			portletMap.put("tenantId", tenantId);
@@ -414,12 +414,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			portletMap.put("themeId", param.get("themeId"));
 			portletMap.put("portletUsed", Boolean.parseBoolean(portletList.get(i).get("portletUsed").toString()));
 			
-			LOGGER.debug("portletMap:" + portletMap.toString());
+			logger.debug("portletMap:" + portletMap.toString());
 			ezNewPortalDAO.insertUserUsedPortlet(portletMap);
 		}
 		
 		
-		LOGGER.debug("[Serivce] updateUserUsedPortlet Ended");
+		logger.debug("[Serivce] updateUserUsedPortlet Ended");
 	}
 	
 	/**
@@ -427,7 +427,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	 */
 	@Override
 	public List<PortletInfoVO> getUserPortletList(int themeId, String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception {
-		LOGGER.debug("[Serivce] getUserPortletList Started");
+		logger.debug("[Serivce] getUserPortletList Started");
 		/**
 		 * 2018-11-21 신규작성
 		 */
@@ -450,7 +450,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Collections.reverse(deptIds);
 		
 		//유저권한체크
-		LOGGER.debug("getPortletForUser deptId = " + userId);
+		logger.debug("getPortletForUser deptId = " + userId);
 		
 		map.put("userType", "USER");
 		map.put("isDept", "user");
@@ -467,7 +467,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		List<Integer> accessYIds = new ArrayList<Integer>();
 		
 		for (PortletInfoVO vo : result) {
-			LOGGER.debug("user portletId = " + vo.getPortletId());
+			logger.debug("user portletId = " + vo.getPortletId());
 			
 			portletIds.add(vo.getPortletId());
 		}
@@ -518,7 +518,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("isDept", "dept");
 			map.put("deptId", pathId);
 			
-			LOGGER.debug("getPortletForUser deptId = " + pathId);
+			logger.debug("getPortletForUser deptId = " + pathId);
 			if (pathId.equals(deptId)) {
 				map.put("isUserDept", true);
 			} else {
@@ -530,39 +530,39 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			
 			//권한잇는것들 && 기존 권한체크안된것들 추가
 			for (PortletInfoVO deptPortlet : deptResult) {
-				LOGGER.debug("deptPortlet id = " + deptPortlet.getPortletId() + " || isAccessYN = " + deptPortlet.isAccessYN() + " || isUsed = " + deptPortlet.isPortletUsed());
+				logger.debug("deptPortlet id = " + deptPortlet.getPortletId() + " || isAccessYN = " + deptPortlet.isAccessYN() + " || isUsed = " + deptPortlet.isPortletUsed());
 				int portletId = deptPortlet.getPortletId();
 								
 				if (portletIds.indexOf(portletId) == -1) {
-					LOGGER.debug("portletIds.indexOf(portletId) == -1");
+					logger.debug("portletIds.indexOf(portletId) == -1");
 					portletIds.add(portletId);
 					
 					if (deptPortlet.isAccessYN()) {
-						LOGGER.debug("deptPortlet.isAccessYN()");
+						logger.debug("deptPortlet.isAccessYN()");
 						result.add(deptPortlet);
-						LOGGER.debug("resultSize = " + result.size());
+						logger.debug("resultSize = " + result.size());
 					}
 				}
 			}
 			
 			for (PortletAuthVO deptAuthPortlet : deptAuthResult) {
-				LOGGER.debug("deptAuthPortlet id = " + deptAuthPortlet.getPortletId() + " || isAccessYN = " + deptAuthPortlet.isAccessYN());
+				logger.debug("deptAuthPortlet id = " + deptAuthPortlet.getPortletId() + " || isAccessYN = " + deptAuthPortlet.isAccessYN());
 				int portletId = deptAuthPortlet.getPortletId();
 								
 				if (portletAuthIds.indexOf(portletId) == -1) {
-					LOGGER.debug("portletAuthIds.indexOf(portletId) == -1");
+					logger.debug("portletAuthIds.indexOf(portletId) == -1");
 					portletAuthIds.add(portletId);
 					
 					if (deptAuthPortlet.isAccessYN()) {
-						LOGGER.debug("portletAuthIds.isAccessYN()");
+						logger.debug("portletAuthIds.isAccessYN()");
 						accessYIds.add(deptAuthPortlet.getPortletId());
 					}
 				}
 			}
 		}
 		
-		LOGGER.debug("portletList : " + result.toString());
-		LOGGER.debug("accessYIds : " + accessYIds.toString());
+		logger.debug("portletList : " + result.toString());
+		logger.debug("accessYIds : " + accessYIds.toString());
 		
 		//authResult와 메뉴권한이 있는 portletList와 비교!
 		List<PortletInfoVO> resultWithAuth = new ArrayList<PortletInfoVO>();
@@ -576,7 +576,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("resultWithAuth : " + resultWithAuth.toString());
+		logger.debug("resultWithAuth : " + resultWithAuth.toString());
 		//여기까지가 권한체크된 모든 포틀릿 리스트
 		
 		//order에 따라 다시 소팅
@@ -587,14 +587,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		});
 		
-		LOGGER.debug("[Serivce] getUserPortletList Ended");
+		logger.debug("[Serivce] getUserPortletList Ended");
 		
 		return resultWithAuth;
 	}
 	
 	@Override
 	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) throws Exception {
-		LOGGER.debug("[Serivce] getVotePortletCount Started");
+		logger.debug("[Serivce] getVotePortletCount Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] deptArr = deptPath.split(",");
 		map.put("userId", userId);
@@ -603,13 +603,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("deptArr", deptArr);
 		
-		LOGGER.debug("[Serivce] getVotePortletCount Ended");
+		logger.debug("[Serivce] getVotePortletCount Ended");
 		return ezNewPortalDAO.getVotePortletCount(map);
 	}
 
 	@Override
 	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) throws Exception {
-		LOGGER.debug("[Serivce] getVotePortletInfo Started");
+		logger.debug("[Serivce] getVotePortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] deptArr = deptPath.split(",");
 		map.put("userId", userId);
@@ -618,24 +618,24 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("deptArr", deptArr);
 		
-		LOGGER.debug("[Serivce] getVotePortletInfo Ended");
+		logger.debug("[Serivce] getVotePortletInfo Ended");
 		return ezNewPortalDAO.getVotePortletInfo(map);
 	}
 
 	@Override
 	public List<PollAnswerVO> getVotePortletAnswer(int qstId, int tenantId) throws Exception {
-		LOGGER.debug("[Serivce] getVotePortletAnswer Started");
+		logger.debug("[Serivce] getVotePortletAnswer Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("qstId", qstId);
 		map.put("tenantId", tenantId);
 
-		LOGGER.debug("[Serivce] getVotePortletAnswer Ended");
+		logger.debug("[Serivce] getVotePortletAnswer Ended");
 		return ezNewPortalDAO.getVotePortletAnswer(map);
 	}
 
 	@Override
 	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount, String offset) throws Exception {
-		LOGGER.debug("[Serivce] getPhotoBoardPortletInfo Started");
+		logger.debug("[Serivce] getPhotoBoardPortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("tenantId", tenantId);
@@ -644,39 +644,39 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("photoCount", photoCount);
 		map.put("nowDate", nowDate);
 
-		LOGGER.debug("[Serivce] getPhotoBoardPortletInfo Ended");
+		logger.debug("[Serivce] getPhotoBoardPortletInfo Ended");
 		return ezNewPortalDAO.getphotoBoardPortletInfo(map);
 	}
 
 	@Override
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception {
-		LOGGER.debug("[Serivce] getCompanyPortletInfo Started");
+		logger.debug("[Serivce] getCompanyPortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("portletId", portletId);
 		map.put("portletLang", portletLang);
 
-		LOGGER.debug("[Serivce] getCompanyPortletInfo Ended");
+		logger.debug("[Serivce] getCompanyPortletInfo Ended");
 		return ezNewPortalDAO.getCompanyPortletInfo(map);
 	}
 
 	@Override
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId) throws Exception {
-		LOGGER.debug("[Serivce] getBoardAuthCheck Started");
+		logger.debug("[Serivce] getBoardAuthCheck Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("boardId", boardId);
 		map.put("accessId", accessId);
 		
-		LOGGER.debug("[Serivce] getBoardAuthCheck Ended");
+		logger.debug("[Serivce] getBoardAuthCheck Ended");
 		return ezNewPortalDAO.getBoardAuthCheck(map);
 	}
 	
 	@Override
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath, String portletLang) throws Exception {
-		LOGGER.debug("[Serivce] getUserPortalSetting Started");
+		logger.debug("[Serivce] getUserPortalSetting Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("companyId", companyId);
@@ -725,7 +725,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 			}
 			
-			LOGGER.debug("canAccessTheme : " + canAccessTheme);
+			logger.debug("canAccessTheme : " + canAccessTheme);
 			
 			if (!canAccessTheme) {
 				if (themeList == null || themeList.size() == 0) {
@@ -743,8 +743,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("final userPortalSetting : " + userPortalSetting.toString());
-		LOGGER.debug("[Serivce] getUserPortalSetting Ended");
+		logger.debug("final userPortalSetting : " + userPortalSetting.toString());
+		logger.debug("[Serivce] getUserPortalSetting Ended");
 		return userPortalSetting;
 	}
 	
@@ -752,7 +752,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@Override
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId,
 			JSONArray portletOrder, String portletLang, int themeId) throws Exception {
-		LOGGER.debug("updatePortletOrderUser started.");
+		logger.debug("updatePortletOrderUser started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		//List<Integer> portletIdList = new ArrayList<Integer>();
@@ -807,10 +807,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 			
 		} else {//있으면 delete 후 insert
-			LOGGER.debug("DAO deletePortletOrderUser started.");
+			logger.debug("DAO deletePortletOrderUser started.");
 			ezNewPortalDAO.deletePortletOrderUser(map);
 			
-			LOGGER.debug("DAO insertPortletOrderUser started.");
+			logger.debug("DAO insertPortletOrderUser started.");
 			for (int i = 0; i < portletOrderCount; i++) {
 				map.put("portletOrder", portletOrder.get(i).get("portletOrder"));
 				map.put("portletId", portletOrder.get(i).get("portletId"));
@@ -818,12 +818,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}*/
 		
-		LOGGER.debug("updatePortletOrderUser ended.");
+		logger.debug("updatePortletOrderUser ended.");
 	}
 	
 	@Override
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month) throws Exception {
-		LOGGER.debug("getMonthlyBirthdayEmployeesCount started.");
+		logger.debug("getMonthlyBirthdayEmployeesCount started.");
 		String monthStr = "";
 		
 		if (month < 10) {
@@ -845,7 +845,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		String lastLunarDate = "";
 		String lastSolarDate = "";
 
-		LOGGER.debug("convertLunarToSolar started.");
+		logger.debug("convertLunarToSolar started.");
 
 
 		for (int i = 0; i < birthdayListCount; i++) {
@@ -868,10 +868,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 
 		if (lunarCount > 0) {
-			LOGGER.debug("lunarInThisMonthCount : " + lunarCount + " / last id : " + lastLunarId + " / date : " + lastLunarDate + " > " + lastSolarDate);
+			logger.debug("lunarInThisMonthCount : " + lunarCount + " / last id : " + lastLunarId + " / date : " + lastLunarDate + " > " + lastSolarDate);
 		}
 
-		LOGGER.debug("convertLunarToSolar ended.");
+		logger.debug("convertLunarToSolar ended.");
 		
 		int birthCount = 0;
 		
@@ -881,13 +881,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			birthCount = birthdayList.size();
 		}
 
-		LOGGER.debug("getMonthlyBirthdayEmployeesCount ended.");
+		logger.debug("getMonthlyBirthdayEmployeesCount ended.");
 		return birthCount;
 	}
 	
 	@Override
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow,String lang) throws Exception {
-		LOGGER.debug("getMonthlyBirthdayEmployees started.");
+		logger.debug("getMonthlyBirthdayEmployees started.");
 		String monthStr = "";
 		
 		if (month < 10) {
@@ -958,7 +958,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("getMonthlyBirthdayEmployees ended.");
+		logger.debug("getMonthlyBirthdayEmployees ended.");
 		return birthdayList;
 	}
 	
@@ -1013,7 +1013,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId, String lang) throws Exception {
-		LOGGER.debug("getMonthlyBestEmployee started.");
+		logger.debug("getMonthlyBestEmployee started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("yearAndMonth", yearAndMonth);
 		map.put("tenantId", tenantId);
@@ -1030,13 +1030,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		portalUserInfo.setUserImg(imgPath);
 		
-		LOGGER.debug("getMonthlyBestEmployee ended.");
+		logger.debug("getMonthlyBestEmployee ended.");
 		return portalUserInfo;
 	}
 
 	@Override
 	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId, String deptPath, String lang) throws Exception {
-		LOGGER.debug("getUserThemeList started.");
+		logger.debug("getUserThemeList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
@@ -1103,24 +1103,24 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("themeList : " + result.toString());
-		LOGGER.debug("getUserThemeList ended.");
+		logger.debug("themeList : " + result.toString());
+		logger.debug("getUserThemeList ended.");
 		return result;
 	}
 	
 
 	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception {
-		LOGGER.debug("getUserStartPage started.");
+		logger.debug("getUserStartPage started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		LOGGER.debug("getUserStartPage ended.");
+		logger.debug("getUserStartPage ended.");
 		return ezNewPortalDAO.getUserStartPage(map);
 	}
 	
 	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) throws Exception {
-		LOGGER.debug("updateUserStartPage started.");
+		logger.debug("updateUserStartPage started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
@@ -1130,30 +1130,30 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		MenuInfoVO userStartPage = ezNewPortalDAO.getUserStartPage(map);
 		
 		if (userStartPage == null) {
-			LOGGER.debug("DAO insertUserStartPage started.");
+			logger.debug("DAO insertUserStartPage started.");
 			ezNewPortalDAO.insertUserStartPage(map);
 		} else {
-			LOGGER.debug("DAO updateUserStartPage started.");
+			logger.debug("DAO updateUserStartPage started.");
 			ezNewPortalDAO.updateUserStartPage(map);
 		}
 		
 		
-		LOGGER.debug("updateUserStartPage ended.");
+		logger.debug("updateUserStartPage ended.");
 	}
 	
 	public void deleteUserThemeSetting(String userId, int tenantId, String companyId) throws Exception { 
-		LOGGER.debug("deleteUserThemeSetting started.");
+		logger.debug("deleteUserThemeSetting started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
 		ezNewPortalDAO.deleteUserThemeSetting(map);
-		LOGGER.debug("deleteUserThemeSetting ended.");
+		logger.debug("deleteUserThemeSetting ended.");
 	}
 	
 	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId) throws Exception {
-		LOGGER.debug("updateUserThemeSetting started.");
+		logger.debug("updateUserThemeSetting started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("usedTheme", usedTheme);
 		map.put("usedFrame", usedFrame);
@@ -1165,27 +1165,27 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		UserPortalSettingVO portalSetting = ezNewPortalDAO.getUserPortalSetting(map);
 		
 		if (portalSetting == null) {
-			LOGGER.debug("DAO insertUserThemeSetting started.");
+			logger.debug("DAO insertUserThemeSetting started.");
 			ezNewPortalDAO.insertUserThemeSetting(map);
 			ezNewPortalDAO.updateUserThemeSetting(map);
 		} else {
-			LOGGER.debug("DAO updateUserThemeSetting started.");
+			logger.debug("DAO updateUserThemeSetting started.");
 			ezNewPortalDAO.updateUserThemeSetting(map);
 		}
 		
-		LOGGER.debug("updateUserThemeSetting ended.");
+		logger.debug("updateUserThemeSetting ended.");
 	}
 	
 	//관리자부분!! ------ boardtree가져오기
 	@Override
 	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getBoardTree started.");
+		logger.debug("getBoardTree started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("parentBoardId", parentBoardId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		LOGGER.debug("getBoardTree ended.");
+		logger.debug("getBoardTree ended.");
 		return ezNewPortalDAO.getBoardTree(map);
 	}
 	
@@ -1193,7 +1193,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@Override
 	public void insertPortlet(JSONObject portletInfo, JSONArray portletNames, String companyId, int tenantId)
 			throws Exception {
-		LOGGER.debug("insertPortlet started.");
+		logger.debug("insertPortlet started.");
 		Map<String, Object> map = new HashMap<>();
 		
 		//메뉴
@@ -1264,13 +1264,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			ezNewPortalDAO.updateThemePortletUsed(map);
 		}
 		
-		LOGGER.debug("insertPortlet ended.");
+		logger.debug("insertPortlet ended.");
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateCompanyPortletInfo(JSONObject portletInfo, JSONArray portletNames, String companyId, int tenantId)
 			throws Exception {
-		LOGGER.debug("updateCompanyPortletInfo started.");
+		logger.debug("updateCompanyPortletInfo started.");
 		Map<String, Object> map = new HashMap<>();
 		
 		//메뉴
@@ -1333,13 +1333,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				ezNewPortalDAO.updateCompanyPortletNameInfo(map);
 			}
 		}
-		LOGGER.debug("updateCompanyPortletInfo ended.");
+		logger.debug("updateCompanyPortletInfo ended.");
 		
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateCompanyPortletOrder(JSONArray portletList, int tenantId, String companyId) throws Exception {
-		LOGGER.debug("updateCompanyPortletOrder started.");
+		logger.debug("updateCompanyPortletOrder started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		//포틀릿 순서
@@ -1354,12 +1354,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				/*ezNewPortalDAO.updateAllThemePortletOrder(map);*/ //테마별 포틀릿 순서에 적용하여 자동 저장
 			}
 		}
-		LOGGER.debug("updateCompanyPortletOrder ended.");
+		logger.debug("updateCompanyPortletOrder ended.");
 		
 	}
 	@Override
 	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("deletePortlet started.");
+		logger.debug("deletePortlet started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("portletId", portletId);
 		map.put("companyId", companyId);
@@ -1381,12 +1381,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.deleteThemePortlet(map);
 		
 		
-		LOGGER.debug("deletePortlet ended.");
+		logger.debug("deletePortlet ended.");
 	}
 	
 	@Override
 	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl) {
-		LOGGER.debug("updateCompanyLogo started.");
+		logger.debug("updateCompanyLogo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1394,59 +1394,59 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("logoUrl", logoUrl);
 		
 		ezNewPortalDAO.updateCompanyLogo(map);
-		LOGGER.debug("updateCompanyLogo ended.");
+		logger.debug("updateCompanyLogo ended.");
 	}
 	
 	@Override
 	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId) {
-		LOGGER.debug("getCompanyLogoList started.");
+		logger.debug("getCompanyLogoList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
 		List<PortalLogoVO> companyLogoList = ezNewPortalDAO.getCompanyLogoList(map);
-		LOGGER.debug("getCompanyLogoList ended.");
+		logger.debug("getCompanyLogoList ended.");
 		return companyLogoList;
 	}
 	
 	@Override
 	public int getTnenantIdByServerName(String serverName) throws Exception {
-		LOGGER.debug("getTnenantIdByServerName started.");
+		logger.debug("getTnenantIdByServerName started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("serverName", serverName);
 		
 		int tenantId = ezNewPortalDAO.getTenantIdByServerName(map);
-		LOGGER.debug("getTnenantIdByServerName ended.");
+		logger.debug("getTnenantIdByServerName ended.");
 		return tenantId;
 	}
 	
 	@Override
 	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateCompanyDefaultTheme started.");
+		logger.debug("updateCompanyDefaultTheme started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("themeId", themeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
 		ezNewPortalDAO.updateCompanyDefaultTheme(map);
-		LOGGER.debug("updateCompanyDefaultTheme ended.");
+		logger.debug("updateCompanyDefaultTheme ended.");
 	}
 	
 	@Override
 	public void deleteCompanyLogo(String companyId, int tenantId, String logoType) {
-		LOGGER.debug("deleteCompanyLogo started.");
+		logger.debug("deleteCompanyLogo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("logoType", logoType);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
 		ezNewPortalDAO.deleteCompanyLogo(map);
-		LOGGER.debug("deleteCompanyLogo ended.");
+		logger.debug("deleteCompanyLogo ended.");
 	}
 	
 	@Override
 	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String companyId, String offset) throws Exception {
-		LOGGER.debug("deleteCompanyLogo started.");
+		logger.debug("deleteCompanyLogo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("boardId", boardId);
@@ -1455,14 +1455,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("nowDate", nowDate);
 		
-		LOGGER.debug("deleteCompanyLogo ended.");
+		logger.debug("deleteCompanyLogo ended.");
 		return ezNewPortalDAO.getBoardPortletInfo(map);
 		
 	}
 	
 	@Override
 	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception {
-		LOGGER.debug("getThemePortletList started.");
+		logger.debug("getThemePortletList started.");
 		List<PortletInfoVO> themePortletList = new ArrayList<PortletInfoVO>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("themeId", themeId);
@@ -1476,14 +1476,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		
 		themePortletList = ezNewPortalDAO.getThemePortletList(map);
-		LOGGER.debug("getThemePortletList ended.");
+		logger.debug("getThemePortletList ended.");
 		return themePortletList;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateThemePortletUsed(int themeId, int tenantId, String companyId, JSONArray themePortletList) throws Exception {
-		LOGGER.debug("updateThemePortletUsed started.");
+		logger.debug("updateThemePortletUsed started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		for (Object item : themePortletList) {
@@ -1499,12 +1499,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("updateThemePortletUsed ended.");
+		logger.debug("updateThemePortletUsed ended.");
 	}
 	
 	@Override
 	public Map<String, Object> getThemeAuth(String companyId, int tenantId, int themeId, String lang) throws Exception {
-		LOGGER.debug("getThemeAuth started.");
+		logger.debug("getThemeAuth started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1521,15 +1521,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		resultMap.put("themeAuthsY", themeAuthsY);
 		resultMap.put("themeAuthsN", themeAuthsN);
 		
-		LOGGER.debug("getThemeAuth ended.");
+		logger.debug("getThemeAuth ended.");
 		
 		return resultMap;
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateThemeAuth(JSONArray themeAuths, int themeId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateThemeAuth started.");
-		LOGGER.debug("themeAuths = " + themeAuths.toString());
+		logger.debug("updateThemeAuth started.");
+		logger.debug("themeAuths = " + themeAuths.toString());
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
@@ -1565,7 +1565,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				idx++;
 			}
 		}
-		LOGGER.debug("updateThemeAuth ended.");
+		logger.debug("updateThemeAuth ended.");
 	}
 	@Override
 	public boolean checkThemeAuthNoList(String companyId, int tenantId, String userId, String deptPath, int themeId, String lang) throws Exception {
@@ -1597,9 +1597,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 						themeList.removeIf(vo -> (vo.getThemeId() == themeAuth.getThemeId()));
 					}
 					
-					LOGGER.debug("themeAuth : " + themeAuth.getThemeId());
-					LOGGER.debug("themeAuthList : " + themeAuthList.toString());
-					LOGGER.debug("themeList : " + themeList.toString());
+					logger.debug("themeAuth : " + themeAuth.getThemeId());
+					logger.debug("themeAuthList : " + themeAuthList.toString());
+					logger.debug("themeList : " + themeList.toString());
 				}
 			}
 		}
@@ -1616,7 +1616,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				if (userId == null) {
 					List<String> themeAuthInDept = ezNewPortalDAO.checkThemeAuthInDept(map);
-					LOGGER.debug("checkThemeAuthInDept deptId : " + deptPathArr[i] + ", themeAuthInDept : " + themeAuthInDept);
+					logger.debug("checkThemeAuthInDept deptId : " + deptPathArr[i] + ", themeAuthInDept : " + themeAuthInDept);
 					
 					if (themeAuthInDept != null && themeAuthInDept.size() > 0) {
 						return false;
@@ -1635,9 +1635,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 							}
 							
 							
-							LOGGER.debug("themeAuth : " + themeAuth.getThemeId());
-							LOGGER.debug("themeAuthList : " + themeAuthList.toString());
-							LOGGER.debug("themeList : " + themeList.toString());
+							logger.debug("themeAuth : " + themeAuth.getThemeId());
+							logger.debug("themeAuthList : " + themeAuthList.toString());
+							logger.debug("themeList : " + themeList.toString());
 						}
 					}
 					
@@ -1652,7 +1652,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	@Override
 	public Map<String, Object> getPortletAuth(String companyId, int tenantId, int portletId, String lang) throws Exception {
-		LOGGER.debug("getPortletAuth started.");
+		logger.debug("getPortletAuth started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1669,14 +1669,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		resultMap.put("portletAuthsY", portletAuthsY);
 		resultMap.put("portletAuthsN", portletAuthsN);
 		
-		LOGGER.debug("getPortletAuth ended.");
+		logger.debug("getPortletAuth ended.");
 		return resultMap;
 	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updatePortletAuth(JSONArray portletAuths, int portletId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updatePortletAuth started.");
-		LOGGER.debug("portletAuths = " + portletAuths.toString());
+		logger.debug("updatePortletAuth started.");
+		logger.debug("portletAuths = " + portletAuths.toString());
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
@@ -1711,7 +1711,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				idx++;
 			}
 		}
-		LOGGER.debug("updatePortletAuth ended.");
+		logger.debug("updatePortletAuth ended.");
 	}
 	/**
 	 * 이효진
@@ -1719,8 +1719,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang) throws Exception {
-		LOGGER.debug("getApprovalList started.");
-		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || type = " + type);
+		logger.debug("getApprovalList started.");
+		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || type = " + type);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -1780,13 +1780,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			break;
 		}
 		
-		LOGGER.debug("getApprovalList ended.");
+		logger.debug("getApprovalList ended.");
 		
 		return result;
 	}
 	
 	private List<ApprGDocListVO> assembleApprPortletList(Map<String, Object> param) throws Exception {
-		LOGGER.debug("assembleApprPortletList started.");
+		logger.debug("assembleApprPortletList started.");
 		
 		List<ApprGDocListVO> ret = new ArrayList<ApprGDocListVO>();
 		int index = 0;
@@ -1818,14 +1818,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			
 		}
 		
-		LOGGER.debug("assembleApprPortletList ended.");
+		logger.debug("assembleApprPortletList ended.");
 		
 		return ret;
 	}
 	
 	@Override
 	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId, String deptPath, String lang) throws Exception {
-		LOGGER.debug("getThemes started. admin = " + admin + " || companyId = " + companyId + " || tenantId = " + tenantId + " || deptPath = " + deptPath + " || lang = " + lang);
+		logger.debug("getThemes started. admin = " + admin + " || companyId = " + companyId + " || tenantId = " + tenantId + " || deptPath = " + deptPath + " || lang = " + lang);
 		
 		List<ThemeInfoVO> list = null;
 		
@@ -1839,13 +1839,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			list = getUserThemeList(companyId, tenantId, userId, deptPath, lang);
 		}
 		
-		LOGGER.debug("getThemes ended.");
+		logger.debug("getThemes ended.");
 		
 		return list;
 	}
 	
 	private List<ThemeInfoVO> getCompanyThemes(String companyId, int tenantId, String lang) throws Exception {
-		LOGGER.debug("getComapnyThemes started.");
+		logger.debug("getComapnyThemes started.");
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
@@ -1854,14 +1854,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<ThemeInfoVO> list = ezNewPortalDAO.getCompanyThemes(map);
 		
-		LOGGER.debug("getComapnyThemes ended.");
+		logger.debug("getComapnyThemes ended.");
 		
 		return list;
 	}
 	
 	@Override
 	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId, String lang) throws Exception {
-		LOGGER.debug("getThemeInfo started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
+		logger.debug("getThemeInfo started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("themeId", themeId);
@@ -1871,14 +1871,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ThemeInfoVO vo = ezNewPortalDAO.getThemeInfo(map);
 		
-		LOGGER.debug("getThemeInfo ended.");
+		logger.debug("getThemeInfo ended.");
 		
 		return vo;
 	}
 	
 	@Override
 	public List<FrameInfoVO> getFrames(int themeId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getFrames started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("getFrames started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("themeId", themeId);
@@ -1887,7 +1887,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<FrameInfoVO> list = ezNewPortalDAO.getFrames(map);
 		
-		LOGGER.debug("getFrames ended.");
+		logger.debug("getFrames ended.");
 		
 		return list;
 	}
@@ -1895,7 +1895,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateThemeInfo(JSONObject themeInfo, JSONArray frameInfos, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateThemeInfo started. themeId = " + themeInfo.get("themeId") + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("updateThemeInfo started. themeId = " + themeInfo.get("themeId") + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map = new ObjectMapper().readValue(themeInfo.toJSONString(), Map.class);
@@ -1944,12 +1944,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("updateThemeInfo ended.");
+		logger.debug("updateThemeInfo ended.");
 	}
 	
 	@Override
 	public List<MenuInfoVO> getMenus(String companyId, int tenantId, String menuLang) throws Exception {
-		LOGGER.debug("getMenus started. companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("getMenus started. companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
@@ -1958,14 +1958,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<MenuInfoVO> list = ezNewPortalDAO.getMenus(map);
 		
-		LOGGER.debug("getMenus ended.");
+		logger.debug("getMenus ended.");
 		
 		return list;
 	}
 	
 	@Override
 	public MenuInfoVO getMenuInfo(int menuId, String companyId, int tenantId, String menuLang) throws Exception {
-		LOGGER.debug("getMenuInfo started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("getMenuInfo started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
@@ -1975,13 +1975,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		MenuInfoVO vo = ezNewPortalDAO.getMenuInfo(map);
 		
-		LOGGER.debug("getMenuInfo ended.");
+		logger.debug("getMenuInfo ended.");
 		
 		return vo;
 	}
 	
 	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getMenuNames started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("getMenuNames started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
@@ -1994,14 +1994,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<MenuNameVO> list = ezNewPortalDAO.getMenuNames(map);
 		
-		LOGGER.debug("getMenuNames ended.");
+		logger.debug("getMenuNames ended.");
 		
 		return list;
 	}
 	
 	@Override
 	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId, String lang) throws Exception {
-		LOGGER.debug("getMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
+		logger.debug("getMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("menuId", menuId);
@@ -2020,7 +2020,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		resultMap.put("menuAuthsY", menuAuthsY);
 		resultMap.put("menuAuthsN", menuAuthsN);
 		
-		LOGGER.debug("getMenuAuth ended.");
+		logger.debug("getMenuAuth ended.");
 		
 		return resultMap;
 	}
@@ -2028,9 +2028,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateCompanyMenuInfo(int menuId, JSONObject menuInfo, JSONArray menuNames, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateCompanyMenuInfo started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
-		LOGGER.debug("menuInfo = " + menuInfo.toString());
-		LOGGER.debug("menuNames = " + menuNames.toString());
+		logger.debug("updateCompanyMenuInfo started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("menuInfo = " + menuInfo.toString());
+		logger.debug("menuNames = " + menuNames.toString());
 		
 		boolean menuUsed = (boolean) menuInfo.get("menuUsed");
 		
@@ -2087,12 +2087,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			updateMenuPortletUsed(menuId, menuUsed, companyId, tenantId);
 		}
 		
-		LOGGER.debug("updateCompanyMenuInfo ended.");
+		logger.debug("updateCompanyMenuInfo ended.");
 	}
 	
 	//메뉴사용여부에 따라 관련포틀릿 사용여부 수정
 	private void updateMenuPortletUsed(int menuId, boolean portletUsed, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateMenuPortletUsed started. menuId = " + menuId + " || menuUsed = " + portletUsed + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("updateMenuPortletUsed started. menuId = " + menuId + " || menuUsed = " + portletUsed + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("menuId", menuId);
@@ -2102,14 +2102,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ezNewPortalDAO.updateMenuPortletUsed(map);
 		
-		LOGGER.debug("updateMenuPortletUsed ended.");
+		logger.debug("updateMenuPortletUsed ended.");
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateMenuAuth(JSONArray menuAuths, int menuId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
-		LOGGER.debug("menuAuths = " + menuAuths.toString());
+		logger.debug("updateMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("menuAuths = " + menuAuths.toString());
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
@@ -2147,13 +2147,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("updateMenuAuth ended.");
+		logger.debug("updateMenuAuth ended.");
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void insertMenu(JSONObject menuInfo, JSONArray menuNames, JSONArray menuAuths, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("insertMenu started.");
+		logger.debug("insertMenu started.");
 		
 		Map<String, Object> map = new HashMap<>();
 		
@@ -2216,12 +2216,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//지금 권한 안들어오지 조직도없지 선택못하지
 		updateMenuAuth(menuAuths, menuId, companyId, tenantId);
 		
-		LOGGER.debug("insertMenu ended.");
+		logger.debug("insertMenu ended.");
 	}
 	
 	@Override
 	public void deleteMenu(int menuId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("deleteMenu started.");
+		logger.debug("deleteMenu started.");
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("menuId", menuId);
@@ -2249,13 +2249,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.deleteMenuComp(map);
 		ezNewPortalDAO.deleteMenu(map);
 		
-		LOGGER.debug("deleteMenu ended.");
+		logger.debug("deleteMenu ended.");
 	}
 	
 	@Override
 	public void udpateMenuOrder(JSONArray menus, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("updateMenuOrder started. companyId = " + companyId + " || tenantId = " + tenantId);
-		LOGGER.debug("menus = " + menus.toString());
+		logger.debug("updateMenuOrder started. companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("menus = " + menus.toString());
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
@@ -2271,13 +2271,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("updateMenuOrder ended.");
+		logger.debug("updateMenuOrder ended.");
 	}
 	
 	@Override
 	public List<ApprGFormVO> getFavoriteForms(String userId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getFavoriteForms started.");
-		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
+		logger.debug("getFavoriteForms started.");
+		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -2286,15 +2286,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<ApprGFormVO> list = ezNewPortalDAO.getFavoriteForms(map);
 		
-		LOGGER.debug("getFavoriteForms ended.");
+		logger.debug("getFavoriteForms ended.");
 		
 		return list;
 	}
 	
 	@Override
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getApprovalStatistics started.");
-		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
+		logger.debug("getApprovalStatistics started.");
+		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -2303,14 +2303,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		Map<String, Object> result = ezNewPortalDAO.getApprovalStatistics(map);
 		
-		LOGGER.debug("getApprovalStatistics ended.");
+		logger.debug("getApprovalStatistics ended.");
 		
 		return result;
 	}
 	
 	@Override
 	public int getThemeId(String userId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getThemeId started.");
+		logger.debug("getThemeId started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -2319,7 +2319,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		int themeId = ezNewPortalDAO.getThemeId(map);
 		
-		LOGGER.debug("getThemeId ended. themeId = " + themeId);
+		logger.debug("getThemeId ended. themeId = " + themeId);
 		
 		return themeId;
 	}
@@ -2332,7 +2332,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 	@Override
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit, String offset) {
-		LOGGER.debug("getFavNewItemList started.");
+		logger.debug("getFavNewItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
@@ -2343,13 +2343,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<FavoriteBoardVO> favNewItemList = ezNewPortalDAO.getFavNewItemList(map);
 		
-		LOGGER.debug("getFavNewItemList ended.");
+		logger.debug("getFavNewItemList ended.");
 		return favNewItemList;
 	}
 	
 	@Override
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset) throws Exception {
-		LOGGER.debug("getFavItemList started.");
+		logger.debug("getFavItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("boardId", boardId);
@@ -2361,13 +2361,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<FavoriteBoardVO> FavItemList = ezNewPortalDAO.getFavItemList(map);
 		
-		LOGGER.debug("getFavItemList ended.");
+		logger.debug("getFavItemList ended.");
 		return FavItemList;
 	}
 	
 	@Override
 	public List<CommunityMyCommunityVO> getCommunityList(String lang, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getCommunityList started.");
+		logger.debug("getCommunityList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANG", commonUtil.getMultiData(lang, tenantId));
 		map.put("companyId", companyId);
@@ -2375,13 +2375,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<CommunityMyCommunityVO> CommunityList = ezNewPortalDAO.getCommunityList(map);
 		
-		LOGGER.debug("getCommunityList ended.");
+		logger.debug("getCommunityList ended.");
 		return CommunityList;
 	}
 	
 	@Override
 	public String getCommunityPermit(String cNo, String userId, int tenantId) {
-		LOGGER.debug("getCommunityPermit started");
+		logger.debug("getCommunityPermit started");
 
 		String ret = "1";
 		
@@ -2398,13 +2398,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			ret = "0";
 		}
 
-		LOGGER.debug("getCommunityPermit ended");
+		logger.debug("getCommunityPermit ended");
 		return ret;
 	}
 	
 	@Override
 	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang) {
-		LOGGER.debug("getPortletList started");
+		logger.debug("getPortletList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -2413,13 +2413,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<PortletInfoVO> portetList = ezNewPortalDAO.getPortletList(map);
 		
-		LOGGER.debug("getPortletList ended");
+		logger.debug("getPortletList ended");
 		return portetList;
 	}
 	
 	@Override
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String usePrimaryLangOnly, String primaryLang) {
-		LOGGER.debug("getPortletNameList started");
+		logger.debug("getPortletNameList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -2432,14 +2432,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<PortletNameInfoVO> portetList = ezNewPortalDAO.getPortletNameList(map);
 		
-		LOGGER.debug("getPortletNameList ended");
+		logger.debug("getPortletNameList ended");
 		return portetList;
 	}
 	
 	@Override
 	public void setWeather() throws Exception {
 		//weather가 current일 때 현재 날씨 today일 때 시간당 날씨
-		LOGGER.debug("setWeather started");
+		logger.debug("setWeather started");
 		List<String> cityCodeList;
 		List<String> primaryLangList = ezNewPortalDAO.getPrimaryLangList();
 		List<String> weatherKeyList = ezNewPortalDAO.getWeatherKeyList(primaryLangList.size());
@@ -2452,11 +2452,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		for (int i = 0; i < weatherKeyList.size(); i++) {
 			if (primaryLangList.get(i) == null) {
-				LOGGER.debug("not enough weatherKey!!");
+				logger.debug("not enough weatherKey!!");
 				break;
 			}
 			String primaryLang = primaryLangList.get(i);
-			LOGGER.debug("primaryLang = " + primaryLang);
+			logger.debug("primaryLang = " + primaryLang);
 			cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLang);
 			
 			StringBuffer buffer = new StringBuffer();
@@ -2530,12 +2530,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				ezNewPortalDAO.setTodayWeather(map);
 			}
 		}
-		LOGGER.debug("setWeather ended");
+		logger.debug("setWeather ended");
 	}
 	
 	@Override
 	public Map<String, Object> getWeather(String cityCode, int primary) {
-		LOGGER.debug("getWeather started.");
+		logger.debug("getWeather started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cityCode", cityCode);
@@ -2543,49 +2543,49 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		Map<String, Object> result = ezNewPortalDAO.getWeather(map);
 		
-		LOGGER.debug("getWeather ended.");
+		logger.debug("getWeather ended.");
 		
 		return result;
 	}
 	
 	@Override
 	public List<WeatherVO> getCityList(int primaryLang) {
-		LOGGER.debug("getCityList started.");
+		logger.debug("getCityList started.");
 		
 		List<WeatherVO> result = ezNewPortalDAO.getCityList(primaryLang);
 		
-		LOGGER.debug("getCityList ended.");
+		logger.debug("getCityList ended.");
 		
 		return result;
 	}
 	
 	@Override
 	public String getUserCityCode(String id, int tenantId) throws Exception {
-		LOGGER.debug("getUserCityCode started.");
+		logger.debug("getUserCityCode started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("userId", id);
-		LOGGER.debug("getUserCityCode started.");
+		logger.debug("getUserCityCode started.");
 		
 		return ezNewPortalDAO.getUserCityCode(map);
 		
 	}
 	@Override
 	public void setUserCityCode(String id, int tenantId, String cityCode) {
-		LOGGER.debug("setUserCityCode started.");
+		logger.debug("setUserCityCode started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", id);
 		map.put("tenantId", tenantId);
 		map.put("cityCode", cityCode);
 		
 		ezNewPortalDAO.setUserCityCode(map);
-		LOGGER.debug("setUserCityCode started.");
+		logger.debug("setUserCityCode started.");
 	}
 	
 	@Override
 	public boolean getCheckAuth(int menuId, String userId, String deptId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getCheckAuth started. menuId : " + menuId);
+		logger.debug("getCheckAuth started. menuId : " + menuId);
 		
 		boolean resultAuth = false;
 		int userType = 1;
@@ -2606,11 +2606,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			//유저 권한이 있으면 바로 리턴
 			if (userAuth.isAccessYN() == true) {
 				resultAuth = true;
-				LOGGER.debug("Auth : userTrue");
+				logger.debug("Auth : userTrue");
 				return resultAuth;
 			} else {
 				resultAuth = false;
-				LOGGER.debug("Auth : userFalse");
+				logger.debug("Auth : userFalse");
 				return resultAuth;
 			}
 		} else {
@@ -2629,11 +2629,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				//유저권한이 없으면 부서권한을 탐색하고 부서권한이 있을 때 바로 리턴 
 				if (deptAuth.isAccessYN() == true) {
 					resultAuth = true;
-					LOGGER.debug("Auth : deptTrue");
+					logger.debug("Auth : deptTrue");
 					return resultAuth;
 				} else {
 					resultAuth = false;
-					LOGGER.debug("Auth : deptFalse");
+					logger.debug("Auth : deptFalse");
 					return resultAuth;
 				}
 			} else {
@@ -2651,17 +2651,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					//유저든 부서든 둘다 Y,N이 있을때만 company 권한보다 앞서므로 다 권한이 모두 없을 때 마지막에 company를 탐색하였다
 					//더 좋은 아이디어 있으신분 수정바랍니다
 					if (comAuth.isAccessYN() == true) {
-						LOGGER.debug("Auth : comTrue");
+						logger.debug("Auth : comTrue");
 						resultAuth = true;
 						return resultAuth;
 					} else {
 						resultAuth = false;
-						LOGGER.debug("Auth : comFalse");
+						logger.debug("Auth : comFalse");
 						return resultAuth;
 					}
 				} else {
 					resultAuth = false;
-					LOGGER.debug("Auth : NoneFalse");
+					logger.debug("Auth : NoneFalse");
 					return resultAuth;
 				}
 			}
@@ -2669,7 +2669,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	public List<MenuInfoVO> getAllCompanyMenus(String companyId, int tenantId, String companyLang) throws Exception {
-		LOGGER.debug("getAllCompanyMenus started.");
+		logger.debug("getAllCompanyMenus started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("langType", companyLang);
@@ -2678,12 +2678,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<MenuInfoVO> comMenuList = ezNewPortalDAO.getAllCompanyMenus(map);
 		
-		LOGGER.debug("getAllCompanyMenus ended.");
+		logger.debug("getAllCompanyMenus ended.");
 		return comMenuList;
 	};
 
 	public String isUseEzWorkspace(String companyId, int tenantId, String userId, String deptId) throws Exception {
-		LOGGER.debug("isUseEzWorkspace started.");
+		logger.debug("isUseEzWorkspace started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -2717,25 +2717,25 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		LOGGER.debug("isUseEzWorkspace ended.");
+		logger.debug("isUseEzWorkspace ended.");
 		return "NO";
 	}
 	
 	@Override
 	public List<PersonalSliderImageVO> getSilderImages(String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getSilderImages started.");
+		logger.debug("getSilderImages started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		LOGGER.debug("getSilderImages ended.");
+		logger.debug("getSilderImages ended.");
 		return ezNewPortalDAO.getSilderImages(map);
 	}
 	
 	@Override
 	public void insertSlideImage(String companyId, int tenantId, String imageUrl, String slideImagePath, String fileName, String userId) throws Exception {
-		LOGGER.debug("insertSlideImage started.");
+		logger.debug("insertSlideImage started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantID", tenantId);
 		map.put("companyId", companyId);
@@ -2752,25 +2752,25 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ezNewPortalDAO.insertSilderImages(map);
 		
-		LOGGER.debug("insertSlideImage ended.");
+		logger.debug("insertSlideImage ended.");
 	}
 	
 	@Override
 	public PersonalSliderImageVO getSlideImageInfo(int tenantId, String companyId, String slideId) throws Exception {
-		LOGGER.debug("getSlideImageInfo started.");
+		logger.debug("getSlideImageInfo started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("slideId", slideId);
 		
-		LOGGER.debug("getSlideImageInfo ended.");
+		logger.debug("getSlideImageInfo ended.");
 		return ezNewPortalDAO.getSilderImagInfo(map);
 	}
 	
 	@Override
 	public void updateSlideImage(String companyId, int tenantId, String imageUrl, String imagePath, String imageName, String userId, String slideId) throws Exception {
-		LOGGER.debug("updateSlideImage started.");
+		logger.debug("updateSlideImage started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -2784,12 +2784,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ezNewPortalDAO.updateSilderImage(map);
 		
-		LOGGER.debug("updateSlideImage ended.");
+		logger.debug("updateSlideImage ended.");
 	}
 	
 	@Override
 	public void deleteSlideImage(int tenantId, String companyId, String slideId) throws Exception {
-		LOGGER.debug("deleteSlideImage started.");
+		logger.debug("deleteSlideImage started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -2798,7 +2798,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ezNewPortalDAO.deleteSlideImage(map);
 		
-		LOGGER.debug("deleteSlideImage ended.");
+		logger.debug("deleteSlideImage ended.");
 	}
 	
 	@Override
@@ -2844,8 +2844,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public int getApprovalDoingListCount(String userId, String companyId, int tenantId, String offset, String approvalFlag, String lang) throws Exception {
-		LOGGER.debug("getApprovalDoingListCount started.");
-		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		logger.debug("getApprovalDoingListCount started.");
+		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -2870,36 +2870,36 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public List<OrganJobVO> getTitleList(String type, int tenantId, String companyId) throws Exception {
-		LOGGER.debug("getTitleList started.");
-		LOGGER.debug("[params] type = " + type + ", tenantId = " + tenantId + ", companyId = " + companyId);
+		logger.debug("getTitleList started.");
+		logger.debug("[params] type = " + type + ", tenantId = " + tenantId + ", companyId = " + companyId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TYPE", type);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_COMPANYID", companyId);
 		
 		List<OrganJobVO> titleList = ezOrganAdminDAO.getTitleList_group(map);
-		LOGGER.debug("getTitleList ended.");
+		logger.debug("getTitleList ended.");
 		return titleList;
 	}
 	
 	@Override
 	public List<OrganGroupVO> getGroupList(int tenantId, String companyId) throws Exception {
-		LOGGER.debug("getGroupList started.");
-		LOGGER.debug("[params] tenantId = " + tenantId + ", companyId = " + companyId);
+		logger.debug("getGroupList started.");
+		logger.debug("[params] tenantId = " + tenantId + ", companyId = " + companyId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TENANT_ID", tenantId);
 		map.put("v_COMPANY_ID", companyId);
 		
 		List<OrganGroupVO> groupList = ezOrganAdminDAO.getGroupList(map);
 		
-		LOGGER.debug("getGroupList ended.");
+		logger.debug("getGroupList ended.");
 		return groupList;
 	}
 	
 	@Override
 	public List<FileVO> getWebFolderFileList(String folderId, int tenantId) throws Exception {
-		LOGGER.debug("getWebFolderFileList started.");
-		LOGGER.debug("folderId = " + folderId + " || tenantId = " + tenantId);
+		logger.debug("getWebFolderFileList started.");
+		logger.debug("folderId = " + folderId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
@@ -2907,7 +2907,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		List<FileVO> fileList = ezNewPortalDAO.getWebFolderFileList(map);
 		
-		LOGGER.debug("getWebFolderFileList ended.");
+		logger.debug("getWebFolderFileList ended.");
 		return fileList;
 	}
 	
@@ -2924,8 +2924,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception {
-		LOGGER.debug("addPortalTenantConfig started");
-		LOGGER.debug("tenantId = " + tenantId + " || propertyName = " + propertyName + " || propertyValue = " + propertyValue + " || description = " + description + " || configName = " + configName + " || configType = " + configType);
+		logger.debug("addPortalTenantConfig started");
+		logger.debug("tenantId = " + tenantId + " || propertyName = " + propertyName + " || propertyValue = " + propertyValue + " || description = " + description + " || configName = " + configName + " || configType = " + configType);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -2937,6 +2937,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ezNewPortalDAO.addPortalTenantConfig(map);
 		
-		LOGGER.debug("addPortalTenantConfig ended");
+		logger.debug("addPortalTenantConfig ended");
 	}
 }
