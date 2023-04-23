@@ -393,7 +393,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	        
 		} catch (MessagingException e) {
 			returnValue = "<DATA>ERROR</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -556,7 +556,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			folder.close(true);
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -689,7 +689,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	        }
         
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return resultList;

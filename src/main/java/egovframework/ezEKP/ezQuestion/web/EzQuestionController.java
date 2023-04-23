@@ -1946,7 +1946,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			ezQuestionService.deletePollAttach(Integer.parseInt(pBrdID), Integer.parseInt(itemNo), loginVO.getTenantId());
 			strXML = "<DATA>DELETE_OK</DATA>";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("qstDeleteItem ended");

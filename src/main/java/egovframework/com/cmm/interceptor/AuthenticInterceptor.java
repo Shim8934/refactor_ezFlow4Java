@@ -132,7 +132,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 		}
 		
 		if(!commonUtil.checkMultiLogin(request, response)) {
@@ -143,7 +143,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				
 				return false;
 			} catch (Exception e) { 
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		} 
 		
@@ -162,7 +162,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	        		}
 	        	}	        	
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 
 			String referer = request.getHeader("REFERER");
@@ -213,7 +213,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		        
 		    	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				
 				return false;
 			}
@@ -241,7 +241,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		        		response.sendRedirect("/user/login/login.do");
 		        	}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 				
 				return false;
@@ -272,7 +272,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
         	ezOffice365ClientId = ezCommonService.getTenantConfig("ezOffice365ClientId", tenantId);
         	ezOffice365ClientSecret = ezCommonService.getTenantConfig("ezOffice365ClientSecret", tenantId);
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     		
     		return;
     	}
@@ -386,7 +386,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							oidcResponse.getErrorObject().getDescription()));
 				}
 			} catch (Throwable e) {
-				e.printStackTrace();												
+				logger.error(e.getMessage(), e);												
 			}
 			
 			return;
@@ -406,7 +406,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				
 				response.sendRedirect(getRedirectUrl("common", ezOffice365ClientId, redirectUri));
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			
 			return;					
@@ -433,7 +433,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
                     "&state=" + state
                     + "&nonce=" + nonce;            
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
         
         return redirectUrl;
@@ -527,7 +527,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
     	
     	return url;

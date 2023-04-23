@@ -94,7 +94,7 @@ public class EzMemoGWController {
 			result.put("defaultColor", config.getDefault_color()-1);
 			result.put("folderId", folderId);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -138,7 +138,7 @@ public class EzMemoGWController {
 			result.put("contents", contents);
 			result.put("code", 0);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -185,7 +185,7 @@ public class EzMemoGWController {
 			result.put("memoCount", memoCount);
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -226,7 +226,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -269,7 +269,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			
 			result.put("code", 1);
@@ -317,7 +317,7 @@ public class EzMemoGWController {
 			result.put("code", 0);
 			result.put("data", folderNameList);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -355,7 +355,7 @@ public class EzMemoGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -394,7 +394,7 @@ public class EzMemoGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -434,7 +434,7 @@ public class EzMemoGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -477,7 +477,7 @@ public class EzMemoGWController {
 			result.put("data", configVO);
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -535,7 +535,7 @@ public class EzMemoGWController {
 			result.put("code", 0);
 			result.put("memo", memo);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -577,7 +577,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -619,7 +619,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			
 			result.put("code", 1);
@@ -664,7 +664,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("code", 1);
 			result.put("status", "error");
@@ -713,7 +713,7 @@ public class EzMemoGWController {
 			result.put("data", memo); 
 			 
 		} catch(Exception e) { 
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 		 
 			result.put("code", 1); 
@@ -757,7 +757,7 @@ public class EzMemoGWController {
 			result.put("code", 0);
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			
 			result.put("code", 1);
@@ -802,7 +802,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			
 			result.put("code", 1);
@@ -853,7 +853,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("code", 1);
 			result.put("status", "error");
@@ -896,7 +896,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("code", 1);
 			result.put("status", "error");
@@ -984,7 +984,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("code", 1);
 			result.put("status", "error");
@@ -1025,7 +1025,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("code", 1);
 			result.put("status", "error");
@@ -1064,7 +1064,7 @@ public class EzMemoGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -1104,7 +1104,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -1145,7 +1145,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("code", 1);
 			result.put("status", "error");
@@ -1186,7 +1186,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("code", 1);
 			result.put("status", "error");

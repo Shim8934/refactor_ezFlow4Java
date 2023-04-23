@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
@@ -11,6 +14,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import org.springframework.http.HttpHeaders;
 
 public class CookieAttributeFilterWrapper extends HttpServletResponseWrapper{
+
+	private static final Logger logger = LoggerFactory.getLogger(CookieAttributeFilterWrapper.class);
 
 	private boolean isSecure = false;
 	
@@ -24,7 +29,7 @@ public class CookieAttributeFilterWrapper extends HttpServletResponseWrapper{
 			setSameSite();
 			return super.getWriter();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -35,7 +40,7 @@ public class CookieAttributeFilterWrapper extends HttpServletResponseWrapper{
 			setSameSite();
 			super.sendRedirect(location);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 

@@ -701,7 +701,7 @@ public class EzWebFolderController_y {
 				result.put("code", json.get("code"));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "ERROR");
 		}
 		

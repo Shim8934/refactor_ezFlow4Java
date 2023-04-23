@@ -139,12 +139,12 @@ public class IMAPAccess {
 			store.connect(userName, password);
 		} catch (NoSuchProviderException e) {
 			logger.error("Error get store from session: " + e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} catch (MessagingException e) {
 			logger.error("Error connect store: " + e.getMessage());
 		} catch (GeneralSecurityException e) {
 		    logger.error("GeneralSecurityException: " + e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 		
 		return store;
@@ -195,7 +195,7 @@ public class IMAPAccess {
 			}
 			
 		} catch(MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("makeTopLevelFolders ended.");
@@ -214,7 +214,7 @@ public class IMAPAccess {
 				topLevelFolderNames.add(folderName);
 			}			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return topLevelFolderNames;
@@ -450,7 +450,7 @@ public class IMAPAccess {
 			result = 0;
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = 3;
 		}
 		
@@ -485,7 +485,7 @@ public class IMAPAccess {
 			result = 0;
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = 3;
 		}
 		
@@ -539,7 +539,7 @@ public class IMAPAccess {
 			result = 0;
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = 4;
 		}
 		
@@ -553,7 +553,7 @@ public class IMAPAccess {
 		try {
 			quotas = imapStore.getQuota(folder);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return quotas;
@@ -626,7 +626,7 @@ public class IMAPAccess {
 				isAttached = true;
 			}			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} 		
 		
 		return isAttached;
@@ -713,7 +713,7 @@ public class IMAPAccess {
 							try {
 								addressStr = MimeUtility.decodeText(addressStr);
 							} catch (UnsupportedEncodingException e) {
-								e.printStackTrace();
+								logger.error(e.getMessage(), e);
 							}
 						}					
 						
@@ -734,7 +734,7 @@ public class IMAPAccess {
 								try {
 									addressStr = MimeUtility.decodeText(addressStr);
 								} catch (UnsupportedEncodingException e) {
-									e.printStackTrace();
+									logger.error(e.getMessage(), e);
 								}
 							}			
 							addressBuilder.append(addressStr);

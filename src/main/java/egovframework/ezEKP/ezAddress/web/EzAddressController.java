@@ -327,7 +327,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressList ended.");
@@ -602,7 +602,7 @@ public class EzAddressController{
 			}
 		} catch (Exception e) {
 			returnVaule = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressSave ended. returnVaule=" + returnVaule);
@@ -851,7 +851,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGroupSave ended. returnValue=" + returnValue);
@@ -1067,7 +1067,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressSaveMoveCopy ended. returnValue=" + returnValue);
@@ -1128,7 +1128,7 @@ public class EzAddressController{
 		
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressSaveConfig ended. returnValue=" + returnValue);
@@ -1236,7 +1236,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetGroupEmail ended. returnValue=" + returnValue);
@@ -1280,7 +1280,7 @@ public class EzAddressController{
 
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetGroupEmailList ended. returnValue=" + returnValue);
@@ -1314,7 +1314,7 @@ public class EzAddressController{
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getGroupAddressMemberCount ended. result=" + result);
@@ -1478,7 +1478,7 @@ public class EzAddressController{
 			ezAddressService.insertFolder(userInfo.getTenantId(), parentId, ownerId, folderType, folderName);
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressAddFolder ended. returnValue=" + returnValue);
@@ -1506,7 +1506,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressModFolder ended. returnValue=" + returnValue);
@@ -1533,7 +1533,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressDelFolder ended. returnVaule=" + returnValue);
@@ -1570,7 +1570,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressMoveCopyFolder ended. returnValue=" + returnValue);
@@ -1747,7 +1747,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetSearchList ended.");
@@ -1825,7 +1825,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "<DATA>" + e.getMessage() + "</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetFullTree ended.");
@@ -1910,7 +1910,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "<DATA>" + e.getMessage() + "</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetListMailCall ended.");
@@ -2023,7 +2023,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetListMailSearchCall ended.");
@@ -2152,7 +2152,7 @@ public class EzAddressController{
 	        }
 	        
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (csvWriter != null) {
 				try {
@@ -2282,7 +2282,7 @@ public class EzAddressController{
 	        
         } catch (IOException e) {
         	logger.error(e.getMessage());
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         } finally {
         	if (csvReader != null) {
         		try {
@@ -2402,7 +2402,7 @@ public class EzAddressController{
 	        		}
         		} catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
         		
-        		e.printStackTrace();
+        		logger.error(e.getMessage(), e);
         	}
         }
         
@@ -2477,7 +2477,7 @@ public class EzAddressController{
 	        csvWriter.flush();
 	        
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (csvWriter != null) {
 				try {

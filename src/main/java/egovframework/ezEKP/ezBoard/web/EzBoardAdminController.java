@@ -1663,7 +1663,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 		catch (Exception e) {
 			logger.debug("makeAllTreeCache aborted, error occurs!");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "FALSE";
 		}
 		// 전부 완료된 경우 TRUE를 리턴, 도중에 실패하면 지금까지의 DB 레코드 삽입이 롤백되지 않도록 catch 하고 FALSE 리턴

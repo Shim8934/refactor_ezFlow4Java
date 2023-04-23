@@ -73,7 +73,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 				backupAllFiles(docId, companyId, tenantId);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			logger.debug("Failed to backup files.");
 		}
 
@@ -92,7 +92,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			encryptHistoryDocFiles(new HashMap<>(parameterMap));
 			encryptHistoryAttachFiles(new HashMap<>(parameterMap));
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			logger.debug("Failed to encrypt files.");
 		}
 
@@ -187,7 +187,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 						backupDir.resolve(relativeAttachmentHistoryDir).toFile(), fileFilter);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			logger.debug("backupAllFiles error.");
 		}
 
@@ -365,7 +365,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 
 			return true;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 		} catch (UnsatisfiedLinkError linkErr) {
 			logger.error(linkErr.toString());
 		}

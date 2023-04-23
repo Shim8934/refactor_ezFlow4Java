@@ -518,7 +518,7 @@ public class ApprGRelayXMLVO {
         try {
             format = sdf.format(sdf.parse(strRecDate));
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return strRecDate.equals(format);
     }

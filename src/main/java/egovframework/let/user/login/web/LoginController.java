@@ -391,7 +391,7 @@ public class LoginController {
 			try {
 				numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		
@@ -953,7 +953,7 @@ public class LoginController {
     		try {
     			sessionTime = Integer.parseInt(useSession);
     		} catch (NumberFormatException nfe) {  
-    			nfe.printStackTrace();
+    			logger.error(nfe.getMessage(), nfe);
     		}
     		
         	if (sessionTime != 0) {
@@ -1210,7 +1210,7 @@ public class LoginController {
         		currentNumber = Integer.parseInt(userLoginFailedAttempt);
         	// Exception이 발생하는 경우엔 LoginFailCount가 0인 경우로 처리한다.
         	} catch (Exception e) {
-        		e.printStackTrace();
+        		logger.error(e.getMessage(), e);
         	}
         	
         	if (currentNumber >= numberOfLoginFailPermit) {

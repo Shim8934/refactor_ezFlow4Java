@@ -117,7 +117,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/main-list/users/" + userId + "] ended.");
@@ -176,7 +176,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list/users/" + userId + "] ended.");
@@ -213,7 +213,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list-count/users/" + userId + "] ended.");
@@ -280,7 +280,7 @@ public class MApprovalGGWController {
 			result.put("code", "0");
 			result.put("data", totalData);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", "1");
 		}
@@ -333,7 +333,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/line-list] ended.");
@@ -382,7 +382,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion-count] ended.");
@@ -430,7 +430,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/attach-list] ended.");
@@ -477,7 +477,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
@@ -528,7 +528,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
@@ -572,7 +572,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
@@ -612,7 +612,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
@@ -657,7 +657,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}	
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/absentee/users/" + userId + "] ended.");
@@ -702,7 +702,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] ended.");
@@ -743,7 +743,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/absentee/users/" + userId + "] ended.");
@@ -786,7 +786,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/pwd-check/users/" + userId + "] ended.");
@@ -950,7 +950,7 @@ public class MApprovalGGWController {
                 mApprovalGService.sendApproveNoticeMail(userInfo, optionInfo, approvalGDocInfoVO, docId, type);
             }
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", "1");
 		}
@@ -983,7 +983,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/left-count/users/" + userId + "] ended.");
@@ -1035,7 +1035,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "] ended.");
@@ -1076,7 +1076,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/AprMemberSN/" + docId + "/checkAprState] ended.");
 		return result;
@@ -1108,7 +1108,7 @@ public class MApprovalGGWController {
 			result.put("status", "error");
 			result.put("code", "1");
 			result.put("message", "geDraft controller error");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/gwDraft" + " ended.");
@@ -1154,7 +1154,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkAccessYNG] ended.");
@@ -1192,7 +1192,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkProxyDoc] ended.");
@@ -1224,7 +1224,7 @@ public class MApprovalGGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkIsGroupDoc] ended.");

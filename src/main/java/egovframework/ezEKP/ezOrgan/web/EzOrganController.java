@@ -100,7 +100,7 @@ public class EzOrganController {
 	        // 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
 	        deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), displayTrashDept, tenantID);
 	    } catch (Exception e) {
-	    	e.printStackTrace();
+	    	logger.error(e.getMessage(), e);
 	    }
 		
         logger.debug("getDeptTreeInfo ended.");
@@ -601,7 +601,7 @@ public class EzOrganController {
 
 	        comInfo = ezOrganService.getCompanyJobTreeInfo(type, comID, topID, propList, primary, tenantID);
 	    } catch (Exception e) {
-	    	e.printStackTrace();
+	    	logger.error(e.getMessage(), e);
 	    }
 	    
         logger.debug("getCompanyJobTreeInfo ended.");

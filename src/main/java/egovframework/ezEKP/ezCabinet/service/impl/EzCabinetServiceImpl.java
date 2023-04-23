@@ -815,7 +815,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 							FileUtils.copyFile(srcFile, destFile);
 						}
 						catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						}
 						
 						//AttachFile process here
@@ -889,7 +889,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				file.delete();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -1539,7 +1539,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 						return result;
 					}
 					catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						logger.debug("Not enough storage to upload these files!");
 						result.put("status", "error");
 						result.put("code", 4);

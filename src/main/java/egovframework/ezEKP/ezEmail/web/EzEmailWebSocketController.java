@@ -52,7 +52,7 @@ public class EzEmailWebSocketController {
         	this.handleMessage(jsonStr, session);
         } catch (Exception e) {
         	logger.debug("[WebSocket] handleOpen error occured.");
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         }
         
         logger.debug("[Websocket] userKey="+ userkey + ", sessionId=" + session.getId() + ", sessionInfo=" + session.getBasicRemote());
@@ -110,7 +110,7 @@ public class EzEmailWebSocketController {
      */
     @OnError
     public void handleError(Throwable e){
-        e.printStackTrace();
+        logger.error(e.getMessage(), e);
     }    
 	
 }

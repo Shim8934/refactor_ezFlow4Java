@@ -170,7 +170,7 @@ public class MLoginGWController {
 				try {
 					numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
 				} catch (NumberFormatException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 			
@@ -877,7 +877,7 @@ public class MLoginGWController {
     			}
     		}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", "1");			
 			result.put("data", "fail");
@@ -925,7 +925,7 @@ public class MLoginGWController {
       		return result;
       		
       	} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", "1");			
 			result.put("data", "fail");
@@ -1343,7 +1343,7 @@ public class MLoginGWController {
 				return result;
     		}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", "1");			
 			result.put("data", "fail");
@@ -1426,7 +1426,7 @@ public class MLoginGWController {
 			result.put("code", "-1");
 			result.put("data", "fail");
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
     	
     	logger.debug("updateLoginDeviceInfo ended.");
@@ -1453,7 +1453,7 @@ public class MLoginGWController {
 			result.put("status", isValid ? "ok" : "error");
 			result.put("code", "0");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", "1");
 			result.put("data", "server error: " + e.getMessage());
@@ -1568,7 +1568,7 @@ public class MLoginGWController {
 			result.put("code", "-1");
 			result.put("data", "fail");
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
     	}
     	
     	logger.debug("pinLogin ended.");
@@ -1632,7 +1632,7 @@ public class MLoginGWController {
 			result.put("code", "-1");
 			result.put("data", "fail");
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
     	}
     	
     	logger.debug("pinLogin ended.");
@@ -1658,7 +1658,7 @@ public class MLoginGWController {
         		currentNumber = Integer.parseInt(userLoginFailedAttempt);
         	// Exception이 발생하는 경우엔 LoginFailCount가 0인 경우로 처리한다.
         	} catch (Exception e) {
-        		e.printStackTrace();
+        		logger.error(e.getMessage(), e);
         	}
         	
         	if (currentNumber >= numberOfLoginFailPermit) {

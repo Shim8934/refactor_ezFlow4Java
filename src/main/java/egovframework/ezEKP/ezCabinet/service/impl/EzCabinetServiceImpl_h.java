@@ -530,7 +530,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 					return result;
 				}
 				catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					logger.debug("Not enough storage to upload these files!");
 					result.put("status", "error");
 					result.put("code", 4);

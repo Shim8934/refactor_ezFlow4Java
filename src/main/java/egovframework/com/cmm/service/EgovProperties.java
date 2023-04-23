@@ -69,7 +69,7 @@ public class EgovProperties{
 			try {
 				if (fis != null) fis.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 			}
 
 		}
@@ -102,7 +102,7 @@ public class EgovProperties{
 			try {
 				if (fis != null) fis.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 			}
 
 		}
@@ -134,7 +134,7 @@ public class EgovProperties{
 			try {
 				if (fis != null) fis.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 			}
 		}
 	}
@@ -164,7 +164,7 @@ public class EgovProperties{
 			try {
 				if (fis != null) fis.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 			}
 		}
 	}

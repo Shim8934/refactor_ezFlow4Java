@@ -1259,7 +1259,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				result.put("code", 3);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 			result.put("code", 2);
 		}

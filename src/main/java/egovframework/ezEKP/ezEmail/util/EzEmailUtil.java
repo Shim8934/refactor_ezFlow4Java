@@ -372,7 +372,7 @@ public class EzEmailUtil {
 	            }		
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return name;
@@ -468,7 +468,7 @@ public class EzEmailUtil {
 				}
 			}			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} 
 		
 		if (addressStr != null) {
@@ -492,7 +492,7 @@ public class EzEmailUtil {
 					name = ia.getAddress();
 				}
 			} catch (Exception e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(), e);
 				
 				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
 				// 예외가 발생하는데 이와 같은 경우에 대한 부가적인 처리를 수행한다.
@@ -518,7 +518,7 @@ public class EzEmailUtil {
 				InternetAddress ia = new InternetAddress(internetAddressStr);
 				address = ia.getAddress();
 			} catch (Exception e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(), e);
 				
 				// 현대오일뱅크" <HyundaiOilbank@oilbankcard.com> 와 같이 "가 하나만 있는 경우
 				// 예외가 발생하는데 이와 같은 경우에 대한 부가적인 처리를 수행한다.
@@ -939,7 +939,7 @@ public class EzEmailUtil {
 	            }
 	        }
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         	
         	// 디코딩 도중 예외가 발생하면 원제목을 반환하여 예외가 발생하더라도 메일 목록이 아예 표시되지 않는 등의 현상이 발생하지 않도록 한다.
         	subject = originalSubject;
@@ -1543,7 +1543,7 @@ public class EzEmailUtil {
 			// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
 			// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				
 				InputStream is = getContentInputStream(part); 
 										
@@ -1757,7 +1757,7 @@ public class EzEmailUtil {
 					// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
 					// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						
 						InputStream is = getContentInputStream(part); 
 												
@@ -2038,7 +2038,7 @@ public class EzEmailUtil {
             // charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
             // 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
                 
                 InputStream is = null; 
                     
@@ -3133,7 +3133,7 @@ public class EzEmailUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return newMessage;
@@ -3503,7 +3503,7 @@ public class EzEmailUtil {
 			// 이 경우 아래 else 문에서 재귀적 호출에 의해 처리되도록 함.
 			// docs/eml/mixed 파트내 related 파트에 첨부파일이 있는 메일.eml 참조
 			} catch (ArrayIndexOutOfBoundsException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			
 			if (fileName != null
@@ -4150,7 +4150,7 @@ public class EzEmailUtil {
 		        returnData[1] = userWarn;
 	        }    	
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     	}
         
     	return returnData;
@@ -4995,7 +4995,7 @@ public class EzEmailUtil {
 				dirFile.delete();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return zipFileName;
@@ -5213,7 +5213,7 @@ public class EzEmailUtil {
 				}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				logger.debug("outerMail insert Address fail / failAddress:" + address );
 			}
 		}
@@ -5271,7 +5271,7 @@ public class EzEmailUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			return true;
 		}
@@ -5437,7 +5437,7 @@ public class EzEmailUtil {
 				try {
 					return new InternetAddress(address);
 				} catch (AddressException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					return null;
 				}
 			}).filter(Objects::nonNull).toArray(InternetAddress[]::new);
@@ -5625,7 +5625,7 @@ public class EzEmailUtil {
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				if (ia != null) {
 					ia.close();
@@ -5806,7 +5806,7 @@ public class EzEmailUtil {
 				reSMTPAccess = SMTPAccess.getNotAuthInstance(smtpMailServer, smtpMailServerPort, smtpUserId, smtpUserPw);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			reSMTPAccess = SMTPAccess.getInstance(smtpMailServer, smtpMailServerPort, userAccount, userPw);
 		}
@@ -5838,7 +5838,7 @@ public class EzEmailUtil {
         		rePart = part;
         	}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
     	
     	return rePart;
@@ -6125,7 +6125,7 @@ public class EzEmailUtil {
             	icalVO.setDescription(vEvent.getDescription());
             }
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (is != null) {
 				try {

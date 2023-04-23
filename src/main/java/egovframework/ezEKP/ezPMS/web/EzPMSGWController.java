@@ -176,7 +176,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", projectList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", e.getMessage());
@@ -285,7 +285,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -445,7 +445,7 @@ public class EzPMSGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -602,7 +602,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -710,7 +710,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -864,7 +864,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", addResult);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -962,7 +962,7 @@ public class EzPMSGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1043,7 +1043,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1126,7 +1126,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1258,7 +1258,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1629,7 +1629,7 @@ public class EzPMSGWController {
 						ezPMSService.deleteTask(Long.parseLong(taskIdList[i]),
 								projectId, tenantId, companyId, lang);
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -1904,7 +1904,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", roleCheck);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1972,7 +1972,7 @@ public class EzPMSGWController {
 					cal.setTime(dateFormat.parse(holiday));
 					holidaySet.add(cal);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			});
 
@@ -2006,7 +2006,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -2052,7 +2052,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", taskList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -2222,7 +2222,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -2368,7 +2368,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -2492,7 +2492,7 @@ public class EzPMSGWController {
 			result.put("data", taskId + "");
 			result.put("projectProgress", projectProgress);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "fail");
@@ -2582,7 +2582,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/tasks/" + taskId + "/users/"
@@ -2857,7 +2857,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", groupList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -2980,7 +2980,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", "success");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "fail");
@@ -3265,7 +3265,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", roleCheck);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -3369,7 +3369,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", list);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -3403,7 +3403,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -3463,7 +3463,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -3566,7 +3566,7 @@ public class EzPMSGWController {
 			result.put("data", data);
 			result.put("projectProgress", projectProgress);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -3687,7 +3687,7 @@ public class EzPMSGWController {
 //			result.put("code", 0);
 //			result.put("data", groupList);
 //		} catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //			result.put("status", "error");
 //			result.put("code", 1);
 //			result.put("data", "");
@@ -3788,7 +3788,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", groupList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -3991,7 +3991,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [POST /rest/ezPMS/boards] ended");
@@ -4030,7 +4030,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [PUT /rest/ezPMS/boards] ended");
@@ -4070,7 +4070,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [PUT /rest/ezPMS/moveBoards] ended");
@@ -4105,7 +4105,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/boards] ended");
@@ -4299,7 +4299,7 @@ public class EzPMSGWController {
 			result.put("code", 1);
 			result.put("data", "");
 			result.put("taskName", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/list/" + projectId
@@ -4394,7 +4394,7 @@ public class EzPMSGWController {
 			result.put("data2", "");
 			result.put("status", "error");
 			result.put("code", 1);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/list-count/"
@@ -4567,7 +4567,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 0);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/attachfiles] ended.");
@@ -4627,7 +4627,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/attachfiles] ended.");
 		return result;
@@ -4745,7 +4745,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/boards/" + itemId + "] ended.");
 		return result;
@@ -4834,7 +4834,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", viewerCount + "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -4986,7 +4986,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/comments/list/" + projectId
@@ -5056,7 +5056,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [GET /rest/ezPMS/comments/list-count/"
@@ -5098,7 +5098,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [POST /rest/ezPMS/comments] ended");
@@ -5137,7 +5137,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/comments] ended");
@@ -5214,7 +5214,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [POST /rest/ezPMS/sysParams/" + userId
@@ -5258,7 +5258,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [POST /rest/ezPMS/boards/checkIfHasReplies] ended");
@@ -5301,7 +5301,7 @@ public class EzPMSGWController {
 	// result.put("status", "error");
 	// result.put("code", 1);
 	// result.put("data", "");
-	// e.printStackTrace();
+	// logger.error(e.getMessage(), e);
 	// }
 	//
 	// logger.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/"
@@ -5367,7 +5367,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId
@@ -5427,7 +5427,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS G/W [PUT /rest/ezPMS/allSchedules/users/" + userId
@@ -5467,7 +5467,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", memberList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -5511,7 +5511,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", folderList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -5565,7 +5565,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", roleCheck);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -5607,7 +5607,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", folder);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -5676,7 +5676,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", roleCheck);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -5742,7 +5742,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 			result.put("data", roleCheck);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

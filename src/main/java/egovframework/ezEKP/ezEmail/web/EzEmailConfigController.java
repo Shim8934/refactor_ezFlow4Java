@@ -457,7 +457,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -602,7 +602,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				result = (String)responseObj.get("resultCode");		        		        				
 			}						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("result=" + result);
@@ -645,7 +645,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				}				
 			}						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("result=" + result);
@@ -678,7 +678,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				result = (String)responseObj.get("resultCode");		        		        				
 			}						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("result=" + result);
@@ -1838,7 +1838,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			rtnVal = "ERROR";
 			logger.error(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailPop3Save ended.");
@@ -2037,7 +2037,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 										return true;
 									}
 								} catch (MessagingException e) {
-									e.printStackTrace();
+									logger.error(e.getMessage(), e);
 								}
 								return false;
 							}
@@ -2107,7 +2107,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 									out.flush();
 									logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale)
 										+ "messageId=" + messageId + ",subject=" + messages[i].getSubject());
-									e.printStackTrace();
+									logger.error(e.getMessage(), e);
 								}
 								
 							}
@@ -2122,7 +2122,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 							logger.error("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale)
 							+ egovMessageSource.getMessage("ezEmail.t502", locale));
 							
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						} finally {
 							if (innerFolder != null) {
 								innerFolder.close(true);
@@ -2138,7 +2138,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					
 					logger.error("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
 					
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (pa != null) {
 						pa.close();
@@ -2153,7 +2153,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			logger.error("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2430,7 +2430,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailGetUserDistribution ended.");
@@ -2528,7 +2528,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("returnData=" + returnData);
@@ -2569,7 +2569,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				ezEmailService.sendUserDLMail(loginCookie, cn, "refuse", toArr);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("refuseToApplyDL ended.");
@@ -2604,7 +2604,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				returnStr = "NOT INCLUDE";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("secessionDistribution ended.");
@@ -2794,7 +2794,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("searchUserDistribution ended.");
@@ -2830,7 +2830,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				returnStr = type.equals("add") ? "ADD" : "DELETE";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailUserDistributionApply ended. returnStr=" + returnStr);

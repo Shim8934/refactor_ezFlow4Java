@@ -315,7 +315,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		try {
 			file.renameTo(new File(commonUtil.detectPathTraversal(afterFilePath)));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("fileMove ended.");
@@ -346,7 +346,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			
 			bw.append(result.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			try {
 				fis.close();
@@ -354,7 +354,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				br.close();
 				bw.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}

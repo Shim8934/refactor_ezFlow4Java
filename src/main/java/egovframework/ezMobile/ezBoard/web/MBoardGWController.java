@@ -153,7 +153,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -229,7 +229,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -266,7 +266,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", resultList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -363,7 +363,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -448,7 +448,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -498,7 +498,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -547,7 +547,7 @@ public class MBoardGWController {
 	        result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 		}	
@@ -595,7 +595,7 @@ public class MBoardGWController {
 	        result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 		}	
@@ -634,7 +634,7 @@ public class MBoardGWController {
 				result.put("hasReply", "YES");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("hasReply", "ERROR");
@@ -681,7 +681,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -728,7 +728,7 @@ public class MBoardGWController {
 	        result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 		}	
@@ -760,7 +760,7 @@ public class MBoardGWController {
 	        result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 		}	
@@ -814,7 +814,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", list);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -962,7 +962,7 @@ public class MBoardGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1259,7 +1259,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1360,7 +1360,7 @@ public class MBoardGWController {
 						mail = accessDeptInfo.getMail();
 						logger.debug("dept sendMail : " + mail);
 					} catch (Exception e2) {
-						e2.printStackTrace();
+						logger.error(e2.getMessage(), e2);
 						logger.debug("error in accessID : " + vo.getAccessID()); // 직위, 직책, 권한그룹에 대해 메일발송되지 않음 (2021-09-08 기준 웹 그룹웨어와 동일 스펙)
 						continue;
 					}
@@ -1378,7 +1378,7 @@ public class MBoardGWController {
 			result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 		}		
@@ -1528,7 +1528,7 @@ public class MBoardGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 		}
@@ -1714,7 +1714,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", boardLineReplyVOList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1751,7 +1751,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1785,7 +1785,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", commentCount);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1827,7 +1827,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");

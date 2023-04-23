@@ -715,7 +715,7 @@ public class EzEmailMailListController {
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1039,7 +1039,7 @@ public class EzEmailMailListController {
 							sb.append(String.format("<countryName><![CDATA[%s]]></countryName>", countryName));
 							sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));							
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						}
 					}
 					
@@ -1263,7 +1263,7 @@ public class EzEmailMailListController {
 							sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));
 							
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						}
 					}
 					sb.append(String.format("<systemCountryCode><![CDATA[%s]]></systemCountryCode>", systemCountryCode.toLowerCase()));
@@ -1356,7 +1356,7 @@ public class EzEmailMailListController {
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1511,7 +1511,7 @@ public class EzEmailMailListController {
 			sourceFolder.close(true);		
 		} catch (Exception e) {
 			returnData = "ERROR : " + e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();		
@@ -1640,7 +1640,7 @@ public class EzEmailMailListController {
 			sourceFolder.close(true);		
 		} catch (Exception e) {
 			returnValue = "ERROR : " + e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1752,7 +1752,7 @@ public class EzEmailMailListController {
 			sourceFolder.close(true);
 		} catch (Exception e) {
 			returnData = "ERROR : " + e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1842,7 +1842,7 @@ public class EzEmailMailListController {
 			sourceFolder.close(true);
 		} catch (Exception e) {
 			returnData = "<DATA>ERROR</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2147,7 +2147,7 @@ public class EzEmailMailListController {
 			returnData = sb.toString();
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2239,7 +2239,7 @@ public class EzEmailMailListController {
 			sourceFolder.close(true);
 		} catch (Exception e) {
 			returnData = "ERROR : " + e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2360,7 +2360,7 @@ public class EzEmailMailListController {
 					message.writeTo(outputStream);
 					inputStream = new ByteArrayInputStream(outputStream.toByteArray());
 				} catch(IOException e){
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (inputStream != null) {
 						inputStream.close();
@@ -2395,7 +2395,7 @@ public class EzEmailMailListController {
 			sourceFolder.close(true);		
 		} catch (Exception e) {
 			returnValue = "ERROR : " + e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2442,7 +2442,7 @@ public class EzEmailMailListController {
 			mailbox.close(true);
 			result = Result.success();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = Result.failure();
 		}
 
@@ -2468,7 +2468,7 @@ public class EzEmailMailListController {
 			logger.debug("jgw deleteTagFromMail result: {}", deleteResult);
 			result = deleteResult.succeeded() ? Result.success() : Result.failure();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = Result.failure();
 		}
 
@@ -2498,7 +2498,7 @@ public class EzEmailMailListController {
 			logger.debug("jgw getUserTagFromMail result: {}", jgwResult);
 			result = jgwResult.succeeded() ? Result.success(jgwResult.getResult()) : Result.failure();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = Result.failure();
 		}
 

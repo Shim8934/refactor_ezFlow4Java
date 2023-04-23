@@ -817,7 +817,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        			// From 주소에 : 과 같은 illegal 문자가 있는 경우 mail.mime.address.strict 속성을 false로 하여도
 		        			// 전체회신을 하면 예외가 발생한다. 이 경우 orgMessage.reply(false)로 대신 호출한다.
 		        			} catch (AddressException e) {
-		        				e.printStackTrace();
+		        				logger.error(e.getMessage(), e);
 		        				
 		        				logger.debug("orgMessage.reply failed.");
 		        				
@@ -897,7 +897,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        				// retrieve the TO addresses from the reply message.
 		        				addresses = replyMessage.getRecipients(Message.RecipientType.TO);
 		        			} catch (AddressException e) {
-		        				e.printStackTrace();
+		        				logger.error(e.getMessage(), e);
 		        				
 		        				logger.debug("replyMessage.getRecipients TO failed.");
 		        				
@@ -955,7 +955,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								// retrieve the CC addresses from the reply message.
 								addresses = replyMessage.getRecipients(Message.RecipientType.CC);
 		        			} catch (AddressException e) {
-		        				e.printStackTrace();
+		        				logger.error(e.getMessage(), e);
 		        				
 		        				logger.debug("replyMessage.getRecipients CC failed.");
 		        				
@@ -1214,7 +1214,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				if (e.getMessage().indexOf("NO APPEND failed.") > -1) {
 					model.addAttribute("overQuota", true);
 				}
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				if (ia != null) {
 					ia.close();        	
@@ -1938,7 +1938,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						}
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 			
@@ -2069,7 +2069,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     				sb.append("<PBIGFILEUPLOAD>Y</PBIGFILEUPLOAD>");
     				sb.append("</NODE>");					
                 } catch(Exception e) {
-                	e.printStackTrace();
+                	logger.error(e.getMessage(), e);
                 } finally {
                 	if (bos != null) {
                 		try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -2149,7 +2149,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					sb.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
 					sb.append("</NODE>");					
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (bos != null) {
                 		try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -2198,7 +2198,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     		String crlf = System.getProperty("line.separator");
     		outWrite.append(crlf+crlf);
     	} catch(Exception e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     	} finally {
     		if (outWrite != null) {
     			try { outWrite.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -2395,7 +2395,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					sb.append("<PBIGFILEUPLOAD>Y</PBIGFILEUPLOAD>");
 					sb.append("</NODE>");					
 				} catch(Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (bos != null) {
 						try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -2476,7 +2476,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					sb.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
 					sb.append("</NODE>");					
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (bos != null) {
 						try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -2512,7 +2512,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			String crlf = System.getProperty("line.separator");
 			outWrite.append(crlf+crlf);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (outWrite != null) {
 				try { outWrite.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -2624,7 +2624,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						}
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 			
@@ -2765,7 +2765,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					sb.append("<PBIGFILEUPLOAD>Y</PBIGFILEUPLOAD>");
 					sb.append("</NODE>");					
 				} catch(Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (bos != null) {
 						try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -2843,7 +2843,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					sb.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
 					sb.append("</NODE>");					
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (bos != null) {
 						try { bos.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -2892,7 +2892,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			String crlf = System.getProperty("line.separator");
 			outWrite.append(crlf+crlf);
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (outWrite != null) {
 				try { outWrite.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -3176,7 +3176,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			returnValue = commonUtil.convertDocumentToString(xmldom);			
 		} catch (MessagingException e) {
 			returnValue = e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {			
 			if (ia != null) {
 				ia.close();
@@ -4186,7 +4186,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	message.writeTo(cos);
 		        	messageSize = cos.getSize() / 1000.0;
 		        } catch(Exception e) {
-		        	e.printStackTrace();
+		        	logger.error(e.getMessage(), e);
 		        } finally {
 		        	try { cos.close(); } catch (Exception e) {}
 		        }
@@ -4434,7 +4434,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        		fos = new FileOutputStream(originalFile);
 		    		        		message.writeTo(fos);
 		    		        	} catch (Exception e) {
-		    		        		e.printStackTrace();
+		    		        		logger.error(e.getMessage(), e);
 		    		        	} finally {
 		    						if (fos != null) {
 		    							try { fos.close(); } catch (IOException e) {}
@@ -4538,7 +4538,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						            		
 						            		Transport.send(message);
 					            		} catch (Exception e) {
-					            			e.printStackTrace();
+					            			logger.error(e.getMessage(), e);
 					            		}
 					            		
 		    			            	sentFolderMessageUID = 0;
@@ -4678,7 +4678,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								userAccount, userInfo.getDisplayName(), userInfo.getDisplayName1());
 					} catch (Exception e) {
 						logger.debug("AutoEmailAddress insert fail.");
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 	        
@@ -4712,7 +4712,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				} else if (e.getMessage().indexOf("RECEIVERCOUNTOVER") > -1) {
 					pResult = egovMessageSource.getMessage("ezEmail.receiverCount01", locale) + mailMaxReceiverCount + egovMessageSource.getMessage("ezEmail.receiverCount02", locale);
 				} else { // retry
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					
 					retryFlag = true;
 					--retryCount;
@@ -4843,7 +4843,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     	        folder.close(true);
     	        
     		} catch (MessagingException e) {
-    			e.printStackTrace();
+    			logger.error(e.getMessage(), e);
     		} finally {
     			if (ia != null) {
     				ia.close();
@@ -5080,7 +5080,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					folder.close(true);
 					
 				} catch (MessagingException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (ia != null) {
 						ia.close();
@@ -5543,7 +5543,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("mailGetDistribution ended.");
@@ -5706,7 +5706,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 			}			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		model.addAttribute("list", list);
@@ -5761,7 +5761,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getSharedMailboxList ended.");
@@ -5897,7 +5897,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				String value = field.get(userInfo).toString();
 				args[i] = value;
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 				args[i] = "";
 			}
 		}
@@ -5905,7 +5905,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		try {
 			return String.format(additionalFormat, args);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			return "";
 		}
 	}
@@ -5918,7 +5918,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         try {
             pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getCompanyID());
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
             pResult = "EXCEPTION";
         }
         return pResult;
@@ -5964,7 +5964,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "EXCEPTION";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
         
         return returnData;
@@ -6000,7 +6000,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             sb.append("</ROWS></LISTVIEWDATA>");
             returnValue = sb.toString();
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         	returnValue = "EXCEPTION";
         }
         return returnValue;
@@ -6051,7 +6051,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "EXCEPTION";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
         
         return returnData;
@@ -6067,7 +6067,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			try {
 				cid = URLDecoder.decode(cid, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			mat.appendReplacement(result, Matcher.quoteReplacement("src=\"cid:" + cid + "\""));
 		}
@@ -6128,9 +6128,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -6163,7 +6163,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     		message.writeTo(fos);
     	} catch (IOException e) {
     		logger.error("IOException has occurred");
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     	} finally {
     		if (fos != null) {
     			fos.close();
@@ -6519,7 +6519,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 											output.write(buffer, 0, byteRead);
 										}
 									} catch (Exception e) {
-										e.printStackTrace();
+										logger.error(e.getMessage(), e);
 									} finally {
 										if (ia != null) {
 											ia.close();
@@ -6542,7 +6542,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -6760,7 +6760,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				folder.close(true);
 				
 			} catch (MessagingException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				if (ia != null) {
 					ia.close();

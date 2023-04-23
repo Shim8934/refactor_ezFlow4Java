@@ -84,7 +84,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("folderType", folderType);
 			model.addAttribute("status", result.getStatus());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("webfolderMain end");
@@ -539,7 +539,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		try {
 			resultBody = (JSONObject) jp.parse(result.getBody());
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("renameFile end");

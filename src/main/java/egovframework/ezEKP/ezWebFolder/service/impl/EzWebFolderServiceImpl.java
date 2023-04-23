@@ -2268,7 +2268,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			try {
 				Files.deleteIfExists(Paths.get(realPath, path));
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -2297,7 +2297,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				try {
 					Files.deleteIfExists(Paths.get(realPath, path));
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}

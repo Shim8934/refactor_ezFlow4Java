@@ -415,7 +415,7 @@ public class EzPMSController {
 
 			logger.debug("projectId : " + projectId + ", groupId : " + groupId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			logger.debug("ERROR : " + e.getMessage());
 		}
 
@@ -1264,7 +1264,7 @@ public class EzPMSController {
 			
 		} catch (Exception e) {
 			logger.debug("sendNotiMail ERROR : " + e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS sendNotiMail Ended.");
@@ -1364,7 +1364,7 @@ public class EzPMSController {
 			logger.debug("ezPMS getToArrMailList ended");
 			return toArr;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			logger.debug("ezPMS getToArrMailList ERROR : " + e.getMessage());
 			return null;
 		}
@@ -2826,7 +2826,7 @@ public class EzPMSController {
 
 			commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS addGroup ended");
@@ -2861,7 +2861,7 @@ public class EzPMSController {
 
 			commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS deleteGroup ended");
@@ -2893,7 +2893,7 @@ public class EzPMSController {
 			commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/weight/", param, request, "put", null);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS updateTaskWeight ended");
@@ -2931,7 +2931,7 @@ public class EzPMSController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezPMS updateTaskProgress ended");

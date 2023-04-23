@@ -257,7 +257,7 @@ public class EzEmailAdminController {
 
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("returnData=" + returnData);
@@ -521,7 +521,7 @@ public class EzEmailAdminController {
 				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID, ownerId, policy, explaination, endDate, loginCookie);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		if (reasonCode == 0) {
@@ -728,7 +728,7 @@ public class EzEmailAdminController {
 			returnData = sb.toString();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("mailViewDistributionList ended.");
@@ -819,7 +819,7 @@ public class EzEmailAdminController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("result=" + result);
@@ -892,7 +892,7 @@ public class EzEmailAdminController {
 
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("returnData=" + returnData);
@@ -953,7 +953,7 @@ public class EzEmailAdminController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		model.addAttribute("importanceColor", importanceColor);
@@ -1002,7 +1002,7 @@ public class EzEmailAdminController {
 
 		} catch (Exception e) {
 			returnValue = "ERROR:" + e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("returnValue=" + returnValue);
@@ -1068,7 +1068,7 @@ public class EzEmailAdminController {
 
 			ezEmailUtil.setDefaultQuota(domainName, maxStorage, warnStorage);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			returnValue = "ERROR";
 		}
@@ -1165,7 +1165,7 @@ public class EzEmailAdminController {
 				ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
 			} catch (Exception e) {
 				logger.debug("error. user=" + email);
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				if (ia != null) {
 					ia.close();
@@ -1289,7 +1289,7 @@ public class EzEmailAdminController {
                 quaList.add(4, String.valueOf(mailboxQuota));
                 userList.add((ArrayList<String>) quaList);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             } finally {
                 if (ia != null) {
                     ia.close();
@@ -1536,7 +1536,7 @@ public class EzEmailAdminController {
 			returnData = sb.toString();
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getSharedMailboxList ended.");
@@ -1572,7 +1572,7 @@ public class EzEmailAdminController {
 			model.addAttribute("sharedMailboxInfo", sharedMailboxInfo);
 		} catch (Exception e) {
 			resultCode = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		model.addAttribute("resultCode", resultCode);
@@ -1747,7 +1747,7 @@ public class EzEmailAdminController {
 		
 		} catch (Exception e) {
 			resultCode = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		model.addAttribute("resultCode", resultCode);
@@ -1911,7 +1911,7 @@ public class EzEmailAdminController {
 						ezOrganAdminService.updateProperty(deptId, "DEPT_CD_PATH", deptId, "dept", tenantId);
 						
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						
 						ezEmailUserAdminService.removeGroup(mailAddr);	
 						logger.debug("create sharedMailbox dept failed.");
@@ -2040,7 +2040,7 @@ public class EzEmailAdminController {
 						}
 						
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.removeUser(mailAddr);
@@ -2116,7 +2116,7 @@ public class EzEmailAdminController {
 			
 		} catch (Exception e) {
 			resultCode = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		model.addAttribute("resultCode", resultCode);
@@ -2193,7 +2193,7 @@ public class EzEmailAdminController {
 			
 		} catch (Exception e) {
 			resultCode = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		model.addAttribute("resultCode", resultCode);
@@ -2218,7 +2218,7 @@ public class EzEmailAdminController {
 				ezEmailUserAdminService.removeGroup(newMailAddr);					
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -2276,7 +2276,7 @@ public class EzEmailAdminController {
 			returnData = sb.toString();
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getSharedMailboxListSearch ended.");
@@ -2479,7 +2479,7 @@ public class EzEmailAdminController {
 		try {
 			ezEmailService.deleteSignatureTemplate(signNo);
 		} catch (Exception e) {
-			 e.printStackTrace();
+			 logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("deleteSignTemplate ended.");
@@ -2625,7 +2625,7 @@ public class EzEmailAdminController {
 			}
 			
 		} catch (Exception e) {
-			 e.printStackTrace();
+			 logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("setSignatureTemplate ended.");

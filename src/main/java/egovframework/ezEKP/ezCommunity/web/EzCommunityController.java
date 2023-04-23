@@ -4653,7 +4653,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		sb.append("</NODES>");

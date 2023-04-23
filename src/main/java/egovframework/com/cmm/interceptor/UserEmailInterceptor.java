@@ -83,7 +83,7 @@ public class UserEmailInterceptor extends WebContentInterceptor {
 				return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return true;

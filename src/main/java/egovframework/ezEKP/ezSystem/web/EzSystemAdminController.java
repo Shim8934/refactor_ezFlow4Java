@@ -293,7 +293,7 @@ public class EzSystemAdminController {
 					licensedUserCount = items[1];
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		
@@ -1890,7 +1890,7 @@ public class EzSystemAdminController {
 					
 					countryVO.setImagePath(printImage); // 이미지 경로
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 			
@@ -2731,7 +2731,7 @@ public class EzSystemAdminController {
 		try {
 			message = ezSystemAdminService.updateFileExtension(tenantId, updateFileExtension);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("updateFileExtension controller ended");

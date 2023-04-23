@@ -590,7 +590,7 @@ public class EzEditorController extends EgovFileMngUtil {
 				model.addAttribute("sUploadedPath", uploadPath);
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 
 				resultCode = "1";
 			} finally {
@@ -756,7 +756,7 @@ public class EzEditorController extends EgovFileMngUtil {
 
 		} catch (Exception e) {
 			result = "";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		resultObj.put("result", result);
@@ -914,7 +914,7 @@ public class EzEditorController extends EgovFileMngUtil {
 			msg = egovMessageSource.getMessage("ezBoard.hyj02", locale);
 			result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
 
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("kukudocsUpload ended.");

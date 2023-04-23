@@ -3225,7 +3225,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			result = ezApprovalGService.updateAttachFileInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "File_NonAttach";
 		}
 		
@@ -3398,7 +3398,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				logger.debug("downloadAttach - ViewSatDocImage ended. ");
 			}
@@ -3534,13 +3534,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						zos.write(fileBytes);
 						zos.closeEntry();
 					} catch (IOException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					} finally {
 						if (bis != null) {
 							try {
 								bis.close();
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error(e.getMessage(), e);
 							}
 						}
 					}
@@ -3567,7 +3567,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				try {
 					zos.close();
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -4434,7 +4434,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			ret ="TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			ret = "FALSE";
 		} finally {
 		   if (bos != null) {
@@ -4806,7 +4806,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 			ret = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			ret = "FALSE";
 		} finally {
@@ -5750,13 +5750,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					zout.write(fileBytes);
 					zout.closeEntry();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (bis != null) {
 						try {
 							bis.close();
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						}
 					}
 				}
@@ -9601,7 +9601,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 //        try {
 //        	m_strMHT = ezCommonService.loadMHTFile(realPath + strURL);
 //		} catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //			m_strMHT= "";
 //		}
 //        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, userInfo.getLocale(), domain);
@@ -9620,7 +9620,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 //            fw.close();
 //
 //        }catch(Exception e){
-//            e.printStackTrace();
+//            logger.error(e.getMessage(), e);
 //        }
 //	
 //		DesiredCapabilities caps = new DesiredCapabilities();
@@ -9990,7 +9990,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			Path outputFile = Paths.get(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + fileName));
 			commonUtil.writeBytesToFile(outputFile, fileBytes);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("uploadDocHistory ended");
@@ -10393,7 +10393,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					sb.append(new String(Base64.decodeBase64(readLine), "euc-kr"));
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			
 			sb.append("<br/>");
@@ -11259,7 +11259,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			outputStreamWriter = new OutputStreamWriter(outputStream);
 			outputStreamWriter.write(convertedMht);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			outputStreamWriter.close();
 			outputStream.close();
@@ -11465,7 +11465,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	            }
 	        }
 	    } catch(Exception e) {
-	        e.printStackTrace();
+	        logger.error(e.getMessage(), e);
 	        retStr = "E";
 	    }
 	    
@@ -11718,7 +11718,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			result = ezApprovalGService.saveTmpGroup(docID, tabSN, groupDocSN, userID, lang, orgCompanyID, tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "error";
 		}
 		
@@ -11748,7 +11748,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			result = (userID + "@" + Integer.parseInt(sn));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "error";
 		}
 		
@@ -11779,7 +11779,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			result = ezApprovalGService.checkIsGroupDoc(userID, docID, orgCompanyID, tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "error";
 		}
 		
@@ -11831,7 +11831,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getGroupDocListByDocID ended. resultAry = " + resultAry.toString());
@@ -11855,7 +11855,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			ezApprovalGService.delGroupDocInfoByDocID(docID, mode, orgCompanyID, tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("delGroupDocInfoByDocID ended.");
@@ -11882,7 +11882,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			// 내부적으로 임시저장 레코드의 삭제(tmpGroupDocSN != "" 인 경우) 및 신규 레코드 삽입을 진행
 			ezApprovalGService.saveAprGroupAndDelTmp(docID, tabSN, newGroupDocSN, tmpGroupDocSN, orgCompanyID, tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("saveAprGroupAndDelTmp ended.");
@@ -11906,7 +11906,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			result = ezApprovalGService.getReceiptExists(docID, mode, orgCompanyID, tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getReceiptExists ended, result = " + result);
@@ -11931,7 +11931,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			ezApprovalGService.copyFirstTabOpinion(docID, groupDocSN, opinionType, orgCompanyID, tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -11952,7 +11952,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			result = ezApprovalGService.chkOpinionInfoExist(docID, orgCompanyID, tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("chkOpinionInfoExist ended, result = " + result);
@@ -11977,7 +11977,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			result = ezApprovalGService.getHWPDocNumFormatByFormID(formID, realPath, orgCompanyID, tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getDocNumFormatByFormID ended, result = " + result);
@@ -12005,7 +12005,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			result = ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getAprOrEndStr ended, docID = " + docID + " / result = " + result);

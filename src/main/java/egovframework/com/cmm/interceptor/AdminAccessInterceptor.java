@@ -128,7 +128,7 @@ public class AdminAccessInterceptor extends WebContentInterceptor {
 			
 			return returnValue;
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return false;
 		}
 	}

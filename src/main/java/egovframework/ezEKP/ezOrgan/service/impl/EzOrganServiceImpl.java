@@ -690,9 +690,9 @@ public class EzOrganServiceImpl implements EzOrganService {
     				} catch (ParseException e) {
     					// TODO Auto-generated catch block
     					logger.error("dateFormat.parse(dateFormat.format(new Date())) error :: " + e);
-    					e.printStackTrace();
+    					logger.error(e.getMessage(), e);
     				} catch (Exception ee) {
-    				    ee.printStackTrace();
+    				    logger.error(ee.getMessage(), ee);
     				}
             	}
             	
@@ -1202,7 +1202,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         	
         	memberlist2.append("</ROWS></LISTVIEWDATA>");
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         	memberlist2 = new StringBuilder("<LISTVIEWDATA>");
         	memberlist2.append("<TOTALCOUNT>" + "0" + "</TOTALCOUNT><ROWS>");
         	memberlist2.append("</ROWS></LISTVIEWDATA>");

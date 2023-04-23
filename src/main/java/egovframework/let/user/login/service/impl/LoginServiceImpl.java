@@ -456,7 +456,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 				result = vo.getMobile() + " " + egovMessageSource.getMessage("login.zno004", locale);
 			} catch (Exception e) {
 				result = egovMessageSource.getMessage("login.zno005", locale);
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		} else {
 			result = egovMessageSource.getMessage("login.zno005", locale);
@@ -550,7 +550,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 						result = "fail|" + egovMessageSource.getMessage("login.zno024", loginVO.getLocale());
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					result = "fail|" + egovMessageSource.getMessage("login.zno024", loginVO.getLocale());
 				}
 			}

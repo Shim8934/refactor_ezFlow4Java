@@ -1069,7 +1069,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 			result = "SUCCESS";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result = "FAIL";
 		}

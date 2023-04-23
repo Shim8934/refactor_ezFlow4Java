@@ -91,7 +91,7 @@ public class EzPortalExchangeController extends EgovFileMngUtil {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("exchangeRateSection end");
 

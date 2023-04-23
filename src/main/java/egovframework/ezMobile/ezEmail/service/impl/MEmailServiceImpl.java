@@ -189,7 +189,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 					
 			folder.close(false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -279,7 +279,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 		} finally {
 			if (ia != null) {

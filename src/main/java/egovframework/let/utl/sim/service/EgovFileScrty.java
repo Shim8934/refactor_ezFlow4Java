@@ -341,9 +341,9 @@ public class EgovFileScrty {
 					.getInstance("RSA")
 					.generatePrivate(new RSAPrivateKeySpec(modulus_, privateExponent_));
 		} catch (InvalidKeySpecException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return privateKey;

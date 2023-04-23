@@ -303,7 +303,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createTblSerialNoRollback(); // 2022-09-21 홍승비 - 전자결재G > 문서 기록물 레코드 중복삽입 시 에러 롤백방지 기록 테이블 추가
 	    	
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     	}
     	logger.debug("init ended.");
     }
@@ -628,7 +628,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							result = "OK";
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 							commonUtil.getJsonFromRestApi("/rest/ezjournal/types", param, request, "delete", null);
 
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
@@ -736,7 +736,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     					result = "OK";
     				// 예외가 발생하면 그룹 주소를 다시 등록한다.
 				    } catch (Exception e) {
-				    	e.printStackTrace();
+				    	logger.error(e.getMessage(), e);
 				    	
 				        ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 				        ezEmailUserAdminService.addGroup(mailAddr);
@@ -1008,7 +1008,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 			}		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return originalMailAddr;		
@@ -1044,7 +1044,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 			}		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}				
 	}
 	
@@ -1585,7 +1585,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				logger.debug("user delete webfolderData delete. end.");
 			} catch(Exception e)  {
 				logger.debug("webfolderDelete error.");
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			
 			if (userExists == 0) { // 이메일 계정이 존재하지 않음.
@@ -1665,7 +1665,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
 					ezOrganAdminService.deleteDestUserProfileImage(cn[i], tenantID, realPath); // 2023-02-28 김은실 : 프로필 이미지  삭제
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
 						if (distributionList != null) {
 							for (String dist : distributionList) {
@@ -1854,8 +1854,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					result = preResult.toString();
 				}
         	} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-        		e.printStackTrace();
-        		e.printStackTrace();
+        		logger.error(e.getMessage(), e);
+        		logger.error(e.getMessage(), e);
         		result = "EMAIL_ERROR";
         	}
 		// 새로운 사용자를 등록한다.
@@ -1945,10 +1945,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 														
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeUser(mailAddr);
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 							result = "EMAIL_ERROR";
 						}
 					} else {
@@ -1970,7 +1970,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						setInitMailSign(vo);
 					} catch (Exception e) {
 						logger.error("setInitMailSign error.");
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 				
@@ -1981,7 +1981,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						setInitInboxRule(loginCookie, vo, locale);
 					} catch (Exception e) {
 						logger.error("setInitInboxRule error.");
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 	        }
@@ -3283,7 +3283,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("saveEmail ended.");
@@ -3313,7 +3313,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String mail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
 			returnValue = ezEmailService.checkIndividualAlias(mail,tenantId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("checkEmail ended.");
@@ -3417,7 +3417,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             
             returnValue = "OK";
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         
         logger.debug("saveUserQuota ended.");
@@ -3449,7 +3449,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				returnValue = "OK";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("syncWithBizmekaTalkAccounts ended.");
@@ -3505,7 +3505,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("syncOrganAccounts ended.");
@@ -3615,7 +3615,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		try {
 			operatorMailId = ezCommonService.getCompanyConfig(tenantID, companyID, "operatorMailId");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("operatorMailId=" + operatorMailId);
@@ -3648,7 +3648,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				Files.copy(sourceFile.toPath(), targetFile.toPath());
 				logger.debug("copy original File to thumbnail.");
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				logger.error(e1.getMessage(), e1);
 			}
 		}
 		
@@ -3811,7 +3811,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			logger.debug("update count=" + updateRow + " userconfig adminOrderNotUsedMobileLogin=" + setUsed);
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		response.addHeader("Result", returnValue);
@@ -4253,7 +4253,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezOrganAdminService.updateDBData_user_new(vo);
 			result = "OK";
 		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "EMAIL_ERROR";
 		}
 
@@ -4328,7 +4328,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezOrganAdminService.updateDBData_user_new(vo);
 			result = "OK";
 		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "EMAIL_ERROR";
 		}
 
@@ -4689,7 +4689,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezBoardAdminService.trunkBoard(tenantId);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("setPermissionGroup ended.");
@@ -4871,7 +4871,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			returnData = sb.toString();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getPermissionGroupInfo ended.");
@@ -4900,7 +4900,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezBoardAdminService.trunkBoard(tenantID);
             
         } catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "ERROR";
 		}
 		
@@ -4949,7 +4949,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getGroupList ended.");
@@ -4978,7 +4978,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			result = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getJikwiList ended.");
@@ -5067,7 +5067,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				    maxItemPerPage, searchKeycode, searchKeyword, stopFlag, offset, companyId);
 			itemCnt = ezOrganAdminService.getLoginStopUserListCount(userInfo.getTenantId(), searchKeycode, searchKeyword, stopFlag, companyId);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			userCnList = new ArrayList<>();
 			itemCnt = 0;
 		}
@@ -5117,7 +5117,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezOrganAdminService.insertStopUser(cnArr, companyId, userInfo.getTenantId());
 			result = "OK";
 		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "EMAIL_ERROR";
 		}
 
@@ -5172,7 +5172,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getGroupListBoard ended.");
@@ -5205,7 +5205,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			result = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getJikwiListBoard ended.");
@@ -5232,7 +5232,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezOrganAdminService.deleteStopUser(cnArr, companyId, userInfo.getTenantId());
 			result = "OK";
 		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "EMAIL_ERROR";
 		}
 		
@@ -5386,7 +5386,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 		}
@@ -5418,7 +5418,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		try {
 			ezOrganAdminService.getExcelFile(fileName, realPath, userAgent, response, tenantId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("downloadExcelReport end");
@@ -5501,7 +5501,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("trashDept ended");

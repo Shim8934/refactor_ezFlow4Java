@@ -567,7 +567,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				try {
 					ezOrganAdminDAO.insertCompanyInfo_I30(map);
 				} catch (Exception e1) {
-					e1.printStackTrace();
+					logger.error(e1.getMessage(), e1);
 				}
 			}
 		}
@@ -662,7 +662,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		} catch (Exception e) {
 			logger.debug("updateListOptionData() ERROR...");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -771,7 +771,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		} catch (Exception e) {
 			logger.debug("addMsgInMailSearch() ERROR...");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -905,7 +905,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			try {
 					insert("EzCommonDAO.insertPortlet",map);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -925,7 +925,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertPortalThemePortlet",map);
 				insert("EzCommonDAO.insertPortalPortletAuth",map);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		
@@ -942,7 +942,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertPortalThemePortlet",map);
 				insert("EzCommonDAO.insertPortalPortletAuth",map);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		
@@ -960,7 +960,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertPortalPortletAuth",map);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 	}
@@ -994,7 +994,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 					try {
 						ezOrganAdminDAO.insertCompanyInfo_I31(map);
 					} catch (Exception e1) {
-						e1.printStackTrace();
+						logger.error(e1.getMessage(), e1);
 					}
 				}
 			}
@@ -1026,7 +1026,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 					try {
 						ezOrganAdminDAO.insertCompanyInfo_I32(map);
 					} catch (Exception e1) {
-						e1.printStackTrace();
+						logger.error(e1.getMessage(), e1);
 					}
 				}
 			}
@@ -1143,7 +1143,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		} catch (Exception e) {
 			logger.debug("alterChamjoView() ERROR...");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -1153,7 +1153,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		} catch (Exception e) {
 			update("EzCommonDAO.addAddressFurigana");
 			logger.debug("JMOCHA_ADDRESS_INFO S_FURIGANA doesn't exist. creating the column...");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -1222,7 +1222,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 					if (ex.getMessage().contains("ORA-00972")) {
 						logger.debug("{} skip, cause=oracle 11g xe error: {}", keyVal, ex.getMessage());
 					} else {
-						ex.printStackTrace();
+						logger.error(ex.getMessage(), ex);
 					}
 				}
 			}
@@ -1248,7 +1248,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertThemeAuthInit", map);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 	}
@@ -1266,7 +1266,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertPortletAuthInit", map);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -1282,7 +1282,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		try {
 			insert("EzCommonDAO.insertSurveyMenu");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -1292,7 +1292,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyMenuAuth", map);
 			insert("EzCommonDAO.insertSurveyMenuName", map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -1428,7 +1428,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 					int cnt = (int) select("EzCommonDAO.checkTblAdminAccessIpSequence");
 					if (cnt < 1) {throw new Exception(); }
 				} catch (Exception ee) {
-					// ee.printStackTrace();
+					// logger.error(ee.getMessage(), ee);
 					logger.debug("TBL_ADMIN_ACCESS_IP Sequence doesn't exist. creating the Sequence...");
 					
 					update("EzCommonDAO.createTblAdminAccessIpSequence");
@@ -1446,7 +1446,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertReBebuOpinionCode", map);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 	}
@@ -1657,7 +1657,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
                insert("EzCommonDAO.insertAutoSendOfferFlag");
            }
        } catch (Exception e) {
-           e.printStackTrace();
+           logger.error(e.getMessage(), e);
        }
    }
 
@@ -1686,7 +1686,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertPortalThemePortlet",map);
 				insert("EzCommonDAO.insertPortalPortletAuth",map);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -1703,7 +1703,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			try {
 					insert("EzCommonDAO.insertPortletWithCode",map);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -1826,7 +1826,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertPortalThemePortlet",map);
 				insert("EzCommonDAO.insertPortalPortletAuth",map);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -1850,7 +1850,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				int cnt = (int) select("EzCommonDAO.checkMailTemplateSequence");
 				if (cnt < 1) {throw new Exception(); }
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				logger.debug("MailTemplateSequence doesn't exist. creating the Sequence...");
 				
 				update("EzCommonDAO.createMailTemplateSequence");
@@ -1949,7 +1949,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 					if (ex.getMessage().contains("ORA-00972")) {
 						logger.debug("{} skip, cause=oracle 11g xe error: {}", keyVal, ex.getMessage());
 					} else {
-						ex.printStackTrace();
+						logger.error(ex.getMessage(), ex);
 					}
 				}
 			}
@@ -2220,7 +2220,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		} catch (Exception e) {
 			logger.debug("alterTblAddjobMaster ERROR...");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -2319,7 +2319,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertReceiptHistoryListoption", map);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -2343,7 +2343,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterTblDevMaster");
 		} catch (Exception e) {
 			logger.debug("alterTblDevMaster() ERROR...");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	

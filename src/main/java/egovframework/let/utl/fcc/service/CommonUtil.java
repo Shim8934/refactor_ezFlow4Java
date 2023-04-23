@@ -517,7 +517,7 @@ public class CommonUtil {
 			
 			return user;
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return new LoginVO();
 		}
 	}
@@ -573,7 +573,7 @@ public class CommonUtil {
 			loginService.insertLog(loginVO); // 로그인히스토리 로그 저장
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("updateLoginInfo ended.");
@@ -635,7 +635,7 @@ public class CommonUtil {
 				filename = new String(filename.getBytes("UTF-8"), "ISO-8859-1");
 			}
 		} catch (Exception e) {			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return filename;
@@ -724,7 +724,7 @@ public class CommonUtil {
 			// 세션 콘피그가 0 이거나 비어있으면 세션 로그인 사용 안 함
 			usingSession = !useSessionConfig.isEmpty() && !useSessionConfig.equals("0");
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			return false;
 		}
 
@@ -754,7 +754,7 @@ public class CommonUtil {
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
 			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return false;
@@ -836,7 +836,7 @@ public class CommonUtil {
             builder = factory.newDocumentBuilder();  
             doc = builder.parse(new InputSource(new StringReader(replaceData)));
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         }
         
         return doc;
@@ -1315,7 +1315,7 @@ public class CommonUtil {
 					packageType = items[2];					
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				logger.debug("License Key Decryption failed.");
 			}			
 		}
@@ -1342,7 +1342,7 @@ public class CommonUtil {
 					packageType = items[2];					
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				logger.debug("License Key Decryption failed.");
 			}			
 		}
@@ -1365,7 +1365,7 @@ public class CommonUtil {
 			}
 		// Exception이 발생하는 경우엔 로그를 출력한다.
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     	}
     }
 
@@ -1532,10 +1532,10 @@ public class CommonUtil {
 			try {
 				resultBody = (JSONObject) jp.parse(result.getBody());
 			} catch (org.json.simple.parser.ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getJsonFromRestApi ended");
@@ -1620,7 +1620,7 @@ public class CommonUtil {
 			return user;
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return new LoginVO();
 		}
 	}
@@ -1680,7 +1680,7 @@ public class CommonUtil {
 		try {
 			resultBody = (JSONObject) jp.parse(result.getBody());
 		} catch (org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("getJsonFromWebFolderRestApi ended");
 		return resultBody;
@@ -1772,7 +1772,7 @@ public class CommonUtil {
 		try {
 			resultBody = (JSONObject) jp.parse(result.getBody());
 		} catch (org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getJsonFromRestApi ended.");
@@ -1827,7 +1827,7 @@ public class CommonUtil {
 		try {
 			resultBody = (JSONObject) jp.parse(result.getBody());
 		} catch (org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("getJsonFromMemoRestApi ended.");
 		return resultBody;
@@ -1966,7 +1966,7 @@ public class CommonUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			logger.debug("multilogin fail::: loginCookie = " + loginCookie);
 		}
 		
@@ -2016,7 +2016,7 @@ public class CommonUtil {
     		countryInfo = ezCommonService.getCountryInfo(map);
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return countryInfo;
 	}
@@ -2347,7 +2347,7 @@ public class CommonUtil {
                         menuAccess = true;
                     }
 				} catch (Exception e) {
-				    e.printStackTrace();
+				    logger.error(e.getMessage(), e);
                 }
 				
 				List<MenuInfoVO> menuFilter = menuList.stream().filter(menuInfo -> menuInfo.getMenuCode() != null && menuInfo.getMenuCode().equals(menuCode))
@@ -2362,7 +2362,7 @@ public class CommonUtil {
 			
 			logger.debug("menuAccessList : " + menuAccessList.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("checkMenuAccess ended.");
@@ -2641,7 +2641,7 @@ public class CommonUtil {
 			}
 		} catch (Exception e) {
 			status = "error";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (inputStream != null) {
 				try {
@@ -2690,13 +2690,13 @@ public class CommonUtil {
 				code = jr.getErrCode();
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			status = "error";
 		} finally {
 			try {
 				job.clearJobDirectory();  
 			} catch(Exception ee) {
-				ee.printStackTrace();
+				logger.error(ee.getMessage(), ee);
 			}
 		}
 		logger.debug("[==================== Unidocs PDF Job End ====================]");
@@ -2750,7 +2750,7 @@ public class CommonUtil {
 				file.delete();
 			}
 			fileDownPath.clear();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} 
 		
 		logger.debug("attachWebFolderFile end.");
@@ -2899,7 +2899,7 @@ public class CommonUtil {
 			resultBody = (JSONObject) jp.parse(resultBodyTemp.toString());
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getXML2JsonFromRestApi ended.");

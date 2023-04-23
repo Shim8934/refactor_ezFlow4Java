@@ -96,7 +96,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h {
 			resultBody = (JSONObject) jp.parse(result.getBody());
 		}
 		catch (org.json.simple.parser.ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return resultBody;

@@ -538,7 +538,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			return "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "FALSE";
 		}
 	}
@@ -5811,7 +5811,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					// 성공 기록물철 개수 증가
 					sucessCount++;
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					
 					// 자동생성 중 오류난 기록물철은 기록물철 일련번호(TYPE1 = '001') 롤백
 					rollbackSN("001", deptCode, taskCode, regSN, companyID, strLang, tenantID, produceY);

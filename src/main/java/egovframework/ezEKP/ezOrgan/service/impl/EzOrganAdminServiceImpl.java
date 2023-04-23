@@ -363,7 +363,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 					moveDBData(parentCn, cn, type, offset, tenantID);
 		            result = "OK";
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					ezEmailUserAdminService.updateGroupMove(newGroupAddr, oldGroupAddr, mailAddr);
 					result = "EMAIL_ERROR";
 				}				
@@ -839,7 +839,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
                 /*
                 map.put("v_CLASS", "group");
                 ezOrganAdminDao.deleteDBDataForJMocha(map);*/
@@ -1261,7 +1261,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
 			*/
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("deleteDestUserProfileImage ended");
@@ -1391,7 +1391,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         					
         				}       
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
-            			e.printStackTrace();
+            			logger.error(e.getMessage(), e);
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
             		}
                 } else {
@@ -1618,7 +1618,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.setTitle(map);
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -1743,7 +1743,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.updateTitle3(map);	//TBL_ADDJOBMASTER
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -1771,7 +1771,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -2207,7 +2207,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.insertStopUser(map);
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -2552,7 +2552,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				file.delete();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		
@@ -2634,7 +2634,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.deleteStopUser(map);
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -2655,7 +2655,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		try {
 			flag = ezOrganAdminDao.checkStopUser(map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("checkStopUser ended. result = " + flag);

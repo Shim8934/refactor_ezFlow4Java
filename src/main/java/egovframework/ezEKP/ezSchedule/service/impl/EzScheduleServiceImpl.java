@@ -1604,7 +1604,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			}
 			sID = scheduleId;			
 		} catch (Exception e) {
-			e.printStackTrace(); //테스트를 위해 추가
+			logger.error(e.getMessage(), e); //테스트를 위해 추가
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();
@@ -1944,7 +1944,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		try {
 			FileUtils.copyFile(new File(orgContentPath), new File(newContentPath));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("copyMhtFile ended");

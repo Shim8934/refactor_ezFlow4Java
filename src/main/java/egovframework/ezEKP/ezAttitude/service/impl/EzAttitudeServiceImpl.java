@@ -2423,7 +2423,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     		
     		memberlist2.append("</ROWS></LISTVIEWDATA>");
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     		memberlist2 = new StringBuilder("<LISTVIEWDATA>");
     		memberlist2.append("<TOTALCOUNT>" + "0" + "</TOTALCOUNT><ROWS>");
     		memberlist2.append("</ROWS></LISTVIEWDATA>");
@@ -3166,7 +3166,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		try {
 				ezAttitudeDAO.changeAnnualHistory(map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("setAnnualHistory ended");

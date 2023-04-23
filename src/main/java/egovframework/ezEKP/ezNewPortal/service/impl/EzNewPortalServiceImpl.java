@@ -128,7 +128,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					map.put(fields[i].getName(), fields[i].get(poll));
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		

@@ -48,7 +48,7 @@ public class EzPersonalGWController {
 				result = Result.successWithCode(-1);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result = Result.failure();
 		}
 

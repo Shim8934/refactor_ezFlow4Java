@@ -1954,7 +1954,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
 		} catch (Exception e) {
 			reStr = "EMAIL_ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return reStr;

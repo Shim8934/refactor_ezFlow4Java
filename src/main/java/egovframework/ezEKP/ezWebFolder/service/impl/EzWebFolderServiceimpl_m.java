@@ -1841,7 +1841,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		try {
 			ezWebFolderDAO_m.insertWebFolderApplyHistory(map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			throw new Exception("HISTORY_ERROR");
 		}
 	}
@@ -1870,7 +1870,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			try {
 				ezWebFolderDAO_m.insertWebFolderApplyHistoryMember(map);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				throw new Exception("HISTORY_MEMBER_ERROR");
 			}
 		} // while end

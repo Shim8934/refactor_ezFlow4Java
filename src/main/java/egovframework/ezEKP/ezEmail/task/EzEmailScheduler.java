@@ -171,7 +171,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
 			} catch (Exception e) {
 				logger.debug("error. user=" + email);
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				if (ia != null) {
 					ia.close();
@@ -261,7 +261,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -398,7 +398,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					f.close(true);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				if (ia != null) {
 					ia.close();
@@ -609,7 +609,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        		fos = new FileOutputStream(originalFile);
     		        		message.writeTo(fos);
     		        	} catch (Exception e) {
-    		        		e.printStackTrace();
+    		        		logger.error(e.getMessage(), e);
     		        	} finally {
     						if (fos != null) {
     							try { fos.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
@@ -709,7 +709,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		        				Transport.send(message);
 		        				
 		        			} catch (Exception e1) {
-		        				e1.printStackTrace();
+		        				logger.error(e1.getMessage(), e1);
 		        				String errorMessage = e1.getMessage();
 		        				logger.debug("remove Invalid address. and retry");
 		        				
@@ -748,7 +748,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				            		message.setRecipient(RecipientType.TO, a);
 			            			Transport.send(message);
 			        			} catch (Exception e) {
-			        				e.printStackTrace();
+			        				logger.error(e.getMessage(), e);
 			        				String errorMessage = e.getMessage();
 			        				
 			        				if (errorMessage.contains("Invalid Addresses")) {
@@ -849,7 +849,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				
 				retryFlag = false;				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				String errorMessage = e.getMessage();
 				
 				//유효하지 않은 사용자일 경우, eml 파일 및  예약 발송 정보(DB) 삭제
@@ -956,7 +956,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			
 			ezEmailService.sendMail(originalSender, jspw, null, from, new InternetAddress[]{ new InternetAddress(originalSender) }, null, null, subject, content.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -997,7 +997,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	            try {
 	            	keepLogPeriodNum = Integer.parseInt(LoginMailLogKeepPeriod);
 	            } catch (Exception e) {            	
-	            	e.printStackTrace();
+	            	logger.error(e.getMessage(), e);
 	            }
             }
             
@@ -1005,7 +1005,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	            // 보존 기간이 지난 로그인 히스토리 로그를 삭제한다.
 	            ezSystemAdminService.deleteLoginHist(keepLogPeriodNum, tenant.getTenantId());
             } catch (Exception e) {           
-            	e.printStackTrace();
+            	logger.error(e.getMessage(), e);
             }
             
             try {
@@ -1013,7 +1013,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
             	ezSystemAdminService.deleteWebfolderLog(keepLogPeriodNum, tenant.getTenantId());
             } catch (Exception e) { 
             	logger.debug("deleteWebfolderLog delete fail. ");
-            	e.printStackTrace();
+            	logger.error(e.getMessage(), e);
             }
             
             // 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
@@ -1082,7 +1082,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                     logger.debug("response=" + response);                           
                 } catch (Exception e) {
                     logger.debug(e.getMessage());
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 } finally {
                     if (ia != null) {
                         ia.close();
@@ -1195,7 +1195,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				emailArray.add(emailAddress);
 			}			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 		}
 		
 		// using system locale
@@ -1289,7 +1289,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				// send mail
 				ezEmailService.sendMail(userEmail, jspw, null, from, new InternetAddress[]{ new InternetAddress(userEmail) }, null, null, subject, content.toString(), false, EmailImportance.HIGH);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 			}
 			
 		}
@@ -1330,7 +1330,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 			}
 		}	
@@ -1503,7 +1503,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		        }
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		} else {
 			logger.debug("config.Run_Scheduler property is not YES.");

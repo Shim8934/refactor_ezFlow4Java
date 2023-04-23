@@ -105,7 +105,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -148,7 +148,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 			result.put("code", 0);
 			result.put("data", opt);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -213,7 +213,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 			result.put("data", opt);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

@@ -108,7 +108,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 			result.put("code", 0);
 			result.put("data", resultMap);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -143,7 +143,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 			result.put("code", 0);
 			result.put("data", returnValue);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -216,7 +216,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 			result.put("code", 0);
 			result.put("data", checkAttitude);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 		}
@@ -268,7 +268,7 @@ public class MAttitudeGWController extends EgovFileMngUtil {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

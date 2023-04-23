@@ -185,7 +185,7 @@ public class KlibUtil {
 			debugBytes("encrypted bytes", encryptedBytes);
 			debugBytes("decrypted bytes", result);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			logger.debug("Failed to decrypt, returns the source bytes.");
 			result = encryptedBytes;
 		}

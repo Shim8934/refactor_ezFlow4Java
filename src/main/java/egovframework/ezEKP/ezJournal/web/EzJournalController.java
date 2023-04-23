@@ -233,7 +233,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		try {
 			param = new ObjectMapper().readValue(jsonParam.toJSONString(), Map.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		String listType =(String) param.get("listType");
 		int listCnt = Integer.parseInt(param.get("listCnt").toString());
@@ -1296,7 +1296,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		try {
 			viewDate = commonUtil.getTodayUTCTime("");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		*/
 		
@@ -1351,7 +1351,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			try {
 				param.put("viewDate",commonUtil.getTodayUTCTime(""));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			*/
 			
@@ -1436,7 +1436,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		try {
 			replyDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		*/
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -1740,7 +1740,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		try {
 			viewDate = commonUtil.getTodayUTCTime("");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		*/
 		
@@ -1822,7 +1822,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		try {
 			viewDate = commonUtil.getTodayUTCTime("");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		*/
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -1893,7 +1893,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				from.setPersonal(userInfo.getDisplayName());
 				ezEmailService.sendMail(loginCookie , from, toArr, null, null, subject, content, false);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -1945,7 +1945,7 @@ public class EzJournalController extends EgovFileMngUtil {
 							recvMail.setPersonal((String) journalEnv.get("name"));
 							toArrList.add(recvMail);
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						}
 					}
 				}
@@ -1971,7 +1971,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				from.setPersonal(userInfo.getDisplayName());
 				ezEmailService.sendMail(loginCookie , from, toArr, null, null, subject, content, false);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		

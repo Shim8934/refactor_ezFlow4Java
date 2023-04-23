@@ -23,6 +23,9 @@ import org.springframework.stereotype.Service;
 
 import com.ibm.icu.util.Calendar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
@@ -45,6 +48,8 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("MScheduleService")
 public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MScheduleService{
 		
+	private static final Logger logger = LoggerFactory.getLogger(MScheduleServiceImpl.class);
+
 	@Resource(name="MScheduleDAO")
 	private MScheduleDAO mScheduleDAO;
 	
@@ -178,7 +183,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();
@@ -289,7 +294,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fis != null) fis.close();				
 			if (fos != null) fos.close();
@@ -341,7 +346,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				bos.write(buffer, 0, bytesRead);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();

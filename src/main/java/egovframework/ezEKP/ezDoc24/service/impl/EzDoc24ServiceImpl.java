@@ -119,7 +119,7 @@ public class EzDoc24ServiceImpl extends EgovFileMngUtil implements EzDoc24Servic
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
         return resultPost;

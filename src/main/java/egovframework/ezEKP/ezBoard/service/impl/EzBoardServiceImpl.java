@@ -2230,7 +2230,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		} catch (Exception e) {
 			logger.error("EzBoard :: deleteOneLineReply");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnValue = "FAIL";
 		}
 		
@@ -2517,7 +2517,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			try {
 				map.put("v_pFileContent", boardListVO.getImageContent());
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				map.put("v_pFileContent", "");
 			}
 			map.put("v_pImageName", boardListVO.getImageNames());
@@ -3217,7 +3217,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			resultValue = "OK";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			resultValue = "ERROR";
 		}
 
@@ -3721,7 +3721,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				deleteCnt++;
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			
 			ezBoardDAO.deleteReservedBoard(k);

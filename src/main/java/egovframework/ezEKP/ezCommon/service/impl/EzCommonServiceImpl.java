@@ -542,7 +542,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                         sc = SSLContext.getInstance("SSL");
                         sc.init(null, trustAllCerts, new java.security.SecureRandom());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
                     }
 
                     HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -562,7 +562,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                     URL url = new URL(imgSrc);
                     in = url.openStream();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             } else {
                 try {
@@ -634,7 +634,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 tempIn = Files.newInputStream(Paths.get(realPath, backgroundImgSrc));
                 contentType = URLConnection.guessContentTypeFromStream(tempIn);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             } finally {
                 if (tempIn != null) {
                     tempIn.close();
@@ -680,7 +680,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                         sc = SSLContext.getInstance("SSL");
                         sc.init(null, trustAllCerts, new java.security.SecureRandom());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
                     }
 
                     HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -700,7 +700,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                     URL url = new URL(backgroundImgSrc);
                     in = url.openStream();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             } else {
                 try {
@@ -928,7 +928,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             else
                 m_strHTML = new String(arr, "ks_c_5601-1987");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return m_strHTML;
@@ -1901,7 +1901,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				String key = keys.next();
 				ezCommonDAO.insertTblTenantConfig(test.get(key));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
            
         }
@@ -2573,7 +2573,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		try {
 			downloadPath = commonUtil.attachWebFolderFile(fileListJson, downloadDIR, loginVO, realPath);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			status = "ERROR";
 		}
 		resultJson.put("status", status);

@@ -504,7 +504,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 							}
 						} catch (Exception e) {
 							logger.debug("exists userId, so next userInsert.");
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 							continue;
 						}
 					}
@@ -1562,7 +1562,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				file.delete();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		

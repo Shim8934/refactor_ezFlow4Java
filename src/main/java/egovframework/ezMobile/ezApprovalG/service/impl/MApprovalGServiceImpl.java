@@ -198,7 +198,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
         try {
         	m_strMHT = ezCommonService.loadMHTFile(realPath + docHref);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			m_strMHT= "";
 		}
         
@@ -914,7 +914,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		        try {
 		        	m_strMHT = ezCommonService.loadMHTFile(realPath + docHref);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					m_strMHT= "";
 				}
 		        
@@ -953,7 +953,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	        			output = new OutputStreamWriter(outputStream);
 	        			output.write(convertedMHT);
 	        		} catch (Exception e) {
-	        			e.printStackTrace();
+	        			logger.error(e.getMessage(), e);
 	        		} finally {
 	        			output.close();
 	        			outputStream.close();
@@ -964,7 +964,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				return result;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "ERROR";
 			
 			logger.debug("insertSeumyungdateMobile ended(ERROR)");
@@ -1278,7 +1278,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			outputStreamWriter = new OutputStreamWriter(outputStream);
 			outputStreamWriter.write(m_strMHT);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "fail";
 		} finally {
 			outputStreamWriter.close();
@@ -1410,7 +1410,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	            else
 	                m_strHTML = new String(arr, "ks_c_5601-1987");
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 
 			return m_strHTML;
@@ -1490,7 +1490,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	        	
 	        	rtnValue = true;
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				logger.debug(e.getMessage());
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				rtnValue = false;

@@ -360,7 +360,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
         } catch (Exception e) {
         	logger.debug("insertDBData_company insert fail");
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             
             /*map.put("v_CLASS", "group");
             deleteDBDataForJMocha(map);*/
@@ -455,7 +455,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             }
         // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             /*
             map.put("v_CLASS", "group");
             deleteDBDataForJMocha(map);*/
@@ -488,7 +488,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             }
         // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             /*
             map.put("v_CLASS", "user");
             deleteDBDataForJMocha(map);*/

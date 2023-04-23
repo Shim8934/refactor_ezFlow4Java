@@ -3,6 +3,9 @@ package egovframework.ezEKP.ezEmail.logic;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -14,6 +17,8 @@ import com.sun.mail.util.MailSSLSocketFactory;
 
 public class SMTPAccess {
 	
+	private static final Logger logger = LoggerFactory.getLogger(SMTPAccess.class);
+
 	private String host;
 	private String port;
 	private String userName;
@@ -71,7 +76,7 @@ public class SMTPAccess {
 				});
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return Session.getInstance(props);
@@ -117,7 +122,7 @@ public class SMTPAccess {
 		try {
 			Transport.send(message);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	

@@ -65,7 +65,7 @@ public class MWebfolderGWController {
 
 			result = mWebfolderService.fetchFiles(fetchInfo, pageType, folderId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = Result.failure();
 		}
 
@@ -90,7 +90,7 @@ public class MWebfolderGWController {
 
 			result = Result.success(treeList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = Result.failure();
 		}
 

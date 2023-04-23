@@ -113,7 +113,7 @@ public class MCommonGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			return result;
 		}
@@ -172,7 +172,7 @@ public class MCommonGWController {
 			result.put("resultTC", resultTC);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 		}
 		logger.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW ended.");
@@ -247,7 +247,7 @@ public class MCommonGWController {
 					response.setHeader("Content-Length", Long.toString(fSize));
 					FileCopyUtils.copy(in, response.getOutputStream());
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					logger.error(ex.getMessage(), ex);
 				}
 
 				response.getOutputStream().flush();

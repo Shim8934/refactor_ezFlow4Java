@@ -262,7 +262,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -374,7 +374,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -417,7 +417,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", permissionInfo);	
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");	
@@ -951,7 +951,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				result.put("data", data);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -1710,7 +1710,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			if (e.getMessage().indexOf("NO APPEND failed.") > -1) {
 //				model.addAttribute("overQuota", true);
@@ -1935,7 +1935,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		            
 		            xmlList = strXML;		            
 	        	} catch(Exception e) {
-	        		e.printStackTrace();
+	        		logger.error(e.getMessage(), e);
 	        		
 	        		result.put("status", "error");
 	    			result.put("code", 1);			
@@ -1963,7 +1963,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	        		osw.append(crlf + crlf);
 	        		xmlList = strXML;	        		
 	        	} catch(Exception e) {
-	        		e.printStackTrace();
+	        		logger.error(e.getMessage(), e);
 	        	} finally {
 	        		if (osw != null) {
 	        			osw.close();
@@ -1975,7 +1975,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", xmlList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -2224,7 +2224,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				returnValue = commonUtil.convertDocumentToString(xmldom);				
 			} catch (MessagingException e) {
 				returnValue = e.getMessage();
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				
 				result.put("status", "error");
 				result.put("code", 1);			
@@ -2239,7 +2239,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", returnValue);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -2370,7 +2370,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						
 						folder.close(true);						
 					} catch (MessagingException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					} finally {
 						if (ia != null) {
 							ia.close();
@@ -3090,7 +3090,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			        	message.writeTo(cos);
 			        	messageSize = cos.getSize() / 1024.0;
 			        } catch (Exception e) {
-			        	e.printStackTrace();
+			        	logger.error(e.getMessage(), e);
 			        	
 			        	result.put("status", "error");
 	        			result.put("code", 1);			
@@ -3225,12 +3225,12 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 									userEmail,info.getUserName(),info.getUserName2());
 						} catch (Exception e) {
 							logger.debug("AutoEmailUtil insert fail.");
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						}
 					}
 			        
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					
 					if (e.getMessage().indexOf("OVERQUOTA") > -1 && e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
 						logger.error("mailInterSend : " + e.getMessage());
@@ -3264,7 +3264,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		    			result.put("code", 1);			
 		    			result.put("data", pResult);
 					} else { // retry
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						
 						retryFlag = true;
 						--retryCount;
@@ -3313,7 +3313,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
         			result.put("code", 0);			
         			result.put("data", ""); */       			
                 } catch (Exception e) {
-                	e.printStackTrace();
+                	logger.error(e.getMessage(), e);
                 	
         			/*result.put("status", "error");
         			result.put("code", 1);			
@@ -3344,7 +3344,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				result.put("data", "");		
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -3819,7 +3819,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", mail);			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -3965,7 +3965,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							result.put("code", 0);			
 							result.put("data", data);							
 						} catch(Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 							
 							result.put("status", "error");
 							result.put("code", 1);			
@@ -3983,7 +3983,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4164,7 +4164,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", "success");			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4241,7 +4241,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				result.put("code", 0);			
 				result.put("data", "success");				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				
 				result.put("status", "error");
 				result.put("code", 1);			
@@ -4254,7 +4254,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			
 			logger.debug("MOBILE G/W MAIL mMailStatusChange ended.");		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return result;
@@ -4335,7 +4335,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", "success");			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4418,7 +4418,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", "success");			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4532,7 +4532,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4600,7 +4600,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4703,7 +4703,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				result.put("data", "fail");							
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4737,7 +4737,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", addressInfo);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4765,7 +4765,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", "success");			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4868,7 +4868,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				result.put("data", "fail");							
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -4966,7 +4966,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		} catch (Exception e) {
 			returnData = "ERROR : " + e.getMessage();
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -5019,7 +5019,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -5062,7 +5062,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -5087,7 +5087,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
         try {
             pResult = ezOrganService.getSearchListOR(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getCompanyId());
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         	
             pResult = "EXCEPTION";
         }
@@ -5133,7 +5133,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			
 			returnData = sb.toString();			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			returnData = "EXCEPTION";
 		}
@@ -5210,7 +5210,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
             sb.append("</ROWS></LISTVIEWDATA>");
             returnValue = sb.toString();
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
             
         	returnValue = "EXCEPTION";
         }
@@ -5249,7 +5249,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
             sb.append("</ROWS></LISTVIEWDATA>");
             returnValue = sb.toString();
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         	returnValue = "EXCEPTION";
         }
         return returnValue;
@@ -5353,7 +5353,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
             sb.append("</ROWS></LISTVIEWDATA>");
             returnValue = sb.toString();
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         	
         	returnValue = "EXCEPTION";
         }
@@ -5434,7 +5434,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
             sb.append("</ROWS></LISTVIEWDATA>");
             returnValue = sb.toString();
         } catch (Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         	
         	returnValue = "EXCEPTION";
         }
@@ -5456,7 +5456,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			try {
 				cid = URLDecoder.decode(cid, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			mat.appendReplacement(result, Matcher.quoteReplacement("src=\"cid:" + cid + "\""));
 		}
@@ -5486,9 +5486,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -5644,7 +5644,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
                     }
                     catch(JsonException e)
                     {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
                     }
                     return compare;
                 }
@@ -5654,7 +5654,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", jsonList);	
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");	
@@ -5717,7 +5717,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", jsonList);	
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");	
@@ -5782,7 +5782,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", jsonList);	
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");	
@@ -5847,7 +5847,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("data", jsonList);	
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");	
@@ -5923,7 +5923,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -6004,7 +6004,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -6105,7 +6105,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("code", 0);			
 			result.put("data", data);			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -6370,7 +6370,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
             f.close(true);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
 
             returnObj.put("data", "fail");
             returnObj.put("status", "error");
@@ -6414,7 +6414,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("data", "fail");
 			result.put("status", "error");
@@ -6470,7 +6470,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			
 		} catch (Exception e) {
 			returnData = "EXCEPTION";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
         
         return returnData;

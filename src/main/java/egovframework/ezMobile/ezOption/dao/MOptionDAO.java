@@ -39,7 +39,7 @@ public class MOptionDAO extends EgovAbstractDAO {
 		try {
 			result = (MCommonVO) select("EzOptionDAO.commonInfoWeb", map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return result;
 	}

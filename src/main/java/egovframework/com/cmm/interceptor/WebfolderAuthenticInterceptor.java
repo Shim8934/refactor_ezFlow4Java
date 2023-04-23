@@ -125,7 +125,7 @@ public class WebfolderAuthenticInterceptor extends WebContentInterceptor {
 						writer.println(obj.toString());
 						response.setContentType("application/json;charset=utf-8");
 					} catch (IOException e1) {
-						e1.printStackTrace();
+						logger.error(e1.getMessage(), e1);
 					}
 					return result;
 				}
@@ -141,7 +141,7 @@ public class WebfolderAuthenticInterceptor extends WebContentInterceptor {
 						writer.println(obj.toString());
 						response.setContentType("application/json;charset=utf-8");
 					} catch (IOException e1) {
-						e1.printStackTrace();
+						logger.error(e1.getMessage(), e1);
 					}
 				}
 			} catch (Exception e) {
@@ -151,7 +151,7 @@ public class WebfolderAuthenticInterceptor extends WebContentInterceptor {
 					writer.println(obj.toString());
 					response.setContentType("application/json;charset=utf-8");
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					logger.error(e1.getMessage(), e1);
 				}
 			}
 			

@@ -443,7 +443,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("code", code);			
 			result.put("data", dataObject);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
@@ -510,7 +510,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("code", 0);			
 			result.put("data", dataObject);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");		
@@ -561,7 +561,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");	
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
 		logger.debug("portalUserInfo End");
@@ -636,7 +636,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");	
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
 		logger.debug("portalMainList End");
@@ -724,7 +724,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");	
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
 		logger.debug("checkMenuAuth End");
@@ -769,7 +769,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");	
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
 		logger.debug("getAddJobList End");
@@ -819,7 +819,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");		
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
 		logger.debug("getAddJobFlag End");

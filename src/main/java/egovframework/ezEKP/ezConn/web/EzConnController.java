@@ -291,7 +291,7 @@ public class EzConnController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailMain ended.");
@@ -368,7 +368,7 @@ public class EzConnController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("approvalMain ended.");
@@ -486,7 +486,7 @@ public class EzConnController {
 				result = ezConnUtil.encryptAES(authString);
 			}						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getSSOAuthString ended. result=" + result);
@@ -579,7 +579,7 @@ public class EzConnController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("loginWithSSOAuthString ended.");
@@ -621,7 +621,7 @@ public class EzConnController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return resultPage;

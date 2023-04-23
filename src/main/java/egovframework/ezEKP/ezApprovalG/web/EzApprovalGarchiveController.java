@@ -2458,7 +2458,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 
 			saveFlag = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			saveFlag = false;
 		} 
 		
@@ -2585,7 +2585,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			fop.write(xmlData.getBytes("utf-8"));
 			fop.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fop != null) {
 				try { fop.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -2719,7 +2719,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			
 			 result = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + commonUtil.convertDocumentToString(xmlDoc).substring(commonUtil.convertDocumentToString(xmlDoc).indexOf("<pubdoc>"), commonUtil.convertDocumentToString(xmlDoc).length());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("loadDocXML ended");

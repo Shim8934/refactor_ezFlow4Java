@@ -1229,13 +1229,13 @@ public class EzJournalGWController {
 			        }
 			        zos.closeEntry();
 				}catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (bis != null) {
 						try {
 							bis.close();
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						}
 					}
 				}

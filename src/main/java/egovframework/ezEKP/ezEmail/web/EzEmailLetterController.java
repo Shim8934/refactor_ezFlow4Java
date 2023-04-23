@@ -93,7 +93,7 @@ public class EzEmailLetterController {
 		try {
 			returnJsonArr = ezEmailAdminLetterService.searchLetter(search, companyId, tenantId, userLang);
 		} catch (Exception e) {
-			// e.printStackTrace();
+			// logger.error(e.getMessage(), e);
 			logger.debug("no data");
 		}
 
@@ -145,7 +145,7 @@ public class EzEmailLetterController {
 		try {
 			json = ezEmailAdminLetterService.selectLetterBoxName(letterBoxNo, userLang);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("readLetterBox ended.");

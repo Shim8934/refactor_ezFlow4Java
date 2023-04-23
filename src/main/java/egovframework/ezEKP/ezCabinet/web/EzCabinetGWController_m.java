@@ -65,7 +65,7 @@ public class EzCabinetGWController_m {
 			result           = cabinetService_m.saveApprovalItem(realPath, dstCabinetId, approvalContent, mode, title, summary, attach, other, locale, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -109,7 +109,7 @@ public class EzCabinetGWController_m {
 			result           = cabinetService_m.saveJournalItem(realPath, dstCabinetId, title, summary, mode, journalTitle, createDate, journalWriter, journalType, journalContent, formName, attach, locale, userInfo);
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}

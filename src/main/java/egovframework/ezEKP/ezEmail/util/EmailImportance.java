@@ -3,6 +3,9 @@ package egovframework.ezEKP.ezEmail.util;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <strong>메일 중요도</strong>
  * 
@@ -16,6 +19,8 @@ import javax.mail.MessagingException;
  * */
 public enum EmailImportance {
 	LOW("5"), NORMAL("3"), HIGH("1");
+
+	private static final Logger logger = LoggerFactory.getLogger(EmailImportance.class);
 
 	private String priority;
 
@@ -63,7 +68,7 @@ public enum EmailImportance {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return null;

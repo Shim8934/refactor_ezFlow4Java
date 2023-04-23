@@ -123,7 +123,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 2);
@@ -171,7 +171,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("code", 0);
 			jsonObj.put("data", folderList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
@@ -245,7 +245,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				jsonObj.put("data", result);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			jsonObj.put("status", "fail");
 			jsonObj.put("code", 2);
 			jsonObj.put("data", "");
@@ -306,7 +306,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 		}
@@ -429,7 +429,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				result.put("duplicateInfoArray", duplicateList);
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -471,7 +471,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				jsonObj.put("code", 5);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 		}
@@ -527,7 +527,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 		}
@@ -738,7 +738,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("data", data);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			logger.debug(" fail ");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
@@ -957,7 +957,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("data", data);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			logger.debug(" fail ");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
@@ -1025,7 +1025,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("status"	, "ok");
 			jsonObj.put("code"		, 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			jsonObj.put("status"	, "error");
 			jsonObj.put("code"		, 2);
@@ -1072,7 +1072,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				jsonObj = service.checkPermissions(userId, deptId, comId, folderList, fileList, tenantId);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
@@ -1123,7 +1123,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("data", data);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			logger.debug(" fail ");
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
@@ -1219,11 +1219,11 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				result.put("code", 3);
 			}
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1304,7 +1304,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("webfolderLogin end.");
@@ -1357,7 +1357,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath, "delete");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 2);
@@ -1397,7 +1397,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				folderId = folderInfo.get(0).get("FOLDER_ID").toString();
 			}
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 			json.put("status", "error");
 			json.put("code", 2);
 			return json;
@@ -1432,7 +1432,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			fileList = service.selectWebfolderFiletoAnother(userId, list, tenantId);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 			return result;
@@ -1483,7 +1483,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 			return jsonObj;
@@ -1508,7 +1508,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		try {
 			jsonObject             = (JSONObject) parser.parse(jsonObject.toJSONString());
 		} catch (ParseException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 			result.put("status", "error");
 			result.put("code", 2);
 			return result;
@@ -1525,7 +1525,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			addUserJSON = (JSONArray) parser.parse((String) jsonObject.get("addUser"));
 			deleteUserJSON = (JSONArray) parser.parse((String) jsonObject.get("deleteUser"));
 		} catch (ParseException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 		}
 		
 		List<String> addUser = new ArrayList<String>();
@@ -1571,7 +1571,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				result.put("code", "0");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1639,7 +1639,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			result.put("code", code);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 			return result;

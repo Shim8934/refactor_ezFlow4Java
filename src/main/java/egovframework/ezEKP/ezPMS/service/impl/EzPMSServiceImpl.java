@@ -178,7 +178,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("headManagerName2", headManagerInfo.getUserName2());
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			logger.debug("Error : " + e.getMessage() + " " + e.getStackTrace());
 		}
 
@@ -857,7 +857,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 			logger.debug("[SERVICE] updateTaskProgress ended.");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("[SERVICE] addTask ended.");
@@ -1049,7 +1049,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 //			// updateProjectDate(task.getProjectId(), task.getTenantId(),
 //			// companyId);
 //		} catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //		}
 //
 //		logger.debug("[SERVICE] updateTask ended.");
@@ -1282,7 +1282,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("[SERVICE] updateGroup ended.");
 	}
@@ -1543,7 +1543,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				try {
 					cal.setTime(sdf.parse(vo.getHoliday()));
 				} catch (ParseException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 				
 				if(cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
@@ -1637,7 +1637,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						holidayList.add(solarDate);
 					}
 				} catch (ParseException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 	 
@@ -1660,7 +1660,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						}
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 				 	
@@ -1673,7 +1673,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						holidayList.add(solarDate);
 					}
 				} catch (ParseException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 	 
@@ -1826,7 +1826,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		map.put("lang", lang);
@@ -1875,7 +1875,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		ezPMSDAO.completeAllTasks(map);
@@ -2337,7 +2337,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			// 따라서 Exception 발생하지만 문제되지 않음
 			logger.debug("e.message=" + e.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("fileMove ended.");
@@ -2434,7 +2434,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			// 가중치 계산
 			updateTaskWDNW(task, taskWorkingday);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("[SERVICE] updateTaskInfo ended.");
@@ -3159,7 +3159,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				cal.setTime(sdf.parse(holiday));
 				holidaySet.add(cal);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		});
 		
@@ -3187,7 +3187,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					startDate.add(Calendar.DATE, 1);
 				} while(startDate.compareTo(endDate) < 1);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		});
 		
@@ -3564,7 +3564,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			holidayDateList.addAll(getWorkingDays2(sdf.parse(planStartDate), sdf.parse(planEndDate), solarHolidayMap, lunarHolidayMap));
 			
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return holidayDateList;

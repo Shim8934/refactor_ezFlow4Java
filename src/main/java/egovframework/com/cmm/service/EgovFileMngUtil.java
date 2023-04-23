@@ -600,7 +600,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 				response.setHeader("Content-Length", Long.toString(fSize));
 				FileCopyUtils.copy(in, response.getOutputStream());
 		    } catch (Exception ex) {
-		    	ex.printStackTrace();
+		    	logger.error(ex.getMessage(), ex);
 		    }
 		    
 		    response.getOutputStream().flush();
@@ -665,7 +665,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	        
 	        os.flush();
         } catch(Exception e) {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         } finally {
         	if (os != null) {
         		try {

@@ -108,7 +108,7 @@ public class EzTalkGateController {
 				userCn = user.getId();
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			value = "2";
 		}
 
@@ -179,7 +179,7 @@ public class EzTalkGateController {
 			}
 		} catch (Exception e) {
 			result = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("ezTalkTokenLogin ended. mobileUsed=" + result);
@@ -258,7 +258,7 @@ public class EzTalkGateController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "ERROR";
 		}
 		
@@ -472,7 +472,7 @@ public class EzTalkGateController {
 			}
 			 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("noticeBoardDetailList ended.");
@@ -641,7 +641,7 @@ public class EzTalkGateController {
 
 			result = loginController.ipAccessCheck(loginVO) ? "1" : "0";
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 		}
 
 		logger.debug("checkBlockedByIP ended. result={}", result);
@@ -701,7 +701,7 @@ public class EzTalkGateController {
 				result = Integer.toString(isMailType ? mailCount : approvalCount);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 		}
 
 		logger.debug("getModuleNotice ended. result={}", result);
@@ -724,7 +724,7 @@ public class EzTalkGateController {
 			List<String> userList = ezOrganAdminService.getNotUseMobileUserList(tenantId);
 			result = JSONArray.toJSONString(userList);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 		}
 
 		logger.debug("getNotUseMobileUserList ended. result={}", result);

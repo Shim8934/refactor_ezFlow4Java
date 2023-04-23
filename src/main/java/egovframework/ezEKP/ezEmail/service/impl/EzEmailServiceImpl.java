@@ -1207,7 +1207,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 					returnValue = "OK";
 				} catch (Exception ex) {
 					logger.debug("set primary error!");
-					ex.printStackTrace();
+					logger.error(ex.getMessage(), ex);
 				}
 			} else if (reasonCode == -1) {
 				returnValue = "OTHERUSER";
@@ -1393,7 +1393,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 //	        }
 //        
 //		} catch (MessagingException e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //		} finally {
 //			if (ia != null) {
 //				ia.close();
@@ -1487,7 +1487,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 //	        
 //	        logger.debug("Mail send success.");	                
 //		} catch (MessagingException e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //		} finally {
 //			if (ia != null) {
 //				ia.close();
@@ -1603,7 +1603,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        }
         
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1685,13 +1685,13 @@ public class EzEmailServiceImpl implements EzEmailService {
         			folder.close(false);
             	}
             } catch (Exception e) {
-            	e.printStackTrace();
+            	logger.error(e.getMessage(), e);
             } finally {
 				ia.close();
 			}
             
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailContentDownload ended. returnValue=" + returnValue);
@@ -1728,7 +1728,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1866,7 +1866,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        }
 	        
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2111,7 +2111,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addEzTalkNotification ended. returnValue=" + returnValue);
@@ -3555,7 +3555,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        	result = (JSONObject)object.get("result");
 	        }
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
         
         logger.debug("recallMailByMessageId ended.");
@@ -3660,7 +3660,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 							totalUnreadCountInAllAccounts += unreadCountInShared;
 						} catch (NumberFormatException ne) {
-							ne.printStackTrace();
+							logger.error(ne.getMessage(), ne);
 						}
 					}
 				}
@@ -3671,7 +3671,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			resultObject.put("totalUnreadCount", totalUnreadCount);
 			resultObject.put("totalUnreadCountInAllAccounts", totalUnreadCountInAllAccounts);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 		}
 
 		return new JSONObject(resultObject);
@@ -4779,7 +4779,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 						img.attr("src", mailTemplatePath + "/" + fileName);
 					} catch (Exception e) {
 						logger.debug("userMailTemplateContent Error.");
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 				
@@ -4868,7 +4868,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 					File testFile = new File(realPath + mailTemplatePath);
 					FileUtils.deleteDirectory(testFile);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 				
 				resultInt = ((Long)responseObj.get("reasonCode")).intValue();

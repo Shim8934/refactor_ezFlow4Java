@@ -156,7 +156,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 			result.put("config", webfolderConfig);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -192,7 +192,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -241,7 +241,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -289,7 +289,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -376,7 +376,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -412,7 +412,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -446,7 +446,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -490,7 +490,7 @@ public class EzWebFolderGWController {
 //			result.put("config", webfolderConfig);
 //		} 
 //		catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //			result.put("status", "error");
 //			result.put("code", 2);
 //		}
@@ -523,7 +523,7 @@ public class EzWebFolderGWController {
 //			result.put("code", 0);
 //		} 
 //		catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //			result.put("status", "error");
 //			result.put("code", 2);
 //		}
@@ -597,7 +597,7 @@ public class EzWebFolderGWController {
 //			result.put("totalUsers", totalUsers);
 //		} 
 //		catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //			result.put("status", "error");
 //			result.put("code", 2);
 //		}
@@ -633,7 +633,7 @@ public class EzWebFolderGWController {
 //			result.put("data", "");
 //		} 
 //		catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //			result.put("status", "error");
 //			result.put("code", 2);
 //		}
@@ -746,7 +746,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -852,7 +852,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -922,7 +922,7 @@ public class EzWebFolderGWController {
 			result.put("duplicateInfoArray", duplicateInfoList);
 			result.put("code", 0);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 
 			result.put("status", "error");
 			result.put("code", 2);
@@ -1068,7 +1068,7 @@ public class EzWebFolderGWController {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1145,7 +1145,7 @@ public class EzWebFolderGWController {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1201,7 +1201,7 @@ public class EzWebFolderGWController {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1346,7 +1346,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1446,7 +1446,7 @@ public class EzWebFolderGWController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1506,7 +1506,7 @@ public class EzWebFolderGWController {
 			result.put("count", cnt);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1571,7 +1571,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1628,7 +1628,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1646,7 +1646,7 @@ public class EzWebFolderGWController {
 		try {
 			jsonObject         = (JSONObject) parser.parse(jsonObject.toJSONString());
 		} catch (ParseException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 			result.put("status", "error");
 			result.put("code", 2);
 			return result;
@@ -1674,7 +1674,7 @@ public class EzWebFolderGWController {
 					ezWebFolderAdminService.addCompanyFolder(pFolderId, folderUsers, folderName, folderName2, userInfo);
 			result = new JSONObject(serviceResult);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1691,7 +1691,7 @@ public class EzWebFolderGWController {
 		try {
 			jsonObject             = (JSONObject) parser.parse(jsonObject.toJSONString());
 		} catch (ParseException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 			result.put("status", "error");
 			result.put("code", 2);
 			return result;
@@ -1709,7 +1709,7 @@ public class EzWebFolderGWController {
 			addUserJSON = (JSONArray) parser.parse((String) jsonObject.get("addUser"));
 			deleteUserJSON = (JSONArray) parser.parse((String) jsonObject.get("deleteUser"));
 		} catch (ParseException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 		}
 		
 		List<String> addUser = new ArrayList<String>();
@@ -1729,7 +1729,7 @@ public class EzWebFolderGWController {
 			addUserManagerJSON = (JSONArray) parser.parse((String) jsonObject.get("addUserManager")       != null ? (String) jsonObject.get("addUserManager") : "[]");
 			deleteUserManagerJSON = (JSONArray) parser.parse((String) jsonObject.get("deleteUserManager") != null ? (String) jsonObject.get("deleteUserManager") : "[]");
 		} catch (ParseException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 		}
 		
 		List<String> addUserManager = new ArrayList<String>();
@@ -1765,7 +1765,7 @@ public class EzWebFolderGWController {
 			result = new JSONObject(serviceResult);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1827,7 +1827,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1878,7 +1878,7 @@ public class EzWebFolderGWController {
 			result.put("currentDept", deptId);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1913,7 +1913,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 			result.put("subTree", sDept);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -1949,7 +1949,7 @@ public class EzWebFolderGWController {
 			result.put("listMembers", listMembers);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2001,7 +2001,7 @@ public class EzWebFolderGWController {
 			result.put("deptTree", listFolders);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2089,7 +2089,7 @@ public class EzWebFolderGWController {
 			result.put("companyTree", company);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2142,7 +2142,7 @@ public class EzWebFolderGWController {
 			result.put("subTree", folder);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2204,7 +2204,7 @@ public class EzWebFolderGWController {
 			result.put("isNotInherit", ezWebFolderService.isNotInheritFolder(folderId, tenantId));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2250,7 +2250,7 @@ public class EzWebFolderGWController {
 			result.put("encryptionRootFolder", "");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2291,7 +2291,7 @@ public class EzWebFolderGWController {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2354,7 +2354,7 @@ public class EzWebFolderGWController {
 				result.put("duplicateInfoArray", duplicateList);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2517,7 +2517,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2639,7 +2639,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2671,7 +2671,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2722,7 +2722,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2739,7 +2739,7 @@ public class EzWebFolderGWController {
 		try {
 			jsonObject             = (JSONObject) parser.parse(jsonObject.toJSONString());
 		} catch (ParseException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2807,7 +2807,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2824,7 +2824,7 @@ public class EzWebFolderGWController {
 		try {
 			jsonObject             = (JSONObject) parser.parse(jsonObject.toJSONString());
 		} catch (ParseException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(), e1);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2901,7 +2901,7 @@ public class EzWebFolderGWController {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2963,7 +2963,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -2996,7 +2996,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3095,7 +3095,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3134,7 +3134,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3167,7 +3167,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3200,7 +3200,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3241,7 +3241,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3288,7 +3288,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3323,7 +3323,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3356,7 +3356,7 @@ public class EzWebFolderGWController {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3395,7 +3395,7 @@ public class EzWebFolderGWController {
 
 			result = ezWebFolderService_y.checkPermissionForCreator(folderIds, fileIds, userInfo, isRecursive);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3437,7 +3437,7 @@ public class EzWebFolderGWController {
 				result.put("code", 2);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3467,7 +3467,7 @@ public class EzWebFolderGWController {
 			int tenantId     = loginService.getTenantId(serverName);
 			ezWebFolderAdminService.getExcelFile(fileName, realPath, userAgent, response, tenantId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getFileExcel end");
@@ -3503,7 +3503,7 @@ public class EzWebFolderGWController {
 			}
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3526,7 +3526,7 @@ public class EzWebFolderGWController {
 
 			result.put("status", "ok");
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 		}
 
@@ -3549,7 +3549,7 @@ public class EzWebFolderGWController {
 
 			result.put("status", "ok");
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 		}
 
@@ -3605,7 +3605,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3648,7 +3648,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3704,7 +3704,7 @@ public class EzWebFolderGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -3802,7 +3802,7 @@ public class EzWebFolderGWController {
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
@@ -3844,7 +3844,7 @@ public class EzWebFolderGWController {
 				result.put("code", 0);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			result.put("status", "error");
 			result.put("code", 2);
@@ -3922,7 +3922,7 @@ public class EzWebFolderGWController {
 
 			result = Result.success(url);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result = Result.failureWithCode(2);
 		}
 
@@ -3978,7 +3978,7 @@ public class EzWebFolderGWController {
 				response.getOutputStream().print(resultStr);
 			}
 
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			logger.error("Invalid key or not found file. key: {}, exception: {}", key, ex);
 		}
 
@@ -4058,7 +4058,7 @@ public class EzWebFolderGWController {
 				result.put("code", 3);*/
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = Result.failureWithCode(2);
 		}
 
@@ -4122,7 +4122,7 @@ public class EzWebFolderGWController {
 			try {
 				return egovFileScrty.encryptAES(fileId + SEPARATOR + tenantId + (version == null ? "" : SEPARATOR + version));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				return "";
 			}
 		}

@@ -2015,7 +2015,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			ezResourceService.insertForm(resID, brdNm, formText, userInfo.getTenantId());
 			return "OK";
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "FALSE";
 		}
 	}
@@ -2033,7 +2033,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			ezResourceService.delFormID(delCode, userInfo.getTenantId());
 			return "OK";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "FALSE";
 		}
 	}
@@ -2253,7 +2253,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			return "True";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "False";
 		}
 	}
@@ -2276,7 +2276,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			return "True";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "False";
 		}
 	}

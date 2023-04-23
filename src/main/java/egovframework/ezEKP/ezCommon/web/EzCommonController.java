@@ -232,7 +232,7 @@ public class EzCommonController extends EgovFileMngUtil{
         try {
         	m_strMHT = ezCommonService.loadMHTFile(realPath + strURL);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			m_strMHT= "";
 		}
         

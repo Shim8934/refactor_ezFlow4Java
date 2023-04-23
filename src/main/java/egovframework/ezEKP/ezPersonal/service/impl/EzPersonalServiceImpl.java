@@ -821,7 +821,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 			String value = ezCommonService.getUserConfigInfo(tenantId, userId, "notiPreferences");
 			return PersonalNotiPreferencesVO.byConfigValue(value);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return new PersonalNotiPreferencesVO();
 		}
 	}
@@ -922,7 +922,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 
 			return true;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			return false;
 		} finally {
 			logger.debug("canReceiveNotification ended.");

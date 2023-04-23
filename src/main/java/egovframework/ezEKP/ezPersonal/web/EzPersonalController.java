@@ -1361,7 +1361,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         	try {
         		ezOrganAdminController.invokeEzTalkSyncServerForSingle(userInfo.getId(), userInfo.getTenantId());
         	} catch (Exception e) {
-        		e.printStackTrace();
+        		logger.error(e.getMessage(), e);
         	}
         }
 		
@@ -1399,7 +1399,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         	try {
         		ezOrganAdminController.invokeEzTalkSyncServerForSingle(userInfo.getId(), userInfo.getTenantId());
         	} catch (Exception e) {
-        		e.printStackTrace();
+        		logger.error(e.getMessage(), e);
         	}
         }
 		
@@ -1641,7 +1641,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         	try {
         		ezOrganAdminController.invokeEzTalkSyncServerForSingle(userInfo.getId(), userInfo.getTenantId());
         	} catch (Exception e) {
-        		e.printStackTrace();
+        		logger.error(e.getMessage(), e);
         	}
         }
         
@@ -1888,7 +1888,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 				Files.copy(sourceFile.toPath(), targetFile.toPath());
 				logger.debug("copy original File to thumbnail.");
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				logger.error(e1.getMessage(), e1);
 			}
 		}
 		
@@ -2049,7 +2049,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			returnValue = "ERROR";
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		response.addHeader("Result", returnValue);
@@ -2080,7 +2080,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			logger.debug("getResult=" + getResult);
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		response.addHeader("Result", returnValue);
@@ -2113,7 +2113,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			returnValue = "ERROR";
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		response.addHeader("Result", returnValue);
@@ -2428,7 +2428,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			String aliasEmail = emailId + "@" + domain;
 			returnValue = ezEmailService.checkIndividualAliasWithoutOwned(userEmail, aliasEmail, tenantId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("checkEmailId ended. returnValue={}", returnValue);
@@ -2460,7 +2460,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 			returnValue = ezEmailService.updatePrimaryIndividualAlias(userEmail, originAlias, updateAlias, tenantId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("saveUserEmail ended. returnValue={}", returnValue);
@@ -2523,7 +2523,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			ezPersonalService.setNotiDisableItems(user.getId(), user.getTenantId(), disableItems);
 			result = Result.success();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result = Result.failure();
 		}
 
@@ -2542,7 +2542,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			ezPersonalService.setNotiPreferences(user.getId(), user.getTenantId(), preferencesVO);
 			result = Result.success();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result = Result.failure();
 		}
 

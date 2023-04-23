@@ -220,7 +220,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			pw.println(content);
 			pw.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			pw.close();
 		}
@@ -318,7 +318,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			pw.println(content);
 			pw.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			pw.close();
 		}
@@ -1291,7 +1291,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		try {
 			file.renameTo(new File(commonUtil.detectPathTraversal(afterFilePath)));			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("fileMove ended.");

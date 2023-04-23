@@ -108,7 +108,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -187,7 +187,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -270,7 +270,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -309,7 +309,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -414,7 +414,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -481,7 +481,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -570,7 +570,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -638,7 +638,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -687,7 +687,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -724,7 +724,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -764,7 +764,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -808,7 +808,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -873,7 +873,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -932,7 +932,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -972,7 +972,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1058,7 +1058,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1103,7 +1103,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1215,7 +1215,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");

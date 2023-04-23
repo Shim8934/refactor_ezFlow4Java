@@ -799,7 +799,7 @@ public class MBoardServiceImpl implements MBoardService {
         	
         	rtnValue = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			logger.debug(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnValue = false;

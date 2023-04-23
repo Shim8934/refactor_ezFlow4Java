@@ -979,7 +979,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1226,7 +1226,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				}
     			}
     		} catch (Exception e) { 
-    			e.printStackTrace();
+    			logger.error(e.getMessage(), e);
     			
                 retryFlag = true;
                 --retryCount;
@@ -1365,7 +1365,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1570,7 +1570,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									
 									zos.closeEntry();
 								} catch (IOException e) {
-									e.printStackTrace();
+									logger.error(e.getMessage(), e);
 								} finally {
 									if (input != null) {
 										try {
@@ -1606,7 +1606,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				file.delete();
 			}
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1778,7 +1778,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1886,7 +1886,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 			downFile(request, response, realFilePath, fileName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			response.setContentType("text/plain; charset=utf-8");
 			response.getWriter().print(egovMessageSource.getMessage("ezEmail.lhm14", locale));
@@ -2004,7 +2004,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2103,7 +2103,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2640,7 +2640,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2903,7 +2903,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				}
     			}
     		} catch (Exception e) {
-    			e.printStackTrace();
+    			logger.error(e.getMessage(), e);
     			
                 retryFlag = true;
                 --retryCount;
@@ -3150,7 +3150,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -3280,7 +3280,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				f.close(true);
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -3495,7 +3495,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -3701,7 +3701,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -4069,7 +4069,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -4240,7 +4240,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -4388,7 +4388,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -4523,7 +4523,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				model.addAttribute("t99000065", egovMessageSource.getMessage("ezEmail.t99000065", locale));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -4679,7 +4679,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("processAutoMDN ended.");
@@ -4746,7 +4746,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			sourceFolder.close(true);
 		} catch (Exception e) {
 			returnData = "<DATA>ERROR</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -5000,7 +5000,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				result.put("status", "ok");
 				result.put("data", data);
 			} catch (MessagingException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				result.put("status", "error");
 			} finally {
 				if (ia != null) {
@@ -5009,7 +5009,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 		}
 		
@@ -5163,7 +5163,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -5286,7 +5286,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			output.flush();
 			output.close();

@@ -1130,7 +1130,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			logger.debug("setEmployeeMonth ended");
 			return "OK";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "";
 		}
 	}
