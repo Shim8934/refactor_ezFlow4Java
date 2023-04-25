@@ -873,7 +873,7 @@ public class LoginController {
 				// Show warning message
 				errorMsg1 = egovMessageSource.getMessage("fail.common.login", locale);
 				errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
-				errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] { check + 1 }, locale);
+				errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {1}, locale);
 				errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
 				errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] { numberOfLoginFailPermit }, locale);
 

@@ -289,11 +289,13 @@
 		    		url : "/user/login/changeExPassword.do",
 		    		success: function(text){
 		    			if (text == 'OK') {
-		    				alert("<spring:message code='ezPersonal.t197'/>");			            	
+		    				//alert("<spring:message code='ezPersonal.t197'/>");
 		    				
 		    				if (${useOTP} && ${isFirstLogin == 'Y'}) {
+		    					alert("<spring:message code='ezPersonal.ls001'/>");
 		    					setTFA(rsa.encrypt(document.getElementById("chooseId").getAttribute("data-userId")));
 		    				} else {
+		    					alert("<spring:message code='ezPersonal.t197'/>");
 			    				window.top.location.href = '/user/login/login.do';
 		    				}
 
