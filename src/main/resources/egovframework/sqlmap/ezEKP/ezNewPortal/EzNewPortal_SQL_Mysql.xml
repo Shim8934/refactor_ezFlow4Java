@@ -1573,6 +1573,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		]]>
 	</select>
 	
+	<!-- 2023-04-28 전인하 - 전자결재 포틀릿의 반송문서 로직 변경 > 원기안자가 아닌 결재선의 1번 결재자에게 돌아가게 변경 (수신결재중인 문서 반송 시, 접수기안자가 아닌 원기안자의 반송문서로 나타나는 오류 수정) -->
 	<select id="ezNewPortal.getApprovalRejectList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
 			SELECT
@@ -1596,6 +1597,14 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				TBL_APRDOCINFO.COMPANYID = GRP.COMPANYID
 			AND
 				TBL_APRDOCINFO.DOCID = GRP.DOCID
+			INNER JOIN
+				TBL_APRLINEINFO
+			ON
+				TBL_APRLINEINFO.DOCID = TBL_APRDOCINFO.DOCID
+			AND
+				TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
+			AND
+				TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
 			WHERE
 				TBL_APRDOCINFO.tenant_id = #tenantId#
 			AND
@@ -1624,13 +1633,15 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 									tenant_id = #tenantId#
 								)
 			AND
-				writerid = #userId#
+				aprmemberid = #userId#
 			AND
 				functiontype = '004'
             AND 
  				startdate between date_sub(now(), interval 1 YEAR) and now()
  			AND
-				IFNULL(GRP.TABSN, 1) = 1	
+				IFNULL(GRP.TABSN, 1) = 1
+			AND
+				TBL_APRLINEINFO.APRMEMBERSN = 1	
 			ORDER BY
 				startdate DESC
 			LIMIT
