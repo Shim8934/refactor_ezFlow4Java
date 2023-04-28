@@ -78,7 +78,7 @@ function GetDraftAprLineInfo(ret) {
 	  		
 	  		name = "habyuisign" + i;
 	  		if (message.FieldExist(name))
-	  			message.PutFieldText(name, "");
+	  			message.PutFieldText(name, " "); /* 2023-04-28 양지혜 - 서명부분에 공백을 삽입하여 Paragraph 2개 생기는 문제 방지  */
 	  		
 	  		name = "habyuipositon" + i;
 	  		if (message.FieldExist(name))
@@ -345,7 +345,7 @@ function GetDraftAprLineInfo(ret) {
 	  		if (message.FieldExist(fieldname))
 	  		{
 	  	        
-	  	        message.PutFieldText(fieldname,  "");
+	  	        message.PutFieldText(fieldname,  " "); /* 2023-04-28 양지혜 - 서명부분에 공백을 삽입하여 Paragraph 2개 생기는 문제 방지  */
 	  	        idx = idx + 1;
 	  	    }
 	  	}
@@ -453,7 +453,7 @@ function ClearDocCellInfo()
 	{
 		fieldname = susunSN + "sign" + i;
 		if (message.FieldExist(fieldname))
-			message.PutFieldText(fieldname, "");
+			message.PutFieldText(fieldname, " "); /* 2023-04-28 양지혜 - 서명부분에 공백을 삽입하여 Paragraph 2개 생기는 문제 방지  */
 
 		fieldname = susunSN + "seumyung" + i;
 		if (message.FieldExist(fieldname))
@@ -484,7 +484,7 @@ function ClearDocCellInfo()
 		
 		fieldname = susunSN + "habyuisign" + j;
 		if (message.FieldExist(fieldname))
-			message.PutFieldText(fieldname, "");
+			message.PutFieldText(fieldname, " ");
     }
     
     for(i=1;i<20;i++)
@@ -540,7 +540,7 @@ function SendDraftMappingSign(ret) {
 		if(pDraftFlag == "SUSIN" || pDocState == "011") {	
 			fieldname = pSusinSN + "sign" + sn;
 			if (message.FieldExist(fieldname))
-				message.PutFieldText(fieldname, "");		
+				message.PutFieldText(fieldname, " "); /* 2023-04-28 양지혜 - 서명부분에 공백을 삽입하여 Paragraph 2개 생기는 문제 방지  */
 			
 			fieldname = pSusinSN + "jikwe" + sn;
 			if (message.FieldExist(fieldname))
@@ -548,7 +548,7 @@ function SendDraftMappingSign(ret) {
 		} else {			
 			fieldname = "sign" + sn;
 			if (message.FieldExist(fieldname))
-				message.PutFieldText(fieldname, "");		
+				message.PutFieldText(fieldname, " ");
 		
 			fieldname = "jikwe" + sn;
 			if (message.FieldExist(fieldname))

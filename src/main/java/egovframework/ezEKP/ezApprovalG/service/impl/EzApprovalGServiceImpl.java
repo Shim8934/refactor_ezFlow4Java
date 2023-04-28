@@ -6339,12 +6339,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (Paragraph p : s) {
                 Cell cell = findHwpFieldCell(p, fieldName);
                 if (cell != null) {
+                    /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+                    cell.getParagraphList().getParagraph(0).deleteText();
                     cell.getParagraphList().getParagraph(0).createText();
                     cell.getParagraphList().getParagraph(0).getText().addString(signText);
                 }
 			}
 		}
- 
 		logger.debug("setHwpSign ended");
 	}
 	
@@ -6373,7 +6374,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	/**
 	 * @param fieldName ex) sign1, sign2
-	 * @param signText
+	 * @param signTextArray
 	 * @param hwpFile
 	 * @throws Exception
 	 * 한글파일에 사인기입하기
@@ -6406,7 +6407,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         
                         newParagraph.getText().addString(signTextArray[k]);
                     }
-                    
+                    /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+                    paragraphList.getParagraph(0).deleteText();
                     paragraphList.getParagraph(0).createText();
                     paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
                 }
