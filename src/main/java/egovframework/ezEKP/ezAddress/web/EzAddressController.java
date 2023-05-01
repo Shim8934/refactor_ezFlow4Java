@@ -110,12 +110,13 @@ public class EzAddressController{
 		String currentPage = request.getParameter("currentPage");
 		String countPerPage = request.getParameter("countPerPage");
 		String confmKey = config.getProperty("config.ConfirmKey");
+		String jusoDomain = config.getProperty("config.jusoDomain", "business.juso.go.kr");
 		String keyword = request.getParameter("keyword");
 
-		logger.debug("currentPage: {} || currentPage: {} || confmKey: {} || keyword: {}", currentPage, currentPage, confmKey, keyword);
+		logger.debug("currentPage: {} || countPerPage: {} || keyword: {}", currentPage, countPerPage, keyword);
 
 		String isSecure = request.isSecure()? "https" : "http";
-		String apiUrl = isSecure + "://business.juso.go.kr/addrlink/addrLinkApi.do?currentPage=" + currentPage
+		String apiUrl = isSecure + "://" + jusoDomain + "/addrlink/addrLinkApi.do?currentPage=" + currentPage
 				+ "&countPerPage=" + countPerPage + "&keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&confmKey=" + confmKey;
 
 		URL url = new URL(apiUrl);
