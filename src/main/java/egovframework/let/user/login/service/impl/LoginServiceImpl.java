@@ -221,7 +221,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 	
     private int getTenantIdForLocal(String serverName) throws Exception {
-        logger.debug("getTenantIdForLocal started. serverName=" + serverName);
+        //logger.debug("getTenantIdForLocal started. serverName=" + serverName); // 로그정리
         
         int tenantId = -1;
         
@@ -231,7 +231,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
             tenantId = tenantServerNameVO.getTenantId();
         }
         
-        logger.debug("getTenantIdForLocal ended. tenantId=" + tenantId);
+        //logger.debug("getTenantIdForLocal ended. tenantId=" + tenantId); // 로그정리 : 상하 로그에서 tenantId 값을 확인가능
         
         return tenantId;
     }

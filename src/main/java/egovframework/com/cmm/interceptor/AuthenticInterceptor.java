@@ -181,11 +181,11 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				
 				String hostDomainName = getDomainName(hostName);
 				
-				logger.debug("hostDomainName=" + hostDomainName);
+				//logger.debug("hostDomainName=" + hostDomainName); // 로그정리 : hostName 으로 확인 가능
 								
 				String refererDomainName = getDomainName(referer);
 				
-				logger.debug("refererDomainName=" + refererDomainName);
+				//logger.debug("refererDomainName=" + refererDomainName); // 로그정리 : referer 로 확인 가능
 				
 				// 도로명주소 open api 예외 처리
 				if (!"juso.go.kr".equalsIgnoreCase(refererDomainName)

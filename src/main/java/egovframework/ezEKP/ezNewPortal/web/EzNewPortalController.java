@@ -711,7 +711,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		if (menuStatus.equals("ok")) {
 			JSONObject data = (JSONObject) menuResultBody.get("data");
 			
-			logger.debug("TopMenu : " + data.toJSONString());
+			//logger.debug("TopMenu : " + data.toJSONString()); // 로그정리 : newPortalTopMenu.do (탑메뉴 호출함수)에서 찍어주고 있음으로 주석
 			model.addAttribute("menuList", data.get("menuList"));
 		}
 		

@@ -534,13 +534,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				int portletId = deptPortlet.getPortletId();
 								
 				if (portletIds.indexOf(portletId) == -1) {
-					logger.debug("portletIds.indexOf(portletId) == -1");
+					//logger.debug("portletIds.indexOf(portletId) == -1");
 					portletIds.add(portletId);
 					
 					if (deptPortlet.isAccessYN()) {
-						logger.debug("deptPortlet.isAccessYN()");
+						//logger.debug("deptPortlet.isAccessYN()"); // 로그정리
 						result.add(deptPortlet);
-						logger.debug("resultSize = " + result.size());
+						//logger.debug("resultSize = " + result.size()); // 로그정리
 					}
 				}
 			}
@@ -550,18 +550,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				int portletId = deptAuthPortlet.getPortletId();
 								
 				if (portletAuthIds.indexOf(portletId) == -1) {
-					logger.debug("portletAuthIds.indexOf(portletId) == -1");
+					//logger.debug("portletAuthIds.indexOf(portletId) == -1");
 					portletAuthIds.add(portletId);
 					
 					if (deptAuthPortlet.isAccessYN()) {
-						logger.debug("portletAuthIds.isAccessYN()");
+						//logger.debug("portletAuthIds.isAccessYN()");
 						accessYIds.add(deptAuthPortlet.getPortletId());
 					}
 				}
 			}
 		}
 		
-		logger.debug("portletList : " + result.toString());
+		logger.debug("portletSize : {}, portletList : {}", result.size(), result.toString());
 		logger.debug("accessYIds : " + accessYIds.toString());
 		
 		//authResult와 메뉴권한이 있는 portletList와 비교!
@@ -743,8 +743,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		logger.debug("final userPortalSetting : " + userPortalSetting.toString());
-		logger.debug("[Serivce] getUserPortalSetting Ended");
+		//logger.debug("final userPortalSetting : " + userPortalSetting.toString()); // 로그정리
+		logger.debug("[Serivce] getUserPortalSetting Ended, userPortalSetting={}", userPortalSetting.toString());
 		return userPortalSetting;
 	}
 	
@@ -1103,7 +1103,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
-		logger.debug("themeList : " + result.toString());
+		//logger.debug("themeList : " + result.toString()); // 로그정리
 		logger.debug("getUserThemeList ended.");
 		return result;
 	}

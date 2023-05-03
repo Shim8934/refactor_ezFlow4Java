@@ -1182,7 +1182,7 @@ public class CommonUtil {
 	 * offset 시간을 분으로 변환하는 함수	 
 	 */
 	public String getMinuteUTC(String offSet) throws Exception {
-		logger.debug("getMinuteUTC started");
+		//logger.debug("getMinuteUTC started"); // 로그정리
 		
 		String format = offSet.split("\\|")[1];
 		String cal = format.substring(0,1);
@@ -1300,14 +1300,14 @@ public class CommonUtil {
 		
 		String licenseKey = ezCommonService.getTenantConfig("LicenseKey", tenantId);
 		
-		logger.debug("licenseKey=" + licenseKey);
+		//logger.debug("licenseKey=" + licenseKey); // 로그정리
 		
 		if (!licenseKey.equals("")) {
 			try {
 				// 라이센스키를 복호화한다.
 				licenseKey = egovFileScrty.decryptAES(licenseKey);
 				
-				logger.debug("Decrypted licenseKey=" + licenseKey);
+				//logger.debug("Decrypted licenseKey=" + licenseKey);
 				
 				String items[] = licenseKey.split(":");
 
@@ -1320,7 +1320,7 @@ public class CommonUtil {
 			}			
 		}
 		
-		logger.debug("packageType=" + packageType);
+		logger.debug("packageType={}, licenseKey={}" + packageType, licenseKey);
 		
 		return packageType;
 	}
