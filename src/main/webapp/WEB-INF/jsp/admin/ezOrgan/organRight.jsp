@@ -2310,7 +2310,9 @@
 							<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
 							<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
 						</c:if>
-						<li id="usermenu8"><span onClick="otpReset()"><spring:message code='ezOrgan.ls002' /></span></li>
+						<c:if test="${useOTP == 'YES' }">
+							<li id="usermenu8"><span onClick="otpReset()"><spring:message code='ezOrgan.ls002' /></span></li>
+						</c:if>
 					</ul>
 				</li>
 				<c:if test="${dotNetIntegration != 'YES'}">

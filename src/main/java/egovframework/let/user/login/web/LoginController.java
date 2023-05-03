@@ -273,7 +273,7 @@ public class LoginController {
 		boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
 		boolean hasOTP = false;
 		boolean isRightOTP = true;
-		model.addAttribute("useOTP", useOTP);
+		//model.addAttribute("useOTP", useOTP);
 		
 		// 비밀번호 '다음에 변경하기'는 이미 로그인 정보(OTP포함) 인증을 마친 상태에서 나타나기 때문에
 		// useOTP를 false로 하여 Id와 password로 로그인 되도록 함
