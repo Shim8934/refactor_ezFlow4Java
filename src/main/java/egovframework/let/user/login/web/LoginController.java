@@ -1,7 +1,12 @@
 package egovframework.let.user.login.web;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -37,6 +45,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.api.client.googleapis.util.Utils;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+
+import de.taimos.totp.TOTP;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService.Device;
@@ -119,8 +135,11 @@ public class LoginController {
 	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model, Locale locale) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
+        // 2023-03-27 이사라 : [TFA] 2-factor 인증 사용 여부 체크하여, otp입력란 표출 여부 결정
+        boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
+		model.addAttribute("useOTP", useOTP);
         
-        logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
+        logger.debug("serverName=" + serverName + ",tenantId=" + tenantId + ",useOTP=" + useOTP);
     	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
     	String userOs = ClientUtil.getClientInfo(request, "os");
     	
@@ -248,7 +267,27 @@ public class LoginController {
 		boolean masteradminLogin = false;
 		String displayName1 = null;
 		String useSession = null;
+
+		// 2023-03-22 이사라 : [TFA] 2-factor 인증 사용 체크
+		String loginOtp = "";
+		boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
+		boolean hasOTP = false;
+		boolean isRightOTP = true;
+		//model.addAttribute("useOTP", useOTP);
 		
+		// 비밀번호 '다음에 변경하기'는 이미 로그인 정보(OTP포함) 인증을 마친 상태에서 나타나기 때문에
+		// useOTP를 false로 하여 Id와 password로 로그인 되도록 함
+		String passwordUpdateNextTime = request.getParameter("nextTime") != null ? request.getParameter("nextTime") : "";
+		useOTP = "YES".equalsIgnoreCase(passwordUpdateNextTime) ? false : useOTP;
+
+		if (useOTP) {
+			loginOtp = StringUtils.defaultString(EgovFileScrty.decryptRsa(pk, loginVO.getEncryptOTP()));
+			loginVO.setOtp(loginOtp);
+			logger.debug("OTP use checked. loginOtp={}", loginOtp);
+			// OTP를 등록한 사용자인지 체크
+			hasOTP = loginService.searchOtpKey(loginVO);
+		}
+
 		// 사용자 ID & 사원번호 자체가 발견되지 않는 경우
 		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
 			logger.debug("_uid is not found.");
@@ -257,6 +296,31 @@ public class LoginController {
         	return "forward:/user/login/login.do";
         // 사용자 ID 혹은 사원번호가 발견된 경우
 		} else {
+			// OTP Key 유무 확인
+			if (useOTP && hasOTP) {
+				String otpKey = ezCommonService.getUserConfigInfo(tenantId, _uid, "otpKey");
+				String otpCode = "";
+
+				if (StringUtils.isNotBlank(otpKey)) {
+					logger.debug("has OTP checked.");
+					otpCode = getTOTPCode(otpKey);
+					isRightOTP = loginVO.getOtp().equals(otpCode) ? true : false;
+
+					logger.debug("OTP correct code={}, submmited code={}, isRightOTP={}", otpCode, loginVO.getOtp(), isRightOTP);
+				} else {
+					// otp 키가 null인 경우 예외 처리
+					logger.debug("has no valid OTP key.");
+					hasOTP = false;
+					model.addAttribute("message", "setflagTFA:" + _uid);
+					return "forward:/user/login/login.do";
+				}
+			// OTP 초기화한 사용자는 설정화면을 제공, masteradmin 계정은 OTP 인증을 제외 함
+			} else if (useOTP && !hasOTP && resultVO.getLoginCnt() > 0 && !resultVO.getId().equalsIgnoreCase("masteradmin")) {
+				logger.debug("hasn't set OTP key.");
+				model.addAttribute("message", "setflagTFA:" + _uid);
+				return "forward:/user/login/login.do";
+			}
+
 			resultVO.setIp(ClientUtil.getClientIP(request));
 			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
 			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
@@ -289,10 +353,19 @@ public class LoginController {
     		            if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
     		            	logger.debug("masteradmin password correct.");
     		            	masteradminLogin = true;
+    		            	isRightOTP = true; // OTP 체크 없이 로그인 가능하도록 함
     		            }
     				}
     				
     				if (!masteradminLogin) {
+						// 2023-03-22 이사라 : [TFA] 사용자 ID or 사원번호가 발견되었으나 첫번째 로그인 혹은 초기화된 사용자가 아닌데 OTP를 입력하지 않은 경우
+						if (useOTP && "".equals(loginOtp) && (resultVO.getLoginCnt() > 0 || hasOTP)) {
+							logger.debug("It isn't the first login and otpKey hasn't been reset either, but otp is not submitted.");
+							model.addAttribute("message", "emptyOtp");
+
+							return "forward:/user/login/login.do";
+						}
+
     					//User uses his/her username to login
     					loginVO.setId(_uid);
     					_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
@@ -342,10 +415,19 @@ public class LoginController {
     			            if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
     			            	logger.debug("masteradmin password correct.");
     			            	masteradminLogin = true;
+								isRightOTP = true; // OTP 체크 없이 로그인 가능하도록 함
     			            }
     					}
     					
     					if (!masteradminLogin) {
+							// 2023-03-22 이사라 : [TFA] 사용자 ID or 사원번호가 발견되었으나 첫번째 로그인 혹은 초기화된 사용자가 아닌데 OTP를 입력하지 않은 경우
+							if (useOTP && "".equals(loginOtp) && (resultVO.getLoginCnt() > 0 || hasOTP)) {
+								logger.debug("It isn't the first login and otpKey hasn't been reset either, but otp is not submitted.");
+								model.addAttribute("message", "emptyOtp");
+
+								return "forward:/user/login/login.do";
+							}
+
     						// 실제 사용자 ID를 사용해 암호가 맞는 지 확인한다.
     						_uid = orgId;
     						_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
@@ -396,7 +478,7 @@ public class LoginController {
 		}
 		
 		// 사용자가 입력한 암호가 맞는 경우
-        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+        if (isRightOTP && resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
         	// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
     		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
     		
@@ -542,7 +624,7 @@ public class LoginController {
     	        	
     				//0보다 작아지면 패스워드 변경기한 Expired
     	        	//패스워드 다음에 변경 기능 추가. 2019-09-17 홍대표
-    	        	String passwordUpdateNextTime = request.getParameter("nextTime") != null ? request.getParameter("nextTime") : "";
+    	        	//String passwordUpdateNextTime = request.getParameter("nextTime") != null ? request.getParameter("nextTime") : "";
     				if (diff <= 0 && !passwordUpdateNextTime.equals("YES")) {				
     					String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
     					
@@ -624,7 +706,11 @@ public class LoginController {
                 } else {
             		//User has been blocked
         			//Show block message
-                	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+					// model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+
+					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
+					model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
+					model.addAttribute("threeLineMSG", "Y");
                 	
                 	// 2021-12-21 이사라 : 접속 로그정보 저장 (실패)
                 	resultVO.setIp(ClientUtil.getClientIP(request));
@@ -645,7 +731,7 @@ public class LoginController {
         	}
         	
         // 사용자가 입력한 암호가 맞지 않는 경우
-        } else {     	
+        } else if (resultVO == null || StringUtils.isBlank(resultVO.getId())) {
         	logger.debug("_uid=" + _uid + ",password is wrong.");
         			
         	// 2021-12-21 이사라 : 접속 로그정보 저장 (실패)
@@ -674,31 +760,35 @@ public class LoginController {
         	String errorMsg3 = "";
         	String errorMsg4 = "";
         	String errorMsg5 = "";
-        	String errorMsg6 = "";
+        	//String errorMsg6 = "";
 
         	switch (check) {
 				case -3: 
 	    			//Show block message
-	            	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+	            	//model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+
+					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
+					model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
+					model.addAttribute("threeLineMSG", "Y");
+
 	            	return "forward:/user/login/login.do";
     			case -2:
 	        		//The first time this user login failed
 	        		ezCommonService.insertUserConfigInfo(tenantId,  _uid, "LoginFailCount", "1");
 	        		//Show warning message
 	        		/* 2018-05-24 홍승비 - 로그인 실패 시 레이어팝업을 위해 플래그 추가, 메세지 리소스 분리 */
-	        		errorMsg1 = egovMessageSource.getMessage("fail.common.login.warning1", locale);
+	        		errorMsg1 = egovMessageSource.getMessage("fail.common.login", locale);
 	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
 	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {1}, locale);
 	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
 	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
-	        		errorMsg6 = egovMessageSource.getMessage("fail.common.login.warning6", locale);
 	        		
 	        		model.addAttribute("message1", errorMsg1);
 	            	model.addAttribute("message2", errorMsg2);
 	            	model.addAttribute("message3", errorMsg3);
 	            	model.addAttribute("message4", errorMsg4);
 	            	model.addAttribute("message5", errorMsg5);
-	            	model.addAttribute("message6", errorMsg6);
+	            	//model.addAttribute("message6", errorMsg6);
 	            	model.addAttribute("isWrongPass", "Y");
 	            	
 	            	return "forward:/user/login/login.do";
@@ -712,29 +802,123 @@ public class LoginController {
         			
         			if (check >= numberOfLoginFailPermit - 1) {
         				//Show block message
-                    	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+						// model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+
+						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
+						model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
+						model.addAttribute("threeLineMSG", "Y");
+
                     	return "forward:/user/login/login.do";
         			} else {
             			//Show warning message
-        				errorMsg1 = egovMessageSource.getMessage("fail.common.login.warning1", locale);
+						errorMsg1 = egovMessageSource.getMessage("fail.common.login", locale);
     	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
     	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {check + 1}, locale);
     	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
     	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
-    	        		errorMsg6 = egovMessageSource.getMessage("fail.common.login.warning6", locale);
     	        		
     	        		model.addAttribute("message1", errorMsg1);
     	            	model.addAttribute("message2", errorMsg2);
     	            	model.addAttribute("message3", errorMsg3);
     	            	model.addAttribute("message4", errorMsg4);
     	            	model.addAttribute("message5", errorMsg5);
-    	            	model.addAttribute("message6", errorMsg6);
+    	            	//model.addAttribute("message6", errorMsg6);
     	            	model.addAttribute("isWrongPass", "Y");
     	            	
     	            	return "forward:/user/login/login.do";
         			}
         	}
-        } 
+			// 2023-03-22 이사라 : [TFA] 사용자가 입력한 OTP가 맞지 않는 경우
+		} else {
+			logger.debug("Wrong OTP, _uid={}, submitted={}", _uid, loginOtp);
+
+			// 접속 실패 로그정보 저장
+			loginVO.setId(_uid);
+			loginVO.setTenantId(tenantId);
+			loginVO.setDn("NOPASSWORD");
+			resultVO = loginService.selectUser(loginVO);
+
+			resultVO.setIp(ClientUtil.getClientIP(request));
+			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+			resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+			resultVO.setTenantId(tenantId);
+			resultVO.setStatus("N");
+
+			if (resultVO.getTitle2() == null) {
+				resultVO.setTitle2("");
+			}
+
+			loginService.insertLog(resultVO);
+
+			// 로그인 실패 카운트 처리 및 메시지
+			int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
+			String errorMsg1 = "";
+			String errorMsg2 = "";
+			String errorMsg3 = "";
+			String errorMsg4 = "";
+			String errorMsg5 = "";
+
+			switch (check) {
+			case -3:
+				// Show block message
+				model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
+				model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
+				model.addAttribute("threeLineMSG", "Y");
+
+				return "forward:/user/login/login.do";
+			case -2:
+				// The first time this user login failed
+				ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginFailCount", "1");
+				// Show warning message
+				errorMsg1 = egovMessageSource.getMessage("fail.common.login", locale);
+				errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
+				errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {1}, locale);
+				errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
+				errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] { numberOfLoginFailPermit }, locale);
+
+				model.addAttribute("message1", errorMsg1);
+				model.addAttribute("message2", errorMsg2);
+				model.addAttribute("message3", errorMsg3);
+				model.addAttribute("message4", errorMsg4);
+				model.addAttribute("message5", errorMsg5);
+				model.addAttribute("isWrongPass", "Y"); // 기존 비밀번호 오류 메시지 레이어를 그대로 사용하기 위해 isWrongPass를 사용
+
+				return "forward:/user/login/login.do";
+			case -1:
+				// Show normal login fail message
+				model.addAttribute("message", egovMessageSource.getMessage("fail.common.login.otp", locale));
+				return "forward:/user/login/login.do";
+			default:
+				// Increase number of attempts in database
+				ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginFailCount", Integer.toString(check + 1));
+
+				if (check >= numberOfLoginFailPermit - 1) {
+					// Show block message
+					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
+					model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
+					model.addAttribute("threeLineMSG", "Y");
+
+					return "forward:/user/login/login.do";
+				} else {
+					// Show warning message
+					errorMsg1 = egovMessageSource.getMessage("fail.common.login", locale);
+					errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
+					errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] { check + 1 }, locale);
+					errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
+					errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] { numberOfLoginFailPermit }, locale);
+
+					model.addAttribute("message1", errorMsg1);
+					model.addAttribute("message2", errorMsg2);
+					model.addAttribute("message3", errorMsg3);
+					model.addAttribute("message4", errorMsg4);
+					model.addAttribute("message5", errorMsg5);
+					model.addAttribute("isWrongPass", "Y"); // 기존 비밀번호 오류 메시지 레이어를 그대로 사용하기 위해 isWrongPass를 사용
+
+					return "forward:/user/login/login.do";
+				}
+			}
+		}
     }
     
     public boolean ipAccessCheck(LoginVO loginVO) throws Exception {
@@ -842,6 +1026,60 @@ public class LoginController {
     	}
     }
     
+    // 2023-03-22 이사라 : [TFA] OTP 번호 확인을 위해 호출
+	public String getTOTPCode(String otpKey) {
+		Base32 base32 = new Base32();
+		byte[] bytes = base32.decode(otpKey);
+		String hexKey = Hex.encodeHexString(bytes);
+
+		return TOTP.getOTP(hexKey);
+	}
+
+	// 2023-03-22 이사라 : [TFA] OTP key 생성
+	public String generateSecretKey() {
+		SecureRandom random = new SecureRandom();
+		byte[] bytes = new byte[20];
+		random.nextBytes(bytes);
+		Base32 base32 = new Base32();
+
+		logger.debug("generateSecretKey=" + base32.encodeToString(bytes));
+
+		return base32.encodeToString(bytes);
+	}
+
+	// 2023-04-10 이사라 : [TFA] OTP QR코드 생성을 위한 구글바코드 생성
+	public String getGoogleAuthenticatorBarCode(String otpKey, String mail, String companyId) {
+	    try {
+	        return "otpauth://totp/"
+	                + URLEncoder.encode(companyId + ":" + mail, "UTF-8").replace("+", "%20")
+	                + "?secret=" + URLEncoder.encode(otpKey, "UTF-8").replace("+", "%20")
+	                + "&issuer=" + URLEncoder.encode(companyId, "UTF-8").replace("+", "%20");
+	    } catch (UnsupportedEncodingException e) {
+	    	logger.error("getGoogleAuthenticatorBarCode Encoding Exception : ", e);
+	    	return "";
+	    }
+	}
+
+	// 2023-04-10 이사라 : [TFA] OTP QR코드 생성
+	public void createQRCode(String id, int tenantId, HttpServletRequest request, String barCodeData) throws Exception {
+
+		// QR을 저장할 위치
+		String filePath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", tenantId) + commonUtil.separator + "qr";//commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,10).replace("-", "") ;
+		File file = new File(commonUtil.detectPathTraversal(filePath));
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+			
+		// QR 생성 및 저장
+	    BitMatrix matrix = new MultiFormatWriter().encode(barCodeData, BarcodeFormat.QR_CODE, 200, 200);
+	    filePath += commonUtil.separator.concat(id).concat(".png");
+
+	    try (FileOutputStream out = new FileOutputStream(filePath)) {
+	        MatrixToImageWriter.writeToStream(matrix, "png", out);
+	    }
+	}
+
     public void createLoginCookie(
     				String userId, String userPw, String encryptedUserPw, int tenantId, 
     				HttpServletRequest request, HttpServletResponse response, String deptID, String companyID
@@ -963,6 +1201,64 @@ public class LoginController {
     	}    	
     }
     
+	// 2023-03-22 이사라 : [TFA] 2-factor 설정화면
+	@RequestMapping(value = "/user/login/setTFA.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String setTFA(HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
+		logger.debug("setTFA started.");
+
+		boolean hasOTP = false;
+		String otpKey = "";
+		String qrImagePath = "";
+		String prm = egovFileScrty.getPrm();
+		String pre = egovFileScrty.getPre();
+		String encUserId = request.getParameter("userId");
+
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		String userId = EgovFileScrty.decryptRsa(pk, encUserId);
+
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
+
+		LoginVO loginVO = new LoginVO();
+		loginVO.setId(userId);
+		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+		LoginVO resultVO = loginService.selectUser(loginVO);
+
+		try {
+			// otp를 등록한 사용자인지 체크
+			hasOTP = loginService.searchOtpKey(resultVO);
+			otpKey = generateSecretKey();
+			logger.debug("setTFA userId={}, tenantId={}, otpKey={}, hasOTP={}", userId, tenantId, otpKey, hasOTP);
+
+			if (hasOTP) {
+				logger.debug("updateUserConfigInfo otpKey");
+				ezCommonService.updateUserConfigInfo(tenantId, userId, "otpKey", otpKey);
+			} else {
+				logger.debug("insertUserConfigInfo otpKey");
+				ezCommonService.insertUserConfigInfo(tenantId, userId, "otpKey", otpKey);
+			}
+
+			// QR 코드 생성
+			String barCodeUrl = getGoogleAuthenticatorBarCode(otpKey, resultVO.getEmail(), resultVO.getCompanyID());
+			qrImagePath = commonUtil.getUploadPath("upload_common.ROOT", tenantId).concat(commonUtil.separator).concat("qr").concat(commonUtil.separator).concat(userId).concat(".png");
+
+			createQRCode(userId, tenantId, request, barCodeUrl);
+			
+		} catch (Exception e) {
+			logger.debug("setTFA error. otpKey={}", otpKey);
+			// 오류가 발생한 경우 otpKey 비워 줌
+			ezCommonService.updateUserConfigInfo(tenantId, userId, "otpKey", "");
+
+			e.printStackTrace();
+			return "fail";
+		}
+
+		logger.debug("setTFA ended. otpKey={}", otpKey);
+		return otpKey.concat("::").concat(qrImagePath);
+	}
+
     /**
 	 * 로그아웃한다.
 	 * @return String
@@ -1094,7 +1390,7 @@ public class LoginController {
         
     @RequestMapping(value = "/user/login/changeExPassword.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
 	@ResponseBody
-    public String changeExPassword(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public String changeExPassword(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
     	logger.debug("=========================================== changePassword ============================================");
     	
     	String prm = egovFileScrty.getPrm();
@@ -1127,6 +1423,10 @@ public class LoginController {
         LoginVO resultVO = loginService.selectUser(loginVO);
         
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
+			// 2023-03-27 이사라 : [TFA] 2-factor 인증 사용 여부 체크하여, otp설정 레이어팝업 표출 여부 결정
+			boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
+			model.addAttribute("useOTP", useOTP);
+       	
         	String epwd = EgovFileScrty.decryptRsa(pk, encNewPass);
 
         	//e-mail 연동

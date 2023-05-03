@@ -54,34 +54,6 @@
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 				windowResize();
 				functionSetting();
-
-				var clickOutside;
-
-				<c:if test="${!isDotNetIntegration}">
-				if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) {
-					clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
-				} else {
-					clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
-				}
-
-				clickOutside.mouseup(function (e) {
-					OrganBtnListHidden(e);
-				});
-				</c:if>
-
-				$($(window.parent.frames['lef'])).mouseup(function (e) {
-					OrganBtnListHidden(e);
-				});
-
-				$(parent.document).mouseup(function (e) {
-					OrganBtnListHidden(e);
-				});
-				
-				//2023.03.13 김대현 event bubbling을 사용하기 위해 jquery가 아닌 javaScript 사용
-				document.addEventListener('click',function (e) {
-					OrganBtnListHidden(e);
-				})
-				
 			});
 			
 			window.onresize = function(event) {
@@ -641,69 +613,6 @@
 		        }
 		    }
 		    
-			// 2023-04-10 이사라 : [TFA] 2-factor 인증 - otp key 초기화
-			function otpReset(){
-				var listview = new ListView();
-		        var otpResetMultiUserlist = "";
-
-		        listview.LoadFromID("lvUserList");
-		        var len = listview.GetSelectedRows().length;
-
-		        if (len == 0) {
-		            alert("<spring:message code='ezOrgan.ls003' />");
-		            return;
-		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
-                    alert(strLang13);
-                    return;
-		        }
-
-				// 다수일 때와 한명일 떄 confirm 내용 분기처리
-		        if (len > 1) {
-		        	if (!confirm(len + "<spring:message code='ezOrgan.ls004' />")){
-						return;
-					}
-		        } else {
-		        	if (!confirm("<spring:message code='ezOrgan.ls005' />")){
-						return;
-					}
-		        }
-
-				for (i = 0; i < len; i++) {
-					otpResetMultiUserlist += listview.GetSelectedRows()[i].getAttribute("DATA2").concat(",");
-				}
-
-				// 조직도 load
-				var treeView = new TreeView();
-				treeView.LoadFromID("FromTreeView");
-
-				var nodeIdx = treeView.GetSelectNode();
-				var treeNode = new TreeNode();
-				treeNode.LoadFromID(nodeIdx.NodeID);
-				document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
-
-		        $.ajax({
-	            	type : "POST",
-	            	dataType : "html",
-	            	url : "/admin/ezOrgan/otpReset.do",
-	            	async : false,
-	            	data : {
-	            		otpResetMultiUserlist : otpResetMultiUserlist
-	            	},
-	            	success : function(result) {
-	            		if (result == "OK") {
-	            			alert("<spring:message code='ezOrgan.ls006' />");
-	            		} else if (result == "EMAIL_ERROR") {
-							alert("<spring:message code='ezOrgan.t302' />");
-	            		} else {
-	            			alert("<spring:message code='ezOrgan.ls007' />");
-	            		}
-	            	},
-	            	error : function() {
-	            		alert("<spring:message code='ezOrgan.ls007' />");
-	            	}
-	            });
-			}
-			
 		    function search_press(){
 				if (window.event.keyCode == "13"){
 					search_click();
@@ -2124,17 +2033,17 @@
 				var treeNode = new TreeNode();
 				treeNode.LoadFromID(nodeIdx.NodeID);
 
-				if (TreeView.selectedIndex == -1) {
+				if (TreeView.selectedIndex == -1){
 					alert("<spring:message code='ezOrgan.t32'/>");
 					return;
 				}
 
-				if (treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")) {
+				if(treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")){
 					alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh01'/>");
 					return;
 				}
 				
-				if (!confirm("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh02'/>")) {
+				if (!confirm("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh02'/>")){
 					return;
 				}
 				
@@ -2147,7 +2056,7 @@
 							EXTENSIONATTRIBUTE2 : treeNode.GetNodeData("EXTENSIONATTRIBUTE2")},
 					success : function (result) {
 						
-						if (result == "HASCHILD") {
+						if (result == "HASCHILD"){
 							alert("<spring:message code='ezOrgan.kdh03'/>");
 						} else if (result == "EMAIL_ERROR") {
 							alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.kdh04'/>");
@@ -2165,37 +2074,6 @@
 						alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t36'/>");
 					}
 				});
-			}
-
-			function organMenuListView(obj) {
-				let spanClassName = obj.getElementsByClassName('icon_sel').item(0).className;
-				let ulClassName = obj.parentElement.getElementsByClassName('option_horizontal_list').item(0).className;
-				
-				if (obj.getAttribute('mode') == "off") {
-					// 먼저 열려있는 list를 닫아주는 부분
-					OrganBtnListHidden();
-					obj.getElementsByClassName('icon_sel').item(0).className = spanClassName.replace('collapse_down', 'collapse_up');
-					obj.parentElement.getElementsByClassName('option_horizontal_list').item(0).style.display = 'block';
-					obj.setAttribute("mode","on");
-					// list를 펼치고 이벤트 끝내는 부분
-					event.stopPropagation();
-				}
-				
-			}
-
-			function OrganBtnListHidden(e) {
-				let list = document.getElementsByClassName('newSelectView');
-				
-				for (let btnObj of list) {
-					
-					if (btnObj.getAttribute('mode') == 'on') {
-						let spanClassName = btnObj.getElementsByClassName('icon_sel').item(0).className;
-						btnObj.getElementsByClassName('icon_sel').item(0).className = spanClassName.replace('collapse_up', 'collapse_down');
-						btnObj.parentElement.getElementsByClassName('option_horizontal_list').item(0).style.display = 'none';
-						btnObj.setAttribute("mode","off");
-					}
-				}
-				
 			}
 			
 		</script>
@@ -2238,7 +2116,7 @@
 		<h1>
 			<spring:message code='main.t56' />
 			<span class="searchForm">
-				<select id="search_type" class="text"; style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+				<select id="search_type" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
 					<option selected value="description"><spring:message code='ezOrgan.t68' /></option>
 					<option value="displayname"><spring:message code='ezOrgan.t67' /></option>
 					<option value="cn"><spring:message code='ezOrgan.t94' /></option>
@@ -2255,95 +2133,13 @@
                     </c:if>
 					<option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100' /></option>
 				</select>
-				<input id="keyword" class="organSearchKeyword searchinputBox"; onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb;"/>
-				<a class="searchBtn nofilter">
-					<img src="/images/bsearch_new2.png" onClick="search_click()" border="0">
+				<input id="keyword" class="organSearchKeyword" onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;"/>
+				<a class=searchBtn>
+					<img src="/images/bsearch_new2.gif" onClick="search_click()" border="0">
 				</a>
 			</span>
 		</h1>
 
-		<div id="mainmenu" class="organMainmenu newSelect_div">
-			<ul style="height:33px;" class="on selectUL" id="selectUL">
-				<c:if test="${dotNetIntegration != 'YES'}">
-				<li id="companyBtnList" class="newSelect on">
-					<p class="newSelectView" style="margin: 0;" onclick="organMenuListView(this)" mode = "off">
-					<span><spring:message code='ezPersonal.t67' /></span>
-					<span class="icon_sel collapse_down"></span>
-					</p>
-					<ul class="option_horizontal_list" style="display: none;">
-						<li id="companybutton1" class="important"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></li>
-						<li id="companybutton2"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></li>
-					</ul>
-				</li>
-				</c:if>
-				
-				<li id="deptBtnList" class="newSelect on" >
-					<p class="newSelectView" style="margin: 0;" onclick="organMenuListView(this)" mode = "off">
-						<span><spring:message code='ezApprovalG.share05' /></span>
-						<span class="icon_sel collapse_down"></span>
-					</p>
-					<ul class="option_horizontal_list" style="display: none;">
-						<c:if test="${dotNetIntegration != 'YES'}">
-						<li class="important"><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></li>
-						<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
-						</c:if>
-						<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
-						<c:if test="${useExternalMailServer == 'NO' }">
-						<li id="usermenu6"><span onClick="deptMail_manage()"><spring:message code='ezEmail.multiDomain.ksa22' /></span></li>
-						</c:if>
-						<li id="usermenu11"><span onclick="trash_dept()"><spring:message code='ezOrgan.kdh06' /></span></li>
-					</ul>
-				</li>
-
-				<li id="userBtnList" class="newSelect on">
-					<p class="newSelectView" style="margin: 0;" onclick="organMenuListView(this)" mode = "off">
-					<span><spring:message code='ezPersonal.kdh01' /></span>
-					<span class="icon_sel collapse_down"></span>
-					</p>
-					<ul class="option_horizontal_list" style="display: none;">
-						<c:if test="${dotNetIntegration != 'YES'}">
-						<li class="important"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></li>
-						<li id="usermenu8"><span onClick="moveMultiUser()"><spring:message code='ezOrgan.t86' /></span></li>
-						<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
-						</c:if>
-						<c:if test="${useExternalMailServer == 'NO' }">
-							<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
-							<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
-						</c:if>
-						<c:if test="${useOTP == 'YES' }">
-							<li id="usermenu8"><span onClick="otpReset()"><spring:message code='ezOrgan.ls002' /></span></li>
-						</c:if>
-					</ul>
-				</li>
-				<c:if test="${dotNetIntegration != 'YES'}">
-					<li id="companybutton3" class="important"><span onClick="check_info()"><spring:message code='ezOrgan.hyh06' /></span></li>
-				</c:if>
-				<c:if test="${useSyncServer == 'YES'}">
-					<li id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></li>
-				</c:if>
-				<c:if test="${useBizmekaTalk == 'YES'}">
-					<li id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></li>
-				</c:if>
-				
-				<c:if test="${useDisablePopImap == 'YES' && useExternalMailServer == 'NO'}">
-					<li id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></li>
-				</c:if>
-				<c:if test="${useMobileManagemant == 'YES' }">
-					<li id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></span></li>
-				</c:if>
-				
-				<li id="btnSave"><span onClick="excelExport()"><spring:message code='ezStatistics.t1003' /></span></li>
-				<dl class="organList">
-					<dt class="organListDT">
-						<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
-						<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
-					</dt>
-				</dl>
-			</ul>
-		</div>
-		<%--
-		23-03-13 김대현 menu 각 버튼 list로 묶기전
-		
 		<div id="mainmenu" class="organMainmenu">
 			<ul style="height:33px;">
 				<c:if test="${dotNetIntegration != 'YES'}">
@@ -2386,7 +2182,6 @@
 				</dl>
 			</ul>
 		</div>
-		--%>
 		<div>
 			<div style="border: 1px solid #ddd; height: 530px; width: 25%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
 			<div id="organListDIv" style="width: 74%; float:right;">

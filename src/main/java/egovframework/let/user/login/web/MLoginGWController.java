@@ -1,6 +1,7 @@
 package egovframework.let.user.login.web;
 
 import java.security.PrivateKey;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +15,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,10 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-
-
+import de.taimos.totp.TOTP;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService.Device;
@@ -575,7 +575,8 @@ public class MLoginGWController {
         					result.put("data", "isExpireDate");
         					
         					return result;    	        	
-        				} else {			
+        				} else {
+        				/*// 2023-03-31 이사라 : [TFA] 로그인 성공 처리는 loginTFA.do에서 진행
         			    	String mIp = request.getHeader("ip");
         			    	String mAgent = request.getHeader("agent");
         			    	String mBrowser = request.getHeader("browser");
@@ -721,11 +722,11 @@ public class MLoginGWController {
         					// 20180711 조진호 - 로그인 성공시 로그인실패 횟수 초기화
         					ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginFailCount", "0");
         					
-        					/* 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO */
+        					//* 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO
         					String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
-        					/* 2018-11-02 배현상 - 공유결재문서 사용 유무 YES or NO */
+        					//* 2018-11-02 배현상 - 공유결재문서 사용 유무 YES or NO
         					String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", tenantId);
-        					/* 2019-08-30 김수아 - 모바일 세션 시간 config - useMobileSession */
+        					//* 2019-08-30 김수아 - 모바일 세션 시간 config - useMobileSession
         					String useSessionMobile = ezCommonService.getTenantConfig("useSessionMobile", tenantId);
 
 							// 모바일 중복로그인 처리
@@ -777,7 +778,33 @@ public class MLoginGWController {
         					result.put("code", "0");
         					result.put("data", map);
         					result.put("dataSSO", mapSSO);
+        					*/
+
+						boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId)) ? true	: false;
+						boolean hasOTP = loginService.searchOtpKey(loginVO);
+    						String code = "0";
         					
+							if (useOTP && hasOTP) {
+								String otpKey = ezCommonService.getUserConfigInfo(tenantId, uid, "otpKey");
+								code = "11";
+
+								if (StringUtils.isBlank(otpKey)) {
+									LOGGER.debug("has no valid OTP key.");
+									hasOTP = false;
+									code = "9";
+								}
+
+							} else if (useOTP && !hasOTP) {
+								LOGGER.debug("hasn't set OTP key.");
+								code = "9";
+							}
+
+							result.put("status", "ok");
+							result.put("code", code);
+							result.put("data", "ok");
+
+							LOGGER.debug("==== end, useOTP={}, hasOTP={} ====", useOTP, hasOTP);
+
         					return result;
         				}
                 	} else {
@@ -886,6 +913,418 @@ public class MLoginGWController {
 		}    	      
     }
     
+	// 2023-03-30 이사라 : [TFA] 2중 인증을 추가하면서 로그인 성공 절차를 loginTFA에서 처리하도록 수정
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezUser/loginTFA/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject loginTFA(@PathVariable String userId, HttpServletRequest request, Locale locale)
+			throws Exception {
+		LOGGER.debug(
+				"=========================================== G/W loginTFA ============================================");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String uid = "";
+			PrivateKey pk = EgovFileScrty.getPrivateKey(egovFileScrty.getPrm(), egovFileScrty.getPre());
+
+			// SSO 솔루션없이 기간계와의 모바일 자동 로그인 처리를 위한 SLO(Single Log On) 처리 여부를 나타냄.
+			String SLOParam = request.getParameter("SLO");
+			boolean isSLOSupport = "yes".equalsIgnoreCase(SLOParam);
+
+			if (!isSLOSupport) {
+				uid = EgovFileScrty.decryptRsa(pk, userId);
+
+				if (uid == null || uid.equals("")) {
+					LOGGER.debug("invalid uid=" + uid);
+
+					result.put("status", "error");
+					result.put("code", "2");
+					result.put("data", "invalid uid");
+
+					return result;
+				}
+
+			} else {
+				// SLO의 경우엔 암호화하지 않은 아이디가 ezMobile로부터 전달됨.
+				// 기간계에서 암호화해서 전달한 아이디를 ezMobile이 복호화한 후 Mobile GW 서버로 전송하는 것임.
+				uid = userId;
+			}
+
+			LOGGER.debug("isSLOSupport={}, uid={}", isSLOSupport, uid);
+
+			String serverName = request.getHeader("x-user-host");
+			int tenantId = loginService.getTenantId(serverName);
+
+			// 2023-03-31 이사라 : [TFA] 2-factor 인증 사용 체크
+			String encLoginOtp = request.getParameter("loginOtp") == null ? "" : request.getParameter("loginOtp");
+			String loginOtp = "";
+			boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
+			boolean hasOTP = false;
+			boolean isRightOTP = true;
+
+			LoginVO loginVO = new LoginVO();
+
+			loginVO.setId(uid);
+			loginVO.setDn("NOPASSWORD");
+			loginVO.setTenantId(tenantId);
+
+			LoginVO resultVO = loginService.selectUser(loginVO);
+			String companyId = resultVO.getCompanyID();
+
+			/* 2019-05-08 홍승비 - LoginCookieSSO를 사용하는지 값을 확인 */
+			String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
+			result.put("useLoginCookieSSO", useSSOCookie);
+
+			// OTP 체크
+			if (useOTP) {
+				loginOtp = StringUtils.defaultString(EgovFileScrty.decryptRsa(pk, encLoginOtp));
+				LOGGER.debug("OTP use checked. loginOtp={}", loginOtp);
+				// OTP를 등록한 사용자인지 체크
+				hasOTP = loginService.searchOtpKey(resultVO);
+			}
+
+			// OTP Key 유무 확인
+			if (hasOTP) {
+				String otpKey = ezCommonService.getUserConfigInfo(tenantId, uid, "otpKey");
+				String otpCode = "";
+
+				if (StringUtils.isNotBlank(otpKey)) {
+					LOGGER.debug("has OTP checked.");
+					otpCode = getTOTPCode(otpKey);
+					isRightOTP = loginOtp.equals(otpCode) ? true : false;
+
+					LOGGER.debug("OTP correct code={}, submmited code={}, isRightOTP={}", otpCode, loginOtp,
+							isRightOTP);
+				} else {
+					// OTP 키가 null인 경우 예외 처리
+					LOGGER.debug("has no valid OTP key.");
+					hasOTP = false;
+					isRightOTP = false;
+				}
+			}
+
+			// 로그인 실패 최대 허용 횟수를 구한다.
+			int numberOfLoginFailPermit = 0;
+
+			String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId,
+					"MaxAllowedCountOfLoginFail");
+			LOGGER.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
+
+			if (!maxAllowedCountOfLoginFail.equals("")) {
+				try {
+					numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+			}
+
+			// 로그인 정보 저장을 위한 값 처리
+			String mIp = request.getHeader("ip");
+			String mAgent = request.getHeader("agent");
+			String mBrowser = request.getHeader("browser");
+			String mOs = request.getHeader("os");
+
+			if (mIp == null) {
+				mIp = ClientUtil.getClientIP(request);
+			}
+
+			if (mAgent == null) {
+				mAgent = ClientUtil.getClientInfo(request, "agent");
+			}
+
+			if (mBrowser == null) {
+				mBrowser = ClientUtil.getClientInfo(request, "browser");
+			}
+
+			if (mOs == null) {
+				mOs = ClientUtil.getClientInfo(request, "os");
+			}
+
+			// 1. OTP 성공 혹은 사용하지 않을 때 로그인 성공
+			if (isRightOTP) {
+				// IP Address, 마지막 login시간 저장
+				resultVO.setIp(mIp);
+				loginService.updateUser(resultVO);
+
+				// 2021-12-28 이사라 : 세션ID를 세션코드로 입력
+				String sessionCode = request.getHeader("mSessionId") == null ? ClientUtil.getClientIP(request)
+						: request.getHeader("mSessionId");
+				LOGGER.debug("Login sessionCode = " + sessionCode);
+
+				// 접속 로그정보 저장
+				resultVO.setIp(mIp);
+				resultVO.setAgent(mAgent);
+				resultVO.setOs(mOs);
+				resultVO.setBrowser(mBrowser);
+				resultVO.setTenantId(tenantId);
+				resultVO.setStatus("Y");
+				resultVO.setSessionCode(sessionCode);
+
+				if (resultVO.getTitle2() == null) {
+					resultVO.setTitle2("");
+				}
+
+				loginService.insertLog(resultVO);
+
+				// DB에서 모바일 환경설정 값 가져옴
+				MOptionVO mOptionVO = mOptionService.optionInfo(uid, tenantId);
+
+				String acceptLanguage = request.getHeader("Accept-Language");
+				String lang = "";
+				String timeZone = "";
+				String maintype = "";
+				String listCnt = "";
+				String useSecurity = "";
+				String returnValue = "";
+
+				String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+				// userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
+				if (mOptionVO == null) {
+
+					// UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+					if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
+						if (primaryLang.equals("1")) {
+							acceptLanguage = "ko";
+						} else if (primaryLang.equals("3")) {
+							acceptLanguage = "ja";
+						}
+					}
+
+					if (acceptLanguage != null) {
+						returnValue = acceptLanguage.substring(0, 2);
+					// 이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+					} else {
+						returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
+					}
+
+					lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
+
+					// 브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
+					if (lang.equals("")) {
+						lang = primaryLang;
+					}
+
+					timeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+
+					if (timeZone.equals("")) {
+						timeZone = "235|+09:00";
+					}
+
+					maintype = "D";
+					listCnt = "10";
+					useSecurity = "N";
+
+					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSecurity, tenantId);
+				} else {
+					lang = mOptionVO.getLang();
+					timeZone = mOptionVO.getTimeZone();
+					maintype = mOptionVO.getMainType();
+					listCnt = mOptionVO.getListCnt();
+					useSecurity = mOptionVO.getUseSecurity();
+					returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
+				}
+
+				// PC 첫 로그인에서 비밀번호만 변경하고 재로그인을 하지 않았을 때
+				// TBL_USERLOCALINFO 테이블에 값이 없어서 모바일 rest 호출시 mOptionService.commonInfoWeb 를
+				// 사용하는 모듈들에서 에러가 발생하게 된다. 체크 후 넣어주는 로직!
+				if (StringUtils.isEmpty(ezCommonService.selectUserGetLang(uid, tenantId))) {
+					// UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+					if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
+						if (primaryLang.equals("1")) {
+							acceptLanguage = "ko";
+						} else if (primaryLang.equals("3")) {
+							acceptLanguage = "ja";
+						}
+					}
+
+					String pcLang;
+
+					if (acceptLanguage != null) {
+						pcLang = acceptLanguage.substring(0, 2);
+						// 이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+					} else {
+						pcLang = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
+					}
+
+					pcLang = commonUtil.getLangNumFromTwoLetterLang(pcLang);
+
+					// 브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
+					if (pcLang.equals("")) {
+						pcLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+					}
+
+					String primaryTimeZone = ezCommonService.getTenantConfig("PrimaryTimeZone", tenantId);
+
+					if (primaryTimeZone.equals("")) {
+						primaryTimeZone = Offset.KST;
+					}
+
+					ezCommonService.insertTblUserLocalInfo(uid, primaryTimeZone, pcLang, tenantId);
+				}
+
+				// 20180711 조진호 - 로그인 성공시 로그인실패 횟수 초기화
+				ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginFailCount", "0");
+
+				/* 2018-01-08 장진혁 - 모바일에서 메일만 사용할 경우 YES or NO */
+				String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
+				/* 2018-11-02 배현상 - 공유결재문서 사용 유무 YES or NO */
+				String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", tenantId);
+				/* 2019-08-30 김수아 - 모바일 세션 시간 config - useMobileSession */
+				String useSessionMobile = ezCommonService.getTenantConfig("useSessionMobile", tenantId);
+
+				// 모바일 중복로그인 처리
+				String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyId, "useMultiLogin");
+				String multiLoginTime = "";
+
+				if ("NO".equalsIgnoreCase(useMultiLogin)) {
+					multiLoginTime = String.valueOf(System.currentTimeMillis());
+					commonUtil.setLoginUsers(tenantId, companyId, uid, multiLoginTime, Device.MOBILE);
+				}
+
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("uid", uid);
+				map.put("ip", mIp);
+				map.put("locale", returnValue);
+				map.put("lang", lang);
+				map.put("timeZone", timeZone);
+				map.put("tenantId", tenantId + "");
+				map.put("mainType", maintype);
+				map.put("listCnt", listCnt);
+				map.put("useSecurity", useSecurity);
+				map.put("companyID", resultVO.getCompanyID());
+				map.put("primaryLang", primaryLang);
+				map.put("rollInfo", resultVO.getRollInfo());
+				map.put("useSessionMobile", useSessionMobile);
+				map.put("multiLoginTime", multiLoginTime);
+				map.put("useOTP", useOTP);
+				map.put("hasOTP", hasOTP);
+
+				// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
+				Map<String, Object> mapSSO = new HashMap<String, Object>();
+				if (!useSSOCookie.trim().isEmpty() && !"NO".equalsIgnoreCase(useSSOCookie)) {
+					// 20210521 조진호 - loginCookieSSO에서 사용자의 패스워드를 사용 할 이유가 없어 WEB과 동일하게 문자열로 처리
+					// pwd = EgovFileScrty.encryptPassword(rpwd, uid);
+					mapSSO.put("userPw", "userPw");
+					mapSSO.put("encryptedUserPw", "encryptedUserPw");
+					mapSSO.put("deptID", resultVO.getDeptID());
+					mapSSO.put("companyID", resultVO.getCompanyID());
+				}
+
+				if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
+					map.put("userName", resultVO.getDisplayName1());
+				} else {
+					map.put("userName", resultVO.getDisplayName2());
+				}
+
+				map.put("useMobileMailOnly", useMobileMailOnly);
+				map.put("useShareApproval", useShareApproval);
+
+				result.put("status", "ok");
+				result.put("code", "0");
+				result.put("data", map);
+				result.put("dataSSO", mapSSO);
+
+			// 2. OTP 인증을 실패 한 경우
+			} else {
+				// 2021-12-28 이사라 : 접속로그 실패 저장
+				resultVO.setIp(mIp);
+				resultVO.setAgent(mAgent);
+				resultVO.setOs(mOs);
+				resultVO.setBrowser(mBrowser);
+				resultVO.setTenantId(tenantId);
+				resultVO.setStatus("N");
+
+				if (resultVO.getTitle2() == null) {
+					resultVO.setTitle2("");
+				}
+
+				loginService.insertLog(resultVO);
+
+				// 로그인 실패 처리
+				// Check login state of the user
+				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
+				String errorMsg1 = "";
+				String errorMsg2 = "";
+				String errorMsg3 = "";
+
+				switch (check) {
+				case -3:
+					// Show block message
+					result.put("status", "error");
+					result.put("code", "3");
+					result.put("data", egovMessageSource.getMessageExtend("fail.mobile.common.login.block",
+							new Object[] { numberOfLoginFailPermit }, locale));
+					break;
+				case -2:
+					// The first time this user login failed
+					ezCommonService.insertUserConfigInfo(tenantId, uid, "LoginFailCount", "1");
+					// Show warning message
+					/* 2018-05-24 홍승비 - 로그인 실패 시 레이어팝업을 위해 플래그 추가, 메세지 리소스 분리 */
+					errorMsg1 = egovMessageSource.getMessage("fail.mobile.common.login", locale);
+					errorMsg1 += egovMessageSource.getMessage("fail.mobile.common.login.warning2", locale);
+					errorMsg2 = egovMessageSource.getMessageExtend("fail.mobile.common.login.warning3",
+							new Object[] { 1 }, locale);
+					errorMsg3 = egovMessageSource.getMessage("fail.mobile.common.login.warning4", locale);
+					errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.mobile.common.login.warning5",
+							new Object[] { numberOfLoginFailPermit }, locale);
+					result.put("status", "error");
+					result.put("code", "3");
+					result.put("data", errorMsg1 + errorMsg2 + errorMsg3);
+					break;
+				case -1:
+					// Show normal login fail message
+					result.put("status", "error");
+					result.put("code", "3");
+					result.put("data", "fail");
+					break;
+				default:
+					// Increase number of attempts in database
+					ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginFailCount", Integer.toString(check + 1));
+
+					if (check >= numberOfLoginFailPermit - 1) {
+						// Show block message
+						result.put("status", "error");
+						result.put("code", "3");
+						result.put("data", egovMessageSource.getMessageExtend("fail.mobile.common.login.block",
+								new Object[] { numberOfLoginFailPermit }, locale));
+					} else {
+						// Show warning message
+						errorMsg1 = egovMessageSource.getMessage("fail.mobile.common.login.warning2", locale);
+						errorMsg2 = egovMessageSource.getMessageExtend("fail.mobile.common.login.warning3",
+								new Object[] { check + 1 }, locale);
+						errorMsg3 = egovMessageSource.getMessage("fail.mobile.common.login.warning4", locale);
+						errorMsg3 += "   " + egovMessageSource.getMessageExtend("fail.mobile.common.login.warning5",
+								new Object[] { numberOfLoginFailPermit }, locale);
+						result.put("status", "error");
+						result.put("code", "3");
+						result.put("data", errorMsg1 + errorMsg2 + errorMsg3);
+					}
+				}
+
+				LOGGER.debug("OTP authentication fail.");
+			}
+
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", "1");
+			result.put("data", "error");
+
+			return result;
+		}
+	}
+
+	// 2023-03-31 이사라 : [TFA] OTP 번호 확인을 위해 호출
+	public String getTOTPCode(String otpKey) {
+		Base32 base32 = new Base32();
+		byte[] bytes = base32.decode(otpKey);
+		String hexKey = Hex.encodeHexString(bytes);
+
+		return TOTP.getOTP(hexKey);
+	}
+
     // 
     /**
   	 * 모바일 G/W 사용자 [GET] 로그아웃
