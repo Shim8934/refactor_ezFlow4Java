@@ -789,13 +789,13 @@ public class MLoginGWController {
 								code = "11";
 
 								if (StringUtils.isBlank(otpKey)) {
-									LOGGER.debug("has no valid OTP key.");
+									logger.debug("has no valid OTP key.");
 									hasOTP = false;
 									code = "9";
 								}
 
 							} else if (useOTP && !hasOTP) {
-								LOGGER.debug("hasn't set OTP key.");
+								logger.debug("hasn't set OTP key.");
 								code = "9";
 							}
 
@@ -803,7 +803,7 @@ public class MLoginGWController {
 							result.put("code", code);
 							result.put("data", "ok");
 
-							LOGGER.debug("==== end, useOTP={}, hasOTP={} ====", useOTP, hasOTP);
+							logger.debug("==== end, useOTP={}, hasOTP={} ====", useOTP, hasOTP);
 
         					return result;
         				}
@@ -918,7 +918,7 @@ public class MLoginGWController {
 	@RequestMapping(value = "/mobile/ezUser/loginTFA/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject loginTFA(@PathVariable String userId, HttpServletRequest request, Locale locale)
 			throws Exception {
-		LOGGER.debug(
+		logger.debug(
 				"=========================================== G/W loginTFA ============================================");
 
 		JSONObject result = new JSONObject();
@@ -935,7 +935,7 @@ public class MLoginGWController {
 				uid = EgovFileScrty.decryptRsa(pk, userId);
 
 				if (uid == null || uid.equals("")) {
-					LOGGER.debug("invalid uid=" + uid);
+					logger.debug("invalid uid=" + uid);
 
 					result.put("status", "error");
 					result.put("code", "2");
@@ -950,7 +950,7 @@ public class MLoginGWController {
 				uid = userId;
 			}
 
-			LOGGER.debug("isSLOSupport={}, uid={}", isSLOSupport, uid);
+			logger.debug("isSLOSupport={}, uid={}", isSLOSupport, uid);
 
 			String serverName = request.getHeader("x-user-host");
 			int tenantId = loginService.getTenantId(serverName);
@@ -978,7 +978,7 @@ public class MLoginGWController {
 			// OTP 체크
 			if (useOTP) {
 				loginOtp = StringUtils.defaultString(EgovFileScrty.decryptRsa(pk, encLoginOtp));
-				LOGGER.debug("OTP use checked. loginOtp={}", loginOtp);
+				logger.debug("OTP use checked. loginOtp={}", loginOtp);
 				// OTP를 등록한 사용자인지 체크
 				hasOTP = loginService.searchOtpKey(resultVO);
 			}
@@ -989,15 +989,15 @@ public class MLoginGWController {
 				String otpCode = "";
 
 				if (StringUtils.isNotBlank(otpKey)) {
-					LOGGER.debug("has OTP checked.");
+					logger.debug("has OTP checked.");
 					otpCode = getTOTPCode(otpKey);
 					isRightOTP = loginOtp.equals(otpCode) ? true : false;
 
-					LOGGER.debug("OTP correct code={}, submmited code={}, isRightOTP={}", otpCode, loginOtp,
+					logger.debug("OTP correct code={}, submmited code={}, isRightOTP={}", otpCode, loginOtp,
 							isRightOTP);
 				} else {
 					// OTP 키가 null인 경우 예외 처리
-					LOGGER.debug("has no valid OTP key.");
+					logger.debug("has no valid OTP key.");
 					hasOTP = false;
 					isRightOTP = false;
 				}
@@ -1008,7 +1008,7 @@ public class MLoginGWController {
 
 			String maxAllowedCountOfLoginFail = ezCommonService.getCompanyConfig(tenantId, companyId,
 					"MaxAllowedCountOfLoginFail");
-			LOGGER.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
+			logger.debug("companyId=" + companyId + ", maxAllowedCountOfLoginFail=" + maxAllowedCountOfLoginFail);
 
 			if (!maxAllowedCountOfLoginFail.equals("")) {
 				try {
@@ -1049,7 +1049,7 @@ public class MLoginGWController {
 				// 2021-12-28 이사라 : 세션ID를 세션코드로 입력
 				String sessionCode = request.getHeader("mSessionId") == null ? ClientUtil.getClientIP(request)
 						: request.getHeader("mSessionId");
-				LOGGER.debug("Login sessionCode = " + sessionCode);
+				logger.debug("Login sessionCode = " + sessionCode);
 
 				// 접속 로그정보 저장
 				resultVO.setIp(mIp);
@@ -1302,7 +1302,7 @@ public class MLoginGWController {
 					}
 				}
 
-				LOGGER.debug("OTP authentication fail.");
+				logger.debug("OTP authentication fail.");
 			}
 
 			return result;
