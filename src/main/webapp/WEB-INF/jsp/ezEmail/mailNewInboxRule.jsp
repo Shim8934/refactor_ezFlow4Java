@@ -443,7 +443,7 @@
 				//2023-04-05 김대현 useBlockExternalForwardAddress이 YES 면 외부도메인 사용을 막는 로직
 				let blockAddress = "FAIL";
 				
-				if(_curCellObj.getAttribute('name') === 'ActS' && "YES" === useBlockExternalForwardAddress) {
+				if (_curCellObj.getAttribute('name') === 'ActS' && "YES" === useBlockExternalForwardAddress) {
 					$.ajax({
 						type : "POST",
 						dataType : "text",
@@ -452,10 +452,10 @@
 						data : {
 							forwardAddress : _value
 						},
-						success : function(result){
+						success : function(result) {
 							blockAddress = result;
 						},
-						error : function(error){
+						error : function(error) {
 							alert("<spring:message code='ezEmail.kdh02'/>" + error);
 						}
 					});
@@ -468,6 +468,7 @@
 						return;
 					}
 				}
+				
 		        if (_curCellObj != null) {
 		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + _value + "'><nobr><u></u></nobr></span>";
 		            $(_curCellObj).find("span nobr u").text(_exp);

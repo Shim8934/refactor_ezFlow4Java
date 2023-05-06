@@ -2383,15 +2383,5 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblSerialNoRollback");
 		}
 	}
-	
-	/*2023-04-03 김대현 메일 자동전달 기능 외부 주소 허용 여부 옵션화*/
-	public void addUseBlockExternalForwardAddress(Map<String, Object> map) throws Exception {
-		String propertyValue = (String) select("EzCommonDAO.checkTenantConfig", map);
-
-		if (propertyValue == null) {
-			logger.debug("useBlockExternalForwardAddress tenant config doesn't exist. insert data...");
-			insert("EzCommonDAO.insertUseBlockExternalForwardAddress", map);
-		}
-	}
-	
+		
 }

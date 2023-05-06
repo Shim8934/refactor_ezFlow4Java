@@ -4887,7 +4887,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String result = "OK";
 		String innerDomain = getMultiDomainList(tenantId); // 도메인 가져오는거 ;으로 구분됨
 		
-		logger.debug("forwardAddress={}, innerDomain={}",forwardAddress,innerDomain);
+		logger.debug("forwardAddress={}, innerDomain={}", forwardAddress, innerDomain);
 		
 		List<String> forwardAddressList = Arrays.asList(forwardAddress.split(";")); //전달할 메일계정 List
 		List<String> innerDomainList = Arrays.asList(innerDomain.split(";")); //내부도메인List
@@ -4901,7 +4901,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			}
 		}
 		
-		logger.debug("checkInnerDomain ended. result = {}",result);
+		logger.debug("checkInnerDomain ended. result = {}", result);
 		return result;
 	}
 }
