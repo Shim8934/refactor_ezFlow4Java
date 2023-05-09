@@ -2383,5 +2383,5 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblSerialNoRollback");
 		}
 	}
-	
+		
 }

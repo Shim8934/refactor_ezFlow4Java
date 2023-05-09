@@ -246,7 +246,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public int mSetOpinionInfo(String pDocID, String pContent, String pOpinionGB, MCommonVO userInfo, String pType) throws Exception {
+	public int mSetOpinionInfo(String pDocID, String pContent, String pOpinionGB, MCommonVO userInfo, String pType, String pAprMemberSN) throws Exception {
 		logger.debug("saveOpinionInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -263,6 +263,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		if (pType.equals("INSERT")) {
 			if (pContent != null && !pContent.equals("")) {
 				map.put("hasOpinionYN", "Y");
+				map.put("aprMemberSN", pAprMemberSN);
 				
 				mApprovalGDAO.insertOpinionInfo(map);
 				
@@ -276,6 +277,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			if (resultRow > 0) {
 				if (pContent != null && !pContent.equals("")) {
 					map.put("hasOpinionYN", "Y");
+					map.put("aprMemberSN", pAprMemberSN);	// 2023-04-28 이가은 - 의견 추가할 경우 실제 결재선상의 부서명, 직위로 표출하기 위해 추가
 					
 					mApprovalGDAO.insertOpinionInfo(map);
 					
