@@ -13980,6 +13980,8 @@
 				AND
 					TBL_RECORD.COMPANYID= #companyID#
 			</isNotEqual>
+			AND
+				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 		</isEqual> 
 	    <isEqual property="listFlag" compareValue="23">
 	        AND
@@ -34349,6 +34351,53 @@
                 DUAL
         </iterate>
     </insert>
+    
+	<select id="EzApprovalG.getReceiptInfoIng" parameterClass="Map" resultClass="HashMap">
+        <isEqual property="v_TYPE" compareValue="one">
+            SELECT 
+                ROWNUM AS SN, 
+                RECEIPTPOINTID, 
+                RECEIPTPOINTNAME$v_LANG$ AS DISPLAYRECEIPTPOINTNAME,
+                RECEIPTPOINTNAME, 
+                RECEIPTPOINTNAME2,
+                RECEIPTMEMBERNAME$v_LANG$ AS DISPLAYRECEIPTMEMBERNAME,
+                RECEIPTMEMBERNAME,
+                RECEIPTMEMBERNAME2
+            FROM 
+                TBL_RECEIPTPOINTINFO 
+            WHERE 
+                DOCID = #v_DOCID# 
+            AND 
+                RECEIPTPOINTID = #v_RECEIPTID# 
+            AND 
+                TENANT_ID = #v_TENANTID# 
+            AND 
+                COMPANYID = #companyID# 
+            ORDER BY 
+                DEPTMEMBERSN
+        </isEqual>
+        <isEqual property="v_TYPE" compareValue="group">
+            SELECT 
+                ROWNUM AS SN, 
+                DEPTID AS RECEIPTPOINTID, 
+                DEPTNAME$v_LANG$ AS DISPLAYRECEIPTPOINTNAME,
+                DEPTNAME AS RECEIPTPOINTNAME, 
+                DEPTNAME2 AS RECEIPTPOINTNAME2,
+                '' AS DISPLAYRECEIPTMEMBERNAME,
+                '' AS RECEIPTMEMBERNAME,
+                '' AS RECEIPTMEMBERNAME2
+            FROM 
+                TBL_ADMINRECEIPTGROUP_SUB 
+            WHERE 
+                MAINID = #v_MAINID# 
+            AND 
+                TENANT_ID = #v_TENANTID# 
+            AND 
+                COMPANYID = #companyID# 
+            ORDER BY 
+                SUBID
+        </isEqual>
+    </select>
     
     <update id="EzApprovalG.updateHistoryAttachInfo" parameterClass="Map">
 	 	UPDATE 

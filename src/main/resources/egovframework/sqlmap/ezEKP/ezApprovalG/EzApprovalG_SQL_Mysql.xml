@@ -14201,6 +14201,8 @@
 			AND
 				TBL_RECORD.COMPANYID= #companyID#
 		</isNotEqual>
+		AND
+			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 	</isEqual> 
 	<isEqual property="listFlag" compareValue="23">
 	    AND
