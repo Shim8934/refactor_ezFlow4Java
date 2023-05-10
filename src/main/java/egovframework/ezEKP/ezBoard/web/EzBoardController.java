@@ -7840,6 +7840,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
+		//2023-05-10 전인하 - 답변알림에서 누락된 파라미터인 boardGubun(게시판의 타입을 규정)을 가져와 메소드에 삽입
+		String boardGubun = boardInfo.getGuBun();
+		
 		if (!boardInfo.getReplyNotify().equals("1")) {
 			return ;
 		}
@@ -7847,7 +7850,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String strXML = ezBoardService.getItemXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		String title = doc.getElementsByTagName("Title").item(0).getTextContent();
-		String strURL =  "javascript:Item_View_New('" + boardID + "','" + itemID + "');";
+		String strURL =  "javascript:Item_View_New('" + boardID + "', '" + itemID + "', '" + boardGubun + "');";
         strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
         String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false); 
         strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
@@ -7878,7 +7881,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	
         	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
         }
-
+        
 		logger.debug("sendReplyNoticeMail ended");
 	}
 	
