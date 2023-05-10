@@ -1125,3 +1125,6 @@ var strLangHSBSH01 = "[시행문반송알림]";
 var strLangHSBAP01 = "The document has already been signed by another shared approver.";
 var strLangHSBAP02 = "Documents made by another company can not be recovered.";
 var strLangHSBAP03 = "The linked form can not be re-drafted.";
+
+/* 2023-05-10 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
+var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";

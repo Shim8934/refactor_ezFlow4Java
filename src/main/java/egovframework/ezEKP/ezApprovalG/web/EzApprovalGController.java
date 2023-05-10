@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -47,6 +48,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.PrivateKey;
@@ -3607,6 +3609,77 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 전자결재G 통합pc 저장 리스트 더블클릭 다운(hwp 배포용 문서 저장)
+	 */
+	@RequestMapping(value = "/ezApprovalG/downloadHwpDbClick.do", method = RequestMethod.GET)
+	@ResponseBody
+	public void downloadHwpDbClick(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadHwpDbClick started.");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String fileName = request.getParameter("fileName");
+		String p_downloadUrl = request.getParameter("downloadUrl");
+		String realPath = commonUtil.getRealPath(request);
+		long time = System.currentTimeMillis();
+		String s_time = String.valueOf(time);
+		
+		// 동시에 다운로드 시 폴더가 겹치는 현상을 피하기 위해 폴더명에 System.currentTimeMillis()를 추가
+		String tempFileUploadPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + docID + s_time;
+		File fileDir = new File(commonUtil.detectPathTraversal(tempFileUploadPath));
+
+		if (!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		
+		String targetPathStr = tempFileUploadPath + commonUtil.separator + fileName;		
+		File targetFile = new File(commonUtil.detectPathTraversal(targetPathStr));
+		
+		if (targetFile.exists()) {
+			targetFile.delete();
+		}
+		
+		Path pathTarget = Paths.get(targetPathStr);
+		URL downloadUrl = new URL(p_downloadUrl);
+		InputStream inpStream = null;
+		
+		try {
+			inpStream = downloadUrl.openStream();
+			Files.copy(inpStream, pathTarget);
+			
+			inpStream.close();
+		} catch (Exception e) {
+			logger.debug("e InputStream: " + e);
+		} finally {
+			if (inpStream != null) {
+				try {
+					inpStream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
+		
+		try {
+			downFile(request, response, targetPathStr, fileName);
+			
+			if (targetFile.exists()) {
+				targetFile.delete();
+			}
+			
+			if (fileDir.exists()) {
+				fileDir.delete();
+			}
+			
+		} catch (Exception e) {
+			logger.debug("e : " + e);
+		}
+		
+		logger.debug("downloadHwpDbClick ended.");
+	}
+	
+	/**
 	 * 전자결재G 기안 문서첨부 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprCabinetAttach.do", method = RequestMethod.GET)
@@ -5628,6 +5701,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
+		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
+		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
+		String HwpSecurityNum = "";
+		
+		/* 2023-05-10 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 배포용 암호 설정 테넌트 컨피그로 추가 */
+		if (useHwpDownSecurity.equals("Y")) {
+			HwpSecurityNum = ezCommonService.getTenantConfig("HwpSecurityNum", userInfo.getTenantId());
+		}
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
@@ -5641,6 +5722,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docID", docID);
 		model.addAttribute("type", type);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("useHwpDownSecurity", useHwpDownSecurity);
+		model.addAttribute("webHWPUrl", webHWPUrl);
+		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
 		
 		logger.debug("totalSaveFileInfo ended.");
 		
