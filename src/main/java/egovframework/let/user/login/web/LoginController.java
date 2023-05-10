@@ -1154,7 +1154,7 @@ public class LoginController {
     	response.addCookie(cookieID);
     	
     	// loginCookieSSO 라는 이름으로 쿠키를 추가로 생성할 것인지
-		/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
+		/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거하였으나 가온누리에서 닷넷 버전 협업과의 연동에 사용중이어서 다시 복원함. */
     	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
     	
     	if (!useSSOCookie.trim().isEmpty() && !"NO".equalsIgnoreCase(useSSOCookie)) {
@@ -1163,7 +1163,6 @@ public class LoginController {
     		ssoLoginCookie.setDomain(useSSOCookie);
     		response.addCookie(ssoLoginCookie);
     	}
-		*/
 
     	String multiLoginTime = "";
     	if(!request.getRequestURI().matches("(/ezConn|/ezTalkGate|/ezUCMessenger).+")) { // 외부 로그인으로 접근시에는 멀티로그인 옵션 무시
@@ -1274,12 +1273,11 @@ public class LoginController {
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
-				/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
+				/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거하였으나 가온누리에서 닷넷 버전 협업과의 연동에 사용중이어서 다시 복원함. */
     			if (cookie.getName().equals("loginCookieSSO")) {
     				String ssoDomain = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
     				cookie.setDomain(ssoDomain);
     			}
-				*/
     			
     			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")){
     				cookie.setMaxAge(0);
