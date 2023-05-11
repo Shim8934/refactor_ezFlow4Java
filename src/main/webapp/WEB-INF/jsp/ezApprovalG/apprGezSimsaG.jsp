@@ -93,7 +93,7 @@
 		    var flag = false;
 		    var pUse_Editor = "<c:out value = '${useEditor}'/>";
 		    var PrtBodyContent;
-		    var orgCompanyID = "<c:out value='${orgCompanyID}' />";
+		    var orgCompanyID = "";
 		    var ext = "mht";
 		    var docTitle = "";
 		    var isConvSihang = ${isConvSihang};

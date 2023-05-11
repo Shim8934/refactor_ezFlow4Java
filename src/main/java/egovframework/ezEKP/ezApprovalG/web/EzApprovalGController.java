@@ -9085,7 +9085,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String recordID = request.getParameter("recordID") != null ? request.getParameter("recordID") : ""; // 시행문의 반송을 위한 recordID 추가
-		String orgCompanyID = request.getParameter("orgCompanyID");
 
 		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
@@ -9124,7 +9123,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             //기관코드와 회사 아이디가 다를 경우 보정처리.
             companyID = config.getProperty("config.companyNum");
         } else {
-            companyID = request.getParameter("orgCompanyID");
+            companyID = request.getParameter("orgCompanyID");;
         }
         userInfo.setCompanyID(companyID);
 		
@@ -9140,7 +9139,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isConvSihang", isConvSihang);
 		model.addAttribute("recordID", recordID);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
-		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
