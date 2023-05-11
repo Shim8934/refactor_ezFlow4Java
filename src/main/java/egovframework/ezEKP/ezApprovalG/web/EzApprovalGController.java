@@ -9695,7 +9695,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optSignDateFormat = "";
 		String optisSplit = "";
 		String optSplitKind = "";
-		String userDirectSign = "";
+		String useDirectSign = "";
 		String draftDate = "";
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -9732,7 +9732,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		
-		userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
+		useDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
 		
 		draftDate = commonUtil.getTodayUTCTime("");
 		
@@ -9749,7 +9749,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optisSplit", optisSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
-		model.addAttribute("userDirectSign", userDirectSign);
+		model.addAttribute("useDirectSign", useDirectSign);
 		model.addAttribute("draftDate", draftDate);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
@@ -10813,7 +10813,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optSignDateFormat = "";
 		String optisSplit = "";
 		String optSplitKind = "";
-		String userDirectSign = "";
+		String useDirectSign = "";
 		String draftDate = "";
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -10850,7 +10850,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		
-		userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
+		useDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
 		
 		draftDate = commonUtil.getTodayUTCTime("");
 		
@@ -10873,7 +10873,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optisSplit", optisSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
-		model.addAttribute("userDirectSign", userDirectSign);
+		model.addAttribute("useDirectSign", useDirectSign);
 		model.addAttribute("draftDate", draftDate);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);

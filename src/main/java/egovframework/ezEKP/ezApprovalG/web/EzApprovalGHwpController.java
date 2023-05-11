@@ -919,7 +919,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String pSusinAdmin = "";
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "form" + commonUtil.separator;
 		
-		String userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
+		String useDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
@@ -960,7 +960,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("usePassword", usePassword);
 		model.addAttribute("isHWP", "Y");
 		model.addAttribute("dirPath", dirPath);
-		model.addAttribute("useDirectSign", userDirectSign);
+		model.addAttribute("useDirectSign", useDirectSign);
 		
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
@@ -1861,7 +1861,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String pSusinAdmin = "";
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "form" + commonUtil.separator;
 		
-		String userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
+		String useDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
@@ -1909,7 +1909,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("usePassword", usePassword);
 		model.addAttribute("isHWP", "Y");
 		model.addAttribute("dirPath", dirPath);
-		model.addAttribute("useDirectSign", userDirectSign);
+		model.addAttribute("useDirectSign", useDirectSign);
 		
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
