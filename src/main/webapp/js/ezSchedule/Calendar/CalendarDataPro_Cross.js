@@ -902,18 +902,22 @@ function CalWeekDataBind(oAppointment, order) {
     var objDivS = document.getElementById("TD_" + oAppointment.trID + "_Value");
     var objDivE = document.getElementById("TD_" + oAppointment.endDiv + "_Value");
     if (objDivS && objDivE) {
-
+        // 05-02 민지수 ellipsis 적용
         var oDiv = document.createElement("DIV");
 
         var oTable = document.createElement("TABLE");
         oTable.setAttribute("cellpadding", "0");
         oTable.setAttribute("cellspacing", "0");
         oTable.setAttribute("width", "100%");
+        oTable.style.display = "block";
         var oTr = document.createElement("TR");
+        oTr.style.display = "block";
         var oTd = document.createElement("TD");
+        oTd.style.display = "block";
         oTd.style.height = "21px";
         oTd.style.whiteSpace = "noWrap";
         oTd.style.overflow = "hidden";
+        oTd.style.textOverflow = "ellipsis";
 
         var oSpan = document.createElement("SPAN");
 
@@ -1058,6 +1062,7 @@ function CalWeekDataBind(oAppointment, order) {
         oDiv.style.height = hSize - 3 + "px";
         oDiv.style.position = "absolute";
         oDiv.style.zIndex = "1";
+        oDiv.style.textOverflow = "ellipsis";
         var sItem = document.getElementById(oAppointment.ScheduleID + "0" + order);
         if (sItem) {
             sItem.appendChild(oDiv);
@@ -1112,7 +1117,8 @@ function CalWeekAllDataBind(oAppointment, order) {
         }
 
         oDiv.appendChild(oSpan);
-
+        oDiv.style.overflow = "hidden";
+        oDiv.style.textOverflow = "ellipsis";
         if (oAppointment.Importance == 1) {
             var oSpan = document.createElement("SPAN");
             oSpan.className = "icon_l";

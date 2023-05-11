@@ -85,6 +85,14 @@ public class LoginDAO extends EgovAbstractDAO {
     	return (LoginVO)select("loginDAO.searchPassword", vo);
     }
     
+	private int searchOtpKeyForLocal(LoginVO vo) throws Exception {
+		return (int) select("loginDAO.searchOtpKey", vo);
+	}
+
+	public int searchOtpKey(LoginVO vo) throws Exception {
+		return searchOtpKeyForLocal(vo);
+	}
+
     private void updatePasswordForLocal(LoginVO vo) throws Exception {
         update("loginDAO.updatePassword", vo);
     }
@@ -106,6 +114,14 @@ public class LoginDAO extends EgovAbstractDAO {
     	updateUserForLocal(vo);       
     }
     
+    private void updateUserForReduceLoginCntForLocal(LoginVO vo) throws Exception {
+        update("loginDAO.updateUserForReduceLoginCnt", vo);
+    }
+
+    public void updateUserForReduceLoginCnt(LoginVO vo) throws Exception {
+    	updateUserForReduceLoginCntForLocal(vo);
+    }
+
     private void insertLogForLocal(LoginVO vo) throws Exception {
         update("loginDAO.insertLog", vo);
     }

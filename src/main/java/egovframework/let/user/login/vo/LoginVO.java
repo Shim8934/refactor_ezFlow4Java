@@ -39,6 +39,8 @@ public class LoginVO implements Serializable {
 	private String passwordHint;
 	/** 비밀번호 정답 */
 	private String passwordCnsr;
+	/** otp */
+	private String otp;
 	/** 사용자구분 */
 	private String userSe;
 	/** 조직(부서)ID */
@@ -99,6 +101,8 @@ public class LoginVO implements Serializable {
 	private String encryptID;
 	/** RSA 암호화 password 변수 */
 	private String encryptPass;
+	/** RSA 암호화 OTP 변수 */
+	private String encryptOTP;
 	/** 마지막 개인정보 수정 일자 */
 	private Date updateDT; 
 	/** 조직도 DeptPath*/
@@ -150,6 +154,19 @@ public class LoginVO implements Serializable {
     /** 부재정보 */
     private String extensionattribute5;
     
+	public String getOtp() {
+		return otp;
+	}
+	public void setOtp(String otp) {
+		this.otp = otp;
+	}
+	public String getEncryptOTP() {
+		return encryptOTP;
+	}
+	public void setEncryptOTP(String encrypOTP) {
+		this.encryptOTP = encrypOTP;
+	}
+
 	public String getMobile() {
 		return mobile;
 	}

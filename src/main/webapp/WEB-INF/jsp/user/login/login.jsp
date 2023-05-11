@@ -27,6 +27,14 @@
 			.warning_wrap dd.count .pointRed{ color:#ff0000; font-weight:bold; display:inline-block; font-family: Malgun Gothic, Meiryo UI; font-size:15px;}
 			.warning_wrap dd{color:#8e8e8e; font-size:12px; padding:0px 0px 2px 0px; margin:0px;letter-spacing:-1px;}
 			
+			.otp_qr{ overflow:hidden; width:575px; margin: 0 auto}
+			.otp_qr p{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; text-align:center; float:left;}
+			.otp_qr dl{ width: 100%; margin:7px 0px 0px 0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; float:left; overflow:hidden;}
+			.otp_qr dt{ font-size:18px; color:#000; padding:0px 0px 13px 14px; margin:0px; font-weight:bold; border-bottom:1px solid #d7d7d7;}
+			.otp_qr dd.count{ color:#000; font-weight:normal; font-size:15px; padding:10px 0px;}
+			.otp_qr dd.count .pointRed{ color:#ff0000; font-weight:bold; display:inline-block; font-family: Malgun Gothic, Meiryo UI; font-size:15px;}
+			.otp_qr dd{text-align: center; color:#797979; font-size:15px; padding:0px 0px 5px 0px; margin:0px;letter-spacing:-1px;}
+			
 			.password_reset{ margin:0 auto; padding:0px; width:405px;}
 			.password_reset .passwordTitle{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; font-size:17px; color:#000; text-align:center; line-height:25px;}
 			.password_reset .passwordTitle span{ display:inline-block; color:#006be4; font-family:Malgun Gothic, Meiryo UI; font-size:17px;}
@@ -58,6 +66,12 @@
 			#exDiv6 #div6_PwPolicyExplain p {
 				padding:0;
 			}
+
+			/* otp 인증 임시 스타일*/
+			#uotp::placeholder {
+				color:#fff;
+				font-weight: 600;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -85,8 +99,10 @@
 
 					frm.encryptID.value = rsa.encrypt(frm.id.value.toLowerCase());
 					frm.encryptPass.value = rsa.encrypt(frm.password.value);
+					frm.encryptOTP.value = rsa.encrypt(frm.otp.value);
 					frm.id.value = "";
 					frm.password.value = "";
+					frm.otp.value = "";
 					frm.action="<c:url value='/user/login/actionLogin.do'/>";        
 					frm.submit();
 			    }
@@ -99,6 +115,7 @@
 				
 				frm.encryptID.value = "<c:out value='${encryptID}' />";
 				frm.encryptPass.value = "<c:out value='${encryptPass}' />";
+				frm.encryptOTP.value = "<c:out value='${encryptOTP}' />";
 				frm.nextTime.value = "YES";
 				frm.action="<c:url value='/user/login/actionLogin.do'/>";        
 				frm.submit();
@@ -173,12 +190,27 @@
 			    		+ "\nInternet Explorer 10 <spring:message code='main.t0632'/>"
 			    		+ "\n(<spring:message code='main.t0633'/> : Internet Explorer 11)");
 			    	return false;
+				// setTFA를 호출하는 flag 형태로 사용
+			    } else if (message.includes("setflagTFA")) {
+			    	var setArr = message.split(":");
+			    	document.loginForm.message.value = "";
+			    	
+			    	var frm = document.loginForm;
+			    	var rsa = new RSAKey();
+			    	rsa.setPublic(frm.publicModulus.value, frm.publicExponent.value);
+			    	
+			    	setTFA(rsa.encrypt(setArr[1]));
 			    } else if (message === "multiLoginNoti") {
 					$("#imgMnt3").html("<img src='/images/warning2.png'>");
 			        $("#exDiv4").modal();
 			    } else if (message === "stopUser") {
 					$("#imgMnt4").html("<img src='/images/warning2.png'>");
 			        $("#exDiv5").modal();
+			    } else if ("${threeLineMSG}" == "Y") {
+			    	$("#imgMnt7").html("<img src='/images/warning2.png'>");
+			    	$("#exDiv7").modal();
+			    } else if(message == "emptyOtp"){
+			    	setTimeout(() => {alert("<spring:message code='fail.common.login.otp.warning1'/>")}, "100");
 			    } else if (message != "") {
 // 			        alert(message);
 					$("#layerTitle").text(message);
@@ -257,8 +289,16 @@
 		    		url : "/user/login/changeExPassword.do",
 		    		success: function(text){
 		    			if (text == 'OK') {
-		    				alert("<spring:message code='ezPersonal.t197'/>");			            	
-			    			window.top.location.href = '/user/login/login.do';
+		    				//alert("<spring:message code='ezPersonal.t197'/>");
+		    				
+		    				if (${useOTP} && ${isFirstLogin == 'Y'}) {
+		    					alert("<spring:message code='ezPersonal.ls001'/>");
+		    					setTFA(rsa.encrypt(document.getElementById("chooseId").getAttribute("data-userId")));
+		    				} else {
+		    					alert("<spring:message code='ezPersonal.t197'/>");
+			    				window.top.location.href = '/user/login/login.do';
+		    				}
+
 		    			} else if (text == 'LOGINERROR') {
 		    				alert("<spring:message code='ezPersonal.t946'/>");		    				
 		    			} else {
@@ -271,6 +311,35 @@
 		        });	        
 		    }
 			
+			function setTFA(userId){
+				$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		data : {
+		    			userId : userId
+		    		},
+		    		url : "/user/login/setTFA.do",
+		    		success: function(result){
+		    			if (result != "fail") {
+		    				var resultArr = result.split("::");
+		    				var otpKey = resultArr[0];
+		    				var qrImagePath = resultArr[1];
+		    				$("#exDiv8").modal();
+		    				
+		    				document.getElementById("otpkey").innerText = otpKey;
+		    				document.getElementById("qr").innerHTML = "<image src=" + qrImagePath + " />";
+		    			    document.loginForm.message.value = "";
+		    			} else {
+			    			alert("<spring:message code='login.ls004'/>");
+		    			}
+		    		},
+		    		error : function err(){
+		    			alert("<spring:message code='login.ls004'/>");
+		    		}
+				});
+			}
+
 			function openFindPwd(){
 				sabun = "";
 				certificationNum = "";
@@ -407,6 +476,7 @@
 	                	<input type="hidden" name="publicExponent" value="${publicExponent}"/>
 	                	<input type="hidden" name="encryptID" />
 	                	<input type="hidden" name="encryptPass"/>
+	                	<input type="hidden" name="encryptOTP"/>
 	                	<input type="hidden" name="nextTime"/>
 	                	
 	                    <fieldset>
@@ -416,7 +486,17 @@
 	                        </p>		                 
 	                        <p class="pw">
 	                        	<input id="upw" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" autocomplete="off" />
-	                        </p>	                        
+	                        </p>
+	                        <c:choose>
+	                        <c:when test="${useOTP}">
+		                        <p class="otp" title="<spring:message code="info.otp.msg" />">
+		                        	<input id="uotp" name="otp" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
+		                        </p>
+	                        </c:when>
+	                        <c:otherwise>
+		                        <input id="uotp" name="otp" type="hidden" style="display:none" />
+	                        </c:otherwise>
+	                        </c:choose>
 	                        <p class="btn_login">
 	                        	<label for="LoginButton" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
 	                        		<span id="LoginBtnSpan" style="font-size:24px;">LOGIN</span>
@@ -531,7 +611,14 @@
 		        	<dt>${message1}</dt>
 		            <dd class="count">${message2}<span class="pointRed">${message3}</span>${message4}</dd>
 		            <dd>${message5}</dd>
-		            <dd>${message6}</dd>
+     				<c:choose>
+						<c:when test="${useOTP}">
+							<dd><spring:message code='fail.common.login.otp.warning2'/></dd>
+						</c:when>
+						<c:otherwise>
+							<dd><spring:message code='fail.common.login.warning6'/></dd>
+						</c:otherwise>
+					</c:choose>
 		        </dl>
 		    </div>
 			<%-- <div style="height:150px;border:1px solid rgb(0, 72, 149);margin:5px;border-radius:10px">
@@ -554,8 +641,14 @@
 				<p style="border:0px" id="imgMnt2"></p>
 		        <dl style="width: 65%;">
 					<dt id="layerTitle" class="layerTitle">${message1}</dt>
-		            <dd><spring:message code='fail.common.login.warning1'/></dd>
-		            <dd><spring:message code='fail.common.login.warning6'/></dd>
+					<c:choose>
+						<c:when test="${useOTP}">
+							<dd><spring:message code='fail.common.login.otp.warning2'/></dd>
+						</c:when>
+						<c:otherwise>
+							<dd><spring:message code='fail.common.login.warning6'/></dd>
+						</c:otherwise>
+					</c:choose>
 		        </dl>
 		    </div>
 		</div>
@@ -648,6 +741,53 @@
 					</tbody>
 				</table>
 				</ul>
+			</div>
+		</div>
+
+		<%-- 2023-03-23 이사라 - OTP 오류 시 레이어팝업 출력 --%>
+		<div id="exDiv7" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
+			<div class="warning_wrap" style="padding-left:20px">
+		    	<p style="border:0px" id="imgMnt7"></p>
+		        <dl>
+		        	<dt>${message1}</dt>
+		        	<br>
+		            <dd>${message2}</dd>
+		            <c:choose>
+                        <c:when test="${useOTP}">
+							<dd><spring:message code='fail.common.login.otp.warning2'/></dd>
+						</c:when>
+                        <c:otherwise>
+	                        <dd><spring:message code='fail.common.login.warning6'/></dd>
+                        </c:otherwise>
+                     </c:choose>
+		        </dl>
+			</div>
+		</div>
+		
+		<%-- 2023-03-23 이사라 - OTP 셋업 레이어팝업 출력 --%>
+		<div id="exDiv8" style="display:none;max-width:620px;padding-top:27px;margin-bottom:100px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
+			<div class="warning_wrap otp_qr" style="padding-left:">
+		        <dl>
+		        	<dt><spring:message code='login.ls001' /></dt>
+		        	<br>
+		            <dd><spring:message code='login.ls002' /></dd>
+		            <dd><spring:message code='login.ls003' /></dd>
+		            <dd>
+		            	<br>
+		            	<span id=otpkey style='font-size: 13px; letter-spacing: 0.7px'></span>
+		            </dd>
+		            <dd><span id=qr></span></dd>
+		        </dl>
 			</div>
 		</div>
 	</body>

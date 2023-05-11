@@ -104,6 +104,10 @@
 		                        alert("<spring:message code='ezEmail.t135' />");
 		                        Button_Enabled();
 		                    }
+							else if (ret == "BlockExternalAddress") {
+								alert("<spring:message code='ezEmail.kdh01' />");
+								Button_Enabled();
+							}
 		                    else {
 		                        alert("<spring:message code='ezEmail.t136' />" + ret);
 		                        Button_Enabled();

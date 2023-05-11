@@ -165,13 +165,14 @@ public class PortletInfoVO {
 	
 	@Override
 	public String toString() {
-		return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName="
+		/*return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName="
 				+ portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral=" + isGeneral
 				+ ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl="
 				+ connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId=" + portletBoardId
 				+ ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2
 				+ ", menuName=" + menuName + ", userAuth=" + userAuth + ", deptAuth=" + deptAuth + ", comAuth="
 				+ comAuth + ", accessYN=" + accessYN + ", isFixed=" + isFixed + ", portletCode=" + portletCode
-				+ ", menuCode=" + menuCode + "]";
+				+ ", menuCode=" + menuCode + "]";*/
+		return "[portletId=" + portletId + " portletName=" + portletName + "]"; // 로그정리
 	}
 }

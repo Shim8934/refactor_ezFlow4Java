@@ -187,7 +187,7 @@ public class EzNewPortalGWController {
 			
 			// 사용자 설정 테마/프레임 가져오기
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, portletLang);
-			logger.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
+			//logger.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame()); // 로그정리 : 서비스에서 찍어 줌
 			
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(userThemeSetting.getUsedTheme(), portletLang, userId, tenantId, companyId, deptId, false);
 			
@@ -1038,7 +1038,7 @@ public class EzNewPortalGWController {
 			//end
 			
 
-			logger.debug("TopMenu Data : " + data.toJSONString());
+			//logger.debug("TopMenu Data : " + data.toJSONString()); // 로그정리 : EzNewPortalController 에서 중복으로 로깅
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);

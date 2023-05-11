@@ -1502,12 +1502,7 @@
         		*
         	  FROM 
 	        	( SELECT 
-	        		<isNotEmpty property="v_TEMP">
-		        		ROW_NUMBER() OVER ( ORDER BY A.ParentWriteDate, A.WriteDate DESC  ) ROWNUM_  ,
-	        		</isNotEmpty>
-	        		<isEmpty property="v_TEMP">
 		        		ROW_NUMBER() OVER ( ORDER BY A.NotiNo ASC, A.ParentWriteDate DESC, A.WriteDate DESC  ) ROWNUM_  ,
-	        		</isEmpty>
 	        		<![CDATA[
 		              	A.BOARDID ,
 		                A.ITEMID ,
@@ -1584,7 +1579,7 @@
 	              </isNotEmpty>
         			ORDER BY 
         				A.NotiNo ASC, 
-        				A.ParentWriteDate ASC, 
+        				A.ParentWriteDate DESC, 
         				A.WriteDate DESC
 	              ) T1 
 	          WHERE 
@@ -2289,7 +2284,7 @@
 				A.APPRFLAG IS NULL
 			)
            	ORDER BY 
-           		NOTINO DESC,
+           		NOTINO ASC,
                 A.ParentWriteDate DESC,
                 A.WriteDate DESC
 		]]>

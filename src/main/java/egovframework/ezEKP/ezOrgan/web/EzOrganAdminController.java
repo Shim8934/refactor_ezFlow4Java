@@ -82,6 +82,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -399,6 +400,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String useDisablePop3Imap = ezCommonService.getTenantConfig("UseDisablePopImap", user.getTenantId());
 		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", user.getTenantId());
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
+		String useOTP = ezCommonService.getTenantConfig("useOTP", user.getTenantId());
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", user.getTenantId());
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 			useExternalMailServer = "NO";
@@ -432,6 +434,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useMobileManagemant", useMobileManagemant);
 		model.addAttribute("useSyncServer", useSyncServer);
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useOTP", useOTP);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
@@ -1350,6 +1353,47 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("changePassword ended.");
 	}
 	
+	/**
+	 * 조직도관리 OTP초기화 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/otpReset.do", method = RequestMethod.POST, produces = "text/html; charset=utf-8")
+	@ResponseBody
+	public String otpReset(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("otpReset started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("otpReset: it's not admin");
+
+			return "EMAIL_ERROR";
+		}
+
+		int tenantId = userInfo.getTenantId();
+		String otpResetUser = request.getParameter("otpResetMultiUserlist");
+		String otpResetlist[] = otpResetUser.split(",");
+		String result = "OK";
+
+		logger.debug("tenantId={}, otpResetUser={}", tenantId, otpResetUser);
+
+		try {
+
+			for (int i = 0; i < otpResetlist.length; i++) {
+				logger.debug("otpResetlist[" + i + "]=" + otpResetlist[i]);
+
+				ezCommonService.updateUserConfigInfo(tenantId, otpResetlist[i], "otpKey", "");
+			}
+
+		} catch (Exception e) {
+			logger.error("OTP Reset UpdateException : ", e);
+			result = "FAIL";
+		}
+
+		logger.debug("otpReset ended. reset by {}, result={}", userInfo.getId(), result);
+
+		return result;
+	}
+
 	/**
 	 * 조직도관리 사원퇴직 실행 함수
 	 */

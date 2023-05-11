@@ -70,7 +70,7 @@
 				(	STATUS LIKE 'Y'
 				OR 	STATUS LIKE ''
 				OR 	STATUS IS NULL	)
-			</isEqual>
+			</isEqual>	
 			<isEqual property="search_keycodeForStatus" compareValue="N">
 				STATUS LIKE 'N'
 			</isEqual>
@@ -92,9 +92,9 @@
 		 	SELECT
 		 	 	X.rnum, 
 			    TO_CHAR((X.CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS CONNECTTIME,
-	            CASE
-	            WHEN X.DISCONNECTTIME IS NOT NULL
-	            THEN TO_CHAR((X.DISCONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS')
+	            CASE 
+	            WHEN X.DISCONNECTTIME IS NOT NULL 
+	            THEN TO_CHAR((X.DISCONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') 
 	            ELSE TO_CHAR(' ')
 	            END AS DISCONNECTTIME,
 	            X."SEQUENCE",
@@ -114,7 +114,7 @@
 				SELECT 
 			    	ROWNUM AS rnum,
 				    A.CONNECTTIME,
-				    A.DISCONNECTTIME,
+				    A.DISCONNECTTIME, 
 					A."SEQUENCE",
 					A.USERNM,
 					A.USERNM2,
@@ -146,11 +146,11 @@
 						C.COMPANYNM2,
 						C.USERID,
 						C.STATUS
-					FROM
+					FROM 
 						TBL_CONNECTION_INFO C <!-- INNER JOIN TBL_USERLOCALINFO U
-					ON
+					ON 
 						C.USERID = U.USERID -->
-					WHERE
+					WHERE 
 						C.TENANT_ID=#v_tenantID# <!-- AND U.TENANT_ID=#v_tenantID# -->
 						$companyOracleStr$
 						<include refid="EzSystemAdminDAO.searchQuery"/>
@@ -177,7 +177,7 @@
 		SELECT 	COUNT(SEQUENCE) 
 		FROM   	TBL_CONNECTION_INFO C <!--INNER JOIN TBL_USERLOCALINFO U
 		ON 		C.USERID = U.USERID -->
-		WHERE	C.TENANT_ID = #v_tenantID# <!-- AND U.TENANT_ID = #v_tenantID# -->
+		WHERE	C.TENANT_ID = #v_tenantID# <!-- AND U.TENANT_ID = #v_tenantID# --> 
 		$companyOracleStr$
 		<include refid="EzSystemAdminDAO.searchQuery"/>
 		<isEqual property="search_keycode" compareValue="6">
@@ -190,8 +190,8 @@
 		 	SELECT
 		 	 	X.rnum, 
 			    TO_CHAR((X.CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS CONNECTTIME,
-	            CASE
-	            WHEN X.DISCONNECTTIME IS NOT NULL
+	            CASE 
+	            WHEN X.DISCONNECTTIME IS NOT NULL 
 	            THEN TO_CHAR((X.DISCONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS')
 	            ELSE TO_CHAR(' ')
 	            END AS DISCONNECTTIME,
@@ -209,7 +209,7 @@
 				SELECT 
 			    	ROWNUM AS rnum,
 				    A.CONNECTTIME,
-				    A.DISCONNECTTIME,
+				    A.DISCONNECTTIME, 
 					A."SEQUENCE",
 					A.USERNM,
 					A.USERNM2,
@@ -545,7 +545,7 @@
 	<select id="EzSystemAdminDAO.getAdminAccessIPBand" parameterClass="Integer" resultClass="IPBandVO">
 		<![CDATA[
 			SELECT
-				IPNO,
+				IPNO, 
 				IPADDRESS,
 				ALLOW_ACCESS AS "ACCESS",
 				EXPLANATION
@@ -558,7 +558,7 @@
 	
 	<insert id="EzSystemAdminDAO.insertAdminIPBand" parameterClass="Map">
 		<selectKey resultClass="int" keyProperty="id">
-			SELECT TBL_ADMIN_ACCESS_IP_SEQ2.NEXTVAL FROM DUAL
+			SELECT TBL_ADMIN_ACCESS_IP_SEQ2.NEXTVAL FROM SYS.DUAL
 		</selectKey>
 		<![CDATA[
 			INSERT INTO 
@@ -599,7 +599,7 @@
             ]]> <iterate prepend="WHERE IPNO IN" open="(" close=")" conjunction=",">#ipNoList[]#</iterate>
        
 	</delete>
-	
+
 	<insert id="EzSystemAdminDAO.insertCompanyConfigParam" parameterClass="SysParamVO">
 		<![CDATA[
 			INSERT INTO 
@@ -684,7 +684,7 @@
 		WHERE TENANT_ID = #tenantId# AND COMPANY_ID=#companyId#
 		]]>
 	</delete>
-
+	
 	<sql id="EzSystemAdminDAO.searchQuery2">
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
@@ -718,14 +718,14 @@
 		<isNotEmpty property="search_keycodeForRoll" prepend="and">
 			<isEqual property="search_keycodeForRoll" compareValue="c=1">
 				ADMINTYPE LIKE '%c=1%'
-			</isEqual>
+			</isEqual>	
 			<isEqual property="search_keycodeForRoll" compareValue="k=1">
 				ADMINTYPE LIKE '%k=1%'
 			</isEqual>
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			TO_CHAR((ACCESSTIME + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate#
+			TO_CHAR((ACCESSTIME + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate# 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
@@ -734,10 +734,10 @@
 			]]>
 		</isNotEmpty>
 	</sql>
-
+	
 	<select id="EzSystemAdminDAO.getAdminAccessHist" parameterClass="map" resultClass="MainVO">
-			SELECT
-				X.rnum,
+		 	SELECT
+		 	 	X.rnum, 
 			    TO_CHAR((X.ACCESSTIME + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS ACCESSTIME,
 	            X."SEQUENCE",
 	            X.USERNM,
@@ -753,9 +753,9 @@
 				X.USERID,
 				X.ADMINTYPE
             FROM (
-				SELECT
-					ROWNUM AS rnum,
-					A.ACCESSTIME,
+				SELECT 
+			    	ROWNUM AS rnum,
+				    A.ACCESSTIME,
 					A."SEQUENCE",
 					A.USERNM,
 					A.USERNM2,
@@ -769,8 +769,9 @@
 					A.COMPANYNM2,
 					A.USERID,
 					A.ADMINTYPE
-				FROM (
-					SELECT
+				FROM 
+					(
+					SELECT  
 					    C.ACCESSTIME,
 						C."SEQUENCE",
 						C.USERNM,
@@ -785,35 +786,35 @@
 						C.COMPANYNM2,
 						C.USERID,
 						C.ADMINTYPE
-					FROM
+					FROM 
 						TBL_ADMIN_ACCESS_INFO C
-					WHERE
+					WHERE 
 						C.TENANT_ID=#v_tenantID#
 						$companyOracleStr$
 						<include refid="EzSystemAdminDAO.searchQuery2"/>
 						<isEqual property="search_keycode" compareValue="6">
 							AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 						</isEqual>
-				    ORDER BY
-						C."SEQUENCE" DESC
+				    ORDER BY 
+				    	C."SEQUENCE" DESC
 					) A
 		<isNotEqual property="v_start" compareValue="-1">
 			<![CDATA[
-				WHERE ROWNUM <= (#pageCount# + #v_start#)
+            	WHERE ROWNUM <= (#pageCount# + #v_start#)
 			]]>
-		</isNotEqual>
-				) X
+		</isNotEqual> 
+            	) X
 		<isNotEqual property="v_start" compareValue="-1">
 			<![CDATA[
-				WHERE X.rnum >= (#v_start# + 1)
+         	WHERE X.rnum >= (#v_start# + 1)
 			]]>
 		</isNotEqual>
 	</select>
-
+	
 	<select id="EzSystemAdminDAO.getAdminAccessHistCount" parameterClass="map" resultClass="int">
-		SELECT 	COUNT(SEQUENCE)
-		FROM   	TBL_ADMIN_ACCESS_INFO C
-		WHERE	C.TENANT_ID = #v_tenantID#
+		SELECT 	COUNT(SEQUENCE) 
+		FROM   	TBL_ADMIN_ACCESS_INFO C 
+		WHERE	C.TENANT_ID = #v_tenantID# 
 		$companyOracleStr$
 		<include refid="EzSystemAdminDAO.searchQuery2"/>
 		<isEqual property="search_keycode" compareValue="6">

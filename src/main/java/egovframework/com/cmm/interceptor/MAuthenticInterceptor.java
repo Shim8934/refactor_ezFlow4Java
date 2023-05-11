@@ -58,7 +58,7 @@ public class MAuthenticInterceptor extends WebContentInterceptor {
 		String ip = ClientUtil.getClientIP(request);
 		String mobileClientServerURL = config.getProperty("config.mobileClientServerURL");
 		
-		logger.debug("ip=" + ip + ",mobileClientServerURL=" + mobileClientServerURL);
+		//logger.debug("ip=" + ip + ",mobileClientServerURL=" + mobileClientServerURL);
 	
 		if (ip.equals("127.0.0.1")) {			
 			return true;

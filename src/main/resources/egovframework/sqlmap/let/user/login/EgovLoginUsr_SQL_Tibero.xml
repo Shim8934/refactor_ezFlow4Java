@@ -448,6 +448,20 @@
         ]]>
     </select>
     
+    <!-- OTP 서치 -->
+	<select id="loginDAO.searchOtpKey" parameterClass="loginVO" resultClass="Integer">
+ 		SELECT
+ 			count(USER_ID)
+ 		FROM
+ 			tbl_user_config tuc
+ 		WHERE
+ 			USER_ID = #id#
+ 		AND
+ 			PROPERTY_NAME = 'otpKey'
+ 		AND
+ 			TENANT_ID = #tenantId#
+	</select>
+
    <select id="loginDAO.getLoginIPCountry" parameterClass="Map" resultMap="CountryVO">
 		SELECT 
 			START_IP, END_IP, START_IP_NUMBER, END_IP_NUMBER, 

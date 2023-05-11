@@ -470,7 +470,7 @@ public class EzMemoGWController {
 			//memoConfigVO.setB_memo_status('N');
 			
 			MemoConfigVO configVO = ezMemoService.getMemoConfig(memoConfigVO);
-			logger.debug("컨피그 값: " + configVO);
+			//logger.debug("컨피그 값: " + configVO); // 로그정리 : 로그가 필요하다면 실제 값을 찍도록 수정 필요 
 
 			result.put("status", "ok");
 			result.put("code", 0);

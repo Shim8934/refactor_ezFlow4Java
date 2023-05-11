@@ -994,8 +994,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         String propertyValue = ezCommonDAO.getTenantConfig(map);
 
-		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
-		logger.debug("PROPERTY VALUE : " + propertyValue);
+		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} ", property, propertyValue, tenantID);
+		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그 정리
 
         if (propertyValue == null) {
             propertyValue = "";
@@ -1169,8 +1169,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         String propertyValue = ezCommonDAO.getCompanyConfig(map);
 
-		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID + "||" + "COMPANYID : " + companyID);
-		logger.debug("PROPERTY VALUE : " + propertyValue);
+		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} || COMPANYID : {}", property, propertyValue, tenantID, companyID);
+		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그정리
 
         if (propertyValue == null) {
             propertyValue = "";
@@ -1190,8 +1190,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("propertyName", propertyName);
 		map.put("propertyValue", propertyValue);
 
-		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
-		logger.debug("PROPERTY VALUE : " + propertyValue);
+		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID :  {} || COMPANYID : {}", propertyName, propertyValue, tenantId, companyId);
+		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그정리
 
 		ezCommonDAO.insertCompanyConfig(map);
 
@@ -1209,8 +1209,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("propertyName", propertyName);
 		map.put("propertyValue", propertyValue);
 
-		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
-		logger.debug("PROPERTY VALUE : " + propertyValue);
+		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} || COMPANYID : {}", propertyName, propertyValue, tenantId, companyId);
+		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그정리
 
 		ezCommonDAO.updateCompanyConfig(map);
 
@@ -1756,7 +1756,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	@Override
 	public int checkDeptId(String userID, String deptID, String tenantId) {
-		logger.debug("checkDeptId started");
+		//logger.debug("checkDeptId started"); // 로그정리
 		int result = 0;
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -1764,7 +1764,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("deptID", deptID);
 		map.put("userID", userID);
 		result= ezCommonDAO.checkDeptId(map);
-		logger.debug("checkDeptId ended");
+		//logger.debug("checkDeptId ended"); // 로그정리
 		return result;
 	}
 
