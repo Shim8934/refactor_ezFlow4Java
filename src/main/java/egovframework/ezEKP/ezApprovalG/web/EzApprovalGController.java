@@ -5776,12 +5776,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
 		String[] filePaths = xmlDom.getElementsByTagName("PPATHINFO").item(0).getTextContent().split(separators);
 		String[] fileNames = xmlDom.getElementsByTagName("PFILEINFO").item(0).getTextContent().split(separators);
+		String[] downUrl = new String[fileTypes.length];
+		String[] hwpInfo = xmlDom.getElementsByTagName("PHWPINFO").item(0).getTextContent().split(separators);
+		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
 		
+		/* 2023-05-10 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 설정 테넌트 컨피그 추가 */
+		if (useHwpDownSecurity.equals("Y")) {
+			downUrl = xmlDom.getElementsByTagName("PDOWNINFO").item(0).getTextContent().split(separators);
+		}
+		
+		InputStream inpStream = null;
 		ZipOutputStream zout = null;
 		String zipFilePath = null;
+		String sourceDirPath = commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID);
 		
 		try {
-			File sourceDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID));
+			File sourceDir = new File(sourceDirPath);
 			
 			if (sourceDir.exists()) {
 				// 2019.03.26 천성준 - 폴더경로 하위에 파일이 존재하면 File삭제 함수가 안돌아서 해당경로에 파일먼저 삭제 후 폴더삭제하도록 로직추가
@@ -5810,6 +5820,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					File sourceFile = new File(commonUtil.detectPathTraversal(realPath + filePaths[k]));
 					byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 					String realExt = "";
+					String sourceFilePath = "";
 					
 					// 전자결재 KLIB 암/복호화
 					if (filePaths[k].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -5830,10 +5841,45 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					
 					fileNames[k] = commonUtil.getUniqueFileName(fileNames[k], fileNameMap);
 					
+					// 페이지에서 문서 타입과 확장자(hwp)를 확인하기 때문에 배포용 문서에 해당하는 경우만 if문 진입
+					if (!hwpInfo[k].equals("noPath") && useHwpDownSecurity.equals("Y")) {
+						sourceFilePath = sourceDirPath + commonUtil.separator + fileNames[k];
+						Path pathSource = Paths.get(sourceFilePath);
+						URL downloadUrl = new URL(downUrl[k]);
+						
+						try {
+							inpStream = downloadUrl.openStream();
+							Files.copy(inpStream, pathSource);
+							
+							inpStream.close();
+						} catch (Exception e) {
+							logger.error(e.getMessage(), e);
+						} finally {
+							if (inpStream != null) {
+								try {
+									inpStream.close();
+								} catch (Exception ignore) {
+									logger.error(ignore.getMessage(), ignore);
+								}
+						    }
+						}
+						
+						// 위에서 fileBytes를 정의하므로 충돌을 피하기 위한 null값 설정
+						fileBytes = null;
+						fileBytes = commonUtil.readBytesFromFile(pathSource);
+						
+						// fileBytes 변수에 배포용 문서 파일을 read했기 때문에, 임의로 만들어준 배포용 문서 파일은 바로 삭제
+						File hwpSourceFile = new File(commonUtil.detectPathTraversal(sourceFilePath));
+						if (hwpSourceFile.exists()) {
+							hwpSourceFile.delete();
+						}
+					}
+					
 					ZipEntry zentry = new ZipEntry(fileNames[k]);
 					zout.putNextEntry(zentry);
 					zout.write(fileBytes);
 					zout.closeEntry();
+					
 				} catch (IOException e) {
 					logger.error(e.getMessage(), e);
 				} finally {
