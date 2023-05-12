@@ -298,7 +298,7 @@
 	            if (message.FieldExist("body") && message2.FieldExist("body")) {
 	                message2.GetCloneData("body", "HWP", function (data) {
 	                    var text = data;
-	                    message.SetCloneData(text, "body", "HWP", process_AfterOpen);
+	                    message.SetCloneDataCallback(text, "body", "HWP", process_AfterOpen);
 	                });
 	            }
 	        }

@@ -16060,10 +16060,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		if (signTitle.trim().equals("")) {
+		/* 2023-05-12 홍승비 - 합의 서명을 위한 직위나 이름이 없는 경우, null 처리 추가 */
+		if (signTitle == null || signTitle.trim().equals("")) {
 			signTitle = "-";
 		}
-		if (signName.trim().equals("")) {
+		if (signName == null || signName.trim().equals("")) {
 			signName = "-";
 		}
 		
