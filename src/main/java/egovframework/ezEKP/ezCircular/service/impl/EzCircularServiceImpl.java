@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -349,10 +350,16 @@ public class EzCircularServiceImpl implements EzCircularService {
 			logger.error(e.getMessage(), e);
 		} finally {
 			try {
-				fis.close();
+				// 2023-05-12 이사라 : NullPointerException 시큐어코딩 
+				/*
 				fos.close();
 				br.close();
 				bw.close();
+				*/
+				IOUtils.closeQuietly(fis);
+				IOUtils.closeQuietly(fos);
+				IOUtils.closeQuietly(br);
+				IOUtils.closeQuietly(bw);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}

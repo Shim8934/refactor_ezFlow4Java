@@ -538,14 +538,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
                     // Install the all-trusting trust manager
                     SSLContext sc = null;
+
                     try {
                         sc = SSLContext.getInstance("SSL");
-                        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                        // 2023-05-12 이사라 : NullPointerException 시큐어코딩
+						if (!Objects.isNull(sc)) {
+							sc.init(null, trustAllCerts, new java.security.SecureRandom());
+							HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+						}
+
                     } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                     }
 
-                    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+                    //HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory()); // try문 안으로 이동
 
                     // Create all-trusting host name verifier
                     HostnameVerifier allHostsValid = new HostnameVerifier() {
@@ -676,14 +682,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
                     // Install the all-trusting trust manager
                     SSLContext sc = null;
+
                     try {
                         sc = SSLContext.getInstance("SSL");
-                        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                        // 2023-05-12 이사라 : NullPointerException 시큐어코딩
+						if (!Objects.isNull(sc)) {
+							sc.init(null, trustAllCerts, new java.security.SecureRandom());
+							HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+						}
+
                     } catch (Exception e) {
                         logger.error(e.getMessage(), e);
                     }
 
-                    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+                    //HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory()); // try문 안으로 이동
 
                     // Create all-trusting host name verifier
                     HostnameVerifier allHostsValid = new HostnameVerifier() {

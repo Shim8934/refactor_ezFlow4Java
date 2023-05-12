@@ -75,6 +75,7 @@ import kr.dogfoot.hwplib.tool.objectfinder.FieldFinder;
 import kr.dogfoot.hwplib.tool.textextractor.TextExtractMethod;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -11259,8 +11260,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			outputStreamWriter.close();
-			outputStream.close();
+			// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+			//outputStreamWriter.close();
+			//outputStream.close();
+			IOUtils.closeQuietly(outputStreamWriter);
+			IOUtils.closeQuietly(outputStream);
 		}
 		
 		logger.debug("enforceSihangDocSave ended.");

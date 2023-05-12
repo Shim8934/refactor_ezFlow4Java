@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -76,7 +78,9 @@ import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.writer.HWPWriter; 
 
 import org.apache.commons.codec.binary.Base64; 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils; 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -460,7 +464,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		sb.append("<NODE>");
 		
-		if (apprGTaskVO != null && apprGTaskVO.getCategoryCode().equals(prevCode)) {
+		// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+		if (Objects.isNull(apprGTaskVO)) {
+			throw new NullPointerException("getCodeTreeNodeInfo apprGTaskVO is null");
+		}
+
+		//if (apprGTaskVO != null && apprGTaskVO.getCategoryCode().equals(prevCode)) {
+		if (apprGTaskVO.getCategoryCode().equals(prevCode)) {
 			sb.append("<EXPANDED>TRUE</EXPANDED>" + codeInfo);
 		} else {
 			sb.append("<EXPANDED>FALSE</EXPANDED>");
@@ -2421,8 +2431,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		} catch (Exception e) {
         			logger.error(e.getMessage(), e);
         		} finally {
-        			output.close();
-        			outputStream.close();
+					// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+					IOUtils.closeQuietly(output);
+					IOUtils.closeQuietly(outputStream);
         		}
         	}
         }
@@ -6219,6 +6230,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        
 			if (signList2 != null) {
 				receivedSN = Integer.parseInt(signList2.getReceiveSN() + 1);
+			} else { // 2023-05-12 이사라 : NullPointerException 시큐어코딩
+				throw new NullPointerException("ApprGReceiveDocVO signList2 is null");
 			}
 			
 			map.put("v_RECEIVESN", receivedSN);
@@ -11642,8 +11655,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<APRSN>" + makeListField(docXML.getElementsByTagName("APRSN").item(k).getTextContent()) + "</APRSN>");
 			resultXML.append("<SIGNTYPE>" + makeListField(docXML.getElementsByTagName("SIGNTYPE").item(k).getTextContent()) + "</SIGNTYPE>");
 			
-			String tempSignName = makeListField(docXML.getElementsByTagName("SIGNNAME").item(k).getTextContent());
-			String tempContent = makeListField(docXML.getElementsByTagName("CONTENT").item(k).getTextContent());
+			// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+			String tempSignName = Optional.ofNullable(makeListField(docXML.getElementsByTagName("SIGNNAME").item(k).getTextContent())).orElse("");
+			String tempContent = Optional.ofNullable(makeListField(docXML.getElementsByTagName("CONTENT").item(k).getTextContent())).orElse("");
 			
 			resultXML.append("<SIGNNAME>" + tempSignName + "</SIGNNAME>");
 			
@@ -23209,14 +23223,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if(type.equalsIgnoreCase("1")) {
 			param.put("limit", 3); // 출력 갯수 제한
 			list = ezApprovalGDAO.getAprPortletList_progress(param);
-			if (list != null) {
+
+			// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+			//if (list != null) {
+			if (CollectionUtils.isNotEmpty(list)) {
 		        for (ApprGDocListVO apr : list) {
 		        	Date date1 = formatter2.parse(apr.getStartDate());                                   
 		        	apr.setStartDate(commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, false));
 				}
 			}
 			ret.put("list", list);
-			logger.debug("list.toString() : " + list.toString());
+			logger.debug("list.toString() : " + Optional.ofNullable(list.toString()).orElse(""));
 			
 			if(list.size() > 0) {
 				param.put("docID", list.get(0).getDocID()); // 첫 번째 결재문서의 라인 정보만 필요함.
@@ -29538,6 +29555,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             } catch (IOException e) {
                                 logger.error(e.getMessage(), e);
                             } finally {
+								// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+								IOUtils.closeQuietly(input);
+								IOUtils.closeQuietly(output);
+                            	/*
                                 try{
                                     // 생성된 InputStream Object를 닫아준다.
                                     input.close();
@@ -29546,6 +29567,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                 } catch(IOException io) {
                                 	logger.error(io.getMessage(), io);
                                 }
+                                */
                             }
                         }
 						map.put("ATTACHFILESIZE", strFileSize);
@@ -31585,8 +31607,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         } finally {
-            outputStreamWriter.close();
-            outputStream.close();
+			// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+            //outputStreamWriter.close();
+            //outputStream.close();
+			IOUtils.closeQuietly(outputStreamWriter);
+			IOUtils.closeQuietly(outputStream);
         }
 
         logger.debug("enforceSihangDoc ended.");

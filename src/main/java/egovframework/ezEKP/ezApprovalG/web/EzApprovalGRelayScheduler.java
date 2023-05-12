@@ -12,9 +12,12 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -34,6 +37,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1661,7 +1665,8 @@ public class EzApprovalGRelayScheduler {
  			//저장된 tenantID들 중에서 첫번째를 조회
  			List<OrganUserVO> list;
  	
- 			list = ezApprovalGService.getTenantID();
+ 			// 2023-05-11 이사라 : NullPointerException 시큐어코딩
+ 			list = Optional.ofNullable(ezApprovalGService.getTenantID()).orElse(Collections.emptyList());
  			int tenantID = list.get(0).getTenantId();
  				 			
  			String strCompanyID = config.getProperty("config.companyNum");
@@ -1672,7 +1677,8 @@ public class EzApprovalGRelayScheduler {
  			String separator = commonUtil.separator;
  			
  			//RelaySchedulerTenant가 빈값이 아니라면 tenantID에 할당
- 			if(!(configRelaySchedulerTenant == null || configRelaySchedulerTenant.equals(""))) {
+ 			//if(!(configRelaySchedulerTenant == null || configRelaySchedulerTenant.equals(""))) {
+ 			if(StringUtils.isNotBlank(configRelaySchedulerTenant)) {
  				 tenantID = Integer.parseInt(configRelaySchedulerTenant);
  			}
  			
@@ -1693,7 +1699,9 @@ public class EzApprovalGRelayScheduler {
              logger.debug("e.getStackTrace(): " + e.getStackTrace());
  		}
  		
- 		logger.debug("resultVO: " + resultVO.toString());
+ 		String result = resultVO != null ?  resultVO.toString() : null;
+ 		
+ 		logger.debug("resultVO: " + result);
     	return resultVO;
     }
     

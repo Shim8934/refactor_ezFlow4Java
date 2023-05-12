@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -615,8 +617,13 @@ public class EzCabinetGWController_h {
 	private void getColumnInformation(JSONObject result, int itemId, int itemType, String primary, int tenantId) throws Exception {
 		//Get related columns
 		List<CabinetColumnVO> columnList = cabinetService.getAllRelatedColumnsOfItem(itemId, primary, tenantId);
-		if (columnList != null && columnList.size() > 0) {
+
+		// 2023-05-11 이사라 : NullPointerException 시큐어코딩
+		//if (columnList != null && columnList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(columnList)) {
 			result.put("columns", columnList);
+		} else {
+			throw new NullPointerException("columnList is null");
 		}
 		
 		//Check file type
