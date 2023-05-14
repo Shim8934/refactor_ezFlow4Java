@@ -6367,7 +6367,8 @@ CREATE TABLE `tbl_endaprdocinfo` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`DOCID`,`TENANT_ID`,`COMPANYID`),
-  KEY `idx_ORDERBY` (`ENDDATE`,`DOCNO`)
+  KEY `idx_ORDERBY` (`ENDDATE`,`DOCNO`),
+  KEY `IDX_TBL_ENDAPRDOCINFO_CONTAINERID` (`CONTAINERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

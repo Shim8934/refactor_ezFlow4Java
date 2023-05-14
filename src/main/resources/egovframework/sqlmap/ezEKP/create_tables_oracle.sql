@@ -11744,6 +11744,12 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_ENDAPRDOCINFO_PK" ON "TBL_ENDAPRDOCINFO" ("TENANT_ID", "COMPANYID", "DOCID") 
   ;
 --------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOCINFO_CONTAINERID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ENDAPRDOCINFO_CONTAINERID_IDX" ON "TBL_ENDAPRDOCINFO" ("CONTAINERID")
+  ;
+--------------------------------------------------------
 --  DDL for Index TBL_ENDAPRLINEINFO_PK
 --------------------------------------------------------
 
