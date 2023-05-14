@@ -22003,7 +22003,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getListField(String fieldName, String fieldValue, String companyID, String userLang, int tenantID, String offSet) throws Exception {
-		logger.debug("getListField started");
+//		logger.debug("getListField started");
 
 		String rtnVal = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
@@ -22081,7 +22081,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 		}
 
-		logger.debug("getListField ended");
+//		logger.debug("getListField ended");
 
 		return makeListField(rtnVal);
 	}

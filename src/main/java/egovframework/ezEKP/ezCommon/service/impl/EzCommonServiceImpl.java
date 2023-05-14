@@ -994,8 +994,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         String propertyValue = ezCommonDAO.getTenantConfig(map);
 
-		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} ", property, propertyValue, tenantID);
-		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그 정리
+		if (!property.equals("ApprovalFlag")) {
+			logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} ", property, propertyValue, tenantID);
+		}
 
         if (propertyValue == null) {
             propertyValue = "";
