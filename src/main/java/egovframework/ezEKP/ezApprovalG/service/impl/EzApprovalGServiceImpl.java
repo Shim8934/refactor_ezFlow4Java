@@ -16074,10 +16074,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		if (signTitle.trim().equals("")) {
+		/* 2023-05-12 홍승비 - 합의 서명을 위한 직위나 이름이 없는 경우, null 처리 추가 */
+		if (signTitle == null || signTitle.trim().equals("")) {
 			signTitle = "-";
 		}
-		if (signName.trim().equals("")) {
+		if (signName == null || signName.trim().equals("")) {
 			signName = "-";
 		}
 		
@@ -22016,7 +22017,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getListField(String fieldName, String fieldValue, String companyID, String userLang, int tenantID, String offSet) throws Exception {
-		logger.debug("getListField started");
+//		logger.debug("getListField started");
 
 		String rtnVal = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
@@ -22094,7 +22095,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 		}
 
-		logger.debug("getListField ended");
+//		logger.debug("getListField ended");
 
 		return makeListField(rtnVal);
 	}

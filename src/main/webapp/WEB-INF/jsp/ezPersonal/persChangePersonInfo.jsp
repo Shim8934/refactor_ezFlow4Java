@@ -101,7 +101,7 @@
 			    	if (userManualFlag != "Y") {
 			    		$(".manualFlagNotYDisabled").attr("disabled", "disabled");
 			    		$(".manualFlagNotYClickOff *").off("click");
-			    		$(".manualFlagNotYOnClickEmpty").attr("onClick", "");
+			    		$(".imgbtn.manualFlagNotYOnClickEmpty").attr("onClick", "").css("background-color", "rgba(239, 239, 239, 0.3)");
 			    	}
 			    	// */
 			    }
