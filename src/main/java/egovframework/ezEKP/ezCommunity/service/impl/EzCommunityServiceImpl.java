@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,7 +233,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             } catch (Exception e) {
             	throw e;
             } finally {
-            	fos.close();
+				// 2023-05-15 이사라 : NullPointerException 시큐어코딩
+				// fos.close();
+				IOUtils.closeQuietly(fos);
             	file.delete();
             }
         }
@@ -1951,7 +1955,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        } catch (Exception e) {
 	        	throw e;
 	        } finally {
-	        	fos.close();
+				// 2023-05-15 이사라 : NullPointerException 시큐어코딩
+				// fos.close();
+				IOUtils.closeQuietly(fos);
 	        	file.delete();
 	        }
 		}
@@ -2000,7 +2006,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        } catch (Exception e) {
 	        	throw e;
 	        } finally {
-	        	fos.close();
+				// 2023-05-15 이사라 : NullPointerException 시큐어코딩
+				// fos.close();
+				IOUtils.closeQuietly(fos);
 	        	file.delete();
 	        }
 		}
@@ -2740,7 +2748,29 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (boardInfoTemp.getBoardAdmin_FG() == null || boardInfoTemp.getBoardAdmin_FG().equals("")) {
+		// 2023-05-15 이사라 : NullPointerException 시큐어코딩
+		} else if (!Objects.isNull(boardInfoTemp)) {
+			if (StringUtils.isEmpty(boardInfoTemp.getBoardAdmin_FG())) {
+				boardInfo.setAccess_FG("1");
+				boardInfo.setBoardAdmin_FG("false");
+				boardInfo.setListView_FG("false");
+				boardInfo.setRead_FG("false");
+				boardInfo.setWrite_FG("false");
+				boardInfo.setReply_FG("false");
+				boardInfo.setDelete_FG("false");
+			} else {
+				boardInfo.setAccess_FG(Integer.toString(boardInfoTemp.getAccess_()));
+				boardInfo.setBoardAdmin_FG(boardInfoTemp.getBoardAdmin_FG().toLowerCase());
+				boardInfo.setListView_FG(boardInfoTemp.getListView_FG().toLowerCase());
+				boardInfo.setRead_FG(boardInfoTemp.getRead_FG());
+				boardInfo.setWrite_FG(boardInfoTemp.getWrite_FG());
+				boardInfo.setReply_FG(boardInfoTemp.getReply_FG());
+				boardInfo.setDelete_FG(boardInfoTemp.getDelete_FG());
+			}
+		} else {
+			throw new NullPointerException("getBoardInfo boardInfoTemp is null");
+		}
+		/*} else if (boardInfoTemp.getBoardAdmin_FG() == null || boardInfoTemp.getBoardAdmin_FG().equals("")) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
 			boardInfo.setListView_FG("false");
@@ -2756,7 +2786,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setWrite_FG(boardInfoTemp.getWrite_FG());
 			boardInfo.setReply_FG(boardInfoTemp.getReply_FG());
 			boardInfo.setDelete_FG(boardInfoTemp.getDelete_FG());
-		}
+		}*/
 		
 		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID, userInfo.getTenantId());
 		

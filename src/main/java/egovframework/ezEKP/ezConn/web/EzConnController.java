@@ -4,6 +4,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
@@ -11,6 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -398,7 +400,9 @@ public class EzConnController {
 			}
 		}
 		
-		if (resultVO.getId() != null) {
+		// 2023-05-15 이사라 : NullPointerException 시큐어코딩 - vo null체크로 수정
+		//if (resultVO.getId() != null) {
+		if (!Objects.isNull(resultVO)) {
 			logger.debug("getUserInfoById ended. resultVO.id=" + resultVO.getId());
 		} else {
 			logger.debug("getUserInfoById ended. resultVO.id=null");			
@@ -610,6 +614,11 @@ public class EzConnController {
 					
 					LoginVO resultVO = getUserInfoById(id, tenantId);
 					
+					// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+					if (Objects.isNull(resultVO)) {
+						throw new NullPointerException("cloudOrgan resultVO is null");
+					}
+
 					loginController.createLoginCookie(resultVO.getId(), "", "", tenantId, request, response, "", "");
 					
 					// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우

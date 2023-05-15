@@ -14,6 +14,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -4361,7 +4362,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);
 		
 		// 만료일을 설정하는 부분
-		if (mode.equals("modify")) { // 수정인 경우
+		// 2023-05-15 이사라 : NullPointerException 시큐어코딩 - !Objects.isNull(item)
+		if (mode.equals("modify") && !Objects.isNull(item)) { // 수정인 경우
 			if (item.getEndDate().substring(0, 4).equals("9999")) { //영구게시인 경우
 				if (expireDays.equals("-1")) { // 게시판 설정이 영구게시인 경우 만료일 컨트롤 값을 30일 뒤로 자동세팅
 					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd");
@@ -4373,7 +4375,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 			
 			item.setExtensionAttribute4(item.getExtensionAttribute4().replace("&amp;", "&"));
-		} else { //새 게시나 답변인 경우
+		} else if (!Objects.isNull(item)){ //새 게시나 답변인 경우
 			if (expireDays.equals("-1")) {
 				endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd"); 
 			} else {

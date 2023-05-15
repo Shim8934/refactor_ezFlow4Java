@@ -9,6 +9,7 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -17,6 +18,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -293,24 +295,30 @@ public class EzEditorController extends EgovFileMngUtil {
 					}
 				}
 
-				// Stream the image file (the original CMYK image)
-				ImageInputStream input = ImageIO.createImageInputStream(imageFile);
-				reader.setInput(input);
-
-				// Read the image raster
-				Raster raster = reader.readRaster(0, null);
-
-				// Create a new RGB image
-				bi = new BufferedImage(raster.getWidth(), raster.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-
-				// Fill the new image with the old raster
-				bi.getRaster().setRect(raster);
+				// 2023-05-15 이사라 : NullPointerException 시큐어코딩
+				if (reader != null) {
+					// Stream the image file (the original CMYK image)
+					ImageInputStream input = ImageIO.createImageInputStream(imageFile);
+					reader.setInput(input);
+	
+					// Read the image raster
+					Raster raster = reader.readRaster(0, null);
+	
+					// Create a new RGB image
+					bi = new BufferedImage(raster.getWidth(), raster.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+	
+					// Fill the new image with the old raster
+					bi.getRaster().setRect(raster);
+				}
 			} else {
 				bi = ImageIO.read(new File(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName)));
 			}
 
-			width = bi.getWidth();
-			height = bi.getHeight();
+			// 2023-05-15 이사라 : NullPointerException 시큐어코딩
+			if (!Objects.isNull(bi)) {
+				width = bi.getWidth();
+				height = bi.getHeight();
+			}
 		}
 		
 		String imgPath = (filePath + commonUtil.separator + fileName + "|!|" + width + "|!|" + height).replace("\\", "/");
@@ -595,7 +603,9 @@ public class EzEditorController extends EgovFileMngUtil {
 				resultCode = "1";
 			} finally {
 				try {
-					fileOuputStream.close();
+					// 2023-05-15 이사라 : NullPointerException 시큐어코딩
+					//fileOuputStream.close();
+					IOUtils.closeQuietly(fileOuputStream);
 				} catch (Exception e) {
 					logger.debug("e.message=" + e.getMessage());
 				}
@@ -838,7 +848,9 @@ public class EzEditorController extends EgovFileMngUtil {
 
 					} finally {
 						try {
-							fileOuputStream.close();
+							// 2023-05-15 이사라 : NullPointerException 시큐어코딩
+							//fileOuputStream.close();
+							IOUtils.closeQuietly(fileOuputStream);
 						} catch (Exception e) {
 							logger.debug("e.message=" + e.getMessage());
 						}
