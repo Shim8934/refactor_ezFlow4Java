@@ -483,7 +483,7 @@
 		FROM 
 			JMOCHA_MAIL_COUNTRYIP
 		WHERE 
-			#loginIP# BETWEEN START_IP_NUMBER AND END_IP_NUMBER;
+			#loginIP# BETWEEN START_IP_NUMBER AND END_IP_NUMBER
 	</select>
 	
 	<!-- 비밀번호 초기화 기능 사용자 확인 -->
