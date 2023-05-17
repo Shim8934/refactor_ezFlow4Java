@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
@@ -282,8 +283,10 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 				
 				updateGoogleAccessTokenInfo(response.getAccessToken(), token.getUserID(), token.getCompanyID(), token.getTenantID());
 			} catch (Exception e) {
+				// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+				String responseValue = Objects.isNull(response) ? "" : response.toPrettyString();
 				logger.error(e.getMessage(), e);
-				logger.debug("accessToken refresh error : " + response.toPrettyString());
+				logger.debug("accessToken refresh error : " + responseValue);
 			}
 		}
     }

@@ -1459,7 +1459,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			throw e;
 		}
 		finally {
-			fileOut.close();
+			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+			//fileOut.close();
+			IOUtils.closeQuietly(fileOut);
 			workbook.close();
 		}
 		logger.debug("createExcelFileLogs end");

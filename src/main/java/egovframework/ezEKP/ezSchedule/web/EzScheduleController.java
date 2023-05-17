@@ -4617,6 +4617,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			strHTML = strHTML.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
 			strHTML = strHTML.replaceAll("\\+", "%2B");
 			strHTML = URLDecoder.decode(strHTML, "utf-8");
+		// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+		} else {
+			strHTML = "";
 		}
 		
 		strHTML = strHTML.replace("replace_" + scheme, scheme);

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -784,7 +785,8 @@ public class EzPollServiceImpl implements EzPollService{
 				toName = AccessUserInfo.getDisplayName();
 				toAddress = AccessUserInfo.getMail();
 			}
-			else{
+			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+			else if (!Objects.isNull(AccessUserGroupInfo)) {
 				toName = AccessUserGroupInfo.getDisplayName();
 				toAddress = AccessUserGroupInfo.getMail();
 			}

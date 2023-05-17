@@ -22,6 +22,7 @@ import javax.naming.directory.DirContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -2503,7 +2504,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			throw e;
 		}
 		finally {
-			fileOut.close();
+			// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+			//fileOut.close();
+			IOUtils.closeQuietly(fileOut);
 			workbook.close();
 		}
 		logger.debug("createExcelUsers end");

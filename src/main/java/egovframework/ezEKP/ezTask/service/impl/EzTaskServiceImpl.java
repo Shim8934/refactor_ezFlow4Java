@@ -15,6 +15,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,7 +223,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			pw.close();
+			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+			//pw.close();
+			IOUtils.closeQuietly(pw);
 		}
 		
 		if (taskID.equals("")) {
@@ -320,7 +323,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			pw.close();
+			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+			//pw.close();
+			IOUtils.closeQuietly(pw);
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();

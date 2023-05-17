@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -802,14 +803,18 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		logger.debug("folderType is " + folderType);
 
 		int folderId = ezWebFolderDAO_y.insertFolder(map);
+		
+		// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+		String uppFolderId = Objects.isNull(uppFolder) ? "" : uppFolder.getFolderId();
+		
 		map.put("newFolderId", folderId);
-		map.put("folderUpper", uppFolder.getFolderId());
+		map.put("folderUpper", uppFolderId);
 		map.put("targetId", folderId);
-		logger.debug("folderId:" + folderId + ",folderUpper:"  + uppFolder.getFolderId() + ",tenantId:" + tenantId);
+		logger.debug("folderId:" + folderId + ",folderUpper:"  + uppFolderId + ",tenantId:" + tenantId);
 		
 		ezWebFolderDAO_y.updateFolderPath(map);
 		
-		map.put("upperFolderId", uppFolder.getFolderId());
+		map.put("upperFolderId", uppFolderId);
 		map.put("type_f", "D");
 		ezWebFolderAdminService.insertFolderUser(map);
 		logger.debug("insert folderId is " + folderId);
@@ -1165,7 +1170,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			}
 
 		} else {
-			if (folderFileType.equalsIgnoreCase("F")){
+			if (folderFileType.equalsIgnoreCase("F") && !Objects.isNull(folderVO)){ // 2023-05-17 이사라 : NullPointerException 시큐어코딩
 				map = new HashMap<String, Object>();
 
 				map.put("fileId", folderFileId);

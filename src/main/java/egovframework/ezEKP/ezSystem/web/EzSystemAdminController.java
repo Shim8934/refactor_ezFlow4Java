@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -256,10 +257,10 @@ public class EzSystemAdminController {
 				obj.put("licenseDomain", licenseDomain);
 				obj.put("msg", "domainFail");
 				return obj;
-			} else {
+			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+			} else if (!Objects.isNull(userInfo)) {
 				try {
-					ezSystemAdminService.updateSysParam(userInfo.getTenantId(), list, userInfo.getLocale(),
-							userInfo.getCompanyID());
+					ezSystemAdminService.updateSysParam(tenantId, list, userInfo.getLocale(), userInfo.getCompanyID());
 					msg = "success";
 				} catch (Exception e) {
 					msg = "fail";

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -4216,7 +4218,8 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 					}
 				}
 				// trim()으로 제거되지 않는 앞뒤 공백제거.
-				value = value.replaceAll("(^\\p{Z}+|\\p{Z}+$)", "");
+				// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+				value = StringUtils.isBlank(value) ? "" : value.replaceAll("(^\\p{Z}+|\\p{Z}+$)", "");
 				map.put(key, value);
 			}
 			list.add(map);
