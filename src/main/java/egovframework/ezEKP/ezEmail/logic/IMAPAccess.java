@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
@@ -147,6 +148,11 @@ public class IMAPAccess {
             logger.error(e.getMessage(), e);
         }
 		
+		// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+		if (Objects.isNull(store)) {
+			throw new NullPointerException("getStore store is null, but it isn't ready");
+		}
+
 		return store;
 	}
 

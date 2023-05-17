@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1207,7 +1208,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				if (exceptionMessage.equals("encrypted ZIP entry not supported")) {
 					returnValue = "NOT";
 					
-					if (useEncryptZipForEmail.equals("YES")) { // 암호화를 사용하면
+					if (useEncryptZipForEmail.equals("YES") && CollectionUtils.isNotEmpty(multiFile)) { // 암호화를 사용하면
 						String guid = UUID.randomUUID().toString(); // 새 id를 만들어서
 						File file = new File(tempFileUploadPath + commonUtil.separator + guid + ".zip"); // 파일을 생성하고
 						multiFile.get(0).transferTo(file); // 멀티파일을 파일로 만들어준다. 

@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -1396,7 +1397,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					}
 				}
 
-				if (obj.get("type").toString().equalsIgnoreCase("CONDITION")) {
+				// 2023-05-16 이사라 : NullPointerException 시큐어코딩 - tCondition, tAction, tException
+				if (obj.get("type").toString().equalsIgnoreCase("CONDITION") && !Objects.isNull(tCondition)) {
 					//DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
 					Element kind = doc.createElement("KIND");
 					kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
@@ -1406,7 +1408,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					values.appendChild(doc.createCDATASection(obj.get("value").toString()));
 					tCondition.appendChild(values);
 
-				} else if (obj.get("type").toString().equalsIgnoreCase("ACTION")) {
+				} else if (obj.get("type").toString().equalsIgnoreCase("ACTION") && !Objects.isNull(tAction)) {
 					//DELETE, READ, IMPORTANCE, REDIRECTION, FORWARD, MOVE, COPY
 					//SKIP : ASSIGNCATE, NONE, FORWARDATTACH, SENDSMS, SERVREPLY
 					if (obj.get("kind").toString().equalsIgnoreCase("DELETE") || obj.get("kind").toString().equalsIgnoreCase("REDIRECTION")
@@ -1463,7 +1465,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						values.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 						tAction.appendChild(values);
 					}
-				} else if (obj.get("type").toString().equalsIgnoreCase("EXCEPTION")) {
+				} else if (obj.get("type").toString().equalsIgnoreCase("EXCEPTION") && !Objects.isNull(tException)) {
 					//DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
 					Element kind = doc.createElement("KIND");
 					kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));

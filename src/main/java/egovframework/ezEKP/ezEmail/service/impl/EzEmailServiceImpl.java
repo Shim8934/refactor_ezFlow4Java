@@ -1687,7 +1687,9 @@ public class EzEmailServiceImpl implements EzEmailService {
             } catch (Exception e) {
             	logger.error(e.getMessage(), e);
             } finally {
-				ia.close();
+            	if (ia != null) {
+            		ia.close();
+            	}
 			}
             
 		} catch (Exception e) {

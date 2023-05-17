@@ -1221,7 +1221,7 @@ public class EzEmailUtil {
             // 인코딩된 상태로 반환되는 경우 예: =?UTF-8?B?Mu2VmeuFhC56aXA=?=
 		    // 디코딩된 상태로 변환되는 경우 예: 료비_20160824 (002)_검토_dhlee.xlsx
 		    // 디코딩된 경우 디코딩 이전 인코딩 예: filename*=euc-kr''%B7%E1%BA%F1%5F20160824%20%28002%29%5F%B0%CB%C5%E4%5Fdhlee.xlsx
-			String filename = part.getFileName();
+			String filename = Objects.isNull(part.getFileName()) ? "" : part.getFileName();
 			
 			logger.debug("filename=" + filename + ",index=" + bodyPartIndex + ",order=" + order + ",depth=" + depth);
 			
@@ -1368,7 +1368,9 @@ public class EzEmailUtil {
 			
             // message/rfc822 타입이면서 filename 속성이 없는 경우에는
             // 첨부된 eml의 제목으로 파일명을 설정한다.
-			if (part.isMimeType("message/rfc822") && filename.isEmpty()) {
+            // 2023-05-16 이사라 : NullPointerException 시큐어코딩
+			//if (part.isMimeType("message/rfc822") && filename.isEmpty()) {
+            if (part.isMimeType("message/rfc822") && StringUtils.isEmpty(filename)) {
 				Message nestedMessage = (Message)part.getContent();
 				
 				filename = getSubject(nestedMessage);;
@@ -2297,6 +2299,9 @@ public class EzEmailUtil {
     		// sort the messages
     		if (sortType != null) {
     			sortMessages(folder, messages, sortType, isAscending);
+    		// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+    		} else {
+    			sortType = "";
     		}
     		
     		if (extraMap != null) {
