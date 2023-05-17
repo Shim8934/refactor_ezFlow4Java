@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -1956,7 +1957,7 @@ public class CommonUtil {
 					
 					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
 					
-					if(useMultiLogin.equalsIgnoreCase("NO")) {
+					if(useMultiLogin.equalsIgnoreCase("NO") && !Objects.isNull(multiLoginCookie)) { // 2023-05-17 이사라 : NullPointerException 시큐어코딩
 						result = ezCommonService.matchMultiLoginTime(tenantID, companyID, userID, multiLoginCookie.getValue(), Device.PC);
 					} 
 				} else {
@@ -2694,7 +2695,11 @@ public class CommonUtil {
 			status = "error";
 		} finally {
 			try {
-				job.clearJobDirectory();  
+				// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+				if (!Objects.isNull(job)) {
+					job.clearJobDirectory();
+				}
+
 			} catch(Exception ee) {
 				logger.error(ee.getMessage(), ee);
 			}
