@@ -1078,12 +1078,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());		
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
 		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
 		if (!useImageConvertServer.equalsIgnoreCase("0")) {
 			extraMap.put("useImageConvertServer", useImageConvertServer);
 		}
 		
+		// 20230418 김은실 - 메일 읽기 > 첨부파일 웹폴더에 저장 기능 추가
+		if ("YES".equalsIgnoreCase(useWebfolder)) {
+			extraMap.put("useWebfolder", true);
+		}
+
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -2757,12 +2763,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
 		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
 		if (!useImageConvertServer.equalsIgnoreCase("0")) {
 			extraMap.put("useImageConvertServer", useImageConvertServer);
 		}
 		
+		// 20230418 김은실 - 메일 읽기 > 첨부파일 웹폴더에 저장 기능 추가
+		if ("YES".equalsIgnoreCase(useWebfolder)) {
+			extraMap.put("useWebfolder", true);
+		}
+
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);

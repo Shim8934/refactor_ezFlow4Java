@@ -18,6 +18,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/unit/openWindowForMail.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript">
@@ -299,33 +300,11 @@
 	        }
         	
 	        function write_Letter() {
-	            var pheight = window.screen.availHeight;
-	            var conHeight = pheight * 0.8;
-	            var pwidth = window.screen.availWidth;
-	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
-	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
-	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            var requestUrl = "/ezEmail/mailWrite.do?cmd=NEW";
-	            
-	            window.open(requestUrl, "", feature);
+				openWindowForMail("/ezEmail/mailWrite.do?cmd=NEW", "", null);
 	        }
 	        
 	        function write_LetterToMe() {
-	            var pheight = window.screen.availHeight;
-	            var conHeight = pheight * 0.8;
-	            var pwidth = window.screen.availWidth;
-	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
-	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
-	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            var requestUrl = "/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES";
-	            
-	            window.open(requestUrl, "", feature);
+	            openWindowForMail("/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES", "", null);
 	        }
 	        
 	        function LoadEmailTree() {
@@ -1103,20 +1082,7 @@
 			}
 
 			function operatorSendMail() {
-		        var pheight = window.screen.availHeight;
-		        var conHeight = pheight * 0.8;
-		        var pwidth = window.screen.availWidth;
-		        var conWidth = pwidth * 0.8;
-		        
-		        if (conWidth > 890) {
-		            conWidth = 890;
-		        }
-		        
-		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-
-		        window.open("/ezEmail/mailWrite.do?cmd=NEW&operatorMailAddress=" + operatorMailAddress, "", feature);
+				openWindowForMail("/ezEmail/mailWrite.do?cmd=NEW&operatorMailAddress=" + operatorMailAddress, "", null);
 		    }
 			
 			function leftResize(){
@@ -1324,18 +1290,7 @@
 			}
 			
 			function goAdress() {
-				var pheight = window.screen.availHeight;
-	            var conHeight = pheight * 0.8;
-	            var pwidth = window.screen.availWidth;
-	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
-	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
-	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            var requestUrl = "/ezEmail/mailMain.do?funCode=2";
-	            
-	            window.open(requestUrl, "", feature);
+	            openWindowForMail("/ezEmail/mailMain.do?funCode=2", "", null);
 			}
 			
 

@@ -1136,15 +1136,12 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	@Override
 	public String getFileExtension(int tenantId) throws Exception {
 		logger.debug("getFileExtension started");
+		String result = "";
 
 		String fileExtension = ezSystemAdminDAO.getFileExtension(tenantId);
 		String[] fileExtensionList = fileExtension.split(",");
 		Arrays.sort(fileExtensionList);
-		String result = "";
-
-		for (String file : fileExtensionList) {
-			result += file+",";
-		}
+		result = String.join(",", fileExtensionList);
 
 		logger.debug("getFileExtension ended");
 

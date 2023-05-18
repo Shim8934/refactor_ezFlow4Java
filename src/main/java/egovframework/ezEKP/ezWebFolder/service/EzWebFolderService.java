@@ -8,11 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileHistoryVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileUploadVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -82,7 +82,7 @@ public interface EzWebFolderService {
 	int checkFilesOwner(String userId, String fileList, int tenantId) throws Exception;
 	//Added
 	String getFolderPath(String[] split, String primary, int tenantId) throws Exception;
-	UploadResult saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo, boolean isEncrypt, String parentId) throws Exception;
+	UploadResult saveUploadedFiles(List<FileUploadVO> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo, boolean isEncrypt, String parentId) throws Exception;
 	void getDownloadedFiles(String[] folderIdList, String[] fileIDList, String realPath, LoginVO userInfo, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	// 휴지통 용량 초과 하는지 체크
 	boolean canDelete(String[] fileIdList, String[] folderIdList, String userId, int tenantId) throws Exception;

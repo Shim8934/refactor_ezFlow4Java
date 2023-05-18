@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.web.multipart.MultipartFile;
 
+import egovframework.ezEKP.ezWebFolder.vo.FileUploadVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -97,7 +97,7 @@ public interface EzWebFolderService_y {
 	// file, folder 탐색기 연동위한 explorer 
 	FileVO getFolderFileDetailForExplorer(String fldFile, String fldFileId, String userId, int tenantId ,String comId ,String offset, String primary) throws Exception;
 	
-	JSONObject fileUpdateOverwrite (List<MultipartFile> multiFileLists, JSONArray nameArray, LoginVO userInfo, String folderId ,JSONArray fileIdArray, String realPath, int tenantId) throws Exception;
+	JSONObject fileUpdateOverwrite (List<FileUploadVO> multiFileLists, JSONArray nameArray, LoginVO userInfo, String folderId ,JSONArray fileIdArray, String realPath, int tenantId) throws Exception;
 
 	public String existsUserIdTokenCheck(String userId, int tenantId) throws Exception;
 	

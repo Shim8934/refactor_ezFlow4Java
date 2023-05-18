@@ -1,5 +1,6 @@
 "use strict";
 var duplicateFile = (function() {
+	var completeListener = null;
 	var requiredParamProperties = [ "workType", "infoArray", "folderId" ];
 	
 	// upload, copy, move, restore
@@ -22,7 +23,7 @@ var duplicateFile = (function() {
 				var fd = new FormData();
 				
 				fd.append("folderId", current.folderId);
-				fd.append("fileToUpload", current.info.fileObject);
+				appendFileForDupli(fd, "fileToUpload", current.info.fileObject);
 				fd.append("fileIdArray", JSON.stringify([ {
 					fileIdArray: current.info.oldId
 				} ]));
@@ -96,7 +97,7 @@ var duplicateFile = (function() {
 				var fd = new FormData();
 				
 				fd.append("folderId", current.folderId);
-				fd.append("fileToUpload", current.info.fileObject);
+				appendFileForDupli(fd, "fileToUpload", current.info.fileObject);
 				fd.append("nameArray", JSON.stringify([ newFileName ]));
 				
 				if (current.isReply) {
@@ -457,6 +458,20 @@ var duplicateFile = (function() {
 		}
 	};
 	
+	/**
+	 * duplicateFile는 객체로 쌓여 있어서 캡슐화 되었다.
+	 * - 같은 이름의 함수를 마지막에 정의한다고 해서 재정의가 되지 않는다.
+	 * 		overwriteAppendFileForDupliFunction: function(func) {
+	 * 			appendFileForDupli = func;
+	 * 		}
+	 * 	 return에 이와 같은 함수를 호출할 수 있게 해서 확장하게 하였다.
+	 * 	 (사용예시) duplicateFile.overwriteAppendFileForDupliFunction(appendFileForUpload);
+	 */
+	function appendFileForDupli(fd, paramKey, fileObject) {
+	// (1) 웹폴더 > 파일업로드 : MultipartFile
+		fd.append(paramKey, fileObject);	// paramKey = "fileToUpload"
+	}
+
 	function addSuccessAlert(currentInfo, message) {
 		alerts.ok.push(currentInfo);
 		alerts.okMessage = message;
@@ -494,6 +509,10 @@ var duplicateFile = (function() {
 		flushAlerts();
 		// 완료 알림 띄우기
 		// alert(messages.completeDuplicateJob);
+
+		if (completeListener) {		// 빈 function을 정의하는 것도 메모리를 잡는다. null을 체크하는 것이 오히려 나음.
+			completeListener();
+		}
 	}
 
 	var executeJob = function(result) {
@@ -625,6 +644,15 @@ var duplicateFile = (function() {
 	return {
 		onClosePopup: onClosePopup,
 		isProcessing: isProcessing,
-		process: process
+		process: process,
+		setOnCompleteListener: function(func) {
+			completeListener = func;
+		},
+		overwriteAppendFileForDupliFunction: function(func) {
+			appendFileForDupli = func;
+		},
+		overwriteAjaxUploadCompleteFunction: function(func) {
+			ajaxUploadComplete = func;
+		}
 	};
 }());

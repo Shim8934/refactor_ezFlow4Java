@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -35,6 +33,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileUploadVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -1297,7 +1296,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 
 	@Override
-	public JSONObject fileUpdateOverwrite(List<MultipartFile> multiFileLists, JSONArray nameArray, LoginVO userInfo,
+	public JSONObject fileUpdateOverwrite(List<FileUploadVO> multiFileLists, JSONArray nameArray, LoginVO userInfo,
 			String folderId, JSONArray fileIdArray , String realPath, int tenantId) throws Exception {
 		
 		String fileName = "";
@@ -1340,9 +1339,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			Date date      = new Date();
 			// 실제 파일을 생성
 			if (requireEncrypt) {
-				writeUploadedFileEncryptKlib(multiFileLists.get(i), realPath + path + newName);
+				writeUploadedFileEncryptKlib(multiFileLists.get(i).getBytes(), realPath + path + newName);
 			} else {
-				writeUploadedFile(multiFileLists.get(i), realPath + path + newName);
+				writeUploadedFile(multiFileLists.get(i).getInputStream(), realPath + path + newName);
 			}
 			
 			String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);

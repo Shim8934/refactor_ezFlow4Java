@@ -429,6 +429,7 @@ public class EzWebFolderController_y {
 	/**
 	 * 다른 모듈에서 웹폴더의 파일 선택시 선택한 파일의 리스트를 선택할 수 있는 레이어 팝업 호출 
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezWebFolder/webfolderFileListPickup.do", method = RequestMethod.GET)
 	public String webfolderFileListPickup (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ) throws Exception {
@@ -440,7 +441,22 @@ public class EzWebFolderController_y {
 		String parentId = orElse(request.getParameter("parentId"),"");
 		String folderId = "";
 		
-		logger.debug("folderType : "+ folderType + ",allFileFlag : " + request.getParameter("allFileFlag"));
+		String mode = orElse(request.getParameter("mode"),"");
+		double uploadLimit = -1;
+
+		logger.debug("folderType : {}, allFileFlag : {}, mode : {}", folderType, request.getParameter("allFileFlag"), mode);
+
+		if ("upload".equalsIgnoreCase(mode)) {
+			// 웹폴더 파일 업로드시 1회업로드 제한 체크를 프론트에서도하도록
+			JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request).url("/rest/ezwebfolder/{0}/upload-limit", userInfo.getId()).exchangeBody();
+
+			if ("ok".equals(resultBody.get("status"))) {
+				uploadLimit = (double) resultBody.get("uploadLimit");
+			}
+		}
+
+		model.addAttribute("mode"	, mode);
+		model.addAttribute("uploadLimit", uploadLimit);
 		
 		JSONObject jsonObj = new JSONObject();
 		
@@ -482,6 +498,17 @@ public class EzWebFolderController_y {
 		return "ezWebFolder/webfolderFileListPickup";
 	}
 	
+	/**
+	 * 첨부폴더를 웹폴더에 저장하기 위해서 팝업을 띄우기 어려운 경우
+	 * webfolderFileListPickup.jsp로 relay를 해 줄 중간 창을 새창으로 띄운다.
+	 */
+	@RequestMapping(value="/ezWebFolder/webfolderFileListUploadParent.do", method = RequestMethod.GET)
+	public String webfolderFileListUploadParent (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp, Model model) throws Exception {
+		logger.debug("webfolderFileListUploadParent open.");
+		return "ezWebFolder/relay/webfolderFileListUploadParent";
+	}
+
 	/**
 	 * 다른 모듈에서 웹폴더의 파일 선택시 선택한 파일의 리스트를 선택할 수 있는 레이어 팝업 호출 
 	 */

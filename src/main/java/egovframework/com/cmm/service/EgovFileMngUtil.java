@@ -38,7 +38,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
 
-
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -239,40 +238,32 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	/**
 	 * 절대 경로로 첨부파일을 서버에 저장한다.
 	 *
-	 * @param multipartFile
+	 * @param stream
 	 * @param filePath
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	protected void writeUploadedFile(MultipartFile multipartFile, String filePath) {
-		try (InputStream stream = multipartFile.getInputStream()) {
+	protected void writeUploadedFile(InputStream stream, String filePath) throws IOException {
+			logger.debug("writeUploadedFile: {}", filePath);
 			File file = new File(filePath);
 
 			file.getParentFile().mkdirs();
 			Files.copy(stream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		} catch (Exception ex) {
-			logger.debug("ex: {}", ex);
-		}
 	}
 	
 	/**
 	 * 절대 경로로 첨부파일을 klib 암호화하여 서버에 저장한다.
 	 *
-	 * @param multipartFile
+	 * @param bytes
 	 * @param filePath
 	 * @throws Exception
 	 */
-	protected void writeUploadedFileEncryptKlib(MultipartFile multipartFile, String filePath) {
-		try {
+	protected void writeUploadedFileEncryptKlib(byte[] bytes, String filePath) throws Exception {
 			logger.debug("writeUploadedFileEncryptKlib: {}", filePath);
 			File file = new File(filePath);
 			file.getParentFile().mkdirs();
-			byte[] encryptedBytes = klibUtil.encrypt(multipartFile.getBytes());
+			byte[] encryptedBytes = klibUtil.encrypt(bytes);
 			commonUtil.writeBytesToFile(file.toPath(), encryptedBytes);
-		} catch (Exception ex) {
-			logger.debug("ex: ", ex);
-		}
 	}
-	
 	
     /**
      * 서버의 파일을 다운로드한다.

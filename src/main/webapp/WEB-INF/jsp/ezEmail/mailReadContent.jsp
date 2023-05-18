@@ -457,6 +457,9 @@
 		    		  });
 		     	}
 		     	
+				function webfolderUpload_open(obj) {
+					return parent.webfolderUpload_open(obj);
+				}
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">

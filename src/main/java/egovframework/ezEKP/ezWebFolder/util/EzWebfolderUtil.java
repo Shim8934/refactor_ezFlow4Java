@@ -1,16 +1,34 @@
 package egovframework.ezEKP.ezWebFolder.util;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.mail.Folder;
+import javax.mail.internet.MimeBodyPart;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezWebFolder.vo.FileUploadVO;
 
 /**
  * @Description ezWebfolder 모듈에서 사용하는 유틸리티 클래스
@@ -19,6 +37,12 @@ import egovframework.let.user.login.vo.LoginVO;
  */
 @Component("EzWebFolderUtil")
 public class EzWebfolderUtil {
+	private static final Logger logger = LoggerFactory.getLogger(EzWebfolderUtil.class);
+    private JSONParser jp          = new JSONParser();
+
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+
 	@Value("#{cryptos['EzWebfolderUtil.apb']}")
 	private String apb;
     private static final String iv = "5F1F6B63AAA65002";
@@ -73,5 +97,106 @@ public class EzWebfolderUtil {
 
 	public boolean isWebfolderAdmin(String rollInfo) {
 		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wf=1");
+	}
+
+// For WebfolderFile Upload
+	// 첫 Controller에서는: GW로 rest를 한번 더 보내기 때문에 굳이 FileUploadVO로 변경할 필요가 없음.
+	/**
+	 * GW에서는 FileUploadVO으로 사용하기가 좋음.
+	 * 	* 다만 Locale정보는 GW에서 받은 것으로 하기 때문에: 첫 Controller에서 받은 Locale정보와 일치할 것인지 의문.
+	 */
+	public List<FileUploadVO> convertFileUploadVOFromRequest(List<MultipartFile> multiPartFileLists
+					, String[] mailAttachArray, String userId, int tenantId, Locale locale) throws Exception {
+				  /*, String[] MailAttachLargeArray) throws Exception {*/
+		// log4j2에서 %M하면 메소드명 안 적어도 되서→ input,output값만 출력해도 될 듯?	*스프링 AOP: 매 메소드마다 표준적으로 로그를 찍을 수가 있음. (*만약 collection 과 같은 큰 데이터는 size만 찍으면 어떨까?)
+		logger.debug("convertFileUploadVOFromRequest started. multiPartFileLists={}, mailAttachArray={}, userId={}, tenantId={}, locale={}",
+															multiPartFileLists.toString(), mailAttachArray.toString(), userId, tenantId, locale);
+		List<FileUploadVO> list = new ArrayList<>();
+
+		/**
+		 * 사용자가 pc에서 업로드 할 파일을 선택하는 것이 기존 웹폴더 로직.
+		 *
+		 * (1)웹폴더 > 파일업로드 시 : MultipartFile
+		 * 사용자는 -input type="file"-를 이용하여 직접 선택한 파일을 담고
+		 * front에서: MultipartFile 타입을 보내게 된다.
+		 * (back에서도: MultipartFile 타입으로 사용.)
+		 * ※ input-file태그에는 임의로 값을 삽입하여 전달할 수가 없음. (직접선택만 가능.)
+		 */
+		for (MultipartFile multi : multiPartFileLists) {
+			list.add(new FileUploadVO(multi.getOriginalFilename(), multi.getSize(), multi.getInputStream()));
+		}
+
+		/**
+		 * 메일의 첨부파일은 메일(MIME)안에 있음(대용량 제외).
+		 * MimeBodyPart 타입으로 첨부파일을 꺼낼 수 있다.
+		 *
+		 * (2)메일 > 첨부파일 > 웹폴더에 업로드 시 : MimeBodyPart
+		 * front에서는: JSONObject객체로 -> 첨부파일을 꺼내기 위해 필요한 정보만을 넘기고,
+		 * back에서: 실제 데이터인 MimeBodyPart는 EzEmailUtil.getAttachPart(message, index)를 이용하여 꺼낼 수 밖에 없다고 보여진다.
+		 */
+		if (mailAttachArray.length != 0) {
+			// 메일의 첨부파일을 저장한다는 것은: 1개 또는 한 메일 안에 있는 파일 모두 저장이므로: 첫 파일의 userAccount, folderPath 만 구해도 문제 없을 것으로 예상. (IMAPAccess 생성 때문에.)
+			JSONObject firstFileInfo = (JSONObject) jp.parse(mailAttachArray[0]);
+			Map<String, Object> extraMap = new HashMap<String, Object>();
+			String shareId = firstFileInfo.get("shareId").toString();
+			String folderPath = firstFileInfo.get("folderPath").toString();
+
+			String userAccount = ezEmailUtil.getUserAccount(userId, shareId, tenantId, extraMap);
+
+			list.addAll(addListMailAttachArray(mailAttachArray, userAccount, locale, folderPath, extraMap));
+		}
+
+		/**
+		 * (3)메일 > (이미 저장이 되어 있는)대용량첨부 > 웹폴더에 업로드 시 :	File		//fileSystem_Path: /files/upload_mail/largeFile
+		 */
+		/*for (  : MailAttachLargeArray) {*/
+
+		logger.debug("convertFileUploadVOFromRequest ended. list={}", list.toString());
+		return list;
+	}
+
+	private List<FileUploadVO> addListMailAttachArray(String[] mailAttachArray
+			, String userAccount, Locale locale, String folderPath, Map<String, Object> extraMap) throws Exception {
+		logger.debug("addListMailAttachArray started. mailAttachArray={}, locale={}, folderPath={}",
+													  mailAttachArray.toString(), locale, folderPath);
+		List<FileUploadVO> list = new ArrayList<>();
+
+		// IMAPAccess open -> folder open -> 실 수행 -> folder close -> IMAPAccess close
+		Consumer<IMAPAccess> callback = ia -> {
+			try {
+				Folder f = ia.getFolder(folderPath);
+
+				if (f.exists()) {
+					f.open(Folder.READ_ONLY);
+
+					// 실 수행.
+					for (String fileInfoStr : mailAttachArray) {
+						JSONObject fileInfo = (JSONObject) jp.parse(fileInfoStr);
+
+						long uid = Long.parseLong(fileInfo.get("uid").toString());
+						int index = Integer.parseInt(fileInfo.get("index").toString());
+
+						MimeBodyPart mime = (MimeBodyPart)ezEmailUtil.getAttachPart(
+								ezEmailUtil.getMailMessage(f, uid, folderPath, null, locale, extraMap)	//괜히 Message객체 import시키기 싫어서.. : 변수로 저장안하고 그냥 parameter로 넣음.
+								, index);
+						InputStream stream = mime.getInputStream();
+
+						list.add(new FileUploadVO((String) fileInfo.get("originalFilename")
+													, Long.parseLong(fileInfo.get("size").toString())
+													, stream));
+					}
+
+					// folder 닫힘.
+					f.close(false);
+				}
+			} catch (Exception e) {
+				logger.error("addListMailAttachArray exception", e);
+			}
+		};
+
+		ezEmailUtil.useIMAPAccessWithCallback(callback, userAccount, locale);
+
+		logger.debug("addListMailAttachArray ended. list={}", list);
+		return list;
 	}
 }

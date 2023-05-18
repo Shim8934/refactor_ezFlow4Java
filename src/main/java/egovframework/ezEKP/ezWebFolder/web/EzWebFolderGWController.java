@@ -67,6 +67,7 @@ import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.ezEKP.ezWebFolder.vo.FileHistoryVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileUploadVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -932,8 +933,10 @@ public class EzWebFolderGWController {
 	}
 	
 	@RequestMapping(value="/rest/ezwebfolder/filemanage/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
+	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiPartFileLists, Locale locale, HttpServletRequest request) throws Exception {
 		logger.debug("postFileUploadGW start");
+		JSONObject result      = new JSONObject();
+
 		JSONParser jp          = new JSONParser();
 		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
 		
@@ -941,9 +944,10 @@ public class EzWebFolderGWController {
 		JSONArray nameArray    = jsonObject.get("nameArray")    != null ? (JSONArray) jsonObject.get("nameArray") : null;
 		String userId          = jsonObject.get("userId")       != null ? (String) jsonObject.get("userId")       : "";
 		String folderId        = jsonObject.get("folderId")     != null ? (String) jsonObject.get("folderId")     : "";
+		String[] mailAttachArray = Optional.ofNullable(request.getParameterValues("filesMailAttach")).orElse(new String[0]);
+
 		boolean isEncrypt = Optional.ofNullable(jsonObject.get("encrypt")).map(Object::toString).map(Boolean::parseBoolean).orElse(false);
 		String parentId        = orElse((String) jsonObject.get("parentId"), "");
-		JSONObject result      = new JSONObject();
 		
 		logger.debug("Servername: " + serverName + " || UserId: " + userId + " || FolderId: " + folderId); 
 		
@@ -953,14 +957,7 @@ public class EzWebFolderGWController {
 			result.put("code", 1);
 			return result;
 		}
-		
-		if (nameArray.size() != multiFileLists.size()) {
-			logger.debug("Some files upload failed!");
-			result.put("status", "error");
-			result.put("code", 1);
-			return result;
-		}
-		
+
 		process: try {
 			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName);
 			String offset     = userInfo.getOffset();
@@ -969,16 +966,25 @@ public class EzWebFolderGWController {
 				JSONObject permissionResult = ezWebFolderService_y.checkPermissions(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderId, "", userInfo.getTenantId());
 				
 				if ("error".equals(permissionResult.get("status"))) {
+					logger.debug("postFileUploadGW end");
 					return permissionResult;
 				}
 			}
 			
+			List<FileUploadVO> multiFileLists = webfolderUtil.convertFileUploadVOFromRequest(multiPartFileLists, mailAttachArray, userId, userInfo.getTenantId(), locale);
+
+			if (nameArray.size() != multiFileLists.size()) {
+				logger.debug("Some files upload failed!");
+				result.put("status", "error");
+				result.put("code", 1);
+				break process;
+			}
 			
 			List<String> onlyNameArray = ((List<JSONObject>) nameArray).stream().map(obj -> obj.get("originalFilename")).map(String.class::cast).collect(Collectors.toList());
 			List<DuplicateInfoVO> duplicateInfoList = new ArrayList<>();
 			
 			Iterator<String> onlyNameIterator = onlyNameArray.iterator();
-			Iterator<MultipartFile> multiFileIterator = multiFileLists.iterator();
+			Iterator<FileUploadVO> multiFileIterator = multiFileLists.iterator();
 			
 			while (onlyNameIterator.hasNext()) {
 				String fileName = onlyNameIterator.next();
@@ -1029,7 +1035,7 @@ public class EzWebFolderGWController {
 				logger.debug("limited upload value!");
 				result.put("status", "error");
 				result.put("code", 4);
-				return result;
+				break process;
 			}
 			
 			UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(folderId, userInfo.getPrimary(), userInfo.getTenantId());
@@ -1041,7 +1047,7 @@ public class EzWebFolderGWController {
 				logger.debug("Not enough storage to upload these files!");
 				result.put("status", "error");
 				result.put("code", 5);
-				return result;
+				break process;
 			}
 			
 			String realPath   = request.getServletContext().getRealPath("");
