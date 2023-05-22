@@ -88,7 +88,7 @@
 	        var _opinionYN = "<c:out value ='${opinionYN}'/>";
 	        var _opinionGamsaYN = "<c:out value ='${opinionGamsaYN}'/>";
 	        var _usepassword = "<c:out value ='${usePassword}'/>";
-	        var pDocSN = "1";
+	        var pDocSN = "1"; // 2023-05-22 기준 웹한글 합의문에서 전혀 사용하지 않는 변수로 확인 (상단에서 import한 .js파일에서도 미사용)
 	        var pUse_Editor = "<c:out value ='${useEditor}'/>";
 			var DocNumCode = "";
 			var ext = "hwp";
@@ -146,9 +146,11 @@
 			                setAttachInfo(pDocID, "APR", lstAttachLink);
 			                getDocInfo();
 			
+			                /* 2023-05-19 홍승비 - 부서순차(병렬)합의문 초기 로딩 시 의견 표출여부 로직 수정 */
+			                // 기존 사용하던 "_opinionYN" 변수는 서버단에서 항상 "N"값으로 전달되므로 로직에서 제거
 			                if (pHasOpinionYN == "Y") {
-			                    if (_opinionYN == "Y")
-			                        openOpinionUI("Display");
+								pInformationContent = "<spring:message code='ezApprovalG.t1374'/><br> <spring:message code='ezApprovalG.t10'/>";
+			                    Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
 			                }
 			            }
 			            else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
@@ -160,10 +162,10 @@
 			                GetAprDocFormID();
 			                setAttachInfo(pDocID, "APR", lstAttachLink);
 			                getDocInfo();
-			
+			                
 			                if (pHasOpinionYN == "Y") {
-			                    if (_opinionYN == "Y")
-			                        openOpinionUI("Display");
+								var pInformationContent = "<spring:message code='ezApprovalG.t1374'/><br> <spring:message code='ezApprovalG.t10'/>";
+			                    var Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
 			                }
 			            }
 			            else if (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
@@ -177,10 +179,10 @@
 			                GetAprDocFormID();
 			                setAttachInfo(pDocID, "APR", lstAttachLink);
 			                getDocInfo();
-			
+			                
 			                if (pHasOpinionYN == "Y") {
-			                    if (_opinionYN == "Y")
-			                        openOpinionUI("Display");
+								var pInformationContent = "<spring:message code='ezApprovalG.t1374'/><br> <spring:message code='ezApprovalG.t10'/>";
+			                    var Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
 			                }
 			            }
 			            else {
@@ -633,6 +635,8 @@
 		            return false;
 		        }
 		        
+		        /* 2023-05-19 홍승비 - 개선된 의견 작성창을 사용하도록 회송 코드 수정, 합의문에서는 의미가 없는 pDocSN 체크 제외 */
+		        /*
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = "HeSong";
@@ -651,29 +655,8 @@
 		        apropinion_cross_dialogArguments[1] = btnReturn_onclick_Complete;
 		
 		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
-		    }
-		    
-		    function openOpinionUI_New_Complete(ret) {
-		    	try {
-		    		if (ret == "Clear") {
-		    			pHasOpinionYN = "N";
-		    		} else if (ret == "cancel") {
-		    			//do_nothing
-		    		} else {
-		    	        var objXML = createXmlDom();
-		    	        objXML = loadXMLString(ret);
-		    	        
-		    	        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
-		    	        if (NodeList.length != 0) {
-		    	            pHasOpinionYN = "Y";
-		    	        } else {
-		    	            pHasOpinionYN = "N";
-		    	            ret = "cancel";
-		    	        }
-		    		}
-		    	} catch (e) {
-		    		alert("openOpinionUI_New_Complete ::: " + e.description);
-		    	}
+		        */
+		        openOpinionUI_New("HeSong", btnReturn_onclick_Complete);
 		    }
 		    
 		    function btnReturn_onclick_Complete(ret) {
@@ -689,12 +672,18 @@
 		                return;
 		            }
 		        	
-		        	if(hesongok) {
+		        	if (hesongok) {
 		        		var writerID = GetDocInfoData("APR", "writerid");
 						var writerName = GetDocInfoData("APR", "writername");
 						var docTitle = GetDocInfoData("APR", "doctitle");
 		            	SendMailToDrafter_Hesong(writerID, writerName, docTitle);
 		            	hesongok = setHeSongDocInfo();
+		            	
+		            	if (hesongok) {
+							ExcuteInfo("HESONG_AFTER", "");
+						} else {
+							ExcuteInfo("HESONG_FAIL", "");
+						}
 		        	}
 		        }
 		    }
@@ -1006,6 +995,13 @@
                  }
 	    	}
 	    	
+	    	/* 2023-05-19 홍승비 - 최초 로딩 시 의견 존재여부 체크 후 의견 레이어 팝업 표출을 위한 함수 추가 */
+			function CheckOpinionYN_complete(Ans) {
+				DivPopUpHidden();
+		    	if (Ans) {
+					openOpinionUI_New("");
+		        }
+			}
 	    </script>
 	</head>
 	<body class="popup" style="height:100%" onload="window_onload()" onbeforeunload="return window_onbeforeunload()">

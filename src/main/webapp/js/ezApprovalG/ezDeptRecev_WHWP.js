@@ -2193,10 +2193,38 @@ function openOpinionUI_New(pOpinionType, CompleteFunction) {
 			apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
 		}
 		
+		/*
 		var url = "/ezApprovalG/aprOpinionNew.do";
 		var OpenWin = window.open(url, "AprOpinion_Cross", GetOpenWindowfeature(530, 520));
         try { OpenWin.focus(); } catch (e) { }
+        */
+		DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do");
 	} catch (e) {
 		alert("openOpinionUI_New ::: " + e.description);
 	}
 }
+
+function openOpinionUI_New_Complete(ret) {
+	try {
+		DivPopUpHidden();
+		if (ret == "Clear") {
+			pHasOpinionYN = "N";
+		} else if (ret == "cancel") {
+			//do_nothing
+		} else {
+	        var objXML = createXmlDom();
+	        objXML = loadXMLString(ret);
+	        
+	        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+	        if (NodeList.length != 0) {
+	            pHasOpinionYN = "Y";
+	        } else {
+	            pHasOpinionYN = "N";
+	            ret = "cancel";
+	        }
+		}
+	} catch (e) {
+		alert("openOpinionUI_New_Complete ::: " + e.description);
+	}
+}
+

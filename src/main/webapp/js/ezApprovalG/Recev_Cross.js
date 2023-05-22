@@ -2005,8 +2005,9 @@ function SaveDraftDocInfo() {
         var objNodes = xmldoc.documentElement.childNodes;
         if (objNodes) {
             pOrgDocID = GetChildNodes(xmldoc.documentElement)[2].textContent;
-            if (GetChildNodes(xmldoc.documentElement)[10].textContentt == "Y" || GetChildNodes(xmldoc.documentElement)[10].textContent == "O")
+            if (GetChildNodes(xmldoc.documentElement)[10].textContent == "Y" || GetChildNodes(xmldoc.documentElement)[10].textContent == "O") {
                 pHasOpinionYN = "Y";
+            }
 
             tempSecurity = getNodeText(GetChildNodes(xmldoc.documentElement)[19]);
             tempKeep = getNodeText(GetChildNodes(xmldoc.documentElement)[20]);
