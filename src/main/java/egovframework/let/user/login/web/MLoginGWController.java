@@ -1019,10 +1019,12 @@ public class MLoginGWController {
 			}
 
 			// 로그인 정보 저장을 위한 값 처리
+			// 2021-12-28 이사라 : 세션ID를 세션코드로 입력
 			String mIp = request.getHeader("ip");
 			String mAgent = request.getHeader("agent");
 			String mBrowser = request.getHeader("browser");
 			String mOs = request.getHeader("os");
+			String mSessionCode = request.getHeader("mSessionId");
 
 			if (mIp == null) {
 				mIp = ClientUtil.getClientIP(request);
@@ -1040,16 +1042,17 @@ public class MLoginGWController {
 				mOs = ClientUtil.getClientInfo(request, "os");
 			}
 
+			if (mSessionCode == null) {
+				mSessionCode = request.getSession().getId();
+			}
+			
+			logger.debug("Login info : mIp={}, mBrowser={}, mOs={}, mSessionCode ={}", mIp, mBrowser, mOs, mSessionCode);
+
 			// 1. OTP 성공 혹은 사용하지 않을 때 로그인 성공
 			if (isRightOTP) {
 				// IP Address, 마지막 login시간 저장
 				resultVO.setIp(mIp);
 				loginService.updateUser(resultVO);
-
-				// 2021-12-28 이사라 : 세션ID를 세션코드로 입력
-				String sessionCode = request.getHeader("mSessionId") == null ? ClientUtil.getClientIP(request)
-						: request.getHeader("mSessionId");
-				logger.debug("Login sessionCode = " + sessionCode);
 
 				// 접속 로그정보 저장
 				resultVO.setIp(mIp);
@@ -1058,7 +1061,7 @@ public class MLoginGWController {
 				resultVO.setBrowser(mBrowser);
 				resultVO.setTenantId(tenantId);
 				resultVO.setStatus("Y");
-				resultVO.setSessionCode(sessionCode);
+				resultVO.setSessionCode(mSessionCode);
 
 				if (resultVO.getTitle2() == null) {
 					resultVO.setTitle2("");
@@ -1325,7 +1328,6 @@ public class MLoginGWController {
 		return TOTP.getOTP(hexKey);
 	}
 
-    // 
     /**
   	 * 모바일 G/W 사용자 [GET] 로그아웃
   	 * 2021-12-27 이사라  
@@ -1341,7 +1343,7 @@ public class MLoginGWController {
 		LoginVO loginVO = new LoginVO ();
       	
       	try {
-      		if (mSessionId == null || mSessionId.equals("")) {
+      		if (StringUtils.isBlank(mSessionId)) {
       			logger.debug("invalid mSessionId= " + mSessionId);
       			
       			result.put("status", "error");
@@ -1359,7 +1361,7 @@ public class MLoginGWController {
       		
            	result.put("status", "ok");
   			result.put("code", "0");			
-  			result.put("data", "logout success");
+  			result.put("data", "success");
   			
       		return result;
       		
