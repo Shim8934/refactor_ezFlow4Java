@@ -2658,39 +2658,72 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 </select>
 
 <!-- 커뮤니티 포틀릿 -->
+<!-- 2023-05-19 홍승비 - 커뮤니티 포틀릿 표출 시, 퇴사하지 않은 실제 사용자 수를 기준으로 DESC 정렬하도록 수정 -->
 <select id="ezNewPortal.getCommunityList" parameterClass="Map" resultClass="CommunityMyCommunityVO"  remapResults="true">
 <![CDATA[
-SELECT
-	C_CLUBNAME,
-	C_CLUBNO,
-	C_CLUBGUBUN,
-	C_CLUBDESC,
-	C_LOGO_THUMBNAIL,
-	C_MEMBERCNT,
-	C_CLUBCONFIRMTYPE
-FROM (
 	SELECT
-		INFO.*, ROWNUM AS RNUM
-	FROM (
-			SELECT (SUBSTR(C_CLUBNAME$v_LANG$, 1, 18)) AS C_CLUBNAME,
-				   C_CLUBNO,
-				   C_CLUBGUBUN,
-				   C_CLUBDESC,
-				   C_LOGO_THUMBNAIL,
-				   C_MEMBERCNT,
-				   C_CLUBCONFIRMTYPE
-			  FROM TBL_C_CLUB A
-			  JOIN TBL_USERMASTER B
-			    ON RTRIM(A.C_SYSOPID) = RTRIM(B.CN)
-			   AND A.TENANT_ID = B.TENANT_ID
-			 WHERE C_ADMINCONFIRM = 'Y'
-			   AND A.COMPANYID = #companyId#
-			   AND A.TENANT_ID = #tenantId#
-			 ORDER BY C_MEMBERCNT DESC
-		) INFO
-	) P
- WHERE
- 	P.RNUM <= 3
+		C_CLUBNAME,
+		C_CLUBNO,
+		C_CLUBGUBUN,
+		C_CLUBDESC,
+		C_LOGO_THUMBNAIL,
+		C_MEMBERCNT,
+		C_CLUBCONFIRMTYPE
+	FROM
+		(SELECT
+			INFO.*, ROWNUM AS RNUM
+		FROM
+			(SELECT
+				SUBSTR(C_CLUBNAME$v_LANG$, 1, 18) AS C_CLUBNAME,
+				A.C_CLUBNO,
+				C_CLUBGUBUN,
+				C_CLUBDESC,
+				C_LOGO_THUMBNAIL,
+				C_REALUSERCNT AS C_MEMBERCNT,
+				C_CLUBCONFIRMTYPE
+			FROM
+				TBL_C_CLUB A
+			JOIN
+				TBL_USERMASTER B
+			ON
+				RTRIM(A.C_SYSOPID) = RTRIM(B.CN)
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			INNER JOIN
+				(SELECT
+					CU.C_CLUBNO,
+					NVL(COUNT(CU.C_ID), 0) AS C_REALUSERCNT,
+					CU.TENANT_ID
+				FROM
+					TBL_C_CLUBUSER CU
+				INNER JOIN
+					TBL_USERMASTER UM
+				ON
+					RTRIM(UM.CN) = RTRIM(CU.C_ID)
+				AND
+					CU.TENANT_ID = UM.TENANT_ID
+				WHERE
+					PERMIT <> 0
+				AND
+					CU.TENANT_ID = #tenantId#
+				GROUP BY
+					CU.C_CLUBNO, CU.TENANT_ID) REALCNT
+			ON
+				A.C_CLUBNO = REALCNT.C_CLUBNO
+			AND
+				A.TENANT_ID = REALCNT.TENANT_ID
+			WHERE
+				C_ADMINCONFIRM = 'Y'
+			AND
+				A.COMPANYID = #companyId#
+			AND
+				A.TENANT_ID = #tenantId#
+			ORDER BY
+				C_REALUSERCNT DESC
+			) INFO
+		) P
+	WHERE
+		P.RNUM <= 3
 ]]>
 </select>
 
