@@ -588,7 +588,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 
 		logger.debug("mail_interuploadX_Server ended");
-		if (pBigFileUpload == "Y") {
+
+		// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		if ("Y".equalsIgnoreCase(pBigFileUpload)) {
 			return pDate + "|!|" + copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
 		} else {
 			return copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
