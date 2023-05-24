@@ -1280,6 +1280,8 @@ public class CommonUtil {
 			returnValue = "ja";
 		} else if (langNum.equals("4")) {
 			returnValue = "zh";
+		} else if (langNum.equals("6")) {
+			returnValue = "id";
 		} else {
 			logger.error("Invalid langNum.");
 		}
@@ -1306,6 +1308,8 @@ public class CommonUtil {
 			returnValue = "3";
 //		} else if (twoLetterLang.equalsIgnoreCase("zh")) {
 //			returnValue = "4";
+		} else if (twoLetterLang.equalsIgnoreCase("id")) {
+			returnValue = "6";
 		} else {
 			logger.error("Invalid twoLetterLang.");
 		}
