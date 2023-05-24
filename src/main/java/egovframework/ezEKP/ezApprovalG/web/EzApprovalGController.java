@@ -5770,8 +5770,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String realPath = commonUtil.getRealPath(request);
 		String docID = xmlDom.getElementsByTagName("PDOCID").item(0).getTextContent().trim();
-		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent().replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "").replaceAll("\\t", " ");
+		String zipFileName = xmlDom.getElementsByTagName("PTITLE").item(0).getTextContent().replaceAll("\\t", " ");
 		String separators = "\\|\\|\\|";
 		String[] fileTypes = xmlDom.getElementsByTagName("PTYPEINFO").item(0).getTextContent().split(separators);
 		String[] filePaths = xmlDom.getElementsByTagName("PPATHINFO").item(0).getTextContent().split(separators);

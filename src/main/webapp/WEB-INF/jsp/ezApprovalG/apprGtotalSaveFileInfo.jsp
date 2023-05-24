@@ -204,18 +204,21 @@
 	        var strFileName = "";
 	        function CheckBoxClick(obj)
 	        {
+	        	/* 2023-05-23 김우철 - 파일명에 사용할 수 없는 특수문자를 "_" 문자로 치환 (타 모듈과 파일명 특수문자 처리 통일) */
+	        	var filename = GetAttribute(obj, "data2").replace(/[*|\\\":\/?<>]/gi, "_");
 	            document.getElementById('cbx_all').checked = false;
+	            
 	            if (obj.checked) {
 	                obj.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
 	                strPathInfo = strPathInfo + obj.value + "|||";
 	                strTypeInfo = strTypeInfo + GetAttribute(obj, "data1") + "|||";
-	                strFileName = strFileName + GetAttribute(obj, "data2") + "|||";
+	                strFileName = strFileName + filename + "|||";
 	            }
 	            else {
 	                obj.parentElement.parentElement.style.backgroundColor = "#FFFFFF";
 	                strPathInfo = strPathInfo.replace(obj.value + "|||", '');
 	                strTypeInfo = strTypeInfo.replace(GetAttribute(obj, "data1") + "|||", '');
-	                strFileName = strFileName.replace(GetAttribute(obj, "data2") + "|||", '');
+	                strFileName = strFileName.replace(filename + "|||", '');
 	            }
 	        }
 	        
@@ -230,18 +233,19 @@
                 
 	            if (obj.checked) {
 	                for (var i = 0; i < count ; i++) {
-	
+						var filename = GetAttribute(document.getElementById('chk_' + i), "data2").replace(/[*|\\\":\/?<>]/gi, "_");
 	                    document.getElementById('chk_' + i).checked = true;
-	                    if (CrossYN())
+	                    
+	                    if (CrossYN()) {
 	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "#f1f8ff";
-	                    else {
+	                    } else {
 	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#f1f8ff";
 	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#f1f8ff";
 	                    }
 	
 	                    strPathInfo += document.getElementById('chk_' + i).value + "|||";
 	                    strTypeInfo += GetAttribute(document.getElementById('chk_' + i), "data1") + "|||";
-	                    strFileName += GetAttribute(document.getElementById('chk_' + i), "data2") + "|||";
+	                    strFileName += filename + "|||";
 	                }
 	            }
 	            else {
@@ -325,7 +329,8 @@
 	        		alert(strLangKWCHd01);
 	        		return;
 	        	}
-	        		
+	        	
+				var filename = GetAttribute(obj, "data2").replace(/[*|\\\":\/?<>]/gi, "_");
 	        	var doc = HwpCtrl.Open(window.location.origin + obj.getAttribute("FILEPATH"), "HWP", "", function(res) {
            			// console.log("res : " + JSON.stringify(res));
            			if (res.result) {
@@ -345,7 +350,7 @@
 						
 						var rtn = dact.Execute(dset, function(action, param, result, userData) {
 							// 배포용 문서는 웹한글기안기 서버 상에 저장되며, result.downloadUrl에는 웹한글기안기 서버에서 해당 파일을 다운로드하기 위한 URL이 리턴됨
-		  					document.getElementById("AttachDownFrame").src = "/ezApprovalG/downloadHwpDbClick.do?fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&downloadUrl=" + result.downloadUrl;
+		  					document.getElementById("AttachDownFrame").src = "/ezApprovalG/downloadHwpDbClick.do?fileName=" + encodeURIComponent(filename + "." + pSourcePath) + "&docID=" + pDocID_mht + "&downloadUrl=" + result.downloadUrl;
 						});
 					} else {
 						alert(strLangKWCHd01);
@@ -362,7 +367,7 @@
 	            
 				var xmlstring = "<DATA>";
 				xmlstring += "<PDOCID>" + pDocID + "</PDOCID>";
-				xmlstring += "<PTITLE><![CDATA[" + ReplaceText(document.getElementById('spn_title').innerText, "\n", "") + "]]></PTITLE>";
+				xmlstring += "<PTITLE><![CDATA[" + ReplaceText(document.getElementById('spn_title').innerText, "\n", "").replace(/[*|\\\":\/?<>]/gi, "_") + "]]></PTITLE>";
 				xmlstring += "<PTYPEINFO><![CDATA[" + strTypeInfo + "]]></PTYPEINFO>";
 				xmlstring += "<PPATHINFO><![CDATA[" + strPathInfo.replace("&amp;", "&") + "]]></PPATHINFO>";
 				xmlstring += "<PFILEINFO><![CDATA[" + ReplaceText(strFileName, "\n", "") + "]]></PFILEINFO>";
