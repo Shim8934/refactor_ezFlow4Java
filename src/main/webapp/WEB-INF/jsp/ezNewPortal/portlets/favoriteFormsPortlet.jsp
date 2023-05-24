@@ -13,7 +13,7 @@
 	<article class="box_shadow">
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet">
-				<!-- portalMain에서 타이틀 넣어주는게 나을꺼같은데 -->
+				<%-- portalMain에서 타이틀을 넣어주는 것이 더 나을 수 있음 --%>
 				<dt class="portletText"><c:out value = "${portletName}" /></dt>
 				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
 			</dl>
@@ -55,9 +55,7 @@
 		</div>
 	</article>
 		<script type="text/javascript">
-		//개똥이라 수정해야함 긁고 붙이고해서 돌아가게만 해놓음
-		
-			//즐겨찾기양식목록 조회
+			// 즐겨찾기 양식목록 조회
 			var getFavoriteForms = function() {
 				var request = new XMLHttpRequest();
 				request.open('GET', '/ezNewPortal/getFavoriteForms.do', true);
@@ -104,7 +102,7 @@
 				request.send();
 			}
 			
-			//결제통계 조회
+			// 결재통계 조회
 			var getApprovalStatistics = function() {
 				var request = new XMLHttpRequest();
 				request.open('GET', '/ezNewPortal/getApprovalStatistics.do', true);
@@ -177,12 +175,14 @@
 		        }
 		    }
 		    
-		    //2018-09-18 구해안 팝업창 가져오기 위해 OpenInformationUI 함수 복붙
+		    // 2018-09-18 구해안 - 팝업창 가져오기 위해 OpenInformationUI 함수 복붙
 		    var ezapropinion_cross_dialogArguments = new Array();
 		    function OpenInformationUI(pInformationContent, CompleteFunction, type, type2, formURL, formDocType) {
 			var parameter = pInformationContent;
 		    var url = "/ezApprovalG/ezAprOpinion.do";
-		    if (CrossYN() && (CompleteFunction != "")) { // 크롬에서 반송문서 대장등록 할수있게 하기위해  CompleteFunction != "" 추가 2018-08-07 강민수92
+		    
+			// 2018-08-07 강민수92 - 크롬에서 반송문서 대장등록 할수있게 하기위해  CompleteFunction != "" 추가
+		    if (CrossYN() && (CompleteFunction != "")) {
 		        ezapropinion_cross_dialogArguments[0] = parameter;
 		        if (type == undefined && CompleteFunction != undefined) {
 		            ezapropinion_cross_dialogArguments[1] = CompleteFunction;
@@ -281,7 +281,7 @@
 		        window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);
 		    }
 			
-		    //이거 뭔가 되게 이상한거같은데
+		    // 부재자 설정 체크 로직
 			var checkBujaeInfo = function (type, formURL, formDocType) {
 				var BString = "${buJaeInfo}";
 				
@@ -350,7 +350,7 @@
 		    	});
 		    }
 		    
-		    //로드되고나서
+		    // 로드 이후 동작
 		    document.getElementById('fraviteFormsPlus').addEventListener('click', fraviteFormsPlus);
 			getFavoriteForms();
 			getApprovalStatistics();
