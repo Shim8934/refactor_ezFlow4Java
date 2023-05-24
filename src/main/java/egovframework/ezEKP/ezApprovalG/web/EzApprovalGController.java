@@ -6171,11 +6171,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docId = request.getParameter("docId");
 		String hesongFlag = request.getParameter("hesongFlag");
 		
-		if (docId != null && docId != "undefined") {
+		// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		if (StringUtils.isNotBlank(docId) && "undefined".equalsIgnoreCase(docId)) {
 			model.addAttribute("regDocId", docId);
 		}
 		
-		if (hesongFlag != null && hesongFlag != "undefined") {
+		if (StringUtils.isNotBlank(hesongFlag) && "undefined".equalsIgnoreCase(hesongFlag)) {
 			model.addAttribute("hesongFlag", hesongFlag);
 		}
 		
@@ -10437,11 +10438,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String ipAddress = request.getLocalAddr(); 
 		
 		String deleteResult = ezApprovalGService.deleteCapInfo(cabinetID, userInfo.getCompanyID(), userInfo.getTenantId());
-		if (!(deleteResult=="TRUE")) {
+		
+		// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		// 표준에서는 삭제버튼을 숨김처리하여 사용하지 않고 있음
+		// 이 기능을 살리기 위해서는 ezApprovalGService.deleteCapInfo, insertDelCapInfo 내의 코드도 수정이 필요 함
+		// 우선 사용하지 않고 있어서 단순 문자열 비교만 처리 함
+		if (!"TRUE".equalsIgnoreCase(deleteResult)) {
 			logger.debug("error");
 		}
 		String insertResult = ezApprovalGService.insertDelCapInfo(cabinetID, userInfo.getId(), ipAddress, userInfo.getCompanyID(), userInfo.getTenantId());
-		if (!(deleteResult=="TRUE" && insertResult=="TRUE")) {
+		if (!("TRUE".equalsIgnoreCase(deleteResult) && "TRUE".equalsIgnoreCase(insertResult))) {
 			logger.debug("error");
 		}
 		

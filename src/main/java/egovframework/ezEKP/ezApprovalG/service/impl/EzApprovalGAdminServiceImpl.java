@@ -34,6 +34,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -1949,7 +1950,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);
 		map1.put("approvalFlag", approvalFlag);
-		map1.put("v_CODELANG", lang == "1" ? "" : lang);
+		//map1.put("v_CODELANG", lang == "1" ? "" : lang); // 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정 - 쿼리에서 사용하지 않음으로 주석처리
 		
 		logger.debug("aprType=" + aprType);
 		List<ApprGAprLineVO> list = ezApprovalGAdminDAO.getUserDocCount(map1);
@@ -2314,7 +2315,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map3.put("companyID", companyID);
 			map3.put("tenantID", tenantID);
 				
-			if (deptList != "") {
+			if (StringUtils.isNotBlank(deptList)) { // 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
 				for(String deptID : deptList.split(";")) {
 					map3.put("deptID", deptID);
 					map3.put("tenantID", tenantID);

@@ -19621,11 +19621,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		if (title != null && title != "") {
+		if (StringUtils.isNotBlank(title)) { // 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
 			title = commonUtil.htmlUnescape(title);
 		}
 		
-		if (summary != null && summary != "") {
+		if (StringUtils.isNotBlank(summary)) { // 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
 			summary = commonUtil.htmlUnescape(summary);
 		}
 		
@@ -27452,9 +27452,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String href = ezApprovalGDAO.getDocInfoHref(map);
 		
-		if(href != "") {
+		// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		if(StringUtils.isNoneBlank(href)) {
 			extFileName = getExtendedFileName(href);
-			docNo = (lang == "1" ? deptName : deptName2 + "-" + docSN);
+			docNo = ("1".equalsIgnoreCase(lang) ? deptName : deptName2 + "-" + docSN);
 			docNumCode = deptID +  getNDigitNum(docSN, 6);
 			newDocID = getNewID(companyID, tenantID);
 		}
@@ -27688,21 +27689,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						fontSize = spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";",spanStyle.indexOf("font-size"))+1);
 					}
 				}
-			     // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+			    // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+				// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
                 if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("body")) {
-                    if (fontFamily != "") {
+                    if (StringUtils.isNotBlank(fontFamily)) {
                         strStyle = "font-family:" + fontFamily;
                     }
 
-                    if (fontSize != "") {
-                        if (strStyle != "") {
+                    if (StringUtils.isNotBlank(fontSize)) {
+                        if (StringUtils.isNotBlank(strStyle)) {
                             strStyle += ";";
                         }
 
                         strStyle = "font-size:" + fontSize;
                     }
 
-                    if (strStyle != "") {
+                    if (StringUtils.isNotBlank(strStyle)) {
                         strInnerHtml = "<p style=\"" + strStyle + "\">" + strInnerHtml + "</p>";
                     } else {
                         strInnerHtml = "<p>" + strInnerHtml + "</p>";
@@ -28193,21 +28195,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						fontSize = spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";",spanStyle.indexOf("font-size"))+1);
 					}
 				}
-			     // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+			    // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+				// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
                 if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("body")) {
-                    if (fontFamily != "") {
+                    if (StringUtils.isNotBlank(fontFamily)) {
                         strStyle = "font-family:" + fontFamily;
                     }
 
-                    if (fontSize != "") {
-                        if (strStyle != "") {
+                    if (StringUtils.isNotBlank(fontSize)) {
+                        if (StringUtils.isNotBlank(strStyle)) {
                             strStyle += ";";
                         }
 
                         strStyle = "font-size:" + fontSize;
                     }
 
-                    if (strStyle != "") {
+                    if (StringUtils.isNotBlank(strStyle)) {
                         strInnerHtml = "<p style=\"" + strStyle + "\">" + strInnerHtml + "</p>";
                     } else {
                         strInnerHtml = "<p>" + strInnerHtml + "</p>";

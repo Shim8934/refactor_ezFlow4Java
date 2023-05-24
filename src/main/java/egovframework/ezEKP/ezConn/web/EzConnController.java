@@ -558,7 +558,18 @@ public class EzConnController {
 							user.setStatus("Y");
 							
 							// sso 접속시에도 로그인 이력 남도록 추가 
-							loginService.insertLog(user);
+							// 2023-05-23 이사라 - 로그인 정보 저장
+							if (commonUtil.isLoginCookieExists(request, response)) {
+								Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+								String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+
+								if (!decryptedLoginCookie.split("///")[1].equals(userId)) {
+									commonUtil.updateLoginInfo(request, user);
+								}
+
+							} else {
+								commonUtil.updateLoginInfo(request, user);
+							}
 														
 							loginController.createLoginCookie(user.getId(), "", "", tenantId, request, response, user.getDeptID(), user.getCompanyID());
 						
