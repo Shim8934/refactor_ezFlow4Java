@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -230,7 +231,8 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
 		if(strAccessFlag.equals("0")) {
 			String jobs = getAddJob(pUserID, tenantID);
 			String jobss = "";
-			if(jobs != null && jobs != ""){ //겸직정보가있으면 
+
+			if(StringUtils.isNotEmpty(jobs)){ //겸직정보가있으면 
 				if("".equals(jobs)) {
 					jobss = "'"+pUserID+"','"+pDeptID+"','everyone'";
 				}
@@ -249,6 +251,7 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
 				jobss = "'"+pUserID+"','"+pDeptID+"','everyone'";
 			}
 			carGetAdmSubClsTree = getAdmSubClsTreeUser(strParentID, strCompanyID, strTreeType, tenantID, userAdminFlag, pUserID, pDeptID, jobss);
+
 		} else {
 			carGetAdmSubClsTree = getSubClsTree(strParentID, strCompanyID, strTreeType, strUserID, pComID, pDeptID, pUserID, tenantID);
 		}

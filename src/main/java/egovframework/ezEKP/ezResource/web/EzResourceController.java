@@ -356,9 +356,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 			
 			// 시분초 버림.
-			if(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent() == null || xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent() == "") {
+			// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
+			if(StringUtils.isEmpty(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent())) {
 				return "";
-			} else if(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent() == null || xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent() == "") {
+			} else if(StringUtils.isEmpty(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent())) {
 				return "";
 			}
 			

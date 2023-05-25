@@ -1212,7 +1212,6 @@ public class EzCarController extends EgovFileMngUtil {
 			
 			int count = Math.subtractExact(Integer.parseInt(request.getParameter("count")), 1);
 			
-			
 			String[] sdatepicker = request.getParameterValues("Sdatepicker");
 			String[] stimepicker = request.getParameterValues("Stimepicker");
 			String[] etimepicker = request.getParameterValues("Etimepicker");
@@ -1229,10 +1228,7 @@ public class EzCarController extends EgovFileMngUtil {
 			String[] adistancework = request.getParameterValues("adistancework");
 			String[] adistanceetc = request.getParameterValues("adistanceetc");
 			
-
-			
 			ArrayList<String> control = new ArrayList<String>();
-		
 			
 			String indexing = request.getParameter("indexing"); //'1,11,'
 			String index[] = indexing.split(",");	//[1,11]
@@ -1240,7 +1236,6 @@ public class EzCarController extends EgovFileMngUtil {
 			for(int i=0; i<count; i++){
 				control.add(request.getParameter("control_"+index[i]));
 			}
-		
 			
 			String[] controla = new String[count];
 			
@@ -1258,7 +1253,7 @@ public class EzCarController extends EgovFileMngUtil {
 						controla[j] = "0";
 					}
 				
-					if(sdatepicker[j]!=""){
+					if(StringUtils.isNotEmpty(sdatepicker[j])){
 						ezCarService.addCarForm(userInfo.getCompanyID(), userInfo.getId(), userInfo.getTenantId(),commonUtil.getTodayUTCTime("yyyy-MM-dd"),carID, car_form_id, 
 						sdatepicker[j],stimepicker[j],etimepicker[j], driverdeptname[j], dirvername[j], s2timepicker[j], bdistance[j], drivepurpose[j], 
 						drivepoint[j],s3timepicker[j],adistance[j],adistanceauto[j], adistancecommute[j], adistancework[j],adistanceetc[j],j, controla[j]);
@@ -1473,7 +1468,7 @@ public class EzCarController extends EgovFileMngUtil {
 						controla[j] = "0";
 					}
 				
-				if(sdatepicker[j]!=""){
+				if(StringUtils.isNotEmpty(sdatepicker[j])){
 					ezCarService.addCarForm(userInfo.getCompanyID(), register_id, userInfo.getTenantId(),register_date,carID, car_form_id, 
 							sdatepicker[j],stimepicker[j],etimepicker[j], driverdeptname[j], dirvername[j], s2timepicker[j], bdistance[j], drivepurpose[j], 
 							drivepoint[j],s3timepicker[j],adistance[j],adistanceauto[j], adistancecommute[j], adistancework[j],adistanceetc[j],j, controla[j]);

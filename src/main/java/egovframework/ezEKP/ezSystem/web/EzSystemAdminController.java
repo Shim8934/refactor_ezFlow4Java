@@ -457,7 +457,8 @@ public class EzSystemAdminController {
 				countryName = "?";
 			}
 			
-			if (countryName != "?") {
+			// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
+			if (!"?".equals(countryName)) {
 				Locale localeCountry = new Locale(systemCountryName, countryCode);
 				countryName = localeCountry.getDisplayCountry(localeCountry);
 				countryName = countryName.replaceAll(" ", "");
@@ -622,7 +623,8 @@ public class EzSystemAdminController {
 				countryName = "?";
 			}
 			
-			if (countryName != "?") {
+			// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
+			if (!"?".equals(countryName)) {
 				Locale localeCountry = new Locale(systemCountryName, countryCode);
 				countryName = localeCountry.getDisplayCountry(localeCountry);
 				countryName = countryName.replaceAll(" ", "");
@@ -815,7 +817,7 @@ public class EzSystemAdminController {
 				countryName = "?";
 			}
 			
-			if (countryName != "?") {
+			if (!"?".equals(countryName)) {
 				Locale localeCountry = new Locale(systemCountryName, countryCode);
 				countryName = localeCountry.getDisplayCountry(localeCountry);
 				countryName = countryName.replaceAll(" ", "");
@@ -2056,7 +2058,7 @@ public class EzSystemAdminController {
 				countryName = "?";
 			}
 			
-			if (countryName != "?") {
+			if (!"?".equals(countryName)) {
 				Locale localeCountry = new Locale(systemCountryName, countryCode);
 				countryName = localeCountry.getDisplayCountry(localeCountry);
 				countryName = countryName.replaceAll(" ", "");
@@ -2235,7 +2237,7 @@ public class EzSystemAdminController {
 				countryName = "?";
 			}
 			
-			if (countryName != "?") {
+			if (!"?".equals(countryName)) {
 				Locale localeCountry = new Locale(systemCountryName, countryCode);
 				countryName = localeCountry.getDisplayCountry(localeCountry);
 				countryName = countryName.replaceAll(" ", "");
@@ -2439,7 +2441,7 @@ public class EzSystemAdminController {
 				countryName = "?";
 			}
 
-			if (countryName != "?") {
+			if (!"?".equals(countryName)) {
 				Locale localeCountry = new Locale(systemCountryName, countryCode);
 				countryName = localeCountry.getDisplayCountry(localeCountry);
 				countryName = countryName.replaceAll(" ", "");
@@ -2612,7 +2614,7 @@ public class EzSystemAdminController {
 				countryName = "?";
 			}
 
-			if (countryName != "?") {
+			if (!"?".equals(countryName)) {
 				Locale localeCountry = new Locale(systemCountryName, countryCode);
 				countryName = localeCountry.getDisplayCountry(localeCountry);
 				countryName = countryName.replaceAll(" ", "");

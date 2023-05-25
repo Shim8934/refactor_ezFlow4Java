@@ -2780,7 +2780,8 @@ public class EzPMSGWController {
 				}
 			}
 
-			if (groupId != originGroupId) {
+			// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
+			if (groupId.equals(originGroupId)) {
 				ezPMSService.updateGroupLatestInfo(Long.parseLong(projectId), groupId, tenantId, lang);
 				ezPMSService.updateGroupLatestInfo(Long.parseLong(projectId), originGroupId, tenantId, lang);
 			}
@@ -3809,15 +3810,13 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/weight", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateTaskWeight(@PathVariable String taskId,
 			HttpServletRequest request) throws Exception {
-		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId
-				+ "/weight] started.");
+		logger.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/{}/weight] started.", taskId);
 
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName,
-					request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 
 			ProjectTaskVO taskVO = new ProjectTaskVO();
 			taskVO.setTaskId(Long.parseLong(taskId));
@@ -3826,11 +3825,9 @@ public class EzPMSGWController {
 					.getParameter("projectId")));
 			taskVO.setWeight(Float.parseFloat(request.getParameter("weight")));
 
-			String groupId = request.getParameter("groupId") != "" ? request
-					.getParameter("groupId") : "";
-			if (!groupId.equals("")) {
-				taskVO.setGroupId(Long.parseLong(request
-						.getParameter("groupId")));
+			String groupId = StringUtils.isNotEmpty(request.getParameter("groupId")) ? request.getParameter("groupId") : "";
+			if (!"".equals(groupId)) {
+				taskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
 			} else {
 				taskVO.setGroupId(0L);
 			}
@@ -3872,16 +3869,13 @@ public class EzPMSGWController {
 
 			ProjectTaskVO taskVO = new ProjectTaskVO();
 
-			float realProgress = Float.parseFloat(request
-					.getParameter("progress"));
+			float realProgress = Float.parseFloat(request.getParameter("progress"));
 			taskVO.setTaskId(Long.parseLong(taskId));
 			taskVO.setProjectId(projectId);
 
-			String groupId = request.getParameter("groupId") != "" ? request
-					.getParameter("groupId") : "";
+			String groupId = StringUtils.isNotEmpty(request.getParameter("groupId")) ? request.getParameter("groupId") : "";
 			if (!groupId.equals("")) {
-				taskVO.setGroupId(Long.parseLong(request
-						.getParameter("groupId")));
+				taskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
 			} else {
 				taskVO.setGroupId(0L);
 			}

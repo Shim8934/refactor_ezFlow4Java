@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -351,7 +352,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("isuse", isuse);
 		map.put("isAdmin", isAdmin);
 		map.put("statistics", statistics);
-		map.put("typeIdArr", (typeIdArr != "" ? typeIdArr.split(",") : ""));
+		map.put("typeIdArr", (!"".equalsIgnoreCase(typeIdArr) ? typeIdArr.split(",") : ""));
 		if (primary.equals("1")) {
 			primary = "";
 		}
@@ -1112,7 +1113,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
-		map.put("listSize", listSize == "" ? "" : Integer.parseInt(listSize));
+		map.put("listSize", StringUtils.isBlank(listSize) ? 0 : Integer.parseInt(listSize));
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -2078,7 +2079,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
-		map.put("listSize", listSize == "" ? "" : Integer.parseInt(listSize));
+		map.put("listSize", StringUtils.isBlank(listSize) ? 0 : Integer.parseInt(listSize));
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -2708,7 +2709,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		if (pageNum != null && pageNum != "") {
+		if (StringUtils.isNotBlank(pageNum)) {
 			int limit = 0;
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
 			map.put("limit", limit);
@@ -2721,7 +2722,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
-		map.put("listSize", listSize == "" ? "" : Integer.parseInt(listSize));
+		map.put("listSize", StringUtils.isBlank(listSize) ? 0 : Integer.parseInt(listSize));
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);

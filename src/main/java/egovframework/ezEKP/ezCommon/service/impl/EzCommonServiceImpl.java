@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -2562,7 +2563,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		JSONObject resultJson = new JSONObject();
 		String downloadDIR = "";
-		if (param == ""){
+
+		// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		if (StringUtils.isNotBlank(param)){
 			param = "upload_mail.ROOT";
 		} else if(param.equals("BOARD")){
 			param = "upload_board.ROOT";

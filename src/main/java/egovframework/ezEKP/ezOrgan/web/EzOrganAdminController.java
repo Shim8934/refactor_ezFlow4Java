@@ -965,7 +965,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			if (!parentCompanyId.isEmpty()) {
 				String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), parentCompanyId, "DomainName");
-				companyDomainName = selectDomain != "" ? selectDomain : companyDomainName;
+				companyDomainName = StringUtils.isNotEmpty(selectDomain) ? selectDomain : companyDomainName;
 				String tenantDomain = originalMailAddr.split("@")[1];
 				logger.debug("companyDomainName=" + companyDomainName + ", tenantDomain=" + tenantDomain);
 	
@@ -4707,7 +4707,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			List<String> memberList = new ArrayList<String>();
 			
 			// 추가
-			if (groupID == null || groupID == "") {
+			// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
+			if (StringUtils.isNotEmpty(groupID)) {
 			
 				int userCheck = 1;
 				

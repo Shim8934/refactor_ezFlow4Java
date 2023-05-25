@@ -4043,7 +4043,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		
 		// 한 페이지에 출력되는 리스트 갯수
 		// default : 10
-		if(automax!= ""){
+		if(StringUtils.isNotEmpty(automax)){
 			queryStr.append("&outmax=").append(automax);
 		}
 		
@@ -4119,7 +4119,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			queryStr.append("&csq={view:"+userID+"}");
 		}
 		
-		if(startDate != "" && endDate != "" ) {
+		if(StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
 			
 			String dateRange = "";
 			
@@ -4287,7 +4287,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		json.put("tenant", tenantID);
 		json.put("company", companyID);
 		
-		if(startDate != "" && endDate != "" ) {
+		if(StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
 			String dateRange = (startDate + "~" + endDate).replaceAll("-", "");
 			json.put("d1", dateRange);
 		}
@@ -4338,7 +4338,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		queryStr.append("&base64=n");
 		
 		// outmax : 한 페이지에 출력되는 리스트 갯수 (반환될 검색결과 수) / default : 10
-		if (automax != ""){
+		if (StringUtils.isNotEmpty(automax)){
 			queryStr.append("&outmax=").append(automax);
 		}
 		
@@ -4409,7 +4409,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		queryStr.append(" ^[AND {MEMBERID:" + userID + "}");
 		
 		// 검색기간 (작성일, 완료일) > DB 테이블과 동일하게 UTC 시간으로 검색
-		if (startDate != "" && endDate != "" ) {
+		if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
 			String dateRange = "";
 			
 			startDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", userInfo.getOffset(), true);

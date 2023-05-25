@@ -1358,7 +1358,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_BOARDNAME2", boardName2);
 
 		// 그룹사 게시판일 경우 일괄 삭제
-		if ( companyID == " " ) {
+		// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		if ( " ".equals(companyID)) {
 			ezBoardAdminDAO.deleteAllComTabBoard(map);
 		}
 		

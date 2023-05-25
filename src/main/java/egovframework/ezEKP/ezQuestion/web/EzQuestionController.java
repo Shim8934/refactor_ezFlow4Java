@@ -413,7 +413,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPollItemVO.setItemNo(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")))));
 		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO, userInfo.getTenantId());
 		
-		if(qstUserPollItemVO.getUserID() != userID){
+		if(qstUserPollItemVO.getUserID().equalsIgnoreCase(userID)){
 			qstUserPollItemVO.setReadCnt(qstUserPollItemVO.getReadCnt() + 1);
 			ezQuestionService.updateReadCnt(qstUserPollItemVO, userInfo.getTenantId());
 		}
@@ -806,7 +806,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPollItemVO.setPollEndDate(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false));
 		
 		/** EZSP_UPDATEREADCNT*/
-		if (qstUserPollItemVO.getUserID() != userID){
+		if (qstUserPollItemVO.getUserID().equalsIgnoreCase(userID)){
 			readCnt = readCnt + 1;
 			ezQuestionService.updateReadCnt(qstUserPollItemVO, loginVO.getTenantId());
 		}
