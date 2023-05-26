@@ -1214,7 +1214,7 @@ public class MLoginGWController {
 					mapSSO.put("companyID", resultVO.getCompanyID());
 				}
 
-				if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
+				if ("1".equals(commonUtil.getPrimaryData(lang, tenantId))) {
 					map.put("userName", resultVO.getDisplayName1());
 				} else {
 					map.put("userName", resultVO.getDisplayName2());
@@ -1765,7 +1765,7 @@ public class MLoginGWController {
 					mapSSO.put("companyID", resultVO.getCompanyID());
 				}
 				
-				if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
+				if ("1".equals(commonUtil.getPrimaryData(lang, tenantId))) {
 					map.put("userName", resultVO.getDisplayName1());
 				} else {
 					map.put("userName", resultVO.getDisplayName2());

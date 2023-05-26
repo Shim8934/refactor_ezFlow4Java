@@ -853,7 +853,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 				
 				if (folderVO != null) {
-					if (flag =="delete") {
+
+					// 2023-05-26 이사라 : 시큐어코딩 문자열 비교 오류 수정 - else 부분 코멘트 남김
+					if ("delete".equalsIgnoreCase(flag)) {
 						deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2, flag);
 						List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId(), flag);
 						
@@ -888,6 +890,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					} else {
 						if (!folder.equals("")) {
 							
+							// Commit b6995680e1fa58de107839a8d4fb2fddd5370cc3 : 영구 삭제시 하위폴더 정확히 삭제 되지 않는 문제 해결
+							// 위 커밋은 flag 값이 delete인지 문자열 비교를 하는데 == 를 사용하여 생긴 오류 발생
+							// 이후 리팩토링 시 아래 코드에서 불필요한 부분은 제거해도 좋을 것으로 보여 코멘트 남김
 							if (folderVO != null) {
 								deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2, flag);
 								List<Map<String, String>> subFolders = subFolders(folderVO.getFolderId(), folderVO.getOwnerId(), tenantId);

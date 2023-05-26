@@ -694,7 +694,7 @@ public class EzWebFolderController_y {
 		String adminPage	= jsonObject.get("adminPage") 		== null ? "" : jsonObject.get("adminPage").toString();
 		
 		try {
-			if (folderId == "" && fileId == ""){
+			if (StringUtils.isEmpty(folderId) && StringUtils.isEmpty(fileId)){
 				throw new Exception();
 			}
 			JSONObject jsonObj = new JSONObject();

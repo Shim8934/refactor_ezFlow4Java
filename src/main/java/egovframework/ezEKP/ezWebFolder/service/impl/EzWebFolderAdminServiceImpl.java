@@ -1018,8 +1018,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		// 2020-12-15 김은실 - [카이스트]회사 폴더별 관리자 지원 기능 : 관리자가 권한이 체크되어 폴더복사가 안되는 현상 수정.
 		String userRoll = userInfo.getRollInfo();
 		if(!(userRoll.contains("c=1") || userRoll.contains("k=1") || userRoll.contains("wf=1"))
-			 &&	ezWebFolderService_y.checkPermission(userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 
-				folder.getFolderId(), "D", userInfo.getTenantId()) == "fail"){
+			 && "fail".equalsIgnoreCase(ezWebFolderService_y.checkPermission(userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 
+				folder.getFolderId(), "D", userInfo.getTenantId()))){
 			logger.debug("folder no permission folderId:" + folder.getFolderId());
 			return null;
 		}
@@ -1094,8 +1094,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			for (int i = 0; i < listSubFolder.size(); i++) {
 				FolderVO subFld   = listSubFolder.get(i);
 				
-				if(userCheck.equalsIgnoreCase("user") && ezWebFolderService_y.checkPermission(userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 
-						subFld.getFolderId(), "D", userInfo.getTenantId()) == "fail"){
+				if(userCheck.equalsIgnoreCase("user") && "fail".equalsIgnoreCase(ezWebFolderService_y.checkPermission(userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 
+						subFld.getFolderId(), "D", userInfo.getTenantId()))){
 					logger.debug("subFld no permission folderId:" + subFld.getFolderId());
 					continue;
 				}
@@ -1145,8 +1145,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			for (FileVO file : fileList) {
 				// 2020-12-15 김은실 - [카이스트]회사 폴더별 관리자 지원 기능 : 관리자가 권한이 체크되어 폴더복사가 안되는 현상 수정.
 				String userRoll = userInfo.getRollInfo();
-				if(userCheck.equalsIgnoreCase("user") && ezWebFolderService_y.checkPermission(userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 
-						file.getFileId(), "F", userInfo.getTenantId()) == "fail"){
+				if(userCheck.equalsIgnoreCase("user") && "fail".equalsIgnoreCase(ezWebFolderService_y.checkPermission(userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 
+						file.getFileId(), "F", userInfo.getTenantId()))){
 					logger.debug("file no permission folderId:" + file.getFileId());
 					continue;
 				}

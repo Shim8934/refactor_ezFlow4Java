@@ -1439,7 +1439,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		fileLog.setTenantId(tenantId);
 		fileLog.setFileId(fileVO.getFileId());
 
-		if (version == null || version == ""){
+		if (StringUtils.isEmpty(version)){
 			Map<String, Object> map = new HashMap<>();
 
 			map.put("fileId", fileVO.getFileId());

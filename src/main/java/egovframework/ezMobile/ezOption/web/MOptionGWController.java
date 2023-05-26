@@ -6,6 +6,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 				result.put("code", 1);
 				result.put("data", "");
 			} else {
-				if (opt.getUsePrimaryLangOnly() == null || opt.getUsePrimaryLangOnly().toString() == "") {
+				if (StringUtils.isEmpty(opt.getUsePrimaryLangOnly())) {
 					String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 					opt.setUsePrimaryLangOnly(usePrimaryLangOnly);
 				}

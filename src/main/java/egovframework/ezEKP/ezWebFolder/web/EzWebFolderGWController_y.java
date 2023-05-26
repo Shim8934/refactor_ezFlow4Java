@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1460,7 +1461,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String folderId = jsonObject.get("folderId").toString();
 		String fileId = jsonObject.get("fileId").toString();
 		
-		if(folderId =="" && fileId == ""){
+		if(StringUtils.isEmpty(folderId) && StringUtils.isEmpty(fileId)){
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
 		}
@@ -1472,7 +1473,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String comId = user.getCompanyID();
 			int tenantId = user.getTenantId();	
 			String fileFolderType = "";
-			if (folderId != ""){
+			if (StringUtils.isNotEmpty(folderId)){
 				fileFolderType = "D";
 			} else {
 				folderId = fileId;

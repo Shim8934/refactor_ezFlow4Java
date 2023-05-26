@@ -4047,7 +4047,7 @@ public class EzWebFolderGWController {
 				FolderVO folderVOtemp = ezWebFolderService_y.getFolderDetail(folderIdTemp, userId, userInfo.getTenantId(), userInfo.getCompanyID());
 				Map<String, String> map = new HashMap<>();
 				map.put("folderId", folderVOtemp.getFolderId());
-				map.put("folderName", userInfo.getPrimary() == "1" ? changeString(folderVOtemp.getFolderName1()) : changeString(folderVOtemp.getFolderName2()));
+				map.put("folderName", "1".equals(userInfo.getPrimary()) ? changeString(folderVOtemp.getFolderName1()) : changeString(folderVOtemp.getFolderName2()));
 				folderNameList.add(map);
 			}
 
