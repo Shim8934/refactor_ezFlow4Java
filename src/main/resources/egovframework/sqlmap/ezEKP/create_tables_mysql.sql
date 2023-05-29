@@ -16,48 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `approvconnscmc`
---
-
-DROP TABLE IF EXISTS `approvconnscmc`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `approvconnscmc` (
-  `MIS_KEY` varchar(64) DEFAULT NULL,
-  `DOCID` char(20) DEFAULT NULL,
-  `EMP_CD` varchar(20) DEFAULT NULL,
-  `FORM_ID` varchar(10) DEFAULT NULL,
-  `STATUS` char(3) DEFAULT NULL,
-  `DRAFTDATE` datetime DEFAULT NULL,
-  `ERRYN` char(1) DEFAULT NULL,
-  `ERRMSG` varchar(2048) DEFAULT NULL,
-  `ERRSYS` varchar(10) DEFAULT NULL,
-  `SYS_TYPE` varchar(10) DEFAULT NULL,
-  `PREDOCID` char(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `approvconnscsc`
---
-
-DROP TABLE IF EXISTS `approvconnscsc`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `approvconnscsc` (
-  `index_id` varchar(32) NOT NULL,
-  `docid` char(20) DEFAULT NULL,
-  `writerid` varchar(100) DEFAULT NULL,
-  `formid` varchar(10) DEFAULT NULL,
-  `docstate` char(3) DEFAULT NULL,
-  `draftdate` datetime DEFAULT NULL,
-  `connhtml` longtext DEFAULT NULL,
-  `conntitle` varchar(200) DEFAULT NULL,
-  `docno` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `james_domain`
 --
 
@@ -111,26 +69,6 @@ DROP TABLE IF EXISTS `james_mail_blob`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `james_mail_blob` (
-  `MAIL_BLOB_ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `MAIL_BYTES` longblob NOT NULL,
-  `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `HEADER_BYTES` mediumblob NOT NULL,
-  `MAILBOX_ID` bigint(20) DEFAULT NULL,
-  `MAIL_UID` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`MAIL_BLOB_ID`),
-  KEY `INDEX_MESSAGE_BLOB_MSG_ID` (`MAIL_BLOB_ID`),
-  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `james_mail_blob_new`
---
-
-DROP TABLE IF EXISTS `james_mail_blob_new`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `james_mail_blob_new` (
   `MAIL_BLOB_ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `MAIL_BYTES` longblob NOT NULL,
   `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,

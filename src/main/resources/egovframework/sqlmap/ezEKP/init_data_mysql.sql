@@ -13,25 +13,6 @@
 INSERT INTO `james_recipient_rewrite` (`DOMAIN_NAME`,`USER_NAME`,`TARGET_ADDRESS`) VALUES ('jtest.kaoni.com','Top','');
 INSERT IGNORE INTO `james_domain` (`DOMAIN_NAME`) VALUES ('jtest.kaoni.com');
 INSERT INTO `james_user` (`USER_NAME`,`PASSWORD_HASH_ALGORITHM`,`PASSWORD`,`version`) VALUES ('masteradmin@jtest.kaoni.com','SHA-256','9bb8ec42d9b552a9be9f9d47d34c1c89039e426f6b95aad9c43d30b8cf505425',1);
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'ExpirePassPeriod','0');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'BigSizeMailAttachDelDay','14');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'BigSizeMailAttachLimit','10');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'DomainName','jtest.kaoni.com');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'IS_READ_DELETE','NO');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LangSecondary1','영문');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LangSecondary2','English');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LangSecondary3','英語');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LangSecondary4','英语');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'MailAttachLimit','10');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'MailInnerDomain','jtest.kaoni.com');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'SignImageSizeLimit','10');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'totBigSizeMailAttachLimit','800');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'INDIVIDUALMAILUSER','5');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'USE_FileExtension','7z,alz,avi,bmp,csv,cur,doc,docx,eml,gif,hwp,hwpx,hwt,jpeg,jpg,log,mht,mp4,odt,pdf,png,ppt,pptx,rar,tif,txt,wmv,xls,xlsx,zip');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LicenseKey','');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'MaxMessageSize','0');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'Use_FromAddress','NO');
-INSERT INTO `jmocha_tenant_servername` (`TENANT_ID`, `SERVER_NAME`) VALUES (0, 'jtest.kaoni.com');
 INSERT INTO `jmocha_default_quota` (`DOMAIN_NAME`,`MAX_STORAGE`,`WARN_STORAGE`) VALUES ('jtest.kaoni.com',1024,819.2);
 INSERT INTO `tbl_tenant_servername` (`TENANT_ID`, `SERVER_NAME`) VALUES (0, 'jtest.kaoni.com');
 

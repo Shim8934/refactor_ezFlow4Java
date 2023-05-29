@@ -386,21 +386,6 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"WEEKTIME" NUMBER DEFAULT 12
    ) ;
 --------------------------------------------------------
---  DDL for Table APPROVCONNSCMC
---------------------------------------------------------
-
-  CREATE TABLE "APPROVCONNSCMC" 
-   (	"MIS_KEY" VARCHAR2(64 BYTE), 
-	"DOCID" CHAR(20 BYTE), 
-	"EMP_CD" VARCHAR2(20 BYTE), 
-	"FORM_ID" VARCHAR2(10 BYTE), 
-	"STATUS" CHAR(3 BYTE), 
-	"DRAFTDATE" DATE, 
-	"ERRYN" CHAR(1 BYTE), 
-	"ERRMSG" VARCHAR2(2048 BYTE), 
-	"ERRSYS" VARCHAR2(10 BYTE)
-   ) ;
---------------------------------------------------------
 --  DDL for Table JAMES_DOMAIN
 --------------------------------------------------------
 
