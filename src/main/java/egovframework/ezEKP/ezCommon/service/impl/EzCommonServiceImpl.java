@@ -836,7 +836,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				return egovMessageSource.getMessage("main.t0600", locale);
 			} else {
 				m_Mimechunk = m_strMHT.split(strBoundary);
-				logger.debug("m_Mimechunk="+m_Mimechunk);
+//				logger.debug("m_Mimechunk="+m_Mimechunk);
 				
 				//문서 인코딩 방식 추출 
                 if (m_Mimechunk[0].indexOf("(UTF-8)") > -1) 

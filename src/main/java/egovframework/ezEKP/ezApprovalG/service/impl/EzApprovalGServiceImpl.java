@@ -950,7 +950,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getOptionInfo(String code1, String code2, LoginVO userInfo, String mode) throws Exception {
-		logger.debug("getOptionInfo started.");
+//		logger.debug("getOptionInfo started.");
 
 		String resultString = "";
 		
@@ -961,14 +961,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultString = getCode2Name(code1, code2, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		}
 		
-		logger.debug("getOptionInfo ended.");
+//		logger.debug("getOptionInfo ended.");
 
 		return resultString;
 	}
 	
 	@Override
 	public String getCode2Name(String code1, String code2, String companyID, String lang, int tenantID) throws Exception{
-		logger.debug("getCode2Name started.");
+//		logger.debug("getCode2Name started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE1", code1);
@@ -977,11 +977,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_LANGTYPE", lang);
 		map.put("v_TENANTID", tenantID);
 		
-		logger.debug("getOptionInfo Param : v_CODE1=" + code1 + " v_CODE2=" + code2 + " v_LANGTYPE=" + lang +" companyID = " + companyID +  " v_TENANTID= " + tenantID);
+//		logger.debug("getOptionInfo Param : v_CODE1=" + code1 + " v_CODE2=" + code2 + " v_LANGTYPE=" + lang +" companyID = " + companyID +  " v_TENANTID= " + tenantID);
 
 		String rtnValue = ezApprovalGDAO.getCode2Name(map);
 		
-		logger.debug("getCode2Name ended.");
+//		logger.debug("getCode2Name ended.");
 		
 		return rtnValue;
 	}
@@ -1160,7 +1160,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getName2Code(String code1, String code2, String companyID, String lang, int tenantID) throws Exception{
-		logger.debug("getName2Code started.");
+//		logger.debug("getName2Code started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE1", code1);
@@ -1169,7 +1169,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		logger.debug("getName2Code Param: v_CODE1=" + code1 + " v_NAME =" + code2 + " v_LANGTYPE=" +lang + " v_TENANTID=" + tenantID);
+//		logger.debug("getName2Code Param: v_CODE1=" + code1 + " v_NAME =" + code2 + " v_LANGTYPE=" +lang + " v_TENANTID=" + tenantID);
 
 		return ezApprovalGDAO.getName2Code(map);
 	}
