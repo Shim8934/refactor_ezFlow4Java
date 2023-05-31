@@ -11729,16 +11729,52 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_ENDAPRDOCINFO_PK" ON "TBL_ENDAPRDOCINFO" ("TENANT_ID", "COMPANYID", "DOCID") 
   ;
 --------------------------------------------------------
---  DDL for Index TBL_ENDAPRDOCINFO_CONTAINERID_IDX
+--  DDL for Index TBL_ENDAPRDOC_CONTAINERID_IDX
 --------------------------------------------------------
 
-  CREATE INDEX "TBL_ENDAPRDOCINFO_CONTAINERID_IDX" ON "TBL_ENDAPRDOCINFO" ("CONTAINERID")
+  CREATE INDEX "TBL_ENDAPRDOC_CONTAINERID_IDX" ON "TBL_ENDAPRDOCINFO" ("CONTAINERID")
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOC_DOCSTATE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ENDAPRDOC_DOCSTATE_IDX" ON "TBL_ENDAPRDOCINFO" ("DOCSTATE")
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOC_FORMID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ENDAPRDOC_FORMID_IDX" ON "TBL_ENDAPRDOCINFO" ("FORMID")
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOC_WRITERID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ENDAPRDOC_WRITERID_IDX" ON "TBL_ENDAPRDOCINFO" ("WRITERID")
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDAPRLINEINFO_PK
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "TBL_ENDAPRLINEINFO_PK" ON "TBL_ENDAPRLINEINFO" ("TENANT_ID", "COMPANYID", "DOCID", "APRMEMBERSN") 
+  ;
+--------------------------------------------------------
+--  DDL for Index ENDAPRLINE_APRMEMBERID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "ENDAPRLINE_APRMEMBERID_IDX" ON "TBL_ENDAPRLINEINFO" ("APRMEMBERID")
+  ;
+--------------------------------------------------------
+--  DDL for Index ENDAPRLINE_APRTYPE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "ENDAPRLINE_APRTYPE_IDX" ON "TBL_ENDAPRLINEINFO" ("APRTYPE")
+  ;
+--------------------------------------------------------
+--  DDL for Index ENDAPRLINE_APRSTATE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "ENDAPRLINE_APRSTATE_IDX" ON "TBL_ENDAPRLINEINFO" ("APRSTATE")
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDAPROPINIONINFO_PK
