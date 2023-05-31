@@ -393,5 +393,7 @@ public interface EzCommonService {
 	void createTblDisableNotiItem();
 
 	public void createTblSerialNoRollback() throws Exception;
+
+	public void insertHWPSecurityConfig() throws Exception;
 	
 }

@@ -2872,4 +2872,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblSerialNoRollback() throws Exception {
 		ezCommonDAO.createTblSerialNoRollback();
 	}
+	
+	@Override
+	public void insertHWPSecurityConfig() throws Exception {
+		ezCommonDAO.insertHWPSecurityConfig();
+	}
 }

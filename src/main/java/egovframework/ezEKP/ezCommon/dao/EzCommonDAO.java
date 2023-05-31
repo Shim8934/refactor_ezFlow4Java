@@ -2383,5 +2383,20 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblSerialNoRollback");
 		}
 	}
+	
+	public void insertHWPSecurityConfig() throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkHWPDownSecurityConfig");
+		String propertyValue2 = (String) select("EzCommonDAO.checkHWPSecurityNumConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("HWPDownSecurity tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertHWPDownSecurityConfig");
+		}
+		
+		if (propertyValue2 == null) {
+			logger.debug("HWPSecurityNum tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertHWPSecurityNumConfig");
+		}
+	}
 		
 }
