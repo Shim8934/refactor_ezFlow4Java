@@ -34253,7 +34253,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String[] userIDArr = userIDs.replace(" ", "").replace("\'", "").split(",");
 		String[] deptIDArr = deptIDs.replace(" ", "").replace("\'", "").split(",");
 		String startDate = Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01";
-		String endDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), offset, false) + " 23:59:59";
+        String endDate = EgovDateUtil.getCurrentDate("-") + " 23:59:59";
 		
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
@@ -34265,6 +34265,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		// v_STARTDATE, v_ENDDATE UTC 시간 기준으로 수정 (DB에는 UTC 시간으로 저장되므로)
 		map.put("v_STARTDATE", commonUtil.getDateStringInUTC(startDate, offset, true)); 
 		map.put("v_ENDDATE", commonUtil.getDateStringInUTC(endDate, offset, true)); /* 2023-05-09 양지혜 - UTC 시간 적용이 중복되어 수정 */
+        logger.debug("endDate = "+endDate+" , v_ENDDATE = "+ commonUtil.getDateStringInUTC(endDate, offset, true));
 		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
 		map.put("proxyList", list);
 		
