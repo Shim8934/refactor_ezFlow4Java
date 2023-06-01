@@ -58,7 +58,10 @@
 			var pModeForAllDocInfo = "APR";
 			var pModeForAllAttachInfo = "APR";
 			var xmluserInfo = createXmlDom();
-	    
+
+			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
+			var useAprFilePrvw = '${useAprFilePrvw}';
+			
 	    	$(document).ready(function() {
 	    		// 1안 추가 시에 최초로 동작하는 부모창의 draftFlag 등 부여 함수
  	    		if (frameNum == "1") {
@@ -203,6 +206,7 @@
 	                    Clear();
 	                }
  	            } catch (e) {
+ 	            	console.log(e);
 	                alert("apprGdraftuiAllContent_WHWP.FieldsAvailable()  ::  " + e.description);
 	            }
 	        }

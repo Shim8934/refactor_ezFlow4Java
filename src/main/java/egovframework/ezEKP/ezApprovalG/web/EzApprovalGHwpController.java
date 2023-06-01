@@ -1212,6 +1212,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		if (!beforeDocID.isEmpty()) {
 			beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
 		}
+		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
 				
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
@@ -1271,7 +1274,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("formPath", formPath + ".hwp");
 		
 		model.addAttribute("isPreview", isPreview);
-
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		
 		logger.debug("draftuiWHWP ended. formPath:" + formPath);
 		
 		return "ezApprovalG/apprGdraftuiWHWP";
@@ -1414,6 +1418,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
 		
 		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
         
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalPWD", approvalPWD);
@@ -1462,6 +1469,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 		model.addAttribute("isPreview", isPreview);
+
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("approvuiWHWP ended");
 		
@@ -1554,6 +1563,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String bigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeApprAttachDelDay", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
+		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
         
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
@@ -1580,6 +1592,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		// 전자결재 미리보기 영역에서 열렸는지 여부 플래그
 		model.addAttribute("isPreview", isPreview);
+
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("ezViewEnd_WHWP ended");
 		
@@ -1680,6 +1694,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일  미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
@@ -1705,6 +1722,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
 		model.addAttribute("isPreview", isPreview);
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("ezviewAprWHWP ended");
 		
@@ -1805,6 +1823,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일  미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
@@ -1835,6 +1856,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
 		model.addAttribute("isPreview", isPreview);
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("ezRecevGSusinWHWP ended");
 		
@@ -1896,6 +1918,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
         
+		// 2023-05-26 조수빈 - 전자결재 첨부파일  미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
@@ -1925,8 +1950,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
 		model.addAttribute("isPreview", isPreview);
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("ezDeptRecevUI_WHWP ended");
+		
 		return "ezApprovalG/apprGdeptRecevuiWHWP";
 	}
 	
@@ -1968,7 +1995,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String bigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeApprAttachDelDay", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
-        
+		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일  미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("docID", docID);
 	    model.addAttribute("docHref", docHref);
@@ -1987,6 +2017,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+		
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("ezSimsaG_WHWP ended");
 		
@@ -2191,6 +2223,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		model.addAttribute("approvalPWD", approvalPWD);
@@ -2237,6 +2272,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("groupDocSN", groupDocSN); // 임시저장 또는 반송된 문서의 일괄기안그룹 DOCID (GROOUPDOCSN)
 		
 		model.addAttribute("isPreview", isPreview); // 미리보기 영역 관련 
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw); 
 		
 		logger.debug("draftuiAll_WHWP ended");
 		
@@ -2259,12 +2295,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String formID = request.getParameter("formID") != null ? request.getParameter("formID") : "";
 		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("type", type);
 		model.addAttribute("formID", formID); // 사실상 iframe 내부에서 GetAprDocFormID()를 호출하여 가져오므로, 필요없는 파라미터임
 		model.addAttribute("frameNum", frameNum);
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("webHWPUrl", webHWPUrl);
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("draftContentAll_WHWP ended.");
 		return "ezApprovalG/apprGdraftuiAllContent_WHWP";
@@ -2465,6 +2505,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<ApprGGroupDocInfoVO>();
 		groupDocInfoList = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalPWD", approvalPWD);
         model.addAttribute("useEditor", useEditor);
@@ -2520,6 +2563,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("groupDocSN", docID); // 일괄기안그룹 DOCID (GROOUPDOCSN)
 		
 		model.addAttribute("isPreview", isPreview);
+
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("approvuiAll_WHWP ended");
 		
@@ -2540,6 +2585,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID") != null ? request.getParameter("docID") : "";
 		String docHref = request.getParameter("docHref") != null ? request.getParameter("docHref") : "";
 		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
+		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
 		
 		model.addAttribute("type", type);
 		model.addAttribute("frameNum", frameNum);
@@ -2660,6 +2708,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			groupDocInfoList = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
 		}
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
@@ -2690,6 +2741,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("groupDocSN", docID); // 일괄기안그룹 DOCID (GROOUPDOCSN)
 		
 		model.addAttribute("isPreview", isPreview);
+
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("ezviewAprAll_WHWP ended");
 		

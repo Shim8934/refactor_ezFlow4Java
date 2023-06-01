@@ -78,6 +78,8 @@
 		    var rsa = new RSAKey(); // 댓글기능 비밀번호 관련
 		    var checkpassword_dialogArguments = new Array(); // 익명게시물 댓글삭제 시 레이어팝업 관련
 		    var scrollValue = 0;
+		 	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 사용 여부
+	        var useBoardFilePrvw = "<c:out value='${useBoardFilePrvw}'/>";
 	        
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
@@ -261,12 +263,39 @@
 	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID"))
 	                + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "' realFileName='" + filename + "'>" + filename + " (" + filesize + ")</a>";	                
 	              	strAttach += "</span>";
+	             	// 2023-05-23 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
+		            if (useBoardFilePrvw == "1") {
+			        	strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
+		            }
 	                strAttach += "</li><br>";
 	            }
 	            strAttach += "</ul></div>";
 	            return strAttach;
 	        }
-	
+			
+	     	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기
+		    function attachFile_Preview(filePath, fileOrgName) {
+		    	$.ajax({
+		    		type : "GET",
+		    		url : "/ezBoard/attachItemPreview.do",
+		    		data : {
+		    			pFilePath : filePath,
+		    			fileName : fileOrgName
+		    		},
+		    		success : function(result) {
+		    			if (result != "") {
+		    				window.open(result);
+		    			} else {
+			    			alert("<spring:message code = 'ezBoard.t181'/>");
+		    			}
+		    		},
+		    		error : function(e) {
+		    			alert("<spring:message code = 'ezBoard.t181'/>");
+		    			console.log(e);
+		    		}
+		    	});
+		    }
+	     	
 	        function File_Size(totalSize) {
 	            var strSize = "";
 	            if (totalSize > 1024 * 1024) {

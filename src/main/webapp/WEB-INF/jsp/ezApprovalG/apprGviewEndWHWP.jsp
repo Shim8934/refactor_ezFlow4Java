@@ -63,6 +63,9 @@
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
 			
+	     	// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
+			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+	        
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
 	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";

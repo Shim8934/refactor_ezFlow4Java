@@ -1137,3 +1137,6 @@ var strLangCSJBDA01 = "<br>一括供覧が完了しました。";
 var strLangCSJBDA02 = "一括供気中にエラーが発生しました。<br>";
 var strLangCSJBDA03 = "<br>一括回覧が完了しました。";
 var strLangCSJBDA04 = "一括回覧中にエラーが発生しました。<br>";
+
+//2023-06-27 조수빈 - 전자결재 첨부문서 미리보기 메세지 추가
+var strLangJSBAP01 = "プレビュー";

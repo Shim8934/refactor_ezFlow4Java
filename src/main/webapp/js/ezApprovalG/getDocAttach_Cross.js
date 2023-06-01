@@ -1,4 +1,4 @@
-﻿var bAttachProcess = false;
+﻿﻿var bAttachProcess = false;
 var tempIfrm = null;
 function AttachProcess(e) {
     if (!e) {
@@ -111,9 +111,9 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     			async : false,
     			url : "/ezApprovalG/getLineMode.do",
     			data : {
-    					docID : tempDocID,
+    					docID : tempDocID, // pDocID 대신 함수 호출 시의 tempDocID 파라미터를 사용하도록 수정
     					orgCompanyID : orgCompanyID
-    					},
+    			},
     			success: function(xml){
     				INGFlag = xml;
     			}        			
@@ -201,6 +201,11 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 
                 strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0' style='vertical-align:sub;'>";
                 strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a>";
+                
+                // 23.05.25. 조수빈 첨부파일 미리보기 아이콘 추가
+                if (useAprFilePrvw == "1") {
+                	strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title=\"" + strLangJSBAP01 + "\" onclick=\"attachFile_Preview('" + javaURLEncode(xmlFilePath) + "', '" + javaURLEncode(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
+                }
                 
                 if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "ISBIGATTACH") == "Y") { // 대용량첨부파일 표시
                 	strAttach = strAttach + " <font style='color:blue'>[" + strLangHSBAt02 + "]</font> &nbsp;</span>";
@@ -292,6 +297,32 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
         } catch (e) { }
     }
 }
+
+// 2023-05-26 조수빈 - 결재문서 첨부파일 미리보기
+function attachFile_Preview(filePath, fileOrgName) {
+	$.ajax({
+		type : "GET",
+		url: "/ezApprovalG/attachItemPreview.do",
+		data : {
+			pFilePath : filePath,
+			fileName : fileOrgName
+		},
+		success : function(result){
+			if (result != "") {
+				window.open(result);
+			} else {
+				alert(strLang223);
+			}
+		},
+		error : function(error){
+			alert(strLang223);
+			console.log(error);
+		}
+	})
+}
+
+
+
 
 function getOriginalFileExtension(filePath) {
 	var pathLength = filePath.length;

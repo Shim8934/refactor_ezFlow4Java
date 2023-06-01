@@ -135,7 +135,10 @@
 	        var bigAttachDownloadPeriod = "<c:out value ='${bigAttachDownloadPeriod}'/>";
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
-			
+
+			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
+			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+	        
 			window.onload = function () {
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();

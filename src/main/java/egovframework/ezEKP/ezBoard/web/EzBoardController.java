@@ -4,14 +4,17 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.security.MessageDigest;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -3801,6 +3804,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
 		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		
+		// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 기능 사용 여부
+		String useBoardFilePrvw = ezCommonService.getTenantConfig("useBoardFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
@@ -3825,6 +3831,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("useCabinet", use_cabinet);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("useBoardFilePrvw", useBoardFilePrvw);
 
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -7186,6 +7193,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
 		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		
+		// 2023-05-26 조수빈 - 게시판 첨부파일 미리보기 기능 사용 여부
+		String useBoardFilePrvw = ezCommonService.getTenantConfig("useBoardFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
 		model.addAttribute("gubun", boardInfo.getGuBun());
 		model.addAttribute("itemID", itemID);
@@ -7196,6 +7206,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("useBoardFilePrvw", useBoardFilePrvw);
 		
 		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
@@ -10229,4 +10240,68 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardItemViewHomePage ended");
 	    return "ezBoard/boardItemViewHomePage";
 	}
+	
+
+	// 2023-05-22 조수빈 - 게시판 첨부파일 미리보기
+	// 게시판 첨부파일 미리보기 아이콘 생성 시 useBoardFilePrvw 테넌트 컨피크를 체크하므로, 해당 테넌트 컨피그의 값이 1(사용)인 경우에만 컨트롤러 접근 가능
+	@RequestMapping(value = "/ezBoard/attachItemPreview.do", method = RequestMethod.GET)
+	public void attachItemPreview(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response
+								, @RequestParam String pFilePath, @RequestParam String fileName) throws Exception {
+		
+		logger.debug("attachItemPreview started.");
+		logger.debug("fileName : " + fileName + " / pFilePath : " + pFilePath);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		try (OutputStream output = response.getOutputStream()) {
+			// 기존 파일 객체 생성
+			pFilePath = URLDecoder.decode(pFilePath, "UTF-8");
+			fileName = URLDecoder.decode(fileName, "UTF-8");
+			logger.debug("filePath : {}",pFilePath);
+			String realPath = commonUtil.getRealPath(request);
+			File srcFile = new File(commonUtil.detectPathTraversal(realPath + pFilePath));
+			
+			if (!srcFile.exists() || !srcFile.isFile()) {
+			    throw new FileNotFoundException(fileName);
+			}
+			
+			String destFilePath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempUploadFile";
+			MessageDigest md2 = MessageDigest.getInstance("SHA-256");
+			md2.update(fileName.substring(0, fileName.lastIndexOf(".")).getBytes());
+			byte mdDate2[] = md2.digest();
+			StringBuffer sb2 = new StringBuffer();
+			
+			for (int i = 0; i < mdDate2.length; i++) {
+				sb2.append(Integer.toHexString((int) mdDate2[i] & 0x00ff));
+			}
+			
+			String md5FileName = sb2.toString() + fileName.substring(fileName.lastIndexOf("."));
+			File destFile = new File(destFilePath + commonUtil.separator + md5FileName);
+			File newFolder = new File(destFilePath);
+			
+			if (!newFolder.exists()) {
+				newFolder.mkdirs();
+			}
+			
+			FileUtils.copyFile(srcFile, destFile);
+			
+			String SATimageConvertServerURL = ezCommonService.getTenantConfig("SATimageConvertServerURL", userInfo.getTenantId());
+			String fileExt = fileName.split("\\.")[fileName.split("\\.").length - 1];
+			destFilePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId())
+							+ commonUtil.separator + "tempUploadFile" + commonUtil.separator + md5FileName;
+			output.write((SATimageConvertServerURL 
+					+ "?filepath=" + URLEncoder.encode(destFilePath, "UTF-8").replace("+", "%20") +
+					"&filename=" + URLEncoder.encode(fileName, "UTF-8").replace("+", "%20") +
+					"&fileext=" + fileExt.replace("+", "%20") +
+					"&viewerselect=image" +
+					"&userid=" + userInfo.getId()).getBytes());
+			
+		} catch (Exception e){
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("attachItemPreview ended.");
+	}
+	
+	
 }

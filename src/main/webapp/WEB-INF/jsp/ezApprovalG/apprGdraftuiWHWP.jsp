@@ -180,6 +180,9 @@
 			var preSusinGroupStr = "<c:out value ='${preSusinGroupStr}'/>";
 
 			var formPath = "<c:out value ='${formPath}'/>";
+			
+			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
+			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 	        
 	        window.onload = function () {
 	            try {

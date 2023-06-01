@@ -106,6 +106,9 @@
 	        
 	        var isSihangReject = "N"; // 시행문변환 시 반송을 위한 구분값 전달
 	        var pRecordID = "<c:out value = '${recordID}'/>";
+
+			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
+			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 	        
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");

@@ -1142,3 +1142,6 @@ var strLangCSJBDA01 = "<br>일괄공람이 완료되었습니다.";
 var strLangCSJBDA02 = "일괄공람 중 오류가 발생하였습니다.<br>";
 var strLangCSJBDA03 = "<br>일괄회람이 완료되었습니다.";
 var strLangCSJBDA04 = "일괄회람 중 오류가 발생하였습니다.<br>";
+
+//2023-06-27 조수빈 - 전자결재 첨부문서 미리보기 메세지 추가
+var strLangJSBAP01 = "미리보기";

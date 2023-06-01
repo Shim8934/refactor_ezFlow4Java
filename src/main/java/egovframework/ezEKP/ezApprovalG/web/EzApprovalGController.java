@@ -1347,6 +1347,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("isUsed", isUsed);
@@ -1421,6 +1424,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("connKey", connKey);
 		model.addAttribute("connFormCode", connFormCode);
 		model.addAttribute("isPreview", isPreview);
+
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("draftui ended.");
 
@@ -4029,6 +4034,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("editor", editor);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("signCheck", signCheck);
@@ -4066,6 +4074,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		// 전자결재 미리보기 영역에서 열렸는지 여부 플래그
 		model.addAttribute("isPreview", isPreview);
+		
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("contDocView ended.");
 		
@@ -5243,7 +5253,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
 		
 		String preSusinGroupStr = ezApprovalGService.getCode2Name("A53", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-        
+
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
 	    model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
@@ -5307,6 +5320,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId())); // 수신처에 "장" 붙이는 옵션
 		model.addAttribute("draftJunGyulFlag", ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId())); // 일반버전 서명 remapping 시 전결문자 표출 확인용
+
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("approvui ended");
 		
@@ -6182,6 +6197,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("docID", docID);
 		model.addAttribute("orgDocID", orgDocID);
@@ -6213,6 +6231,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
 		model.addAttribute("isPreview", isPreview);
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("recevGSusin ended.");
 		
@@ -6788,6 +6807,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		model.addAttribute("docID", docID);
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("susinAdmin", susinAdmin);
@@ -6817,6 +6839,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
 		model.addAttribute("isPreview", isPreview);
+
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("aprDocView ended.");
 		
@@ -9255,6 +9279,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		
 		if (docID != null && docID.equals("")) {
 			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID(), userInfo.getTenantId(), "");
 			
@@ -9305,6 +9332,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
+
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("ezSimsaG ended");
 		
@@ -11032,6 +11061,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String bigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeApprAttachDelDay", userInfo.getTenantId()); // 전자결재 대용량 첨부파일 보존기간
 		String bigAttachFileMinSaveDate = ezApprovalGService.getAttachFileMinSaveDate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String bigAttachDownloadPeriod = bigAttachFileMinSaveDate + " ~ " + EgovDateUtil.addDay(bigAttachFileMinSaveDate, Integer.parseInt(bigAttachDownloadDay), "yyyy/MM/dd");
+
+		// 2023-05-26 조수빈 - 전자결재 첨부파일  미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
 		
 		model.addAttribute("docID", docID);
 		model.addAttribute("draftFlag", draftFlag);
@@ -11060,6 +11092,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
 		model.addAttribute("isPreview", isPreview);
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("recevGDeptHapyui ended");
 
@@ -12277,6 +12310,70 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getDocInfoAll ended");
 		
 		return resultArrList;
+	}
+
+	// 2023-05-25  조수빈 - 전자결재 첨부파일 미리보기
+	// 전자결재 첨부파일 미리보기 아이콘 생성 시 useAprFilePrvw 테넌트 컨피크를 체크하므로, 해당 테넌트 컨피그의 값이 1(사용)인 경우에만 컨트롤러 접근 가능
+	@RequestMapping(value = "/ezApprovalG/attachItemPreview.do", method = RequestMethod.GET)
+	public void attachItemPreview(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response
+			, @RequestParam String pFilePath, @RequestParam String fileName) throws Exception {
+		
+		logger.debug("attachItemPreview started.");
+		logger.debug("fileName : " + fileName + " / pFilePath : " + pFilePath);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		// try-catch-with-resources로 자동 close 사용
+		try (OutputStream output = response.getOutputStream()) {
+			// 기존 첨부파일 객체 생성
+			pFilePath = URLDecoder.decode(pFilePath, "UTF-8");
+			fileName = URLDecoder.decode(fileName, "UTF-8");
+			
+			logger.debug("filePath(decode) : {}", pFilePath);
+			
+			String realPath = commonUtil.getRealPath(request);
+			File srcFile = new File(commonUtil.detectPathTraversal(realPath + pFilePath));
+			
+			if (!srcFile.exists() || !srcFile.isFile()) {
+				throw new FileNotFoundException(fileName);
+			}
+			
+			String destFilePath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempUploadFile";
+			MessageDigest md2 = MessageDigest.getInstance("SHA-256");
+			md2.update(fileName.substring(0, fileName.lastIndexOf(".")).getBytes());
+			byte mdDate2[] = md2.digest();
+			StringBuffer sb2 = new StringBuffer();
+			
+			for (int i = 0; i < mdDate2.length; i++) {
+				sb2.append(Integer.toHexString((int) mdDate2[i] & 0x00ff));
+			}
+			
+			// SAT 이미지 변환을 위한 파일명은 '해시.확장자' 형태로 전달됨
+			String md5FileName = sb2.toString() + fileName.substring(fileName.lastIndexOf("."));
+			File destFile = new File(destFilePath + commonUtil.separator + md5FileName);
+			File newFolder = new File(destFilePath);
+			
+			if (!newFolder.exists()) {
+				newFolder.mkdirs();
+			}
+			
+			FileUtils.copyFile(srcFile, destFile);
+			
+			String SATimageConvertServerURL = ezCommonService.getTenantConfig("SATimageConvertServerURL", userInfo.getTenantId());
+			String fileExt = fileName.split("\\.")[fileName.split("\\.").length - 1];
+			destFilePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId())
+			+ commonUtil.separator + "tempUploadFile" + commonUtil.separator + md5FileName;
+			output.write((SATimageConvertServerURL 
+					+ "?filepath=" + URLEncoder.encode(destFilePath, "UTF-8").replace("+", "%20") +
+					"&filename=" + URLEncoder.encode(fileName, "UTF-8").replace("+", "%20") +
+					"&fileext=" + fileExt.replace("+", "%20") +
+					"&viewerselect=image" +
+					"&userid=" + userInfo.getId()).getBytes());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("attachItemPreview ended.");
 	}
 	
 }

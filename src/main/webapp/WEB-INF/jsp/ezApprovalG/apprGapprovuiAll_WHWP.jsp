@@ -299,7 +299,10 @@
 			var pAttachInfoAry = new Array();
 			var pModeForAllDocInfo = "APR"; // 일괄기안 문서는 모든 문서가 결재선을 공통으로 사용
 			var pModeForAllAttachInfo = "APR"; // 첨부파일 정보를 가져오기 위한 pMode값 분리
-	        
+
+			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
+			var useAprFilePrvw = "${useAprFilePrvw}";
+			
 			// 모두결재 관련 함수
 		    function getNextDocList() {
 		        NextDocID = "";

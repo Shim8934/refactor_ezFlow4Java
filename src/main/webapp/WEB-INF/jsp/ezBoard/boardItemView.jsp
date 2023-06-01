@@ -80,6 +80,8 @@
 		    var rsa = new RSAKey();
 		    var addheight = 0;
 		    var scrollValue = 0;
+		 	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 사용 여부
+		    var useBoardFilePrvw = "<c:out value='${useBoardFilePrvw}'/>";
 
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
@@ -834,11 +836,39 @@
 		            /* 2020-01-30 홍승비 - 모두저장 기능을 위해 속성 추가 */
 		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filePath='" + MakeXMLString(filepath) + "'>";
 		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
-		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a><br>";
+		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a>";
+		            // 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
+		            if (useBoardFilePrvw == "1") {
+			            strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filenameOrg) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
+		            }
+		            strAttach += "<br>";
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
 		    
+		 	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기
+		    function attachFile_Preview(filePath, fileOrgName) {
+		    	$.ajax({
+		    		type : "GET",
+		    		url : "/ezBoard/attachItemPreview.do",
+		    		data : {
+		    			pFilePath : filePath,
+		    			fileName : fileOrgName
+		    		},
+		    		success : function(result) {
+		    			if (result != "") {
+		    				window.open(result);
+		    			} else {
+			    			alert("<spring:message code = 'ezBoard.t181'/>");
+		    			}
+		    		},
+		    		error : function(e) {
+		    			alert("<spring:message code = 'ezBoard.t181'/>");
+		    			console.log(e);
+		    		}
+		    	});
+		    }
+		 	
 		    function attach_SelectAll() {
 		        var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
 		        for (var i = 0; i < checks.length; i++)

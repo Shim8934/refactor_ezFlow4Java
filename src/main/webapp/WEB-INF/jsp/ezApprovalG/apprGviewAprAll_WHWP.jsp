@@ -159,6 +159,9 @@
     		var docLoadCompleteCnt = 0; // 각 안의 문서들이 로딩되었는지 판단하기 위한 카운트 변수
     		// 초기 문서 로딩 시 사용하며, 초기 문서 로딩을 전부 완료한 후에는 더이상 카운트를 증가시키지 않는다.
     		
+    		// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
+			var useAprFilePrvw = "${useAprFilePrvw}";
+    		
 			function btnOpinion_onclick() {
 				openOpinionUI_New("Show");
 			}

@@ -1137,3 +1137,6 @@ var strLangCSJBDA01 = "<br>The batch display has been completed.";
 var strLangCSJBDA02 = "An error occurred during the batch display.<br>";
 var strLangCSJBDA03 = "<br>The batch circulation has been completed.";
 var strLangCSJBDA04 = "An error occurred during the batch circulation.<br>";
+
+//2023-06-27 조수빈 - 전자결재 첨부문서 미리보기 메세지 추가
+var strLangJSBAP01 = "Preview";
