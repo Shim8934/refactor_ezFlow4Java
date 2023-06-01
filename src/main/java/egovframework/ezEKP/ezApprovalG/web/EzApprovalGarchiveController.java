@@ -1976,7 +1976,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 */
         
         //엑셀시작
-		HSSFWorkbook workbook = new HSSFWorkbook();
+        // 2023-05-31 이사라 : 시큐어코딩 리소스 close
+        try(HSSFWorkbook workbook = new HSSFWorkbook()){
 		HSSFSheet sheet;
 	
 		//헤더 폰트 굵게
@@ -2039,8 +2040,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		}//body
 	
 		workbook.write(response.getOutputStream());
-		workbook.close();
+		//workbook.close();
 		logger.debug("getUserContListSave ended");
+		}
 	}
 	
 	/** 전자결재 일반 결재문서 첨부*/

@@ -973,7 +973,9 @@ public class EzApprovalGRelayScheduler {
 
 	private boolean ReplaceFileText(String strFilePath, String pTargetText,	String pNewText, boolean pUseRegex, String pRegexPattern) throws Exception {
 
-		FileInputStream fis = new FileInputStream(new File(commonUtil.detectPathTraversal(strFilePath))); 
+		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
+		try (FileInputStream fis = new FileInputStream(new File(commonUtil.detectPathTraversal(strFilePath)))){
+		
 		InputStreamReader isr = new InputStreamReader(fis,"UTF-8"); 
 		String text = "";
 
@@ -1007,7 +1009,7 @@ public class EzApprovalGRelayScheduler {
 			logger.error(e.getMessage(), e);
 			return false;
 		}
-		
+		}
 		
 	}
 

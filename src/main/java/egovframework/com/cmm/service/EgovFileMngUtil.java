@@ -726,43 +726,49 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		List<File> fileList = new ArrayList<File>();
 		getAllFiles(dir, fileList);
 		
-		ZipOutputStream zos = null;
-		FileInputStream fis = null;
+		// 2023-06-01 이사라 : 시큐어코딩 리소스 close
+		//ZipOutputStream zos = null;
+		//FileInputStream fis = null;
 		
-		try {
+		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(path + ".zip"), Charset.forName("UTF-8"))) {
 			if (fileName != null) {
 				path = dir.getPath().substring(0, dir.getName().length()) + fileName;
 			}
 			
-			zos = new ZipOutputStream(new FileOutputStream(path + ".zip"), Charset.forName("UTF-8"));
+			//zos = new ZipOutputStream(new FileOutputStream(path + ".zip"), Charset.forName("UTF-8"));
 			
 			for (File file : fileList) {
 				if (!file.isDirectory()) {
-					fis = new FileInputStream(file);
-					String zipFilePath = file.getPath().substring(dir.getPath().length() + 1, file.getPath().length());
-					
-					logger.debug("zipFilePath=" + zipFilePath);
-					
-					ZipEntry zipEntry = new ZipEntry(zipFilePath);
-					zos.putNextEntry(zipEntry);
+					//fis = new FileInputStream(file);
 
-					byte[] bytes = new byte[BUFF_SIZE];
-					int length;
-					
-					while ((length = fis.read(bytes)) >= 0) {
-						zos.write(bytes, 0, length);
+					try (FileInputStream fis = new FileInputStream(file)) {
+						String zipFilePath = file.getPath().substring(dir.getPath().length() + 1, file.getPath().length());
+
+						logger.debug("zipFilePath=" + zipFilePath);
+
+						ZipEntry zipEntry = new ZipEntry(zipFilePath);
+						zos.putNextEntry(zipEntry);
+
+						byte[] bytes = new byte[BUFF_SIZE];
+						int length;
+
+						while ((length = fis.read(bytes)) >= 0) {
+							zos.write(bytes, 0, length);
+						}
+
+						zos.closeEntry();
+					} catch (IOException e) {
+						logger.error(e.getMessage(), e);
 					}
-
-					zos.closeEntry();
 				}
 			}
 						
-			zos.close();
-			zos = null;
+			//zos.close();
+			//zos = null;
 		} catch (Exception e) {
-			throw e;
+			logger.error(e.getMessage(), e);
 			
-		} finally {
+			/*} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
@@ -770,7 +776,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			if (zos != null) {
 				try { zos.closeEntry(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 				try { zos.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
-			}
+			}*/
 			
 		}
 		

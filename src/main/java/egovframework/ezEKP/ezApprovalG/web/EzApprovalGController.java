@@ -8339,7 +8339,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
 		
 		//엑셀시작
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet;
 
 		//헤더 폰트 굵게
@@ -8444,10 +8445,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName.replaceAll("\r", "").replaceAll("\n", "")) + "\"");
 		
 		workbook.write(response.getOutputStream());
-		  
-		workbook.close();		
+		//workbook.close();
 		
 		logger.debug("excelExportOut ended"); 
+		}
 	}
 	
 	/**

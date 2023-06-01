@@ -1605,7 +1605,8 @@ public class EzAttitudeController {
 			headerFLAG = request.getParameter("headerFlag");
 		} */
 		  
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
+		try(HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet;
 		  
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -1662,6 +1663,7 @@ public class EzAttitudeController {
 		workbook.close();
 		  
 		logger.debug("qstResultsaticGetXlsAtt ended");
+		}
 	}
 	
 	@RequestMapping(value="/ezAttitude/delAttModApp.do" , method= RequestMethod.POST)
@@ -3040,7 +3042,8 @@ public class EzAttitudeController {
 			}
 		}
 		
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet;
 		  
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -3530,9 +3533,10 @@ public class EzAttitudeController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
-		workbook.close();
+		//workbook.close();
 		
 		logger.debug("excelFileExport ended.");
+	}
 	}
 	
 	/**
@@ -3846,7 +3850,8 @@ public class EzAttitudeController {
 			annualList = gson.fromJson(data.toString(), new TypeToken<List<AdminAttitudeVO>>(){}.getType()) ;
 		}
 		
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet;
 		  
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -3927,9 +3932,10 @@ public class EzAttitudeController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
-		workbook.close();
+		//workbook.close();
 		
 		logger.debug("excelAnnualListExport ended.");
+	}
 	}
 	
 	/**

@@ -1630,13 +1630,16 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 						throw new FileNotFoundException();
 					}
 					else {
-						InputStream input   = null;
-						OutputStream output = null;
+						// 2023-05-31 이사라 : 시큐어코딩 리소스 close
+						//InputStream input   = null;
+						//OutputStream output = null;
+						File newAttachFile = new File(newFilePath);
 						
-						try {
-							input              = part.getInputStream();
-							File newAttachFile = new File(newFilePath);
-							output             = new FileOutputStream(newAttachFile);
+						try (InputStream input = part.getInputStream();
+							 OutputStream output =new FileOutputStream(newAttachFile)) {
+							//input              = part.getInputStream();
+							//File newAttachFile = new File(newFilePath);
+							//output             = new FileOutputStream(newAttachFile);
 							byte[] buffer      = new byte[4096];
 							int byteRead       = 0;
 							
@@ -1649,13 +1652,13 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 						}
 						finally {
 							ia.close();
-							if (input != null) {
+							/*if (input != null) {
 								try { input.close(); } catch (IOException e2) {throw e2;}
 							}
 							if (output != null) {
 								try {output.flush();} catch (IOException e3) {throw e3;}
 								try {output.close();} catch (IOException e4) {throw e4;}
-							}
+							}*/
 						}
 					}
 				}

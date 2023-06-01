@@ -120,19 +120,26 @@ public class EzAddressController{
 				+ "&countPerPage=" + countPerPage + "&keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&confmKey=" + confmKey;
 
 		URL url = new URL(apiUrl);
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-		StringBuffer sb = new StringBuffer();
-		String tempStr = null;
-		while (true) {
-			tempStr = br.readLine();
-			if (tempStr == null)
-				break;
-			sb.append(tempStr);
+		//BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+		
+		// 2023-06-01 이사라 : 시큐어코딩 리소스 close
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
+			StringBuffer sb = new StringBuffer();
+			String tempStr = null;
+			while (true) {
+				tempStr = br.readLine();
+				if (tempStr == null)
+					break;
+				sb.append(tempStr);
+			}
+
+			// br.close();
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("text/xml");
+			response.getWriter().write(sb.toString());
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
 		}
-		br.close();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/xml");
-		response.getWriter().write(sb.toString());
 
 		logger.debug("addressZipCodeListOpen ended.");
 	}

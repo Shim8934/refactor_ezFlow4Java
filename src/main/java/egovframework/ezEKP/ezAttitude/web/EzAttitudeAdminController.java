@@ -2295,7 +2295,8 @@ public class EzAttitudeAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
+		try(HSSFWorkbook workbook = new HSSFWorkbook()){
 		HSSFSheet sheet;
 		  
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -2355,9 +2356,10 @@ public class EzAttitudeAdminController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
-		workbook.close();
+		//workbook.close();
 		
 		logger.debug("excelAnnualFormatDownload ended.");
+		}
 	}
 	
 	/**
@@ -2754,7 +2756,8 @@ public class EzAttitudeAdminController {
 			annualList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AttitudeAnnualVO>>(){}.getType()) ;
 		}
 		
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
+		try(HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet;
 		  
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -2843,9 +2846,10 @@ public class EzAttitudeAdminController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
-		workbook.close();
+		//workbook.close();
 		
 		logger.debug("excelAnnualListExport ended.");
+		}
 	}
 	
 	@RequestMapping(value = "/admin/ezAttitude/useAnnualHistoryPop.do")
