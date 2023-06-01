@@ -975,40 +975,41 @@ public class EzApprovalGRelayScheduler {
 
 		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
 		try (FileInputStream fis = new FileInputStream(new File(commonUtil.detectPathTraversal(strFilePath)))){
-		
-		InputStreamReader isr = new InputStreamReader(fis,"UTF-8"); 
-		String text = "";
 
-		// CWE-404 보안 취약점 대응
-		try (BufferedReader br = new BufferedReader(isr)) {			
-			while(true){
-				if(br.readLine() == null) break;
-				text += br.readLine();
-			}
-		}
-		try {
-			if (pUseRegex) {
-				Pattern pattern = Pattern.compile(pRegexPattern);
-				Matcher matcher = pattern.matcher(text);
-				
-				text = matcher.replaceAll(pNewText);
-			} else {
-				text = text.replace(pTargetText, pNewText);
-			}
-			
-			File file = new File(commonUtil.detectPathTraversal(strFilePath));
+			InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+			String text = "";
+
 			// CWE-404 보안 취약점 대응
-			try (FileOutputStream fop = new FileOutputStream(file)) {
-				// get the content in bytes
-				fop.write(text.getBytes("UTF-8"));
-				fop.flush();
+			try (BufferedReader br = new BufferedReader(isr)) {
+				while (true) {
+					if (br.readLine() == null)
+						break;
+					text += br.readLine();
+				}
 			}
-			
-			return true;
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			return false;
-		}
+			try {
+				if (pUseRegex) {
+					Pattern pattern = Pattern.compile(pRegexPattern);
+					Matcher matcher = pattern.matcher(text);
+
+					text = matcher.replaceAll(pNewText);
+				} else {
+					text = text.replace(pTargetText, pNewText);
+				}
+
+				File file = new File(commonUtil.detectPathTraversal(strFilePath));
+				// CWE-404 보안 취약점 대응
+				try (FileOutputStream fop = new FileOutputStream(file)) {
+					// get the content in bytes
+					fop.write(text.getBytes("UTF-8"));
+					fop.flush();
+				}
+
+				return true;
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+				return false;
+			}
 		}
 		
 	}

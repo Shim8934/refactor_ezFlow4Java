@@ -1978,70 +1978,70 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         //엑셀시작
         // 2023-05-31 이사라 : 시큐어코딩 리소스 close
         try(HSSFWorkbook workbook = new HSSFWorkbook()){
-		HSSFSheet sheet;
-	
-		//헤더 폰트 굵게
-		HSSFFont headerFont = workbook.createFont();
-		headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+			HSSFSheet sheet;
 		
-		HSSFCellStyle headerStyle= workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-		headerStyle.setFont(headerFont);
-		
-		HSSFCellStyle bodyStyle= workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-		 
-		Row row;
-		Cell cell;
-		      
-		sheet = workbook.createSheet("report");
-		row = sheet.createRow(0);
-		for (int i = 0; i <objXML.getElementsByTagName("HEADER").getLength(); i++) {
-			String headerName = objXML.getElementsByTagName("NAME").item(i).getTextContent();
+			//헤더 폰트 굵게
+			HSSFFont headerFont = workbook.createFont();
+			headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 			
-			cell = row.createCell(i);
-			cell.setCellValue(headerName);
-			cell.setCellStyle(headerStyle);
-		    row.setHeight((short)512);
-		    sheet.autoSizeColumn(i);
-		    sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
-		}//header
-		
-		NodeList objRow = objXML.getElementsByTagName("ROW");
-	
-		for (int j = 0; j < objRow.getLength(); j++) {
-			row = sheet.createRow((j + 1));
+			HSSFCellStyle headerStyle= workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			headerStyle.setFont(headerFont);
 			
-			Element rowElem = (Element) objRow.item(j);
-			NodeList objCell = rowElem.getElementsByTagName("CELL");
-	
-			for (int k = 0; k < objCell.getLength(); k++) {
-				Element cellElem = (Element) objCell.item(k);
-	 			String cellValue = cellElem.getElementsByTagName("VALUE").item(0).getTextContent();
+			HSSFCellStyle bodyStyle= workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+
+			Row row;
+			Cell cell;
+
+			sheet = workbook.createSheet("report");
+			row = sheet.createRow(0);
+			for (int i = 0; i <objXML.getElementsByTagName("HEADER").getLength(); i++) {
+				String headerName = objXML.getElementsByTagName("NAME").item(i).getTextContent();
 				
-				cell = row.createCell(k);
-				cell.setCellValue(cellValue);
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)384);
-				sheet.autoSizeColumn(k);
-			    sheet.setColumnWidth(k, (sheet.getColumnWidth(k)) + 512);
-			}
-		}//body
-	
-		workbook.write(response.getOutputStream());
-		//workbook.close();
-		logger.debug("getUserContListSave ended");
+				cell = row.createCell(i);
+				cell.setCellValue(headerName);
+				cell.setCellStyle(headerStyle);
+			    row.setHeight((short)512);
+			    sheet.autoSizeColumn(i);
+			    sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
+			}//header
+			
+			NodeList objRow = objXML.getElementsByTagName("ROW");
+		
+			for (int j = 0; j < objRow.getLength(); j++) {
+				row = sheet.createRow((j + 1));
+				
+				Element rowElem = (Element) objRow.item(j);
+				NodeList objCell = rowElem.getElementsByTagName("CELL");
+		
+				for (int k = 0; k < objCell.getLength(); k++) {
+					Element cellElem = (Element) objCell.item(k);
+		 			String cellValue = cellElem.getElementsByTagName("VALUE").item(0).getTextContent();
+					
+					cell = row.createCell(k);
+					cell.setCellValue(cellValue);
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)384);
+					sheet.autoSizeColumn(k);
+				    sheet.setColumnWidth(k, (sheet.getColumnWidth(k)) + 512);
+				}
+			}//body
+
+			workbook.write(response.getOutputStream());
+			//workbook.close();
+			logger.debug("getUserContListSave ended");
 		}
 	}
 	

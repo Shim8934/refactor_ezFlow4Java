@@ -8341,113 +8341,113 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//엑셀시작
 		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
 		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
-		HSSFSheet sheet;
-
-		//헤더 폰트 굵게
-		HSSFFont headerFont = workbook.createFont();
-		headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-		
-		HSSFCellStyle headerStyle= workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-		headerStyle.setFont(headerFont);
-		
-		HSSFCellStyle bodyStyle= workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-		 
-		Row row;
-		Cell cell;
-		      
-		sheet = workbook.createSheet("report");
-		row = sheet.createRow(0);
-		for (int i = 0; i <objXML.getElementsByTagName("HEADER").getLength(); i++) {
-			String headerName = objXML.getElementsByTagName("NAME").item(i).getTextContent();
+			HSSFSheet sheet;
+	
+			//헤더 폰트 굵게
+			HSSFFont headerFont = workbook.createFont();
+			headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 			
-			cell = row.createCell(i);
-			cell.setCellValue(headerName);
-			cell.setCellStyle(headerStyle);
-		    row.setHeight((short)512);
-		    sheet.autoSizeColumn(i);
-		    sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
-		}//header
-		
-		NodeList objRow = objXML.getElementsByTagName("ROW");
-
-		for (int j = 0; j < objRow.getLength(); j++) {
-			row = sheet.createRow((j + 1));
+			HSSFCellStyle headerStyle= workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			headerStyle.setFont(headerFont);
 			
-			Element rowElem = (Element) objRow.item(j);
-			NodeList objCell = rowElem.getElementsByTagName("CELL");
-
-			for (int k = 0; k < objCell.getLength(); k++) {
-				Element cellElem = (Element) objCell.item(k);
-   				String cellValue = cellElem.getElementsByTagName("VALUE").item(0).getTextContent();
+			HSSFCellStyle bodyStyle= workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			 
+			Row row;
+			Cell cell;
+			      
+			sheet = workbook.createSheet("report");
+			row = sheet.createRow(0);
+			for (int i = 0; i <objXML.getElementsByTagName("HEADER").getLength(); i++) {
+				String headerName = objXML.getElementsByTagName("NAME").item(i).getTextContent();
 				
-				if (cellValue.equals("001")) {
-					cellValue = "품의";
-				} else if (cellValue.equals("002")) {
-					cellValue = "협조";
-				} else if (cellValue.equals("003")) {
-					cellValue = "감사";
-				} else if (cellValue.equals("004")) {
-					cellValue = "심사";
-				} else if (cellValue.equals("011")) {
-					cellValue = "수신";
-				} else if (cellValue.equals("012")) {
-					cellValue = "합의";
-				} else if (cellValue.equals("013")) {
-					cellValue = "시행";
-				} else if (cellValue.equals("014")) {
-					cellValue = "검사부 감사";
-				} else if (cellValue.equals("015")) {
-					cellValue = "공람";
-				} else if (cellValue.equals("016")) {
-					cellValue = "회람";
-				} else if (cellValue.equals("017")) {
-					cellValue = "참조";
-				} else if (cellValue.equals("018")) {
-					cellValue = "후결";
-				} else if (cellValue.equals("019")) {
-					cellValue = "발신";
-				} else if (cellValue.equals("020")) {
-					cellValue = "신청";
-				} else if (cellValue.equals("031")) {
-					cellValue = "반송";
-				} else if (cellValue.equals("032")) {
-					cellValue = "회송";
+				cell = row.createCell(i);
+				cell.setCellValue(headerName);
+				cell.setCellStyle(headerStyle);
+			    row.setHeight((short)512);
+			    sheet.autoSizeColumn(i);
+			    sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
+			}//header
+			
+			NodeList objRow = objXML.getElementsByTagName("ROW");
+	
+			for (int j = 0; j < objRow.getLength(); j++) {
+				row = sheet.createRow((j + 1));
+				
+				Element rowElem = (Element) objRow.item(j);
+				NodeList objCell = rowElem.getElementsByTagName("CELL");
+	
+				for (int k = 0; k < objCell.getLength(); k++) {
+					Element cellElem = (Element) objCell.item(k);
+	   				String cellValue = cellElem.getElementsByTagName("VALUE").item(0).getTextContent();
+					
+					if (cellValue.equals("001")) {
+						cellValue = "품의";
+					} else if (cellValue.equals("002")) {
+						cellValue = "협조";
+					} else if (cellValue.equals("003")) {
+						cellValue = "감사";
+					} else if (cellValue.equals("004")) {
+						cellValue = "심사";
+					} else if (cellValue.equals("011")) {
+						cellValue = "수신";
+					} else if (cellValue.equals("012")) {
+						cellValue = "합의";
+					} else if (cellValue.equals("013")) {
+						cellValue = "시행";
+					} else if (cellValue.equals("014")) {
+						cellValue = "검사부 감사";
+					} else if (cellValue.equals("015")) {
+						cellValue = "공람";
+					} else if (cellValue.equals("016")) {
+						cellValue = "회람";
+					} else if (cellValue.equals("017")) {
+						cellValue = "참조";
+					} else if (cellValue.equals("018")) {
+						cellValue = "후결";
+					} else if (cellValue.equals("019")) {
+						cellValue = "발신";
+					} else if (cellValue.equals("020")) {
+						cellValue = "신청";
+					} else if (cellValue.equals("031")) {
+						cellValue = "반송";
+					} else if (cellValue.equals("032")) {
+						cellValue = "회송";
+					}
+					
+					cell = row.createCell(k);
+					cell.setCellValue(cellValue);
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)384);
+					sheet.autoSizeColumn(k);
+				    sheet.setColumnWidth(k, (sheet.getColumnWidth(k)) + 512);
 				}
-				
-				cell = row.createCell(k);
-				cell.setCellValue(cellValue);
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)384);
-				sheet.autoSizeColumn(k);
-			    sheet.setColumnWidth(k, (sheet.getColumnWidth(k)) + 512);
-			}
-		}//body
-		
-		/* 2019-11-18 홍승비 - 전자결재문서 엑셀 저장 시 부서ID 대신 부서명을 파일명에 사용하도록 수정 */
-		// 2020-10-08 김민성- 크롬에서 다운로드시 확장자 사라지는 오류 수정
-		String pFileName = EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptName() + "_" + messageSource.getMessage("ezApprovalG.kms01", locale).replace(" ", "_") + ".xls";
-		response.setContentType("application/ms-excel");
-		response.setCharacterEncoding("utf-8");
-		// CWE-113 보안 취약점 대응
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName.replaceAll("\r", "").replaceAll("\n", "")) + "\"");
-		
-		workbook.write(response.getOutputStream());
-		//workbook.close();
-		
-		logger.debug("excelExportOut ended"); 
+			}//body
+			
+			/* 2019-11-18 홍승비 - 전자결재문서 엑셀 저장 시 부서ID 대신 부서명을 파일명에 사용하도록 수정 */
+			// 2020-10-08 김민성- 크롬에서 다운로드시 확장자 사라지는 오류 수정
+			String pFileName = EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptName() + "_" + messageSource.getMessage("ezApprovalG.kms01", locale).replace(" ", "_") + ".xls";
+			response.setContentType("application/ms-excel");
+			response.setCharacterEncoding("utf-8");
+			// CWE-113 보안 취약점 대응
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName.replaceAll("\r", "").replaceAll("\n", "")) + "\"");
+			
+			workbook.write(response.getOutputStream());
+			//workbook.close();
+			
+			logger.debug("excelExportOut ended");
 		}
 	}
 	
