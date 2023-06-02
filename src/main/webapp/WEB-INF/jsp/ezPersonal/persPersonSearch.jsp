@@ -605,7 +605,13 @@
 	        	if (selTab == "orglistView" && $(".txtlist_DeptTD").length > 0) {
 			        $(".txtlist_DeptTD").css("display", "none");
 			        $(".txtlist_DeptTD").css("padding-left", "4px");
-			        $(".mainlist tr td:nth-child(2)").css("padding-left", "15px");
+					//2023-06-02 김대현 조직도 리스트 보기에서 직위 테이블 헤더와 바디 값 줄이 안맞는 현상 수정
+					//$(".mainlist tr td:nth-child(2)").css("padding-left", "15px");
+					$(".mainlist tr .td_gray:nth-child(2)").css("padding-left", "15px");
+					// 검색시 이름이 밀리는 현상 수정
+					if ($("#Search_txtlist_table tr .td_gray:nth-child(2)").css("padding-left") == "15px") {
+						$("#Search_txtlist_table tr .td_gray:nth-child(2)").css("padding-left", "4px");
+					}
 		        }
 	    	}
 	    	
