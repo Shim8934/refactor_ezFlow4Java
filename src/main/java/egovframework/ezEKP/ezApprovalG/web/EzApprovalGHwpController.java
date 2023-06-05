@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -493,6 +495,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String sFileTitle = xmlDom.getElementsByTagName("name").item(0).getTextContent();
 		String sFileData = xmlDom.getElementsByTagName("filedata").item(0).getTextContent();
 		String sExt = xmlDom.getElementsByTagName("ext").item(0).getTextContent();
+		String sFileTypeCode = xmlDom.getElementsByTagName("fileTypeCode").item(0).getTextContent();
+		String sFileUrl = xmlDom.getElementsByTagName("fileUrl").item(0).getTextContent();
+		
 		//2019.03.25 천성준 - 사용안해서 일단 주석
 		//String sGUID = xmlDom.getElementsByTagName("guid").item(0).getTextContent();
 		//String sFolder = xmlDom.getElementsByTagName("dir").item(0).getTextContent();
@@ -512,7 +517,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String pDirTempPath = "";
 		if (ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId()) != null) {
 			useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
-		}		
+		}
+		
+		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
 		String extResult = "";
 		String pDate = "";
 		String sFileHref = xmlDom.getElementsByTagName("filehref").item(0).getTextContent(); 
@@ -576,12 +583,38 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 					}
 				}
 			}
-
+			
 			File file2 = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + newfilename));
 			File file3 = new File(commonUtil.detectPathTraversal(realPath +  commonUtil.separator + sFileHref ));
-
+			
 			if (!file2.exists()) {
-				FileUtils.copyFile(file3, file2);
+				
+				// useHwpDownSecurity의 값이 Y일 때, 배포용 문서로 변환된 파일은 URL을 통해 웹한글기안기 서버에서 해당 파일을 다운로드
+				if (useHwpDownSecurity.equals("Y") && sExt.equals("hwp") && sFileTypeCode.equals("document") && !sFileUrl.equals("noUrl")) {
+					String targetFilePath = commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + newfilename);
+					Path pathTarget = Paths.get(targetFilePath);
+					URL downloadUrl = new URL(sFileUrl);
+					InputStream inpStream = null;
+					
+					try {
+						inpStream = downloadUrl.openStream();
+						Files.copy(inpStream, pathTarget);
+						
+						inpStream.close();
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					} finally {
+						if (inpStream != null) {
+							try {
+								inpStream.close();
+							} catch (Exception ignore) {
+								logger.error(ignore.getMessage(), ignore);
+							}
+					    }
+					}
+				} else {
+					FileUtils.copyFile(file3, file2);
+				}
 			}
 
 			extResult = "OK";

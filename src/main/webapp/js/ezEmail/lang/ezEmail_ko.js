@@ -332,6 +332,9 @@ var strLangKSA05 = "일정을 저장하는 도중 오류 발생.";
 
 var strLangTagAlreadyUse = "이미 사용 중인 다른 태그의 이름입니다.";
 
+/* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
+var strLangKWCHd01 = "한글 배포용 문서 저장 시 오류가 발생했습니다. 다시 시도해주세요.";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

@@ -65,6 +65,9 @@
         <c:if test="${isCrossBrowser != true}">
         	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>
+        <script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
+    	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
 	    <script type="text/javascript">
 	    $(document).ready(function() {
 	    	window.resizeTo(990, window.outerHeight);
@@ -204,7 +207,19 @@
 				'cancelBT' : webFolderCancelBT 						// 웹폴더첨부 취소 시 실행할 함수
 		};
      	
+        /* 2023-05-15 김우철 - hwp결재문서를 배포용 문서로 저장하기 위한 변수 */
+		var HwpCtrl;
+		var useHwpDownSecurity = "<c:out value='${useHwpDownSecurity}'/>";
+		var HwpSecurityNum = "<c:out value='${HwpSecurityNum}'/>";
+		var isHwpCtrlOpen = false;
+     	
 	    window.onload = function () {
+	    	
+	    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출
+        	if (useHwpDownSecurity == "Y") {
+        		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
+        	}
+	    	
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
 	            EzHTTPTrans.UseDbCl = true;
@@ -2750,4 +2765,5 @@
 	<xmp id="AttachXmlList" style="display:none;">
 	   ${attach}
 	</xmp>
+	<div id="hwpctrl"/>
 </html>

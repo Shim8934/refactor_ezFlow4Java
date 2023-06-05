@@ -1,4 +1,4 @@
-﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+﻿﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
 var emailFlag=false;
 function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
@@ -1964,13 +1964,21 @@ function GetDateFormatString() {
 }
 
 var AttachFlag = false;
+var ofileName;
+var ofileHref;
+var ofileAttachSize;
+var ofileTypeCode;
+var ofileUrl;
+var ofileCopyPath;
 function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     AttachFlag = true;
     var docAttach = "";
-    
-    var ofileName = new Array();
-    var ofileHref = new Array();
-    var ofileAttachSize = new Array();
+    ofileName = new Array();
+    ofileHref = new Array();
+    ofileAttachSize = new Array();
+    ofileTypeCode = new Array();
+    ofileUrl = new Array();
+    ofileCopyPath = new Array();
     var attachcount = 0;
     
     if (DocHref.toLowerCase().indexOf(".doc") == -1 && DocHref.toLowerCase().indexOf(".hwp") == -1) {
@@ -2027,7 +2035,9 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	     ofileName[attachcount] = strLang116 + fileext;
 	     ofileHref[attachcount] = docHref;
 //	     ofileAttachSize[attachcount] = docfilesize.toString();
-	     attachcount++;
+		 ofileTypeCode[attachcount] = "document";
+		 
+		 attachcount++;
     }
     var xmlHTTP = createXMLHttpRequest();
     var xmlpara = createXmlDom();
@@ -2083,122 +2093,55 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
         
         eSubject.value = strLang117 + getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
         
-        if (DocHref.toLowerCase().indexOf(".doc") < 0 && DocHref.toLowerCase().indexOf(".hwp") < 0) {
-	        var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
-	        var pstrXML = "";
-	        if (AttachRows.length > 0) {
-	            pstrXML += "<LISTVIEWDATA><HEADERS>";
-	            pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
-	            pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-	            pstrXML += "</HEADERS><ROWS>";
-	        }
-	
-	        for (var i = 0; i < AttachRows.length; i++) {
-	            var filepath = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
-	            var filename = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
-	            var filesize = SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
-	            var fileExt = getOriginalFileExtension(filepath);
-	            if (filesize == "0" && fileExt == "hwp") {
-	                filename = filename + ".hwp";
-	                filesize = strLang116;
-	            }
-	            else if ((filesize == "0" || filesize == "") && fileExt == "mht") {
-	                filename = filename + ".mht";
-	                filesize = strLang116;
-	            }
-	
-	            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
-	            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
-	            pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
-	            pstrXML += "<DATA3></DATA3>";
-	            pstrXML += "<DATA4>APPROVAL</DATA4>";
-	            pstrXML += "<DATA5>N</DATA5>";
-	            pstrXML += "<DATA6>" + filesize + "</DATA6>";
-	            if (filesize > BigSizeAttachSize)
-	                pstrXML += "<DATA7>Y</DATA7>";
-	            else
-	                pstrXML += "<DATA7>N</DATA7>";
-	
-	            pstrXML += "</CELL><CELL>";
-	            pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
-	            pstrXML += "</CELL></ROW>";
-	        }
-	        if (pstrXML != "") {
-	            pstrXML += "</ROWS></LISTVIEWDATA>";
-	            objXML = loadXMLString(pstrXML);
-	            if (pAttachListXml == "") {
-	                pAttachListXml = objXML;
-	            }
-	            else {
-	                if (typeof (pAttachListXml) == "string")
-	                    Rtnxml = loadXMLString(pAttachListXml);
-	                else
-	                    Rtnxml = loadXMLString(getXmlString(pAttachListXml));
-	
-	                GetChildNodes(SelectNodes(objXML, "<LISTVIEWDATA><ROWS>")).length
-	                for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
-	                    var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
-	//                  if (CrossYN())
-	//                     var Node = Rtnxml.importNode(objNewAttachNodes, true);
-	//                  else
-	                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
-	                }
-	                pAttachListXml = Rtnxml;
-	            }
-	            if (DragDropAttachObjetLoading) {
-	//            	AppendFileAttachInfo(pAttachListXml);
-	            	dadiframe.fileupload2(pAttachListXml);            	
-	            }
-	        } 
-        } else {
-//	            var ezUtil = new ActiveXObject("ezUtil.RegScript");
-//	            var regData = ezUtil.ReadValueEx(2, "SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage", "OEMCP");
-//	            ezUtil = null;
-		        var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
+//		var ezUtil = new ActiveXObject("ezUtil.RegScript");
+//		var regData = ezUtil.ReadValueEx(2, "SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage", "OEMCP");
+//		ezUtil = null;
 
-	            for (var i = 0; i < SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW").length; i++) {
-	
-	                var fileName = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
-	                var fileHref = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
-	                var fileAttachSize =  SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
-	                
-		            if ((fileAttachSize == "0" || fileAttachSize == "") && (fileHref.indexOf(".hwp") > -1 || fileHref.indexOf(".mht") > -1)) {
-		            	fileAttachSize = strLang116;
-		            }
-	                
-	                fileName = fileName.replace("&amp;","&");
-	
-	                fileName = ReplaceText(fileName, "\\\\", "");
-	                fileName = ReplaceText(fileName, "/", "");
-	                fileName = ReplaceText(fileName, ":", "_");
-	                fileName = ReplaceText(fileName, "\\*", "");
-	                fileName = ReplaceText(fileName, "\\?", "");
-	                fileName = ReplaceText(fileName, "\"", "");
-	                fileName = ReplaceText(fileName, "<", "");
-	                fileName = ReplaceText(fileName, ">", "");
-	                fileName = ReplaceText(fileName, "\\|", "");
-	
-	                var tmpExt = fileHref.substr(fileHref.length - 3, 3);
-	                // 2018.07.04 (KLIB) 암호화된 ezd 확장자 파일일 경우 원래 확장자로 처리
-	                if (tmpExt === 'ezd') {
-	                	tmpExt = fileHref.substr(fileHref.length - 7, 3);
-	                }
-	                
-	                if (fileName.length > 3) {
-	                    if (fileName.substr(fileName.length - 3, 3) != tmpExt)
-	                        fileName += "." + tmpExt;
-	                } else {
-	                	fileName += "." + tmpExt;
-	                }
-	
-	                var fullPath = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(fileHref) + "&filename=" + escape(fileName) + "&regData=" + regData;
-	                ofileName[attachcount] = fileName;
-	                ofileHref[attachcount] = fileHref;
-	                ofileAttachSize[attachcount] = fileAttachSize;
-	
-	                attachcount++;
-	            }
-	            attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize);
+		// 결재문서의 확장자(mht, hwp 등)에 따라 다르게 작동하던  파일 업로드 방식을 단일 형식으로 통일
+        var AttachRows = SelectNodes(ReturnXML, "ATTACHINFO/DATA/ROW");
+
+        for (var i = 0; i < AttachRows.length; i++) {
+            var fileName = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
+            var fileHref = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
+            var fileAttachSize =  SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
+            var fileTypeCode = SelectSingleNodeValue(AttachRows[i], "ATTACHTYPECODE");
+            
+            if ((fileAttachSize == "0" || fileAttachSize == "") && (fileHref.indexOf(".hwp") > -1 || fileHref.indexOf(".mht") > -1)) {
+            	fileAttachSize = strLang116;
+            }
+            
+            fileName = fileName.replace("&amp;","&");
+            fileName = fileName.replace(/[*|\\\":\/?<>]/gi, "_");
+
+
+            var tmpExt = fileHref.substr(fileHref.length - 3, 3);
+            // 2018.07.04 (KLIB) 암호화된 ezd 확장자 파일일 경우 원래 확장자로 처리
+            if (tmpExt === 'ezd') {
+            	tmpExt = fileHref.substr(fileHref.length - 7, 3);
+            }
+            
+          	if (fileName.length > 3) {
+                if (fileName.substr(fileName.length - 3, 3) != tmpExt)
+                    fileName += "." + tmpExt;
+            } else {
+            	fileName += "." + tmpExt;
+            }
+
+            ofileName[attachcount] = fileName;
+            ofileHref[attachcount] = fileHref;
+            ofileAttachSize[attachcount] = fileAttachSize;
+            ofileTypeCode[attachcount] = fileTypeCode;
+
+            attachcount++;
+        }
+        
+        /* 2023-05-16 김우철 - 테넌트 컨피그  useHwpDownSecurity의 값이 Y일 때, 배포용 문서로 변환하는 함수 hwp_url를 호출 */
+        if (useHwpDownSecurity == "Y") {
+        	hwp_url(0, ofileName.length);
+        } else {
+        	attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize, ofileTypeCode);
+        }
+	            
 /*=======
         document.title = getNodeText(GetElementsByTagName(ReturnXML, "DOCTITLE")[0]);
         
@@ -2267,7 +2210,6 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
             	dadiframe.fileupload2(pAttachListXml);            	
             }
 >>>>>>> master*/
-        }
     }
 }
 
@@ -4149,14 +4091,19 @@ function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
             createNodeAndInsertText(xmlDoc2, objRoot, "filename", "");
             createNodeAndInsertText(xmlDoc2, objRoot, "sid", "");
             createNodeAndInsertText(xmlDoc2, objRoot, "filehref", ofileHref[i]);
+            createNodeAndInsertText(xmlDoc2, objRoot, "fileTypeCode", ofileTypeCode[i]);
+            createNodeAndInsertText(xmlDoc2, objRoot, "fileUrl", ofileUrl[i]); // 2023-05-16 김우철 - 웹한글기안기 서버에서 배포용 문서 파일을 다운로드하기 위한 URL 배열
             xmlhttp2.open("POST", "/ezApprovalG/mail_interuploadX_Server.do", false);
             xmlhttp2.send(xmlDoc2);
             var rtnInfo = xmlhttp2.responseText;
-
+            
             if (rtnInfo != "ERROR") {
                 var filename = g_fileList[i];
                 var filesize = ofileAttachSize[i];
                 var filePath = rtnInfo.split('_kaonisplit_')[0];
+                
+                // 2023-05-16 김우철 - tempFileUpload에 임시저장한 경로를 ofileCopyPath 배열에 저장
+                ofileCopyPath[i] = filePath;
                 var BigYN = rtnInfo.split('_kaonisplit_')[1].split('_')[0];
                 var extYN = rtnInfo.split('_kaonisplit_')[1].split('_')[1];
 
@@ -4215,7 +4162,14 @@ function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
     }
 
     for (var i = 0; i < g_fileList.length; i++) {
-        var filepath = ofileHref[i];
+    	var filepath = "";
+    	
+    	if (useHwpDownSecurity == "Y") {
+    		filepath = ofileCopyPath[i];
+    	} else {
+    		filepath = ofileHref[i];
+    	}
+    	
         var filename = ofileName[i];
         var filesize = ofileAttachSize[i];
         if (filesize == "0" && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "hwp") {
@@ -4226,7 +4180,7 @@ function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
             filename = filename + ".mht";
             filesize = strLang116;
         }
-
+		
         pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
         pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
         pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
@@ -4250,8 +4204,8 @@ function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
             pAttachListXml = objXML;
         }
     }
-        
-        dadiframe.fileupload2(pAttachListXml);            	
+    
+    dadiframe.fileupload2(pAttachListXml);            	
     xmlhttp = null;
 }
 
@@ -4385,4 +4339,56 @@ function setBigAttachCountInfo (bigAttachArr) {
 			console.log(error);
 		}
 	});
+}
+
+/* 2023-05-16 김우철 - 메일 작성 시 파일을 배포용 문서로 변환할 때, Whwp api가 비동기로 호출되는 것을 제어하기 위한 재귀함수 */
+function hwp_url(p_num, arrayLength) {
+	// p_num은 각 첨부파일의 배열 인덱스이며, 파일 전체 개수보다 같거나 많아지는 경우 attach_Add_OtherModule 함수 호출
+	if (p_num >= arrayLength) {
+		return attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize, ofileTypeCode);
+	} else {
+		if (isHwpCtrlOpen != true) {
+			alert(strLangKWCHd01);
+			return;
+		}
+		
+		var strFileExt = ofileName[p_num].substr(ofileName[p_num].lastIndexOf('.') + 1);
+		if (useHwpDownSecurity == "Y" && strFileExt == "hwp" && ofileTypeCode[p_num] == "document") {
+			var doc = HwpCtrl.Open(window.location.origin + ofileHref[p_num], "HWP", "", function(res) {
+				// console.log("res" + p_num + " : " + JSON.stringify(res));
+				if (res.result) {
+       				var dact = HwpCtrl.CreateAction("FileSetSecurity");
+					var dset = dact.CreateSet();
+					
+					dact.GetDefault(dset);
+					
+					// 패스워드 설정
+					dset.SetItem("Password", HwpSecurityNum);
+					
+					// 프린트 사용여부
+					dset.SetItem("NoPrint", true);
+					
+					// 복사 방지
+					dset.SetItem("NoCopy", true);
+					
+					var rtn = dact.Execute(dset, function(action, param, result, userData) {
+						// 배포용 문서는 웹한글기안기 서버 상에 저장되며, ofileUrl[p_num]에는 웹한글기안기 서버에서 해당 파일을 다운로드하기 위한 URL이 저장됨
+   						ofileUrl[p_num] = result.downloadUrl;
+   						ofileAttachSize[p_num] = result.size; // 배포용 문서는 파일 사이즈가 달라지므로 재설정
+   						p_num++;
+   						
+   						return hwp_url(p_num, arrayLength);
+					});
+       			} else {
+       				alert(strLangKWCHd01);
+       				return;
+       			}
+			});	
+		} else {
+			ofileUrl[p_num] = "noUrl";
+			p_num++;
+			
+			return hwp_url(p_num, arrayLength);
+		}
+	}
 }

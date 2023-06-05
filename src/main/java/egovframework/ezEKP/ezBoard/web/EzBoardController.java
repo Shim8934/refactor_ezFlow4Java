@@ -15,6 +15,9 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.security.MessageDigest;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -4138,6 +4141,15 @@ public class EzBoardController extends EgovFileMngUtil{
 			displayName = userInfo.getDisplayName2();
 		}
 		
+		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
+		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
+		String HwpSecurityNum = "";
+		
+		/* 2023-05-17 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 배포용 암호 설정 테넌트 컨피그로 추가 */
+		if (useHwpDownSecurity.equals("Y")) {
+			HwpSecurityNum = ezCommonService.getTenantConfig("HwpSecurityNum", userInfo.getTenantId());
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -4169,6 +4181,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("displayName", displayName);
+		model.addAttribute("useHwpDownSecurity", useHwpDownSecurity);
+		model.addAttribute("webHWPUrl", webHWPUrl);
+		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -7485,6 +7500,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = commonUtil.detectPathTraversal(xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent());
 		String realPath = commonUtil.getRealPath(request);
 		int cnt = xmlDom.getElementsByTagName("ROW").getLength();
+		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
 		
 		String[] fileNames = new String[cnt];
 		//String[] orgFileNames = new String[cnt];
@@ -7492,6 +7508,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String[] fileLocations = new String[cnt];
 		String[] types = new String[cnt];
 		String[] uploadSN = new String[cnt];
+		String[] downUrl = new String[cnt];
 		
 		for (int k = 0; k < cnt; k++) {
 			fileNames[k] = xmlDom.getElementsByTagName("FILENAME").item(k).getTextContent();
@@ -7500,6 +7517,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			//orgFileNames[k] = xmlDom.getElementsByTagName("ORGFILEPATH").item(k).getTextContent();
 			types[k] = xmlDom.getElementsByTagName("TYPE").item(k).getTextContent();
 			uploadSN[k] = "{" + UUID.randomUUID().toString() + "}";
+			
+			if (useHwpDownSecurity.equals("Y")) {
+				downUrl[k] = xmlDom.getElementsByTagName("DOWNURL").item(k).getTextContent();
+			}
 		}
 		
 		String dirPath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
@@ -7521,8 +7542,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 		}
 		
+		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+		
 		for (int k = 0; k < cnt; k++) {
-			String fileName = fileNames[k];
+			String fileName = commonUtil.getUniqueFileName(fileNames[k], fileNameMap);
 			String fileLocation = fileLocations[k];
 			String fileSize = fileSizes[k];
 			String puploadSN;
@@ -7552,8 +7575,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			file = new File(dirPath2 + commonUtil.separator + fileLocation);
-			uploadLocation = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName.replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-					replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+			uploadLocation = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName;
 			puploadSN = uploadSN[k] + "_" + fileName;
 			
 			if (isEncryptedForKlib) {
@@ -7561,8 +7583,32 @@ public class EzBoardController extends EgovFileMngUtil{
 				puploadSN += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
-			if (file.exists()) {
-				FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(uploadLocation)));
+			// useHwpDownSecurity의 값이 Y일 때, 배포용 문서로 변환된 파일은 URL을 통해 웹한글기안기 서버에서 해당 파일을 다운로드
+			if (useHwpDownSecurity.equals("Y") && fileExt.equalsIgnoreCase(".hwp") && !downUrl[k].equals("noUrl")) {
+				Path pathUploadLocation = Paths.get(commonUtil.detectPathTraversal(uploadLocation));
+				URL downloadUrl = new URL(downUrl[k]);
+				InputStream inpStream = null;
+				
+				try {
+					inpStream = downloadUrl.openStream();
+					Files.copy(inpStream, pathUploadLocation);
+					
+					inpStream.close();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				} finally {
+					if (inpStream != null) {
+						try {
+							inpStream.close();
+						} catch (Exception ignore) {
+							logger.error(ignore.getMessage(), ignore);
+						}
+				    }
+				}
+			} else {
+				if (file.exists()) {
+					FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(uploadLocation)));
+				}
 			}
 			
 			strXML += "<NODE><PUPLOADSN><![CDATA[" + puploadSN + "]]></PUPLOADSN>";

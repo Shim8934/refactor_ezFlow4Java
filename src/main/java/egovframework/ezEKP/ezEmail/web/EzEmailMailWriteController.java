@@ -518,6 +518,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         urlOwn = _url;
         logger.debug("_cmd=" + _cmd + ",_url=" + _url);
         
+        String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", loginInfo.getTenantId());
+		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", loginInfo.getTenantId());
+		String HwpSecurityNum = "";
+		
+		/* 2023-05-15 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 배포용 암호 설정 테넌트 컨피그로 추가 */
+		if (useHwpDownSecurity.equals("Y")) {
+			HwpSecurityNum = ezCommonService.getTenantConfig("HwpSecurityNum", loginInfo.getTenantId());
+		}
+        
         /* String _attach = "";
         if (request.getParameter("attach") != null) {
         	_attach = request.getParameter("attach");
@@ -1437,6 +1446,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//근태관리
 		model.addAttribute("attitudeId", attitudeId);
 		
+		model.addAttribute("useHwpDownSecurity", useHwpDownSecurity); // hwp 배포용 문서 저장을 위한 테넌트 컨피그
+		model.addAttribute("webHWPUrl", webHWPUrl); // Whwp api Url
+		model.addAttribute("HwpSecurityNum", HwpSecurityNum); // hwp 배포용 문서 해제를 위한 암호
+		
 		response.setHeader("X-XSS-Protection", "0");
 		
 		logger.debug("mailWrite ended.");
@@ -1883,6 +1896,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String[] newFileName = new String[fileCnt];
 		boolean[] downloadedFlags = new boolean[fileCnt];
 		String comparingExt = "";
+		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
 		
 		int totalFileSize = 0;
 		
@@ -1950,6 +1964,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
 				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
 				fileName[i] = commonUtil.normalizeFileName(fileName[i]);
+				fileName[i] = commonUtil.getUniqueFileName(fileName[i], fileNameMap);
 				
 				if (fileName[i].lastIndexOf(".") > -1) {
 					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);

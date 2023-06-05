@@ -51,6 +51,10 @@
 		<!-- time picker-->
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+		<!-- Whwp api -->
+        <script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
+    	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
 	    <script type="text/javascript">
 		    var pUploadFilePath = "${uploadFilePath}";
 		    var pBoardID = "<c:out value='${boardID}'/>";
@@ -123,7 +127,20 @@
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    var mailShareId = "${mailShareId}";
 		    
+		    /* 2023-05-16 김우철 - hwp결재문서를 배포용 문서로 저장하기 위한 변수 */
+		    var HwpCtrl;
+			var useHwpDownSecurity = "<c:out value='${useHwpDownSecurity}'/>";
+			var HwpSecurityNum = "<c:out value='${HwpSecurityNum}'/>";
+			var isHwpCtrlOpen = false;
+		    var startCheck = false;
+		    
 		    window.onload = function () {
+		    	
+		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출
+	        	if (useHwpDownSecurity == "Y") {
+	        		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
+	        	}
+		    	
 		        if (pUseBackGround == "TRUE") {
 		            document.getElementById("pUseBackGroundTR").style.display = "";
 		            GetBackGroundImage();
@@ -1362,100 +1379,10 @@
 		            var xmldom = createXmlDom();
 		            xmldom = loadXMLString(xmlHTTP.responseText);
 		            document.getElementById("txtTitle").value = "<spring:message code='ezBoard.t420' />" + getNodeText(GetElementsByTagName(xmldom, "DOCTITLE")[0]);
-		            var xmlHTTP2 = createXMLHttpRequest();
-		            var xmldom2 = createXmlDom();
-		            if (SelectNodes(xmldom, "ATTACHNAME").length > 0) {
-		                var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
-		                for (var i = 0; i < SelectNodes(xmldom, "ATTACHNAME").length; i++) {
-		                    var temppath = getNodeText(SelectNodes(xmldom, "ATTACHFILEHREF")[i]);
-		                    temppath = temppath.substring(34, temppath.length);
-		                    var orgfile = temppath.split("/");
-		                    orgfile = orgfile[orgfile.length - 1];
-		                    xmlstring += "<ROW><FILENAME><![CDATA[" + getNodeText(SelectNodes(xmldom, "ATTACHNAME")[i]) + "]]></FILENAME>";
-		                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
-		                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
-		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
-		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
-		                    else
-		                        xmlstring += "<TYPE>APPROVALG</TYPE>";
-		                    xmlstring += "<FILESIZE>" + getNodeText(SelectNodes(xmldom, "ATTACHFILESIZE")[i]) + "</FILESIZE></ROW>";
-		                }
-		                if (pUrl.toLowerCase().indexOf(".hwp") > -1) {
-		                    xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
-		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1) {
-		                        xmlstring += "<FILEPATH><![CDATA[" + pUrl.split("upload_approval")[1] + "]]></FILEPATH>";
-		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
-		                    }
-		                    else {
-		                        xmlstring += "<FILEPATH><![CDATA[" + pUrl.split("upload_approvalG")[1] + "]]></FILEPATH>";
-		                        xmlstring += "<TYPE>APPROVALG</TYPE>";
-		                    }
-		                    xmlstring += "<ORGFILEPATH><![CDATA[" + "<spring:message code='ezBoard.t419' />" + "]]></ORGFILEPATH>";
-		                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
-		                }
-		                xmlstring += "</ROWS></DATA>";
-		                xmldom2 = loadXMLString(xmlstring);
-		                xmlHTTP.open("POST", "/ezBoard/uploadApprovFile.do", false);
-		                xmlHTTP.send(xmldom2);
-		                returnvalue(xmlHTTP.responseText);
-		
-		                var xml = loadXMLString(xmlHTTP.responseText);
-		                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
-		                var strRet = "";
-		                for (i = 0; i < nodes.length; i++) {
-		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
-		                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
-		                    //if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
-		                    //	filepath = filepath + ".ezd";
-		                    //}
-		                    
-		                    strRet += "tempUploadFile/" + filepath + "|";
-		                }
-		                attachxml = strRet;
-		            } else {
-		            	var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
-	                    var temppath = pUrl;
-	                    temppath = temppath.substring(34, temppath.length);
-	                    var orgfile = temppath.split("/");
-	                    orgfile = orgfile[orgfile.length - 1];
-	                    
-	                    var orgFileList = orgfile.split(".");
-	                    var orgFileType = orgFileList[orgFileList.length - 1];
-		                 
-	                    if (pUrl.toLowerCase().indexOf(".hwp") > -1) {
-		               	//if (orgFileType == "hwp"){ //ezd로 들어옴
-		            	   	xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
-		                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
-		                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
-		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
-		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
-		                    else
-		                        xmlstring += "<TYPE>APPROVALG</TYPE>";
-		                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
-			               
-			                xmlstring += "</ROWS></DATA>";
-			                xmldom2 = loadXMLString(xmlstring);
-			                xmlHTTP.open("POST", "/ezBoard/uploadApprovFile.do", false);
-			                xmlHTTP.send(xmldom2);
-			                returnvalue(xmlHTTP.responseText);
-			
-			                var xml = loadXMLString(xmlHTTP.responseText);
-			                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
-			                var strRet = "";
-			                for (i = 0; i < nodes.length; i++) {
-			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
-			                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
-			                    //if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
-			                    //	filepath = filepath + ".ezd";
-			                    //}
-			                    
-			                    strRet += "tempUploadFile/" + filepath + "|";
-				                attachxml = strRet;
-			                }
-		               } else {
-			                xmlstring += "</ROWS></DATA>";
-		               }
-		            }
+		            startCheck = false;
+		            
+		            /* 2023-05-16 김우철 - 파일 업로드를 위한 xml 작성 함수 분리 및 호출 */
+		            uploadXml(0, xmldom);
 		        }
 		    }
 		    function GetBoardInfo() {
@@ -2200,6 +2127,190 @@
 				});
 	        }
 	        
+	        var xmlstringUl = "";
+	        var startMht = false;
+	        
+			/* 2023-05-16 김우철 - 결재문서, 첨부파일의 정보를 xml로 작성하는 함수. 결재문서, 문서첨부 파일이면서 확장자가 hwp이면 배포용 문서로 변환 */
+	        function uploadXml(p_num, xmldom) {
+	        	var arrayLength = SelectNodes(xmldom, "ATTACHNAME").length;
+	        	
+	        	// 결재문서를 게시물로 게시
+	        	if (!startCheck) {
+	        		var temppath = pUrl;
+                    temppath = temppath.substring(34, temppath.length);
+                    var orgfile = temppath.split("/");
+                    orgfile = orgfile[orgfile.length - 1];
+                    
+                    var orgFileList = orgfile.split(".");
+                    var orgFileType = orgFileList[orgFileList.length - 1];
+	        		
+	        		xmlstringUl += "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+	        		
+	        		// 결재문서의 확장자가 hwp인 경우
+	        		if (orgFileType == "hwp") {
+	        			xmlstringUl += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
+	        			xmlstringUl += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+	        			xmlstringUl += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
+	        			
+	        			if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1) {
+	        				xmlstringUl += "<TYPE>APPROVAL</TYPE>";
+	        			} else {
+	        				xmlstringUl += "<TYPE>APPROVALG</TYPE>";
+	        			}
+	                    xmlstringUl += "<FILESIZE>0</FILESIZE>";
+	                    
+	                    // useHwpDownSecurity가 Y이면 한글 배포용 문서로 변환
+	                    if (useHwpDownSecurity == "Y") {
+	                    	if (isHwpCtrlOpen == true) {
+	                    		var doc = HwpCtrl.Open(window.location.origin + pUrl, "HWP", "", function(res) {
+		            				// console.log("res" + p_num + " : " + JSON.stringify(res));
+		            				if (res.result) {
+		                   				var dact = HwpCtrl.CreateAction("FileSetSecurity");
+		            					var dset = dact.CreateSet();
+		            					
+		            					dact.GetDefault(dset);
+		            					
+		            					// 패스워드 설정
+		            					dset.SetItem("Password", HwpSecurityNum);
+		            					
+		            					// 프린트 사용여부
+		            					dset.SetItem("NoPrint", true);
+		            					
+		            					// 복사 방지
+		            					dset.SetItem("NoCopy", true);
+		            					
+		            					var rtn = dact.Execute(dset, function(action, param, result, userData) {
+		            						// 배포용 문서는 웹한글기안기 서버 상에 저장되며, downUrl에는 웹한글기안기 서버에서 해당 파일을 다운로드하기 위한 URL이 저장됨
+		               						var downUrl = result.downloadUrl;
+		               						xmlstringUl += "<DOWNURL><![CDATA[" + downUrl + "]]></DOWNURL></ROW>";
+		               						startCheck = true;
+		               						return uploadXml(p_num, xmldom);
+		            					});
+		                   			} else {
+		                   				alert(strLangKWCHd01);
+		                   				return;
+		                   			}
+		            			});
+	                    	} else {
+	                    		alert(strLangKWCHd01);
+                   				return;
+	                    	}
+	            		} else {
+	            			xmlstringUl += "<DOWNURL>noUrl</DOWNURL></ROW>";
+	            			startCheck = true;
+	            			return uploadXml(p_num, xmldom);
+	            		}
+	                    
+	        		}
+	        		// 결재문서의 확장자가 hwp가 아닌 경우
+	        		else {
+	        			startCheck = true;
+	        			startMht = true;
+            			return uploadXml(p_num, xmldom);
+	        		}
+	        		
+	        	}
+	        	// 결재문서의 일반 첨부파일 및 문서첨부를 게시물의 첨부파일로 삽입 (결재 문서의 정보를 xml에 저장 완료한 경우)
+	        	else {
+					if (p_num >= arrayLength) {
+						xmlstringUl += "</ROWS></DATA>";
+					
+						if (arrayLength == 0 && startMht == true) {
+							return;
+						} else {
+							uploadApprov(xmlstringUl);
+						}
+						
+					} else {
+						var orgTemppath = getNodeText(SelectNodes(xmldom, "ATTACHFILEHREF")[p_num]);
+	                    var temppath = orgTemppath.substring(34, orgTemppath.length);
+	                    var orgfile = temppath.split("/");
+	                    orgfile = orgfile[orgfile.length - 1];
+	                    var orgFileList = orgfile.split(".");
+	                    var orgFileType = orgFileList[orgFileList.length - 1];
+	                    var orgTypeCode = getNodeText(SelectNodes(xmldom, "ATTACHTYPECODE")[p_num]);
+	                    var filename = getNodeText(SelectNodes(xmldom, "ATTACHNAME")[p_num]).replace("&amp;","&");
+	                    filename = filename.replace(/[*|\\\":\/?<>]/gi, "_");
+	                    
+	                    xmlstringUl += "<ROW><FILENAME><![CDATA[" + filename + "]]></FILENAME>";
+	                    xmlstringUl += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+	                    xmlstringUl += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
+	                    
+	                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1) {
+	                    	xmlstringUl += "<TYPE>APPROVAL</TYPE>";
+	                    } else {
+	                    	xmlstringUl += "<TYPE>APPROVALG</TYPE>";
+	                    }
+	                    
+	                    // orgTypeCode를 체크하여 일반 첨부파일(file)이 아닌 문서첨부(document)만 한글 배포용 문서로 변환
+                        if (useHwpDownSecurity == "Y" && orgFileType == "hwp" && orgTypeCode == "document") {
+	                    	if (isHwpCtrlOpen == true) {
+	                    		var doc = HwpCtrl.Open(window.location.origin + orgTemppath, "HWP", "", function(res) {
+		            				// console.log("res" + p_num + " : " + JSON.stringify(res));
+		            				if (res.result) {
+		                   				var dact = HwpCtrl.CreateAction("FileSetSecurity");
+		            					var dset = dact.CreateSet();
+		            					
+		            					dact.GetDefault(dset);
+		            					
+		            					// 패스워드 설정
+		            					dset.SetItem("Password", HwpSecurityNum);
+		            					
+		            					// 프린트 사용여부
+		            					dset.SetItem("NoPrint", true);
+		            					
+		            					// 복사 방지
+		            					dset.SetItem("NoCopy", true);
+		            					
+		            					var rtn = dact.Execute(dset, function(action, param, result, userData) {
+		            						// 배포용 문서는 웹한글기안기 서버 상에 저장되며, downUrl에는 웹한글기안기 서버에서 해당 파일을 다운로드하기 위한 URL이 저장됨
+		            						var downUrl = result.downloadUrl;
+		               						xmlstringUl += "<FILESIZE>" + result.size + "</FILESIZE>";
+		               						xmlstringUl += "<DOWNURL><![CDATA[" + downUrl + "]]></DOWNURL></ROW>";
+		               						p_num++;
+		               						return uploadXml(p_num, xmldom);
+		            					});
+		                   			} else {
+		                   				alert(strLangKWCHd01);
+		                   				return;
+		                   			}
+		            			});
+	                    	} else {
+	                    		alert(strLangKWCHd01);
+                   				return;
+	                    	}
+	            		}
+                        // useHwpDownSecurity가 N이거나 파일이 한글 배포용 문서 변환 대상이 아닌 경우
+                        else {
+	            			xmlstringUl += "<FILESIZE>" + getNodeText(SelectNodes(xmldom, "ATTACHFILESIZE")[p_num]) + "</FILESIZE>";
+	            			xmlstringUl += "<DOWNURL>noUrl</DOWNURL></ROW>";
+	            			p_num++;
+	            			return uploadXml(p_num, xmldom);
+	            		}
+					}
+	        	}
+	        }
+	        
+	        // 함수 uploadXml에서 작성한 xml의 파일 정보를 이용해 서버의 임시저장 폴더에 파일 업로드
+	        function uploadApprov(xmlstring) {
+	        	var xmlHTTP = createXMLHttpRequest();
+	        	var xmldom2 = createXmlDom();
+	        	xmldom2 = loadXMLString(xmlstring);
+                xmlHTTP.open("POST", "/ezBoard/uploadApprovFile.do", false);
+                xmlHTTP.send(xmldom2);
+                returnvalue(xmlHTTP.responseText);
+
+                var xml = loadXMLString(xmlHTTP.responseText);
+                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+                var strRet = "";
+                for (i = 0; i < nodes.length; i++) {
+                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+                    
+                    strRet += "tempUploadFile/" + filepath + "|";
+                }
+                attachxml = strRet;
+	        }
+	        
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -2616,6 +2727,7 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<div id="hwpctrl"/>
 	</body>
 	<script type="text/javascript">
 	//사용안되는듯 2017-01-11 파악
