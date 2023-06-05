@@ -49,11 +49,11 @@
                 		<span id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:11px;margin-left:21px;cursor:pointer;background-color:#b9b9b9; border:1px solid #b9b9b9;"/></span>
                 	</dt>
                     <dt>${userName} ${userTitle}</dt>
-                    <dd><spring:message code='ezNewPortal.t026' />${lastLogin}</dd>
+                    <dd><spring:message code='ezNewPortal.yej06' />&nbsp;:&nbsp;${lastLogin}</dd>
+                    <dd><spring:message code='ezNewPortal.jhy01' />&nbsp;:&nbsp;${lastLoginIP}</dd>
                 </dl>
             </div>
             <div class="personal_content">
-            	<p>&nbsp;</p>
             <c:choose>
             	<c:when test="${useAttitude eq 'YES' }">
 	                <dl class="commute">

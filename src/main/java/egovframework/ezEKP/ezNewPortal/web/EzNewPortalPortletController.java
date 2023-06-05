@@ -896,6 +896,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("userEmail", data.get("userEmail"));
 			model.addAttribute("lastLogin", data.get("lastLogin"));
 			model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+			
+			// 2023-05-16 장혜연 : 사용자 정보 포틀릿에 최종접속IP 표시
+			model.addAttribute("lastLoginIP", data.get("lastLoginIP"));
 		}
 		
 		logger.debug("portalUserInfoPortlet End");
