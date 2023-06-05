@@ -94,7 +94,7 @@
     <align>center</align>
   </column>
   <column>
-    <heading>Location</heading>
+    <heading>Mailbox</heading>
     <type>i4</type>
     <propname>parentname</propname>
     <prop></prop>
