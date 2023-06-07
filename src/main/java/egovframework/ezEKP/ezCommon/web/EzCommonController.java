@@ -108,7 +108,8 @@ public class EzCommonController extends EgovFileMngUtil{
         }
         
         String scheme = "http://";
-    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+        String http = request.getScheme();
+    	if (http.equalsIgnoreCase("https")) {
     		scheme = "https://";
     	}
         
