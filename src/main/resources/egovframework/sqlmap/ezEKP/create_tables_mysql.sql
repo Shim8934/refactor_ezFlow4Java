@@ -10288,7 +10288,8 @@ CREATE TABLE `tbl_recreadhistory` (
   `DEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SERIALNO`,`DOCID`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SERIALNO`,`DOCID`),
+  KEY `tbl_recreadhistory_DOCID_IDX` (`DOCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

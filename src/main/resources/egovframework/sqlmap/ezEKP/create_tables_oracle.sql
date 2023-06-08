@@ -12177,6 +12177,12 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_RECREADHISTORY_PK" ON "TBL_RECREADHISTORY" ("TENANT_ID", "COMPANYID", "SERIALNO", "DOCID") 
   ;
 --------------------------------------------------------
+--  DDL for Index TBL_RECREADHISTORY_DOCID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX TBL_RECREADHISTORY_DOCID_IDX ON "TBL_RECREADHISTORY" ("DOCID")
+  ;
+--------------------------------------------------------
 --  DDL for Index TBL_RECRELAYINFO_PK
 --------------------------------------------------------
 
