@@ -18,13 +18,13 @@
 							<c:out value="${portletName }" />
 						</dt>
 					<dd class="portletPlus" id="photoBoardPlus">
-						<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+						<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
 					</dd>
 						<c:if test="${not empty photoBoardList}">
 							<dd class="nextBtn">
 								<c:choose>
-									<c:when test="${usedTheme eq 3 }">
-										<img src="/images/ezNewPortal/photo_next3.png">
+									<c:when test="${usedTheme eq 3}">
+										<img src="/images/ezNewPortal/photo_next.png">
 									</c:when>
 									<c:otherwise>
 										<img src="/images/ezNewPortal/photo_next.png">
@@ -33,8 +33,8 @@
 							</dd>
 							<dd class="preBtn">
 								<c:choose>
-									<c:when test="${usedTheme eq 3 }">
-										<img src="/images/ezNewPortal/photo_pre3.png">
+									<c:when test="${usedTheme eq 3}">
+										<img src="/images/ezNewPortal/photo_pre.png">
 									</c:when>
 									<c:otherwise>
 										<img src="/images/ezNewPortal/photo_pre.png">
@@ -46,9 +46,10 @@
 						<c:choose>
 							<c:when test="${not empty photoBoardList && photoBoardList != ''}">
 								<ul class="photoList" id="photoul">
-									<c:forEach items="${photoBoardList }" var="photo">
-										<li><img src="${photo.filePath }" data1="${photo.boardID }"
-											data2="${photo.itemID }" onclick="photoItemRead(this)"></li>
+									<c:forEach items="${photoBoardList}" var="photo">
+										<li><img src="${photo.filePath}" data1="${photo.boardID}" data2="${photo.itemID}" onclick="photoItemRead(this)">
+											<span>${photo.title}</span>
+										</li>
 									</c:forEach>
 								</ul>
 							</c:when>

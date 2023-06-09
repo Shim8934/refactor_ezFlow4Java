@@ -863,13 +863,13 @@ function getMonthlyBestEmployee() {
 			var strHTML = "";
 			
 			if (bestEmployee == null) {
-				$("#emPic").find("img").attr("src", "/images/ezNewPortal/bestEmployee_pic_none.png");
+				$("#emPic").find("img").attr("src", "/images/ezNewPortal/info_pic_none.png");
 				strHTML += "<dl class='nodata' style='margin-top:8px'>";
 				strHTML += "<dd>" + messages.strLang1 + "</dd>";
 				strHTML += "</dl>";
 			} else {
 				$("#emPic").find("img").attr("src", bestEmployee.userImg);
-				strHTML += "<dd class='emName'>\"" + bestEmployee.userName + " " + bestEmployee.title + "\"</dd>";
+				strHTML += "<dd class='emName'>" + bestEmployee.userName + " " + bestEmployee.title + "</dd>";
 				strHTML += "<dd class='emTeam'>" + bestEmployee.userDeptName + "</dd>";
 			}
 			
@@ -916,10 +916,12 @@ function getAttitudeList(themeId) {
  						$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
  					}
  					
+ 					/* 2023-06-01 홍승비 - 테마2 > 디자인 개선을 위해 출근, 퇴근 버튼 클릭 시 표출 수정 (inAttiBtn_txt 영역 대신 inAttiBtn 영역에 시간 표출) */
 					if (nowTheme == 2) {
  						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
- 						$("#inAttiBtn_txt").removeClass("main_out").addClass("main_in");
-						$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 						//$("#inAttiBtn_txt").removeClass("main_out").addClass("main_in");
+						//$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
  					} else {
  						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
  						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
@@ -942,8 +944,9 @@ function getAttitudeList(themeId) {
 					
 					if (nowTheme == 2) {
  						$("#inAttiBtn").removeClass("main_out").addClass("main_lateIn");
- 						$("#inAttiBtn_txt").removeClass("main_out").addClass("main_lateIn");
-						$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 						//$("#inAttiBtn_txt").removeClass("main_out").addClass("main_lateIn");
+						//$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
  					} else {
  						$("#inAttiBtn").removeClass("main_out").addClass("main_lateIn");
  						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
@@ -965,8 +968,9 @@ function getAttitudeList(themeId) {
 					
 					if (nowTheme == 2) {
 						$("#outAttiBtn").removeClass("main_out").addClass("main_in");
-						$("#outAttiBtn_txt").removeClass("main_out").addClass("main_in");
-						$("#outAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+						//$("#outAttiBtn_txt").removeClass("main_out").addClass("main_in");
+						//$("#outAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+						$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
  					} else {
  						$("#outAttiBtn").removeClass("main_out").addClass("main_in");
  						$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
@@ -1228,7 +1232,25 @@ function quickMenuOpen(menu) {
 	    case "Circular":
 			url = "/ezCircular/circularIndex.do";
 			location = "main";
-	        break; 
+	        break;
+	        
+	    /* 2023-06-05 홍승비 - 테마2 상단 사용자 영역 > 조직도, 커뮤니티, 메모 메뉴 연결 추가 */
+	    case "Organ":
+			var height = window.screen.availHeight;
+			var width = window.screen.availWidth;
+			var top = (height - 670) / 2;
+			var left = (width - 750) / 2;
+			url = '/ezPersonal/personSearch.do';
+			option = 'height=670px,width=750px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
+	    	break;
+	    case "Community":
+	    	url = "/ezCommunity/communityMain.do";
+	    	location = "main";
+	    	break;
+	    case "Memo":
+	    	url = "/ezMemo/memoMainPage.do";
+	    	location = "main";
+	    	break;
 	}
 	
 	window.open(url, location, option);

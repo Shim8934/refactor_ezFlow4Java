@@ -267,11 +267,11 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 /* admin slider images */
 #sliderContainer{ margin:0px; padding:0px 0px 0px 5px;}
 .sliderList{ margin:10px 20px 20px 10px; display:inline-block; background:#fff; box-sizing:border-box; position:relative; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.slider-body{ margin:0px; padding:0px; position:relative; cursor:move; border:none; width:285px; height:515px; }
-.slider-head{ margin:0px; padding:0px; cursor:move; background: rgba(0, 0, 0, 0.5); width:285px; height:40px; position:absolute; top:0px;}
+.slider-body{ margin:0px; padding:0px; position:relative; cursor:move; border:none; width:280px; height:450px; }
+.slider-head{ margin:0px; padding:0px; cursor:move; background: rgba(0, 0, 0, 0.5); width:280px; height:40px; position:absolute; top:0px;}
 .slider-head .sliderHDT{ margin:10px 10px 0px 15px; padding:0px; float:right; cursor:pointer;}
 .slider-head .sliderHDD{ margin:10px 0px 0px 0px; padding:0px; float:right; cursor:pointer;}
-.slider-content{ width:285px; height:115px; background: rgba(0, 0, 0, 0.5); position:absolute; bottom:0px; margin:0px; padding:0px;}
+.slider-content{ width:280px; height:115px; background: rgba(0, 0, 0, 0.5); position:absolute; bottom:0px; margin:0px; padding:0px;}
 .sliderCDT{ margin-top:20px; padding:0px 15px;}
 .sliderCDT .sliderTtit{ margin:0px; padding:0px; display:inline-block; float:left; color:#fff; font-size:12px; font-weight:bold; width:28%; box-sizing:border-box; text-align:left; height:27px; line-height:27px;}
 .sliderCDT .sliderText{ margin:0px; padding:0px; display:inline-block; width:72%;}
@@ -279,11 +279,11 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .sliderCDT .sliderSwitch{ margin:14px 0px 0px 0px; padding:0px; display:inline-block;}
 
 .sliderListmodify{ margin:10px 20px 20px 0px; padding:0px; background:#fff; position:relative; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); display:inline-block;}
-.sliderModifyBody{ width:285px; height:515px; margin:0px; position:relative; cursor:move;}
-.slider-header-modify{ cursor:move; background: rgba(0, 0, 0, 0.5); margin:0px; padding:0px;width:285px; height:40px; position:absolute; top:0px;}
+.sliderModifyBody{ width:280px; height:450px; margin:0px; position:relative; cursor:move;}
+.slider-header-modify{ cursor:move; background: rgba(0, 0, 0, 0.5); margin:0px; padding:0px;width:280px; height:40px; position:absolute; top:0px;}
 .slider-header-modify .sliderHDT{ margin:10px 0px 0px 15px; padding:0px; float:left; cursor:pointer;}
 .slider-header-modify .sliderHDD{ margin:10px 15px 0px 0px; padding:0px; float:right; cursor:pointer;}
-.slider-content-modify{width:285px; height:115px; background: rgba(0, 0, 0, 0.5); position:absolute; bottom:0px; margin:0px; padding:0px;}
+.slider-content-modify{width:280px; height:115px; background: rgba(0, 0, 0, 0.5); position:absolute; bottom:0px; margin:0px; padding:0px;}
 .addImageBtnModify{ margin:-70px 0px 0px -33px; padding:0px; position:absolute; top:50%; left:50%; cursor:pointer;}
 
 /* ManageOrgan */

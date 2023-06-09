@@ -19,7 +19,7 @@
 			
 			var currentWeatherArr = currentWeather.split(";");
 			
-			//현재 날씨를 잘라서 각각 넣어줌
+			// 현재 날씨를 잘라서 각각 삽입
 			var currentIcon = currentWeatherArr[0];
 			var currentMain = currentWeatherArr[1];
 			var currentTemp = currentWeatherArr[2];
@@ -27,7 +27,7 @@
 			var currentClouds = currentWeatherArr[4];
 			var currentWind = currentWeatherArr[5];
 			
-			//오늘 날씨를 잘라서  너줌 오늘날씨는 시간별 아이콘, 온도 두가지로 되어있음
+			// 오늘 날씨를 잘라서 삽입 / 오늘날씨는 시간별 아이콘, 온도 두가지로 되어있음
 			var TodayWeatherArr = todayWeather.split("!");
 			
 			var today1Arr = TodayWeatherArr[0].split(";");
@@ -57,7 +57,7 @@
 			var today5Time = todayHoursArr[4];
 			
 			$(function(){
-				//셀렉트박스 onchange
+				// 셀렉트박스 onchange
 				$("#cityList").change(function(){
 			    	$.ajax({
 			    		type : "GET",
@@ -85,7 +85,7 @@
 			    			
 			    			todayHoursArr = data.todayHours.split(";");
 			    			
-			    			$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon" +  currentIcon.substring(0,2) + ".png");
+			    			$("#currentIcon").attr("src", "/images/ezNewPortal/weather/wt" +  currentIcon.substring(0,2) + ".png");
 			
 			    			switch (currentMain) {
 			    			case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
@@ -154,11 +154,11 @@
 			    			today5Temp = today5Arr[1];
 			    			today5Time = todayHoursArr[4];
 			    			
-			    			$("#icon1").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today1Icon.substring(0,2) + ".png");
-			    			$("#icon2").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today2Icon.substring(0,2) + ".png");
-			    			$("#icon3").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today3Icon.substring(0,2) + ".png");
-			    			$("#icon4").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today4Icon.substring(0,2) + ".png");
-			    			$("#icon5").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today5Icon.substring(0,2) + ".png");
+			    			$("#icon1").attr("src", "/images/ezNewPortal/weather/s_wt" +  today1Icon.substring(0,2) + ".png");
+			    			$("#icon2").attr("src", "/images/ezNewPortal/weather/s_wt" +  today2Icon.substring(0,2) + ".png");
+			    			$("#icon3").attr("src", "/images/ezNewPortal/weather/s_wt" +  today3Icon.substring(0,2) + ".png");
+			    			$("#icon4").attr("src", "/images/ezNewPortal/weather/s_wt" +  today4Icon.substring(0,2) + ".png");
+			    			$("#icon5").attr("src", "/images/ezNewPortal/weather/s_wt" +  today5Icon.substring(0,2) + ".png");
 			    			
 			    			if (today1Temp.indexOf(".") == -1) {
 			    				$("#temp1").text(today1Temp + "℃");
@@ -216,33 +216,34 @@
 	<body>
 		<article class="weather box_shadow">
 			<div class="layDiv">
-				<c:choose>
-					<c:when test="${usedTheme eq 3 }">
-						<dl class="portlet_title sortablePortlet" style="border-bottom: 1px solid #e7e7e7;">
-					</c:when>
-					<c:otherwise>
-						<dl class="portlet_title sortablePortlet">
-					</c:otherwise>
-				</c:choose>
+				<dl class="portlet_title sortablePortlet">
 		        	<dt class="portletText"><c:out value='${portletName }'/></dt>
 		            <dd class="portletPlus">
 		            	<select id="cityList" class="weatherSelect">
 		                </select>
 		            </dd>
 		        </dl>
+		        <%-- 2023-06-01 홍승비 - 홈 > 날씨 포틀릿 > 디자인 개선을 위해 스타일 및 날씨 이미지 수정 --%>
 		        <div class="weather_content">
+		        <span style="position:absolute; font-size:9px; color:#989595; right:15px; top:2px; ">Weather from OpenWeatherMap </span>
 		        	<div class="weather_title">
 		            	<dl class="weatherPresent">
 		                	<dt><img id="currentIcon" src=""></dt>
 		                    <dd><span id="mainWeather"></span> <span id="currentTemp"></span></dd>
 		                </dl>
 		                <ul class="weatherPer">
-		                	<li class="weatherPerLi"><span class="icon iconbg01"><img src="/images/ezNewPortal/weather/weatherIcon_add01.png"></span>
-		                	<span class="text"><span class="text" id="humidity" style="margin-right:5px;font-weight: normal"></span><span id="currentHumidity"></span><span class="text" id="humidityPer"></span></span></li>
-		                    <li class="weatherPerLi"><span class="icon iconbg02"><img src="/images/ezNewPortal/weather/weatherIcon_add02.png"></span>
-		                    <span class="text"><span class="text" id="clouds" style="margin-right:5px;font-weight: normal"></span><span id="currentClouds"></span><span class="text" id="cloudsPer"></span></span></li>
-		                    <li class="weatherPerLi"><span class="icon iconbg03"><img src="/images/ezNewPortal/weather/weatherIcon_add03.png"></span>
-		                    <span class="text"><span class="text" id="wind" style="margin-right:5px;font-weight: normal"></span><span id="currentWind"></span><span class="text" id="windPer"></span></span></li>
+		                	<li class="weatherPerLi" style="display: list-item;">
+		                		<%-- <span class="icon iconbg01"><img src="/images/ezNewPortal/weather/weatherIcon_add01.png"></span> --%>
+		                		<span class="text"><span class="text" id="humidity" style="margin-right:5px;font-weight: normal"></span><span id="currentHumidity"></span><span class="text" id="humidityPer"></span></span>
+		                	</li>
+		                    <li class="weatherPerLi" style="display: list-item;">
+		                    	<%-- <span class="icon iconbg02"><img src="/images/ezNewPortal/weather/weatherIcon_add02.png"></span> --%>
+		                    	<span class="text"><span class="text" id="clouds" style="margin-right:5px;font-weight: normal"></span><span id="currentClouds"></span><span class="text" id="cloudsPer"></span></span>
+		                    </li>
+		                    <li class="weatherPerLi" style="display: list-item;">
+		                    	<%-- <span class="icon iconbg03"><img src="/images/ezNewPortal/weather/weatherIcon_add03.png"></span> --%>
+		                    	<span class="text"><span class="text" id="wind" style="margin-right:5px;font-weight: normal"></span><span id="currentWind"></span><span class="text" id="windPer"></span></span>
+		                    </li>
 		                </ul>
 		            </div>
 		            <div class="weather_mini" style="display:none">
@@ -267,12 +268,11 @@
 		                    <dd><span id="date5"></span><span id="temp5"></span></dd>
 		                </dl>
 		            </div>
-					<span style="font-size:10px;margin-right:6px;margin-top:3px;margin-bottom:1px;float:right;">Weather from OpenWeatherMap </span>
 		        </div>
 		    </div>
 		</article>
 		<script>
-			$("#currentIcon").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon" +  currentIcon.substring(0,2) + ".png");
+			$("#currentIcon").attr("src", "/images/ezNewPortal/weather/wt" +  currentIcon.substring(0,2) + ".png");
 				
 			switch (currentMain) {
 			case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
@@ -325,11 +325,11 @@
 			$("#currentClouds").text(currentClouds);
 			$("#currentWind").text(currentWind);
 			
-			$("#icon1").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today1Icon.substring(0,2) + ".png");
-			$("#icon2").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today2Icon.substring(0,2) + ".png");
-			$("#icon3").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today3Icon.substring(0,2) + ".png");
-			$("#icon4").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today4Icon.substring(0,2) + ".png");
-			$("#icon5").attr("src", "/images/ezNewPortal/weather/" + "weatherIcon_mini" +  today5Icon.substring(0,2) + ".png");
+			$("#icon1").attr("src", "/images/ezNewPortal/weather/s_wt" +  today1Icon.substring(0,2) + ".png");
+			$("#icon2").attr("src", "/images/ezNewPortal/weather/s_wt" +  today2Icon.substring(0,2) + ".png");
+			$("#icon3").attr("src", "/images/ezNewPortal/weather/s_wt" +  today3Icon.substring(0,2) + ".png");
+			$("#icon4").attr("src", "/images/ezNewPortal/weather/s_wt" +  today4Icon.substring(0,2) + ".png");
+			$("#icon5").attr("src", "/images/ezNewPortal/weather/s_wt" +  today5Icon.substring(0,2) + ".png");
 			
 			if (today1Temp.indexOf(".") == -1) {
 				$("#temp1").text(today1Temp + "℃");

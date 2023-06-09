@@ -9,9 +9,9 @@
 <body class="body_bg1">
 	<article class="box_shadow">
 		<div class="layDIV">
-			<dl class="portlet_title sortablePortlet">
-			    <dt class="portletText"><spring:message code='ezNewPortal.pjg01' /></dt>
-			    <dd class="portletPlus" id="ezWorkspacePlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
+			<dl class="portlet_title sortablePortlet" style="<c:if test='${usedTheme == 3}'>border-bottom: 1px solid #D7E3E5;</c:if>">
+			    <dt class="portletText"><spring:message code='ezNewPortal.pjg01'/></dt>
+			    <dd class="portletPlus" id="ezWorkspacePlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png"></dd>
 			</dl>          
 			<ul class="collaborate_tab" id="divSpaceListResults" style="overflow-y: auto; height: 204px;">
 			</ul>

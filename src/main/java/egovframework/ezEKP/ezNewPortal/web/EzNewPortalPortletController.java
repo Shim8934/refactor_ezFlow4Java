@@ -479,7 +479,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("startRow", 0);
-		param.put("photoCount", 4);
+		param.put("photoCount", 3);
 		param.put("portletId", portletId);
 		String url = "/rest/ezPortal/portlets/photoBoard";
 		
@@ -1088,7 +1088,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
+			model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
 		}
+		
 		logger.debug("portalCountPortlet End");
 		return "/ezNewPortal/portlets/cntPortlet"; 
 	}
@@ -1270,5 +1272,40 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 
 		logger.debug("ChartPortlet End");
 		return "/ezNewPortal/portlets/chartPortlet";
+	}
+	
+	/**
+	 * 2023-06-07 홍승비 - 테마2 > 상단 사용자 정보 영역 좌측 하단 > 회사별 공지사항 게시판 표출
+	 * */
+	@RequestMapping(value = "/ezNewPortal/getTheme2NotiBoardItemList.do", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONArray getTheme2NotiBoardItemList(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getTheme2NotiBoardItemList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = req.getParameter("boardID"); // 회사별 공지사항 게시판ID
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("boardID", boardID);
+		
+		String url = "/rest/ezPortal/portlets/theme2NotiBoardItemList";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		JSONArray boardList = new JSONArray();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			String access = data.get("access").toString();
+			
+			if (access.equals("true")) {
+				boardList = (JSONArray) data.get("boardList");
+			}
+		}
+		
+		logger.debug("getTheme2NotiBoardItemList End");
+		
+		return boardList;
 	}
 }

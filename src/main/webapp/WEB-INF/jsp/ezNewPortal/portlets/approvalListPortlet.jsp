@@ -165,7 +165,7 @@
 			    
 			    for(var i=0; i<listSize; i++){
 			        console.log("img", lines[i].ext2);
-			        var imgsrc = lines[i].ext2 !== null && lines[i].ext2 !== '' ? "/ezCommon/downloadAttach.do?filePath=" + imgPath + "/" + lines[i].ext2 : "/images/kr/main/bestEmployee_pic_none.png";
+			        var imgsrc = lines[i].ext2 !== null && lines[i].ext2 !== '' ? "/ezCommon/downloadAttach.do?filePath=" + imgPath + "/" + lines[i].ext2 : "/images/ezNewPortal/info_pic_none.png";
 			        var apprTextColor = "";
 			        
 			        // 승인 003, 진행 002, 대기, 001

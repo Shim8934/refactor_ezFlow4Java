@@ -12,10 +12,10 @@
 	<body>
 	<article class="box_shadow">
 		<div class="layDIV">
-			<dl class="portlet_title sortablePortlet">
+			<dl class="portlet_title sortablePortlet" style="border-bottom:0px;">
 				<%-- portalMain에서 타이틀을 넣어주는 것이 더 나을 수 있음 --%>
 				<dt class="portletText"><c:out value = "${portletName}" /></dt>
-				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
+				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/resources_setting.png"></dd>
 			</dl>
 			<div class = "bookmark_content">
 				<ul class="bookmark">
@@ -26,32 +26,73 @@
 					<li class='bookmarkLi_none'></li>
 				</ul>
 			</div>
-			<div class ="apprgraph_div">
-				<div class="apprgraph">
-					<div class="apprgraph_area">
-						<dl class="bookmarkG01">
-							<dt><spring:message code='main.t00006' /></dt>
-							<dd>(<span id="SIXHGAP">0</span>)</dd>
-						</dl>
-						<dl class="bookmarkG02">
-							<dt><spring:message code='main.t00007' /></dt>
-							<dd>(<span id="ONEDGAP">0</span>)</dd>
-						</dl>
-						<dl class="bookmarkG03">
-							<dt><spring:message code='main.t00008' /></dt>
-							<dd>(<span id="SEVENDGAP">0</span>)</dd>
-						</dl>
-						<dl class="bookmarkG04">
-							<dt><spring:message code='main.t00009' /></dt>
-							<dd>(<span id="ONEMGAP">0</span>)</dd>
-						</dl>
-						<dl class="bookmarkG05">
-							<dt><spring:message code='main.t00010' /></dt>
-							<dd>(<span id="OTHER">0</span>)</dd>
-						</dl>
+			
+			<%-- 2023-05-31 홍승비 - 테마에 따라 즐겨찾기 양식 포틀릿 하단의 미결재문서 스타일 분기처리 --%>
+			<c:choose>
+				<c:when test="${usedTheme == 1 || usedTheme == 2 || usedTheme == 3}">
+					<div class="apprgraph_div">
+		                <div class="apprgraph_text"><spring:message code='ezNewPortal.HSBPT02'/></div>
+		                <div class="apprgraph">
+		                    <div class="apprgraph_area">
+		                        <dl class="bookmarkG01">
+		                            <dt><spring:message code='main.t00006'/></dt>
+		                            <dd><span id="SIXHGAP">0</span></dd>
+		                            <dd class="dot"></dd>
+		                        </dl>
+		                        <dl class="bookmarkG02">
+		                            <dt><spring:message code='main.t00007'/></dt>
+		                            <dd><span id="ONEDGAP">0</span></dd>
+		                            <dd class="dot"></dd>
+		                        </dl>
+		                        <dl class="bookmarkG03">
+		                            <dt><spring:message code='main.t00008'/></dt>
+		                            <dd><span id="SEVENDGAP">0</span></dd>
+		                            <dd class="dot"></dd>
+		                        </dl>
+		                        <dl class="bookmarkG04">
+		                            <dt><spring:message code='main.t00009'/></dt>
+		                            <dd><span id="ONEMGAP">0</span></dd>
+		                            <dd class="dot"></dd>
+		                        </dl>
+		                        <dl class="bookmarkG05">
+		                            <dt><spring:message code='main.t00010'/></dt>
+		                            <dd><span id="OTHER">0</span></dd>
+		                            <dd class="dot"></dd>
+		                        </dl>
+		                        <div class="graph_bar"></div>
+		                    </div>
+		                </div>
+		            </div>
+				</c:when>
+				<c:otherwise>
+					<div class ="apprgraph_div">
+						<div class="apprgraph">
+							<div class="apprgraph_area">
+								<dl class="bookmarkG01">
+									<dt><spring:message code='main.t00006' /></dt>
+									<dd>(<span id="SIXHGAP">0</span>)</dd>
+								</dl>
+								<dl class="bookmarkG02">
+									<dt><spring:message code='main.t00007' /></dt>
+									<dd>(<span id="ONEDGAP">0</span>)</dd>
+								</dl>
+								<dl class="bookmarkG03">
+									<dt><spring:message code='main.t00008' /></dt>
+									<dd>(<span id="SEVENDGAP">0</span>)</dd>
+								</dl>
+								<dl class="bookmarkG04">
+									<dt><spring:message code='main.t00009' /></dt>
+									<dd>(<span id="ONEMGAP">0</span>)</dd>
+								</dl>
+								<dl class="bookmarkG05">
+									<dt><spring:message code='main.t00010' /></dt>
+									<dd>(<span id="OTHER">0</span>)</dd>
+								</dl>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</article>
 		<script type="text/javascript">
@@ -69,7 +110,7 @@
 						
 						for (var i = 0; i < 5; i++) {
 							if (forms[i]) {
-								formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span style='width: 65px; overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:3; -webkit-box-orient:vertical; height: 39px;";
+								formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span style='overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:3; -webkit-box-orient:vertical; height: 39px;";
 								if (navigator.userAgent.indexOf("Trident") > -1) {
 									formsHTML += " display:-ms-flexbox; -ms-flex-pack:center; "
 								} else {

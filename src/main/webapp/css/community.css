@@ -61,7 +61,7 @@ img { border:0px;}
 	background:url(../images/kr/community/type4/backimg.gif);
 }
 .cmhomebg_type5{
-	background:url(../images/kr/community/type5/backimg.gif);
+	background:#fff;
 }
 
 /* layout */
@@ -102,7 +102,6 @@ img { border:0px;}
 	width:1200px;
 	margin:20px auto 20px;
 	padding:10px 10px 20px 10px;
-	border:1px solid #a6a6a6;
 	overflow:hidden;
 	background:#fff;
 }
@@ -117,14 +116,14 @@ img { border:0px;}
 }
 .cmhome_left { 
 	float:left; 
-	width:180px; 
+	width:205px; 
 	margin:0px;
-	overflow:hidden; 
+
 	}
 .cmhome_right {
 	float:right;
 	margin:0px;
-	width:1000px;
+	width:970px;
 }
 
 
@@ -1067,7 +1066,7 @@ img { border:0px;}
 	clear:both;
 	padding:0px; 
 	height:156px; 
-	margin:0px -10px;
+	margin:0px -10px 15px;
 	vertical-align:top;
 	overflow:hidden;
 }
@@ -1078,24 +1077,24 @@ img { border:0px;}
 }
 #cmhome_type5 .cmhome_top .homename {
 	/* background:url(../images/kr/community/type5/topbg.gif) repeat-x bottom #fff; */
-	background-color:#f8f8fa;
-	border-top:1px solid #eeeef0;
-	border-bottom:1px solid #eeeef0;
-	color:#000; 
+	background-color:#042C5A;
+	color:#fff; 
 	font-size:14px;
 	line-height:140%; 
-	padding:6px 10px 7px 10px; 
+	padding:10px 10px 10px 10px; 
 	text-align:center;
 }
 
 
 /* cmhome_type5-left */
 #cmhome_type5 .info {
-	width:178px;
+	width:205px;
 	/* background: url(../images/kr/community/type5/info_bg_bottom.gif) repeat-x bottom #a4a7a9; */
-	border:1px solid #ddd;
-	padding:0px;
-	overflow:hidden;
+	border:1px solid #CFD8DD;
+	border-radius: 7px;
+	padding:10px 15px;
+	box-shadow: 0 0 5px #CFD8DD;
+	box-sizing: border-box;
 }
 #cmhome_type5 .info_box {
 	position:relative;
@@ -1104,15 +1103,17 @@ img { border:0px;}
 	padding:15px 10px 2px 10px;
 }
 #cmhome_type5 .info_box .master {
-	margin:0px 0px 9px 65px;
+	margin:3px 0px 9px 70px;
 	padding:0px;
 	font-size:12px;
 	color:#333;
 }
 #cmhome_type5 .info_box .master p {
 	padding:0px;
-	margin:0px;
+	margin:4px 0 0 0px;
 	line-height:18px;
+	display:inline-block;
+
 	
 }
 #cmhome_type5 .info_box .pic {
@@ -1129,47 +1130,53 @@ img { border:0px;}
 
 #cmhome_type5 .info_count {
 	margin:0px;
-	height:42px;
-	padding:0px 10px;
+	height:65px;
+	padding:10px 20px;
 	/* background:url(../images/kr/community/type5/info_bg02.gif) no-repeat; */
-	border-bottom:1px solid #ddd;
-	border-top:1px solid #ddd;
+	border-bottom:1px solid #E1E1E1;
 	list-style:none;
 }
 #cmhome_type5 .info_count li {
-	float:left;
-	width:39px;
-	height:27px;
-	padding:15px 0px 0px 32px;
+	display:flex;
+	justify-content: space-between;
+	align-items: center;
+	width:100%;
+	padding:3px 0px 3px 0px;
 	/* 2018-07-03 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
 	/*text-align:right;*/
 	text-align:center;
-	display:inline-block;
 	overflow:hidden;
 	margin-right:5px;
 	
 }
-#cmhome_type5 .info_count .icon_member {
+/* #cmhome_type5 .info_count .icon_member {
 	background:url(../images/kr/community/type1/icon_people_big.gif) no-repeat 0px 10px;
 }
 #cmhome_type5 .info_count .icon_board {
 	margin-left:5px;
 	background:url(../images/kr/community/type1/icon_board_big.gif) no-repeat 2px 10px;
+} */
+#cmhome_type5 .info_count li .txt{
+	width:60px;
+	text-align: left;
 }
 #cmhome_type5 .info_count li .count {
-	display:block;
-	font-size:11px;
-	color:#333;
-	font-weight:bold;
+	display:inline-block;
+	width: 60px;
+	font-size:12px;
+	text-align: right;
+	color:#042C5A;
+	font-weight: bold;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;
+	box-sizing: border-box;
 	
 }
 
 #cmhome_type5 .info_list {	
-	background-color:#f8f8fa;
-	padding:7px;
+	border-top:#E1E1E1;
+	padding:10px 20px 20px 20px;
 	list-style:none;
 	font-size:12px;
 }
@@ -1177,6 +1184,7 @@ img { border:0px;}
 #cmhome_type5 .info_list li {	
 	line-height:20px;
 	padding:0px 0px 0px 0px;	
+	color:#727272;
 }
 
 _list li {
@@ -1209,28 +1217,32 @@ _list li {
 
 
 #cmhome_type5 .btn_join {
-	border-top:1px solid #ddd;
-	height:29px;
+	height:35px;
 	text-align:center;
 	font-weight:bold;
 	font-size:12px;
 	color:#333;
 	cursor:pointer;
-	line-height:29px;
+	line-height:35px;
+	background: linear-gradient(#FEFEFE, #E5E9EB);
+	border:1px solid #B9C0C8;
+	border-radius: 5px;
+	margin-bottom: 10px
 }
 #cmhome_type5 .btn_join img {
 	vertical-align:middle;
 }
 
 #cmhome_type5 .leftmenu {
-	border:1px solid #ddd;
+	border:1px solid #CFD8DD;
 	border-top:0px;
-	margin-top:10px;
+	margin-top:15px;
 	font-size:12px;
+	border-radius: 7px;
 }
 #cmhome_type5 .leftmenu h2 {
 	margin:0px;
-	padding:0 0 0 10px;
+	padding:0 0 0 15px;
 	border-top:1px solid #ddd;
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
@@ -1257,7 +1269,7 @@ _list li {
 	font-size:12px;
 	font-weight: bold;
 	margin:0px;
-	padding:0 0 0 10px;
+	padding:0 0 0 15px;
 	border-top:1px solid #ddd;
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
@@ -1279,27 +1291,30 @@ _list li {
 /* cmhome_type5-right */
 #cmhome_type5 .introduce {
 	clear:both;
-	border:1px solid #d5d5d5;
-	background:url(../images/kr/community/type5/introduce_bg.gif);
+	border:1px solid #CFD8DD;
+	background:#FAFCFD;
 	overflow:hidden;
 	height:93px;
+	border-radius: 7px;
+	padding:8px 0;
+	box-sizing: border-box;
 }
 #cmhome_type5 .introduce .bgimg {
 	display:inline-block;
-	width:120px;
+	width:60px;
 	vertical-align:middle;
 	float:left;
 	height:93px;
-	background:url(../images/kr/community/type5/introduce_img.gif) no-repeat left top;
+	background:url(../images/kr/community/type5/introduce_img.png) no-repeat right 20px;
 }
 #cmhome_type5 .introduce p {
 	margin:0px;
-	padding:15px;
+	padding:12px 20px;
 	height:62px;
-	font-size:12px;
-	color:#666;
+	font-size:14px;
+	color:#444F56;
 	overflow:auto;
-	line-height:18px;	
+	line-height:24px;	
 }
 
 /* cmhome_type5 end */
@@ -1346,12 +1361,12 @@ _list li {
 .btype_list .title {
 	position:relative;
 	margin:0px;
-	padding:0px;
-	border-bottom: 1px solid #ddd;
+	padding:1px 5px;
+	border-bottom: 2px solid #042C5A;
 	height:25px;
 	line-height:25px;
-	font-size:12px;
-	color:#333;
+	font-size:13px;
+	color:#042C5A;
 	font-weight:bold;
 	/* background:url(../images/kr/community/type1/icon_arrow02.gif) no-repeat 0px 8px; */
 		
@@ -1359,7 +1374,7 @@ _list li {
 .btype_list .title .more {
 	position:absolute;
 	top:5px;
-	right:0px;
+	right:5px;
 	cursor:pointer;
 }
 .btype_list ul {
@@ -1372,10 +1387,9 @@ _list li {
 .btype_list ul li {
 	clear:both;
 	margin:0px; 
-	padding:0px 0px 0px 10px;
+	padding:0px 0px 0px 0px;
 	line-height:23px;
 	height:23px;
-	background:url('/images/kr/left/left_dot02.gif') no-repeat 0px 7px #fff;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;
@@ -1538,6 +1552,6 @@ _list li {
 .cmhomelist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .cmhomelist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
 
-#cpublic{margin-top:5px;}
+#cpublic{margin-top:2px;}
 #mailBoxInfo{font-weight: normal;}
 .urgency{color:red !important;}

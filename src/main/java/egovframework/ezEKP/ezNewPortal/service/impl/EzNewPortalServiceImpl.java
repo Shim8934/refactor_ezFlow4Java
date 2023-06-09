@@ -916,7 +916,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
 					imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
 				} else {
-					imgPath = "/images/default_pic.gif";
+					imgPath = "/images/ezNewPortal/info_pic_none.png";
 				}
 				
 				portalUserInfo.setUserImg(imgPath);
@@ -928,7 +928,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
 						imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
 					} else {
-						imgPath = "/images/default_pic.gif";
+						imgPath = "/images/ezNewPortal/info_pic_none.png";
 					}
 					
 					portalUserInfo.setUserBirthday(toSolarDate);
@@ -1448,7 +1448,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String companyId, String offset) throws Exception {
-		logger.debug("deleteCompanyLogo started.");
+		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("boardId", boardId);
@@ -1457,7 +1457,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("nowDate", nowDate);
 		
-		logger.debug("deleteCompanyLogo ended.");
+		logger.debug("getBoardPortletInfo ended.");
 		return ezNewPortalDAO.getBoardPortletInfo(map);
 		
 	}

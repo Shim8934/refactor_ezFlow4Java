@@ -564,6 +564,11 @@ public class EzNewPortalGWController {
 			data.put("userEmail", info.getEmail());
 			data.put("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
 			data.put("lastLoginIP", lastLoginIP);
+			
+			/* 2023-06-05 홍승비 - 커뮤니티, 메모, 웹폴더 모듈 사용여부 테넌트 컨피그 추가 */
+			data.put("useCommunity", useCommunity);
+			data.put("useMemo", useMemo);
+			data.put("useWebfolder", useWebfolder);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -5591,6 +5596,65 @@ public class EzNewPortalGWController {
 		}
 		
 		logger.debug("ezNewPortal G/W getTabBoardPortlet ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 2023-06-07 홍승비 - 테마2 > 상단 사용자 정보 영역 좌측 하단 > 회사별 공지사항 게시판 표출
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPortal/portlets/theme2NotiBoardItemList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getTheme2NotiBoardItemList(HttpServletRequest request) throws Exception {
+		logger.debug("ezNewPortal G/W getTheme2NotiBoardItemList started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String boardID = request.getParameter("boardID"); // 회사별 공지사항 게시판ID
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+			String companyId = info.getCompanyID();
+			String deptId = info.getDeptID();
+			String rollInfo = info.getRollInfo();
+			int tenantId = info.getTenantId();
+			String deptPath = info.getDeptPathCode();
+			deptPath = "everyone," + deptPath + "," + userId;
+			JSONObject data = new JSONObject();
+			
+			// 게시판 권한 체크
+			boolean accessCheck = boardAuthCheck(boardID, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+
+			if (!accessCheck) {
+				data.put("access", "false");
+			} else {
+				// 권한이 true이면 게시물 가져옴 (최대 3개)
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(tenantId, boardID, 3, companyId, info.getOffset());
+				
+				// 리스트 개수로 utc time 적용
+				int boardListCount = boardList.size();
+				
+				for (int i = 0; i < boardListCount; i++) {
+					String writeDate = boardList.get(i).getStartDate();
+					
+					boardList.get(i).setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
+				}
+				
+				data.put("access", "true");
+				data.put("boardList", boardList);
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		logger.debug("ezNewPortal G/W getTheme2NotiBoardItemList ended.");
+
 		return result;
 	}
 }

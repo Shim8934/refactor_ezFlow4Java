@@ -486,6 +486,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				model.addAttribute("workspaceContextRootUrl", data.get("workspaceContextRootUrl"));
 			//}
 
+			/* 2023-06-05 홍승비 - 게시판, 커뮤니티, 메모, 웹폴더 모듈 사용여부 테넌트 컨피그 추가 */
+			model.addAttribute("useBoard", data.get("useBoard"));
+			model.addAttribute("useCommunity", data.get("useCommunity"));
+			model.addAttribute("useMemo", data.get("useMemo"));
+			model.addAttribute("useWebfolder", data.get("useWebfolder"));
+			
 			String usedTheme = data.get("usedTheme").toString();
 			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);

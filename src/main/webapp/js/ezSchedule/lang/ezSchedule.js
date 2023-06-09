@@ -206,3 +206,14 @@ var googleSyncMessages = {
 		strOnlyGoogle : "구글캘린더에서만 제공하는 기능입니다.\n 수정,삭제 및 드래그엔드롭을 할수 없습니다.",
 		strConfirmDelete : "동기화를 취소하시겠습니까?"
 	}
+
+/* 2023-05-31 홍승비 - 일정관리 포틀릿 디자인 개선을 위한 메세지 추가 */
+var strLang125_2 = "개인";
+var strLang126_2 = "부서";
+var strLang127_2 = "회사";
+var strLang130_2 = "그룹";
+var strLang131_2 = "협업";
+var strLang141_2 = "구글";
+var strLangHSBScPt1 = "년";
+var strLangHSBScPt2 = "월";
+var strLangHSBScPt3 = "일";

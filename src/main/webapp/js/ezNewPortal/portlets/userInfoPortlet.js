@@ -19,13 +19,15 @@ function ptlGetAttitudeList(usedTheme) {
 					
 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
  					
-					console.log(usedTheme);
+					// console.log(usedTheme);
 					
+					/* 2023-06-01 홍승비 - 테마2 > 디자인 개선을 위해 출근, 퇴근 버튼 클릭 시 표출 수정 (inAttiBtn_txt 영역 대신 inAttiBtn 영역에 시간 표출) */
  					if (usedTheme == 2) {
  						$("#inAttiBtn").parent().addClass("commute_on");
  						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
- 						$("#inAttiBtn_txt").removeClass("main_out").addClass("main_in");
-						$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 						//$("#inAttiBtn_txt").removeClass("main_out").addClass("main_in");
+						//$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
  					} else {
  						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
  						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
@@ -46,8 +48,9 @@ function ptlGetAttitudeList(usedTheme) {
 					
 					if (usedTheme == 2) {
  						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
- 						$("#inAttiBtn_txt").removeClass("main_out").addClass("main_in");
-						$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 						//$("#inAttiBtn_txt").removeClass("main_out").addClass("main_in");
+						//$("#inAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
  					} else {
  						$("#inAttiBtn").removeClass("main_out").addClass("main_in");
  						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
@@ -66,8 +69,9 @@ function ptlGetAttitudeList(usedTheme) {
 					
 					if (usedTheme == 2) {
  						$("#outAttiBtn").removeClass("main_out").addClass("main_in");
- 						$("#outAttiBtn_txt").removeClass("main_out").addClass("main_in");
-						$("#outAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+ 						//$("#outAttiBtn_txt").removeClass("main_out").addClass("main_in");
+						//$("#outAttiBtn_txt").text(result[i].startDate.split(" ")[1].substring(0,5));
+						$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
  					} else {
  						$("#outAttiBtn").removeClass("main_out").addClass("main_in");
  						$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));

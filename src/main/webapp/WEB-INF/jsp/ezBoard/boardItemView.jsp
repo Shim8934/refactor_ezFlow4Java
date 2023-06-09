@@ -501,45 +501,53 @@
 		                xmlhttp = null;
 		                try {
 		                	window.opener.leftCountRf(pBoardID);
-						} catch (e) {
-						}
+						} catch (e) {console.log(e);}
 		                try {
 		                    window.opener.refresh_onclick();
-		                } catch (e) {
-		                }
+		                } catch (e) {console.log(e);}
 
 	                    //2019.03.04 유은정 - 게시판 적용
-	                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
-	                    	parent.opener.getNoticePortletList();
-	                    }
+	                    try {
+		                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
+		                    	parent.opener.getNoticePortletList();
+		                    }
+	                    } catch (e) {console.log(e);}
 
-	                    if (window.opener != null && window.opener.getBoardList != undefined) {
-							window.opener.getBoardList();
-	                    }
+	                    try {
+		                    if (window.opener != null && window.opener.getBoardList != undefined) {
+								window.opener.getBoardList();
+		                    }
+	                    } catch (e) {console.log(e);}
 
 	                 	// 게시판 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener.getBoardPortletInfo != undefined) {
-			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
-			            	var customBoardCount = customBoardList.length;
-			            	
-			            	for (var i = 0; i < customBoardCount; i++) {
-			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
-			            		
-			            		if (boardId == pBoardID) {
-			            			var portletId = customBoardList[i].parentElement.id;
-			            			portletId = portletId.substring(0, portletId.indexOf("P"));
-			            			parent.opener.getBoardPortletInfo(portletId);
-			            		}
-			            	}
-			            }
+						try {
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+				            }
+	                 	} catch (e) {console.log(e);}
 	                 	
-			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
-							parent.opener.getBoardList_NewBoardSTD();
-						}
-
-						if(parent.opener.search != undefined){
-							parent.opener.search('skip');
-						}
+	                 	try {
+				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+								parent.opener.getBoardList_NewBoardSTD();
+							}
+	                 	} catch (e) {console.log(e);}
+	                 	
+	                 	try {
+							if (parent.opener.search != undefined){
+								parent.opener.search('skip');
+							}
+	                 	} catch (e) {console.log(e);}
 			            
 		                window.close();
 		            }

@@ -41,8 +41,8 @@
 		</c:when>
 		<c:when test="${usedTheme eq 3}">
 			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none;"></dl>
-			<div style="position:relative; bottom:46px; overflow:hidden;">
-				<article class="schedule_small box_shadow schedule_calendar">
+			<div style="position:relative; bottom:50px; overflow:hidden;">
+				<article class="schedule_small box_shadow schedule_calendar" style="width: calc(50% - 11px);">
 					<div class="layDIV">
 						<div class="sCalendarArea">
 							<div id="CalendarMini" class="scalender"></div>
@@ -50,15 +50,16 @@
 					</div>
 				</article>
 	
-				<article class="schedule_small box_shadow schedule_scheduleList">
+				<article class="schedule_small box_shadow schedule_scheduleList" style="width: 50.7%; box-shadow:none;">
 					<div class="layDIV">
 						<div class="sCalendarArea">
 							<dl class="portlet_title portlet_schedule sortablePortlet">
-								<dt class="portletText">
+								<dt class="portletText" id="theme3PortletCalTextDT">
+								<%-- 현재 일자와 요일 텍스트로 변경 --%>
 									<c:out value='${portletName }'/>
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+									<img src="/images/ezNewPortal/portlet_Plus1.png">
 								</dd>
 							</dl>
 							<div id="scheduleList" class="sschedule_list">

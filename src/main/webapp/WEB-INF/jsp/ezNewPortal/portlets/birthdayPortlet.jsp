@@ -19,7 +19,7 @@
 			<dd id="birthNext" class="nextBtn">
 				<c:choose>
 					<c:when test="${usedTheme eq 3 }">
-						<img src="/images/ezNewPortal/photo_next3.png">
+						<img src="/images/ezNewPortal/photo_next.png">
 					</c:when>
 					<c:otherwise>
 						<img src="/images/ezNewPortal/photo_next.png">
@@ -29,7 +29,7 @@
 			<dd id="birthPrev" class="preBtn">
 				<c:choose>
 					<c:when test="${usedTheme eq 3 }">
-						<img src="/images/ezNewPortal/photo_pre3.png">
+						<img src="/images/ezNewPortal/photo_pre.png">
 					</c:when>
 					<c:otherwise>
 						<img src="/images/ezNewPortal/photo_pre.png">
@@ -37,7 +37,7 @@
 				</c:choose>
 			</dd>
 		</dl>
-		<div style="height:100%; background-color:#ffffff">
+		<div style="height:100%;">
 			<div class="birthdayList" id="birthcount" style="display: none;">
 			<c:choose>
 				<c:when test="${usedTheme eq 1 }">

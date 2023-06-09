@@ -206,3 +206,14 @@ var googleSyncMessages = {
 		strOnlyGoogle : "It's only available on Google Calendar.\n Unable to the modification, removal and drag, drop.",
 		strConfirmDelete : "Do you want to cancel the synchronization?"
 	}
+
+/* 2023-05-31 홍승비 - 일정관리 포틀릿 디자인 개선을 위한 메세지 추가 */
+var strLang125_2 = "Personal";
+var strLang126_2 = "Department";
+var strLang127_2 = "Company";
+var strLang130_2 = "Group";
+var strLang131_2 = "Collabo";
+var strLang141_2 = "Google";
+var strLangHSBScPt1 = "-";
+var strLangHSBScPt2 = ".";
+var strLangHSBScPt3 = "";
