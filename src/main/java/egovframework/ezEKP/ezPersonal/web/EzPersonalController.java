@@ -1430,31 +1430,30 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String oldPassword = xmlDom.getElementsByTagName("OLDPASSWORD").item(0).getTextContent();
 		String newPassword = xmlDom.getElementsByTagName("NEWPASSWORD").item(0).getTextContent();
 		
-		/* 2021-10-26 이사라 : prev비번과 새비번 비교 추가 */
-		// company option check 
-		boolean useCkhPrevPwd = false;
+		String decryptedOldPassword = EgovFileScrty.decryptRsa(pk, oldPassword);
+		String decryptedNewPassword = EgovFileScrty.decryptRsa(pk, newPassword);
 		
-		if (ezCommonService.getCompanyConfig(tenantID, companyID, "useChkPrevPwd").equalsIgnoreCase("YES")) {
-			useCkhPrevPwd = true;
-    	}
+		// 2021-10-26 이사라 : prev비번과 새비번 비교 추가
+		// 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
+		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), decryptedOldPassword, tenantID, companyID, decryptedNewPassword);
 		
-		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, oldPassword), tenantID, companyID, EgovFileScrty.decryptRsa(pk, newPassword), useCkhPrevPwd);
-		
-		if (checkResult == 0) { // 0: 현비번과 db비번이 일치하지 않음(실패) 1 : 일치 (성공)
+		if (checkResult == 0) { // 0 : 현암호와 db암호가 일치하지 않음(실패), 1 : 일치 (성공)
 			return "CHKERROR";
 		}
 		
-		if (checkResult == 2) { // 2 : prev비번이 새비번과 일치 (실패)
+		if (checkResult == 2) { // 2 : 가장최근 prev암호가 새암호와 일치 (실패)
 			return "PREVERROR";
 		} 
 		
+		if (checkResult == 3) { // 3 : 새암호에 연속숫자, 생일, 전화번호 포함 (실패)
+			return "NUMBERERROR";
+		}
+
 		// dhlee
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String mailAddr = userInfo.getId() + "@" + domain;
 		
 		// 이메일 계정의 암호를 새 암호로 설정한다.
-		String decryptedOldPassword = EgovFileScrty.decryptRsa(pk, oldPassword);
-		String decryptedNewPassword = EgovFileScrty.decryptRsa(pk, newPassword);
 		int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedOldPassword, decryptedNewPassword);
 		
 		if (rc == 0) { // checkAndUpdateUserPassword 성공                                                 

@@ -1033,6 +1033,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 		return map;
 	}
+	
+	public void addTenantConfigCheckPasswordNumber() throws Exception {
+		
+	}
 
 	@Override
 	public void insertTblUserLocalInfo(String userID, String timeZone, String lang, int tenantID) throws Exception {
@@ -1798,6 +1802,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertTblTenantConfig() throws Exception {
 		logger.debug("insertTest started");
 		Map<String, Map<String, Object>> test = new HashMap<String,  Map<String, Object>>();
+		test.put("checkPasswordNumber", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","checkPasswordNumber"); // property_name
+			put("property_value","YES");
+			put("config_name","패스워드 설정 시 3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지 사용여부");
+			put("regdate","2023-06-09 00:00:00");
+			put("description","패스워드 설정 시 3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지 사용여부 (default:YES)");
+			put("config_type","로그인");
+			put("property","CHECKPASSWORDNUMBER"); // property_name
+		}});
 		test.put("mailConfirm", new HashMap<String, Object>(){{
 			put("tenantID", 0);
 			put("confName","useMailConfirm"); // property_name

@@ -320,6 +320,8 @@
 			                alert("<spring:message code='ezPersonal.t946'/>");
 			            } else if (xmlHTTP.responseText == "PREVERROR") {    
 			                alert("<spring:message code='ezOrgan.ls001'/>"); // 2021-10-26 이사라 : 최근사용 비밀번호는 사용할 수 없는 로직 추가
+			            } else if (xmlHTTP.responseText == "NUMBERERROR") {
+			                alert("<spring:message code='ezOrgan.ls008'/>"); // 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
 				        } else {
 				            alert("<spring:message code='ezPersonal.t198'/>");
 				        }
