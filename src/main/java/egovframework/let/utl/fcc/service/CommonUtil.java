@@ -1321,7 +1321,7 @@ public class CommonUtil {
 			}			
 		}
 		
-		logger.debug("packageType={}, licenseKey={}" + packageType, licenseKey);
+		logger.debug("packageType={}, licenseKey={}", packageType, licenseKey);
 		
 		return packageType;
 	}
