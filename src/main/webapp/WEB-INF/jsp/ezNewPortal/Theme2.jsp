@@ -80,84 +80,93 @@
         <div class="bannerlink_area">
         	<article class="writebanner">
                 <ul class="writebannerUL">
-                    <li>
-                    	<c:choose>
-                    		<c:when test="${useMail eq 'NO' }">								
-                    			<dl id="NewMail" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="NewMail">
-                           		 	<dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.t015' /></dt>
-                            		<dd id="unreadMailCount" class="iconCount_none">0</dd>
-                        		</dl>
-                    		</c:otherwise>
-                    	</c:choose>
-                    </li>
-                    <li>
-                    	<c:choose>
-                    		<c:when test="${useApproval eq 'NO' }">								
-                    			<dl id="AprSign" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="AprSign">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.t016' /></dt>
-                            		<dd id="approvalCount" class="iconCount_none">0</dd>
-                        		</dl>
-                    		</c:otherwise>
-                    	</c:choose>
-                    </li>
-                    <li>
-                    	<c:choose>
-                    		<c:when test="${useSchedule eq 'NO' }">								
-                    			<dl id="Schedule" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="Schedule">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.gu3' /></dt>
-                            		<dd id="scheduleCount" class="iconCount_none">0</dd>
-                        		</dl>
-                    		</c:otherwise>
-                    	</c:choose>
-                    </li>
-                    <li>
-                    	<c:choose>
-                    		<%-- 
-                    		<c:when test="${useQuestion eq 'NO' }">								
-                    			<dl id="Poll" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="Poll">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.gu4' /></dt>
-                            		<dd id="pollCount" class="iconCount_none">0</dd>
-                       			</dl>
-                    		</c:otherwise>
-                    		 --%>
-                    		<c:when test="${useSurvey eq 'NO' }">								
-                    			<dl id="Survey" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="Survey">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.gu4' /></dt>
-                            		<dd id="surveyCount" class="iconCount_none">0</dd>
-                       			</dl>
-                    		</c:otherwise>
-                    	</c:choose>
-                    </li>
+                   	<c:choose>
+                   		<c:when test="${useMail eq 'NO'}">
+                   		<li>
+                   			<dl id="NewMail" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+						</li>
+                   		</c:when>
+                   		<c:otherwise>
+                   		<li>
+                       		<dl class="writebannerDL" id="NewMail">
+                       		 	<dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.t015' /></dt>
+                           		<dd id="unreadMailCount" class="iconCount_none">0</dd>
+                       		</dl>
+                       	</li>
+                   		</c:otherwise>
+                   	</c:choose>
+                   	<c:choose>
+                   		<c:when test="${useApproval eq 'NO'}">
+                   		<li>
+                   			<dl id="AprSign" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+						</li>
+                   		</c:when>
+                   		<c:otherwise>
+                   		<li>
+                       		<dl class="writebannerDL" id="AprSign">
+                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.t016' /></dt>
+                           		<dd id="approvalCount" class="iconCount_none">0</dd>
+                       		</dl>
+                       	</li>
+                   		</c:otherwise>
+                   	</c:choose>
+                   	<c:choose>
+                   		<c:when test="${useSchedule eq 'NO'}">
+                   		<li>
+                   			<dl id="Schedule" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+						</li>
+                   		</c:when>
+                   		<c:otherwise>
+                   		<li>
+                       		<dl class="writebannerDL" id="Schedule">
+                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.gu3' /></dt>
+                           		<dd id="scheduleCount" class="iconCount_none">0</dd>
+                       		</dl>
+                       	</li>
+                   		</c:otherwise>
+                   	</c:choose>
+                   	<c:choose>
+                   	<%-- 구버전 전자설문(useQuestion) 영역 --%>
+                   		<%-- 
+                   		<c:when test="${useQuestion eq 'NO' }">
+                   			<dl id="Poll" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+                   		</c:when>
+                   		<c:otherwise>
+                       		<dl class="writebannerDL" id="Poll">
+                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.gu4' /></dt>
+                           		<dd id="pollCount" class="iconCount_none">0</dd>
+                      			</dl>
+                   		</c:otherwise>
+                   		 --%>
+                   		<c:when test="${useSurvey eq 'NO'}">
+                   		<li>
+                   			<dl id="Survey" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+						</li>
+                   		</c:when>
+                   		<c:otherwise>
+                   		<li>
+                       		<dl class="writebannerDL" id="Survey">
+                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.gu4' /></dt>
+                           		<dd id="surveyCount" class="iconCount_none">0</dd>
+                      		</dl>
+                      	</li>
+                   		</c:otherwise>
+                   	</c:choose>
                     
                     <%-- 2023-06-05 홍승비 - 디자인 개선을 위해 테마2 상단 영역 회람판 메뉴 표출되지 않도록 숨김 / 협업 메뉴 이미지 교체 --%>
                     <li style="display:none;">
@@ -176,15 +185,15 @@
                     		</c:otherwise>
                     	</c:choose>
                     </li>
-                    <li>
 					<c:if test="${useEzWorkspace}">
-                    <dl class="writebannerDL" id="ezWorkspace">
-                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="협업"></dt>
-                        <dt><spring:message code='ezNewPortal.pjg01' /></dt>
-                        <dd class="iconCount_none" id="workspaceCnt">0</dd>
-                    </dl>
-                	</c:if>                        
+					<li>
+	                    <dl class="writebannerDL" id="ezWorkspace">
+	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="협업"></dt>
+	                        <dt><spring:message code='ezNewPortal.pjg01' /></dt>
+	                        <dd class="iconCount_none" id="workspaceCnt">0</dd>
+	                    </dl>
                     </li>
+                	</c:if>                        
                     <%-- 조직도, 커뮤니티, 메모 영역 추가 (카운트 없음) --%>
 					<li>
                     <dl class="writebannerDL" id="Organ">
