@@ -85,6 +85,8 @@ public class ScheduleInfoVO {
 	private String googleOriginalStartTime;
 	
 	private long repeatedScheduleOffset;
+	
+	private String groupColor;
 
 	public String getRealEndDate() {
 		return realEndDate;
@@ -604,6 +606,13 @@ public class ScheduleInfoVO {
 		this.repStartDate = repStartDate;
 	}
 	
+	public String getGroupColor() {
+		return groupColor;
+	}
+
+	public void setGroupColor(String groupColor) {
+		this.groupColor = groupColor;
+	}
 	@Override
 	public String toString() {
 		return "ScheduleInfoVO [scheduleId=" + scheduleId + ", parentId="
@@ -624,7 +633,8 @@ public class ScheduleInfoVO {
 				+ ", content=" + content + ", contentPath=" + contentPath
 				+ ", groupName=" + groupName + ", companyid=" + companyid
 				+ ", repeatCount=" + repeatCount + ", completeFG=" + completeFG
-				+ ", isAllRep=" + isAllRep + ", repStartDate=" + repStartDate + "]";
+				+ ", isAllRep=" + isAllRep + ", repStartDate=" + repStartDate
+				+ ", groupColor=" + groupColor + "]";
 	}
 
 }

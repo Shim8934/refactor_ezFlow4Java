@@ -69,6 +69,7 @@
 		<result property="contentPath"		column="CONTENTPATH"		columnIndex="28"/>
 		<result property="groupName"		column="GROUPNAME"			columnIndex="29"/>
 		<result property="companyid"		column="COMPANYID"			columnIndex="30"/>
+		<result property="groupColor"		column="GROUPCOLOR"			columnIndex="31"/>
 	</resultMap>
 
 	<resultMap class="AttendantListVO" id="attendantListVO">
@@ -108,6 +109,7 @@
 		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
 		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
 		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
+		<result property="groupColor"		column="GROUPCOLOR"			columnIndex="5"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO">
@@ -211,7 +213,8 @@
 				DISTINCT A.GROUPID AS GROUPID,
 				GROUPNAME,
 				'' AS DESCRIPTION,
-              	'' AS CREATEDATE
+              	'' AS CREATEDATE,
+              	A.GROUPCOLOR AS GROUPCOLOR
         	FROM 
         		TBL_SCHEDULEGROUP A LEFT JOIN TBL_SCHEDULEGROUPMEMBER B ON A.GROUPID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
        		WHERE  
@@ -256,8 +259,9 @@
 	            TITLE,
 	            LOCATION,
 	            CONTENTPATH,
-	            GROUPNAME,
-	            A.COMPANYID      
+	            B.GROUPNAME,
+	            A.COMPANYID,
+	            B.GROUPCOLOR      
 			FROM 
 				TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
 	       	WHERE  
@@ -269,7 +273,7 @@
 	
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
 		<![CDATA[
-			SELECT a.* FROM
+			SELECT C.* FROM
 			(
 			SELECT 
 				SCHEDULEID,
@@ -277,14 +281,14 @@
 				OWNERID,
 				OWNERNAME,
 				OWNERNAME2,
-				CREATORID,
-				CREATORNAME,
-				CREATORNAME2,
-				(CREATEDATE + #v_OFFSETMIN#/(24*60)) AS CREATEDATE,
-				MODIFIERID,
-				MODIFIERNAME,
-				MODIFIERNAME2,
-				(MODIFYDATE + #v_OFFSETMIN#/(24*60)) AS MODIFYDATE,
+				A.CREATORID,
+				A.CREATORNAME,
+				A.CREATORNAME2,
+				(A.CREATEDATE + #v_OFFSETMIN#/(24*60)) AS CREATEDATE,
+				A.MODIFIERID,
+				A.MODIFIERNAME,
+				A.MODIFIERNAME2,
+				(A.MODIFYDATE + #v_OFFSETMIN#/(24*60)) AS MODIFYDATE,
 				SCHEDULETYPE,
 				IMPORTANCE,
 				HASATTENDANT,
@@ -293,36 +297,37 @@
 				ISREADONLY,
 				ISPUBLIC,
 				DATETYPE,
-				(STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,
-				(ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE,
+				(A.STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,
+				(A.ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE,
 				REPETITION,
 				REPETITIONDELETE,
 				TITLE,
 				LOCATION,
 				CONTENTPATH,
-				'' AS GROUPNAME,
-				COMPANYID
+				B.GROUPNAME,
+				A.COMPANYID,
+				B.GROUPCOLOR
         	FROM 
-        		TBL_SCHEDULE
+        		TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
        		WHERE  
-       			(OWNERID IN ($v_INDILIST$)
+       			(A.OWNERID IN ($v_INDILIST$)
             AND 
             	(            		
-            		(STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
-            		(ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
-            		(STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR 
-            		(DATETYPE='3')
+            		(A.DATETYPE='3')
             	)
             AND
-            	TENANT_ID = #v_TENANTID#
+            	A.TENANT_ID = #v_TENANTID#
             ]]>
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
+            	A.title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty> 
             <isNotEmpty property="v_PKEYWORD">
@@ -332,11 +337,11 @@
             <![CDATA[
             )
             or 
-       			(OWNERID IN ($v_PIDLIST$)
+       			(A.OWNERID IN ($v_PIDLIST$)
        		and
-        		companyid = #v_COMPANYID#        	     	
+        		A.companyid = #v_COMPANYID#        	     	
         	and 
-        		((scheduletype = '2' and ownerid in (SELECT 
+        		((A.scheduletype = '2' and A.ownerid in (SELECT 
 														deptid
 													FROM 
 														TBL_ADDJOBMASTER 
@@ -364,38 +369,39 @@
 														TENANT_ID = #v_TENANTID#
 													 ))
 					or
-					(scheduletype <> '2'))
+					(A.scheduletype <> '2'))
             AND 
             	(            		
-            		(STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
-            		(ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
-            		(STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
+            		(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR 
-            		(DATETYPE='3')
+            		(A.DATETYPE='3')
             	)
             AND
-            	TENANT_ID = #v_TENANTID#
+            	A.TENANT_ID = #v_TENANTID#
             ]]>
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
+            	A.title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
-        	) ) A
-        	ORDER BY STARTDATE ASC
+        	) ) C
+        	ORDER BY C.STARTDATE ASC
 	</select>
 	
-	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
+	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO">
 		<![CDATA[
 			SELECT 
 				GROUPID,
             	GROUPNAME,
               	DESCRIPTION,
-              	CREATEDATE
+              	CREATEDATE,
+              	GROUPCOLOR
         	FROM 
         		TBL_SCHEDULEGROUP 
         	WHERE  
@@ -704,9 +710,7 @@
 								FROM
 						           		TBL_USERMASTER_RETIRE 
 						        WHERE
-						                TENANT_ID = #v_TENANTID#
-						        AND 
-						           		PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# )
+						                TENANT_ID = #v_TENANTID# )
 			UNION ALL
 				SELECT
 					A.CN ,                  			
@@ -1306,9 +1310,9 @@
 	<insert id="EzScheduleDAO.insertScheduleGroup" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEGROUP(
-				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,			tenant_id,		COMPANYID			
+				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,			tenant_id,		COMPANYID, 		groupcolor			
 			) VALUES (
-				#v_GUID#,		#v_GROUPNAME#,		#v_USERID#,		#v_DISPLAYNAME#,	#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_TENANTID#,	#v_COMPANYID#
+				#v_GUID#,		#v_GROUPNAME#,		#v_USERID#,		#v_DISPLAYNAME#,	#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_TENANTID#,	#v_COMPANYID#,	#v_GROUPCOLOR#
 			)
    		]]>
 	</insert>
@@ -1604,7 +1608,7 @@
                 precreatorid = #v_CREATORID#,
                 precreatorname = #v_CREATORNAME#,
                 precreatorname2 = #v_CREATORNAME2#,
-                modifydate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
+                transferdate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
 	   		where  
 	   			groupid = #v_GROUPID#
 	   		and	
@@ -1637,7 +1641,9 @@
 				tbl_schedulegroup
 			set
 				groupname = #v_GROUPNAME#, 		
-				description = #v_DESCRIPTION#					
+				description = #v_DESCRIPTION#,
+				groupColor = #v_GROUPCOLOR#,
+				modifydate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
 			where 
 				groupid = #v_GUID#
 			and

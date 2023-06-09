@@ -69,6 +69,7 @@
 		<result property="contentPath"		column="CONTENTPATH"		columnIndex="28"/>
 		<result property="groupName"		column="GROUPNAME"			columnIndex="29"/>
 		<result property="companyid"		column="COMPANYID"			columnIndex="30"/>
+		<result property="groupColor"		column="GROUPCOLOR"			columnIndex="31"/>
 	</resultMap>
 
 	<resultMap class="AttendantListVO" id="attendantListVO">
@@ -108,6 +109,7 @@
 		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
 		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
 		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
+		<result property="groupColor"		column="GROUPCOLOR"			columnIndex="5"/>
 	</resultMap>
 	
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO">
@@ -199,7 +201,8 @@
 				distinct a.groupid as groupid,
 				groupname,
 				'' as description,
-              	'' as createdate
+              	'' as createdate,
+              	a.groupcolor as groupcolor
         	from
         		tbl_schedulegroup a left join tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
        		where
@@ -244,8 +247,9 @@
 	            title,
 	            location,
 	            contentpath,
-	            groupname,
-	            a.companyid	           
+	            b.groupname,
+	            a.companyid,
+	            b.groupcolor	           
 			from 
 				tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid and a.tenant_id = b.tenant_id
 	       	where  
@@ -264,14 +268,14 @@
 				ownerid,
 				ownername,
 				ownername2,
-				creatorid,
-				creatorname,
-				creatorname2,				
-				date_add(createdate, interval +#v_OFFSETMIN# minute) as createdate,
-				modifierid,
-				modifiername,
-				modifiername2,				
-				date_add(modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
+				a.creatorid,
+				a.creatorname,
+				a.creatorname2,				
+				date_add(a.createdate, interval +#v_OFFSETMIN# minute) as createdate,
+				a.modifierid,
+				a.modifiername,
+				a.modifiername2,				
+				date_add(a.modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
 				scheduletype,
 				importance,
 				hasattendant,
@@ -280,36 +284,37 @@
 				isreadonly,
 				ispublic,
 				datetype,				
-				date_add(startdate, interval +#v_OFFSETMIN# minute) as startdate,				
-				date_add(enddate, interval +#v_OFFSETMIN# minute) as enddate,
+				date_add(a.startdate, interval +#v_OFFSETMIN# minute) as startdate,				
+				date_add(a.enddate, interval +#v_OFFSETMIN# minute) as enddate,
 				repetition,
 				repetitiondelete,
 				title,
 				location,
 				contentpath,
-				'' as groupname,
-				companyid
+				b.groupname,
+				a.companyid,
+				b.groupcolor
         	from 
-        		tbl_schedule
+        		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
        		where  
-       			(ownerid in ($v_INDILIST$)
+       			(a.ownerid in ($v_INDILIST$)
             and 
             	(            		
-            		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
+            		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#) 
             		or
-            		(ENDDATE >= #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
+            		(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#) 
             		or
-            		(startdate < #v_PSTARTDATE# and enddate >= #v_PENDDATE#) 
+            		(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#) 
             		or 
-            		(datetype='3')
+            		(a.datetype='3')
             	)
             and
-            	tenant_id = #v_TENANTID#
+            	a.tenant_id = #v_TENANTID#
             ]]>
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            	a.title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
             ]]>
             </isNotEmpty>
             <isNotEmpty property="v_PKEYWORD">
@@ -319,11 +324,11 @@
             <![CDATA[
         	)
         	or  
-       			(ownerid in ($v_PIDLIST$)
+       			(a.ownerid in ($v_PIDLIST$)
        		and
-        		companyid = #v_COMPANYID#        	     	
+        		a.companyid = #v_COMPANYID#        	     	
         	and 
-        		((scheduletype = '2' and ownerid in (SELECT 
+        		((a.scheduletype = '2' and a.ownerid in (SELECT 
 														deptid
 													FROM 
 														TBL_ADDJOBMASTER 
@@ -351,38 +356,39 @@
 														TENANT_ID = #v_TENANTID#
 													 ))
 					or
-					(scheduletype <> '2'))
+					(a.scheduletype <> '2'))
             and 
             	(            		
-            		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
+            		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#) 
             		or
-            		(ENDDATE >= #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
+            		(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#) 
             		or
-            		(startdate < #v_PSTARTDATE# and enddate >= #v_PENDDATE#) 
+            		(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#) 
             		or 
-            		(datetype='3')
+            		(a.datetype='3')
             	)
             and
-            	tenant_id = #v_TENANTID#
+            	a.tenant_id = #v_TENANTID#
             ]]>
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            	a.title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
             ]]>
             </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
         		)
-          order by startdate asc
+          order by a.startdate asc
 	</select>
 	<!-- checked -->
-	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
+	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultClass="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO">
 		<![CDATA[
 			select
 				groupid,
             	groupname,
               	description,
-              	createdate
+              	createdate,
+              	groupcolor
         	from
         		tbl_schedulegroup
         	where
@@ -673,10 +679,7 @@
 								FROM
 						           		TBL_USERMASTER_RETIRE 
 						        WHERE
-						                TENANT_ID = #v_TENANTID#
-						        AND 
-						           		PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# )
-					
+						                TENANT_ID = #v_TENANTID# )
 			UNION ALL
 				SELECT
 					A.CN ,                  			
@@ -1312,9 +1315,9 @@
 	<insert id="EzScheduleDAO.insertScheduleGroup" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedulegroup(
-				groupid, 			groupname, 				creatorid, 				creatorname, 			creatorname2, 		description,		createdate,			tenant_id,		companyid		
+				groupid, 			groupname, 				creatorid, 				creatorname, 			creatorname2, 		description,		createdate,			tenant_id,		companyid,		 groupColor
 			) values (
-				#v_GUID#,			#v_GROUPNAME#,			#v_USERID#,				#v_DISPLAYNAME#,		#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	utc_timestamp(),	#v_TENANTID#,	#v_COMPANYID#
+				#v_GUID#,			#v_GROUPNAME#,			#v_USERID#,				#v_DISPLAYNAME#,		#v_DISPLAYNAME2#,	#v_DESCRIPTION#,	utc_timestamp(),	#v_TENANTID#,	#v_COMPANYID#,  #v_GROUPCOLOR#
 			)
    		]]>
 	</insert>
@@ -1646,7 +1649,7 @@
                 precreatorid = #v_CREATORID#,
                 precreatorname = #v_CREATORNAME#,
                 precreatorname2 = #v_CREATORNAME2#,
-                modifydate = utc_timestamp()
+                transferdate = utc_timestamp()
 	   		where  
 	   			groupid = #v_GROUPID#
 	   		and	
@@ -1697,7 +1700,9 @@
 				tbl_schedulegroup
 			set
 				groupname = #v_GROUPNAME#, 		
-				description = #v_DESCRIPTION#					
+				description = #v_DESCRIPTION#,
+				groupColor = #v_GROUPCOLOR#,
+				modifydate = utc_timestamp()
 			where 
 				groupid = #v_GUID#
 			and

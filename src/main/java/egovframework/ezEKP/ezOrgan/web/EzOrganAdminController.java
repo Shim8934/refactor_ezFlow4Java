@@ -307,6 +307,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
 			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
 	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
+	    	ezCommonService.addScheduleGroupColumn(); // 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가 (양도일자/그룹 색상)
 			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);

@@ -56,6 +56,7 @@ function getScheduleList_after(resultList, mode, date) {
 				var startTime = STARTDATE.split(' ')[1].substring(0,5);
 				var endTime = ENDDATE.split(' ')[1].substring(0,5);
 				var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));	
+				var groupColor = resultList[i].groupColor;
 				
 				// 2020-02-25 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
 				if (DATETYPE == "4") {
@@ -81,7 +82,14 @@ function getScheduleList_after(resultList, mode, date) {
 					listHTML += "<span class='Tcompany'>" + strLang127_1 + "</span>";
 				} else if (SCHEDULETYPE == 7) {
 					timeClass = "Tgroup";
-					listHTML += "<span class='Tgroup'>" + strLang130_1 + "</span>";
+					// 2023-09-06 조소정 - 일정 포틀릿 그룹일정 그룹색상 표출
+		            if(groupColor == null || groupColor == "") {
+		            	var groupColor = "#e9de13";
+						listHTML += "<span class='Tgroup' style='background-color: " + groupColor + ";'>" + strLang130_1 + "</span>";  
+		            }
+		            else {
+						listHTML += "<span class='Tgroup' style='background-color: " + groupColor + ";'>" + strLang130_1 + "</span>";
+		            }
 				} else if (SCHEDULETYPE == 4) {
 					timeClass = "Tcollaborate";
 					listHTML += "<span class='Tcollaborate'>" + strLang131_1 + "</span>";

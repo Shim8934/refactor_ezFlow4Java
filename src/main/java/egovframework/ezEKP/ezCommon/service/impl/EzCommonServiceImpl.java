@@ -2913,7 +2913,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         logger.debug("insertOpinionGB ended");
     }
     
-    // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
+	/* 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가 (양도일자/그룹 색상) */
+	@Override
+	public void addScheduleGroupColumn() throws Exception {
+		ezCommonDAO.addScheduleGroupColumn();
+	}
+
+	// 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
     @Override
     public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception {
         ezCommonDAO.updateWebFolderAndApprovalCheckPermissionCode();

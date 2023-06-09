@@ -2441,10 +2441,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	/* 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가(양도일자/그룹색상) */
+	public void addScheduleGroupColumn() {
+		try {
+			select("EzCommonDAO.checkScheduleGroup_TransferDateColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULEGROUP TRANSFERDATE column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addScheduleTransferDateColumn");
+		}
+		try {
+			select("EzCommonDAO.checkScheduleGroup_GroupColorColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULEGROUP GROUPCOLOR column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addScheduleGroupColorColumn");
+		}
+	}
+
 	// 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
     public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception {
 		update("EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode1");
 		update("EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode2");
 		update("EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode3");
-    }
+    }		
 }

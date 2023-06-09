@@ -9,6 +9,8 @@ public class ScheduleGroupVO {
 	private String description;
 	/** 그룹 생성일 */
 	private String createDate;
+	
+	private String groupColor;
 
 	private String creatorid;
 
@@ -27,6 +29,8 @@ public class ScheduleGroupVO {
 	private String precreatorname;
 	
 	private String precreatorname2;
+	/** 그룹장 양도일자 */
+	private String transferDate;	
 	
 	
 	public String getModifydate() {
@@ -96,6 +100,14 @@ public class ScheduleGroupVO {
 		this.createDate = createDate;
 	}
 
+	public String getGroupColor() {
+		return groupColor;
+	}
+
+	public void setGroupColor(String groupColor) {
+		this.groupColor = groupColor;
+	}
+
 	public String getCreatorid() {
 		return creatorid;
 	}
@@ -134,6 +146,14 @@ public class ScheduleGroupVO {
 
 	public void setCompanyid(String companyid) {
 		this.companyid = companyid;
+	}
+
+	public String getTransferDate() {
+		return transferDate;
+	}
+
+	public void setTransferDate(String transferDate) {
+		this.transferDate = transferDate;
 	}
 	
 	

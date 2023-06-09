@@ -600,7 +600,7 @@
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
 							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
-							  		<span class="checkmark" style="background-color:#e9de13;"></span>
+							  		<span class="checkmark" style="background-color: ${group.groupColor }"></span>
 							  		<span class="list_text" title="${fn:escapeXml(group.groupName)}"><spring:message code='ezSchedule.t375'/>${fn:escapeXml(group.groupName)}</span>
 								</label>
 							</li>	

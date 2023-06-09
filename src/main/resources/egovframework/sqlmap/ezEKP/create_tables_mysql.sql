@@ -11224,6 +11224,8 @@ CREATE TABLE `tbl_schedulegroup` (
   `PRECREATORID` varchar(100) DEFAULT NULL,
   `PRECREATORNAME` varchar(100) DEFAULT NULL,
   `PRECREATORNAME2` varchar(100) DEFAULT NULL,
+  `GROUPCOLOR` varchar(10) DEFAULT NULL,
+  `TRANSFERDATE` datetime DEFAULT NULL,
   PRIMARY KEY (`GROUPID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_write_Cross.js')}"></script>
 	    <script type="text/javascript">
 		    var groupid = "<c:out value='${groupID}' />";
 		    var companyid = "<c:out value='${userInfo.companyID}' />";
@@ -499,15 +500,23 @@
 						groupName : document.all("groupname").value,
 						description : document.all("description").value,
 						displayName : "<c:out value='${userInfo.displayName1}' />",
-						displayName2 : "<c:out value='${userInfo.displayName2}' />"
+						displayName2 : "<c:out value='${userInfo.displayName2}' />",
+						groupColor : document.getElementById("groupColorText").innerHTML
 					} ,
    					success : function(text) {
    						alert("<spring:message code='ezSchedule.shb08' />");
-   							
-   							window.close();
-   							opener.parent.left.groupRefresh();
-   							
-   							
+  							
+						window.close();
+						
+						// 2023-09-06 조소정 - 관리자단과 사용자단의 부모창이 달라 분기처리함
+						var pathName = opener.parent.location.pathname;
+							
+						if (pathName.includes('admin')) {
+							opener.parent.lef.groupRefresh();
+						}
+						else {
+	   	   					opener.parent.left.groupRefresh();
+						}
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezSchedule.shb09' />");
@@ -585,7 +594,6 @@
 		        return text.replace(/&amp;|&lt;|&gt;|&#034;|&#039;/g, function(m) { return map[m]; });
 		    }	
 		    
-		    
 		    //2018-08-10 김보미 - 추가
 		    window.onload = function () {
 		    	var groupName = "<c:out value='${groupName}' />";
@@ -616,28 +624,33 @@
 			</div>
 			<div id="close"><ul><li><span onClick="window.close()"></span></li></ul></div>
 			
+			<!-- 2023-09-06 조소정 - 일정 그룹 구성원 관리 팝업창에 일정그룹색상 지정할 수 있도록 셀 추가 -->
 			<table class="popuplist" width="100%">
 				<tr> 
-			    	<th style="width:120px; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t202' /></th> 
-			      <!-- 	<td style="width:200px"> -->
-			       <td>
+			    	<th style="width:20%; white-space:nowrap; text-align:center;"><spring:message code='ezSchedule.t202' /></th> 
+			      	<!-- 	<td style="width:200px"> -->
+			       	<td style="width: 35%; height: 23px; white-space:nowrap; text-align:center;">
 			        	<!-- <input type="text" id="groupname" style="WIDTH:200px; height: 23px;" maxlength=50> -->
-			        	<input type="text" id="groupname" style="WIDTH:100%; height: 23px;" maxlength=50>
-			       </td>
-			     <!--  	</td> -->
-			      </tr>
-			      <tr>
-			      	<th style="width:120px; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t203' /></th> 
-			      	<td>
-			        	<input name="text" type="text" id="description" style="WIDTH:100%; height: 23px;" maxlength=250>
+			        	<input type="text" id="groupname" style="WIDTH:100%; height: 23px;">
+			       	</td>
+			     	<!--  	</td> -->
+			    	<th style="width:20%; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.jsb01' /></th> 
+			      	<td style="width: 100%;">
+			      		<div id="groupColor" style="width: 20px; height: 20px; float: left; margin-top: 1.5px; margin-left: 2px; background-color: ${groupColor};"></div>
+			      		<div id="groupColorText" style="width: 60px; height: 20px; float: left; margin-top: 3px; margin-left: 5px; font-size: 13px;">${groupColor}</div>
+			        	<a class="imgbtn" onclick="select_groupcolor()" style="float: right;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
+			      	</td>
+			    </tr>
+			    <tr style="width: 100%;">
+			    	<th style="width:20%; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t203' /></th> 
+			      	<td colspan=3>
+			        	<input name="text" type="text" id="description" style="width:100%; height: 23px; colspan: 3;">
 			      	</td>
 			    </tr> 
 			    
 			</table>
-			
-			
-			<div id="menu" style="margin-top: 10px">
-				<ul style="margin-left:220px">
+			<div id="menu" style="width: 130px; margin-left: 45%; margin-top: 1%;">
+				<ul>
 				    <li title="<spring:message code='ezSchedule.shb10' />"><span onClick="save_onclick()"><spring:message code='ezSchedule.shb11' /></span></li>
 				    <li title="<spring:message code='ezSchedule.t5' />"><span onClick="cancel_onclick()"><spring:message code='ezSchedule.t5' /></span></li>
 			  	</ul>
@@ -647,11 +660,11 @@
 			<span class="txt" style="color:red">▒ <spring:message code="ezSchedule.t17902" /></span>
 			<br />
 			<span class="txt" style="color:red">▒ <spring:message code="ezSchedule.shb21" /></span>
-			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:520px; HEIGHT:300px"> 
+			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:300px;"> 
 				<table width="100%" class="popuplist">
 			    	<tr>
 				    	<th style="width:40px; text-align:center"><spring:message code='ezSchedule.t190' /></th>
-				      	<th style="text-align:center"><spring:message code='ezSchedule.t163' /></th>
+				      	<th style="width:120px; text-align:center"><spring:message code='ezSchedule.t163' /></th>
 				      	<th style="width:80px; text-align:center"><spring:message code='ezSchedule.t164' /></th>
 				      	<th style="width:100px; text-align:center"><spring:message code='ezSchedule.t165' /></th>
 				  	</tr>
@@ -684,6 +697,11 @@
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			</script> 
 		</form>
+		<!-- 2023-09-06 조소정 - 색상선택표 표출 시 뒷배경 회색 처리 -->
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>
 

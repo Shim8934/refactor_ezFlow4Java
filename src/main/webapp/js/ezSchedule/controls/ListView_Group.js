@@ -548,6 +548,11 @@ function ListView() {
                     oInput.onclick = function () { event_HeaderCheckBoxClick(this); };
                     objTd.appendChild(oInput);
                 }
+                // 2023-09-06 조소정 - 관리자단 > 일정관리 > 일정그룹관리 메뉴에서 테이블 헤더에 span 추가
+                else if (strName == "GROUPCOLOR") {
+                	var oSpan = document.createElement("SPAN");
+                	objTd.appendChild(oSpan);
+                }
                 else {
                     var oText = document.createTextNode(strName);
                     objTd.innerHTML = strName;
@@ -750,10 +755,14 @@ function ListView() {
                     oInput.name = 'chk_group';
                     
                     /*if (!new RegExp(/MSIE/).test(navigator.userAgent))*/
-                    if(CrossYN())
-                        oInput.id = oDatas[0].textContent + ";";
-                    else
-                        oInput.id = oDatas[0].text + ";";
+                    // 23.06.08. 조수빈 그룹 색상 추가
+                    if(CrossYN()){
+                    	oInput.id = oDatas[0].textContent + ";";
+                    	//oInput.setAttribute("groupColor", oDatas[2].firstChild.nodeValue);
+                    }else{
+                    	oInput.id = oDatas[0].text + ";";
+                    	//oInput.setAttribute("groupColor", oDatas[2].firstChild.nodeValue);
+                    }
 
                     oInput.type = "checkbox";
                     //2018-07-13 구해안 _rowonclick 이벤트 삭제 후 Input 박스에 이벤트 별도로 연결
@@ -765,7 +774,16 @@ function ListView() {
                     oInput.onclick = function () { event_listCheckboxclick(this); }
                     
                     objTd.appendChild(oInput);
-                }else {                	
+                }
+                // 2023-09-06 조소정 - 관리자단 > 일정관리 > 일정그룹관리 메뉴에서 테이블 바디에 그룹색상 표출
+                else if (strValue == "GROUPCOLOR") {
+                	var oSpan = document.createElement("SPAN");
+                	var groupColor = oDatas[2].firstChild.nodeValue;
+                	oSpan.style = "width:10px; height:10px; float:right; margin-top:3px; margin-right:5px; display:inline-block; overflow:hidden; " +
+                				  "background-color:" + groupColor + "; border:1px solid " + groupColor + "; border-radius:10px;";
+                	objTd.appendChild(oSpan);
+                }
+                else {                	
                     objTd.appendChild(oText);
                 }
                 objTr.appendChild(objTd);
@@ -1449,7 +1467,7 @@ function event_listclick(obj, event) {
 function show_groupinfo2(obj) {
 	var checkRealID = "";
 	//var feature = GetOpenPosition(430, 370);
-	var feature = GetOpenPosition(540, 550);
+	var feature = GetOpenPosition(850, 550);
 	
 	var checkCnt = 0;
 	var allChild = $("#GroupListView")[0].childNodes[1];
@@ -1466,6 +1484,7 @@ function show_groupinfo2(obj) {
 	
 	if(obj == 'show'){
 		var checkId = $('#GroupListView tbody input:checked')
+		var groupColor = checkId[0].parentNode.parentNode.getAttribute("data3");
 		
 		if(checkId.length > 1){
 			alert(strLang276);
@@ -1476,7 +1495,7 @@ function show_groupinfo2(obj) {
 		}else{
 			checkRealID = checkId[0].id.substring(0,checkId[0].id.length -1);
 			//window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
-			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "schedule_group_modify", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID + "&groupColor=" + encodeURIComponent(groupColor), "schedule_group_modify", "height = 550px, width = 850px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 			return;
 		}
 	}else{
@@ -1487,7 +1506,7 @@ function show_groupinfo2(obj) {
 		//window.open("/myoffice/ezSchedule/schedule_group_member.aspx?id=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		
 		//window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1"), "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
-		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1"), "", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1")  + "&groupColor=" + encodeURIComponent(selectedTr.getAttribute("data3")), "", "height = 550px, width = 850px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		
 	}
 	            

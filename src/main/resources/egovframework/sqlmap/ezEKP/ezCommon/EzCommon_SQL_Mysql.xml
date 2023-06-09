@@ -4642,4 +4642,42 @@
 					EXTENSIONATTRIBUTE1 like '%;wf=%'
 		]]>
 	</update>
+    
+   	<select id="EzCommonDAO.checkScheduleGroup_TransferDateColumn" resultClass="String">
+	<![CDATA[
+		SELECT
+			TRANSFERDATE
+		FROM
+			TBL_SCHEDULEGROUP
+		LIMIT 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addScheduleTransferDateColumn">
+    <![CDATA[
+    	ALTER TABLE
+    		TBL_SCHEDULEGROUP
+    	ADD
+    		TRANSFERDATE DATETIME DEFAULT NULL
+	]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkScheduleGroup_GroupColorColumn" resultClass="String">
+	<![CDATA[
+		SELECT
+			GROUPCOLOR
+		FROM
+			TBL_SCHEDULEGROUP
+		LIMIT 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addScheduleGroupColorColumn">
+    <![CDATA[
+    	ALTER TABLE
+    		TBL_SCHEDULEGROUP
+    	ADD
+    		GROUPCOLOR VARCHAR(10) DEFAULT NULL
+	]]>
+	</statement>
 </sqlMap>
