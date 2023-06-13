@@ -6257,7 +6257,163 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
- 	
+
+	<delete id="EzOrganAdminDAO.deleteCompany_D21" parameterClass="Map">
+        DELETE FROM 
+        	TBL_ATTITUDE_TYPE
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D22" parameterClass="Map">
+        DELETE FROM 
+        	TBL_MENUITEM_ITEMS_MENUITEMS_S
+ 		WHERE  
+            UID_ IN (SELECT UID_  FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#) 
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D23" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_THEME_COMP
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D24" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_FRAME_COMP
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D25" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_MENU_COMP
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D26" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_MENU_AUTH
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D27" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_MENU_NAME
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D28" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_PORTLET_COMP
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D29" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_PORTLET_NAME
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D30" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_THEME_PORTLET
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D31" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_THEME_AUTH
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D32" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_PORTLET_AUTH
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D33" parameterClass="Map">
+        DELETE FROM 
+        	TBL_CAR
+ 		WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS" parameterClass="Map">
+        DELETE FROM
+            TBL_TOPMENU_ITEMS    
+        WHERE 
+        	UID_ IN (SELECT UID_ FROM TBL_TOPMENU_GENERAL WHERE COMPANYID = #v_CN# AND TENANT_ID = #v_TENANT_ID#) 
+        OR 
+        	PAGEUID IN (SELECT UID_ FROM TBL_TOPMENU_GENERAL WHERE COMPANYID = #v_CN# AND TENANT_ID = #v_TENANT_ID#)
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS2" parameterClass="Map">
+        DELETE FROM
+            TBL_PORTALPAGE_ITEMS    
+        WHERE  
+            UID_ IN (SELECT UID_  FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#) 
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS3" parameterClass="Map">
+        DELETE FROM
+            TBL_MENUITEM_ITEMS_MENUITEMS    
+         WHERE  
+            UID_ IN (SELECT UID_  FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#) 
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS4" parameterClass="Map">
+        DELETE FROM
+            TBL_PORTLET_URL    
+        WHERE UID_ IN (SELECT UID_ FROM TBL_PORTLET_GENERAL WHERE COMPANYID = #v_CN# AND TENANT_ID = #v_TENANT_ID#)
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS5" parameterClass="Map">
+        DELETE FROM
+            TBL_MENUITEM_ITEMS_LOGOS     
+        WHERE UID_ IN (SELECT UID_ FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#)
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS6" parameterClass="Map">
+        DELETE FROM
+            TBL_MENUITEM_ITEMS_IMAGE    
+        WHERE UID_ IN (SELECT UID_ FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#)
+     </delete>
+	 	
  	<delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
         DELETE FROM
             TBL_BOARD_MYBOARDS    
@@ -6268,6 +6424,15 @@
 		AND
 			BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'
      </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IJHS1" parameterClass="Map">
+        DELETE FROM
+            TBL_ATTITUDE_ANNUAL_CONF    
+        WHERE  
+            COMPANY_ID = #v_CN#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+    </delete>
      
  	<select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
  		SELECT

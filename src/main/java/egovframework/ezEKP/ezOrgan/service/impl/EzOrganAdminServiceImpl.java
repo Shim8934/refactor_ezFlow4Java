@@ -1171,9 +1171,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        
 	        //회사 삭제시 넣었던 초기데이터 테이블 삭제
 	        ezOrganAdminDao.deleteCompany_D1(map);
-	        ezOrganAdminDao.deleteCompany_D2(map);
 	        ezOrganAdminDao.deleteCompany_D3(map);
-	        ezOrganAdminDao.deleteCompany_D4(map);
 	        ezOrganAdminDao.deleteCompany_D5(map);
 	        ezOrganAdminDao.deleteCompany_D6(map);
 	        ezOrganAdminDao.deleteCompany_D7(map);
@@ -1188,9 +1186,44 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        ezOrganAdminDao.deleteCompany_D16(map);
 	        ezOrganAdminDao.deleteCompany_D17(map);
 	        ezOrganAdminDao.deleteCompany_D18(map);
-	        ezOrganAdminDao.deleteCompany_D19(map);
+	        
+	        //2023-06-01 장혜연 : 회사데이터 삭제 코드 추가
+	        //근태설정(근태규율관리) 데이터 삭제 
 	        ezOrganAdminDao.deleteCompany_D20(map);
+	        ezOrganAdminDao.deleteCompany_D21(map);
+
+	        //서브 메뉴 아이템 데이터 삭제
+	        ezOrganAdminDao.deleteCompany_D22(map);
+	        
+	        //포탈 개인화 설정 데이터 삭제
+	        ezOrganAdminDao.deleteCompany_D23(map);
+	        ezOrganAdminDao.deleteCompany_D24(map);
+	        ezOrganAdminDao.deleteCompany_D25(map);
+	        ezOrganAdminDao.deleteCompany_D26(map);
+	        ezOrganAdminDao.deleteCompany_D27(map);
+	        ezOrganAdminDao.deleteCompany_D28(map);
+	        ezOrganAdminDao.deleteCompany_D29(map);
+	        ezOrganAdminDao.deleteCompany_D30(map);
+	        ezOrganAdminDao.deleteCompany_D31(map);
+	        ezOrganAdminDao.deleteCompany_D32(map);
+	        
+	        //차량관리  데이터 삭제
+	        ezOrganAdminDao.deleteCompany_D33(map);
+	        //근태설정(연차설정관리) 데이터 삭제
+	        ezOrganAdminDao.deleteCompanyInfo_IJHS1(map);
+	        
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS2(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS3(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS4(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS5(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS6(map);
 	        ezOrganAdminDao.deleteCompanyInfo_IKMS7(map);
+	        
+	        //기본키와 연관된 테이블 먼저 삭제 후 마지막에 삭제 
+	        ezOrganAdminDao.deleteCompany_D2(map);
+	        ezOrganAdminDao.deleteCompany_D4(map);
+	        ezOrganAdminDao.deleteCompany_D19(map);
 	        
 		    /**
 		     * Active Directory
