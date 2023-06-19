@@ -1370,7 +1370,7 @@ public class EzEmailAdminController {
 		}
 		
 		/* 엑셀 만들기 */
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet = workbook.createSheet("MailQuotaList");
 			
 		Row row = null;
@@ -1448,6 +1448,7 @@ public class EzEmailAdminController {
 		workbook.close();
 	
 		logger.debug("mailQuotaExcelExport controller ended.");
+		}
 	}
 	
 	/**

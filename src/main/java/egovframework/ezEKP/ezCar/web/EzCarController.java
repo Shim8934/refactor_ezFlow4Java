@@ -1521,7 +1521,7 @@ public class EzCarController extends EgovFileMngUtil {
 			yearMonth = request.getParameter("yearMonth");
 
 			//엑셀시작
-			HSSFWorkbook workbook = new HSSFWorkbook();
+			try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 			HSSFSheet sheet;
 
 			//헤더 폰트 굵게
@@ -1903,7 +1903,8 @@ public class EzCarController extends EgovFileMngUtil {
 			
 			workbook.write(response.getOutputStream());
 			  
-			workbook.close();		
+			//workbook.close();
+			}
 			
 			logger.debug("excelExportOut ended"); 
 		}

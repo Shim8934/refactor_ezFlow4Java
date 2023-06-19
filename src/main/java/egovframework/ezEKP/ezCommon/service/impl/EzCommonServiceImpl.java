@@ -2780,7 +2780,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 
 		FileOutputStream fileOut = null;
-		Workbook workbook = new XSSFWorkbook();
+		int rowSize = 0;
+
+		try (Workbook workbook = new XSSFWorkbook()) {
 
 		Sheet sheet = workbook.createSheet(sheetName);
 		sheet.setDefaultRowHeight((short)500);
@@ -2798,7 +2800,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		styleData.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
 
 		int rowNum = 0;
-		int rowSize = data.size();
+		//int rowSize = data.size();
+		rowSize = data.size();
 		boolean appearedHead = false;
 		int colRangeStart = 0;
 		int colRangeEnd = 0;
@@ -2842,7 +2845,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			sheet.setColumnWidth(i, ((int)(15 * 1.14388)) * 256);
 		}
 
-		try {
+		//try {
 			fileOut = new FileOutputStream(filePath);
 			workbook.write(fileOut);
 			fileOut.close();
@@ -2852,7 +2855,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		}
 		finally {
 			if (fileOut != null) fileOut.close();
-			workbook.close();
+			//workbook.close();
 		}
 		logger.debug("createExcelByList end. list size:" + rowSize);
 		return fileName;

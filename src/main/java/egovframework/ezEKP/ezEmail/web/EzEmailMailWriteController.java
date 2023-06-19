@@ -1792,15 +1792,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	} catch(Exception e) {
         		throw e;
         	} finally {
+        		IOUtils.closeQuietly(osw);
+
         		if (br != null) {
         			br.close();
         		}
         		if (isr != null) {
         			isr.close();
         		}
-        		if (osw != null) {
+        		/*if (osw != null) {
         			osw.close();
-        		}
+        		}*/
         	}
         	
         } else {

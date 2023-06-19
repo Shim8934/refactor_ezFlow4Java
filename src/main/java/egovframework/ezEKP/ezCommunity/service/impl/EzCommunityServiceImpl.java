@@ -3662,9 +3662,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         //logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLevel);
         String maxIdFieldName = "c_no";
         
-        InputStream is = null;
-        OutputStream os = null;
-        PrintWriter pw = null;
+        //InputStream is = null;
+        //OutputStream os = null;
+        //PrintWriter pw = null;
 		
 		if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = bbsEditOkGet1(bName, no, code, userInfo.getTenantId());
@@ -3679,8 +3679,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	                String strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
 	                strPath = commonUtil.detectPathTraversal(strPath);
 	                //logger.debug("strPath ==== " + strPath);
-	                try{
-		    		    pw = new PrintWriter(new File(strPath));
+
+	                try (PrintWriter pw = new PrintWriter(new File(strPath))) {
+		    		    //pw = new PrintWriter(new File(strPath));
 			    		pw.print(commonUtil.stripScriptTags(MHTcontent));
 			    		pw.flush();
 			    		pw.close();
@@ -3688,7 +3689,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	    				logger.debug("fnfe: {}", fnfe);
 	    			} catch (Exception e) {
 	    				logger.debug("e: {}", e);
-	    			} finally {
+	    			} /*finally {
 	    			    if (os != null) {
 	    					try {
 	    					    os.close();
@@ -3704,7 +3705,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	    						logger.debug("IGNORED: {}", ignore.getMessage());
 	    					}
 	    			    }
-	                }
+	                }*/
 	        	}
         	}
         } else {
@@ -3762,19 +3763,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             }
 
         	String nowDate = commonUtil.getTodayUTCTime("");
+        	strPath = commonUtil.detectPathTraversal(strPath);
         	
         	/* 2021-06-28 홍승비 - mode가 write이고 no가 존재하는 답변 공지사항 등록 시, 부모 no 데이터를 UPPERNO 칼럼에 저장하도록 수정 */
         	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
         	
-        	try{
+        	try (PrintWriter pw = new PrintWriter(new File(strPath))) {
         		File dir = new File(commonUtil.detectPathTraversal(dirPath));
         		
         		if (!dir.exists()) {
         			dir.mkdirs();
         		}
         		
-        		strPath = commonUtil.detectPathTraversal(strPath);
-	    		pw = new PrintWriter(new File(strPath));
+	    		//pw = new PrintWriter(new File(strPath));
 	    		pw.print(commonUtil.stripScriptTags(MHTcontent));
 	    		pw.flush();
 	    		pw.close();
@@ -3782,7 +3783,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
  				logger.debug("fnfe: {}", fnfe);
  			} catch (Exception e) {
  				logger.debug("e: {}", e);
- 			} finally {
+ 			} /*finally {
  			    if (os != null) {
  					try {
  					    os.close();
@@ -3798,7 +3799,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
  						logger.debug("IGNORED: {}", ignore.getMessage());
  					}
  			    }
-             }
+        	}*/
         }
 		
 		logger.debug("bbsEditOk ended.");
@@ -6694,6 +6695,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public boolean saveMHT(String strHTML, String strMHTFileName, String strBoardID, String strFilePath, String realPath) throws Exception {
 		String docPath = "";
 		String mhtFilePath = "";
+		PrintWriter pw = null;
 		
 		try {
 			docPath = realPath + strFilePath;
@@ -6714,7 +6716,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				new File(mhtFilePath).delete();
 			}
 			
-			PrintWriter pw = new PrintWriter(new File(mhtFilePath));
+			pw = new PrintWriter(new File(mhtFilePath));
 			pw.print(commonUtil.stripScriptTags(strHTML));
 			pw.flush();
 			pw.close();
@@ -6724,6 +6726,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("saveMHT ERROR");
 			logger.error(e.getMessage());
 			return false;
+		} finally {
+			IOUtils.closeQuietly(pw);
 		}
 	}
 	
