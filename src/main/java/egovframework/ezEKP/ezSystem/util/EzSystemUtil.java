@@ -30,9 +30,9 @@ public class EzSystemUtil {
 		
 //		logger.debug("getSysInfo started." );
 
-		BufferedReader br = null;
-		BufferedReader cbr = null;
-		BufferedReader mbr = null;
+		//BufferedReader br = null;
+		//BufferedReader cbr = null;
+		//BufferedReader mbr = null;
 
 		// CWE-404 보안 취약점 대응
 		try {
@@ -42,73 +42,56 @@ public class EzSystemUtil {
 			 * cBuilder -> CPU 정보
 			 * mBuilder -> 메모리 정보
 			 */
-			if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
-				/* 2020-03-12 홍승비 - 시스템 모니터링 grep 명령어 파라미터 수정 */
-				ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
-				ProcessBuilder cBuilder = new ProcessBuilder("grep", "model\\ name", "/proc/cpuinfo");
-				ProcessBuilder mBuilder = new ProcessBuilder("cat", "/proc/meminfo");
-				
-				Process process = builder.start();				
-				InputStreamReader isr = new InputStreamReader(process.getInputStream());
-				br = new BufferedReader(isr);
-				
-				Process cprocess = cBuilder.start();
-				InputStreamReader cisr = new InputStreamReader(cprocess.getInputStream());
-				cbr = new BufferedReader(cisr);
-				
-				Process mprocess = mBuilder.start();
-				InputStreamReader misr = new InputStreamReader(mprocess.getInputStream());
-				mbr = new BufferedReader(misr);
-				
-			} else {
-				String filePath = "D:/test/unamemain.txt";
-				String cpuFile = "D:/test/cpuinfo.txt";
-				String memFile = "D:/test/meminfo.txt";
-				FileReader fr = new FileReader(filePath);
-				FileReader cf = new FileReader(cpuFile);
-				FileReader mr = new FileReader(memFile);
-				br = new BufferedReader(fr);			
-				cbr	= new BufferedReader(cf);
-				mbr = new BufferedReader(mr);			
-			}
 
+			/* 2020-03-12 홍승비 - 시스템 모니터링 grep 명령어 파라미터 수정 */
+			ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
+			ProcessBuilder cBuilder = new ProcessBuilder("grep", "model\\ name", "/proc/cpuinfo");
+			ProcessBuilder mBuilder = new ProcessBuilder("cat", "/proc/meminfo");
+			
+			Process process = builder.start();				
+			InputStreamReader isr = new InputStreamReader(process.getInputStream());
+			//br = new BufferedReader(isr);
+			
+			Process cprocess = cBuilder.start();
+			InputStreamReader cisr = new InputStreamReader(cprocess.getInputStream());
+			//cbr = new BufferedReader(cisr);
+			
+			Process mprocess = mBuilder.start();
+			InputStreamReader misr = new InputStreamReader(mprocess.getInputStream());
+			//mbr = new BufferedReader(misr);
+				
 			JSONObject jObj = new JSONObject();
 			JSONArray jArr = new JSONArray();
 			JSONObject tmpObj = new JSONObject();
 			
-			while (true) {
-				String line = br.readLine();
-	//			logger.debug("write unameInfo");
-	//			logger.debug("<<<!!br.readLine : " + line); 
-				if (line == null) {
-					break;
-				} else {
-					//JSONObject tmpObj = new JSONObject();
-					String[] tmp = line.trim().split("\\s+");
-					
-					tmpObj.put("hostname", tmp[0]);
-					tmpObj.put("version", tmp[1]);
-					tmpObj.put("os", tmp[2]);
-					
-					//jArr.add(tmpObj);
+			try (BufferedReader br = new BufferedReader(isr); 
+					BufferedReader cbr = new BufferedReader(cisr); 
+					BufferedReader mbr = new BufferedReader(misr)) {
+				while (true) {
+					String line = br.readLine();
+					if (line == null) {
+						break;
+					} else {
+						String[] tmp = line.trim().split("\\s+");
+						
+						tmpObj.put("hostname", tmp[0]);
+						tmpObj.put("version", tmp[1]);
+						tmpObj.put("os", tmp[2]);
+					}
 				}
-			}
-			
-			for (int i = 0; i < 1; i ++) {
-				String cline = cbr.readLine();
-	//			logger.debug("write cpuinfo");
-	//			logger.debug("<<<!!cbr.readLine : " + cline); 
-				String[] tmp = cline.trim().split(":");
-				tmpObj.put("cpu", tmp[1].trim());		
-			}
-			
-			for (int i = 0; i < 1; i ++) {
-				String mline = mbr.readLine();
-	//			logger.debug("write meminfo");
-	//			logger.debug("<<<!!mbr.readLine : " + mline); 
-				String[] tmp = mline.trim().split("\\s+");
 				
-				tmpObj.put("memory", tmp[1]);
+				for (int i = 0; i < 1; i ++) {
+					String cline = cbr.readLine();
+					String[] tmp = cline.trim().split(":");
+					tmpObj.put("cpu", tmp[1].trim());		
+				}
+				
+				for (int i = 0; i < 1; i ++) {
+					String mline = mbr.readLine();
+					String[] tmp = mline.trim().split("\\s+");
+					
+					tmpObj.put("memory", tmp[1]);
+				}
 			}
 						
 			jArr.add(tmpObj);
@@ -117,7 +100,7 @@ public class EzSystemUtil {
 					
 			return jObj.toString();
 		} finally {
-			if (br != null) {
+			/*if (br != null) {
 				br.close();
 			}
 
@@ -127,7 +110,7 @@ public class EzSystemUtil {
 
 			if (mbr != null) {
 				mbr.close();
-			}
+			}*/
 		}
 	}
 	

@@ -349,20 +349,19 @@ public class EzCircularServiceImpl implements EzCircularService {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
-			try {
-				// 2023-05-12 이사라 : NullPointerException 시큐어코딩 
-				/*
+			// 2023-06-01 이사라 : 시큐어코딩 NullPointerException, 리소스 close
+			IOUtils.closeQuietly(fis);
+			IOUtils.closeQuietly(fos);
+			IOUtils.closeQuietly(br);
+			IOUtils.closeQuietly(bw);
+
+			/*try {
 				fos.close();
 				br.close();
 				bw.close();
-				*/
-				IOUtils.closeQuietly(fis);
-				IOUtils.closeQuietly(fos);
-				IOUtils.closeQuietly(br);
-				IOUtils.closeQuietly(bw);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
-			}
+			}*/
 		}
 	}
 

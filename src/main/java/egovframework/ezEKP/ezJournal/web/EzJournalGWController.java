@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1179,9 +1180,9 @@ public class EzJournalGWController {
 		
 		int bufferSize = 4096;
 		            
-		ZipOutputStream zos = null;
+		//ZipOutputStream zos = null;
 		
-		try {
+		//try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String realPath = commonUtil.getRealPath(request);
@@ -1194,11 +1195,12 @@ public class EzJournalGWController {
 			List<String> filePathList = Arrays.asList(filePathS);
 			List<String> fileNameList = Arrays.asList(fileNameS);
 			
-			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
-			BufferedInputStream bis = null;
+			//zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"))){
+			//BufferedInputStream bis = null;
 			
 			for (int i = 0; i < filePathList.size(); i++) {
-				try {
+				//try {
 					String filePath = URLDecoder.decode(filePathList.get(i), "UTF-8");
 					String fileName = fileNameList.get(i);
 					
@@ -1216,7 +1218,7 @@ public class EzJournalGWController {
 						throw new FileNotFoundException(fullFilePath);
 					}
 					
-					bis = new BufferedInputStream(new FileInputStream(file));
+					try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
 			        ZipEntry zentry = new ZipEntry(fileName);
 			        zentry.setTime(file.lastModified());
 			        zos.putNextEntry(zentry);
@@ -1228,21 +1230,21 @@ public class EzJournalGWController {
 			            zos.write(buffer, 0, cnt);
 			        }
 			        zos.closeEntry();
-				}catch (IOException e) {
+				} catch (IOException e) {
 					logger.error(e.getMessage(), e);
-				} finally {
+				/*} finally {
 					if (bis != null) {
 						try {
 							bis.close();
 						} catch (Exception e) {
 							logger.error(e.getMessage(), e);
 						}
-					}
+					}*/
 				}
 			}
-			zos.flush();
+			/*zos.flush();
 			zos.close();
-			zos = null;
+			zos = null;*/
 			
 			File file = new File(pDirTempPath + ".zip");
 			

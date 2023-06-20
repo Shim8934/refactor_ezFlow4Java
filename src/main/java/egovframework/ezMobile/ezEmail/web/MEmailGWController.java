@@ -1905,13 +1905,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	        
 	        if (f.exists()) {
 	        	String tempXmlList = "";
-	        	InputStreamReader isr = null;
-	        	BufferedReader br = null;
-	        	OutputStreamWriter osw = null;
 	        	
-	        	try {
-		        	isr = new InputStreamReader(new FileInputStream(f));
-		        	br = new BufferedReader(isr);
+	        	try (InputStreamReader isr = new InputStreamReader(new FileInputStream(f)); 
+	        			BufferedReader br = new BufferedReader(isr);
+	        			OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(f))) {
 		        	int read = 0;
 		        	
 					while ((read = br.read()) != -1) {
@@ -1928,7 +1925,6 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
 		            }
 		            
-	            	osw = new OutputStreamWriter(new FileOutputStream(f));
 	            	osw.write(commonUtil.convertDocumentToString(xmldom));
 	            	String crlf = System.getProperty("line.separator");
 	        		osw.append(crlf+crlf);
@@ -1941,7 +1937,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	    			result.put("code", 1);			
 	    			result.put("data", "");	
 	        	} finally {
-	        		if (br != null) {
+	        		/*if (br != null) {
 	        			br.close();
 	        		}
 	        		
@@ -1951,13 +1947,12 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	        		
 	        		if (osw != null) {
 	        			osw.close();
-	        		}
+	        		}*/
 	        	}	        	
 	        } else {
-	        	OutputStreamWriter osw = null;
+	        	//OutputStreamWriter osw = null;
 	        	
-	        	try {
-	        		osw = new OutputStreamWriter(new FileOutputStream(f));
+	        	try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(f))) {
 	        		osw.write(strXML);
 	        		String crlf = System.getProperty("line.separator");
 	        		osw.append(crlf + crlf);
@@ -1965,9 +1960,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	        	} catch(Exception e) {
 	        		logger.error(e.getMessage(), e);
 	        	} finally {
-	        		if (osw != null) {
+	        		/*if (osw != null) {
 	        			osw.close();
-	        		}
+	        		}*/
 	        	}
 	        }
 	        
