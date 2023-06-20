@@ -1658,6 +1658,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				 userInfoT.setDn("NOPASSWORD");
 				 LoginVO resultVO = loginService.selectUser(userInfoT);
 				 
+				 // deptPathCode에서 userID가 맨 앞으로 오도록 조정 (로그인쿠키를 사용하는 userInfo 참고)
+				 resultVO.setDeptPathCode(organUser.getCn() + "," + resultVO.getDeptPathCode());
+				 
 				 makeAllTreeCacheForUsers(resultVO);
 			 }
 		}
