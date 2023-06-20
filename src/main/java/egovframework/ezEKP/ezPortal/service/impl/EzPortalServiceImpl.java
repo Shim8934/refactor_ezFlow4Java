@@ -4157,14 +4157,14 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		StringBuffer sb = new StringBuffer();
 		
 		try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
-
-		String inputLine;
-		//StringBuffer sb = new StringBuffer();
-		
-		// 내용을 저장한다.
-		while((inputLine = in.readLine()) != null) {
-			sb.append(inputLine.trim());
-		}
+	
+			String inputLine;
+			//StringBuffer sb = new StringBuffer();
+			
+			// 내용을 저장한다.
+			while((inputLine = in.readLine()) != null) {
+				sb.append(inputLine.trim());
+			}
 		}
 		
 		// List 데이터 변환

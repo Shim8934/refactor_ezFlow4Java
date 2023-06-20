@@ -715,151 +715,151 @@ public class EzSystemAdminController {
 		
 		/* 엑셀 만들기 */
 		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
-		HSSFSheet sheet = workbook.createSheet("LoginLogList");
-		
-		Row row = null;
-		Cell cell = null;
-		
-		String fileName = "";
-		fileName = startDate +"_"+ endDate + "_LoginLogList";
-		
-		HSSFCellStyle headerStyle = workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setVerticalAlignment((short)1);
-		
-		HSSFCellStyle bodyStyle = workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-
-		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
-		headerStyle.setFont(font);
-		
-		String histHeader = config.equals("u") ? egovMessageSource.getMessage("ezSystem.ksaLoginHistUser", locale) : egovMessageSource.getMessage("ezSystem.ksaLoginHistAdmin", locale);
-		String[] histHeaderArr = histHeader.split(";");
-		int histHeaderLen = histHeaderArr.length;
-		
-		row = sheet.createRow(0);
-		cell = row.createCell(0);	
-		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
-		cell = row.createCell(histHeaderLen-1);
-		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
-		
-		row = sheet.createRow(1);
-		for (int i = 0; i < histHeaderLen; i ++) {
-			cell = row.createCell(i);	cell.setCellValue(histHeaderArr[i]); 
-			cell.setCellStyle(headerStyle);
-		}
-		
-		String systemLang = userInfoUser.getLang();
-		String systemCountryName = "";
-		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfoUser.getTenantId());
-		
-		for (int i = 2; i < totalCount + 2; i++) {
-			row = sheet.createRow(i);
-			row.setHeight((short)300);
-			int j = 2;
+			HSSFSheet sheet = workbook.createSheet("LoginLogList");
 			
-			ConnectionInfoVO infoVo = loginHistList.get(i-j);
-			String userName = infoVo.getUsernm() + "(" + infoVo.getUserid() + ")";
-			String userDeptName = infoVo.getDeptnm();
-			String userCompanyName = infoVo.getCompanynm();
-			if (!sysLang.equals("primary")) {
-				userName = infoVo.getUsernm2() + "(" + infoVo.getUserid() + ")";
-				userDeptName = infoVo.getDeptnm2();
-				userCompanyName = infoVo.getCompanynm2();
+			Row row = null;
+			Cell cell = null;
+			
+			String fileName = "";
+			fileName = startDate +"_"+ endDate + "_LoginLogList";
+			
+			HSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short)1);
+			
+			HSSFCellStyle bodyStyle = workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+	
+			HSSFFont font = workbook.createFont();
+			font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
+			headerStyle.setFont(font);
+			
+			String histHeader = config.equals("u") ? egovMessageSource.getMessage("ezSystem.ksaLoginHistUser", locale) : egovMessageSource.getMessage("ezSystem.ksaLoginHistAdmin", locale);
+			String[] histHeaderArr = histHeader.split(";");
+			int histHeaderLen = histHeaderArr.length;
+			
+			row = sheet.createRow(0);
+			cell = row.createCell(0);	
+			cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
+			cell = row.createCell(histHeaderLen-1);
+			cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
+			
+			row = sheet.createRow(1);
+			for (int i = 0; i < histHeaderLen; i ++) {
+				cell = row.createCell(i);	cell.setCellValue(histHeaderArr[i]); 
+				cell.setCellStyle(headerStyle);
 			}
 			
-			// countryIP 관련 국가명 표시 위함 시작.
-			String ip = loginHistList.get(i-j).getConnectip();
-			String countryName = "";
-			String countryCode = "";
+			String systemLang = userInfoUser.getLang();
+			String systemCountryName = "";
+			String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfoUser.getTenantId());
 			
-			if (ip.equals("0:0:0:0:0:0:0:1")) {
-				ip = "127.0.0.1";
-			}
-			
-			switch (systemLang){
-			case "1" :
-				systemCountryName = "ko";
-				break;
-			case "2" :
-				systemCountryName = "en";
-				break;
-			case "3" :
-				systemCountryName = "ja";
-				break;
-			default:
-				systemCountryName = "ko";
-				break;
+			for (int i = 2; i < totalCount + 2; i++) {
+				row = sheet.createRow(i);
+				row.setHeight((short)300);
+				int j = 2;
 				
-			}
-			
-			if (ip != null && !ip.equals("")) {
-				if (commonUtil.checkLocalIP(ip)) {
-					countryCode = systemCountryCode;
-				} else {
-					List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
-					if (countryVo.size() == 0 ) {
-						countryName = "?";
-					} else {
-						countryCode = countryVo.get(0).getCountryCode();
-					}
+				ConnectionInfoVO infoVo = loginHistList.get(i-j);
+				String userName = infoVo.getUsernm() + "(" + infoVo.getUserid() + ")";
+				String userDeptName = infoVo.getDeptnm();
+				String userCompanyName = infoVo.getCompanynm();
+				if (!sysLang.equals("primary")) {
+					userName = infoVo.getUsernm2() + "(" + infoVo.getUserid() + ")";
+					userDeptName = infoVo.getDeptnm2();
+					userCompanyName = infoVo.getCompanynm2();
 				}
-			} else {
-				countryName = "?";
-			}
-			
-			if (!"?".equals(countryName)) {
-				Locale localeCountry = new Locale(systemCountryName, countryCode);
-				countryName = localeCountry.getDisplayCountry(localeCountry);
-				countryName = countryName.replaceAll(" ", "");
-			}
-			loginHistList.get(i-j).setConnectCountryName(countryName);
-			// countryIP 관련 국가명 표시 위함 끝.
-			
-			String userConnectIp = infoVo.getConnectip() + "(" + loginHistList.get(i-j).getConnectCountryName() + ")";
-			String userConnectTime = infoVo.getConnecttime();
-			String userDisconnectTime = infoVo.getDisconnecttime();
-			String userConnectBrowser = infoVo.getConnectbrowser();
-			String userConnectOS = infoVo.getConnectos();
-			String userStatus = infoVo.getStatus() == null ? "Y" : infoVo.getStatus();
-			
-			userStatus = userStatus.equals("Y") ? egovMessageSource.getMessage("ezSystem.ls04", locale) : egovMessageSource.getMessage("ezSystem.ls05", locale);
-			
-			//if (userStatus !) {
 				
-			//}
-			
-			String[] userHist = null;
-			
-			if (config.equals("u")){
-				userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userDisconnectTime,userConnectBrowser,userConnectOS,userStatus};
-			} else {
-				userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userDisconnectTime,userConnectBrowser,userConnectOS,userStatus};
+				// countryIP 관련 국가명 표시 위함 시작.
+				String ip = loginHistList.get(i-j).getConnectip();
+				String countryName = "";
+				String countryCode = "";
+				
+				if (ip.equals("0:0:0:0:0:0:0:1")) {
+					ip = "127.0.0.1";
+				}
+				
+				switch (systemLang){
+				case "1" :
+					systemCountryName = "ko";
+					break;
+				case "2" :
+					systemCountryName = "en";
+					break;
+				case "3" :
+					systemCountryName = "ja";
+					break;
+				default:
+					systemCountryName = "ko";
+					break;
+					
+				}
+				
+				if (ip != null && !ip.equals("")) {
+					if (commonUtil.checkLocalIP(ip)) {
+						countryCode = systemCountryCode;
+					} else {
+						List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
+						if (countryVo.size() == 0 ) {
+							countryName = "?";
+						} else {
+							countryCode = countryVo.get(0).getCountryCode();
+						}
+					}
+				} else {
+					countryName = "?";
+				}
+				
+				if (!"?".equals(countryName)) {
+					Locale localeCountry = new Locale(systemCountryName, countryCode);
+					countryName = localeCountry.getDisplayCountry(localeCountry);
+					countryName = countryName.replaceAll(" ", "");
+				}
+				loginHistList.get(i-j).setConnectCountryName(countryName);
+				// countryIP 관련 국가명 표시 위함 끝.
+				
+				String userConnectIp = infoVo.getConnectip() + "(" + loginHistList.get(i-j).getConnectCountryName() + ")";
+				String userConnectTime = infoVo.getConnecttime();
+				String userDisconnectTime = infoVo.getDisconnecttime();
+				String userConnectBrowser = infoVo.getConnectbrowser();
+				String userConnectOS = infoVo.getConnectos();
+				String userStatus = infoVo.getStatus() == null ? "Y" : infoVo.getStatus();
+				
+				userStatus = userStatus.equals("Y") ? egovMessageSource.getMessage("ezSystem.ls04", locale) : egovMessageSource.getMessage("ezSystem.ls05", locale);
+				
+				//if (userStatus !) {
+					
+				//}
+				
+				String[] userHist = null;
+				
+				if (config.equals("u")){
+					userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userDisconnectTime,userConnectBrowser,userConnectOS,userStatus};
+				} else {
+					userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userDisconnectTime,userConnectBrowser,userConnectOS,userStatus};
+				}
+				
+				for (int k = 0; k < histHeaderLen; k ++) {
+					cell = row.createCell(k);	cell.setCellValue((String) userHist[k]); 
+					cell.setCellStyle(bodyStyle);
+				}
+				
+				sheet.autoSizeColumn(i-1);
 			}
 			
-			for (int k = 0; k < histHeaderLen; k ++) {
-				cell = row.createCell(k);	cell.setCellValue((String) userHist[k]); 
-				cell.setCellStyle(bodyStyle);
-			}
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+			response.setContentType("application/vnd.ms-excel");
 			
-			sheet.autoSizeColumn(i-1);
-		}
-		
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
-		response.setContentType("application/vnd.ms-excel");
-		
-		workbook.write(response.getOutputStream());
-		//workbook.close();
+			workbook.write(response.getOutputStream());
+			//workbook.close();
 		}
 		
 		logger.debug("systemLoginHistExcelExport controller ended.");
@@ -2136,147 +2136,147 @@ public class EzSystemAdminController {
 		
 		/* 엑셀 만들기 */
 		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
-		HSSFSheet sheet = workbook.createSheet("AccessAdminLogList");
-		
-		Row row = null;
-		Cell cell = null;
-		
-		String fileName = "";
-		fileName = startDate +"_"+ endDate + "_AdminAccessLogList";
-		
-		HSSFCellStyle headerStyle = workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setVerticalAlignment((short)1);
-		
-		HSSFCellStyle bodyStyle = workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-
-		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
-		headerStyle.setFont(font);
-		
-		String histHeader = egovMessageSource.getMessage("ezSystem.lsAccessHistAdmin", locale);
-		String[] histHeaderArr = histHeader.split(";");
-		int histHeaderLen = histHeaderArr.length;
-		
-		row = sheet.createRow(0);
-		cell = row.createCell(0);	
-		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
-		cell = row.createCell(histHeaderLen-1);
-		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
-		
-		row = sheet.createRow(1);
-		for (int i = 0; i < histHeaderLen; i ++) {
-			cell = row.createCell(i);	cell.setCellValue(histHeaderArr[i]); 
-			cell.setCellStyle(headerStyle);
-		}
-		
-		String systemLang = userInfoUser.getLang();
-		String systemCountryName = "";
-		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
-		
-		for (int i = 2; i < totalCount + 2; i++) {
-			row = sheet.createRow(i);
-			row.setHeight((short)300);
-			int j = 2;
+			HSSFSheet sheet = workbook.createSheet("AccessAdminLogList");
 			
-			MainVO infoVo = accessHistList.get(i-j);
-			String userName = infoVo.getUsernm() + "(" + infoVo.getUserid() + ")";
-			String userDeptName = infoVo.getDeptnm();
-			String userCompanyName = infoVo.getCompanynm();
-			if (!sysLang.equals("primary")) {
-				userName = infoVo.getUsernm2() + "(" + infoVo.getUserid() + ")";
-				userDeptName = infoVo.getDeptnm2();
-				userCompanyName = infoVo.getCompanynm2();
+			Row row = null;
+			Cell cell = null;
+			
+			String fileName = "";
+			fileName = startDate +"_"+ endDate + "_AdminAccessLogList";
+			
+			HSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short)1);
+			
+			HSSFCellStyle bodyStyle = workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+	
+			HSSFFont font = workbook.createFont();
+			font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
+			headerStyle.setFont(font);
+			
+			String histHeader = egovMessageSource.getMessage("ezSystem.lsAccessHistAdmin", locale);
+			String[] histHeaderArr = histHeader.split(";");
+			int histHeaderLen = histHeaderArr.length;
+			
+			row = sheet.createRow(0);
+			cell = row.createCell(0);	
+			cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
+			cell = row.createCell(histHeaderLen-1);
+			cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
+			
+			row = sheet.createRow(1);
+			for (int i = 0; i < histHeaderLen; i ++) {
+				cell = row.createCell(i);	cell.setCellValue(histHeaderArr[i]); 
+				cell.setCellStyle(headerStyle);
 			}
 			
-			// countryIP 관련 국가명 표시 위함 시작.
-			String ip = accessHistList.get(i-j).getAccessip();
-			String countryName = "";
-			String countryCode = "";
+			String systemLang = userInfoUser.getLang();
+			String systemCountryName = "";
+			String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
 			
-			if (ip.equals("0:0:0:0:0:0:0:1")) {
-				ip = "127.0.0.1";
-			}
-			
-			switch (systemLang){
-			case "1" :
-				systemCountryName = "ko";
-				break;
-			case "2" :
-				systemCountryName = "en";
-				break;
-			case "3" :
-				systemCountryName = "ja";
-				break;
-			default:
-				systemCountryName = "ko";
-				break;
+			for (int i = 2; i < totalCount + 2; i++) {
+				row = sheet.createRow(i);
+				row.setHeight((short)300);
+				int j = 2;
 				
-			}
-			
-			if (ip != null && !ip.equals("")) {
-				if (commonUtil.checkLocalIP(ip)) {
-					countryCode = systemCountryCode;
-				} else {
-					List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
-					if (countryVo.size() == 0 ) {
-						countryName = "?";
-					} else {
-						countryCode = countryVo.get(0).getCountryCode();
-					}
+				MainVO infoVo = accessHistList.get(i-j);
+				String userName = infoVo.getUsernm() + "(" + infoVo.getUserid() + ")";
+				String userDeptName = infoVo.getDeptnm();
+				String userCompanyName = infoVo.getCompanynm();
+				if (!sysLang.equals("primary")) {
+					userName = infoVo.getUsernm2() + "(" + infoVo.getUserid() + ")";
+					userDeptName = infoVo.getDeptnm2();
+					userCompanyName = infoVo.getCompanynm2();
 				}
-			} else {
-				countryName = "?";
+				
+				// countryIP 관련 국가명 표시 위함 시작.
+				String ip = accessHistList.get(i-j).getAccessip();
+				String countryName = "";
+				String countryCode = "";
+				
+				if (ip.equals("0:0:0:0:0:0:0:1")) {
+					ip = "127.0.0.1";
+				}
+				
+				switch (systemLang){
+				case "1" :
+					systemCountryName = "ko";
+					break;
+				case "2" :
+					systemCountryName = "en";
+					break;
+				case "3" :
+					systemCountryName = "ja";
+					break;
+				default:
+					systemCountryName = "ko";
+					break;
+					
+				}
+				
+				if (ip != null && !ip.equals("")) {
+					if (commonUtil.checkLocalIP(ip)) {
+						countryCode = systemCountryCode;
+					} else {
+						List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
+						if (countryVo.size() == 0 ) {
+							countryName = "?";
+						} else {
+							countryCode = countryVo.get(0).getCountryCode();
+						}
+					}
+				} else {
+					countryName = "?";
+				}
+				
+				if (!"?".equals(countryName)) {
+					Locale localeCountry = new Locale(systemCountryName, countryCode);
+					countryName = localeCountry.getDisplayCountry(localeCountry);
+					countryName = countryName.replaceAll(" ", "");
+				}
+				accessHistList.get(i-j).setCountryName(countryName);
+				// countryIP 관련 국가명 표시 위함 끝.
+				
+				String accessIp = infoVo.getAccessip() + "(" + accessHistList.get(i-j).getCountryName() + ")";
+				String accessTime = infoVo.getAccesstime();
+				String accessBrowser = infoVo.getAccessbrowser();
+				String accessOS = infoVo.getAccessos();
+				String adminType = infoVo.getAdmintype();
+				
+				if (adminType.indexOf("c=1") > -1 && adminType.indexOf("k=1") > -1) {
+					adminType = egovMessageSource.getMessage("ezSystem.ls10", locale);
+				} else if (adminType.indexOf("c=1") > -1) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t291", locale);
+				} else {
+					adminType = egovMessageSource.getMessage("ezOrgan.t293", locale); 
+				}
+				
+				String[] accessHist = null;
+				accessHist = new String [] {userName, userDeptName, userCompanyName, accessIp, accessTime, accessBrowser, accessOS, adminType};
+				
+				for (int k = 0; k < histHeaderLen; k ++) {
+					cell = row.createCell(k);	cell.setCellValue((String) accessHist[k]); 
+					cell.setCellStyle(bodyStyle);
+				}
+				
+				sheet.autoSizeColumn(i-1);
 			}
 			
-			if (!"?".equals(countryName)) {
-				Locale localeCountry = new Locale(systemCountryName, countryCode);
-				countryName = localeCountry.getDisplayCountry(localeCountry);
-				countryName = countryName.replaceAll(" ", "");
-			}
-			accessHistList.get(i-j).setCountryName(countryName);
-			// countryIP 관련 국가명 표시 위함 끝.
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+			response.setContentType("application/vnd.ms-excel");
 			
-			String accessIp = infoVo.getAccessip() + "(" + accessHistList.get(i-j).getCountryName() + ")";
-			String accessTime = infoVo.getAccesstime();
-			String accessBrowser = infoVo.getAccessbrowser();
-			String accessOS = infoVo.getAccessos();
-			String adminType = infoVo.getAdmintype();
-			
-			if (adminType.indexOf("c=1") > -1 && adminType.indexOf("k=1") > -1) {
-				adminType = egovMessageSource.getMessage("ezSystem.ls10", locale);
-			} else if (adminType.indexOf("c=1") > -1) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t291", locale);
-			} else {
-				adminType = egovMessageSource.getMessage("ezOrgan.t293", locale); 
-			}
-			
-			String[] accessHist = null;
-			accessHist = new String [] {userName, userDeptName, userCompanyName, accessIp, accessTime, accessBrowser, accessOS, adminType};
-			
-			for (int k = 0; k < histHeaderLen; k ++) {
-				cell = row.createCell(k);	cell.setCellValue((String) accessHist[k]); 
-				cell.setCellStyle(bodyStyle);
-			}
-			
-			sheet.autoSizeColumn(i-1);
-		}
-		
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
-		response.setContentType("application/vnd.ms-excel");
-		
-		workbook.write(response.getOutputStream());
-		//workbook.close();
+			workbook.write(response.getOutputStream());
+			//workbook.close();
 		}
 		
 		logger.debug("systemAccessHistExcelExport controller ended.");
@@ -2523,172 +2523,172 @@ public class EzSystemAdminController {
 
 		/* 엑셀 만들기 */
 		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
-		HSSFSheet sheet = workbook.createSheet("permissionChangeHistory");
-
-		Row row = null;
-		Cell cell = null;
-
-		String fileName = "";
-		fileName = startDate + "_" + endDate + "_permissionChangeHistory";
-
-		HSSFCellStyle headerStyle = workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setVerticalAlignment((short) 1);
-
-		HSSFCellStyle bodyStyle = workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-
-		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
-		headerStyle.setFont(font);
-
-		String histHeader = egovMessageSource.getMessage("ezOrgan.lsPermissionChHist", locale);
-		String[] histHeaderArr = histHeader.split(";");
-		int histHeaderLen = histHeaderArr.length;
-
-		row = sheet.createRow(0);
-		cell = row.createCell(0);
-		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
-		cell = row.createCell(histHeaderLen - 1);
-		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount
-				+ egovMessageSource.getMessage("ezSystem.kyj2", locale));
-
-		row = sheet.createRow(1);
-		for (int i = 0; i < histHeaderLen; i++) {
-			cell = row.createCell(i);
-			cell.setCellValue(histHeaderArr[i]);
-			cell.setCellStyle(headerStyle);
-		}
-
-		String systemLang = user.getLang();
-		String systemCountryName = "";
-		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
-
-		for (int i = 2; i < totalCount + 2; i++) {
-			row = sheet.createRow(i);
-			row.setHeight((short) 300);
-			int j = 2;
-
-			// countryIP 관련 국가명 표시 위함 시작.
-			String ip = permissionChHist.get(i - j).getAuthorizerIp();
-			String countryName = "";
-			String countryCode = "";
-
-			if (ip.equals("0:0:0:0:0:0:0:1")) {
-				ip = "127.0.0.1";
+			HSSFSheet sheet = workbook.createSheet("permissionChangeHistory");
+	
+			Row row = null;
+			Cell cell = null;
+	
+			String fileName = "";
+			fileName = startDate + "_" + endDate + "_permissionChangeHistory";
+	
+			HSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short) 1);
+	
+			HSSFCellStyle bodyStyle = workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+	
+			HSSFFont font = workbook.createFont();
+			font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
+			headerStyle.setFont(font);
+	
+			String histHeader = egovMessageSource.getMessage("ezOrgan.lsPermissionChHist", locale);
+			String[] histHeaderArr = histHeader.split(";");
+			int histHeaderLen = histHeaderArr.length;
+	
+			row = sheet.createRow(0);
+			cell = row.createCell(0);
+			cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
+			cell = row.createCell(histHeaderLen - 1);
+			cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount
+					+ egovMessageSource.getMessage("ezSystem.kyj2", locale));
+	
+			row = sheet.createRow(1);
+			for (int i = 0; i < histHeaderLen; i++) {
+				cell = row.createCell(i);
+				cell.setCellValue(histHeaderArr[i]);
+				cell.setCellStyle(headerStyle);
 			}
-
-			switch (systemLang) {
-			case "1":
-				systemCountryName = "ko";
-				break;
-			case "2":
-				systemCountryName = "en";
-				break;
-			case "3":
-				systemCountryName = "ja";
-				break;
-			default:
-				systemCountryName = "ko";
-				break;
-			}
-
-			if (StringUtils.isNotBlank(ip)) {
-				if (commonUtil.checkLocalIP(ip)) {
-					countryCode = systemCountryCode;
-				} else {
-					List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
-					if (countryVo.size() == 0) {
-						countryName = "?";
-					} else {
-						countryCode = countryVo.get(0).getCountryCode();
-					}
+	
+			String systemLang = user.getLang();
+			String systemCountryName = "";
+			String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
+	
+			for (int i = 2; i < totalCount + 2; i++) {
+				row = sheet.createRow(i);
+				row.setHeight((short) 300);
+				int j = 2;
+	
+				// countryIP 관련 국가명 표시 위함 시작.
+				String ip = permissionChHist.get(i - j).getAuthorizerIp();
+				String countryName = "";
+				String countryCode = "";
+	
+				if (ip.equals("0:0:0:0:0:0:0:1")) {
+					ip = "127.0.0.1";
 				}
-			} else {
-				countryName = "?";
+	
+				switch (systemLang) {
+				case "1":
+					systemCountryName = "ko";
+					break;
+				case "2":
+					systemCountryName = "en";
+					break;
+				case "3":
+					systemCountryName = "ja";
+					break;
+				default:
+					systemCountryName = "ko";
+					break;
+				}
+	
+				if (StringUtils.isNotBlank(ip)) {
+					if (commonUtil.checkLocalIP(ip)) {
+						countryCode = systemCountryCode;
+					} else {
+						List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
+						if (countryVo.size() == 0) {
+							countryName = "?";
+						} else {
+							countryCode = countryVo.get(0).getCountryCode();
+						}
+					}
+				} else {
+					countryName = "?";
+				}
+	
+				if (!"?".equals(countryName)) {
+					Locale localeCountry = new Locale(systemCountryName, countryCode);
+					countryName = localeCountry.getDisplayCountry(localeCountry);
+					countryName = countryName.replaceAll(" ", "");
+				}
+				permissionChHist.get(i - j).setCountryName(countryName);
+				// countryIP 관련 국가명 표시 위함 끝.
+	
+				PermissionInfoVO infoVo = permissionChHist.get(i - j);
+	
+				String userName = infoVo.getUserNm() + "(" + infoVo.getUserId() + ")";
+				String userDeptName = infoVo.getDeptNm();
+				String userCompanyName = infoVo.getCompanyNm();
+				String authorizedTime = infoVo.getAuthorizedTime();
+				String adminType = infoVo.getAdminType();
+				String status = infoVo.getStatus().equalsIgnoreCase("Y") ? egovMessageSource.getMessage("ezOrgan.ls07", locale) : egovMessageSource.getMessage("ezOrgan.ls08", locale);
+				String authorizer = infoVo.getAuthorizerNm() + "(" + infoVo.getAuthorizerId() + ")";
+				String authorizerIp = infoVo.getAuthorizerIp() + "(" + permissionChHist.get(i - j).getCountryName() + ")";
+	
+				if (!sysLang.equals("primary")) {
+					userName = infoVo.getUserNm2() + "(" + infoVo.getUserId() + ")";
+					userDeptName = infoVo.getDeptNm2();
+					userCompanyName = infoVo.getCompanyNm2();
+					authorizer = infoVo.getAuthorizerNm2() + "(" + infoVo.getAuthorizerId() + ")";
+				}
+	
+				if (adminType.contains("c=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t291", locale);
+				} else if (adminType.contains("k=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t293", locale);
+				} else if (adminType.contains("g=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t295", locale);
+				} else if (adminType.contains("a=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t292", locale);
+				} else if (adminType.contains("i=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t294", locale);
+				} else if (adminType.contains("n=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t297", locale);
+				} else if (adminType.contains("l=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t296", locale);
+				} else if (adminType.contains("w=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t301", locale);
+				} else if (adminType.contains("m=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t300", locale);
+				} else if (adminType.contains("f=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.lhj1", locale);
+				} else if (adminType.contains("wf=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.t303", locale);
+				} else if (adminType.contains("e=")) {
+					adminType = egovMessageSource.getMessage("ezOrgan.kbm01", locale);
+				} else { // s
+					adminType = egovMessageSource.getMessage("ezOrgan.t9904", locale);
+				}
+	
+				String[] permissionHist = null;
+				permissionHist = new String[] { userName, userDeptName, userCompanyName, authorizedTime, adminType, status,
+						authorizer, authorizerIp };
+	
+				for (int k = 0; k < histHeaderLen; k++) {
+					cell = row.createCell(k);
+					cell.setCellValue((String) permissionHist[k]);
+					cell.setCellStyle(bodyStyle);
+				}
+	
+				sheet.autoSizeColumn(i - 1);
 			}
-
-			if (!"?".equals(countryName)) {
-				Locale localeCountry = new Locale(systemCountryName, countryCode);
-				countryName = localeCountry.getDisplayCountry(localeCountry);
-				countryName = countryName.replaceAll(" ", "");
-			}
-			permissionChHist.get(i - j).setCountryName(countryName);
-			// countryIP 관련 국가명 표시 위함 끝.
-
-			PermissionInfoVO infoVo = permissionChHist.get(i - j);
-
-			String userName = infoVo.getUserNm() + "(" + infoVo.getUserId() + ")";
-			String userDeptName = infoVo.getDeptNm();
-			String userCompanyName = infoVo.getCompanyNm();
-			String authorizedTime = infoVo.getAuthorizedTime();
-			String adminType = infoVo.getAdminType();
-			String status = infoVo.getStatus().equalsIgnoreCase("Y") ? egovMessageSource.getMessage("ezOrgan.ls07", locale) : egovMessageSource.getMessage("ezOrgan.ls08", locale);
-			String authorizer = infoVo.getAuthorizerNm() + "(" + infoVo.getAuthorizerId() + ")";
-			String authorizerIp = infoVo.getAuthorizerIp() + "(" + permissionChHist.get(i - j).getCountryName() + ")";
-
-			if (!sysLang.equals("primary")) {
-				userName = infoVo.getUserNm2() + "(" + infoVo.getUserId() + ")";
-				userDeptName = infoVo.getDeptNm2();
-				userCompanyName = infoVo.getCompanyNm2();
-				authorizer = infoVo.getAuthorizerNm2() + "(" + infoVo.getAuthorizerId() + ")";
-			}
-
-			if (adminType.contains("c=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t291", locale);
-			} else if (adminType.contains("k=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t293", locale);
-			} else if (adminType.contains("g=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t295", locale);
-			} else if (adminType.contains("a=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t292", locale);
-			} else if (adminType.contains("i=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t294", locale);
-			} else if (adminType.contains("n=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t297", locale);
-			} else if (adminType.contains("l=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t296", locale);
-			} else if (adminType.contains("w=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t301", locale);
-			} else if (adminType.contains("m=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t300", locale);
-			} else if (adminType.contains("f=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.lhj1", locale);
-			} else if (adminType.contains("wf=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.t303", locale);
-			} else if (adminType.contains("e=")) {
-				adminType = egovMessageSource.getMessage("ezOrgan.kbm01", locale);
-			} else { // s
-				adminType = egovMessageSource.getMessage("ezOrgan.t9904", locale);
-			}
-
-			String[] permissionHist = null;
-			permissionHist = new String[] { userName, userDeptName, userCompanyName, authorizedTime, adminType, status,
-					authorizer, authorizerIp };
-
-			for (int k = 0; k < histHeaderLen; k++) {
-				cell = row.createCell(k);
-				cell.setCellValue((String) permissionHist[k]);
-				cell.setCellStyle(bodyStyle);
-			}
-
-			sheet.autoSizeColumn(i - 1);
-		}
-
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
-		response.setContentType("application/vnd.ms-excel");
-
-		workbook.write(response.getOutputStream());
-		//workbook.close();
+	
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+			response.setContentType("application/vnd.ms-excel");
+	
+			workbook.write(response.getOutputStream());
+			//workbook.close();
 		}
 
 		logger.debug("permissionChHistExcelExport controller ended.");

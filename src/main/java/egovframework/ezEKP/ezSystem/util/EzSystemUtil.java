@@ -67,31 +67,31 @@ public class EzSystemUtil {
 			try (BufferedReader br = new BufferedReader(isr); 
 					BufferedReader cbr = new BufferedReader(cisr); 
 					BufferedReader mbr = new BufferedReader(misr)) {
-			while (true) {
-				String line = br.readLine();
-				if (line == null) {
-					break;
-				} else {
-					String[] tmp = line.trim().split("\\s+");
-					
-					tmpObj.put("hostname", tmp[0]);
-					tmpObj.put("version", tmp[1]);
-					tmpObj.put("os", tmp[2]);
+				while (true) {
+					String line = br.readLine();
+					if (line == null) {
+						break;
+					} else {
+						String[] tmp = line.trim().split("\\s+");
+						
+						tmpObj.put("hostname", tmp[0]);
+						tmpObj.put("version", tmp[1]);
+						tmpObj.put("os", tmp[2]);
+					}
 				}
-			}
-			
-			for (int i = 0; i < 1; i ++) {
-				String cline = cbr.readLine();
-				String[] tmp = cline.trim().split(":");
-				tmpObj.put("cpu", tmp[1].trim());		
-			}
-			
-			for (int i = 0; i < 1; i ++) {
-				String mline = mbr.readLine();
-				String[] tmp = mline.trim().split("\\s+");
 				
-				tmpObj.put("memory", tmp[1]);
-			}
+				for (int i = 0; i < 1; i ++) {
+					String cline = cbr.readLine();
+					String[] tmp = cline.trim().split(":");
+					tmpObj.put("cpu", tmp[1].trim());		
+				}
+				
+				for (int i = 0; i < 1; i ++) {
+					String mline = mbr.readLine();
+					String[] tmp = mline.trim().split("\\s+");
+					
+					tmpObj.put("memory", tmp[1]);
+				}
 			}
 						
 			jArr.add(tmpObj);
