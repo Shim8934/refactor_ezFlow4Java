@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Base64;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -30,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.NodeList;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+//import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
@@ -1507,8 +1508,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			if (attach == null) {
 				stream = new ByteArrayInputStream(content.getBytes("UTF-8"));
 			}else{
-				@SuppressWarnings("deprecation")
-				byte[] ct = Base64.decode(content);
+				//byte[] ct = Base64.decode(content);
+				byte[] ct = Base64.getUrlDecoder().decode(content);
 				stream = new ByteArrayInputStream(ct);
 			}
 			
@@ -1652,7 +1653,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		//OutputStream bos = null;		
 		
 		try (OutputStream bos = new FileOutputStream(commonUtil.detectPathTraversal(defaultPath))) {
-			byte[] ct = Base64.decode(content);
+			//byte[] ct = Base64.decode(content);
+			byte[] ct = Base64.getUrlDecoder().decode(content);
 			stream = new ByteArrayInputStream(ct);
 			//bos = new FileOutputStream(commonUtil.detectPathTraversal(defaultPath));
 			
