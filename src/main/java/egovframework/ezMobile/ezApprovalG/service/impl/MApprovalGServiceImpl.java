@@ -953,23 +953,16 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 					signField.get(signField.size() - 1).html(newSignHtml);
 					
 					// 수정한 결재문서 html을 다시 mht로 저장한다.
-					OutputStream outputStream = null;
-	        		OutputStreamWriter output = null;
+					//OutputStream outputStream = null;
+	        		//OutputStreamWriter output = null;
 					String tempHtml = doc.outerHtml();
 	        		String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
 	        		
-	        		try {
-	        			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref)));
-	        			output = new OutputStreamWriter(outputStream);
+	        		try (OutputStream outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref)));
+	        				OutputStreamWriter output = new OutputStreamWriter(outputStream)) {
 	        			output.write(convertedMHT);
 	        		} catch (Exception e) {
 	        			logger.error(e.getMessage(), e);
-	        		} finally {
-	        			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
-	        			//output.close();
-	        			//outputStream.close();
-	        			IOUtils.closeQuietly(output);
-	        			IOUtils.closeQuietly(outputStream);
 	        		}
 				}
 			} else { // 아직 결재 진행중인 경우, 바로 리턴시킨다. 에러는 아니다.

@@ -1513,84 +1513,85 @@ public class EzEmailAdminController {
 		}
 		
 		/* 엑셀 만들기 */
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet = workbook.createSheet("MailQuotaList");
-			
-		Row row = null;
-		Cell cell = null;
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			HSSFSheet sheet = workbook.createSheet("MailQuotaList");
+				
+			Row row = null;
+			Cell cell = null;
+		
+			String fileName = "";
+			fileName = "MailQuotaList";
+		
+			HSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short) 1);
+				
+			HSSFCellStyle bodyStyle = workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
+			HSSFFont font = workbook.createFont();
+			font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
+			headerStyle.setFont(font);
 	
-		String fileName = "";
-		fileName = "MailQuotaList";
-	
-		HSSFCellStyle headerStyle = workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setVerticalAlignment((short) 1);
-			
-		HSSFCellStyle bodyStyle = workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-	
-		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
-		headerStyle.setFont(font);
-
-		row = sheet.createRow(0);
-		cell = row.createCell(0);
-		cell.setCellValue(egovMessageSource.getMessage("main.t252") + " " + totalCount + 
-						  egovMessageSource.getMessage("ezSystem.kyj2"));
-	
-		row = sheet.createRow(1);
-		cell = row.createCell(0);
-		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04"));
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(1);
-		cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113"));
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(2);
-		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd02"));
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(3);
-		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03"));
-		cell.setCellStyle(headerStyle);
-	
-		for (int i = 2; i < userList.size() + 2; i++) {
-			row = sheet.createRow(i);
-			row.setHeight((short) 300);
-			int j = 2;
+			row = sheet.createRow(0);
 			cell = row.createCell(0);
-			cell.setCellValue((String) userList.get(i - j).get(1));
-			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("main.t252") + " " + totalCount + 
+							  egovMessageSource.getMessage("ezSystem.kyj2"));
+		
+			row = sheet.createRow(1);
+			cell = row.createCell(0);
+			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04"));
+			cell.setCellStyle(headerStyle);
 			cell = row.createCell(1);
-			cell.setCellValue((String) userList.get(i - j).get(2));
-			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113"));
+			cell.setCellStyle(headerStyle);
 			cell = row.createCell(2);
-			cell.setCellValue((String) userList.get(i - j).get(3));
-			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd02"));
+			cell.setCellStyle(headerStyle);
 			cell = row.createCell(3);
-			cell.setCellValue((String) userList.get(i - j).get(4));
-			cell.setCellStyle(bodyStyle);
-	
-		}
+			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03"));
+			cell.setCellStyle(headerStyle);
 		
-		for (int i = 0; i < 4; i++) {
-			sheet.autoSizeColumn(i);
-		}
+			for (int i = 2; i < userList.size() + 2; i++) {
+				row = sheet.createRow(i);
+				row.setHeight((short) 300);
+				int j = 2;
+				cell = row.createCell(0);
+				cell.setCellValue((String) userList.get(i - j).get(1));
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(1);
+				cell.setCellValue((String) userList.get(i - j).get(2));
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(2);
+				cell.setCellValue((String) userList.get(i - j).get(3));
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(3);
+				cell.setCellValue((String) userList.get(i - j).get(4));
+				cell.setCellStyle(bodyStyle);
 		
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
-		response.setContentType("application/vnd.ms-excel");
-	
-		workbook.write(response.getOutputStream());
-		workbook.close();
-	
-		logger.debug("mailQuotaExcelExport controller ended.");
+			}
+			
+			for (int i = 0; i < 4; i++) {
+				sheet.autoSizeColumn(i);
+			}
+			
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+			response.setContentType("application/vnd.ms-excel");
+		
+			workbook.write(response.getOutputStream());
+			workbook.close();
+		
+			logger.debug("mailQuotaExcelExport controller ended.");
+		}
 	}
 	
 	/**

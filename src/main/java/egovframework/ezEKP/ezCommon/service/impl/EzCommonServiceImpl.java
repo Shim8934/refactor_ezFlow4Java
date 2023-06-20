@@ -2790,69 +2790,72 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 
 		FileOutputStream fileOut = null;
-		Workbook workbook = new XSSFWorkbook();
+		int rowSize = 0;
 
-		Sheet sheet = workbook.createSheet(sheetName);
-		sheet.setDefaultRowHeight((short)500);
-
-		//Set style
-		CellStyle styleHead = workbook.createCellStyle();
-		styleHead.setWrapText(false);
-		styleHead.setAlignment(CellStyle.ALIGN_CENTER);
-		styleHead.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-		styleHead.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-		styleHead.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-
-		CellStyle styleData = workbook.createCellStyle();
-		styleData.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-
-		int rowNum = 0;
-		int rowSize = data.size();
-		boolean appearedHead = false;
-		int colRangeStart = 0;
-		int colRangeEnd = 0;
-
-		while(rowNum < rowSize) {
-			List<Object> dataList = data.get(rowNum);
-			int colSize = dataList.size();
-
-			if (colSize > 0) {
-				Row row = sheet.createRow(rowNum);
-
-				if (!appearedHead) {
-					for (int colNum = 0; colNum < colSize; colNum++) {
-						Object value = dataList.get(colNum);
-						String strValue = String.valueOf(value).trim();
-
-						if (value != null && !strValue.isEmpty()) {
-							row.createCell(colNum).setCellValue(strValue);
-							row.getCell(colNum).setCellStyle(styleHead);
-							appearedHead = true;
-							if(colRangeStart == 0) colRangeStart = colNum;
-							colRangeEnd = colNum;
+		try (Workbook workbook = new XSSFWorkbook()) {
+	
+			Sheet sheet = workbook.createSheet(sheetName);
+			sheet.setDefaultRowHeight((short)500);
+	
+			//Set style
+			CellStyle styleHead = workbook.createCellStyle();
+			styleHead.setWrapText(false);
+			styleHead.setAlignment(CellStyle.ALIGN_CENTER);
+			styleHead.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+			styleHead.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			styleHead.setFillPattern(CellStyle.SOLID_FOREGROUND);
+	
+			CellStyle styleData = workbook.createCellStyle();
+			styleData.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+	
+			int rowNum = 0;
+			//int rowSize = data.size();
+			rowSize = data.size();
+			boolean appearedHead = false;
+			int colRangeStart = 0;
+			int colRangeEnd = 0;
+	
+			while(rowNum < rowSize) {
+				List<Object> dataList = data.get(rowNum);
+				int colSize = dataList.size();
+	
+				if (colSize > 0) {
+					Row row = sheet.createRow(rowNum);
+	
+					if (!appearedHead) {
+						for (int colNum = 0; colNum < colSize; colNum++) {
+							Object value = dataList.get(colNum);
+							String strValue = String.valueOf(value).trim();
+	
+							if (value != null && !strValue.isEmpty()) {
+								row.createCell(colNum).setCellValue(strValue);
+								row.getCell(colNum).setCellStyle(styleHead);
+								appearedHead = true;
+								if(colRangeStart == 0) colRangeStart = colNum;
+								colRangeEnd = colNum;
+							}
 						}
-					}
-				} else {
-					for (int colNum = 0; colNum < colSize; colNum++) {
-						Object value = dataList.get(colNum);
-						String strValue = String.valueOf(value).trim();
-
-						if (value != null && !strValue.isEmpty()) {
-							row.createCell(colNum).setCellValue(strValue);
-							row.getCell(colNum).setCellStyle(styleData);
+					} else {
+						for (int colNum = 0; colNum < colSize; colNum++) {
+							Object value = dataList.get(colNum);
+							String strValue = String.valueOf(value).trim();
+	
+							if (value != null && !strValue.isEmpty()) {
+								row.createCell(colNum).setCellValue(strValue);
+								row.getCell(colNum).setCellStyle(styleData);
+							}
 						}
 					}
 				}
+
+				rowNum++;
 			}
-			rowNum++;
-		}
+	
+			for (int i = colRangeStart; i <= colRangeEnd; i++) {
+				sheet.setColumnWidth(i, ((int)(15 * 1.14388)) * 256);
+			}
 
-		for (int i = colRangeStart; i <= colRangeEnd; i++) {
-			sheet.setColumnWidth(i, ((int)(15 * 1.14388)) * 256);
-		}
-
-		try {
+			//try {
 			fileOut = new FileOutputStream(filePath);
 			workbook.write(fileOut);
 			fileOut.close();
@@ -2862,7 +2865,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		}
 		finally {
 			if (fileOut != null) fileOut.close();
-			workbook.close();
+			//workbook.close();
 		}
 		logger.debug("createExcelByList end. list size:" + rowSize);
 		return fileName;
