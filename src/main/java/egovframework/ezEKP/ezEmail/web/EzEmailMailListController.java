@@ -160,6 +160,7 @@ public class EzEmailMailListController {
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
 		String useMailConfirm = ezCommonService.getTenantConfig("useMailConfirm", tenantId);
 		String useHackingMailReport = ezCommonService.getTenantConfig("useHackingMailReport", tenantId);
+		String useSecureMail = StringUtils.defaultIfEmpty(ezCommonService.getTenantConfig("USE_SECUREMAIL", tenantId), "NO");
 		String userTimeSet = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
 		String serverName = userInfo.getServerName();
@@ -292,13 +293,17 @@ public class EzEmailMailListController {
 		model.addAttribute("useHackingMailReport", useHackingMailReport);
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("serverName", serverName);
+		model.addAttribute("useSecureMail", useSecureMail);
 
-		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
-				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
-				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
-				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP + ", useMailConfirm=" + useMailConfirm 
-				 + ", useHackingMailReport=" + useHackingMailReport + ",offsetMin=" + offsetMin);
-		logger.debug("mailGeneral=" + mailGeneral);
+		logger.debug("folderName={}, url={}, folderType={}, isSentItems={}, userLang={},"
+					+ " userId={}, domainName={}, useEditor={}, useOcs={}, importanceColor={},"
+					, folderName, url, folderType, isSentItems, userInfo.getLang()
+					, userInfo.getId(), domainName, useEditor, useOcs, importanceColor);
+		logger.debug("UseEncryptZipForEmail={}, useMailBoxBackUp={}, useCountryIP={}, useMailConfirm={}, useHackingMailReport={},"
+					+ " offsetMin={}, mailGeneral={}, useSecureMail={}"
+					, useEncryptZipForEmail, useMailBoxBackUp, useCountryIP, useMailConfirm, useHackingMailReport
+					, offsetMin, mailGeneral, useSecureMail);
+		
 		logger.debug("showMailList ended.");
 		
 		return "ezEmail/mailList";
