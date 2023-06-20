@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1477,11 +1478,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				new File(mhtFilePath).delete();
 			}
 			
-			PrintWriter pw = new PrintWriter(new File(mhtFilePath));
-			
-			pw.print(commonUtil.stripScriptTags(strHTML));
-			pw.flush();
-			pw.close();
+			try (PrintWriter pw = new PrintWriter(new File(mhtFilePath))) {			
+				pw.print(commonUtil.stripScriptTags(strHTML));
+				pw.flush();
+				pw.close();
+			} catch (Exception e1) {
+				return false;
+			}
 			
 			logger.debug("saveMHT ended");
 			return true;

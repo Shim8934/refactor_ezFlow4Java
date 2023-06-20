@@ -780,7 +780,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		List<QuestionVO> surveyResultData = objectMapper.readValue(questionData.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, QuestionVO.class));
 	
 		// Excel 객체 생성
-		XSSFWorkbook workbook = new XSSFWorkbook();
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 
 		String fontFamily = egovMessageSource.getMessage("main.t0620", locale).split(";")[0];
 
@@ -1336,7 +1336,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xlsx\"");
 		workbook.write(response.getOutputStream());
-		workbook.close();
+		//workbook.close();
+		}
+		
 		logger.debug("jsonSaveResponse ended");
 	}
 	

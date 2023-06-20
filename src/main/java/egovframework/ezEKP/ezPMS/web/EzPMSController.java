@@ -4567,8 +4567,9 @@ public class EzPMSController {
 			groupList = (JSONArray) resultBodyGroup.get("data");
 		}
 		
-		XSSFWorkbook workbook = new XSSFWorkbook();
+		//XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet;
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 
 		// 1행 타이틀 font (bold, 맑은고딕, 크기 12pt)
 		XSSFFont titleFont = workbook.createFont();
@@ -5394,7 +5395,9 @@ public class EzPMSController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xlsx\"");
 		workbook.write(response.getOutputStream());
 
-		workbook.close();
+		//workbook.close();
+		} 
+
 		logger.debug("ezPMS exportGanttExcel ended.");
 	}
 	

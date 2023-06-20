@@ -714,7 +714,7 @@ public class EzSystemAdminController {
 		}
 		
 		/* 엑셀 만들기 */
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet = workbook.createSheet("LoginLogList");
 		
 		Row row = null;
@@ -859,7 +859,8 @@ public class EzSystemAdminController {
 		response.setContentType("application/vnd.ms-excel");
 		
 		workbook.write(response.getOutputStream());
-		workbook.close();
+		//workbook.close();
+		}
 		
 		logger.debug("systemLoginHistExcelExport controller ended.");
 	}	
@@ -2134,7 +2135,7 @@ public class EzSystemAdminController {
 		
 		
 		/* 엑셀 만들기 */
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet = workbook.createSheet("AccessAdminLogList");
 		
 		Row row = null;
@@ -2275,7 +2276,8 @@ public class EzSystemAdminController {
 		response.setContentType("application/vnd.ms-excel");
 		
 		workbook.write(response.getOutputStream());
-		workbook.close();
+		//workbook.close();
+		}
 		
 		logger.debug("systemAccessHistExcelExport controller ended.");
 	}	
@@ -2520,7 +2522,7 @@ public class EzSystemAdminController {
 				searchKeycode, searchKeyword, searchKeycodeForRoll, sysLang, startDate, endDate, companyId, isMasterAdmin);
 
 		/* 엑셀 만들기 */
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet = workbook.createSheet("permissionChangeHistory");
 
 		Row row = null;
@@ -2686,7 +2688,8 @@ public class EzSystemAdminController {
 		response.setContentType("application/vnd.ms-excel");
 
 		workbook.write(response.getOutputStream());
-		workbook.close();
+		//workbook.close();
+		}
 
 		logger.debug("permissionChHistExcelExport controller ended.");
 	}

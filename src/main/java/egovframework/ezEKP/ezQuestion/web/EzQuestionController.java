@@ -2917,7 +2917,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 		
 		//@SuppressWarnings("resource")
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet;
 		
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -3017,7 +3017,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
-		workbook.close();
+		//workbook.close();
+		}
 
 		logger.debug("qstResultAnalysisSave ended");
 	}

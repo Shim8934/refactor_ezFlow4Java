@@ -76,7 +76,7 @@ public class EzStatisticsController {
 			headerFLAG = request.getParameter("headerFlag");
         }
 		
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet;
 		
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -185,7 +185,8 @@ public class EzStatisticsController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
-		workbook.close();
+		//workbook.close();
+		}
 		
 		logger.debug("qstResultAnalysisSave ended");
 	}
@@ -204,7 +205,7 @@ public class EzStatisticsController {
 			headerFLAG = request.getParameter("headerFlag");
         }
 		
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet;
 		
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -286,7 +287,8 @@ public class EzStatisticsController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
-		workbook.close();
+		//workbook.close();
+		}
 		
 		logger.debug("qstResultAnalysisSaveM ended");
 	}
@@ -300,7 +302,7 @@ public class EzStatisticsController {
 	public void qstResultAnalysisSaveA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveA started");
 		
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		
 		HSSFSheet sheet;
 		
@@ -422,7 +424,8 @@ public class EzStatisticsController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
-		workbook.close();
+		//workbook.close();
+		}
 		
 		logger.debug("qstResultAnalysisSaveA ended");
 	}
@@ -435,7 +438,7 @@ public class EzStatisticsController {
    public void qstResultAnalysisSaveApproval(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApproval started");
       
-      HSSFWorkbook workbook = new HSSFWorkbook();
+      try (HSSFWorkbook workbook = new HSSFWorkbook()) {
       HSSFSheet sheet;
       
       HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -490,7 +493,8 @@ public class EzStatisticsController {
       response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
       workbook.write(response.getOutputStream());
       
-      workbook.close();
+      //workbook.close();
+      }
       
       logger.debug("qstResultAnalysisSaveApproval ended");
    }
@@ -503,7 +507,7 @@ public class EzStatisticsController {
    public void qstResultAnalysisSaveApprovalTime(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApprovalTime started");
       
-      HSSFWorkbook workbook = new HSSFWorkbook();
+      try (HSSFWorkbook workbook = new HSSFWorkbook()) {
       HSSFSheet sheet;
       
       HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -575,7 +579,8 @@ public class EzStatisticsController {
       response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
       workbook.write(response.getOutputStream());
       
-      workbook.close();
+      //workbook.close();
+      }
       
       logger.debug("qstResultAnalysisSaveApprovalTime ended");
    }
@@ -589,7 +594,7 @@ public class EzStatisticsController {
 	public void qstResultAnalysisSaveTotalA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveTotalA started");
 	
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		
 		HSSFSheet sheet;
 		
@@ -677,7 +682,8 @@ public class EzStatisticsController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
-		workbook.close();
+		//workbook.close();
+		}
 		
 		logger.debug("qstResultAnalysisSaveTotalA ended");
 	}
@@ -690,7 +696,7 @@ public class EzStatisticsController {
 	public void qstResultAnalysisSaveWA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveM started");
 		
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet;
 		
 		HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -765,7 +771,8 @@ public class EzStatisticsController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
-		workbook.close();
+		//workbook.close();
+		}
 		
 		logger.debug("qstResultAnalysisSaveM ended");
 	}

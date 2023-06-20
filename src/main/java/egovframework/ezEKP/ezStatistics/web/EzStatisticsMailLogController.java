@@ -430,7 +430,7 @@ public class EzStatisticsMailLogController {
 		int totalCount = mailLogList.size();
 		
 		// 엑셀 워크시트 생성 및 자동 다운로드 
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 		HSSFSheet sheet = workbook.createSheet("MailLog");
 		
 		Row row = null;
@@ -605,7 +605,8 @@ public class EzStatisticsMailLogController {
 		response.setContentType("application/vnd.ms-excel");
 		
 		workbook.write(response.getOutputStream());
-		workbook.close();
+		//workbook.close();
+		}
 		
 		logger.debug("statisticsMailLogExcelExport ended.");
 	}

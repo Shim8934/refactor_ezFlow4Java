@@ -126,7 +126,7 @@ public class EzStatisticsApprController {
 		}*/
 		
 		// 2019-02-08 김민성 - 엑셀내려받기 workbook 형식 다운로드로 변경
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
 	    HSSFSheet sheet;
 	    
 	    HSSFCellStyle headerStyle= workbook.createCellStyle();
@@ -249,7 +249,8 @@ row = sheet.createRow(0);
 	    response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 	    workbook.write(response.getOutputStream());
 	      
-	    workbook.close();
+	    //workbook.close();
+		}
 
 		logger.debug("excelExportOut ended");
 	}

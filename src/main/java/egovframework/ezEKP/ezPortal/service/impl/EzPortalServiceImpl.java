@@ -4154,14 +4154,17 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		conn.setDoOutput(true);
 		conn.setRequestProperty("content-type", "text/xml");
 		
-		BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+		StringBuffer sb = new StringBuffer();
+		
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
 
 		String inputLine;
-		StringBuffer sb = new StringBuffer();
+		//StringBuffer sb = new StringBuffer();
 		
 		// 내용을 저장한다.
 		while((inputLine = in.readLine()) != null) {
 			sb.append(inputLine.trim());
+		}
 		}
 		
 		// List 데이터 변환
