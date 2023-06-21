@@ -4486,5 +4486,34 @@
 			PRIMARY KEY (`TYPE1`, `TYPE3`, `TYPE2`, `TIMESEP`, `REGSERIALNO`, `TENANT_ID`, `COMPANYID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 	</statement>
+	
+	<select id="EzCommonDAO.checkHWPDownSecurityConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useHwpDownSecurity'
+		AND
+			TENANT_ID = 0
+	</select>
+	<select id="EzCommonDAO.checkHWPSecurityNumConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'HwpSecurityNum'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertHWPDownSecurityConfig">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES ('0', 'useHwpDownSecurity', 'Y', 'Y: 사용 N: 사용안함 (default: Y)', '통합pc저장 시 hwp 결재파일 배포용 문서로 저장', '2023-05-31 00:00:00', '전자결재')
+    </insert>
+    <insert id="EzCommonDAO.insertHWPSecurityNumConfig">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES ('0', 'HwpSecurityNum', 'Kaoni2023!', '통합pc저장 hwp 배포용문서 비밀번호', '통합pc 저장시  hwp배포용 문서 비밀번호', '2023-05-31 00:00:00', '전자결재')
+    </insert>
     
 </sqlMap>

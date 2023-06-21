@@ -32,7 +32,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("MEmailService")
 public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmailService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MEmailServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MEmailServiceImpl.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -66,7 +66,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			String end = (Integer.parseInt(start) + Integer.parseInt(listSize) - 1) + "";
 	        String userId = info.getUserId();
 	      
-	        LOGGER.debug("userID : " + userId+ ",folderId : " + folderId + ",listLength : " + listSize
+	        logger.debug("userID : " + userId+ ",folderId : " + folderId + ",listLength : " + listSize
 	        		+"start : " + start+ ",end : " + end); 
 	        
 	        Message[] messages = null;
@@ -189,7 +189,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 					
 			folder.close(false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -226,14 +226,14 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONArray getFolderList(MCommonVO info, Locale locale, String folderId) {
-		LOGGER.debug("MEmailServiceImpl getFolderList started.");
+		logger.debug("MEmailServiceImpl getFolderList started.");
 		
 		IMAPAccess ia = null;
 //		List<MEmailFolderVO> mailFolderList = new ArrayList<MEmailFolderVO>();
 		JSONArray malFolderList = new JSONArray();
 		
 		try {		
-			LOGGER.debug("folderId=" + folderId);		
+			logger.debug("folderId=" + folderId);		
 	
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
@@ -279,7 +279,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			
 		} catch (Exception e) {
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 		} finally {
 			if (ia != null) {
@@ -287,7 +287,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			}
 		}
 		
-		LOGGER.debug("MEmailServiceImpl getFolderList ended.");
+		logger.debug("MEmailServiceImpl getFolderList ended.");
 		
 		return malFolderList;
 	}

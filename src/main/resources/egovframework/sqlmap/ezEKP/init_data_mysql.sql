@@ -13,28 +13,11 @@
 INSERT INTO `james_recipient_rewrite` (`DOMAIN_NAME`,`USER_NAME`,`TARGET_ADDRESS`) VALUES ('jtest.kaoni.com','Top','');
 INSERT IGNORE INTO `james_domain` (`DOMAIN_NAME`) VALUES ('jtest.kaoni.com');
 INSERT INTO `james_user` (`USER_NAME`,`PASSWORD_HASH_ALGORITHM`,`PASSWORD`,`version`) VALUES ('masteradmin@jtest.kaoni.com','SHA-256','9bb8ec42d9b552a9be9f9d47d34c1c89039e426f6b95aad9c43d30b8cf505425',1);
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'ExpirePassPeriod','0');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'BigSizeMailAttachDelDay','14');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'BigSizeMailAttachLimit','10');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'DomainName','jtest.kaoni.com');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'IS_READ_DELETE','NO');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LangSecondary1','영문');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LangSecondary2','English');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LangSecondary3','英語');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LangSecondary4','英语');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'MailAttachLimit','10');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'MailInnerDomain','jtest.kaoni.com');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'SignImageSizeLimit','10');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'totBigSizeMailAttachLimit','800');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'INDIVIDUALMAILUSER','5');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'USE_FileExtension','7z,alz,avi,bmp,csv,cur,doc,docx,eml,gif,hwp,hwpx,hwt,jpeg,jpg,log,mht,mp4,odt,pdf,png,ppt,pptx,rar,tif,txt,wmv,xls,xlsx,zip');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LicenseKey','');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'MaxMessageSize','0');
-INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'Use_FromAddress','NO');
-INSERT INTO `jmocha_tenant_servername` (`TENANT_ID`, `SERVER_NAME`) VALUES (0, 'jtest.kaoni.com');
 INSERT INTO `jmocha_default_quota` (`DOMAIN_NAME`,`MAX_STORAGE`,`WARN_STORAGE`) VALUES ('jtest.kaoni.com',1024,819.2);
 INSERT INTO `tbl_tenant_servername` (`TENANT_ID`, `SERVER_NAME`) VALUES (0, 'jtest.kaoni.com');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'checkPasswordNumber', '3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지', 'YES', '패스워드 설정 시 3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지 사용여부 (default:YES)', '2023-06-09 00:00:00', '로그인');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useOTP', 'OTP 사용여부', 'NO', 'TFA 2중인증 OTP 사용여부 (default:NO)', '2023-03-30 00:00:00', '로그인');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'MaxMessageSize', '메일최대크기', '65536', '메일최대크기 (default:65536)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useZipCodeSearchInApr', '전자결재 민원인주소 검색 사용여부', 'NO', '전자결재>결재정보에서 민원인주소를 입력 시 주소정보 검색을 사용한다.(민원인주소 버튼: 결재정보>수신자>민원인주소입력 버튼, 전자결재G에서 재기안이 아닐 때 버튼 활성화)YES: 이름+우편번호검색+상세주소 입력NO: 이름 입력 (default: NO)', '2017-01-06 00:00:00', '전자결재G');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useZipCodeSearch', '우편번호 검색 사용여부', 'YES', '사용자 정보 관리, 주소록에서 우편번호 검색을 사용한다. (우편번호 검색 버튼 활성화)YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '일반');
@@ -109,7 +92,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_HTMLMODE', '에디터 HTML 모드 사용여부', 'YES', '에디터의 HTML 모드를 사용한다. 관리자 화면에서는 설정에 관계없이 무조건 사용한다.YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'Use_FromAddress', '발신인 주소 선택 사용여부', 'NO', '발신인이 멀티 메일 도메인을 가지고 있을 때 메일쓰기에서 보내는 사람의 메일 주소 선택이 가능하다.YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_FileExtension', '첨부파일 확장자명 제한', '7z,alz,avi,bmp,csv,cur,doc,docx,eml,gif,hwp,hwpx,hwt,jpeg,jpg,log,mht,mp4,odt,pdf,png,ppt,pptx,rar,tif,txt,wmv,xls,xlsx,zip', '업로드 가능한 첨부파일의 확장자명을 설정한다. ex) exe|jpg*: 제한하지 않음 (모든 확장자 허용) (default: *)', '2017-01-06 00:00:00', '일반');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_DirectSign', '부서 협조/합의 직접서명 사용여부', 'YES', '전자결재 부서 협조/합의 접수 시 직접서명을 사용한다.YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '전자결재');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_DirectSign', '부서 협조/합의 직접서명 사용여부', 'NO', '전자결재 부서 협조/합의 접수 시 직접서명을 사용한다.YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_BOARD_LEFTMENU_COUNT', '게시판 왼쪽 메뉴 총 개수 표시', 'YES', '게시판 왼쪽 메뉴에 각 게시판의 게시문 개수를 표시한다.YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '게시판');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_ATTITUDE', '근태관리 모듈 사용여부', 'NO', 'YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '기타모듈');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'USE_AdditionalROle', '겸직부서에 따른 일괄결재 제한', 'NO', '전자결재에서 겸직부서 선택에 따라 현재 부서의 일괄결재만 가능하다.YES: 겸직부서 선택에 따라 일괄결재제한NO: 겸직부서 상관없이 모두 일괄결재 가능 (default: NO)', '2017-01-06 00:00:00', '전자결재');
@@ -298,6 +281,9 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 -- 전자결재 가변결재선 기본 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(0, 'UseDynamicAprLine', '전자결재 가변결재선 사용여부', '0', '0/1 (0:사용안함, 1:사용함) (default: 0)', '2022-12-29 00:00:00', '전자결재');
+
+-- 메일 자동전달 외부 주소 허용 여부 설정
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)  VALUES (0, 'useBlockExternalForwardAddress', '외부주소 사용여부', 'NO', 'YES: 외부주소 허용하지 않음, NO: 외부주소 허용 (기본값: NO)', '2023-04-06 00:00:00', '메일');
 
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'ExpirePassPeriod', '0');
@@ -2826,7 +2812,7 @@ INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MEN
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (7, 3, 'Top', 0, '回覧板');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (8, 1, 'Top', 0, '업무일지');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (8, 2, 'Top', 0, 'Journal');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (8, 3, 'Top', 0, '業務報告');
+INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (8, 3, 'Top', 0, 'ジャーナル');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (9, 1, 'Top', 0, '근태관리');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (9, 2, 'Top', 0, 'Attitude');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (9, 3, 'Top', 0, '勤怠管理');
@@ -2853,7 +2839,7 @@ INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MEN
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (16, 3, 'Top', 0, 'はしごゲーム');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (17, 1, 'Top', 0, '업무관리');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (17, 2, 'Top', 0, 'Tasks');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (17, 3, 'Top', 0, 'To Do');
+INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (17, 3, 'Top', 0, 'To Do管理');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (18, 1, 'Top', 0, '메모');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (18, 2, 'Top', 0, 'Memo');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (18, 3, 'Top', 0, 'メモ帳');

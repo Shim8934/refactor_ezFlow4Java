@@ -628,7 +628,17 @@
                 	window.open(requestUrl, boardTarget, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + boardHeight + ",width=" + boardWidth + ",top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    }
+	    </script>
 		    
+		<%-- 웹폴더 첨부 레이어팝업을 위한 스크립트 추가--%>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/relay/webfolderFileUploadOpener.js')}"></script>
+		<%@ include file="/WEB-INF/jsp/ezWebFolder/relay/webfolderFileListUploadParentHead.jsp" %>
+		<script type="text/javascript">
+		function completeListener() {
+			document.getElementById("mailPanel").style.display = "none";
+			document.getElementById("loadingLayer").style.display = "none";
+		}
+		duplicateFile.setOnCompleteListener(completeListener);
 		</script>
 	</head>
 
@@ -805,5 +815,8 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+
+	    <%-- 웹폴더 첨부 레이어팝업을 위한 태그 추가--%>
+		<%@ include file="/WEB-INF/jsp/ezWebFolder/relay/webfolderFileListUploadParentBody.jsp" %>
 	</body>
 </html>

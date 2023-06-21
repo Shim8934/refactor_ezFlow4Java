@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 
 public class EgovComOthersExcepHndlr implements ExceptionHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovComOthersExcepHndlr.class);
+	private static final Logger logger = LoggerFactory.getLogger(EgovComOthersExcepHndlr.class);
 
     public void occur(Exception exception, String packageName) {
     	//log.debug(" EgovServiceExceptionHandler run...............");
-    	LOGGER.error(packageName, exception);
+    	logger.error(packageName, exception);
     }
 }

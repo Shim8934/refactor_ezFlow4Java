@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -457,7 +458,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		} catch (Exception e) {
 			logger.debug(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -519,7 +520,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
-
+		String useBlockExternalForwardAddress = ezCommonService.getTenantConfig("useBlockExternalForwardAddress", userInfo.getTenantId()); 
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 
 		String forwardAddress = doc.getElementsByTagName("ADDRESS").item(0).getTextContent();
@@ -534,7 +536,22 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (!checkMyAddress.equalsIgnoreCase(userEmail)) {
 			try {				
 				InternetAddress internetAddress = new InternetAddress(forwardAddress);
-				strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());
+				
+				if ("YES".equals(useBlockExternalForwardAddress)) {
+					//2023-04-04 김대현 외부 주소 허용 여부
+					String isInnerDomain = ezEmailService.checkInnerDomain(forwardAddress, userInfo.getTenantId());
+					
+					if (!"OK".equals(isInnerDomain)) {
+						// 내부메일도메인리스트에 없는경우 등록 불가
+						strResult = "BlockExternalAddress";
+					} else {
+						// 외부 주소 허용 && 내부메일도메인리스트에도 있는 경우 등록
+						strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());
+					}
+					
+				} else {
+					strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());
+				}
 			} catch (AddressException e) {
 				logger.debug("e.message=" + e.getMessage());
 			}
@@ -602,7 +619,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				result = (String)responseObj.get("resultCode");		        		        				
 			}						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("result=" + result);
@@ -645,7 +662,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				}				
 			}						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("result=" + result);
@@ -678,7 +695,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				result = (String)responseObj.get("resultCode");		        		        				
 			}						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("result=" + result);
@@ -1089,7 +1106,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String useBlockExternalForwardAddress = ezCommonService.getTenantConfig("useBlockExternalForwardAddress", userInfo.getTenantId());
+		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -1110,6 +1128,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				}
 			}
 		}
+		// 2023_04-05 메일환경설정>자동분류에서 useBlockExternalForwardAddress 사용유무 판단을 위해 담아줌
+		model.addAttribute("useBlockExternalForwardAddress", useBlockExternalForwardAddress);
 		
 		logger.debug("mailNewInboxRule ended.");
 		return "ezEmail/mailNewInboxRule";
@@ -1377,7 +1397,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					}
 				}
 
-				if (obj.get("type").toString().equalsIgnoreCase("CONDITION")) {
+				// 2023-05-16 이사라 : NullPointerException 시큐어코딩 - tCondition, tAction, tException
+				if (obj.get("type").toString().equalsIgnoreCase("CONDITION") && !Objects.isNull(tCondition)) {
 					//DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
 					Element kind = doc.createElement("KIND");
 					kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
@@ -1387,7 +1408,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					values.appendChild(doc.createCDATASection(obj.get("value").toString()));
 					tCondition.appendChild(values);
 
-				} else if (obj.get("type").toString().equalsIgnoreCase("ACTION")) {
+				} else if (obj.get("type").toString().equalsIgnoreCase("ACTION") && !Objects.isNull(tAction)) {
 					//DELETE, READ, IMPORTANCE, REDIRECTION, FORWARD, MOVE, COPY
 					//SKIP : ASSIGNCATE, NONE, FORWARDATTACH, SENDSMS, SERVREPLY
 					if (obj.get("kind").toString().equalsIgnoreCase("DELETE") || obj.get("kind").toString().equalsIgnoreCase("REDIRECTION")
@@ -1444,7 +1465,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						values.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
 						tAction.appendChild(values);
 					}
-				} else if (obj.get("type").toString().equalsIgnoreCase("EXCEPTION")) {
+				} else if (obj.get("type").toString().equalsIgnoreCase("EXCEPTION") && !Objects.isNull(tException)) {
 					//DOMAIN, SENDER, RECEIVER, SUBJECT, BODY, SUBJECTORBODY
 					Element kind = doc.createElement("KIND");
 					kind.appendChild(doc.createCDATASection(obj.get("kind").toString().toUpperCase()));
@@ -1838,7 +1859,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			rtnVal = "ERROR";
 			logger.error(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailPop3Save ended.");
@@ -2037,7 +2058,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 										return true;
 									}
 								} catch (MessagingException e) {
-									e.printStackTrace();
+									logger.error(e.getMessage(), e);
 								}
 								return false;
 							}
@@ -2107,7 +2128,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 									out.flush();
 									logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale)
 										+ "messageId=" + messageId + ",subject=" + messages[i].getSubject());
-									e.printStackTrace();
+									logger.error(e.getMessage(), e);
 								}
 								
 							}
@@ -2122,7 +2143,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 							logger.error("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale)
 							+ egovMessageSource.getMessage("ezEmail.t502", locale));
 							
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						} finally {
 							if (innerFolder != null) {
 								innerFolder.close(true);
@@ -2138,7 +2159,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					
 					logger.error("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
 					
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (pa != null) {
 						pa.close();
@@ -2153,7 +2174,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			logger.error("<BR>" + egovMessageSource.getMessage("ezEmail.t497", locale) + e.getMessage());
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2430,7 +2451,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailGetUserDistribution ended.");
@@ -2528,7 +2549,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("returnData=" + returnData);
@@ -2569,7 +2590,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				ezEmailService.sendUserDLMail(loginCookie, cn, "refuse", toArr);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("refuseToApplyDL ended.");
@@ -2604,7 +2625,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				returnStr = "NOT INCLUDE";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("secessionDistribution ended.");
@@ -2794,7 +2815,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("searchUserDistribution ended.");
@@ -2830,7 +2851,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				returnStr = type.equals("add") ? "ADD" : "DELETE";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailUserDistributionApply ended. returnStr=" + returnStr);
@@ -3124,5 +3145,24 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("deleteTag ended.");
 		return jgwResult.succeeded() ? Result.success() : Result.failure();
 	}
-
+	
+	@PostMapping("/ezEmail/checkBlockExternalAddress.do")
+	@ResponseBody
+	public String checkBlockExternalAddress(@CookieValue("loginCookie") String loginCookie, @RequestParam String forwardAddress) throws Exception {
+		logger.debug("checkBlockExternalAddress started. forwardAddress = {}", forwardAddress);
+	
+		String result = "OK";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		try {
+			result = ezEmailService.checkInnerDomain(forwardAddress, tenantId);
+		} catch (Exception e) {
+			result = "ERROR";
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("checkBlockExternalAddress ended.");
+		return result;
+	}
 }

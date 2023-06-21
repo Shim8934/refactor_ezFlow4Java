@@ -22,6 +22,7 @@ import javax.naming.directory.DirContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -363,7 +364,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 					moveDBData(parentCn, cn, type, offset, tenantID);
 		            result = "OK";
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					ezEmailUserAdminService.updateGroupMove(newGroupAddr, oldGroupAddr, mailAddr);
 					result = "EMAIL_ERROR";
 				}				
@@ -839,7 +840,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
                 /*
                 map.put("v_CLASS", "group");
                 ezOrganAdminDao.deleteDBDataForJMocha(map);*/
@@ -1056,8 +1057,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			map.put("v_EXTATTR15", vo.getExtensionAttribute15());
 			
+			// 2023.06.07 한슬기 : 트리뷰 순서값이 지정된 경우 순서값 유지, 지정되지 않았을 경우 1씩 증가하도록 수정
+			if ("0".equals(map.get("v_EXTATTR15"))) {
+				ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
+				ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
+				
+			}
+			
+			/* 원본코드
 			ezOrganAdminDao.updateDBData_addjobmasterOrder(map); // 겸직되어있는 사용자 트리뷰순서값 1씩 증가
 			ezOrganAdminDao.updateDBData_userOrder(map); // 원부서 사용자 트리뷰순서값 1씩 증가
+			*/
 		}
 		
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
@@ -1161,9 +1171,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        
 	        //회사 삭제시 넣었던 초기데이터 테이블 삭제
 	        ezOrganAdminDao.deleteCompany_D1(map);
-	        ezOrganAdminDao.deleteCompany_D2(map);
 	        ezOrganAdminDao.deleteCompany_D3(map);
-	        ezOrganAdminDao.deleteCompany_D4(map);
 	        ezOrganAdminDao.deleteCompany_D5(map);
 	        ezOrganAdminDao.deleteCompany_D6(map);
 	        ezOrganAdminDao.deleteCompany_D7(map);
@@ -1178,9 +1186,44 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        ezOrganAdminDao.deleteCompany_D16(map);
 	        ezOrganAdminDao.deleteCompany_D17(map);
 	        ezOrganAdminDao.deleteCompany_D18(map);
-	        ezOrganAdminDao.deleteCompany_D19(map);
+	        
+	        //2023-06-01 장혜연 : 회사데이터 삭제 코드 추가
+	        //근태설정(근태규율관리) 데이터 삭제 
 	        ezOrganAdminDao.deleteCompany_D20(map);
+	        ezOrganAdminDao.deleteCompany_D21(map);
+
+	        //서브 메뉴 아이템 데이터 삭제
+	        ezOrganAdminDao.deleteCompany_D22(map);
+	        
+	        //포탈 개인화 설정 데이터 삭제
+	        ezOrganAdminDao.deleteCompany_D23(map);
+	        ezOrganAdminDao.deleteCompany_D24(map);
+	        ezOrganAdminDao.deleteCompany_D25(map);
+	        ezOrganAdminDao.deleteCompany_D26(map);
+	        ezOrganAdminDao.deleteCompany_D27(map);
+	        ezOrganAdminDao.deleteCompany_D28(map);
+	        ezOrganAdminDao.deleteCompany_D29(map);
+	        ezOrganAdminDao.deleteCompany_D30(map);
+	        ezOrganAdminDao.deleteCompany_D31(map);
+	        ezOrganAdminDao.deleteCompany_D32(map);
+	        
+	        //차량관리  데이터 삭제
+	        ezOrganAdminDao.deleteCompany_D33(map);
+	        //근태설정(연차설정관리) 데이터 삭제
+	        ezOrganAdminDao.deleteCompanyInfo_IJHS1(map);
+	        
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS2(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS3(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS4(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS5(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS6(map);
 	        ezOrganAdminDao.deleteCompanyInfo_IKMS7(map);
+	        
+	        //기본키와 연관된 테이블 먼저 삭제 후 마지막에 삭제 
+	        ezOrganAdminDao.deleteCompany_D2(map);
+	        ezOrganAdminDao.deleteCompany_D4(map);
+	        ezOrganAdminDao.deleteCompany_D19(map);
 	        
 		    /**
 		     * Active Directory
@@ -1261,7 +1304,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
 			*/
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("deleteDestUserProfileImage ended");
@@ -1391,7 +1434,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         					
         				}       
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
-            			e.printStackTrace();
+            			logger.error(e.getMessage(), e);
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
             		}
                 } else {
@@ -1618,7 +1661,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.setTitle(map);
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -1743,7 +1786,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.updateTitle3(map);	//TBL_ADDJOBMASTER
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -1771,7 +1814,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -2207,7 +2250,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.insertStopUser(map);
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -2503,7 +2546,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			throw e;
 		}
 		finally {
-			fileOut.close();
+			// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+			//fileOut.close();
+			IOUtils.closeQuietly(fileOut);
 			workbook.close();
 		}
 		logger.debug("createExcelUsers end");
@@ -2552,7 +2597,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				file.delete();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		
@@ -2634,7 +2679,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			ezOrganAdminDao.deleteStopUser(map);
 			rtnVal = "TRUE";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";
 		}
 		
@@ -2655,7 +2700,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		try {
 			flag = ezOrganAdminDao.checkStopUser(map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("checkStopUser ended. result = " + flag);

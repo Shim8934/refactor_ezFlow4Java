@@ -107,6 +107,7 @@
 	        var CurrentDate
 	        var flag = false;
 	        var fieldflag = false;
+	        var xmluserInfo = createXmlDom();
 	        var xmlhttp = createXMLHttpRequest();
 	        var SignCount = 0;
 	        var hapyuiCount = 0;
@@ -318,9 +319,19 @@
 			var lowerHapyuiCnt = 0;
 			var lowerHapyuiTab = 0;
 			
+			/* 2023-04-20 홍승비 - 각 안별 탭 생성 및 웹에디터 로딩 이전, 순차실행이 보장되도록 결재문서 데이터를 가져와 각 안이 사용할 수 있게 분리 */
+			var pDocInfoAry = new Array();
+			var pAttachInfoAry = new Array();
+			var pModeForAllDocInfo = "APR"; // 일괄기안 문서는 모든 문서가 결재선을 공통으로 사용
+			var pModeForAllAttachInfo = "APR"; // 첨부파일 정보를 가져오기 위한 pMode값 분리
+			var SendName = "";
+			
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
                 pDraftFlag = DraftFlag; // 모든 문서 공통이므로 ready 시 바로 부여
+                
+                getDraftUserInfo(); // 기안자 정보
+    			SendName = getDeptSendName(arr_userinfo[4]); // 부서발신명의
                 
 				if (DraftFlag == "REDRAFT" && !reDraftFlag) {
 					// 1안을 의미하는 [1] 인덱스 부터 배열 데이터가 들어가도록, [0]에는 공백 데이터를 부여함
@@ -338,6 +349,18 @@
 	        		</c:forEach>
 	        		
 	        		reDraftFlag = true;
+	        		
+	        		/* 2023-04-20 홍승비 - 각 안별 탭 생성 및 웹에디터 로딩 이전, 순차실행이 보장되도록 결재문서 데이터를 가져와 각 안이 사용할 수 있게 분리 */
+	        		if (ListType == "21") { // 임시저장된 문서
+	        			getLineModeAll(DocSNAry[1]); // 결재진행중/완료여부 체크
+	        			getDocInfoAll(DocSNAry); // 결재문서 기본 정보
+	        			getAttachInfoAll(DocSNAry); // 첨부파일 정보
+	        		} else { // 반송된 문서 재기안
+	        			getLineModeAll(pDocIDAry[1]);
+	        			getDocInfoAll(pDocIDAry);
+	        			getAttachInfoAll(pDocIDAry);
+	        		}
+        			
 	        		makeTabs(); // 기존 pDocIDAry에 문서정보가 있는 경우(재기안 시), 각 문서의 안을 만들어준다.
                 }
 			});
@@ -405,7 +428,7 @@
 		        }
 		    }
 		    
-			// 부모단에서 실제로 호출되는 부분은 없는 듯 하다. getDraftUserInfo()와 SetAutoPropertyValue()함수 모두 자식 iframe으로 이동시켰음
+			// getDraftUserInfo()의 호출은 부모 페이지에서 단 한 번만 호출되도록 한다. SetAutoPropertyValue()함수는 자식 iframe으로 이동시켰음
 			/*
 			function setAutoProperty() {
 			    getDraftUserInfo();
@@ -950,37 +973,6 @@
 			function btn_Attach_onclick() {
 			    btnFileAttach_onclick();
 			}
-			
-/* 			function btnDocInfo_onclick() {
-			    try {
-			        var parameter = new Array();
-			        parameter[0] = tempSecurity;
-			        parameter[1] = tempUrgent;
-			        parameter[2] = pSummery;
-			        parameter[3] = pSpecialRecordCode;
-			        parameter[4] = pPublicityCode;
-			        parameter[5] = pLimitRange;
-			        parameter[6] = pPageNum;
-			        parameter[7] = tempSecurityDate;
-			
-			        var url = "/myoffice/ezApprovalG/ezDocInfo/ezDocInfoG.aspx";
-			        var feature = "status:no;dialogWidth:430px;dialogHeight:625px;help:no;scroll:no;edge:sunken;";
-			        var RtnVal = window.showModalDialog(url, parameter, feature);
-			
-			        tempSecurity = RtnVal[0];
-			        tempUrgent = RtnVal[1];
-			        pSummery = RtnVal[2];
-			        pSpecialRecordCode = RtnVal[3];
-			        pPublicityCode = RtnVal[4];
-			        pLimitRange = RtnVal[5];
-			        pPageNum = RtnVal[6];
-			        tempSecurityDate = RtnVal[7];
-			        setPublicFlag();
-			        SummaryFlag = true;
-			    } catch (e) {
-			        alert("ezdraftui_hwp.btnDocInfo_onclick()::" + e.description);
-			    }
-			} */
 			
 			/*PublicType, PublicLevel 기존의 공개여부 2018-04-04 김은석 수정*/
 			function setPublicFlag() {
@@ -2240,6 +2232,94 @@
 	        	}
 	        }
 	        
+			/* 2023-04-20 홍승비 - 일괄기안된 문서는 모든 안에 대해 결재선이 동일하므로, 부모창에서 한번만 호출 */
+			function getLineModeAll(pDocID) {
+				// 재기안(APR), 임시저장(TMP) 분기처리
+				if (DraftFlag == "REDRAFT" && ListType == "21") {
+					pModeForAllDocInfo = "TMP";
+	 				pModeForAllAttachInfo = "TMP";
+				}
+				else {
+					$.ajax({
+			 			type : "POST",
+			 			dataType : "text",
+			 			async : false,
+			 			url : "/ezApprovalG/getLineMode.do",
+			 			data : {
+			 					docID : pDocID,
+			 					orgCompanyID : orgCompanyID
+			 					},
+			 			success : function(xml) {
+			 				pModeForAllDocInfo = xml;
+			 				pModeForAllAttachInfo = xml;
+			 			},
+			    		error : function (e) {
+			    			console.log(e);
+			    		}
+					});
+				}
+			}
+			
+			function getDocInfoAll(pDocIDAry) {
+				try {
+				    var result = new Array(); // 배열로 결재문서 정보 받기
+				    
+					$.ajax({
+			    		type : "POST",
+			    		dataType : "json",
+			    		async : false,
+			    		url : "/ezApprovalG/getDocInfoAll.do",
+			    		data : {
+			    			docIDArr : pDocIDAry
+			    		},
+			    		success : function(xml) {
+			    			result = xml;
+			    			
+			    			for (var i = 1; i < result.length; i++) { // [0] 인덱스는 미사용, [1]부터 사용
+			    				pDocInfoAry[i] = result[i];
+			    			}
+			    		},
+			    		error : function (e) {
+			    			console.log(e);
+			    		}
+			    	});
+				}
+				 catch (e) {
+					console.log(e);
+				}
+			}
+			
+			function getAttachInfoAll(pDocIDAry) {
+				try {
+					var result = new Array(); // 배열로 첨부파일 정보 받기
+					
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezApprovalG/getTotalAttachInfoAll.do",
+						data : {
+							docIDArr : pDocIDAry,
+							mode : pModeForAllAttachInfo,
+							orgCompanyID : orgCompanyID
+						},
+						success: function(xml){
+							result = xml;
+							
+			    			for (var i = 1; i < result.length; i++) { // [0] 인덱스는 미사용, [1]부터 사용
+			    				pAttachInfoAry[i] = result[i];
+			    			}
+						},
+			    		error : function (e) {
+			    			console.log(e);
+			    		}
+					});
+				}
+			 	catch (e) {
+					console.log(e);
+				}
+			}
+			
 	    </script>
 	</head>
 	<body class="popup" style="overflow:hidden;">

@@ -188,5 +188,13 @@ public interface EzEmailService {
 	public JSONObject getUserMailTemplate(String userEmail, String templateId) throws Exception;
 	public int saveUserMailTemplate(String userEmail, String displayName, String content, String realPath, String editorType, int tenantId) throws Exception;
 	public int deleteUserMailTemplate(String userEmail, String templateId, String type, String realPath, int tenantId) throws Exception;
-	
+
+	/**
+	 * 해당 주소 도메인이 내부주소에 포함된 도메인인지 확인 로직
+	 * @param forwardAddress
+	 * @param tenantId
+	 * @return "OK" : 내부주소 List에 등록됨 , "FAIL" : 내부주소 List에 등록된 주소가 아님
+	 * @throws Exception
+	 */
+	public String checkInnerDomain(String forwardAddress, int tenantId) throws Exception;
 }

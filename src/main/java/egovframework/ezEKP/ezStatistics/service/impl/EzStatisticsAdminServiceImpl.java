@@ -264,7 +264,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 				sb.append(commonUtil.getQueryResult(statConnVOs.get(i)));
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		sb.append("</DATA>");
@@ -286,7 +286,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 				sb.append(commonUtil.getQueryResult(connVo.get(i)));
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		sb.append("</DATA>");
@@ -453,7 +453,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 
 		} catch (Exception e) {
 			result.put("result", "error");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getYearlyDocCount ended/result : " + result.get("result").toString());

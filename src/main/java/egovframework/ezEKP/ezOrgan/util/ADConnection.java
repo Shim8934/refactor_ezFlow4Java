@@ -87,8 +87,7 @@ public class ADConnection {
 			
 		} catch (NamingException e) {
 			chk = "false";
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
     	logger.debug("AD setConnection end. result=" + chk);
 		

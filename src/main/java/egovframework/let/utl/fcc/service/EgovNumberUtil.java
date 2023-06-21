@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 public class EgovNumberUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovNumberUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(EgovNumberUtil.class);
 
     /**
      * 특정숫자 집합에서 랜덤 숫자를 구하는 기능 시작숫자와 종료숫자 사이에서 구한 랜덤 숫자를 반환한다
@@ -119,7 +119,7 @@ public class EgovNumberUtil {
 		try {
 			cnvrDate = dateFormatter.parse(srcStr);
 		} catch (ParseException e) {
-			LOGGER.error("ERROR parsing", e.getMessage());
+			logger.error("ERROR parsing", e.getMessage());
 		}
 
 		cnvrStr = String.format("%1$tY-%1$tm-%1$td", cnvrDate);

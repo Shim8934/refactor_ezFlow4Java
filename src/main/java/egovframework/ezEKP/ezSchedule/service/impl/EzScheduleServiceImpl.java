@@ -14,11 +14,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Base64;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.NodeList;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+//import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
@@ -1491,13 +1493,13 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		}
 		
 		InputStream stream = null;
-		OutputStream bos = null;		
+		//OutputStream bos = null;		
 		int sID = 0;
 		
-		try {
-			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
-			contentPath += schedulePath;
+		String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+		contentPath += schedulePath;
 			
+		try (OutputStream bos = new FileOutputStream(commonUtil.detectPathTraversal(contentPath))) {
 			//byte[] ct = Base64.decode(content);
 			//stream = new ByteArrayInputStream(ct);
 			//bos = new FileOutputStream(contentPath);
@@ -1506,11 +1508,12 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			if (attach == null) {
 				stream = new ByteArrayInputStream(content.getBytes("UTF-8"));
 			}else{
-				byte[] ct = Base64.decode(content);
+				//byte[] ct = Base64.decode(content);
+				byte[] ct = Base64.getUrlDecoder().decode(content);
 				stream = new ByteArrayInputStream(ct);
 			}
 			
-			bos = new FileOutputStream(commonUtil.detectPathTraversal(contentPath));
+			//bos = new FileOutputStream(commonUtil.detectPathTraversal(contentPath));
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
@@ -1604,10 +1607,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			}
 			sID = scheduleId;			
 		} catch (Exception e) {
-			e.printStackTrace(); //테스트를 위해 추가
+			logger.error(e.getMessage(), e); //테스트를 위해 추가
 		} finally {
 			if (stream != null) stream.close();				
-			if (bos != null) bos.close();
+			//if (bos != null) bos.close();
 		}
 		return sID;
 	}
@@ -1647,12 +1650,13 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		//mht 내용 변경
 		InputStream stream = null;
-		OutputStream bos = null;		
+		//OutputStream bos = null;		
 		
-		try {
-			byte[] ct = Base64.decode(content);
+		try (OutputStream bos = new FileOutputStream(commonUtil.detectPathTraversal(defaultPath))) {
+			//byte[] ct = Base64.decode(content);
+			byte[] ct = Base64.getUrlDecoder().decode(content);
 			stream = new ByteArrayInputStream(ct);
-			bos = new FileOutputStream(commonUtil.detectPathTraversal(defaultPath));
+			//bos = new FileOutputStream(commonUtil.detectPathTraversal(defaultPath));
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
@@ -1664,7 +1668,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			logger.debug("e.message=" + e.getMessage());
 		} finally {
 			if (stream != null) stream.close();				
-			if (bos != null) bos.close();
+			//if (bos != null) bos.close();
 		}
 		//첨부파일 경로 삭제
 		ezScheduleDAO.deleteScheduleAttach(map);
@@ -1944,7 +1948,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		try {
 			FileUtils.copyFile(new File(orgContentPath), new File(newContentPath));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("copyMhtFile ended");

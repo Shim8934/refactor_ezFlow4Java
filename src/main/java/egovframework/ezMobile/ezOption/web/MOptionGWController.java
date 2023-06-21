@@ -6,6 +6,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @RestController
 public class MOptionGWController extends EgovFileMngUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MOptionGWController.class);
 
 	@Autowired
 	private Properties config;
@@ -53,7 +54,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezoption/option/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject optionDetail(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W OPTION [GET /mobile/ezoption/option/users/{userId}] started.");
+		logger.debug("MOBILE G/W OPTION [GET /mobile/ezoption/option/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -69,7 +70,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 				result.put("code", 1);
 				result.put("data", "");
 			} else {
-				if (opt.getUsePrimaryLangOnly() == null || opt.getUsePrimaryLangOnly().toString() == "") {
+				if (StringUtils.isEmpty(opt.getUsePrimaryLangOnly())) {
 					String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 					opt.setUsePrimaryLangOnly(usePrimaryLangOnly);
 				}
@@ -105,13 +106,13 @@ public class MOptionGWController extends EgovFileMngUtil {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 
 		}
-		LOGGER.debug("MOBILE G/W OPTION [GET /mobile/ezoption/option/users/{userId}] ended.");
+		logger.debug("MOBILE G/W OPTION [GET /mobile/ezoption/option/users/{userId}] ended.");
 
 		return result;
 	}
@@ -123,7 +124,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 	@RequestMapping(value = "/mobile/ezoption/option/users/{userId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject optionCreate(@PathVariable String userId, @RequestBody JSONObject jsonObject,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W OPTION [POST /mobile/ezoption/option/users/{userId}] started.");
+		logger.debug("MOBILE G/W OPTION [POST /mobile/ezoption/option/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -133,7 +134,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 
 			int tenantId = info.getTenantId();
 
-			LOGGER.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : "
+			logger.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : "
 					+ jsonObject.get("lang").toString() + ", mainType : " + jsonObject.get("mainType").toString()
 					+ ", listCnt : " + jsonObject.get("listCnt").toString() + ", useSecurity : "
 					+ jsonObject.get("useSecurity").toString());
@@ -148,13 +149,13 @@ public class MOptionGWController extends EgovFileMngUtil {
 			result.put("code", 0);
 			result.put("data", opt);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 
-		LOGGER.debug("MOBILE G/W OPTION [POST /mobile/ezoption/option/users/{userId}] ended.");
+		logger.debug("MOBILE G/W OPTION [POST /mobile/ezoption/option/users/{userId}] ended.");
 
 		return result;
 	}
@@ -166,7 +167,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 	@RequestMapping(value = "/mobile/ezoption/option/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject optionUpdate(@PathVariable String userId, @RequestBody JSONObject jsonObject,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] started.");
+		logger.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -195,7 +196,7 @@ public class MOptionGWController extends EgovFileMngUtil {
 
 			String deviceId = (request.getParameter("deviceID") == null) ? "" : request.getParameter("deviceID");
 
-			LOGGER.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : "
+			logger.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : "
 					+ jsonObject.get("lang").toString() + ", mainType : " + jsonObject.get("mainType").toString()
 					+ ", listCnt : " + jsonObject.get("listCnt").toString() + ", useSecurity : "
 					+ jsonObject.get("useSecurity").toString() + ", deviceId : " + deviceId
@@ -213,13 +214,13 @@ public class MOptionGWController extends EgovFileMngUtil {
 			result.put("data", opt);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 
 		}
-		LOGGER.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] ended.");
+		logger.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] ended.");
 
 		return result;
 	}

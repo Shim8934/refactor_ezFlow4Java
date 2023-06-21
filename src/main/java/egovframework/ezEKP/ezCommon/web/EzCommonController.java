@@ -108,7 +108,8 @@ public class EzCommonController extends EgovFileMngUtil{
         }
         
         String scheme = "http://";
-    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+        String http = request.getScheme();
+    	if (http.equalsIgnoreCase("https")) {
     		scheme = "https://";
     	}
         
@@ -232,7 +233,7 @@ public class EzCommonController extends EgovFileMngUtil{
         try {
         	m_strMHT = ezCommonService.loadMHTFile(realPath + strURL);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			m_strMHT= "";
 		}
         
@@ -789,7 +790,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		logger.debug("checkUseFileExtension file extension is : " + fileExt);
 		// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
-		if (!useExtension.equals("*") && (fileExt.isEmpty() || useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
+		if (!useExtension.contains("*") && (fileExt.isEmpty() || useExtension.toLowerCase().indexOf(fileExt.toLowerCase()) < 0)) {
 			result = "UPLOAD_EXT_ERROR";
 		} else {
 			result = "OK";

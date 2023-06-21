@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -226,7 +227,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		} catch (Exception e) {
 			logger.error("Error get unread message count: " + e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -588,7 +589,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -650,7 +651,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			
 			folderUnreadCount = ia.getUnreadCount(folderName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -740,7 +741,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							
 							totalUnreadCountInAllAccounts += unreadCountInShared;
 						} catch (NumberFormatException ne) {
-							ne.printStackTrace();
+							logger.error(ne.getMessage(), ne);
 						}
 					}
 				}
@@ -752,7 +753,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			resultObject.put("totalUnreadCountInAllAccounts", totalUnreadCountInAllAccounts);
 		} catch (Exception e) {
 			resultCode = e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -854,7 +855,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				
 			} catch (MessagingException e) {
 				strResult = "ERROR : " + e.getMessage();
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				if (ia != null) {
 					ia.close();
@@ -943,7 +944,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			
 		} catch (MessagingException e) {
 			strResult = "ERROR : " + e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1140,7 +1141,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						messageList.add(message);
 						emlCount ++;
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						String exceptionMessage = e.getMessage();
 						
 						if (exceptionMessage.contains("NO APPEND failed. Save failed.")) {
@@ -1171,7 +1172,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 								}
 								//handleMessage(json2, session);
 							} catch (IllegalStateException e) {
-								e.printStackTrace();
+								logger.error(e.getMessage(), e);
 								break;
 							}
 							
@@ -1199,7 +1200,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				folder.close(true);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			String exceptionMessage = e.getMessage();
 			
 			if (exceptionMessage != null) {
@@ -1207,7 +1208,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				if (exceptionMessage.equals("encrypted ZIP entry not supported")) {
 					returnValue = "NOT";
 					
-					if (useEncryptZipForEmail.equals("YES")) { // 암호화를 사용하면
+					if (useEncryptZipForEmail.equals("YES") && CollectionUtils.isNotEmpty(multiFile)) { // 암호화를 사용하면
 						String guid = UUID.randomUUID().toString(); // 새 id를 만들어서
 						File file = new File(tempFileUploadPath + commonUtil.separator + guid + ".zip"); // 파일을 생성하고
 						multiFile.get(0).transferTo(file); // 멀티파일을 파일로 만들어준다. 
@@ -1365,7 +1366,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1590,7 +1591,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("searchedMailExportZip ended.");
@@ -1613,7 +1614,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		try {
 			returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath, 0, ""); // maxCount와 userkey가 불필요하여 디폴트 값을 넣어 줌
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailExportZip ended.");
@@ -1762,7 +1763,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 									returnValue = "CANCEL";
 
-									e.printStackTrace();
+									logger.error(e.getMessage(), e);
 									break;
 								}
 
@@ -1789,7 +1790,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				file.delete();
 			}
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1956,7 +1957,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 								returnValue = "CANCEL";
 								sessionFlag = false;
 								
-								e.printStackTrace();
+								logger.error(e.getMessage(), e);
 								break;
 							} 
 							lastTime = currTime;
@@ -1994,7 +1995,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				file.delete();
 			}
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();

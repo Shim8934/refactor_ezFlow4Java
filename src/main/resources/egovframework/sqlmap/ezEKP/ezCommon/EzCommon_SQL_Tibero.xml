@@ -91,7 +91,7 @@
 			WHERE
 				tenant_id = #tenantID#
 			AND
-				UPPER(property_name) = UPPER(#property#)
+				UPPER(property_name) = #property#
 		]]>
 	</select>
 	
@@ -613,7 +613,7 @@
 		ALTER TABLE
 			$TBL_NAME$
 		$ALTER$ 
-			$COLUMN_NAME$ $TYPE_TIBERO$ $AFTER$
+			$COLUMN_NAME$ $TYPE_ORACLE$ $AFTER$
 	</statement>
 
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
@@ -2704,6 +2704,8 @@
 			TBL_LASTAPRLINE
 		DROP 
 			PRIMARY KEY
+		DROP
+			INDEX
 	</statement>
 	<statement id="EzCommonDAO.addLastAprLinePrimaryKey"> 
 		ALTER TABLE 
@@ -2733,6 +2735,8 @@
 			TBL_LASTDEPTLINE
 		DROP 
 			PRIMARY KEY
+		DROP
+			INDEX
 	</statement>
 	<statement id="EzCommonDAO.addLastDeptLinePrimaryKey"> 
 		ALTER TABLE 
@@ -2776,7 +2780,7 @@
 		CREATE SEQUENCE "TBL_ADMIN_ACCESS_IP_SEQ2"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE
 
 	</statement>
-	
+
 	<select id="EzCommonDAO.checkReBebuOpinionCode" parameterClass="Map" resultClass="String">
 	<![CDATA[
 		SELECT
@@ -4723,4 +4727,46 @@
 		ALTER TABLE TBL_USERMASTER ADD CONSTRAINT PK_TBL_USERMASTER PRIMARY KEY (TENANT_ID,CN) USING INDEX
 	</statement>
 
+	<select id="EzCommonDAO.checkTblAprpreview">
+		<![CDATA[
+		SELECT
+			USERID
+		FROM
+			TBL_APRPREVIEW
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblAprpreview">
+		CREATE TABLE TBL_APRPREVIEW (
+										USERID NVARCHAR2(80) NOT NULL
+			, PREVIEW NVARCHAR2(50)
+			, TENANT_ID NUMBER NOT NULL
+			, CONSTRAINT "TBL_APRPREVIEW_PK" PRIMARY KEY (USERID , TENANT_ID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.chkTblSerialNoRollback">
+        <![CDATA[
+		SELECT
+			TYPE1
+		FROM
+			TBL_SERIAL_NOROLLBACK
+		WHERE
+			ROWNUM <= 1
+		]]>
+    </select>
+	<statement id="EzCommonDAO.createTblSerialNoRollback">
+		CREATE TABLE TBL_SERIAL_NOROLLBACK (
+											   TYPE1 VARCHAR2(50 CHAR) NOT NULL,
+											   TYPE3 VARCHAR2(50 CHAR) NOT NULL,
+											   TYPE2 VARCHAR2(50 CHAR) NOT NULL,
+											   TIMESEP NUMBER(10,0) NOT NULL,
+											   REGSERIALNO NUMBER(19,0) NOT NULL,
+											   TENANT_ID NUMBER(38,0) DEFAULT 0,
+											   COMPANYID VARCHAR2(20 BYTE) NOT NULL,
+											   CONSTRAINT "TBL_SR_NOROLLBACK_PK" PRIMARY KEY (TYPE1, TYPE3, TYPE2, TIMESEP, REGSERIALNO, TENANT_ID, COMPANYID)
+		)
+	</statement>
+	
 </sqlMap>

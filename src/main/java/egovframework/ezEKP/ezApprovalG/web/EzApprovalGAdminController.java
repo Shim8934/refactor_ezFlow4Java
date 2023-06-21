@@ -1178,7 +1178,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				}				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("result : " + result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI()))));
@@ -5109,7 +5109,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
             
             resEntity = new ResponseEntity<String>(resultHtmlCode, header, HttpStatus.OK);
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
             resEntity = new ResponseEntity<String>(HttpStatus.CONFLICT);
         }
         

@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -1130,7 +1131,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			logger.debug("setEmployeeMonth ended");
 			return "OK";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "";
 		}
 	}
@@ -1212,6 +1213,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		if (request.getFile("file1") != null) {
 			multiFile = request.getFile("file1");
+		}
+		
+		// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+		if (Objects.isNull(multiFile)) {
+			throw new NullPointerException("saveSliderImage multiFile is null");
 		}
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -1386,6 +1392,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getFile("file1") != null) {
 			multiFile = request.getFile("file1");
 		}
+
 		writeUploadedFile(multiFile, fileName, realPath + serverPath);
 
         String pAttachPath = dirPath + commonUtil.separator + boardID + commonUtil.separator + fileName;
@@ -1451,12 +1458,19 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		//deleteFile(dirPath + serverPath + fileName);
 		
 		String fileLocation = serverPath  + pSaveName;
-	
+		
+		// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+		int fileSize = 0;
+		
+		if (!Objects.isNull(multiFile)) {
+			fileSize = (int) multiFile.getSize();
+		}
+
 		strXML.append("<ROOT><NODES>");
 		strXML.append("<NODE><PUPLOADSN><![CDATA[" + qID + extension + "]]></PUPLOADSN>");
 		strXML.append("<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>");
 		strXML.append( "<PFILENAME><![CDATA[" + qID + extension + "]]></PFILENAME>");
-		strXML.append( "<FILESIZE>" + (int) multiFile.getSize() + "</FILESIZE>");
+		strXML.append( "<FILESIZE>" + fileSize + "</FILESIZE>");
 		strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
 		strXML.append( "</NODE>");
 		strXML.append("</NODES></ROOT>");

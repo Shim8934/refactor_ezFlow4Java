@@ -179,7 +179,7 @@ public class EzEmailMailSearchController {
 			logger.debug("mailSearchPeriod=" + mailSearchPeriod);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -526,7 +526,7 @@ public class EzEmailMailSearchController {
 		
 		} catch (Exception e) {
 			returnData = "<DATA>ERROR</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -642,7 +642,7 @@ public class EzEmailMailSearchController {
 			}	
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -740,7 +740,7 @@ public class EzEmailMailSearchController {
 			}
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			returnValue = "ERROR : " + e.getMessage();
 		} finally {
 			if (ia != null) {

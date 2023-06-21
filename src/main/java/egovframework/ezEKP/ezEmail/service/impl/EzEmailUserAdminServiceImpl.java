@@ -590,7 +590,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 				}
 			}						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getUserDistributionList ended.");
@@ -622,7 +622,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 				}
 			}	
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("deleteAllUserDistributionForMember ended.");

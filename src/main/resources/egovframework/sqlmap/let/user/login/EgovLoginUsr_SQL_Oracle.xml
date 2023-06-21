@@ -448,6 +448,34 @@
         ]]>
     </select>
     
+   	<!-- OTP 서치 -->
+ 	<select id="loginDAO.searchOtpKey" parameterClass="loginVO" resultClass="Integer">
+ 		SELECT
+ 			count(USER_ID)
+ 		FROM
+ 			tbl_user_config tuc
+ 		WHERE
+ 			USER_ID = #id#
+ 		AND
+ 			PROPERTY_NAME = 'otpKey'
+ 		AND
+ 			TENANT_ID = #tenantId#
+ 	</select>
+
+ 	<!-- OTP 개인 키 확인 -->
+ 	<select id="loginDAO.getOtpKey" parameterClass="loginVO" resultClass="String">
+ 		SELECT
+ 			PROPERTY_VALUE
+ 		FROM
+ 			tbl_user_config tuc
+ 		WHERE
+ 			USER_ID = #id#
+ 		AND
+ 			PROPERTY_NAME = 'otpKey'
+ 		AND
+ 			TENANT_ID = #tenantId#
+ 	</select>
+
    <select id="loginDAO.getLoginIPCountry" parameterClass="Map" resultMap="CountryVO">
 		SELECT 
 			START_IP, END_IP, START_IP_NUMBER, END_IP_NUMBER, 
@@ -455,7 +483,7 @@
 		FROM 
 			JMOCHA_MAIL_COUNTRYIP
 		WHERE 
-			#loginIP# BETWEEN START_IP_NUMBER AND END_IP_NUMBER;
+			#loginIP# BETWEEN START_IP_NUMBER AND END_IP_NUMBER
 	</select>
 	
 	<!-- 비밀번호 초기화 기능 사용자 확인 -->

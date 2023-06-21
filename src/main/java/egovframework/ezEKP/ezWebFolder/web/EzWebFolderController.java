@@ -84,7 +84,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 			model.addAttribute("folderType", folderType);
 			model.addAttribute("status", result.getStatus());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("webfolderMain end");
@@ -267,13 +267,14 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return resultBody;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezWebFolder/uploadFile.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("uploadFile start");
 		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
+		String[] mailAttachArray = Optional.ofNullable(request.getParameterValues("fileToUploadMailAttach")).orElse(new String[0]);
+
 		// nullable
 		String nameArray               = request.getParameter("nameArray");
 		String folderId                = request.getParameter("folderId");
@@ -299,47 +300,56 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		}
 		
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		JSONObject jsonObject             = new JSONObject();
-		JSONArray jsonArray               = new JSONArray();
+		Map<String, Object> jsonObject = new HashMap<>();
+		List<Object> jsonArray = new ArrayList<>();
+		JSONParser jp         = new JSONParser();
 		
 		boolean useOriginalFileNames = true;
 		
 		// custom file names
 		if (nameArray != null) {
 			try {
-				List<?> nameList = (List<?>) new JSONParser().parse(nameArray);
+				List<?> nameList = (List<?>) jp.parse(nameArray);
 				
 				for (Object fileName : nameList) {
-					JSONObject fileJson = new JSONObject();
-					
-					fileJson.put("originalFilename", fileName);
-					jsonArray.add(fileJson);
+					setNameToNameList(jsonArray, (String) fileName);
 				}
 				
 				useOriginalFileNames = false;
 			} catch (Exception e) {
-				logger.debug("e.message=" + e.getMessage());
+				logger.error("nameArray exception", e);
 			}
 		}
 		
+		// (1)웹폴더 > 파일업로드 : MultipartFile
 		for (MultipartFile file: multiFiles) {
 			if (useOriginalFileNames) {
-				JSONObject fileJson = new JSONObject();
-				
-				fileJson.put("originalFilename", file.getOriginalFilename());
-				jsonArray.add(fileJson);
+				setNameToNameList(jsonArray, file.getOriginalFilename());
 			}
 
 			map.add("files", new MultipartFileResource(file.getInputStream(), file.getOriginalFilename()));
 		}
 		
+		// (2)메일 > 첨부파일 > 웹폴더에 업로드 : MimeBodyPart
+		for (String fileInfoStr : mailAttachArray) {
+			JSONObject fileInfo = (JSONObject) jp.parse(fileInfoStr);
+			if (useOriginalFileNames) {
+				setNameToNameList(jsonArray, (String) fileInfo.get("originalFilename"));
+			}
+
+			map.add("filesMailAttach", fileInfo);
+		}
+
+		// (3)메일 > (이미 저장이 되어 있는)대용량첨부 > 웹폴더에 업로드 : File
+		/*for (  : MailAttachLargeArray) {*/
+
 		jsonObject.put("nameArray", jsonArray);
 		jsonObject.put("userId", userInfo.getId());
 		jsonObject.put("folderId", folderId);
 		jsonObject.put("encrypt", encrypt);
 		jsonObject.put("parentId", parentId);
 		
-		map.add("data", jsonObject);
+		map.add("data", new JSONObject(jsonObject));
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -349,19 +359,27 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		UriComponentsBuilder builder                     = UriComponentsBuilder.fromHttpUrl(url);
 		ResponseEntity<String> result                    = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
-		JSONParser jp         = new JSONParser();
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("uploadFile end");
 		return resultBody;
 	}
 	
+	private void setNameToNameList(List<Object> nameList, String originalFilename) {
+		Map<String, Object> fileJson = new HashMap<>();
+
+		fileJson.put("originalFilename", originalFilename);
+		nameList.add(fileJson);
+	}
+
 	@RequestMapping(value="/ezWebFolder/uploadFileOverwrite.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject uploadFileOverwrite(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("uploadFileWrite start");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
+		String[] mailAttachArray = Optional.ofNullable(request.getParameterValues("fileToUploadMailAttach")).orElse(new String[0]);
+
 		String folderId = request.getParameter("folderId");
 		String fileIdListStr = request.getParameter("fileIdArray");
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
@@ -386,16 +404,27 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 		Map<String, Object> jsonObject = new HashMap<>();
 		List<Object> nameList = new ArrayList<>();
-		List<?> fileIdList = (List<?>) new JSONParser().parse(fileIdListStr);
+		JSONParser jp = new JSONParser();
+		List<?> fileIdList = (List<?>) jp.parse(fileIdListStr);
 		
+		// (1)웹폴더 > 파일업로드 : MultipartFile
 		for (MultipartFile file: multiFiles) {
-			Map<String, Object> fileJson = new HashMap<>();
-			
-			fileJson.put("originalFilename", file.getOriginalFilename());
-			nameList.add(fileJson);
+			setNameToNameList(nameList, file.getOriginalFilename());
+
 			map.add("files", new MultipartFileResource(file.getInputStream(), file.getOriginalFilename()));
 		}
 		
+		// (2)메일 > 첨부파일 > 웹폴더에 업로드 : MimeBodyPart
+		for (String fileInfoStr : mailAttachArray) {
+			JSONObject fileInfo = (JSONObject) jp.parse(fileInfoStr);
+			setNameToNameList(nameList, (String) fileInfo.get("originalFilename"));
+
+			map.add("filesMailAttach", fileInfo);
+		}
+
+		// (3)메일 > (이미 저장이 되어 있는)대용량첨부 > 웹폴더에 업로드 : File
+		/*for (  : MailAttachLargeArray) {*/
+
 		jsonObject.put("nameArray", nameList);
 		jsonObject.put("userId", userInfo.getId());
 		jsonObject.put("folderId", folderId);
@@ -411,7 +440,6 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 		ResponseEntity<String> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
 		
-		JSONParser jp = new JSONParser();
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("uploadFileWrite end");
@@ -539,7 +567,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		try {
 			resultBody = (JSONObject) jp.parse(result.getBody());
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("renameFile end");

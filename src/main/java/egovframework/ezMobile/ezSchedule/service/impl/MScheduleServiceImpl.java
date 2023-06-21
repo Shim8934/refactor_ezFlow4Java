@@ -23,6 +23,9 @@ import org.springframework.stereotype.Service;
 
 import com.ibm.icu.util.Calendar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleGoogleService;
@@ -45,6 +48,8 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("MScheduleService")
 public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MScheduleService{
 		
+	private static final Logger logger = LoggerFactory.getLogger(MScheduleServiceImpl.class);
+
 	@Resource(name="MScheduleDAO")
 	private MScheduleDAO mScheduleDAO;
 	
@@ -82,13 +87,13 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		}
 		
 		InputStream stream = null;
-		OutputStream bos = null;		
+		//OutputStream bos = null;		
 		int sID = 0;
 		
-		try {					
-			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
-			contentPath += schedulePath;
+		String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+		contentPath += schedulePath;
 
+		try (OutputStream bos = new FileOutputStream(contentPath);) {
 			String content = jsonParam.get("content").toString();
 			
 			//html -> mht변환
@@ -97,7 +102,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			//String mhtData = ezCommonService.startHtml2Mht(new String(ct), realPath, locale);
 			
 			stream = new ByteArrayInputStream(mhtData.getBytes());
-			bos = new FileOutputStream(contentPath);
+			//bos = new FileOutputStream(contentPath);
 	
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
@@ -178,10 +183,10 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (stream != null) stream.close();				
-			if (bos != null) bos.close();
+			//if (bos != null) bos.close();
 		}
 		return sID;
 	}
@@ -201,18 +206,20 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			file.mkdirs();
 		}
 		
-		FileInputStream fis = null;
-		FileOutputStream fos = null;		
+		//FileInputStream fis = null;
+		//FileOutputStream fos = null;		
 		int sID = 0;
 		
-		try {					
-			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
-			contentPath += schedulePath;
+		String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+		contentPath += schedulePath;
 			
-			String filePath = jsonParam.get("contentPath").toString();
+		String filePath = jsonParam.get("contentPath").toString();
+		
+		try (FileInputStream fis = new FileInputStream(realPath + filePath); 
+				FileOutputStream fos = new FileOutputStream(contentPath)) {
 			
-			fis = new FileInputStream(realPath + filePath);
-			fos = new FileOutputStream(contentPath);
+			//fis = new FileInputStream(realPath + filePath);
+			//fos = new FileOutputStream(contentPath);
 	
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
@@ -289,10 +296,10 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
-			if (fis != null) fis.close();				
-			if (fos != null) fos.close();
+			//if (fis != null) fis.close();				
+			//if (fos != null) fos.close();
 		}
 		return sID;
 	}
@@ -322,9 +329,9 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		
 		//mht 내용 변경
 		InputStream stream = null;
-		OutputStream bos = null;		
+		//OutputStream bos = null;		
 		
-		try {
+		try (OutputStream bos = new FileOutputStream(defaultPath)) {
 			String content = jsonParam.get("content").toString();
 			
 			//html -> mht변환
@@ -332,7 +339,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			stream = new ByteArrayInputStream(mhtData.getBytes());
 			
-			bos = new FileOutputStream(defaultPath);
+			//bos = new FileOutputStream(defaultPath);
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
@@ -341,11 +348,11 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				bos.write(buffer, 0, bytesRead);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (stream != null) stream.close();				
-			if (bos != null) bos.close();
 		}
+
 		//첨부파일 경로 삭제
 		//ezScheduleDAO.deleteScheduleAttach(map);
 		

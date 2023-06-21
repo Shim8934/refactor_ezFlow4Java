@@ -293,6 +293,12 @@
 			// 각 안의 html 데이터를 정상적으로 가져올때마다 하나씩 증가시킨다. 이 값이 최대 안의 값과 같아지는 경우에만 이후 동작을 진행한다.
     		
 			var docApprovCompleteCnt = 0; // 각 안의 결재진행 동작이 완료되었을때 카운트를 증가시킨다.
+			
+			/* 2023-04-20 홍승비 - 각 안별 탭 생성 및 웹에디터 로딩 이전, 순차실행이 보장되도록 결재문서 데이터를 가져와 각 안이 사용할 수 있게 분리 */
+			var pDocInfoAry = new Array();
+			var pAttachInfoAry = new Array();
+			var pModeForAllDocInfo = "APR"; // 일괄기안 문서는 모든 문서가 결재선을 공통으로 사용
+			var pModeForAllAttachInfo = "APR"; // 첨부파일 정보를 가져오기 위한 pMode값 분리
 	        
 			// 모두결재 관련 함수
 		    function getNextDocList() {
@@ -497,6 +503,11 @@
                		pDocHrefAry.push("${item.docHref}"); // 문서경로
         			pDocTypeAry.push("${item.docType}"); // 문서타입 (내부결재, 수신문...)
         		</c:forEach>
+        			
+        			/* 2023-04-20 홍승비 - 각 안별 탭 생성 및 웹에디터 로딩 이전, 순차실행이 보장되도록 결재문서 데이터를 한 번에 가져와 각 안이 사용할 수 있게 분리 */
+        			getLineModeAll(pDocIDAry[1]); // 결재진행중/완료여부 체크
+        			getApprovInfoAll(pDocIDAry); // 결재문서 기본 정보
+        			getAttachInfoAll(pDocIDAry); // 첨부파일 정보
         			
         			// 각 안별 탭 생성 및 로딩 진행
         			makeTabs();
@@ -2056,6 +2067,100 @@
 					success: function(xml) {},
 					error : function () {}
 				});
+			}
+			
+			/* 2023-04-20 홍승비 - 일괄기안된 문서는 모든 안에 대해 결재선이 동일하므로, 부모창에서 한번만 호출 */
+			function getLineModeAll(pDocID) {
+				// 기본적으로 결재(APR)이나, 공통적으로 사용하는 함수이므로 명시적으로 pMode를 가져오도록 호출 (일괄기안문서는 결재완료 시 각 안이 분리됨)
+				$.ajax({
+		 			type : "POST",
+		 			dataType : "text",
+		 			async : false,
+		 			url : "/ezApprovalG/getLineMode.do",
+		 			data : {
+		 					docID : pDocID,
+		 					orgCompanyID : orgCompanyID
+		 					},
+		 			success : function(xml) {
+		 				pModeForAllDocInfo = xml;
+		 				pModeForAllAttachInfo = xml;
+		 				
+		 				if (docState == "017") { // 결재유형이 참조인 경우 추가 조정
+			 				if (xml == "END") {
+			 					pModeForAllDocInfo = "CHAMJOEND";
+			 				} else {
+			 					pModeForAllDocInfo = "CHAMJOAPR";
+			 				}
+		 				}
+		 			},
+		    		error : function (e) {
+		    			console.log(e);
+		    		}
+				});
+			}
+			
+			function getApprovInfoAll(pDocIDAry) {
+				try {
+				    var result = new Array(); // 배열로 결재문서 정보 받기
+				    
+					$.ajax({
+			    		type : "POST",
+			    		dataType : "json",
+			    		async : false,
+			    		url : "/ezApprovalG/getApproveDocInfoAll.do",
+			    		data : {
+			    			docIDArr : pDocIDAry,
+			    			deptID : OrgAprUserDeptID,
+			    			mode : pModeForAllDocInfo,
+			    			chamState : docState,
+			    			orgCompanyID : orgCompanyID
+			    		},
+			    		success : function(xml) {
+			    			result = xml;
+			    			
+			    			for (var i = 1; i < result.length; i++) { // [0] 인덱스는 미사용, [1]부터 사용
+			    				pDocInfoAry[i] = result[i];
+			    			}
+			    		},
+			    		error : function (e) {
+			    			console.log(e);
+			    		}
+			    	});
+				}
+				 catch (e) {
+					console.log(e);
+				}
+			}
+			
+			function getAttachInfoAll(pDocIDAry) {
+				try {
+					var result = new Array(); // 배열로 첨부파일 정보 받기
+				    
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezApprovalG/getTotalAttachInfoAll.do",
+						data : {
+							docIDArr : pDocIDAry,
+							mode : pModeForAllAttachInfo,
+							orgCompanyID : orgCompanyID
+						},
+						success: function(xml){
+							result = xml;
+							
+			    			for (var i = 1; i < result.length; i++) { // [0] 인덱스는 미사용, [1]부터 사용
+			    				pAttachInfoAry[i] = result[i];
+			    			}
+						},
+			    		error : function (e) {
+			    			console.log(e);
+			    		}
+					});
+				}
+			 	catch (e) {
+					console.log(e);
+				}
 			}
 			 
 	    </script>

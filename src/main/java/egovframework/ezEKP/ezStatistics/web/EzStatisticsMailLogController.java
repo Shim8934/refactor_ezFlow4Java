@@ -430,182 +430,183 @@ public class EzStatisticsMailLogController {
 		int totalCount = mailLogList.size();
 		
 		// 엑셀 워크시트 생성 및 자동 다운로드 
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet = workbook.createSheet("MailLog");
-		
-		Row row = null;
-		Cell cell = null;
-		
-		String fileName = "";
-		fileName = startDate +"_"+ endDate + "_MailLogList";
-
-		HSSFCellStyle headerStyle = workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setVerticalAlignment((short)1);
-		
-		HSSFCellStyle bodyStyle = workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
-		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
-		headerStyle.setFont(font);
-		
-		row = sheet.createRow(0);
-		
-		sheet.addMergedRegion(CellRangeAddress.valueOf("B1:D1"));
-		sheet.addMergedRegion(CellRangeAddress.valueOf("E1:F1"));
-		sheet.addMergedRegion(CellRangeAddress.valueOf("G1:G2"));
-		sheet.addMergedRegion(CellRangeAddress.valueOf("H1:H2"));
-		sheet.addMergedRegion(CellRangeAddress.valueOf("I1:I2"));
-		
-		// 상단
-		if (mailLogType.equals("sendAll")) {
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			HSSFSheet sheet = workbook.createSheet("MailLog");
 			
-			cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1051", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(6);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1056", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(7);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1057", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(8);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1058", locale));
-			cell.setCellStyle(headerStyle);
-
-			row = sheet.createRow(1);
+			Row row = null;
+			Cell cell = null;
 			
-			cell = row.createCell(0); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t214", locale)); // 시간
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(1); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale)); // 이름
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(2); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale)); // 이메일주소
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(3); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t83", locale)); // 부서명
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(4); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale)); // 이름
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(5); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale)); // 이메일주소
-			cell.setCellStyle(headerStyle);
+			String fileName = "";
+			fileName = startDate +"_"+ endDate + "_MailLogList";
+	
+			HSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short)1);
 			
-		} else {
+			HSSFCellStyle bodyStyle = workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 			
-			cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1050", locale)); 
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(6);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1056", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(7);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1057", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(8);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1058", locale));
-			cell.setCellStyle(headerStyle);
+			HSSFFont font = workbook.createFont();
+			font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
+			headerStyle.setFont(font);
 			
-			row = sheet.createRow(1);
+			row = sheet.createRow(0);
 			
-			cell = row.createCell(0); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t214", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(1); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale)); 
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(2); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(3); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t83", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(4); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(5); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale));
-			cell.setCellStyle(headerStyle);
+			sheet.addMergedRegion(CellRangeAddress.valueOf("B1:D1"));
+			sheet.addMergedRegion(CellRangeAddress.valueOf("E1:F1"));
+			sheet.addMergedRegion(CellRangeAddress.valueOf("G1:G2"));
+			sheet.addMergedRegion(CellRangeAddress.valueOf("H1:H2"));
+			sheet.addMergedRegion(CellRangeAddress.valueOf("I1:I2"));
 			
-		}
-		
-		cell = row.createCell(6); cell.setCellStyle(headerStyle);
-		cell = row.createCell(7); cell.setCellStyle(headerStyle);
-		cell = row.createCell(8); cell.setCellStyle(headerStyle);
-		
-		for (int i = 0; i < totalCount; i++) {
-			row = sheet.createRow(i+2);
-			row.setHeight((short)300);
-			
-			Map<String, Object> mailLog = mailLogList.get(i);
-			
-			cell = row.createCell(0);
-			cell.setCellValue((String) mailLog.get("LogTime"));
-			cell.setCellStyle(bodyStyle);
-
+			// 상단
 			if (mailLogType.equals("sendAll")) {
-				cell = row.createCell(1);
-				cell.setCellValue((String) mailLog.get("senderName"));
-				cell.setCellStyle(bodyStyle);
 				
-				cell = row.createCell(2);
-				cell.setCellValue((String) mailLog.get("senderEmail"));
-				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1051", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(6);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1056", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(7);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1057", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(8);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1058", locale));
+				cell.setCellStyle(headerStyle);
+	
+				row = sheet.createRow(1);
 				
-				cell = row.createCell(3);
-				cell.setCellValue((String) mailLog.get("senderDeptName"));
-				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(0); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t214", locale)); // 시간
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(1); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale)); // 이름
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(2); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale)); // 이메일주소
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(3); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t83", locale)); // 부서명
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(4); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale)); // 이름
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(5); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale)); // 이메일주소
+				cell.setCellStyle(headerStyle);
 				
-				cell = row.createCell(4);
-				cell.setCellValue((String) mailLog.get("recipientName"));
-				cell.setCellStyle(bodyStyle);
-				
-				cell = row.createCell(5);
-				cell.setCellValue((String) mailLog.get("recipientEmail"));
-				cell.setCellStyle(bodyStyle);
 			} else {
-				cell = row.createCell(1);
-				cell.setCellValue((String) mailLog.get("recipientName"));
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(2);
-				cell.setCellValue((String) mailLog.get("recipientEmail"));
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(3);
-				cell.setCellValue((String) mailLog.get("recipientDeptName"));
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(4);
-				cell.setCellValue((String) mailLog.get("senderName"));
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(5);
-				cell.setCellValue((String) mailLog.get("senderEmail"));
-				cell.setCellStyle(bodyStyle);
+				
+				cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1050", locale)); 
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(6);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1056", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(7);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1057", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(8);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1058", locale));
+				cell.setCellStyle(headerStyle);
+				
+				row = sheet.createRow(1);
+				
+				cell = row.createCell(0); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t214", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(1); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale)); 
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(2); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(3); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t83", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(4); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale));
+				cell.setCellStyle(headerStyle);
+				cell = row.createCell(5); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale));
+				cell.setCellStyle(headerStyle);
+				
 			}
-
-			cell = row.createCell(6);
-			cell.setCellValue((String) mailLog.get("subject"));
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(7);
-			cell.setCellValue((String) mailLog.get("attachedFileName"));
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(8);
-			cell.setCellValue((String) mailLog.get("mailSize"));
-			cell.setCellStyle(bodyStyle);
 			
-			//sheet.autoSizeColumn(i-1);
+			cell = row.createCell(6); cell.setCellStyle(headerStyle);
+			cell = row.createCell(7); cell.setCellStyle(headerStyle);
+			cell = row.createCell(8); cell.setCellStyle(headerStyle);
+			
+			for (int i = 0; i < totalCount; i++) {
+				row = sheet.createRow(i+2);
+				row.setHeight((short)300);
+				
+				Map<String, Object> mailLog = mailLogList.get(i);
+				
+				cell = row.createCell(0);
+				cell.setCellValue((String) mailLog.get("LogTime"));
+				cell.setCellStyle(bodyStyle);
+	
+				if (mailLogType.equals("sendAll")) {
+					cell = row.createCell(1);
+					cell.setCellValue((String) mailLog.get("senderName"));
+					cell.setCellStyle(bodyStyle);
+					
+					cell = row.createCell(2);
+					cell.setCellValue((String) mailLog.get("senderEmail"));
+					cell.setCellStyle(bodyStyle);
+					
+					cell = row.createCell(3);
+					cell.setCellValue((String) mailLog.get("senderDeptName"));
+					cell.setCellStyle(bodyStyle);
+					
+					cell = row.createCell(4);
+					cell.setCellValue((String) mailLog.get("recipientName"));
+					cell.setCellStyle(bodyStyle);
+					
+					cell = row.createCell(5);
+					cell.setCellValue((String) mailLog.get("recipientEmail"));
+					cell.setCellStyle(bodyStyle);
+				} else {
+					cell = row.createCell(1);
+					cell.setCellValue((String) mailLog.get("recipientName"));
+					cell.setCellStyle(bodyStyle);
+					cell = row.createCell(2);
+					cell.setCellValue((String) mailLog.get("recipientEmail"));
+					cell.setCellStyle(bodyStyle);
+					cell = row.createCell(3);
+					cell.setCellValue((String) mailLog.get("recipientDeptName"));
+					cell.setCellStyle(bodyStyle);
+					cell = row.createCell(4);
+					cell.setCellValue((String) mailLog.get("senderName"));
+					cell.setCellStyle(bodyStyle);
+					cell = row.createCell(5);
+					cell.setCellValue((String) mailLog.get("senderEmail"));
+					cell.setCellStyle(bodyStyle);
+				}
+	
+				cell = row.createCell(6);
+				cell.setCellValue((String) mailLog.get("subject"));
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(7);
+				cell.setCellValue((String) mailLog.get("attachedFileName"));
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(8);
+				cell.setCellValue((String) mailLog.get("mailSize"));
+				cell.setCellStyle(bodyStyle);
+				
+				//sheet.autoSizeColumn(i-1);
+			}
+			
+			for (int i = 0; i < 9; i++) {
+				sheet.autoSizeColumn(i);
+				//sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 1000);
+			}
+			
+			response.setCharacterEncoding("UTF-8");
+			// CWE-113 보안 취약점 대응
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName.replaceAll("\r", "").replaceAll("\n", "") + ".xls");
+			response.setContentType("application/vnd.ms-excel");
+			
+			workbook.write(response.getOutputStream());
+			//workbook.close();
 		}
-		
-		for (int i = 0; i < 9; i++) {
-			sheet.autoSizeColumn(i);
-			//sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 1000);
-		}
-		
-		response.setCharacterEncoding("UTF-8");
-		// CWE-113 보안 취약점 대응
-		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName.replaceAll("\r", "").replaceAll("\n", "") + ".xls");
-		response.setContentType("application/vnd.ms-excel");
-		
-		workbook.write(response.getOutputStream());
-		workbook.close();
 		
 		logger.debug("statisticsMailLogExcelExport ended.");
 	}

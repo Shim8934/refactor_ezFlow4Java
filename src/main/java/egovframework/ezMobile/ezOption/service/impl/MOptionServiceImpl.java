@@ -28,7 +28,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("MOptionService")
 public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOptionService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MOptionServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MOptionServiceImpl.class);
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -50,7 +50,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	
 	@Override
 	public MCommonVO commonInfo(String serverName, String userId) throws Exception {
-		LOGGER.debug("commonInfo started");
+		logger.debug("commonInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("serverName", serverName);
@@ -80,14 +80,14 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 
 		}
 		
-		LOGGER.debug("commonInfo ended");
+		logger.debug("commonInfo ended");
 		
 		return info;
 	}
 
 	@Override
 	public MOptionVO optionInfo(String userId, int tenantId) throws Exception {
-		LOGGER.debug("optionInfo started");
+		logger.debug("optionInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -95,14 +95,14 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		
 		MOptionVO info = mOptionDAO.optionInfo(map);
 
-		LOGGER.debug("optionInfo ended");
+		logger.debug("optionInfo ended");
 		
 		return info;
 	}
 
 	@Override
 	public void insertOption(String uid, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId) throws Exception {
-		LOGGER.debug("insertOption started");
+		logger.debug("insertOption started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", uid);
@@ -115,12 +115,12 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		
 		mOptionDAO.insertOption(map);
 				
-		LOGGER.debug("insertOption ended");				
+		logger.debug("insertOption ended");				
 	}
 
 	@Override
 	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId, String deviceId, String pinState, String pin, String biometric) throws Exception {
-		LOGGER.debug("updateOption started");	
+		logger.debug("updateOption started");	
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -138,12 +138,12 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 			updateDevicePinfInfo(deviceId, pinState, pin, biometric, tenantId, userId);
 		}
 		
-		LOGGER.debug("updateOption ended");	
+		logger.debug("updateOption ended");	
 	}
 
 	@Override
 	public List<MPortalTimeLineVO> getTimeLineList(MCommonVO info, String sessionDate, String listCnt, String approvalAccess, String boardAccess) throws Exception {
-		LOGGER.debug("getTimeLineList started");
+		logger.debug("getTimeLineList started");
 		
 		String userIDS = "'" + info.getUserId() + "'";
 		String proxyOption = ezApprovalGService.getIsUse("A23", "001", info.getCompanyId(), info.getLang(), info.getTenantId());
@@ -168,14 +168,14 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		
 		List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionDAO.getTimeLineList(map);
 
-		LOGGER.debug("getTimeLineList ended");
+		logger.debug("getTimeLineList ended");
 		
 		return mPortalTimeLineVOs;
 	}
 
 	@Override
 	public MCommonVO commonInfoWeb(String serverName, String userId) throws Exception {
-		LOGGER.debug("commonInfoWeb started");
+		logger.debug("commonInfoWeb started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("serverName", serverName);
@@ -204,14 +204,14 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 			// dhlee : 20220928 - end
 		}
 		
-		LOGGER.debug("commonInfoWeb ended");
+		logger.debug("commonInfoWeb ended");
 		
 		return info;
 	}
 
 	public void updateDevicePinfInfo(String deviceId, String pinState, String pin, String biometric, int tenantId, String userId) throws Exception {
-		LOGGER.debug("updateDevicePinfInfo started.");
-		LOGGER.debug("deviceId=" + deviceId + ", userId=" + userId + ", pinState=" + pinState + ", biometric=" + biometric);
+		logger.debug("updateDevicePinfInfo started.");
+		logger.debug("deviceId=" + deviceId + ", userId=" + userId + ", pinState=" + pinState + ", biometric=" + biometric);
 
 		String tenantIdParam = "tenantId=" + tenantId;
 		String deviceIdParam = "deviceId=" + URLEncoder.encode(deviceId, "UTF-8");
@@ -220,11 +220,11 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		String pinParam = "pin=" + URLEncoder.encode(pin, "UTF-8");
 		String biometricParam = "biometric=" + URLEncoder.encode(biometric, "UTF-8");
 		String inputParams = tenantIdParam + "&" + deviceIdParam + "&" + pinStateParam + "&" + pinParam + "&" + biometricParam + "&" + userIdParam;
-		LOGGER.debug("inputParams=" + inputParams);
+		logger.debug("inputParams=" + inputParams);
 		
 		try {
 			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/ezTalkGate/updateDevicePinfInfo", inputParams);
-			LOGGER.debug("strJson=" + strJson);
+			logger.debug("strJson=" + strJson);
 			
 			JSONParser parser = new JSONParser();
 			JSONObject object = (JSONObject)parser.parse(strJson);
@@ -233,27 +233,27 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	        	throw new Exception("JGwServer ERROR");
 	        }
 		} catch (Exception e) {
-			LOGGER.debug("[JGW-SERVER ERROR] updateDevicePinfInfo.");
+			logger.debug("[JGW-SERVER ERROR] updateDevicePinfInfo.");
 		}
 
-		LOGGER.debug("updateDevicePinfInfo ended.");
+		logger.debug("updateDevicePinfInfo ended.");
 	}
 	
 	@Override
 	public String getDevicePinfInfo(String deviceId, String userId) throws Exception {
-		LOGGER.debug("getDevicePinfInfo started.");
-		LOGGER.debug("deviceId=" + deviceId + ", userId=" + userId);
+		logger.debug("getDevicePinfInfo started.");
+		logger.debug("deviceId=" + deviceId + ", userId=" + userId);
 
 		String deviceIdParam = "deviceId=" + URLEncoder.encode(deviceId, "UTF-8");
 		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
 		String inputParams = deviceIdParam + "&" + userIdParam;
-		LOGGER.debug("inputParams=" + inputParams);
+		logger.debug("inputParams=" + inputParams);
 		
 		JSONObject jsonObject = new JSONObject();
 		
 		try {
 			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/ezTalkGate/getUserMobileDevicePinInfo", inputParams);
-			LOGGER.debug("strJson=" + strJson);
+			logger.debug("strJson=" + strJson);
 			
 			JSONParser parser = new JSONParser();
 			jsonObject = (JSONObject)parser.parse(strJson);
@@ -262,10 +262,10 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	        	throw new Exception("JGwServer ERROR");
 	        }
 		} catch (Exception e) {
-			LOGGER.debug("[JGW-SERVER ERROR] getDevicePinfInfo.");
+			logger.debug("[JGW-SERVER ERROR] getDevicePinfInfo.");
 		}
 
-		LOGGER.debug("getDevicePinfInfo ended.");
+		logger.debug("getDevicePinfInfo ended.");
 
 		return jsonObject.toJSONString();
 	}

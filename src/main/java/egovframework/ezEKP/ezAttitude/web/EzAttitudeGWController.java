@@ -59,7 +59,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @SuppressWarnings("unchecked")
 @RestController
 public class EzAttitudeGWController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzAttitudeGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzAttitudeGWController.class);
 	
 	public static final int BUFF_SIZE = 2048;
 	
@@ -90,7 +90,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/attitudes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeMainList(HttpServletRequest request) {
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -127,12 +127,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes] ended.");
 		return result;
 	}
 	
@@ -141,7 +141,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitudes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject registeAttitude(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -199,11 +199,11 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", checkAttitude);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/attitudes] ended.");
 		return result;
 	}
 	
@@ -212,7 +212,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -228,12 +228,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", attitudeVO);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
 		return result;
 	}
 	
@@ -242,7 +242,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -281,11 +281,11 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", checkAttitude);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
 		return result;
 	}
 	
@@ -294,7 +294,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteAttitudeInfo(@PathVariable String attitudeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/attitudes/" + attitudeId + "] started.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/attitudes/" + attitudeId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -316,12 +316,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/attitudes/" + attitudeId + "] ended.");
 		return result;
 	}
 	
@@ -337,7 +337,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="content", required=true) String content,
 			@RequestParam(value="changeDate", required=true) String changeDate,
 			@RequestParam(value="originDate", required=true) String originDate) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] started.");
 		
 		JSONObject result = new JSONObject();
 		String status = "exception";
@@ -353,12 +353,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", status);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/modify-applications] ended.");
 		return result;
 	}
 	
@@ -367,7 +367,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/organtree/depts", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject organtreeDepts(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -377,7 +377,7 @@ public class EzAttitudeGWController {
 	         String serverName = request.getHeader("x-user-host");
 	         MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 	         
-	         LOGGER.debug("userId : " + userId);
+	         logger.debug("userId : " + userId);
 	         String companyId = request.getParameter("companyId");
 	         
 	         if (companyId == null || companyId.equals("")) {
@@ -390,13 +390,13 @@ public class EzAttitudeGWController {
 	         result.put("code", 0);
 	         result.put("data", deptList);
 	      } catch (Exception e) {
-	    	 e.printStackTrace();
+	    	 logger.error(e.getMessage(), e);
 	         result.put("code", 1);
 	         result.put("status", "error");
 	         result.put("data", "");
 	      }
 
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/depts] ended.");
 		return result;
 	}
 	
@@ -405,7 +405,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/organtree/users", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject organtreeUsersOfDept(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/users] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/users] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -424,13 +424,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", userList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/users] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/organtree/users] ended.");
 		return result;
 	}
 	
@@ -439,7 +439,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject userAttitudeCount(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
@@ -473,12 +473,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-count] ended.");
 		return result;
 	}
 	
@@ -487,7 +487,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/depts/{deptId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject deptAttitudeCount(@PathVariable String deptId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/" + deptId + "/attitude-count] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/depts/" + deptId + "/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -497,12 +497,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /ezattitude/depts/" + deptId + "/attitude-count] ended.");
+		logger.debug("G/W EzAttitude [GET /ezattitude/depts/" + deptId + "/attitude-count] ended.");
 		return result;
 	}
 	
@@ -511,7 +511,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudereg", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeConfInfo(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -537,12 +537,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", attitudeConfigInfo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
 		
 		return result;
 	}
@@ -552,7 +552,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudereg", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeConf(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -589,13 +589,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudereg] ended.");
 		
 		return result;
 	}
@@ -605,7 +605,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeTypeList(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -623,12 +623,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", attitudeTypeList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
 		return result;
 	}
 	
@@ -637,7 +637,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeTypeBatchStore(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -653,13 +653,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
 		
 		return result;
 	}
@@ -669,7 +669,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertAttitudeType(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -689,12 +689,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitudetypes] ended.");
 		return result;
 	}
 	
@@ -703,7 +703,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeTypeInfo(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -718,13 +718,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", typeInfo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId + "] ended.");
 		
 		return result;
 	}
@@ -734,7 +734,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -752,12 +752,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] ended.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] ended.");
 		
 		return result;
 	}
@@ -767,7 +767,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitudetypes/{attitudetypeId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteAttitudeType(@PathVariable String companyId, @PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -785,12 +785,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] ended.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitudetypes/" + attitudetypeId+ "] ended.");
 		
 		return result;
 	}
@@ -800,7 +800,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject updateAttitudeType(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -820,12 +820,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies] ended.");
 		return result;
 	}
 	
@@ -834,7 +834,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/user-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject userAttitudeConfList(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users-attitude-confs] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users-attitude-confs] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -867,13 +867,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users-attitude-confs] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users-attitude-confs] ended.");
 		
 		return result;
 	}
@@ -883,7 +883,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/users-attitude-confs", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject userAttitudeConfInfo(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -900,13 +900,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", vo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/users-attitude-confs] ended.");
 		
 		return result;
 	}
@@ -916,7 +916,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/users/ezattitude/user-attitude-confs", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertUserAttitudeConf(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -937,12 +937,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users-attitude-confs] ended.");
 		return result;
 	}
 	/**
@@ -950,7 +950,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/users/ezattitude/dept-attitude-confs", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertDeptAttitudeConf(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/dept-attitude-confs] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/dept-attitude-confs] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -971,12 +971,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/dept-attitude-confs] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/dept-attitude-confs] ended.");
 		return result;
 	}
 	
@@ -1001,7 +1001,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
 			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
 			@RequestParam(value="deptid", required=false) String deptid) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1064,12 +1064,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes] ended.");
 		return result;
 	}
 	
@@ -1090,7 +1090,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
 			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
 			@RequestParam(value="deptid", required=false) String deptid) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes/count] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes/count] started.");
 
 		JSONObject result = new JSONObject();
 		try {
@@ -1144,12 +1144,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", attListCount+"");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes/count] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes/count] ended.");
 		return result;
 	}
 	
@@ -1158,7 +1158,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/holidays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getHolidayList(@PathVariable String companyId, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/holidays] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/holidays] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1177,12 +1177,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", holidayList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/holidays] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/holidays] ended.");
 		return result;
 	}
     
@@ -1195,7 +1195,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="idList", required=false) String idList) {
 			
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1222,12 +1222,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", status);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/modifyattitudes] ended.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/modifyattitudes] ended.");
 		return result;
 	}
 	
@@ -1241,7 +1241,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="idList", required=true) String idList,
 			@RequestParam(value="changeStatus", required=true) String changeStatus) {
 			
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -1260,12 +1260,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "fail");
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/modifyattitudes] ended.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/modifyattitudes] ended.");
 		return result;
 	}
 	
@@ -1274,7 +1274,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudetypes/{attitudetypeId}/forms/form", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getFormBody(@PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/"+attitudetypeId+"/forms/form] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/"+attitudetypeId+"/forms/form] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1292,12 +1292,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", formVO);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/"+attitudetypeId+"/forms/form] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudetypes/"+attitudetypeId+"/forms/form] ended.");
 		
 		return result;
 	}
@@ -1313,7 +1313,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="userId", required=true) String userId,
 			@RequestParam(value="offset", required=true) String offset,
 			@RequestParam(value="applCnt", required=false) String applCnt) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] started.");
 		JSONObject result = new JSONObject();
 		try {
 			String serverName = request.getHeader("x-user-host");
@@ -1325,13 +1325,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/"+attModId+"] ended.");
 		return result;
 	}
 
@@ -1347,7 +1347,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="offset", required=true) String offset,
 			@RequestParam(value="content", required=true) String content,
 			@RequestParam(value="changeDate", required=true) String changeDate) throws Exception{
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/modifyattitude/"+attModId+"] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/modifyattitude/"+attModId+"] started.");
 		JSONObject result = new JSONObject();
 		int update = 0;
 		try {
@@ -1357,13 +1357,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", update);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", update);
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/modifyattitude/"+attModId+"] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/modifyattitude/"+attModId+"] ended.");
 		return result;
 	}
 	
@@ -1372,7 +1372,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/check", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeMainList2(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/check] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/check] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1431,12 +1431,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/check] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/check] ended.");
 		return result;
 	}
 	
@@ -1445,7 +1445,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/absent", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject attitudeAbsentList(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/absent] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/absent] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1489,13 +1489,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/absent] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/absent] ended.");
 		
 		return result;
 	}
@@ -1506,7 +1506,7 @@ public class EzAttitudeGWController {
 	/* 현재는 메일 작성창을 띄우므로 사용하지 않고 있음.
 	@RequestMapping(value = "/rest/ezattitude/attitudes/mail", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject absentedListSendMail(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/mail] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/mail] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1551,7 +1551,7 @@ public class EzAttitudeGWController {
 			
 			ezAttitudeService.absentedListSendMail(duplicatedList, distinctList, loginCookie, searchStartDate, searchEndDate,info.getUserName(), info.getEmail());
 			
-			LOGGER.debug("배현상 메일정보 확인 : " + info.getEmail());
+			logger.debug("배현상 메일정보 확인 : " + info.getEmail());
 			JSONObject data = new JSONObject();
 			
 			result.put("status", "ok");
@@ -1563,7 +1563,7 @@ public class EzAttitudeGWController {
 			result.put("data", "error");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/mail] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/mail] ended.");
 		
 		return result;
 	}
@@ -1587,7 +1587,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="userId", required=true) String userId,
 			@RequestParam(value="offset", required=true) String offset) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/" + attModId + "/history started");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/" + attModId + "/history started");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -1600,12 +1600,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 			
-			LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/" + attModId + "/history ended.");
+			logger.debug("G/W EzAttitude [GET /rest/ezattitude/modifyattitude/" + attModId + "/history ended.");
 		}
 		return result;
 	}
@@ -1619,7 +1619,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeAuthList(@PathVariable String companyId, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -1633,13 +1633,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", authorlist);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
 		return result;
 	}
 	
@@ -1652,7 +1652,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertAttitudeAuth(@PathVariable String companyId, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -1669,13 +1669,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "success");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
 		return result;
 	}
 	
@@ -1689,7 +1689,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/attitude-auth", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteAttitudeAuth(
 			@PathVariable String companyId, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitude-auth] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -1704,13 +1704,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/companies/" + companyId + "/attitude-auth] ended.");
 		return result;
 	}
 	
@@ -1720,7 +1720,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-auth", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeAuthDeptList(@PathVariable String userId, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -1736,13 +1736,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", authDeptlist);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth] ended.");
 		return result;
 	}
 	
@@ -1754,7 +1754,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/attitude-auth/hyo", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeAuthDeptListhyo(@PathVariable String userId, HttpServletRequest request) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth/hyo] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth/hyo] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -1772,13 +1772,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", authDeptlist);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth/hyo] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/attitude-auth/hyo] ended.");
 		return result;
 	}
 	
@@ -1787,7 +1787,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{selectUserId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeUserCount(@PathVariable String selectUserId, @PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + selectUserId + "/attitudetypes/" + attitudetypeId + "/attitude-count] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + selectUserId + "/attitudetypes/" + attitudetypeId + "/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
@@ -1809,12 +1809,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + selectUserId + "/attitudetypes/" + attitudetypeId + "/attitude-count] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + selectUserId + "/attitudetypes/" + attitudetypeId + "/attitude-count] ended.");
 		return result;
 	}
 	
@@ -1823,7 +1823,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/depts/{deptId}/attitudetypes/{attitudetypeId}/attitude-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeDeptCount(@PathVariable String deptId, @PathVariable String attitudetypeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/" + attitudetypeId + "/attitude-count] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/" + attitudetypeId + "/attitude-count] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
@@ -1839,12 +1839,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/" + attitudetypeId + "/attitude-count] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/depts/"+deptId+"/attitudetypes/" + attitudetypeId + "/attitude-count] ended.");
 		return result;
 	}
 	
@@ -1853,7 +1853,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/depts", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCompanyDeptList(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/"+companyId+"/depts] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/"+companyId+"/depts] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
@@ -1868,12 +1868,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/"+companyId+"/depts] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/"+companyId+"/depts] ended.");
 		return result;
 	}
 	
@@ -1882,7 +1882,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/manageHistories", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeHistoryList(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/manageHistories] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/manageHistories] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1939,12 +1939,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/manageHistories] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/manageHistories] ended.");
 		return result;
 	}
 	
@@ -1954,7 +1954,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezAttitude/getSearchList.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getSearchList(HttpServletRequest request){	    
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezAttitude/getSearchList.do] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezAttitude/getSearchList.do] started.");
 		
 	    JSONObject resultJ = new JSONObject();
 	    
@@ -1964,7 +1964,7 @@ public class EzAttitudeGWController {
 			
 	        int tenantID = userInfo.getTenantId();        
 	        
-	        LOGGER.debug("tenantID=" + tenantID);       
+	        logger.debug("tenantID=" + tenantID);       
 			
 			String searchlist = request.getParameter("searchlist").trim();
 			String celllist = request.getParameter("celllist");
@@ -1975,7 +1975,7 @@ public class EzAttitudeGWController {
 			String page = request.getParameter("page");
 			String infoXML = "";
 			
-			LOGGER.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
+			logger.debug("searchlist=" + searchlist + ",celllist=" + celllist + ",proplist=" + proplist
 			        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + ",companyID=" + companyID);
 			
 			List<String> deptIdList = new ArrayList<>();
@@ -2032,12 +2032,12 @@ public class EzAttitudeGWController {
 			resultJ.put("data", result);
 			
 	    } catch (Exception e) {
-	    	e.printStackTrace();
+	    	logger.error(e.getMessage(), e);
 	    	resultJ.put("status", "error");
 	    	resultJ.put("code", 1);
 	    	resultJ.put("data", "");
 		}
-	    LOGGER.debug("G/W EzAttitude [GET /rest/ezAttitude/getSearchList.do] ended.");
+	    logger.debug("G/W EzAttitude [GET /rest/ezAttitude/getSearchList.do] ended.");
 		return resultJ;
 	}
 	
@@ -2048,7 +2048,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/checkIsAttitude", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCheckIsAttitude(HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/checkIsAttitude] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/checkIsAttitude] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2066,12 +2066,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", returnValue);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/checkIsAttitude] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/checkIsAttitude] ended.");
 		return result;
 	}
 	
@@ -2080,7 +2080,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/companies/{companyId}/annual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	 public JSONObject getAttitudeAnnualList(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/companies/" + companyId + "/annual] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/companies/" + companyId + "/annual] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2112,13 +2112,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/companies/" + companyId + "/annual] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/companies/" + companyId + "/annual] ended.");
 		return result;
 	}
 
@@ -2127,7 +2127,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/changeallannual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject changeAllAnnual(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeallannual] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeallannual] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2158,24 +2158,24 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (DataIntegrityViolationException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "dive");
 			result.put("code", 1);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeallannual] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeallannual] ended.");
 		return result;
 	}
 	
 	@RequestMapping(value="/rest/ezattitude/users/{userId}/annual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserAnnual(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annual] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annual] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2196,12 +2196,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", list);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annual] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annual] ended.");
 		return result;
 	}
 	
@@ -2210,7 +2210,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/changePrsnAnnual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject changePrsnAnnual(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/changePrsnAnnual] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/changePrsnAnnual] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2235,13 +2235,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/changePrsnAnnual] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/changePrsnAnnual] ended.");
 		return result;
 	}
 	
@@ -2250,7 +2250,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/annualExcelUpload", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject annualExcelUpload(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/annualExcelUpload] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/annualExcelUpload] started.");
 		
 		JSONObject result = new JSONObject();
 		String resultMsg = "";
@@ -2338,13 +2338,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultMsg);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/annualExcelUpload] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/annualExcelUpload] ended.");
 		return result;
 	}
 	
@@ -2353,7 +2353,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/annualHistoryPop", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject annualHistoryPop(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/annualHistoryPop] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/annualHistoryPop] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2379,13 +2379,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/annualHistoryPop] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/annualHistoryPop] ended.");
 		return result;
 	}
 	
@@ -2395,7 +2395,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/monthlyannual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMonthlyAnnualList(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyannual] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyannual] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
@@ -2432,12 +2432,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyannual] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyannual] ended.");
 		return result;
 	}
 	
@@ -2453,7 +2453,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="idList", required=false) String idList,
 			@RequestParam(value="loginCookie", required=false) String loginCookie,
 			@RequestParam(value="content", required=true) String content) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/savecancelannual] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/savecancelannual] started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2477,12 +2477,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", status);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/savecancelannual] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/savecancelannual] ended.");
 		return result;
 	}
 	
@@ -2495,7 +2495,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="attitudeId", required=false) String attitudeId) {
 			
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deletecancelannual] started.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deletecancelannual] started.");
 		
 		JSONObject result = new JSONObject();
 		// JSONObject data = new JSONObject();
@@ -2514,12 +2514,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", status);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deletecancelannual] ended.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deletecancelannual] ended.");
 		return result;
 	}
 	
@@ -2540,7 +2540,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
 			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
 			@RequestParam(value="deptid", required=false) String deptid) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual/count] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual/count] started.");
 
 		JSONObject result = new JSONObject();
 		// JSONObject data = new JSONObject();
@@ -2596,12 +2596,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", attListCount+"");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual/count] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual/count] ended.");
 		return result;
 	}
 	
@@ -2626,7 +2626,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="adminFlag", required=false) String adminFlag,
 			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
 			@RequestParam(value="deptid", required=false) String deptid) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -2690,12 +2690,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual] ended.");
 		return result;
 	}
 	
@@ -2710,7 +2710,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="userId", required=true) String userId,
 			@RequestParam(value="offset", required=true) String offset,
 			@RequestParam(value="applCnt", required=false) String applCnt) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/cancelannual/"+attModId+"] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/cancelannual/"+attModId+"] started.");
 		JSONObject result = new JSONObject();
 		try {
 			String serverName = request.getHeader("x-user-host");
@@ -2722,13 +2722,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/cancelannual/"+attModId+"] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/cancelannual/"+attModId+"] ended.");
 		return result;
 	}
 	
@@ -2742,7 +2742,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="idList", required=true) String idList,
 			@RequestParam(value="changeStatus", required=true) String changeStatus) {
 			
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/cancelannual] started.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/cancelannual] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -2762,12 +2762,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "fail");
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/cancelannual] ended.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/cancelannual] ended.");
 		return result;
 	}
 	
@@ -2781,7 +2781,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="userId", required=true) String userId,
 			@RequestParam(value="offset", required=true) String offset) throws Exception{
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/cancelannual/" + attModId + "/history started");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/cancelannual/" + attModId + "/history started");
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -2794,12 +2794,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
 			
-			LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/cancelannual/" + attModId + "/history ended.");
+			logger.debug("G/W EzAttitude [GET /rest/ezattitude/cancelannual/" + attModId + "/history ended.");
 		}
 		return result;
 	}
@@ -2809,7 +2809,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/joindate", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject saveJoinDate(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/saveJoinDate] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/saveJoinDate] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2831,13 +2831,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/saveJoinDate] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/saveJoinDate] ended.");
 		return result;
 	}
 	
@@ -2846,7 +2846,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/annualcnt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAnnaulCntInfo(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annualcnt] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annualcnt] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2913,13 +2913,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", vo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annualcnt] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annualcnt] ended.");
 		return result;
 	}
 	
@@ -2929,7 +2929,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject approvalGConn(@PathVariable String userId, HttpServletRequest request) {
 			
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/"+userId+"/approvalconn] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/"+userId+"/approvalconn] started.");
 		
 		JSONObject result = new JSONObject();
 		int status = 0;
@@ -2956,12 +2956,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", status);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
 		return result;
 	}
 	/**
@@ -2970,7 +2970,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateApprovalGConnInfo(@PathVariable String userId, HttpServletRequest request) {
 		
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/approvalconn] started.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/approvalconn] started.");
 		
 		JSONObject result = new JSONObject();
 		int status = 0;
@@ -2991,12 +2991,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", status);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
 		return result;
 	}
 	/**
@@ -3005,7 +3005,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteApprovalGConnInfo(@PathVariable String userId, HttpServletRequest request) {
 		
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/approvalconn] started.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/approvalconn] started.");
 		
 		JSONObject result = new JSONObject();
 		int status = 0;
@@ -3026,12 +3026,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", status);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
+		logger.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
 		return result;
 	}
 	
@@ -3040,7 +3040,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/annualreg", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject attitudeAnnualConfigInfo(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/annualreg] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/annualreg] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -3055,12 +3055,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", attitudeAnnualConfigInfo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/annualreg] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/annualreg] ended.");
 		
 		return result;
 	}
@@ -3070,7 +3070,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/annualreg", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateAnnualConf(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/annualreg] started.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/annualreg] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -3107,13 +3107,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/annualreg] ended.");
+		logger.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/annualreg] ended.");
 		
 		return result;
 	}
@@ -3124,7 +3124,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/joindate", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getJoinDate(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/joindate] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/joindate] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -3147,12 +3147,12 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", joinDate);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/joindate] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/joindate] ended.");
 		
 		return result;
 	}
@@ -3162,7 +3162,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/aprinfo", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getAttitudeAprInfo(@PathVariable String attitudeId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "/aprinfo] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "/aprinfo] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -3179,13 +3179,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", list);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "/aprinfo] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "/aprinfo] ended.");
 		return result;
 	}
 	
@@ -3195,7 +3195,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn/disableddays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getDisabledDays(@PathVariable String userId, HttpServletRequest request) {
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/approvalconn/disableddays] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/approvalconn/disableddays] started.");
 		JSONObject result = new JSONObject();
 		
 		try{
@@ -3212,13 +3212,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", list);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 			
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/approvalconn/disableddays] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/approvalconn/disableddays] ended.");
 		return result;
 	}
 	
@@ -3228,7 +3228,7 @@ public class EzAttitudeGWController {
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/holidays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getHoliDays(@PathVariable String userId, HttpServletRequest request) {
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/holidays] started.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/holidays] started.");
 		JSONObject result = new JSONObject();
 		
 		try{
@@ -3245,13 +3245,13 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", list);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/holidays] ended.");
+		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/holidays] ended.");
 		return result;
 	}
 	
@@ -3260,7 +3260,7 @@ public class EzAttitudeGWController {
 	 */
 	@RequestMapping(value = "/rest/ezattitude/attitudes/daliyWork", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject setDailyWork() {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/daliyWork] started.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/daliyWork] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -3268,11 +3268,11 @@ public class EzAttitudeGWController {
 			ezAttitudeService.autoSetDailyWork();
 			result.put("status", "success");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/daliyWork] ended.");
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/daliyWork] ended.");
 		return result;
 	}
 }

@@ -13,6 +13,9 @@ import java.util.Properties;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,8 @@ import egovframework.let.utl.rest.callback.HttpEntityRequestCallback;
 /** ezFlow 내부의 GW 와의 통신을 쉽게 하기 위한 유틸리티 */
 @Component
 public class Rest {
+
+	private static final Logger logger = LoggerFactory.getLogger(Rest.class);
 
 	/** GW 컨트롤러를 별도로 사용하는 모듈들이 나열된다. */
 	public enum Module {
@@ -112,7 +117,7 @@ public class Rest {
 					try {
 						sb.append(entry.getKey()).append('=').append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
 					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 				return sb.toString();
@@ -248,7 +253,7 @@ public class Rest {
 				} else if (obj instanceof Collection) {
 					obj = jsonStr;
 				}
-			} catch (Exception ex) {ex.printStackTrace();}
+			} catch (Exception ex) {logger.error(ex.getMessage(), ex);}
 
 			body = obj;
 			return this;

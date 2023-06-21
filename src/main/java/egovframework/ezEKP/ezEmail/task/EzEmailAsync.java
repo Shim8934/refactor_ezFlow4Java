@@ -86,7 +86,7 @@ public class EzEmailAsync {
 			recallMailByMessageId(addresses, password, messageId, num, locale, isReadDelete);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("cancelMailDelete async methoed ended.");
@@ -159,7 +159,7 @@ public class EzEmailAsync {
 							folder.close(true);
 						}
 					} catch (MessagingException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						logger.debug("mail Flags update error. so move the next mailbox.");
 						continue;
 					}
@@ -172,7 +172,7 @@ public class EzEmailAsync {
 				ia = null;
 			
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				if (ia != null) {
 					ia.close();
@@ -205,7 +205,7 @@ public class EzEmailAsync {
 			realTimeZone = " ( GMT | " + timeZoneArr[1] + " )";
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		/* 2021-11-18 홍승비 - 전자설문 메일발송 대상자 중복제거 Set 추가 */
@@ -252,7 +252,7 @@ public class EzEmailAsync {
 				}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}

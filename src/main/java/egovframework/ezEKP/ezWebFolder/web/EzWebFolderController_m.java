@@ -928,7 +928,7 @@ public class EzWebFolderController_m {
 						mailContent = commonUtil.createNotiMailContent(mailContent, tenantId, locale);
 						ezEmailService.sendMail(loginCookie, from, toArr, null, null, mailSubject, mailContent, false);
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						returnStr = "EMAIL_ERROR";
 						
 						logger.debug("delete webfolderApplyHistory..");

@@ -13,6 +13,7 @@
 	    <script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/relay/webfolderFileUploadOpener.js')}"></script>
 	    <style> 
 			p { margin-bottom: 0; margin-top: 0; } 
 		</style>

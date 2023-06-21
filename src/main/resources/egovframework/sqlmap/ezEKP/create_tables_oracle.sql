@@ -386,21 +386,6 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"WEEKTIME" NUMBER DEFAULT 12
    ) ;
 --------------------------------------------------------
---  DDL for Table APPROVCONNSCMC
---------------------------------------------------------
-
-  CREATE TABLE "APPROVCONNSCMC" 
-   (	"MIS_KEY" VARCHAR2(64 BYTE), 
-	"DOCID" CHAR(20 BYTE), 
-	"EMP_CD" VARCHAR2(20 BYTE), 
-	"FORM_ID" VARCHAR2(10 BYTE), 
-	"STATUS" CHAR(3 BYTE), 
-	"DRAFTDATE" DATE, 
-	"ERRYN" CHAR(1 BYTE), 
-	"ERRMSG" VARCHAR2(2048 BYTE), 
-	"ERRSYS" VARCHAR2(10 BYTE)
-   ) ;
---------------------------------------------------------
 --  DDL for Table JAMES_DOMAIN
 --------------------------------------------------------
 
@@ -2264,7 +2249,7 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
    (	"BOARDID" NCHAR(38), 
 	"ACCESSID" NVARCHAR2(20), 
 	"ACCESSNAME" NVARCHAR2(50), 
-	"ACCESSNAME2" NVARCHAR2(50), 
+	"ACCESSNAME2" NVARCHAR2(500), 
 	"ACCESSLEVEL" NUMBER(10,0), 
 	"ACCESS_" NUMBER(10,0), 
 	"PARENTBOARDID" NCHAR(38), 
@@ -11744,10 +11729,52 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_ENDAPRDOCINFO_PK" ON "TBL_ENDAPRDOCINFO" ("TENANT_ID", "COMPANYID", "DOCID") 
   ;
 --------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOC_CONTAINERID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ENDAPRDOC_CONTAINERID_IDX" ON "TBL_ENDAPRDOCINFO" ("CONTAINERID")
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOC_DOCSTATE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ENDAPRDOC_DOCSTATE_IDX" ON "TBL_ENDAPRDOCINFO" ("DOCSTATE")
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOC_FORMID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ENDAPRDOC_FORMID_IDX" ON "TBL_ENDAPRDOCINFO" ("FORMID")
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOC_WRITERID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "TBL_ENDAPRDOC_WRITERID_IDX" ON "TBL_ENDAPRDOCINFO" ("WRITERID")
+  ;
+--------------------------------------------------------
 --  DDL for Index TBL_ENDAPRLINEINFO_PK
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "TBL_ENDAPRLINEINFO_PK" ON "TBL_ENDAPRLINEINFO" ("TENANT_ID", "COMPANYID", "DOCID", "APRMEMBERSN") 
+  ;
+--------------------------------------------------------
+--  DDL for Index ENDAPRLINE_APRMEMBERID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "ENDAPRLINE_APRMEMBERID_IDX" ON "TBL_ENDAPRLINEINFO" ("APRMEMBERID")
+  ;
+--------------------------------------------------------
+--  DDL for Index ENDAPRLINE_APRTYPE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "ENDAPRLINE_APRTYPE_IDX" ON "TBL_ENDAPRLINEINFO" ("APRTYPE")
+  ;
+--------------------------------------------------------
+--  DDL for Index ENDAPRLINE_APRSTATE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "ENDAPRLINE_APRSTATE_IDX" ON "TBL_ENDAPRLINEINFO" ("APRSTATE")
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDAPROPINIONINFO_PK
@@ -12148,6 +12175,12 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "TBL_RECREADHISTORY_PK" ON "TBL_RECREADHISTORY" ("TENANT_ID", "COMPANYID", "SERIALNO", "DOCID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_RECREADHISTORY_DOCID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX TBL_RECREADHISTORY_DOCID_IDX ON "TBL_RECREADHISTORY" ("DOCID")
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECRELAYINFO_PK
@@ -17824,7 +17857,7 @@ END;
   ALTER TABLE "TBL_USERLOCALINFO" MODIFY ("TIMEZONE" NOT NULL ENABLE);
   ALTER TABLE "TBL_USERLOCALINFO" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "TBL_USERLOCALINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_USERLOCALINFO" ADD CONSTRAINT "PK_TBL_USERLOCALINFO" PRIMARY KEY ("TENANT_ID", "USERID")
+  ALTER TABLE "TBL_USERLOCALINFO" ADD CONSTRAINT "PK_TBL_USERLOCALINFO" PRIMARY KEY ("USERID", "TENANT_ID")
   USING INDEX;
 --------------------------------------------------------
 --  Constraints for Table TBL_USERMASTER
@@ -18638,8 +18671,8 @@ END;
 --  Ref Constraints for Table TBL_USER_NOTI_DISABLE_ITEM
 --------------------------------------------------------
 
-  ALTER TABLE "TBL_USER_NOTI_DISABLE_ITEM" ADD CONSTRAINT "FK_TBL_USER_NOTI_DISABLE_ITEM" FOREIGN KEY ("USER_ID", "TENANT_ID")
-	  REFERENCES "TBL_USERMASTER" ("CN", "TENANT_ID") ON DELETE CASCADE ENABLE;
+  ALTER TABLE "TBL_USER_NOTI_DISABLE_ITEM" ADD CONSTRAINT "FK_TBL_USER_NOTI_DISABLE_ITEM" FOREIGN KEY ("TENANT_ID", "USER_ID")
+	  REFERENCES "TBL_USERMASTER" ("TENANT_ID", "CN") ON DELETE CASCADE ENABLE;
 	  
 --------------------------------------------------------
 --  VIEW_EZAPPROVALG

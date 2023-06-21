@@ -20,11 +20,14 @@ import egovframework.com.cmm.EgovMessageSource;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.taimos.totp.TOTP;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -185,12 +188,22 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
     	return result;
     }
 
+	@Override
+	public boolean searchOtpKey(LoginVO vo) throws Exception {
+		boolean result = loginDAO.searchOtpKey(vo) > 0 ? true : false;
+
+		return result;
+	}
 
 	@Override
 	public void updateUser(LoginVO vo) throws Exception {
 		loginDAO.updateUser(vo);
 	}
 
+	@Override
+	public void updateUserForReduceLoginCnt(LoginVO vo) throws Exception {
+		loginDAO.updateUserForReduceLoginCnt(vo);
+	}
 
 	@Override
 	public void insertLog(LoginVO vo) throws Exception {
@@ -221,7 +234,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 	
     private int getTenantIdForLocal(String serverName) throws Exception {
-        logger.debug("getTenantIdForLocal started. serverName=" + serverName);
+        //logger.debug("getTenantIdForLocal started. serverName=" + serverName); // 로그정리
         
         int tenantId = -1;
         
@@ -231,7 +244,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
             tenantId = tenantServerNameVO.getTenantId();
         }
         
-        logger.debug("getTenantIdForLocal ended. tenantId=" + tenantId);
+        //logger.debug("getTenantIdForLocal ended. tenantId=" + tenantId); // 로그정리 : 상하 로그에서 tenantId 값을 확인가능
         
         return tenantId;
     }
@@ -456,7 +469,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 				result = vo.getMobile() + " " + egovMessageSource.getMessage("login.zno004", locale);
 			} catch (Exception e) {
 				result = egovMessageSource.getMessage("login.zno005", locale);
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		} else {
 			result = egovMessageSource.getMessage("login.zno005", locale);
@@ -550,7 +563,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 						result = "fail|" + egovMessageSource.getMessage("login.zno024", loginVO.getLocale());
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					result = "fail|" + egovMessageSource.getMessage("login.zno024", loginVO.getLocale());
 				}
 			}

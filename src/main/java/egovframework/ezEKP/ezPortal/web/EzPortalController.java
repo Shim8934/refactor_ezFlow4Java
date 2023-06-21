@@ -3674,7 +3674,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("downloadServer="+result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI()))));
 		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
@@ -3915,14 +3915,14 @@ public class EzPortalController extends EgovFileMngUtil {
 			try {
 				result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult, 4000, 8000);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 				logger.debug("totalSearch retry...");
 				result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult, 4000, 8000);
 			}
 			
 			logger.debug("result : {}", result);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			Map<String, String> resultMap = new HashMap<>();
 			resultMap.put("error", "internal server error");
 			result = new JSONObject(resultMap);
@@ -4001,14 +4001,14 @@ public class EzPortalController extends EgovFileMngUtil {
 				result = commonUtil.getXML2JsonFromRestApi(totalSearchURL, "", null, req, "post", null, 4000, 8000);
 			}
 			catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 				logger.debug("totalSearch_XTEN retry...");
 				result = commonUtil.getXML2JsonFromRestApi(totalSearchURL, "", null, req, "post", null, 4000, 8000);
 			}
 			
 			logger.debug("result : {}", result);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			Map<String, String> resultMap = new HashMap<>();
 			resultMap.put("error", "internal server error");
 			result = new JSONObject(resultMap);

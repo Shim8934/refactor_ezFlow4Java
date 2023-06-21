@@ -101,7 +101,7 @@ public class EzDoc24Scheduler {
 				logger.debug("********************  수신처 데이터 가져오기 작업 실패 ********************");
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("doc24Scheduler ended.");
@@ -132,7 +132,7 @@ public class EzDoc24Scheduler {
 				}
 			}
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return retCheck;
 	}
@@ -173,7 +173,7 @@ public class EzDoc24Scheduler {
         }
         catch (Exception e)
         {
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         }
 
         return resultPost;
@@ -197,7 +197,7 @@ public class EzDoc24Scheduler {
 				}
 				
         	} catch(Exception e) {
-        		e.printStackTrace();
+        		logger.error(e.getMessage(), e);
         	} finally {
         		if (br != null) {
         			br.close();

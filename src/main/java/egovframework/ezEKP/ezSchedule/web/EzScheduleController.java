@@ -1117,7 +1117,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 						logger.debug("resultCode=" + resultCode);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 		    }
 		}
@@ -1267,7 +1267,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 						logger.debug("resultCode=" + resultCode);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 		    }
 		}
@@ -2371,7 +2371,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 							logger.debug("resultCode=" + resultCode);
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 			    }
 			}
@@ -3783,10 +3783,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 		} catch(ParserException e) {
 			logger.debug("Parse Error");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} catch(Exception e) {
 			logger.debug("Error");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fin != null) { try { fin.close(); } catch (IOException e) {logger.debug("e.message=" + e.getMessage());} }
 		}
@@ -4158,11 +4158,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 					} catch(ParserException e) {
 						reMsg = "ERROR";
 						logger.debug("Parse Error");
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					} catch(Exception e) {
 						reMsg = "ERROR";
 						logger.debug("Error");
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					} finally {
 						if (fin != null) { try { fin.close(); } catch (IOException e) {} }
 					}
@@ -4172,7 +4172,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 		} catch (MessagingException e) {
 			reMsg = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -4482,7 +4482,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			dropCal.add(Calendar.MINUTE, getDateDiff(info));
 			endDate = sdf.format(dropCal.getTime());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getDropEndDate ended");
@@ -4503,7 +4503,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			dropCal.add(Calendar.MINUTE, getDateDiff(info));
 			date.add(sdf.format(dropCal.getTime())); //endDate
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}	
 		
 		return date;
@@ -4526,7 +4526,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 			
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return returnValue;
@@ -4617,6 +4617,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			strHTML = strHTML.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
 			strHTML = strHTML.replaceAll("\\+", "%2B");
 			strHTML = URLDecoder.decode(strHTML, "utf-8");
+		// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+		} else {
+			strHTML = "";
 		}
 		
 		strHTML = strHTML.replace("replace_" + scheme, scheme);

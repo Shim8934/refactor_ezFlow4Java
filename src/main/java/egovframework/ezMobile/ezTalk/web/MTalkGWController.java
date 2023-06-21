@@ -34,7 +34,7 @@ public class MTalkGWController {
 			List<MTalkNotification> notifications = mTalkService.getNotificationsAndDelete(limit.orElse(null));
 			return MTalkResult.success(notifications);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return MTalkResult.failure();
 		} finally {
 			logger.debug("MOBILE G/W TALK [GET /rest/eztalk/notilist] ended.");

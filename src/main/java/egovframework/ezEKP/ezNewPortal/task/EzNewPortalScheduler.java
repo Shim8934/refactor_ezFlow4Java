@@ -47,7 +47,7 @@ public class EzNewPortalScheduler {
 		    	logger.debug("have to connect the internet to use weather scheduler");
 		    }
 		    else {
-		    	e.printStackTrace();
+		    	logger.error(e.getMessage(), e);
 		    }
 		}
 		

@@ -413,7 +413,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPollItemVO.setItemNo(Integer.parseInt(commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")))));
 		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO, userInfo.getTenantId());
 		
-		if(qstUserPollItemVO.getUserID() != userID){
+		if(qstUserPollItemVO.getUserID().equalsIgnoreCase(userID)){
 			qstUserPollItemVO.setReadCnt(qstUserPollItemVO.getReadCnt() + 1);
 			ezQuestionService.updateReadCnt(qstUserPollItemVO, userInfo.getTenantId());
 		}
@@ -806,7 +806,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPollItemVO.setPollEndDate(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false));
 		
 		/** EZSP_UPDATEREADCNT*/
-		if (qstUserPollItemVO.getUserID() != userID){
+		if (qstUserPollItemVO.getUserID().equalsIgnoreCase(userID)){
 			readCnt = readCnt + 1;
 			ezQuestionService.updateReadCnt(qstUserPollItemVO, loginVO.getTenantId());
 		}
@@ -1946,7 +1946,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			ezQuestionService.deletePollAttach(Integer.parseInt(pBrdID), Integer.parseInt(itemNo), loginVO.getTenantId());
 			strXML = "<DATA>DELETE_OK</DATA>";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("qstDeleteItem ended");
@@ -2917,107 +2917,108 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 		
 		//@SuppressWarnings("resource")
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet;
-		
-		HSSFCellStyle headerStyle= workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		HSSFCellStyle bodyStyle= workbook.createCellStyle();
-		
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
-		Row row;
-		Cell cell;
-		
-		String pFileName = "";
-		String strDate = EgovDateUtil.getToday("-");
-		String StrAnalysisDate = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("AnalysisData"))).trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
-		
-		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
-		
-		Node tableNode = analysisData.getElementsByTagName("table").item(0);
-		Node tableHeadNode;
-		Node tableBodyNode;
-//		subjective
-		if(hidRType2.equals("A")){
-			pFileName = strDate+"_Report.xls";
-			sheet = workbook.createSheet("report");
-			tableHeadNode = tableNode.getChildNodes().item(0);
-			tableBodyNode = tableNode.getChildNodes().item(1);
-			row = sheet.createRow(0);
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			HSSFSheet sheet;
 			
-			for(int i=0; i<tableHeadNode.getChildNodes().item(0).getChildNodes().getLength(); i++){
-				cell = row.createCell(i);
-				cell.setCellValue(tableHeadNode.getChildNodes().item(0).getChildNodes().item(i).getTextContent());
-				cell.setCellStyle(headerStyle);
-			}
+			HSSFCellStyle headerStyle= workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			HSSFCellStyle bodyStyle= workbook.createCellStyle();
 			
-			for(int i=0; i<tableBodyNode.getChildNodes().getLength(); i++){
-				row = sheet.createRow(i+1);
-				Node tr = tableBodyNode.getChildNodes().item(i);
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			
+			Row row;
+			Cell cell;
+			
+			String pFileName = "";
+			String strDate = EgovDateUtil.getToday("-");
+			String StrAnalysisDate = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("AnalysisData"))).trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+			
+			Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+			
+			Node tableNode = analysisData.getElementsByTagName("table").item(0);
+			Node tableHeadNode;
+			Node tableBodyNode;
+	//		subjective
+			if(hidRType2.equals("A")){
+				pFileName = strDate+"_Report.xls";
+				sheet = workbook.createSheet("report");
+				tableHeadNode = tableNode.getChildNodes().item(0);
+				tableBodyNode = tableNode.getChildNodes().item(1);
+				row = sheet.createRow(0);
 				
-				for(int j=0; j<tr.getChildNodes().getLength(); j++){
-					cell = row.createCell(j);
-					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
-					cell.setCellStyle(bodyStyle);
+				for(int i=0; i<tableHeadNode.getChildNodes().item(0).getChildNodes().getLength(); i++){
+					cell = row.createCell(i);
+					cell.setCellValue(tableHeadNode.getChildNodes().item(0).getChildNodes().item(i).getTextContent());
+					cell.setCellStyle(headerStyle);
+				}
+				
+				for(int i=0; i<tableBodyNode.getChildNodes().getLength(); i++){
+					row = sheet.createRow(i+1);
+					Node tr = tableBodyNode.getChildNodes().item(i);
+					
+					for(int j=0; j<tr.getChildNodes().getLength(); j++){
+						cell = row.createCell(j);
+						cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+						cell.setCellStyle(bodyStyle);
+					}
+				}
+	//		table
+				/* 18-05-02 김민성 - 전자설문 상세분석 > 분석결과저장 파일명 수정 */
+			}else if(hidRType2.equals("T")){
+				//pFileName = strDate+"_Table.xls";
+				pFileName = strDate+"_Table";
+				sheet = workbook.createSheet("table");
+				tableHeadNode = tableNode.getChildNodes().item(0);
+				tableBodyNode = tableNode.getChildNodes().item(1);
+				row = sheet.createRow(0);
+				
+				for(int i=0; i<tableHeadNode.getChildNodes().item(0).getChildNodes().getLength(); i++){
+					cell = row.createCell(i);
+					cell.setCellValue(tableHeadNode.getChildNodes().item(0).getChildNodes().item(i).getTextContent());
+					cell.setCellStyle(headerStyle);
+				}
+				
+				for(int i=1; i<=tableBodyNode.getChildNodes().getLength(); i++){
+					row = sheet.createRow(i);
+					Node tr = tableBodyNode.getChildNodes().item(i-1);
+					
+					for(int j=0; j<tr.getChildNodes().getLength(); j++){
+						cell = row.createCell(j);
+						cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+						cell.setCellStyle(bodyStyle);
+					}
+				}
+	//		graph
+			}else{
+				//pFileName = strDate+"_Graph.xls";	
+				pFileName = strDate+"_Graph";			
+				sheet = workbook.createSheet("graph");
+				tableBodyNode = tableNode.getChildNodes().item(0);
+				
+				for(int i=0; i<tableBodyNode.getChildNodes().getLength(); i++){
+					row = sheet.createRow(i);
+					Node tr = tableBodyNode.getChildNodes().item(i);
+					
+					for(int j=0; j<tr.getChildNodes().getLength(); j++){
+						cell = row.createCell(j);
+						cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+						cell.setCellStyle(bodyStyle);
+					}
 				}
 			}
-//		table
-			/* 18-05-02 김민성 - 전자설문 상세분석 > 분석결과저장 파일명 수정 */
-		}else if(hidRType2.equals("T")){
-			//pFileName = strDate+"_Table.xls";
-			pFileName = strDate+"_Table";
-			sheet = workbook.createSheet("table");
-			tableHeadNode = tableNode.getChildNodes().item(0);
-			tableBodyNode = tableNode.getChildNodes().item(1);
-			row = sheet.createRow(0);
 			
-			for(int i=0; i<tableHeadNode.getChildNodes().item(0).getChildNodes().getLength(); i++){
-				cell = row.createCell(i);
-				cell.setCellValue(tableHeadNode.getChildNodes().item(0).getChildNodes().item(i).getTextContent());
-				cell.setCellStyle(headerStyle);
-			}
-			
-			for(int i=1; i<=tableBodyNode.getChildNodes().getLength(); i++){
-				row = sheet.createRow(i);
-				Node tr = tableBodyNode.getChildNodes().item(i-1);
-				
-				for(int j=0; j<tr.getChildNodes().getLength(); j++){
-					cell = row.createCell(j);
-					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
-					cell.setCellStyle(bodyStyle);
-				}
-			}
-//		graph
-		}else{
-			//pFileName = strDate+"_Graph.xls";	
-			pFileName = strDate+"_Graph";			
-			sheet = workbook.createSheet("graph");
-			tableBodyNode = tableNode.getChildNodes().item(0);
-			
-			for(int i=0; i<tableBodyNode.getChildNodes().getLength(); i++){
-				row = sheet.createRow(i);
-				Node tr = tableBodyNode.getChildNodes().item(i);
-				
-				for(int j=0; j<tr.getChildNodes().getLength(); j++){
-					cell = row.createCell(j);
-					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
-					cell.setCellStyle(bodyStyle);
-				}
-			}
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+			workbook.write(response.getOutputStream());
+			//workbook.close();
 		}
-		
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
-		workbook.write(response.getOutputStream());
-		workbook.close();
 
 		logger.debug("qstResultAnalysisSave ended");
 	}

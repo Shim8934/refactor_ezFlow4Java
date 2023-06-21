@@ -835,7 +835,7 @@ function SetAutoPropertyValue(frameNum) {
 	
 	var FullDate = getGyulJeFullDate();
 	CurrentDate = getGyulJeDate();
-	var SendName = getDeptSendName(arr_userinfo[4]);
+	SendName = parent.SendName; // 부모 페이지에서 가져온 부서발신명의 그대로 사용
 	
 	SignInfo = "";
 	hapyuiCount = 0;

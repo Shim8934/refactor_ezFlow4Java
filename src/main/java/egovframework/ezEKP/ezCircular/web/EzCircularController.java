@@ -2731,10 +2731,10 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		logger.debug("fullFilePath : " + fullFilePath);
 		
-		ZipOutputStream zos = null;
+		//ZipOutputStream zos = null;
 		String downFileName = "";
 		
-		try {
+		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(commonUtil.detectPathTraversal(pDirTempPath + ".zip")), Charset.forName("utf-8"))) {
 			File tempFile = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + ".zip"));
 			
 			if (tempFile.exists()) {
@@ -2747,7 +2747,7 @@ public class EzCircularController extends EgovFileMngUtil {
 				tempFile.mkdirs();
 			}
 			
-			zos = new ZipOutputStream(new FileOutputStream(commonUtil.detectPathTraversal(pDirTempPath + ".zip")), Charset.forName("utf-8"));
+			//zos = new ZipOutputStream(new FileOutputStream(commonUtil.detectPathTraversal(pDirTempPath + ".zip")), Charset.forName("utf-8"));
 				
 			JSONParser jp = new JSONParser();
 			JSONArray fileNamesArr = (JSONArray)jp.parse(fileNames);
@@ -2759,12 +2759,11 @@ public class EzCircularController extends EgovFileMngUtil {
 			
 			if (fileNamesArr.size() != 0) {// 파일이 있으면
 				for (int i = 0; i < fileNamesArr.size(); i++) { //파일 길이만큼
-					BufferedInputStream bis = null;
+					File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesArr.get(i).toString()));
+					//BufferedInputStream bis = null;
 					
-					try {
-				       File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesArr.get(i).toString()));
-	                   
-				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
+					try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(sourceFile))) {
+				        //bis = new BufferedInputStream(new FileInputStream(sourceFile));
 				        String newFileName = commonUtil.getUniqueFileName(fileNamesArr2.get(i).toString(), fileNameMap);
 				        //ZipEntry zentry = new ZipEntry(fileNamesArr2.get(i).toString());
 				        ZipEntry zentry = new ZipEntry(newFileName);
@@ -2777,20 +2776,20 @@ public class EzCircularController extends EgovFileMngUtil {
 				        }
 				        zos.closeEntry();
 					} catch (IOException e) {
-						e.printStackTrace();
-					} finally {
+						logger.error(e.getMessage(), e);
+					/*} finally {
 						if (bis != null) {
 							try {
 								bis.close();
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error(e.getMessage(), e);
 							}
-						}
+						}*/
 					}
 				}
 				zos.flush();
-				zos.close();
-				zos = null;
+				//zos.close();
+				//zos = null;
 	
 				File file = new File(commonUtil.detectPathTraversal(pDirTempPath + ".zip"));
 				
@@ -2805,14 +2804,14 @@ public class EzCircularController extends EgovFileMngUtil {
 			if (file.exists()) {
 				file.delete();
 			}
-		} finally {
+		/*} finally {
 			if (zos != null) {
 				try {
 					zos.close();
 				} catch (Exception e) {
 					logger.debug("e.message=" + e.getMessage());
 				}
-			}
+			}*/
 		}
 		logger.debug("downloadAttachAll ended.");
 	}

@@ -16,48 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `approvconnscmc`
---
-
-DROP TABLE IF EXISTS `approvconnscmc`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `approvconnscmc` (
-  `MIS_KEY` varchar(64) DEFAULT NULL,
-  `DOCID` char(20) DEFAULT NULL,
-  `EMP_CD` varchar(20) DEFAULT NULL,
-  `FORM_ID` varchar(10) DEFAULT NULL,
-  `STATUS` char(3) DEFAULT NULL,
-  `DRAFTDATE` datetime DEFAULT NULL,
-  `ERRYN` char(1) DEFAULT NULL,
-  `ERRMSG` varchar(2048) DEFAULT NULL,
-  `ERRSYS` varchar(10) DEFAULT NULL,
-  `SYS_TYPE` varchar(10) DEFAULT NULL,
-  `PREDOCID` char(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `approvconnscsc`
---
-
-DROP TABLE IF EXISTS `approvconnscsc`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `approvconnscsc` (
-  `index_id` varchar(32) NOT NULL,
-  `docid` char(20) DEFAULT NULL,
-  `writerid` varchar(100) DEFAULT NULL,
-  `formid` varchar(10) DEFAULT NULL,
-  `docstate` char(3) DEFAULT NULL,
-  `draftdate` datetime DEFAULT NULL,
-  `connhtml` longtext DEFAULT NULL,
-  `conntitle` varchar(200) DEFAULT NULL,
-  `docno` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `james_domain`
 --
 
@@ -111,26 +69,6 @@ DROP TABLE IF EXISTS `james_mail_blob`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `james_mail_blob` (
-  `MAIL_BLOB_ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `MAIL_BYTES` longblob NOT NULL,
-  `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `HEADER_BYTES` mediumblob NOT NULL,
-  `MAILBOX_ID` bigint(20) DEFAULT NULL,
-  `MAIL_UID` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`MAIL_BLOB_ID`),
-  KEY `INDEX_MESSAGE_BLOB_MSG_ID` (`MAIL_BLOB_ID`),
-  KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `james_mail_blob_new`
---
-
-DROP TABLE IF EXISTS `james_mail_blob_new`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `james_mail_blob_new` (
   `MAIL_BLOB_ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `MAIL_BYTES` longblob NOT NULL,
   `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -1481,33 +1419,6 @@ CREATE TABLE `jmocha_user_quota` (
   `MAX_STORAGE` double DEFAULT 0,
   `WARN_STORAGE` double DEFAULT 0,
   PRIMARY KEY (`USER_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `ked.tbl_endaprdocattachinfo_old`
---
-
-DROP TABLE IF EXISTS `ked.tbl_endaprdocattachinfo_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ked.tbl_endaprdocattachinfo_old` (
-  `DOCID` varchar(80) NOT NULL,
-  `ATTACHSN` bigint(10) NOT NULL,
-  `ATTACHDOCNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHDOCURL` varchar(1020) DEFAULT NULL,
-  `SUBATTACHYN` varchar(4) DEFAULT NULL,
-  `ATTACHUSERID` varchar(400) DEFAULT NULL,
-  `ATTACHUSERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERDEPTID` varchar(400) DEFAULT NULL,
-  `ATTACHUSERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-  `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`ATTACHSN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5863,23 +5774,6 @@ CREATE TABLE `tbl_container` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_container_old`
---
-
-DROP TABLE IF EXISTS `tbl_container_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_container_old` (
-  `CONTAINERID` varchar(40) NOT NULL,
-  `CONTAINERTYPEID` varchar(40) DEFAULT NULL,
-  `CONTAINEROWNDEPID` varchar(200) NOT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-  `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`CONTAINERID`,`CONTAINEROWNDEPID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_containertodocstate`
 --
 
@@ -6378,33 +6272,6 @@ CREATE TABLE `tbl_endaprdocattachinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_endaprdocattachinfo_old`
---
-
-DROP TABLE IF EXISTS `tbl_endaprdocattachinfo_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_endaprdocattachinfo_old` (
-  `DOCID` varchar(80) NOT NULL,
-  `ATTACHSN` bigint(10) NOT NULL,
-  `ATTACHDOCNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHDOCURL` varchar(1020) DEFAULT NULL,
-  `SUBATTACHYN` varchar(4) DEFAULT NULL,
-  `ATTACHUSERID` varchar(400) DEFAULT NULL,
-  `ATTACHUSERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERDEPTID` varchar(400) DEFAULT NULL,
-  `ATTACHUSERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-  `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`ATTACHSN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_endaprdocinfo`
 --
 
@@ -6438,44 +6305,11 @@ CREATE TABLE `tbl_endaprdocinfo` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`DOCID`,`TENANT_ID`,`COMPANYID`),
-  KEY `idx_ORDERBY` (`ENDDATE`,`DOCNO`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_endaprdocinfo_old`
---
-
-DROP TABLE IF EXISTS `tbl_endaprdocinfo_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_endaprdocinfo_old` (
-  `DOCID` varchar(80) NOT NULL,
-  `ORGDOCID` varchar(80) DEFAULT NULL,
-  `DOCTYPE` varchar(12) DEFAULT NULL,
-  `DOCSTATE` varchar(12) DEFAULT NULL,
-  `FUNCTIONTYPE` varchar(12) DEFAULT NULL,
-  `HREF` varchar(1020) DEFAULT NULL,
-  `DOCTITLE` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `DOCNO` varchar(200) DEFAULT NULL,
-  `HASATTACHYN` varchar(4) DEFAULT NULL,
-  `HASOPINIONYN` varchar(4) DEFAULT NULL,
-  `STARTDATE` datetime DEFAULT NULL,
-  `ENDDATE` datetime DEFAULT NULL,
-  `WRITERID` varchar(400) DEFAULT NULL,
-  `WRITERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `WRITERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `WRITERDEPTID` varchar(400) DEFAULT NULL,
-  `WRITERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `FORMID` varchar(40) DEFAULT NULL,
-  `CONTAINERID` varchar(40) DEFAULT NULL,
-  `ISPUBLIC` varchar(4) DEFAULT NULL COMMENT '공개여부(Y/N)',
-  `WRITERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `WRITERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `WRITERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-  `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`)
+  KEY `idx_ORDERBY` (`ENDDATE`,`DOCNO`),
+  KEY `IDX_TBL_ENDAPRDOCINFO_CONTAINERID` (`CONTAINERID`),
+  KEY `IDX_TBL_ENDAPRDOCINFO_DOCSTATE` (`DOCSTATE`),
+  KEY `IDX_TBL_ENDAPRDOCINFO_FORMID` (`FORMID`),
+  KEY `IDX_TBL_ENDAPRDOCINFO_WRITERID` (`WRITERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6509,41 +6343,10 @@ CREATE TABLE `tbl_endaprlineinfo` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
   `CONTAINERDEPTID` varchar(400) DEFAULT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERSN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_endaprlineinfo_old`
---
-
-DROP TABLE IF EXISTS `tbl_endaprlineinfo_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_endaprlineinfo_old` (
-  `DOCID` varchar(80) NOT NULL,
-  `APRMEMBERSN` bigint(10) NOT NULL,
-  `APRTYPE` varchar(12) DEFAULT NULL,
-  `APRSTATE` varchar(12) DEFAULT NULL,
-  `APRMEMBERID` varchar(400) DEFAULT NULL,
-  `APRMEMBERISDEPTYN` varchar(4) DEFAULT NULL,
-  `APRMEMBERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `APRMEMBERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `APRMEMBERDEPTID` varchar(400) DEFAULT NULL,
-  `APRMEMBERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `APRMEMBERLDAPPATH` varchar(400) DEFAULT NULL,
-  `RECEIVEDDATE` datetime DEFAULT NULL,
-  `PROCESSDATE` datetime DEFAULT NULL,
-  `ISPROPOSERYN` varchar(4) DEFAULT NULL,
-  `ISBRIEFUSERYN` varchar(4) DEFAULT NULL,
-  `REASONDONOTAPPROVAL` varchar(1020) DEFAULT NULL,
-  `APRMEMBERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `APRMEMBERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `APRMEMBERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-  `COMPANYID` varchar(20) NOT NULL,
-  `CONTAINERDEPTID` varchar(400) DEFAULT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERSN`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`APRMEMBERSN`),
+  KEY `INDEX_ENDLINE_APRMEMBERID` (`APRMEMBERID`),
+  KEY `INDEX_ENDLINE_APRTYPE` (`APRTYPE`),
+  KEY `INDEX_ENDLINE_APRSTATE` (`APRSTATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6555,32 +6358,6 @@ DROP TABLE IF EXISTS `tbl_endapropinioninfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endapropinioninfo` (
-  `DOCID` varchar(80) NOT NULL,
-  `USERID` varchar(400) NOT NULL,
-  `OPINIONGB` varchar(12) DEFAULT NULL COMMENT '001:일반의견, 002:반송의견, 003:보류의견, 004:회송의견',
-  `CONTENT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
-  `USERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `USERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `USERDEPTID` varchar(400) DEFAULT NULL,
-  `USERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `OPINIONSN` bigint(10) NOT NULL,
-  `USERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `USERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `USERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-  `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`USERID`(255),`OPINIONSN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_endapropinioninfo_old`
---
-
-DROP TABLE IF EXISTS `tbl_endapropinioninfo_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_endapropinioninfo_old` (
   `DOCID` varchar(80) NOT NULL,
   `USERID` varchar(400) NOT NULL,
   `OPINIONGB` varchar(12) DEFAULT NULL COMMENT '001:일반의견, 002:반송의견, 003:보류의견, 004:회송의견',
@@ -6631,36 +6408,6 @@ CREATE TABLE `tbl_endattachinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_endattachinfo_old`
---
-
-DROP TABLE IF EXISTS `tbl_endattachinfo_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_endattachinfo_old` (
-  `DOCID` varchar(80) NOT NULL,
-  `ATTACHFILESN` bigint(10) NOT NULL,
-  `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHFILEHREF` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHFILESIZE` double(126,0) DEFAULT NULL,
-  `ATTACHUSERID` varchar(400) DEFAULT NULL,
-  `ATTACHUSERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERDEPTID` varchar(400) DEFAULT NULL,
-  `ATTACHUSERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `PAGENUM` bigint(10) DEFAULT NULL,
-  `DISPLAYNAME` varchar(600) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `BODYATTACH` varchar(4) DEFAULT NULL,
-  `ATTACHUSERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ATTACHUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-  `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`ATTACHFILESN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_endreceiptpointinfo`
 --
 
@@ -6668,36 +6415,6 @@ DROP TABLE IF EXISTS `tbl_endreceiptpointinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endreceiptpointinfo` (
-  `DOCID` varchar(80) NOT NULL,
-  `RECEIPTPOINTID` varchar(400) NOT NULL,
-  `RECEIPTPOINTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `EXTRECEPTYN` varchar(4) DEFAULT NULL,
-  `PROCESSYN` varchar(4) DEFAULT NULL COMMENT '수신 상태 관련 - H:회송,  I:진행,  N:대기,  Y:완료, B:배부',
-  `PROCESSSN` bigint(10) NOT NULL,
-  `CANEDITYN` varchar(4) DEFAULT NULL,
-  `EXTRECEPTEMAIL` varchar(400) DEFAULT NULL,
-  `RECEIPTMEMBERID` varchar(400) DEFAULT NULL,
-  `RECEIPTMEMBERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `PROCESSDATE` datetime DEFAULT NULL,
-  `RECEIPTMEMBERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `DEPTMEMBERSN` bigint(10) DEFAULT NULL,
-  `RECEIPTPOINTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `RECEIPTMEMBERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `RECEIPTMEMBERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-  `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`,`RECEIPTPOINTID`(255),`PROCESSSN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_endreceiptpointinfo_old`
---
-
-DROP TABLE IF EXISTS `tbl_endreceiptpointinfo_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_endreceiptpointinfo_old` (
   `DOCID` varchar(80) NOT NULL,
   `RECEIPTPOINTID` varchar(400) NOT NULL,
   `RECEIPTPOINTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6877,50 +6594,6 @@ CREATE TABLE `tbl_expendaprdocinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_expendaprdocinfo_old`
---
-
-DROP TABLE IF EXISTS `tbl_expendaprdocinfo_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_expendaprdocinfo_old` (
-  `DOCID` varchar(80) NOT NULL,
-  `SECURITYCODE` bigint(10) DEFAULT NULL COMMENT '100:1등급, 200:2등급, 300:3등급, 400:4등급, 500:5등급',
-  `STORAGEPERIOD` varchar(160) DEFAULT NULL COMMENT '1:1년, 2:2년, 3:3년, 5:5년, 10:10년, 100:준영구, 1000:영구',
-  `KEYWORD` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ORGCONTID` varchar(40) DEFAULT NULL,
-  `DELFLAG` varchar(4) DEFAULT NULL,
-  `FORMNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `COMPANYID` varchar(20) NOT NULL,
-  `ITEMCODE` varchar(160) DEFAULT NULL,
-  `ITEMNAME` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `URGENTAPPROVAL` varchar(4) DEFAULT NULL COMMENT '긴급결재(Y/N)',
-  `SECURITYAPPROVAL` varchar(40) DEFAULT NULL,
-  `TEMPATTRIBUTE` varchar(200) DEFAULT NULL,
-  `STATUS` varchar(4) DEFAULT NULL,
-  `EDMSYN` varchar(4) DEFAULT NULL,
-  `SPECIALRECORDCODE` varchar(20) DEFAULT NULL,
-  `PUBLICITYCODE` varchar(36) DEFAULT NULL,
-  `LIMITRANGE` varchar(400) DEFAULT NULL,
-  `PAGENUM` bigint(10) DEFAULT NULL,
-  `CABINETID` varchar(112) DEFAULT NULL,
-  `TASKCODE` varchar(32) DEFAULT NULL,
-  `DOCNUMCODE` varchar(52) DEFAULT NULL,
-  `ORGDOCNUMCODE` varchar(52) DEFAULT NULL,
-  `SEPERATEATTACHXML` longtext DEFAULT NULL,
-  `SUMMARY` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
-  `FORMNAME2` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `ITEMNAME2` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `SIGNCHECK` varchar(4) NOT NULL DEFAULT 'N',
-  `TENANT_ID` mediumint(5) NOT NULL,
-  `PUBLICITYYN` char(2) DEFAULT NULL,
-  `FORMVERSION` int(11) DEFAULT 0,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`),
-  KEY `TBL_EXPENDAPRDOCINFO_NONIDX1` (`TENANT_ID`,`COMPANYID`,`DOCID`,`DELFLAG`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_expendaprline`
 --
 
@@ -6943,31 +6616,6 @@ CREATE TABLE `tbl_expendaprline` (
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`ORGUSERID`,`APRMEMBERSN`,`DOCID`),
   KEY `TBL_EXPENDAPRLINE_LINEJOINIDX` (`TENANT_ID`,`COMPANYID`,`APRMEMBERSN`,`DOCID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_expendaprline_old`
---
-
-DROP TABLE IF EXISTS `tbl_expendaprline_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_expendaprline_old` (
-  `DOCID` varchar(80) NOT NULL,
-  `APRMEMBERSN` bigint(10) NOT NULL,
-  `ORGUSERID` varchar(255) NOT NULL,
-  `PROXYUSERID` varchar(400) DEFAULT NULL,
-  `PROXYUSERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `PROXYUSERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `PROXYUSERDEPTID` varchar(400) DEFAULT NULL,
-  `PROXYUSERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `PROXYUSERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `PROXYUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `PROXYUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
-  `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`ORGUSERID`,`APRMEMBERSN`,`DOCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -10640,7 +10288,8 @@ CREATE TABLE `tbl_recreadhistory` (
   `DEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SERIALNO`,`DOCID`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SERIALNO`,`DOCID`),
+  KEY `tbl_recreadhistory_DOCID_IDX` (`DOCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

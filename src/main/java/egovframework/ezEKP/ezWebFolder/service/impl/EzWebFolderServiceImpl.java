@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +24,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
-import java.util.UUID;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -47,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -66,6 +62,7 @@ import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.ezEKP.ezWebFolder.vo.FileHistoryVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileUploadVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
@@ -858,7 +855,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
-	public UploadResult saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo, boolean isEncrypt, String parentId) throws Exception {
+	public UploadResult saveUploadedFiles(List<FileUploadVO> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo, boolean isEncrypt, String parentId) throws Exception {
 		UploadResult result = new UploadResult();
 		int tenantId               = userInfo.getTenantId();
 		String userName1           = userInfo.getDisplayName1();
@@ -903,9 +900,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		List<FileVO> list = new ArrayList<FileVO>();
 		List<ExtensionErrorFile> failureList = new ArrayList<>();
 		boolean isEncryptionFolder = isEncryptionFolder(folder.getFolderId(), tenantId);
-		BiConsumer<MultipartFile, String> uploadConsumer = isEncryptionFolder || isEncrypt
-				? this::writeUploadedFileEncryptKlib : this::writeUploadedFile;
-		
 		boolean isReply = !parentId.isEmpty();
 
 		FileVO parentFile = null;
@@ -932,8 +926,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			}
 			
 			// dhlee : 20220527 - 파일 업로드 시 .으로 끝나는 파일(예: .jsp.)이 무조건 업로드 허용되는 문제 수정
-			if ((!extend.isEmpty() && useExtension.toLowerCase().contains(extend.toLowerCase())) || useExtension.equals("*")) {
-				uploadConsumer.accept(multiFileLists.get(i), pDirPath + newName);
+			if ((!extend.isEmpty() && useExtension.toLowerCase().contains(extend.toLowerCase())) || useExtension.contains("*")) {
+				if (isEncryptionFolder || isEncrypt) {
+					writeUploadedFileEncryptKlib(multiFileLists.get(i).getBytes(), pDirPath + newName);
+				} else {
+					writeUploadedFile(multiFileLists.get(i).getInputStream(), pDirPath + newName);
+				}
+
 				FileTypeVO fileType = getFileTypeByFileExt(extend.toLowerCase(), tenantId);
 				
 				if (fileType == null) {
@@ -1440,7 +1439,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		fileLog.setTenantId(tenantId);
 		fileLog.setFileId(fileVO.getFileId());
 
-		if (version == null || version == ""){
+		if (StringUtils.isEmpty(version)){
 			Map<String, Object> map = new HashMap<>();
 
 			map.put("fileId", fileVO.getFileId());
@@ -2268,7 +2267,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			try {
 				Files.deleteIfExists(Paths.get(realPath, path));
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -2297,7 +2296,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				try {
 					Files.deleteIfExists(Paths.get(realPath, path));
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}

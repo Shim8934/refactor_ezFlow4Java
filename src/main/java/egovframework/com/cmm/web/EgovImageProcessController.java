@@ -48,7 +48,7 @@ public class EgovImageProcessController extends HttpServlet {
 	@Resource(name = "EgovFileMngService")
     private EgovFileMngService fileService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EgovImageProcessController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EgovImageProcessController.class);
 
     /**
      * 첨부된 이미지에 대한 미리보기 기능을 제공한다.
@@ -103,7 +103,7 @@ public class EgovImageProcessController extends HttpServlet {
 			    type = "image/" + fvo.getFileExtsn().toLowerCase();
 
 			} else {
-				LOGGER.debug("Image fileType is null.");
+				logger.debug("Image fileType is null.");
 			}
 
 			response.setHeader("Content-Type", type);
@@ -116,27 +116,27 @@ public class EgovImageProcessController extends HttpServlet {
 
 
 		}catch(Exception e){
-			LOGGER.debug("{}", e);
+			logger.debug("{}", e);
 		}finally{
 			if (bStream != null) {
 				try {
 					bStream.close();
 				} catch (Exception est) {
-					LOGGER.debug("IGNORED: {}", est.getMessage());
+					logger.debug("IGNORED: {}", est.getMessage());
 				}
 			}
 			if (in != null) {
 				try {
 					in.close();
 				} catch (Exception ei) {
-					LOGGER.debug("IGNORED: {}", ei.getMessage());
+					logger.debug("IGNORED: {}", ei.getMessage());
 				}
 			}
 			if (fis != null) {
 				try {
 					fis.close();
 				} catch (Exception efis) {
-					LOGGER.debug("IGNORED: {}", efis.getMessage());
+					logger.debug("IGNORED: {}", efis.getMessage());
 				}
 			}
 		}

@@ -1212,7 +1212,6 @@ public class EzCarController extends EgovFileMngUtil {
 			
 			int count = Math.subtractExact(Integer.parseInt(request.getParameter("count")), 1);
 			
-			
 			String[] sdatepicker = request.getParameterValues("Sdatepicker");
 			String[] stimepicker = request.getParameterValues("Stimepicker");
 			String[] etimepicker = request.getParameterValues("Etimepicker");
@@ -1229,10 +1228,7 @@ public class EzCarController extends EgovFileMngUtil {
 			String[] adistancework = request.getParameterValues("adistancework");
 			String[] adistanceetc = request.getParameterValues("adistanceetc");
 			
-
-			
 			ArrayList<String> control = new ArrayList<String>();
-		
 			
 			String indexing = request.getParameter("indexing"); //'1,11,'
 			String index[] = indexing.split(",");	//[1,11]
@@ -1240,7 +1236,6 @@ public class EzCarController extends EgovFileMngUtil {
 			for(int i=0; i<count; i++){
 				control.add(request.getParameter("control_"+index[i]));
 			}
-		
 			
 			String[] controla = new String[count];
 			
@@ -1258,7 +1253,7 @@ public class EzCarController extends EgovFileMngUtil {
 						controla[j] = "0";
 					}
 				
-					if(sdatepicker[j]!=""){
+					if(StringUtils.isNotEmpty(sdatepicker[j])){
 						ezCarService.addCarForm(userInfo.getCompanyID(), userInfo.getId(), userInfo.getTenantId(),commonUtil.getTodayUTCTime("yyyy-MM-dd"),carID, car_form_id, 
 						sdatepicker[j],stimepicker[j],etimepicker[j], driverdeptname[j], dirvername[j], s2timepicker[j], bdistance[j], drivepurpose[j], 
 						drivepoint[j],s3timepicker[j],adistance[j],adistanceauto[j], adistancecommute[j], adistancework[j],adistanceetc[j],j, controla[j]);
@@ -1473,7 +1468,7 @@ public class EzCarController extends EgovFileMngUtil {
 						controla[j] = "0";
 					}
 				
-				if(sdatepicker[j]!=""){
+				if(StringUtils.isNotEmpty(sdatepicker[j])){
 					ezCarService.addCarForm(userInfo.getCompanyID(), register_id, userInfo.getTenantId(),register_date,carID, car_form_id, 
 							sdatepicker[j],stimepicker[j],etimepicker[j], driverdeptname[j], dirvername[j], s2timepicker[j], bdistance[j], drivepurpose[j], 
 							drivepoint[j],s3timepicker[j],adistance[j],adistanceauto[j], adistancecommute[j], adistancework[j],adistanceetc[j],j, controla[j]);
@@ -1526,389 +1521,390 @@ public class EzCarController extends EgovFileMngUtil {
 			yearMonth = request.getParameter("yearMonth");
 
 			//엑셀시작
-			HSSFWorkbook workbook = new HSSFWorkbook();
-			HSSFSheet sheet;
-
-			//헤더 폰트 굵게
-			HSSFFont headerFont = workbook.createFont();
-			headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-			
-			HSSFFont headerFont2 = workbook.createFont();
-			headerFont2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
-			headerFont2.setFontHeight((short) 600);
-			headerFont2.setBold(true);
-			
-			HSSFCellStyle headerStyle= workbook.createCellStyle();
-			HSSFCellStyle headerStyle2= workbook.createCellStyle();
-			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-			headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-			headerStyle2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-			headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-			headerStyle2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-			headerStyle.setFont(headerFont);
-			headerStyle2.setFont(headerFont2);
-			
-			HSSFCellStyle bodyStyle= workbook.createCellStyle();
-			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-			bodyStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-			bodyStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-			
-			CarBrdVO carBrd = ezCarService.getBrd(Integer.parseInt(carID), userInfo.getCompanyID(), userInfo.getTenantId());
-			
-			String[] ownerList = carBrd.getOwnerID().split(",");
-			
-			List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
-			for(int i=0; i<ownerInfoList.size(); i++){ //관리자 이름 받아오기
-				        	 ownerName += ownerInfoList.get(i).getDisplayName() + ',';
-			}
-			ownerName = ownerName.substring(0, ownerName.length()-1); //마지막 , 지우기
-			
-			//헤더만들기
-			Row row;
-			Cell cell;
-			      
-			sheet = workbook.createSheet("report");
-			
-			row = sheet.createRow(0);
-				cell = row.createCell(2);
-				cell.setCellValue("차 량 운 행 기 록 일 지 (차종  : "+carBrd.getCarName()+", 차량번호 : "+carBrd.getCar_nm()+")");
-				cell.setCellStyle(headerStyle2);
-				row.setHeight((short)700);
-				sheet.autoSizeColumn(2);
-				sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
-			row = sheet.createRow(1);
-			
-			row = sheet.createRow(2);
-				cell = row.createCell(0);
-				cell.setCellValue("차 량 담당자 : "+ownerName+" ("+carBrd.getOwnerCall()+")");
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(0);
-				sheet.setColumnWidth(0, (sheet.getColumnWidth(2)) + 512);
+			try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+				HSSFSheet sheet;
+	
+				//헤더 폰트 굵게
+				HSSFFont headerFont = workbook.createFont();
+				headerFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 				
-				cell = row.createCell(11);
-				cell.setCellValue("예약은 운행전 30분전 예약 후 차량스케줄 협의");
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(0);
-				sheet.setColumnWidth(0, (sheet.getColumnWidth(2)) + 512);
-			
-			row = sheet.createRow(3);
-				cell = row.createCell(0);
-				cell.setCellValue("운행 전 작성");
-				cell.setCellStyle(headerStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(0);
-				sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+				HSSFFont headerFont2 = workbook.createFont();
+				headerFont2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+				headerFont2.setFontHeight((short) 600);
+				headerFont2.setBold(true);
 				
-				cell = row.createCell(6);
-				cell.setCellValue("운행 후 작성");
-				cell.setCellStyle(headerStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(6);
-				sheet.setColumnWidth(6, (sheet.getColumnWidth(6)) + 512);
+				HSSFCellStyle headerStyle= workbook.createCellStyle();
+				HSSFCellStyle headerStyle2= workbook.createCellStyle();
+				headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+				headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+				headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+				headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+				headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+				headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+				headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+				headerStyle2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+				headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+				headerStyle2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+				headerStyle.setFont(headerFont);
+				headerStyle2.setFont(headerFont2);
 				
-				cell = row.createCell(14);
-				cell.setCellValue("출장승인서 제출여부");
-				cell.setCellStyle(headerStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(14);
-				sheet.setColumnWidth(14, (sheet.getColumnWidth(14)) + 512);
+				HSSFCellStyle bodyStyle= workbook.createCellStyle();
+				bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+				bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+				bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+				bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+				bodyStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+				bodyStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 				
-				for(int i=1; i<=5; i++){
-					cell = row.createCell(i);
-					cell.setCellStyle(headerStyle);
+				CarBrdVO carBrd = ezCarService.getBrd(Integer.parseInt(carID), userInfo.getCompanyID(), userInfo.getTenantId());
+				
+				String[] ownerList = carBrd.getOwnerID().split(",");
+				
+				List<OrganUserVO> ownerInfoList = ezResourceService.getOwnerInfo(ownerList, userInfo.getTenantId(), userInfo.getCompanyID());
+				for(int i=0; i<ownerInfoList.size(); i++){ //관리자 이름 받아오기
+					        	 ownerName += ownerInfoList.get(i).getDisplayName() + ',';
 				}
-				for(int i=7; i<=13; i++){
-					cell = row.createCell(i);
-					cell.setCellStyle(headerStyle);
-				}
+				ownerName = ownerName.substring(0, ownerName.length()-1); //마지막 , 지우기
 				
+				//헤더만들기
+				Row row;
+				Cell cell;
+				      
+				sheet = workbook.createSheet("report");
 				
+				row = sheet.createRow(0);
+					cell = row.createCell(2);
+					cell.setCellValue("차 량 운 행 기 록 일 지 (차종  : "+carBrd.getCarName()+", 차량번호 : "+carBrd.getCar_nm()+")");
+					cell.setCellStyle(headerStyle2);
+					row.setHeight((short)700);
+					sheet.autoSizeColumn(2);
+					sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+				row = sheet.createRow(1);
 				
-			row = sheet.createRow(4);
-				cell = row.createCell(11);
-				cell.setCellValue("업무용사용거리");
-				cell.setCellStyle(headerStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(11);
-				sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
+				row = sheet.createRow(2);
+					cell = row.createCell(0);
+					cell.setCellValue("차 량 담당자 : "+ownerName+" ("+carBrd.getOwnerCall()+")");
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(0);
+					sheet.setColumnWidth(0, (sheet.getColumnWidth(2)) + 512);
+					
+					cell = row.createCell(11);
+					cell.setCellValue("예약은 운행전 30분전 예약 후 차량스케줄 협의");
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(0);
+					sheet.setColumnWidth(0, (sheet.getColumnWidth(2)) + 512);
 				
-				String[] headerName1 = {"운행일자", "예약시간", "부서", "사용자", "회사 출발시간", "출발시 누적거리", "주행목적*", "행선지*", "회사 도착시간", "도착시 누적거리(km)", "주행거리(km)"};
-				
-				for(int i=0; i<headerName1.length; i++){
-					cell = row.createCell(i);
-					cell.setCellValue(headerName1[i]);
+				row = sheet.createRow(3);
+					cell = row.createCell(0);
+					cell.setCellValue("운행 전 작성");
 					cell.setCellStyle(headerStyle);
 					row.setHeight((short)512);
-					sheet.autoSizeColumn(i);
-					sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
-				}
+					sheet.autoSizeColumn(0);
+					sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+					
+					cell = row.createCell(6);
+					cell.setCellValue("운행 후 작성");
+					cell.setCellStyle(headerStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(6);
+					sheet.setColumnWidth(6, (sheet.getColumnWidth(6)) + 512);
+					
+					cell = row.createCell(14);
+					cell.setCellValue("출장승인서 제출여부");
+					cell.setCellStyle(headerStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(14);
+					sheet.setColumnWidth(14, (sheet.getColumnWidth(14)) + 512);
+					
+					for(int i=1; i<=5; i++){
+						cell = row.createCell(i);
+						cell.setCellStyle(headerStyle);
+					}
+					for(int i=7; i<=13; i++){
+						cell = row.createCell(i);
+						cell.setCellStyle(headerStyle);
+					}
+					
+				row = sheet.createRow(4);
+					cell = row.createCell(11);
+					cell.setCellValue("업무용사용거리");
+					cell.setCellStyle(headerStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(11);
+					sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
+					
+					String[] headerName1 = {"운행일자", "예약시간", "부서", "사용자", "회사 출발시간", "출발시 누적거리", "주행목적*", "행선지*", "회사 도착시간", "도착시 누적거리(km)", "주행거리(km)"};
+					
+					for(int i=0; i<headerName1.length; i++){
+						cell = row.createCell(i);
+						cell.setCellValue(headerName1[i]);
+						cell.setCellStyle(headerStyle);
+						row.setHeight((short)512);
+						sheet.autoSizeColumn(i);
+						sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + 512);
+					}
+						cell = row.createCell(13);
+						cell.setCellValue("업무 외 이용(km)");
+						cell.setCellStyle(headerStyle);
+						row.setHeight((short)512);
+						sheet.autoSizeColumn(13);
+						sheet.setColumnWidth(13, (sheet.getColumnWidth(13)) + 512);
+					
+						cell = row.createCell(14);
+						cell.setCellStyle(headerStyle);
+						sheet.autoSizeColumn(14);
+						sheet.setColumnWidth(14, (sheet.getColumnWidth(14)) + 512);
+					
+				row = sheet.createRow(5);
+					cell = row.createCell(11);
+					cell.setCellValue("출퇴근용");
+					cell.setCellStyle(headerStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(11);
+					sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
+					
+					cell = row.createCell(12);
+					cell.setCellValue("일반업무용");
+					cell.setCellStyle(headerStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(12);
+					sheet.setColumnWidth(12, (sheet.getColumnWidth(12)) + 512);
+	
+					for(int i=0; i<11; i++){
+						cell = row.createCell(i);
+						cell.setCellStyle(headerStyle);
+					}
 					cell = row.createCell(13);
-					cell.setCellValue("업무 외 이용(km)");
 					cell.setCellStyle(headerStyle);
-					row.setHeight((short)512);
 					sheet.autoSizeColumn(13);
 					sheet.setColumnWidth(13, (sheet.getColumnWidth(13)) + 512);
-				
+	
 					cell = row.createCell(14);
 					cell.setCellStyle(headerStyle);
 					sheet.autoSizeColumn(14);
 					sheet.setColumnWidth(14, (sheet.getColumnWidth(14)) + 512);
-				
-			row = sheet.createRow(5);
-				cell = row.createCell(11);
-				cell.setCellValue("출퇴근용");
-				cell.setCellStyle(headerStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(11);
-				sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
-				
-				cell = row.createCell(12);
-				cell.setCellValue("일반업무용");
-				cell.setCellStyle(headerStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(12);
-				sheet.setColumnWidth(12, (sheet.getColumnWidth(12)) + 512);
-
-				for(int i=0; i<11; i++){
-					cell = row.createCell(i);
-					cell.setCellStyle(headerStyle);
-				}
-				cell = row.createCell(13);
-				cell.setCellStyle(headerStyle);
-				sheet.autoSizeColumn(13);
-				sheet.setColumnWidth(13, (sheet.getColumnWidth(13)) + 512);
-
-				cell = row.createCell(14);
-				cell.setCellStyle(headerStyle);
-				sheet.autoSizeColumn(14);
-				sheet.setColumnWidth(14, (sheet.getColumnWidth(14)) + 512);
-				
-			sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 10));
-			sheet.addMergedRegion(new CellRangeAddress(2, 2, 11, 14));
-			sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 10));
-			sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 5));
-			sheet.addMergedRegion(new CellRangeAddress(3, 3, 6, 13));
-			sheet.addMergedRegion(new CellRangeAddress(4, 4, 11, 12));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 0, 0));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 1, 1));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 2, 2));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 3, 3));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 4, 4));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 5, 5));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 6, 6));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 7, 7));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 8, 8));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 9, 9));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 10, 10));
-			sheet.addMergedRegion(new CellRangeAddress(4, 5, 13, 13));
-			sheet.addMergedRegion(new CellRangeAddress(3, 5, 14, 14));
-
-			yearMonth = yearMonth.replace("-",""); //2021-06 -> 202106
-			//body만들기
-			List<CarFormListVO> carFormList = ezCarService.getCarFormList2(Integer.parseInt(carID), userInfo.getCompanyID(), userInfo.getTenantId(), yearMonth);
-			for(int j=0; j<carFormList.size(); j++){
-				row = sheet.createRow(j+6); //7번째행부터 입력되어야한다
-				
-				for(int k=0; k<15; k++){
-					cell = row.createCell(k);
-					if(k==0){
-						cell.setCellValue(carFormList.get(j).getRev_date());
-					}else if(k==1){
-						cell.setCellValue(carFormList.get(j).getRev_time()+"~"+carFormList.get(j).getRev_time2());
-					}else if(k==2){
-						cell.setCellValue(carFormList.get(j).getDriver_deptname());
-					}else if(k==3){
-						cell.setCellValue(carFormList.get(j).getDriver_name());
-					}else if(k==4){
-						cell.setCellValue(carFormList.get(j).getB_depart_time());
-					}else if(k==5){
-						cell.setCellValue(carFormList.get(j).getB_distance());
-					}else if(k==6){
-						cell.setCellValue(carFormList.get(j).getDrive_purpose());
-					}else if(k==7){
-						cell.setCellValue(carFormList.get(j).getDrive_point());
-					}else if(k==8){
-						cell.setCellValue(carFormList.get(j).getA_arrive_time());
-					}else if(k==9){
-						cell.setCellValue(carFormList.get(j).getA_distance());
-					}else if(k==10){
-						cell.setCellValue(carFormList.get(j).getA_distance_auto());
-					}else if(k==11){
-						cell.setCellValue(carFormList.get(j).getA_distance_commute());
-					}else if(k==12){
-						cell.setCellValue(carFormList.get(j).getA_distance_work());
-					}else if(k==13){
-						cell.setCellValue("       " + carFormList.get(j).getA_distance_etc() + "       ");
-					}else if(k==14){
-						if(carFormList.get(j).getA_submit_flag().equals("1")){
-							cell.setCellValue("  YES  ");
-						}else if(carFormList.get(j).getA_submit_flag().equals("0")){
-							cell.setCellValue("  NO  ");
+					
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 10));
+				sheet.addMergedRegion(new CellRangeAddress(2, 2, 11, 14));
+				sheet.addMergedRegion(new CellRangeAddress(2, 2, 0, 10));
+				sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 5));
+				sheet.addMergedRegion(new CellRangeAddress(3, 3, 6, 13));
+				sheet.addMergedRegion(new CellRangeAddress(4, 4, 11, 12));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 0, 0));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 1, 1));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 2, 2));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 3, 3));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 4, 4));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 5, 5));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 6, 6));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 7, 7));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 8, 8));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 9, 9));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 10, 10));
+				sheet.addMergedRegion(new CellRangeAddress(4, 5, 13, 13));
+				sheet.addMergedRegion(new CellRangeAddress(3, 5, 14, 14));
+	
+				yearMonth = yearMonth.replace("-",""); //2021-06 -> 202106
+				//body만들기
+				List<CarFormListVO> carFormList = ezCarService.getCarFormList2(Integer.parseInt(carID), userInfo.getCompanyID(), userInfo.getTenantId(), yearMonth);
+				for(int j=0; j<carFormList.size(); j++){
+					row = sheet.createRow(j+6); //7번째행부터 입력되어야한다
+					
+					for(int k=0; k<15; k++){
+						cell = row.createCell(k);
+						if(k==0){
+							cell.setCellValue(carFormList.get(j).getRev_date());
+						}else if(k==1){
+							cell.setCellValue(carFormList.get(j).getRev_time()+"~"+carFormList.get(j).getRev_time2());
+						}else if(k==2){
+							cell.setCellValue(carFormList.get(j).getDriver_deptname());
+						}else if(k==3){
+							cell.setCellValue(carFormList.get(j).getDriver_name());
+						}else if(k==4){
+							cell.setCellValue(carFormList.get(j).getB_depart_time());
+						}else if(k==5){
+							cell.setCellValue(carFormList.get(j).getB_distance());
+						}else if(k==6){
+							cell.setCellValue(carFormList.get(j).getDrive_purpose());
+						}else if(k==7){
+							cell.setCellValue(carFormList.get(j).getDrive_point());
+						}else if(k==8){
+							cell.setCellValue(carFormList.get(j).getA_arrive_time());
+						}else if(k==9){
+							cell.setCellValue(carFormList.get(j).getA_distance());
+						}else if(k==10){
+							cell.setCellValue(carFormList.get(j).getA_distance_auto());
+						}else if(k==11){
+							cell.setCellValue(carFormList.get(j).getA_distance_commute());
+						}else if(k==12){
+							cell.setCellValue(carFormList.get(j).getA_distance_work());
+						}else if(k==13){
+							cell.setCellValue("       " + carFormList.get(j).getA_distance_etc() + "       ");
+						}else if(k==14){
+							if(carFormList.get(j).getA_submit_flag().equals("1")){
+								cell.setCellValue("  YES  ");
+							}else if(carFormList.get(j).getA_submit_flag().equals("0")){
+								cell.setCellValue("  NO  ");
+							}
 						}
+						cell.setCellStyle(bodyStyle);
+						row.setHeight((short)384);
+						sheet.autoSizeColumn(k);
+					    sheet.setColumnWidth(k, (sheet.getColumnWidth(k)) + 3000);
 					}
+				}
+				
+				int lastrow =carFormList.size()+6+2; //마지막 row +2
+				int sum_commute = 0;//주행거리합계_출퇴근
+				int sum_work = 0;//주행거리함계_일반업무
+				int sum_worketc = 0;//주행거리합계_업무외이용
+				
+				for(int i=0; i<carFormList.size(); i++){
+						if(carFormList.get(i).getA_distance_commute()!= null && !carFormList.get(i).getA_distance_commute().equals("")){
+							sum_commute = sum_commute + Integer.parseInt(carFormList.get(i).getA_distance_commute());
+						}
+						if(carFormList.get(i).getA_distance_work() != null && !carFormList.get(i).getA_distance_work().equals("")){
+							sum_work = sum_work + Integer.parseInt(carFormList.get(i).getA_distance_work());
+						}
+						if(carFormList.get(i).getA_distance_etc() != null && !carFormList.get(i).getA_distance_etc().equals("")){
+							sum_worketc = sum_worketc + Integer.parseInt(carFormList.get(i).getA_distance_etc());
+						}
+				}
+				
+				int a_distance = 0;
+				int b_distance = 0;
+				
+				if(carFormList.get(carFormList.size()-1).getA_distance() != null && !carFormList.get(carFormList.size()-1).getA_distance().equals("")){
+						a_distance = Integer.parseInt(carFormList.get(carFormList.size()-1).getA_distance());
+				}else{
+					 for(int i=carFormList.size()-1; i>=0; i--){
+						     if(carFormList.get(i).getA_distance()!= null && !carFormList.get(i).getA_distance().equals("")){
+						           a_distance = Integer.parseInt(carFormList.get(i).getA_distance());
+						           break;
+						     }
+					}
+				}
+				if(carFormList.get(0).getB_distance() != null && !carFormList.get(0).getB_distance().equals("")){
+						b_distance = Integer.parseInt(carFormList.get(0).getB_distance());
+				}
+				int errorRange = a_distance - b_distance - (sum_commute + sum_work);
+				
+				
+				row = sheet.createRow(lastrow);
+					cell = row.createCell(10);
+					cell.setCellValue("주행거리합계");
 					cell.setCellStyle(bodyStyle);
-					row.setHeight((short)384);
-					sheet.autoSizeColumn(k);
-				    sheet.setColumnWidth(k, (sheet.getColumnWidth(k)) + 3000);
-				}
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(10);
+					sheet.setColumnWidth(10, (sheet.getColumnWidth(10)) + 512);
+					
+					cell = row.createCell(11);
+					cell.setCellValue(sum_commute);
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(11);
+					sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
+					
+					cell = row.createCell(12);
+					cell.setCellValue(sum_work);
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(12);
+					sheet.setColumnWidth(12, (sheet.getColumnWidth(12)) + 512);
+					
+					cell = row.createCell(13);
+					cell.setCellValue(sum_worketc);
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(13);
+					sheet.setColumnWidth(13, (sheet.getColumnWidth(13)) + 512);
+					
+					
+				row = sheet.createRow(lastrow+1);
+					cell = row.createCell(10);
+					cell.setCellValue("주행거리합계");
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(10);
+					sheet.setColumnWidth(10, (sheet.getColumnWidth(10)) + 512);
+					
+					cell = row.createCell(11);
+					cell.setCellValue(sum_commute+sum_work);
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(11);
+					sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
+					
+					cell = row.createCell(12);
+					cell.setCellStyle(bodyStyle);
+					
+					cell = row.createCell(13);
+					cell.setCellValue(" ");
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(13);
+					sheet.setColumnWidth(13, (sheet.getColumnWidth(13)) + 512);
+				
+				
+				row = sheet.createRow(lastrow+2);
+					cell = row.createCell(10);
+					cell.setCellValue("총 이용거리");
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(10);
+					sheet.setColumnWidth(10, (sheet.getColumnWidth(10)) + 512);
+					
+					cell = row.createCell(11);
+					cell.setCellValue(sum_commute+sum_work);
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(11);
+					sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
+					
+					cell = row.createCell(12);
+					cell.setCellStyle(bodyStyle);
+					
+					cell = row.createCell(13);
+					cell.setCellStyle(bodyStyle);
+				
+				row = sheet.createRow(lastrow+3);
+					cell = row.createCell(10);
+					cell.setCellValue("오차");
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(10);
+					sheet.setColumnWidth(10, (sheet.getColumnWidth(10)) + 512);
+					
+					cell = row.createCell(11);
+					cell.setCellValue(errorRange);
+					cell.setCellStyle(bodyStyle);
+					row.setHeight((short)512);
+					sheet.autoSizeColumn(11);
+					sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
+					
+					cell = row.createCell(12);
+					cell.setCellStyle(bodyStyle);
+					
+					cell = row.createCell(13);
+					cell.setCellStyle(bodyStyle);
+				
+				
+				
+				sheet.addMergedRegion(new CellRangeAddress(lastrow+1, lastrow+1, 11, 12));
+				sheet.addMergedRegion(new CellRangeAddress(lastrow+2, lastrow+2, 11, 13));
+				sheet.addMergedRegion(new CellRangeAddress(lastrow+3, lastrow+3, 11, 13));
+			
+				/* 2019-11-18 홍승비 - 전자결재문서 엑셀 저장 시 부서ID 대신 부서명을 파일명에 사용하도록 수정 */
+				// 2020-10-08 김민성- 크롬에서 다운로드시 확장자 사라지는 오류 수정
+				String pFileName = EgovDateUtil.getTodayTime().substring(0, 10) +"_"+carBrd.getCarName() +"_차량등록일지" + ".xls";
+				response.setContentType("application/ms-excel");
+				response.setCharacterEncoding("utf-8");
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName) + "\"");
+				
+				workbook.write(response.getOutputStream());
+				  
+				//workbook.close();
 			}
-			
-			int lastrow =carFormList.size()+6+2; //마지막 row +2
-			int sum_commute = 0;//주행거리합계_출퇴근
-			int sum_work = 0;//주행거리함계_일반업무
-			int sum_worketc = 0;//주행거리합계_업무외이용
-			
-			for(int i=0; i<carFormList.size(); i++){
-					if(carFormList.get(i).getA_distance_commute()!= null && !carFormList.get(i).getA_distance_commute().equals("")){
-						sum_commute = sum_commute + Integer.parseInt(carFormList.get(i).getA_distance_commute());
-					}
-					if(carFormList.get(i).getA_distance_work() != null && !carFormList.get(i).getA_distance_work().equals("")){
-						sum_work = sum_work + Integer.parseInt(carFormList.get(i).getA_distance_work());
-					}
-					if(carFormList.get(i).getA_distance_etc() != null && !carFormList.get(i).getA_distance_etc().equals("")){
-						sum_worketc = sum_worketc + Integer.parseInt(carFormList.get(i).getA_distance_etc());
-					}
-			}
-			int a_distance = 0;
-			int b_distance = 0;
-			if(carFormList.get(carFormList.size()-1).getA_distance() != null && !carFormList.get(carFormList.size()-1).getA_distance().equals("")){
-					a_distance = Integer.parseInt(carFormList.get(carFormList.size()-1).getA_distance());
-			}else{
-				 for(int i=carFormList.size()-1; i>=0; i--){
-					     if(carFormList.get(i).getA_distance()!= null && !carFormList.get(i).getA_distance().equals("")){
-					           a_distance = Integer.parseInt(carFormList.get(i).getA_distance());
-					           break;
-					     }
-				}
-			}
-			if(carFormList.get(0).getB_distance() != null && !carFormList.get(0).getB_distance().equals("")){
-					b_distance = Integer.parseInt(carFormList.get(0).getB_distance());
-			}
-			int errorRange = a_distance - b_distance - (sum_commute + sum_work);
-			
-			
-			row = sheet.createRow(lastrow);
-				cell = row.createCell(10);
-				cell.setCellValue("주행거리합계");
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(10);
-				sheet.setColumnWidth(10, (sheet.getColumnWidth(10)) + 512);
-				
-				cell = row.createCell(11);
-				cell.setCellValue(sum_commute);
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(11);
-				sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
-				
-				cell = row.createCell(12);
-				cell.setCellValue(sum_work);
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(12);
-				sheet.setColumnWidth(12, (sheet.getColumnWidth(12)) + 512);
-				
-				cell = row.createCell(13);
-				cell.setCellValue(sum_worketc);
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(13);
-				sheet.setColumnWidth(13, (sheet.getColumnWidth(13)) + 512);
-				
-				
-			row = sheet.createRow(lastrow+1);
-				cell = row.createCell(10);
-				cell.setCellValue("주행거리합계");
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(10);
-				sheet.setColumnWidth(10, (sheet.getColumnWidth(10)) + 512);
-				
-				cell = row.createCell(11);
-				cell.setCellValue(sum_commute+sum_work);
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(11);
-				sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
-				
-				cell = row.createCell(12);
-				cell.setCellStyle(bodyStyle);
-				
-				cell = row.createCell(13);
-				cell.setCellValue(" ");
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(13);
-				sheet.setColumnWidth(13, (sheet.getColumnWidth(13)) + 512);
-			
-			
-			row = sheet.createRow(lastrow+2);
-				cell = row.createCell(10);
-				cell.setCellValue("총 이용거리");
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(10);
-				sheet.setColumnWidth(10, (sheet.getColumnWidth(10)) + 512);
-				
-				cell = row.createCell(11);
-				cell.setCellValue(sum_commute+sum_work);
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(11);
-				sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
-				
-				cell = row.createCell(12);
-				cell.setCellStyle(bodyStyle);
-				
-				cell = row.createCell(13);
-				cell.setCellStyle(bodyStyle);
-			
-			row = sheet.createRow(lastrow+3);
-				cell = row.createCell(10);
-				cell.setCellValue("오차");
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(10);
-				sheet.setColumnWidth(10, (sheet.getColumnWidth(10)) + 512);
-				
-				cell = row.createCell(11);
-				cell.setCellValue(errorRange);
-				cell.setCellStyle(bodyStyle);
-				row.setHeight((short)512);
-				sheet.autoSizeColumn(11);
-				sheet.setColumnWidth(11, (sheet.getColumnWidth(11)) + 512);
-				
-				cell = row.createCell(12);
-				cell.setCellStyle(bodyStyle);
-				
-				cell = row.createCell(13);
-				cell.setCellStyle(bodyStyle);
-			
-			
-			
-			sheet.addMergedRegion(new CellRangeAddress(lastrow+1, lastrow+1, 11, 12));
-			sheet.addMergedRegion(new CellRangeAddress(lastrow+2, lastrow+2, 11, 13));
-			sheet.addMergedRegion(new CellRangeAddress(lastrow+3, lastrow+3, 11, 13));
-		
-			/* 2019-11-18 홍승비 - 전자결재문서 엑셀 저장 시 부서ID 대신 부서명을 파일명에 사용하도록 수정 */
-			// 2020-10-08 김민성- 크롬에서 다운로드시 확장자 사라지는 오류 수정
-			String pFileName = EgovDateUtil.getTodayTime().substring(0, 10) +"_"+carBrd.getCarName() +"_차량등록일지" + ".xls";
-			response.setContentType("application/ms-excel");
-			response.setCharacterEncoding("utf-8");
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), pFileName) + "\"");
-			
-			workbook.write(response.getOutputStream());
-			  
-			workbook.close();		
 			
 			logger.debug("excelExportOut ended"); 
 		}

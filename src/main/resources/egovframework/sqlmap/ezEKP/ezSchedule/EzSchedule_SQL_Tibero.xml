@@ -16,6 +16,7 @@
 	<typeAlias  alias="ResGetScheduleVO" 	type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
 	<typeAlias  alias="ScheduleGroupVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO"/>
 	<typeAlias  alias="ScheduleMailConfigVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO"/>
+	<typeAlias  alias="ScheduleTokenInfoVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO"/>
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
 		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
@@ -175,6 +176,16 @@
 		<result property="cancellationMail"			column="CANCELLATIONMAIL"			columnIndex="2"/>
 		<result property="attendanceMail"		column="ATTENDANCEMAIL"			columnIndex="3"/>
 		<result property="rejectedMail"			column="REJECTEDMAIL"			columnIndex="4"/>
+	</resultMap>
+	
+	<resultMap class="ScheduleTokenInfoVO"         id="scheduleTokenInfoVO">
+		<result property="userID"                  column="USERID"/>
+		<result property="googleAccessToken"       column="GOOGLEACCESSTOKEN"/>
+		<result property="googleRefreshToken"      column="GOOGLEREFRESHTOKEN"/>
+		<result property="googleCreateDate"        column="GOOGLECREATEDATE"/>
+		<result property="googleUpdateDate"        column="GOOGLEUPDATEDATE"/>
+		<result property="companyID"               column="COMPANYID"/>
+		<result property="tenantID"                column="TENANT_ID"/>
 	</resultMap>
 			
 	<select id="EzScheduleDAO.getScheduleConfig" resultMap="scheduleConfigVO">
@@ -1251,10 +1262,10 @@
 	<insert id="EzScheduleDAO.insertScheduleRepeDelChild" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEREPETITION_DEL(
-				SCHEDULEID,			STARTDATE, 				ENDDATE,				TENANT_ID,				COMPANYID
+				REPETITIONID,	 SCHEDULEID,			STARTDATE, 				ENDDATE,				TENANT_ID,				COMPANYID
 			) 
 			SELECT 
-				SCHEDULEID ,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
+				SEQ_TBL_SCHEDULE_REPEDEL.NEXTVAL, 	SCHEDULEID ,		TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			#v_TENANTID#,			#v_COMPANYID#
 			FROM 
 				TBL_SCHEDULE 
 			WHERE 
@@ -1265,10 +1276,10 @@
 	<insert id="EzScheduleDAO.insertAttendantScheduleDel" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEREPETITION_DEL(
-				SCHEDULEID,			STARTDATE, 				ENDDATE,				TENANT_ID,				COMPANYID
+				REPETITIONID, 	SCHEDULEID,			STARTDATE, 				ENDDATE,				TENANT_ID,				COMPANYID
 			)
 			SELECT 
-				S.SCHEDULEID ,		D.STARTDATE,			D.ENDDATE,			S.TENANT_ID,			S.COMPANYID
+				SEQ_TBL_SCHEDULE_REPEDEL.NEXTVAL, 	S.SCHEDULEID ,		D.STARTDATE,			D.ENDDATE,			S.TENANT_ID,			S.COMPANYID
 			FROM 
 				TBL_SCHEDULE S
 			INNER JOIN
@@ -1665,6 +1676,296 @@
 			TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
+	
+	<!-- 2021-11-25 홍승비 - 일정완료 관련 쿼리 추가 -->
+	<select id="EzScheduleDAO.getScheduleCompleteCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(SCHEDULEID)
+        	FROM 
+        		TBL_SCHEDULE_COMPLETE
+       		WHERE  
+       			SCHEDULEID = #v_SCHEDULEID#
+       		AND
+				REPEATCOUNT = #v_REPEATCOUNT#
+			AND
+				ISALLREP = #v_ISALLREP#
+       		AND
+       			STARTDATE = TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+       		AND
+       			TENANT_ID = #v_TENANTID#
+       		AND
+       			COMPANYID = #v_COMPANYID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getScheduleCompleteIsAllRep" parameterClass="Map" resultClass="String" remapResults="true">
+		<![CDATA[
+			SELECT DISTINCT
+				ISALLREP
+        	FROM 
+        		TBL_SCHEDULE_COMPLETE
+       		WHERE  
+       			SCHEDULEID = #v_SCHEDULEID#
+       	]]>
+       	<isEqual property="v_USECOND_REPCNT_SDATE" compareValue="Y">
+       		AND
+       			REPEATCOUNT = #v_REPEATCOUNT#
+	       	AND
+	       		STARTDATE = TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+       	</isEqual>
+       	<![CDATA[
+       		AND
+       			TENANT_ID = #v_TENANTID#
+       		AND
+       			COMPANYID = #v_COMPANYID#
+		]]>
+	</select>
+	
+	<!-- 일정완료 레코드 삽입/삭제 시 부모 일정이 존재한다면 자식 일정(초대받은 일정)도 완료 레코드를 삽입/삭제함 -->
+	<insert id="EzScheduleDAO.insertScheduleComplete" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_SCHEDULE_COMPLETE (
+					SCHEDULEID, REPEATCOUNT, ISALLREP, STARTDATE, TENANT_ID, COMPANYID
+				)
+				(SELECT DISTINCT
+					S.SCHEDULEID, #v_REPEATCOUNT#, #v_ISALLREP#, TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANTID#, #v_COMPANYID#
+				FROM
+					TBL_SCHEDULE_COMPLETE C
+				RIGHT OUTER JOIN
+					TBL_SCHEDULE S
+				ON
+					(C.SCHEDULEID = NULL OR S.SCHEDULEID = C.SCHEDULEID OR S.PARENTID = C.SCHEDULEID)
+				AND
+					S.TENANT_ID = C.TENANT_ID
+				AND
+					S.COMPANYID = C.COMPANYID
+				WHERE
+					(S.SCHEDULEID =  #v_SCHEDULEID# OR S.PARENTID =  #v_SCHEDULEID#)
+				AND
+					S.TENANT_ID = #v_TENANTID#
+			)
+				
+   		]]>
+	</insert>
+	<delete id="EzScheduleDAO.deleteScheduleComplete" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SCHEDULE_COMPLETE C
+			WHERE
+				SCHEDULEID IN (
+					SELECT
+						SCHEDULEID
+					FROM
+						TBL_SCHEDULE S
+					WHERE
+						(S.SCHEDULEID =  #v_SCHEDULEID# OR S.PARENTID =  #v_SCHEDULEID#)
+					AND
+						S.TENANT_ID = C.TENANT_ID
+					AND
+						S.COMPANYID = C.COMPANYID	
+				)
+		]]>
+		<isEqual property="v_USECOND_REPCNT_SDATE_ISALLREP" compareValue="Y">
+			AND
+				C.REPEATCOUNT = #v_REPEATCOUNT#
+			AND
+				C.ISALLREP = #v_ISALLREP#
+	       	AND
+	       		C.STARTDATE = TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+		</isEqual>
+		<![CDATA[
+       		AND
+       			C.TENANT_ID = #v_TENANTID#
+   		]]>
+	</delete>
+	<!-- 현재 반복일정 완료와 전체 반복일정 완료 간의 변경이 일어났을 때는 동일한 SCHEDULEID에 대하여 현재 삽입한 레코드를 제외한 다른 레코드(ISALLREP != #v_ISALLREP#)를 전부 삭제 -->
+	<delete id="EzScheduleDAO.deleteScheduleCompleteDiffCurr" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SCHEDULE_COMPLETE C
+			WHERE
+				SCHEDULEID IN (
+					SELECT
+						SCHEDULEID
+					FROM
+						TBL_SCHEDULE S
+					WHERE
+						(S.SCHEDULEID =  #v_SCHEDULEID# OR S.PARENTID =  #v_SCHEDULEID#)
+					AND
+						S.TENANT_ID = C.TENANT_ID
+					AND
+						S.COMPANYID = C.COMPANYID	
+				)
+			AND
+				C.ISALLREP != #v_ISALLREP#
+       		AND
+       			C.TENANT_ID = #v_TENANTID#
+   		]]>
+	</delete>
+	
+	<insert id="EzScheduleDAO.insertAttendantScheduleComplete" parameterClass="Map">
+		<![CDATA[
+			MERGE INTO
+				TBL_SCHEDULE_COMPLETE SC1
+			USING (
+				SELECT
+					S.SCHEDULEID, C.REPEATCOUNT, C.ISALLREP, C.STARTDATE, C.TENANT_ID, C.COMPANYID
+				FROM
+					TBL_SCHEDULE_COMPLETE C
+				INNER JOIN
+					TBL_SCHEDULE S
+				ON
+					S.PARENTID = C.SCHEDULEID
+				AND
+					S.TENANT_ID = C.TENANT_ID
+				AND
+					S.COMPANYID = C.COMPANYID
+				WHERE
+					S.PARENTID = #v_SCHEDULEID#
+				AND
+					S.TENANT_ID = #v_TENANTID#
+				) SC2
+			ON (
+				SC1.SCHEDULEID = SC2.SCHEDULEID
+			AND
+				SC1.REPEATCOUNT = SC2.REPEATCOUNT
+			AND
+				SC1.ISALLREP = SC2.ISALLREP
+			AND
+				SC1.STARTDATE = SC2.STARTDATE
+			)
+			WHEN NOT MATCHED THEN
+			INSERT (
+				SCHEDULEID, REPEATCOUNT, ISALLREP, STARTDATE, TENANT_ID, COMPANYID
+			)
+			VALUES (
+				SC2.SCHEDULEID, SC2.REPEATCOUNT, SC2.ISALLREP, SC2.STARTDATE, SC2.TENANT_ID, SC2.COMPANYID
+			)
+   		]]>
+	</insert>
+
+	<select id="EzScheduleDAO.getIsSync" parameterClass="loginVO" resultClass="String">
+		select
+			GOOGLEACCESSTOKEN
+		from	
+			tbl_schedule_oauthinfo
+		where
+			companyid = #companyID#
+   		and
+   			tenant_id = #tenantId#
+   		and
+   			userid = #id#
+	</select>
+	
+	<select id="EzScheduleDAO.getScheduleTokenInfo" parameterClass="Map" resultMap="scheduleTokenInfoVO">
+		<![CDATA[
+			select
+				*
+			from
+				tbl_schedule_oauthinfo
+			where
+				userid = #v_USERID#
+			and
+				companyid = #v_COMPANYID#
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+	</select>
+	
+	<insert id="EzScheduleDAO.insertScheduleTokenInfo" parameterClass="Map">
+		<![CDATA[
+			insert into tbl_schedule_oauthinfo (
+				USERID,
+				GOOGLEACCESSTOKEN,
+				GOOGLEREFRESHTOKEN,
+				GOOGLECREATEDATE,
+				GOOGLEUPDATEDATE,
+				COMPANYID,
+				TENANT_ID
+			) values (
+				#v_USERID#,
+				#v_GOOGLEACCESSTOKEN#,
+				#v_GOOGLEREFRESHTOKEN#,
+				case when #v_GOOGLEACCESSTOKEN# is null then null else TO_DATE(#v_TODAYUTCTIME#, 'YYYY-MM-DD HH24:MI:SS') end,
+				case when #v_GOOGLEACCESSTOKEN# is null then null else TO_DATE(#v_TODAYUTCTIME#, 'YYYY-MM-DD HH24:MI:SS') end,
+				#v_COMPANYID#,
+				#v_TENANTID#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzScheduleDAO.updateScheduleTokenInfo" parameterClass="map">
+		<![CDATA[
+		update
+			tbl_schedule_oauthinfo
+		set
+			USERID = #v_USERID#,
+			GOOGLEACCESSTOKEN  = #v_GOOGLEACCESSTOKEN#,
+			GOOGLEREFRESHTOKEN = #v_GOOGLEREFRESHTOKEN#,
+			GOOGLECREATEDATE   = case when #v_GOOGLEACCESSTOKEN# is null then GOOGLECREATEDATE else case GOOGLECREATEDATE when null then TO_DATE(#v_TODAYUTCTIME#, 'YYYY-MM-DD HH24:MI:SS') else GOOGLECREATEDATE end end,
+			GOOGLEUPDATEDATE   = case when #v_GOOGLEACCESSTOKEN# is null then null             else case GOOGLEUPDATEDATE when null then TO_DATE(#v_TODAYUTCTIME#, 'YYYY-MM-DD HH24:MI:SS') else GOOGLEUPDATEDATE end end
+		where
+			userid = #v_USERID#
+		and
+			companyid = #v_COMPANYID#
+		and
+			tenant_id = #v_TENANTID#
+		]]>
+	</update>
+	
+	<select id="EzScheduleDAO.getAllGoogleToken" parameterClass="map" resultClass="ScheduleTokenInfoVO">
+	<![CDATA[
+		select
+			USERID,
+			COMPANYID,
+			TENANT_ID,
+			GOOGLEACCESSTOKEN,
+			GOOGLEREFRESHTOKEN
+		from
+			tbl_schedule_oauthinfo
+		where
+			GOOGLEACCESSTOKEN IS NOT NULL
+		and
+			GOOGLEREFRESHTOKEN IS NOT NULL
+	]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getExpiredGoogleToken" parameterClass="map" resultClass="ScheduleTokenInfoVO">
+	<![CDATA[
+		select
+			USERID,
+			COMPANYID,
+			TENANT_ID,
+			GOOGLEACCESSTOKEN,
+			GOOGLEREFRESHTOKEN
+		from
+			tbl_schedule_oauthinfo
+		where
+			GOOGLEUPDATEDATE + (INTERVAL '50' MINUTE) < #v_TODAYUTCTIME#
+		and
+			GOOGLEACCESSTOKEN IS NOT NULL
+		and
+			GOOGLEREFRESHTOKEN IS NOT NULL
+	]]>
+	</select>
+	
+	<update id="EzScheduleDAO.updateGoogleTokenInfo" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedule_oauthinfo
+			set
+				GOOGLEACCESSTOKEN  = #v_GOOGLEACCESSTOKEN#,
+				GOOGLEUPDATEDATE   = #v_TODAYUTCTIME#
+			where
+				userid = #v_USERID#
+			and
+				tenant_id = #v_TENANTID#
+			and
+				companyid = #v_COMPANYID#
+		]]>
+	</update>
 	
 </sqlMap>
 

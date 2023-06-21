@@ -36,7 +36,7 @@ import com.ibm.icu.util.ChineseCalendar;
  */
 public class EgovDateUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovDateUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(EgovDateUtil.class);
 
 	/**
 	 * <p>yyyyMMdd 혹은 yyyy-MM-dd 형식의 날짜 문자열을 입력 받아 년, 월, 일을
@@ -299,7 +299,7 @@ public class EgovDateUtil {
 			}
 			simpledateformat = new SimpleDateFormat(_toDateFormat, Locale.getDefault());
 		} catch (ParseException exception) {
-			LOGGER.debug("{}", exception);
+			logger.debug("{}", exception);
 		}
 		if (simpledateformat != null && simpledateformat.format(date) != null) {
 			return simpledateformat.format(date);

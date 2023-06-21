@@ -5,6 +5,8 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,10 +65,12 @@ public class EzApprovalGOpenGovScheduler {
             dirFile.mkdirs();
         }
 
-        List<String> csvList = ezApprovalGOpenGovService.getOpenGovCsv();
-        List<String> resendCSVList = ezApprovalGOpenGovService.getOpenGovResendCsv();
+        // 2023-05-12 이사라 : NullPointerException 시큐어코딩
+        List<String> csvList = Optional.ofNullable(ezApprovalGOpenGovService.getOpenGovCsv()).orElse(Collections.emptyList());
+        List<String> resendCSVList = Optional.ofNullable(ezApprovalGOpenGovService.getOpenGovResendCsv()).orElse(Collections.emptyList());
 
-        if (csvList == null && resendCSVList == null) {
+        //if (csvList == null && resendCSVList == null) {
+        if (CollectionUtils.isEmpty(csvList) && CollectionUtils.isEmpty(resendCSVList)) {
             logger.debug("makeOpenGovCSV ended csv Size : 0");
             logger.debug("makeOpenGovCSV ended");
 
@@ -74,15 +78,16 @@ public class EzApprovalGOpenGovScheduler {
         }
         
         // CWE-404 보안 취약점 대응
+        // 2023-05-12 이사라 : 위 에서 csvList, resendCSVList 대응하여 가독성을 위해 아래 코드 원복
         try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvFilePath.toFile()), "euc-kr"))) {
             //발송
-            for (String csv : Optional.ofNullable(csvList).orElse(Collections.emptyList())) {
+            for (String csv : csvList) {
                 bw.write(csv);
                 bw.newLine();
             }
 
             //재발송
-            for (String csv : Optional.ofNullable(resendCSVList).orElse(Collections.emptyList())) {
+            for (String csv : resendCSVList) {
                 bw.write(csv);
                 bw.newLine();
             }

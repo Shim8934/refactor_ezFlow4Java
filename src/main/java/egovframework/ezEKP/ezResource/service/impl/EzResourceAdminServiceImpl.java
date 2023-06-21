@@ -424,7 +424,7 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			returnXMLBld.append("</SUBCLSLIST>");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return returnXMLBld.toString();
 	}

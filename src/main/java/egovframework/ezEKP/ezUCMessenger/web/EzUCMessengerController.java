@@ -76,7 +76,7 @@ public class EzUCMessengerController {
 			}
 		} catch (Exception e) {
 			result = "FALSE";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		PrintWriter writer = null;
@@ -93,7 +93,7 @@ public class EzUCMessengerController {
 			
 			writer.flush();
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (writer != null) {
 				try { writer.close(); } catch(Exception e) {logger.debug("e.message=" + e.getMessage());}

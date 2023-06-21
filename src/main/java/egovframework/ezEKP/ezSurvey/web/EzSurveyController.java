@@ -780,453 +780,231 @@ public class EzSurveyController extends EgovFileMngUtil {
 		List<QuestionVO> surveyResultData = objectMapper.readValue(questionData.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, QuestionVO.class));
 	
 		// Excel 객체 생성
-		XSSFWorkbook workbook = new XSSFWorkbook();
-
-		String fontFamily = egovMessageSource.getMessage("main.t0620", locale).split(";")[0];
-
-		// 1행 타이틀 font (bold, 맑은고딕, 크기 12pt)
-		XSSFFont titleFont = workbook.createFont();
-		titleFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
-		titleFont.setFontHeight((short) 240);
-		titleFont.setFontName(fontFamily);
-
-		// header font (bold, 맑은고딕)
-		XSSFFont headerFont = workbook.createFont();
-		headerFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
-		headerFont.setFontName(fontFamily);
-
-		// 기본 font(맑은고딕)
-		XSSFFont basicFont = workbook.createFont();
-		basicFont.setFontName(fontFamily);
-
-		
-		// 헤더 스타일(회색 배경, border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
-		XSSFCellStyle headerStyle = workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_40_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-		headerStyle.setFont(headerFont);
-		headerStyle.setWrapText(true);
-
-		// 작업 이름 border스타일(좌우 라인 없음, 왼쪽정렬)
-		XSSFCellStyle taskNameStyle = workbook.createCellStyle();
-		taskNameStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		taskNameStyle.setFont(basicFont);
-
-		// 보기, 답변 스타일
-		XSSFCellStyle sentenceStyle = workbook.createCellStyle();
-		sentenceStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		sentenceStyle.setFont(basicFont);
-
-		// 1행 타이틀 스타일
-		XSSFCellStyle titleStyle = workbook.createCellStyle();
-		titleStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-		titleStyle.setFont(titleFont);
-		
-		// 응답자 정보 헤더 스타일
-		XSSFCellStyle responserHeaderStyle = workbook.createCellStyle();
-		responserHeaderStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		responserHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		responserHeaderStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		responserHeaderStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		responserHeaderStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		responserHeaderStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		responserHeaderStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		responserHeaderStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-		
-		// 응답자 정보 스타일
-		XSSFCellStyle responserStyle = workbook.createCellStyle();
-		responserStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		responserStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		responserStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		responserStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		responserStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		responserStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-
-		String fileName = surveyTitle;		
-		String[] invalidName = {"\\\\","/",":","[*]","[?]","\"","<",">","[|]"}; // 윈도우 파일명으로 사용할 수 없는 문자
-		
-		for(int i = 0;i < invalidName.length; i++) { 
-			fileName = fileName.replaceAll(invalidName[i], "_"); //언더바로 치환
-		}
-		
-		String browser = "";
-		String header = request.getHeader("User-Agent"); 
-		
-		if (header.indexOf("MSIE") > -1) { 
-			browser = "MSIE"; 
-		} else if (header.indexOf("Chrome") > -1) { 
-			browser = "Chrome"; 
-		} else if (header.indexOf("Opera") > -1) { 
-			browser = "Opera"; 
-		} else if (header.indexOf("Trident/7.0") > -1) { 
-			//IE 11 이상 
-			//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
-			browser = "MSIE"; 
-		} else if (header.indexOf("Trident/6.0") > -1) { 
-			//IE 11 이상 
-			//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
-			browser = "MSIE"; 
-		} else {
-			browser = "Firefox";
-		}
-
-		String encodedFileName = "";
-		
-		if (browser.equals("MSIE")) { 
-			encodedFileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20"); 
-		} else if (browser.equals("Firefox")) { 
-			encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1");
-		} else if (browser.equals("Opera")) {
-			encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1"); 
-		} else if (browser.equals("Chrome")) { 
-			StringBuffer sb = new StringBuffer(); 
-			
-			for (int i = 0; i < fileName.length(); i++) { 
-				char c = fileName.charAt(i); 
-				
-				if (c > '~') { 
-					sb.append(URLEncoder.encode("" + c, "UTF-8")); 
-				
-				} else { 
-					sb.append(c); 
-				} 
-			} 
-			
-			encodedFileName = sb.toString(); 
-		} else { 
-			encodedFileName = fileName;
-		}
-
-
-
-		// Sheet 객체 생성
-		XSSFSheet sheet = workbook.createSheet("report");
-		// Row 객체 생성
-		Row row = sheet.createRow(0);
-
-		// 1행 제목
-		row.createCell(0).setCellValue(fileName);
-		row.getCell(0).setCellStyle(titleStyle);
-		row.setHeight((short) 512);
-
-		// 기준일, 간트차트 시작 주수 등 들어감
-		row = sheet.createRow(1);
-		// 빈 행
-		row = sheet.createRow(2);
-
-		/** 참여자 */
-		//int responseUser   = ((Long)surveyData.get("respondentCnt")).intValue();
-		/** 전체참여자 */
-		//int allUser        = ((Long)surveyData.get("usersCnt")).intValue();
-
-		// 전체
-		row = sheet.createRow(3);
-		row.createCell(12).setCellValue(egovMessageSource.getMessage("ezSurvey.t104", locale));
-		row.getCell(12).setCellStyle(headerStyle);
-		row.createCell(13).setCellValue(allUser + egovMessageSource.getMessage("ezSurvey.t102", locale));
-		row.getCell(13).setCellStyle(headerStyle);
-		// 참여
-		row = sheet.createRow(4);
-		row.createCell(12).setCellValue(egovMessageSource.getMessage("ezSurvey.t105", locale));
-		row.getCell(12).setCellStyle(headerStyle);
-		row.createCell(13).setCellValue(responseUser + egovMessageSource.getMessage("ezSurvey.t102", locale));
-		row.getCell(13).setCellStyle(headerStyle);
-		
-		int rowCount = 5;
-		for (QuestionVO qVO : surveyResultData) {
-			// 질문 헤더
-			sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount+1, 0, 0));
-			sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount+1, 1, 13));
-			row = sheet.createRow(rowCount);
-			row.createCell(0).setCellValue(egovMessageSource.getMessage("ezSurvey.t103", locale) + qVO.getLevel() + " (" + egovMessageSource.getMessage("ezSurvey.t100" + qVO.getType(), locale) + ")");
-			
-			row.getCell(0).setCellStyle(headerStyle);
-			row.createCell(1).setCellValue(qVO.getContent());
-			row.getCell(1).setCellStyle(headerStyle);
-			for(int i = 2; i<=13;  i++) {
-				row.createCell(i);
-				row.getCell(i).setCellStyle(headerStyle);
-			}
-			row = sheet.createRow(rowCount+1);
-			for(int i = 0; i<=13;  i++) {
-				row.createCell(i);
-				row.getCell(i).setCellStyle(headerStyle);
-			}
-			
-			boolean isFirstRow = true;
-			
-			rowCount++;
-			// 보기 갯수
-			int bogiCount;
-			// 전체 응답수
-			double resultTot;
-			// 질문 본문
-			switch(qVO.getType()) {
-				case 1: // 단일선택 질문
-				case 2: // 다중선택 질문
-				case 9: // 드롭다운 질문
-					resultTot = 0;
-
-					// 질문 응답 전체 참여자
-					for(OptionVO optVO:qVO.getOption()) {
-						if(optVO.getResponses() != null) {
-							resultTot += optVO.getResponses().size();
-						}
-					}
-
-					// 매치된 값으로 sheet 생성
-					for(OptionVO optVO:qVO.getOption()) {
-						// 응답자수
-						int responCount = 0;
-						rowCount++;
-						row = sheet.createRow(rowCount);
-						// 보기 질문
-						row.createCell(0).setCellValue(optVO.getContent());
-						row.getCell(0).setCellStyle(sentenceStyle);
-						
-						// 응답자수
-						if(optVO.getResponses()!= null){
-							responCount = optVO.getResponses().size();
-						} 
-						row.createCell(13).setCellValue(responCount + egovMessageSource.getMessage("ezSurvey.t102", locale));
-						row.getCell(13).setCellStyle(taskNameStyle);
-						
-						// 참여율
-						row.createCell(12).setCellValue(Math.round(responCount/resultTot * 1000)/10.0 + "%");
-						row.getCell(12).setCellStyle(taskNameStyle);
-						
-						if(annoynumous == 0) {
-							for(int i=0; i<responCount; i++) {
-								ResponseVO resVO = optVO.getResponses().get(i);
-								
-								rowCount++;
-								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
-								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
-								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
-								row = sheet.createRow(rowCount);
-								
-								for(int j=8; j<=13; j++) {
-									row.createCell(j);
-									row.getCell(j).setCellStyle(responserStyle);
-								}
-								row.getCell(8).setCellValue(resVO.getUserName());
-								row.getCell(10).setCellValue(resVO.getDeptName());
-								row.getCell(12).setCellValue(resVO.getResponseDate().substring(0, 19));
-							}
-						}
-					}
-					break;
-				case 3: // 행렬 질문
-				case 4: // 행렬다중선택 질문
-					// 행렬 보기수
-					bogiCount           = qVO.getOption().size();
-					// 행렬 id
-					int[] matrixID      = new int[bogiCount];
-					// 행/렬 순서
-					int[] matrixOrder   = new int[bogiCount];
-					// 행/렬 보기 이름
-					String[] matrixName = new String[bogiCount];
-					int rowCol = 0;
-
-					if(qVO.getResponses() != null) {
-						// 행렬 id, 순서, 행렬이름 매치
-						List<OptionVO> optionVO = qVO.getOption();
-						List<ResponseVO> responVO = qVO.getResponses();
-						int matrixCnt=0;
-						for(OptionVO optVO:optionVO) {
-							matrixName[matrixCnt] = optVO.getContent();
-							matrixOrder[matrixCnt] = optVO.getRowLevel()>=0 ? optVO.getRowLevel() : optVO.getColLevel();
-							matrixID[matrixCnt++] = (int) optVO.getOptionId();
-						}
-						for(int i=1; i<matrixOrder.length; i++) {
-							if(matrixOrder[i] == 0) {
-								rowCol = i;
-								break;
-							}
-						}
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
 	
-						// 행 * 렬 배열 set
-						int[][] rowColMatrix = new int[rowCol][bogiCount-rowCol+1];
-						for(int i=0;i<rowCol;i++) {
-							rowColMatrix[i][0] = matrixID[i];
-							rowColMatrix[i][1] = 0;
-						}
-						int minCol = matrixID[rowCol];
-						for(ResponseVO rVO:responVO) {
-							int rowID = rVO.getRowId();
-							int colID = rVO.getColumnId();
-							for(int i=0; i<rowCol; i++) {
-								if(rowColMatrix[i][0] == rowID) {
-									rowColMatrix[i][colID-minCol+1]++;
-								}
+			String fontFamily = egovMessageSource.getMessage("main.t0620", locale).split(";")[0];
+	
+			// 1행 타이틀 font (bold, 맑은고딕, 크기 12pt)
+			XSSFFont titleFont = workbook.createFont();
+			titleFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+			titleFont.setFontHeight((short) 240);
+			titleFont.setFontName(fontFamily);
+	
+			// header font (bold, 맑은고딕)
+			XSSFFont headerFont = workbook.createFont();
+			headerFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+			headerFont.setFontName(fontFamily);
+	
+			// 기본 font(맑은고딕)
+			XSSFFont basicFont = workbook.createFont();
+			basicFont.setFontName(fontFamily);
+	
+			
+			// 헤더 스타일(회색 배경, border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+			XSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_40_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			headerStyle.setFont(headerFont);
+			headerStyle.setWrapText(true);
+	
+			// 작업 이름 border스타일(좌우 라인 없음, 왼쪽정렬)
+			XSSFCellStyle taskNameStyle = workbook.createCellStyle();
+			taskNameStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+			taskNameStyle.setFont(basicFont);
+	
+			// 보기, 답변 스타일
+			XSSFCellStyle sentenceStyle = workbook.createCellStyle();
+			sentenceStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			sentenceStyle.setFont(basicFont);
+	
+			// 1행 타이틀 스타일
+			XSSFCellStyle titleStyle = workbook.createCellStyle();
+			titleStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+			titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			titleStyle.setFont(titleFont);
+			
+			// 응답자 정보 헤더 스타일
+			XSSFCellStyle responserHeaderStyle = workbook.createCellStyle();
+			responserHeaderStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			responserHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			responserHeaderStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			responserHeaderStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			
+			// 응답자 정보 스타일
+			XSSFCellStyle responserStyle = workbook.createCellStyle();
+			responserStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			responserStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+	
+			String fileName = surveyTitle;		
+			String[] invalidName = {"\\\\","/",":","[*]","[?]","\"","<",">","[|]"}; // 윈도우 파일명으로 사용할 수 없는 문자
+			
+			for(int i = 0;i < invalidName.length; i++) { 
+				fileName = fileName.replaceAll(invalidName[i], "_"); //언더바로 치환
+			}
+			
+			String browser = "";
+			String header = request.getHeader("User-Agent"); 
+			
+			if (header.indexOf("MSIE") > -1) { 
+				browser = "MSIE"; 
+			} else if (header.indexOf("Chrome") > -1) { 
+				browser = "Chrome"; 
+			} else if (header.indexOf("Opera") > -1) { 
+				browser = "Opera"; 
+			} else if (header.indexOf("Trident/7.0") > -1) { 
+				//IE 11 이상 
+				//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
+				browser = "MSIE"; 
+			} else if (header.indexOf("Trident/6.0") > -1) { 
+				//IE 11 이상 
+				//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
+				browser = "MSIE"; 
+			} else {
+				browser = "Firefox";
+			}
+	
+			String encodedFileName = "";
+			
+			if (browser.equals("MSIE")) { 
+				encodedFileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20"); 
+			} else if (browser.equals("Firefox")) { 
+				encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1");
+			} else if (browser.equals("Opera")) {
+				encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1"); 
+			} else if (browser.equals("Chrome")) { 
+				StringBuffer sb = new StringBuffer(); 
+				
+				for (int i = 0; i < fileName.length(); i++) { 
+					char c = fileName.charAt(i); 
+					
+					if (c > '~') { 
+						sb.append(URLEncoder.encode("" + c, "UTF-8")); 
+					
+					} else { 
+						sb.append(c); 
+					} 
+				} 
+				
+				encodedFileName = sb.toString(); 
+			} else { 
+				encodedFileName = fileName;
+			}
+	
+	
+	
+			// Sheet 객체 생성
+			XSSFSheet sheet = workbook.createSheet("report");
+			// Row 객체 생성
+			Row row = sheet.createRow(0);
+	
+			// 1행 제목
+			row.createCell(0).setCellValue(fileName);
+			row.getCell(0).setCellStyle(titleStyle);
+			row.setHeight((short) 512);
+	
+			// 기준일, 간트차트 시작 주수 등 들어감
+			row = sheet.createRow(1);
+			// 빈 행
+			row = sheet.createRow(2);
+	
+			/** 참여자 */
+			//int responseUser   = ((Long)surveyData.get("respondentCnt")).intValue();
+			/** 전체참여자 */
+			//int allUser        = ((Long)surveyData.get("usersCnt")).intValue();
+	
+			// 전체
+			row = sheet.createRow(3);
+			row.createCell(12).setCellValue(egovMessageSource.getMessage("ezSurvey.t104", locale));
+			row.getCell(12).setCellStyle(headerStyle);
+			row.createCell(13).setCellValue(allUser + egovMessageSource.getMessage("ezSurvey.t102", locale));
+			row.getCell(13).setCellStyle(headerStyle);
+			// 참여
+			row = sheet.createRow(4);
+			row.createCell(12).setCellValue(egovMessageSource.getMessage("ezSurvey.t105", locale));
+			row.getCell(12).setCellStyle(headerStyle);
+			row.createCell(13).setCellValue(responseUser + egovMessageSource.getMessage("ezSurvey.t102", locale));
+			row.getCell(13).setCellStyle(headerStyle);
+			
+			int rowCount = 5;
+			for (QuestionVO qVO : surveyResultData) {
+				// 질문 헤더
+				sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount+1, 0, 0));
+				sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount+1, 1, 13));
+				row = sheet.createRow(rowCount);
+				row.createCell(0).setCellValue(egovMessageSource.getMessage("ezSurvey.t103", locale) + qVO.getLevel() + " (" + egovMessageSource.getMessage("ezSurvey.t100" + qVO.getType(), locale) + ")");
+				
+				row.getCell(0).setCellStyle(headerStyle);
+				row.createCell(1).setCellValue(qVO.getContent());
+				row.getCell(1).setCellStyle(headerStyle);
+				for(int i = 2; i<=13;  i++) {
+					row.createCell(i);
+					row.getCell(i).setCellStyle(headerStyle);
+				}
+				row = sheet.createRow(rowCount+1);
+				for(int i = 0; i<=13;  i++) {
+					row.createCell(i);
+					row.getCell(i).setCellStyle(headerStyle);
+				}
+				
+				boolean isFirstRow = true;
+				
+				rowCount++;
+				// 보기 갯수
+				int bogiCount;
+				// 전체 응답수
+				double resultTot;
+				// 질문 본문
+				switch(qVO.getType()) {
+					case 1: // 단일선택 질문
+					case 2: // 다중선택 질문
+					case 9: // 드롭다운 질문
+						resultTot = 0;
+	
+						// 질문 응답 전체 참여자
+						for(OptionVO optVO:qVO.getOption()) {
+							if(optVO.getResponses() != null) {
+								resultTot += optVO.getResponses().size();
 							}
 						}
-						
-						Collections.sort(responVO, new Comparator<ResponseVO>() {
-							@Override
-							public int compare(ResponseVO o1, ResponseVO o2) {
-								if(o1.getRowId() == o2.getRowId()) {
-									return Integer.compare(o1.getColumnId(), o2.getColumnId());
-								}
-								return Integer.compare(o1.getRowId(), o2.getRowId());
-							}
-						});
 	
 						// 매치된 값으로 sheet 생성
-						int responseCnt = 0;
-						for(int i=0; i<rowCol; i++) {
-							String rowName = matrixName[i];
-							for(int j=1;j<bogiCount-rowCol+1; j++) {
-								String colName = matrixName[rowCol+j-1];
-								rowCount++;
-								row = sheet.createRow(rowCount);
-								// 행/렬
-								row.createCell(0).setCellValue(rowName + " / " + colName);
-								row.getCell(0).setCellStyle(sentenceStyle);
-								
-								// 참여
-								row.createCell(13).setCellValue(rowColMatrix[i][j] + egovMessageSource.getMessage("ezSurvey.t102", locale));
-								row.getCell(13).setCellStyle(taskNameStyle);
-								
-								if(annoynumous == 0) {
-									for(int k=0; k<rowColMatrix[i][j]; k++) {
-										ResponseVO resVO = responVO.get(responseCnt++);
-										
-										rowCount++;
-										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
-										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
-										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
-										row = sheet.createRow(rowCount);
-										
-										for(int l=8; l<=13; l++) {
-											row.createCell(l);
-											row.getCell(l).setCellStyle(responserStyle);
-										}
-										row.getCell(8).setCellValue(resVO.getUserName());
-										row.getCell(10).setCellValue(resVO.getDeptName());
-										row.getCell(12).setCellValue(resVO.getResponseDate().substring(0, 19));
-									}
-								}
-							}
-						}
-					}
-					
-					break;
-				case 5: // 단답 질문
-				case 6: // 문장 질문
-					if(qVO.getResponses() != null) {
-						for(ResponseVO rVO:qVO.getResponses()) {
-							rowCount++;
-							row = sheet.createRow(rowCount);
-							
-							if(annoynumous == 0) {
-								if(isFirstRow) {
-									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 0, 7));
-									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
-									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
-									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
-									
-									for(int l=0; l<=13; l++) {
-										row.createCell(l);
-										row.getCell(l).setCellStyle(responserHeaderStyle);
-									}
-									
-									row.getCell(0).setCellValue(egovMessageSource.getMessage("ezSurvey.t88", locale));
-									row.getCell(8).setCellValue(egovMessageSource.getMessage("ezSurvey.t57", locale));
-									row.getCell(10).setCellValue(egovMessageSource.getMessage("ezSurvey.t59", locale));
-									row.getCell(12).setCellValue(egovMessageSource.getMessage("ezSchedule.t165", locale));
-									
-									rowCount++;
-									row = sheet.createRow(rowCount);
-									
-									isFirstRow = false;
-								}
-								
-								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 0, 7));
-								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
-								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
-								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
-							}
-							else {
-								sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 0, 13));
-							}
-							
-							// 답변
-							row.createCell(0).setCellValue(rVO.getTexts());
-							row.getCell(0).setCellStyle(sentenceStyle);
-							
-							if(annoynumous == 0) {
-								for(int j=8; j<=13; j++) {
-									row.createCell(j);
-									row.getCell(j).setCellStyle(responserStyle);
-								}
-								row.getCell(8).setCellValue(rVO.getUserName());
-								row.getCell(10).setCellValue(rVO.getDeptName());
-								row.getCell(12).setCellValue(rVO.getResponseDate().substring(0, 19));
-							}
-						}
-					}
-					break;
-				case 7: // 슬라이드 질문
-					if(qVO.getResponses() != null) {
-						// 단위
-						int unit       = (int) qVO.getUnit();
-						// 슬라이드 시작값
-						int startValue = Integer.parseInt(qVO.getOption().get(0).getContent());
-						// 슬라이드 종료값
-						int endValue   = Integer.parseInt(qVO.getOption().get(1).getContent());
-						int cnt        = (endValue - startValue)/unit + 1;
-						int[][] sliderArray = new int[cnt][2];
-						for(int i=0; i<cnt; i++) {
-							sliderArray[i][0] = startValue + unit*i;
-						}
-						
-						
-						// 슬라이드 응답값
-						List<ResponseVO> responseVO = qVO.getResponses().stream().collect(Collectors.toList());
-						List<Integer> sliderValue   = responseVO.stream().map(i -> i.getSliderValue()).collect(Collectors.toList());
-						for(int sValue:sliderValue ) {
-							int temp = sValue;
-							for(int[] sArray:sliderArray) {
-								if(sArray[0] == temp) {
-									sArray[1]++;
-								}
-							}
-						}
-						
-						Collections.sort(responseVO, new Comparator<ResponseVO>() {
-							@Override
-							public int compare(ResponseVO o1, ResponseVO o2) {
-								return Integer.compare(o1.getSliderValue(), o2.getSliderValue());
-							}
-						});
-	
-						// 엑셀 그리기
-						int responseCnt = 0;
-						for(int []sArray:sliderArray) {
-							if(sArray[1] == 0) {
-								continue;
-							}
-	
+						for(OptionVO optVO:qVO.getOption()) {
+							// 응답자수
+							int responCount = 0;
 							rowCount++;
 							row = sheet.createRow(rowCount);
 							// 보기 질문
-							row.createCell(0).setCellValue(sArray[0]);
+							row.createCell(0).setCellValue(optVO.getContent());
 							row.getCell(0).setCellStyle(sentenceStyle);
+							
 							// 응답자수
-							row.createCell(13).setCellValue(sArray[1] + egovMessageSource.getMessage("ezSurvey.t102", locale));
+							if(optVO.getResponses()!= null){
+								responCount = optVO.getResponses().size();
+							} 
+							row.createCell(13).setCellValue(responCount + egovMessageSource.getMessage("ezSurvey.t102", locale));
 							row.getCell(13).setCellStyle(taskNameStyle);
 							
+							// 참여율
+							row.createCell(12).setCellValue(Math.round(responCount/resultTot * 1000)/10.0 + "%");
+							row.getCell(12).setCellStyle(taskNameStyle);
+							
 							if(annoynumous == 0) {
-								for(int i=0; i<sArray[1]; i++) {
-									ResponseVO resVO = responseVO.get(responseCnt++);
+								for(int i=0; i<responCount; i++) {
+									ResponseVO resVO = optVO.getResponses().get(i);
 									
 									rowCount++;
 									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
@@ -1244,68 +1022,211 @@ public class EzSurveyController extends EgovFileMngUtil {
 								}
 							}
 						}
-					}
-					break;
-				case 8: // 순위 질문
-					if(qVO.getResponses() != null) {
-						// 보기갯수
-						bogiCount                = qVO.getOption().size();
-						// OptionVO
-						List<OptionVO> optVO     = qVO.getOption();
-						// 보기 이름
-						List<String> optionName  = optVO.stream().map(i->i.getContent()).collect(Collectors.toList());
-						// 보기 아이디
-						List<Integer> optionId   = optVO.stream().map(i->(int) i.getOptionId()).collect(Collectors.toList());
-						
-						
-						// 배열 set
-						int count          = 0;
-						int[][] orderArray = new int[bogiCount][bogiCount+1];
-						for(int[] rowArray:orderArray) {
-							rowArray[0] = optionId.get(count++);
-							/* for(int num:rowArray) {
-								num = 0;
-							} */
-						}
-						List<ResponseVO> responsVO = qVO.getResponses();
-						for(ResponseVO rVO:responsVO) {
-							int optId = (int) rVO.getOptionId();
-							int level = rVO.getRankingLevel();
-							for(int[] rowArray:orderArray) {
-								if(rowArray[0] == optId) {
-									rowArray[level]++;
-								}
-							}
-						}
-						
-						Collections.sort(responsVO, new Comparator<ResponseVO>() {
-							@Override
-							public int compare(ResponseVO o1, ResponseVO o2) {
-								if(o1.getOptionId() == o2.getOptionId()) {
-									return Integer.compare(o1.getRankingLevel(), o2.getRankingLevel());
-								}
-								return Long.compare(o1.getOptionId(), o2.getOptionId());
-							}
-						});
+						break;
+					case 3: // 행렬 질문
+					case 4: // 행렬다중선택 질문
+						// 행렬 보기수
+						bogiCount           = qVO.getOption().size();
+						// 행렬 id
+						int[] matrixID      = new int[bogiCount];
+						// 행/렬 순서
+						int[] matrixOrder   = new int[bogiCount];
+						// 행/렬 보기 이름
+						String[] matrixName = new String[bogiCount];
+						int rowCol = 0;
 	
-						// 매치된 값으로 sheet 생성
-						int responseCnt = 0;
-						for(int i=0; i<bogiCount; i++) {
-							String rowName = optionName.get(i);
-							for(int j=1;j<bogiCount+1; j++) {
+						if(qVO.getResponses() != null) {
+							// 행렬 id, 순서, 행렬이름 매치
+							List<OptionVO> optionVO = qVO.getOption();
+							List<ResponseVO> responVO = qVO.getResponses();
+							int matrixCnt=0;
+							for(OptionVO optVO:optionVO) {
+								matrixName[matrixCnt] = optVO.getContent();
+								matrixOrder[matrixCnt] = optVO.getRowLevel()>=0 ? optVO.getRowLevel() : optVO.getColLevel();
+								matrixID[matrixCnt++] = (int) optVO.getOptionId();
+							}
+							for(int i=1; i<matrixOrder.length; i++) {
+								if(matrixOrder[i] == 0) {
+									rowCol = i;
+									break;
+								}
+							}
+		
+							// 행 * 렬 배열 set
+							int[][] rowColMatrix = new int[rowCol][bogiCount-rowCol+1];
+							for(int i=0;i<rowCol;i++) {
+								rowColMatrix[i][0] = matrixID[i];
+								rowColMatrix[i][1] = 0;
+							}
+							int minCol = matrixID[rowCol];
+							for(ResponseVO rVO:responVO) {
+								int rowID = rVO.getRowId();
+								int colID = rVO.getColumnId();
+								for(int i=0; i<rowCol; i++) {
+									if(rowColMatrix[i][0] == rowID) {
+										rowColMatrix[i][colID-minCol+1]++;
+									}
+								}
+							}
+							
+							Collections.sort(responVO, new Comparator<ResponseVO>() {
+								@Override
+								public int compare(ResponseVO o1, ResponseVO o2) {
+									if(o1.getRowId() == o2.getRowId()) {
+										return Integer.compare(o1.getColumnId(), o2.getColumnId());
+									}
+									return Integer.compare(o1.getRowId(), o2.getRowId());
+								}
+							});
+		
+							// 매치된 값으로 sheet 생성
+							int responseCnt = 0;
+							for(int i=0; i<rowCol; i++) {
+								String rowName = matrixName[i];
+								for(int j=1;j<bogiCount-rowCol+1; j++) {
+									String colName = matrixName[rowCol+j-1];
+									rowCount++;
+									row = sheet.createRow(rowCount);
+									// 행/렬
+									row.createCell(0).setCellValue(rowName + " / " + colName);
+									row.getCell(0).setCellStyle(sentenceStyle);
+									
+									// 참여
+									row.createCell(13).setCellValue(rowColMatrix[i][j] + egovMessageSource.getMessage("ezSurvey.t102", locale));
+									row.getCell(13).setCellStyle(taskNameStyle);
+									
+									if(annoynumous == 0) {
+										for(int k=0; k<rowColMatrix[i][j]; k++) {
+											ResponseVO resVO = responVO.get(responseCnt++);
+											
+											rowCount++;
+											sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+											sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+											sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
+											row = sheet.createRow(rowCount);
+											
+											for(int l=8; l<=13; l++) {
+												row.createCell(l);
+												row.getCell(l).setCellStyle(responserStyle);
+											}
+											row.getCell(8).setCellValue(resVO.getUserName());
+											row.getCell(10).setCellValue(resVO.getDeptName());
+											row.getCell(12).setCellValue(resVO.getResponseDate().substring(0, 19));
+										}
+									}
+								}
+							}
+						}
+						
+						break;
+					case 5: // 단답 질문
+					case 6: // 문장 질문
+						if(qVO.getResponses() != null) {
+							for(ResponseVO rVO:qVO.getResponses()) {
 								rowCount++;
 								row = sheet.createRow(rowCount);
-								// 보기n / n번째
-								row.createCell(0).setCellValue(rowName + " : " + j);
+								
+								if(annoynumous == 0) {
+									if(isFirstRow) {
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 0, 7));
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
+										
+										for(int l=0; l<=13; l++) {
+											row.createCell(l);
+											row.getCell(l).setCellStyle(responserHeaderStyle);
+										}
+										
+										row.getCell(0).setCellValue(egovMessageSource.getMessage("ezSurvey.t88", locale));
+										row.getCell(8).setCellValue(egovMessageSource.getMessage("ezSurvey.t57", locale));
+										row.getCell(10).setCellValue(egovMessageSource.getMessage("ezSurvey.t59", locale));
+										row.getCell(12).setCellValue(egovMessageSource.getMessage("ezSchedule.t165", locale));
+										
+										rowCount++;
+										row = sheet.createRow(rowCount);
+										
+										isFirstRow = false;
+									}
+									
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 0, 7));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
+								}
+								else {
+									sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 0, 13));
+								}
+								
+								// 답변
+								row.createCell(0).setCellValue(rVO.getTexts());
 								row.getCell(0).setCellStyle(sentenceStyle);
 								
-								// 참여
-								row.createCell(13).setCellValue(orderArray[i][j] + egovMessageSource.getMessage("ezSurvey.t102", locale));
+								if(annoynumous == 0) {
+									for(int j=8; j<=13; j++) {
+										row.createCell(j);
+										row.getCell(j).setCellStyle(responserStyle);
+									}
+									row.getCell(8).setCellValue(rVO.getUserName());
+									row.getCell(10).setCellValue(rVO.getDeptName());
+									row.getCell(12).setCellValue(rVO.getResponseDate().substring(0, 19));
+								}
+							}
+						}
+						break;
+					case 7: // 슬라이드 질문
+						if(qVO.getResponses() != null) {
+							// 단위
+							int unit       = (int) qVO.getUnit();
+							// 슬라이드 시작값
+							int startValue = Integer.parseInt(qVO.getOption().get(0).getContent());
+							// 슬라이드 종료값
+							int endValue   = Integer.parseInt(qVO.getOption().get(1).getContent());
+							int cnt        = (endValue - startValue)/unit + 1;
+							int[][] sliderArray = new int[cnt][2];
+							for(int i=0; i<cnt; i++) {
+								sliderArray[i][0] = startValue + unit*i;
+							}
+							
+							
+							// 슬라이드 응답값
+							List<ResponseVO> responseVO = qVO.getResponses().stream().collect(Collectors.toList());
+							List<Integer> sliderValue   = responseVO.stream().map(i -> i.getSliderValue()).collect(Collectors.toList());
+							for(int sValue:sliderValue ) {
+								int temp = sValue;
+								for(int[] sArray:sliderArray) {
+									if(sArray[0] == temp) {
+										sArray[1]++;
+									}
+								}
+							}
+							
+							Collections.sort(responseVO, new Comparator<ResponseVO>() {
+								@Override
+								public int compare(ResponseVO o1, ResponseVO o2) {
+									return Integer.compare(o1.getSliderValue(), o2.getSliderValue());
+								}
+							});
+		
+							// 엑셀 그리기
+							int responseCnt = 0;
+							for(int []sArray:sliderArray) {
+								if(sArray[1] == 0) {
+									continue;
+								}
+		
+								rowCount++;
+								row = sheet.createRow(rowCount);
+								// 보기 질문
+								row.createCell(0).setCellValue(sArray[0]);
+								row.getCell(0).setCellStyle(sentenceStyle);
+								// 응답자수
+								row.createCell(13).setCellValue(sArray[1] + egovMessageSource.getMessage("ezSurvey.t102", locale));
 								row.getCell(13).setCellStyle(taskNameStyle);
 								
 								if(annoynumous == 0) {
-									for(int k=0; k<orderArray[i][j]; k++) {
-										ResponseVO resVO = responsVO.get(responseCnt++);
+									for(int i=0; i<sArray[1]; i++) {
+										ResponseVO resVO = responseVO.get(responseCnt++);
 										
 										rowCount++;
 										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
@@ -1313,9 +1234,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 										sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
 										row = sheet.createRow(rowCount);
 										
-										for(int l=8; l<=13; l++) {
-											row.createCell(l);
-											row.getCell(l).setCellStyle(responserStyle);
+										for(int j=8; j<=13; j++) {
+											row.createCell(j);
+											row.getCell(j).setCellStyle(responserStyle);
 										}
 										row.getCell(8).setCellValue(resVO.getUserName());
 										row.getCell(10).setCellValue(resVO.getDeptName());
@@ -1324,19 +1245,100 @@ public class EzSurveyController extends EgovFileMngUtil {
 								}
 							}
 						}
-					}
-					break;
+						break;
+					case 8: // 순위 질문
+						if(qVO.getResponses() != null) {
+							// 보기갯수
+							bogiCount                = qVO.getOption().size();
+							// OptionVO
+							List<OptionVO> optVO     = qVO.getOption();
+							// 보기 이름
+							List<String> optionName  = optVO.stream().map(i->i.getContent()).collect(Collectors.toList());
+							// 보기 아이디
+							List<Integer> optionId   = optVO.stream().map(i->(int) i.getOptionId()).collect(Collectors.toList());
+							
+							
+							// 배열 set
+							int count          = 0;
+							int[][] orderArray = new int[bogiCount][bogiCount+1];
+							for(int[] rowArray:orderArray) {
+								rowArray[0] = optionId.get(count++);
+								/* for(int num:rowArray) {
+									num = 0;
+								} */
+							}
+							List<ResponseVO> responsVO = qVO.getResponses();
+							for(ResponseVO rVO:responsVO) {
+								int optId = (int) rVO.getOptionId();
+								int level = rVO.getRankingLevel();
+								for(int[] rowArray:orderArray) {
+									if(rowArray[0] == optId) {
+										rowArray[level]++;
+									}
+								}
+							}
+							
+							Collections.sort(responsVO, new Comparator<ResponseVO>() {
+								@Override
+								public int compare(ResponseVO o1, ResponseVO o2) {
+									if(o1.getOptionId() == o2.getOptionId()) {
+										return Integer.compare(o1.getRankingLevel(), o2.getRankingLevel());
+									}
+									return Long.compare(o1.getOptionId(), o2.getOptionId());
+								}
+							});
+		
+							// 매치된 값으로 sheet 생성
+							int responseCnt = 0;
+							for(int i=0; i<bogiCount; i++) {
+								String rowName = optionName.get(i);
+								for(int j=1;j<bogiCount+1; j++) {
+									rowCount++;
+									row = sheet.createRow(rowCount);
+									// 보기n / n번째
+									row.createCell(0).setCellValue(rowName + " : " + j);
+									row.getCell(0).setCellStyle(sentenceStyle);
+									
+									// 참여
+									row.createCell(13).setCellValue(orderArray[i][j] + egovMessageSource.getMessage("ezSurvey.t102", locale));
+									row.getCell(13).setCellStyle(taskNameStyle);
+									
+									if(annoynumous == 0) {
+										for(int k=0; k<orderArray[i][j]; k++) {
+											ResponseVO resVO = responsVO.get(responseCnt++);
+											
+											rowCount++;
+											sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 8, 9));
+											sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 10, 11));
+											sheet.addMergedRegionUnsafe(new CellRangeAddress(rowCount, rowCount, 12, 13));
+											row = sheet.createRow(rowCount);
+											
+											for(int l=8; l<=13; l++) {
+												row.createCell(l);
+												row.getCell(l).setCellStyle(responserStyle);
+											}
+											row.getCell(8).setCellValue(resVO.getUserName());
+											row.getCell(10).setCellValue(resVO.getDeptName());
+											row.getCell(12).setCellValue(resVO.getResponseDate().substring(0, 19));
+										}
+									}
+								}
+							}
+						}
+						break;
+				}
+				
+				rowCount += 3;
 			}
 			
-			rowCount += 3;
+			sheet.autoSizeColumn(0);
+	
+			response.setContentType("application/vnd.ms-excel");
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xlsx\"");
+			workbook.write(response.getOutputStream());
+			//workbook.close();
 		}
 		
-		sheet.autoSizeColumn(0);
-
-		response.setContentType("application/vnd.ms-excel");
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xlsx\"");
-		workbook.write(response.getOutputStream());
-		workbook.close();
 		logger.debug("jsonSaveResponse ended");
 	}
 	

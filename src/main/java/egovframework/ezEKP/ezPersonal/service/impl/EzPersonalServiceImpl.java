@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.w3c.dom.Document;
 
 import com.ibm.icu.util.ChineseCalendar;
 
@@ -636,18 +638,66 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	
 	/* 2021-10-26 이사라 : 새비번이 prev비번과 일치하는지 chk 추가 */
 	@Override
-	public int checkPassword (String pCN, String pPassword, int tenantID, String companyID, String npPassword, boolean useCkhPrevPwd) throws Exception {
+	public int checkPassword (String pCN, String decryptPassword, int tenantID, String companyID, String newDecryptPassword) throws Exception {
 		logger.debug("checkPassword started");
 
-		pPassword = EgovFileScrty.encryptPassword(pPassword, pCN);
-		npPassword = EgovFileScrty.encryptPassword(npPassword, pCN); // 새비번 추가
+		String pPassword = EgovFileScrty.encryptPassword(decryptPassword, pCN);
+		String npPassword = EgovFileScrty.encryptPassword(newDecryptPassword, pCN); // 새비번 추가
 		
 		int pResult = 0;
+		boolean useCkhPrevPwd = false;
+		boolean checkPasswordNumber = false;
 		
-		if (ezPersonalDAO.getPassword(pCN, tenantID).equals(pPassword)) { // 현비번 compaing with db현비번
+		if ("YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantID, companyID, "useChkPrevPwd"))) {
+			useCkhPrevPwd = true;
+		}
+
+		if ("YES".equalsIgnoreCase(ezCommonService.getTenantConfig("checkPasswordNumber", tenantID))) {
+			checkPasswordNumber = true;
+		}
+
+		String propList = "homePhone;telephoneNumber;mobile;birth";
+		String result = ezOrganService.getPropertyList(pCN, propList, "", tenantID);
+		Document xmlDom = commonUtil.convertStringToDocument(result);
+
+		String telephone = xmlDom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();
+		String mobile = xmlDom.getElementsByTagName("MOBILE").item(0).getTextContent();
+		String homephone = xmlDom.getElementsByTagName("HOMEPHONE").item(0).getTextContent();
+		String birth = xmlDom.getElementsByTagName("BIRTH").item(0).getTextContent();
+
+		telephone = StringUtils.defaultString(telephone.replaceAll("\\D", "").trim(), "");
+		homephone = StringUtils.defaultString(homephone.replaceAll("\\D", "").trim(), "");
+		mobile = StringUtils.defaultString(mobile.replaceAll("\\D", "").trim(), "");
+		birth = StringUtils.defaultString(birth.replaceAll("\\D", "").trim(), "");
+
+		if (ezPersonalDAO.getPassword(pCN, tenantID).equals(pPassword)) { // 현비번 comparing with db현비번
 			pResult = 1;
 			
-			// company option on/off check
+			// 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
+			if (checkPasswordNumber) {
+				for (int i = 0; i < newDecryptPassword.length() - 2; i++) {
+					if (Character.isDigit(newDecryptPassword.charAt(i))
+							&& Character.isDigit(newDecryptPassword.charAt(i + 1))
+							&& Character.isDigit(newDecryptPassword.charAt(i + 2))) {
+						int num1 = Character.getNumericValue(newDecryptPassword.charAt(i));
+						int num2 = Character.getNumericValue(newDecryptPassword.charAt(i + 1));
+						int num3 = Character.getNumericValue(newDecryptPassword.charAt(i + 2));
+
+						if ((num2 - num1 == 1 && num3 - num2 == 1) || (num1 == num2 && num2 == num3)) {
+							return 3; // 연속된 3자리 이상의 숫자 또는 같은 값이 발견되면 오류로 처리
+						}
+
+						String consecutiveNumbers = String.valueOf(num1) + String.valueOf(num2) + String.valueOf(num3);
+
+						if (telephone.contains(consecutiveNumbers) || homephone.contains(consecutiveNumbers)
+								|| mobile.contains(consecutiveNumbers) || birth.contains(consecutiveNumbers)) {
+							return 3; // 전화번호, 생일에 포함되는 숫자가 발견되면 오류로 처리
+						}
+					}
+				}
+			}
+
+			// 새비번이 prev비번과 일치하는지 chk 추가
 			if (useCkhPrevPwd) {
 				if (npPassword.equals(ezCommonService.getPrevPwd(tenantID, pCN))) { // 새비번 comparing with prev비번
 					pResult = 2; 
@@ -821,7 +871,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 			String value = ezCommonService.getUserConfigInfo(tenantId, userId, "notiPreferences");
 			return PersonalNotiPreferencesVO.byConfigValue(value);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return new PersonalNotiPreferencesVO();
 		}
 	}
@@ -922,7 +972,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 
 			return true;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			return false;
 		} finally {
 			logger.debug("canReceiveNotification ended.");

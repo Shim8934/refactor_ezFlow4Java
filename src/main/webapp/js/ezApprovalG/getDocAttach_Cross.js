@@ -111,7 +111,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     			async : false,
     			url : "/ezApprovalG/getLineMode.do",
     			data : {
-    					docID : pDocID,
+    					docID : tempDocID,
     					orgCompanyID : orgCompanyID
     					},
     			success: function(xml){
@@ -121,6 +121,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 	} else {
 		INGFlag = INGFlag.substring(0,3);
 	}
+	
 	$.ajax({
 		type : "POST",
 		dataType : "text",
@@ -426,4 +427,60 @@ function escapeHtml(text) {
     };
 
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+/**
+ * 2023-04-20 홍승비 - 일괄기안 문서 전용 첨부파일 정보 추출 함수 분리 (자식 프레임 최초 로딩 시에만 동작, 화면단에 첨부파일 영역 그리는 로직 제거)
+ * */
+function setAttachInfoAll(tempDocID, INGFlag, attachTag) {
+    attachTag.innerHTML = "";
+    
+    var docAttachTag = ""; // 문서첨부영역 분리
+    var parentHasAttachAry = new Array(); // 부모창의 일반첨부여부 배열
+    var parentHasDocAttachAry = new Array(); // 부모창의 문서첨부여부 배열
+    
+    // 부모창에서 받은 첨부파일 정보를 그대로 맵핑하는 함수이므로, 일괄기안 자식 프레임에서만 호출함 (currIdx 대신 frameNum 사용)
+	attachTag = parent.document.getElementById(attachTag.id);
+	docAttachTag = parent.document.getElementById(attachTag.id + "Doc");
+	parentHasAttachAry = parent.pHasAttachYNAry;
+	parentHasDocAttachAry = parent.pHasDocAttachYNAry;
+    
+	if (docAttachTag != undefined && docAttachTag != null) {
+		docAttachTag.innerHTML = "";
+	}
+	
+    var xmldom = createXmlDom();
+    xmldom = loadXMLString(parent.pAttachInfoAry[frameNum]);
+    
+    var xmlRtn = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+    
+    if (xmlRtn.length > 0) {
+        for (i = 0; i < xmlRtn.length; i++) {
+        	// 해당 함수는 일괄기안의 각 자식 프레임 최초 로딩 시에만 동작하므로, 화면단에 첨부파일 정보를 그리는 작업은 제외한다.
+        	// 각 안 클릭(selTab) 시 화면단에 첨부파일 UI 그리는 작업은 기존 함수(setAttachInfo)가 담당함
+        	
+            // 일반 파일 첨부
+            if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == "File" || SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA4") == strLang1136) {
+                // 일괄기안용 일반첨부 플래그 부여
+                parentHasAttachAry[frameNum] = "Y";
+            }
+            // 문서첨부
+            else {
+                // 일괄기안용 문서첨부 플래그 부여
+                parentHasDocAttachAry[frameNum] = "Y";
+            }
+        }
+        try {
+            pHasAttachYN = "Y";
+        } catch (e) { console.log(e); }
+    }
+    else {
+        try {
+            pHasAttachYN = "N";
+            
+            // 일괄기안용 일반첨부, 문서첨부 플래그 부여
+        	parentHasAttachAry[frameNum] = "N";
+        	parentHasDocAttachAry[frameNum] = "N";
+        } catch (e) { console.log(e); }
+    }
 }

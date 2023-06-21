@@ -40,7 +40,7 @@ import egovframework.let.utl.rest.Result;
 @Controller
 public class EzWebFolderController_y {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderController_y.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController_y.class);
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -54,7 +54,7 @@ public class EzWebFolderController_y {
 	@RequestMapping(value="/ezWebFolder/main.do", method = RequestMethod.GET)
 	public String main (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
-		LOGGER.debug("main started");
+		logger.debug("main started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderType = orElse(request.getParameter("folderType"), "");
@@ -67,7 +67,7 @@ public class EzWebFolderController_y {
 				
 		parentId = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(parentId));
 		
-		LOGGER.debug("folderType : "+ folderType + " folderId : " + request.getParameter("folderId") + "allFileFlag : " + request.getParameter("allFileFlag"));
+		logger.debug("folderType : "+ folderType + " folderId : " + request.getParameter("folderId") + "allFileFlag : " + request.getParameter("allFileFlag"));
 		
 		// 관리자 또는 담당자 flag.
 		if (folderType.equals("C")) {
@@ -101,14 +101,14 @@ public class EzWebFolderController_y {
         model.addAttribute("usePreview"	, usePreview);
         model.addAttribute("useVersionHistory", useVersionHistory);
         
-        LOGGER.debug("main ended");
+        logger.debug("main ended");
 		return "ezWebFolder/webFolderRight";
 	}
 	
 	// getFolderList /ezwebfolder/users/{userId}/folder-tree에 가는 메소드 
 	@RequestMapping(value = "/ezWebFolder/folderList.do", method = RequestMethod.POST)
 	public @ResponseBody JSONObject getFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getFolderList started");
+		logger.debug("getFolderList started");
 
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 
@@ -129,7 +129,7 @@ public class EzWebFolderController_y {
 				.queryParam("isAdmin", isAdmin)
 				.exchangeBody();
 
-		LOGGER.debug("getFolderList ended");
+		logger.debug("getFolderList ended");
 		return resultBody;
 	}
 	
@@ -137,7 +137,7 @@ public class EzWebFolderController_y {
 	@RequestMapping(value = "/ezWebFolder/fileList.do", method = RequestMethod.POST)
 	public @ResponseBody Object getFileList (@CookieValue("loginCookie") String loginCookie, @RequestParam String folderId,
 			HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
-		LOGGER.debug("getFileList started");
+		logger.debug("getFileList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String allFileFlag = StringUtils.defaultString(request.getParameter("allFileFlag"));
@@ -189,8 +189,8 @@ public class EzWebFolderController_y {
 		param.put("sortType"		, sortType);
 		param.put("sortColumn"		, orElse(request.getParameter("sortColumn")			, ""));
 		
-		LOGGER.debug("folderId : " + folderId);
-		LOGGER.debug(	"listCount : " + request.getParameter("listCount") 
+		logger.debug("folderId : " + folderId);
+		logger.debug(	"listCount : " + request.getParameter("listCount") 
 					+ 	" currPage : " + request.getParameter("currPage")
 					+ 	" totalPages"+ request.getParameter("totalpages")  );
 		
@@ -206,13 +206,13 @@ public class EzWebFolderController_y {
 					.exchangeBody();
 		}
 		
-		LOGGER.debug("getFileList ended");
+		logger.debug("getFileList ended");
 		return resultBody;
 	}
 	
 	@RequestMapping(value ="/ezWebFolder/folderManage.do", method = RequestMethod.GET)
 	public String folderManage(@CookieValue("loginCookie") String loginCookie, @RequestParam String folderType, Model model) throws Exception {
-		LOGGER.debug("folderControll started");
+		logger.debug("folderControll started");
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = userInfo.getId();
@@ -220,8 +220,8 @@ public class EzWebFolderController_y {
 		model.addAttribute("userId", userId);
 		model.addAttribute("folderType", folderType);
 
-		LOGGER.debug("userId : {}, folderType : {}", userId, folderType);
-		LOGGER.debug("folderManage ended");
+		logger.debug("userId : {}, folderType : {}", userId, folderType);
+		logger.debug("folderManage ended");
 		return "ezWebFolder/folderManage";
 	}
 	
@@ -234,7 +234,7 @@ public class EzWebFolderController_y {
 	@SuppressWarnings("unchecked")
 	@RequestMapping( value ="/ezWebFolder/insertFolder.do", method = RequestMethod.POST) 
 	public @ResponseBody JSONObject insertFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("insertFolder started");
+		logger.debug("insertFolder started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderUppId = request.getParameter("folderId");
@@ -245,8 +245,8 @@ public class EzWebFolderController_y {
 		if ( folderUppId == null || newFolderName1 == null  ) {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
-			LOGGER.debug("must necessary data is not comming. ");
-			LOGGER.debug("insertFolder ended");
+			logger.debug("must necessary data is not comming. ");
+			logger.debug("insertFolder ended");
 			return jsonObj;
 		}
 		
@@ -270,7 +270,7 @@ public class EzWebFolderController_y {
 		
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders", null, request, "post", jsonObj);
 		
-		LOGGER.debug("insertFolder ended");
+		logger.debug("insertFolder ended");
 		return resultBody;
 	}
 	
@@ -278,7 +278,7 @@ public class EzWebFolderController_y {
 	@RequestMapping( value ="/ezWebFolder/updateFolder.do", method = RequestMethod.POST) 
 	public @ResponseBody JSONObject updateFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ) throws Exception {
-		LOGGER.debug("updateFolder started");
+		logger.debug("updateFolder started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId 		= request.getParameter("folderId");
@@ -289,8 +289,8 @@ public class EzWebFolderController_y {
 		if ( folderId == null || newFolderName1 == null || newFolderName2 == null ) {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
-			LOGGER.debug("must necessary data is not comming. ");
-			LOGGER.debug("insertFolder ended");
+			logger.debug("must necessary data is not comming. ");
+			logger.debug("insertFolder ended");
 			return jsonObj;
 		}
 		
@@ -314,7 +314,7 @@ public class EzWebFolderController_y {
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders/"+folderId, 
 				null, request, "put", jsonObj);
 		
-		LOGGER.debug("updateFolder ended");
+		logger.debug("updateFolder ended");
 		return resultBody;
 	}
 	
@@ -329,7 +329,7 @@ public class EzWebFolderController_y {
 	@RequestMapping( value ="/ezWebFolder/deleteFolder.do", method=RequestMethod.POST) 
 	public @ResponseBody JSONObject deleteFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
-		LOGGER.debug("deleteFolder started");
+		logger.debug("deleteFolder started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId = request.getParameter("folderId");
@@ -338,8 +338,8 @@ public class EzWebFolderController_y {
 		if ( folderId == null ) {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
-			LOGGER.debug("must necessary data is not comming. ");
-			LOGGER.debug("insertFolder ended");
+			logger.debug("must necessary data is not comming. ");
+			logger.debug("insertFolder ended");
 			return jsonObj;
 		}
 		
@@ -362,7 +362,7 @@ public class EzWebFolderController_y {
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folder-delete", 
 				null, request, "delete", jsonObj);
 		
-		LOGGER.debug("folderDelete ended");
+		logger.debug("folderDelete ended");
 		return resultBody;
 	}
 	
@@ -377,7 +377,7 @@ public class EzWebFolderController_y {
 	@RequestMapping( value ="/ezWebFolder/moveFolder.do", method=RequestMethod.POST) 
 	public @ResponseBody JSONObject moveFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
-		LOGGER.debug("moveFolder started");
+		logger.debug("moveFolder started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String folderId = request.getParameter("folderId");
@@ -387,8 +387,8 @@ public class EzWebFolderController_y {
 		if (folderId == null || mode == null ) {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 1);
-			LOGGER.debug("must necessary data is not comming. ");
-			LOGGER.debug("insertFolder ended");
+			logger.debug("must necessary data is not comming. ");
+			logger.debug("insertFolder ended");
 			return jsonObj;
 		}
 		
@@ -412,7 +412,7 @@ public class EzWebFolderController_y {
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders/"+ folderId + "/"+mode, 
 				null, request, "put", jsonObj);
 		
-		LOGGER.debug("userId : "+ userInfo.getId() + "folderId : "+ request.getParameter("folderId") 
+		logger.debug("userId : "+ userInfo.getId() + "folderId : "+ request.getParameter("folderId") 
 				+ "uppFolderId : "+ request.getParameter("uppFolderId") + "lang : "+ userInfo.getLang());
 		
 		return resultBody;
@@ -429,10 +429,11 @@ public class EzWebFolderController_y {
 	/**
 	 * 다른 모듈에서 웹폴더의 파일 선택시 선택한 파일의 리스트를 선택할 수 있는 레이어 팝업 호출 
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezWebFolder/webfolderFileListPickup.do", method = RequestMethod.GET)
 	public String webfolderFileListPickup (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ) throws Exception {
-		LOGGER.debug("webfolderFileListPickup started");
+		logger.debug("webfolderFileListPickup started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String folderType = orElse(request.getParameter("folderType"), "");
@@ -440,14 +441,29 @@ public class EzWebFolderController_y {
 		String parentId = orElse(request.getParameter("parentId"),"");
 		String folderId = "";
 		
-		LOGGER.debug("folderType : "+ folderType + ",allFileFlag : " + request.getParameter("allFileFlag"));
+		String mode = orElse(request.getParameter("mode"),"");
+		double uploadLimit = -1;
+
+		logger.debug("folderType : {}, allFileFlag : {}, mode : {}", folderType, request.getParameter("allFileFlag"), mode);
+
+		if ("upload".equalsIgnoreCase(mode)) {
+			// 웹폴더 파일 업로드시 1회업로드 제한 체크를 프론트에서도하도록
+			JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request).url("/rest/ezwebfolder/{0}/upload-limit", userInfo.getId()).exchangeBody();
+
+			if ("ok".equals(resultBody.get("status"))) {
+				uploadLimit = (double) resultBody.get("uploadLimit");
+			}
+		}
+
+		model.addAttribute("mode"	, mode);
+		model.addAttribute("uploadLimit", uploadLimit);
 		
 		JSONObject jsonObj = new JSONObject();
 		
 		JSONObject existsCheck = null;
 		existsCheck = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" +userInfo.getId() + "/checkRootFolder", 
 				null, request, "get", jsonObj);
-		LOGGER.debug("existsCheck=" + existsCheck);
+		logger.debug("existsCheck=" + existsCheck);
 		if (existsCheck.get("status").equals("error")){
 			return "cmm/error/egovError";
 		}
@@ -463,7 +479,7 @@ public class EzWebFolderController_y {
 		JSONObject json = null;
 		json = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folderidbyuserid-foldertype", 
 				null, request, "post", jsonObj);
-		LOGGER.debug("json=" + json);
+		logger.debug("json=" + json);
 		folderId = json.get("folderId").toString();
 		
 		List<Map<String,Object>> folderInfo = new ArrayList<Map<String,Object>>();
@@ -478,10 +494,21 @@ public class EzWebFolderController_y {
         model.addAttribute("allFileFlag", allFileFlag);
         model.addAttribute("parentId"	, parentId);
         
-        LOGGER.debug("webfolderFileListPickup ended");
+        logger.debug("webfolderFileListPickup ended");
 		return "ezWebFolder/webfolderFileListPickup";
 	}
 	
+	/**
+	 * 첨부폴더를 웹폴더에 저장하기 위해서 팝업을 띄우기 어려운 경우
+	 * webfolderFileListPickup.jsp로 relay를 해 줄 중간 창을 새창으로 띄운다.
+	 */
+	@RequestMapping(value="/ezWebFolder/webfolderFileListUploadParent.do", method = RequestMethod.GET)
+	public String webfolderFileListUploadParent (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			HttpServletResponse resp, Model model) throws Exception {
+		logger.debug("webfolderFileListUploadParent open.");
+		return "ezWebFolder/relay/webfolderFileListUploadParent";
+	}
+
 	/**
 	 * 다른 모듈에서 웹폴더의 파일 선택시 선택한 파일의 리스트를 선택할 수 있는 레이어 팝업 호출 
 	 */
@@ -489,7 +516,7 @@ public class EzWebFolderController_y {
 	@ResponseBody 
 	public JSONObject webfolderAuthFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp) throws Exception {
-		LOGGER.debug("webfolderFileListPickup started");
+		logger.debug("webfolderFileListPickup started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String folderType = orElse(request.getParameter("folderType"), "");
@@ -498,7 +525,7 @@ public class EzWebFolderController_y {
 		String folderId = "";
 		String ownerId = "";
 		
-		LOGGER.debug("folderType : "+ folderType + ",allFileFlag : " + request.getParameter("allFileFlag"));
+		logger.debug("folderType : "+ folderType + ",allFileFlag : " + request.getParameter("allFileFlag"));
 		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("userId", userInfo.getId());
@@ -524,8 +551,8 @@ public class EzWebFolderController_y {
 		JSONObject json = null;
 		json = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folderidbyuserid-foldertype", 
 				null, request, "post", jsonObj);
-		LOGGER.debug("json=" + json);
-        LOGGER.debug("webfolderFileListPickup ended");
+		logger.debug("json=" + json);
+        logger.debug("webfolderFileListPickup ended");
 		return json;
 	}
 	
@@ -541,7 +568,7 @@ public class EzWebFolderController_y {
 	@RequestMapping(value="/ezWebFolder/selectWebfolderFiletoAnother.do", method = RequestMethod.POST)
 	public JSONObject selectWebfolderFiletoAnother (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse response, @RequestBody JSONObject jsonObject) throws Exception {
-		LOGGER.debug("selectWebfolderFiletoAnother started");
+		logger.debug("selectWebfolderFiletoAnother started");
 		JSONObject result = new JSONObject();
 		JSONObject json = new JSONObject();
 		
@@ -554,7 +581,7 @@ public class EzWebFolderController_y {
 		if (paramJson == null || paramJson.size() <= 0){
 			return result;
 		}
-		LOGGER.debug("paramJson=" + paramJson);
+		logger.debug("paramJson=" + paramJson);
 		
 		json.put("param", paramJson);
 		json.put("userId", userId);
@@ -563,7 +590,7 @@ public class EzWebFolderController_y {
 		result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/selectwebfolderfiletoanother", 
 				null, request, "post", json);
 		
-		LOGGER.debug("result=" + result);
+		logger.debug("result=" + result);
 		
 		
 		JSONArray jsonArr = new JSONArray();
@@ -585,20 +612,20 @@ public class EzWebFolderController_y {
 		result.clear(); 
 		result.put("fileList", jsonArr.toString());
 		
-		LOGGER.debug("selectWebfolderFiletoAnother end.");
+		logger.debug("selectWebfolderFiletoAnother end.");
 		return result;
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/selectedFolderCheckPermission.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject selectedFolderCheckPermission(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("seletedFolderCheckpermission start");
+		logger.debug("seletedFolderCheckpermission start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String userId = user.getId();
 		String folderId = StringUtils.defaultString(request.getParameter("folderId"));
 		String fileId = StringUtils.defaultString(request.getParameter("fileId"));
 
-		LOGGER.debug("userId: {}, folderId: {}, fileId: {}", userId, folderId, fileId);
+		logger.debug("userId: {}, folderId: {}, fileId: {}", userId, folderId, fileId);
 
 		JSONObject resultBody = rest.gateway(Module.WEBFOLDER, request)
 				.post().url("/rest/ezwebfolder/selectedfolder-checkpermission")
@@ -607,14 +634,14 @@ public class EzWebFolderController_y {
 				.jsonParam("userId", userId)
 				.exchangeBody();
 
-		LOGGER.debug("seletedFolderCheckpermission end");
+		logger.debug("seletedFolderCheckpermission end");
 		return resultBody;
 	}
 	
 	@RequestMapping(value = "/ezWebFolder/changeUserFileORFolder.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject changeUserFileORFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
-		LOGGER.debug("seletedFolderCheckpermission start");
+		logger.debug("seletedFolderCheckpermission start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		
 		String currFolderId	  = request.getParameter("currFolderId");
@@ -626,7 +653,7 @@ public class EzWebFolderController_y {
 		String deleteUser     = request.getParameter("deleteUser");
 		String subFolderType  = request.getParameter("subFolderType");
 		
-		LOGGER.debug("targetId:" + targetId + ",Folder users:" + folderUsers + ",addUser:" + addUser + ",deleteUser:" + deleteUser 
+		logger.debug("targetId:" + targetId + ",Folder users:" + folderUsers + ",addUser:" + addUser + ",deleteUser:" + deleteUser 
 				+ ",subFolderType:" + subFolderType + "targetType:" + targetType);
 		
 		JSONObject jsonObject = new JSONObject();
@@ -638,12 +665,12 @@ public class EzWebFolderController_y {
 		jsonObject.put("deleteUser", deleteUser);
 		jsonObject.put("subFolderType", subFolderType);
 		
-		LOGGER.debug("jsonObject:{}", jsonObject);
+		logger.debug("jsonObject:{}", jsonObject);
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/changeUserFileORFolder/" + targetId + "/" + targetType, 
 				null, request, "post", jsonObject);
 		
-		LOGGER.debug("seletedFolderCheckpermission end resultBody=" + resultBody);
+		logger.debug("seletedFolderCheckpermission end resultBody=" + resultBody);
 		return resultBody;
 	}
 		
@@ -652,7 +679,7 @@ public class EzWebFolderController_y {
 	@RequestMapping(value="/ezWebFolder/webfolderFileDownForUnidocs.do", method = RequestMethod.POST)
 	public JSONObject webfolderFileDownForUnidocs (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model, @RequestBody JSONObject jsonObject ) throws Exception {
-		LOGGER.debug("webfolderFileDownForUnidocs start.");
+		logger.debug("webfolderFileDownForUnidocs start.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -667,7 +694,7 @@ public class EzWebFolderController_y {
 		String adminPage	= jsonObject.get("adminPage") 		== null ? "" : jsonObject.get("adminPage").toString();
 		
 		try {
-			if (folderId == "" && fileId == ""){
+			if (StringUtils.isEmpty(folderId) && StringUtils.isEmpty(fileId)){
 				throw new Exception();
 			}
 			JSONObject jsonObj = new JSONObject();
@@ -681,11 +708,11 @@ public class EzWebFolderController_y {
 			jsonObj.put("deptId", userInfo.getDeptID());
 			jsonObj.put("adminPage", adminPage);
 			
-			LOGGER.debug("jsonObj=" + jsonObj); 
+			logger.debug("jsonObj=" + jsonObj); 
 			JSONObject json = null;
 			json = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/webfolderFileDownForUnidocs", 
 					null, request, "post", jsonObj);
-			LOGGER.debug("json=" + json); 
+			logger.debug("json=" + json); 
 		
 			if (json.get("status").toString().equalsIgnoreCase("OK")){
 				String download = "false";
@@ -701,11 +728,11 @@ public class EzWebFolderController_y {
 				result.put("code", json.get("code"));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "ERROR");
 		}
 		
-		LOGGER.debug("webfolderFileDownForUnidocs end.");
+		logger.debug("webfolderFileDownForUnidocs end.");
 		return result;
 	}
 
@@ -715,7 +742,7 @@ public class EzWebFolderController_y {
 	@RequestMapping(value="/ezWebFolder/openWebFolderRightWarning.do", method = RequestMethod.GET)
 	public String openWebFolderRightWarning (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ) throws Exception {
-		LOGGER.debug("openWebFolderRightWarning started-end");
+		logger.debug("openWebFolderRightWarning started-end");
 		return "ezWebFolder/webFolderRightWarning";
 	}
 }

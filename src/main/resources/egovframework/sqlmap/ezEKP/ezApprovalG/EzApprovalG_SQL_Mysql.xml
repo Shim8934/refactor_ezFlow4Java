@@ -12952,6 +12952,7 @@
         	DOCID = #v_DOCID#
         ORDER BY 
         	OPINIONSN DESC
+        LIMIT 1
 	</select>
 <!-- 	<procedure id="EzApprovalG.gongRamDocInfo" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GONGRAMDOCINFO(#v_ORGDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -14201,6 +14202,8 @@
 			AND
 				TBL_RECORD.COMPANYID= #companyID#
 		</isNotEqual>
+		AND
+			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 	</isEqual> 
 	<isEqual property="listFlag" compareValue="23">
 	    AND

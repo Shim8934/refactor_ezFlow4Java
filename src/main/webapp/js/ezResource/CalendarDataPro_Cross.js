@@ -698,8 +698,9 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
         oTd.appendChild(oSpan);
 
         var pTime = "";
-        var pSubject = document.createElement("p");
-        pSubject.setAttribute("style","margin:0; padding:0; display:inline-block;");
+        // 05-02 민지수 ellipsis 적용
+        var pSubject = document.createElement("SPAN");
+        //pSubject.setAttribute("style","margin:0; padding:0; display:inline-block;");
 
         if (oAppointment.oAlldayevent != 1) {
             if(oAppointment2 != "")
@@ -714,7 +715,7 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
             var timeeSplit = oAppointment.odtendDisplay.split(":");
             var timeofStart = timesSplit[0]+ ":" + ((timesSplit[1].length == 1)?("0" + timesSplit[1]):timesSplit[1]); 
             var timeofEnd = timeeSplit[0] + ":" + ((timeeSplit[1].length == 1)?("0" + timeeSplit[1]):timeeSplit[1]); 
-            pSubject.innerHTML = timeofStart + " - " + timeofEnd + "<p style='display:inline-block; width:10px; margin:0; padding:0;'></P>" + MakeXMLString(oAppointment.oSubject);		// 2018-07-04 김민성 - 특수문자 태그 적용 안되도록 수정
+            pSubject.innerHTML = timeofStart + " - " + timeofEnd + "  " + MakeXMLString(oAppointment.oSubject);		// 2018-07-04 김민성 - 특수문자 태그 적용 안되도록 수정
         }
         else {
             pTime = strLang126;
@@ -784,8 +785,11 @@ function CalWeekDataBind(oAppointment, order, oAppointment2) {
         oTable.setAttribute("cellpadding", "0");
         oTable.setAttribute("cellspacing", "0");
         oTable.setAttribute("width", "100%");
+        oTable.style.display = "block";
         var oTr = document.createElement("TR");
+        oTr.style.display = "block";
         var oTd = document.createElement("TD");
+        oTd.style.display = "block";
         oTd.style.height = "21px";
         oTd.style.whiteSpace = "noWrap";
         oTd.style.overflow = "hidden";

@@ -26,7 +26,7 @@ public class KlibUtil {
 	// only aix, 2018.07.23
 	private static final String LIBRARY_PATH = "/WEB-INF/lib/libezKlib.so";
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(KlibUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(KlibUtil.class);
 
 	private static final int DEBUG_BYTE_SIZE = 16;
 
@@ -117,14 +117,14 @@ public class KlibUtil {
 			// WEB-INF/lib/libezKlib.so
 			Path libraryPath = Paths.get(servletContext.getResource(LIBRARY_PATH).toURI());
 
-			LOGGER.debug("library path: {}", libraryPath);
+			logger.debug("library path: {}", libraryPath);
 
 			// native library load
 			System.load(libraryPath.toString());
 			loadSuccess = true;
 		} catch (Throwable throwable) {
-			LOGGER.debug("Failed to load KLIB - {}", throwable.toString());
-			Stream.of(throwable.getStackTrace()).filter(obj -> obj.getClassName().contains(KlibUtil.class.getName())).map(Object::toString).forEach(LOGGER::debug);
+			logger.debug("Failed to load KLIB - {}", throwable.toString());
+			Stream.of(throwable.getStackTrace()).filter(obj -> obj.getClassName().contains(KlibUtil.class.getName())).map(Object::toString).forEach(logger::debug);
 		}
 
 		cipher = loadSuccess ? new KlibCipher() : new NonKlibCipher();
@@ -133,18 +133,18 @@ public class KlibUtil {
 		try {
 			String testString = "Hello klib!";
 
-			LOGGER.debug("=== KLIB Test ===");
-			LOGGER.debug("test string: \"{}\"", testString);
+			logger.debug("=== KLIB Test ===");
+			logger.debug("test string: \"{}\"", testString);
 
 			byte[] encryptBytes = cipher.encrypt(testString.getBytes());
-			LOGGER.debug("encrypt bytes: {}, to string: {}", DatatypeConverter.printHexBinary(encryptBytes), new String(encryptBytes));
+			logger.debug("encrypt bytes: {}, to string: {}", DatatypeConverter.printHexBinary(encryptBytes), new String(encryptBytes));
 
 			byte[] decryptBytes = cipher.decrypt(encryptBytes);
-			LOGGER.debug("decrypt bytes: {}, to string: {}", DatatypeConverter.printHexBinary(decryptBytes), new String(decryptBytes));
+			logger.debug("decrypt bytes: {}, to string: {}", DatatypeConverter.printHexBinary(decryptBytes), new String(decryptBytes));
 		} catch (Throwable throwable) {
-			LOGGER.debug("Failed to test for KLIB - {}", throwable.toString());
+			logger.debug("Failed to test for KLIB - {}", throwable.toString());
 		} finally {
-			LOGGER.debug("=== KLIB Test ===");
+			logger.debug("=== KLIB Test ===");
 		}
 	}
 
@@ -155,14 +155,14 @@ public class KlibUtil {
 	 *            암호화할 바이트 배열
 	 */
 	public byte[] encrypt(byte[] originBytes) throws Exception, UnsatisfiedLinkError {
-		LOGGER.debug("encrypt started.");
+		logger.debug("encrypt started.");
 
 		byte[] result = tryTransformationPolicy(originBytes, cipher::encrypt);
 
 		debugBytes("origin bytes", originBytes);
 		debugBytes("encrypted bytes", result);
 
-		LOGGER.debug("encrypt ended.");
+		logger.debug("encrypt ended.");
 
 		return result;
 	}
@@ -176,7 +176,7 @@ public class KlibUtil {
 	 *            복호화할 바이트 배열
 	 */
 	public byte[] decrypt(byte[] encryptedBytes) throws Exception, UnsatisfiedLinkError {
-		LOGGER.debug("decrypt started.");
+		logger.debug("decrypt started.");
 		byte[] result;
 
 		try {
@@ -185,12 +185,12 @@ public class KlibUtil {
 			debugBytes("encrypted bytes", encryptedBytes);
 			debugBytes("decrypted bytes", result);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			LOGGER.debug("Failed to decrypt, returns the source bytes.");
+			logger.error(ex.getMessage(), ex);
+			logger.debug("Failed to decrypt, returns the source bytes.");
 			result = encryptedBytes;
 		}
 
-		LOGGER.debug("decrypt ended.");
+		logger.debug("decrypt ended.");
 
 		return result;
 	}
@@ -211,13 +211,13 @@ public class KlibUtil {
 			dest = transformationFunction.apply(source);
 		} catch (Exception ex) {
 			// 실패시 두 번째 시도
-			LOGGER.debug("An exception occurred in the first attempt. {}", ex.toString());
+			logger.debug("An exception occurred in the first attempt. {}", ex.toString());
 
 			try {
 				dest = transformationFunction.apply(source);
 			} catch (Exception twoEx) {
 				// 두 번째 시도에서 실패시 예외를 던짐
-				LOGGER.debug("An exception occurred in the second attempt. {}", twoEx.toString());
+				logger.debug("An exception occurred in the second attempt. {}", twoEx.toString());
 
 				throw twoEx;
 			}
@@ -225,19 +225,19 @@ public class KlibUtil {
 
 		// 만약 결과 값의 사이즈가 0 이라면 재시도
 		if (dest.length == 0 && source.length != 0) {
-			LOGGER.debug("The result size is zero. try again");
+			logger.debug("The result size is zero. try again");
 
 			try {
 				dest = transformationFunction.apply(source);
 			} catch (Exception ex) {
 				// 재시도 실패시 예외를 던짐
-				LOGGER.debug("An error occurred on retried: {}", ex.toString());
+				logger.debug("An error occurred on retried: {}", ex.toString());
 
 				throw ex;
 			}
 		}
 
-		LOGGER.debug("Successfully completed");
+		logger.debug("Successfully completed");
 		return dest;
 	}
 
@@ -252,6 +252,6 @@ public class KlibUtil {
 
 		System.arraycopy(bytes, 0, ellipsisBytes, 0, debugSize);
 
-		LOGGER.debug(isGreaterThanEllipsis ? "{}: {}…, to string: {}…" : "{}: {}, to string: {}", byteArrayName, DatatypeConverter.printHexBinary(ellipsisBytes), new String(ellipsisBytes));
+		logger.debug(isGreaterThanEllipsis ? "{}: {}…, to string: {}…" : "{}: {}, to string: {}", byteArrayName, DatatypeConverter.printHexBinary(ellipsisBytes), new String(ellipsisBytes));
 	}
 }

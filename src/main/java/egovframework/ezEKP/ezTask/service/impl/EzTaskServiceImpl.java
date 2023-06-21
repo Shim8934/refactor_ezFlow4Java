@@ -15,6 +15,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,9 +221,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			pw.println(content);
 			pw.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
-			pw.close();
+			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+			//pw.close();
+			IOUtils.closeQuietly(pw);
 		}
 		
 		if (taskID.equals("")) {
@@ -318,9 +321,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			pw.println(content);
 			pw.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
-			pw.close();
+			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+			//pw.close();
+			IOUtils.closeQuietly(pw);
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1291,7 +1296,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		try {
 			file.renameTo(new File(commonUtil.detectPathTraversal(afterFilePath)));			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("fileMove ended.");

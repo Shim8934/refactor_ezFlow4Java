@@ -92,49 +92,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	 * 계정정보(LoginVO)가 없다면, 로그인 페이지로 이동한다.
 	 */
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
-		try {
-			String ChkOldBrowser = ezCommonService.getTenantConfig("ChkOldBrowser", loginService.getTenantId(request.getServerName().toString()));
-			//IE 계열이면서 IE10이나 IE11이 아닌 경우에 로그아웃 시키면서 경고창을 띄운다.
-			String agent = request.getHeader("User-Agent");
-			agent = agent != null ? agent : "";
-			if (ChkOldBrowser != null && ChkOldBrowser.equals("YES") && ((agent.indexOf("Trident") > 0 || agent.toLowerCase().indexOf("msie") > 0) && !(agent.indexOf("Trident/6.0") > 0 || agent.indexOf("Trident/7.0") > 0))){
-				Cookie[] cookies = request.getCookies();
-				
-				if (cookies != null) {
-					for (Cookie cookie : cookies) {
-						if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
-							cookie.setMaxAge(0);
-							cookie.setPath("/");
-							response.addCookie(cookie);
-						}
-					}
-				}
-				
-				// 2018.10.22 이석화 추가 - 세션 제거 
-				request.getSession().invalidate();
-				
-				request.setAttribute("message", "oldBrowser");
-				
-		        String serverName = request.getServerName();
-		        int tenantId = loginService.getTenantId(serverName);
-	        	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
-	        	String userOs = ClientUtil.getClientInfo(request, "os");
-	        	
-	        	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
-	        		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
-	        			response.sendRedirect(mobileRedirection);
-	        		}
-	        	}
-	        	
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/login.do");
-				dispatcher.forward(request, response);
-			}
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {		
 		if(!commonUtil.checkMultiLogin(request, response)) {
 			try {
 //				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + "/user/login/login.do&message=multiLoginNoti");
@@ -143,7 +101,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				
 				return false;
 			} catch (Exception e) { 
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		} 
 		
@@ -162,7 +120,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	        		}
 	        	}	        	
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 
 			String referer = request.getHeader("REFERER");
@@ -181,11 +139,11 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				
 				String hostDomainName = getDomainName(hostName);
 				
-				logger.debug("hostDomainName=" + hostDomainName);
+				//logger.debug("hostDomainName=" + hostDomainName); // 로그정리 : hostName 으로 확인 가능
 								
 				String refererDomainName = getDomainName(referer);
 				
-				logger.debug("refererDomainName=" + refererDomainName);
+				//logger.debug("refererDomainName=" + refererDomainName); // 로그정리 : referer 로 확인 가능
 				
 				// 도로명주소 open api 예외 처리
 				if (!"juso.go.kr".equalsIgnoreCase(refererDomainName)
@@ -213,7 +171,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		        
 		    	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				
 				return false;
 			}
@@ -241,7 +199,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		        		response.sendRedirect("/user/login/login.do");
 		        	}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 				
 				return false;
@@ -272,7 +230,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
         	ezOffice365ClientId = ezCommonService.getTenantConfig("ezOffice365ClientId", tenantId);
         	ezOffice365ClientSecret = ezCommonService.getTenantConfig("ezOffice365ClientSecret", tenantId);
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     		
     		return;
     	}
@@ -386,7 +344,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							oidcResponse.getErrorObject().getDescription()));
 				}
 			} catch (Throwable e) {
-				e.printStackTrace();												
+				logger.error(e.getMessage(), e);												
 			}
 			
 			return;
@@ -406,7 +364,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				
 				response.sendRedirect(getRedirectUrl("common", ezOffice365ClientId, redirectUri));
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			
 			return;					
@@ -433,7 +391,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
                     "&state=" + state
                     + "&nonce=" + nonce;            
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
         
         return redirectUrl;
@@ -527,7 +485,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
     	
     	return url;

@@ -1,9 +1,12 @@
 package egovframework.ezEKP.ezAddress.web;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -88,13 +91,57 @@ public class EzAddressController{
 	public String addressZipCodePopupOpen(Model model) throws Exception {
 		logger.debug("addressZipCodePopupOpen started.");
 		
-		String confirmKey = config.getProperty("config.ConfirmKey");
-		
-		model.addAttribute("confirmKey", confirmKey);
+		// ※ 행정망 내에서 운영되는 시스템도 이용 가능합니다. 행정망 서비스를 위한 API 요청URL은 별도로 문의 주시기 바랍니다.(1588-0061)
+		model.addAttribute("resultType", "4"); // 검색결과 화면 출력유형 (1 : 도로명, 2 : 도로명+지번, 3 : 도로명+상세건물명, 4 : 도로명+지번+상세건물명)
 		
 		logger.debug("addressZipCodePopupOpen ended.");
 		
 		return "ezAddress/addressZipSelectInternet";
+	}
+
+	/**
+	 * 도로명 주소 검색 실행 함수 (Open API)
+	 * (참고) 어플리케이션 호출 소스 보기 -> https://business.juso.go.kr/addrlink/openApi/searchApi.do
+	 */
+	@RequestMapping(value = "/ezAddress/addressZipCodeListOpen.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	public void addressZipCodeListOpen(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("addressZipCodeListOpen started.");
+
+		String currentPage = request.getParameter("currentPage");
+		String countPerPage = request.getParameter("countPerPage");
+		String confmKey = config.getProperty("config.ConfirmKey");
+		String jusoDomain = config.getProperty("config.jusoDomain", "business.juso.go.kr");
+		String keyword = request.getParameter("keyword");
+
+		logger.debug("currentPage: {} || countPerPage: {} || keyword: {}", currentPage, countPerPage, keyword);
+
+		String isSecure = request.isSecure()? "https" : "http";
+		String apiUrl = isSecure + "://" + jusoDomain + "/addrlink/addrLinkApi.do?currentPage=" + currentPage
+				+ "&countPerPage=" + countPerPage + "&keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&confmKey=" + confmKey;
+
+		URL url = new URL(apiUrl);
+		//BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+		
+		// 2023-06-01 이사라 : 시큐어코딩 리소스 close
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
+			StringBuffer sb = new StringBuffer();
+			String tempStr = null;
+			while (true) {
+				tempStr = br.readLine();
+				if (tempStr == null)
+					break;
+				sb.append(tempStr);
+			}
+
+			// br.close();
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("text/xml");
+			response.getWriter().write(sb.toString());
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("addressZipCodeListOpen ended.");
 	}
 	
 	/**
@@ -327,7 +374,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressList ended.");
@@ -602,7 +649,7 @@ public class EzAddressController{
 			}
 		} catch (Exception e) {
 			returnVaule = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressSave ended. returnVaule=" + returnVaule);
@@ -851,7 +898,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGroupSave ended. returnValue=" + returnValue);
@@ -1067,7 +1114,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressSaveMoveCopy ended. returnValue=" + returnValue);
@@ -1128,7 +1175,7 @@ public class EzAddressController{
 		
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressSaveConfig ended. returnValue=" + returnValue);
@@ -1236,7 +1283,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetGroupEmail ended. returnValue=" + returnValue);
@@ -1280,7 +1327,7 @@ public class EzAddressController{
 
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetGroupEmailList ended. returnValue=" + returnValue);
@@ -1314,7 +1361,7 @@ public class EzAddressController{
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getGroupAddressMemberCount ended. result=" + result);
@@ -1478,7 +1525,7 @@ public class EzAddressController{
 			ezAddressService.insertFolder(userInfo.getTenantId(), parentId, ownerId, folderType, folderName);
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressAddFolder ended. returnValue=" + returnValue);
@@ -1506,7 +1553,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressModFolder ended. returnValue=" + returnValue);
@@ -1533,7 +1580,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressDelFolder ended. returnVaule=" + returnValue);
@@ -1570,7 +1617,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressMoveCopyFolder ended. returnValue=" + returnValue);
@@ -1747,7 +1794,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetSearchList ended.");
@@ -1825,7 +1872,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "<DATA>" + e.getMessage() + "</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetFullTree ended.");
@@ -1910,7 +1957,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "<DATA>" + e.getMessage() + "</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetListMailCall ended.");
@@ -2023,7 +2070,7 @@ public class EzAddressController{
 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("addressGetListMailSearchCall ended.");
@@ -2152,7 +2199,7 @@ public class EzAddressController{
 	        }
 	        
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (csvWriter != null) {
 				try {
@@ -2282,7 +2329,7 @@ public class EzAddressController{
 	        
         } catch (IOException e) {
         	logger.error(e.getMessage());
-        	e.printStackTrace();
+        	logger.error(e.getMessage(), e);
         } finally {
         	if (csvReader != null) {
         		try {
@@ -2402,7 +2449,7 @@ public class EzAddressController{
 	        		}
         		} catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
         		
-        		e.printStackTrace();
+        		logger.error(e.getMessage(), e);
         	}
         }
         
@@ -2477,7 +2524,7 @@ public class EzAddressController{
 	        csvWriter.flush();
 	        
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (csvWriter != null) {
 				try {

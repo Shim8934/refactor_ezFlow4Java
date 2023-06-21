@@ -42,7 +42,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @Controller
 public class EzNewPortalAdminController extends EgovFileMngUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzNewPortalAdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzNewPortalAdminController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -67,7 +67,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@SuppressWarnings("unused")
 	@RequestMapping(value = "/admin/ezNewPortal/portalMain.do", method=RequestMethod.GET)
 	public String portalMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("portalMain started.");
+		logger.debug("portalMain started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -82,11 +82,11 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         model.addAttribute("usePortal", usePortal);
 		
 		if (userInfo == null) {
-			LOGGER.debug("portalMain accessDenied.");
+			logger.debug("portalMain accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			LOGGER.debug("portalMain ended.");
+			logger.debug("portalMain ended.");
 			
 			return "/admin/ezNewPortal/portalMain";
 		}
@@ -98,7 +98,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@SuppressWarnings("unused")
 	@RequestMapping(value = "/admin/ezNewPortal/portalLeftMenu.do", method=RequestMethod.GET)
 	public String portalTopMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("portalLeftMenu started.");
+		logger.debug("portalLeftMenu started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -109,11 +109,11 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         model.addAttribute("usePortal", usePortal);
 		
 		if (userInfo == null) {
-			LOGGER.debug("portalLeftMenu accessDenied.");
+			logger.debug("portalLeftMenu accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			LOGGER.debug("portalLeftMenu ended.");
+			logger.debug("portalLeftMenu ended.");
 			
 			return "/admin/ezNewPortal/portalLeftMenu";
 		}
@@ -128,16 +128,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalThemes.do", method=RequestMethod.GET)
 	public String portalThemes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("portalThemes started.");
+		logger.debug("portalThemes started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("portalThemes accessDenied.");
+			logger.debug("portalThemes accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			LOGGER.debug("portalThemes ended.");
+			logger.debug("portalThemes ended.");
 			
 			return "/admin/ezNewPortal/portalThemes";
 		}
@@ -148,16 +148,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalMenus.do", method=RequestMethod.GET)
 	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset, HttpServletResponse response) throws Exception {
-		LOGGER.debug("portalMenus started.");
+		logger.debug("portalMenus started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("portalMenus accessDenied.");
+			logger.debug("portalMenus accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			LOGGER.debug("portalMenus ended.");
+			logger.debug("portalMenus ended.");
 
 			response.setHeader("Pragma", "no-cache"); //HTTP 1.0 
 			response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
@@ -174,12 +174,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/portalMenuAuth.do", method=RequestMethod.GET)
 	public String portalMenuAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("portalMenuAuth started.");
+		logger.debug("portalMenuAuth started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("portalMenuAuth accessDenied.");
+			logger.debug("portalMenuAuth accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		}
@@ -224,7 +224,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("companyId", request.getParameter("companyId"));
 		model.addAttribute("mode", request.getParameter("mode"));
 		
-		LOGGER.debug("portalMenuAuth ended");
+		logger.debug("portalMenuAuth ended");
 		
 		return "/admin/ezNewPortal/portalMenuAuth";
 	}
@@ -237,7 +237,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getCompanies.do", method=RequestMethod.GET)
 	public String getCompanys(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getCompanys started.");
+		logger.debug("getCompanys started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -257,7 +257,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("usePrimaryLangOnly", resultBody.get("usePrimaryLangOnly"));
 		}
 		
-		LOGGER.debug("getCompanys ended.");
+		logger.debug("getCompanys ended.");
 		
 		return "json";
 	}
@@ -267,7 +267,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getThemes.do", method=RequestMethod.POST)
 	public String getPortalThemes(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getPortalThemes started.");
+		logger.debug("getPortalThemes started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -277,7 +277,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String companyID = (String) paramMap.get("companyId");
 		
 		if (companyID == null) {
-		    LOGGER.debug("--> companyID is null");
+		    logger.debug("--> companyID is null");
 		    return "";
 		}
 		
@@ -292,7 +292,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("userLang", userInfo.getLang());
 		}
 		
-		LOGGER.debug("getPortalThemes ended.");
+		logger.debug("getPortalThemes ended.");
 		
 		return "json";
 	}
@@ -302,7 +302,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getThemeInfo.do", method=RequestMethod.POST)
 	public String getPortalThemeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getPortalThemeInfo started.");
+		logger.debug("getPortalThemeInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -333,7 +333,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("themeAuths", resultBody.get("data"));
 		}
 		
-		LOGGER.debug("getPortalThemeInfo ended.");
+		logger.debug("getPortalThemeInfo ended.");
 		
 		return "json";
 	}
@@ -345,7 +345,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/updateThemeInfo.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void updateThemeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("updateThemeInfo started.");
+		logger.debug("updateThemeInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -362,7 +362,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
-		LOGGER.debug("updateThemeAuths started.");
+		logger.debug("updateThemeAuths started.");
 		//포틀릿 권한 추가
 		jsonParam = new JSONObject();
 		jsonParam.put("themeAuths", paramMap.get("themeAuths"));
@@ -372,8 +372,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
-		LOGGER.debug("updateThemeAuths ended.");
-		LOGGER.debug("updateThemeInfo ended.");
+		logger.debug("updateThemeAuths ended.");
+		logger.debug("updateThemeInfo ended.");
 	}
 	
 	/**
@@ -385,7 +385,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getMenus.do", method=RequestMethod.POST)
 	public String getMenus(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getMenus started.");
+		logger.debug("getMenus started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -402,7 +402,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("list", resultBody.get("data"));
 		}
 		
-		LOGGER.debug("getMenus ended.");
+		logger.debug("getMenus ended.");
 		
 		return "json";
 	}
@@ -412,7 +412,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getMenuInfo.do", method=RequestMethod.POST)
 	public String getMenuInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getMenuInfo started.");
+		logger.debug("getMenuInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -448,7 +448,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("menuAuths", resultBody.get("data"));
 		}
 		
-		LOGGER.debug("getMenuInfo ended.");
+		logger.debug("getMenuInfo ended.");
 		
 		return "json";
 	}
@@ -458,7 +458,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getMenuAuths.do", method=RequestMethod.POST)
 	public String getMenuAuths(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getMenuAuths started.");
+		logger.debug("getMenuAuths started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -477,7 +477,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("menuAuths", resultBody.get("data"));
 		}
 		
-		LOGGER.debug("getMenuAuths ended.");
+		logger.debug("getMenuAuths ended.");
 		
 		return "json";
 	}
@@ -489,7 +489,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/updateMenu.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void updateMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("updateMenu started.");
+		logger.debug("updateMenu started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -514,7 +514,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
-		LOGGER.debug("updateMenu ended.");
+		logger.debug("updateMenu ended.");
 	}
 	
 	/**
@@ -524,7 +524,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/insertMenu.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void insertMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("insertMenu started.");
+		logger.debug("insertMenu started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -542,7 +542,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "post", jsonParam);
 		
-		LOGGER.debug("insertMenu ended.");
+		logger.debug("insertMenu ended.");
 	}
 	
 	/**
@@ -551,7 +551,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/deleteMenu.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void deleteMenu(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("deleteMenu started.");
+		logger.debug("deleteMenu started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -562,7 +562,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "delete", null);
 		
-		LOGGER.debug("deleteMenu ended.");
+		logger.debug("deleteMenu ended.");
 	}
 	
 	/**
@@ -572,7 +572,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/updateMenuOrder.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void updateMenuOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("updateMenuOrder started.");
+		logger.debug("updateMenuOrder started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -586,7 +586,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
-		LOGGER.debug("updateMenuOrder ended.");
+		logger.debug("updateMenuOrder ended.");
 	}
 	
 	/** ----------------------------------------------- */
@@ -600,12 +600,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalPortlets.do", method=RequestMethod.GET)
 	public String portalManagePortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("portalPortlets started.");
+		logger.debug("portalPortlets started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("portalPortlets accessDenied.");
+			logger.debug("portalPortlets accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
@@ -625,7 +625,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("lang", resultBody.get("lang"));
 			}
 			
-			LOGGER.debug("portalPortlets ended.");
+			logger.debug("portalPortlets ended.");
 			return "/admin/ezNewPortal/portalPortlets";
 		}
 	}
@@ -633,12 +633,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	//관리자 로고관리 > 화면 출력
 	@RequestMapping(value = "/admin/ezNewPortal/portalLogos.do", method=RequestMethod.GET)
 	public String portalManageLogo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("portalManageLogo started.");
+		logger.debug("portalManageLogo started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("portalManageLogo accessDenied.");
+			logger.debug("portalManageLogo accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
@@ -652,7 +652,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         	}
         	
         	model.addAttribute("adminCheck", adminCheck);
-			LOGGER.debug("portalManageLogo ended.");
+			logger.debug("portalManageLogo ended.");
 			return "/admin/ezNewPortal/portalLogos";
 		}
 	}
@@ -664,7 +664,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public JSONArray getPortalPortlets(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap,
 			HttpServletRequest req, Model model) throws Exception {
-		LOGGER.debug("getPortalPortlets started.");
+		logger.debug("getPortalPortlets started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = paramMap.get("companyId").toString();
@@ -680,8 +680,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			json = (JSONArray) data.get("PortletList");
 		}
-		LOGGER.debug("json : " + json);
-		LOGGER.debug("getPortalPortlets Ended");
+		logger.debug("json : " + json);
+		logger.debug("getPortalPortlets Ended");
 		return json;
 	}
 	
@@ -692,7 +692,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/updatePortlet.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void updatePortlet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, @RequestBody JSONObject json, Model model) throws Exception {
-		LOGGER.debug("updatePortlet started.");
+		logger.debug("updatePortlet started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = json.get("portletId").toString();
@@ -702,7 +702,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		json.put("userId", userInfo.getId());
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
-		LOGGER.debug("updatePortlet Ended");
+		logger.debug("updatePortlet Ended");
 	}
 	
 	/** ----------------------------------------------- */
@@ -714,16 +714,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	//메뉴 아이콘 선택 화면 호출
 	@RequestMapping(value = "/admin/ezNewPortal/selectMenuIcon.do", method=RequestMethod.GET)
 	public String portalMenuIconSelect(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("portalMenuIconSelect started.");
+		logger.debug("portalMenuIconSelect started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("portalMenuIconSelect accessDenied.");
+			logger.debug("portalMenuIconSelect accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			LOGGER.debug("portalMenuIconSelect ended.");
+			logger.debug("portalMenuIconSelect ended.");
 			
 			return "/admin/ezNewPortal/portalMenuIconSelect";
 		}
@@ -739,16 +739,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/openBoardTree.do", method=RequestMethod.GET)
 	public String openBoardTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("openBoardTree started.");
+		logger.debug("openBoardTree started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("openBoardTree accessDenied.");
+			logger.debug("openBoardTree accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			LOGGER.debug("openBoardTree ended.");
+			logger.debug("openBoardTree ended.");
 			//게시판이 top인 목록 가져오기
 			String userId = userInfo.getId();
 			String companyId = request.getParameter("companyId");
@@ -768,7 +768,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("portletId", request.getParameter("portletId"));
 			}
 			
-			LOGGER.debug("openBoardTree ended.");
+			logger.debug("openBoardTree ended.");
 			return "/admin/ezNewPortal/portalBoardTree";
 		}
 	}
@@ -785,7 +785,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/getSubBoards.do", method=RequestMethod.POST)
 	@ResponseBody
 	public JSONArray getSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, @RequestBody Map<String, Object> paramMap, Model model) throws Exception {
-		LOGGER.debug("getSubBoards started.");
+		logger.debug("getSubBoards started.");
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		String userId = userInfo.getId();
 		String companyId = paramMap.get("companyId").toString();
@@ -802,7 +802,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			subBoards = (JSONArray) resultBody.get("data");
 		}
 		
-		LOGGER.debug("getSubBoards ended.");
+		logger.debug("getSubBoards ended.");
 		return subBoards;
 	}
 	
@@ -813,7 +813,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/addPortlet.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void addPortlets(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, @RequestBody JSONObject json, Model model) throws Exception {
-		LOGGER.debug("addPortlets started.");
+		logger.debug("addPortlets started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = json.get("companyId").toString();
@@ -823,7 +823,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "post", json);
 		
-		LOGGER.debug("addPortlets Ended");
+		logger.debug("addPortlets Ended");
 	}
 	
 	/**
@@ -832,7 +832,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/deletePortlet.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void deletePortlets(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest req, Model model) throws Exception {
-		LOGGER.debug("addPortlets started.");
+		logger.debug("addPortlets started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = paramMap.get("portletId").toString();
@@ -842,7 +842,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		paramMap.put("userId", userInfo.getId());		
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "delete", null);
-		LOGGER.debug("addPortlets Ended");
+		logger.debug("addPortlets Ended");
 	}
 	
 	/**
@@ -852,7 +852,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/updatePortletOrder.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void updatePortletOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject json, HttpServletRequest req, Model model) throws Exception {
-		LOGGER.debug("updatePortletOrder started.");
+		logger.debug("updatePortletOrder started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = json.get("companyId").toString();
@@ -861,7 +861,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		json.put("userId", userInfo.getId());		
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
-		LOGGER.debug("updatePortletOrder Ended");
+		logger.debug("updatePortletOrder Ended");
 	}
 	
 	/**
@@ -874,16 +874,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/openPortalMenu.do", method=RequestMethod.GET)
 	public String openPortalMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("openPortalMenu started.");
+		logger.debug("openPortalMenu started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("openBoardTree accessDenied.");
+			logger.debug("openBoardTree accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
-			LOGGER.debug("openBoardTree ended.");
+			logger.debug("openBoardTree ended.");
 			//게시판이 top인 목록 가져오기
 			String userId = userInfo.getId();
 			String companyId = request.getParameter("companyId");
@@ -902,7 +902,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 				model.addAttribute("portletId", commonUtil.stripScriptTags(request.getParameter("portletId")));
 			}
 			
-			LOGGER.debug("openPortalMenu ended.");
+			logger.debug("openPortalMenu ended.");
 			return "/admin/ezNewPortal/portalPortletMenu";
 		}
 	}
@@ -911,7 +911,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/getCompanyLogos.do", method=RequestMethod.POST)
 	@ResponseBody
 	public JSONArray getCompanyLogos(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody Map<String, Object> paramMap, Model model) throws Exception {
-		LOGGER.debug("getCompanyLogos started.");
+		logger.debug("getCompanyLogos started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = paramMap.get("companyId").toString();
@@ -926,7 +926,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			logoList = (JSONArray) result.get("data");
 		}
 		
-		LOGGER.debug("getCompanyLogos Ended");
+		logger.debug("getCompanyLogos Ended");
 		
 		return logoList;
 	}
@@ -936,7 +936,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/uploadLogo.do", produces = "text/plain; charset=utf-8", method=RequestMethod.POST)
 	@ResponseBody
 	public String updateCompanyLogo(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("updateCompanyLogo started");
+		logger.debug("updateCompanyLogo started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = request.getParameter("companyId").toString();
 		String url = "/rest/admin/ezPortal/logos/companies/" + companyId;
@@ -1027,8 +1027,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", userInfo.getTenantId()) + commonUtil.separator + "uploadFile" + commonUtil.separator + newFileName;
 		}
 		
-		LOGGER.debug("logoUrl : " + logoUrl);
-		LOGGER.debug("updateCompanyLogo ended");
+		logger.debug("logoUrl : " + logoUrl);
+		logger.debug("updateCompanyLogo ended");
 		
 		return logoUrl;
 	}
@@ -1038,12 +1038,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/themePreview.do", method=RequestMethod.GET)
 	public String themePreview(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("themePreview started.");
+		logger.debug("themePreview started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("themePreview accessDenied.");
+			logger.debug("themePreview accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		} else {
@@ -1059,7 +1059,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("themeId", request.getParameter("themeId"));
 			model.addAttribute("frameId", request.getParameter("frameId"));
 			model.addAttribute("imgFolder", imgFolder);
-			LOGGER.debug("themePreview ended.");
+			logger.debug("themePreview ended.");
 			return "/admin/ezNewPortal/themePreview";
 		}
 	}
@@ -1067,12 +1067,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/updateCompanyDefaultTheme.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void updateCompanyDefaultTheme(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("updateCompanyDefaultTheme started.");
+		logger.debug("updateCompanyDefaultTheme started.");
 
 		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		
 		if (user == null) {
-			LOGGER.debug("updateCompanyDefaultTheme accessDenied.");
+			logger.debug("updateCompanyDefaultTheme accessDenied.");
 			
 		} else {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1086,19 +1086,19 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			
 			commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "patch", null);
 			
-			LOGGER.debug("updateCompanyDefaultTheme ended.");
+			logger.debug("updateCompanyDefaultTheme ended.");
 		}
 	}
 	
 	@RequestMapping(value = "/admin/ezNewPortal/deleteLogo.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void deleteLogo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("deleteLogo started.");
+		logger.debug("deleteLogo started.");
 
 		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		
 		if (user == null) {
-			LOGGER.debug("deleteLogo accessDenied.");
+			logger.debug("deleteLogo accessDenied.");
 			
 		} else {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1112,7 +1112,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			
 			commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "delete", null);
 			
-			LOGGER.debug("deleteLogo ended.");
+			logger.debug("deleteLogo ended.");
 		}
 	}
 	
@@ -1120,12 +1120,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/resetMenuOrder.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void resetMenuOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("resetMenuOrder started.");
+		logger.debug("resetMenuOrder started.");
 
 		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		
 		if (user == null) {
-			LOGGER.debug("resetMenuOrder accessDenied.");
+			logger.debug("resetMenuOrder accessDenied.");
 			
 		} else {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1145,14 +1145,14 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "patch", jsonParam);
 			
 			
-			LOGGER.debug("resetMenuOrder ended.");
+			logger.debug("resetMenuOrder ended.");
 		}
 	}
 
 	@RequestMapping(value = "/admin/ezNewPortal/getThemePortletList.do", method=RequestMethod.POST)
 	@ResponseBody
 	public JSONArray getThemePortletList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getThemePortletList started");
+		logger.debug("getThemePortletList started");
 		JSONArray result = new JSONArray();
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String themeId = paramMap.get("themeId").toString();
@@ -1169,7 +1169,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			result = (JSONArray) resultBody.get("data");
 		}
 		
-		LOGGER.debug("getThemePortletList ended");
+		logger.debug("getThemePortletList ended");
 		return result;
 	}
 	
@@ -1177,7 +1177,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/updateThemePortletUsed.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void updateThemePortletUsed(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject json, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("updateThemePortletUsed started");
+		logger.debug("updateThemePortletUsed started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String themeId = json.get("themeId").toString();
 		String companyId = json.get("companyId").toString();
@@ -1188,7 +1188,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, request, "patch", json);
 		
-		LOGGER.debug("updateThemePortletUsed ended");
+		logger.debug("updateThemePortletUsed ended");
 	}
 	
 	// 2019.06.18 테마별, 포틀릿별 권한 설정 기능 추가
@@ -1198,7 +1198,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/getThemeAuths.do", method=RequestMethod.GET)
 	@ResponseBody
 	public String getThemeAuths(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getThemeAuths started.");
+		logger.debug("getThemeAuths started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1217,8 +1217,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			status = resultBody.get("data").toString();
 		}
 		
-		LOGGER.debug("status : " + status);
-		LOGGER.debug("getThemeAuths ended.");
+		logger.debug("status : " + status);
+		logger.debug("getThemeAuths ended.");
 		
 		return status;
 	}
@@ -1226,7 +1226,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/checkThemeAuths.do", method=RequestMethod.POST)
 	public String checkThemeAuths(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("checkThemeAuths started.");
+		logger.debug("checkThemeAuths started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1245,7 +1245,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("authResult", resultBody.get("data"));
 		}
 		
-		LOGGER.debug("checkThemeAuths ended.");
+		logger.debug("checkThemeAuths ended.");
 		return "json";
 	}
 	/**
@@ -1253,7 +1253,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getPortletAuths.do", method=RequestMethod.GET)
 	public String getPortletAuths(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getPortletAuths started.");
+		logger.debug("getPortletAuths started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1272,7 +1272,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("portletAuths", resultBody.get("data"));
 		}
 		
-		LOGGER.debug("getPortletAuths ended.");
+		logger.debug("getPortletAuths ended.");
 		
 		return "json";
 	}
@@ -1280,11 +1280,11 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	//포틀릿 권한 창 열기
 	@RequestMapping(value = "/admin/ezNewPortal/openPortletAuthSetting.do", method=RequestMethod.GET)
 	public String openPortletAuthSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("openPortletAuthSetting started.");
+		logger.debug("openPortletAuthSetting started.");
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			LOGGER.debug("openPortletAuthSetting accessDenied.");
+			logger.debug("openPortletAuthSetting accessDenied.");
 			
 			return "cmm/error/adminDenied";
 		}
@@ -1311,7 +1311,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("portletId", portletId);
 
-		LOGGER.debug("openPortletAuthSetting ended.");
+		logger.debug("openPortletAuthSetting ended.");
 		return "/admin/ezNewPortal/portletAuthSetting";
 	}
 	
@@ -1319,7 +1319,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/updatePortletAuth.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String updatePortletAuth(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("updatePortletAuth started.");
+		logger.debug("updatePortletAuth started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1336,8 +1336,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		String status = resultBody.get("status").toString();
 		
-		LOGGER.debug("status : " + status);
-		LOGGER.debug("updatePortletAuth ended.");
+		logger.debug("status : " + status);
+		logger.debug("updatePortletAuth ended.");
 		
 		return status;
 	}
@@ -1353,7 +1353,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/openSlideImageSetting.do", method=RequestMethod.GET)
 	public String openSlideImageSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("openSlideImageSetting started.");
+		logger.debug("openSlideImageSetting started.");
 
 		// LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -1364,7 +1364,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("portletId", portletId);
 		
-		LOGGER.debug("openSlideImageSetting ended.");
+		logger.debug("openSlideImageSetting ended.");
 		return "/admin/ezNewPortal/portalSlideImageSetting";
 	}
 	
@@ -1379,7 +1379,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getSlideImages.do", method=RequestMethod.POST)
 	public String getSlideImages(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getSlideImages started.");
+		logger.debug("getSlideImages started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1396,7 +1396,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("list", resultBody.get("data"));
 		}
 		
-		LOGGER.debug("getSlideImages ended.");
+		logger.debug("getSlideImages ended.");
 		
 		return "json";
 	}
@@ -1412,7 +1412,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/uploadSlideImage.do", produces = "text/plain; charset=utf-8", method=RequestMethod.POST)
 	@ResponseBody
 	public String uploadSlideImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("uploadSlideImages started.");
+		logger.debug("uploadSlideImages started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId").toString();
@@ -1493,7 +1493,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			result = pDirPath + saveName;
         }
 
-		LOGGER.debug("uploadSlideImages ended.");
+		logger.debug("uploadSlideImages ended.");
 		
 		return result;
 	}
@@ -1509,7 +1509,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/saveSlideImages.do", method=RequestMethod.POST)
 	public String saveSlideImages(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("saveSlideImages started.");
+		logger.debug("saveSlideImages started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String imagePath = paramMap.get("imagePath").toString();
@@ -1535,7 +1535,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, type, null);
 
-		LOGGER.debug("saveSlideImages ended.");
+		logger.debug("saveSlideImages ended.");
 		
 		return "json";
 	}
@@ -1551,7 +1551,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getSlideImageInfo.do", method=RequestMethod.POST)
 	public String getSlideImageInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("getSlideImageInfo started.");
+		logger.debug("getSlideImageInfo started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1568,7 +1568,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("slideInfo", resultBody.get("data"));
 		}
 		
-		LOGGER.debug("getSlideImageInfo ended.");
+		logger.debug("getSlideImageInfo ended.");
 		
 		return "json";
 	}
@@ -1585,7 +1585,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/delSlideImage.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void deleteSlideImage(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("deleteSlideImage started.");
+		logger.debug("deleteSlideImage started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1596,7 +1596,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "delete", null);
 		
-		LOGGER.debug("deleteSlideImage ended.");
+		logger.debug("deleteSlideImage ended.");
 	}
 	
 	/**
@@ -1606,7 +1606,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezNewPortal/updateSlideOrder.do", method=RequestMethod.POST)
 	@ResponseBody
 	public void updateSlideOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("updateSlideOrder started.");
+		logger.debug("updateSlideOrder started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1620,7 +1620,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
-		LOGGER.debug("updateSlideOrder ended.");
+		logger.debug("updateSlideOrder ended.");
 	}
 	
 	/**
@@ -1632,7 +1632,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public JSONArray getTitleList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap,
 			HttpServletRequest req, Model model) throws Exception {
-		LOGGER.debug("getTitleList started.");
+		logger.debug("getTitleList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = paramMap.get("companyId").toString();
@@ -1648,8 +1648,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		if (result.equals("ok")) {
 			json = (JSONArray) resultBody.get("data");
 		}
-		LOGGER.debug("json : " + json);
-		LOGGER.debug("getTitleList Ended");
+		logger.debug("json : " + json);
+		logger.debug("getTitleList Ended");
 		return json;
 	}
 	
@@ -1658,7 +1658,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public JSONArray getGroupList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap,
 			HttpServletRequest req, Model model) throws Exception {
-		LOGGER.debug("getGroupList started.");
+		logger.debug("getGroupList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = paramMap.get("companyId").toString();
@@ -1674,8 +1674,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		if (result.equals("ok")) {
 			json = (JSONArray) resultBody.get("data");
 		}
-		LOGGER.debug("json : " + json);
-		LOGGER.debug("getGroupList Ended");
+		logger.debug("json : " + json);
+		logger.debug("getGroupList Ended");
 		return json;
 	}
 }

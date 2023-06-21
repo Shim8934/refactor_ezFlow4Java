@@ -93,7 +93,7 @@
 			var isSplit = "${optisSplit}";
 			var SplitKind = "${optSplitKind}";
 			var ConvertYN = "Y";	// 이 값이 N이면, 원문서를 그대로 사용한다.
-			var _USE_DirectSign = "${useDirectSign}";     //20090112 직접서명
+			var _USE_DirectSign = "<c:out value='${useDirectSign}'/>";    //20090112 직접서명
 			
 			//20110201  기안일자 확인 
 			var _DraftDate = "${draftDate}";
@@ -160,16 +160,13 @@
 			                getDocInfo();
 			
 			                if (pHasOpinionYN == "Y") {
-			                    if (pAprState == "006")
+			                    if (pAprState == "006") {
 			                        pInformationContent = "<spring:message code='ezApprovalG.t124'/><br> <spring:message code='ezApprovalG.t125'/>";
-			                    else
+			                    } else {
 			                        pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t125'/>";
-			
-			                    Ans = OpenInformationUI(pInformationContent);
-			
-			                    if (Ans) {
-			                        openOpinionUI("Display");
 			                    }
+			                    
+			                    Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
 			                }
 			            } else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
 			                var len;
@@ -179,17 +176,13 @@
 			                GetAprDocFormID();
 			                setAttachInfo(pDocID, "APR", lstAttachLink);
 			                getDocInfo();
+			                
 			                if (pHasOpinionYN == "Y") {
 			                    var pInformationContent;
 			                    var Ans;
 			
 			                    pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t125'/>";
-			                    Ans = OpenInformationUI(pInformationContent);
-			
-			                    if (Ans) {
-			                        openOpinionUI("Display");
-			                    }
-			
+			                    Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
 			                }
 			            } else if (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
 			                var len;
@@ -201,15 +194,13 @@
 			                GetAprDocFormID();
 			                setAttachInfo(pDocID, "APR", lstAttachLink);
 			                getDocInfo();
+			                
 			                if (pHasOpinionYN == "Y") {
 			                    var pInformationContent;
 			                    var Ans;
-			
+			                    
 			                    pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t125'/>";
-			                    Ans = OpenInformationUI(pInformationContent);
-			                    if (Ans) {
-			                        openOpinionUI("Display");
-			                    }
+			                    Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
 			                }
 			            }
 			            else {
@@ -703,7 +694,8 @@
 			// 첨언창 오픈 함수
 			function btnOpinion_onclick()
 			{
-				var ret = openOpinionUI("N");
+				//var ret = openOpinionUI("N");
+				openOpinionUI_New("");
 			}
 			
 			//프린트 
@@ -1039,6 +1031,9 @@
 		            }
 		            return false;
 		        }
+		        
+		        /* 2023-05-19 홍승비 - 개선된 의견 작성창을 사용하도록 회송 코드 수정, 합의문에서는 의미가 없는 pDocSN 체크 제외 */
+		        /*
 		        var pDocSN = "";
 		        var fields = message.GetFieldsList();
 		        var field = message.GetListItem(fields, "receiptnumber");
@@ -1068,6 +1063,8 @@
 		        apropinion_cross_dialogArguments[1] = btnReturn_onclick_Complete;
 		
 		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+		        */
+		        openOpinionUI_New("HeSong", btnReturn_onclick_Complete);
 		    }
 		    function btnReturn_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -1086,9 +1083,11 @@
 
 		            setButtonReceiveTrue();
 		
-		            if (temppDocSN != "") {
+		            // pDocSN, temppDocSN 값은 접수번호(receiptnumber) 필드가 없는 합의문에서 체크할 필요가 없음
+		            // 수신접수 페이지에서 회송을 위해 사용되던 변수 및 코드가 그대로 복사된 것으로 추정되어 주석 처리함
+		            /*if (temppDocSN != "") {
 		                hesongok = setCabinetHeSong(temppDocSN);
-					}
+					}*/
 
 					if (hesongok) {
 						var docInfo = document.getElementById("DOCINFO").dataSource;
@@ -1255,6 +1254,13 @@
 				ExcuteInfo("INIT");
 			}
 	    	
+			/* 2023-05-19 홍승비 - 최초 로딩 시 의견 존재여부 체크 후 의견 레이어 팝업 표출을 위한 함수 추가 */
+			function CheckOpinionYN_complete(Ans) {
+				DivPopUpHidden();
+		    	if (Ans) {
+					openOpinionUI_New("");
+		        }
+			}
 		</script>
 	</head>
 	<body class="popup" style="height:100%">

@@ -299,7 +299,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				file.delete();
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -664,7 +664,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		result.put("status", "ok");
@@ -1224,7 +1224,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				attach.setFpath(newPath);
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 	}

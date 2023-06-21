@@ -403,7 +403,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	        }
 		} catch (MessagingException e) {
 			returnValue = "ERROR : " + e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -484,7 +484,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			returnValue = "OK";
 		} catch (MessagingException e) {
 			returnValue = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();

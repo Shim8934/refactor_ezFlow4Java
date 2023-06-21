@@ -631,24 +631,38 @@
 			]]>
 		</isEqual>
 		<isNotEqual property="v_PROPNAME" compareValue="updateDT">
-			<![CDATA[
-			UPDATE
-				TBL_USERMASTER
-			SET 
-			    $v_PROPNAME$ = #v_PROPVALUE#
-			    
-			]]>
-			<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+			<isEqual property="v_PROPNAME" compareValue="photo_updateDT">
 				<![CDATA[
-					, UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+				UPDATE
+					TBL_USERMASTER
+				SET 
+				    $v_PROPNAME$ = TO_DATE(#v_PROPVALUE#, 'yyyy-MM-dd HH24:MI:SS')
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#
 				]]>
 			</isEqual>
-			<![CDATA[
-			WHERE
-				CN = #v_CN#
-			AND
-				TENANT_ID = #v_TENANT_ID#
-			]]>
+			<isNotEqual property="v_PROPNAME" compareValue="photo_updateDT">
+				<![CDATA[
+				UPDATE
+					TBL_USERMASTER
+				SET 
+				    $v_PROPNAME$ = #v_PROPVALUE#
+				    
+				]]>
+				<isEqual property="v_PROPNAME" compareValue="EXTENSIONATTRIBUTE15">
+					<![CDATA[
+						, UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+					]]>
+				</isEqual>
+				<![CDATA[
+				WHERE
+					CN = #v_CN#
+				AND
+					TENANT_ID = #v_TENANT_ID#
+				]]>
+			</isNotEqual>
 		</isNotEqual>
 	</update>
 	
@@ -1643,7 +1657,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A30','002','0000','1','문서번호 FORMAT','0000','0000','0000',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A30','003','2','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','2','2','2',#tenantID#, #companyID#)
+			VALUES ('A30','003','0','1','회계종료월 (예: 2007.3~2008.2 이 회계년도이면 2를 넣는다. 1~12월이면 0을 넣는다)로 채번 및 기록물등록년도에 이용된다','0','0','0',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A31','0  ','결재처리제한','0','결재처리 되지 않는 문서리스트 제한','결재처리제한','결재처리제한','결재처리제한',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -3425,15 +3439,15 @@
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
 			VALUES ('S057', 6, '문서명', 'Form title', '文書名', '文件名', 150, 'TBL_ENDAPRDOCINFO', 'FormName', NULL, NULL, '문서함문서', '양식명', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
-			VALUES ('S061', 1, '변경내용', 'Content', '変更内容', '变更内容', 60, 'TBHISTORYATTACHINFO', 'ModifyFlag', NULL, NULL, '첨부파일이력리스트', '변경내용', #companyID#, #tenantID#)
+			VALUES ('S061', 1, '변경내용', 'Content', '変更内容', '变更内容', 60, 'TBL_HISTORYATTACHINFO', 'ModifyFlag', NULL, NULL, '첨부파일이력리스트', '변경내용', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
-			VALUES ('S061', 2, '첨부이름', 'Filename', '添付名', '附件名', 200, 'TBHISTORYATTACHINFO', 'AttachFileName', NULL, NULL, '첨부파일이력리스트', '첨부이름', #companyID#, #tenantID#)
+			VALUES ('S061', 2, '첨부이름', 'Filename', '添付名', '附件名', 200, 'TBL_HISTORYATTACHINFO', 'AttachFileDisplayName', NULL, NULL, '첨부파일이력리스트', '첨부이름', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
-			VALUES ('S061', 3, '첨부사이즈', 'Size', '添付サイズ', '附件大小', 80, 'TBHISTORYATTACHINFO', 'AttachFileSize', NULL, NULL, '첨부파일이력리스트', '첨부사이즈', #companyID#, #tenantID#)
+			VALUES ('S061', 3, '첨부사이즈', 'Size', '添付サイズ', '附件大小', 80, 'TBL_HISTORYATTACHINFO', 'AttachFileSize', NULL, NULL, '첨부파일이력리스트', '첨부사이즈', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
-			VALUES ('S061', 4, '변경일자', 'Date', '変更日付', '变更日', 120, 'TBHISTORYATTACHINFO', 'ModifyDate', NULL, NULL, '첨부파일이력리스트', '변경일자', #companyID#, #tenantID#)
+			VALUES ('S061', 4, '변경일자', 'Date', '変更日付', '变更日', 120, 'TBL_HISTORYATTACHINFO', 'ModifyDate', NULL, NULL, '첨부파일이력리스트', '변경일자', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
-			VALUES ('S061', 5, '변경자', 'User', '変更者', '变更者', 80, 'TBHISTORYATTACHINFO', 'AttachUserName', NULL, NULL, '첨부파일이력리스트', '변경자', #companyID#, #tenantID#)
+			VALUES ('S061', 5, '변경자', 'User', '変更者', '变更者', 80, 'TBL_HISTORYATTACHINFO', 'AttachUserName', NULL, NULL, '첨부파일이력리스트', '변경자', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
 			VALUES ('S062', 1, '변경순번', 'No.', '順番', '变更序号', 60, 'TBHISTORYLINEINFO', 'ModifySN', NULL, NULL, '결재선이력리스트', '변경순번', #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
@@ -3847,7 +3861,7 @@
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',3,'등록일',100,'TBL_RECORD','TBL_RECORD.RegisterDate','RegisterDate','dtDateTime','기록물 대장',null,'RegisterDate','登録日','注册',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('001',4,'문서번호',80,'TBL_ENDAPRDOCINFO','TBL_ENDAPRDOCINFO.DOCNO','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#tenantID#, #companyID#)
+			VALUES ('001',4,'문서번호',100,null,'CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, ''-''), SUBSTR(TBL_RECORD.RegisterNo, -6))','DispRegisterNo','Default','기록물 대장',null,'Doc. No.','登録番号','註冊號',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('001',5,'첨부번호',55,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.SeperateAttachNo','SeperateAttachNo','Default','기록물 대장',null,'SepAttachNo','添付番号','附件编号',#tenantID#, #companyID#)
 			INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -5265,6 +5279,21 @@
 		]]>
 	</insert>
 	
+	<select id="EzOrganAdminDAO.getAddJobCountInOneDept" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				count(DEPTID)
+			FROM
+				TBL_ADDJOBMASTER
+			WHERE
+				CN = #v_CN#
+			AND
+				DEPTID = #v_DEPTID#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+		]]>
+	</select>
+
 	<!-- <procedure id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			{CALL EZSP_GETPERMISSIONLISTCOUNT(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
@@ -6040,6 +6069,10 @@
             cn = #v_CN#
         AND 
         </isNotNull>
+        <isNotNull property="v_JOBID">
+            JOBID = #v_JOBID#
+        AND
+        </isNotNull>
             deptid = #v_DEPTID#
         AND 
             TENANT_ID = #v_TENANT_ID#
@@ -6224,7 +6257,163 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
- 	
+
+	<delete id="EzOrganAdminDAO.deleteCompany_D21" parameterClass="Map">
+        DELETE FROM 
+        	TBL_ATTITUDE_TYPE
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D22" parameterClass="Map">
+        DELETE FROM 
+        	TBL_MENUITEM_ITEMS_MENUITEMS_S
+ 		WHERE  
+            UID_ IN (SELECT UID_  FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#) 
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D23" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_THEME_COMP
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D24" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_FRAME_COMP
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D25" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_MENU_COMP
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D26" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_MENU_AUTH
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D27" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_MENU_NAME
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D28" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_PORTLET_COMP
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D29" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_PORTLET_NAME
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D30" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_THEME_PORTLET
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D31" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_THEME_AUTH
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D32" parameterClass="Map">
+        DELETE FROM 
+        	TBL_PORTAL_PORTLET_AUTH
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D33" parameterClass="Map">
+        DELETE FROM 
+        	TBL_CAR
+ 		WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS" parameterClass="Map">
+        DELETE FROM
+            TBL_TOPMENU_ITEMS    
+        WHERE 
+        	UID_ IN (SELECT UID_ FROM TBL_TOPMENU_GENERAL WHERE COMPANYID = #v_CN# AND TENANT_ID = #v_TENANT_ID#) 
+        OR 
+        	PAGEUID IN (SELECT UID_ FROM TBL_TOPMENU_GENERAL WHERE COMPANYID = #v_CN# AND TENANT_ID = #v_TENANT_ID#)
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS2" parameterClass="Map">
+        DELETE FROM
+            TBL_PORTALPAGE_ITEMS    
+        WHERE  
+            UID_ IN (SELECT UID_  FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#) 
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS3" parameterClass="Map">
+        DELETE FROM
+            TBL_MENUITEM_ITEMS_MENUITEMS    
+         WHERE  
+            UID_ IN (SELECT UID_  FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#) 
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS4" parameterClass="Map">
+        DELETE FROM
+            TBL_PORTLET_URL    
+        WHERE UID_ IN (SELECT UID_ FROM TBL_PORTLET_GENERAL WHERE COMPANYID = #v_CN# AND TENANT_ID = #v_TENANT_ID#)
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS5" parameterClass="Map">
+        DELETE FROM
+            TBL_MENUITEM_ITEMS_LOGOS     
+        WHERE UID_ IN (SELECT UID_ FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#)
+     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS6" parameterClass="Map">
+        DELETE FROM
+            TBL_MENUITEM_ITEMS_IMAGE    
+        WHERE UID_ IN (SELECT UID_ FROM TBL_PORTAL_ACL WHERE ACCESSID = #v_CN# AND TENANT_ID = #v_TENANT_ID#)
+     </delete>
+	 	
  	<delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
         DELETE FROM
             TBL_BOARD_MYBOARDS    
@@ -6235,6 +6424,15 @@
 		AND
 			BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'
      </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IJHS1" parameterClass="Map">
+        DELETE FROM
+            TBL_ATTITUDE_ANNUAL_CONF    
+        WHERE  
+            COMPANY_ID = #v_CN#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+    </delete>
      
  	<select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
  		SELECT
@@ -6360,6 +6558,30 @@
 			(SEQ_TBL_USER_JOBMASTER.NEXTVAL, #v_TYPE#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_USEFLAG#, #v_SORT#, SYSDATE, #v_COMPANYID#, #v_TENANTID#)
 	]]>
 	</insert>
+	<select id="EzOrganAdminDAO.selectTitleByJobID" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
+		SELECT 
+			JOBID,
+			TYPE, 
+			CN, 
+			CASE
+            	#v_LANGDATA#
+            WHEN '1'
+            THEN
+            	DISPLAYNAME
+            ELSE
+            	DISPLAYNAME2
+            END DISPLAYNAME,
+			USEFLAG, 
+			SORT, 
+			CREATEDATE,
+			COMPANYID
+		FROM 
+			TBL_USER_JOBMASTER
+		WHERE 
+			JOBID = #v_JOBID#
+		AND 
+			TENANT_ID = #v_TENANTID#
+	</select>
 	<select id="EzOrganAdminDAO.selectTitleList" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
 		SELECT 
 			JOBID,
@@ -6433,7 +6655,7 @@
 		SET
 			TITLE = #v_DISPLAYNAME#,
 			TITLE2 = #v_DISPLAYNAME2#,
-			UPDATEDT = #nowDate#
+			UPDATEDT = TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
 		WHERE
 			EXTENSIONATTRIBUTE7 = #v_JOBID#
 	]]>

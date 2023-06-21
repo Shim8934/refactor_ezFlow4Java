@@ -48,7 +48,7 @@ public class EgovFileDownloadController {
     @Resource(name = "EgovFileMngService")
     private EgovFileMngService fileService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EgovFileDownloadController.class);
+    private static final Logger logger = LoggerFactory.getLogger(EgovFileDownloadController.class);
 
     /**
      * 브라우저 구분 얻기.
@@ -167,20 +167,20 @@ public class EgovFileDownloadController {
 		} catch (Exception ex) {
 		    // 다음 Exception 무시 처리
 		    // Connection reset by peer: socket write error
-			LOGGER.debug("IGNORED: {}", ex.getMessage());
+			logger.debug("IGNORED: {}", ex.getMessage());
 		} finally {
 		    if (in != null) {
 			try {
 			    in.close();
 			} catch (Exception ignore) {
-				LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				logger.debug("IGNORED: {}", ignore.getMessage());
 			}
 		    }
 		    if (out != null) {
 			try {
 			    out.close();
 			} catch (Exception ignore) {
-				LOGGER.debug("IGNORED: {}", ignore.getMessage());
+				logger.debug("IGNORED: {}", ignore.getMessage());
 			}
 		    }
 		}

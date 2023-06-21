@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -97,7 +99,7 @@ public class EzCabinetGWController_h {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 		}
@@ -143,7 +145,7 @@ public class EzCabinetGWController_h {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -178,7 +180,7 @@ public class EzCabinetGWController_h {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -209,7 +211,7 @@ public class EzCabinetGWController_h {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -240,7 +242,7 @@ public class EzCabinetGWController_h {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -292,7 +294,7 @@ public class EzCabinetGWController_h {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 		}
@@ -324,7 +326,7 @@ public class EzCabinetGWController_h {
 			result                    = cabinetService_h.saveShareUserList(listUsers, cabinetId, userInfo);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -356,7 +358,7 @@ public class EzCabinetGWController_h {
 			result                    = cabinetService_h.modifyShareUserList(listUsers, actMode, cabinetId, userInfo);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -399,7 +401,7 @@ public class EzCabinetGWController_h {
 			result = cabinetService.checkPermission(cabinetList, itemList, permission, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -445,7 +447,7 @@ public class EzCabinetGWController_h {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -490,7 +492,7 @@ public class EzCabinetGWController_h {
 			result.put("code"      , 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -565,7 +567,7 @@ public class EzCabinetGWController_h {
 			result = cabinetService_h.modifyItem(currentItemId, attacheFiles, relatedFiles, title, summary, realPath, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -604,7 +606,7 @@ public class EzCabinetGWController_h {
 			result           = cabinetService_h.saveBoardItem(realPath, mode, dstCabinetId, title, summary, boardTitle, writer, attach, content, dateTime, locale, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -615,8 +617,13 @@ public class EzCabinetGWController_h {
 	private void getColumnInformation(JSONObject result, int itemId, int itemType, String primary, int tenantId) throws Exception {
 		//Get related columns
 		List<CabinetColumnVO> columnList = cabinetService.getAllRelatedColumnsOfItem(itemId, primary, tenantId);
-		if (columnList != null && columnList.size() > 0) {
+
+		// 2023-05-11 이사라 : NullPointerException 시큐어코딩
+		//if (columnList != null && columnList.size() > 0) {
+		if (CollectionUtils.isNotEmpty(columnList)) {
 			result.put("columns", columnList);
+		} else {
+			throw new NullPointerException("columnList is null");
 		}
 		
 		//Check file type
@@ -835,7 +842,7 @@ public class EzCabinetGWController_h {
 			result           = cabinetService_h.saveOptionItem(realPath, mode, dstCabinetId, title, summary, optionTitle, writer, date, content, attach, locale, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -876,7 +883,7 @@ public class EzCabinetGWController_h {
 			result           = cabinetService_h.saveCommunityItem(realPath, mode, dstCabinetId, title, summary, commuTitle, writer, date, endDate, content, attach, locale, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -914,7 +921,7 @@ public class EzCabinetGWController_h {
 			result           = cabinetService_h.savePhotoCommunityitem(realPath, mode, dstCabinetId, title, summary, commuTitle, writer, content, locale, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}

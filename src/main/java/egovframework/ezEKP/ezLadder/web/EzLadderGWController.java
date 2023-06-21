@@ -296,7 +296,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [POST /rest/ladder/BMs/users/" + userId + "] ended.");
@@ -665,7 +665,7 @@ public class EzLadderGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("web G/W LADDER [PUT /rest/ladder/ladders/" + ladderId + "users/" + userId + "] ended.");

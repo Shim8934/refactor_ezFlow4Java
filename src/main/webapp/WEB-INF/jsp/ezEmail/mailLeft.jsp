@@ -18,6 +18,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/unit/openWindowForMail.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript">
@@ -299,33 +300,11 @@
 	        }
         	
 	        function write_Letter() {
-	            var pheight = window.screen.availHeight;
-	            var conHeight = pheight * 0.8;
-	            var pwidth = window.screen.availWidth;
-	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
-	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
-	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            var requestUrl = "/ezEmail/mailWrite.do?cmd=NEW";
-	            
-	            window.open(requestUrl, "", feature);
+				openWindowForMail("/ezEmail/mailWrite.do?cmd=NEW", "", null);
 	        }
 	        
 	        function write_LetterToMe() {
-	            var pheight = window.screen.availHeight;
-	            var conHeight = pheight * 0.8;
-	            var pwidth = window.screen.availWidth;
-	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
-	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
-	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            var requestUrl = "/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES";
-	            
-	            window.open(requestUrl, "", feature);
+	            openWindowForMail("/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES", "", null);
 	        }
 	        
 	        function LoadEmailTree() {
@@ -381,24 +360,9 @@
 	        	if (typeof(event) !== "undefined") {
 		        	if (event.which != 3) {
 					    var nodeIdx = window[treeviewStr].selectedIndex();
-					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "href"));
-		        		
-		        		if (shareId != "") {
-		        			url += "&shareId=" + encodeURIComponent(shareId);
-		        		}
-		        		
-		        		try {
-			                if (typeof (parent.frames["right"]) != "undefined")
-			                    parent.frames["right"].Window_onunload();
-			            } catch (e) { }
-			            
-			            if (g_firstOpen) {
-			                g_firstOpen = false;
-			            } else {
-			                window.open(url, "right");
-			            }
-			            
-			            get_unreadcount();
+						openRightFrameDefault(window[treeviewStr].getvalue(nodeIdx, "foldername"),
+											  window[treeviewStr].getvalue(nodeIdx, "href"),
+											  shareId);
 		        	}
 	        	}
 	        }
@@ -604,6 +568,7 @@
 		                	window[treeviewStr].select(1);
 		                }
 		                
+						// openRightFrameDefault()가능?
 		                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
 		                
 		            	if (shareId != "") {
@@ -895,24 +860,7 @@
 	            xmlHTTP.open("POST",requestUrl, false);
 	            xmlHTTP.send();
 	            
-	            try {
-	                if (typeof (parent.frames["right"]) != "undefined")
-	                    parent.frames["right"].Window_onunload();
-	            } catch (e) { }
-	            
-	            if (g_firstOpen) {
-	                g_firstOpen = false;
-	            } else {
-	            	requestUrl = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(foldername) + "&url=" + encodeURIComponent(href);
-	                
-	            	if (shareId != "") {
-		            	requestUrl += "&shareId=" + encodeURIComponent(shareId);
-		            }
-	            	
-	            	window.open(requestUrl, "right");
-	            }
-	            
-	            get_unreadcount();
+				openRightFrameDefault(foldername, href, shareId);
 		    }
 		    
 		    function mailbox_export(){
@@ -1035,22 +983,7 @@
 							if (xmlHTTP2.responseText == "OK") {
 								alert("<spring:message code='ezEmail.t473' />");
 
-								if (typeof (parent.frames["right"]) != "undefined") {
-									parent.frames["right"].Window_onunload();
-								}
-			 			        
-								if (g_firstOpen) {
-									g_firstOpen = false;
-								} else {
-									var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(foldername) + "&url=" + encodeURIComponent(href);
-
-									if (shareId != "") {
-										url += "&shareId=" + encodeURIComponent(shareId);
-									}
-
-									window.open(url, "right");
-									get_unreadcount();
-								}
+								openRightFrameDefault(foldername, href, shareId);
 					    	} else {
 					    		alert("<spring:message code='ezEmail.t472' />");
 					    	}
@@ -1063,23 +996,7 @@
 						if (xmlHTTP2.status >= 200 && xmlHTTP2.status < 300) {
 							if (xmlHTTP2.responseText == "OK") {
 								alert("<spring:message code='ezEmail.t478' />");
-
-								if (typeof (parent.frames["right"]) != "undefined") {
-									parent.frames["right"].Window_onunload();
-								}
-			 			        
-								if (g_firstOpen) {
-									g_firstOpen = false;
-								} else {
-									var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(foldername) + "&url=" + encodeURIComponent(href);
-									
-									if (shareId != "") {
-										url += "&shareId=" + encodeURIComponent(shareId);
-									}
-									
-									window.open(url, "right");
-									get_unreadcount();
-								}
+								openRightFrameDefault(foldername, href, shareId);
 		            		} else if (xmlHTTP2.responseText.indexOf("NO COPY processing failed.") > -1) {
 		            			alert(strLang241);
 		            		} else if (xmlHTTP2.responseText.indexOf("MAIL_NOT_EXISTS") > -1) {
@@ -1128,34 +1045,44 @@
 			
 			// 수신확인 메뉴 클릭
 			function reception_check() {
-				var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent("<spring:message code='ezEmail.t516' />") + "&url=receiveChk";
-				
-	            try {
-	                if (typeof (parent.frames["right"]) != "undefined")
-	                    parent.frames["right"].Window_onunload();
-	            } catch (e) { }
-	            if (g_firstOpen)
-	                g_firstOpen = false;
-	            else
-	                window.open(url, "right");
-	            get_unreadcount();
+	            openRightFrame(encodeURIComponent("<spring:message code='ezEmail.t516' />"), "receiveChk", "");
+			}
+
+			// window.open(url, "right"); 구절이 중복되어 통일함.
+			function openRightFrame(dispname, url, extra) {
+				// 메일 페이지로 처음 진입 시 (대 메뉴 "메일" 클릭)
+				// : parent.frames["right"]는 있지만 빈 frame의 Window_onunload()는 없는 상태이기 때문에(window.open(right) 이 후 → Window_onunload() 있음.)
+				// parent.frames["right"].Window_onunload(); 에러나는 것을 무시한다.(try-catch)
+				try {
+					if (typeof (parent.frames["right"]) != "undefined") {
+						parent.frames["right"].Window_onunload();
+					}
+				} catch (e) { }
+
+				// 메일 페이지로 처음 진입 시 (대 메뉴 "메일" 클릭)
+				// : function selectnode(event)이 두 번 실행되어, 첫번째에는 window.open 실행하지 않도록 함. (왜 두 번 실행되는지는 분석 포기)
+				if (g_firstOpen) {
+					g_firstOpen = false;
+
+				} else {
+					window.open("/ezEmail/mailList.do?dispname=" + dispname + "&url=" + url + extra, "right");
+				}
+
+				get_unreadcount();
 			}
 			
-			function operatorSendMail() {
-		        var pheight = window.screen.availHeight;
-		        var conHeight = pheight * 0.8;
-		        var pwidth = window.screen.availWidth;
-		        var conWidth = pwidth * 0.8;
-		        
-		        if (conWidth > 890) {
-		            conWidth = 890;
-		        }
-		        
-		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+			/**
+			 * 원 함수(openRightFrame())는 : String과 extra를 받도록 하는데,
+			 * String에 encodeURIComponent() 기본적용하고, shareId인 것은 : default로 공통적용할 수 있도록 함.
+			 */
+			function openRightFrameDefault(foldername, href, shareId) {
+				openRightFrame(encodeURIComponent(foldername),
+							   encodeURIComponent(href),
+							   (shareId != "")? "&shareId=" + encodeURIComponent(shareId) : "");
+			}
 
-		        window.open("/ezEmail/mailWrite.do?cmd=NEW&operatorMailAddress=" + operatorMailAddress, "", feature);
+			function operatorSendMail() {
+				openWindowForMail("/ezEmail/mailWrite.do?cmd=NEW&operatorMailAddress=" + operatorMailAddress, "", null);
 		    }
 			
 			function leftResize(){
@@ -1363,18 +1290,7 @@
 			}
 			
 			function goAdress() {
-				var pheight = window.screen.availHeight;
-	            var conHeight = pheight * 0.8;
-	            var pwidth = window.screen.availWidth;
-	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
-	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
-	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            var requestUrl = "/ezEmail/mailMain.do?funCode=2";
-	            
-	            window.open(requestUrl, "", feature);
+	            openWindowForMail("/ezEmail/mailMain.do?funCode=2", "", null);
 			}
 			
 

@@ -48,7 +48,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @Service("EzWebFolderService_m")
 public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderServiceimpl_m.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderServiceimpl_m.class);
 	
 	@Autowired
 	private EzWebFolderDAO_m ezWebFolderDAO_m;
@@ -229,7 +229,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		countInfo.put("totalPage", totalPage);
 		countInfo.put("pageSize", (long) pageSize);
 		
-		LOGGER.debug("countInfo: " + countInfo);
+		logger.debug("countInfo: " + countInfo);
 		return countInfo;
 	}
 	
@@ -279,7 +279,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		countInfo.put("totalPage", totalPage);
 		countInfo.put("pageSize", (long) pageSize);
 		
-		LOGGER.debug("countInfo: " + countInfo);
+		logger.debug("countInfo: " + countInfo);
 		return countInfo;
 	}
 	
@@ -287,7 +287,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	public String checkShared(String folderFileId, String folderFileType, String folderPath, int tenantId) throws Exception {
 		String result = "N";
 		
-		LOGGER.debug("folderFileId=" + folderFileId + ",folderFileType=" + folderFileType + ",folderPath=" + folderPath);
+		logger.debug("folderFileId=" + folderFileId + ",folderFileType=" + folderFileType + ",folderPath=" + folderPath);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderFileId", folderFileId);
@@ -387,7 +387,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		idList.add(idMap);
 		
-		LOGGER.debug("idMapList: " + idList);
+		logger.debug("idMapList: " + idList);
 		return idList;
 	}
 	
@@ -412,7 +412,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		idList.addAll(idSet);
 		
-		LOGGER.debug("idList: " + idList);
+		logger.debug("idList: " + idList);
 		return idList;
 	}
 	
@@ -638,7 +638,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		countInfo.put("totalPage", totalPage);
 		countInfo.put("pageSize", (long) pageSize);
 		
-		LOGGER.debug("countInfo: " + countInfo);
+		logger.debug("countInfo: " + countInfo);
 		return countInfo;
 	}
 	
@@ -771,9 +771,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			}
 		} 
 		
-		LOGGER.debug("orderByData:"+ secondSort);
-		LOGGER.debug("realColmn:"+ realColmn);
-		LOGGER.debug("order:"+ order);
+		logger.debug("orderByData:"+ secondSort);
+		logger.debug("realColmn:"+ realColmn);
+		logger.debug("order:"+ order);
 		
 		
 		map.put("orderByData", secondSort);
@@ -790,7 +790,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		result.put("currentPage", currPage);
 		result.put("totalRows", totalRows);
 
-		LOGGER.debug("result=" + result);
+		logger.debug("result=" + result);
 		return result;
 	}
 
@@ -808,7 +808,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public void permanetDeleteSelectedFiles(String[] fileIDList, String[] folderIDList ,LoginVO userInfo, String realPath, String flag) throws Exception {
-		LOGGER.debug("permanetDeleteSelectedFiles start." );
+		logger.debug("permanetDeleteSelectedFiles start." );
 		String userName1 = userInfo.getDisplayName1();
 		String userName2 = userInfo.getDisplayName2();
 		String companyId = userInfo.getCompanyID();
@@ -829,7 +829,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			flag = "";
 		}
 		for (String file : fileIDList ) {
-			LOGGER.debug("fileDelete");
+			logger.debug("fileDelete");
 			if (!file.equals("")) {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				if (fileVO != null) {
@@ -853,12 +853,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 				
 				if (folderVO != null) {
-					if (flag =="delete") {
+
+					// 2023-05-26 이사라 : 시큐어코딩 문자열 비교 오류 수정 - else 부분 코멘트 남김
+					if ("delete".equalsIgnoreCase(flag)) {
 						deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2, flag);
 						List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId(), flag);
 						
 						for (String currentFolder : lowerFolders) {
-							LOGGER.debug("currentFolder" + currentFolder);
+							logger.debug("currentFolder" + currentFolder);
 							
 							// 현재 폴더의 정보 가져오기 
 							FolderVO currentFolderVO = ezWebFolderService.getFolderByFolderId(currentFolder, offset, tenantId);
@@ -888,6 +890,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 					} else {
 						if (!folder.equals("")) {
 							
+							// Commit b6995680e1fa58de107839a8d4fb2fddd5370cc3 : 영구 삭제시 하위폴더 정확히 삭제 되지 않는 문제 해결
+							// 위 커밋은 flag 값이 delete인지 문자열 비교를 하는데 == 를 사용하여 생긴 오류 발생
+							// 이후 리팩토링 시 아래 코드에서 불필요한 부분은 제거해도 좋을 것으로 보여 코멘트 남김
 							if (folderVO != null) {
 								deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2, flag);
 								List<Map<String, String>> subFolders = subFolders(folderVO.getFolderId(), folderVO.getOwnerId(), tenantId);
@@ -908,7 +913,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			}
 		}
 		
-		LOGGER.debug("permanetDeleteSelectedFiles end." );
+		logger.debug("permanetDeleteSelectedFiles end." );
 	}
 
 	@Override
@@ -948,7 +953,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public String subFolderRealDeleteRecursive(List<Map<String, String>> subFolders, int tenantId, Map<String, Object> map, LoginVO userInfo, String flag) throws Exception {
-		LOGGER.debug("subFolderRealDeleteRecursive start.");
+		logger.debug("subFolderRealDeleteRecursive start.");
 		String status  = "";
 		for (int i=0; i < subFolders.size(); i++) {
 			
@@ -979,7 +984,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				continue;
 			}
 		}
-		LOGGER.debug("subFolderRealDeleteRecursive end.");
+		logger.debug("subFolderRealDeleteRecursive end.");
 		return status; 
 	}
 	
@@ -990,7 +995,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		File file = new File(commonUtil.detectPathTraversal(pDirPath));
 		int isDeleted = -1;
 		
-		LOGGER.debug("pDirPath=" + pDirPath);
+		logger.debug("pDirPath=" + pDirPath);
 		
 		// 파일 존재 여부 상관 없이 지우도록 함
 		ezWebFolderService.deleteEncryptedAllVersions(fileVO.getFileId(), userInfo.getTenantId());
@@ -999,12 +1004,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		if (file.exists() && file.isFile()) {
 			if (file.delete()) {
 				isDeleted = 1;
-				LOGGER.debug(fileVO.getFileName() + "delete is success");
+				logger.debug(fileVO.getFileName() + "delete is success");
 			} else {
-				LOGGER.debug(fileVO.getFileName() + "delete is fail");
+				logger.debug(fileVO.getFileName() + "delete is fail");
 			}
 		} else {
-			LOGGER.error("File is Not Found : " + fileVO.getFileName());
+			logger.error("File is Not Found : " + fileVO.getFileName());
 		}
 		
 		return isDeleted;
@@ -1021,9 +1026,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		int result = ezWebFolderDAO.deleteFile(map);
 		
 		if (result > 0) {
-			LOGGER.debug("deleteFile is success");
+			logger.debug("deleteFile is success");
 		} else {
-			LOGGER.debug("deleteFile is fail");
+			logger.debug("deleteFile is fail");
 		}
 		
 		return result;
@@ -1040,9 +1045,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		int result = ezWebFolderDAO.deleteFolder(map);
 		
 		if (result > 0) {
-			LOGGER.debug("deleteFolder is success");
+			logger.debug("deleteFolder is success");
 		} else {
-			LOGGER.debug("deleteFolder is fail");
+			logger.debug("deleteFolder is fail");
 		}
 		
 		return result;
@@ -1059,9 +1064,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		int result = ezWebFolderDAO.deleteFolderUser(map);
 		
 		if (result > 0) {
-			LOGGER.debug("deleteFolder is success");
+			logger.debug("deleteFolder is success");
 		} else {
-			LOGGER.debug("deleteFolder is fail");
+			logger.debug("deleteFolder is fail");
 		}
 		
 		return result;
@@ -1071,7 +1076,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	public int deleteFileUser (FileVO fileVO , String flag) throws Exception {
 		if (fileVO.isReply()) {
 			// 답글 파일은 권한 데이터가 없으니 0 리턴
-			LOGGER.debug("deleteFileUser skipped: this is reply file.");
+			logger.debug("deleteFileUser skipped: this is reply file.");
 			return 0;
 		}
 
@@ -1083,9 +1088,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		int result = ezWebFolderDAO.deleteFileUser(map);
 		
 		if (result > 0) {
-			LOGGER.debug("deleteFileUser is success");
+			logger.debug("deleteFileUser is success");
 		} else {
-			LOGGER.debug("deleteFileUser is fail");
+			logger.debug("deleteFileUser is fail");
 		}
 		
 		return result;
@@ -1093,7 +1098,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2, String flag) throws Exception {
-		LOGGER.debug("deleteAllFilesInFolder start.");
+		logger.debug("deleteAllFilesInFolder start.");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderVO.getFolderId());
 		map.put("tenantId", folderVO.getTenantId());
@@ -1122,9 +1127,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			}
 			
 			if (result > 0) {
-				LOGGER.debug("deleteAllFilesInFolder is success");
+				logger.debug("deleteAllFilesInFolder is success");
 			} else {
-				LOGGER.debug("deleteAllFilesInFolder is fail");
+				logger.debug("deleteAllFilesInFolder is fail");
 			}
 		}
 
@@ -1132,12 +1137,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		// 폴더 권한 비상속
 		ezWebFolderService.deleteNotInheritFolder(folderVO.getFolderId(), tenantId);
 
-		LOGGER.debug("deleteAllFilesInFolder start.");
+		logger.debug("deleteAllFilesInFolder start.");
 	}
 
 	@Override
 	public List<TrashCanVO> getFileByFolderId(String folderId, int tenantId, String userId) throws Exception {
-		LOGGER.debug("getFileByFolderId Started.");
+		logger.debug("getFileByFolderId Started.");
 
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
@@ -1146,7 +1151,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		List<TrashCanVO> fileList = ezWebFolderDAO.getFileListByFolderId(map);
 		
-		LOGGER.debug("getFileByFolderId ended");
+		logger.debug("getFileByFolderId ended");
 		return fileList;
 	}
 
@@ -1176,11 +1181,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		if (result > 0) {
 			ezWebFolderService.saveLog("RE", companyId, offset, userId, userName1, userName2, tenantId, fileVO, "", primary);
-			LOGGER.debug("restoreFile is success");
+			logger.debug("restoreFile is success");
 			
 			return true;
 		} else {
-			LOGGER.debug("restoreFile is fail");
+			logger.debug("restoreFile is fail");
 			
 			return false;
 		}
@@ -1198,11 +1203,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		int result = ezWebFolderDAO.restoreFolder(map);
 		
 		if (result > 0) {
-			LOGGER.debug("restoreFolder is success");
+			logger.debug("restoreFolder is success");
 			
 			return true;
 		} else {
-			LOGGER.debug("restoreFolder is fail");
+			logger.debug("restoreFolder is fail");
 			
 			return false;
 		}
@@ -1354,10 +1359,10 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				ezWebFolderService.saveLog("RE", companyId, offset, userId, userName1, userName2, tenantId, fileVO, "", primary);
 				
-				LOGGER.debug("restoreFileInFolder is success");
+				logger.debug("restoreFileInFolder is success");
 			} else {
 				success = false;
-				LOGGER.debug("restoreFileInFolder is fail");
+				logger.debug("restoreFileInFolder is fail");
 			}
 		}
 		
@@ -1488,8 +1493,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 		Integer count = ezWebFolderDAO.isExistsFavorite(parameterMap);
 
-		LOGGER.debug("is exists: " + (count == 1));
-		LOGGER.debug("exists data: " + parameterMap.toString());
+		logger.debug("is exists: " + (count == 1));
+		logger.debug("exists data: " + parameterMap.toString());
 
 		return count == 1;
 	}
@@ -1736,7 +1741,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
 			SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
 			Date date1 = formatter2.parse(folderVO.getCreateDate());																							// folder의 creatreDate를 가져와서 date방식으로 format
-			LOGGER.debug("date1:"+date1 + ",folderCreateDate:"+folderVO.getCreateDate());
+			logger.debug("date1:"+date1 + ",folderCreateDate:"+folderVO.getCreateDate());
 			
 			SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
 			createDate = targetDateFormat.format(date1);
@@ -1812,17 +1817,17 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	@Override
 	public String setWebFolderApplyHistory(String primary, int tenantId, String companyId, String folderName, String content, 
 			List<Map<String, String>> memberList, String usingS, String usingE) throws Exception {
-		LOGGER.debug("setWebFolderApplyHistory started.");
+		logger.debug("setWebFolderApplyHistory started.");
 		
 		String applyId = UUID.randomUUID().toString();
-		LOGGER.debug("applyId=" + applyId);
+		logger.debug("applyId=" + applyId);
 
 		// HISTORY
 		insertWebFolderApplyHistory(applyId, tenantId, companyId, folderName, content, usingS, usingE);
 		// HISTORY MEMBER
 		insertWebFolderApplyHistoryMember(primary, tenantId, companyId, applyId, memberList);
 		                     
-		LOGGER.debug("setWebFolderApplyHistory ended.");
+		logger.debug("setWebFolderApplyHistory ended.");
 		return applyId;
 	}
 	
@@ -1841,7 +1846,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		try {
 			ezWebFolderDAO_m.insertWebFolderApplyHistory(map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			throw new Exception("HISTORY_ERROR");
 		}
 	}
@@ -1870,7 +1875,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			try {
 				ezWebFolderDAO_m.insertWebFolderApplyHistoryMember(map);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				throw new Exception("HISTORY_MEMBER_ERROR");
 			}
 		} // while end

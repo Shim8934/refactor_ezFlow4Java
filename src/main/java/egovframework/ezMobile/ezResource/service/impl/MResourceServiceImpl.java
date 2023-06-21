@@ -35,7 +35,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("MResourceService")
 public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MResourceService{
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MResourceServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MResourceServiceImpl.class);
 	
 	@Resource(name="MResourceDAO")
 	private MResourceDAO mResourceDAO;
@@ -87,7 +87,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_POWNERID", ownerId);
 		map.put("tenantID", tenantId);
 		List<MResourceScheduleVO> list = mResourceDAO.getResScheduleList(map);
-		LOGGER.debug("size of list: " + list.size());
+		logger.debug("size of list: " + list.size());
 		return list;
 	}
 
@@ -202,7 +202,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PGRESFLAG", "");
 		map.put("v_PCHARACTERID", 0);
 
-		LOGGER.debug("map: " + map);
+		logger.debug("map: " + map);
 		mResourceDAO.addResSch(map);
 	}
 
@@ -225,7 +225,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PAPPROVEFLAG", approveFlag);
 		map.put("v_PNUM", num);
 		
-		LOGGER.debug("map in modifyResSch: " + map);
+		logger.debug("map in modifyResSch: " + map);
 		
 		mResourceDAO.modifyResSch(map);
 	}
@@ -248,8 +248,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			map.put("v_PMAXNUM", maxNum);
 			startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 			endDate = commonUtil.getDateStringInUTC(endDate, offset, true);			
-			LOGGER.debug("startDate in repeat :", startDate);
-			LOGGER.debug("endDate in repeat :", endDate);
+			logger.debug("startDate in repeat :", startDate);
+			logger.debug("endDate in repeat :", endDate);
 			map.put("v_PSTARTDATE", startDate);
 			map.put("v_PENDDATE", endDate);
 			mResourceDAO.delResSch_I(map);*/
@@ -277,9 +277,9 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	public void delResFavor(String resId, String userId, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		
-		LOGGER.debug("resId: " + resId);
-		LOGGER.debug("userId: " + userId);
-		LOGGER.debug("tenantId: " + tenantId);
+		logger.debug("resId: " + resId);
+		logger.debug("userId: " + userId);
+		logger.debug("tenantId: " + tenantId);
 		
 		map.put("v_PRESID", resId);
 		map.put("v_PUSERID", userId);
@@ -289,7 +289,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	
 	@Override
 	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt, String check, String checkNum, String checkSDate, String checkEDate, String langStr) throws Exception {
-		LOGGER.debug("getScheduleList Start");
+		logger.debug("getScheduleList Start");
 	
 		Map<String, Object> result = new HashMap<>();
 		String startDateLimit = eDate + " 23:59:59";
@@ -298,14 +298,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		startDateLimit = commonUtil.getDateStringInUTC(startDateLimit, offset, true);
 		endDateLimit = commonUtil.getDateStringInUTC(endDateLimit, offset, true);
 		
-		LOGGER.debug("startDateLimit : " + startDateLimit);
-		LOGGER.debug("endDateLimit : " + endDateLimit);
+		logger.debug("startDateLimit : " + startDateLimit);
+		logger.debug("endDateLimit : " + endDateLimit);
 		
 		
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
 		List<ResGetScheduleVO> getScheduleList = getScheduleNormalList(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
-		//LOGGER.debug("getScheduleList : " + getScheduleList);
+		//logger.debug("getScheduleList : " + getScheduleList);
 		
 		for (ResGetScheduleVO resVO : getScheduleList) {
 			resVO.setStartDate(commonUtil.getDateStringInUTC(resVO.getStartDate(), offset, false));
@@ -322,7 +322,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
 		List<ResGetScheduleVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
-		//LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
+		//logger.debug("getScheduleListRept: " + getScheduleListRept);
 		
 		getRepeatResult.addAll(getScheduleListRept);
 		
@@ -345,14 +345,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 					
 					// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
 					ResScheduleRepetitionVO rvo = resStruct(vo);
-					//LOGGER.debug("ResScheduleRepetitionVO: " + rvo);
+					//logger.debug("ResScheduleRepetitionVO: " + rvo);
 					
 					// 반복예약의 반복되는 날짜리스트 뽑아옴
 					List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);
 					
 					// 반복예약 중에 삭제된 예약 가져옴
 					List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
-					LOGGER.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+					logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
 					
 					for (int j=0; j<deletedDateStrList.size(); j++) {
 						deletedDateStrList.set(j, commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false));
@@ -435,7 +435,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			}
 		});
 						
-		LOGGER.debug("getScheduleList: " + getScheduleList);		
+		logger.debug("getScheduleList: " + getScheduleList);		
 		
 		int count = getScheduleList.size();
 		
@@ -444,7 +444,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		if(!listCnt.equals("")&&(listCnt != null)){
 			int index = 0;
 			index =	Integer.parseInt(listCnt);
-			LOGGER.debug("index: " + index);
+			logger.debug("index: " + index);
 			
 			
 			if(count > index){
@@ -477,17 +477,17 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			}
 		}
 		
-		LOGGER.debug("resultList: " + resultList);
+		logger.debug("resultList: " + resultList);
 			
 		result.put("scheduleList", resultList);
 		result.put("count", count);
 		result.put("repeatYn", repeatYn);
-		LOGGER.debug("getScheduleList End");
+		logger.debug("getScheduleList End");
 		return result;
 	}
 	
 	public List<Date[]> getRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
-		LOGGER.debug("getRepDeteTimes started");
+		logger.debug("getRepDeteTimes started");
 		
 		int maxTemp = 1000;
 		
@@ -510,8 +510,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			returnList = getMonthlyRepDateTimes(vo, sDate, eDate, maxTemp);
 		}
 		
-		LOGGER.debug("returnList.size()=" + returnList.size());
-		LOGGER.debug("getRepDeteTimes ended");
+		logger.debug("returnList.size()=" + returnList.size());
+		logger.debug("getRepDeteTimes ended");
 		
 		return returnList;
 	}
@@ -664,7 +664,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			temp--;
 			
 			if (temp < 0) {
-				LOGGER.debug("Repeat time over 1000.");
+				logger.debug("Repeat time over 1000.");
 				break;
 			}
 		}
@@ -780,7 +780,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			temp--;
 			
 			if (temp < 0) {
-				LOGGER.debug("Repeat time over 1000.");
+				logger.debug("Repeat time over 1000.");
 				break;
 			}
 			
@@ -790,7 +790,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	public List<Date[]> getMonthlyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception {
-		LOGGER.debug("getMonthlyRepDateTimes started.");
+		logger.debug("getMonthlyRepDateTimes started.");
 		int freq = vo.getFreq();
 		int selType = vo.getSelType();
 		int interval = vo.getInterval();
@@ -969,13 +969,13 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			temp--;
 			
 			if (temp < 0) {
-				LOGGER.debug("Repeat time over 1000.");
+				logger.debug("Repeat time over 1000.");
 				break;
 			}
 			
 		}
 		
-		LOGGER.debug("getMonthlyRepDateTimes End");
+		logger.debug("getMonthlyRepDateTimes End");
 		return returnList;
 	}
 	
@@ -1052,7 +1052,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	
 	public ResScheduleRepetitionVO resStruct(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, 
 			String strInterval, String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear) throws Exception {
-		LOGGER.debug("resStruct started");
+		logger.debug("resStruct started");
 
 		ResScheduleRepetitionVO result = new ResScheduleRepetitionVO();
 		
@@ -1113,12 +1113,12 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			result.setEndDate(format.parse(strEndDateTime));
 		}
 		
-		LOGGER.debug("resStruct ended");
+		logger.debug("resStruct ended");
 		return result;
 	}
 	
 	public ResScheduleRepetitionVO resStruct(ResGetScheduleRepetitionVO vo) throws Exception {
-		LOGGER.debug("resStruct started");
+		logger.debug("resStruct started");
 
 		ResScheduleRepetitionVO result = new ResScheduleRepetitionVO();
 		
@@ -1180,7 +1180,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			result.setAllDay(true);
 		}
 		
-		LOGGER.debug("resStruct ended");
+		logger.debug("resStruct ended");
 		return result;
 	}
 
@@ -1239,7 +1239,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	@Override
 	public Map<String, Object> getScheduleApprList(String ownerID, String companyID, String sDate, String eDate, String userId, String deptId, String writerName, String approveType, int tenantID, String offset, String check, String checkNum, String checkSDate, String checkEDate, String langStr, String authYn) throws Exception {
 		
-		LOGGER.debug("getScheduleList Start");
+		logger.debug("getScheduleList Start");
 		
 		Map<String, Object> result = new HashMap<>();
 		String startDateLimit = eDate + " 23:59:59";
@@ -1247,10 +1247,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 		startDateLimit = commonUtil.getDateStringInUTC(startDateLimit, offset, true);
 		endDateLimit = commonUtil.getDateStringInUTC(endDateLimit, offset, true);
-		LOGGER.debug("");
+		logger.debug("");
 		
-		LOGGER.debug("startDateLimit" + startDateLimit);
-		LOGGER.debug("endDateLimit" + endDateLimit);
+		logger.debug("startDateLimit" + startDateLimit);
+		logger.debug("endDateLimit" + endDateLimit);
 		
 		
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
@@ -1271,7 +1271,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
 		List<ResGetScheduleVO> getScheduleListRept = getScheduleApprRepetList(ownerID, companyID, startDateLimit, endDateLimit, userId, deptId, writerName, approveType, tenantID, check, authYn);
 		
-		LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
+		logger.debug("getScheduleListRept: " + getScheduleListRept);
 		
 		getRepeatResult.addAll(getScheduleListRept);
 		
@@ -1294,14 +1294,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 					
 					// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
 					ResScheduleRepetitionVO rvo = resStruct(vo);
-					LOGGER.debug("ResScheduleRepetitionVO: " + rvo);
+					logger.debug("ResScheduleRepetitionVO: " + rvo);
 					
 					// 반복예약의 반복되는 날짜리스트 뽑아옴
 					List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);
 					
 					// 반복예약 중에 삭제된 예약 가져옴
 					List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
-					LOGGER.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+					logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
 					
 					for (int j=0; j<deletedDateStrList.size(); j++) {
 						deletedDateStrList.set(j, commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false));
@@ -1401,32 +1401,32 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		String repeatYn = "N";
 
 		if(check.equals("Y")) {
-			LOGGER.debug("checkSDate" + checkSDate);
-			LOGGER.debug("checkEDate" + checkEDate);
+			logger.debug("checkSDate" + checkSDate);
+			logger.debug("checkEDate" + checkEDate);
 			
 			for (ResGetScheduleVO vo : getScheduleList) {
 			
-				LOGGER.debug("vo in loop for cheking repeat " + vo.toString());
-				LOGGER.debug("vo.getStartDate() " + Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
-				LOGGER.debug("vo.getEndDate() " + Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14))); 
-				LOGGER.debug("checkSDate() " + Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
-				LOGGER.debug("checkEDate() " + Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
+				logger.debug("vo in loop for cheking repeat " + vo.toString());
+				logger.debug("vo.getStartDate() " + Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
+				logger.debug("vo.getEndDate() " + Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14))); 
+				logger.debug("checkSDate() " + Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
+				logger.debug("checkEDate() " + Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)));
 				
 				if((Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) <= Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) < Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)))
 				||(Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) < Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)))
 				||(Long.parseLong(vo.getEndDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) <= Long.parseLong(checkEDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) && Long.parseLong(checkSDate.replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "")) <= Long.parseLong(vo.getStartDate().replaceAll("-", "").replaceAll(":", "").replaceAll(" ", "").substring(0,14)) )){
-					LOGGER.debug("repeat repeat repaet !!!!");	
+					logger.debug("repeat repeat repaet !!!!");	
 					repeatYn = "Y";
 				}
 			}
 		}
 				
-		LOGGER.debug("resultList: " + getScheduleList);		
+		logger.debug("resultList: " + getScheduleList);		
 		
 		result.put("scheduleList", getScheduleList);
 		result.put("count", getScheduleList.size());
 		result.put("repeatYn", repeatYn);
-		LOGGER.debug("getScheduleList End");
+		logger.debug("getScheduleList End");
 		return result;
 	}
 	
@@ -1445,7 +1445,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("tenantID", tenantID);
 		map.put("check", check);
 		
-		LOGGER.debug("sql이 없을수도 있나");
+		logger.debug("sql이 없을수도 있나");
 		return mResourceDAO.getScheduleApprList(map);
 	}
 	
@@ -1468,7 +1468,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	
 	@Override
 	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) {	
-		LOGGER.debug("getResApprBrdList start.");
+		logger.debug("getResApprBrdList start.");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDCOMPANY", brdCompany);

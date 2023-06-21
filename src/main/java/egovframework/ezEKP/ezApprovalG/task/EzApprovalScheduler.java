@@ -113,7 +113,7 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 						susinScheduleList.remove(i);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					idx = idx + 1 >= susinScheduleList.size() ? 0 : idx + 1;
 					if(tryCnt == 3) {
 						logger.debug("susinScheduler Retry 3 times failed!");
@@ -203,7 +203,7 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 				return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -260,7 +260,7 @@ public class EzApprovalScheduler extends EgovFileMngUtil {
 		        }
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		} else {
 			logger.debug("config.Run_Scheduler property is not YES.");

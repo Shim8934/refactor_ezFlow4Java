@@ -216,7 +216,7 @@ public class EzPollController extends EgovFileMngUtil {
 				model.addAttribute("question", pollQuestionVO);
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}		
 		
 			//Get list of options		
@@ -515,7 +515,7 @@ public class EzPollController extends EgovFileMngUtil {
 						}
 					}
 					catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}	
 				}										
 			}
@@ -717,7 +717,7 @@ public class EzPollController extends EgovFileMngUtil {
 				ezPollService.deleteUserAndQuestion(pollQuestionVO.getQstId(), loginVO.getTenantId());
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		else {
@@ -1318,7 +1318,7 @@ public class EzPollController extends EgovFileMngUtil {
 			strXML = "<DATA>OK</DATA>";
 		}
 		catch (Exception e) {			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			strXML = "<DATA>FAIL</DATA>";
 		}
 		
@@ -1430,7 +1430,7 @@ public class EzPollController extends EgovFileMngUtil {
 			strXML = "<DATA>OK</DATA>";
 		}
 		catch (Exception e) {			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			strXML = "<DATA>FAIL</DATA>";
 		}
 		
@@ -1470,7 +1470,7 @@ public class EzPollController extends EgovFileMngUtil {
 			strXML = "<DATA>OK</DATA>";
 		}
 		catch (Exception e) {			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			strXML = "<DATA>FAIL</DATA>";
 		}
 		
@@ -1528,7 +1528,7 @@ public class EzPollController extends EgovFileMngUtil {
 		} 
 		catch (Exception e) {
 			//strXML = "<DATA>FAIL</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("Undo modify vote finishes!");
@@ -1898,7 +1898,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		catch (Exception e) {
 			strXML = "<DATA>DELETE_FAIL</DATA>";
-	        e.printStackTrace();
+	        logger.error(e.getMessage(), e);
 	    }
 		
 		logger.debug("Delete comment file finishes!");
@@ -1952,7 +1952,7 @@ public class EzPollController extends EgovFileMngUtil {
 			}
 			catch (Exception e) {
 				strXML = "<DATA>DELETE_FAIL</DATA>";
-		        e.printStackTrace();
+		        logger.error(e.getMessage(), e);
 		    }
 		}
 		
@@ -1995,7 +1995,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		catch (Exception e) {
 			strXML = "<DATA>DELETE_FAIL</DATA>";
-	        e.printStackTrace();
+	        logger.error(e.getMessage(), e);
 	    }
 		
 		logger.debug("Delete file finishes!");
@@ -2154,7 +2154,7 @@ public class EzPollController extends EgovFileMngUtil {
 			ezPollService.insertModifyingQuestion(pollQstStatusVO, companyID);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		//Inform all waiting users
@@ -2180,7 +2180,7 @@ public class EzPollController extends EgovFileMngUtil {
 			ezPollService.updateEndDateForQst(qstId, tenantId, dateNow);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		//Inform all subscriber users
@@ -2662,7 +2662,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		catch (Exception e) {
 			strXML = "<RESULT>ADD_FAIL</RESULT>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return strXML;
@@ -2679,7 +2679,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		catch (Exception e) {
 			strXML = "<RESULT>REMOVE_FAIL</RESULT>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return strXML;
@@ -2952,7 +2952,7 @@ public class EzPollController extends EgovFileMngUtil {
 		catch (Exception e) {
 			logger.debug("Exception in delete question function!");
 			strXML = "<DATA>DELETE_FAIL</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
 		return strXML;

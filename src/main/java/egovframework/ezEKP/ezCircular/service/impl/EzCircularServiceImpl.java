@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -315,7 +316,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		try {
 			file.renameTo(new File(commonUtil.detectPathTraversal(afterFilePath)));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("fileMove ended.");
@@ -346,16 +347,21 @@ public class EzCircularServiceImpl implements EzCircularService {
 			
 			bw.append(result.toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
-			try {
-				fis.close();
+			// 2023-06-01 이사라 : 시큐어코딩 NullPointerException, 리소스 close
+			IOUtils.closeQuietly(fis);
+			IOUtils.closeQuietly(fos);
+			IOUtils.closeQuietly(br);
+			IOUtils.closeQuietly(bw);
+
+			/*try {
 				fos.close();
 				br.close();
 				bw.close();
 			} catch (Exception e) {
-				e.printStackTrace();
-			}
+				logger.error(e.getMessage(), e);
+			}*/
 		}
 	}
 

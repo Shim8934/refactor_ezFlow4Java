@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezWebFolder.service.impl;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -34,6 +33,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileUploadVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
@@ -69,7 +69,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	@Resource(name = "EzWebFolderDAO")
 	private EzWebFolderDAO ezWebFolderDAO;
 	
-	private static final Logger LOGGER = LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(EzWebFolderServiceImpl_y.class);
 
 	@Autowired
@@ -96,7 +96,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date),
 				offset, true);
 		String folderId = ezWebFolderAdminService.getMaxFolderID(tenantId);
-		LOGGER.debug("timeUTC: " + timeUTC);
+		logger.debug("timeUTC: " + timeUTC);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -114,7 +114,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 				int folderIdInt = ezWebFolderDAO_y.insertRootFolder(map);
 				map.put("newFolderId", String.valueOf(folderIdInt));
 				map.put("folderUpper", "");
-				LOGGER.debug("folderId:" + folderId + ",folderUpper:" + ",tenantId:" + tenantId);
+				logger.debug("folderId:" + folderId + ",folderUpper:" + ",tenantId:" + tenantId);
 				ezWebFolderDAO_y.updateFolderPath(map);
 				folderId = String.valueOf(folderIdInt); 
 				
@@ -122,7 +122,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 					ezWebFolderAdminService.insertFolderUser(
 						ezWebFolderAdminService.getMaxFolderUserSeq(tenantId), idMap.get("id"), "dept", folderId, userId,timeUTC, compId, tenantId);
 				}
-				LOGGER.debug("root folder created. idMap: " + idMap);
+				logger.debug("root folder created. idMap: " + idMap);
 			}
 		}
 	}
@@ -142,7 +142,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		List<FolderTreeVO> folderTree = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		LOGGER.debug("getFolderTree. userId :" + userId + ", folderType :" + folderType);
+		logger.debug("getFolderTree. userId :" + userId + ", folderType :" + folderType);
 		map.put("primary", primary);
 		map.put("tenantId", tenantId);
 		map.put("compId", compId);
@@ -261,7 +261,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			folderTree.addAll(compFolderTree);
 		}
 
-		LOGGER.debug("folderTree size: " + folderTree.size());
+		logger.debug("folderTree size: " + folderTree.size());
 		return folderTree;
 	}
 
@@ -269,7 +269,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	 * 상위 권한이 없는 폴더라면 하위의 폴더는 나타나지 않도록 제거 
 	 */
 	private List<FolderTreeVO> checkFolderParent(List<FolderTreeVO> folderTreeList) {
-		LOGGER.debug("checkFolderParent start.");
+		logger.debug("checkFolderParent start.");
 
 		List<String> folderIds = folderTreeList.stream().map(FolderTreeVO::getId).collect(Collectors.toList());
 
@@ -281,11 +281,11 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			}
 
 			String id = treeVO.getId();
-			LOGGER.debug("parent folder not exists permission. delete folderId={}", id);
+			logger.debug("parent folder not exists permission. delete folderId={}", id);
 			return folderIds.remove(id);
 		});
 
-		LOGGER.debug("checkFolderParent end.");
+		logger.debug("checkFolderParent end.");
 		return folderTreeList;
 	}
 	
@@ -296,7 +296,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart,
 			int pEnd, String offset, String primary) throws Exception {
-		LOGGER.debug("getFileList started");
+		logger.debug("getFileList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
@@ -324,17 +324,17 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("primary", primary);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 
-		LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
+		logger.debug("offset : " + commonUtil.getMinuteUTC(offset));
 
 		List<FileVO> filevo = new ArrayList<FileVO>();
 		
-		LOGGER.debug("searchExt:"+searchExt+",searchStartDate:"+searchStartDate+",searchEndDate:"+searchEndDate
+		logger.debug("searchExt:"+searchExt+",searchStartDate:"+searchStartDate+",searchEndDate:"+searchEndDate
 				+",searchCreateName:"+searchCreateName+",searchFileName:"+searchFileName);
 		
 		if (!searchExt.equals("") || !searchStartDate.equals("") || !searchEndDate.equals("")
 				|| !searchCreateName.equals("") || !searchFileName.equals("")) {
 			flag = "1";
-			LOGGER.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
+			logger.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
 					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
 			if (!searchEndDate.equals("") ) {
@@ -366,7 +366,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			}
 		}
 
-		LOGGER.debug("getFileList ended");
+		logger.debug("getFileList ended");
 		return filevo;
 	}
 	
@@ -378,7 +378,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart,
 			int pEnd, String offset, String primary, String sortType, String sortColumn) throws Exception {
-		LOGGER.debug("getFileList started");
+		logger.debug("getFileList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
@@ -409,14 +409,14 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("sortColumn", sortColumn);
 		map.put("folderLevel", detailFld.getFolderLevel());
 		
-		LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
+		logger.debug("offset : " + commonUtil.getMinuteUTC(offset));
 		
 		List<FileVO> filevo = new ArrayList<FileVO>();
 		
 		if (!searchExt.equals("") || !searchStartDate.equals("") || !searchEndDate.equals("")
 				|| !searchCreateName.equals("") || !searchFileName.equals("")) {
 			flag = "1";
-			LOGGER.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
+			logger.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
 					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
 			if (!searchEndDate.equals("") ) {
@@ -503,7 +503,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList2(map);
 		}
 		
-		LOGGER.debug("getFileList ended");
+		logger.debug("getFileList ended");
 		return filevo;
 	}
 
@@ -514,7 +514,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart,
 			int pEnd, String offset, String primary) throws Exception {
-		LOGGER.debug("getFileToTalCount started");
+		logger.debug("getFileToTalCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -543,7 +543,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
 
-		LOGGER.debug("offset  :  " + commonUtil.getMinuteUTC(offset));
+		logger.debug("offset  :  " + commonUtil.getMinuteUTC(offset));
 
 		int fileTotalCnt = 0;
 		int fldTotalCnt = 0;
@@ -551,7 +551,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		if (!searchExt.equals("") || !searchStartDate.equals("") || !searchEndDate.equals("")
 				|| !searchCreateName.equals("") || !searchFileName.equals("")) {
 			flag = "1";
-			LOGGER.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
+			logger.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
 					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
 			if (!searchEndDate.equals("") ) {
@@ -569,21 +569,21 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("flag", flag);
 
 		if (flag.equals("1")) {
-			LOGGER.debug("searchFileToTalCount start ");
+			logger.debug("searchFileToTalCount start ");
 			if (parentId.equals("root")) {
 				fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCountR(map);
 			} else {
 				fileTotalCnt = ezWebFolderDAO_y.searchFileToTalCount(map);
 			}
-			LOGGER.debug("searchFileToTalCount end ");
+			logger.debug("searchFileToTalCount end ");
 		} else {
-			LOGGER.debug("getFileTotalCount start ");
+			logger.debug("getFileTotalCount start ");
 			if (parentId.equals("root")) {
 				fileTotalCnt = ezWebFolderDAO_y.getFileTotalCountR(map);
 			} else {
 				fileTotalCnt = ezWebFolderDAO_y.getFileTotalCount(map);
 			}
-			LOGGER.debug("getFileTotalCount end ");
+			logger.debug("getFileTotalCount end ");
 		}
 
 		fldTotalCnt = ezWebFolderDAO_y.getFldTotalCount(map);
@@ -605,7 +605,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		cnt.put("fldTotalCnt", fldTotalCnt);
 		cnt.put("totalCount", totalCount);
 
-		LOGGER.debug("getFileToTalCount ended");
+		logger.debug("getFileToTalCount ended");
 		return cnt;
 	}
 
@@ -616,7 +616,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart,
 			int pEnd, String offset, String primary) throws Exception {
-		LOGGER.debug("getFileToTalCount started");
+		logger.debug("getFileToTalCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -646,7 +646,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("primary", primary);
 		map.put("folderLevel", detailFld.getFolderLevel());
 		
-		LOGGER.debug("offset  :  " + commonUtil.getMinuteUTC(offset));
+		logger.debug("offset  :  " + commonUtil.getMinuteUTC(offset));
 		
 		int fileTotalCnt = 0;
 		int fldTotalCnt = 0;
@@ -654,7 +654,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		if (!searchExt.equals("") || !searchStartDate.equals("") || !searchEndDate.equals("")
 				|| !searchCreateName.equals("") || !searchFileName.equals("")) {
 			flag = "1";
-			LOGGER.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
+			logger.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
 					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
 			if (!searchEndDate.equals("") ) {
@@ -730,7 +730,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		cnt.put("fldTotalCnt", fldTotalCnt);
 		cnt.put("totalCount", totalCount);
 		
-		LOGGER.debug("getFileToTalCount ended");
+		logger.debug("getFileToTalCount ended");
 		return cnt;
 	}
 
@@ -756,7 +756,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		LoginVO loginvo = getUserInfo(tenantId, comId, userId);
-		LOGGER.debug("insertFolder start");
+		logger.debug("insertFolder start");
 		map.put("tenantId", tenantId);
 
 		if (uppFolder != null) {
@@ -799,26 +799,30 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("createName2", loginvo.getDisplayName2());
 		}
 
-		LOGGER.debug("folderType is " + folderType);
+		logger.debug("folderType is " + folderType);
 
 		int folderId = ezWebFolderDAO_y.insertFolder(map);
+		
+		// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+		String uppFolderId = Objects.isNull(uppFolder) ? "" : uppFolder.getFolderId();
+		
 		map.put("newFolderId", folderId);
-		map.put("folderUpper", uppFolder.getFolderId());
+		map.put("folderUpper", uppFolderId);
 		map.put("targetId", folderId);
-		LOGGER.debug("folderId:" + folderId + ",folderUpper:"  + uppFolder.getFolderId() + ",tenantId:" + tenantId);
+		logger.debug("folderId:" + folderId + ",folderUpper:"  + uppFolderId + ",tenantId:" + tenantId);
 		
 		ezWebFolderDAO_y.updateFolderPath(map);
 		
-		map.put("upperFolderId", uppFolder.getFolderId());
+		map.put("upperFolderId", uppFolderId);
 		map.put("type_f", "D");
 		ezWebFolderAdminService.insertFolderUser(map);
-		LOGGER.debug("insert folderId is " + folderId);
+		logger.debug("insert folderId is " + folderId);
 
 		if (folderId == 0 ) {
 			new Exception();
 		} 
 
-		LOGGER.debug("insertFolder ended");
+		logger.debug("insertFolder ended");
 		return Integer.toString(folderId);
 	}
 
@@ -830,7 +834,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		userTempMap.put("comId", comId);
 		userTempMap.put("tenantId", tenantId);
 		folderUserList = ezWebFolderDAO_y.getFolderUser(userTempMap);
-		LOGGER.debug("folderUserList: " + folderUserList);
+		logger.debug("folderUserList: " + folderUserList);
 		return folderUserList ;
 	}
 	
@@ -875,7 +879,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		FolderVO folder = getFolderDetail(folderId, userId, tenantId, comId);
 		int result = 0;
 
-		LOGGER.debug("folderId : " + folderId + "comId : " + comId + "userId"
+		logger.debug("folderId : " + folderId + "comId : " + comId + "userId"
 				+ userId + "deleteSubFldAFile  Method");
 		
 		if (webfolderUtil.isWebfolderAdmin(rollInfo) || (folder.getFolderType().equals("U") && folder.getOwnerId().equals(userId))) {
@@ -894,9 +898,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			ezWebFolderDAO_y.deleteSubFolder(map);
 			// 하위 파일 삭제 (USE_STATUS = 'N')
 			ezWebFolderDAO_y.deleteFileInFolder(map);
-			LOGGER.debug("deleteSubFldAFile is success");
+			logger.debug("deleteSubFldAFile is success");
 		} else {
-			LOGGER.debug("deleteSubFldAFile is fail");
+			logger.debug("deleteSubFldAFile is fail");
 			result = 2;
 		}
 		return result;
@@ -938,14 +942,14 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("comId", comId);
 		map.put("userId", userId);
 		map.put("folderPath", folder.getFolderPath());
-		LOGGER.debug("folderId : " + folderId + "comId : " + comId + "userId"
+		logger.debug("folderId : " + folderId + "comId : " + comId + "userId"
 				+ userId + "deleteSubFldAFile  Method");
 		resultFld = ezWebFolderDAO_y.checkSubCreater(map);
-		LOGGER.debug("resultFld : " + resultFld);
+		logger.debug("resultFld : " + resultFld);
 
 		// resultFile = 2 면 자신이 아닌 사람이 만든 파일이 존재
 		resultFile = ezWebFolderDAO_y.checkFileCreater(map);
-		LOGGER.debug("resultFile : " + resultFile);
+		logger.debug("resultFile : " + resultFile);
 		// 1이 리턴되면 모두 다 내가 만든 파일
 		if (resultFile == 1 && resultFld == 1) {
 			result = 1;
@@ -970,13 +974,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	@Override
 	public void insertEnv(String userId, int tenantId, int listCount)
 			throws Exception {
-		LOGGER.debug("insertEnv Start");
+		logger.debug("insertEnv Start");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		map.put("listCount", listCount);
 		ezWebFolderDAO_y.insertEnv(map);
-		LOGGER.debug("insertEnv End");
+		logger.debug("insertEnv End");
 	}
 
 	@Override
@@ -1063,7 +1067,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	public String checkPermission(String userId, String deptId, String comId,
 			String folderFileId, String folderFileType, int tenantId)
 			throws Exception {
-		LOGGER.debug("checkPermission started.");
+		logger.debug("checkPermission started.");
 
 		String status = "fail";
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1165,7 +1169,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			}
 
 		} else {
-			if (folderFileType.equalsIgnoreCase("F")){
+			if (folderFileType.equalsIgnoreCase("F") && !Objects.isNull(folderVO)){ // 2023-05-17 이사라 : NullPointerException 시큐어코딩
 				map = new HashMap<String, Object>();
 
 				map.put("fileId", folderFileId);
@@ -1207,7 +1211,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			}
 		}
 
-		LOGGER.debug("checkPermission ended. status=" + status);
+		logger.debug("checkPermission ended. status=" + status);
 		return status;
 	}
 
@@ -1215,8 +1219,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	public JSONObject checkPermissions(String userId, String deptId,
 			String comId, String folders, String files, int tenantId)
 			throws Exception {
-		LOGGER.debug("checkPermissions started.");
-		LOGGER.debug(String
+		logger.debug("checkPermissions started.");
+		logger.debug(String
 				.format("userId: %s, deptId: %s, comId: %s, folder: %s, files: %s, tenantId: %d",
 						userId, deptId, comId, folders, files, tenantId));
 
@@ -1250,22 +1254,22 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 		try {
 			if (permissionChecker.accept(folders, "D") && permissionChecker.accept(files, "F")) {
-				LOGGER.debug("permission allowed.");
+				logger.debug("permission allowed.");
 				result.put("status", "ok");
 				result.put("code", 0);
 			} else {
-				LOGGER.debug("permission denied.");
+				logger.debug("permission denied.");
 				result.put("status", "error");
 				result.put("code", 3);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error(ex.getMessage(), ex);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
 
-		LOGGER.debug(String.format("result: %s", result.toString()));
-		LOGGER.debug("checkPermissions ended.");
+		logger.debug(String.format("result: %s", result.toString()));
+		logger.debug("checkPermissions ended.");
 		return new JSONObject(result);
 	}
 
@@ -1292,7 +1296,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 
 	@Override
-	public JSONObject fileUpdateOverwrite(List<MultipartFile> multiFileLists, JSONArray nameArray, LoginVO userInfo,
+	public JSONObject fileUpdateOverwrite(List<FileUploadVO> multiFileLists, JSONArray nameArray, LoginVO userInfo,
 			String folderId, JSONArray fileIdArray , String realPath, int tenantId) throws Exception {
 		
 		String fileName = "";
@@ -1316,7 +1320,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			fileName = filevo.getFilePath();
 			String[] arryStrings = fileName.split("/");
 			fileName = arryStrings[arryStrings.length-1];
-			LOGGER.debug("before fileName is " + fileName);
+			logger.debug("before fileName is " + fileName);
 			
 			if (filevo.getFileTypeName() == null) {
 				filevo.setFileTypeName(ezWebFolderService.getFileTypeByFileExt("unknown", tenantId).getTypeName());
@@ -1326,7 +1330,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			String extend  = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
 			String newName = webfolderUtil.generateFilePath(extend);
 			path = commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator; 
-			LOGGER.debug("new fileName is " + newName);
+			logger.debug("new fileName is " + newName);
 
 			// 폴더가 암호화 대상이거나, 첫 번째 파일을 업로드할때 다운로드 불가 옵션을 선택했었다면 암호화하여 저장함
 			boolean isEncryptedFile = ezWebFolderService.isEncryptedFile(fileId, tenantId);
@@ -1335,9 +1339,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			Date date      = new Date();
 			// 실제 파일을 생성
 			if (requireEncrypt) {
-				writeUploadedFileEncryptKlib(multiFileLists.get(i), realPath + path + newName);
+				writeUploadedFileEncryptKlib(multiFileLists.get(i).getBytes(), realPath + path + newName);
 			} else {
-				writeUploadedFile(multiFileLists.get(i), realPath + path + newName);
+				writeUploadedFile(multiFileLists.get(i).getInputStream(), realPath + path + newName);
 			}
 			
 			String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
@@ -1372,10 +1376,10 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 //
 //			if (file.exists() && file.isFile()) {
 //				if (file.delete()) {
-//					LOGGER.debug("delete success.");
+//					logger.debug("delete success.");
 //				}
 //			} else {
-//				LOGGER.debug("file is not exists.");
+//				logger.debug("file is not exists.");
 //			}
 			
 		}
@@ -1538,7 +1542,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		
 		List<Map<String, Object>> result = ezWebFolderDAO_y.selectRootFolderListInfo(map); 
 		
-		LOGGER.debug("result=" + result);
+		logger.debug("result=" + result);
 		return result; 
 	}
 	
@@ -1662,7 +1666,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 						}
 					}
 				} catch (Exception e) {
-					LOGGER.debug("exists userId, so next userInsert.");
+					logger.debug("exists userId, so next userInsert.");
 					continue;
 				}
 			}

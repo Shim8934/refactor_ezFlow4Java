@@ -44,7 +44,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		try {
 			insert("insertJournalType", param);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -346,7 +346,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 			map.put("isUser", select("selectRecvUser",map));
 			update("updateRecvDate",map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -432,7 +432,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		try {
 			result= (List<JournalReceiverVO>) list("getReceiverList",map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return result;
 	}
@@ -473,7 +473,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		try {
 			result= (List<JournalReceiverVO>) list("getViewerList",map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return result;
 	}
@@ -495,7 +495,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		try {
 			insert("insertJournalBasicForm",map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -508,7 +508,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		try {
 			result =  (JournalAuthCheckVO) select("checkJournalAuth",map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return result;
 	}
@@ -534,7 +534,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 		try {
 			result = (List<DeptViewVO>) list("selectCheifBossList",param);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		return result;
 	}

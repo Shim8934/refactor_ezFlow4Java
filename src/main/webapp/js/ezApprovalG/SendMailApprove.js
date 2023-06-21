@@ -180,7 +180,12 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     /* 2022-02-11 홍승비 - 일괄기안의 경우, 1안의 문서정보를 삽입하도록 pDocID 변경 분기 추가 */
     var mailDocID = pDocID;
     if (typeof(draftAllFlag) != "undefined" && draftAllFlag == "Y") {
-    	mailDocID = pDocIDAry[1];
+    	/* 2023-04-21 홍승비 > 일괄기안의 경우, 자식 프레임에서 메일을 발송하는 분기처리 추가 */
+    	if (typeof(pDocIDAry) != "undefined") { // 부모 페이지에서 접근
+    		mailDocID = pDocIDAry[1];
+    	} else { // 자식 프레임에서 접근
+    		mailDocID = parent.pDocIDAry[1];
+    	}
     }
     
     if (Subject == strLang1122) {
@@ -706,7 +711,18 @@ function GetDocInfoDataForDraftAll(mode, field) {
 }
 
 function SendMailBansongtoDrafter() {
+	
+	/* 2023-04-21 홍승비 - 일괄기안의 경우, 반송 시 1안의 의견정보를 삽입하도록 pDocID 분기 추가 */
+    if (typeof(draftAllFlag) != "undefined" && draftAllFlag == "Y") {
+    	if (typeof(pDocIDAry) != "undefined") { // 부모 페이지에서 접근
+    		pDocID = pDocIDAry[1];
+    	} else { // 자식 프레임에서 접근
+    		pDocID = parent.pDocIDAry[1];
+    	}
+    }
+    
     getOpinionInfo(pDocID, "APR");
+    
     if (pDraftFlag == "DRAFT") {
     	//기안 문서 반송 메일알림은 원기안자에게
         var pwriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));

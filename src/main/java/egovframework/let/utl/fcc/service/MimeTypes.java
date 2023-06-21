@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Component;
 
 /*
@@ -44,6 +47,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MimeTypes
 {
+
+	private static final Logger logger = LoggerFactory.getLogger(MimeTypes.class);
+
 	public static String getContentType(byte[] data)
 	{
 		return getContentType(data, null);
@@ -280,7 +286,7 @@ public class MimeTypes
 				}
 				catch (IOException e)
 				{
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 				finally
 				{
@@ -290,7 +296,7 @@ public class MimeTypes
 					}
 					catch (IOException e)
 					{
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 				synchronized (mimeTypes)

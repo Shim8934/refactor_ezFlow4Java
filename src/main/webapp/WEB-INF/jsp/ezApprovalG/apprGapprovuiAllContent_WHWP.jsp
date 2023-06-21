@@ -67,6 +67,10 @@
 			var pDocState = "";
 			var SignInfoFlag = "";
 			var approvalFlag = "";
+			
+			/* 2023-04-20 홍승비 - 일괄기안된 문서는 모든 안에 대해 결재선이 동일하므로, 부모창의 값을 자식 프레임에서 그대로 사용 */
+			var pModeForAllDocInfo = "APR";
+			var pModeForAllAttachInfo = "APR";
 	    
 	    	$(document).ready(function() {
 	    		pDocHref = parent.pDocHrefAry[frameNum];
@@ -77,10 +81,12 @@
 	            SignInfoFlag = parent.SignInfoFlag;
 	            DeptSymbol = parent.DeptSymbol;
 	            approvalFlag = parent.approvalFlag;
+	            pModeForAllDocInfo = parent.pModeForAllDocInfo;
+	            pModeForAllAttachInfo = parent.pModeForAllAttachInfo;
 	            
 	            getApprovInfo(); // 양식id, 문서id, 문서제목, 첨부정보 등을 가져온다. 태그 XML 접근해서 거기에 값을 넣어줌
                 getDocInfo(); // 문서정보, 원문정보공개 등의 정보를 가져와서 파라미터에 부여한다.
-                setAttachInfo(parent.pDocIDAry[frameNum], "APR", parent.document.getElementById("lstAttachLink")); // 첨부파일 정보를 UI로 표출하고, 첨부파일 플래그도 변경해준다.
+                setAttachInfoAll(parent.pDocIDAry[frameNum], pModeForAllAttachInfo, parent.document.getElementById("lstAttachLink")); // 각 안 별 첨부파일 플래그 세팅
                 
                 //GetExchInfo(); // 아무런 동작 없이 그냥 리턴된다.
                 parent.ShowMailProgress(); // 문서 로딩중 이미지 표출
@@ -723,48 +729,10 @@
 			        pOrgAprUserDeptID = OrgAprUserDeptID;
 			        pUserID = pOrgAprUserID;
 			        parent.pUserID = pUserID;
-			        
-			        var pMode = "APR";
-			    	var result = "";
+			       
+			        /* 2023-04-20 홍승비 - 각 안별 탭 생성 및 웹에디터 로딩 이전, 순차실행이 보장되도록 결재문서 데이터를 가져와 각 안이 사용할 수 있게 분리 */
+			    	var result = loadXMLString(parent.pDocInfoAry[frameNum]);
 			    	
-			    	if (docState == "017") { // 참조
-				 	   $.ajax({
-				 			type : "POST",
-				 			dataType : "text",
-				 			async : false,
-				 			url : "/ezApprovalG/getLineMode.do",
-				 			data : {
-				 					docID : parent.pDocIDAry[frameNum],
-				 					orgCompanyID : pCompanyID
-				 					},
-				 			success: function(xml){
-				 				if (xml == "END") {
-				 					pMode = "CHAMJOEND";
-				 				} else {
-				 					pMode = "CHAMJOAPR";
-				 				}
-				 			}        			
-				 		});
-			    	}
-			    	$.ajax({
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		url : "/ezApprovalG/getApproveDocInfo.do",
-			    		data : {
-			    			docID : parent.pDocIDAry[frameNum],
-			    			userID : pUserID,
-			    			deptID : OrgAprUserDeptID,
-			    			mode : pMode,
-			    			chamState : docState,
-			    			orgCompanyID : pCompanyID
-			    		},
-			    		success: function(xml){
-			    			result = xml;
-			    		}
-			    	});
-			    	
-			    	result = loadXMLString(result);
 			        var xmlpara = createXmlDom();
 			        var pdocXML;
 			

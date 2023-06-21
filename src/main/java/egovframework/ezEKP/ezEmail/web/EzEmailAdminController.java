@@ -4,6 +4,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -257,7 +259,7 @@ public class EzEmailAdminController {
 
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("returnData=" + returnData);
@@ -521,7 +523,7 @@ public class EzEmailAdminController {
 				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID, ownerId, policy, explaination, endDate, loginCookie);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		if (reasonCode == 0) {
@@ -554,7 +556,7 @@ public class EzEmailAdminController {
 		String domain = ezCommonService.getTenantConfig("DomainName",
 				userInfo.getTenantId());
 		String userLang = userInfo.getPrimary();
-
+ 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String companyId = doc.getElementsByTagName("COMPID").item(0)
@@ -592,6 +594,148 @@ public class EzEmailAdminController {
 			sb.append("<DATA>");
 			sb.append("<MAIL>" + mail + "</MAIL>");
 			
+			// 2023.05.26 한슬기 : 공용배포그룹정보 구성원 목록 정렬기능 추가(관리자->공용배포그룹관리->공용배포그룹구성원목록)
+			if (resultArray != null) {
+				List<Map<String, String>> distributionSortList = new ArrayList<>();
+
+				// 화면에 보여줄 값들을 정렬하기 위해 distributionSortList에 데이터를 담아주는 반복문
+				for (int i = 0; i < resultArray.size(); i++) {
+					JSONObject address = (JSONObject) resultArray.get(i);
+					String pCn = (String) address.get("cn"); // 공용배포그룹 주소
+					String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
+					String pClass = (String) address.get("class");
+					String displayName = (String) address.get("displayName");
+					
+					if (domain.equals(pCnDomain)) {
+						pCn = pCn.substring(0, pCn.indexOf("@"));
+					} else {
+						pClass = "distributionSub";
+					}
+					
+					logger.debug("pCn : {}, pClass : {}, displayName : {}", pCn, pClass, displayName);
+
+					Map<String, String> map = new HashMap<>();
+					
+					if ("group".equals(pClass)) {
+						OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+						
+						map.put("CN", commonUtil.cleanValue(pCn));
+						
+						if (dept != null) {	// 부서일때
+							map.put("CLASS", pClass);
+							map.put("DISPLAYNAME", commonUtil.cleanValue(dept.getDisplayName()));
+							map.put("MAIL", commonUtil.cleanValue(dept.getMail()));
+							map.put("COMPANY", commonUtil.cleanValue(dept.getExtensionAttribute3()));
+							map.put("DEPT", egovMessageSource.getMessage("ezOrgan.t68", locale));
+							map.put("TITLE", egovMessageSource.getMessage("ezOrgan.t68", locale));
+							
+							distributionSortList.add(map);
+							
+						} else {	// 공용배포그룹일 때
+							map.put("CLASS", "distribution");
+							map.put("DISPLAYNAME", commonUtil.cleanValue(displayName));
+							map.put("MAIL", commonUtil.cleanValue(cn));
+							map.put("COMPANY", "");
+							map.put("DEPT", egovMessageSource.getMessage("ezEmail.t57", locale));
+							map.put("TITLE", "");
+							
+							distributionSortList.add(map);
+							
+						}
+						
+					} else if ("user".equals(pClass)) { // user or jobmst
+						OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+						
+						if (user != null) {	// 사원
+							map.put("CLASS", pClass);
+							map.put("CN", commonUtil.cleanValue(pCn));
+							map.put("DISPLAYNAME", commonUtil.cleanValue(user.getDisplayName()));
+							map.put("MAIL", commonUtil.cleanValue(user.getMail()));
+							map.put("COMPANY", commonUtil.cleanValue(user.getCompany()));
+							map.put("DEPT", commonUtil.cleanValue(user.getDescription()));
+							map.put("TITLE", commonUtil.cleanValue(user.getTitle()));
+							
+							distributionSortList.add(map);
+							
+						} else {	// 직위, 직책
+							String jobId = pCn.split("__")[1]; // 직위,직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
+							OrganJobVO jobVO = ezOrganAdminService.getTitleByJobID(jobId, userLang, userInfo.getTenantId());
+							
+							String jobType = jobVO.getType(); // 001직위, 002직책
+							String jobMail = pCn + "@" + pCnDomain;
+							String jobTitle = jobType.equals("001") ? "main.t77" : "ezPersonal.t175"; 
+							
+							if (jobVO != null && !"".equals(jobVO.getJobID())) {	// 겸직
+								map.put("CLASS", "jobmst");
+								map.put("CN", commonUtil.cleanValue(jobVO.getJobID()));
+								map.put("DISPLAYNAME", commonUtil.cleanValue(jobVO.getDisplayName()));
+								map.put("MAIL", commonUtil.cleanValue(jobMail));
+								map.put("COMPANY", "");
+								map.put("DEPT", egovMessageSource.getMessage(jobTitle, locale));
+								map.put("TITLE", jobType);
+								
+								distributionSortList.add(map);
+								
+							}
+						}
+						
+					} else {	// 주소록, 직접입력(distribution_sub에서 가져오기)
+						MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(cn, pCn, companyId, userInfo.getTenantId());
+						
+						if (distributionSubVO != null) {
+							map.put("CLASS", pClass );
+							map.put("CN", commonUtil.cleanValue(pCn));
+							map.put("DISPLAYNAME", commonUtil.cleanValue(distributionSubVO.getName()));
+							map.put("MAIL", commonUtil.cleanValue(distributionSubVO.getMail()));
+							map.put("COMPANY", "");
+							map.put("DEPT", commonUtil.cleanValue(distributionSubVO.getMail()));
+							map.put("TITLE", "");
+							
+							distributionSortList.add(map);
+							
+						}
+					}
+				} // 값 담아주는 반복문 끝
+				
+				// 정렬시작(DISPLAYNAME기준으로 오름차순 정렬)
+				Collections.sort(distributionSortList, new Comparator<Map<String, String>>() {
+					@Override
+					public int compare(Map<String, String> map1, Map<String, String> map2) {
+						String displayName1 = map1.get("DISPLAYNAME");
+						String displayName2 = map2.get("DISPLAYNAME");
+						
+						return displayName1.compareTo(displayName2);
+						
+					}
+				}); // 정렬 끝 
+				
+				logger.debug("Sort Complete. distributionSortList : {}", distributionSortList);
+				
+				// 화면 그려주기
+				for (int i = 0; i < distributionSortList.size(); i++) {
+					Map<String, String> distributionSortGetI = distributionSortList.get(i);
+					
+					sb.append("<ROW>");
+					sb.append("<CLASS>" + distributionSortGetI.get("CLASS") + "</CLASS>");
+					sb.append("<CN>" + distributionSortGetI.get("CN") + "</CN>");
+					sb.append("<DISPLAYNAME>"
+							+ distributionSortGetI.get("DISPLAYNAME")
+							+ "</DISPLAYNAME>");
+					sb.append("<MAIL>"
+							+ distributionSortGetI.get("MAIL")
+							+ "</MAIL>");
+					sb.append("<COMPANY>"
+							+ distributionSortGetI.get("COMPANY")
+							+ "</COMPANY>");
+					sb.append("<DEPT>"
+							+ distributionSortGetI.get("DEPT") + "</DEPT>");
+					sb.append("<TITLE>"
+							+ distributionSortGetI.get("TITLE") + "</TITLE>");
+					sb.append("</ROW>");
+					
+				}	// 화면 그리기 끝
+			}
+			/* 원본 코드
 			if (resultArray != null) {
 				for (int i = 0; i < resultArray.size(); i++) {
 					JSONObject address = (JSONObject) resultArray.get(i);
@@ -719,16 +863,15 @@ public class EzEmailAdminController {
 									+ "</DEPT>");
 							sb.append("</ROW>");
 						} 
-						
 					}
 				}
-			}
+			}*/
 
 			sb.append("</DATA>");
 			returnData = sb.toString();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("mailViewDistributionList ended.");
@@ -819,7 +962,7 @@ public class EzEmailAdminController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("result=" + result);
@@ -892,7 +1035,7 @@ public class EzEmailAdminController {
 
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("returnData=" + returnData);
@@ -953,7 +1096,7 @@ public class EzEmailAdminController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		model.addAttribute("importanceColor", importanceColor);
@@ -1002,7 +1145,7 @@ public class EzEmailAdminController {
 
 		} catch (Exception e) {
 			returnValue = "ERROR:" + e.getMessage();
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("returnValue=" + returnValue);
@@ -1068,7 +1211,7 @@ public class EzEmailAdminController {
 
 			ezEmailUtil.setDefaultQuota(domainName, maxStorage, warnStorage);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 
 			returnValue = "ERROR";
 		}
@@ -1165,7 +1308,7 @@ public class EzEmailAdminController {
 				ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
 			} catch (Exception e) {
 				logger.debug("error. user=" + email);
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			} finally {
 				if (ia != null) {
 					ia.close();
@@ -1289,7 +1432,7 @@ public class EzEmailAdminController {
                 quaList.add(4, String.valueOf(mailboxQuota));
                 userList.add((ArrayList<String>) quaList);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             } finally {
                 if (ia != null) {
                     ia.close();
@@ -1370,84 +1513,85 @@ public class EzEmailAdminController {
 		}
 		
 		/* 엑셀 만들기 */
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet = workbook.createSheet("MailQuotaList");
-			
-		Row row = null;
-		Cell cell = null;
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			HSSFSheet sheet = workbook.createSheet("MailQuotaList");
+				
+			Row row = null;
+			Cell cell = null;
+		
+			String fileName = "";
+			fileName = "MailQuotaList";
+		
+			HSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short) 1);
+				
+			HSSFCellStyle bodyStyle = workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
+			HSSFFont font = workbook.createFont();
+			font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
+			headerStyle.setFont(font);
 	
-		String fileName = "";
-		fileName = "MailQuotaList";
-	
-		HSSFCellStyle headerStyle = workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setVerticalAlignment((short) 1);
-			
-		HSSFCellStyle bodyStyle = workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-	
-		HSSFFont font = workbook.createFont();
-		font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
-		headerStyle.setFont(font);
-
-		row = sheet.createRow(0);
-		cell = row.createCell(0);
-		cell.setCellValue(egovMessageSource.getMessage("main.t252") + " " + totalCount + 
-						  egovMessageSource.getMessage("ezSystem.kyj2"));
-	
-		row = sheet.createRow(1);
-		cell = row.createCell(0);
-		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04"));
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(1);
-		cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113"));
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(2);
-		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd02"));
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(3);
-		cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03"));
-		cell.setCellStyle(headerStyle);
-	
-		for (int i = 2; i < userList.size() + 2; i++) {
-			row = sheet.createRow(i);
-			row.setHeight((short) 300);
-			int j = 2;
+			row = sheet.createRow(0);
 			cell = row.createCell(0);
-			cell.setCellValue((String) userList.get(i - j).get(1));
-			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("main.t252") + " " + totalCount + 
+							  egovMessageSource.getMessage("ezSystem.kyj2"));
+		
+			row = sheet.createRow(1);
+			cell = row.createCell(0);
+			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04"));
+			cell.setCellStyle(headerStyle);
 			cell = row.createCell(1);
-			cell.setCellValue((String) userList.get(i - j).get(2));
-			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113"));
+			cell.setCellStyle(headerStyle);
 			cell = row.createCell(2);
-			cell.setCellValue((String) userList.get(i - j).get(3));
-			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd02"));
+			cell.setCellStyle(headerStyle);
 			cell = row.createCell(3);
-			cell.setCellValue((String) userList.get(i - j).get(4));
-			cell.setCellStyle(bodyStyle);
-	
-		}
+			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03"));
+			cell.setCellStyle(headerStyle);
 		
-		for (int i = 0; i < 4; i++) {
-			sheet.autoSizeColumn(i);
-		}
+			for (int i = 2; i < userList.size() + 2; i++) {
+				row = sheet.createRow(i);
+				row.setHeight((short) 300);
+				int j = 2;
+				cell = row.createCell(0);
+				cell.setCellValue((String) userList.get(i - j).get(1));
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(1);
+				cell.setCellValue((String) userList.get(i - j).get(2));
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(2);
+				cell.setCellValue((String) userList.get(i - j).get(3));
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(3);
+				cell.setCellValue((String) userList.get(i - j).get(4));
+				cell.setCellStyle(bodyStyle);
 		
-		response.setCharacterEncoding("UTF-8");
-		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
-		response.setContentType("application/vnd.ms-excel");
-	
-		workbook.write(response.getOutputStream());
-		workbook.close();
-	
-		logger.debug("mailQuotaExcelExport controller ended.");
+			}
+			
+			for (int i = 0; i < 4; i++) {
+				sheet.autoSizeColumn(i);
+			}
+			
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+			response.setContentType("application/vnd.ms-excel");
+		
+			workbook.write(response.getOutputStream());
+			workbook.close();
+		
+			logger.debug("mailQuotaExcelExport controller ended.");
+		}
 	}
 	
 	/**
@@ -1536,7 +1680,7 @@ public class EzEmailAdminController {
 			returnData = sb.toString();
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getSharedMailboxList ended.");
@@ -1572,7 +1716,7 @@ public class EzEmailAdminController {
 			model.addAttribute("sharedMailboxInfo", sharedMailboxInfo);
 		} catch (Exception e) {
 			resultCode = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		model.addAttribute("resultCode", resultCode);
@@ -1747,7 +1891,7 @@ public class EzEmailAdminController {
 		
 		} catch (Exception e) {
 			resultCode = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		model.addAttribute("resultCode", resultCode);
@@ -1911,7 +2055,7 @@ public class EzEmailAdminController {
 						ezOrganAdminService.updateProperty(deptId, "DEPT_CD_PATH", deptId, "dept", tenantId);
 						
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						
 						ezEmailUserAdminService.removeGroup(mailAddr);	
 						logger.debug("create sharedMailbox dept failed.");
@@ -2040,7 +2184,7 @@ public class EzEmailAdminController {
 						}
 						
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 						
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.removeUser(mailAddr);
@@ -2116,7 +2260,7 @@ public class EzEmailAdminController {
 			
 		} catch (Exception e) {
 			resultCode = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		model.addAttribute("resultCode", resultCode);
@@ -2193,7 +2337,7 @@ public class EzEmailAdminController {
 			
 		} catch (Exception e) {
 			resultCode = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		model.addAttribute("resultCode", resultCode);
@@ -2218,7 +2362,7 @@ public class EzEmailAdminController {
 				ezEmailUserAdminService.removeGroup(newMailAddr);					
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -2276,7 +2420,7 @@ public class EzEmailAdminController {
 			returnData = sb.toString();
 		} catch (Exception e) {
 			returnData = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("getSharedMailboxListSearch ended.");
@@ -2479,7 +2623,7 @@ public class EzEmailAdminController {
 		try {
 			ezEmailService.deleteSignatureTemplate(signNo);
 		} catch (Exception e) {
-			 e.printStackTrace();
+			 logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("deleteSignTemplate ended.");
@@ -2625,7 +2769,7 @@ public class EzEmailAdminController {
 			}
 			
 		} catch (Exception e) {
-			 e.printStackTrace();
+			 logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("setSignatureTemplate ended.");

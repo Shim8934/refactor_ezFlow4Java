@@ -68,7 +68,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @RestController
 public class MPortalGWController extends EgovFileMngUtil {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MPortalGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MPortalGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -119,7 +119,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/{type}/main-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalMainList(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("portalMainList Start");
+		logger.debug("portalMainList Start");
 		
 		JSONObject result = new JSONObject();
 		int code = 0;
@@ -289,7 +289,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				//한번에 가져오긴 힘들고 귀찮다.
 				List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionService.getTimeLineList(info, utcSessionDate, listCnt, approvalAccess, boardAccess);
 				
-				LOGGER.debug("## 전자결재/게시판 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
+				logger.debug("## 전자결재/게시판 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				startTime = System.currentTimeMillis();
 				
 				if ("true".equalsIgnoreCase(mailAccess) && "NO".equalsIgnoreCase(useExternalMailServer)) {
@@ -323,7 +323,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 						dataObject.put("importanceColor", importanceColor);
 					}
 
-					LOGGER.debug("## 메일 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
+					logger.debug("## 메일 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				}
 				
 				startTime = System.currentTimeMillis();
@@ -360,7 +360,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 						}
 					}
 					
-					LOGGER.debug("## 자원관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
+					logger.debug("## 자원관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				}
 				
 				startTime = System.currentTimeMillis();
@@ -416,7 +416,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
 			        }
 					
-					LOGGER.debug("## 일정관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
+					logger.debug("## 일정관리 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
 				}
 				
 				Collections.sort(mPortalTimeLineVOs, new Comparator<MPortalTimeLineVO>() {
@@ -443,14 +443,14 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("code", code);			
 			result.put("data", dataObject);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");		
 		}		
 		
-		LOGGER.debug("portalMainList End");
+		logger.debug("portalMainList End");
 		
 		return result;
 	}
@@ -458,7 +458,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/{menu}/footer-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("portalFooterList Start");
+		logger.debug("portalFooterList Start");
 		
 		JSONObject result = new JSONObject();
 		
@@ -510,13 +510,13 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("code", 0);			
 			result.put("data", dataObject);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");		
 		}		
 		
-		LOGGER.debug("portalFooterList End");
+		logger.debug("portalFooterList End");
 		
 		return result;
 	}
@@ -546,7 +546,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalUserInfo(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("portalUserInfo Start");
+		logger.debug("portalUserInfo Start");
 		
 		JSONObject result = new JSONObject();
 		
@@ -561,10 +561,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");	
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
-		LOGGER.debug("portalUserInfo End");
+		logger.debug("portalUserInfo End");
 		
 		return result;
 	}
@@ -576,7 +576,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/{type}/right-panel/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject portalRightPanel(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("portalMainList Start");
+		logger.debug("portalMainList Start");
 		
 		JSONObject result = new JSONObject();
 		
@@ -636,10 +636,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");	
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
-		LOGGER.debug("portalMainList End");
+		logger.debug("portalMainList End");
 		
 		return result;
 	}
@@ -650,7 +650,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/menus/auth/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkMenuAuth(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("checkMenuAuth Start");
+		logger.debug("checkMenuAuth Start");
 		
 		JSONObject result = new JSONObject();
 		
@@ -711,7 +711,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					break;
 				}
 			}
-			LOGGER.debug("[access result] footerAccessCount : " + footerAccessCount + ", accessMenuCode : " + accessMenuCode.toString() + ", portalAccessCount : " + portalAccessCount);
+			logger.debug("[access result] footerAccessCount : " + footerAccessCount + ", accessMenuCode : " + accessMenuCode.toString() + ", portalAccessCount : " + portalAccessCount);
 			
 			dataObject.put("portalAccessCount", portalAccessCount);
 			dataObject.put("footerAccessCount", footerAccessCount);
@@ -724,10 +724,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");	
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
-		LOGGER.debug("checkMenuAuth End");
+		logger.debug("checkMenuAuth End");
 		
 		return result;
 	}
@@ -738,7 +738,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/users/{userId:.+}/addJob", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject addJobList(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getAddJobList Start");
+		logger.debug("getAddJobList Start");
 		
 		JSONObject result = new JSONObject();
 		
@@ -769,10 +769,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");	
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
-		LOGGER.debug("getAddJobList End");
+		logger.debug("getAddJobList End");
 		
 		return result;
 	}
@@ -783,7 +783,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezPortal/users/{userId:.+}/addJobFlag", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject addJobListFlag(@PathVariable String userId, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getAddJobFlag Start");
+		logger.debug("getAddJobFlag Start");
 		
 		JSONObject result = new JSONObject();
 		
@@ -819,10 +819,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");		
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}		
 		
-		LOGGER.debug("getAddJobFlag End");
+		logger.debug("getAddJobFlag End");
 		
 		return result;
 	}

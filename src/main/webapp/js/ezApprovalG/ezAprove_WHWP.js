@@ -1050,7 +1050,7 @@ function ReAprLineSingMapping(ret)
 					
 			fieldname = susinSN + "sign" + i
 			if (message.FieldExist(fieldname))
-				message.PutFieldText(fieldname, "");
+				message.PutFieldText(fieldname, " "); /* 2023-04-28 양지혜 - 서명부분에 공백을 삽입하여 Paragraph 2개 생기는 문제 방지  */
 
 			fieldname = susinSN + "seumyungdate" + i
 			if (message.FieldExist(fieldname))
@@ -1071,7 +1071,7 @@ function ReAprLineSingMapping(ret)
 				  			
 				name = susinSN + "habyuisign" + i;
 				if (message.FieldExist(name))
-					message.PutFieldText(name, "");
+					message.PutFieldText(name, " ");
 					  		    
 				name = susinSN + "habyuipositon" + i;
 				if (message.FieldExist(name))

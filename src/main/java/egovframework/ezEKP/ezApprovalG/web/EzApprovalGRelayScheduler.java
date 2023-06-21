@@ -12,9 +12,12 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -34,6 +37,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -595,7 +599,7 @@ public class EzApprovalGRelayScheduler {
 				} catch (Exception e) {
 					logger.debug("#대외문서 접수 중 에러. 파일명 = " + receiveTempFile.getName());
 					backupErrorXml(strRelayFolderPath, receiveTempFile);
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					continue;
 				}
         	 }
@@ -773,7 +777,7 @@ public class EzApprovalGRelayScheduler {
 
 	        result = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = false;
 		}
 		
@@ -930,7 +934,7 @@ public class EzApprovalGRelayScheduler {
 
 	        result = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;
@@ -962,48 +966,51 @@ public class EzApprovalGRelayScheduler {
              }
 
          } catch (Exception ex) {
-        	 ex.printStackTrace();
+        	 logger.error(ex.getMessage(), ex);
              logger.debug("ezReceiverMain", "pubdocUpdate", ex.getMessage());
          }
 	}
 
 	private boolean ReplaceFileText(String strFilePath, String pTargetText,	String pNewText, boolean pUseRegex, String pRegexPattern) throws Exception {
 
-		FileInputStream fis = new FileInputStream(new File(commonUtil.detectPathTraversal(strFilePath))); 
-		InputStreamReader isr = new InputStreamReader(fis,"UTF-8"); 
-		String text = "";
+		// 2023-05-31 이사라 : 시큐어코딩 리소스 close
+		try (FileInputStream fis = new FileInputStream(new File(commonUtil.detectPathTraversal(strFilePath)))){
 
-		// CWE-404 보안 취약점 대응
-		try (BufferedReader br = new BufferedReader(isr)) {			
-			while(true){
-				if(br.readLine() == null) break;
-				text += br.readLine();
-			}
-		}
-		try {
-			if (pUseRegex) {
-				Pattern pattern = Pattern.compile(pRegexPattern);
-				Matcher matcher = pattern.matcher(text);
-				
-				text = matcher.replaceAll(pNewText);
-			} else {
-				text = text.replace(pTargetText, pNewText);
-			}
-			
-			File file = new File(commonUtil.detectPathTraversal(strFilePath));
+			InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+			String text = "";
+
 			// CWE-404 보안 취약점 대응
-			try (FileOutputStream fop = new FileOutputStream(file)) {
-				// get the content in bytes
-				fop.write(text.getBytes("UTF-8"));
-				fop.flush();
+			try (BufferedReader br = new BufferedReader(isr)) {
+				while (true) {
+					if (br.readLine() == null)
+						break;
+					text += br.readLine();
+				}
 			}
-			
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+			try {
+				if (pUseRegex) {
+					Pattern pattern = Pattern.compile(pRegexPattern);
+					Matcher matcher = pattern.matcher(text);
+
+					text = matcher.replaceAll(pNewText);
+				} else {
+					text = text.replace(pTargetText, pNewText);
+				}
+
+				File file = new File(commonUtil.detectPathTraversal(strFilePath));
+				// CWE-404 보안 취약점 대응
+				try (FileOutputStream fop = new FileOutputStream(file)) {
+					// get the content in bytes
+					fop.write(text.getBytes("UTF-8"));
+					fop.flush();
+				}
+
+				return true;
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+				return false;
+			}
 		}
-		
 		
 	}
 
@@ -1037,7 +1044,7 @@ public class EzApprovalGRelayScheduler {
 
 			result = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;
@@ -1053,7 +1060,7 @@ public class EzApprovalGRelayScheduler {
 		try {
 		   format = sdf.format(sdf.parse(strRecDate));
 		} catch (ParseException e) {
-		   e.printStackTrace();
+		   logger.error(e.getMessage(), e);
 		}
 		  return strRecDate.equals(format);
 	}
@@ -1073,7 +1080,7 @@ public class EzApprovalGRelayScheduler {
 	    	
 	    	result = "OK";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = e.getMessage();
 		}
 		return result;
@@ -1094,7 +1101,7 @@ public class EzApprovalGRelayScheduler {
 	    	
 	    	result = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = false;
 		}
 		
@@ -1168,7 +1175,7 @@ public class EzApprovalGRelayScheduler {
             catch (Exception ex)
             {
             	result = false;
-            	ex.printStackTrace();
+            	logger.error(ex.getMessage(), ex);
             }
             return result;
 	}
@@ -1178,7 +1185,7 @@ public class EzApprovalGRelayScheduler {
             return pOrgString.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("%", "");
         }
         catch (Exception Ex){
-        	Ex.printStackTrace();
+        	logger.error(Ex.getMessage(), Ex);
             return null;
         }
     }
@@ -1195,7 +1202,7 @@ public class EzApprovalGRelayScheduler {
     	try {
     		FileUtils.moveFile(errorfile, new File(strBackupFile));
     	} catch (IOException e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     	}
     }
         
@@ -1645,7 +1652,7 @@ public class EzApprovalGRelayScheduler {
             System.out.println("separate prop remove result: " + xmlFile.toString());
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage(), ex);
             logger.debug("ezReceiverMain", "updateXmlAttr", ex.getMessage());
             System.out.println("ezReceiverMain updateXmlAttr" + ex.getMessage());
         }
@@ -1661,7 +1668,8 @@ public class EzApprovalGRelayScheduler {
  			//저장된 tenantID들 중에서 첫번째를 조회
  			List<OrganUserVO> list;
  	
- 			list = ezApprovalGService.getTenantID();
+ 			// 2023-05-11 이사라 : NullPointerException 시큐어코딩
+ 			list = Optional.ofNullable(ezApprovalGService.getTenantID()).orElse(Collections.emptyList());
  			int tenantID = list.get(0).getTenantId();
  				 			
  			String strCompanyID = config.getProperty("config.companyNum");
@@ -1672,7 +1680,8 @@ public class EzApprovalGRelayScheduler {
  			String separator = commonUtil.separator;
  			
  			//RelaySchedulerTenant가 빈값이 아니라면 tenantID에 할당
- 			if(!(configRelaySchedulerTenant == null || configRelaySchedulerTenant.equals(""))) {
+ 			//if(!(configRelaySchedulerTenant == null || configRelaySchedulerTenant.equals(""))) {
+ 			if(StringUtils.isNotBlank(configRelaySchedulerTenant)) {
  				 tenantID = Integer.parseInt(configRelaySchedulerTenant);
  			}
  			
@@ -1693,7 +1702,9 @@ public class EzApprovalGRelayScheduler {
              logger.debug("e.getStackTrace(): " + e.getStackTrace());
  		}
  		
- 		logger.debug("resultVO: " + resultVO.toString());
+ 		String result = resultVO != null ?  resultVO.toString() : null;
+ 		
+ 		logger.debug("resultVO: " + result);
     	return resultVO;
     }
     
@@ -1895,7 +1906,7 @@ public class EzApprovalGRelayScheduler {
 				} catch (Exception e) {
 					logger.debug("#대외문서 접수 중 에러. 파일명 = " + receiveTempFile.getName());
 					backupErrorXml(configVO.getStrRelayFolderPath(), receiveTempFile);
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					continue;
 				}
 			}

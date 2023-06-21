@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -538,14 +539,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
                     // Install the all-trusting trust manager
                     SSLContext sc = null;
+
                     try {
                         sc = SSLContext.getInstance("SSL");
-                        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                        // 2023-05-12 이사라 : NullPointerException 시큐어코딩
+						if (!Objects.isNull(sc)) {
+							sc.init(null, trustAllCerts, new java.security.SecureRandom());
+							HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+						}
+
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
                     }
 
-                    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+                    //HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory()); // try문 안으로 이동
 
                     // Create all-trusting host name verifier
                     HostnameVerifier allHostsValid = new HostnameVerifier() {
@@ -562,7 +569,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                     URL url = new URL(imgSrc);
                     in = url.openStream();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             } else {
                 try {
@@ -634,7 +641,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 tempIn = Files.newInputStream(Paths.get(realPath, backgroundImgSrc));
                 contentType = URLConnection.guessContentTypeFromStream(tempIn);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             } finally {
                 if (tempIn != null) {
                     tempIn.close();
@@ -676,14 +683,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
                     // Install the all-trusting trust manager
                     SSLContext sc = null;
+
                     try {
                         sc = SSLContext.getInstance("SSL");
-                        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                        // 2023-05-12 이사라 : NullPointerException 시큐어코딩
+						if (!Objects.isNull(sc)) {
+							sc.init(null, trustAllCerts, new java.security.SecureRandom());
+							HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+						}
+
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
                     }
 
-                    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+                    //HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory()); // try문 안으로 이동
 
                     // Create all-trusting host name verifier
                     HostnameVerifier allHostsValid = new HostnameVerifier() {
@@ -700,7 +713,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                     URL url = new URL(backgroundImgSrc);
                     in = url.openStream();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             } else {
                 try {
@@ -823,7 +836,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				return egovMessageSource.getMessage("main.t0600", locale);
 			} else {
 				m_Mimechunk = m_strMHT.split(strBoundary);
-				logger.debug("m_Mimechunk="+m_Mimechunk);
+//				logger.debug("m_Mimechunk="+m_Mimechunk);
 				
 				//문서 인코딩 방식 추출 
                 if (m_Mimechunk[0].indexOf("(UTF-8)") > -1) 
@@ -928,7 +941,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             else
                 m_strHTML = new String(arr, "ks_c_5601-1987");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		return m_strHTML;
@@ -994,8 +1007,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         String propertyValue = ezCommonDAO.getTenantConfig(map);
 
-		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID);
-		logger.debug("PROPERTY VALUE : " + propertyValue);
+		if (!property.equals("ApprovalFlag")) {
+			logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} ", property, propertyValue, tenantID);
+		}
 
         if (propertyValue == null) {
             propertyValue = "";
@@ -1169,8 +1183,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         String propertyValue = ezCommonDAO.getCompanyConfig(map);
 
-		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID + "||" + "COMPANYID : " + companyID);
-		logger.debug("PROPERTY VALUE : " + propertyValue);
+		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} || COMPANYID : {}", property, propertyValue, tenantID, companyID);
+		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그정리
 
         if (propertyValue == null) {
             propertyValue = "";
@@ -1190,8 +1204,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("propertyName", propertyName);
 		map.put("propertyValue", propertyValue);
 
-		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
-		logger.debug("PROPERTY VALUE : " + propertyValue);
+		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID :  {} || COMPANYID : {}", propertyName, propertyValue, tenantId, companyId);
+		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그정리
 
 		ezCommonDAO.insertCompanyConfig(map);
 
@@ -1209,8 +1223,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("propertyName", propertyName);
 		map.put("propertyValue", propertyValue);
 
-		logger.debug("PROPERTY NAME : " + propertyName + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
-		logger.debug("PROPERTY VALUE : " + propertyValue);
+		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} || COMPANYID : {}", propertyName, propertyValue, tenantId, companyId);
+		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그정리
 
 		ezCommonDAO.updateCompanyConfig(map);
 
@@ -1756,7 +1770,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	@Override
 	public int checkDeptId(String userID, String deptID, String tenantId) {
-		logger.debug("checkDeptId started");
+		//logger.debug("checkDeptId started"); // 로그정리
 		int result = 0;
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -1764,7 +1778,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("deptID", deptID);
 		map.put("userID", userID);
 		result= ezCommonDAO.checkDeptId(map);
-		logger.debug("checkDeptId ended");
+		//logger.debug("checkDeptId ended"); // 로그정리
 		return result;
 	}
 
@@ -1784,6 +1798,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertTblTenantConfig() throws Exception {
 		logger.debug("insertTest started");
 		Map<String, Map<String, Object>> test = new HashMap<String,  Map<String, Object>>();
+		test.put("checkPasswordNumber", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","checkPasswordNumber"); // property_name
+			put("property_value","YES");
+			put("config_name","3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지");
+			put("regdate","2023-06-09 00:00:00");
+			put("description","패스워드 설정 시 3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지 사용여부 (default:YES)");
+			put("config_type","로그인");
+			put("property","CHECKPASSWORDNUMBER"); // property_name
+		}});
 		test.put("mailConfirm", new HashMap<String, Object>(){{
 			put("tenantID", 0);
 			put("confName","useMailConfirm"); // property_name
@@ -1901,7 +1925,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				String key = keys.next();
 				ezCommonDAO.insertTblTenantConfig(test.get(key));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
            
         }
@@ -2549,7 +2573,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		JSONObject resultJson = new JSONObject();
 		String downloadDIR = "";
-		if (param == ""){
+
+		// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		if (StringUtils.isNotBlank(param)){
 			param = "upload_mail.ROOT";
 		} else if(param.equals("BOARD")){
 			param = "upload_board.ROOT";
@@ -2573,7 +2599,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		try {
 			downloadPath = commonUtil.attachWebFolderFile(fileListJson, downloadDIR, loginVO, realPath);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			status = "ERROR";
 		}
 		resultJson.put("status", status);
@@ -2764,69 +2790,72 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 
 		FileOutputStream fileOut = null;
-		Workbook workbook = new XSSFWorkbook();
+		int rowSize = 0;
 
-		Sheet sheet = workbook.createSheet(sheetName);
-		sheet.setDefaultRowHeight((short)500);
-
-		//Set style
-		CellStyle styleHead = workbook.createCellStyle();
-		styleHead.setWrapText(false);
-		styleHead.setAlignment(CellStyle.ALIGN_CENTER);
-		styleHead.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-		styleHead.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-		styleHead.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-
-		CellStyle styleData = workbook.createCellStyle();
-		styleData.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
-
-		int rowNum = 0;
-		int rowSize = data.size();
-		boolean appearedHead = false;
-		int colRangeStart = 0;
-		int colRangeEnd = 0;
-
-		while(rowNum < rowSize) {
-			List<Object> dataList = data.get(rowNum);
-			int colSize = dataList.size();
-
-			if (colSize > 0) {
-				Row row = sheet.createRow(rowNum);
-
-				if (!appearedHead) {
-					for (int colNum = 0; colNum < colSize; colNum++) {
-						Object value = dataList.get(colNum);
-						String strValue = String.valueOf(value).trim();
-
-						if (value != null && !strValue.isEmpty()) {
-							row.createCell(colNum).setCellValue(strValue);
-							row.getCell(colNum).setCellStyle(styleHead);
-							appearedHead = true;
-							if(colRangeStart == 0) colRangeStart = colNum;
-							colRangeEnd = colNum;
+		try (Workbook workbook = new XSSFWorkbook()) {
+	
+			Sheet sheet = workbook.createSheet(sheetName);
+			sheet.setDefaultRowHeight((short)500);
+	
+			//Set style
+			CellStyle styleHead = workbook.createCellStyle();
+			styleHead.setWrapText(false);
+			styleHead.setAlignment(CellStyle.ALIGN_CENTER);
+			styleHead.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+			styleHead.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			styleHead.setFillPattern(CellStyle.SOLID_FOREGROUND);
+	
+			CellStyle styleData = workbook.createCellStyle();
+			styleData.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+	
+			int rowNum = 0;
+			//int rowSize = data.size();
+			rowSize = data.size();
+			boolean appearedHead = false;
+			int colRangeStart = 0;
+			int colRangeEnd = 0;
+	
+			while(rowNum < rowSize) {
+				List<Object> dataList = data.get(rowNum);
+				int colSize = dataList.size();
+	
+				if (colSize > 0) {
+					Row row = sheet.createRow(rowNum);
+	
+					if (!appearedHead) {
+						for (int colNum = 0; colNum < colSize; colNum++) {
+							Object value = dataList.get(colNum);
+							String strValue = String.valueOf(value).trim();
+	
+							if (value != null && !strValue.isEmpty()) {
+								row.createCell(colNum).setCellValue(strValue);
+								row.getCell(colNum).setCellStyle(styleHead);
+								appearedHead = true;
+								if(colRangeStart == 0) colRangeStart = colNum;
+								colRangeEnd = colNum;
+							}
 						}
-					}
-				} else {
-					for (int colNum = 0; colNum < colSize; colNum++) {
-						Object value = dataList.get(colNum);
-						String strValue = String.valueOf(value).trim();
-
-						if (value != null && !strValue.isEmpty()) {
-							row.createCell(colNum).setCellValue(strValue);
-							row.getCell(colNum).setCellStyle(styleData);
+					} else {
+						for (int colNum = 0; colNum < colSize; colNum++) {
+							Object value = dataList.get(colNum);
+							String strValue = String.valueOf(value).trim();
+	
+							if (value != null && !strValue.isEmpty()) {
+								row.createCell(colNum).setCellValue(strValue);
+								row.getCell(colNum).setCellStyle(styleData);
+							}
 						}
 					}
 				}
+
+				rowNum++;
 			}
-			rowNum++;
-		}
+	
+			for (int i = colRangeStart; i <= colRangeEnd; i++) {
+				sheet.setColumnWidth(i, ((int)(15 * 1.14388)) * 256);
+			}
 
-		for (int i = colRangeStart; i <= colRangeEnd; i++) {
-			sheet.setColumnWidth(i, ((int)(15 * 1.14388)) * 256);
-		}
-
-		try {
+			//try {
 			fileOut = new FileOutputStream(filePath);
 			workbook.write(fileOut);
 			fileOut.close();
@@ -2836,7 +2865,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		}
 		finally {
 			if (fileOut != null) fileOut.close();
-			workbook.close();
+			//workbook.close();
 		}
 		logger.debug("createExcelByList end. list size:" + rowSize);
 		return fileName;
@@ -2855,5 +2884,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void createTblSerialNoRollback() throws Exception {
 		ezCommonDAO.createTblSerialNoRollback();
+	}
+	
+	@Override
+	public void insertHWPSecurityConfig() throws Exception {
+		ezCommonDAO.insertHWPSecurityConfig();
 	}
 }

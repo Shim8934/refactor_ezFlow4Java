@@ -275,10 +275,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 					}
 				
 				} catch (MessagingException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} catch (IOException e) {
 					logger.error("IOException has occurred");
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				} finally {
 					if (ia != null) {
 						ia.close();

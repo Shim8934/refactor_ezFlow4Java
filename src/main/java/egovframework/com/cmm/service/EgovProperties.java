@@ -1,7 +1,9 @@
 package egovframework.com.cmm.service;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 public class EgovProperties{
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovProperties.class);
+	private static final Logger logger = LoggerFactory.getLogger(EgovProperties.class);
 
 	//프로퍼티값 로드시 에러발생하면 반환되는 에러문자열
 	public static final String ERR_CODE =" EXCEPTION OCCURRED";
@@ -69,7 +71,7 @@ public class EgovProperties{
 			try {
 				if (fis != null) fis.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 			}
 
 		}
@@ -102,7 +104,7 @@ public class EgovProperties{
 			try {
 				if (fis != null) fis.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 			}
 
 		}
@@ -134,7 +136,7 @@ public class EgovProperties{
 			try {
 				if (fis != null) fis.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 			}
 		}
 	}
@@ -164,7 +166,7 @@ public class EgovProperties{
 			try {
 				if (fis != null) fis.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				logger.error(ex.getMessage(), ex);
 			}
 		}
 	}
@@ -190,27 +192,34 @@ public class EgovProperties{
 
 				java.util.Properties props = new java.util.Properties();
 				fis  = new FileInputStream(src);
-				props.load(new java.io.BufferedInputStream(fis));
+				// props.load(new java.io.BufferedInputStream(fis));
 
-				int i = 0;
-				Enumeration<?> plist = props.propertyNames();
-				if (plist != null) {
-					while (plist.hasMoreElements()) {
-						Map<String, String> map = new HashMap<String, String>();
-						String key = (String)plist.nextElement();
-						map.put(key, props.getProperty(key));
-						keyList.add(map);
+				// 2023-06-01 이사라 : 시큐어코딩 리소스 close
+				try (BufferedInputStream bis = new BufferedInputStream(fis)) {
+					props.load(bis);
+
+					int i = 0;
+					Enumeration<?> plist = props.propertyNames();
+					if (plist != null) {
+						while (plist.hasMoreElements()) {
+							Map<String, String> map = new HashMap<String, String>();
+							String key = (String) plist.nextElement();
+							map.put(key, props.getProperty(key));
+							keyList.add(map);
+						}
 					}
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		} catch (Exception ex){
 			debug("EX:"+ex);
-		} finally {
+		/*} finally {
 			try {
 				if (fis != null) fis.close();
 			} catch (Exception ex) {
 				debug("EX:"+ex);
-			}
+			}*/
 		}
 
 		return keyList;
@@ -222,7 +231,7 @@ public class EgovProperties{
 	 */
 	private static void debug(Object obj) {
 		if (obj instanceof java.lang.Exception) {
-			LOGGER.debug("IGNORED: {}", ((Exception)obj).getMessage());
+			logger.debug("IGNORED: {}", ((Exception)obj).getMessage());
 		}
 	}
 }

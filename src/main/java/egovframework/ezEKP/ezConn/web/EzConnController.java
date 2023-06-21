@@ -4,6 +4,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
@@ -11,6 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -291,7 +293,7 @@ public class EzConnController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("mailMain ended.");
@@ -368,7 +370,7 @@ public class EzConnController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("approvalMain ended.");
@@ -398,7 +400,9 @@ public class EzConnController {
 			}
 		}
 		
-		if (resultVO.getId() != null) {
+		// 2023-05-15 이사라 : NullPointerException 시큐어코딩 - vo null체크로 수정
+		//if (resultVO.getId() != null) {
+		if (!Objects.isNull(resultVO)) {
 			logger.debug("getUserInfoById ended. resultVO.id=" + resultVO.getId());
 		} else {
 			logger.debug("getUserInfoById ended. resultVO.id=null");			
@@ -486,7 +490,7 @@ public class EzConnController {
 				result = ezConnUtil.encryptAES(authString);
 			}						
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("getSSOAuthString ended. result=" + result);
@@ -554,7 +558,18 @@ public class EzConnController {
 							user.setStatus("Y");
 							
 							// sso 접속시에도 로그인 이력 남도록 추가 
-							loginService.insertLog(user);
+							// 2023-05-23 이사라 - 로그인 정보 저장
+							if (commonUtil.isLoginCookieExists(request, response)) {
+								Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+								String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+
+								if (!decryptedLoginCookie.split("///")[1].equals(userId)) {
+									commonUtil.updateLoginInfo(request, user);
+								}
+
+							} else {
+								commonUtil.updateLoginInfo(request, user);
+							}
 														
 							loginController.createLoginCookie(user.getId(), "", "", tenantId, request, response, user.getDeptID(), user.getCompanyID());
 						
@@ -579,7 +594,7 @@ public class EzConnController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("loginWithSSOAuthString ended.");
@@ -610,6 +625,11 @@ public class EzConnController {
 					
 					LoginVO resultVO = getUserInfoById(id, tenantId);
 					
+					// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+					if (Objects.isNull(resultVO)) {
+						throw new NullPointerException("cloudOrgan resultVO is null");
+					}
+
 					loginController.createLoginCookie(resultVO.getId(), "", "", tenantId, request, response, "", "");
 					
 					// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
@@ -621,7 +641,7 @@ public class EzConnController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		return resultPage;

@@ -25,7 +25,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 @Controller
 public class EzPMSAdminController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzPMSAdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzPMSAdminController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -35,7 +35,7 @@ public class EzPMSAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezPMS/pmsMain.do")
 	public String ezPMSMain(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) {
-		LOGGER.debug("ezPMSMain started");
+		logger.debug("ezPMSMain started");
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -43,7 +43,7 @@ public class EzPMSAdminController {
 			return "cmm/error/adminDenied";
 		}
 
-		LOGGER.debug("ezPMSMain ended");
+		logger.debug("ezPMSMain ended");
 		
 		return "/admin/ezPMS/pmsMain";
 	}
@@ -53,14 +53,14 @@ public class EzPMSAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezPMS/leftTop.do")
 	public String leftTop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) {
-		LOGGER.debug("leftTop started");
+		logger.debug("leftTop started");
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		LOGGER.debug("leftTop ended");
+		logger.debug("leftTop ended");
 		
 		return "/admin/ezPMS/leftTop";
 	}
@@ -71,7 +71,7 @@ public class EzPMSAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezPMS/projectListMain.do")
 	public String projectListMain(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) {
-		LOGGER.debug("projectListMain started");
+		logger.debug("projectListMain started");
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -79,7 +79,7 @@ public class EzPMSAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		LOGGER.debug("projectListMain ended");
+		logger.debug("projectListMain ended");
 		
 		return "/admin/ezPMS/pmsProjectListMain";
 	}
@@ -89,7 +89,7 @@ public class EzPMSAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezPMS/getProjectList.do", method=RequestMethod.POST)
 	public String getProjectList(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) {
-		LOGGER.debug("getProjectList started");
+		logger.debug("getProjectList started");
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -142,14 +142,14 @@ public class EzPMSAdminController {
 			model.addAttribute("projectListCount", projectListCount);
 		}
 		
-		LOGGER.debug("getProjectList ended");
+		logger.debug("getProjectList ended");
 		
 		return "/admin/ezPMS/pmsProjectList";
 	}
 	
 	@RequestMapping(value = "/admin/ezPMS/getProjectGeneralInfo.do")
 	public String getProjectGeneralInfo(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) {
-		LOGGER.debug("getProjectGeneralInfo started");
+		logger.debug("getProjectGeneralInfo started");
 		
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -180,7 +180,7 @@ public class EzPMSAdminController {
 			model.addAttribute("project", project);
 		}
 		
-		LOGGER.debug("getProjectGeneralInfo ended");
+		logger.debug("getProjectGeneralInfo ended");
 		
 		return "/admin/ezPMS/pmsProjectGeneralInfo";
 	}
@@ -188,7 +188,7 @@ public class EzPMSAdminController {
 	@RequestMapping(value = "/admin/ezPMS/deleteProject.do")
 	@ResponseBody
 	public String deleteProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model, LoginVO userInfo) throws Exception {
-		LOGGER.debug("deleteProject started");
+		logger.debug("deleteProject started");
 		
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -208,7 +208,7 @@ public class EzPMSAdminController {
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
 		String data = result.get("data").toString();	
 		
-		LOGGER.debug("deleteProject ended");
+		logger.debug("deleteProject ended");
 		
 		return data;
 	}
@@ -217,7 +217,7 @@ public class EzPMSAdminController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPMS/modifyProject.do")
 	public String modifyProject(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model, LoginVO userInfo) throws Exception {
-		LOGGER.debug("modifyProject started");
+		logger.debug("modifyProject started");
 		
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -259,7 +259,7 @@ public class EzPMSAdminController {
 			model.addAttribute("statusChange", "success");
 		}
 		
-		LOGGER.debug("modifyProject ended");
+		logger.debug("modifyProject ended");
 		
 		return "json";
 	}

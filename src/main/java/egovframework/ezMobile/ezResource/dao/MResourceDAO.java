@@ -18,7 +18,7 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @Repository("MResourceDAO")
 public class MResourceDAO extends EgovAbstractDAO {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MResourceDAO.class);
+	private static final Logger logger = LoggerFactory.getLogger(MResourceDAO.class);
 	
 	
 	@SuppressWarnings("unchecked")
@@ -40,7 +40,7 @@ public class MResourceDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<MResourceScheduleVO> getResScheduleMainList(Map<String, Object> map){
 		List<MResourceScheduleVO> list = (List<MResourceScheduleVO>) list("MResourceDAO.getResScheduleMainList", map);
-		LOGGER.debug("size of list: " + list.size());
+		logger.debug("size of list: " + list.size());
 		return  list;
 	}
 	

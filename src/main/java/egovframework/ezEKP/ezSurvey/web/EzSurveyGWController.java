@@ -99,7 +99,7 @@ public class EzSurveyGWController {
 			result.put("node", deptId);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -131,7 +131,7 @@ public class EzSurveyGWController {
 			result.put("subNodes", subDepts);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -174,7 +174,7 @@ public class EzSurveyGWController {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 		}
@@ -205,7 +205,7 @@ public class EzSurveyGWController {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -257,7 +257,7 @@ public class EzSurveyGWController {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 		}
@@ -293,7 +293,7 @@ public class EzSurveyGWController {
 			result.put("path", filePath);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -351,7 +351,7 @@ public class EzSurveyGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -392,7 +392,7 @@ public class EzSurveyGWController {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -431,7 +431,7 @@ public class EzSurveyGWController {
 			result.put("code", 0);
 		} 
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -490,7 +490,7 @@ public class EzSurveyGWController {
 			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -531,7 +531,7 @@ public class EzSurveyGWController {
 			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, order, column, userInfo, userMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -558,7 +558,7 @@ public class EzSurveyGWController {
 			result = surveyService.getPopupItems(mode, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -600,7 +600,7 @@ public class EzSurveyGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -629,7 +629,7 @@ public class EzSurveyGWController {
 			result.put("status", "ok");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -658,7 +658,7 @@ public class EzSurveyGWController {
 			result           = surveyService.changeSurveyState(itemId, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -687,7 +687,7 @@ public class EzSurveyGWController {
 			result           = surveyService.checkProcessing(itemId, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -716,7 +716,7 @@ public class EzSurveyGWController {
 			result.put("code", 0);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -766,7 +766,7 @@ public class EzSurveyGWController {
 			result = surveyService.getItemInfo(surveyId, mode, realPath, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -798,7 +798,7 @@ public class EzSurveyGWController {
 			result           = surveyService.getSurveyQuestions(surveyId, logicMode, realPath, userInfo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -832,7 +832,7 @@ public class EzSurveyGWController {
 		}
 		
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -869,7 +869,7 @@ public class EzSurveyGWController {
 			result.put("adminYN", adminYN);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}
@@ -904,7 +904,7 @@ public class EzSurveyGWController {
 			
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 2);
 		}

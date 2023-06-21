@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
@@ -207,7 +208,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 				}
 				logger.debug("getGoogleScheduleList ended ==> success");
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				logger.debug("getGoogleScheduleList ended ==> error");
 			}
 		} else {
@@ -248,7 +249,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 			logger.debug("refreshToken : " + token.getGoogleRefreshToken());
 			logger.debug("buildCalendarService success");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 	
@@ -282,8 +283,10 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 				
 				updateGoogleAccessTokenInfo(response.getAccessToken(), token.getUserID(), token.getCompanyID(), token.getTenantID());
 			} catch (Exception e) {
-				e.printStackTrace();
-				logger.debug("accessToken refresh error : " + response.toPrettyString());
+				// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+				String responseValue = Objects.isNull(response) ? "" : response.toPrettyString();
+				logger.error(e.getMessage(), e);
+				logger.debug("accessToken refresh error : " + responseValue);
 			}
 		}
     }
@@ -1032,7 +1035,7 @@ public class EzScheduleGoogleServiceImpl implements EzScheduleGoogleService {
 				logger.debug("getGoogleSchedule ended ==> success");
 				return event;
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				logger.debug("getGoogleSchedule ended ==> error");
 				return null;
 			}

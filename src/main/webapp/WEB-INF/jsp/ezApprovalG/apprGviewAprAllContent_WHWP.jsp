@@ -44,7 +44,8 @@
 	    		pDocHref = parent.pDocHrefAry[frameNum];
 	            pDocType = parent.pDocTypeAry[frameNum];
 	            
-                setAttachInfo(parent.pDocIDAry[frameNum], "APR", parent.document.getElementById("lstAttachLink")); // 첨부파일 정보를 UI로 표출하고, 첨부파일 플래그도 변경해준다.
+	            // 불필요한 함수 호출 제거 (실제로는 각 안 선택 시에만 필요한 함수이며, 문서보기 팝업창에서는 첨부/문서첨부의 존재여부 플래그를 배열로 관리할 필요가 없음)
+                // setAttachInfo(parent.pDocIDAry[frameNum], "APR", parent.document.getElementById("lstAttachLink")); // 첨부파일 정보를 UI로 표출하고, 첨부파일 플래그도 변경해준다.
                 parent.ShowMailProgress(); // 문서 로딩중 이미지 표출
                 
                 HwpCtrl = BuildWebHwpCtrl("hwpContent", "${webHWPUrl}", function () {Editor_Complete();});

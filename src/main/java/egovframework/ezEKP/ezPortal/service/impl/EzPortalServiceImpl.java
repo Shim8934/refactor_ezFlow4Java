@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -4041,7 +4043,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		
 		// 한 페이지에 출력되는 리스트 갯수
 		// default : 10
-		if(automax!= ""){
+		if(StringUtils.isNotEmpty(automax)){
 			queryStr.append("&outmax=").append(automax);
 		}
 		
@@ -4117,7 +4119,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			queryStr.append("&csq={view:"+userID+"}");
 		}
 		
-		if(startDate != "" && endDate != "" ) {
+		if(StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
 			
 			String dateRange = "";
 			
@@ -4152,14 +4154,17 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		conn.setDoOutput(true);
 		conn.setRequestProperty("content-type", "text/xml");
 		
-		BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-
-		String inputLine;
 		StringBuffer sb = new StringBuffer();
 		
-		// 내용을 저장한다.
-		while((inputLine = in.readLine()) != null) {
-			sb.append(inputLine.trim());
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"))) {
+	
+			String inputLine;
+			//StringBuffer sb = new StringBuffer();
+			
+			// 내용을 저장한다.
+			while((inputLine = in.readLine()) != null) {
+				sb.append(inputLine.trim());
+			}
 		}
 		
 		// List 데이터 변환
@@ -4216,7 +4221,8 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 					}
 				}
 				// trim()으로 제거되지 않는 앞뒤 공백제거.
-				value = value.replaceAll("(^\\p{Z}+|\\p{Z}+$)", "");
+				// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+				value = StringUtils.isBlank(value) ? "" : value.replaceAll("(^\\p{Z}+|\\p{Z}+$)", "");
 				map.put(key, value);
 			}
 			list.add(map);
@@ -4284,7 +4290,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		json.put("tenant", tenantID);
 		json.put("company", companyID);
 		
-		if(startDate != "" && endDate != "" ) {
+		if(StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
 			String dateRange = (startDate + "~" + endDate).replaceAll("-", "");
 			json.put("d1", dateRange);
 		}
@@ -4335,7 +4341,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		queryStr.append("&base64=n");
 		
 		// outmax : 한 페이지에 출력되는 리스트 갯수 (반환될 검색결과 수) / default : 10
-		if (automax != ""){
+		if (StringUtils.isNotEmpty(automax)){
 			queryStr.append("&outmax=").append(automax);
 		}
 		
@@ -4406,7 +4412,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		queryStr.append(" ^[AND {MEMBERID:" + userID + "}");
 		
 		// 검색기간 (작성일, 완료일) > DB 테이블과 동일하게 UTC 시간으로 검색
-		if (startDate != "" && endDate != "" ) {
+		if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
 			String dateRange = "";
 			
 			startDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", userInfo.getOffset(), true);

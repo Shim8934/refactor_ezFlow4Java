@@ -2660,7 +2660,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		try {
 			resGetSchedule = getSchedule(Integer.parseInt(num), ownerID, companyID, tenantID);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		if (resGetSchedule != null) {
 			orgGresFlag = resGetSchedule.getGresFlag();

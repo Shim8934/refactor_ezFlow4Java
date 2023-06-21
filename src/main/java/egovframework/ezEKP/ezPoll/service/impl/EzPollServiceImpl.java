@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -13,6 +14,9 @@ import javax.mail.internet.InternetAddress;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -35,6 +39,9 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPollService")
 public class EzPollServiceImpl implements EzPollService{
+
+	private static final Logger logger = LoggerFactory.getLogger(EzPollServiceImpl.class);
+
 	@Resource(name = "EzPollDAO")
 	private EzPollDAO ezPollDAO;
 	
@@ -513,7 +520,7 @@ public class EzPollServiceImpl implements EzPollService{
 				listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr, primary, mode);
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			set.addAll(listOfQuestion);
 			
@@ -531,7 +538,7 @@ public class EzPollServiceImpl implements EzPollService{
 				listOfQuestion = getAllQuestions(tenantID, searchStr, primary, mode, companyID, loginvo.getId());
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			
 			set.addAll(listOfQuestion);
@@ -553,7 +560,7 @@ public class EzPollServiceImpl implements EzPollService{
 			listOfQuestion = getQuestionsTest(userID, depPath, companyID, tenantID, searchStr, primary, mode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		set.addAll(listOfQuestion);
@@ -639,7 +646,7 @@ public class EzPollServiceImpl implements EzPollService{
 						file.delete();	
 					}
 					catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -666,7 +673,7 @@ public class EzPollServiceImpl implements EzPollService{
 					file.delete();	
 				}
 				catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -693,7 +700,7 @@ public class EzPollServiceImpl implements EzPollService{
 						file.delete();	
 					}
 					catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -718,7 +725,7 @@ public class EzPollServiceImpl implements EzPollService{
 						file.delete();	
 					}
 					catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -778,7 +785,8 @@ public class EzPollServiceImpl implements EzPollService{
 				toName = AccessUserInfo.getDisplayName();
 				toAddress = AccessUserInfo.getMail();
 			}
-			else{
+			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+			else if (!Objects.isNull(AccessUserGroupInfo)) {
 				toName = AccessUserGroupInfo.getDisplayName();
 				toAddress = AccessUserGroupInfo.getMail();
 			}

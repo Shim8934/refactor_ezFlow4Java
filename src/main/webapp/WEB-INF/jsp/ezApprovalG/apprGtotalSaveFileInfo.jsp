@@ -12,13 +12,33 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
+    	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+    	
 	    <script type="text/javascript">	
 	        var pDocID = "<c:out value='${docID}'/>";
 	        var pType = "<c:out value='${type}'/>";
 	        var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
 	        var ReturnFunction;
+	        
+	        /* 2023-05-09 김우철 - hwp결재문서를 배포용 문서로 저장하기 위한 변수 */
+			var HwpCtrl;
+			var useHwpDownSecurity = "<c:out value='${useHwpDownSecurity}'/>";
+			var length = 0;
+			var num = 0;
+			var docHwpPathArr;
+			var downUrl = "";
+			var docHwpPath = "";
+			var isHwpCtrlOpen = false;
+	        
 	        window.onload = function ()
 	        {
+	        	// useHwpDownSecurity가 Y일 때만 Whwp api 호출
+	        	if (useHwpDownSecurity == "Y") {
+	        		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
+	        	}
+	        	
 	        	if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 		    		QuitWindow();
 			    }
@@ -126,16 +146,24 @@
 	            
 	            if (obj.getAttribute("DATA1") == "ATT") {
 	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&fileName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA4") + "&orgCompanyID=" + orgCompanyID;
-	            } else if (obj.getAttribute("DATA1") == "ATTDOC") {
-	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=END&orgCompanyID=" + orgCompanyID;
+				} else if (obj.getAttribute("DATA1") == "ATTDOC") {
+					if (pSourcePath == "hwp" && useHwpDownSecurity == "Y") {
+						dcHwpDown(obj, pSourcePath, pDocID_mht);
+					} else {
+						AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=END&orgCompanyID=" + orgCompanyID;
+					}
 	            } else {
 	            	if (pType == "TMP") { //2019-02-08 천성준 - #14965 임시보관함문서 > 문서보기 > 통합PC저장 시, 첨부 및 문서파일을 내려받을수 없던 문제해결
 	            		AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID + "&docStatus=" + pType + "&orgCompanyID=" + orgCompanyID;
-	            	} else {
-		                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=" + pType + "&orgCompanyID=" + orgCompanyID;
-	            	}
-	            }
-	        }
+					} else {
+						if (pSourcePath == "hwp" && useHwpDownSecurity == "Y") {
+							dcHwpDown(obj, pSourcePath, pDocID_mht);
+						} else {
+							AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=" + pType + "&orgCompanyID=" + orgCompanyID;
+						}
+					}
+				}
+			}
 	
 	        function btn_OK()
 	        {
@@ -144,43 +172,53 @@
 	                alert(strLang584);
 	                return;
 	            }
-	            var xmlhttp = createXMLHttpRequest();
-	            var xmlpara = createXmlDom();
-	            var xmlstring = "<DATA>";
-	            xmlstring += "<PDOCID>" + pDocID + "</PDOCID>";
-	            xmlstring += "<PTITLE><![CDATA[" + ReplaceText(document.getElementById('spn_title').innerText, "\n", "") + "]]></PTITLE>";
-	            xmlstring += "<PTYPEINFO><![CDATA[" + strTypeInfo + "]]></PTYPEINFO>";
-	            xmlstring += "<PPATHINFO><![CDATA[" + strPathInfo.replace("&amp;", "&") + "]]></PPATHINFO>";
-	            xmlstring += "<PFILEINFO><![CDATA[" + ReplaceText(strFileName, "\n", "") + "]]></PFILEINFO>";
-	            xmlstring += "</DATA>";
-	
-	            xmlpara = loadXMLString(xmlstring);
-	
-	            xmlhttp.open("Post", "/ezApprovalG/saveTotalDoc.do", false);
-	            xmlhttp.send(xmlpara);
-	            var URL = xmlhttp.responseText;
-
-	            /* 2023-03-08 홍승비 - 통합PC저장으로 결재문서와 첨부파일 다운로드 후, 임시 생성된 .zip파일 삭제 */
-	            AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(URL) + "&isToDelFG=Y";
-	        }
+	            
+				var strTypeInfoArr = strTypeInfo.split("|||");
+				var strPathInfoArr = strPathInfo.replace("&amp;", "&").split("|||");
+				length = (strTypeInfoArr.length - 1);
+				docHwpPathArr = new Array(strTypeInfoArr.length - 1);
+				docHwpPath = "";
+				downUrl = "";
+				num = 0;
+	            
+				for (var i = 0; i < strTypeInfoArr.length - 1; i++) {
+	            	
+					if ((strTypeInfoArr[i] == "DOC" || strTypeInfoArr[i] == "ATTDOC") && strPathInfoArr[i].substring(strPathInfoArr[i].lastIndexOf(".") + 1) == "hwp") {
+						docHwpPathArr[i] = strPathInfoArr[i];
+					} else {
+						docHwpPathArr[i] = "noPath"; // 2023-05-09 김우철 - 배포용 문서로 저장할 대상이 아닌 경우 docHwpPath를 "noPath"로 지정
+					}
+	           	 	
+					docHwpPath += (docHwpPathArr[i] + "|||");
+				}
+	        	
+				if (useHwpDownSecurity == "Y") {
+					hwp_url(num);
+				} else {
+					download(downUrl);
+				}
+			}
 	
 	        var strPathInfo = "";
 	        var strTypeInfo = "";
 	        var strFileName = "";
 	        function CheckBoxClick(obj)
 	        {
+	        	/* 2023-05-23 김우철 - 파일명에 사용할 수 없는 특수문자를 "_" 문자로 치환 (타 모듈과 파일명 특수문자 처리 통일) */
+	        	var filename = GetAttribute(obj, "data2").replace(/[*|\\\":\/?<>]/gi, "_");
 	            document.getElementById('cbx_all').checked = false;
+	            
 	            if (obj.checked) {
 	                obj.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
 	                strPathInfo = strPathInfo + obj.value + "|||";
 	                strTypeInfo = strTypeInfo + GetAttribute(obj, "data1") + "|||";
-	                strFileName = strFileName + GetAttribute(obj, "data2") + "|||";
+	                strFileName = strFileName + filename + "|||";
 	            }
 	            else {
 	                obj.parentElement.parentElement.style.backgroundColor = "#FFFFFF";
 	                strPathInfo = strPathInfo.replace(obj.value + "|||", '');
 	                strTypeInfo = strTypeInfo.replace(GetAttribute(obj, "data1") + "|||", '');
-	                strFileName = strFileName.replace(GetAttribute(obj, "data2") + "|||", '');
+	                strFileName = strFileName.replace(filename + "|||", '');
 	            }
 	        }
 	        
@@ -195,18 +233,19 @@
                 
 	            if (obj.checked) {
 	                for (var i = 0; i < count ; i++) {
-	
+						var filename = GetAttribute(document.getElementById('chk_' + i), "data2").replace(/[*|\\\":\/?<>]/gi, "_");
 	                    document.getElementById('chk_' + i).checked = true;
-	                    if (CrossYN())
+	                    
+	                    if (CrossYN()) {
 	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "#f1f8ff";
-	                    else {
+	                    } else {
 	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#f1f8ff";
 	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#f1f8ff";
 	                    }
 	
 	                    strPathInfo += document.getElementById('chk_' + i).value + "|||";
 	                    strTypeInfo += GetAttribute(document.getElementById('chk_' + i), "data1") + "|||";
-	                    strFileName += GetAttribute(document.getElementById('chk_' + i), "data2") + "|||";
+	                    strFileName += filename + "|||";
 	                }
 	            }
 	            else {
@@ -234,6 +273,121 @@
 				window_close();
 		    }
 	        
+	        /* 2023-05-09 김우철 - 통합PC저장 시 다중 파일을 배포용 문서로 저장할 때, Whwp api가 비동기로 호출되는 것을 제어하기 위한 재귀함수 */
+			function hwp_url(p_num) {
+				// p_num은 각 첨부파일의 배열 인덱스이며, 파일 전체 개수보다 같거나 많아지는 경우 download 함수 호출
+				if (p_num >= length) {
+					return download(downUrl);
+				} else {
+					if (isHwpCtrlOpen != true) {
+						alert(strLangKWCHd01);
+						return;
+					}
+	        		
+					if (docHwpPathArr[num] == "noPath") {
+						downUrl += ("noURL|||");
+						num++;
+   						
+						return hwp_url(num);
+					} else {
+						var doc = HwpCtrl.Open(window.location.origin + docHwpPathArr[num], "HWP", "", function(res) {
+							// console.log("res" + num + " : " + JSON.stringify(res));
+							if (res.result) {
+                   				var dact = HwpCtrl.CreateAction("FileSetSecurity");
+        						var dset = dact.CreateSet();
+        						
+        						dact.GetDefault(dset);
+        						
+        						// 패스워드 설정
+        						dset.SetItem("Password", "${HwpSecurityNum}");
+        						
+        						// 프린트 사용여부
+        						dset.SetItem("NoPrint", true);
+        						
+        						// 복사 방지
+        						dset.SetItem("NoCopy", true);
+        						
+        						var rtn = dact.Execute(dset, function(action, param, result, userData) {
+        							// 배포용 문서는 웹한글기안기 서버 상에 저장되며, downUrl에는 웹한글기안기 서버에서 해당 파일을 다운로드하기 위한 URL이 저장됨
+        	   						downUrl += (result.downloadUrl + "|||");
+        	   						num++;
+        	   						
+        	   						return hwp_url(num);
+        						});
+                   			} else {
+                   				alert(strLangKWCHd01);
+                   				return;
+                   			}
+        				});	
+           			}
+	        	}
+			}
+			
+	        /* 2023-05-09 김우철 - 통합PC저장 시 단일 파일을 더블클릭으로 저장할 때 배포용 문서로 저장 */
+			function dcHwpDown(obj, pSourcePath, pDocID_mht) {
+				if (isHwpCtrlOpen != true) {
+	        		alert(strLangKWCHd01);
+	        		return;
+	        	}
+	        	
+				var filename = GetAttribute(obj, "data2").replace(/[*|\\\":\/?<>]/gi, "_");
+	        	var doc = HwpCtrl.Open(window.location.origin + obj.getAttribute("FILEPATH"), "HWP", "", function(res) {
+           			// console.log("res : " + JSON.stringify(res));
+           			if (res.result) {
+	           			var dact = HwpCtrl.CreateAction("FileSetSecurity");
+						var dset = dact.CreateSet();
+						
+						dact.GetDefault(dset);
+						
+						// 패스워드 설정
+						dset.SetItem("Password", "${HwpSecurityNum}");
+						
+						// 프린트 사용여부
+						dset.SetItem("NoPrint", true);
+						
+						// 복사 방지
+						dset.SetItem("NoCopy", true);
+						
+						var rtn = dact.Execute(dset, function(action, param, result, userData) {
+							// 배포용 문서는 웹한글기안기 서버 상에 저장되며, result.downloadUrl에는 웹한글기안기 서버에서 해당 파일을 다운로드하기 위한 URL이 리턴됨
+		  					document.getElementById("AttachDownFrame").src = "/ezApprovalG/downloadHwpDbClick.do?fileName=" + encodeURIComponent(filename + "." + pSourcePath) + "&docID=" + pDocID_mht + "&downloadUrl=" + result.downloadUrl;
+						});
+					} else {
+						alert(strLangKWCHd01);
+						return;
+					}
+				});	
+			}
+	        
+			/* 2023-05-09 김우철 - 통합PC저장 > 실제 첨부파일 다운로드를 위한 함수 분리 (다중 파일 저장) */
+			function download(downloadUrl) {
+				var p_downloadUrl = downloadUrl;
+				var xmlhttp = createXMLHttpRequest();
+				var xmlpara = createXmlDom();
+	            
+				var xmlstring = "<DATA>";
+				xmlstring += "<PDOCID>" + pDocID + "</PDOCID>";
+				xmlstring += "<PTITLE><![CDATA[" + ReplaceText(document.getElementById('spn_title').innerText, "\n", "").replace(/[*|\\\":\/?<>]/gi, "_") + "]]></PTITLE>";
+				xmlstring += "<PTYPEINFO><![CDATA[" + strTypeInfo + "]]></PTYPEINFO>";
+				xmlstring += "<PPATHINFO><![CDATA[" + strPathInfo.replace("&amp;", "&") + "]]></PPATHINFO>";
+				xmlstring += "<PFILEINFO><![CDATA[" + ReplaceText(strFileName, "\n", "") + "]]></PFILEINFO>";
+				xmlstring += "<PHWPINFO><![CDATA[" + docHwpPath.replace("&amp;", "&") + "]]></PHWPINFO>";
+				 
+				if (useHwpDownSecurity == "Y") {
+					xmlstring += "<PDOWNINFO><![CDATA[" + p_downloadUrl.replace("&amp;", "&") + "]]></PDOWNINFO>";
+				}
+				
+				xmlstring += "</DATA>";
+				xmlpara = loadXMLString(xmlstring);
+				
+				xmlhttp.open("Post", "/ezApprovalG/saveTotalDoc.do", false);
+				xmlhttp.send(xmlpara);
+				var URL = xmlhttp.responseText;
+				
+				/* 2023-03-08 홍승비 - 통합PC저장으로 결재문서와 첨부파일 다운로드 후, 임시 생성된 .zip파일 삭제 */
+				document.getElementById("AttachDownFrame").src = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(URL) + "&isToDelFG=Y";
+			}
+			
 	    </script>
 	</head>
 	<body class="popup">
@@ -259,5 +413,6 @@
 	        <a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>	        
 	    </div>
 	    <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
+	    <div id="hwpctrl"/>
 	</body>
 </html>

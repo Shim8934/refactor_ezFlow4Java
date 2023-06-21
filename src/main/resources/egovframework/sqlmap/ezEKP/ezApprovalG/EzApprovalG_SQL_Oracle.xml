@@ -12724,18 +12724,23 @@
 <!-- 		{CALL EZSP_GETLASTOPINIONCONTENT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getLastOpinionContent" parameterClass="Map" resultClass="String">
-		SELECT 
-			CONTENT 
-        FROM 
-        	TBL_APROPINIONINFO 
-        WHERE  
-        	TENANT_ID = #v_TENANTID#
-        AND
-            COMPANYID = #companyID#        	
-        AND
-        	DOCID = #v_DOCID#
-        ORDER BY 
-        	OPINIONSN DESC
+		SELECT
+			*
+		FROM (
+			SELECT
+				CONTENT
+	        FROM
+	        	TBL_APROPINIONINFO
+	        WHERE
+	        	TENANT_ID = #v_TENANTID#
+	        AND
+	            COMPANYID = #companyID#
+	        AND
+	        	DOCID = #v_DOCID#
+	        ORDER BY
+	        	OPINIONSN DESC)
+		WHERE
+	       	 ROWNUM = 1
 	</select>
 <!-- 	<procedure id="EzApprovalG.gongRamDocInfo" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GONGRAMDOCINFO(#v_ORGDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -13980,6 +13985,8 @@
 				AND
 					TBL_RECORD.COMPANYID= #companyID#
 			</isNotEqual>
+			AND
+				TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 		</isEqual> 
 	    <isEqual property="listFlag" compareValue="23">
 	        AND

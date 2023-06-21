@@ -57,7 +57,7 @@ import egovframework.let.utl.fcc.service.KlibUtil;
 
 @Controller
 public class EzApprovalGHwpController extends EgovFileMngUtil{
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGHwpController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGHwpController.class);
 	
 	@Autowired
 	private Properties config;
@@ -90,7 +90,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/draftuiHWP.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String draftuiHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("draftuiHWP started");
+		logger.debug("draftuiHWP started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -171,7 +171,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("formAprOption", formAprOption);
 		//		
 		
-		LOGGER.debug("draftuiHWP ended");
+		logger.debug("draftuiHWP ended");
 		
 		return "ezApprovalG/apprGdraftuiHWP";
 	}
@@ -186,7 +186,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/approvuiHWP.do", method = RequestMethod.GET)
 	public String approvuiHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("approvuiHWP started");
+		logger.debug("approvuiHWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String susinAdmin = "";
@@ -344,7 +344,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("formAprOption", formAprOption);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 
-		LOGGER.debug("approvuiHWP ended");
+		logger.debug("approvuiHWP ended");
 		
 		return "/ezApprovalG/apprGapprovuiHWP";
 	}
@@ -354,7 +354,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/docViewerHWP.do", method = RequestMethod.GET)
 	public String docViewerHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("docViewerHWP started");
+		logger.debug("docViewerHWP started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 
@@ -363,7 +363,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("docHref", commonUtil.cleanValue(docHref));
 		
-		LOGGER.debug("docViewerHWP ended");
+		logger.debug("docViewerHWP ended");
 		
 		if(useWebHWP.equals("YES")) {
 			return "ezApprovalG/apprGdocViewerWHWP";
@@ -377,7 +377,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/ezviewAprHWP.do", method = RequestMethod.GET)
 	public String ezviewAprHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezviewAprHWP started");
+		logger.debug("ezviewAprHWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -473,7 +473,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
-		LOGGER.debug("ezviewAprHWP ended");
+		logger.debug("ezviewAprHWP ended");
 		
 		return "ezApprovalG/apprGviewAprHWP";
 	}
@@ -484,7 +484,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/mail_interuploadX_Server.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mail_interuploadX_Server(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception {
-		LOGGER.debug("mail_interuploadX_Server started");
+		logger.debug("mail_interuploadX_Server started");
 
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 
@@ -587,8 +587,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			extResult = "OK";
 		}
 
-		LOGGER.debug("mail_interuploadX_Server ended");
-		if (pBigFileUpload == "Y") {
+		logger.debug("mail_interuploadX_Server ended");
+
+		// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		if ("Y".equalsIgnoreCase(pBigFileUpload)) {
 			return pDate + "|!|" + copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
 		} else {
 			return copyPath + commonUtil.separator + newfilename + "_kaonisplit_" + pBigFileUpload + "_" + extResult;
@@ -600,7 +602,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/ezDocInfoG_View.do", method = RequestMethod.GET)
 	public String ezDocInfoG_View(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezDocInfoG_View started");
+		logger.debug("ezDocInfoG_View started");
 
 		String urgentApproval = "";
 		String summary = "";
@@ -670,7 +672,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         model.addAttribute("pIngFlag", pIngFlag);
         model.addAttribute("securityNode", securityNode);
         
-		LOGGER.debug("ezDocInfoG_View ended");
+		logger.debug("ezDocInfoG_View ended");
 		
 		return "ezApprovalG/apprGezDocInfoGView";
 	}
@@ -680,7 +682,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/ezViewEnd_HWP.do", method = RequestMethod.GET)
 	public String ezViewEnd_HWP(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezViewEnd_HWP started");
+		logger.debug("ezViewEnd_HWP started");
 
 		String docID = request.getParameter("docID");
 		String docHref = request.getParameter("docHref");
@@ -775,7 +777,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		// 전자결재 미리보기 영역에서 열렸는지 여부 플래그
 		model.addAttribute("isPreview", isPreview);
 		
-		LOGGER.debug("ezViewEnd_HWP ended");
+		logger.debug("ezViewEnd_HWP ended");
 		
 		return "ezApprovalG/apprGviewEndHWP";
 	}
@@ -784,7 +786,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	@RequestMapping(value = "/ezApprovalG/ezRecevGSusinHWP.do", method = RequestMethod.GET)
 	public String ezRecevGSusinHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezRecevGSusinHWP started");
+		logger.debug("ezRecevGSusinHWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -891,7 +893,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("pSusinAdmin", pSusinAdmin);
 		
-		LOGGER.debug("ezRecevGSusinHWP ended");
+		logger.debug("ezRecevGSusinHWP ended");
 		
 		return "ezApprovalG/apprGrecevgsusinHWP";
 	}	
@@ -899,7 +901,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	@RequestMapping(value = "/ezApprovalG/ezDeptRecevUI_HWP.do", method = RequestMethod.GET)
 	public String ezDeptRecevUI_HWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezDeptRecevUI_HWP started");
+		logger.debug("ezDeptRecevUI_HWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -919,7 +921,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String pSusinAdmin = "";
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "form" + commonUtil.separator;
 		
-		String userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
+		String useDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
@@ -960,21 +962,21 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("usePassword", usePassword);
 		model.addAttribute("isHWP", "Y");
 		model.addAttribute("dirPath", dirPath);
-		model.addAttribute("useDirectSign", userDirectSign);
+		model.addAttribute("useDirectSign", useDirectSign);
 		
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
 		model.addAttribute("signImageSize", signImageSize);
 		
-		LOGGER.debug("ezDeptRecevUI_HWP ended");
+		logger.debug("ezDeptRecevUI_HWP ended");
 		return "ezApprovalG/apprGdeptRecevuiHWP";
 	}
 	
 
 	@RequestMapping(value = {"/ezApprovalG/ezSimsaG_HWP.do", "/ezApprovalG/ezConvSihang_HWP.do"}, method = RequestMethod.GET)
 	public String ezSimsaG_HWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezSimsaG_HWP started");
+		logger.debug("ezSimsaG_HWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -1017,7 +1019,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("docTitle", docTitle);
 	    model.addAttribute("isConvSihang", isConvSihang);
 		
-		LOGGER.debug("ezSimsaG_HWP ended");
+		logger.debug("ezSimsaG_HWP ended");
 		
 		return "ezApprovalG/apprGezSimsagHWP";
 	}	
@@ -1028,7 +1030,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody JSONObject jsonObj) throws Exception{
-		LOGGER.debug("saveEndFileHwp started");
+		logger.debug("saveEndFileHwp started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -1042,9 +1044,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			if (docID == null | formText.equals("")) {
 				result = "FAIL";
 				
-				LOGGER.debug("<<<docID : " + docID);
-				LOGGER.debug("<<<formText : " + formText);
-				LOGGER.debug("there is no primary data.");
+				logger.debug("<<<docID : " + docID);
+				logger.debug("<<<formText : " + formText);
+				logger.debug("there is no primary data.");
 
 				return result;
 			}
@@ -1069,12 +1071,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 			result = "SUCCESS";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			result = "FAIL";
 		}
 		
-		LOGGER.debug("saveEndFileHwp ended");
+		logger.debug("saveEndFileHwp ended");
 		
 		return result;
 	}
@@ -1084,7 +1086,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezConvOutHWP.do", method = RequestMethod.GET)
 	public String ezConvOutHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezConvOutHWP started.");
+		logger.debug("ezConvOutHWP started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
@@ -1100,7 +1102,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("hwpToolbar", hwpToolbar);
 		
-		LOGGER.debug("ezConvOutHWP ended.");
+		logger.debug("ezConvOutHWP ended.");
 		
 		return "/ezApprovalG/apprGezConvOutHWP";
 	}
@@ -1116,7 +1118,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	@ResponseBody
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
-		LOGGER.debug("============ downloadHWPdoc started ============");
+		logger.debug("============ downloadHWPdoc started ============");
 		
 		userInfo = commonUtil.userInfo(loginCookie);		
 		
@@ -1147,7 +1149,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/draftuiWHWP.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String draftuiWHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("draftuiHWP started");
+		logger.debug("draftuiHWP started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -1270,7 +1272,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 
-		LOGGER.debug("draftuiWHWP ended. formPath:" + formPath);
+		logger.debug("draftuiWHWP ended. formPath:" + formPath);
 		
 		return "ezApprovalG/apprGdraftuiWHWP";
 	}
@@ -1285,7 +1287,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/approvuiWHWP.do", method = RequestMethod.GET)
 	public String approvuiWHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("approvuiWHWP started");
+		logger.debug("approvuiWHWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String susinAdmin = "";
@@ -1461,7 +1463,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("preSusinGroupStr", preSusinGroupStr);
 		model.addAttribute("isPreview", isPreview);
 		
-		LOGGER.debug("approvuiWHWP ended");
+		logger.debug("approvuiWHWP ended");
 		
 		return "/ezApprovalG/apprGapprovuiWHWP";
 	}
@@ -1471,7 +1473,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/ezViewEnd_WHWP.do", method = RequestMethod.GET)
 	public String ezViewEnd_WHWP(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezViewEnd_WHWP started");
+		logger.debug("ezViewEnd_WHWP started");
 
 		String docID = request.getParameter("docID");
 		String docHref = request.getParameter("docHref");
@@ -1579,7 +1581,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		// 전자결재 미리보기 영역에서 열렸는지 여부 플래그
 		model.addAttribute("isPreview", isPreview);
 		
-		LOGGER.debug("ezViewEnd_WHWP ended");
+		logger.debug("ezViewEnd_WHWP ended");
 		
 		return "ezApprovalG/apprGviewEndWHWP";
 	}
@@ -1589,7 +1591,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/ezviewAprWHWP.do", method = RequestMethod.GET)
 	public String ezviewAprWHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezviewAprWHWP started");
+		logger.debug("ezviewAprWHWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -1704,14 +1706,14 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		
-		LOGGER.debug("ezviewAprWHWP ended");
+		logger.debug("ezviewAprWHWP ended");
 		
 		return "ezApprovalG/apprGviewAprWHWP";
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/ezRecevGSusinWHWP.do", method = RequestMethod.GET)
 	public String ezRecevGSusinWHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezRecevGSusinWHWP started");
+		logger.debug("ezRecevGSusinWHWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -1834,14 +1836,14 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		
-		LOGGER.debug("ezRecevGSusinWHWP ended");
+		logger.debug("ezRecevGSusinWHWP ended");
 		
 		return "ezApprovalG/apprGrecevgsusinWHWP";
 	}	
 	
 	@RequestMapping(value = "/ezApprovalG/ezDeptRecevUI_WHWP.do", method = RequestMethod.GET)
 	public String ezDeptRecevUI_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezDeptRecevUI_WHWP started");
+		logger.debug("ezDeptRecevUI_WHWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -1861,7 +1863,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String pSusinAdmin = "";
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "form" + commonUtil.separator;
 		
-		String userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
+		String useDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
@@ -1909,7 +1911,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("usePassword", usePassword);
 		model.addAttribute("isHWP", "Y");
 		model.addAttribute("dirPath", dirPath);
-		model.addAttribute("useDirectSign", userDirectSign);
+		model.addAttribute("useDirectSign", useDirectSign);
 		
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
@@ -1924,13 +1926,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		
-		LOGGER.debug("ezDeptRecevUI_WHWP ended");
+		logger.debug("ezDeptRecevUI_WHWP ended");
 		return "ezApprovalG/apprGdeptRecevuiWHWP";
 	}
 	
 	@RequestMapping(value = {"/ezApprovalG/ezSimsaG_WHWP.do", "/ezApprovalG/ezConvSihang_WHWP.do"}, method = RequestMethod.GET)
 	public String ezSimsaG_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezSimsaG_WHWP started");
+		logger.debug("ezSimsaG_WHWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -1986,7 +1988,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("bigAttachDownloadDay", bigAttachDownloadDay); // 보관되는 일수
 		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount); // 다운로드 횟수
 		
-		LOGGER.debug("ezSimsaG_WHWP ended");
+		logger.debug("ezSimsaG_WHWP ended");
 		
 		return "ezApprovalG/apprGezSimsagWHWP";
 	}	
@@ -1994,19 +1996,19 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/downloadAttachForHwp.do", method = RequestMethod.GET)
 	@ResponseBody
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LOGGER.debug("downloadAttachForHwp started");
+		logger.debug("downloadAttachForHwp started");
 		
 		String filePath = request.getParameter("filePath");
 		
 		downImage(filePath, request, response);
 		
-		LOGGER.debug("downloadAttachForHwp ended");
+		logger.debug("downloadAttachForHwp ended");
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/uploadAttachForHwp.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String uploadAttachForHwp(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("uploadAttachForHwp started");
+		logger.debug("uploadAttachForHwp started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2034,7 +2036,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         
         String pDirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
         pDirPath = realPath + pDirPath + commonUtil.separator + companyID + commonUtil.separator;
-        LOGGER.debug("pDirPath : " + pDirPath);
+        logger.debug("pDirPath : " + pDirPath);
         
         File tempFile = new File(pDirPath + "tempUploadFile");
         
@@ -2055,13 +2057,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         
         strXML.append("</NODES></ROOT>");
         
-		LOGGER.debug("uploadAttachForHwp ended");
+		logger.debug("uploadAttachForHwp ended");
 		return strXML.toString();
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/tempUploadFileDelete.do", method = RequestMethod.POST)
 	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LOGGER.debug("tempUploadFileDelete started");
+		logger.debug("tempUploadFileDelete started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -2070,12 +2072,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID + commonUtil.separator + "tempUploadFile";
 		
-		LOGGER.debug("filePath : " + (pDirPath + commonUtil.separator + fileName));
+		logger.debug("filePath : " + (pDirPath + commonUtil.separator + fileName));
 		
 		File file = new File(pDirPath + commonUtil.separator + fileName);
 		file.delete();
 
-		LOGGER.debug("tempUploadFileDelete ended");
+		logger.debug("tempUploadFileDelete ended");
         
         return "json";
 	}
@@ -2085,7 +2087,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezApprovalG/WHWPEditor.do", method = RequestMethod.GET)
 	public String WHWPEditor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LOGGER.debug("WHWPEditor started.");
+		logger.debug("WHWPEditor started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String type = request.getParameter("type");
@@ -2093,7 +2095,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("webHWPUrl", ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId()));
 		model.addAttribute("type", type);
 		
-		LOGGER.debug("WHWPEditor ended.");
+		logger.debug("WHWPEditor ended.");
 		return "ezApprovalG/apprGWHWPEditor";
 	}
 	
@@ -2102,13 +2104,13 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezApprovalG/hwpctrlmain.do", method = RequestMethod.GET)
 	public String hwpctrlmain(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LOGGER.debug("hwpctrlmain started.");
+		logger.debug("hwpctrlmain started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		model.addAttribute("webHWPUrl", ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId()));
 		
-		LOGGER.debug("hwpctrlmain ended.");
+		logger.debug("hwpctrlmain ended.");
 		return "ezApprovalG/hwpctrlmain";
 	}
 	
@@ -2118,7 +2120,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/draftuiAll_WHWP.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String draftuiAll_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("draftuiAll_WHWP started");
+		logger.debug("draftuiAll_WHWP started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -2236,7 +2238,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview); // 미리보기 영역 관련 
 		
-		LOGGER.debug("draftuiAll_WHWP ended");
+		logger.debug("draftuiAll_WHWP ended");
 		
 		return "ezApprovalG/apprGdraftuiAll_WHWP";
 	}
@@ -2246,7 +2248,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezApprovalG/draftContentAll_WHWP.do", method = RequestMethod.GET)
 	public String draftContentAll_WHWP(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LOGGER.debug("draftContentAll_WHWP started.");
+		logger.debug("draftContentAll_WHWP started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -2264,7 +2266,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		
-		LOGGER.debug("draftContentAll_WHWP ended.");
+		logger.debug("draftContentAll_WHWP ended.");
 		return "ezApprovalG/apprGdraftuiAllContent_WHWP";
 	}
 	
@@ -2275,7 +2277,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/copyDocAttachHwp.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public void copyDocAttachHwp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
-		LOGGER.debug("copyDocAttachHwp started");
+		logger.debug("copyDocAttachHwp started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
@@ -2290,7 +2292,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		ezApprovalGService.copyDocAttach(apprGAttachOptionVO, realPath);
 
-		LOGGER.debug("copyDocAttachHwp ended");
+		logger.debug("copyDocAttachHwp ended");
 	}
 	
 	/**
@@ -2299,18 +2301,18 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/copyAprLine.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public void copyAprLine(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ApprGAttachOptionVO apprGAttachOptionVO) throws Exception {
-		LOGGER.debug("copyAprLine started");
+		logger.debug("copyAprLine started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		apprGAttachOptionVO.setTenantID(userInfo.getTenantId());
 		apprGAttachOptionVO.setCompanyID(userInfo.getCompanyID());
 		
-		//LOGGER.debug("userID : " + userInfo.getId() + " / userName : " + userInfo.getDisplayName() + " / mainDocID : " + apprGAttachOptionVO.getMainDocID() + " / currentDocID : " + apprGAttachOptionVO.getCurrentDocID());
+		//logger.debug("userID : " + userInfo.getId() + " / userName : " + userInfo.getDisplayName() + " / mainDocID : " + apprGAttachOptionVO.getMainDocID() + " / currentDocID : " + apprGAttachOptionVO.getCurrentDocID());
 		
 		ezApprovalGService.copyAprLine(apprGAttachOptionVO);
 		
-		LOGGER.debug("copyAprLine ended");
+		logger.debug("copyAprLine ended");
 	}
 	
 	/**
@@ -2318,7 +2320,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/approvuiAll_WHWP.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String approvuiAll_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("approvuiAll_WHWP started");
+		logger.debug("approvuiAll_WHWP started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -2519,7 +2521,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		
-		LOGGER.debug("approvuiAll_WHWP ended");
+		logger.debug("approvuiAll_WHWP ended");
 		
 		return "ezApprovalG/apprGapprovuiAll_WHWP";
 	}
@@ -2529,7 +2531,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezApprovalG/approvContentAll_WHWP.do", method = RequestMethod.GET)
 	public String approvContentAll_WHWP(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LOGGER.debug("approvContentAll_WHWP started.");
+		logger.debug("approvContentAll_WHWP started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -2545,7 +2547,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		
-		LOGGER.debug("approvContentAll_WHWP ended.");
+		logger.debug("approvContentAll_WHWP ended.");
 		return "ezApprovalG/apprGapprovuiAllContent_WHWP";
 	}
 
@@ -2554,7 +2556,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/ezviewAprAll_WHWP.do", method = RequestMethod.GET)
 	public String ezviewAprAll_WHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("ezviewAprAll_WHWP started");
+		logger.debug("ezviewAprAll_WHWP started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -2689,7 +2691,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		
-		LOGGER.debug("ezviewAprAll_WHWP ended");
+		logger.debug("ezviewAprAll_WHWP ended");
 		
 		return "ezApprovalG/apprGviewAprAll_WHWP";
 	}
@@ -2699,7 +2701,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezApprovalG/apprViewContentAll_WHWP.do", method = RequestMethod.GET)
 	public String apprViewContentAll_WHWP(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LOGGER.debug("apprViewContentAll_WHWP started.");
+		logger.debug("apprViewContentAll_WHWP started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -2715,7 +2717,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		
-		LOGGER.debug("apprViewContentAll_WHWP ended.");
+		logger.debug("apprViewContentAll_WHWP ended.");
 		return "ezApprovalG/apprGviewAprAllContent_WHWP";
 	}
 ////////////////////// 일괄기안 코드 끝 ///////////////////////
@@ -2725,7 +2727,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/docViewerWHWPCompare.do", method = RequestMethod.GET)
 	public String docViewerCompare(HttpServletRequest request, Model model) throws Exception {
-		LOGGER.debug("docViewerWHWPCompare started");
+		logger.debug("docViewerWHWPCompare started");
 
 		String pDocHrefAfter = request.getParameter("docHrefAfter");
 		String pDocHrefBefore = request.getParameter("docHrefBefore");
@@ -2733,7 +2735,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docHrefAfter", commonUtil.cleanValue(pDocHrefAfter));
 		model.addAttribute("docHrefBefore", commonUtil.cleanValue(pDocHrefBefore));
 		
-		LOGGER.debug("docViewerCompare ended");
+		logger.debug("docViewerCompare ended");
 		return "ezApprovalG/apprGdocViewerWHWPCompare";
 	}
 	

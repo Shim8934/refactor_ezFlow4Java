@@ -28,7 +28,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @RestController
 public class MOrganGWController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MOrganGWController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MOrganGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -54,7 +54,7 @@ public class MOrganGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezorgan/personlist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getPersonList(HttpServletRequest request, Model model) {		
-		LOGGER.debug("MOBILE G/W ORGAN [GET /ezorgan/personlist] started.");
+		logger.debug("MOBILE G/W ORGAN [GET /ezorgan/personlist] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -86,13 +86,13 @@ public class MOrganGWController {
 			result.put("listCount", listCount);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 			result.put("listCount", "");
 		}
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezorgan/personlist] ended.");
+		logger.debug("MOBILE G/W BOARD [GET /ezorgan/personlist] ended.");
 		return result;
 	}
 	
@@ -102,7 +102,7 @@ public class MOrganGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezorgan/personDetail", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getPersonInfo(HttpServletRequest request, Model model) {		
-		LOGGER.debug("MOBILE G/W ORGAN [GET /ezorgan/personDetail] started.");
+		logger.debug("MOBILE G/W ORGAN [GET /ezorgan/personDetail] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -136,19 +136,19 @@ public class MOrganGWController {
 			result.put("data", personInfo);
 			result.put("imgSrc", imgSrc);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
 		}
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezorgan/personDetail] ended.");
+		logger.debug("MOBILE G/W BOARD [GET /ezorgan/personDetail] ended.");
 		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezorgan/dept-info/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetDeptInfo(HttpServletRequest request, @PathVariable String userId) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/dept-info/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/dept-info/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -156,9 +156,9 @@ public class MOrganGWController {
 			String serverName = request.getHeader("x-user-host");
 			String organType = request.getParameter("organType");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("organType : " + organType);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("organType : " + organType);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
@@ -171,10 +171,10 @@ public class MOrganGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/dept-info/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/dept-info/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -182,7 +182,7 @@ public class MOrganGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezorgan/low-dept-info/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetLowDeptInfo(HttpServletRequest request, @PathVariable String userId) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/low-dept-info/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/low-dept-info/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -190,9 +190,9 @@ public class MOrganGWController {
 			String serverName = request.getHeader("x-user-host");
 			String deptID = request.getParameter("deptID");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("deptID : " + deptID);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("deptID : " + deptID);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
@@ -205,10 +205,10 @@ public class MOrganGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/low-dept-info/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/low-dept-info/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -216,7 +216,7 @@ public class MOrganGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezorgan/high-dept-info/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetHighDeptInfo(HttpServletRequest request, @PathVariable String userId) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/high-dept-info/users/" + userId + "] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/high-dept-info/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -226,9 +226,9 @@ public class MOrganGWController {
 			String deptType = request.getParameter("deptType");
 			String organType = request.getParameter("organType");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("deptID : " + deptID);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("deptID : " + deptID);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
@@ -241,10 +241,10 @@ public class MOrganGWController {
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/high-dept-info/users/" + userId + "] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/high-dept-info/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -252,7 +252,7 @@ public class MOrganGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezorgan/depts/{deptID}/userList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mGetDeptMemberList(HttpServletRequest request, @PathVariable String deptID) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/depts/" + deptID + "/userList] started.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/depts/" + deptID + "/userList] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -263,11 +263,11 @@ public class MOrganGWController {
 			String selectType = request.getParameter("selectType");
 			String companyId = request.getParameter("companyId");
 			
-			LOGGER.debug("serverName : " + serverName);
-			LOGGER.debug("userId : " + userId);
-			LOGGER.debug("selectType : " + selectType);
-			LOGGER.debug("searchFlag : " + searchFlag);
-			LOGGER.debug("companyId : " + companyId);
+			logger.debug("serverName : " + serverName);
+			logger.debug("userId : " + userId);
+			logger.debug("selectType : " + selectType);
+			logger.debug("searchFlag : " + searchFlag);
+			logger.debug("companyId : " + companyId);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
@@ -278,12 +278,12 @@ public class MOrganGWController {
 			result.put("code", "0");
 			result.put("data", mOrganListVOs);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", "1");
 		}		
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/depts/" + deptID + "/userList] ended.");
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/depts/" + deptID + "/userList] ended.");
 		
 		return result;
 	}

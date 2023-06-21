@@ -161,7 +161,7 @@ public class EzEmailAdminLetterController {
 		try {
 			returnJsonArr = ezEmailAdminLetterService.selectAllLetterBox(companyId, tenantId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		logger.debug("getLetterBox ended.");
 
@@ -229,7 +229,7 @@ public class EzEmailAdminLetterController {
 		try {
 			json = ezEmailAdminLetterService.selectOneLetterBox(letterBoxNo);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("readLetterBox ended.");
@@ -583,7 +583,7 @@ public class EzEmailAdminLetterController {
 
 		} catch (Exception e) {
 			returnStr = "ERROR";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("createLetter ended.");
@@ -654,7 +654,7 @@ public class EzEmailAdminLetterController {
 			ezEmailAdminLetterService.updateDisplayNameLetter(displayname, displayname2, letterNo);
 		} catch (Exception e) {
 			returnStr = "ERROR";
-			// e.printStackTrace();
+			// logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("updateDisplayNameLetter ended.");
@@ -754,7 +754,7 @@ public class EzEmailAdminLetterController {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return null;
 		}
 
@@ -793,7 +793,7 @@ public class EzEmailAdminLetterController {
 				writer.flush();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			resultReturn = "ERROR";
 		}
 
@@ -855,7 +855,7 @@ public class EzEmailAdminLetterController {
 			}
 		} catch (Exception e) {
 			returnStr = "ERROR";
-			// e.printStackTrace();
+			// logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("deleteLetter ended.");
@@ -937,7 +937,7 @@ public class EzEmailAdminLetterController {
 
 			returnJson.put("filePath", letter);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("readLetter ended.");

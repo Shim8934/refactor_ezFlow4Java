@@ -26,7 +26,7 @@ import java.util.Properties;
 @Service
 public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGOpenGovServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(EzApprovalGOpenGovServiceImpl.class);
 
     @Autowired
     private Properties config;
@@ -36,35 +36,35 @@ public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService 
 
     @Override
     public String getOpenGovDocOpenFlag(String docId) throws Exception {
-        LOGGER.debug("getOpenGovDocOpenFlag started.");
+        logger.debug("getOpenGovDocOpenFlag started.");
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("docId", docId);
 
         String result = ezApprovalGOpenGovDAO.getOpenGovDocOpenFlag(map);
 
-        LOGGER.debug("getOpenGovDocOpenFlag ended. result = " + result);
+        logger.debug("getOpenGovDocOpenFlag ended. result = " + result);
 
         return result;
     }
 
     @Override
     public String getOpenGovDocHref(String docId) throws Exception {
-        LOGGER.debug("getOpenGovDocHref started.");
+        logger.debug("getOpenGovDocHref started.");
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("docId", docId);
 
         String result = ezApprovalGOpenGovDAO.getOpenGovDocHref(map);
 
-        LOGGER.debug("getOpenGovDocHref ended. result = " + result);
+        logger.debug("getOpenGovDocHref ended. result = " + result);
 
         return result;
     }
 
     @Override
     public String getOpenGovAttachHref(String docId, String sn) throws Exception {
-        LOGGER.debug("getOpenGovAttachHref started. docId = " + docId + ", sn = " + sn);
+        logger.debug("getOpenGovAttachHref started. docId = " + docId + ", sn = " + sn);
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("docId", docId);
@@ -72,14 +72,14 @@ public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService 
 
         String result = ezApprovalGOpenGovDAO.getOpenGovAttachHref(map);
 
-        LOGGER.debug("getOpenGovAttachHref ended. result = " + result);
+        logger.debug("getOpenGovAttachHref ended. result = " + result);
 
         return result;
     }
 
     @Override
     public void insertGovDocSend(String docId, String fileId) throws Exception {
-        LOGGER.debug("insertGovDocSend started.");
+        logger.debug("insertGovDocSend started.");
 
         String attachSn = "";
         String type = "";
@@ -100,13 +100,13 @@ public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService 
 
         ezApprovalGOpenGovDAO.insertGovDocSend(map);
 
-        LOGGER.debug("insertGovDocSend ended.");
+        logger.debug("insertGovDocSend ended.");
     }
 
     //scheduler
     @Override
     public List<String> getOpenGovCsv() throws Exception {
-        LOGGER.debug("getOpenGovCsv started.");
+        logger.debug("getOpenGovCsv started.");
 
         String companyNum = config.getProperty("openGov_companyNum");
         String companyName = config.getProperty("openGov_companyName");
@@ -159,24 +159,24 @@ public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService 
             list.add(csvRow.toString());
         }
 
-        LOGGER.debug("getOpenGovCSV ended");
+        logger.debug("getOpenGovCSV ended");
 
         return list;
     }
 
     private List<String> getResendDate() throws Exception {
-        LOGGER.debug("getResendDate started.");
+        logger.debug("getResendDate started.");
 
         List<String> list = ezApprovalGOpenGovDAO.getResendDate();
 
-        LOGGER.debug("getResendDate ended. list.size = " + list.size());
+        logger.debug("getResendDate ended. list.size = " + list.size());
 
         return list;
     }
 
     @Override
     public List<String> getOpenGovResendCsv() throws Exception {
-        LOGGER.debug("getOpenGovResendCsv started.");
+        logger.debug("getOpenGovResendCsv started.");
 
         //이거 시간있으면 getOpenGovCsv랑 합쳐야함. 쿼리 밑에 조건 두줄 빼고 다 똑같
 
@@ -238,37 +238,37 @@ public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService 
             list.add(csvRow.toString());
         }
 
-        LOGGER.debug("getOpenGovResendCsv ended.");
+        logger.debug("getOpenGovResendCsv ended.");
 
         return list;
     }
 
     @Override
     public void setOpenGovSendFlagToY() throws Exception {
-        LOGGER.debug("setOpenGovSendFlagToY started.");
+        logger.debug("setOpenGovSendFlagToY started.");
 
         ezApprovalGOpenGovDAO.setOpenGovSendFlagToY();
 
-        LOGGER.debug("setOpenGovSendFlagToY ended.");
+        logger.debug("setOpenGovSendFlagToY ended.");
     }
 
     @Override
     public void insertTodayGovSendDocHistory() throws Exception {
-        LOGGER.debug("insertTodayGovSendDocHistory started.");
+        logger.debug("insertTodayGovSendDocHistory started.");
 
         String sn = ezApprovalGOpenGovDAO.getGovSendDocHistorySn();
 
         ezApprovalGOpenGovDAO.insertTodayGovSendDocHistory(sn);
 
-        LOGGER.debug("insertTodayGovSendDocHistory ended.");
+        logger.debug("insertTodayGovSendDocHistory ended.");
     }
 
     @Override
     public void setHwpSealSignEmpty(HWPFile hwpFile) throws Exception {
-        LOGGER.debug("setHwpSealSignEmpty started");
+        logger.debug("setHwpSealSignEmpty started");
 
         if (!findHwpField("sealsign", hwpFile)) {
-            LOGGER.debug("setHwpSealSignEmpty ended");
+            logger.debug("setHwpSealSignEmpty ended");
             return;
         }
 
@@ -314,7 +314,7 @@ public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService 
             }
         }
 
-        LOGGER.debug("setHwpSealSignEmpty ended");
+        logger.debug("setHwpSealSignEmpty ended");
     }
 
     /**
@@ -324,7 +324,7 @@ public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService 
      * @throws Exception 한글파일에서 필드속성 존재여부 체크
      */
     private boolean findHwpField(String fieldName, HWPFile hwpFile) throws Exception {
-        LOGGER.debug("findHwpField started");
+        logger.debug("findHwpField started");
 
         for (Section s : hwpFile.getBodyText().getSectionList()) {
             for (Paragraph p : s) {
@@ -370,7 +370,7 @@ public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService 
             }
         }
 
-        LOGGER.debug("findHwpField ended");
+        logger.debug("findHwpField ended");
 
         return false;
     }

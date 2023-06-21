@@ -19,7 +19,9 @@ import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -47,7 +49,7 @@ import java.util.stream.Collectors;
 
 @Service("MApprovalGService")
 public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MApprovalGService {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MApprovalGServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MApprovalGServiceImpl.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -81,7 +83,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 	@Override
 	public List<MApprovalGDocInfoVO> getDoApproveList(MCommonVO userInfo, String type, String searchText, String listSize, String lastDate) throws Exception {
-		LOGGER.debug("getDoApproveList started");
+		logger.debug("getDoApproveList started");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String mainViewYN = ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId());
@@ -111,14 +113,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = mApprovalGDAO.getDoApproveList(map);
 
-		LOGGER.debug("getDoApproveList ended");
+		logger.debug("getDoApproveList ended");
 		
 		return approvalGDocInfoVOs;
 	}
 
 	@Override
 	public int getDoApproveListCount(MCommonVO userInfo, String type, String searchText) throws Exception {
-		LOGGER.debug("getDoApproveListCount started");
+		logger.debug("getDoApproveListCount started");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String mainViewYN = ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId());
@@ -145,14 +147,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 		int listCount = mApprovalGDAO.getDoApproveListCount(map);
 		
-		LOGGER.debug("getDoApproveListCount ended");
+		logger.debug("getDoApproveListCount ended");
 		
 		return listCount;
 	}
 
 	@Override
 	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, String type, MCommonVO userInfo) throws Exception {
-		LOGGER.debug("getAprLineInfo started");
+		logger.debug("getAprLineInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
@@ -164,14 +166,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = mApprovalGDAO.getAprLineInfo(map);
 
-		LOGGER.debug("getAprLineInfo ended");
+		logger.debug("getAprLineInfo ended");
 		
 		return approvalGAprLineInfoVOs;
 	}
 
 	@Override
 	public String getMHTBody(String pDocID, String realPath, String domain, MCommonVO userInfo, Locale locale, String type, String scheme, String mode) throws Exception {
-		LOGGER.debug("getMHTBody started");
+		logger.debug("getMHTBody started");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
@@ -184,7 +186,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("companyID", userInfo.getCompanyId());
 		
 		String docHref = mApprovalGDAO.getAprDocHref(map);
-		LOGGER.debug("docHref : " + docHref);
+		logger.debug("docHref : " + docHref);
 		String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator;
 		String filePath = realPath + uploadModule;
         
@@ -198,21 +200,21 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
         try {
         	m_strMHT = ezCommonService.loadMHTFile(realPath + docHref);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			m_strMHT= "";
 		}
         
         String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain, scheme);
-//        LOGGER.debug("strHTML : " + strHTML);
+//        logger.debug("strHTML : " + strHTML);
 
-		LOGGER.debug("getMHTBody ended");
+		logger.debug("getMHTBody ended");
 		
 		return strHTML;
 	}
 
 	@Override
 	public String getOpinionCount(String pDocID, String type, MCommonVO userInfo) throws Exception {
-		LOGGER.debug("getAprCommentCount started");
+		logger.debug("getAprCommentCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
@@ -222,14 +224,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		String commentCount = mApprovalGDAO.getAprCommentCount(map);
 
-		LOGGER.debug("getAprCommentCount ended");
+		logger.debug("getAprCommentCount ended");
 		
 		return commentCount;
 	}
 
 	@Override
 	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String type, MCommonVO userInfo) throws Exception {
-		LOGGER.debug("getOpinionInfo started");
+		logger.debug("getOpinionInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
@@ -240,14 +242,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = mApprovalGDAO.getOpinionInfo(map);
 		
-		LOGGER.debug("getOpinionInfo ended");
+		logger.debug("getOpinionInfo ended");
 		
 		return approvalGOpinionInfoVOs;
 	}
 
 	@Override
-	public int mSetOpinionInfo(String pDocID, String pContent, String pOpinionGB, MCommonVO userInfo, String pType) throws Exception {
-		LOGGER.debug("saveOpinionInfo started");
+	public int mSetOpinionInfo(String pDocID, String pContent, String pOpinionGB, MCommonVO userInfo, String pType, String pAprMemberSN) throws Exception {
+		logger.debug("saveOpinionInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", pDocID);
@@ -263,6 +265,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		if (pType.equals("INSERT")) {
 			if (pContent != null && !pContent.equals("")) {
 				map.put("hasOpinionYN", "Y");
+				map.put("aprMemberSN", pAprMemberSN);
 				
 				mApprovalGDAO.insertOpinionInfo(map);
 				
@@ -276,6 +279,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			if (resultRow > 0) {
 				if (pContent != null && !pContent.equals("")) {
 					map.put("hasOpinionYN", "Y");
+					map.put("aprMemberSN", pAprMemberSN);	// 2023-04-28 이가은 - 의견 추가할 경우 실제 결재선상의 부서명, 직위로 표출하기 위해 추가
 					
 					mApprovalGDAO.insertOpinionInfo(map);
 					
@@ -294,14 +298,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			}
 		}
 
-		LOGGER.debug("saveOpinionInfo ended");
+		logger.debug("saveOpinionInfo ended");
 		
 		return result;
 	}
 
 	@Override
 	public List<MApprovalGAttachInfoVO> getAttachList(String docId, String type, MCommonVO userInfo) throws Exception {
-		LOGGER.debug("getAttachList started");
+		logger.debug("getAttachList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docId);
@@ -311,14 +315,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		List<MApprovalGAttachInfoVO> approvalGAttachInfoVOs = mApprovalGDAO.getAttachList(map);
 
-		LOGGER.debug("getAttachList ended");
+		logger.debug("getAttachList ended");
 		
 		return approvalGAttachInfoVOs;
 	}
 	
 	@Override
 	public MApprovalGAbsenteeInfoVO getAbsenteeInfo(MCommonVO userInfo) throws Exception {
-		LOGGER.debug("getAbsenteeInfo started");
+		logger.debug("getAbsenteeInfo started");
 
 		String absenteeInfo = mApprovalGDAO.getAbsenteeInfo(userInfo);
 		
@@ -334,25 +338,25 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			absenteeInfoVO.setEndDate(absenteeInfoArry[5] + ":" + absenteeInfoArry[6]);
 		}
 
-		LOGGER.debug("getAbsenteeInfo ended");
+		logger.debug("getAbsenteeInfo ended");
 		
 		return absenteeInfoVO;
 	}
 
 	@Override
 	public int setAbsenteeInfo(MApprovalGAbsenteeInfoVO absenteeInfoVO) throws Exception {
-		LOGGER.debug("setAbsenteeInfo started");
+		logger.debug("setAbsenteeInfo started");
 
 		int result = mApprovalGDAO.setAbsenteeInfo(absenteeInfoVO);
 
-		LOGGER.debug("setAbsenteeInfo ended");
+		logger.debug("setAbsenteeInfo ended");
 		
 		return result;
 	}
 
 	@Override
 	public int checkPass(MCommonVO userInfo, String shaEncPassword) throws Exception {
-		LOGGER.debug("checkPass started");
+		logger.debug("checkPass started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("password", shaEncPassword);
@@ -361,14 +365,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		int resultCode = mApprovalGDAO.checkPass(map);
 
-		LOGGER.debug("checkPass ended");
+		logger.debug("checkPass ended");
 		
 		return resultCode;
 	}
 
 	@Override
 	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String offset, String companyId, int tenantId, String aprMemberSN, String mode) throws Exception {
-		LOGGER.debug("getAprDocInfo started");
+		logger.debug("getAprDocInfo started");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
 		
@@ -387,14 +391,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		approvalGDocInfoVO = mApprovalGDAO.getAprDocInfo(map);
 
-		LOGGER.debug("getAprDocInfo ended");
+		logger.debug("getAprDocInfo ended");
 		
 		return approvalGDocInfoVO;
 	}
 	
 	@Override
 	public MApprovalGDocInfoVO getAprMemberSn(String docId, String type, MCommonVO userInfo) throws Exception {
-		LOGGER.debug("getAprDocInfo started");
+		logger.debug("getAprDocInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docId);
@@ -407,14 +411,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		approvalGDocInfoVO = mApprovalGDAO.getAprMemberSn(map);
 
-		LOGGER.debug("getAprDocInfo ended");
+		logger.debug("getAprDocInfo ended");
 		
 		return approvalGDocInfoVO;
 	}
 
 	@Override
 	public String getDocState(String docId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getDocState started");
+		logger.debug("getDocState started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docId);
@@ -423,14 +427,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		String docState = mApprovalGDAO.getDocState(map);
 
-		LOGGER.debug("getDocState ended");
+		logger.debug("getDocState ended");
 		
 		return docState;
 	}
 
 	@Override
 	public MApprovalGLeftVO getLeftCount(String userId, MCommonVO userInfo) throws Exception {
-		LOGGER.debug("getLeftCount started");
+		logger.debug("getLeftCount started");
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String mainViewYN = ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId());
@@ -455,14 +459,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		MApprovalGLeftVO approvalGLeftVO = mApprovalGDAO.getLeftCount(map);
 
-		LOGGER.debug("getLeftCount ended");
+		logger.debug("getLeftCount ended");
 		
 		return approvalGLeftVO;
 	}
 
 	@Override
 	public int delAbsenteeInfo(String userId, int tenantId) throws Exception {
-		LOGGER.debug("delAbsenteeInfo started");
+		logger.debug("delAbsenteeInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -470,7 +474,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		int result = mApprovalGDAO.delAbsenteeInfo(map);
 
-		LOGGER.debug("delAbsenteeInfo ended");
+		logger.debug("delAbsenteeInfo ended");
 		
 		return result;
 	}
@@ -479,7 +483,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	public int getCheckAprState(String docId, String userId,
 			String aprMemberSN, String mode, String companyId, int tenantId)
 			throws Exception {
-		LOGGER.debug("getCheckAprState started.");
+		logger.debug("getCheckAprState started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docId", docId);
@@ -491,7 +495,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		int result = mApprovalGDAO.getCheckAprState(map);
 		
-		LOGGER.debug("getCheckAprState ended.");
+		logger.debug("getCheckAprState ended.");
 		
 		return result;
 	}
@@ -507,7 +511,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	 */
 	@Override
 	public void sendApproveNoticeMail(MCommonVO userInfo, MOptionVO optionInfo, MApprovalGDocInfoVO approvalGDocInfoVO, String docId, String type) throws Exception {
-		LOGGER.debug("sendApproveNoticeMail started.");
+		logger.debug("sendApproveNoticeMail started.");
 
 		String subject = null;
 		StringBuilder contentBuilder = null;
@@ -533,7 +537,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		String companyId = userInfo.getCompanyId();
 		int tenantId = userInfo.getTenantId();
 
-		LOGGER.debug("docId = " + docId + ", type = " + type + ", userId = " + userId);
+		logger.debug("docId = " + docId + ", type = " + type + ", userId = " + userId);
 
 		InternetAddress from = new InternetAddress();
 		from.setAddress(userInfo.getEmail());
@@ -560,7 +564,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						}
 
 						targetUserName = targetVo.getAprMemberName();
-						LOGGER.debug("END REC : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
+						logger.debug("END REC : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
 
 						to = new InternetAddress();
 						to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
@@ -588,7 +592,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						}
 
 						targetUserName = targetVo.getAprMemberName();
-						LOGGER.debug("END : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
+						logger.debug("END : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
 
 						to = new InternetAddress();
 						to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
@@ -633,7 +637,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 							List<MCommonVO> userInfos = mApprovalGDAO.getReceiptInfosOfDept(map);
 
 							for (MCommonVO info : userInfos) {
-								LOGGER.debug("REC dept : targetUserId = " + info.getUserId() + ", targetUserName = " + info.getUserName());
+								logger.debug("REC dept : targetUserId = " + info.getUserId() + ", targetUserName = " + info.getUserName());
 
 								to = new InternetAddress();
 
@@ -658,7 +662,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 							List<MCommonVO> userInfos = mApprovalGDAO.getReceiptInfosOfUser(map);
 
 							for (MCommonVO info : userInfos) {
-								LOGGER.debug("REC user : targetUserId = " + info.getUserName() + ", targetUserName = " + info.getUserName());
+								logger.debug("REC user : targetUserId = " + info.getUserName() + ", targetUserName = " + info.getUserName());
 
 								to = new InternetAddress();
 
@@ -685,7 +689,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						}
 
 						targetUserName = vo.getAprMemberName();
-						LOGGER.debug("APR NEXT : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName + ", aprState = " + vo.getAprState() + ", aprType = " + vo.getAprType());
+						logger.debug("APR NEXT : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName + ", aprState = " + vo.getAprState() + ", aprType = " + vo.getAprType());
 
 						to = new InternetAddress();
 						to.setAddress(ezOrganService.getPropertyValue(targetUserId, "mail", tenantId));
@@ -726,15 +730,21 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 							contentBuilderCham.append("</td></tr></table>");
 						}
 						
+						// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+						String contentBuilderChamValue = !Objects.isNull(contentBuilderCham) ? contentBuilderCham.toString() : "";
+
 						// 참조자가 아닌 경우, 개별로 결재에 관련된 속성(targetUserId, targetUserName 등)을 부여한 결재알림메일을 루프 내부에서 발송한다.
 						if (toList.size() > 0) {
-							ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), tenantId, locale), false, EmailImportance.NORMAL);
+							ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderChamValue, tenantId, locale), false, EmailImportance.NORMAL);
 							toList.clear(); // 결재자에게 메일 발송 후 리스트 초기화 -> 다음 루프에서 참조자가 아닌 결재자가 존재한다면 다시 메일 발송하도록 add() 후 초기화를 반복함
 						}
 					}
+
+					String contentBuilderChamValue = !Objects.isNull(contentBuilderCham) ? contentBuilderCham.toString() : "";
+
 					// 참조자인 경우, 메일 내부에 결재 관련 속성이 없으므로 한꺼번에 참조메일을 발송한다.
 					if (toListCham.size() > 0) {
-						ezEmailService.sendMail(userEmail, password, locale, from, toListCham.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderCham.toString(), tenantId, locale), false, EmailImportance.NORMAL);
+						ezEmailService.sendMail(userEmail, password, locale, from, toListCham.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(contentBuilderChamValue, tenantId, locale), false, EmailImportance.NORMAL);
 					}
 				}
 
@@ -750,7 +760,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				}
 
 				targetUserName = targetVo.getAprMemberName();
-				LOGGER.debug("BAN : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
+				logger.debug("BAN : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName);
 
 				to = new InternetAddress();
 
@@ -837,7 +847,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 					}
 
 					targetUserName = vo.getAprMemberName();
-					LOGGER.debug("HWE : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName + ", aprState = " + vo.getAprState() + ", aprType = " + vo.getAprType());
+					logger.debug("HWE : targetUserId = " + targetUserId + ", targetUserName = " + targetUserName + ", aprState = " + vo.getAprState() + ", aprType = " + vo.getAprType());
 
 					to = new InternetAddress();
 
@@ -865,11 +875,11 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				break;
 		}
 
-		LOGGER.debug("sendApproveNoticeMail ended.");
+		logger.debug("sendApproveNoticeMail ended.");
 	}
 
 	public List<MApprovalGReceiptInfoVO> getEndReceiptInfos(String docId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getEndReceiptInfos started");
+		logger.debug("getEndReceiptInfos started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docId", docId);
@@ -878,14 +888,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 		List<MApprovalGReceiptInfoVO> receiptInfos = mApprovalGDAO.getEndReceiptInfos(map);
 
-		LOGGER.debug("getEndReceiptInfos ended");
+		logger.debug("getEndReceiptInfos ended");
 
 		return receiptInfos;
 	}
 	
 	/* 2020-07-02 홍승비 - 모바일에서 최종결재 완료 시 서명에 결재날짜 삽입 동작 추가(결재날짜 필드가 없는 경우에만, 웹과 동일하게) */
 	public String insertSeumyungdateMobile(String docId, String realPath, String offset, Locale locale, String domain, String scheme, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("insertSeumyungdateMobile started");
+		logger.debug("insertSeumyungdateMobile started");
 
 		String result = "SUCCESS";
 		try {
@@ -899,7 +909,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			// 최종결재가 완료된 경우, 완료문서의 경로를 찾아서 서명을 업데이트한다.
 			if (endDocInfo != null && endDocInfo.getHref() != null) {
 				String docHref = endDocInfo.getHref();
-				LOGGER.debug("docHref in insertSeumyungdateMobile : " + docHref);
+				logger.debug("docHref in insertSeumyungdateMobile : " + docHref);
 				
 				String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantId) + commonUtil.separator;
 				String filePath = realPath + uploadModule;
@@ -914,7 +924,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		        try {
 		        	m_strMHT = ezCommonService.loadMHTFile(realPath + docHref);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 					m_strMHT= "";
 				}
 		        
@@ -925,7 +935,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		        Elements signField = new Elements();
 				Elements seumyungDateField = new Elements();
 				
-				LOGGER.debug("endDocInfo.getDocState() in insertSeumyungdateMobile   ::   " + endDocInfo.getDocState());
+				logger.debug("endDocInfo.getDocState() in insertSeumyungdateMobile   ::   " + endDocInfo.getDocState());
 		        if (endDocInfo.getDocState().equals("011")) { // 수신결재
 		        	signField = doc.select("[id^='1sign']");
 					seumyungDateField = doc.select("[id^='1seumyungdate" + signField.size() + "']"); // (수신)최종결재자의 결재날짜
@@ -938,59 +948,55 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				if (signField.size() > 0 && seumyungDateField.size() == 0) { // 서명 필드가 존재하며, 결재날짜 필드가 없는 경우
 					String orgSignHtml = signField.get(signField.size() - 1).html();
 					String newSignHtml = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy/MM/dd"), offset, false).substring(5,10) + "<br>" + orgSignHtml;
-					LOGGER.debug("newSignHtml   ::   " + newSignHtml);
+					logger.debug("newSignHtml   ::   " + newSignHtml);
 					
 					signField.get(signField.size() - 1).html(newSignHtml);
 					
 					// 수정한 결재문서 html을 다시 mht로 저장한다.
-					OutputStream outputStream = null;
-	        		OutputStreamWriter output = null;
+					//OutputStream outputStream = null;
+	        		//OutputStreamWriter output = null;
 					String tempHtml = doc.outerHtml();
 	        		String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
 	        		
-	        		try {
-	        			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref)));
-	        			output = new OutputStreamWriter(outputStream);
+	        		try (OutputStream outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref)));
+	        				OutputStreamWriter output = new OutputStreamWriter(outputStream)) {
 	        			output.write(convertedMHT);
 	        		} catch (Exception e) {
-	        			e.printStackTrace();
-	        		} finally {
-	        			output.close();
-	        			outputStream.close();
+	        			logger.error(e.getMessage(), e);
 	        		}
 				}
 			} else { // 아직 결재 진행중인 경우, 바로 리턴시킨다. 에러는 아니다.
-				LOGGER.debug("insertSeumyungdateMobile ended(Not End Apr)");
+				logger.debug("insertSeumyungdateMobile ended(Not End Apr)");
 				return result;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "ERROR";
 			
-			LOGGER.debug("insertSeumyungdateMobile ended(ERROR)");
+			logger.debug("insertSeumyungdateMobile ended(ERROR)");
 			return result;
 		}
 		
-		LOGGER.debug("insertSeumyungdateMobile ended");
+		logger.debug("insertSeumyungdateMobile ended");
 		return result;
 	}
 
 	@Override
 	public List<MApprovalGAbsenteeAddJobInfoVO> getAbsenteeAddJobInfo(MCommonVO userInfo) throws Exception {
-		LOGGER.debug("getAbsenteeAddJobInfo started");
+		logger.debug("getAbsenteeAddJobInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userInfo.getUserId());
 		map.put("tenantId", userInfo.getTenantId());
 		List<MApprovalGAbsenteeAddJobInfoVO> list = mApprovalGDAO.getAbsenteeAddJobInfo(map);
 
-		LOGGER.debug("getAbsenteeAddJobInfo ended");
+		logger.debug("getAbsenteeAddJobInfo ended");
 		return list;
 	}
 
 	@Override
 	public int updateAbsenteeJobInfo(JSONObject data, String userId, int tenantId) throws Exception {
-		LOGGER.debug("updateAbsenteeJobInfo started");
+		logger.debug("updateAbsenteeJobInfo started");
 
 		int result = 0;
 		String startDate = data.get("startDate").toString();
@@ -1045,7 +1051,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 
 
-		LOGGER.debug("updateAbsenteeJobInfo ended");
+		logger.debug("updateAbsenteeJobInfo ended");
 		return result;
 	}
 
@@ -1082,22 +1088,22 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			//가장 최근 완료문서 조회
 			HashMap<String, Object> lastDocInfo = mApprovalGDAO.getLastDocInfo(map);
 
-			LOGGER.debug("testGetLastDocInfo lastDocInfo: " + lastDocInfo.toString());
+			logger.debug("testGetLastDocInfo lastDocInfo: " + lastDocInfo.toString());
 
 			map.put("v_DOCID", lastDocInfo.get("DOCID"));
 			
 			//문서아이디 발급 및 진행문서 정보 생성
 			String newDocId = ezApprovalGService.createNewDoc(formId, companyId, tenantId);
-			LOGGER.debug(" newDocId: " + newDocId);
+			logger.debug(" newDocId: " + newDocId);
 
 			//mht 파일 생성 경로
 			String thisYear = ezApprovalGService.getDocHrefYear(newDocId, companyId, tenantId);
-			LOGGER.debug("oldYear: " + thisYear);
+			logger.debug("oldYear: " + thisYear);
 			String extension = ".mht";
 			String filePath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId) + commonUtil.separator + companyId + commonUtil.separator + "doc" + commonUtil.separator + thisYear + 
 					commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(newDocId);
 			String fileName = newDocId + extension;
-			LOGGER.debug("filePath: " + filePath);
+			logger.debug("filePath: " + filePath);
 
 			map.put("realPath", realPath);
 			map.put("filePath", filePath);
@@ -1139,7 +1145,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			
 			int sqlResult = mApprovalGDAO.updateDocInfo(endDocInfo);
 
-			LOGGER.debug("sqlResult: " + sqlResult);
+			logger.debug("sqlResult: " + sqlResult);
 
 			HashMap<String, Object> expEndDocInfo = mApprovalGDAO.getEndDocInfoEx(map);
 			
@@ -1147,7 +1153,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			
 			sqlResult = mApprovalGDAO.updateDocInfoEx(expEndDocInfo);
 
-			LOGGER.debug("sqlResult: " + sqlResult);
+			logger.debug("sqlResult: " + sqlResult);
 
 			List<HashMap> endDocLineInfo = mApprovalGDAO.getEndDocLineInfo(map);
 			
@@ -1175,7 +1181,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				
 				mApprovalGDAO.insertDocLineInfo(hashMap);
 
-				LOGGER.debug("endDocLineInfo: " + hashMap);
+				logger.debug("endDocLineInfo: " + hashMap);
 
 			}
 			
@@ -1187,7 +1193,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				hashMap.put("DOCID", newDocId);
 				mApprovalGDAO.insertDocLineInfoEx(hashMap);
 
-				LOGGER.debug("expEndDocLine: " + hashMap);
+				logger.debug("expEndDocLine: " + hashMap);
 
 			}
 			
@@ -1202,7 +1208,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 				
 				mApprovalGDAO.insertDocRecvInfo(hashMap);
 
-				LOGGER.debug("endReceiptInfo: " + hashMap);
+				logger.debug("endReceiptInfo: " + hashMap);
 
 			}
 			
@@ -1255,7 +1261,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		HashMap<String, Object> formInfo = mApprovalGDAO.getFormInfo(map);
 		String formURL = realPath + formInfo.get("FORMFILELOCATION");
 		String loadMht = ezCommonService.loadMHTFile(formURL); // 결재문서 가져오기
-		LOGGER.debug("loadMht: " + loadMht);
+		logger.debug("loadMht: " + loadMht);
 
 		Locale locale = new Locale("ko");		
 		String m_strMHT = "";
@@ -1264,7 +1270,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		if(!Folder.exists()) {
 			Folder.mkdir();
-			LOGGER.debug("폴더 생성 완료!!!");
+			logger.debug("폴더 생성 완료!!!");
 		}
 		
 		//양식을 가져와서 데이터를 매핑한 후 문서를 생성
@@ -1278,11 +1284,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			outputStreamWriter = new OutputStreamWriter(outputStream);
 			outputStreamWriter.write(m_strMHT);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "fail";
 		} finally {
-			outputStreamWriter.close();
-			outputStream.close();
+			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
+			//outputStreamWriter.close();
+			//outputStream.close();
+			IOUtils.closeQuietly(outputStreamWriter);
+			IOUtils.closeQuietly(outputStream);
 		}
 		
 		return result;
@@ -1292,7 +1301,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	//MHT 파일에 데이터를 추가한 MHT를 생성
 		public String changeHTMLInMHT(String m_strMHT, JSONObject jObject, Locale locale) throws Exception {
 			
-			LOGGER.debug("====== startMHT2HTML started ======");
+			logger.debug("====== startMHT2HTML started ======");
 			String m_strHTML = "";
 			String r_strMHT = "";
 			String strBoundary = "";
@@ -1300,14 +1309,14 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			boolean isUTF8;
 			
 			strBoundary = getBoundaryText(m_strMHT);
-			LOGGER.debug("strBoundary="+strBoundary);
+			logger.debug("strBoundary="+strBoundary);
 
 			if (m_strMHT != null && !m_strMHT.equals("")) {
 				if (strBoundary.equals("error")) {
 					return egovMessageSource.getMessage("main.t0600", locale);
 				} else {
 					m_Mimechunk = m_strMHT.split(strBoundary);
-					LOGGER.debug("m_Mimechunk="+m_Mimechunk);
+					logger.debug("m_Mimechunk="+m_Mimechunk);
 					
 					//문서 인코딩 방식 추출 
 	                if (m_Mimechunk[0].indexOf("(UTF-8)") > -1) 
@@ -1348,22 +1357,22 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						
 					}
 
-					//LOGGER.debug("doc: " + doc.toString());
+					//logger.debug("doc: " + doc.toString());
 
 					StringBuilder mhtBuilder = new StringBuilder();
 					StringBuilder htmlBuilder = new StringBuilder(doc.toString());
 					
 					doHtmlEncoding( htmlBuilder, mhtBuilder, strBoundary);
 
-					//LOGGER.debug("mhtBuilder: " + mhtBuilder.toString());
+					//logger.debug("mhtBuilder: " + mhtBuilder.toString());
 
-					LOGGER.debug("m_Mimechunk size: " + m_Mimechunk.length);
+					logger.debug("m_Mimechunk size: " + m_Mimechunk.length);
 
 					m_Mimechunk[1] = mhtBuilder.toString();
 					
 					for (int i = 0; i < m_Mimechunk.length; i++) {
 
-						//LOGGER.debug("m_Mimechunk index " + i + " : " + m_Mimechunk[i].toString());
+						//logger.debug("m_Mimechunk index " + i + " : " + m_Mimechunk[i].toString());
 
 						if(i == (m_Mimechunk.length - 1)) {
 							r_strMHT = r_strMHT + strBoundary + m_Mimechunk[i];
@@ -1410,7 +1419,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	            else
 	                m_strHTML = new String(arr, "ks_c_5601-1987");
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 
 			return m_strHTML;
@@ -1437,7 +1446,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		 * 전자결재 첨부파일저장 실행 Method
 		 */
 		public boolean saveAttachmentsInfo(String strAttachments, String newDocId, String strFilePath, String strType, String realPath, MCommonVO userInfo) throws Exception{
-			LOGGER.debug("saveAttachmentsInfo started");
+			logger.debug("saveAttachmentsInfo started");
 			
 			String fileRoot = "fileroot/0/files";
 			
@@ -1490,18 +1499,18 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	        	
 	        	rtnValue = true;
 			} catch (Exception e) {
-				e.printStackTrace();
-				LOGGER.debug(e.getMessage());
+				logger.error(e.getMessage(), e);
+				logger.debug(e.getMessage());
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				rtnValue = false;
 			}
 	        
-	        LOGGER.debug("saveAttachmentsInfo ended");
+	        logger.debug("saveAttachmentsInfo ended");
 	        return rtnValue;
 		}
 		
 		public void saveAttachInfo(String newDocId, int seqNum, String filePath, long fileSize, String fileName, MCommonVO userInfo) throws Exception {
-			LOGGER.debug("saveAttachInfo started");
+			logger.debug("saveAttachInfo started");
 			
 			/*
 			 * DOCID , ATTACHFILESN , VIEWORDER , ATTACHFILENAME , ATTACHFILEHREF ,
@@ -1532,7 +1541,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 			
 			mApprovalGDAO.saveAttachInfo(map);
 			
-			LOGGER.debug("saveAttachInfo ended");
+			logger.debug("saveAttachInfo ended");
 		}
 
 		@Override
@@ -1545,7 +1554,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 	@Override
 	public HashMap<String, Object> getAprMemberBySn(String docID, String aprMemberSN, String lang, String companyID, int tenantID) throws Exception {
-		LOGGER.debug("getAprMemberBySn started");
+		logger.debug("getAprMemberBySn started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
@@ -1556,7 +1565,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		HashMap<String, Object> result = mApprovalGDAO.getAprMemberBySn(map);
 		
-		LOGGER.debug("getAprMemberBySn ended");
+		logger.debug("getAprMemberBySn ended");
 		return result;
 	}
 }

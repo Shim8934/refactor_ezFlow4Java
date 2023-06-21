@@ -180,7 +180,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 						try {
 							insertUseDept(formId, depts.get(i).get("deptId").toString(), tenantId);
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						}
 					}
 				}
@@ -356,7 +356,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 						try {
 							insertUseDept(jsonParam.get("formId").toString(), depts.get(i).get("deptId").toString(), tenantId);
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage(), e);
 						}
 					}
 				}
@@ -417,7 +417,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				insertMap.put("deptId", ((String) deptList.get(i)).trim());
 				ezJournalDAO.insertAuthDept(insertMap);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		
@@ -462,7 +462,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				try {
 					insertFavoriteUserList(favoriteId, receivers.get(i).get("userId").toString(), tenantId);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -544,7 +544,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				try {
 					insertFavoriteUserList(favoriteId, receivers.get(i).get("userId").toString(), tenantId);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -566,7 +566,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 			ezJournalDAO.deleteFavoriteUser(map);
 			ezJournalDAO.deleteFavorite(map);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("deleteFavorite ended");
@@ -827,7 +827,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("fileMove ended.");

@@ -73,11 +73,11 @@ public class POP3Access {
 			
 		} catch (NoSuchProviderException e) {
 			logger.error("Error get store from session: " + e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			close();
 		}catch (MessagingException e) {
 			logger.error("Error connect store: " + e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			close();
 		}
 		return store;
@@ -109,7 +109,7 @@ public class POP3Access {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			returnValue = false;
 		}
 		
@@ -188,7 +188,7 @@ public class POP3Access {
 //				isAttached = true;
 //			}			
 //		} catch (Exception e) {
-//			e.printStackTrace();
+//			logger.error(e.getMessage(), e);
 //		} 		
 //		
 //		return isAttached;
@@ -263,7 +263,7 @@ public class POP3Access {
 //							try {
 //								addressStr = MimeUtility.decodeText(addressStr);
 //							} catch (UnsupportedEncodingException e) {
-//								e.printStackTrace();
+//								logger.error(e.getMessage(), e);
 //							}
 //						}					
 //						
@@ -284,7 +284,7 @@ public class POP3Access {
 //								try {
 //									addressStr = MimeUtility.decodeText(addressStr);
 //								} catch (UnsupportedEncodingException e) {
-//									e.printStackTrace();
+//									logger.error(e.getMessage(), e);
 //								}
 //							}			
 //							addressBuilder.append(addressStr);

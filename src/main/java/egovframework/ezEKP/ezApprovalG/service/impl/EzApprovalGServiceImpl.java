@@ -42,6 +42,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -76,7 +78,9 @@ import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.writer.HWPWriter; 
 
 import org.apache.commons.codec.binary.Base64; 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils; 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -460,7 +464,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		sb.append("<NODE>");
 		
-		if (apprGTaskVO != null && apprGTaskVO.getCategoryCode().equals(prevCode)) {
+		// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+		if (Objects.isNull(apprGTaskVO)) {
+			throw new NullPointerException("getCodeTreeNodeInfo apprGTaskVO is null");
+		}
+
+		//if (apprGTaskVO != null && apprGTaskVO.getCategoryCode().equals(prevCode)) {
+		if (apprGTaskVO.getCategoryCode().equals(prevCode)) {
 			sb.append("<EXPANDED>TRUE</EXPANDED>" + codeInfo);
 		} else {
 			sb.append("<EXPANDED>FALSE</EXPANDED>");
@@ -940,7 +950,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getOptionInfo(String code1, String code2, LoginVO userInfo, String mode) throws Exception {
-		logger.debug("getOptionInfo started.");
+//		logger.debug("getOptionInfo started.");
 
 		String resultString = "";
 		
@@ -951,14 +961,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultString = getCode2Name(code1, code2, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		}
 		
-		logger.debug("getOptionInfo ended.");
+//		logger.debug("getOptionInfo ended.");
 
 		return resultString;
 	}
 	
 	@Override
 	public String getCode2Name(String code1, String code2, String companyID, String lang, int tenantID) throws Exception{
-		logger.debug("getCode2Name started.");
+//		logger.debug("getCode2Name started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE1", code1);
@@ -967,11 +977,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_LANGTYPE", lang);
 		map.put("v_TENANTID", tenantID);
 		
-		logger.debug("getOptionInfo Param : v_CODE1=" + code1 + " v_CODE2=" + code2 + " v_LANGTYPE=" + lang +" companyID = " + companyID +  " v_TENANTID= " + tenantID);
+//		logger.debug("getOptionInfo Param : v_CODE1=" + code1 + " v_CODE2=" + code2 + " v_LANGTYPE=" + lang +" companyID = " + companyID +  " v_TENANTID= " + tenantID);
 
 		String rtnValue = ezApprovalGDAO.getCode2Name(map);
 		
-		logger.debug("getCode2Name ended.");
+//		logger.debug("getCode2Name ended.");
 		
 		return rtnValue;
 	}
@@ -1150,7 +1160,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getName2Code(String code1, String code2, String companyID, String lang, int tenantID) throws Exception{
-		logger.debug("getName2Code started.");
+//		logger.debug("getName2Code started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE1", code1);
@@ -1159,7 +1169,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		logger.debug("getName2Code Param: v_CODE1=" + code1 + " v_NAME =" + code2 + " v_LANGTYPE=" +lang + " v_TENANTID=" + tenantID);
+//		logger.debug("getName2Code Param: v_CODE1=" + code1 + " v_NAME =" + code2 + " v_LANGTYPE=" +lang + " v_TENANTID=" + tenantID);
 
 		return ezApprovalGDAO.getName2Code(map);
 	}
@@ -2419,10 +2429,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         			output = new OutputStreamWriter(outputStream);
         			output.write(convertedMHT);
         		} catch (Exception e) {
-        			e.printStackTrace();
+        			logger.error(e.getMessage(), e);
         		} finally {
-        			output.close();
-        			outputStream.close();
+					// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+					IOUtils.closeQuietly(output);
+					IOUtils.closeQuietly(outputStream);
         		}
         	}
         }
@@ -2819,7 +2830,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             //첨부파일 변경내역이 있으면 그 변경 내역을 새로 생성된 문서의 변경내역으로 바꿔준다.
             ezApprovalGDAO.aprMakeTmp2Ing12(map);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         
         // 중복삽입을 방지하기 위하여 try~catch 처리
@@ -2829,7 +2840,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	            ezApprovalGDAO.aprMakeTmp2Ing14(map);
 	        }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         
         rtnVal = "<RESULT>" + docID + "</RESULT>";
@@ -3602,7 +3613,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					recMemJobTitle2 = "";
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 			
 			map.put("v_ExtRecYN", extYN);
@@ -3813,7 +3824,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_AprType", getName2Code("SA03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
 						map.put("v_AprState", getName2Code("SA04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
 					}
 				}
 				
@@ -6219,6 +6230,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        
 			if (signList2 != null) {
 				receivedSN = Integer.parseInt(signList2.getReceiveSN() + 1);
+			} else { // 2023-05-12 이사라 : NullPointerException 시큐어코딩
+				throw new NullPointerException("ApprGReceiveDocVO signList2 is null");
 			}
 			
 			map.put("v_RECEIVESN", receivedSN);
@@ -6339,12 +6352,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (Paragraph p : s) {
                 Cell cell = findHwpFieldCell(p, fieldName);
                 if (cell != null) {
+                    /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+                    cell.getParagraphList().getParagraph(0).deleteText();
                     cell.getParagraphList().getParagraph(0).createText();
                     cell.getParagraphList().getParagraph(0).getText().addString(signText);
                 }
 			}
 		}
- 
 		logger.debug("setHwpSign ended");
 	}
 	
@@ -6373,7 +6387,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	/**
 	 * @param fieldName ex) sign1, sign2
-	 * @param signText
+	 * @param signTextArray
 	 * @param hwpFile
 	 * @throws Exception
 	 * 한글파일에 사인기입하기
@@ -6406,7 +6420,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         
                         newParagraph.getText().addString(signTextArray[k]);
                     }
-                    
+                    /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+                    paragraphList.getParagraph(0).deleteText();
                     paragraphList.getParagraph(0).createText();
                     paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
                 }
@@ -6453,7 +6468,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ios.close();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 		return buffer;
@@ -6514,6 +6529,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String receiveDeptName = "";
 		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
 		
+        String signInfo = "";
+        String signInfo2 = "";
+        String signText2 = "";
+        boolean signSaveFlag = false;
+        
 		try {
 			// 부재자 설정인 경우 proxySign = '代'
 			if (!userID.equals(orgUID)) {
@@ -6728,13 +6748,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							}
 						}
 						
+                        signInfo = strSign;
 						signText = proxySign + displayName;
+                        signInfo2 = strSeumyungDate;
+                        signText2 = commonUtil.getTodayUTCTime("");
+                        
 					} else if (aprType.equals("008") || aprType.equals("009")) {
 						int tmps = signCnt - habResult;
 						String habSign = signAdd + "habyuisign" + tmps;
 						String habSem = signAdd + "habyuidate" + tmps;
 						
+                        signInfo = habSign;
 						signText = proxySign + displayName;
+                        signInfo2 = habSem;
+                        signText2 = commonUtil.getTodayUTCTime("");
 						
 						setHwpText(habSign, signText, hwpFile);
 						setHwpText(habSem, signText, hwpFile);
@@ -6753,15 +6780,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							setHwpText(tempSign, proxySign + displayName, hwpFile);
 							setHwpText(tempSeumyungDate, lastCnt, hwpFile);
 							
+                            signInfo = tempSign;
 							signText = proxySign + displayName;
+                            signInfo2 = tempSeumyungDate;
+                            signText2 = commonUtil.getTodayUTCTime("");
 						} else if (junGyulFlag.equals("4")) {
 							int tmps = signCnt - refResult;
+                            String tempSign = signAdd + "sign" + lastSignNum;
 							String tempSeumyungDate = signAdd + "seumyungdate" + tmps;
 							
 							setHwpText(signAdd + "sign" + tmps, proxySign + displayName, hwpFile);
 							setHwpText(tempSeumyungDate, lastCnt, hwpFile);
 							
+                            signInfo = tempSign;
 							signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + commonUtil.CRLF + proxySign + displayName;
+                            signInfo2 = tempSeumyungDate;
+                            signText2 = commonUtil.getTodayUTCTime("");
 						}
 					}
 				} else { // 전자결재 G
@@ -6784,6 +6818,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							setHwpText(hwpFile, strSign, signAryJK);
 						}
 						
+                        signInfo = tempSign;
 						signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
 					} else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
 						String lastCnt = "";
@@ -6823,13 +6858,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							}
 						}
 						
+                        signInfo = strSign;
 						signText = lastCnt + proxySign + displayName;
 					} else if (aprType.equals("008") || aprType.equals("009")) { // 개인순차협조 || 개인병렬협조
 						int tmps = signCnt - habResult;
 						String habSign = signAdd + "habyuisign" + tmps;
 						String habSem = signAdd + "habyuidate" + tmps;
 						
+                        signInfo = habSign;
 						signText = proxySign + displayName;
+                        signInfo2 = habSem;
+                        signText2 = commonUtil.getTodayUTCTime("");
 						
 						String[] signAry = {tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), signText};
 						
@@ -6857,6 +6896,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						setHwpText(hwpFile, tempSign, signAry);
 						
+                        signInfo = tempSign;
 						signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
 					} else if (aprType.equals("015")) { // 후열
 						gongRamUpdate(docID, userID, companyID, strLang, userInfo.getTenantId());
@@ -7072,6 +7112,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				docResult = commonUtil.convertDocumentToString(paramXML);
 			}
 			
+            StringBuilder resultXML = new StringBuilder();
+            resultXML.append("<SIGNINFOS>");
+            
+            if (!signInfo.isEmpty()) {
+                resultXML.append("<SIGNINFO>");
+                resultXML.append("<DOCID>" + docID + "</DOCID>");
+                resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
+                resultXML.append("<SIGNNAME>" + signInfo + "</SIGNNAME>");
+                resultXML.append("<CONTENT>" + signText + "</CONTENT>");
+                resultXML.append("</SIGNINFO>");
+            }
+            if (!signInfo2.isEmpty()) {
+                resultXML.append("<SIGNINFO>");
+                resultXML.append("<DOCID>" + docID + "</DOCID>");
+                resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
+                resultXML.append("<SIGNNAME>" + signInfo2 + "</SIGNNAME>");
+                resultXML.append("<CONTENT>" + commonUtil.cleanValue(signText2) + "</CONTENT>");
+                resultXML.append("</SIGNINFO>");
+            }
+            
+            resultXML.append("</SIGNINFOS>");
+            
 			if (result.equals("A")) {
 				if (aprStateSign.equals("011")) {
 					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
@@ -7090,6 +7152,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						linkCheck = excuteInfoHwp("MIDDLE_SIGN_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 					}
 				}
+                updateSignInfo(resultXML, companyID, "SET", userInfo.getTenantId());
+                signSaveFlag = true;
 			}
 			
 			if (!linkCheck) {
@@ -7100,6 +7164,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (hwpSaveFlag) {
 					rollBackHwp(formURL, tempHwp);
 				}
+				
+                if (signSaveFlag) {
+                    rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+                }
 			}
 			
 			Document tempXmlDom = commonUtil.convertStringToDocument(docResult);
@@ -7112,6 +7180,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!xmlResult2.getElementsByTagName("RESULT").item(0).getTextContent().equals("TRUE")) {
 				linkCheck = true;
+                signSaveFlag = true;
 				
 				if (result.equals("A")) {
 					if (aprStateSign.equals("011")) {
@@ -7144,6 +7213,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						rollBackHwp(formURL, tempHwp);
 					}
 					
+                    if (signSaveFlag) {
+                        rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+                    }
+					
 					return "Link ERROR";
 				}
 				
@@ -7154,6 +7227,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (hwpSaveFlag) {
 					rollBackHwp(formURL, tempHwp);
 				}
+				
+                if (signSaveFlag) {
+                    rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+                }
 				
 				return "ERROR";
 			} else {
@@ -7190,6 +7267,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						rollBackHwp(formURL, tempHwp);
 					}
 					
+                    if (signSaveFlag) {
+                        rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+                    }
+					
 					return "Link ERROR";
 				}
 				
@@ -7198,7 +7279,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				return "001";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			if (docNumFlag) {
 				// Cause: java.sql.SQLTransactionRollbackException: (conn=7146174) Deadlock found when trying to get lock; try restarting transaction
@@ -7212,6 +7293,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (hwpSaveFlag) {
 				rollBackHwp(formURL, tempHwp);
 			}
+			
+            if (signSaveFlag) {
+                rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+            }
 			
 			return "ERROR";
 		}
@@ -11570,8 +11655,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<APRSN>" + makeListField(docXML.getElementsByTagName("APRSN").item(k).getTextContent()) + "</APRSN>");
 			resultXML.append("<SIGNTYPE>" + makeListField(docXML.getElementsByTagName("SIGNTYPE").item(k).getTextContent()) + "</SIGNTYPE>");
 			
-			String tempSignName = makeListField(docXML.getElementsByTagName("SIGNNAME").item(k).getTextContent());
-			String tempContent = makeListField(docXML.getElementsByTagName("CONTENT").item(k).getTextContent());
+			// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+			String tempSignName = Optional.ofNullable(makeListField(docXML.getElementsByTagName("SIGNNAME").item(k).getTextContent())).orElse("");
+			String tempContent = Optional.ofNullable(makeListField(docXML.getElementsByTagName("CONTENT").item(k).getTextContent())).orElse("");
 			
 			resultXML.append("<SIGNNAME>" + tempSignName + "</SIGNNAME>");
 			
@@ -13904,7 +13990,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				rtnVal = false;
 			}
 		} else {
@@ -13924,7 +14010,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnVal = true;
 				} 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				rtnVal = false;
 			}
 		}
@@ -15988,10 +16074,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		if (signTitle.trim().equals("")) {
+		/* 2023-05-12 홍승비 - 합의 서명을 위한 직위나 이름이 없는 경우, null 처리 추가 */
+		if (signTitle == null || signTitle.trim().equals("")) {
 			signTitle = "-";
 		}
-		if (signName.trim().equals("")) {
+		if (signName == null || signName.trim().equals("")) {
 			signName = "-";
 		}
 		
@@ -16902,7 +16989,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				// 기록물 테이블(TBL_RECORD)에 입력
 				ezApprovalGDAO.insertRecord(map);
 			} catch (DataIntegrityViolationException e) { // 중복 삽입 시의 예외 catch (중복삽입 이외의 경우 문서번호 롤백을 진행)
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				insertRegErrorNoRollbackRecord("002", deptCode, "", Integer.valueOf(regYear), commonUtil.getTodayUTCTime(""), Integer.valueOf(regSN), companyID, tenantID);
 				
 				return "FALSE";
@@ -16954,7 +17041,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				// 기록물 테이블(TBL_RECORD)에 입력
 				ezApprovalGDAO.insertRecord(map);
 			} catch (DataIntegrityViolationException e) { // 중복 삽입 시의 예외 catch (중복삽입 이외의 경우 문서번호 롤백을 진행)
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				insertRegErrorNoRollbackRecord("002", deptCode, "", Integer.valueOf(regYear), commonUtil.getTodayUTCTime(""), Integer.valueOf(regSN), companyID, tenantID);
 				
 				return "FALSE";
@@ -18628,7 +18715,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			logger.debug("copyFile ended");
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -18659,7 +18746,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			logger.debug("copyDecryptFileForKlib ended");
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -19534,11 +19621,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		if (title != null && title != "") {
+		if (StringUtils.isNotBlank(title)) { // 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
 			title = commonUtil.htmlUnescape(title);
 		}
 		
-		if (summary != null && summary != "") {
+		if (StringUtils.isNotBlank(summary)) { // 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
 			summary = commonUtil.htmlUnescape(summary);
 		}
 		
@@ -21930,7 +22017,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getListField(String fieldName, String fieldValue, String companyID, String userLang, int tenantID, String offSet) throws Exception {
-		logger.debug("getListField started");
+//		logger.debug("getListField started");
 
 		String rtnVal = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
@@ -22008,7 +22095,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			break;
 		}
 
-		logger.debug("getListField ended");
+//		logger.debug("getListField ended");
 
 		return makeListField(rtnVal);
 	}
@@ -22036,7 +22123,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		   }
 		   return rtnVal;
 	   } catch(Exception e){
-		   e.printStackTrace();
+		   logger.error(e.getMessage(), e);
 	   }
 
 	   logger.debug("getSpecialRecString ended");
@@ -23137,14 +23224,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if(type.equalsIgnoreCase("1")) {
 			param.put("limit", 3); // 출력 갯수 제한
 			list = ezApprovalGDAO.getAprPortletList_progress(param);
-			if (list != null) {
+
+			// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+			//if (list != null) {
+			if (CollectionUtils.isNotEmpty(list)) {
 		        for (ApprGDocListVO apr : list) {
 		        	Date date1 = formatter2.parse(apr.getStartDate());                                   
 		        	apr.setStartDate(commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, false));
 				}
 			}
 			ret.put("list", list);
-			logger.debug("list.toString() : " + list.toString());
+			logger.debug("list.toString() : " + Optional.ofNullable(list.toString()).orElse(""));
 			
 			if(list.size() > 0) {
 				param.put("docID", list.get(0).getDocID()); // 첫 번째 결재문서의 라인 정보만 필요함.
@@ -27362,9 +27452,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String href = ezApprovalGDAO.getDocInfoHref(map);
 		
-		if(href != "") {
+		// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
+		if(StringUtils.isNoneBlank(href)) {
 			extFileName = getExtendedFileName(href);
-			docNo = (lang == "1" ? deptName : deptName2 + "-" + docSN);
+			docNo = ("1".equalsIgnoreCase(lang) ? deptName : deptName2 + "-" + docSN);
 			docNumCode = deptID +  getNDigitNum(docSN, 6);
 			newDocID = getNewID(companyID, tenantID);
 		}
@@ -27598,21 +27689,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						fontSize = spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";",spanStyle.indexOf("font-size"))+1);
 					}
 				}
-			     // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+			    // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+				// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
                 if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("body")) {
-                    if (fontFamily != "") {
+                    if (StringUtils.isNotBlank(fontFamily)) {
                         strStyle = "font-family:" + fontFamily;
                     }
 
-                    if (fontSize != "") {
-                        if (strStyle != "") {
+                    if (StringUtils.isNotBlank(fontSize)) {
+                        if (StringUtils.isNotBlank(strStyle)) {
                             strStyle += ";";
                         }
 
                         strStyle = "font-size:" + fontSize;
                     }
 
-                    if (strStyle != "") {
+                    if (StringUtils.isNotBlank(strStyle)) {
                         strInnerHtml = "<p style=\"" + strStyle + "\">" + strInnerHtml + "</p>";
                     } else {
                         strInnerHtml = "<p>" + strInnerHtml + "</p>";
@@ -28031,7 +28123,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} catch (Exception e) {
 /*			System.out.println(e.getMessage());
 			System.out.println(e.getStackTrace());*/
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
 			return ReturnErrorContent(strErrorMsg);
 		}
@@ -28103,21 +28195,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						fontSize = spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";",spanStyle.indexOf("font-size"))+1);
 					}
 				}
-			     // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+			    // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+				// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
                 if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("body")) {
-                    if (fontFamily != "") {
+                    if (StringUtils.isNotBlank(fontFamily)) {
                         strStyle = "font-family:" + fontFamily;
                     }
 
-                    if (fontSize != "") {
-                        if (strStyle != "") {
+                    if (StringUtils.isNotBlank(fontSize)) {
+                        if (StringUtils.isNotBlank(strStyle)) {
                             strStyle += ";";
                         }
 
                         strStyle = "font-size:" + fontSize;
                     }
 
-                    if (strStyle != "") {
+                    if (StringUtils.isNotBlank(strStyle)) {
                         strInnerHtml = "<p style=\"" + strStyle + "\">" + strInnerHtml + "</p>";
                     } else {
                         strInnerHtml = "<p>" + strInnerHtml + "</p>";
@@ -28530,7 +28623,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} catch (Exception e) {
 /*			System.out.println(e.getMessage());
 			System.out.println(e.getStackTrace());*/
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
 			return ReturnErrorContent(strErrorMsg);
 		}
@@ -28983,7 +29076,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		builder.parse(new InputSource(mapPath));
 			result = "OK";
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "FALSE";
 		} 
 		return result;
@@ -29101,7 +29194,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fop.flush();
 			}
  		} catch (Exception e) {
- 			e.printStackTrace();
+ 			logger.error(e.getMessage(), e);
  		} 
        
          return strDocID + ".xml::" + strRtnXML.replace("\n", "").replace("\t", "");
@@ -29163,7 +29256,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			folderName = ">" + strFolderName;
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = "FALSE";
 		} 
 		
@@ -29232,7 +29325,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertRelayDB(map);
 			result = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;
@@ -29445,35 +29538,44 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             if (!dir.exists()) {
                             	dir.mkdirs();
                             }
-                            FileInputStream input = null;
-                            FileOutputStream output = null;
+
+                            // 2023-05-31 이사라 : 시큐어코딩 리소스 close
+                            //FileInputStream input = null;
+                            //FileOutputStream output = null;
                             try {
                                 // 복사할 대상 파일을 지정해준다.
                                 File file = new File(commonUtil.detectPathTraversal(strSource));
                                 long lFileSize = file.length();
                                 strFileSize = Long.toString(lFileSize);
                                 
-                                // FileInputStream 는 File object를 생성자 인수로 받을 수 있다.         
-                                input = new FileInputStream(file);
+                                // FileInputStream 는 File object를 생성자 인수로 받을 수 있다.
+                                //input = new FileInputStream(file);
                                 // 복사된 파일의 위치를 지정해준다.
-                                output = new FileOutputStream(new File(commonUtil.detectPathTraversal(strTarget)));
-                                             
-                                int readBuffer = 0;
-                                byte [] buffer = new byte[512];
-                                while((readBuffer = input.read(buffer)) != -1) {
-                                    output.write(buffer, 0, readBuffer);
+                                //output = new FileOutputStream(new File(commonUtil.detectPathTraversal(strTarget)));
+								try (FileInputStream input = new FileInputStream(file);
+									 FileOutputStream output = new FileOutputStream(
+												new File(commonUtil.detectPathTraversal(strTarget)))) {
+									int readBuffer = 0;
+									byte[] buffer = new byte[512];
+									while ((readBuffer = input.read(buffer)) != -1) {
+										output.write(buffer, 0, readBuffer);
+									}
                                 }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } finally {
+                            } catch (Exception e) {
+                                logger.error(e.getMessage(), e);
+                            /*} finally {
+								// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+								IOUtils.closeQuietly(input);
+								IOUtils.closeQuietly(output);
                                 try{
                                     // 생성된 InputStream Object를 닫아준다.
                                     input.close();
                                     // 생성된 OutputStream Object를 닫아준다.
                                     output.close();
                                 } catch(IOException io) {
-                                	io.printStackTrace();
+                                	logger.error(io.getMessage(), io);
                                 }
+                                */
                             }
                         }
 						map.put("ATTACHFILESIZE", strFileSize);
@@ -29498,7 +29600,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			map.put("NEWID", strNewID);
 			map.put("XDOCID", strXDocID);
 			map.put("XTOCODE", strXToCode);
@@ -29600,7 +29702,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             return true;
          }
          catch (Exception Ex) {
-        	Ex.printStackTrace();
+        	logger.error(Ex.getMessage(), Ex);
             return false;
          } 
 	}
@@ -29691,7 +29793,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.updateRelaySusinState(map);
 			result = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = false;
 		}
 		
@@ -29714,7 +29816,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertRelayFailMessage(map);
 			result = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;
@@ -29853,7 +29955,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			logger.debug("setHref ended");
 			return "<setHref>" + strHref + "</setHref>"; 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			 return "<setHref></setHref>";
 		}
 	}
@@ -29896,7 +29998,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			logger.debug("setRecvDocInfo ended");
 			return  "<RESULT>TRUE</RESULT>";
 		} catch(Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "<RESULT>FALSE</RESULT>";
 		}
 	}
@@ -30797,7 +30899,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    	}
 		    }
 	    } catch (Exception e) {
-	    	e.printStackTrace();
+	    	logger.error(e.getMessage(), e);
 	    	result = "FALSE";
 	    }
 	    
@@ -30882,7 +30984,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.susinNonElecRecDocDel7(map); //TBL_EXPAPRLINE
 				result = "TRUE";
 			} catch(Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				result = "FALSE";
 			}
 	    } else {
@@ -30975,7 +31077,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.setDocNumZeroCnt(map);
 			rtnVal = "true";
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "false";
 		}
 
@@ -31255,7 +31357,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			rtnVal = "ERROR";
 		}
 		
@@ -31511,10 +31613,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             outputStreamWriter = new OutputStreamWriter(outputStream);
             outputStreamWriter.write(convertedMht);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
-            outputStreamWriter.close();
-            outputStream.close();
+			// 2023-05-12 이사라 : NullPointerException 시큐어코딩
+            //outputStreamWriter.close();
+            //outputStream.close();
+			IOUtils.closeQuietly(outputStreamWriter);
+			IOUtils.closeQuietly(outputStream);
         }
 
         logger.debug("enforceSihangDoc ended.");
@@ -32297,7 +32402,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    		result = userInfo.getDeptID();
 	    	}
     	} catch (Exception e) {
-    		e.printStackTrace();
+    		logger.error(e.getMessage(), e);
     		result = userInfo.getDeptID();
     	}
     	
@@ -32878,7 +32983,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String[] userIDArr = userIDs.replace(" ", "").replace("\'", "").split(",");
 		String[] deptIDArr = deptIDs.replace(" ", "").replace("\'", "").split(",");
 		String startDate = Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01";
-		String endDate = commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59";
+		String endDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), offset, false) + " 23:59:59";
 		
 		map.put("v_USERID", userID);
 		map.put("v_DEPTID", deptID);
@@ -32889,7 +32994,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		// v_STARTDATE, v_ENDDATE UTC 시간 기준으로 수정 (DB에는 UTC 시간으로 저장되므로)
 		map.put("v_STARTDATE", commonUtil.getDateStringInUTC(startDate, offset, true)); 
-		map.put("v_ENDDATE", commonUtil.getDateStringInUTC(endDate, offset, true)); 
+		map.put("v_ENDDATE", commonUtil.getDateStringInUTC(endDate, offset, true)); /* 2023-05-09 양지혜 - UTC 시간 적용이 중복되어 수정 */
 		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
 		map.put("proxyList", list);
 		
@@ -34339,7 +34444,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 			ezApprovalGDAO.insertRegErrorNoRollbackRecord(map);
 		} catch (Exception e) { // TBL_SERIAL_NOROLLBACK 테이블 레코드 중복삽입 시 그냥 로그만 찍고 무시
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("insertRegErrorNoRollbackRecord ended.");

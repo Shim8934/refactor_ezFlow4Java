@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -49,6 +50,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
@@ -979,7 +981,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1076,12 +1078,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());		
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
 		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
 		if (!useImageConvertServer.equalsIgnoreCase("0")) {
 			extraMap.put("useImageConvertServer", useImageConvertServer);
 		}
 		
+		// 20230418 김은실 - 메일 읽기 > 첨부파일 웹폴더에 저장 기능 추가
+		if ("YES".equalsIgnoreCase(useWebfolder)) {
+			extraMap.put("useWebfolder", true);
+		}
+
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -1226,7 +1234,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				}
     			}
     		} catch (Exception e) { 
-    			e.printStackTrace();
+    			logger.error(e.getMessage(), e);
     			
                 retryFlag = true;
                 --retryCount;
@@ -1245,6 +1253,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     		}
         } while (retryFlag && retryCount > -1);		
 		
+		// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+		if (Objects.isNull(bodyInfoList)) {
+			throw new NullPointerException("readMailContent bodyInfoList is null");
+		}
+
         String htmlBody = bodyInfoList.get(0);
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
@@ -1365,7 +1378,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1570,7 +1583,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									
 									zos.closeEntry();
 								} catch (IOException e) {
-									e.printStackTrace();
+									logger.error(e.getMessage(), e);
 								} finally {
 									if (input != null) {
 										try {
@@ -1586,7 +1599,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 			
-			f.close(true);
+			// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+			if (!Objects.isNull(f)) {
+				f.close(true);
+			}
 			
 			zos.flush();
 			zos.close();
@@ -1606,7 +1622,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				file.delete();
 			}
 			
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1778,7 +1794,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1886,7 +1902,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 			downFile(request, response, realFilePath, fileName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			
 			response.setContentType("text/plain; charset=utf-8");
 			response.getWriter().print(egovMessageSource.getMessage("ezEmail.lhm14", locale));
@@ -2004,7 +2020,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2103,7 +2119,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2201,20 +2217,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				if (mailInfo == null) {
 					logger.error("Message not found. uid=" + uid);
 					emptyFlag = true;
-				}	
-				
-				String recipientsStr = mailInfo.get("RECIPIENT");
-				
-				if (!recipientsStr.isEmpty()) {
-					// To, Cc, Bcc를 분리한다.(||로 구분됨.)
-					String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
+				} else {
+					String recipientsStr = mailInfo.get("RECIPIENT");
 					
-					// 오래된 사이트(가온누리 포함)의 경우 오래된 메일의 RECIPIENT 필드값이 To, Cc, Bcc로 분리되어 있지 않은 경우가 있어
-					// 추가함.
-					if (recipientsArr.length > 1) {
-						recipientHasAllRecipientTypes = true;
+					if (!recipientsStr.isEmpty()) {
+						// To, Cc, Bcc를 분리한다.(||로 구분됨.)
+						String[] recipientsArr = recipientsStr.split("\\|\\|", 3);
+
+						// 오래된 사이트(가온누리 포함)의 경우 오래된 메일의 RECIPIENT 필드값이 To, Cc, Bcc로 분리되어 있지 않은 경우가 있어
+						// 추가함.
+						if (recipientsArr.length > 1) {
+							recipientHasAllRecipientTypes = true;
+						}
 					}
-				}								
+				}
 			}
 			
 			if (useRDBOnlyMailList.equals("YES") && recipientHasAllRecipientTypes) {
@@ -2640,7 +2656,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -2747,12 +2763,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
 		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
 		if (!useImageConvertServer.equalsIgnoreCase("0")) {
 			extraMap.put("useImageConvertServer", useImageConvertServer);
 		}
 		
+		// 20230418 김은실 - 메일 읽기 > 첨부파일 웹폴더에 저장 기능 추가
+		if ("YES".equalsIgnoreCase(useWebfolder)) {
+			extraMap.put("useWebfolder", true);
+		}
+
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -2903,7 +2925,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				}
     			}
     		} catch (Exception e) {
-    			e.printStackTrace();
+    			logger.error(e.getMessage(), e);
     			
                 retryFlag = true;
                 --retryCount;
@@ -2922,7 +2944,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     		}        
         } while (retryFlag && retryCount > -1);		
 		
-        String htmlBody = bodyInfoList.get(0);
+        // 2023-05-16 이사라 : NullPointerException 시큐어코딩
+        String htmlBody = CollectionUtils.isNotEmpty(bodyInfoList) ? bodyInfoList.get(0) : "";
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
@@ -2939,17 +2962,31 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
         String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
         
+        // 2023-05-16 이사라 : NullPointerException 시큐어코딩
+        String pAttachListHtml = "";
+        String isAttach = "";
+        String previewImageListHtml = "";
+        String isIcalMail = "";
+        
+        
+        if (CollectionUtils.isNotEmpty(bodyInfoList)) {
+        	pAttachListHtml = bodyInfoList.get(1);
+        	isAttach = bodyInfoList.get(4);
+        	previewImageListHtml = bodyInfoList.get(5);
+        	isIcalMail = bodyInfoList.get(6);
+        }
+
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", htmlBody);
-		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
+		model.addAttribute("pAttachListHtml", pAttachListHtml);
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
-		model.addAttribute("isAttach", bodyInfoList.get(4));
+		model.addAttribute("isAttach", isAttach);
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
 		model.addAttribute("memoFlag", memoFlag);
-		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		model.addAttribute("previewImageListHtml", previewImageListHtml); //이미지 미리보기 
 		model.addAttribute("previewMailImage", previewMailImage);
 		model.addAttribute("unread", unread);
-		model.addAttribute("isIcalMail", bodyInfoList.get(6)); // "" or "Y"
+		model.addAttribute("isIcalMail", isIcalMail); // "" or "Y"
 		
 		logger.debug("previewContent ended.");
 		
@@ -3150,7 +3187,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -3280,7 +3317,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				f.close(true);
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -3495,7 +3532,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -3701,7 +3738,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -4069,7 +4106,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -4240,7 +4277,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -4388,7 +4425,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -4523,7 +4560,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				model.addAttribute("t99000065", egovMessageSource.getMessage("ezEmail.t99000065", locale));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (fis != null) {
 				try { fis.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
@@ -4679,7 +4716,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 		
 		logger.debug("processAutoMDN ended.");
@@ -4746,7 +4783,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			sourceFolder.close(true);
 		} catch (Exception e) {
 			returnData = "<DATA>ERROR</DATA>";
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -5000,7 +5037,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				result.put("status", "ok");
 				result.put("data", data);
 			} catch (MessagingException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				result.put("status", "error");
 			} finally {
 				if (ia != null) {
@@ -5009,7 +5046,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 		}
 		
@@ -5163,7 +5200,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -5286,7 +5323,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		} finally {
 			output.flush();
 			output.close();
