@@ -3524,4 +3524,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterFileNameForWebfolderHistory() throws Exception {
         ezCommonDAO.alterFileNameForWebfolderHistory();
     }
+	
+	/** 2023-06-27 한태훈 - 전자결재 > 통합PC저장 다운로드 이력 남기는 테이블 생성(차후에 다른 이력을 남기기 위한 테이블로 쓸 수 있음) */	
+	@Override
+	public void createTblTotalHistory() throws Exception {
+		logger.debug("createTblTotalHistory started");
+		ezCommonDAO.createTblTotalHistory();
+		logger.debug("createTblTotalHistory ended");
+	}
 }

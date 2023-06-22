@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.vo;
 
+import java.util.Date;
+
 public class ApprGAttachInfoVO {
 
 	/** 첨부타입*/
@@ -67,6 +69,9 @@ public class ApprGAttachInfoVO {
 	private String tblName;
 	/** 첨부파일의 소속회사ID */
 	private String companyID;
+	
+	/** 2023-06-23 한태훈 - 완료 문서 최종 결재 날짜 */
+	private Date enddate;
 	
 	public String getAttachType() {
 		return attachType;
@@ -260,4 +265,12 @@ public class ApprGAttachInfoVO {
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
 	}
+	
+	public Date getEnddate() {
+		return enddate;
+	}
+	public void setEnddate(Date enddate) {
+		this.enddate = enddate;
+	}
+	
 }

@@ -1992,4 +1992,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterFileNameForWebfolderHistory");
 		}
 	}
+	
+	/** 2023-06-26 한태훈 - 통합 PC 저장 이력 남기는 tbl_total_history 테이블 만들기(차후 다른 목적으로도 쓰일 수 있음.) */
+	public void createTblTotalHistory() {
+		try {
+			select("EzCommonDAO.chkTblTotalHistory");
+		} catch (Exception e) {
+			logger.debug("TBL_TOTAL_HISTORY table doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblTotalHistory");
+		}
+	}
 }

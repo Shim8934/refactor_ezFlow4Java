@@ -165,7 +165,12 @@ function ezCabMunuCtl(MenuType, selRow) {
             break;
 
         case "1":
-
+        	/* 2023-06-28 한태훈 - 통합 PC 저장 시 지워졌던 네 개의 버튼 - 등록정보, 공람정보, 철검색, 목록출력 버튼 보이기 (나머지 버튼들은 아래 if문으로 조절됨) */
+			document.getElementById("tDocInfo").style.display = "";
+			document.getElementById("tdViewRecInfo").style.display = "";
+			document.getElementById("tdCabSelect").style.display = "";
+			document.querySelector("#trRecSubMenu #tdDocListPrint").style.display = "";
+        	
             if (typeof (tdRegRecord) != "undefined" && typeof (tdRegRecord) != "unknown") {
                 if (GetCabChargerRight() == "true")
                     document.getElementById("tdRegRecord").style.display = "";
@@ -915,6 +920,8 @@ function InsertToRecListView(Resultxml) {
         DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                 
         DocList.SetTitle("RecTitle");
+        // 2023-03-20 한태훈 - 기록물 등록대장, 부서공유함 복수선택 체크박스 추가
+        if (g_sFlag == "m01" || g_sFlag == "docShare") { DocList.SetCheckBoxFlag(true); }
         DocList.SetSecurityFlag(true);
         DocList.SetSecurityIdx(13);
         DocList.DataSource(xmlDoc);                             

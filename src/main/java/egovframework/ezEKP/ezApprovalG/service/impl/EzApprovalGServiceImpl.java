@@ -6,11 +6,13 @@ import java.io.File;
 import java.io.FileInputStream; 
 import java.io.FileNotFoundException; 
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException; 
 import java.io.InputStream; 
 import java.io.InputStreamReader; 
 import java.io.OutputStream; 
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Field; 
 import java.lang.reflect.Method; 
 import java.net.HttpURLConnection; 
@@ -27,6 +29,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar; 
@@ -42,6 +45,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource; 
 import javax.mail.internet.InternetAddress; 
@@ -34801,4 +34806,453 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         logger.debug("getAccessYNGforAPR ended.");
         return rtnVal ? "<RESULT>TRUE</RESULT>" : "<RESULT>TRUE</RESULT>";
     } 
+	
+	/* 2023-03-22 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 통합 PC 저장시 문서 하나의 완료 의견 정보 가져오는 메소드 */
+	public List<ApprGOpinionVO> getDocOpinionList(String docID, LoginVO userInfo) throws Exception {
+		logger.debug("getDocOpinionList started.");
+		// 의견정보 담기 시작
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		
+		String orderOption1 = "";
+		map2.put("v_DOCID", docID);
+		map2.put("v_MODE", "END");
+		map2.put("v_ORDEROPTION", orderOption1);
+		map2.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		
+		if (orderOption1.length() > 0) {
+			map2.put("v_ORDEROPTIONVALUE", orderOption1.substring(0, 9).toLowerCase());
+		}
+		
+		map2.put("v_TENANTID", userInfo.getTenantId());
+		map2.put("companyID", userInfo.getCompanyID());
+		
+		// 해당 문서에 저장된 의견 정보 리스트 추출
+		List<ApprGOpinionVO> apprGOpinioinVOList = ezApprovalGDAO.getOpinionInfo(map2);
+		
+		logger.debug("getDocOpinionList ended.");
+		return apprGOpinioinVOList;
+	};
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 선택된 문서 통합 PC 저장 */
+	@Override
+	public String totalSaveDownloadAll(String[] docIDarr, LoginVO userInfo, String type, String approvalFlag, String accessInfo, String realPath, String opinionTxtFileName, String opinionWriterMark, String opinionContentMark, String attMark) throws Exception {
+		
+		logger.debug("totalSaveDownloadAll started");
+		ZipOutputStream zout = null;
+		String zipFilePath = null;
+
+		// 기존 통합 파일 저장은 docID 폴더명으로 파일을 임시 저장했는데, 여러 개의 문서를 한 번에 저장하는 경우 날짜를 기준으로 압축 파일명을 만듦.
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HHmmssSSS");
+		Date now = new Date();
+		String nowTime = dateFormat.format(now);
+		String zipFileName = nowTime;
+		List<String> docIDlist = null;
+		
+		try {
+			File sourceDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + nowTime));
+			
+			if (sourceDir.exists()) {
+				for (File sDirFile : sourceDir.listFiles()) {
+					sDirFile.delete();
+				}
+				sourceDir.delete();
+			}
+			
+			if (!sourceDir.exists()) {
+				sourceDir.mkdirs();
+			}
+			zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + nowTime + commonUtil.separator + zipFileName + ".zip";
+			zout = new ZipOutputStream(new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + zipFilePath))));
+			
+			docIDlist = Arrays.asList(docIDarr);
+			
+		    Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyID", userInfo.getCompanyID());
+			map.put("vDocIDMap", docIDlist);
+			map.put("v_PMODE", type);
+			map.put("v_TENANTID", userInfo.getTenantId());
+			
+			List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.getTotalDownloadAll(map);
+			
+			Map<String, Integer> uniqueFolderNameMap = new HashMap<String, Integer>();
+			Map<String, Integer> uniqueFileNameMap = null;
+			Map<String, String> folderNameMap = new HashMap<String, String>();
+			String folderName = "";
+			boolean isAttachYN = false;
+			int attachCnt = 0;
+			for (int index = 0; index < apprGAttachInfoVOList.size(); index ++) {
+				ApprGAttachInfoVO fileInfo = apprGAttachInfoVOList.get(index);
+				String filetype = fileInfo.getType();
+				String filePath = fileInfo.getFilePath();
+				String fileName = fileInfo.getFileName().replace("\\", "_").replace("/", "_").replace(":", "_").replace("?", "_").
+		                replace('"' + "", "_").replace("*", "_").replace("<", "_").replace(">", "_").replace("|", "_").replace("[","_").replace("}","_").replaceAll("\\t", " ");
+				String docId = fileInfo.getDocID();
+				
+				switch (filetype) {
+				// filetype이 DOC인 경우에는 docID가 바뀐다.
+				case "DOC":
+					attachCnt = 0;
+					uniqueFileNameMap = new HashMap<String, Integer> ();
+					folderName = commonUtil.getUniqueFileName(fileName, uniqueFolderNameMap);
+					folderNameMap.put(docId, folderName);
+					zout.putNextEntry(new ZipEntry(folderName + commonUtil.separator));
+					zout.closeEntry();
+					isAttachYN = false;
+					downloadFileInZip(realPath, filePath, fileName, folderName, zout, uniqueFileNameMap, isAttachYN, attMark);
+					break;
+				case "ATT":
+					attachCnt += 1;
+					// 첨부파일 존재할 시 첨부 폴더 생성.
+					if (attachCnt == 1) {
+						zout.putNextEntry(new ZipEntry(folderName + commonUtil.separator + attMark + commonUtil.separator));
+						zout.closeEntry();
+					}
+					isAttachYN = true;
+					downloadFileInZip(realPath, filePath, fileName, folderName, zout, uniqueFileNameMap, isAttachYN, attMark);
+					break;
+				case "ATTDOC":
+					isAttachYN = false;
+					downloadFileInZip(realPath, filePath, fileName, folderName, zout, uniqueFileNameMap, isAttachYN, attMark);
+					break;
+				}
+			}
+			
+			// 의견정보 담기 시작
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			
+			map2.put("vDocIDMap", docIDlist);
+			map2.put("v_MODE", "END");
+			map2.put("v_TENANTID", userInfo.getTenantId());
+			map2.put("companyID", userInfo.getCompanyID());
+			
+			// 선택된 문서들의 모든 의견 정보 리스트를 docID, 의견 순서로 정렬하여 리턴.
+			List<ApprGOpinionVO> apprGOpinionList = ezApprovalGDAO.getDocsOpinionInfo(map2);
+			String lineSepearator = System.lineSeparator();
+			int lastOpinionIndex = apprGOpinionList.size() - 1;
+			
+			String tempOpinionFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + nowTime + commonUtil.separator;
+			
+			StringBuilder opinionSb = new StringBuilder();
+			
+			// 문서별로 의견을 분류하여 다운로드. 다음 의견이 현재 의견의 docID와 같다면 의견 내용만 작성, 다르다면 zip에 다운로드.
+			for (int index = 0; index < apprGOpinionList.size(); index ++) {
+				ApprGOpinionVO apprGCurOpinion = apprGOpinionList.get(index);
+				String curDocId = apprGCurOpinion.getDocID();
+				
+				opinionSb = makeOneOpinionContent(opinionSb, userInfo, lineSepearator, opinionWriterMark, opinionContentMark, apprGCurOpinion);
+				
+				if (index != lastOpinionIndex) {
+					ApprGOpinionVO apprGNextOpinion = apprGOpinionList.get(index + 1);
+					String nextDocId =  apprGNextOpinion.getDocID();
+					
+					// 현재 의견의 docID와 다음 의견의 docID가 다른 경우에는 해당 문서의 마지막 의견이므로, 현재까지의 의견 내용들을 텍스트 파일로 만든 뒤 압축 파일 안에 넣어준다.
+					if (!curDocId.equals(nextDocId)) {
+						String saveFolderName = folderNameMap.get(curDocId);
+						downloadOpinionFileInZip(realPath, tempOpinionFilePath, opinionTxtFileName, opinionSb, saveFolderName, zout);
+						opinionSb = new StringBuilder();
+					}
+				}
+				// 마지막 의견의 경우 비교할 다음 의견이 존재하지 않으므로, 현재까지의 의견 내용들을 텍스트 파일로 만든 뒤 압축 파일 안에 넣어준다.
+				else {
+					String saveFolderName = folderNameMap.get(curDocId);
+					downloadOpinionFileInZip(realPath, tempOpinionFilePath, opinionTxtFileName, opinionSb, saveFolderName, zout);
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			if(zout!=null) {
+				zout.close();
+			}
+		}
+		
+		// 통합 PC 저장한 이력을 남김.
+		insertTotalSaveHistory(docIDlist, userInfo, "D");
+		
+		logger.debug("totalSaveDownloadAll ended");
+		
+		return zipFilePath;
+	}
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 선택된 문서 통합 PC 저장에서 문서에 있는 모든 의견들이 문자열로 만들어지면 해당 내용을 텍스트파일로 만들어서 zip에 다운로드 */
+	@Override
+	public void downloadOpinionFileInZip(String realPath, String tempOpinionFilePath, String opinionTxtFileName, StringBuilder sb, String saveFolderName, ZipOutputStream zout) throws Exception {
+		
+		logger.debug("downloadOpinionFileInZip started");
+		
+		File opinionFile = null;
+		FileWriter fw = null;
+		PrintWriter writer = null;
+		
+		try {
+			opinionFile = new File(commonUtil.detectPathTraversal(realPath + tempOpinionFilePath + opinionTxtFileName + ".txt"));
+			fw = new FileWriter(opinionFile,false);
+			writer = new PrintWriter(fw);
+			writer.write(sb.toString());
+			writer.flush();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+			if (fw != null) {
+				try {
+					fw.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		byte[] fileOpinionBytes = commonUtil.readBytesFromFile(opinionFile.toPath());
+		
+		ZipEntry zentry = new ZipEntry(saveFolderName + commonUtil.separator + opinionTxtFileName + ".txt");
+		zout.putNextEntry(zentry);
+		zout.write(fileOpinionBytes);
+		zout.closeEntry();
+
+		if (opinionFile != null && opinionFile.exists()) {
+			opinionFile.delete();
+		}
+		
+		logger.debug("downloadOpinionFileInZip ended");
+	}
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 문서 통합 PC 저장 시 하나의 의견내용을 문자열로 만들어주는 메소드. */
+	@Override
+	public StringBuilder makeOneOpinionContent(StringBuilder sb, LoginVO userInfo, String lineSepearator, String opinionWriterMark, String opinionContentMark, ApprGOpinionVO apprGOpinion) throws Exception {
+		
+		logger.debug("makeOneOpinionContent started");
+		
+		StringBuffer opinionTitle = new StringBuffer();
+		String opinionContent = apprGOpinion.getContent();
+		String opinionUserName = "";
+		String opinionUserDeptName = "";
+		String opinionUserJobTitle = "";
+		
+		if (userInfo.getPrimary().equals("1")) {
+			opinionUserName = apprGOpinion.getUserName();
+			opinionUserDeptName = apprGOpinion.getUserDeptName();
+			
+			if (apprGOpinion.getUserJobTitle() == null) {
+				opinionUserJobTitle = "";
+			} else {
+				opinionUserJobTitle = apprGOpinion.getUserJobTitle();
+			}
+		} else {
+			opinionUserName = apprGOpinion.getUserName2();
+			opinionUserDeptName = apprGOpinion.getUserDeptName2();
+			
+			if (apprGOpinion.getUserJobTitle2() == null) {
+				opinionUserJobTitle = "";
+			} else {
+				opinionUserJobTitle = apprGOpinion.getUserJobTitle2();
+			}
+		}
+		
+		String opinionGB = "";
+		
+		try {
+			opinionGB = commonUtil.cleanValue(getListField("OPINIONGB", apprGOpinion.getOpinionGB(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset()));
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		opinionTitle.append(opinionGB).append("_");
+		opinionTitle.append(opinionUserDeptName).append("_");
+		opinionTitle.append(opinionUserJobTitle).append("_");
+		opinionTitle.append(opinionUserName);
+		
+		sb.append("###");
+		sb.append(opinionWriterMark); // 작성자 : 
+		sb.append(opinionTitle).append(lineSepearator);
+		sb.append("###");
+		sb.append(opinionContentMark); // 의견 내용 : 
+		sb.append(lineSepearator);
+		sb.append(opinionContent).append(lineSepearator);
+		sb.append("-------------------------------------------------------------------------------------------").append(lineSepearator);
+		sb.append("-------------------------------------------------------------------------------------------").append(lineSepearator);
+		
+		logger.debug("makeOneOpinionContent ended");
+		
+		return sb;
+	}
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 문서 통합 PC 저장시 문서파일, 첨부파일, 문서첨부파일을 zip내 문서별로 분류된 폴더에 다운로드 */
+	@Override
+	public void downloadFileInZip(String realPath, String filePath, String fileName, String folderName, ZipOutputStream zout, Map<String,Integer> fileNameMap, boolean isAttachYN, String attMark) throws Exception {
+		logger.debug("downloadFileInZip started");
+		try {
+			File sourceFile = new File(commonUtil.detectPathTraversal(realPath + filePath));
+			byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
+			String realExt = "";
+			
+			// 전자결재 KLIB 암/복호화
+			if (filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				fileBytes = klibUtil.decrypt(fileBytes);
+				
+				// 복호화하여 다운로드하므로, .ezd로 끝나는 확장자(/\\.ezd$/)가 파일명에 존재한다면 제거
+				fileName = fileName.replaceAll(("\\." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT + "$"), "");
+				realExt = filePath.replaceAll(("\\." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT + "$"), "");
+			}
+			
+			// 파일경로에서 찾은 실제 파일 확장자 보존 (.문자 포함)
+			realExt = filePath.substring(filePath.lastIndexOf("."));
+			
+			// 파일명에 확장자가 존재하지 않는 경우, 실제 확장자를 어펜드 (KLIB 암/복호화 관련 확장자는 제외)
+			if (!fileName.endsWith(realExt) && !filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				fileName = fileName + realExt;
+			}
+			
+			fileName = commonUtil.getUniqueFileName(fileName, fileNameMap);
+			
+			// 첨부 파일은 첨부 폴더에 추가.
+			String entryFilePath = isAttachYN ? folderName + commonUtil.separator + attMark + commonUtil.separator + fileName : folderName + commonUtil.separator + fileName;
+			ZipEntry zentry = new ZipEntry(entryFilePath);
+			zout.putNextEntry(zentry);
+			zout.write(fileBytes);
+			zout.closeEntry();
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		} 
+		
+		logger.debug("downloadFileInZip ended");
+	}
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 단일 문서 통합PC 저장시 완료 문서의 경우 의견 내용들을 문자열로 만들어서 반환 */
+	@Override
+	public String makingOpinionFileContent(LoginVO userInfo, List<ApprGOpinionVO> apprGOpinionList, String opinionWriterMark, String opinionContentMark, String lineSepearator) {
+		logger.debug("makingOpinionFileContent started");
+		
+		StringBuilder sb = new StringBuilder();
+		
+			for (int j = 0; j < apprGOpinionList.size(); j++) {
+				StringBuffer opinionTitle = new StringBuffer();
+				String opinionContent = apprGOpinionList.get(j).getContent();
+				String opinionUserName = "";
+				String opinionUserDeptName = "";
+				String opinionUserJobTitle = "";
+				
+				if (userInfo.getPrimary().equals("1")) {
+					opinionUserName = apprGOpinionList.get(j).getUserName();
+					opinionUserDeptName = apprGOpinionList.get(j).getUserDeptName();
+					
+					if (apprGOpinionList.get(j).getUserJobTitle() == null) {
+						opinionUserJobTitle = "";
+					} else {
+						opinionUserJobTitle = apprGOpinionList.get(j).getUserJobTitle();
+					}
+				} else {
+					opinionUserName = apprGOpinionList.get(j).getUserName2();
+					opinionUserDeptName = apprGOpinionList.get(j).getUserDeptName2();
+					
+					if (apprGOpinionList.get(j).getUserJobTitle2() == null) {
+						opinionUserJobTitle = "";
+					} else {
+						opinionUserJobTitle = apprGOpinionList.get(j).getUserJobTitle2();
+					}
+				}
+				
+				String opinionGB = "";
+				
+				try {
+					opinionGB = commonUtil.cleanValue(getListField("OPINIONGB", apprGOpinionList.get(j).getOpinionGB(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset()));
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+				
+				opinionTitle.append(opinionGB).append("_");
+				opinionTitle.append(opinionUserDeptName).append("_");
+				opinionTitle.append(opinionUserJobTitle).append("_");
+				opinionTitle.append(opinionUserName);
+				
+				sb.append("###");
+				sb.append(opinionWriterMark);//작성자 : 
+				sb.append(opinionTitle).append(lineSepearator);
+				sb.append("###");
+				sb.append(opinionContentMark);//의견 내용 : 
+				sb.append(lineSepearator);
+				sb.append(opinionContent).append(lineSepearator);
+				sb.append("-------------------------------------------------------------------------------------------").append(lineSepearator);
+				sb.append("-------------------------------------------------------------------------------------------").append(lineSepearator);
+			}
+			
+			logger.debug("makingOpinionFileContent ended");
+			return sb.toString();
+	}
+	
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 통합PC 저장 시 tbl_total_history에 다운로드 이력 남김.(다운로드 이력은 gubun값 D) docID리스트를 parameter로 전달하여 문서마다 이력을 남김.(현재는 다운로드 이력이지만, gubun값을 이용해 차후에 다른 용도로 사용 가능.) */
+	@Override
+	public void insertTotalSaveHistory(List<String> docIDlist, LoginVO userInfo, String gubun) throws Exception {
+		logger.debug("insertTotalSaveHistory started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCIDlist", docIDlist);
+		map.put("v_USERID", userInfo.getId());
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_USERJOBTITLE", userInfo.getTitle());
+		map.put("v_USERDEPTID", userInfo.getDeptID());
+		map.put("v_USERDEPTNAME", userInfo.getDeptName());
+		map.put("v_USERNAME", userInfo.getDisplayName());
+		map.put("v_USERNAME2", userInfo.getDisplayName2());
+		map.put("v_USERJOBTITLE2", userInfo.getTitle2());
+		map.put("v_USERDEPTNAME2", userInfo.getDeptName2());
+		map.put("v_TENANT_ID", userInfo.getTenantId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_GUBUN", gubun);
+		ezApprovalGDAO.insertTotalSaveHistory(map);
+		
+		logger.debug("insertTotalSaveHistory ended");
+	}
+	
+	/* 2023-03-28 한태훈  - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 문서 통합PC저장 시 선택된 보안결재 문서들 결재선 포함 여부 확인 (현재 사용자가 결재선상에 존재해야 다운로드 가능) */
+	@Override
+	public String checkAprLineAll(String[] docIDarr, String mode, String userID, String companyID, int tenantID) throws Exception {
+		
+		logger.debug("checkAprLineAll started");
+		
+		String result = "";
+		StringBuffer secDocIDsInAprLine = new StringBuffer();
+		StringBuffer secDocIDsNotInAprLine = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
+		sb.append("<RESULT>");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (String docID : docIDarr) {
+		    map.put("companyID", companyID);
+			map.put("v_DOCID", docID);
+			map.put("v_MODE", mode);
+			map.put("v_USERID", userID);
+			map.put("v_TENANTID", tenantID);
+			int tempCount = ezApprovalGDAO.checkAprLine(map); // 결재선에 포함되어있는지 체크
+			
+			if (tempCount > 0) {
+				secDocIDsInAprLine.append(docID + "|||");
+			} else {
+				tempCount = ezApprovalGDAO.checkProxyAprLine(map); // 결재 진행중인 결재자의 대리결재자인지 체크 보안결재의 경우 대리결재자도 열람권한이 없음.
+				if (tempCount > 0) {
+					secDocIDsInAprLine.append(docID+"|||");
+				} else {
+					secDocIDsNotInAprLine.append(docID + "|||");
+				}
+				
+			}
+		}
+		
+		sb.append("<INAPRLINE>");
+		sb.append(secDocIDsInAprLine.toString()); // 결재선에 포함된 docID
+		sb.append("</INAPRLINE>");
+		sb.append("<NOTINARPLINE>");
+		sb.append(secDocIDsNotInAprLine.toString()); // 결재선에 미포함된 docID
+		sb.append("</NOTINARPLINE>");
+		sb.append("</RESULT>");
+		result = sb.toString();
+		
+		logger.debug("checkAprLineAll ended");
+		
+		return result;
+	}
 }

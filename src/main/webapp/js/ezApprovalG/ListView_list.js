@@ -1881,6 +1881,14 @@ function SelectCheckBox(pTableID, pRowSN, event) {
     if (pSelCheckBox.checked) {
         oSourceTr.setAttribute("selected", "true");
         oSourceTr.style.backgroundColor = m_strColorSelect;
+        
+        /* 2023-06-30 한태훈 > 기록물 등록대장 미리보기 창에 선택한 열의 정보를 보이게 하기 위해서 추가.
+		      현재 결재 문서에서 체크 박스 클릭 시 처음 선택한 행의 미리보기를 보여주는데, 결재 문서 스펙과 동일하게 맞추기 위해 주석 처리함. 
+         if (typeof g_sFlag != "undefined") {
+        	if (g_sFlag == "m01" || g_sFlag == "docShare") {
+        		processRowClick(oSourceTr);
+        	}
+        } */
     } else {
         oSourceTr.setAttribute("selected", "false");
         oSourceTr.style.backgroundColor = m_strColorDefault;
@@ -1895,6 +1903,35 @@ function checkboxBtnShowCtl() {
 	var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var oArrRows = DocList.GetSelectedRows();
+    
+    // 2023-03-07 한태훈 - 기록물등록대장에서도 사용하기 위해서 내용 추가. 
+	if (typeof g_sFlag != "undefined") {
+		if (g_sFlag == "m01" || g_sFlag == "docShare") { // 기록물 등록 대장 or 부서공유함일 경우.
+			if (oArrRows.length == 1) {
+				lvtDoclist_SelChange();
+			} else if (oArrRows.length > 1) {
+				document.getElementById("tdichange_Rec").style.display = "none";
+				document.getElementById("tdichangeS_Rec").style.display = "none";
+				document.getElementById("tdReSend").style.display = "none";
+				document.getElementById("tdRegRecord").style.display = "none";
+				document.getElementById("tdRegSepAtt").style.display = "none";
+				document.getElementById("tdViewRecInfo").style.display = "none";
+				document.getElementById("tDocInfo").style.display = "none";
+				document.getElementById("tdbtnCardSend").style.display = "none";
+				document.getElementById("tdbtnSetRecRole").style.display = "none";
+				document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+				document.getElementById("tdVeiwRecHist").style.display = "none";
+				document.getElementById("tdMoveRec").style.display = "none";
+				document.getElementById("tdModifyRec").style.display = "none";
+				document.getElementById("tdGongRam").style.display = "none";
+				document.getElementById("tdCabSelect").style.display = "none";
+				document.getElementById("tbtnRemoveDoc").style.display = "none";
+				document.getElementById("tdViewCabList").style.display = "none";
+				$("#trRecSubMenu #tdDocListPrint").css("display", "none");
+			}
+		}
+		return;
+	}
     
     var isDelShow = true;
     var isRedraftShow = true;
