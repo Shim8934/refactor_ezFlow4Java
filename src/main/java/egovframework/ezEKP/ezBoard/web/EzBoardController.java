@@ -7545,7 +7545,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
 		
 		for (int k = 0; k < cnt; k++) {
-			String fileName = commonUtil.getUniqueFileName(fileNames[k], fileNameMap);
+			String fileName = fileNames[k];
 			String fileLocation = fileLocations[k];
 			String fileSize = fileSizes[k];
 			String puploadSN;
@@ -7569,11 +7569,12 @@ public class EzBoardController extends EgovFileMngUtil{
 				// fileName 에 확장자가 포함되지 않으면 확장자 붙여줌
 				if (!fileName.endsWith(fileExt)) {
 					fileName += fileExt;
+					fileNames[k] = fileName;
 					file = new File(dirPath2 + commonUtil.separator + fileLocation);
 					fileSize = String.valueOf(file.length());
 				}
 			}
-			
+			fileName = commonUtil.getUniqueFileName(fileNames[k], fileNameMap);
 			file = new File(dirPath2 + commonUtil.separator + fileLocation);
 			uploadLocation = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName;
 			puploadSN = uploadSN[k] + "_" + fileName;
