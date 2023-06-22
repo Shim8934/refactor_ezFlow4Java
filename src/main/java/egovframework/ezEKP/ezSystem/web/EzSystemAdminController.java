@@ -2707,10 +2707,10 @@ public class EzSystemAdminController {
 
 		logger.debug("tenantID={}", userInfo.getTenantId());
 
-		String fileExtension = ezSystemAdminService.getFileExtension(userInfo.getTenantId());
+		List<String> fileExtension = ezSystemAdminService.getFileExtension(userInfo.getTenantId());
 		logger.debug("fileExtension={}", fileExtension);
 
-		model.addAttribute("fileExtension",fileExtension);
+		model.addAttribute("fileExtension",JSONArray.toJSONString(fileExtension));
 
 		logger.debug("fileExtension controller ended.");
 		return "/ezSystem/systemFileExtension";
@@ -2718,7 +2718,7 @@ public class EzSystemAdminController {
 
 	@RequestMapping(value = "/admin/ezSystem/updateFileExtension.do")
 	@ResponseBody
-	public String updateFileExtension(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+	public String updateFileExtension(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, @RequestParam(value = "updateFileExtension[]") ArrayList<String> updateFileExtension) throws Exception {
 		logger.debug("updateFileExtension controller started");
 
 		// 관리자 권한체크
@@ -2730,8 +2730,7 @@ public class EzSystemAdminController {
 
 		logger.debug("tenantID={}",userInfo.getTenantId());
 		int tenantId = userInfo.getTenantId();
-
-		String updateFileExtension = request.getParameter("updateFileExtension");
+		
 		String message = "fail";
 
 		try {

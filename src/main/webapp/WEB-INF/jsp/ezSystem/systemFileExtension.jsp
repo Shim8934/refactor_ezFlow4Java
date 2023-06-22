@@ -17,19 +17,70 @@
         let : 변수에 재할당이 가능합니다.
         const : 변수 재선언, 변수 재할당 모두 불가능합니다.
     */
-    const fileExtension = "<c:out value='${fileExtension}'/>";
+    let updateFileExList = ${fileExtension};
     // 추가 또는 삭제시 view 타입 변경되는 오류
-    let fViewTypeValue = window.parent.frames["stat_left"].fileExtensionViewType;
     window.onload = function () {
+        makeExtensionUL_BOXinList();
+
+        let fViewTypeValue = window.parent.frames["stat_left"].fileExtensionViewType;
         if (fViewTypeValue == 1) {
             let obj = document.getElementById("listViewType");
             let type = "list";
             viewType(obj,type);
         }
     }
+    
+    function makeExtensionUL_BOXinList () {
+        
+        let ulElemnt = document.querySelector("#ExtensionUL_TYPE");
+        
+        for (let i = 0; i < updateFileExList.length; i++) {
+            let item = updateFileExList[i];
 
+            // li 태그 생성
+            let liElement = document.createElement("li");
+            liElement.setAttribute("_ext", item);
+            liElement.setAttribute("name", "LI_EXT");
+
+            // checkbox 생성
+            let checkboxElement = document.createElement("input");
+            checkboxElement.setAttribute("type", "checkbox");
+            checkboxElement.setAttribute("name", "checkbox");
+            checkboxElement.setAttribute("id", "checkbox" + i);
+            checkboxElement.setAttribute("value", item);
+
+            // label 생성
+            let labelElement = document.createElement("label");
+            labelElement.setAttribute("for", "checkbox" + i);
+
+            // checkbox 내부에 span 추가
+            let spanElement = document.createElement("span");
+            spanElement.textContent = item;
+
+            // a 태그 생성
+            let aElement = document.createElement("a");
+            aElement.setAttribute("class", "imgbtn01");
+
+            // span 태그 생성
+            let spanDeleteElement = document.createElement("span");
+            spanDeleteElement.setAttribute("class", "icon16 icon16_delete");
+            spanDeleteElement.onclick = function () {deleteFile(item)};
+            
+            labelElement.appendChild(spanElement);
+            labelElement.appendChild(aElement);
+            aElement.appendChild(spanDeleteElement);
+            liElement.appendChild(checkboxElement);
+            liElement.appendChild(labelElement);
+
+            // li 태그를 ul 태그 안에 추가
+            ulElemnt.appendChild(liElement);
+        }
+        
+    }
+    
     function viewType (thisObj, pViewType) {
         let pSelectElement = document.getElementById("ExtensionUL_TYPE");
+        let fViewTypeValue = window.parent.frames["stat_left"].fileExtensionViewType;
         if (pViewType === "list") {
             pSelectElement.classList.add("ExtensionUL_LIST");
             pSelectElement.classList.remove("ExtensionUL_BOX");
@@ -76,7 +127,7 @@
     // 허용 첨부 확장자 추가
     function add() {
         let addValue = document.getElementById('qname').value.toLowerCase();
-        if (addValue == null || addValue == undefined || addValue == '') {
+        if (addValue == null || addValue == '') {
             alert("<spring:message code='ezSystem.kdh05' />  ");
             return;
         }
@@ -86,18 +137,16 @@
         for (let i = 0; i < addList.length; i++) {
             let trimTemp = addList[i].trim();
 
-            if (fileExtension.indexOf(trimTemp) != -1) {
+            if (updateFileExList.indexOf(trimTemp) !== -1) {
                 alert(trimTemp+" <spring:message code='ezSystem.kdh04' />  ");
                 add_close()
                 return;
             } else {
-                // 공백제거
-                updateFileEx += trimTemp+",";
+                updateFileExList.push(trimTemp);
             }
         }
-        // 마지막 "," 지워주는 작업
-        updateFileEx = updateFileEx.toString().replace(/,$/,'');
-        let data = fileExtension + updateFileEx;
+        
+        let data = updateFileExList;
 
         actionAjax(true, data);
     }
@@ -106,13 +155,9 @@
         if (!confirm("'"+deleteFE + "' <spring:message code='ezOrgan.t130'/>   ")) {
             return;
         }
-        let list = deleteFE.split(",");
-        let updateFE = fileExtension;
-        $.each(list, function (index, item){
-            updateFE = updateFE.replace(item+',','');
-        })
+            updateFileExList = updateFileExList.filter((element) => element !== deleteFE);
 
-        actionAjax(false, updateFE);
+        actionAjax(false, updateFileExList);
     }
 
     function actionAjax(isAdd, data) {
@@ -150,18 +195,28 @@
         let v = 'input[name="checkbox"]:checked';
         let selectedList = document.querySelectorAll(v);
 
-        if (selectedList == undefined || selectedList == null || selectedList == '' || selectedList.length == 0) {
+        if (selectedList === undefined || selectedList === '' || selectedList.length === 0) {
             alert("<spring:message code='ezSystem.kdh03' />");
             return;
         }
-
-        let deleteFEList = '';
+        
+        let selectedListValue = '';
         $.each(selectedList, function (index, item){
-            deleteFEList += item.value+",";
+            selectedListValue += item.value+",";
+            
         })
-        // 마지막 "," 지워주는 작업
-        deleteFEList = deleteFEList.replace(/,$/,'');
-        deleteFile(deleteFEList);
+        
+        selectedListValue = selectedListValue.replace(/,$/,'');
+        if (!confirm("'"+selectedListValue + "' <spring:message code='ezOrgan.t130'/>   ")) {
+            return;
+        }
+        
+        $.each(selectedList, function (index, item){
+            
+            updateFileExList = updateFileExList.filter((element) => element !== item.value);
+        })
+        
+        actionAjax(false, updateFileExList);
     }
     </script>
     </head>
@@ -189,9 +244,6 @@
 
             <div id="divExtensionList">
                 <ul class="ExtensionUL_BOX" id="ExtensionUL_TYPE">
-                    <c:forTokens var="item" items="${fileExtension}" delims="," varStatus="i">
-                        <li _ext="${item}" name="LI_EXT"><input type="checkbox" name="checkbox" id="checkbox${i.index}" value="${item}" /><label for="checkbox${i.index}"><span>${item}</span><a class="imgbtn01"><span class="icon16 icon16_delete" onclick="deleteFile('${item}')"></span></a></label></li>
-                    </c:forTokens>
                 </ul>
             </div>
         </div>
