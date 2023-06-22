@@ -1134,14 +1134,12 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public String getFileExtension(int tenantId) throws Exception {
+	public List<String> getFileExtension(int tenantId) throws Exception {
 		logger.debug("getFileExtension started");
-		String result = "";
 
 		String fileExtension = ezSystemAdminDAO.getFileExtension(tenantId);
-		String[] fileExtensionList = fileExtension.split(",");
-		Arrays.sort(fileExtensionList);
-		result = String.join(",", fileExtensionList);
+		List<String> result = new ArrayList<>(Arrays.asList(fileExtension.split(",")));
+		Collections.sort(result);
 
 		logger.debug("getFileExtension ended");
 
@@ -1149,11 +1147,13 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public String updateFileExtension(int tenantId, String updateFileExtension) throws Exception {
+	public String updateFileExtension(int tenantId, ArrayList<String> updateFileExtensionList) throws Exception {
 		logger.debug("updateFileExtension service started");
 
 		Map<String,Object> map = new HashMap<>();
 		map.put("tenantId", tenantId);
+		
+		String updateFileExtension = String.join(",", updateFileExtensionList);
 		map.put("fileExtension", updateFileExtension);
 
 		ezSystemAdminDAO.updateFileExtension(map);
