@@ -132,7 +132,7 @@
 		                case "SUBJECT":
 		                    ConObj.selectedIndex = 4;
 		                    ConObj.item(4).checked = true;
-		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i].replace(/;/g, "" + strLang236 + "")) + "\"";
+		                    var _exp = "\"" + MakeXMLString(spltRuleVal[i]) + "\"";
 		                    ConObj.nextSibling.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + MakeXMLString(spltRuleVal[i]) + "'><nobr><u>" + _exp + "</u></nobr></span>";
 		                    ConObj.nextSibling.setAttribute("value", spltRuleVal[i]);
 		                    ConObj.nextSibling.setAttribute("RuleKind", spltRule[i]);
