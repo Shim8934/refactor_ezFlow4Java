@@ -1243,13 +1243,13 @@ public class CommonUtil {
 			return null;
 		}
 		
-		// 2018-02-28 skyblue0o0 : 영어(en)와 중국어(zh)는 아직 지원하지 않으므로 주석처리
+		// 2018-02-28 skyblue0o0 : 중국어(zh)는 아직 지원하지 않으므로 주석처리
 		// 첫 로그인 시 브라우저의 언어로 사용자 언어가 세팅되기 때문에 문제가 생길 수 있음.
-		// TODO: 영어/중국어 지원 시 주석 풀기
+		// TODO: 중국어 지원 시 주석 풀기
 		if (twoLetterLang.equalsIgnoreCase("ko")) {
 			returnValue = "1";
-//		} else if (twoLetterLang.equalsIgnoreCase("en")) {
-//			returnValue = "2";
+		} else if (twoLetterLang.equalsIgnoreCase("en")) {
+			returnValue = "2";
 		} else if (twoLetterLang.equalsIgnoreCase("ja")) {
 			returnValue = "3";
 //		} else if (twoLetterLang.equalsIgnoreCase("zh")) {
