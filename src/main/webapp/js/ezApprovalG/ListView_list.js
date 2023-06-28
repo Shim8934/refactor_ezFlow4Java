@@ -1925,12 +1925,21 @@ function checkboxBtnShowCtl() {
     	
     	document.getElementById("tbtnApprove").style.display = "none";
 		//document.getElementById("tbtnApprove1").style.display = "";
+    	document.getElementById("tbtnGongRam").style.display = "none";
+    	
     	if(oArrRows.length == 1) {
     		document.getElementById("tbtnViewDoc").style.display = "";
         	document.getElementById("tbtnTotalSave").style.display = "";
         	if (isDelShow == false && isRedraftShow == false) {
         		document.getElementById("tbtnApprove").style.display = "";
 //				document.getElementById("tbtnApprove1").style.display = "";
+        		document.getElementById("tbtnGongRam").style.display = "";
+        		
+        		if (pListTypeValue != "1") {
+        			document.getElementById("tbtnApprove").style.display = "none";
+        		} else if (pListTypeValue != "99") {
+        			document.getElementById("tbtnGongRam").style.display = "none";
+        		}
         	}
     	} else {
     		document.getElementById("tbtnViewDoc").style.display = "none";

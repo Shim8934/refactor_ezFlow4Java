@@ -1128,3 +1128,9 @@ var strLangHSBAP03 = "The linked form can not be re-drafted.";
 
 /* 2023-05-10 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
+
+/* 2023-06-19 조소정 - 일괄공람/일괄회람 메세지 추가 */
+var strLangCSJBDA01 = "<br>일괄공람이 완료되었습니다.";
+var strLangCSJBDA02 = "일괄공람 중 오류가 발생하였습니다.<br>";
+var strLangCSJBDA03 = "<br>일괄회람이 완료되었습니다.";
+var strLangCSJBDA04 = "일괄회람 중 오류가 발생하였습니다.<br>";

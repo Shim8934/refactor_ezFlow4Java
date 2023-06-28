@@ -8751,6 +8751,34 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/** 2023-06-20 조소정 - 전자결재(G/일반) 공람할문서 일괄공람 / 회람수신함 일괄회람 표출 Method */
+	@RequestMapping(value = "/ezApprovalG/gongRamAllUpdate.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String gongRamAllUpdate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestParam String userID, @RequestParam(value = "docIDArray[]") String[] docIDArray, @RequestParam(value = "orgCompanyIDArray[]") String[] orgCompanyIDArray, HttpServletRequest request) throws Exception {
+		logger.debug("gongRamAllUpdate started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String result = "";
+		int totCnt = docIDArray.length;
+		int trueCnt = 0;
+		String rtnVal = "";
+		
+		for (int i = 0; i < docIDArray.length; i++) {
+			String orgCompanyID = orgCompanyIDArray[i];
+			result = ezApprovalGService.gongRamUpdate(docIDArray[i], userID, orgCompanyID, userInfo.getLang(), userInfo.getTenantId());
+			
+			if (result.equals("<RESULT>TRUE</RESULT>")) {
+				trueCnt++;
+			}
+		}
+		
+		rtnVal = totCnt + "/" + trueCnt;
+		
+		logger.debug("gongRamAllUpdate ended, rtnVal = " + rtnVal);
+		
+		return rtnVal;
+	}
+	
 	/**
 	 * 전자결재G 종료연기 신청,취소 표출 Method
 	 */
