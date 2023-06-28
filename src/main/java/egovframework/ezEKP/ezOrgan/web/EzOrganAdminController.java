@@ -4708,7 +4708,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			// 추가
 			// 2023-05-25 이사라 : 시큐어코딩 문자열 비교 오류 수정
-			if (StringUtils.isNotEmpty(groupID)) {
+			if (StringUtils.isEmpty(groupID)) {
 			
 				int userCheck = 1;
 				

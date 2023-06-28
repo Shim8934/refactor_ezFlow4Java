@@ -374,7 +374,7 @@
 		                    break;
 		                case "SUBJECT":
 		                    _con += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang207 + " </span><br/>\"<span style='color:red;'>" +
-		                     MakeXMLString(conval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"  " + strLang210 + "<br/>" + " \"<span style='color:red;'>") + "</span>" + strLang206 + "</div>";
+		                     MakeXMLString(conval[i]) + "</span>" + strLang206 + "</div>";
 		                    break;
 		                case "BODY":
 		                    _con += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang208 + " </span><br/>\"<span style='color:red;'>" +
@@ -477,7 +477,7 @@
 		                        break;
 		                    case "SUBJECT":
 		                        _expt += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang207 + " </span><br/>\"<span style='color:red;'>" +
-		                         MakeXMLString(exptval[i].replace(/;/g, "_replacesemiconlon_")).replace(/_replacesemiconlon_/g, "</span>\"  " + strLang210 + "<br/>" + " \"<span style='color:red;'>") + "</span>" + strLang206 + "</div>";
+		                         MakeXMLString(exptval[i]) + " \"<span style='color:red;'>" + "</span>" + strLang206 + "</div>";
 		                        break;
 		                    case "BODY":
 		                        _expt += "<div><span><img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'>" + strLang208 + " </span><br/>\"<span style='color:red;'>" +

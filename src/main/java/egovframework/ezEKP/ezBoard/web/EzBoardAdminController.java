@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -1649,10 +1652,14 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserCnList(tenantID);
 		
 		try {
+			// 멀티스레딩을 위해 스레드 생성, 메인 스레드는 CountDownLatch로 사용자 수만큼의 스레드 작업이 완료되는 것을 기다림
+			ExecutorService service = Executors.newFixedThreadPool(8); // 최대 8개의 스레드 생성
+			CountDownLatch latch = new CountDownLatch(userCnList.size()); // 사용자 수만큼 스레드 작업 완료 대기
+			
 			// 2) 각 사용자 ID에 대하여 LoginVO를 만든 뒤, 트리캐시 생성 루프를 진행
 			 for (OrganUserVO organUser : userCnList) {
 				 LoginVO userInfoT = new LoginVO();
-				    
+				 
 				 userInfoT.setId(organUser.getCn());
 				 userInfoT.setTenantId(tenantID);
 				 userInfoT.setDn("NOPASSWORD");
@@ -1661,8 +1668,16 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				 // deptPathCode에서 userID가 맨 앞으로 오도록 조정 (로그인쿠키를 사용하는 userInfo 참고)
 				 resultVO.setDeptPathCode(organUser.getCn() + "," + resultVO.getDeptPathCode());
 				 
-				 makeAllTreeCacheForUsers(resultVO);
+				 // 람다식으로 트리캐시 생성 task를 지정, 내부적인 Exception 발생 시 바로 리턴하지 않고 다음 루프를 진행 (삽입된 트리캐시는 롤백되지 않음)
+				 service.submit(() -> {
+					 makeAllTreeCacheForUsers(resultVO);
+					 latch.countDown();
+					 
+					 // unchecked예외 발생 시 해당 예외 throw
+					 throw new IllegalArgumentException();
+				 });
 			 }
+			latch.await(); // 다른 스레드의 작업 완료 대기
 		}
 		catch (Exception e) {
 			logger.debug("makeAllTreeCache aborted, error occurs!");
@@ -1671,12 +1686,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 		// 전부 완료된 경우 TRUE를 리턴, 도중에 실패하면 지금까지의 DB 레코드 삽입이 롤백되지 않도록 catch 하고 FALSE 리턴
 		
-		logger.debug("makeAllTreeCache ended, all process success! (for [" + userCnList.size() + "] users)");
-		
 		long afterTime = System.currentTimeMillis();
-		long secDiffTime = (afterTime - beforeTime)/1000;
+		long secDiffTime = (afterTime - beforeTime) / 1000;
 		
-		logger.debug("makeAllTreeCache process time(s) = " + secDiffTime);
+		logger.debug("makeAllTreeCache ended, all process success! process time(s) = " + secDiffTime + " (for [" + userCnList.size() + "] users)");
 		
 		return "TRUE";
 	}

@@ -623,6 +623,7 @@ function func_reject_Complete(retVal) {
         DivPopUpHidden();
         if (typeof (retVal) == "string") {
             if (retVal == "cancel")
+                completeListener();
                 return;
         }
         var objXml = new DOMParser().parseFromString('<DATA></DATA>', "text/xml");
@@ -657,10 +658,18 @@ function func_reject_Complete(retVal) {
         result = replaceAll(result, "]]></DATA>", "");
         
         xmlHTTP = null;
+
+        completeListener();
     } catch (e) {}
     
     return result;
 }
+
+function completeListener() {
+	document.getElementById("mailPanel").style.display = "none";
+	document.getElementById("loadingLayer").style.display = "none";
+}
+
 function replaceAll(pStrContent, pStrOrg, pStrRep) {
     return pStrContent.split(pStrOrg).join(pStrRep);
 }
