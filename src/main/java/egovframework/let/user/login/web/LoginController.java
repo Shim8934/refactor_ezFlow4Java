@@ -1116,7 +1116,7 @@ public class LoginController {
 			
 		    lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang);
 		    
-		    //브라우저 언어가 한국어/일본어가 아닐 경우 시스템 언어로 설정(영어/중국어 추후 지원)
+		    //브라우저 언어가 한국어/영어/일본어가 아닐 경우 시스템 언어로 설정(중국어 추후 지원)
 		    if (lang.equals("")) {						
 				lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			}

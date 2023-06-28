@@ -56,7 +56,7 @@
 	<c:if test="${not isFolder}">
 	function onClickRename() {
 		// 이름 하나 넣어주려고 이게 무슨,,, 현타가 온다
-		var currentName = "<c:out value='${fileName}' />";
+		var currentName = "${fileName}";
 		try {
 			var nameTd = parent.document.querySelector(".wfFileName[title='" + currentName + "']");
 			
