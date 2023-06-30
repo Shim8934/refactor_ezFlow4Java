@@ -41,12 +41,22 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 		return (List<MApprovalGOpinionInfoVO>) list("MApprovalG.getOpinionInfo", map);
 	}
 
+	// 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 수 카운트 조회 쿼리
+	public int getOpinionCountInfo(Map<String, Object> map) throws Exception {
+		return (int) select("MApprovalG.getOpinionCountInfo", map);
+	}
+
 	public void insertOpinionInfo(Map<String, Object> map) throws Exception {
 		insert("MApprovalG.insertOpinionInfo", map);
 	}
 
 	public int updateDocOpinionInfo(Map<String, Object> map) throws Exception {
 		return update("MApprovalG.updateDocOpinionInfo", map);
+	}
+
+	// 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 update 쿼리
+	public int updateOpinionInfo(Map<String, Object> map) throws Exception {
+		return update("MApprovalG.updateOpinionInfo", map);
 	}
 
 	@SuppressWarnings("unchecked")

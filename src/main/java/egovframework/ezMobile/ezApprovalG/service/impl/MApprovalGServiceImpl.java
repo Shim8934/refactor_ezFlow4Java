@@ -246,9 +246,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		return approvalGOpinionInfoVOs;
 	}
-
+	
 	@Override
-	public int mSetOpinionInfo(String pDocID, String pContent, String pOpinionGB, MCommonVO userInfo, String pType, String pAprMemberSN) throws Exception {
+	public int mSetOpinionInfo(String pDocID, String pContent, String pOpinionGB, MCommonVO userInfo, String pType, String pAprMemberSN, String opinionSN) throws Exception {
 		logger.debug("saveOpinionInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -258,43 +258,30 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("userID", userInfo.getUserId());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
+		// 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 동작 시 추가 파라미터(의견순번) 삽입, 의견 동작 로직 개선
+		map.put("opinionSN", opinionSN);
+		map.put("aprMemberSN", pAprMemberSN); // 2023-04-28 이가은 - 의견 추가할 경우 실제 결재선상의 부서명, 직위로 표출하기 위해 추가
 		
 		int result = 0;
-		int resultRow = mApprovalGDAO.deleteOpinionInfo(map);
+        // int resultRow = mApprovalGDAO.deleteOpinionInfo(map); // 기존 의견 전체삭제 동작 주석
 		
 		if (pType.equals("INSERT")) {
 			if (pContent != null && !pContent.equals("")) {
 				map.put("hasOpinionYN", "Y");
-				map.put("aprMemberSN", pAprMemberSN);
-				
 				mApprovalGDAO.insertOpinionInfo(map);
-				
-				result = mApprovalGDAO.updateDocOpinionInfo(map);
-			} else {
-				map.put("hasOpinionYN", "N");
-				
 				result = mApprovalGDAO.updateDocOpinionInfo(map);
 			}
 		} else if (pType.equals("UPDATE")) {
-			if (resultRow > 0) {
-				if (pContent != null && !pContent.equals("")) {
-					map.put("hasOpinionYN", "Y");
-					map.put("aprMemberSN", pAprMemberSN);	// 2023-04-28 이가은 - 의견 추가할 경우 실제 결재선상의 부서명, 직위로 표출하기 위해 추가
-					
-					mApprovalGDAO.insertOpinionInfo(map);
-					
-					result = mApprovalGDAO.updateDocOpinionInfo(map);
-				} else {
-					map.put("hasOpinionYN", "N");
-					
-					result = mApprovalGDAO.updateDocOpinionInfo(map);
-				}
+			if (pContent != null && !pContent.equals("")) {
+				result = mApprovalGDAO.updateOpinionInfo(map);
 			}
 		} else if (pType.equals("DELETE")) {
-			if (resultRow > 0) {
+			result = mApprovalGDAO.deleteOpinionInfo(map);
+			int opinionCount = mApprovalGDAO.getOpinionCountInfo(map);
+
+			if (opinionCount == 0) { // 의견을 지우고 남은 의견 수가 0일때, hasOpinionYN 컬럼에 N 삽입
 				map.put("hasOpinionYN", "N");
-				
-				result = mApprovalGDAO.updateDocOpinionInfo(map);
+				mApprovalGDAO.updateDocOpinionInfo(map);
 			}
 		}
 

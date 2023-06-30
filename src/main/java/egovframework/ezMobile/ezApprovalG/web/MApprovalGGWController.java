@@ -515,7 +515,8 @@ public class MApprovalGGWController {
 				userInfo.setCompanyId(companyID);
 			}
 			
-			int resultCode = mApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "INSERT", aprMemberSN);
+			// 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 동작 시 추가 파라미터 삽입
+			int resultCode = mApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "INSERT", aprMemberSN, "0");
 			
 			//resultCode 가 0이면 업데이트를 했는데 업데이트가 안된 경우 잘못된 경우지만 흐름은 정상적으로 흘러가기에 코드로 구분 프론트단에서 업데이트가 안됐다고 알려줘야하는데 안될리가 없을듯 하지만 한치앞을 내다볼수없는 세상이라 만들어놓음
 			if (resultCode == 0) {
@@ -552,6 +553,8 @@ public class MApprovalGGWController {
 			String userId = jsonParam.get("userId").toString();
 			String content = jsonParam.get("content").toString();
 			String opinionGB = jsonParam.get("opinionGB").toString();
+			// 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 동작 시 추가 파라미터(의견순번) 삽입
+			String opinionSN = jsonParam.get("opinionSN").toString();
 			String serverName = request.getHeader("x-user-host");
 			String aprMemberSN = jsonParam.get("aprMemberSN").toString();
 			
@@ -560,6 +563,7 @@ public class MApprovalGGWController {
 			logger.debug("content : " + content);
 			logger.debug("opinionGB : " + opinionGB);
 			logger.debug("aprMemberSN : " + aprMemberSN);
+			logger.debug("opinionSN : " + opinionSN);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -568,7 +572,7 @@ public class MApprovalGGWController {
 				userInfo.setCompanyId(companyID);
 			}
 			
-			mApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "UPDATE", aprMemberSN);
+			mApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "UPDATE", aprMemberSN, opinionSN);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -598,8 +602,10 @@ public class MApprovalGGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			String aprMemberSN = request.getParameter("aprMemberSN");
+			String opinionSN = request.getParameter("opinionSN");
 			
 			logger.debug("serverName : " + serverName);
+			logger.debug("opinionSN : " + opinionSN);
 			logger.debug("userId : " + userId);
 			logger.debug("aprMemberSN : " + aprMemberSN);
 			
@@ -610,7 +616,7 @@ public class MApprovalGGWController {
 				userInfo.setCompanyId(companyID);
 			}
 			
-			mApprovalGService.mSetOpinionInfo(docId, "", "", userInfo, "DELETE", aprMemberSN);
+			mApprovalGService.mSetOpinionInfo(docId, "", "", userInfo, "DELETE", aprMemberSN, opinionSN);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

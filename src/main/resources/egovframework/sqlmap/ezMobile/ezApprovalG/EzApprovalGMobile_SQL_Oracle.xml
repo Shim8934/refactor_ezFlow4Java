@@ -1535,6 +1535,7 @@
 		</isNotEqual>
 	</select>
 	
+	<!-- 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 정보 테이블에서 PK중 하나인 OpinionSN을 추가 조회 -->
 	<select id="MApprovalG.getOpinionInfo" parameterClass="Map" resultClass="MApprGOpinionInfoVO">
 		<isEqual property="type" compareValue="END">
 			<![CDATA[
@@ -1542,6 +1543,7 @@
 					 CONTENT,
 					 OPINIONGB,
 					 USERID,
+					 OPINIONSN,
 					 CASE 
 	   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
 	   					THEN USERNAME
@@ -1575,6 +1577,7 @@
 					 CONTENT,
 					 OPINIONGB,
 					 USERID,
+					 OPINIONSN,
 					 CASE 
 	   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
 	   					THEN USERNAME
@@ -1604,6 +1607,22 @@
 		</isNotEqual>
 	</select>
 	
+	<!-- 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 수 카운트 조회 쿼리 -->
+	<select id="MApprovalG.getOpinionCountInfo" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_APROPINIONINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+			]]>
+	</select>
+
 	<select id="MApprovalG.getAttachList" parameterClass="Map" resultClass="MApprGAttachInfoVO">
 		<isNotEqual property="type" compareValue="END">
 			<![CDATA[
@@ -2100,6 +2119,26 @@
 		]]>
    </update>
    
+	<!-- 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 update 쿼리 -->
+	<update id="MApprovalG.updateOpinionInfo" parameterClass="Map">
+		<![CDATA[
+   			UPDATE
+   				TBL_APROPINIONINFO
+	   		SET
+	   			CONTENT = #content#
+	   		WHERE
+	   			TENANT_ID = #tenantID#
+	   		AND
+	   			COMPANYID = #companyID#
+	   		AND
+	   			DOCID = #docID#
+	   		AND
+	   			USERID = #userID#
+	   		AND
+	   			OPINIONSN = #opinionSN#
+		]]>
+	</update>
+
    <update id="MApprovalG.setAbsenteeInfo" parameterClass="MApprGAbsenteeInfoVO">
    		<![CDATA[
    			UPDATE
@@ -2126,6 +2165,7 @@
 		]]>
    </update>
    
+   <!-- 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 delete 쿼리 -->
    <delete id="MApprovalG.deleteOpinionInfo" parameterClass="Map">
    		<![CDATA[
    			DELETE FROM 
@@ -2138,6 +2178,8 @@
 	    		DOCID = #docID#
 	    	AND
 	    		USERID = #userID#
+	    	AND
+	    		OPINIONSN = #opinionSN#
 		]]>
    </delete>
    
