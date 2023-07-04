@@ -794,13 +794,13 @@ public class EzScheduleAdminController {
 	    	
 		
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
-		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>10%</WIDTH></HEADER>");
+		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>40</WIDTH></HEADER>");
         result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t159", loginSimpleVO.getLocale()) + "</NAME><WIDTH>20%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t160", loginSimpleVO.getLocale()) + "</NAME><WIDTH>30%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb17", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t00002", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb18", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb19", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER></HEADERS>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t160", loginSimpleVO.getLocale()) + "</NAME><WIDTH></WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb17", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t00002", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb18", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb19", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER></HEADERS>");
         result.append("<ROWS>");
 		
         for (int i = 0; i < myList.size(); i++) {
