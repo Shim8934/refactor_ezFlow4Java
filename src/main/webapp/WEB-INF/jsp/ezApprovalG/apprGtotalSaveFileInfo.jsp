@@ -31,11 +31,14 @@
 			var downUrl = "";
 			var docHwpPath = "";
 			var isHwpCtrlOpen = false;
+			
+			/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
+			var approvalFlag = "<c:out value='${approvalFlag}'/>";
 	        
 	        window.onload = function ()
 	        {
-	        	// useHwpDownSecurity가 Y일 때만 Whwp api 호출
-	        	if (useHwpDownSecurity == "Y") {
+	        	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
+	        	if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
 	        		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
 	        	}
 	        	
@@ -147,7 +150,7 @@
 	            if (obj.getAttribute("DATA1") == "ATT") {
 	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&fileName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA4") + "&orgCompanyID=" + orgCompanyID;
 				} else if (obj.getAttribute("DATA1") == "ATTDOC") {
-					if (pSourcePath == "hwp" && useHwpDownSecurity == "Y") {
+					if (pSourcePath.toUpperCase() == "HWP" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
 						dcHwpDown(obj, pSourcePath, pDocID_mht);
 					} else {
 						AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=END&orgCompanyID=" + orgCompanyID;
@@ -156,7 +159,7 @@
 	            	if (pType == "TMP") { //2019-02-08 천성준 - #14965 임시보관함문서 > 문서보기 > 통합PC저장 시, 첨부 및 문서파일을 내려받을수 없던 문제해결
 	            		AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID + "&docStatus=" + pType + "&orgCompanyID=" + orgCompanyID;
 					} else {
-						if (pSourcePath == "hwp" && useHwpDownSecurity == "Y") {
+						if (pSourcePath.toUpperCase() == "HWP" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
 							dcHwpDown(obj, pSourcePath, pDocID_mht);
 						} else {
 							AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=" + pType + "&orgCompanyID=" + orgCompanyID;
@@ -182,8 +185,8 @@
 				num = 0;
 	            
 				for (var i = 0; i < strTypeInfoArr.length - 1; i++) {
-	            	
-					if ((strTypeInfoArr[i] == "DOC" || strTypeInfoArr[i] == "ATTDOC") && strPathInfoArr[i].substring(strPathInfoArr[i].lastIndexOf(".") + 1) == "hwp") {
+					
+					if ((strTypeInfoArr[i] == "DOC" || strTypeInfoArr[i] == "ATTDOC") && strPathInfoArr[i].substring(strPathInfoArr[i].lastIndexOf(".") + 1).toUpperCase() == "HWP") {
 						docHwpPathArr[i] = strPathInfoArr[i];
 					} else {
 						docHwpPathArr[i] = "noPath"; // 2023-05-09 김우철 - 배포용 문서로 저장할 대상이 아닌 경우 docHwpPath를 "noPath"로 지정
@@ -192,7 +195,7 @@
 					docHwpPath += (docHwpPathArr[i] + "|||");
 				}
 	        	
-				if (useHwpDownSecurity == "Y") {
+				if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
 					hwp_url(num);
 				} else {
 					download(downUrl);
@@ -373,7 +376,7 @@
 				xmlstring += "<PFILEINFO><![CDATA[" + ReplaceText(strFileName, "\n", "") + "]]></PFILEINFO>";
 				xmlstring += "<PHWPINFO><![CDATA[" + docHwpPath.replace("&amp;", "&") + "]]></PHWPINFO>";
 				 
-				if (useHwpDownSecurity == "Y") {
+				if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
 					xmlstring += "<PDOWNINFO><![CDATA[" + p_downloadUrl.replace("&amp;", "&") + "]]></PDOWNINFO>";
 				}
 				

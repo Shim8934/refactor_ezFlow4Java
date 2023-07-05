@@ -520,6 +520,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		}
 		
 		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String extResult = "";
 		String pDate = "";
 		String sFileHref = xmlDom.getElementsByTagName("filehref").item(0).getTextContent(); 
@@ -590,7 +591,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			if (!file2.exists()) {
 				
 				// useHwpDownSecurity의 값이 Y일 때, 배포용 문서로 변환된 파일은 URL을 통해 웹한글기안기 서버에서 해당 파일을 다운로드
-				if (useHwpDownSecurity.equals("Y") && sExt.equals("hwp") && sFileTypeCode.equals("document") && !sFileUrl.equals("noUrl")) {
+				if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G") && sExt.equalsIgnoreCase("hwp") && sFileTypeCode.equals("document") && !sFileUrl.equals("noUrl")) {
 					String targetFilePath = commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + newfilename);
 					Path pathTarget = Paths.get(targetFilePath);
 					URL downloadUrl = new URL(sFileUrl);

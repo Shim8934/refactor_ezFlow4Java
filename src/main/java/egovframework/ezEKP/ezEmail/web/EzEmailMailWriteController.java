@@ -521,9 +521,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", loginInfo.getTenantId());
 		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", loginInfo.getTenantId());
 		String HwpSecurityNum = "";
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", loginInfo.getTenantId());
 		
 		/* 2023-05-15 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 배포용 암호 설정 테넌트 컨피그로 추가 */
-		if (useHwpDownSecurity.equals("Y")) {
+		if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G")) {
 			HwpSecurityNum = ezCommonService.getTenantConfig("HwpSecurityNum", loginInfo.getTenantId());
 		}
         
@@ -1449,6 +1450,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useHwpDownSecurity", useHwpDownSecurity); // hwp 배포용 문서 저장을 위한 테넌트 컨피그
 		model.addAttribute("webHWPUrl", webHWPUrl); // Whwp api Url
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum); // hwp 배포용 문서 해제를 위한 암호
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		

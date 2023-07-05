@@ -5722,7 +5722,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String HwpSecurityNum = "";
 		
 		/* 2023-05-10 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 배포용 암호 설정 테넌트 컨피그로 추가 */
-		if (useHwpDownSecurity.equals("Y")) {
+		if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G")) {
 			HwpSecurityNum = ezCommonService.getTenantConfig("HwpSecurityNum", userInfo.getTenantId());
 		}
 		
@@ -5741,6 +5741,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useHwpDownSecurity", useHwpDownSecurity);
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("totalSaveFileInfo ended.");
 		
@@ -5794,9 +5795,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String[] downUrl = new String[fileTypes.length];
 		String[] hwpInfo = xmlDom.getElementsByTagName("PHWPINFO").item(0).getTextContent().split(separators);
 		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		/* 2023-05-10 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 설정 테넌트 컨피그 추가 */
-		if (useHwpDownSecurity.equals("Y")) {
+		if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G")) {
 			downUrl = xmlDom.getElementsByTagName("PDOWNINFO").item(0).getTextContent().split(separators);
 		}
 		
@@ -5857,7 +5859,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					fileNames[k] = commonUtil.getUniqueFileName(fileNames[k], fileNameMap);
 					
 					// 페이지에서 문서 타입과 확장자(hwp)를 확인하기 때문에 배포용 문서에 해당하는 경우만 if문 진입
-					if (!hwpInfo[k].equals("noPath") && useHwpDownSecurity.equals("Y")) {
+					if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G") && !hwpInfo[k].equals("noPath")) {
 						sourceFilePath = sourceDirPath + commonUtil.separator + fileNames[k];
 						Path pathSource = Paths.get(sourceFilePath);
 						URL downloadUrl = new URL(downUrl[k]);

@@ -9875,7 +9875,8 @@
                  		SELECT 
                			     DISPLAYNAME ATTACHNAME  ,
                              ATTACHFILEHREF ATTACHFILEHREF  ,
-                             ATTACHFILESIZE ATTACHFILESIZE  
+                             ATTACHFILESIZE ATTACHFILESIZE	,
+							'file' AS ATTACHTYPECODE                             
                         FROM 
                         	 TBL_APRATTACHINFO 
                         WHERE  
@@ -9890,7 +9891,8 @@
                         SELECT 
                         	   ATTACHDOCNAME ATTACHNAME  ,
                                ATTACHDOCURL ATTACHFILEHREF  ,
-                               NULL ATTACHFILESIZE  
+                               NULL ATTACHFILESIZE	,
+                               'document' AS ATTACHTYPECODE  
                         FROM 
                         	   TBL_APRDOCATTACHINFO 
                         WHERE  
@@ -9923,7 +9925,8 @@
             		SELECT 
             			DISPLAYNAME ATTACHNAME  ,
                         ATTACHFILEHREF ATTACHFILEHREF  ,
-                        ATTACHFILESIZE ATTACHFILESIZE  
+                        ATTACHFILESIZE ATTACHFILESIZE  ,
+                        'file' AS ATTACHTYPECODE  
                     FROM 
                     	TBL_ENDATTACHINFO 
                     WHERE  
@@ -9938,7 +9941,8 @@
                     SELECT 
                     	ATTACHDOCNAME ATTACHNAME  ,
                         ATTACHDOCURL ATTACHFILEHREF  ,
-                        NULL ATTACHFILESIZE  
+                        NULL ATTACHFILESIZE  ,
+                        'document' AS ATTACHTYPECODE		  
                     FROM 
                     	TBL_ENDAPRDOCATTACHINFO 
                     WHERE  
@@ -9975,7 +9979,8 @@
             		SELECT 
             			DISPLAYNAME ATTACHNAME  ,
                         ATTACHFILEHREF ATTACHFILEHREF  ,
-                        ATTACHFILESIZE ATTACHFILESIZE  
+                        ATTACHFILESIZE ATTACHFILESIZE  ,
+                        'file' AS ATTACHTYPECODE  
                     FROM ( 
                     		SELECT 
                     			(CAST(OWNERID AS VARCHAR2(200)) || '@' || CAST(SN AS VARCHAR2(200))) DOCID  ,
@@ -9996,7 +10001,8 @@
                    SELECT 
                    		ATTACHDOCNAME ATTACHNAME  ,
                         ATTACHDOCURL ATTACHFILEHREF  ,
-                        TO_BINARY_FLOAT(NULL) ATTACHFILESIZE  
+                        TO_BINARY_FLOAT(NULL) ATTACHFILESIZE  ,
+                        'document' AS ATTACHTYPECODE  
                    FROM ( 
                    			SELECT 
                    				(CAST(OWNERID AS VARCHAR2(200)) || '@' || CAST(SN AS VARCHAR2(200))) DOCID  ,

@@ -4144,9 +4144,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
 		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
 		String HwpSecurityNum = "";
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		/* 2023-05-17 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 배포용 암호 설정 테넌트 컨피그로 추가 */
-		if (useHwpDownSecurity.equals("Y")) {
+		if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G")) {
 			HwpSecurityNum = ezCommonService.getTenantConfig("HwpSecurityNum", userInfo.getTenantId());
 		}
 		
@@ -4184,6 +4185,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useHwpDownSecurity", useHwpDownSecurity);
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -7501,6 +7503,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		int cnt = xmlDom.getElementsByTagName("ROW").getLength();
 		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		String[] fileNames = new String[cnt];
 		//String[] orgFileNames = new String[cnt];
@@ -7518,7 +7521,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			types[k] = xmlDom.getElementsByTagName("TYPE").item(k).getTextContent();
 			uploadSN[k] = "{" + UUID.randomUUID().toString() + "}";
 			
-			if (useHwpDownSecurity.equals("Y")) {
+			if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G")) {
 				downUrl[k] = xmlDom.getElementsByTagName("DOWNURL").item(k).getTextContent();
 			}
 		}
@@ -7585,7 +7588,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			// useHwpDownSecurity의 값이 Y일 때, 배포용 문서로 변환된 파일은 URL을 통해 웹한글기안기 서버에서 해당 파일을 다운로드
-			if (useHwpDownSecurity.equals("Y") && fileExt.equalsIgnoreCase(".hwp") && !downUrl[k].equals("noUrl")) {
+			if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G") && fileExt.equalsIgnoreCase(".hwp") && !downUrl[k].equals("noUrl")) {
 				Path pathUploadLocation = Paths.get(commonUtil.detectPathTraversal(uploadLocation));
 				URL downloadUrl = new URL(downUrl[k]);
 				InputStream inpStream = null;

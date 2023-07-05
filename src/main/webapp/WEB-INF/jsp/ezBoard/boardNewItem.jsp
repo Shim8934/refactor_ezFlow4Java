@@ -134,10 +134,13 @@
 			var isHwpCtrlOpen = false;
 		    var startCheck = false;
 		    
+			/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
+		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
+		    
 		    window.onload = function () {
 		    	
-		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출
-	        	if (useHwpDownSecurity == "Y") {
+		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
+	        	if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
 	        		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
 	        	}
 		    	
@@ -2147,7 +2150,7 @@
 	        		xmlstringUl += "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
 	        		
 	        		// 결재문서의 확장자가 hwp인 경우
-	        		if (orgFileType == "hwp") {
+	        		if (orgFileType.toUpperCase() == "HWP") {
 	        			xmlstringUl += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
 	        			xmlstringUl += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
 	        			xmlstringUl += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
@@ -2160,7 +2163,7 @@
 	                    xmlstringUl += "<FILESIZE>0</FILESIZE>";
 	                    
 	                    // useHwpDownSecurity가 Y이면 한글 배포용 문서로 변환
-	                    if (useHwpDownSecurity == "Y") {
+	                    if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
 	                    	if (isHwpCtrlOpen == true) {
 	                    		var doc = HwpCtrl.Open(window.location.origin + pUrl, "HWP", "", function(res) {
 		            				// console.log("res" + p_num + " : " + JSON.stringify(res));
@@ -2243,7 +2246,7 @@
 	                    }
 	                    
 	                    // orgTypeCode를 체크하여 일반 첨부파일(file)이 아닌 문서첨부(document)만 한글 배포용 문서로 변환
-                        if (useHwpDownSecurity == "Y" && orgFileType == "hwp" && orgTypeCode == "document") {
+                        if (useHwpDownSecurity == "Y" && approvalFlag == "G" && orgFileType.toUpperCase() == "HWP" && orgTypeCode == "document") {
 	                    	if (isHwpCtrlOpen == true) {
 	                    		var doc = HwpCtrl.Open(window.location.origin + orgTemppath, "HWP", "", function(res) {
 		            				// console.log("res" + p_num + " : " + JSON.stringify(res));
