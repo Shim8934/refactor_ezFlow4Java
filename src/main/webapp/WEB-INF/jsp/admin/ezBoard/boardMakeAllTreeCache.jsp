@@ -11,10 +11,19 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" language="javascript">
+			var isIng = false;
+			
 	    	function makeAllTreeCache() {
+	    		// 일괄생성 동작 완료 전까지 중복 클릭 방지
+	    		if (isIng == true) {
+	    			return;
+	    		}
+	    		
 	    		var ret = confirm("<spring:message code='ezBoard.HSBAt004'/>");
 	    		
 	    		if (ret) {
+	    			isIng = true;
+	    			
 	    			// 진행상황 갱신 (없음 -> 진행중)
 	    			document.getElementById("processTxt").innerHTML = "<spring:message code='ezBoard.HSBAt008'/>";
 	    			
@@ -24,6 +33,8 @@
 	    				url : "/admin/ezBoard/makeAllTreeCache.do",
 	    				data : {},
 	    				success : function (result) {
+	    					isIng = false;
+	    					
 	    					if (result == "TRUE") {
 	    						// 진행상황 갱신 (진행중 -> 완료)
 		    					document.getElementById("processTxt").innerHTML = "<spring:message code='ezBoard.HSBAt009'/>";
@@ -33,6 +44,13 @@
 		    					document.getElementById("processTxt").innerHTML = "<spring:message code='ezBoard.HSBAt011'/>";
 		    					alert("<spring:message code='ezBoard.HSBAt010'/>");
 	    					}
+	    				},
+	    				error : function() {
+	    					isIng = false;
+	    					
+	    					// 진행상황 갱신 (진행중 -> 중단, 오류 발생)
+	    					document.getElementById("processTxt").innerHTML = "<spring:message code='ezBoard.HSBAt011'/>";
+	    					alert("<spring:message code='ezBoard.HSBAt010'/>");
 	    				}
 	    			});
 	    		}
