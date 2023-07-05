@@ -57,8 +57,9 @@
 	function onClickRename() {
 		// 이름 하나 넣어주려고 이게 무슨,,, 현타가 온다
 		var currentName = "${fileName}";
+
 		try {
-			var nameTd = parent.document.querySelector(".wfFileName[title='" + currentName + "']");
+			var nameTd = parent.document.querySelector(".wfFileName[title='<c:out value='${fileName}' />']");
 			
 			if (!nameTd) {
 				var lastDot = currentName.lastIndexOf(".");

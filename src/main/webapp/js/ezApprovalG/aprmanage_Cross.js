@@ -148,8 +148,12 @@ function getDocList_after(xml) {
     DocList.SetRowOnDblClick("lvDocList_DBSelChange");
     DocList.SetTitleIdx(0);
     DocList.SetUrgentFlag(false);
-    if(pListTypeValue == "1")  //2020-04-29 : 결재할문서 복수체크박스 추가
-        DocList.SetCheckBoxFlag(true);
+    
+    /* 2023-06-19 조소정 - 공람할문서 메뉴(99) 복수 체크박스 추가 */
+    if(pListTypeValue == "1" || pListTypeValue == "99") { // 2020-04-29 : 결재할문서 복수체크박스 추가
+    	DocList.SetCheckBoxFlag(true);
+    }
+    
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
     
@@ -2059,7 +2063,8 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "";
     }
     else {
-        document.getElementById("tbtnGongRam").style.display = "none";
+    	// apprGManage.jsp에서 공람버튼의 기본 스타일을 display = "none"으로 수정 (공람할문서 메뉴에서만 표출)
+        // document.getElementById("tbtnGongRam").style.display = "none";
 
         document.getElementById("tbtnApprove2").style.display = "none";
         document.getElementById("tbtnApproveALL").style.display = "none";
@@ -2082,6 +2087,7 @@ function setbuttonenable() {
         document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtnSimsa").style.display = "none";
         document.getElementById("tbtnGongRam").style.display = "none";
+        document.getElementById("tbtnGongRamALL").style.display = "none";
 
         if (oArrRows != null) {
             document.getElementById("tbtnViewDoc").style.display = "";
@@ -2143,10 +2149,14 @@ function setbuttonenable() {
             document.getElementById("tbtnLinkDraft").style.display = "none";
 
             //20130311 cpno.64
-            if (GetAttribute(tr, "DATA12") == "015" && pListTypeValue == 99)
-                document.getElementById("tbtnGongRam").style.display = "";
-            else
-                document.getElementById("tbtnGongRam").style.display = "none";
+            if (GetAttribute(tr, "DATA12") == "015" && pListTypeValue == 99) {
+            	document.getElementById("tbtnGongRam").style.display = "";
+            	document.getElementById("tbtnGongRamALL").style.display = "";
+            }
+            else {
+            	document.getElementById("tbtnGongRam").style.display = "none";
+            	document.getElementById("tbtnGongRamALL").style.display = "none";
+            }
 
             if (pFunctionType == "001") {
                 document.getElementById("tbtnDraft").style.display = "";
@@ -2242,6 +2252,7 @@ function setbuttonenable() {
             document.getElementById("tbtnLinkDraft").style.display = "none";
             document.getElementById("tbtnApproveALL").style.display = "none";
             document.getElementById("tbtnGongRam").style.display = "none";
+            document.getElementById("tbtnGongRamALL").style.display = "none";
         }
     } else {
         document.getElementById("tbtnSimsa").style.display = "none";
@@ -2254,6 +2265,8 @@ function setbuttonenable() {
         
         //20130311 cpno.64
         document.getElementById("tbtnGongRam").style.display = "none";
+        document.getElementById("tbtnGongRamALL").style.display = "none";
+
         if (oArrRows.length != 0) {
             pFunctionType = GetAttribute(tr, "DATA10");
             if (pFunctionType == "011" || pFunctionType == "012" || pFunctionType == "014") {
@@ -2359,10 +2372,6 @@ function setbuttonenable() {
 	    }
 	    if (pListTypeValue == "2") {
             document.getElementById("tbtnDraft").style.display = "";      
-	    }
-	    
-	    if (pListTypeValue == "99" ) {
-	        document.getElementById("tbtnGongRam").style.display = "";      
 	    }
     }
     

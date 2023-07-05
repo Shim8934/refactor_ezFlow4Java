@@ -2511,6 +2511,82 @@
 				}
 			}
 			
+			/* 2023-06-20 조소정 - 전자결재(G/일반) 공람할문서 일괄공람 / 회람수신함 일괄회람 함수 추가 */
+			function btnGongRamALL_onclick() {
+		        var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		        var pCurSelRow = DocList.GetSelectedRows();
+		        
+		        if (pCurSelRow.length == 0) {
+		            var pAlertContent = strLang930 + "<br>" + strLang336;
+		            OpenAlertUI(pAlertContent);
+				} else {
+					if (approvalFlag == "G") {
+						OpenInformationUI("<spring:message code='ezApprovalG.CSJBDA02'/>", btnGongRamALL_onclick_complete);
+					}
+					else {
+						OpenInformationUI("<spring:message code='ezApprovalG.CSJBDA04'/>", btnGongRamALL_onclick_complete);
+					}
+				}
+			}
+
+			function btnGongRamALL_onclick_complete(Rtnval) {
+				if (Rtnval === true) {
+					var DocList = new ListView();
+					DocList.LoadFromID("DocList");
+					var pCurSelRow = DocList.GetSelectedRows();
+
+					var userID = arr_userinfo[1];
+					var docIDArray = [];
+					var orgCompanyIDArray = [];
+					var tempValue = "";
+					var rtnVal = "";
+
+					$(pCurSelRow).each(function(idx, curRow) {
+						docIDArray.push($(this).attr("DATA1"));
+						orgCompanyIDArray.push($(this).attr("orgCompanyID"));
+					});
+
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/gongRamAllUpdate.do",
+						data : {
+							userID : userID,
+							docIDArray : docIDArray,
+							orgCompanyIDArray : orgCompanyIDArray
+						},
+						success : function(result) {
+							rtnVal = result.split("/");
+							tempValue = "TRUE";
+						},
+						error : function(e) {
+							console.log(e);
+						}
+					});
+					
+					if (tempValue == "TRUE") {
+						if (approvalFlag == "G") {
+							OpenAlertUI(strLang933 + rtnVal[0] + strLang934 + strLang935 + rtnVal[1] + strLang934_1 + strLangCSJBDA01, OpenAlertUI_Close);
+						}
+						else {
+							OpenAlertUI(strLang933 + rtnVal[0] + strLang934 + strLang935 + rtnVal[1] + strLang934_1 + strLangCSJBDA03, OpenAlertUI_Close);
+						}
+					} 
+					else {
+						if (approvalFlag == "G") {
+							OpenAlertUI(strLangCSJBDA02, OpenAlertUI_Close);
+						}
+						else {
+							OpenAlertUI(strLangCSJBDA04, OpenAlertUI_Close);
+						}					
+					}
+				} else {
+					DivPopUpHidden();
+				}
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px; overflow:auto;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">	
@@ -2544,9 +2620,11 @@
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<c:if test="${approvalFlag == 'G'}">
 					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
+					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL" onclick="return btnGongRamALL_onclick()" ><spring:message code='ezApprovalG.CSJBDA01'/></span></li>
 				</c:if>
 				<c:if test="${approvalFlag != 'G'}">
 					<li id="tbtnGongRam" style="DISPLAY:none"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
+					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL" onclick="return btnGongRamALL_onclick()" ><spring:message code='ezApprovalG.CSJBDA03'/></span></li>
 				</c:if>
 				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
