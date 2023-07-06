@@ -5109,8 +5109,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formId = "";
 		boolean isReform = false;
 		
+		/* 2023-07-06 홍승비 - 기안 시점에는 사용자의 회사ID를 사용하나, 결재 시점에는 해당 문서의 orgCompanyID를 체크하도록 수정 */
 		// FormBuilder
-		ApprGFormVO reformInfo = ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), userInfo.getCompanyID(), tenantID);
+		ApprGFormVO reformInfo = ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), orgCompanyID, tenantID);
 		if (reformInfo != null) {
 			formId = reformInfo.getFormID();
 			isReform = "Y".equals(reformInfo.getReformFlag());
