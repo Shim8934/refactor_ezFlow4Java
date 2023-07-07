@@ -519,7 +519,8 @@ public class LoginVO implements Serializable {
 	}
 	
 	public int hashCode() {
-		return id.hashCode() + tenantId;
+		// id가 null인 경우 NullPointerException이 발생해 null check 추가함
+		return (id != null ? id.hashCode() : super.hashCode()) + tenantId;
 	}
 
 	public String getRealPath() {
