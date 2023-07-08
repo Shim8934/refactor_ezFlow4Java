@@ -1083,7 +1083,14 @@ public class EzEmailMailListController {
 					}
 					
 					// received date
-					sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", mailInfo.get("MAIL_DATE")));
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					Date receivedDate = sdf.parse(mailInfo.get("MAIL_DATE"));
+					sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+					String receivedDateStr = sdf.format(receivedDate);
+					
+					receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+					
+					sb.append(String.format("<receivedt><![CDATA[%s]]></receivedt>", receivedDateStr));
 					
 					// size
 					sb.append(String.format("<size><![CDATA[%s]]></size>", mailInfo.get("MAIL_SIZE")));
