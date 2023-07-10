@@ -2915,6 +2915,31 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 환경설정 >  편지함 관리 > 내보내기 - 기간설정
+	 */
+	@RequestMapping(value="/ezEmail/folderExportPeriod.do", method = RequestMethod.GET)
+	public String folderExportPeriod(
+			@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {
+		logger.debug("folderExportPeriod started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+
+		String folderName = request.getParameter("folderName");
+		String folderNameSql = request.getParameter("folderNameSql");
+		String folderMailCnt = request.getParameter("folderMailCnt");
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("folderName", folderName);
+		model.addAttribute("folderNameSql", folderNameSql);
+		model.addAttribute("folderMailCnt", folderMailCnt);
+
+		logger.debug("folderExportPeriod ended.");
+		return "ezEmail/mailFolderExportPeriod";
+	}
+
+	/**
 	 * 메일 부재중 설정 
 	 * - 부재중 설정, 부재중 설정 템플릿 메뉴 포함된 메인 화면
 	 */

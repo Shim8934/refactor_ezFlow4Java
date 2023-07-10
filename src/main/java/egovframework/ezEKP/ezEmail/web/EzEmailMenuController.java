@@ -1396,12 +1396,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String folderId = (String) requestObject.get("FOLDERID");
 		String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
-		String sortType = (String) requestObject.get("SORTTYPE");
-		String start = (String) requestObject.get("START");
-		String end = (String) requestObject.get("END");
-		String search = (String) requestObject.get("SEARCH");
-		String viewSelectIndex = (String) requestObject.get("VIEWSELECTINDEX");
-		String useSecureMailFilter = (String) requestObject.get("SECUREMAILFILTER");
+		String sortType = StringUtils.defaultIfBlank((String) requestObject.get("SORTTYPE"), "");
+		String start = StringUtils.defaultIfBlank((String) requestObject.get("START"), "0");
+		String end = StringUtils.defaultIfBlank((String) requestObject.get("END"), "0");
+		String search = StringUtils.defaultIfBlank((String) requestObject.get("SEARCH"), "");
+		String viewSelectIndex = StringUtils.defaultIfBlank((String) requestObject.get("VIEWSELECTINDEX"), "");
+		String useSecureMailFilter = StringUtils.defaultIfBlank((String) requestObject.get("SECUREMAILFILTER"), "");
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", userInfo.getTenantId());
@@ -1409,10 +1409,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String endDate = (String) requestObject.get("ENDDATE");
 		String andorStatus = (String) requestObject.get("ANDORSTATUS");
 		String attachStatus = (String) requestObject.get("ATTACHSTATUS");
-		String tagName = (String) requestObject.get("TAGNAME") == null ? "" : (String) requestObject.get("TAGNAME");
+		String tagName = StringUtils.defaultIfBlank((String) requestObject.get("TAGNAME"), "");
 		boolean isRequireMailboxPath = !tagName.isEmpty();
 		String shareId = "";
-		int maxCount = (Integer) requestObject.get("MAXCOUNT");
+		int maxCount = requestObject.get("MAXCOUNT") == null ? 0 : (Integer) requestObject.get("MAXCOUNT");
 		String userkey = (String) requestObject.get("USERKEY");
 
 		List listCategory = (ArrayList) requestObject.get("CATEGORY");
@@ -1585,6 +1585,13 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				}
 
 				String realPath = commonUtil.getRealPath(request);
+
+				// 2023-07-10 이사라
+				// maxCount는 진행율(%)를 출력하기 위해 필요한 값으로 mailId를 가져올때는 사용되지 않는다.
+				// 0이 나오는 경우는 '메일환경설정> 편지함관리> 내보내기'에서 기간을 직접입력했을 때이며 이 경우에는 진행율을 정상적으로 출력하기 위해 mailList의 사이즈를 구해서 전달한다.
+				if (maxCount == 0) {
+					maxCount = mailList.size();
+				}
 
 				returnValue = mailExportZipExcute(loginCookie, locale, shareId, urlMap, realPath, maxCount, userkey);
 			}

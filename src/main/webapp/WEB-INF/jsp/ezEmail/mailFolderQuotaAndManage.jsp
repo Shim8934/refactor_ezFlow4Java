@@ -169,7 +169,13 @@
 					alert("<spring:message code='ezEmail.kyj13' />");
 					return;
 				}
-				parent.parent.document.getElementsByName("right")[0].contentWindow.mailbox_export(selectFolderName, selectFolderNameSpl, folderMailCnt);
+
+				parent.parent.document.getElementsByName("right")[0].contentWindow
+				.DivPopUpShow(500, 300, "/ezEmail/folderExportPeriod.do?"
+						+ "folderName=" + encodeURIComponent(selectFolderName)
+						+ "&folderNameSql=" + encodeURIComponent(selectFolderNameSpl)
+						+ "&folderMailCnt=" + (folderMailCnt));
+				//parent.parent.document.getElementsByName("right")[0].contentWindow.mailbox_export(selectFolderName, selectFolderNameSpl, folderMailCnt);
 			}
 			function add_onclickUp(){
 				// 하위 편지함 5개까지 생성가능 top편지함의 하위편지함이 1레벨로 생각

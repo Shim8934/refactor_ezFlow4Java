@@ -168,7 +168,7 @@
 	        }
 	        
 		 // 메일박스 내보내기 config 확인
-			function mailbox_export(selectFolderName, selectFolderNameSpl, folderTotalCount) {
+			function mailbox_export(selectFolderName, selectFolderNameSpl, folderTotalCount, isDirect, startDate, endDate) {
 
 				this.selectFolderName = selectFolderName;
             	this.selectFolderNameSpl = selectFolderNameSpl;
@@ -186,10 +186,12 @@
 
 				if (useEncryptZipForEmail == "YES") {
 					mailExportOption_onClick(exportType);
-				} else {
-					if (confirm("<spring:message code='ezEmail.lhm36' />")) {
+				} else if (!isDirect){
+					//if (confirm("<spring:message code='ezEmail.lhm36' />")) {
 						mailbox_export_start();
-					}
+					//}
+				} else {
+					mailboxExportByPeriod(startDate, endDate, folderTotalCount);
 				}
 			}
 		    
@@ -206,6 +208,66 @@
 		    	});
 		    	
 		    	return userKey;
+		    }
+
+			// 2023-07-10 이사라 - 편지함관리> 내보내기> 기간설정 직집입력 시에는 아래 function을 사용
+			function mailboxExportByPeriod(startDate, endDate, folderTotalCount) {
+				var attachStatus = "all";
+				var andorStatus = "and";
+
+		    	socketUserkey = mailbox_getUserKey();
+
+		    	var jsonData = {"FOLDERID" : selectFolderName,
+						"KEYWORD" : ["all"], // KEYWORD, CATEGORY는 controller에서 null오류를 피하기 위해서 검색에 지장을 주지 않는 값을 입력 함
+						"CATEGORY" : ["attachStatus"],
+						"START" : "0",
+						"STARTDATE" : startDate,
+						"ENDDATE" : endDate,
+						"ATTACHSTATUS" : attachStatus,
+						"ANDORSTATUS" : andorStatus,
+						"END" : folderTotalCount,
+						"USERKEY" : socketUserkey
+						};
+
+	   			var _url = "/ezEmail/searchedMailExportZip.do";
+
+	            ShowMailProgressNew();
+	            ShowPercent(0);
+	            mailboxProgressFun(true, socketUserkey); // progress percent
+
+				$.ajax({
+					cache: false,
+					method: "post",
+					url: _url,
+					data: JSON.stringify(jsonData),
+					contentType : "application/json",
+					complete: function(){
+						HiddenMailProgress();
+					},
+					success: function(result){
+						if (result == "CANCEL") {
+							console.log('User Cancel');
+						} else if (result != "") {
+							var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + "";
+
+							if (typeof(shareId) != "undefined" && shareId != "") {
+								fullpath += "&shareId=" + encodeURIComponent(shareId);
+					    	}
+
+							AttachDownFrame.location.href = fullpath;
+							AttachDownFrame.target = "_blank";
+						} else {
+							alert("<spring:message code='ezEmail.ls010' />");
+						}
+					},
+					error: function() {
+						alert("<spring:message code='ezEmail.ls011' />");
+					},
+					complete : function() {
+				       	HiddenMailProgressNew();
+				        mailboxProgressFun(false); // progress percent
+					}
+				});
 		    }
 		   
 		    function mailbox_export_start(pwd) {
