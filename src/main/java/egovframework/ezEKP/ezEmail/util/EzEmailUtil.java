@@ -1059,7 +1059,7 @@ public class EzEmailUtil {
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
-			int bodyPartIndex, List<Map<String, String>> attachedFileList, Locale locale, Map<String, Object> extraMap, int depth, int order) throws Exception {
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, Locale locale, Map<String, Object> extraMap, int order, int depth) throws Exception {
 		List<String> resultList = new ArrayList<String>();
 		
 		String htmlBody = "";
