@@ -18866,12 +18866,10 @@ CREATE OR REPLACE VIEW VIEW_EZWEBFOLDER AS
 	F.FILE_NAME 									AS FILENAME,
 	CONCAT('/volumes/shared/ezFlow',F.FILE_PATH) 	AS FILEPATH,
 	F.FILE_SIZE 									AS FILESIZE,
-
 	F.CREATE_ID 									AS WRITERID,
 	F.CREATE_NAME1 									AS WRITERNAME,
 	F.CREATE_NAME2 									AS WRITERNAME2,
 	fld.COMPANY_ID 									AS COMPANYID,
-
 	DEPT.CN											AS WRITERDEPTID,
 	DEPT.DISPLAYNAME								AS WRITERDEPTNAME,
 	DEPT.DISPLAYNAME2								AS WRITERDEPTNAME2,
@@ -18881,7 +18879,6 @@ CREATE OR REPLACE VIEW VIEW_EZWEBFOLDER AS
 	FLD.FOLDER_TYPE									AS FOLDERTYPE,
 	FLD.FOLDER_NAME1								AS FOLDERNAME1,
 	FLD.FOLDER_NAME2								AS FOLDERNAME2
-
 	FROM TBL_WEBFOLDER_FILE F
 	INNER JOIN TBL_WEBFOLDER_FOLDER FLD ON FLD.FOLDER_ID = F.FOLDER_ID AND FLD.TENANT_ID = F.TENANT_ID
 	INNER JOIN TBL_USERMASTER USR ON USR.CN = F.CREATE_ID AND USR.TENANT_ID = F.TENANT_ID
@@ -18905,7 +18902,7 @@ CREATE TABLE "SEARCH_INDEX_WEBFOLDER"
 --  DDL for Sequence SEQ_SEARCH_INDEX_WEBFOLDER
 --------------------------------------------------------
 
-   CREATE SEQUENCE  "SEQ_SEARCH_INDEX_WEBFOLDER"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+   CREATE SEQUENCE  "SEQ_SEARCH_INDEX_WEBFOLDER"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER NOCYCLE ;
 
 --------------------------------------------------------
 --  VIEW_WEBFOLDERPERMISSIONS
@@ -18915,75 +18912,62 @@ CREATE OR REPLACE VIEW VIEW_WEBFOLDERPERMISSIONS AS
 select  fi.file_id as file_id, NVL(user_id, owner_id) as cn
 from tbl_webfolder_file fi inner join tbl_webfolder_folder folder on fi.folder_id = folder.folder_id
 left outer join tbl_webfolder_fileuser usr on fi.file_id = usr.file_id where (folder.folder_type = 'U' or (folder.folder_type ='C' and user_type = 'user'))
-
 UNION
 select  usr.file_id as file_id, TO_CHAR(u.cn) as cn
 from tbl_webfolder_file fi inner join tbl_webfolder_fileuser usr on fi.file_id = usr.file_id
 inner join tbl_usermaster u on u.department = usr.user_id
 where user_type = 'dept'
-
 UNION
 select  usr.file_id as file_id, TO_CHAR(addjob.cn) as cn from tbl_webfolder_file fi inner join tbl_webfolder_fileuser usr
 on fi.file_id = usr.file_id
 inner join tbl_addjobmaster addjob on addjob.deptid = usr.user_id
 where user_type = 'dept'
-
 UNION
 select  usr.file_id as file_id, TO_CHAR(u.cn) as cn from tbl_webfolder_file fi inner join tbl_webfolder_fileuser usr
 on fi.file_id = usr.file_id
 inner join tbl_usermaster u on u.PHYSICALDELIVERYOFFICENAME = usr.user_id
 where user_type = 'dept'
-
 UNION
 select f.file_id as file_id, TO_CHAR(addjob.cn) as cn
 from tbl_addjobmaster addjob inner join tbl_webfolder_fileuser fu on fu.user_id = addjob.jobid 
 and fu.user_type = 'JIKWI'
 inner join tbl_webfolder_file f on fu.file_id = f.file_id
-
 UNION
 select f.file_id as file_id, TO_CHAR(u.cn) as cn
 from tbl_usermaster u inner join tbl_webfolder_fileuser fu on fu.user_id = u.extensionattribute7
 and fu.user_type = 'JIKWI'
 inner join tbl_webfolder_file f on fu.file_id = f.file_id
-
 UNION
 select f.file_id as file_id, TO_CHAR(u.cn) as cn
 from tbl_usermaster u inner join tbl_webfolder_fileuser fu on fu.user_id = u.extensionattribute8
 and fu.user_type = 'JIKCHEK'
 inner join tbl_webfolder_file f on fu.file_id = f.file_id
-
 UNION
 select file_id as file_id, member_id as cn  FROM tbl_permissiongroupinfo p inner join tbl_webfolder_fileuser fu 
 on fu.user_id = p.group_id where fu.user_type = 'group'
 and p.member_type = 'user' 
-
 UNION
 select file_id, TO_CHAR(u.cn) as cn FROM tbl_permissiongroupinfo p inner join tbl_webfolder_fileuser fu 
 on fu.user_id = p.group_id inner join tbl_usermaster u on u.extensionattribute8 = member_id 
 where fu.user_type = 'group' and p.member_type = 'JIKCHEK'  
-
 UNION
 select file_id, TO_CHAR(u.cn) as cn FROM tbl_permissiongroupinfo p inner join tbl_webfolder_fileuser fu 
 on fu.user_id = p.group_id inner join tbl_usermaster u on u.extensionattribute7 = member_id 
 where fu.user_type = 'group' and p.member_type = 'JIKWI'  
-
 UNION
 select file_id, TO_CHAR(u.cn) as cn FROM tbl_permissiongroupinfo p inner join tbl_webfolder_fileuser fu 
 on fu.user_id = p.group_id inner join tbl_addjobmaster u on u.jobid = member_id 
 where fu.user_type = 'group' and p.member_type = 'JIKWI'  
-
 UNION
 select file_id, TO_CHAR(u.cn) as cn from tbl_webfolder_fileuser fu inner join tbl_permissiongroupinfo p
 on p.group_id = fu.user_id inner join tbl_usermaster u
 on u.department = p.member_id
 where p.member_type = 'dept' and user_type = 'group' and sub_dept_yn = 'N'  
-
 UNION
 select file_id, TO_CHAR(u.cn) as cn from tbl_webfolder_fileuser fu inner join tbl_permissiongroupinfo p
 on p.group_id = fu.user_id inner join tbl_addjobmaster u
 on u.deptid = p.member_id
 where p.member_type = 'dept' and user_type = 'group' and sub_dept_yn = 'N'  
-
 UNION
 select deptlist.file_id as file_id, TO_CHAR(u.cn) as cn from tbl_usermaster u inner join (
 	select cn, dept_cd_path, tenant_id , deptInfo.file_id as file_id 
@@ -18997,11 +18981,9 @@ select deptlist.file_id as file_id, TO_CHAR(u.cn) as cn from tbl_usermaster u in
 		) pandd
 		on dept.cn = pandd.member_id group by group_id, file_id
 	) deptInfo
-
 	inner join tbl_deptmaster on REGEXP_LIKE (UPPER(dept_cd_path), UPPER(deptInfo.deptpath))
 ) deptlist
 on deptlist.cn = u.department 
-
 union
 select deptlist.file_id as file_id, TO_CHAR(u.cn) as cn from tbl_addjobmaster u inner join (
 	select cn, dept_cd_path, tenant_id , deptInfo.file_id as file_id 
@@ -19015,11 +18997,9 @@ select deptlist.file_id as file_id, TO_CHAR(u.cn) as cn from tbl_addjobmaster u 
 		) pandd
 		on dept.cn = pandd.member_id group by group_id, file_id
 	) deptInfo
-
 	inner join tbl_deptmaster on REGEXP_LIKE (UPPER(dept_cd_path), UPPER(deptInfo.deptpath))
 ) deptlist
 on deptlist.cn = u.deptid
-
 union
 select distinct f.file_id as file_id ,folderInfo.user_id as cn
  from tbl_webfolder_file f 
