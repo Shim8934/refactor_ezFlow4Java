@@ -1748,13 +1748,13 @@ function setHeSongDocInfo() {
     }
 }
 
-var ezchkpasswd_dialogArguments = new Array();
+var ezchkpasswd_cross_dialogArguments = new Array();
 function chk_Passwd() {
 	var parameter = pUserID;
 	var url		= "/ezApprovalG/ezchkPasswd.do";
 	
-	ezchkpasswd_dialogArguments[0] = parameter;
-	ezchkpasswd_dialogArguments[1] = chk_Passwd_Complete;
+	ezchkpasswd_cross_dialogArguments[0] = parameter;
+	ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
 	DivPopUpShow(330, 200, url);
 	//var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
