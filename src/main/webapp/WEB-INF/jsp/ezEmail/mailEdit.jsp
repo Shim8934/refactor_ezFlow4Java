@@ -125,6 +125,8 @@
 	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
 	        var g_useAdditionalInfo = ${useAdditionalInfo};
 	        var previewChk = false; // 메일 미리보기
+			//2023-07-13 김대현 - 예약메일 수정시 대용량첨부파일을 추가하면 저장이 안되는 오류 수정
+			var BigSizeAttachDownloadLimitCount = "${bigSizeAttachDownloadLimitCount}";
 	        
 			function window_onload() {
 	            if (!CrossYN()) {
