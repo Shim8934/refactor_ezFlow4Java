@@ -856,4 +856,7 @@ public interface EzApprovalGService {
 
     /* 2023-10-05 박기범 - 유저의 현재 설정된 부재 클리어 */
     void cleanAbsence(String userID, int tenantID);
+
+    /* 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재여부와 지정된 날짜를 체크하는 메소드 */
+    public String checkSecurityApprovalDate(String docID, String companyID, int tenantID) throws Exception;
 }

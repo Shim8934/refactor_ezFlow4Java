@@ -194,16 +194,15 @@
 		        }
 		    }
 		    function QuitWindow() {
-// 		        OpenAlertUI(strLang929);
-				alert(strLang1139);
-		        btnClose_onclick();
-		        window.close();
-		        
+                // 2023-06-19 전인하 - 전자결재G > 기록물대장 미리보기 - 사용자에게 열람권한이 없을 때 미리보기 영역에서 문서가 열렸을 경우 미리보기 프레임에 공백 페이지 삽입
 		        /* 2022-07-29 홍승비 - 미리보기 영역으로 열린 경우, iframe src 자체를 공백으로 변경 */
-		        var ifrmPreViewH = window.parent.document.getElementById("ifrmPreViewH");
-		        if (ifrmPreViewH != null) {
-		        	ifrmPreViewH.src = "<spring:message code='main.kms4'/>";
-		        	ifrmPreViewH.contentDocument.getElementById("ifrmviewEmptyText").textContent = strLang930;	
+                var ifrmPreViewH = window.parent.document.getElementById("ifrmPreViewH");
+                if (ifrmPreViewH != null && window.self.frameElement.id == "ifrmPreViewH") {
+                    ifrmPreViewH.src = "<spring:message code='main.kms4'/>";
+                } else {
+                    alert(strLang1139);
+                    btnClose_onclick();
+                    window.close();
 		        }
 		    }
 		    function CheckOpinionInfo() {

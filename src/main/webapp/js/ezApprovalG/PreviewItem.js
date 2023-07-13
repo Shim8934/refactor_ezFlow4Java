@@ -1,4 +1,8 @@
-﻿﻿function PreviewRayerChange(pGubun, pPage) {
+﻿// 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 -  필요한 변수 추가. 미리보기 열람불가문서를 미리보기레이어로 열람 시도하는 경우의 분기처리.
+// 미리보기가 삽입되는 페이지 구분값(g_sFlag) 변수배열 추가
+var cabinetPreviewItemFlagArr = ['m01', 'm03', 'm05', 'm06', 'm12', 'm13', 'm14', 'UNTREATED', 'docShare'];
+var isPreviewChange = false;
+function PreviewRayerChange(pGubun, pPage) {
 	if (pGubun == "NONE") {
 		pGubun = "OFF";
 	}
@@ -9,30 +13,59 @@
     DocList.LoadFromID("DocList");
     selobj = DocList.GetSelectedRows()[0];
     
-    if (selobj != null && pGubun != "OFF" && selobj.childNodes.length != 0) {
-    	ItemPreviewRead(selobj, pPage);   
-    	$(document).ready(function () {
-    		$("#ifrmPreViewH").load(function() {
-    			// 상단 버튼 표출제어 부분 각 결재문서 보기 팝업창 내부로 이동 (화면에 잠시 나타났다가 사라지는 현상 방지)
+    // 문서 리스트에서 선택된 컬럼이 있을 때의 분기
+    if (typeof selobj != "undefined" && selobj != null && pGubun != "OFF" && selobj.childNodes.length != 0) {
+    	ItemPreviewRead(selobj, pPage);
+    	// 2023-09-08 전인하 - 비공개문서 미리보기 동작 이상 수정 - 문서 로딩 과정을 기존과 동일히 하되, 프레임에 load시 동작 삽입한 것을 다 사용하면 off시켜 메소드가 중첩 생성되지 않도록 함
+    	$(document).ready(function() {
+          $("#ifrmPreViewH").on("load", function () { // 로딩 시 해당 jQuery 로드 함수가 중첩 실행되는 것을 제거
+   			// 상단 버튼 표출제어 부분 각 결재문서 보기 팝업창 내부로 이동 (화면에 잠시 나타났다가 사라지는 현상 방지)
 /*    			$("#ifrmPreViewH").contents().find("tr:eq(0) #close").css("display", "none");
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu li").css("display", "none");*/
     			$("#ifrmPreViewH").css("height", "738px"); // 미리보기 영역 높이 고정 (화면 전체 스크롤을 위해)
     		/*	var btn_popup = "<ul><li><img src='/images/kr/cm/btn_newpopup.gif' title='새창으로열기' alt='새창으로열기' onclick='return parent.btn_newpopup()'></li></ul>";
     			$("#ifrmPreViewH").contents().find("tr:eq(0) #menu").append(btn_popup);*/
-    		});
-    	});
+            // 2023-09-05 기록물 등록대장 미리보기 - 배부대장에서 정상적으로 미리보기 할 수 있도록 분기처리, 전체관리자일 경우 미리보기 또한 가능케 하도록 분기처리, 로직개선 및 코드정리
+            if ($("#ifrmPreViewH").attr("src") == strLangJIH02) { // 권한이 없어서 선택한 문서 row가 있음에도 빈문서가 로드되었을 때의 분기
+                var secureApprovalDate = "";
+                var checkAprLineFlag = "";
+                var ifrmviewEmptyTextValue = "";
+                
+                checkAprLineFlag = CheckAprLine(selobj.getAttribute("DATA1"));
+                if (pPage == "Cabinet") {
+                    secureApprovalDate = (g_sFlag == "m03" || g_sFlag == "m14") ? trim_Cross(selobj.getAttribute("DATA8")) : trim_Cross(selobj.getAttribute("DATA14"));
+                } else if ( pPage == "Container") {
+                    secureApprovalDate = trim_Cross(selobj.getAttribute("DATA10"));
+                }
+                
+                // 2023-09-08 전인하 - 프레임 생성 시에만 텍스트 삽입함으로서 에러 방지, 불필요한 조건분기 제거
+                // 문서 비공개 사유 문자열 생성
+                if (checkAprLineFlag != "TRUE" && GetUserRole() != "Admin") {
+                    ifrmviewEmptyTextValue = strLang929;
+                } else if (typeof secureApprovalDate != "undefined" && secureApprovalDate != "" && secureApprovalDate >= GetTodayDate()) {
+                    ifrmviewEmptyTextValue = strLangJIH01;
+                } 
+                if ($("#ifrmviewEmptyText") != null) {
+                    ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML = ifrmviewEmptyTextValue;   
+                }
+            }
+            $("#ifrmPreViewH").off();
+          });
+        });
+    // 문서 리스트에서 선택된 컬럼이 없거나, 리스트에 문서가 없을때의 분기
     } else {
-    	document.getElementById("ifrmPreViewH").src = "/blank_kr.htm";  
+    	document.getElementById("ifrmPreViewH").src = strLangJIH02;
     	document.getElementById("ifrmPreViewH").onload = function() {
+    	// 공백페이지 문구 영역 존재여부에 더해, 이미 존재하는 문구가 있는지 여부를 체크 (미리보기 영역에 이미 존재하는 메세지가 있으면 기존 메세지 유지)
     		if (CrossYN()) {
-    			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null) {
+    			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null && ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText == "") {
     				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = strLang930;	        			
     			}
     		} else {
-    			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null) {
+    			if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null && ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText == "") {
     				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLang930;		            		
     			}
-    		}    		
+    		}    
     	}
     }
     
@@ -107,29 +140,51 @@
         Set_ApprovConfig(); 
         isPreviewChange = false;
        // scroll();
-    } catch (e) { }
+    } catch (e) {
+        console.log(e);
+     }
 }
 
+// 2023-06-08 전인하 -  전자결재G > 기록물대장 미리보기 > 배부대장의 우측 상단 미리보기 버튼 id가 중복되지 않도록 분리
 function PreviewMode_ChangeBtn() {
     try {
     	document.getElementById("PreViewNone").className = "icon16 btn_noframe";
+    	if (document.getElementById("PreViewNoneDelivery")) {
+    	    document.getElementById("PreViewNoneDelivery").className = "icon16 btn_noframe";
+    	}
     	
     	if (document.getElementById("PreViewBottom")) {
     		document.getElementById("PreViewBottom").className = "icon16 btn_bottomframe";
     	}
     	
+    	if (document.getElementById("PreViewBottomDelivery")) {
+    	    document.getElementById("PreViewBottomDelivery").className = "icon16 btn_bottomframe";
+    	}
+
     	if (document.getElementById("PreViewleft")) {
     		document.getElementById("PreViewleft").className = "icon16 btn_leftframe";
     	}
     	
+    	if (document.getElementById("PreViewleftDelivery")) {
+    	    document.getElementById("PreViewleftDelivery").className = "icon16 btn_leftframe";
+    	}
+
     	if (pPreviewShow_HOW == "H") {
     		if (document.getElementById("PreViewleft")) {
     			document.getElementById("PreViewleft").className = "icon16 btn_onleftframe";
     		}
+    		if (document.getElementById("PreViewleftDelivery")) {
+    		    document.getElementById("PreViewleftDelivery").className = "icon16 btn_onleftframe";
+    		}
     	} else {
             document.getElementById("PreViewNone").className = "icon16 btn_onnoframe";
+            if (document.getElementById("PreViewNoneDelivery")) {
+                document.getElementById("PreViewNoneDelivery").className = "icon16 btn_onnoframe";
+            }
     	}
-    } catch (e) { }
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 function ItemPreviewRead(obj, page) {
@@ -159,10 +214,11 @@ function ItemPreviewRead(obj, page) {
         var para = new Array();
         para[0] = DocID;
         para[1] = pURL;
-
+        
+        // 2023-09-08 전인하 - 불필요하게 삽입된 조건분기 제거함
         if (tr.getAttribute("DATA10") != "" && tr.getAttribute("DATA10") >= GetTodayDate()) {
             if (CheckAprLine(tr.getAttribute("DATA1")) == "TRUE") {
-                    chk_Passwd(UserID);
+                chk_Passwd(UserID);
             } else {
                 OpenAlertUI(strLang580,"OPEN","");
                 return;
@@ -170,6 +226,51 @@ function ItemPreviewRead(obj, page) {
         }
         else {
             pre_chk_Passwd_Complete("TRUE");
+        }
+    }
+    // 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - "Cabinet"플래그를 추가하여, 기록물 등록대장에서 미리보기하는 경우의 분기를 생성, 처리
+    else if (page == "Cabinet") {
+        var DocList = new ListView();
+        DocList.LoadFromID("DocList");
+
+        var selRow = DocList.GetSelectedRows();
+
+        if (selRow.length <= 0) {
+            var pAlertContent = strLang870;
+            alert(pAlertContent);
+            return;
+        }
+
+        var tr = selRow[0];
+        pURL = tr.getAttribute("DATA2");
+
+        var para = new Array();
+        para[0] = DocID;
+        para[1] = pURL;
+
+        if (cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+            var securityApproval = "";
+            $.ajax({
+                type : "GET",
+                dataType : "text",
+                async : false,
+                url : "/ezApprovalG/getSecurityApprovalDate.do",
+                data : {
+                        docID: DocID
+                        },
+                success: function(result) {
+                    securityApproval = result;
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+
+            if (securityApproval != "" && securityApproval >= GetTodayDate()) {  // 미리보기로 열람하려는 문서가 보안문서일 때.
+                document.getElementById("ifrmPreViewH").src = strLangJIH02;
+            } else { // 미리보기로 열람하려는 문서가 보안문서가 아닐 때.
+                pre_chk_Passwd_Complete("TRUE");
+            }
         }
 	} else {
 		if (pListTypeValue == "1" || pListTypeValue == "11") { //listTypeValue = 11(공유결재문서)
@@ -213,7 +314,7 @@ function ItemPreviewRead(obj, page) {
 			
 			para[0] = pDocID;
 			para[1] = pURL;
-			
+
 			if (tempURL.substr(tempURL.length - 4, tempURL.length).toLowerCase() == ".ezd") {
 				tempURL = tempURL.substr(0, tempURL.length - 4);
 			}
@@ -438,8 +539,7 @@ function pre_OpenReceiveDraftUI(selobj, pDraftFlag) {
             if (isMht) {
                 openLocation = "";
                 
-                if (GetAttribute(selobj,"DATA15") == "001") {
-                	//언제타는지 궁금하구나
+                if (GetAttribute(selobj, "DATA15") == "001") {
                 	openLocation = "/ezApprovalG/recevG.do";
                 } else {
                 	openLocation = "/ezApprovalG/recevGSusin.do";
@@ -921,6 +1021,12 @@ function Window_resize() {
             else {
             	if (useAprPreview == "YES") {
             		document.getElementById("right").style.display = "";
+            		// 2023-07-11 전인하 - useAprPreview가 Yes이나 미리보기 미사용인 일부 메뉴(기록물철 조회 화면 > 기록물보기 버튼 클릭)에서 미리보기 버튼 나타나지 않게 분기처리
+            		if (typeof g_sFlag != 'undefined') {
+            		    if (!cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+            		        document.getElementById("right").style.display = "none";
+            		    } 
+            		}
             	}
             }
             if (pPreviewShow_HOW.trim() == "H") {
@@ -1052,17 +1158,30 @@ function pre_chk_Passwd_Complete(Rtn)
         DocList.LoadFromID("DocList");
         var selRow = DocList.GetSelectedRows();
         var tr = selRow[0];
+
+        // 2023-05-23 이혜림 -  전자결재G > 기록물대장 미리보기 - 기록물 등록대장의 미리보기 문서 url 생성 분기처리
+        // 결재완료문서, 기록물등록대장 등 각 메뉴의 문서 리스트 tr에 맞춰서 데이터를 설정
         pURL = tr.getAttribute("DATA2");
-		orgCompanyID = tr.getAttribute("ORGCOMPANYID");
-        var formid = tr.getAttribute("DATA6");
-        if (approvalFlag == 'S' ) {
-            var docState =  tr.getAttribute("DATA12");
-        } else {
-            var docState =  tr.getAttribute("DATA7");
-        }
-        var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
         var openLocation;
         var tempURL = pURL;
+        
+        if (typeof g_sFlag != 'undefined' && cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+            orgCompanyID = CompanyID;
+            var formid = tr.getAttribute("DATA5");
+            var docState =  tr.getAttribute("DATA15");
+            var orgdocid = trim_Cross(tr.getAttribute("DATA1")); // 결재완료문서에서 ""
+        } else {
+            orgCompanyID = tr.getAttribute("ORGCOMPANYID");
+            var formid = tr.getAttribute("DATA6");
+
+            if (approvalFlag == 'S' ) {
+                var docState =  tr.getAttribute("DATA12");
+            } else {
+                var docState =  tr.getAttribute("DATA7");
+            }
+
+            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
+        }
         
         if (tempURL.substr(tempURL.length - 4, tempURL.length).toLowerCase() == ".ezd") {
         	tempURL = tempURL.substr(0, tempURL.length - 4);

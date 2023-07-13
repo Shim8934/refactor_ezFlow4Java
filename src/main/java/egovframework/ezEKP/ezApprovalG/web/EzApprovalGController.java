@@ -7535,6 +7535,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//부서공유함의 부서,사용자 아이디
 		String shareDeptId = request.getParameter("shareDeptId");
 		String shareUserId = request.getParameter("shareUserId");
+
+		// 2023-07-13 전인하 - 전자결재 > 공유문서함 > 미리보기영역 활성화여부 플래그를 문서함 공유자의 설정값으로 가져오는 현상을 개선
+		String userIdForPreview = userInfo.getId();
 		
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -7605,7 +7608,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		/* 2023-04-18 홍승비 - 전자결재 > 미리보기 영역의 설정값 반환 이전, 미리보기 영역 사용여부를 먼저 체크 (사용하지 않으면 OFF 유지) */
 		if (useAprPreview.equalsIgnoreCase("YES")) {
-			previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId()); // 미리보기 영역 사용설정 (OFF, H)
+			// 2023-07-13 전인하 - 전자결재 > 공유문서함 > 미리보기영역 활성화여부 플래그를 문서함 공유자의 설정값으로 가져오는 현상을 개선
+			previewInfo = ezApprovalGService.getApprovConfig(userIdForPreview, userInfo.getTenantId()); // 미리보기 영역 사용설정 (OFF, H)
 		}
 		
 		model.addAttribute("useEnforceSihang", useEnforceSihang);
@@ -12364,4 +12368,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 
 
+	// 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재여부와 지정된 날짜를 체크하는 메소드
+	@RequestMapping(value = "/ezApprovalG/getSecurityApprovalDate.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String checkSecurityApprovalDate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("checkSecurityApprovalDate (Controller) started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String docID = request.getParameter("docID");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		String result = ezApprovalGService.checkSecurityApprovalDate(docID, companyID, tenantID);
+
+		logger.debug("checkSecurityApprovalDate (Controller) ended, result = " + result);
+		return result;
+	}
 }

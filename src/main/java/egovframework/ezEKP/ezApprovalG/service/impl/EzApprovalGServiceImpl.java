@@ -23876,7 +23876,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     resultXML.append("<DATA5>" + makeXMLString(docXML.getElementsByTagName("CHARGEID").item(j).getTextContent().trim()) + "</DATA5>");
                     resultXML.append("<DATA6>" + makeXMLString(docXML.getElementsByTagName("DEPTID").item(j).getTextContent().trim()) + "</DATA6>");
                     resultXML.append("<DATA7>" + makeXMLString(docXML.getElementsByTagName("ORGDOCNUMCODE").item(j).getTextContent().trim()) + "</DATA7>");
-				}
+                    // 2023-09-05 전인하 - 배부대장 > 리스트조회 시 보안결재정보 함께 호출
+                    resultXML.append("<DATA8>" + makeXMLString(docXML.getElementsByTagName("SECURITYAPPROVAL").item(j).getTextContent().trim()) + "</DATA8>");
+                }
 				resultXML.append("</CELL>");
 			}
 			resultXML.append("</ROW>");
@@ -34657,5 +34659,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     @Override
     public void cleanAbsence(String userID, int tenantID) {
 
+    }
+    
+    // 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재여부와 지정된 날짜를 체크하는 메소드
+    @Override
+    public String checkSecurityApprovalDate(String docID, String companyID, int tenantID) throws Exception {
+        logger.debug("checkSecurityApprovalDate started");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("v_COMPANYID", companyID);
+        map.put("v_TENANTID", tenantID);
+
+        String result = ezApprovalGDAO.checkSecurityApprovalDate(map);
+
+        logger.debug("checkSecurityApprovalDate ended");
+        return result;
     }
 }

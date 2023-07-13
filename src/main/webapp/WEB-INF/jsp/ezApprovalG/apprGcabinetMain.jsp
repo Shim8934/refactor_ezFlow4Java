@@ -45,6 +45,8 @@
 		<!-- <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}"> -->
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/PreviewItem.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS">
 				var OrderOption = "";
 		        var OrderCell = "";        
@@ -102,6 +104,26 @@
 		        var isCabinetToRecordFirst = true; // 기록물철등록부에서 기록물보기 메뉴로 최초 진입했는지 판단하기 위한 변수
 				var selRowChangeFlag = false;
 
+		        // 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 기록물 등록대장 미리보기에서 사용하는 변수를 추가
+		        var cabinetPreviewItemFlagArr = ['m01', 'm03', 'm05', 'm06', 'm12', 'm13', 'm14', 'UNTREATED', 'docShare']; // 미리보기를 표시해야 할 리스트 플래그 모음 배열
+		        var temp_g_sFlag = "";
+		        var pMailListDiv = 0;
+		  		var pMailPreVDiv = 0;
+		 	   	var pMailListWidthH = 0;
+		 	   	var pMailPreWidthH = 0;
+			 	var pMailListDiv_H = 0;
+		 	   	var pMailPreVDiv_H = 0;
+		 	   	var CurrentHeight = 0;
+		 	   	var CurrentWidth = 0;
+		 	    var PreviewH_Move = false;
+
+		        var pListTypeValue = "";
+		        var pPreviewShow_HOW = "";
+		        var previewInfo = "<c:out value = '${previewInfo}'/>";
+			    var useAprPreview = "<c:out value = '${useAprPreview}'/>";
+			    var approvalFlag = "<c:out value = '${approvalFlag}'/>";
+		    	var share = "";
+
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {
@@ -114,9 +136,9 @@
 		                AddOption(del_year, i, i);
 		            }
 		
-		            var height = parseInt(divList.style.height.replace('px', '')) + 200;
-		            var reheight = window.innerHeight - parseInt(height);
-		           //document.getElementById('div_AprLine').style.height = reheight + "px";
+                    // 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 미리보기 영역 크기설정 관련 값 설정
+                    CurrentHeight = document.documentElement.clientHeight;
+                    CurrentWidth = document.documentElement.clientWidth;
 		
 		            if (navigator.userAgent.indexOf('Firefox') != -1) {
 		                document.body.style.MozUserSelect = 'none';
@@ -139,64 +161,88 @@
 		                LoadList();
 		            }
 		            catch (e) {
+		                console.log(e);
+		            }
+		            
+		            // 2023-06-15 전인하 - 전자결재G > 기록물대장 미리보기 - 온로드 시 미리보기 기능 관련 설정값 부여
+                    if (useAprPreview == "YES" && previewInfo == "H") {
+                        document.getElementById("PreviewRayerH").style.display = "";
 		            }
 
+                    if (cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+                        if (useAprPreview == "YES") {
+                            if (pPreviewShow_HOW == "") {
+                                if (previewInfo != null && previewInfo.trim() != "") {
+                                    pPreviewShow_HOW = previewInfo;
+                                } else {
+                                    pPreviewShow_HOW = "OFF";
+                                }
+                            }
+                        } else {
+                            pPreviewShow_HOW = "OFF";
+                        }
+                    } else {
+                        // 기록물대장 미리보기가 열린 상태에서 기록물 미리보기 안쓰는 페이지로 이동 시, 미리보기 레이어가 화면에 나타나는 것을 방지
+                        document.getElementById("PreviewRayerH").style.display = "none";
+                    }
 		            settingResize();
+		            Window_resize();
 		        };
 		        
 		        var isPeriodYear = true;
+		        // 2023-05-23 이혜림 - g_sFlag에 대한 설명 주석 추가
 		        function LoadList() {
 		        	listLoading(true); //20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
 		        	
 		            switch (g_sFlag) {
-		                case "m01":
+		                case "m01": // 기록물등록대장
 		                    RecordList_onclick();
 		                    break;
-		                case "m02":
+		                case "m02": // 기록물철등록부
 		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    CabinetList_onclick();
 		                    break;
-		                case "m03":
+		                case "m03": // 기록물배부대장
 		                    idistbox_onclick();
 		                    break;
-		                case "m05":
+		                case "m05": // 기록물접수목록
 		                    ReceiptList_onclick();
 		                    break;
-		                case "m06":
+		                case "m06": // 기록물발송목록
 		                    SendList_onclick();
 		                    break;
-		                case "m07":
+		                case "m07": // 종료연기신청
 		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    DelayEndYRequest_onclick();
 		                    break;
-		                case "m08":
+		                case "m08": // 정리대상목록
 		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    ArrTargetList_onclick();
 		                    break;
-		                case "m09":
+		                case "m09": // 인계목록
 		                    isPeriodYear = false;
 		                    CabGiveList_onclick();
 		                    break;
 		                case "m10":
 		                    ToggleAdminMenu();
 		                    break;
-		                case "UNTREATED":
+		                case "UNTREATED": // 미처리문서함
 		                    untreatedList_onclick();
 		                    break;
-		                case "docShare":
+		                case "docShare": // 공유문서함
 		      		        DeptID = shareDeptId;
 		                    RecordList_onclick();
 		                    break;
-		                case "m12":
+		                case "m12": // 대외접수목록
 		                    OutReceiptList_onclick();
 		                    break;
-		                case "m13":
+		                case "m13": // 대외발송목록
 		                    OutSendList_onclick();
 		                    break;
-		                case "m14":
+		                case "m14": // 대외배부대장
 		                    idistbox_onclick();
 		                    break;
 		                default:
@@ -1655,6 +1701,8 @@
 		
 		    window.onresize = function() {
 		    	settingResize();
+		        // 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 영역 리사이징 동작 추가
+		    	Window_resize();
 		    };
 		    
 		    var settingResize = function() {
@@ -1985,10 +2033,16 @@
 	                AddOption(rec_year, i, i);
 	            }
 			}
-
+			
+            //2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 > 미리보기영역의 문서팝업창 보기버튼 동작메소드 추가
+            function btn_newpopup() {
+                lvtDoclist_onSel_DBclick();
+            }
+		    
 	    </script>
 	</head>
-	<body class="mainbody" style="margin-top: 0px">
+	<%-- 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 프리뷰 리사이징바 영역 동작 추가 --%>
+	<body class="mainbody" style="margin-top:0px; overflow:auto;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><span id="imgTitle" style="font-size:17px"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 			<span class="searchForm">
 				<select id="selectType" class="text" style="width:80px; height:27px; border-color: #c8c8c8;">
@@ -2057,6 +2111,13 @@
 	            <%-- 2022-03-18 홍승비 - 미처리문서함 > 내부시행문의 반송 시 문서삭제 기능 추가 --%>
 	            <li id="tbtnRemoveDoc" style="display:none;"><span class="icon16 icon16_delete" id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"></span></li>
 	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
+	            <%-- 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 미리보기 영역 상단 아이콘 삽입 (기록물 대장) --%>
+		            <div id="right" class="sub_frameIcon" <c:if test="${useAprPreview != 'YES'}">style="display:none;"</c:if>>
+	    				<div class="sub_frameIconUL" style="width:auto !important;">
+	           				<p class="frameIconLI"><span class="icon16 btn_onnoframe" id="PreViewNone" onclick="PreviewRayerChange('NONE', 'Cabinet')"></span></p>
+	        				<p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Cabinet')"></span></p>
+					    </div>
+					</div>
 	            <li style="vertical-align: middle; float:right"> <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 	            </select>  </li>  
@@ -2066,11 +2127,25 @@
 	        	<li class="important" id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>
 	            <li id="Li1"><span id="Span1" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbSearchDelivery"><span class="icon16 icon16_search" id="SearchDelivery" onclick="return btnSearchDelivery_onclick()"></span></li>
+
+	            <%-- 2023-06-07 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 영역 상단 아이콘 삽입 (배부 대장) --%>
+	            <div id="right" class="sub_frameIcon" <c:if test="${useAprPreview != 'YES'}">style="display:none;"</c:if>>
+                    <div class="sub_frameIconUL" style="width:auto !important;">
+                        <p class="frameIconLI"><span class="icon16 btn_onnoframe" id="PreViewNoneDelivery" onclick="PreviewRayerChange('NONE', 'Cabinet')"></span></p>
+                        <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleftDelivery" onclick="PreviewRayerChange('H', 'Cabinet')"></span></p>
+                    </div>
+                </div>
 	            <li style="vertical-align: middle; float:right"> <select id="del_year" name="del_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 	            </select>    </li>
 	        </ul>
 	    </div>
+        <%-- 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 미리보기 레이어 및 리사이징 바 요소 추가 --%>
+	    <%-- 리사이즈 바 클릭 시의 음영을 위한 부분 --%>
+ 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="ResizeBarPanel"></div>
+	    <div style="width: 8px; height:738px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
+	    <%-- 좌측 리스트 영역 --%>
+	    <span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 	    <div id="divList" class="div_scroll" style="width: 100%; height: 375px; overflow: AUTO; margin-bottom:10px;">
 	        <div id="lvtDoclist"></div>
 	    </div>
@@ -2098,6 +2173,22 @@
 
 	        <div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	            <div id="lvtDetail" style="border: 0;"></div>
+		        </div>
+		    </div>
+	    </span>
+
+	    <%-- 우측 미리보기 영역 --%>
+	    <div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
+	        <div class="previewmail_bar_h" id="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block; height:738px;">
+	            <p class="hbar_dotted">
+	                <img src="/images/prevview_hbar_dotted.gif">
+	            </p>
+	        </div>
+	        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
+	            <div class="previewmail">
+	            	<div class="previewmail_info"></div>
+	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 738px; border: solid 0px green; display: inline-block;"></iframe>
+	            </div>
 	        </div>
 	    </div>
 	    <script type="text/javascript">
