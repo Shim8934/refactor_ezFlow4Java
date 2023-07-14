@@ -175,6 +175,10 @@ public class LoginController {
         		response.addCookie(tempMLCookie);
     		}
     	}
+
+		if(StringUtils.isNotEmpty(request.getParameter("loginSessionFlag"))){
+			model.addAttribute("message", "loginSessionFlag");
+		}
     	
     	String pbm = egovFileScrty.getPbm();
     	

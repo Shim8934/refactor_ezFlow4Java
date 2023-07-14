@@ -211,7 +211,10 @@
 			    	$("#exDiv7").modal();
 			    } else if(message == "emptyOtp"){
 			    	setTimeout(() => {alert("<spring:message code='fail.common.login.otp.warning1'/>")}, "100");
-			    } else if (message != "") {
+			    } else if (message === "loginSessionFlag") {
+					$("#imgMnt9").html("<img src='/images/warning2.png'>");
+					$("#exDiv9").modal();
+				} else if (message != "") {
 // 			        alert(message);
 					$("#layerTitle").text(message);
 					$("#imgMnt2").html("<img src='/images/warning2.png'>");
@@ -789,6 +792,24 @@
 		            <dd><span id=qr></span></dd>
 		        </dl>
 			</div>
+
+			<!-- 2023-07-10 김혜지 세션 만료시 알림 레이어 팝업 -->
+			<div id="exDiv9" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+				<div id="close">
+					<ul>
+						<li><a rel="modal:close"><span></span></a></li>
+					</ul>
+				</div>
+<%--				<div class="warning_wrap" style="padding-left:80px">--%>
+				<div class="warning_wrap">
+					<p style="border:0px; padding-left: 20px;" id="imgMnt9"></p>
+					<dl style="margin-top: 23px; margin-left: 50px;">
+						<dt id="layerTitle9" class="layerTitle"><spring:message code="ezOrgan.hj01" /></dt>
+						<dd><spring:message code="ezOrgan.hj02" /></dd>
+					</dl>
+				</div>
+			</div>
+
 		</div>
 	</body>
 </html>

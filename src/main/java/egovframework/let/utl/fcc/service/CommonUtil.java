@@ -2910,4 +2910,43 @@ public class CommonUtil {
 		logger.debug("getXML2JsonFromRestApi ended.");
 		return resultBody;
 	}
+	
+	public String loginCookieExists(HttpServletRequest request, HttpServletResponse response) {
+		boolean usingSession = false;
+		String  result = "null"; //  0 : 세션 유지 , 1 : 세션 만료 , 2 :  쿠키 만료 및 예외
+
+		try {
+			String serverName = request.getServerName();
+			int tenantID = loginService.getTenantId(serverName);
+			String useSessionConfig = ezCommonService.getTenantConfig("useSession", tenantID);
+
+			// 세션 콘피그가 0 이거나 비어있으면 세션 로그인 사용 안 함
+			usingSession = !useSessionConfig.isEmpty() && !useSessionConfig.equals("0");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return "2";
+		}
+
+		// 세션 콘피그를 무시하고 로그인 쿠키만으로 사용할 수 있도록 해줌
+		boolean usingAsAPI = "yes".equalsIgnoreCase(request.getHeader("Use-As-API"));
+		// request 아이피가 127.0.0.1 일 때는 세션 콘피그 무시함 (인사연동)
+		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
+
+		if (!usingSession || usingAsAPI || isLoopbackRequest) {
+			if(validLoginCookie(request)){
+				result = "0";
+			}else{
+				return "2";
+			}
+		}
+
+		if(validSessionLoginCookie(request, response)){
+			result = "0";
+		}else {
+			result = "1";
+		}
+
+		return result;
+	}
+
 }
