@@ -612,10 +612,7 @@
 	                    var getlistview = new ListView();
 	                    getlistview.LoadFromID(listid);
 	                    var IsInsert = CheckMailReceiver(strId, "3");
-	                    
-	                    /* 2023-07-17 홍승비 - 관리자 > 일정관리 > 일정 그룹 관리 > 그룹 관리 > 구성원 추가 시 작성자 선택 가능하도록 수정 */
-	                    // 사용자단의 일정 참석자 초대, 개인비서지정 기능과 동일한 함수를 사용하므로 작성자 본인이 참석자가 될 수 없는 경우에만 알러트
-	                    if (type != "group" && strId == "<c:out value='${userID}' />") {
+	                    if (strId == "<c:out value='${userID}' />") {
 	                        alert("<spring:message code='ezSchedule.t352' />");
 	                        continue;
 	                    }
