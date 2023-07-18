@@ -1610,7 +1610,7 @@
 								<tr>
 									<th><spring:message code='ezBoard.t224' /></th>
 									<td id="PostDate" style = "white-space:nowrap; padding-right:5px">
-										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate.substring(0, 16)}</div>
+										<div style="vertical-align:middle;width:100%;height:16px;">${boardItem.writeDate.substring(0, 16)}</div>
 									</td>
 									<!-- 게시일 end -->
 									<!-- 게시 종료일 -->
@@ -1698,7 +1698,7 @@
 			        <tr>
 			          <th><spring:message code='ezBoard.t323' /></th>
 			             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-			             	<div style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
+			             	<div style="WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
 			             </td>
 			        </tr>
 			        <!-- 제목 end -->

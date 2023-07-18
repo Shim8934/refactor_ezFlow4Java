@@ -63,7 +63,7 @@
 								<div id="portalOrgan_content">
 					        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 2px; padding:0px; border-top: none;">
 					                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
-					                        <table style="margin-top: 5px; width: 100%;">
+					                        <table style="margin-top: 3px; width: 100%;">
 					                            <tr>
 					                                <td>
 					                                    <div style="float: left; margin-left: 5px;">

@@ -663,7 +663,7 @@
 				        	<td id="journalOrgan_content" style="display: none;">
 				        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 1px; padding:0px; border-top: none;">
 				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
-				                        <table style="margin-top: 5px; width: 100%;">
+				                        <table style="margin-top: 3px; width: 100%;">
 				                            <tr>
 				                                <td>
 				                                    <div style="float: left; margin-left: 5px;">
@@ -713,7 +713,7 @@
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 0px 0 3px 0; background-color: #ffffff; height: 20px;">
                                         	<h2 class="h2_dot" style="display: inline-block;"><spring:message code='ezJournal.t95'/></h2>
-		                                    <div style="float:right; margin-top: 1px;">
+		                                    <div style="float:right; margin-top: -5px;">
 		                                        <a class="imgbtn imgbck"><span onclick="applyFavorite()"><spring:message code='ezJournal.t135'/></span></a>
 		                                        <a class="imgbtn imgbck"><span onclick="modifyFavorite()"><spring:message code='ezJournal.t96'/></span></a>
 		                                        <a class="imgbtn imgbck"><span onclick="deleteFavorite()"><spring:message code='ezJournal.t97'/></span></a>
@@ -764,16 +764,16 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver()">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 252px; position: absolute;top: 56px;">
-		                            <h2 class="receiver_tltype01" style="margin-top:4px; border-bottom:none;">
+	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; width: 252px; position: absolute;top: 56px;">
+		                            <h2 class="receiver_tltype01" style="border-bottom:none;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
-								 	<a id="addFavoriteLineA" class="imgbtn imgbck" style="margin-top: 6px; margin-left: 65px;">
+								 	<a id="addFavoriteLineA" class="imgbtn imgbck" style="margin-top: 4px !important; margin-left: 81px !important;">
 								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
 								 	</a>
 								</div>
 								<div class="receiver_borderbox" style="border-top: 1px solid #ddd;">
-									<div id="receiverList" style="width: 250px; Height: 508px; overflow-x: auto; overflow-y: auto;">
+									<div id="receiverList" style="width: 250px; Height: 516px; overflow-x: auto; overflow-y: auto;">
 									</div>
 								</div>
 	                        </td>

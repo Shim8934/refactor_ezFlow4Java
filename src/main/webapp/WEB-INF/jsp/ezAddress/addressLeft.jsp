@@ -365,6 +365,9 @@
 	        }
 	        function address_Search() {
 	            window.open("/ezAddress/addressMainSearch.do", "right");
+	            // 2023-06-28 황인경  - 디자인 개선 주소록 주소록검색 메뉴 선택시 상단 selected 해제
+	            $(".node_selected").attr("class", "node_normal");
+	            $(".list_text").addClass("node_selected");
 	        }
 		    
  			function event_folderMenu(event){
@@ -482,32 +485,33 @@
 	        	<span class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezEmail.t99000044" />" onclick="mail_Config()"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="newAddress()">
-	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezAddress.t236' /></p>
+	        	<p class="btn_write01"><spring:message code='ezAddress.t236' /></p>
 	        </div>
 	        <div class="addressListBox" style="overflow:hidden; padding-right: 0;">
-		        <ul class="lnbUL">
-		        	<div class="tree" id="AddressTreeView">
-		            	<span>
-		                	<span>
-		                    	<span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_individual"></span><span class="list_text"><spring:message code='ezAddress.t145' /></span><span class="sub_iconLNB tree_manage" onclick="address_foldermanage()"></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_department"></span><span class="list_text"><spring:message code='ezAddress.t146' /></span>
-		                            </div>
-		                    	</span>
-		                        <span>
-		                        	<div class="node_div">
-		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_company"></span><span class="list_text"><spring:message code='ezAddress.t147' /></span>
-		                            </div>
-		                    	</span>
-		                    </span>        
-		                </span>
+		        <ul class="lnbUL" style="background: #F8F9FB">
+		        	<div class="tree" id="AddressTreeView" style="padding-top:15px">
+		            		<!-- 2023-06-22 황인경 - 디자인 개선 주소록 LNB 삭제 -->
+<!-- 		            	<span> -->
+<!-- 		                	<span> -->
+<!-- 		                    	<span> -->
+<!-- 		                        	<div class="node_div"> -->
+<%-- 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_individual"></span><span class="list_text"><spring:message code='ezAddress.t145' /></span><span class="sub_iconLNB tree_manage" onclick="address_foldermanage()"></span> --%>
+<!-- 		                            </div> -->
+<!-- 		                    	</span> -->
+<!-- 		                        <span> -->
+<!-- 		                        	<div class="node_div"> -->
+<%-- 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_department"></span><span class="list_text"><spring:message code='ezAddress.t146' /></span> --%>
+<!-- 		                            </div> -->
+<!-- 		                    	</span> -->
+<!-- 		                        <span> -->
+<!-- 		                        	<div class="node_div"> -->
+<%-- 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_company"></span><span class="list_text"><spring:message code='ezAddress.t147' /></span> --%>
+<!-- 		                            </div> -->
+<!-- 		                    	</span> -->
+<!-- 		                    </span>         -->
+<!-- 		                </span> -->
 		            </div>
-		            <li onclick="address_Search()"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code="ezEmail.t99000042" /></span></li>
+		            <li onclick="address_Search()"><span class="list_text"><spring:message code="ezEmail.t99000042" /></span></li>
 		        </ul>
 	        </div>
 	    </div>

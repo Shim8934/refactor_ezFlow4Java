@@ -45,6 +45,8 @@
             	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/default_pic.gif" style="border-radius:20px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:20px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
                 <dl class="info_txt">
                 	<dt>
+                		<!-- 2023-06-15 황인경 - 디자인 개선 테마2 사용자 정보 부서 추가 -->
+                		<span class="info_team">${deptName}</span>
                 		<span class="info_name">${userName}</span>
                 		<span class="info_icon">
 							<span class="info_set" id="main_personalEnv"><img src="/images/admin/infoSetting.png" alt=""></span>
@@ -52,11 +54,15 @@
                 		</span>
                 	</dt>
                     <dd><spring:message code='ezNewPortal.yej06'/> <span>${lastLogin}</span></dd>
+                    <!-- 2023-06-15 황인경 - 디자인 개선 테마2 사용자 정보 최종접속 IP 추가 -->
+                    <dd><spring:message code='ezNewPortal.hik01'/> <span>${lastLoginIP}</span></dd>
                 </dl>
             </div>
             <div class="personal_content">
             <c:choose>
             	<c:when test="${useAttitude eq 'YES' }">
+            		<!-- 2023-06-15 황인경 - 디자인 개선 테마2 현재시간 문구 추가 -->
+         			<dl class="current"><spring:message code='ezNewPortal.t012' /></dl>
 					<dl class="time">
 	                    <dd id="timeFlow"></dd>
 	                </dl>
@@ -1185,6 +1191,70 @@
 		}
 		
 		setPortalRefresh();
+		
+		// 2023-06-20 한슬기 - 테마2 > 메일 용량 표시 추가
+		var getMailCapacity = function() {
+	        var mailCapacityInfo = loadXMLString("${mailCapacityInfo}");
+			var mGraphSpanPortal = $("#mGraphSpanPortal");
+	        var useMailBoxPortal = $("#useMailBoxPortal");
+	        useMailBoxPortal.text(GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[1].textContent
+	        					 + "\/"+GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[0].textContent)
+	        mGraphSpanPortal.css('width', GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[2].textContent)
+		}
+		
+		getMailCapacity();
+		
+		// 2023-06-20 한슬기 - 테마2 > 웹폴더(개인) 용량 표시 추가 
+		<c:if test="${not empty webFolderPersonalFolderId}">
+		
+			var webFolderPersonalFolderCapacity = function() {
+				// 용량정보 표시
+				function getUsageSuffix(webFolderPersonalFolderCapacity) {
+					var max = webFolderPersonalFolderCapacity.totalCapacity * 1024 * 1024;
+					var usage = webFolderPersonalFolderCapacity.totalUsed / 1024;
+					
+					return kilobyteCalculation(usage) + "/" + kilobyteCalculation(max);
+				}
+				
+				// KB, MB, GB 표시
+				function kilobyteCalculation(kilobyte) {
+
+					if (kilobyte >= 1024 * 1024) {
+						return trimDecimal(kilobyte / (1024 * 1024)) + "G";
+					} else if (kilobyte >= 1024) {
+						return trimDecimal(kilobyte / 1024) + "M";
+					} else {
+						return trimDecimal(kilobyte) + "K";
+					}
+				}
+				
+				function trimDecimal(number) {
+					var str = Math.floor(number);
+					
+					return str;
+				}
+				
+				$.ajax({
+					type: "POST",
+					async: true,
+					url: "/ezWebFolder/getCapacity.do",
+					dataType:"json",
+					data: {
+						folderId: ${webFolderPersonalFolderId}
+					},
+					success: function(data) {
+						var webFolderPersonalFolderCapacity = data.capacity;
+						var usedRate = Math.min(webFolderPersonalFolderCapacity.usedRate, 100);
+						var usageSuffix = getUsageSuffix(webFolderPersonalFolderCapacity);
+						
+						$("#usedRateSpanPortal").css("width", usedRate + "%");
+						$("#usingCpacityPortal").text(usageSuffix);
+					}
+				});
+			}
+			
+			webFolderPersonalFolderCapacity();
+		</c:if>
 	});
 	
 </script>

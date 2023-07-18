@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 //트리의 설정값을 가지고 있는 변수
 var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
@@ -220,12 +220,12 @@ function TreeNode() {
             subImgNode.src = TreeImages["iconboard"];
         }
         
-        /* 2019-05-08 홍승비 - 마이게시판의 하위게시판과 상위폴더(분류) 이미지 분리 */
-        if (IMAGETYPE == "BOARD") {
+        /* 2019-05-08 홍승비 - 마이게시판의 하위게시판과 상위폴더(분류) 이미지 분리, 2023-06-22 황인경 - 디자인 개선 게시판 트리구조 LNB 삭제*/
+		/*if (IMAGETYPE == "BOARD") {
         	treeDiv.innerHTML += subImgNode.outerHTML;
         } else {
         	treeDiv.innerHTML += "<span class='sub_iconLNB tree_folder'></span>";
-        }
+        }*/
         
         //노드 이름 SPAN 생성
         var spnNode = document.createElement("SPAN");
@@ -741,4 +741,7 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
         if (callbackFunc != null & typeof (callbackFunc) == "function")
             callbackFunc(pNodeID, pNodeNM);
     }
+    
+    // 2023-06-28 황인경 - 디자인 개선 게시판 트리구조 다른 h2 메뉴 클릭시 전 선택 메뉴 해제 추가
+	$(".list_text.node_selected").removeClass("node_selected");
 }

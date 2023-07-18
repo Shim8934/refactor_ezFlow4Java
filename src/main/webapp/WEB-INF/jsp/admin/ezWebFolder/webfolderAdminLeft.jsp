@@ -117,6 +117,12 @@
 					goPage(1);
 				}
 
+				// 2023-07-03 황인경 - 디자인개선 관리자화면 웹폴더 트리구조 메뉴 선택 
+				if ($(obj).prop("tagName") == "SPAN" ) {
+					$(obj).parent().next().children().eq(0).attr("class", "on");
+					$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+					$(obj).prev().attr("class", "sub_iconLNB tree_arrow_down");
+				}
 			}
 			
 			function clearToggle(obj) {
@@ -176,11 +182,16 @@
 			function fileTransactionHistory(obj) {
 				clearToggle(obj);
 				window.open("/admin/ezWebFolder/webfolderAdminFileHistory.do", "right");
+				// 2023-07-04 황인경 - 디자인 개선 관리자화면 웹폴더 트리구조 클래스 추가
+				$(obj).parent().attr("class", "on");
+				$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 			}
 			
 			function getTrashCanList(obj) {
 				clearToggle(obj);
 				window.open("/admin/ezWebFolder/recycleBin.do", "right");
+				$(obj).parent().attr("class", "on");
+				$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 			}
 			
 			function departmentFolder() {
@@ -224,20 +235,20 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-			<div class="left_title" style="height: auto;padding: 14px 0 14px 20px;word-break: keep-all;line-height: 1.8;white-space: normal;"><spring:message code="ezWebFolder.t10"/></div>
+			<div class="admin_left_title" style="height: auto;padding: 14px 0 14px 20px;word-break: keep-all;line-height: 1.8;white-space: normal;"><spring:message code="ezWebFolder.t10"/></div>
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<h2 class="on">
-					<span class="sub_iconLNB tree_arrow_up"></span>
+					<span class="sub_iconLNB tree_arrow_down"></span>
 					<span class="h2Title"  onClick="displayPersonal(this);" id="click1"><spring:message code='ezWebFolder.t101'/></span>
 				</h2>
 				<ul class="lnbUL" id="ul1">
-					<li><span class="sub_iconLNB tree_dot_li"></span><span id="company" class="list_text leftMenu_btn"  onClick="goPage(1);" ><spring:message code='ezWebFolder.t102'/></span></li>
+					<li class="on"><span class="sub_iconLNB tree_dot_li"></span><span id="company" class="list_text leftMenu_btn"  onClick="goPage(1);" ><spring:message code='ezWebFolder.t102'/></span></li>
 					<li><span class="sub_iconLNB tree_dot_li"></span><span id="personal" class="list_text leftMenu_btn" onClick="goPage(2);" ><spring:message code='ezWebFolder.t103'/></span></li>
 				</ul>
 				
 				<%-- 회사폴더 --%>
 				<h2 class="off">
-					<span class="sub_iconLNB tree_arrow_up"></span>
+					<span class="sub_iconLNB tree_plus"></span>
 					<span class="h2Title"  onClick="displayPersonal(this);" id="task"><spring:message code='ezWebFolder.t11'/></span>
 				</h2>
 				<ul class="lnbUL"  style="display:none;" id="ul2">
@@ -251,7 +262,7 @@
 				
 				<%-- 부서폴더 --%>				
 				<h2 class="off">
-					<span class="sub_iconLNB tree_arrow_up"></span>
+					<span class="sub_iconLNB tree_plus"></span>
 					<span class="h2Title"  onClick="displayPersonal(this);" id="click2"><spring:message code='ezWebFolder.t12'/></span>
 				</h2>
 				<ul class="lnbUL" style="display:none;" id="ul3">
@@ -262,8 +273,8 @@
 					<div id="folderTree2" class="tree onlytree" ></div>
 				</ul>
 												
-				<h2><span class="h2Title" onClick="fileTransactionHistory(this);" id="fileHistory"><spring:message code='ezWebFolder.t128'/></span></h2>
- 				<h2><span class="h2Title" onclick="getTrashCanList(this);" id="trashClick"><spring:message code='ezWebFolder.t269'/></span></h2>
+				<h2><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onClick="fileTransactionHistory(this);" id="fileHistory"><spring:message code='ezWebFolder.t128'/></span></h2>
+ 				<h2><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="getTrashCanList(this);" id="trashClick"><spring:message code='ezWebFolder.t269'/></span></h2>
 			</div>
 		</div>
 		<div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;" onclick="closePop();"></div>

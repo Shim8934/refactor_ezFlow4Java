@@ -253,13 +253,13 @@
 					<table class="content">
 						<tr>
 							<th><spring:message code='ezCommunity.t138' /></th>
-							<td id="WriteUserNM" ><div id=title style="OVERFLOW-Y: auto; WIDTH: 100%; CURSOR: pointer; HEIGHT: 16px; vertical-align: middle" onclick='OpenUserInfo("<c:out value='${strWriterID}'/>")'> <c:out value='${strWriteName}'/></div></td>
+							<td id="WriteUserNM" ><div id=title style="OVERFLOW-Y: auto; WIDTH: 100%; CURSOR: pointer; HEIGHT: 20px; vertical-align: middle; line-height: 20px;" onclick='OpenUserInfo("<c:out value='${strWriterID}'/>")'> <c:out value='${strWriteName}'/></div></td>
 							<th><spring:message code='ezCommunity.t209' /></th>
 							<td id="PostDate" style="padding-right:15px;white-space:nowrap;" ><c:out value='${strWriteDate}'/></td>
 			        	</tr>
 			        	<tr>
 			          		<th><spring:message code='ezCommunity.t210' /></th>
-			          		<td id="cTitle" colspan="3"><div id="title" style="WORD-WRAP: break-word;word-break:break-all;OVERFLOW-Y: auto; WIDTH: 100%; HEIGHT: 16px"><c:out value='${strTitle}'/></div></td>
+			          		<td id="cTitle" colspan="3"><div id="title" style="WORD-WRAP: break-word;word-break:break-all;OVERFLOW-Y: auto; WIDTH: 100%; HEIGHT: 20px; line-height: 20px;"><c:out value='${strTitle}'/></div></td>
 			        	</tr>
       				</table>
       			</td>

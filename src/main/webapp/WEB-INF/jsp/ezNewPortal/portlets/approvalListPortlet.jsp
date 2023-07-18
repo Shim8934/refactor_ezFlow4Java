@@ -14,8 +14,14 @@
                 	<dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
                 	<dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
                 	<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /></span></dt>                	
-                	<dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
+                	<!-- 2023-06-22 황인경 - 디자인 개선 전자결재 포틀릿 '+' 더보기 위치 이동 -->
+<%--                <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>                	 --%>
             	</dl>
+            	<dl class="portlet_tab_plus">
+                	<dd class="portletPlus" onclick="Appmore_btnClick()">
+                		<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+               		</dd>
+				</dl>
             	<ul id ="ApprList" class="portlet_list"></ul>
         	</div>
 		</article>

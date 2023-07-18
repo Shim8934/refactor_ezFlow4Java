@@ -673,7 +673,7 @@
 							<option value="creatorname" ><spring:message code = 'ezSchedule.shb20' /></option>
 						</select>
 						
-						<input name="text" type="text" style="WIDTH:200px;  height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_GroupInfo(event)"> 
+						<input name="text" type="text" style="WIDTH:200px;  height: 25px;" id="txt_SearchQuery" onKeyPress="return get_search_GroupInfo(event)"> 
 						
 						
 						<a class="imgbtn imgbck" style=" margin-bottom:0px;"><span onClick="search_GroupInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>

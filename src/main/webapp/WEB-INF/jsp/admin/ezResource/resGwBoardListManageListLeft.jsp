@@ -180,12 +180,12 @@
 		<div id="left" class="lnb" style="overflow: auto">
   			<div class="admin_left_title"><spring:message code="ezResource.t17" /></div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<div><h1 id="ToTitle" class="receiver_tltype01" style="border-bottom:0px;margin-left:8px;"><spring:message code="ezResource.t71" /></h1></div>
-	    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc); height:250px; overflow-x:hidden;overflow-y:auto;
-	    			BORDER:#e4e8ec 1px solid; BACKGROUND-COLOR:#e4e8ec; margin-top:5px; margin-left:3px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
+				<div><h1 id="ToTitle" class="receiver_tltype01" style="background: #f8f9fb; padding: 10px 0px 10px 23px; font-size: 16px;"><spring:message code="ezResource.t71" /></h1></div>
+	    		<div id="TreeView" valign="top" style="height:250px; overflow-x:hidden; overflow-y:auto;
+	    			BACKGROUND-COLOR:#f8f9fb;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
 					onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
 				</div>
-				<h2 style="border-top:1px solid #cdd2d9"><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span></h2>
+				<h2><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('NEW')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t23" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('ACL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t24" /></span></h2>
 				<h2><span onClick="brdlistsInit();NavigateBrdAdmin_Res('STEP')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t25" /></span></h2>

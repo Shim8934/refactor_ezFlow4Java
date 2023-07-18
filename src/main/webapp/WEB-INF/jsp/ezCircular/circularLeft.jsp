@@ -30,7 +30,6 @@
 	    		overflow:hidden;
 	    		text-overflow:ellipsis;
 	    		display:inline-block;
-	    		width:146px;
 	    	}	  
 	    	#mCSB_1_container {
 				margin-right: 0px;
@@ -76,6 +75,7 @@
 		        $(".circularListBox").mCustomScrollbar({
 	        		theme : "dark"
 	        	});	
+		        liSelected();
 	        }
 	        
 	        /** ellipsis 추가 */
@@ -139,13 +139,38 @@
 				window.open(url, "right");
 	        }
 
-	        /* 2017-05-17 장진혁 구현 */	        
+	        /* 2017-05-17 장진혁 구현, 2023-06-14 황인경 - 디자인 개선 회람판 트리구조 LNB 수정*/
 	        function openFolder() {
-	        	if ($("#PostTreeView").css("display") == "none") {	        	
-	        		$("#PostTreeView").css("display", "");
+	        	var h2Title = $(event.target).parent();
+	        	var arrowSpan = $(event.target).prev();
+	        	
+	        	if (h2Title.hasClass("off")) {
+					$("h2.on").attr("class", "off");
+	        		$(".sub_iconLNB.tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+		        	$(".lnbUL").attr("class", "lnbUL off");
+	        		h2Title.attr("class", "on");
+	        		h2Title.children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+	        		h2Title.next().attr("class", "lnbUL on");
+	        		
+	        		if (h2Title.next().children().eq(0).attr("id") == "PostTreeView") {
+						$("#PostTreeView").css("display", "");
+	        		}
+
 	        	} else {
-	        		$("#PostTreeView").css("display", "none");
+	        		$("h2.on").attr("class", "off");
+	        		h2Title.children().eq(0).attr("class", "sub_iconLNB tree_plus");
+	        		h2Title.next().attr("class", "lnbUL off");
+	        		
+	        		if (h2Title.next().children().eq(0).attr("id") == "PostTreeView") {
+	        			$("#PostTreeView").css("display", "none");
+					}
+
 	        	}
+				/*if ($("#PostTreeView").css("display") == "none") {	        	
+ 	        		$("#PostTreeView").css("display", "");
+ 	        	} else {
+ 	        		$("#PostTreeView").css("display", "none");
+ 	        	} */
 	        }
 	        
 	        function folder_Manage() {
@@ -205,8 +230,10 @@
 							rcnt = "";	
 						} else {
 							rcnt = result.count;
+							// 2023-06-22 황인경 - 디자인 개선 회람판 좌측 문서 갯수 괄호 추가
+							$("#newCircularCount").html("(" + rcnt + ")");
 						}
-						$("#newCircularCount").html("&nbsp;" + rcnt);
+						//$("#newCircularCount").html("&nbsp;" + rcnt);
 					}
 				});
 	        }
@@ -326,10 +353,31 @@
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
+	        
+		     // 2023-06-14 황인경 - 디자인 개선 회람판 트리구조 LNB 추가 
+		     function liSelected() {
+		    	 var defaultUl = document.getElementById("defaultCircular");
+			     var defaultLi = defaultUl.getElementsByTagName("li");
+			     
+				 for (var i = 0; i < defaultLi.length; i++) {
+					 defaultLi[i].addEventListener("click", function() {
+						 $("#compUL span.node_selected").attr("class", "node_normal");
+		 				var selectedList = defaultUl.querySelector(".node_selected");
+		 				
+						 if (selectedList != null) {
+							 $(selectedList).removeClass("node_selected");
+						     $(event.target).addClass("node_selected");
+						 } else {
+						     $(event.target).addClass("node_selected");
+						 }
+						 
+			       	});
+			     }
+		     }
 	    </script>
 	</head>
 	<body class="newLeft">
-		<div id="left" class="lnb" style="overflow: auto">
+		<div id="left" class="lnb circular_left" style="overflow: auto">
 	    	<!-- <div class="lnb_btn"></div> -->
 	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
 	    	<div class="left_title" title="<spring:message code="ezCircular.t1" />">
@@ -337,22 +385,27 @@
 	        	<span class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezCircular.t10" />" onclick="circularConfig()"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onClick="CircularWrite_onclick()"><span class="sub_iconLNB tree_write"></span><spring:message code='ezCircular.t55'/></p>
+	        	<p class="btn_write01" onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></p>
 	        </div>
 	        <div class="circularListBox" style="overflow:hidden; padding-right: 0;">
-		        <ul class="lnbUL">
-                   	<li><span class="sub_iconLNB tree_circular_new"></span><span class="list_text" id="newCircular" onclick="newCircular()"><spring:message code="ezCircular.t2" /> <span id="newCircularCount"></span></span></li>
-                   	<li><span class="sub_iconLNB tree_circular_in"></span><span class="list_text" id="circularComplete" onclick="circularComplete()"><spring:message code="ezCircular.t3" /><span id="circularCompleteCount"></span></span></li>
-                   	<li><span class="sub_iconLNB tree_circular_write"></span><span class="list_text" id="circularMyCircular" onclick="circularMyCircular()"><spring:message code="ezCircular.t4" /><span id="myCircularCount"></span></span></li>
-                   	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" id="circularTemp" onclick="circularTemp()"><spring:message code="ezCircular.t5" /><span id="circularTempCount"></span></span></li>
-                   	<li><span class="sub_iconLNB tree_delete"></span><span class="list_text" id="circularDelete" onclick="circularDelete()"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span></li>
+		        <!-- 2023-06-30 황인경 - 디자인 개선 회람판 최상위 메뉴 표시 추가 -->
+		        <h2 class="on">
+					<span class="sub_iconLNB tree_arrow_down"></span>
+			        <span class="h2Title" onclick="openFolder()"><spring:message code="ezCircular.t1" /></span>
+		        </h2>
+		        <ul class="lnbUL clicked" id="defaultCircular">
+                   	<li><span class="list_text node_selected" id="newCircular" onclick="newCircular()"><spring:message code="ezCircular.t2" /><span id="newCircularCount"></span></span></li>
+                   	<li><span class="list_text" id="circularComplete" onclick="circularComplete()"><spring:message code="ezCircular.t3" /><span id="circularCompleteCount"></span></span></li>
+                   	<li><span class="list_text" id="circularMyCircular" onclick="circularMyCircular()"><spring:message code="ezCircular.t4" /><span id="myCircularCount"></span></span></li>
+                   	<li><span class="list_text" id="circularTemp" onclick="circularTemp()"><spring:message code="ezCircular.t5" /><span id="circularTempCount"></span></span></li>
+                   	<li><span class="list_text" id="circularDelete" onclick="circularDelete()"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span></li>
+                   	<li><span class="list_text" onclick="circular_Search()"><spring:message code="ezCircular.t8" /></span></li>
 		        </ul>
-		        <ul class="lnbUL">
-                   	<li id="circularDoc"><span class="sub_iconLNB tree_circular_document"></span><span class="sub_iconLNB tree_manage" onclick="folder_Manage()"></span><span class="list_text" onclick="openFolder()"><spring:message code="ezCircular.t7" /></span></li>
-                    <div class="tree onlytree circularDoc" id="PostTreeView" style="display:none;padding-left:10px"></div>
-		        </ul>
-		        <ul class="lnbUL">
-                   	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="circular_Search()"><spring:message code="ezCircular.t8" /></span></li>
+		        <h2 class="off" id="compH2">
+                   	<span class="sub_iconLNB tree_plus"></span><span class="sub_iconLNB tree_manage" onclick="folder_Manage()"></span><span class="h2Title" onclick="openFolder()"><spring:message code="ezCircular.t7" /></span>
+		        </h2>
+		        <ul class="lnbUL off" id="compUL">
+                    <div class="tree onlytree circularDoc" id="PostTreeView" style="display:none;"></div>
 		        </ul>
 	        </div>
 	    </div>

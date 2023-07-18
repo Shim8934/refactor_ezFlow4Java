@@ -439,7 +439,9 @@
 	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption);
 	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : ''");
 	                    } else {
-	                        window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "&nbsp;&nbsp;" + unreadcount);
+	                        // 2023-06-23 황인경 - 디자인 개선 메일 좌측 메뉴 메일 갯수 괄호 추가
+							window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "(" + unreadcount + ")");
+							//window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "&nbsp;&nbsp;" + unreadcount);
 	                    }
 						if (typeof parent.frames["right"] != "undefined") {
 							if (parent.frames["right"] != null){
@@ -501,7 +503,9 @@
 	                    				if (typeof(unreadCount) === 'undefined' || unreadCount === 0) {
 		        	                    	window[treeviewStr].putcaption(i + 1, caption);
 		        	                    } else {
-		        	                    	window[treeviewStr].putcaption(i + 1, caption + "&nbsp;&nbsp;" + unreadCount);
+		        	                    	// 2023-06-23 황인경 - 디자인 개선 메일 좌측 메뉴 메일 갯수 괄호 추가
+		        	                    	window[treeviewStr].putcaption(i + 1, caption + "(" + unreadCount + ")");
+		        	                    	//window[treeviewStr].putcaption(i + 1, caption + "&nbsp;&nbsp;" + unreadCount);
 		        	                    }
 		                    		}
 	                    		}
@@ -656,6 +660,7 @@
 	                
 	                window.open(url, "right");
 	            } catch (e) { }
+	            liSelcted();
 	        }
 	        
 	        function openSpamBox() {
@@ -1047,6 +1052,7 @@
 			// 수신확인 메뉴 클릭
 			function reception_check() {
 	            openRightFrame(encodeURIComponent("<spring:message code='ezEmail.t516' />"), "receiveChk", "");
+	            liSelcted();
 			}
 
 			// window.open(url, "right"); 구절이 중복되어 통일함.
@@ -1215,7 +1221,9 @@
 				var h2TitleElem = document.getElementById(h2TitleId);
 				
 				if (totalUnreadCountElem != null) {
-					totalUnreadCountElem.innerHTML = "&nbsp;(" + totalUnreadCount + ")";
+					// 2023-06-23 황인경 - 디자인 개선 메일 좌측 메뉴 메일 갯수 괄호 추가
+					totalUnreadCountElem.innerHTML = "(" + totalUnreadCount + ")";
+					//totalUnreadCountElem.innerHTML = "&nbsp;(" + totalUnreadCount + ")";
 					h2TitleElem.style.maxWidth = (155 - totalUnreadCountElem.offsetWidth) + "px";
 				}
 			}
@@ -1485,6 +1493,19 @@
 		 		parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
 			}
 			//address end
+			
+			// 2023-06-28 황인경 - 디자인 개선 메일 좌측 트리구조 메일함 메뉴 selected 해제
+			function liSelcted() {
+	            $("#PostTreeView span.node_selected").attr("class", "node_normal");
+	            $(".list_text.node_selected").removeClass("node_selected");
+	            var mailBoxMenu = $(event.target);
+	            
+	            if (mailBoxMenu.prop("tagName") == "LI" ) {
+	            	mailBoxMenu.children().attr("class", "list_text node_selected");
+	            } else {
+	            	mailBoxMenu.attr("class", "list_text node_selected");
+	            }
+			}
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1521,34 +1542,34 @@
 	        	<span class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezEmail.t99000044" />" onclick="mail_Config()"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write02" onclick="write_LetterToMe()"><span class="sub_iconLNB tree_Mwrite"></span><spring:message code="ezEmail.t99000010" /></p> 
-	        	<p class="btn_write01" onclick="write_Letter()"><span class="sub_iconLNB tree_write"></span><spring:message code="ezEmail.t99000013" /></p>
+	        	<p class="btn_write02" onclick="write_LetterToMe()"><spring:message code="ezEmail.t99000010" /></p> 
+	        	<p class="btn_write01" onclick="write_Letter()"><spring:message code="ezEmail.t99000013" /></p>
 	        </div>
         	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
 		        <h2 class="on" id="h2Mail" onclick="Email_Menu_Click();">
-		        	<span class="sub_iconLNB tree_arrow_up"></span>
-		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span>&nbsp;&nbsp;<span id="totalUnreadCount" style="color:#0470e4; position:absolute;"></span>
+		        	<span class="sub_iconLNB tree_arrow_down"></span>
+		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span><span id="totalUnreadCount" style="color:#0470e4; position:absolute;"></span>
 		        </h2>
 		        <ul class="lnbUL" id="ulMail">
 		        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
-		        	<li onclick="reception_check();"><span class="sub_iconLNB tree_receive_ok"></span><span class="list_text"><spring:message code="ezEmail.t516" /></span></li>
-		            <li onclick="Open_Search();"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
+		        	<li onclick="reception_check();"><span class="list_text"><spring:message code="ezEmail.t516" /></span></li>
+		            <li onclick="Open_Search();"><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
 		            <c:if test="${useOnlyInnerMail != 'YES'}">
-		            	<li onclick="check_pop3()"><span class="sub_iconLNB tree_outlook_mail"></span><span class="list_text"><spring:message code="ezEmail.t490" /></span></li>
+		            	<li onclick="check_pop3()"><span class="list_text"><spring:message code="ezEmail.t490" /></span></li>
 		            </c:if>	
-		            <li onclick="mail_exportall()" style="display: none;"><span class="sub_iconLNB tree_outlook_mail_get"></span><span class="list_text"><spring:message code="ezEmail.t99000014" /></span></li>
-		            <li onclick="Open_ReservationManage()"><span class="sub_iconLNB tree_reservation"></span><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
+		            <li onclick="mail_exportall()" style="display: none;"><span class="list_text"><spring:message code="ezEmail.t99000014" /></span></li>
+		            <li onclick="Open_ReservationManage()"><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
 		            <c:if test="${useBizmekaSpambox == 'YES'}">
-		            	<li onclick="openSpamBox()"><span class="sub_iconLNB tree_reservation"></span><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
+		            	<li onclick="openSpamBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
 		            <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
-		            	<li onclick="operatorSendMail()"><span class="sub_iconLNB left_admin_mail"></span><span class="list_text"><spring:message code="ezEmail.0hun01" /></span></li>
+		            	<li onclick="operatorSendMail()"><span class="list_text"><spring:message code="ezEmail.0hun01" /></span></li>
 		            </c:if>	
 		            <c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
-		            	<li onclick="spamMailBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
+		            	<li onclick="spamMailBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
 		            <c:if test="${useSpamOut}">
-		            	<li onclick="oepnSpamOutBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
+		            	<li onclick="oepnSpamOutBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
 		        </ul>
 		        <!-- 주소록 -->
@@ -1594,7 +1615,7 @@
 			        <c:forEach items="${shareInfoList}" var="shareInfo">
 			        	<h2 class="off" id="h2_${shareInfo.shareId}" title="${shareInfo.shareName}" 
 			        		 onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
-			        		<span class="sub_iconLNB tree_arrow_up"></span>
+			        		<span class="sub_iconLNB tree_arrow_down"></span>
 			        		<span class="h2Title" id="h2Title_${shareInfo.shareId}" style="display:inline-block"><c:out value="${shareInfo.shareName}" /></span>&nbsp;&nbsp;
 			        		<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;">
 			        			<c:if test="${shareInfo.totalUnreadCount != '0'}">(${shareInfo.totalUnreadCount})</c:if>
@@ -1602,12 +1623,12 @@
 			        	</h2>
 			        	<ul class="lnbUL off" id="ul_${shareInfo.shareId}">
 			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
-			        		<li onclick="Open_Search();"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
+			        		<li onclick="Open_Search();"><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
 			        		<c:if test="${shareInfo.managePermission eq 'Y'}">
 			        			<li onclick="mail_Config('${shareInfo.shareId}')"><span class="sub_iconLNB tree_setting_gray"></span><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
 			        		</c:if>
 			        		<c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
-				            	<li onclick="shareMailAddress()"><span class="sub_iconLNB tree_junk"></span><span class="list_text">스팸편지함</span></li>
+				            	<li onclick="shareMailAddress()"><span class="list_text">스팸편지함</span></li>
 				            </c:if>		
 			        	</ul>
 			        	<script>
@@ -1617,7 +1638,7 @@
 		        </c:if>
 				<c:if test="${useMailTag}">
 					<h2 class="on" id="tagtitle" onclick='openTagFolder();'>
-						<span class="sub_iconLNB tree_arrow_up"></span>
+						<span class="sub_iconLNB tree_arrow_down"></span>
 						<span class="h2Title" style="display:inline-block"><spring:message code="ezEmail.tag" /></span>
 					</h2>
 					<ul class="lnbUL" id="tagcontent">

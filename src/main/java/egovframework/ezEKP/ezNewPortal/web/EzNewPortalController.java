@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -27,16 +28,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ibm.icu.impl.TimeZoneGenericNames.Pattern;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.web.EzEmailConfigController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
+import egovframework.ezEKP.ezWebFolder.web.EzWebFolderController;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -53,6 +60,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzEmailConfigController ezEmailConfigController; 
+
+	@Autowired
+	private EzWebFolderService_y ezWebFolderService_y;
 	
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
@@ -435,7 +448,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 포탈 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalPortalPage.do", method=RequestMethod.GET)
-	public String portalMainPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+	public String portalMainPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale local) throws Exception { // 2023-06-14 한슬기 - 테마2 상단 영역 메일/웹폴더 용량 표시 추가를 위해 Locale local 추가해주었음
 		logger.debug("portalMainPage Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -446,6 +459,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		Calendar cal = Calendar.getInstance();
 		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
+		
+		// 2023-06-14 한슬기 - 디자인 개선 테마2 > 상단 영역 메일 용량 표시 추가를 위한 메일용량정보(xml)
+		String mailCapacityInfo = ezEmailConfigController.mailGetUse(loginCookie, local, model, req);
+		
+		// 2023-06-20 한슬기 - 디자인 개선 테마2 > 웹폴더(개인) 용량표시 추가를 위한 FolderId 값 추출
+		String webFolderPersonalFolderId = ezWebFolderService_y.getFolderTree(userInfo.getId(), userInfo.getDeptID(),
+										  userInfo.getCompanyName(), "U", userInfo.getPrimary(), userInfo.getTenantId(), "", false )
+										  .stream().findFirst().map(FolderTreeVO::getId).orElse(""); 
 		
 		resp.setHeader("Pragma", "no-cache"); //HTTP 1.0 
 		resp.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
@@ -491,6 +512,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useCommunity", data.get("useCommunity"));
 			model.addAttribute("useMemo", data.get("useMemo"));
 			model.addAttribute("useWebfolder", data.get("useWebfolder"));
+			
+			// 2023-06-15 한슬기 - 디자인 개선 테마2 > 상단 영역 메일/웹폴더(개인) 용량 표시 추가
+			model.addAttribute("mailCapacityInfo", mailCapacityInfo);
+			model.addAttribute("webFolderPersonalFolderId", webFolderPersonalFolderId);
 			
 			String usedTheme = data.get("usedTheme").toString();
 			returnUrl += "Theme" + usedTheme;

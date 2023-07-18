@@ -106,11 +106,11 @@
 	    		<spring:message code='ezBoard.t365'/>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick="qstWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezBoard.t367" /></p>
+	        	<p class="btn_write01" onclick="qstWrite();"><spring:message code="ezBoard.t367" /></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
-				<ul class="lnbUL">
-					<li><span class="sub_iconLNB tree_board_qst"></span><span class="node_selected" onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></li>
+				<ul class="lnbUL" style="background: #F8F9FB; padding: 15px 0px 15px 0px;">
+					<li style="margin: 0px 20px 0px 20px;"><span class="node_selected" onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></li>
 				</ul>
 			</div>	        
 	    </div>

@@ -9,6 +9,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <style type="text/css">
 	    	#mCSB_1_container {
 				margin-right: 0px;
@@ -41,6 +42,34 @@
 				}
 				window.open(url,"right");
 				setRecvCount();
+				
+	        	// 2023-06-15 황인경 - 디자인 개선 업무일지 트리구조 LNB 수정
+	        	if (elem.id == "recvFolder" || elem.id == "tempFolder" ) {
+	        		var activeH2 = document.querySelectorAll(".on");
+	        		activeH2.forEach(function(h2){
+	        			$(h2).removeClass("on");
+	        			$(h2).addClass("off");
+	        		})
+	        		
+	        		$(elem).parent().removeClass("off");
+	        		$(elem).parent().addClass("on");
+	        		$(".list_text.node_selected").removeClass("node_selected");
+	        		$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus")
+	        	}
+				
+				var liSeleted = $(event.target);
+				
+				if (liSeleted.prop("tagName") == "SPAN" && liSeleted.hasClass("list_text")) {
+					$(".node_selected").attr("class", "list_text");
+					
+					if (liSeleted.prop("tagName") == "LI" ) {
+						var liChangeSpan = event.target.querySelector(".list_text");
+						liChangeSpan.setAttribute("class", "list_text node_selected");
+					} else {
+						liSeleted.attr("class", "list_text node_selected");
+					}
+					
+				}
 			}
 	        
 	        function setRecvCount() {
@@ -82,11 +111,15 @@
 	        		
 	        		$("#"+val01+"H2").attr("class", "on");
 	        		$("#"+val01+"UL").attr("class", "lnbUL on");
-	        		$("#"+val01).attr("class", "sub_iconLNB tree_arrow_up");
+	        		// 2023-06-15 황인경 - 디자인 개산 업무일지 트리구조 LNB 수정 
+	        		$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+	        		$("#"+val01).attr("class", "sub_iconLNB tree_arrow_down");
+ 	        		//$("#"+val01).attr("class", "sub_iconLNB tree_arrow_up");
 	        	} else {
 	        		$("#"+val01+"H2").attr("class", "off");
 	        		$("#"+val01+"UL").attr("class", "lnbUL off");	        		
 	        		$("#"+val01).attr("class", "");
+	        		$("#"+val01).attr("class", "sub_iconLNB tree_plus");
 	        	}
 	        }
 	        
@@ -108,81 +141,63 @@
 	        	<span class="sub_iconLNB tree_leftconfig" onClick="journalConfig()" title="<spring:message code='ezJournal.t53'/>"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="writejournal()">
-	        	<p class="btn_write01"><span class="sub_iconLNB tree_write" ></span><spring:message code='ezJournal.t57'/></p>
+	        	<p class="btn_write01"><spring:message code='ezJournal.t57'/></p>
 	        </div>
-	        <div class="journalListBox" style="overflow:hidden; padding-right: 0;">
-		        <h2 class="on" id="deptFolderH2">
-	            	<span id="deptFolder" class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('deptFolder')"><spring:message code='ezJournal.t49'/></span>
-		        </h2>
-		        <ul class="lnbUL" id="deptFolderUL">		        	
-               		<c:choose>
-			    		<c:when test="${not empty typeList }">
-			    			<c:forEach items="${typeList }" var="type">
-			    				<li>						    				
-				    				<c:choose>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t05'}">
-				    						<span class="sub_iconLNB tree_businessLog_day"></span>
-				    					</c:when>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t06'}">
-				    						<span class="sub_iconLNB tree_businessLog_week"></span>
-				    					</c:when>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t07'}">
-				    						<span class="sub_iconLNB tree_businessLog_month"></span>
-				    					</c:when>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t08'}">
-				    						<span class="sub_iconLNB tree_businessLog_half"></span>
-				    					</c:when>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t09'}">
-				    						<span class="sub_iconLNB tree_businessLog_quarter"></span>
-				    					</c:when>
-				    					<c:otherwise>
-				    						<span class="sub_iconLNB tree_businessLog_year"></span>
-				    					</c:otherwise>
-				    				</c:choose>
-				    				<span class="list_text" id="fmenu" listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);"><spring:message code="${type.journaltypeId}"/></span>
-			    				</li>
-			    			</c:forEach>
-			    		</c:when>
-			    	</c:choose>
-		        </ul>
-		        <h2 class="off" id="myFolderH2">
-		            <span id="myFolder" class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('myFolder')"><spring:message code='ezJournal.t50'/></span>
-		        </h2>
-		        <ul class="lnbUL off" id="myFolderUL">
-	        		<c:choose>
-			    		<c:when test="${not empty typeList }">
-			    			<c:forEach items="${typeList }" var="type">
-							    <li>
-								    <c:choose>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t05'}">
-				    						<span class="sub_iconLNB tree_businessLog_day"></span>
-				    					</c:when>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t06'}">
-				    						<span class="sub_iconLNB tree_businessLog_week"></span>
-				    					</c:when>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t07'}">
-				    						<span class="sub_iconLNB tree_businessLog_month"></span>
-				    					</c:when>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t08'}">
-				    						<span class="sub_iconLNB tree_businessLog_half"></span>
-				    					</c:when>
-				    					<c:when test="${type.journaltypeId eq 'ezJournal.t09'}">
-				    						<span class="sub_iconLNB tree_businessLog_quarter"></span>
-				    					</c:when>
-				    					<c:otherwise>
-				    						<span class="sub_iconLNB tree_businessLog_year"></span>
-				    					</c:otherwise>
-				    				</c:choose>
-				    				<span class="list_text" listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);"><spring:message code="${type.journaltypeId}"/></span>
-							    </li>
-			    			</c:forEach>
-			    		</c:when>
-			    	</c:choose>
-		        </ul>
-		        <ul id="option" class="lnbUL">
-                   	<li><span class="sub_iconLNB tree_businessLog_receive"></span><span class="list_text" listType='recv' onClick="goJournalList(this);"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">&nbsp;&nbsp;${recvCount}</span></c:if></span></li>
-                   	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" listType='temp' onClick="goJournalList(this);"><spring:message code='ezJournal.t52'/></span></li>
-		        </ul>
+	        <div class="journalListBox mCustomScrollbar _mCS_1 mCS_no_scrollbar" style="overflow: hidden; padding-right: 0px; height: 854px;">
+		        <div id="mCSB_1" class="mCustomScrollBox mCS-dark mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
+		        	<div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+				        <h2 class="on" id="deptFolderH2">
+							<span id="deptFolder" class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" onclick="openFolder('deptFolder')"><spring:message code='ezJournal.t49'/></span>
+						</h2>
+						<ul class="lnbUL on" id="deptFolderUL">
+							<c:choose>
+								<c:when test="${not empty typeList }">
+									<c:forEach items="${typeList }" var="type">
+										<li>
+											<c:choose>
+												<c:when test="${type.journaltypeId eq 'ezJournal.t05'}">
+													<span class="list_text node_selected" id="fmenu" listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);"><spring:message code="${type.journaltypeId}"/></span>
+												</c:when>
+												<c:otherwise>
+								    				<span class="list_text" id="fmenu" listType='department' typeId='${type.journaltypeId }' onClick="goJournalList(this);"><spring:message code="${type.journaltypeId}"/></span>
+												</c:otherwise>
+											</c:choose>
+					    				</li>
+					    			</c:forEach>
+					    		</c:when>
+					    	</c:choose>
+				        </ul>
+				        <h2 class="off" id="myFolderH2">
+				            <span id="myFolder" class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('myFolder')"><spring:message code='ezJournal.t50'/></span>
+				        </h2>
+				        <ul class="lnbUL off" id="myFolderUL">
+			        		<c:choose>
+					    		<c:when test="${not empty typeList }">
+					    			<c:forEach items="${typeList }" var="type">
+									    <li>
+						    				<span class="list_text" listType='mine' typeId='${type.journaltypeId }' onClick="goJournalList(this);"><spring:message code="${type.journaltypeId}"/></span>
+									    </li>
+					    			</c:forEach>
+					    		</c:when>
+					    	</c:choose>
+				        </ul>
+						<!-- 2023-06-14 황인경 디자인 개선 업무일지 태그 구조 수정, LNB 삭제  -->
+						<h2 class="off" id="recvFolderH2">
+							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" listType='recv' onClick="goJournalList(this);" id="recvFolder"><spring:message code='ezJournal.t51'/>
+								<c:if test="${recvCount ne 0 }">
+			                   		<span id="recvCount">&nbsp;&nbsp;${recvCount}</span>
+			                   	</c:if>
+		                   	</span>
+						</h2>
+						<h2 class="off" id="tempFolderH2">
+		                	<span class="sub_iconLNB tree_plus"></span><span class="h2Title" listType='temp' onClick="goJournalList(this);" id="tempFolder"><spring:message code='ezJournal.t52'/></span>
+						</h2>
+					</div>
+<!-- 					<ul id="option" class="lnbUL"> -->
+<%--                    	<li><span class="sub_iconLNB tree_businessLog_receive"></span><span class="list_text" listType='recv' onClick="goJournalList(this);"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">&nbsp;&nbsp;${recvCount}</span></c:if></span></li> --%>
+<%--                    	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" listType='temp' onClick="goJournalList(this);"><spring:message code='ezJournal.t52'/></span></li> --%>
+<!--	 		        </ul> -->
+				</div>
 	        </div>
 	    </div>
 	

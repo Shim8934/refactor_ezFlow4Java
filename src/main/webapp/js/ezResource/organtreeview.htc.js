@@ -1,4 +1,4 @@
-﻿/*
+﻿﻿/*
 <public:component urn="www.asitaka.com:organtreeview">
 
 <public:property name="config" put="put_config" />
@@ -1080,7 +1080,13 @@ function organtreeview(thisobjid, elobjid) {
                 var nodeCount = g_nodeCount;
                 var mydepth = depth;
 
-            	var nodeHtml = "<span id= 'res"+nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
+            	// 2023-06-22 황인경 - 디자인 개선 관리자 화면 자원관리, 차량관리 트리구조 style 변경
+                if ($("h1.receiver_tltype01").length > 0) {
+                	var nodeHtml = "<span id= 'res"+nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent+"' style='padding: 0 6px; margin: 0 23px; height: 26px; display: inline-block; font-size: 14px;'><span><div class='node_div'>";
+                } else {
+    				var nodeHtml = "<span id= 'res"+nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
+                }
+            	//var nodeHtml = "<span id= 'res"+nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
             	k++;
 
                 for (var j = 0; j < depth.length; j++) {
@@ -1131,12 +1137,13 @@ function organtreeview(thisobjid, elobjid) {
                 else {
                     if (!bEndNode) {
                         //nodeHtml += g_baseImage["dot_normal"];
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
+                    	// 2023-06-22 황인경 - 디자인 개선 관리자 화면 차량관리 트리구조 태그 삭제
+						//nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "1";
                     }
                     else {
                         //nodeHtml += g_baseImage["dot_end"];
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
+                    	//nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "0";
                     }
 
@@ -1148,9 +1155,10 @@ function organtreeview(thisobjid, elobjid) {
                 }
 				else
 				{
-				    if (findchildnodevalue(childNode, "DATA7") == 1) //자원관리에서 1:분류 2:자원 이미지 달리표현하기 2008-09-30
+				    if (findchildnodevalue(childNode, "DATA7") == 1) { // 자원관리에서 1:분류 2:자원 이미지 달리표현하기 2008-09-30
+					}
 					    //nodeHtml += ("<img src='" + g_images["BASE"] + "'>"); 
-				    	nodeHtml += "<span class='sub_iconLNB tree_folder'></span>"; 
+				    	//nodeHtml += "<span class='sub_iconLNB tree_folder'></span>";  
 				    else
 				        if (findchildnodevalue(childNode, "DATA15") == 1)
 				            //nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
@@ -1295,12 +1303,13 @@ function organtreeview(thisobjid, elobjid) {
                 else {
                     if (!bEndNode) {
                         //nodeHtml += g_baseImage["dot_normal"];
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
+                    	// 2023-06-22 황인경 - 디자인 개선 관리자 화면 차량관리 트리구조 태그 삭제
+                    	//nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "1";
                     }
                     else {
                         //nodeHtml += g_baseImage["dot_end"];
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
+                    	//nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "0";
                     }
 

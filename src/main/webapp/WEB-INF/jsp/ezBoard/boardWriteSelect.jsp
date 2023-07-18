@@ -13,6 +13,7 @@
 				overflow:hidden;
 				text-overflow:ellipsis;
 				display: inline-block;
+				font-size: 14px;
 			}
 			.node_div span {
 				overflow:hidden;

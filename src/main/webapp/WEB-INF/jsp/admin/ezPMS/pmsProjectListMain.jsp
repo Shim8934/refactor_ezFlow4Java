@@ -175,7 +175,7 @@
 							<option value="searchByOverview"><spring:message code="ezPMS.t236"/></option>
 							<option value="listProjectStatus"><spring:message code="ezPMS.t38"/></option>
 						</select>
-						<input id="searchKeyword" type="text" style="height:22px; width:200px; margin-bottom:1px;" onkeypress="if(event.keyCode==13) {searchProject(); return false;}"/>
+						<input id="searchKeyword" type="text" style="height:25px; width:200px; margin-bottom:1px;" onkeypress="if(event.keyCode==13) {searchProject(); return false;}"/>
 						<a class="imgbtn imgbck" id="searchBtn" onclick="searchProject()" style="margin-left:3px;"><span><spring:message code="ezPMS.t1"/></span></a>
 						<select id="listByStatus" onchange="viewListByStatus(this.value)" style="display: none; height:22px;">
 							<option value="A"><spring:message code="ezPMS.t271"/></option>

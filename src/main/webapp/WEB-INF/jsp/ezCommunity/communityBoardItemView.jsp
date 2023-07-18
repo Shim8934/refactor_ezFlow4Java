@@ -1077,7 +1077,7 @@
 	                        <!-- 게시일 -->
 	                        <th style="width:10%"><spring:message code='ezCommunity.t209'/></th>
 	                        <td id="PostDate" style="padding-right: 15px; white-space: nowrap; width:40%">
-	                        	<div id="Div3" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.writeDate.substring(0, 16)}' /></div>
+	                        	<div id="Div3" style="vertical-align: middle; width: 100%; height: 16px;"><c:out value='${item.writeDate.substring(0, 16)}' /></div>
 	                        </td>
 	                        <!-- 게시일 end -->
 	                        <!-- 게시종료일 -->
@@ -1086,7 +1086,7 @@
 	                        <c:choose>
 	                        	<c:when test="${item.endDate == t930}">
 	                        		<td id="EndDate" style="padding-right: 15px; white-space: nowrap; width: 40%;">
-			                            <div id="Div4" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><spring:message code='ezCommunity.t930'/></div>
+			                            <div id="Div4" style="vertical-align: middle; width: 100%; height: 16px;"><spring:message code='ezCommunity.t930'/></div>
 			                        </td>
 	                        	</c:when>
 	                        	

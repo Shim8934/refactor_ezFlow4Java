@@ -215,7 +215,7 @@
 	    		<spring:message code="main.t28" />
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick='resourceWrite()'><span class="sub_iconLNB tree_write"></span><spring:message code="main.t00034" /></p>
+	        	<p class="btn_write01" onclick='resourceWrite()'><spring:message code="main.t00034" /></p>
 	        </div>
 	        <div class="resourceListBox" style="overflow:hidden; padding-right: 0;">
 		        <ul class="lnbUL">

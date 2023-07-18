@@ -608,7 +608,7 @@
 	    		<spring:message code='main.t1006' />
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick="make_Cop()"><span class="sub_iconLNB tree_write"></span><spring:message code="ezCommunity.t1011" /></p>
+	        	<p class="btn_write01" onclick="make_Cop()"><spring:message code="ezCommunity.t1011" /></p>
 	        </div>
 	        <div class="communityListBox" style="overflow:hidden; padding-right: 0;">
 		        <div id="MyCopList">

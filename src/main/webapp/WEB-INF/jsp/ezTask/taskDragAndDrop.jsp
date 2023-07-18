@@ -254,7 +254,7 @@
 		</script>
 	</head>  
 	<body style ="width:100%;height:100%;overflow:hidden">   
-        <div style="width:100%;white-space:nowrap;display:inline-block; height: 20px;">
+        <div style="width:100%;white-space:nowrap;display:inline-block; height: 25px;">
             <div style="float:left">
                 <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezTask.t215' /></span></a>
                 <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezTask.t216' /></span></a>   

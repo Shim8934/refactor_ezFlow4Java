@@ -593,7 +593,9 @@
 					return this.nodeType === 3 && (!this.nodeValue || /^\s+$/.test(this.nodeValue));
 				})
 				.remove();
-			this.element.html("<"+"ol class='jstree-container-ol jstree-children' role='group'><"+"li id='j"+this._id+"_loading' class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='tree-item'><i class='jstree-icon jstree-ocl'></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
+			// 2023-06-22 황인경 - 디자인 개선 웹폴더 트리구조 LNB 삭제
+			this.element.html("<"+"ol class='jstree-container-ol jstree-children' role='group'><"+"li id='j"+this._id+"_loading' class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='tree-item'><span class=''></i><"+"li class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</li></li></ol>");
+			//this.element.html("<"+"ol class='jstree-container-ol jstree-children' role='group'><"+"li id='j"+this._id+"_loading' class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='tree-item'><span class=''></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
 			this.element.attr('aria-activedescendant','j' + this._id + '_loading');
 			this._data.core.li_height = this.get_container_ol().children("li").first().outerHeight() || 24;
 			this._data.core.node = this._create_prototype_node();
@@ -635,16 +637,21 @@
 		_create_prototype_node : function () {
 			var _node = document.createElement('LI'), _temp1, _temp2;
 			_node.setAttribute('role', 'treeitem');
-			_temp1 = document.createElement('I');
-			_temp1.className = 'jstree-icon jstree-ocl';
+			// 2023-06-22 황인경 - 디자인 개선 웹폴더 트리구조 태그 변경 및 LNB 삭제
+			_temp1 = document.createElement('SPAN');
+			_temp1.className = '';
+			//_temp1 = document.createElement('I');
+			//_temp1.className = 'jstree-icon jstree-ocl';
 			_temp1.setAttribute('role', 'presentation');
 			_node.appendChild(_temp1);
-			_temp1 = document.createElement('A');
+			_temp1 = document.createElement('LI');
+			//_temp1 = document.createElement('A');
 			_temp1.className = 'jstree-anchor';
 			_temp1.setAttribute('href','#');
 			_temp1.setAttribute('tabindex','-1');
 			_temp2 = document.createElement('I');
-			_temp2.className = 'jstree-icon jstree-themeicon';
+			_temp2.className = '';
+			//_temp2.className = 'jstree-icon jstree-themeicon';
 			_temp2.setAttribute('role', 'presentation');
 			_temp1.appendChild(_temp2);
 			_node.appendChild(_temp1);
@@ -740,10 +747,13 @@
 							was_click = +(new Date()); // ie does not allow to prevent losing focus
 						}
 					}, this))
-				.on("mousedown.jstree", ".jstree-ocl", function (e) {
+				// 2023-06-22 황인경 - 디자인 개선 웹폴더 트리구조 LNB 삭제
+				.on("mousedown.jstree", "", function (e) {
+				//.on("mousedown.jstree", ".jstree-ocl", function (e) {
 						e.preventDefault(); // prevent any node inside from losing focus when clicking the open/close icon
 					})
-				.on("click.jstree", ".jstree-ocl", $.proxy(function (e) {
+				.on("click.jstree", "", $.proxy(function (e) {
+				//.on("click.jstree", ".jstree-ocl", $.proxy(function (e) {
 						this.toggle_node(e.target);
 					}, this))
 				.on("dblclick.jstree", ".jstree-anchor", $.proxy(function (e) {
@@ -2559,8 +2569,11 @@
 				//node.childNodes[1].innerHTML += "<span class='jstree-span-title' style='width:" + spanW + "px'>" + obj.text + "</span>";
 
 				/* 김수아 - html entity 그대로 출력    core.force_text를 true로 설정하면 되지만, span.jstree-span-title에 폰트 크기 스타일이 걸려있어 걍 여기다 추가함.. */
-				node.childNodes[1].innerHTML += "<span class='jstree-span-title' style='width:" + spanW + "px'></span>";
-				node.childNodes[1].getElementsByClassName('jstree-span-title')[0].appendChild(d.createTextNode(obj.text));
+				// 2023-06-22 황인경 - 디자인 개선 웹폴더 트리구조 클래스, style 변경
+				node.childNodes[1].innerHTML += "<span class='list_text'></span>";
+				node.childNodes[1].getElementsByClassName('list_text')[0].appendChild(d.createTextNode(obj.text));
+				//node.childNodes[1].innerHTML += "<span class='jstree-span-title' style='width:" + spanW + "px'></span>";
+				//node.childNodes[1].getElementsByClassName('jstree-span-title')[0].appendChild(d.createTextNode(obj.text));
 			}
 			
 			if(deep && obj.children.length && (obj.state.opened || force_render) && obj.state.loaded) {
@@ -3591,7 +3604,9 @@
 
 			var c = this.get_container_ol()[0].className;
 			if(!skip_loading) {
-				this.element.html("<"+"ol class='"+c+"' role='group'><"+"li class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='treeitem' id='j"+this._id+"_loading'><i class='jstree-icon jstree-ocl'></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
+				// 2023-06-22 황인경 - 디자인 개선 웹폴더 트리구조 클래스 변경
+				this.element.html("<"+"ol class='"+c+"' role='group'><"+"li class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='treeitem' id='j"+this._id+"_loading'><span class=''></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
+				//this.element.html("<"+"ol class='"+c+"' role='group'><"+"li class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='treeitem' id='j"+this._id+"_loading'><i class='jstree-icon jstree-ocl'></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
 				this.element.attr('aria-activedescendant','j'+this._id+'_loading');
 			}
 			this.load_node($.jstree.root, function (o, s) {
@@ -3624,7 +3639,8 @@
 			var opened = [], to_load = [], s = this._data.core.selected.concat([]);
 			to_load.push(obj.id);
 			if(obj.state.opened === true) { opened.push(obj.id); }
-			this.get_node(obj, true).find('.jstree-open').each(function() { to_load.push(this.id); opened.push(this.id); });
+			this.get_node(obj, true).find('.jstree-open').each(function() { to_load.push(this.id); opened.push(this.id);});
+			//this.get_node(obj, true).find('.jstree-open').each(function() { to_load.push(this.id); opened.push(this.id); });
 			this._load_nodes(to_load, $.proxy(function (nodes) {
 				this.open_node(opened, false, 0);
 				this.select_node(s);
@@ -4989,7 +5005,9 @@
  * It also supports tri-state behavior, meaning that if a node has a few of its children checked it will be rendered as undetermined, and state will be propagated up.
  */
 
-	var _i = document.createElement('I');
+	// 2023-06-22 황인경 - 디자인 개선 웹폴더 트리구조 태그 변경
+	var _i = document.createElement('LI');
+	//var _i = document.createElement('I');
 	_i.className = 'jstree-icon jstree-checkbox';
 	_i.setAttribute('role', 'presentation');
 	/**
@@ -8455,7 +8473,9 @@
 						var tmp = $.Event('dblclick', { metaKey : e.metaKey, ctrlKey : e.ctrlKey, altKey : e.altKey, shiftKey : e.shiftKey });
 						$(e.currentTarget).closest(".jstree-node").children(".jstree-anchor").first().trigger(tmp).focus();
 					})
-				.on("click.jstree", ".jstree-leaf > .jstree-ocl", $.proxy(function (e) {
+				// 2023-06-22 황인경 - 디자인 개선 웹폴더 트리구조 LNB 삭제
+				.on("click.jstree", ".jstree-leaf", $.proxy(function (e) {
+				//.on("click.jstree", ".jstree-leaf > .jstree-ocl", $.proxy(function (e) {
 						e.stopImmediatePropagation();
 						var tmp = $.Event('click', { metaKey : e.metaKey, ctrlKey : e.ctrlKey, altKey : e.altKey, shiftKey : e.shiftKey });
 						$(e.currentTarget).closest(".jstree-node").children(".jstree-anchor").first().trigger(tmp).focus();

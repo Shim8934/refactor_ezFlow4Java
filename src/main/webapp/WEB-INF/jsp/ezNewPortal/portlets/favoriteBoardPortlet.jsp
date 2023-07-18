@@ -10,6 +10,8 @@
 	<article class="board box_shadow">
 		<div class="layDIV">
            <dl class="portlet_tab sortablePortlet" id="BoardTab"></dl>
+           <!-- 2023-06-23 황인경 - 디자인 개선 즐겨찾기 포틀릿 '+' 더보기 위치 변경 -->
+           <dl class="portlet_tab_plus" id="BoardTabPlus"></dl>
            <ul class="portlet_list" id="BoardList"></ul>
     	</div>
     </article>

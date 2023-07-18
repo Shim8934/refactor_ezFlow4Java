@@ -1660,7 +1660,7 @@
 					<input type="text" id="EdatepickerSimple" style="height:30px;" size="10" disabled="" readonly>
 				</span>
 
-				<select name="searchCheck searchFilter" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; border-right: 0px none;">
+				<select name="searchCheck searchFilter" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
 					<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
 					<c:if test="${isSentItems != true}">
 						<option value="FROM"><spring:message code="ezEmail.t161" /></option>
@@ -1673,7 +1673,7 @@
 					</c:if>
 				</select>
 			  
-				<input name="keyword" id="keywordSearch" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"
+				<input name="keyword" id="keywordSearch" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb;" onKeyPress="onkeydown_start_search(event);"
 					   onmousedown="keyword_Clear();" placeholder="";/>
 				<a class="searchBtn"><img src="/images/bsearch_new2.png" border="0" onclick="start_search2()"></a>
 				<a class="searchFilterBtn"><img src="/images/bsearch_new2_filter.png" border="0" onclick="addSearch()"></a>

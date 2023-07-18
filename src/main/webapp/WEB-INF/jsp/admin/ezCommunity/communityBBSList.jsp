@@ -313,7 +313,7 @@
 							</c:when>
 						</c:choose>
 						
-						<input type="text" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px; height: 22px; vertical-align:middle;">
+						<input type="text" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px; height: 25px; vertical-align:middle;">
 						<a class="imgbtn imgbck" style="vertical-align: middle; margin-bottom: 0px;"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
 					</td>
 				</tr>

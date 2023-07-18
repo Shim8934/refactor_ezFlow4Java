@@ -422,6 +422,12 @@
 	    function functionFlag(flag) {
 	    	var funcFlag = flag;
 	    	
+	    	// 2023-06-23 황인경 - 디자인 개선 근태관리 트리구조 selected 수정
+	    	if ($(event.target).prop("tagName") == "SPAN" && flag != 7 ) {
+		    	$(".node_selected").attr("class", "list_text");
+		    	$(event.target).attr("class", "list_text node_selected");
+	    	}
+	    	
 	    	switch(funcFlag) {
 	    		case 1:
 	    			window.open("/ezAttitude/attitudeUserMain.do", "right");
@@ -443,6 +449,11 @@
 	    			break;
 	    		case 7:	// 근태정보관리
 	    			window.open("/ezAttitude/attitudeManage.do", "right");
+	    			// 2023-06-23 황인경 - 디자인 개선 근태관리 LNB 수정
+	    			$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+	    			$(".on").attr("class", "off");
+	    			$("#personalH2").attr("class", "on");
+	    			$(".list_text.node_selected").removeClass("node_selected");
 	    			break;
 	    	}
 	    }
@@ -534,10 +545,34 @@
         	leftResize();
     	});
     	
+        // 2023-06-27 황인경 - 디자인 개선 근태관리 트리구조 클래스 추가, LNB 삭제 및 수정 
+        function openFolder() {
+        	var openH2;
+        	
+	        if ($(event.target).prop("tagName") == "SPAN" ) {
+				openH2 = $(event.target).parent();         			
+	        } else {
+				openH2 = $(event.target);         			
+	        }
+	        
+	        if ($(openH2).hasClass("off")) {
+	           	$("h2.on").attr("class", "off");
+	           	$(".lnbUL.on").removeClass("on").addClass("off");
+	           	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+	           	$(openH2).attr("class", "on");
+	           	$(openH2).next().attr("class", "lnbUL on");
+	           	$(openH2).children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+			} else {
+	        	   $(openH2).attr("class", "off");
+	        	   $(".lnbUL.on").removeClass("on").addClass("off");
+		           $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+			}
+		}
+        
 		</script>
 	</head>
 	<body class="newLeft">
-		<div id="left" class="lnb" style="overflow: auto">
+		<div id="left" class="lnb">
 	    	<!-- <div class="lnb_btn"></div> -->
 	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
 	    	<div class="left_title" title="<spring:message code='ezAttitude.t1'/>">
@@ -548,26 +583,26 @@
 	        	<p class="btn_write01" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t64'/></span></p>
 	        </div>
 	        <div class="attitudeListBox" style="overflow:hidden; padding-right: 0;">
-		        <h2 class="on">
-		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t1'/></span>
+		        <h2 class="on" onclick="openFolder()">
+		            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title"><spring:message code='ezAttitude.t1'/></span>
 		        </h2>
-		        <ul class="lnbUL">
-                   	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span></li>
-                   	<li><span class="sub_iconLNB tree_workTime_department"></span><span class="list_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span></li>
-                   	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAnnual" onclick="functionFlag(3)"><spring:message code='ezAttitude.t265'/></span></li>
+		        <ul class="lnbUL on">
+                   	<li><span class="list_text node_selected" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span></li>
+                   	<li><span class="list_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span></li>
+                   	<li><span class="list_text" id="userAnnual" onclick="functionFlag(3)"><spring:message code='ezAttitude.t265'/></span></li>
 		        </ul>
-		        <h2 class="on">
-		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
+		        <h2 class="off" onclick="openFolder()">
+		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
 		        </h2>
-		        <ul class="lnbUL">
-               		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t166'/></span></li>
+		        <ul class="lnbUL off">
+               		<li><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t166'/></span></li>
                    	<c:if test="${attitudeAdminCheck == true}">
-                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t7'/>
+                   		<li><span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t7'/>
                    			<c:if test="${totalAtt != 0 }">
 								<span id="attCount" class="attCount">&nbsp;${totalAtt}</span>
 							</c:if>
                    		</span></li>
-                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t275'/>
+                   		<li><span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t275'/>
 	                   		<c:if test="${totalAnnual != '0' }">
 								<span id="annualCount" class="attCount">&nbsp;${totalAnnual}</span>
 							</c:if>
@@ -575,9 +610,9 @@
                     </c:if>
 		        </ul>
 		        <c:if test="${attitudeAdminCheck == true}">
-			        <ul class="lnbUL">
-                  		<li><span class="sub_iconLNB tree_workTimeset"></span><span class="list_text" onclick="functionFlag(7)"><spring:message code='ezAttitude.t73'/></span></li>
-					</ul>
+			        <h2 class="off" id="personalH2">
+                  		<span class="sub_iconLNB tree_plus"></span><span class="list_text" onclick="functionFlag(7)"><spring:message code='ezAttitude.t73'/></span>
+					</h2>
 				</c:if>
 			</div>
 	    </div>

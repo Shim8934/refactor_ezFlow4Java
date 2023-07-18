@@ -68,6 +68,8 @@ function getScheduleList_after(resultList, mode, date) {
 					classNameForTheme = "dept";
 				} else if (SCHEDULETYPE == 3) {
 					classNameForTheme = "company";
+				} else if (SCHEDULETYPE == 7) { // 2023-06-22 황인경 - 디자인 개선 일정관리 포틀릿 디자인 '그룹' 분기 추가 */
+					classNameForTheme = "group";
 				}
 				
 				if (usedTheme == 1 || usedTheme == 2) {

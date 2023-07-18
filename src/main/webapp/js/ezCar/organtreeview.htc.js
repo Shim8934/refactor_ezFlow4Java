@@ -1,4 +1,4 @@
-﻿/*
+﻿﻿/*
 <public:component urn="www.asitaka.com:organtreeview">
 
 <public:property name="config" put="put_config" />
@@ -1080,7 +1080,9 @@ function organtreeview(thisobjid, elobjid) {
                 var nodeCount = g_nodeCount;
                 var mydepth = depth;
 
-            	var nodeHtml = "<span id= 'res"+nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
+            	// 2023-06-22 황인경 - 디자인 개선 관리자 화면 차량관리 트리구조 style 변경
+            	var nodeHtml = "<span id= 'res"+nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent+"' style='padding: 0 6px; margin: 0 23px; height: 26px; display: inline-block; font-size: 14px;'><span><div class='node_div'>";
+            	//var nodeHtml = "<span id= 'res"+nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
             	k++;
 
                 for (var j = 0; j < depth.length; j++) {

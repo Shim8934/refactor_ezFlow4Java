@@ -538,19 +538,19 @@
         					</tr>
         					<tr>
           						<th> <spring:message code="ezResource.t149"/></th>
-          						<td colspan="3" style="width:100%"><input type="radio" name="approve" id="approve1" value="1" checked>
+          						<td colspan="3" style="width:100%"><input type="radio" style="margin-top: 0px;" name="approve" id="approve1" value="1" checked>
             						<spring:message code="ezResource.t156"/>
-            						<input type="radio" name="approve" id="approve0" value="0">
+            						<input type="radio" name="approve" style="margin-top: 0px;" id="approve0" value="0">
             						<spring:message code="ezResource.t157"/>
-            						<input type="radio" name="approve" id="approve2" value="2">
+            						<input type="radio" name="approve" id="approve2" style="margin-top: 0px;" value="2">
             						<spring:message code="ezResource.kje01"/>
             					</td>
         					</tr>
         					<tr>
           						<th><spring:message code="ezResource.kmsr11"/></th>
-          						<td colspan="3" style="width:100%"><input type="radio" name="return" id="return1" value="0" checked>
+          						<td colspan="3" style="width:100%"><input type="radio" style="margin-top: 0px;" name="return" id="return1" value="0" checked>
             						<spring:message code="ezResource.kmsr12"/>&nbsp;
-            						<input type="radio" name="return" id="return2" value="1">
+            						<input type="radio" name="return" style="margin-top: 0px;" id="return2" value="1">
             						<spring:message code="ezResource.kmsr13"/>
             					</td>
         					</tr>
@@ -558,10 +558,10 @@
         					<th><spring:message code="ezPortal.t202"/>1</th>
           					<td colspan="3" >
           						<img id="preview1" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
-           						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:5px">
+           						<a class="imgbtn imgbck" style="float:right; margin-top:5px !important; margin-right:5px !important">
            							<span onClick="btnfiledel('1')"><spring:message code="ezPortal.t990008"/></span>
            						</a>
-           						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:10px">
+           						<a class="imgbtn imgbck" style="float:right; margin-top:5px !important; margin-right:5px !important">
            							<span onClick="btnfileup()"><spring:message code="ezPersonal.t20003"/></span>
            						</a>
             				</td>
@@ -571,10 +571,10 @@
         					<th><spring:message code="ezPortal.t202"/>2</th>
           					<td colspan="3" >
           						<img id="preview2"  name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
-           						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:5px">
+           						<a class="imgbtn imgbck" style="float:right; margin-top:5px !important; margin-right:5px !important">
            							<span onClick="btnfiledel('2')"><spring:message code="ezPortal.t990008"/></span>
            						</a>
-           						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:10px">
+           						<a class="imgbtn imgbck" style="float:right; margin-top:5px !important; margin-right:5px !important">
            							<span onClick="btnfileup2()"><spring:message code="ezPersonal.t20003"/></span>
            						</a>
             				</td>

@@ -633,7 +633,7 @@
 					<option value="C_ClubDesc"><spring:message code = 'ezCommunity.t2008' /></option>
 				</select>
 						
-				<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="searchValue" onkeydown="return keyword_onkeydown()"> 
+				<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 25px;" id="searchValue" onkeydown="return keyword_onkeydown()"> 
 				<a class="imgbtn imgbck" style="vertical-align: middle; margin-bottom:0px;"><span onClick="search()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			</td>
 		</tr>

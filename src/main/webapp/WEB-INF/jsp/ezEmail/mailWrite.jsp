@@ -24,7 +24,6 @@
 			.viewtxtScroller {
 				min-height: 16px;
 				max-height: 16px;
-				overflow-y: auto;
 				margin-bottom: 3px;
 			}
 			.viewtxtWrapper {
