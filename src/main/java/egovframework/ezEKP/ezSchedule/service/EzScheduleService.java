@@ -144,4 +144,7 @@ public interface EzScheduleService {
 	public ScheduleTokenInfoVO scheduleGetTokenInfo(String userID, int tenantID, String companyID) throws Exception;
 	
 	public void scheduleSaveTokenInfo(String userID, String googleAccessToken, String googleRefreshToken, String todayUtcTime, int tenantID, String companyID) throws Exception;
+	
+	/* 2023-07-19 홍승비 - 일정그룹의 관리자(그룹장) CREATORID(USERID)값을 리턴하는 메서드 */
+	public String getScheduleGroupCreatorID(String groupID) throws Exception;
 }

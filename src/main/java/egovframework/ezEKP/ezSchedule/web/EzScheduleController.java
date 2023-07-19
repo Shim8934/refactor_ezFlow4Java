@@ -1010,6 +1010,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         String type = request.getParameter("type");
         String pSearchString = request.getParameter("searchString");
         String userID = request.getParameter("ownerid");
+        String groupID = request.getParameter("groupID") != null ? request.getParameter("groupID") : "";
+        String groupOwnerID = "";
 				    		
 		if (title == null) title = "";		
 		if (startTime == null) startTime = "";
@@ -1024,6 +1026,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		if (userID == null || userID.equals("")) userID = loginVO.getId();
 		
+		/* 2023-07-19 홍승비 - 일정그룹관리로 접근한 경우, 해당 일정그룹의 관리자(그룹장) USERID 추가 (그룹관리가 아니라면 공백 리턴) */
+		if (type.equalsIgnoreCase("group") && !groupID.equals("")) {
+			groupOwnerID = ezScheduleService.getScheduleGroupCreatorID(groupID);
+		}
+		
 		model.addAttribute("title", title);
 		model.addAttribute("startTime", startTime);
 		model.addAttribute("endTime", endTime);
@@ -1036,6 +1043,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("companyID", loginVO.getCompanyID());
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("lang", loginVO.getPrimary());
+		model.addAttribute("groupOwnerID", groupOwnerID);
 		
 		return "ezSchedule/scheduleSelectAttendant";
 	}	

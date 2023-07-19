@@ -2236,5 +2236,20 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			ezScheduleDAO.updateScheduleTokenInfo(map);
 		}
 	}
+	
+	/* 2023-07-19 홍승비 - 일정그룹의 관리자(그룹장) CREATORID(USERID)값을 리턴하는 메서드 */
+	@Override
+	public String getScheduleGroupCreatorID(String groupID) throws Exception {
+		logger.debug("getScheduleGroupCreatorID started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_GROUPID", groupID); // PRI KEY는 GROUPID만 사용
+		
+		ScheduleGroupVO creatorVO = ezScheduleDAO.selectCreatorMember(map);
+		
+		logger.debug("getScheduleGroupCreatorID ended. result = " + creatorVO.getCreatorid());
+		return creatorVO.getCreatorid();
+	}
+	
 }
 

@@ -51,6 +51,9 @@
 	        var ReturnFunction;	        
 	        var lang = "<c:out value='${lang}' />";
 	        
+	        /* 2023-07-19 홍승비 - 일정그룹관리로 접근한 경우, 해당 일정그룹의 관리자(그룹장) userID 추가 (그룹관리가 아니라면 공백) */
+	        var groupOwnerID = "<c:out value='${groupOwnerID}'/>";
+	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 	            window.onblur = function () {
@@ -612,8 +615,17 @@
 	                    var getlistview = new ListView();
 	                    getlistview.LoadFromID(listid);
 	                    var IsInsert = CheckMailReceiver(strId, "3");
-	                    if (strId == "<c:out value='${userID}' />") {
-	                        alert("<spring:message code='ezSchedule.t352' />");
+	                    
+	                    // 그룹관리가 아닌 경우 -> 비서관리, 일정의 참석자 초대이므로 추가하려는 구성원이 현재 사용자(작성자)인지 체크
+	                    if (type != "group" && strId == "<c:out value='${userID}'/>") {
+	                        alert("<spring:message code='ezSchedule.t352' />"); // 작성자는 선택할 수 없습니다.
+	                        continue;
+	                    }
+	                    
+	                    /* 2023-07-17 홍승비 - 관리자 > 일정관리 > 일정 그룹 관리 > 그룹 관리 > 구성원 추가 시 그룹장이 아닌 경우 추가 가능하도록 수정 */
+	                    // 그룹관리인 경우 -> 관리자단에서 그룹장이 아닌 사용자도 그룹 관리가 가능하므로, 추가하려는 구성원이 그룹장인지 체크
+	                    if (type == "group" && strId == groupOwnerID) {
+	                    	alert("<spring:message code='ezSchedule.HSBGR01'/>"); // 일정그룹의 그룹장은 구성원으로 추가할 수 없습니다.
 	                        continue;
 	                    }
 	
