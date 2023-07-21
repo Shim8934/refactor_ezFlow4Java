@@ -61,6 +61,7 @@ function getScheduleList_after(resultList, mode, date) {
 				var classNameForTheme = "";
 				var strLangArrForTheme = new Array();
 				
+				/* 2023-06-22 황인경 - 디자인 개선 > 일정관리 포틀릿 > '그룹' 분기 추가 */
 				/* 2023-05-31 홍승비 - 일정관리 포틀릿 디자인 개선을 위한 클래스 및 메세지 분기 추가 */
 				if (SCHEDULETYPE == 1 || SCHEDULETYPE == 9) {
 					classNameForTheme = "individual";
@@ -68,7 +69,7 @@ function getScheduleList_after(resultList, mode, date) {
 					classNameForTheme = "dept";
 				} else if (SCHEDULETYPE == 3) {
 					classNameForTheme = "company";
-				} else if (SCHEDULETYPE == 7) { // 2023-06-22 황인경 - 디자인 개선 일정관리 포틀릿 디자인 '그룹' 분기 추가 */
+				} else if (SCHEDULETYPE == 7) {
 					classNameForTheme = "group";
 				}
 				

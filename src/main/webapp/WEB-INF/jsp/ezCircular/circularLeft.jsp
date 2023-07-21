@@ -139,7 +139,8 @@
 				window.open(url, "right");
 	        }
 
-	        /* 2017-05-17 장진혁 구현, 2023-06-14 황인경 - 디자인 개선 회람판 트리구조 LNB 수정*/
+	        /* 2023-06-14 황인경 - 디자인 개선 > 회람판 > 좌측메뉴 > 트리구조 LNB 이미지 수정 */
+	        /* 2017-05-17 장진혁 구현 */
 	        function openFolder() {
 	        	var h2Title = $(event.target).parent();
 	        	var arrowSpan = $(event.target).prev();
@@ -230,7 +231,7 @@
 							rcnt = "";	
 						} else {
 							rcnt = result.count;
-							// 2023-06-22 황인경 - 디자인 개선 회람판 좌측 문서 갯수 괄호 추가
+							// 2023-06-22 황인경 - 디자인 개선 > 회람판 > 좌측메뉴 > 카운트 괄호 추가
 							$("#newCircularCount").html("(" + rcnt + ")");
 						}
 						//$("#newCircularCount").html("&nbsp;" + rcnt);
@@ -354,23 +355,22 @@
 	        	leftResize();
         	});
 	        
-		     // 2023-06-14 황인경 - 디자인 개선 회람판 트리구조 LNB 추가 
+		     // 2023-06-14 황인경 - 디자인 개선 > 회람판 > 좌측메뉴 > 트리구조 LNB 이미지 추가 
 		     function liSelected() {
 		    	 var defaultUl = document.getElementById("defaultCircular");
 			     var defaultLi = defaultUl.getElementsByTagName("li");
 			     
 				 for (var i = 0; i < defaultLi.length; i++) {
 					 defaultLi[i].addEventListener("click", function() {
-						 $("#compUL span.node_selected").attr("class", "node_normal");
-		 				var selectedList = defaultUl.querySelector(".node_selected");
+						$("#compUL span.node_selected").attr("class", "node_normal");
+						var selectedList = defaultUl.querySelector(".node_selected");
 		 				
-						 if (selectedList != null) {
-							 $(selectedList).removeClass("node_selected");
-						     $(event.target).addClass("node_selected");
-						 } else {
-						     $(event.target).addClass("node_selected");
-						 }
-						 
+						if (selectedList != null) {
+							$(selectedList).removeClass("node_selected");
+						    $(event.target).addClass("node_selected");
+						} else {
+						    $(event.target).addClass("node_selected");
+						}
 			       	});
 			     }
 		     }
@@ -388,7 +388,7 @@
 	        	<p class="btn_write01" onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></p>
 	        </div>
 	        <div class="circularListBox" style="overflow:hidden; padding-right: 0;">
-		        <!-- 2023-06-30 황인경 - 디자인 개선 회람판 최상위 메뉴 표시 추가 -->
+		        <%-- 2023-06-30 황인경 - 디자인 개선 > 회람판 > 좌측메뉴 > 최상위 '회람판' 메뉴 표시 추가 --%>
 		        <h2 class="on">
 					<span class="sub_iconLNB tree_arrow_down"></span>
 			        <span class="h2Title" onclick="openFolder()"><spring:message code="ezCircular.t1" /></span>

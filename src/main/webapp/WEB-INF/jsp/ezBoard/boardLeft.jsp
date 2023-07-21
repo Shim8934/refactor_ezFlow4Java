@@ -557,12 +557,14 @@
 		            alert(e.description);
 		        }
 		    }
-		
+			
+		    /* 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 LNB 이미지 수정 */
 		    /* 2019-12-02 홍승비 - 게시판 좌측메뉴에서 마이게시판 설정 아이콘 표출, 의미없는 함수 파라미터 제거 */
 		    function ShowMyBoardItem() {		// 마이 게시판 선택
 		    	/* $(".on").attr("class", "off");
 		    	$(".myb h2").attr("class", "on");
 		    	$(".myb").next().attr("class", "on"); */
+		    	var openSpan = $(event.target);
 		    	
 		    	SetTreeConfig();
 		        document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
@@ -574,18 +576,17 @@
 		        treeView.DataSource(GetMyBoardItem("0"));
 		        treeView.DataBind("TreeCtrl_MyBoardTree");
 	            
-	            $("h2.on").not($("#myBoardList")).attr("class","off");
-	            $("#TopBoardsList .lnbUL").attr("class","off");
+	            $("h2.on").not($("#myBoardList")).attr("class", "off");
+	            $("#TopBoardsList .lnbUL").attr("class", "off");
 	            
 	            if ($("#myBoardList").attr("class") == "off") {
-	            	$("#myBoardList").attr("class","on");
-	            	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL");
-	            	// 2023-06-22 황인경 - 디자인 개선 게시판 트리구조 LNB 수정
+	            	$("#myBoardList").attr("class", "on");
+	            	$("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL");
 	            	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 	            	$("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 	            } else {
-	            	$("#myBoardList").attr("class","off");
-	            	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");	
+	            	$("#myBoardList").attr("class", "off");
+	            	$("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");	
 	            	$(".list_text.node_selected").removeClass("node_selected");
 	            	$("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_plus");
 	            }
@@ -683,14 +684,14 @@
 		            $("h2.on").not(ctr).attr("class","off");
 		            $("#TopBoardsList .lnbUL").attr("class","lnbUL off");
 		            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
- 		            // 2023-06-22 황인경 - 디자인 개선 게시판 트리구조 LNB 수정
+ 		            // 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 LNB 이미지 수정
 		            $("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_plus"); 
 		            
 		            if (ctr.attr("class") == "off") {
-		            	ctr.attr("class","on");		            	
-		            	ctrobj.attr("class","lnbUL");
+		            	ctr.attr("class", "on");		            	
+		            	ctrobj.attr("class", "lnbUL");
 		            	
-		            	if ($(ctr).prop("tagName") == "H2" ) {
+		            	if ($(ctr).prop("tagName") == "H2") {
 							$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 		            	}
 		            	
@@ -896,24 +897,18 @@
 				}
 		    }
 		    
+	    	/* 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '즐겨찾기' LNB 이미지 수정 */
 		    function favoriteList() {
-		    	$("h2.on").attr("class", "off");
-		    	// 2023-06-22 황인경 - 디자인 개선 게시판 즐겨찾기 LNB 수정
+		    	var openSpan = $(event.target);
+
+	    		$("h2.on").attr("class", "off");
+		    	openSpan.parent().addClass("on");	
 		    	$(".list_text.node_selected").removeClass("node_selected");
-		    	
-		    	var favoriteListH2 = $(event.target);
-		    	
-		    	if (favoriteListH2.prop("tagName") == "SPAN" ) {
-		    		favoriteListH2.parent().addClass("on");	
-		    	} else {
-		    		favoriteListH2.addClass("on");
-		    	}
-		    	
-	            $(".tree_arrow_down").attr("class","sub_iconLNB tree_plus");
-		    	$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
-	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
-		    	
-		    	if (typeof window.parent.frames["right"] == "undefined") {
+	            $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+		    	$("#TopBoardsList .lnbUL").attr("class", "lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");
+
+	            if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardItemList_favorite.do";
 				} else {
 		       		window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
@@ -998,20 +993,20 @@
 		    }
 		    function boardSearch(){
 		    	$("h2.on").attr("class", "off");
-		    	// 2023-06-22 황인경 - 디자인 개선 게시판 검색LNB 수정
+		    	// 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '검색' LNB 이미지 수정
 		    	$(".list_text.node_selected").removeClass("node_selected");
 
 		    	var boardSearchH2 = $(event.target);
 		    	
-		    	if (boardSearchH2.prop("tagName") == "SPAN" ) {
+		    	if (boardSearchH2.prop("tagName") == "SPAN") {
 		    		boardSearchH2.parent().parent().addClass("on");	
 		    	} else {
 		    		boardSearchH2.addClass("on");
 		    	}
 		    	
-	            $(".tree_arrow_down").attr("class","sub_iconLNB tree_plus");
-		    	$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
-	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
+	            $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+		    	$("#TopBoardsList .lnbUL").attr("class", "lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");
 	            
 		      	if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardSearchView.do";
@@ -1099,8 +1094,8 @@
 							}
 							
 							if (resultCount > 0) {
-								subBoardName += ("(" + resultCount + ")"); // 2023-06-23 황인경 - 디자인 개선 게시판 갯수 괄호 추가
-								//subBoardName += (" " + resultCount);
+								// 2023-06-23 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 카운트 괄호 추가
+								subBoardName += ("(" + resultCount + ")");
 							}
 							
 							subBoardSpanMy.text(subBoardName);
@@ -1140,7 +1135,7 @@
 		    	return result;
 		    }
 		    
-			// 2023-06-28 황인경 - 디자인 개선 게시판 트리구조 선택 메뉴 클래스 수정
+			// 2023-06-28 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 서브메뉴 클래스 제어
 			function liSelected() {
 			  	if (event.target.classList.length == 1) {
 			  		
@@ -1224,9 +1219,9 @@
 				        </ul>
 				    </c:if>
 			        <ul class="lnbUL">
-                       	<!-- 2023-06-22 황인경 - 디자인 개선 게시판 태그 구조 및  LNB 수정 -->
+                       	<%-- 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '검색' 태그 구조, LNB 이미지 수정 --%>
 						<h2 class="off">
-                           	<span><span class="sub_iconLNB tree_plus"></span><span id=""class="h2Title" value="" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></span>
+                           	<span><span class="sub_iconLNB tree_plus"></span><span id="" class="h2Title" value="" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></span>
 						</h2>
 <%--                       	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li> --%>
                     	<c:if test="${applyFlag == 'OK'}">

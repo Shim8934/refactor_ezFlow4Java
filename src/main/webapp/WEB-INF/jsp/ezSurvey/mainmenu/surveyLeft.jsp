@@ -36,7 +36,7 @@
 			<div class="surveyList mCustomScrollbar _mCS_1 mCS_no_scrollbar" style="height: 911px;">
 				<div id="mCSB_1" class="mCustomScrollBox mCS-dark mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
 					<div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
-						<ul class="lnbUL">
+						<ul class="lnbUL surveyUL">
 							<li id="totalSurvey"><span class="list_text"><spring:message code='ezSurvey.t80'/></span></li>
 							<li id="processingSurvey"><span class="list_text node_selected"><spring:message code='ezSurvey.t02'/></span></li>
 							<li id="finishedSurvey"><span class="list_text"><spring:message code='ezSurvey.t03'/></span></li>
@@ -224,12 +224,12 @@
 				};
 			}();
 			
-			// 2023-06-15 황인경 - 디자인 개선 전자설문 선택 메뉴 클래스 변경
+			// 2023-06-15 황인경 - 디자인 개선 > 전자설문 > 좌측메뉴 > 메뉴선택 클래스 제어
 			function liSelected() {
 				if (event.target.classList.contains("list_text")) {
 					$(".node_selected").attr("class", "list_text");
 					
-					if (event.target.tagName == "LI" ) {
+					if (event.target.tagName == "LI") {
 						var liChangeSpan = event.target.querySelector(".list_text");
 						liChangeSpan.setAttribute("class", "list_text node_selected");
 					} else {

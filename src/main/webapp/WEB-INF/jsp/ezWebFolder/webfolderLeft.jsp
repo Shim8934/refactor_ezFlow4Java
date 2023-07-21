@@ -379,10 +379,9 @@
 	        		
 	        		$("#"+val01+"H2").attr("class", "on");
 	        		$("#"+val01+"UL").attr("class", "lnbUL on");
-	        		// 2023-06-23 황인경 - 디자인 개선 웹폴더 트리구조 LNB 수정
+	        		// 2023-06-23 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 트리구조 LNB 이미지 수정
 	        		$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 	        		$("#"+val01+"H2").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
- 	        		//$("#"+val01).attr("class", "sub_iconLNB tree_arrow_up");
 	        		
 	        		if (val01 == "company") {
 	        			folderList('C')
@@ -397,7 +396,6 @@
 	        		$("#"+val01+"H2").attr("class", "off");
 	        		$("#"+val01+"UL").attr("class", "lnbUL off");	        		
 	        		$("#"+val01).attr("class", "");
-	        		// 2023-06-23 황인경 - 디자인 개선 웹폴더 트리구조 LNB 추가
 	        		$("#"+val01+"H2").children().eq(0).attr("class", "sub_iconLNB tree_plus");
 	        	}
 	        }
@@ -459,16 +457,16 @@
 				window.parent.frames["right"].location.href = "/admin/ezWebFolder/webfolderAdminFileHistory.do?adminFlag=user";
 			}
 			
-			// 2023-06-15 황인경 - 디자인 개선 웹폴더 트리구조 LNB 추가 
+			// 2023-06-15 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 트리구조 LNB 이미지 추가 
 			function optionOnOff() {
 				$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
-				$(".on").attr("class","off");
+				$(".on").attr("class", "off");
 				
 				if ($(".lnbUL on").length > 0) {
 					$(".lnbUL on").attr("class", "lnbUL off");
 				}
 				
-				if (event.target.tagName == "SPAN" ) {
+				if (event.target.tagName == "SPAN") {
 					$(event.target.parentNode).removeClass("off").addClass("on");
 				} else {
 					$(event.target).removeClass("off").addClass("on");

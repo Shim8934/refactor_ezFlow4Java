@@ -52,14 +52,14 @@ function getTabList() {
     		            listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "' data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
     		        }
     		    }
-    		        // 2023-06-22 황인경 - 디자인 개선 즐겨찾기 포틀릿 '+' 버튼 태그 위치 변경
-    		        plusHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/ezNewPortal/portlet_Plus"+usedTheme+".png'></dd>";
-    		        //listHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/ezNewPortal/portlet_Plus"+usedTheme+".png'></dd>";		                
-    		        document.getElementById("BoardTabPlus").innerHTML = plusHTML;
-					document.getElementById("BoardTab").innerHTML = listHTML;
-    		        favoriteBoardId = $('#Board0').attr('data1');
-    		        getBoardList_NewBoardSTD();
-    		    } else {
+		        // 2023-06-22 황인경 - 디자인 개선 > 즐겨찾기 포틀릿 > '+' 더보기 태그 위치 변경
+		        plusHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/ezNewPortal/portlet_Plus" + usedTheme + ".png'></dd>";
+		        document.getElementById("BoardTabPlus").innerHTML = plusHTML;
+				document.getElementById("BoardTab").innerHTML = listHTML;
+		        favoriteBoardId = $('#Board0').attr('data1');
+		        getBoardList_NewBoardSTD();
+		        
+    		} else {
     			var listHTML = "";
     			listHTML += "<dl class='nodata'>";
     	    	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";

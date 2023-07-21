@@ -233,9 +233,9 @@
 	            if (ctr.attr("class") == "off") {
 	            	ctr.attr("class","on");		            	
 	            	ctrobj.attr("class","lnbUL");
-	            	/* 2023-06-22 황인경 - 디자인 개선 관리자화면 게시판 트리구조 on/off LNB 추가  */
-	            	$(".tree_arrow_down").attr("class","sub_iconLNB tree_plus")
-	            	$(event.target).prev().attr("class", "sub_iconLNB tree_arrow_down");
+	            	/* 2023-06-22 황인경 - 디자인 개선 > 관리자 > 게시판 > 좌측메뉴 트리구조 확장 LNB 이미지 추가  */
+	            	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+	            	$(ctr).children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 	            	
 	            	/* ctrobj.animate({
 	            		maxHeight: "250px"
@@ -245,7 +245,7 @@
 	            } else {
 	            	ctrobj.attr("class","lnbUL off");
 	            	ctr.attr("class","off");
-	            	$(event.target).prev().attr("class", "sub_iconLNB tree_plus");
+	            	$(ctr).children().eq(0).attr("class", "sub_iconLNB tree_plus");
 	            	
 	            	/* ctrobj.animate({
 	            		maxHeight: "0px"
@@ -353,7 +353,7 @@
 	                    break;
 	            }
 
-        		// 2023-07-03 황인경 - 디자인 개선 관리자화면 포탈 트리구조 메뉴 선택 
+        		// 2023-07-03 황인경 - 디자인 개선 > 관리자 > 게시판 > 좌측메뉴 하단 영역 > 메뉴 선택 시 on class 제어
     	        $("li.on").attr("class", "");
     			$(event.target).parent().attr("class", "on");
 	        }

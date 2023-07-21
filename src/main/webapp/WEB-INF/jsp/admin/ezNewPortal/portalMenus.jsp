@@ -279,9 +279,9 @@
 					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th>";
 					
 					if (menuInfo.menuUsed) {
-						menusHTML += "<td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox' checked><span class='slider round'></span></label></td></tr>";
+						menusHTML += "<td colspan='2' class='menuIconTD'><label class='switch menuSwitch' style='vertical-align: bottom;'><input type='checkbox' checked><span class='slider round'></span></label></td></tr>";
 					} else {
-						menusHTML += "<td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
+						menusHTML += "<td colspan='2' class='menuIconTD'><label class='switch menuSwitch' style='vertical-align: bottom;'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
 					}
 					
 					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr>"
@@ -549,7 +549,7 @@
 			menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span></span></dt>";
 			menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd></dl>";
 			menusHTML += "<table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
-			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
+			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch' style='vertical-align: bottom;'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
 			menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' maxlength='100'></td></tr>";
 			
 			if (usePrimaryLangOnly == "YES") {

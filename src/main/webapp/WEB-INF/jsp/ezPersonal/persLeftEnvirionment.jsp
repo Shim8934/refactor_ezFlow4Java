@@ -179,7 +179,7 @@
 						break;
 					case "LOGINHIST":
 						window.parent.frames.right.document.location.href = "/ezSystem/systemLoginHist.do";
-						// 2023-06-28 황인경 - 디자인 개선 사용자환경설정 트리구조 LNB 수정
+						// 2023-06-28 황인경 - 디자인 개선 > 사용자환경설정 > 좌측메뉴 > 트리구조 LNB 이미지 수정, 클래스 제어
 						$("h2.on").attr("class", "off");
 						$(".lnbUL.on").removeClass("on").addClass("off");
 						$(".list_text.node_selected").removeClass("node_selected");
@@ -196,7 +196,7 @@
 						break;
 				}
 				
-				// 2023-06-28 황인경 - 디자인 개선 사용자환경설정 트리구조 LNB 수정
+				// 2023-06-28 황인경 - 디자인 개선 > 사용자환경설정 > 좌측메뉴 > 트리구조 서브메뉴 선택 클래스 제어
 				if (pthis.id != "LOGINHIST") {
 					liSelected();
 				}
@@ -239,29 +239,23 @@
 	        	document.getElementById("progressPanel").style.display = "none";
 	        }
 	        
-	        // 2023-06-28 황인경 - 디자인 개선 사용자환경설정 트리구조 LNB 수정
+	        // 2023-06-28 황인경 - 디자인 개선 > 사용자환경설정 > 좌측메뉴 > 트리구조 LNB 이미지 수정, 클래스 제어
 	        function openFolder() {
-	        	var openH2;
-	        	
-		        if ($(event.target).prop("tagName") == "SPAN" ) {
-					openH2 = $(event.target).parent();
-		        } else {
-					openH2 = $(event.target);
-		        }
+	        	var openSpan = $(event.target).parent();
 		        
-		        if (openH2.hasClass("off")) {
+		        if (openSpan.hasClass("off")) {
 		           	$("h2.on").attr("class", "off");
 		           	$(".lnbUL.on").removeClass("on").addClass("off");
 		           	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
-		           	openH2.attr("class", "on");
+		           	openSpan.attr("class", "on");
 		           	
-		           	if (openH2.children().eq(1).Id != "LOGINHIST") {
-			           	openH2.next().attr("class", "lnbUL on");
-			           	openH2.children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+		           	if (openSpan.children().eq(1).Id != "LOGINHIST") {
+		           		openSpan.next().attr("class", "lnbUL on");
+		           		openSpan.children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 		           	}
 		           	
 		        } else {
-		        	   openH2.attr("class", "off");
+		        	openSpan.attr("class", "off");
 		        	   $(".lnbUL.on").removeClass("on").addClass("off");
 			           $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 		        }
@@ -278,14 +272,14 @@
 	<body  class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
 		<!-- <div class="lnb_btn"></div> -->
-        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->        
+        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기-->        
 	    	<div class="left_title" title="<spring:message code='ezNewPortal.t006' />"><spring:message code='ezNewPortal.t006' />
 	        	<!--<span class="sub_iconLNB tree_leftconfig" title="환경설정"></span>-->
 	        </div>
 	        <div class="envListBox" style="overflow:hidden; padding-right: 0;">
-		        <!-- 2023-06-28 황인경 - 디자인 개선 사용자환경설정 LNB 클래스 추가 및 삭제 -->
-		        <h2 class="on" onclick="openFolder()">
-	            	<span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title"><spring:message code='ezPersonal.jjh01' /></span>
+		        <%-- 2023-06-28 황인경 - 디자인 개선 > 사용자환경설정 > 좌측메뉴 > LNB 클래스 변경 --%>
+		        <h2 class="on">
+	            	<span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezPersonal.jjh01' /></span>
 		        </h2>
 		        <ul class="lnbUL on">
                		<c:if test="${packageType == 'standard'}">
@@ -305,29 +299,29 @@
 							</c:choose>
 						</c:if>
 		            </c:if>
-<!-- 				<h2 class="on"> -->
-<%-- 	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPersonal.jjh01' /></span> --%>
-<!-- 		        </h2> -->
-<!-- 		        <ul class="lnbUL"> -->
-<%--                		<c:if test="${packageType == 'standard'}"> --%>
-<%-- 						<c:if test="${firstScreen_Mail != 'YES'}"> --%>
-<%-- 							<c:choose> --%>
-<%-- 								<c:when test="${portalEnv == '0' and usePortal eq 'YES'}"> --%>
-<%-- 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li> --%>
-<%-- 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t136' /></span></li> --%>
-<%-- 			                    </c:when> --%>
-<%-- 			                    <c:when test="${portalEnv == '1'}"> --%>
-<%-- 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li> --%>
-<%-- 			                    </c:when> --%>
-<%-- 			                    <c:when test="${portalEnv == '2'}"> --%>
-<%-- 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t136' /></span></li> --%>
-<%-- 			                    </c:when> --%>
-<%-- 								<c:otherwise></c:otherwise> --%>
-<%-- 							</c:choose> --%>
-<%-- 						</c:if> --%>
-<%-- 		            </c:if> --%>
+<%-- 				<h2 class="on"> 
+	 	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPersonal.jjh01' /></span> 
+	 		        </h2> 
+	 		        <ul class="lnbUL"> 
+	                	<c:if test="${packageType == 'standard'}"> 
+	 						<c:if test="${firstScreen_Mail != 'YES'}"> 
+	 							<c:choose> 
+	 								<c:when test="${portalEnv == '0' and usePortal eq 'YES'}"> 
+	 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li> 
+	 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t136' /></span></li> 
+	 			                    </c:when> 
+	 			                    <c:when test="${portalEnv == '1'}"> 
+	 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li> 
+	 			                    </c:when> 
+	 			                    <c:when test="${portalEnv == '2'}"> 
+	 	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t136' /></span></li> 
+	 			                    </c:when> 
+	 								<c:otherwise></c:otherwise> 
+	 							</c:choose> 
+	 						</c:if> 
+	 		            </c:if> --%>
 		            <c:if test="${usePortal eq 'YES' }">
-                   	<!-- 2023-06-28 황인경 - 디자인 개선 사용자환경설정 LNB 삭제 -->
+                   	<%-- 2023-06-28 황인경 - 디자인 개선 > 사용자환경설정 > 좌측메뉴 > LNB 이미지 삭제 --%>
                    	<li><span class="list_text" id="UserInfo" name="UserInfo" onClick="Open_Func(this)"><spring:message code='ezPersonal.t172' /></span></li>
                    	</c:if>
 					<%-- 아래 2가지 상황 중 하나 이상 해당되어야 알림환경설정을 보여줌
@@ -338,8 +332,8 @@
 					</c:if>
                    	<li><span class="list_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.s3' /></span></li>
 		        </ul>
-		        <h2 class="off" onclick="openFolder()">
-	            	<span class="sub_iconLNB tree_plus"></span><span class="h2Title"><spring:message code='ezPersonal.jjh02' /></span>
+		        <h2 class="off">
+	            	<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezPersonal.jjh02' /></span>
 		        </h2>
 		        <ul class="lnbUL off">
                		<c:if test="${isMailUsed == 'Y'}">
@@ -381,49 +375,49 @@
 <%-- 					아래 2가지 상황 중 하나 이상 해당되어야 알림환경설정을 보여줌
 <%-- 						1. 사용자에게 결재 메뉴가 표출되는 권한이 있을 때 --%>
 <%-- 						2. 사용자에게 메일 메뉴가 표출되는 권한이 있으면서 서버 내에서 톡 푸시를 사용할 때 --%>
-<%-- 					<c:if test="${isApprUsed == 'Y' or (isMailUsed == 'Y' and useEzTalkNotification)}"> --%>
-<%-- 					<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="noti" onclick="Open_Func(this)"><spring:message code='ezPersonal.noti.title' /></span></li> --%>
-<%-- 					</c:if> --%>
-<%--                    	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.s3' /></span></li> --%>
-<!-- 		        </ul> -->
-<!-- 		        <h2 class="on"> -->
-<%-- 	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPersonal.jjh02' /></span> --%>
-<!-- 		        </h2> -->
-<!-- 		        <ul class="lnbUL"> -->
-<%--                		<c:if test="${isMailUsed == 'Y'}"> --%>
-<%--                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="MailEnv" name="MailEnv" onClick="mail_Config()"><spring:message code='ezEmail.t904' /></span></li> --%>
-<%--                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="AddressEnv" name="AddressEnv" onClick="address_Config()"><spring:message code='ezAddress.hyh001' /></span></li> --%>
-<%--                     </c:if> --%>
-<%--                     <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}"> --%>
-<%--        					<c:if test="${isScheduleUsed == 'Y'}"> --%>
-<%--                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezPersonal.t999900007' /></span></li> --%>
-<%-- 	                   </c:if> --%>
-<%-- 	                   <c:if test="${isTaskUsed == 'Y'}"> --%>
-<%--                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="TaskEnv" name="TaskEnv" onClick="Task_Config()"><spring:message code='ezTask.hyh001' /></span></li> --%>
-<%-- 	                   </c:if> --%>
-<%-- 	                    <c:if test="${packageType == 'standard'}"> --%>
-<%-- 	                    	<c:if test="${isApprUsed == 'Y'}"> --%>
-<%--                             	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()"><spring:message code='ezPersonal.t999900008' /></span></li> --%>
-<%-- 		                    </c:if> --%>
-<%-- 		                </c:if> --%>
-<%-- 		                <c:if test="${isBoardUsed == 'Y'}">    	 --%>
-<%--                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)"><spring:message code='ezBoard.t10010' /></span></li> --%>
-<%-- 	                    </c:if> --%>
-<%-- 	                    <c:if test="${isCircularUsed == 'Y'}"> --%>
-<%--                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)"><spring:message code='ezCircular.t17' /></span></li> --%>
-<%-- 	                    </c:if> --%>
-<%-- 	                    <c:if test="${isJournalUsed == 'Y'}"> --%>
-<%--                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="journalEnv" onClick="Open_Func(this)"><spring:message code='ezJournal.t150' /></span></li> --%>
-<%-- 	                    </c:if> --%>
-<%-- 	                    <c:if test="${isWebfolderUsed == 'Y'}"> --%>
-<%--                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="webfolder" name="webfolder" onClick="Open_Func(this)"><spring:message code='ezWebFolder.t31' /></span></li> --%>
-<%-- 	                    </c:if> --%>
-<%-- 	                    <c:if test="${isPMSUsed == 'Y'}"> --%>
-<%--                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ezPMSEnv" name="ezPMS" onClick="Open_Func(this)"><spring:message code='ezPMS.t171' /></span></li> --%>
-<%-- 	                    </c:if> --%>
-<%-- 					</c:if> --%>
-<!-- 		        </ul> -->
-<%-- 		        <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="Open_Func(this)"><spring:message code='ezSystem.x0021' /></span></h2> --%>
+<%-- 					<c:if test="${isApprUsed == 'Y' or (isMailUsed == 'Y' and useEzTalkNotification)}">
+	 					<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="noti" onclick="Open_Func(this)"><spring:message code='ezPersonal.noti.title' /></span></li> 
+	 					</c:if> 
+	                    	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.s3' /></span></li> 
+	 		        </ul> 
+	 		        <h2 class="on"> 
+	 	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPersonal.jjh02' /></span> 
+	 		        </h2> 
+	 		        <ul class="lnbUL"> 
+	                		<c:if test="${isMailUsed == 'Y'}"> 
+	                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="MailEnv" name="MailEnv" onClick="mail_Config()"><spring:message code='ezEmail.t904' /></span></li> 
+	                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="AddressEnv" name="AddressEnv" onClick="address_Config()"><spring:message code='ezAddress.hyh001' /></span></li> 
+	                     </c:if> 
+	                     <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}"> 
+	        					<c:if test="${isScheduleUsed == 'Y'}"> 
+	                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezPersonal.t999900007' /></span></li> 
+	 	                   </c:if> 
+	 	                   <c:if test="${isTaskUsed == 'Y'}"> 
+	                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="TaskEnv" name="TaskEnv" onClick="Task_Config()"><spring:message code='ezTask.hyh001' /></span></li> 
+	 	                   </c:if> 
+	 	                    <c:if test="${packageType == 'standard'}"> 
+	 	                    	<c:if test="${isApprUsed == 'Y'}"> 
+	                             	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()"><spring:message code='ezPersonal.t999900008' /></span></li> 
+	 		                    </c:if> 
+	 		                </c:if> 
+	 		                <c:if test="${isBoardUsed == 'Y'}">    	 
+	                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)"><spring:message code='ezBoard.t10010' /></span></li> 
+	 	                    </c:if> 
+	 	                    <c:if test="${isCircularUsed == 'Y'}"> 
+	                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)"><spring:message code='ezCircular.t17' /></span></li> 
+	 	                    </c:if> 
+	 	                    <c:if test="${isJournalUsed == 'Y'}"> 
+	                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="journalEnv" onClick="Open_Func(this)"><spring:message code='ezJournal.t150' /></span></li> 
+	 	                    </c:if> 
+	 	                    <c:if test="${isWebfolderUsed == 'Y'}"> 
+	                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="webfolder" name="webfolder" onClick="Open_Func(this)"><spring:message code='ezWebFolder.t31' /></span></li> 
+	 	                    </c:if> 
+	 	                    <c:if test="${isPMSUsed == 'Y'}"> 
+	                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ezPMSEnv" name="ezPMS" onClick="Open_Func(this)"><spring:message code='ezPMS.t171' /></span></li> 
+	 	                    </c:if> 
+	 					</c:if> 
+	 		        </ul> -->
+	 		        <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="Open_Func(this)"><spring:message code='ezSystem.x0021' /></span></h2> --%>
 	        </div>
 	    </div>
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>    

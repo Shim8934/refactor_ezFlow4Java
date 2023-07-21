@@ -117,7 +117,7 @@
 					goPage(1);
 				}
 
-				// 2023-07-03 황인경 - 디자인개선 관리자화면 웹폴더 트리구조 메뉴 선택 
+				// 2023-07-03 황인경 - 디자인개선 > 관리자 > 웹폴더 > 좌측메뉴 > 트리구조 메뉴 선택 
 				if ($(obj).prop("tagName") == "SPAN" ) {
 					$(obj).parent().next().children().eq(0).attr("class", "on");
 					$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
@@ -182,7 +182,7 @@
 			function fileTransactionHistory(obj) {
 				clearToggle(obj);
 				window.open("/admin/ezWebFolder/webfolderAdminFileHistory.do", "right");
-				// 2023-07-04 황인경 - 디자인 개선 관리자화면 웹폴더 트리구조 클래스 추가
+				// 2023-07-04 황인경 - 디자인개선 > 관리자 > 웹폴더 > 좌측메뉴 트리구조 클래스 추가
 				$(obj).parent().attr("class", "on");
 				$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 			}

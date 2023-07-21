@@ -121,7 +121,7 @@
 				
 				function handleErrorTree(errorUrl) {window.parent.frames["right"].location.href = errorUrl;}
 				
-				function openCabinet(obj) { // 2023-06-23 황인경 - 디자인 개선 캐비넷 트리구조 LNB 수정
+				function openCabinet(obj) { // 2023-06-23 황인경 - 디자인 개선 > 캐비넷 > 좌측메뉴 > 트리구조 LNB 이미지 수정 및 클래스 제어
 					if ($("#" + obj).hasClass("on")) {
 						$("#" + obj).attr("class", "off");
 						$("#" + obj).next().attr("class", "lnbUL off");

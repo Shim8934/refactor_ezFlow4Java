@@ -422,8 +422,8 @@
 	    function functionFlag(flag) {
 	    	var funcFlag = flag;
 	    	
-	    	// 2023-06-23 황인경 - 디자인 개선 근태관리 트리구조 selected 수정
-	    	if ($(event.target).prop("tagName") == "SPAN" && flag != 7 ) {
+	    	// 2023-06-23 황인경 - 디자인 개선 > 근태관리 > 좌측메뉴 > 트리구조 근태관리, 수정신청관리 서브메뉴 선택시 클래스 제어
+	    	if ($(event.target).prop("tagName") == "SPAN" && flag != 7) {
 		    	$(".node_selected").attr("class", "list_text");
 		    	$(event.target).attr("class", "list_text node_selected");
 	    	}
@@ -449,7 +449,7 @@
 	    			break;
 	    		case 7:	// 근태정보관리
 	    			window.open("/ezAttitude/attitudeManage.do", "right");
-	    			// 2023-06-23 황인경 - 디자인 개선 근태관리 LNB 수정
+	    			// 2023-06-23 황인경 - 디자인 개선 > 근태관리 > 좌측메뉴 > LNB 이미지 수정
 	    			$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 	    			$(".on").attr("class", "off");
 	    			$("#personalH2").attr("class", "on");
@@ -545,27 +545,21 @@
         	leftResize();
     	});
     	
-        // 2023-06-27 황인경 - 디자인 개선 근태관리 트리구조 클래스 추가, LNB 삭제 및 수정 
+        // 2023-06-27 황인경 - 디자인 개선 > 근태관리 > 좌측메뉴 > 트리구조 클래스 제어 , LNB 이미지 수정 
         function openFolder() {
-        	var openH2;
+        	var openH2 = $(event.target).parent();
         	
-	        if ($(event.target).prop("tagName") == "SPAN" ) {
-				openH2 = $(event.target).parent();         			
-	        } else {
-				openH2 = $(event.target);         			
-	        }
-	        
-	        if ($(openH2).hasClass("off")) {
-	           	$("h2.on").attr("class", "off");
+        	if ($(openH2).hasClass("off")) {
+        		$("h2.on").attr("class", "off");
 	           	$(".lnbUL.on").removeClass("on").addClass("off");
 	           	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 	           	$(openH2).attr("class", "on");
 	           	$(openH2).next().attr("class", "lnbUL on");
 	           	$(openH2).children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
-			} else {
-	        	   $(openH2).attr("class", "off");
-	        	   $(".lnbUL.on").removeClass("on").addClass("off");
-		           $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+        	} else {
+				$(openH2).attr("class", "off");
+				$(".lnbUL.on").removeClass("on").addClass("off");
+				$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 			}
 		}
         
@@ -583,16 +577,16 @@
 	        	<p class="btn_write01" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t64'/></span></p>
 	        </div>
 	        <div class="attitudeListBox" style="overflow:hidden; padding-right: 0;">
-		        <h2 class="on" onclick="openFolder()">
-		            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title"><spring:message code='ezAttitude.t1'/></span>
+		        <h2 class="on">
+		            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezAttitude.t1'/></span>
 		        </h2>
 		        <ul class="lnbUL on">
                    	<li><span class="list_text node_selected" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span></li>
                    	<li><span class="list_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span></li>
                    	<li><span class="list_text" id="userAnnual" onclick="functionFlag(3)"><spring:message code='ezAttitude.t265'/></span></li>
 		        </ul>
-		        <h2 class="off" onclick="openFolder()">
-		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
+		        <h2 class="off">
+		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezAttitude.t7'/></span>
 		        </h2>
 		        <ul class="lnbUL off">
                		<li><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t166'/></span></li>

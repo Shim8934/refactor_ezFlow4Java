@@ -500,15 +500,15 @@
 				}
 	        }
 	        
-	        // 2023-06-30 황인경 - 디자인 개선 일정관리 일정검색, 공개일정검색 선택시 선택 항목 표시
+	        // 2023-06-30 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 일정검색, 공개일정검색 선택 항목 클래스 제어
 	        function liSelected() {
 	        	$(".list_text.node_selected").removeClass("node_selected");
 
 	        	var liSelected = $(event.target);
 	        	
-	            if (liSelected.prop("tagName") == "LI" ) {
+	            if (liSelected.prop("tagName") == "LI") {
 	            	liSelected.children().addClass("node_selected");
-	            }else{
+	            } else {
 	            	liSelected .addClass("node_selected");
 	            }
 	        }
@@ -519,8 +519,8 @@
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
 			<input type="hidden" id="chk_str" value="" />
-	    	<!-- <div class="lnb_btn"></div> -->
-	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<%-- <div class="lnb_btn"></div> --%>
+	        <%-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼 --%>
 	    	<div class="left_title" title="<spring:message code='ezSchedule.t1010'/>">
 	    		<spring:message code='ezSchedule.t1010'/>
 	        	<span id='Schedule_Config' onClick="Function_Flag('11')" class="sub_iconLNB tree_leftconfig" title="<spring:message code='ezPersonal.t999900007'/>"></span>
@@ -529,15 +529,15 @@
 	        	<p class="btn_write01"><spring:message code='ezSchedule.t214'/></p>
 	        </div>
         	<div class="scheduleListBox" style="overflow:hidden; padding-right: 0;">
-		        <!-- 2023-06-23 황인경 - 디자인 개선 일정관리 좌측메뉴 타이틀 추가 -->
+		        <%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 최상위 '일정관리' 메뉴 표시 추가 --%>
 	        	<h2 class="on">
 			            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="" onclick="('')"><spring:message code='ezSchedule.t1010'/></span>
 		        </h2>
 		        <ul class="lnbUL">
 		        	<li>
-			    		<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
-			    		<!-- 2023-06-23 황인경 - 디자인 개선 일정관리 LNB 삭제 -->
-<!-- 			    	<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)" style="pointer-events:auto"></span> -->
+			    		<%-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 --%>
+			    		<%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > LNB 이미지 삭제 --%>
+<%-- 			    	<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)" style="pointer-events:auto"></span> --%>
 			    		<label class="IDcontainer" onchange="chk_all()">
 							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
 					  		<span class="checkmark" style="background:rgb(125, 125, 125);"></span>
@@ -629,14 +629,14 @@
 							</li>	
 						</c:forEach>
 					</c:if>
-					<!-- 2023-06-23 황인경 - 디자인 개선 일정관리 LNB, 구조 수정 -->
+					<%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > LNB 이미지, 구조 수정 --%>
                   	<li class="ul_2Box"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
                   	<li><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
 		        </ul>
-<!-- 		    <ul class="lnbUL"> -->
-<%--            	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li> --%>
-<%--            	<li><span class="sub_iconLNB tree_pims_search_open"></span><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li> --%>
-<!-- 		    </ul> -->
+<%-- 		    <ul class="lnbUL">
+	            	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
+    	        	<li><span class="sub_iconLNB tree_pims_search_open"></span><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
+	 		    </ul> --%>
 	        </div>
 	    </div>
 	    

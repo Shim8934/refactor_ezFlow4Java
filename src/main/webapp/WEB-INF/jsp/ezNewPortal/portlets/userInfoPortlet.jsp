@@ -20,26 +20,26 @@
 		        		<img src="${userPhoto }">
 	        		</c:if>
 	        	
-	            <!-- 2023-06-23 황인경 디자인 개선 유저 포틀릿 구조 변경 -->
-				<dd class="infoName">${userName }<span class="infoTeam">${deptName } ${userTitle}</span></dd>
-				<dd class="infoTime"><spring:message code="ezNewPortal.yej06" /><span>${lastLogin }</span></dd>
+	            <%-- 2023-06-23 황인경 - 디자인 개선 > 유저 포틀릿 > 구조 변경 --%>
+				<dd class="infoName">${userName}<span class="infoTeam">${deptName} ${userTitle}</span></dd>
+				<dd class="infoTime"><spring:message code="ezNewPortal.yej06" /><span>${lastLogin}</span></dd>
 			</dl>
-	            <!-- 임시 -->
+	            <%-- 임시 --%>
 			<div class="info_btn">
 				<span class="info_portal" id="portletEnv"><span class="info_portal_icon"></span><spring:message code='ezNewPortal.HSBPT01'/></span>
 				<span class="info_set" id="personalEnv"><span class="info_set_icon"></span><spring:message code='ezNewPortal.t006'/></span>
 				<span class="info_logout"><span class="info_logout_icon"></span><spring:message code='ezNewPortal.t008'/></span>
 			</div>
-<!--			<dd class="infoName">${userName }</dd>
+<%--			<dd class="infoName">${userName }</dd>
 	            <dd class="infoTeam">${deptName }</dd>
 	            <dd class="infoMail">${userEmail }</dd>
 	            <dd class="infoTime"><spring:message code="ezNewPortal.yej06" />&nbsp;&nbsp;${lastLogin }</dd>
-	            <dd class="infoIP"><spring:message code="ezNewPortal.jhy01" />&nbsp;&nbsp;${lastLoginIP }</dd> -->
+	            <dd class="infoIP"><spring:message code="ezNewPortal.jhy01" />&nbsp;&nbsp;${lastLoginIP }</dd>
 	            <!-- 임시 -->
-<!--            <dd id="portletEnv" class="infoSet" onclick="viewPortletEnv()"><img src="/images/admin/frameSetting.png"></dd>
+	            <dd id="portletEnv" class="infoSet" onclick="viewPortletEnv()"><img src="/images/admin/frameSetting.png"></dd>
 	            <dd id="portletEnv" class="infoSet" onclick="infoSetClick()" style="z-index: 1001;"><img src="/images/ezNewPortal/theme3Img/infoSet_btn.png"></dd>
 	            <dd class="infoLogout" onclick="infoLogoutClick()"><img src="/images/ezNewPortal/theme3Img/infoLogout_btn.png"></dd>
-	        </dl>  -->
+	        </dl>  --%>
 	        <div class="time_check">
 	        	<c:choose>
 	        		<c:when test="${useAttitude eq 'YES' }">

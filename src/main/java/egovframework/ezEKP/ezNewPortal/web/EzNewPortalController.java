@@ -448,7 +448,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 포탈 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalPortalPage.do", method=RequestMethod.GET)
-	public String portalMainPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale local) throws Exception { // 2023-06-14 한슬기 - 테마2 상단 영역 메일/웹폴더 용량 표시 추가를 위해 Locale local 추가해주었음
+	public String portalMainPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale local) throws Exception { // 2023-06-14 한슬기 - 디자인 개선> 테마2 > 상단 영역 메일/웹폴더 용량 표시 추가를 위해 Locale local 추가해주었음
 		logger.debug("portalMainPage Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -460,14 +460,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		Calendar cal = Calendar.getInstance();
 		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
 		
-		// 2023-06-14 한슬기 - 디자인 개선 테마2 > 상단 영역 메일 용량 표시 추가를 위한 메일용량정보(xml)
-		String mailCapacityInfo = ezEmailConfigController.mailGetUse(loginCookie, local, model, req);
-		
-		// 2023-06-20 한슬기 - 디자인 개선 테마2 > 웹폴더(개인) 용량표시 추가를 위한 FolderId 값 추출
-		String webFolderPersonalFolderId = ezWebFolderService_y.getFolderTree(userInfo.getId(), userInfo.getDeptID(),
-										  userInfo.getCompanyName(), "U", userInfo.getPrimary(), userInfo.getTenantId(), "", false )
-										  .stream().findFirst().map(FolderTreeVO::getId).orElse(""); 
-		
 		resp.setHeader("Pragma", "no-cache"); //HTTP 1.0 
 		resp.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
 		resp.setHeader("Cache-Control", "no-store"); //HTTP 1.1 
@@ -476,6 +468,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			boolean useEzWorkspace = "YES".equals(data.get("useEzWorkspace"));
+			String usedTheme = data.get("usedTheme").toString();
+			
 			model.addAttribute("portletOrder", data.get("portletOrder"));
 			model.addAttribute("usedTheme", data.get("usedTheme"));
 			model.addAttribute("usedFrame", data.get("usedFrame"));
@@ -513,11 +507,21 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useMemo", data.get("useMemo"));
 			model.addAttribute("useWebfolder", data.get("useWebfolder"));
 			
-			// 2023-06-15 한슬기 - 디자인 개선 테마2 > 상단 영역 메일/웹폴더(개인) 용량 표시 추가
-			model.addAttribute("mailCapacityInfo", mailCapacityInfo);
-			model.addAttribute("webFolderPersonalFolderId", webFolderPersonalFolderId);
 			
-			String usedTheme = data.get("usedTheme").toString();
+			// 2023-06-15 한슬기 - 디자인 개선 테마2 > 상단 영역 메일/웹폴더(개인) 용량 표시 추가
+			if (usedTheme.equals("2")) {
+				// 2023-06-14 한슬기 - 디자인 개선 테마2 > 상단 영역 메일 용량 표시 추가를 위한 메일용량정보(xml)
+				String mailCapacityInfo = ezEmailConfigController.mailGetUse(loginCookie, local, model, req);
+				
+				// 2023-06-20 한슬기 - 디자인 개선 테마2 > 웹폴더(개인) 용량표시 추가를 위한 FolderId 값 추출
+				String webFolderPersonalFolderId = ezWebFolderService_y.getFolderTree(userInfo.getId(), userInfo.getDeptID(),
+												  userInfo.getCompanyName(), "U", userInfo.getPrimary(), userInfo.getTenantId(), "", false)
+												  .stream().findFirst().map(FolderTreeVO::getId).orElse("");
+				
+				model.addAttribute("mailCapacityInfo", mailCapacityInfo);
+				model.addAttribute("webFolderPersonalFolderId", webFolderPersonalFolderId);
+			}
+			
 			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);
 		}

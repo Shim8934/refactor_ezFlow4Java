@@ -365,7 +365,7 @@
 	        }
 	        function address_Search() {
 	            window.open("/ezAddress/addressMainSearch.do", "right");
-	            // 2023-06-28 황인경  - 디자인 개선 주소록 주소록검색 메뉴 선택시 상단 selected 해제
+	            // 2023-06-28 황인경 - 디자인 개선 > 주소록 > 좌측메뉴 > 하단 '주소록검색' 메뉴 선택시 상단 메뉴 선택 해제
 	            $(".node_selected").attr("class", "node_normal");
 	            $(".list_text").addClass("node_selected");
 	        }
@@ -490,26 +490,26 @@
 	        <div class="addressListBox" style="overflow:hidden; padding-right: 0;">
 		        <ul class="lnbUL" style="background: #F8F9FB">
 		        	<div class="tree" id="AddressTreeView" style="padding-top:15px">
-		            		<!-- 2023-06-22 황인경 - 디자인 개선 주소록 LNB 삭제 -->
-<!-- 		            	<span> -->
-<!-- 		                	<span> -->
-<!-- 		                    	<span> -->
-<!-- 		                        	<div class="node_div"> -->
-<%-- 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_individual"></span><span class="list_text"><spring:message code='ezAddress.t145' /></span><span class="sub_iconLNB tree_manage" onclick="address_foldermanage()"></span> --%>
-<!-- 		                            </div> -->
-<!-- 		                    	</span> -->
-<!-- 		                        <span> -->
-<!-- 		                        	<div class="node_div"> -->
-<%-- 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_department"></span><span class="list_text"><spring:message code='ezAddress.t146' /></span> --%>
-<!-- 		                            </div> -->
-<!-- 		                    	</span> -->
-<!-- 		                        <span> -->
-<!-- 		                        	<div class="node_div"> -->
-<%-- 		                            	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_company"></span><span class="list_text"><spring:message code='ezAddress.t147' /></span> --%>
-<!-- 		                            </div> -->
-<!-- 		                    	</span> -->
-<!-- 		                    </span>         -->
-<!-- 		                </span> -->
+	            		<%-- 2023-06-22 황인경 - 디자인 개선 > 주소록 > 좌측메뉴 LNB 이미지 삭제 --%>
+<%-- 		            <span> 
+			            	<span> 
+			                	<span> 
+			                    	<div class="node_div"> 
+			                        	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_individual"></span><span class="list_text"><spring:message code='ezAddress.t145' /></span><span class="sub_iconLNB tree_manage" onclick="address_foldermanage()"></span> 
+			                        </div> 
+			                	</span> 
+			                    <span> 
+			                    	<div class="node_div"> 
+			                        	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_department"></span><span class="list_text"><spring:message code='ezAddress.t146' /></span> 
+			                        </div> 
+			                	</span> 
+			                    <span> 
+			                    	<div class="node_div"> 
+			                        	<span class="sub_iconLNB tree_blank"></span><span class="sub_iconLNB tree_adress_company"></span><span class="list_text"><spring:message code='ezAddress.t147' /></span> 
+			                        </div> 
+			                	</span> 
+			                </span>         
+			            </span> --%>
 		            </div>
 		            <li onclick="address_Search()"><span class="list_text"><spring:message code="ezEmail.t99000042" /></span></li>
 		        </ul>

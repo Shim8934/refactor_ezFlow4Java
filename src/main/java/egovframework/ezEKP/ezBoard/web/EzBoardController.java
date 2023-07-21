@@ -819,10 +819,10 @@ public class EzBoardController extends EgovFileMngUtil{
 					   
 					   strName = "";
 					   
-					   /* 2018-12-11 홍승비 - 마이게시판리스트 우측 게시물 갯수에서 괄호 제거, 2023-06-28 황인경 - 디자인 개선 마이게시판리스트 우측 게시물 갯수에서 괄호 추가 */
+					   /* 2023-06-28 황인경 - 디자인 개선 > 게시판 > 마이게시판 > 좌측메뉴 > 게시물 카운트 괄호 추가 */
+					   /* 2018-12-11 홍승비 - 마이게시판리스트 우측 게시물 갯수에서 괄호 제거 */
 					   if (intCount != 0) {
 						   strName = "(" + intCount + ")";
-						   // strName = " " + intCount;
 					   }
 					   
 					   nList.item(i).getChildNodes().item(0).setTextContent(nList.item(i).getChildNodes().item(0).getTextContent() + strName);
@@ -3432,10 +3432,9 @@ public class EzBoardController extends EgovFileMngUtil{
 						
 						String strName = "";
 						
-						/* 2023-06-28 황인경 - 디자인 개선 마이게시판리스트 우측 게시물 갯수에서 괄호 추가 */
+						/* 2023-06-28 황인경 - 디자인 개선 > 게시판 > 마이게시판 > 좌측메뉴 > 게시물 카운트 괄호 추가 */
 						if (intCount != 0) {
 							strName = "(" + intCount + ")";
-							// strName = " " + intCount;
 						}
 						
 						node.getChildNodes().item(0).setTextContent(node.getChildNodes().item(0).getTextContent() + strName);

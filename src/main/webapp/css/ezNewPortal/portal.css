@@ -445,6 +445,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .sscheduleUL .scheduleLi .scheduleTime .Tcompany_timeText{color:#333333; font-size:13px; margin:0px 0px 0px 5px;}
 .sscheduleUL .scheduleLi .scheduleTime .Tindividual_timeText{color:#333333; font-size:13px; margin:0px 0px 0px 5px;}
 .sscheduleUL .scheduleLi .scheduleTime .Tcollaborate_timeText{color:#333333; font-size:13px; margin:0px 0px 0px 5px;}
+.sscheduleUL .scheduleLi .scheduleTime .Tgroup_timeText{color:#333333; font-size:13px; margin:0px 0px 0px 5px;}
 .sscheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:13px; color:#333; width:97%; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;}
 .sscheduleUL .scheduleLi_nodata{ background:#F3F3F3;margin:10px;padding: 8px 0px 10px 14px; height:35px; line-height:34px; border-radius: 5px;}
 .sscheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 0px; float:left; font-size:12px; color:#b2b2b2; }

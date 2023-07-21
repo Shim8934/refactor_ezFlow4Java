@@ -24,7 +24,7 @@
 	        		window.open("/ezPMS/pmsSetting.do", "right");
 	        	});
 	        	
-	        	/* 2023-06-15 황인경 - 디자인 개선 프로젝트 관리 트리구조 selected 추가 */
+	        	/* 2023-06-15 황인경 - 디자인 개선 > 프로젝트 관리 > 좌측메뉴 > 트리구조 메뉴 선택 클래스 제어 */
 	        	$("#myTask").click(function() {
 	        		window.open("/ezPMS/pmsMyTask.do", "right");
 	        		$("#projectList").attr("class", "node_normal");
@@ -39,7 +39,7 @@
 	        });
 	    </script>
 	</head>
-	<!-- 2023-06-15 황인경 - 디자인 개선 프로젝트관리 style 수정 및 LNB 삭제, 태그 구조 수정  -->
+	<%-- 2023-06-15 황인경 - 디자인 개선 > 프로젝트관리 > 좌측메뉴 > style 수정 및 LNB 이미지 삭제, 태그 구조 수정  --%>
 	<body class="newLeft">
 	    <div id="left"  class="lnb pms_left" style="overflow: auto;">
 	    	<div class="left_title" title="ezPMS">
@@ -77,15 +77,15 @@
 		    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:5000;display:none;" id="webFolderLeftPanel">&nbsp;</div>
 		    <div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;"></div>
 	    </div>
-<!-- 	    <body class="leftbody"> -->
-<!-- 	    <div id="left"> -->
-<%-- 	    	<div class="left_pims" title="ezPMS"><span><spring:message code='ezPMS.t8' /></span></div> --%>
-<%-- 		    <h2 class="on"><span><spring:message code='ezPMS.t8' /></span></h2> --%>
-<!-- 		    <ul> -->
-<%-- 		    	<li><span id="projectList" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t8' /></span></li> --%>
-<%-- 		    	<li><span id="myTask" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t142' /></span></li> --%>
-<!-- 		    </ul> -->
-<%-- 		    <h3><span id="pmsSetting" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t144' /></span></h3> --%>
-<!-- 		</div> -->
+<%-- 	<body class="leftbody">
+	 	    <div id="left">
+	 	    	<div class="left_pims" title="ezPMS"><span><spring:message code='ezPMS.t8' /></span></div> 
+	 		    <h2 class="on"><span><spring:message code='ezPMS.t8' /></span></h2> 
+	 		    <ul> 
+	 		    	<li><span id="projectList" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t8' /></span></li>
+	 		    	<li><span id="myTask" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t142' /></span></li>
+	 		    </ul>
+	 		    <h3><span id="pmsSetting" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t144' /></span></h3>
+			</div> --%>
 	</body>
 </html>

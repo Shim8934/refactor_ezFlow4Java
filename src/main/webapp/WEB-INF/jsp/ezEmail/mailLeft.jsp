@@ -439,9 +439,8 @@
 	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption);
 	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : ''");
 	                    } else {
-	                        // 2023-06-23 황인경 - 디자인 개선 메일 좌측 메뉴 메일 갯수 괄호 추가
+	                        // 2023-06-23 황인경 - 디자인 개선 > 메일 > 좌측 메뉴 > 카운트 괄호 추가
 							window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "(" + unreadcount + ")");
-							//window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "&nbsp;&nbsp;" + unreadcount);
 	                    }
 						if (typeof parent.frames["right"] != "undefined") {
 							if (parent.frames["right"] != null){
@@ -503,9 +502,8 @@
 	                    				if (typeof(unreadCount) === 'undefined' || unreadCount === 0) {
 		        	                    	window[treeviewStr].putcaption(i + 1, caption);
 		        	                    } else {
-		        	                    	// 2023-06-23 황인경 - 디자인 개선 메일 좌측 메뉴 메일 갯수 괄호 추가
+		        	                    	// 2023-06-23 황인경 - 디자인 개선 > 메일 > 좌측 메뉴 > 카운트 괄호 추가
 		        	                    	window[treeviewStr].putcaption(i + 1, caption + "(" + unreadCount + ")");
-		        	                    	//window[treeviewStr].putcaption(i + 1, caption + "&nbsp;&nbsp;" + unreadCount);
 		        	                    }
 		                    		}
 	                    		}
@@ -714,6 +712,7 @@
 	        }
 	        
 	        function Email_Menu_Click() {
+	        	if ($(event.target).prop("tagName") == "SPAN" && !$(event.target).hasClass("sub_iconLNB")){
 	        	shareId = "";
 	        	deletePermission = "";
 	        	sendPermission = "";
@@ -731,6 +730,7 @@
 	        	detailView();
 	        	window[treeviewStr].select(1);
 	        	openFolder();
+	        	}
 	        }
 	        
 	        function showProgress() {
@@ -1221,9 +1221,8 @@
 				var h2TitleElem = document.getElementById(h2TitleId);
 				
 				if (totalUnreadCountElem != null) {
-					// 2023-06-23 황인경 - 디자인 개선 메일 좌측 메뉴 메일 갯수 괄호 추가
+					// 2023-06-23 황인경 - 디자인 개선 > 메일 > 좌측 메뉴 > 카운트 괄호 추가
 					totalUnreadCountElem.innerHTML = "(" + totalUnreadCount + ")";
-					//totalUnreadCountElem.innerHTML = "&nbsp;(" + totalUnreadCount + ")";
 					h2TitleElem.style.maxWidth = (155 - totalUnreadCountElem.offsetWidth) + "px";
 				}
 			}
@@ -1494,13 +1493,13 @@
 			}
 			//address end
 			
-			// 2023-06-28 황인경 - 디자인 개선 메일 좌측 트리구조 메일함 메뉴 selected 해제
+			// 2023-06-28 황인경 - 디자인 개선 > 메일 > 좌측메뉴 > 트리구조 메일함/하단 메뉴 선택시 클래스 제어
 			function liSelcted() {
 	            $("#PostTreeView span.node_selected").attr("class", "node_normal");
 	            $(".list_text.node_selected").removeClass("node_selected");
 	            var mailBoxMenu = $(event.target);
 	            
-	            if (mailBoxMenu.prop("tagName") == "LI" ) {
+	            if (mailBoxMenu.prop("tagName") == "LI") {
 	            	mailBoxMenu.children().attr("class", "list_text node_selected");
 	            } else {
 	            	mailBoxMenu.attr("class", "list_text node_selected");

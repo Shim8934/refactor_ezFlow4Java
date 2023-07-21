@@ -103,18 +103,16 @@
 		            	
 		        }
 		        
-		     	// 2023-06-15 황인경 - 디자인 개선 업무관리 메뉴 선택 selected 변경
-		        if (event.target.classList.contains("list_text")) {
-					$(".node_selected").attr("class", "list_text");
-					
-					if (event.target.tagName == "LI" ) {
-						var liChangeSpan = event.target.querySelector(".list_text");
-						liChangeSpan.setAttribute("class", "list_text node_selected");
-					} else {
-						event.target.setAttribute("class", "list_text node_selected");
-					}
+		     	// 2023-06-15 황인경 - 디자인 개선 > 업무관리 > 좌측메뉴 > 메뉴선택 클래스 제어
+				$(".node_selected").attr("class", "list_text");
+				
+				if (event.target.tagName == "LI") {
+					var liChangeSpan = event.target.querySelector(".list_text");
+					liChangeSpan.setAttribute("class", "list_text node_selected");
+				} else {
+					event.target.setAttribute("class", "list_text node_selected");
 				}
-		    }		   
+		    }
 		
 	        // 업무작성창 load
 	        function WritePopup() {// 왼쪽(일반업무, 반복업무, 보낸업무) => 왼쪽 업무작성 버튼 입력
@@ -127,26 +125,23 @@
                 window.open("/ezTask/taskWrite.do?flag=other", "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 	        }
 	        
-	        // 2023-06-15 황인경 - 디자인 개선 업무관리 업무갯수 괄호 추가 
+	        // 2023-06-15 황인경 - 디자인 개선 > 업무관리 > 좌측메뉴 > 카운트 괄호 추가 
 	        function cntLoad() {
 	        	// 일반업무
 	        	if (window.parent.frames["right"].cnt > 0) {
 	        		$("#taskCnt").html("(" + window.parent.frames["right"].cnt + ")");
- 	        		//$("#taskCnt").html(window.parent.frames["right"].cnt);
 	        	} else if(window.parent.frames["right"].cnt == 0) {
 	        		$("#taskCnt").html("");
 	        	}
 	        	// 반복업무
 	        	if (window.parent.frames["right"].cnt3 > 0) {
 	        		$("#task2Cnt").html("(" + window.parent.frames["right"].cnt3 + ")");
- 	        		//$("#task2Cnt").html(window.parent.frames["right"].cnt3);	
 	        	} else if(window.parent.frames["right"].cnt3 == 0) {
 	        		$("#task2Cnt").html("");
 	        	}
 	        	// 보낸업무
 	        	if (window.parent.frames["right"].cnt2 > 0) {
 	        		$("#task3Cnt").html("(" + window.parent.frames["right"].cnt2 + ")");
- 	        		//$("#task3Cnt").html(window.parent.frames["right"].cnt2);	        		
 	        	} else if(window.parent.frames["right"].cnt2 == 0) {
 	        		$("#task3Cnt").html("");
 	        	}
@@ -175,20 +170,17 @@
 						count2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
 						count3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
 						
-						// 2023-06-15 황인경 - 디자인 개선 업무관리 업무갯수 괄호 추가 
+						// 2023-06-15 황인경 - 디자인 개선 > 업무관리 > 좌측메뉴 > 카운트 괄호 추가 
 						if (count != 0) {
 							$("#taskCnt").html("(" + count + ")");
- 							//$("#taskCnt").html(count);
 						}
 						
 						if (count3 != 0) {
 							$("#task2Cnt").html("(" + count3 + ")");
- 							//$("#task2Cnt").html(count3);
 						}
 						
 						if (count2 != 0) {
 							$("#task3Cnt").html("(" + count2 + ")");
-							//$("#task3Cnt").html(count2);
 						}
 						
 					},

@@ -848,7 +848,8 @@
 							//if (listCountMap[pListTypeValue] !== countNodeName) {
 								var countElem = document.querySelector("#" + countNodeName);
 								if (countElem) {
-									countElem.innerHTML = getNodeText(countNode) === "0" ? "" : "(" + getNodeText(countNode) + ")"; // 2023-06-23 황인경 - 디자인 개선 전자결재 문서갯수 괄호 추가
+									// 2023-06-23 황인경 - 디자인 개선 > 전자결재 > 좌측메뉴 > 문서 카운트 괄호 추가
+									countElem.innerHTML = getNodeText(countNode) === "0" ? "" : "(" + getNodeText(countNode) + ")";
 								}
 							//}
 						} catch (e) { }
@@ -1182,7 +1183,7 @@
 	        	if ($("#" + val01 + "H2").attr("class") == "on") {	        	
 	        		$("#" + val01 + "H2").attr("class", "off");
 	        		$("#" + val01 + "UL").attr("class", "lnbUL off");
-	        		// 2023-06-23 황인경 - 디자인 개선 전자결재 트리구조 LNB 수정
+	        		// 2023-06-23 황인경 - 디자인 개선 > 전자결재 > 좌측메뉴 > 트리구조 LNB 이미지 수정
 	        		$("#" + val01 + "H2").children().eq(0).attr("class", "sub_iconLNB tree_plus"); 
 	        	} else {
 	        		$(".lnb H2").attr("class", "off");

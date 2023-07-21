@@ -129,7 +129,7 @@
 	    </script>
 	</head>
 	<body class="newLeft">
-		<!-- 2023-06-23 황인경 - 디자인 개선 투표 클래스 및 구조 수정, LNB 삭제 -->
+		<%-- 2023-06-23 황인경 - 디자인 개선 > 투표 > 좌측메뉴 > 클래스 및 구조 수정, LNB 이미지 삭제 --%>
 		<div id="left" class="lnb poll_left" style="overflow: auto">
 	    	<div class="left_title" title="<spring:message code='ezBoard.t371'/>">
 	    		<spring:message code='ezBoard.t371'/>
@@ -151,22 +151,22 @@
 				</div>
 			</div>
 	    </div>
-<!-- 	    <div id="left" class="lnb" style="overflow: auto"> -->
-<%-- 	    	<div class="left_title" title="<spring:message code='ezBoard.t371'/>"> --%>
-<%-- 	    		<spring:message code='ezBoard.t371'/> --%>
-<%-- 	    		<span onclick="pollConfig();" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span> --%>
-<!-- 	        </div> -->
-<!-- 	        <div class="btn_writeBox"> -->
-<%-- 	        	<p class="btn_write01" onclick="pollWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezPoll.t144" /></p> --%>
-<!-- 	        </div> -->
-<!-- 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;"> -->
-<!-- 				<ul class="lnbUL"> -->
-<%-- 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_all"></span><span class="node_normal" onclick="pollClick(this)" pollId="1"><spring:message code="ezPoll.hdp18" /></span></li> --%>
-<%-- 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ing"></span><span class="node_selected" onclick="pollClick(this)" pollId="2"><spring:message code="ezPoll.psb256" /></span></li> --%>
-<%-- 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_wait"></span><span class="node_normal" onclick="pollClick(this)" pollId="4"><spring:message code="ezPoll.psb257" /></span></li> --%>
-<%-- 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ok"></span><span class="node_normal" onclick="pollClick(this)" pollId="3"><spring:message code="ezPoll.psb258" /></span></li> --%>
-<!-- 				</ul> -->
-<!-- 			</div>	         -->
-<!-- 	    </div> -->
+<%-- 	    <div id="left" class="lnb" style="overflow: auto">
+	 	    	<div class="left_title" title="<spring:message code='ezBoard.t371'/>">
+	 	    		<spring:message code='ezBoard.t371'/>
+	 	    		<span onclick="pollConfig();" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
+	 	        </div>
+	 	        <div class="btn_writeBox">
+	 	        	<p class="btn_write01" onclick="pollWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezPoll.t144" /></p>
+	 	        </div>
+	 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
+	 				<ul class="lnbUL">
+	 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_all"></span><span class="node_normal" onclick="pollClick(this)" pollId="1"><spring:message code="ezPoll.hdp18" /></span></li>
+	 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ing"></span><span class="node_selected" onclick="pollClick(this)" pollId="2"><spring:message code="ezPoll.psb256" /></span></li>
+	 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_wait"></span><span class="node_normal" onclick="pollClick(this)" pollId="4"><spring:message code="ezPoll.psb257" /></span></li>
+	 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ok"></span><span class="node_normal" onclick="pollClick(this)" pollId="3"><spring:message code="ezPoll.psb258" /></span></li>
+	 				</ul>
+	 			</div>	        
+	 	    </div> --%>
 	</body>
 </html>

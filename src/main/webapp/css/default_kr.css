@@ -3901,6 +3901,7 @@ select{min-height: 24px !important;}
 #mainmenu ul.selectUL{overflow:visible; max-height: 220px;}
 .organMainmenu ul li.newSelect{border-radius: 0px;}
 .organMainmenu ul li.newSelect span{padding: 0px 10px !important;}
+
 .organMainmenu ul.selectUL li .option_horizontal_list::-webkit-scrollbar {width: 8px;}
 .organMainmenu ul.selectUL li .option_horizontal_list::-webkit-scrollbar-thumb {height: 30%;background: #d9d9d9;border-radius: 10px;}
 .organMainmenu ul.selectUL li .option_horizontal_list::-webkit-scrollbar-track{background: #f1f1f1;}

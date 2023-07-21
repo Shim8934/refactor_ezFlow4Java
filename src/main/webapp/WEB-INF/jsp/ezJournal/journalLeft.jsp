@@ -43,13 +43,13 @@
 				window.open(url,"right");
 				setRecvCount();
 				
-	        	// 2023-06-15 황인경 - 디자인 개선 업무일지 트리구조 LNB 수정
-	        	if (elem.id == "recvFolder" || elem.id == "tempFolder" ) {
+	        	// 2023-06-15 황인경 - 디자인 개선 > 업무일지 > 좌측메뉴 > 트리구조 LNB 이미지 수정, 메뉴선택 클래스 제어
+	        	if (elem.id == "recvFolder" || elem.id == "tempFolder") {
 	        		var activeH2 = document.querySelectorAll(".on");
-	        		activeH2.forEach(function(h2){
+	        		activeH2.forEach(function(h2) {
 	        			$(h2).removeClass("on");
 	        			$(h2).addClass("off");
-	        		})
+	        		});
 	        		
 	        		$(elem).parent().removeClass("off");
 	        		$(elem).parent().addClass("on");
@@ -62,13 +62,12 @@
 				if (liSeleted.prop("tagName") == "SPAN" && liSeleted.hasClass("list_text")) {
 					$(".node_selected").attr("class", "list_text");
 					
-					if (liSeleted.prop("tagName") == "LI" ) {
+					if (liSeleted.prop("tagName") == "LI") {
 						var liChangeSpan = event.target.querySelector(".list_text");
 						liChangeSpan.setAttribute("class", "list_text node_selected");
 					} else {
 						liSeleted.attr("class", "list_text node_selected");
 					}
-					
 				}
 			}
 	        
@@ -111,10 +110,9 @@
 	        		
 	        		$("#"+val01+"H2").attr("class", "on");
 	        		$("#"+val01+"UL").attr("class", "lnbUL on");
-	        		// 2023-06-15 황인경 - 디자인 개산 업무일지 트리구조 LNB 수정 
+	        		// 2023-06-15 황인경 - 디자인 개선 > 업무일지 > 좌측메뉴 > 트리구조 LNB 이미지 수정 
 	        		$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 	        		$("#"+val01).attr("class", "sub_iconLNB tree_arrow_down");
- 	        		//$("#"+val01).attr("class", "sub_iconLNB tree_arrow_up");
 	        	} else {
 	        		$("#"+val01+"H2").attr("class", "off");
 	        		$("#"+val01+"UL").attr("class", "lnbUL off");	        		
@@ -181,7 +179,7 @@
 					    		</c:when>
 					    	</c:choose>
 				        </ul>
-						<!-- 2023-06-14 황인경 디자인 개선 업무일지 태그 구조 수정, LNB 삭제  -->
+						<%-- 2023-06-14 황인경 - 디자인 개선 > 업무일지 > 좌측메뉴 > '수신일지함', '임시보관함' 태그 구조 수정, LNB 이미지 삭제 --%>
 						<h2 class="off" id="recvFolderH2">
 							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" listType='recv' onClick="goJournalList(this);" id="recvFolder"><spring:message code='ezJournal.t51'/>
 								<c:if test="${recvCount ne 0 }">
@@ -193,10 +191,10 @@
 		                	<span class="sub_iconLNB tree_plus"></span><span class="h2Title" listType='temp' onClick="goJournalList(this);" id="tempFolder"><spring:message code='ezJournal.t52'/></span>
 						</h2>
 					</div>
-<!-- 					<ul id="option" class="lnbUL"> -->
-<%--                    	<li><span class="sub_iconLNB tree_businessLog_receive"></span><span class="list_text" listType='recv' onClick="goJournalList(this);"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">&nbsp;&nbsp;${recvCount}</span></c:if></span></li> --%>
-<%--                    	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" listType='temp' onClick="goJournalList(this);"><spring:message code='ezJournal.t52'/></span></li> --%>
-<!--	 		        </ul> -->
+<%-- 					<ul id="option" class="lnbUL">
+	                    	<li><span class="sub_iconLNB tree_businessLog_receive"></span><span class="list_text" listType='recv' onClick="goJournalList(this);"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">&nbsp;&nbsp;${recvCount}</span></c:if></span></li>
+	                    	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" listType='temp' onClick="goJournalList(this);"><spring:message code='ezJournal.t52'/></span></li>
+	 		        	</ul> --%>
 				</div>
 	        </div>
 	    </div>

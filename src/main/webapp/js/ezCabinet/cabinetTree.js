@@ -171,18 +171,14 @@ function CabinetTree() {
 		
 		if (level > 0) {
 			for (var j = 0; j < level; j++) {
-				// 2023-06-22 황인경 - 디자인 개선 캐비넷 메뉴 트리 구조 태그, 클래스 LNB 변경
-				var imgTag       = document.createElement("SPAN");
+				// 2023-06-22 황인경 - 디자인 개선 > 캐비넷 > 좌측메뉴 > 트리 구조, 클래스, LNB 이미지 변경
+				var imgTag = document.createElement("SPAN");
 				imgTag.className = "sub_iconLNB tree_blank";
 				divElmt.appendChild(imgTag);
-				//var imgTag       = document.createElement("img");
-				//imgTag.src       = _transImg;
-				//imgTag.className = "cabinetImg";
 			}
 		}
 		
 		var imgElmt = document.createElement("SPAN");
-		//var imgElmt = document.createElement("img");
 		imgElmt.setAttribute("role", list[_nodeId]);
 		imgElmt.setAttribute("level" , list[_levelName]);
 		
@@ -193,7 +189,6 @@ function CabinetTree() {
 		var spanDeptName         = document.createElement("span");
 		spanDeptName.textContent = list[_nodeName];
 		spanDeptName.className   = "list_text";
-		//spanDeptName.className   = "spanName";
 		spanDeptName.setAttribute("role", list[_nodeId]);
 		
 		if (list[_name1]) {spanDeptName.setAttribute("name1", list[_name1]); spanDeptName.setAttribute("name2", list[_name2]);}
@@ -205,22 +200,17 @@ function CabinetTree() {
 		if (_dblClickHdl != null) {spanDeptName.ondblclick = function() {_dblClickHdl(this)};}
 		
 		divElmt.appendChild(imgElmt);
-		//divElmt.appendChild(imgElmt2);
 		divElmt.appendChild(spanDeptName);
 		divTree.appendChild(divElmt);
 		
 		if (list["hasSub"] == "0") {
 			imgElmt.className = "sub_iconLNB tree_blank";
-			//imgElmt.src       = _transImg;
-			//imgElmt.className = "cabinetImg";
 		}
 		else {
 			imgElmt.onclick = function() {getSubNodes(this);};
 			
 			if (list[_nodeSub] == null) {
 				imgElmt.className = "sub_iconLNB tree_plus";
-				//imgElmt.src       = _plusImg;
-				//imgElmt.className = "cabinetPlus";
 				return;
 			}
 			
@@ -240,11 +230,9 @@ function CabinetTree() {
 	}
 	
 	function generateShareList(divTree, divElmt, list) {
-		// 2023-06-22 황인경 - 디자인 개선 캐비넷 메뉴 트리 구조 태그, LNB 변경
+		// 2023-06-22 황인경 - 디자인 개선 > 캐비넷 > 좌측메뉴 > 트리 태그 구조, LNB 이미지 변경
 		var imgElmt       = document.createElement("SPAN");
 		imgElmt.className = "sub_iconLNB tree_plus";
-		//var imgElmt       = document.createElement("img");
-		//imgElmt.className = "cabinetPlus";
 		imgElmt.setAttribute("role", list["userId"]);
 		imgElmt.onclick = function() {getUserSharedCabinet(this);};
 		
@@ -256,7 +244,6 @@ function CabinetTree() {
 		spanDeptName.textContent = list["userName"];
 		spanDeptName.setAttribute("title", list["userName"] + "[" + list["deptName"] + "]");
 		spanDeptName.className   = "list_text";
-		//spanDeptName.className   = "spanName";
 		spanDeptName.setAttribute("role", list["userId"]);
 		spanDeptName.addEventListener("click", function(e) {getUserSelected(this);}, false);
 		
@@ -267,8 +254,6 @@ function CabinetTree() {
 		
 		if (list["sharedCabinet"] && list["sharedCabinet"].length > 0) {
 			imgElmt.className = "sub_iconLNB tree_minus";
-			//imgElmt.className = "cabinetMinus";
-			//imgElmt.src       = _minusImg;
 			var newDivElmt    = document.createElement("div");
 			divElmt.appendChild(newDivElmt);
 			
@@ -279,8 +264,6 @@ function CabinetTree() {
 		}
 		else {
 			imgElmt.className = "sub_iconLNB tree_plus";
-			//imgElmt.className = "cabinetPlus";
-			//imgElmt.src       = _plusImg;
 		}
 	}
 	
@@ -292,9 +275,7 @@ function CabinetTree() {
 		var spanDeptName         = document.createElement("span");
 		spanDeptName.textContent = strName;
 		spanDeptName.setAttribute("title", strName);
-		// 2023-06-22 황인경 - 디자인 개선 캐비넷 메뉴 트리 구조 클래스 변경
 		spanDeptName.className   = "list_text";
-		//spanDeptName.className   = "spanName";
 		
 		divElmt.appendChild(imgElmt2);
 		divElmt.appendChild(spanDeptName);
@@ -316,25 +297,18 @@ function CabinetTree() {
 		if (divChildren > 0) {
 			var childElmt = parentDiv.lastElementChild;
 			
-			// 2023-06-22 황인경 - 디자인 개선 캐비넷 메뉴 트리 구조 LNB 변경
+			// 2023-06-22 황인경 - 디자인 개선 > 캐비넷 > 좌측메뉴 > 트리 구조, LNB 이미지 변경
 			if (obj.className == "sub_iconLNB tree_minus") {
 				obj.className           = "sub_iconLNB tree_plus";
 				childElmt.style.display = "none";
-			/*if (obj.className == "cabinetMinus") {
-				obj.src                 = _plusImg;
-				obj.className           = "cabinetPlus";*/
 			}
 			else {
 				obj.className           = "sub_iconLNB tree_minus";
-				//obj.src                 = _minusImg;
-				//obj.className           = "cabinetMinus";
 				childElmt.style.display = "";
 			}
 		}
 		else {
 			obj.className = "sub_iconLNB tree_minus";
-			//obj.src       = _minusImg;
-			//obj.className = "cabinetMinus";
 			var userId    = obj.getAttribute("role");
 			var dataInf   = {"shareId" : userId};
 			
@@ -356,25 +330,18 @@ function CabinetTree() {
 		if (divChildren > 0) {
 			var childElmt = parentDiv.lastElementChild;
 			
-			// 2023-06-22 황인경 - 디자인 개선 캐비넷 메뉴 트리 구조 LNB 변경
+			// 2023-06-22 황인경 - 디자인 개선 > 캐비넷 > 좌측메뉴 > 트리 구조, LNB 이미지 변경
 			if (obj.className == "sub_iconLNB tree_minus") {
 				obj.className = "sub_iconLNB tree_plus";
 				childElmt.style.display = "none";
-			/*if (obj.className == "cabinetMinus") {
-				obj.src                 = _plusImg;
-				obj.className           = "cabinetPlus";*/
 			}
 			else {
 				obj.className = "sub_iconLNB tree_minus";
-				//obj.src                 = _minusImg;
-				//obj.className           = "cabinetMinus";
 				childElmt.style.display = "";
 			}
 		}
 		else {
 			obj.className = "sub_iconLNB tree_minus";
-			//obj.src       = _minusImg;
-			//obj.className = "cabinetMinus";
 			var deptData  = {"nodeId" : nodeId, "level" : level};
 			
 			makeAjaxCall(deptData, "GET", _getSubUrl, makeSubTree, null, true, parentDiv);
@@ -398,24 +365,14 @@ function CabinetTree() {
 	
 	function getSelected(selectElmt) {
 		var divTree      = document.getElementById(_treeElmtId);
-		// 2023-06-22 황인경 - 디자인 개선 캐비넷 메뉴 트리 구조 클래스 변경
+		// 2023-06-22 황인경 - 디자인 개선 > 캐비넷 > 좌측메뉴 > 트리 구조, 메뉴선택 클래스 제어
 		var previousElmt = divTree.querySelector("span[class='list_text node_selected']");
-		//var previousElmt = divTree.querySelector("span[class='selectedNode']");
 		
 		if (previousElmt != null) {
 			previousElmt.className = "list_text";
-			//previousElmt.className = "spanName";
-			
-			/*if (previousElmt.getAttribute("role") != selectElmt.getAttribute("role")) {
-				previousElmt.className = "spanName";
-			}
-			else {
-				return;
-			}*/
 		}
 		
 		selectElmt.className = "list_text node_selected";
-		//selectElmt.className = "selectedNode";
 	}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, extenParam) {

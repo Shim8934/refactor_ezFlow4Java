@@ -159,7 +159,7 @@
 		    	leftResize();
 			});
 		    
-		    // 2023-07-04 황인경 - 디자인 개선 관리자 화면 통계 트리구조 LNB 추가
+		    // 2023-07-04 황인경 - 디자인 개선 > 관리자 > 통계 > 좌측메뉴 > 트리구조 LNB 이미지 추가
 		    function openFolder(val01) {
 		    	if ($("#" + val01 + "H2").attr("class") == "on") {	        	
 		    		$("#" + val01 + "H2").attr("class", "off");
@@ -176,11 +176,12 @@
 		    	}
 		    }
 		    
-		 	// 2023-07-03 황인경 - 디자인 개선 관리자화면 통계 트리구조 메뉴 선택 
+		 	// 2023-07-03 황인경 - 디자인 개선 > 관리자 > 통계 > 좌측메뉴 > 트리구조 메뉴선택 클래스 제어 
 		    function liSelected() {
 		        $("li.on").attr("class", "");
 				$(event.target).parent().attr("class", "on");
-	        } 
+	        }
+		 	
 	    </script>
     </head>
 

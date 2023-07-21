@@ -45,7 +45,7 @@
             	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/default_pic.gif" style="border-radius:20px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:20px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
                 <dl class="info_txt">
                 	<dt>
-                		<!-- 2023-06-15 황인경 - 디자인 개선 테마2 사용자 정보 부서 추가 -->
+                		<%-- 2023-06-15 황인경 - 디자인 개선 > 테마2 > 상단 사용자 정보 > 부서 추가 --%>
                 		<span class="info_team">${deptName}</span>
                 		<span class="info_name">${userName}</span>
                 		<span class="info_icon">
@@ -54,14 +54,14 @@
                 		</span>
                 	</dt>
                     <dd><spring:message code='ezNewPortal.yej06'/> <span>${lastLogin}</span></dd>
-                    <!-- 2023-06-15 황인경 - 디자인 개선 테마2 사용자 정보 최종접속 IP 추가 -->
+                    <%-- 2023-06-15 황인경 - 디자인 개선 > 테마2 > 상단 사용자 정보 > 최종접속 IP 추가 --%>
                     <dd><spring:message code='ezNewPortal.hik01'/> <span>${lastLoginIP}</span></dd>
                 </dl>
             </div>
             <div class="personal_content">
             <c:choose>
             	<c:when test="${useAttitude eq 'YES' }">
-            		<!-- 2023-06-15 황인경 - 디자인 개선 테마2 현재시간 문구 추가 -->
+            		<%-- 2023-06-15 황인경 - 디자인 개선 > 테마2 > 상단 > 현재시간 문구 추가 --%>
          			<dl class="current"><spring:message code='ezNewPortal.t012' /></dl>
 					<dl class="time">
 	                    <dd id="timeFlow"></dd>
@@ -1192,19 +1192,19 @@
 		
 		setPortalRefresh();
 		
-		// 2023-06-20 한슬기 - 테마2 > 메일 용량 표시 추가
+		// 2023-06-20 한슬기 - 테마2 > 상단에 메일 용량 표시 추가
 		var getMailCapacity = function() {
 	        var mailCapacityInfo = loadXMLString("${mailCapacityInfo}");
 			var mGraphSpanPortal = $("#mGraphSpanPortal");
 	        var useMailBoxPortal = $("#useMailBoxPortal");
 	        useMailBoxPortal.text(GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[1].textContent
-	        					 + "\/"+GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[0].textContent)
-	        mGraphSpanPortal.css('width', GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[2].textContent)
+	        					 + "\/"+GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[0].textContent);
+	        mGraphSpanPortal.css('width', GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[2].textContent);
 		}
 		
 		getMailCapacity();
 		
-		// 2023-06-20 한슬기 - 테마2 > 웹폴더(개인) 용량 표시 추가 
+		// 2023-06-20 한슬기 - 테마2 > 상단에 웹폴더(개인) 용량 표시 추가 
 		<c:if test="${not empty webFolderPersonalFolderId}">
 		
 			var webFolderPersonalFolderCapacity = function() {

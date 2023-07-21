@@ -151,13 +151,13 @@
 			liSelected();
 		}
         
-        // 2023-07-03 황인경 - 디자인 개선 관리자화면 포탈 트리구조 메뉴 선택 
+        // 2023-07-03 황인경 - 디자인 개선 > 관리자 > 포탈 > 좌측메뉴 > 트리구조 메뉴 선택 
         function liSelected() {
 	        $("li.on").attr("class", "");
 			$(event.target).parent().attr("class", "on");
         } 
         
-        // 2023-07-03 황인경 - 디자인 개선 관리자화면 포탈 LNB 추가 
+        // 2023-07-03 황인경 - 디자인 개선 > 관리자 > 포탈 > 좌측메뉴 > 트리구조 LNB 이미지 추가 
         function openFolder() {
         	var h2Title = $(event.target).parent();
         	
