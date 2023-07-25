@@ -800,11 +800,10 @@
 						<li><a rel="modal:close"><span></span></a></li>
 					</ul>
 				</div>
-<%--				<div class="warning_wrap" style="padding-left:80px">--%>
 				<div class="warning_wrap">
-					<p style="border:0px; padding-left: 20px;" id="imgMnt9"></p>
-					<dl style="margin-top: 23px; margin-left: 50px;">
-						<dt id="layerTitle9" class="layerTitle"><spring:message code="ezOrgan.hj01" /></dt>
+					<p style="border:0px; padding-left: 10px;" id="imgMnt9"></p>
+					<dl>
+						<dt id="layerTitle9" class="layerTitle" style="width: 346.38px"><spring:message code="ezOrgan.hj01" /></dt>
 						<dd><spring:message code="ezOrgan.hj02" /></dd>
 					</dl>
 				</div>
