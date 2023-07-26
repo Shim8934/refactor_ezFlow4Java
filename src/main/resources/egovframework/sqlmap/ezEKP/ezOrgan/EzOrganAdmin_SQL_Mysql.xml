@@ -1705,7 +1705,7 @@
 			('SA01','001','기안문',		'Approval',		'起案文',		'起案文',		'1',	'기안문',				#companyID#, #tenantID#),
 			('SA01','002','보고문',		'Report',		'報告文',		'?告文',		'1',	'보고문',				#companyID#, #tenantID#),
 			('SA01','003','수신문',		'Received',		'受信文',		'收件文',		'1',	'수신문',				#companyID#, #tenantID#),
-			('SA01','004','시행문',		'시행문',			'施行文',		'?行文',		'1',	'시행문',				#companyID#, #tenantID#),
+			('SA01','004','시행문',		'Enforcement',			'施行文',		'?行文',		'1',	'시행문',				#companyID#, #tenantID#),
 			('SA01','005','부서합의',		'agreement',	'起案文',		'起案文',		'0',	'기안문',				#companyID#, #tenantID#),
 			('SA01','006','감사문서',		'Inspect',		'監査',		'?察',		'0',	'감사',				#companyID#, #tenantID#),
 			('SA01','007','신청문서',		'application',	'申請',		'申?',		'0',	'신청',				#companyID#, #tenantID#),
