@@ -649,7 +649,7 @@ var strLang934_1 = "Items";
 var strLang935 = "Success:";
 var strLang936 = "Failure:";
 var strLang937 = "Results bulk reassign document.";
-var strLang938 = "제외 : ";
+var strLang938 = "Exception : ";
 // ezViewHWP/ezDeptRecev_HWP.js
 var strLang940 = "Prev"
 var strLang941 = "Next"
