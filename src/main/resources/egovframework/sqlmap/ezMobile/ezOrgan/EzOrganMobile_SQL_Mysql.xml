@@ -307,7 +307,11 @@
 	  					THEN DESCRIPTION
 	  					ELSE DESCRIPTION$lang$
 	  				END deptName,
-	  				TITLE,
+	  				CASE
+						WHEN (TITLE$lang$ = '' OR TITLE$lang$ IS NULL)
+	  					THEN TITLE
+	  					ELSE TITLE$lang$
+	  				END TITLE,
 	  				MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				    EXTENSIONATTRIBUTE2 as imageName,
@@ -357,7 +361,11 @@
 	  					ELSE B.DISPLAYNAME$lang$
 	  				END userName,
 	  				D.DISPLAYNAME$lang$ as deptName,
-	  				A.TITLE,
+	  				CASE
+						WHEN (A.TITLE$lang$ = '' OR A.TITLE$lang$ IS NULL)
+	  					THEN A.TITLE
+	  					ELSE A.TITLE$lang$
+	  				END TITLE,
 	  				B.MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.ORDERBY, '0'))), IFNULL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    B.EXTENSIONATTRIBUTE2 as imageName,
@@ -438,7 +446,11 @@
 	  					THEN DESCRIPTION
 	  					ELSE DESCRIPTION$lang$
 	  				END deptName,
-	  				TITLE,
+	  				CASE
+						WHEN (TITLE$lang$ = '' OR TITLE$lang$ IS NULL)
+	  					THEN TITLE
+	  					ELSE TITLE$lang$
+	  				END TITLE,
 	  				MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				    EXTENSIONATTRIBUTE2 as imageName,
@@ -474,7 +486,11 @@
 	  					ELSE B.DISPLAYNAME$lang$
 	  				END userName,
 	  				D.DISPLAYNAME$lang$ as deptName,
-	  				A.TITLE,
+	  				CASE
+						WHEN (A.TITLE$lang$ = '' OR A.TITLE$lang$ IS NULL)
+	  					THEN A.TITLE
+	  					ELSE A.TITLE$lang$
+	  				END TITLE,
 	  				B.MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.ORDERBY, '0'))), IFNULL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    B.EXTENSIONATTRIBUTE2 as imageName,
