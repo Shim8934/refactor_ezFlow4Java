@@ -61,14 +61,13 @@ public final class EzLambda {
         };
     }
 
-
     /**
      * 예외를 던질 수 있는 Supplier를 래핑합니다.
      *
      * @param supplier 예외를 던질 수 있는 Supplier
      * @return 같은 입력을 받지만, 던져진 모든 예외를 WrappedException(Unchecked)으로 던지는 Supplier입니다.
      */
-    public static <T, E extends Exception> Supplier<T> wrapThrowingConsumer(ThrowsSupplier<T, E> supplier) {
+    public static <T, E extends Exception> Supplier<T> wrapThrowingSupplier(ThrowsSupplier<T, E> supplier) {
         return () -> {
             try {
                 return supplier.get();
