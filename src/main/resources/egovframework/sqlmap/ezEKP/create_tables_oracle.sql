@@ -9441,6 +9441,12 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE INDEX "I_JMS_MIL_MAIL_MODSEQ" ON "JAMES_MAIL" ("MAIL_MODSEQ") 
   ;
 --------------------------------------------------------
+--  DDL for Index JAMES_MAIL_MAIL_DATE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "JAMES_MAIL_MAIL_DATE_IDX" ON "JAMES_MAIL" ("MAIL_DATE")
+  ;
+--------------------------------------------------------
 --  DDL for Index JAMES_MAIL_BLOB_PK
 --------------------------------------------------------
 
