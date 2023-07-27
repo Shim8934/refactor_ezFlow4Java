@@ -528,12 +528,12 @@ public class CommonUtil {
 			LoginVO user = userInfo(loginCookie);
 	
 			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
-				return new LoginVO();
+				return null;
 			}else{
 				return user;
 			}
 		}catch(Exception e){
-			return new LoginVO();
+			return null;
 		}
 	}
 	
@@ -542,12 +542,12 @@ public class CommonUtil {
 			LoginVO user = aprUserInfo(loginCookie);
 	
 			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
-				return new LoginVO();
+				return null;
 			}else{
 				return user;
 			}
 		}catch(Exception e){
-			return new LoginVO();
+			return null;
 		}
 	}
 	
