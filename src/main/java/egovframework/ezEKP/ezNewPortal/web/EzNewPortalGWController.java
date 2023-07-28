@@ -3844,10 +3844,17 @@ public class EzNewPortalGWController {
 			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			List<Map<String, Object>> answerList = new ArrayList<Map<String, Object>>();
-
+			// 2023-07-28 황인경 - 포탈 > 빠른 설문 포틑릿 > 설문제목 다국어 지원 추가 
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
 			PersonalLightPollVO pollInfo = new PersonalLightPollVO();
 			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId, request.getParameter("userId"), offset);
-
+			
+			// 2023-07-28 황인경 - 포탈 > 빠른 설문 포틑릿 > 설문제목 다국어 지원 추가 
+			if (!lang.equals("")) {
+				pollInfo.setPollTitle(pollInfo.getPollTitle2());
+			}
+			
 			int itemSeq = pollInfo.getItemSeq();
 			List<PersonalLightPollVO> pollResult = ezNewPortalService.getPollPortletResult(companyId, tenantId, itemSeq);
 
