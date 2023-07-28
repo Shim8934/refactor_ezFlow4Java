@@ -401,6 +401,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String propList = "extensionAttribute4;department;description;title;title2;description2;physicalDeliveryOfficeName;company;company2";
 		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		String myDept = "";
+		String myTitle= "";
 		String subTitleString = "";
 		boolean isSubTitle = false;
 		Document doc = commonUtil.convertStringToDocument(results);
@@ -417,19 +418,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
         int deptListFlag = 0;
         
         myDept = userInfo.getPrimary().equals("1") ? deptName : deptName2;
+		myTitle = userInfo.getPrimary().equals("1") ? title : title2;
         
         if (companyID.equals(userInfo.getCompanyID())) {
 	        if (userInfo.getDeptID().equals(deptID)) {
 	        	if (title.equals("")){
 	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "</option>";
 	        	} else {
-	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "[" + title + "]" + "</option>";
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "[" + myTitle + "]" + "</option>";
 	        	}
 	        } else {
 	        	if (title.equals("")){
 	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "</option>";
 	        	} else {
-	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "[" + title + "]" + "</option>";
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "[" + myTitle + "]" + "</option>";
 	        	}
 	        }
 	        deptListFlag++;
