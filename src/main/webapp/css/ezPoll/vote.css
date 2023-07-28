@@ -187,3 +187,6 @@
 .stopButton{position: absolute; right: 30px; color: red; font-size: 80px; background: rgba(255,255,255,0.8); border-radius: 25px; cursor:pointer; border:1px solid #ddd;}
 .stopButton:hover{background-color:rgba(221, 238, 255, 0.8);}
 .stopBtnToggle{position: absolute;width: 13px;height: 13px;background: red;right: 30px;border-radius: 23px;z-index:1; cursor:pointer;}
+
+/* 다국어 수정 */
+.Pt_QstInfoVotes{display:inline-block; padding-left:16px; background:url(/images/ppl.png) no-repeat left center; background-size:13px 13px; margin-right:3px;}
