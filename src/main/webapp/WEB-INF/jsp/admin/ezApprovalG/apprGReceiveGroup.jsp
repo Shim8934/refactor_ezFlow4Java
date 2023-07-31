@@ -689,7 +689,7 @@
 							var tempNum = Number(result);
 
 							if (!isNaN(tempNum)) {
-								alert(tempNum + "<spring:message code='ezApprovalG.pgb05'/>");
+								alert(tempNum + " <spring:message code='ezApprovalG.pgb05'/>");
 							} else {
 								alert("<spring:message code='ezApprovalG.pgb04'/>");
 							}
