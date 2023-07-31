@@ -340,3 +340,14 @@ label[for="listOpt2"] { position: relative; top: -4.5px;}
 .adminTopTitle {cursor:pointer;}
 .concurrentUL .concurrentLI .conlistDL {width:calc(28% - 45px);}
 .concurrentUL .concurrentLI .conlistDL .conlistText {max-width:calc(100% - 45px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+
+/* 다국어 수정 */
+#popupContentTb{width:100%; table-layout:fixed;}
+#receivelist{margin-top:0; width:100%; box-sizing:border-box;}
+#popupContentTb .question{display:flex; min-height:60px; height:auto; border-bottom:0; display:flex; width:100% !important; box-sizing:border-box;}
+#popupContentTb .question span{width:auto !important;}
+#popupContentTb .question span.spanPollTitle{flex:1;}
+
+#receivelist .poll_list1{display:flex; align-items:center;}
+#receivelist .poll_list1 .graphbar1{flex:1;}
+#receivelist .Pt_QstInfoDiv{min-width:100px; text-align:right;}

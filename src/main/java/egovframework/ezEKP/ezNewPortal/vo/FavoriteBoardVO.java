@@ -8,6 +8,8 @@ public class FavoriteBoardVO {
 	private String startDate;
 	private String title;
 	private String gubun;
+	// 2023-07-28 황인경 - 즐겨찾기 포틀릿 > 다국어 지원 > 작성자명 
+	private String writerName2;
 	
 	public String getGubun() {
 		return gubun;
@@ -44,6 +46,9 @@ public class FavoriteBoardVO {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public String getWriterName2() {
+		return writerName2;
 	}
 	
 	@Override

@@ -649,7 +649,7 @@ var strLang934_1 = "Items";
 var strLang935 = "Success:";
 var strLang936 = "Failure:";
 var strLang937 = "Results bulk reassign document.";
-var strLang938 = "제외 : ";
+var strLang938 = "Exception : ";
 // ezViewHWP/ezDeptRecev_HWP.js
 var strLang940 = "Prev"
 var strLang941 = "Next"
@@ -1058,7 +1058,7 @@ var strLangHSBPR01 = "Arial";
 //var strLangHSBAt00 = ".\nIt will be deleted the attachment files of big e-mail after ";
 var strLangHSBAt00 = "If file exceed the maximum capacity of a regular attachment, it will be treated as a Large attachment.";
 var strLangHSBAt01 = ".";
-var strLangHSBAt02 = "Big";
+var strLangHSBAt02 = "Large";
 var strLangHSBAt03 = "The total size of large dosage attachment files can not exceed ";
 var strLangHSBAt04 = "MB.";
 var strLangHSBAt05 = "Download period : ";

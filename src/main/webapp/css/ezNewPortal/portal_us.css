@@ -277,7 +277,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 /* birthday */
 .birthday{ margin:0px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif; overflow:hidden; background-color: white; height:197px;} /* 장진혁 추가 */
 .birthTit{ height:32px; border-top:1px solid #e7e7e7; border-bottom:1px solid #e7e7e7; box-sizing:border-box; line-height:30px;}
-.birthTit .birthText{margin:0px; padding:0px 0px 0px 10px; font-size:14px; color:#333; font-weight:bold; float:left;}
+.birthTit .birthText{margin:0px; padding:0px 0px 0px 10px; font-size:11px; color:#333; font-weight:bold; float:left;}
 .birthTit .birthText span{ color:#0470e4;}
 .birthTit .birthLeftbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer;}
 .birthTit .birthRighttbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer;}
@@ -1304,3 +1304,27 @@ input, label, textarea, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .
 
 /* 2021-08-25 김성준 - 전자설문 팝업 작성자와 종료일 가운데 정렬*/
 .popup_noticeLayout .popup_noticeList .popuplist tr td:not(:first-child){text-align: center;}
+
+/* 다국어 수정 */
+
+/* 테마1 */
+.rolling_info .info .infoName{max-width:calc(100% - 110px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.rolling_info .info .infoTeam{max-width:calc(100% - 110px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.info .infoMail{margin:15px 0 0 0;}
+
+/* 테마2 */
+#theme2Body .personal .info{height:auto; padding: 20px 0px 10px;}
+#theme2Body .personal .info:after{content:""; display:block; clear:both;}
+#theme2Body .info_txt dt{max-width:calc(100% - 40px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+#theme2Body .info .infoMail{margin:15px 0 0 0;}
+.info .infoTime{margin:5px 0 0 0;}
+.info .infoIP{margin:5px 0 0 0; padding:0 0 0 18px; color:#444445; font-size:14px; background:url(../../images/ezNewPortal/theme3Img/infoicon_clock.png) no-repeat 0 4px;}
+#theme2Body .writebanner .writebannerDL dt{padding:0 3px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.noti_portlet_list .notiLI .noti_text{word-break:break-word; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; text-overflow:ellipsis; overflow:hidden;}
+#theme2Body .birthList{box-sizing:border-box;}
+#theme2Body .birthList li .birthListDL{padding-right:10px;}
+.writebannerIcon .iconText{padding:0 5px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+
+/* 테마3 */
+#theme3Body .info .infoMail{margin:15px 0 0 0;}
+#theme3Body .birthList{box-sizing:border-box;}
