@@ -109,7 +109,7 @@ public interface EzWebFolderService {
 
 	void insertEncryptedFile(String fileId, int tenantId);
 
-	void deleteEncryptedFile(String fileId, int tenantId);
+	void deleteEncryptedLatestVersion(String fileId, int tenantId);
 
 	void deleteEncryptedAllVersions(String fileId, int tenantId);
 

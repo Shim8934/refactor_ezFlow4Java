@@ -1975,18 +1975,18 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 
 	@Override
-	public void deleteEncryptedFile(String fileId, int tenantId) {
-		logger.debug("deleteEncryptedFile: {}", fileId);
+	public void deleteEncryptedLatestVersion(String fileId, int tenantId) {
+		logger.debug("deleteEncryptedLatestVersion: {}", fileId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileId);
 		map.put("tenantId", tenantId);
 
-		ezWebFolderDAO.deleteEncryptedFile(map);
+		ezWebFolderDAO.deleteEncryptedLatestVersion(map);
 	}
 
 	@Override
 	public void deleteEncryptedAllVersions(String fileId, int tenantId) {
-		logger.debug("deleteEncryptedFile: {}", fileId);
+		logger.debug("deleteEncryptedAllVersions: {}", fileId);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileId);
 		map.put("tenantId", tenantId);
@@ -1996,7 +1996,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 	@Override
 	public void deleteEncryptedVersion(String fileId, int version, int tenantId) {
-		logger.debug("deleteEncryptedFile: {}", fileId);
+		logger.debug("deleteEncryptedVersion: {}, version: {}", fileId, version);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("fileId", fileId);
 		map.put("tenantId", tenantId);
