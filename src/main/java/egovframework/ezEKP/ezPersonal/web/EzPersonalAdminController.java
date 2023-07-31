@@ -836,9 +836,16 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			
-			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.cleanValue(vo.getTitle()) + "</VALUE>");
-			result.append("</CELL>");
+			//2023-07-27 이주원 -  pollTitle 다국어_en 적용하기 위해 추가
+			if (userInfo.getPrimary().equals("2") && vo.getTitle2() != null && !vo.getTitle2().equals("")) {
+				result.append("<CELL>");
+				result.append("<VALUE>" + commonUtil.cleanValue(vo.getTitle2()) + "</VALUE>");
+				result.append("</CELL>");
+			} else {
+				result.append("<CELL>");
+				result.append("<VALUE>" + commonUtil.cleanValue(vo.getTitle()) + "</VALUE>");
+				result.append("</CELL>");
+			}
 			
 			result.append("<CELL>");
 			result.append("<VALUE>" + vo.getStartDate().substring(0, 10) + "</VALUE>");
