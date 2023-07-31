@@ -978,7 +978,7 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menus .kk_image_dialog_tab_menu_item:hover { background-color: #f5f4f4; }
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menus .kk_image_dialog_tab_menu_item.kk_image_dialog_tab_menu_on { background-color: #ffffff; border: 1px solid #b9b9b9; border-bottom: 2px solid #ffffff; color: #333333;}
 
-.kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menu_contents { height: 258px; padding:10px; }
+.kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menu_contents { height: 278px; padding:10px; }
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menu_contents .kk_image_dialog_tab_menu_contents_common { display: none; height:100%; }
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_tab_menu_contents .kk_image_dialog_tab_menu_contents_hyperlink { display: none; height:100%;}
 
