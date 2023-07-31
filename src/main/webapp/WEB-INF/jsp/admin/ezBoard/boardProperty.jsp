@@ -1063,11 +1063,11 @@
 	                <%-- 2018-07-13 홍승비 - URL게시판 구분 추가 --%>
 	                <c:if test="${model.guBun == '6' }">
 	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" checked />
-	                	URL<spring:message code="ezBoard.t0006" />
+	                	URL <spring:message code="ezBoard.t185" />
 	                </c:if>
 	                <c:if test="${model.guBun != '6'}">
 	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" />
-	                	URL<spring:message code="ezBoard.t0006"/>
+	                	URL <spring:message code="ezBoard.t185"/>
 	                </c:if>
 	                 <%-- URL 필드를 게시판 구분 필드로 이동 --%>
 	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />
