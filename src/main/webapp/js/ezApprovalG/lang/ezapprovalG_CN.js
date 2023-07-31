@@ -1137,3 +1137,5 @@ var strLangCSJBDA04 = "일괄회람 중 오류가 발생하였습니다.<br>";
 
 // 2023-06-27 조수빈 - 전자결재 첨부문서 미리보기 메세지 추가
 var strLangJSBAP01 = "预览";
+
+var strLangMJSSFA = "收件人组不能添加到收藏夹中。";
