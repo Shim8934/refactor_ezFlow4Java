@@ -21,8 +21,6 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.jsoup.Jsoup;
@@ -37,7 +35,6 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
-import javax.servlet.http.HttpServletRequest;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,7 +42,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service("MApprovalGService")
 public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MApprovalGService {

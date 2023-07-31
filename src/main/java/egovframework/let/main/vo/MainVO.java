@@ -1,9 +1,6 @@
 package egovframework.let.main.vo;
 
-import java.util.Date;
-import java.util.Locale;
-
-public class MainVO {	
+public class MainVO {
 	
 	private String sequence;
 	private String userid;

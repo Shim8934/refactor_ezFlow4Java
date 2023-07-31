@@ -1,7 +1,5 @@
 package egovframework.ezMobile.ezTalk.vo;
 
-import java.util.Collections;
-
 public class MTalkNotification {
 
 	private int id;

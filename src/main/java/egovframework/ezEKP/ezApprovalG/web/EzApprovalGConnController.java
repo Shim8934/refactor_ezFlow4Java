@@ -4,7 +4,6 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
-import egovframework.let.utl.fcc.service.ClientUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
