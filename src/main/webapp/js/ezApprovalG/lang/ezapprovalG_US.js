@@ -168,7 +168,7 @@ var strLang287 = "Can not process pre-approval."
 var strLang288 = "Pre-audit"
 var strLang289 = "Watch low-abiding"
 var strLang290 = "Do you want to delete?"
-var strLang291 = "So that there is no person in department."
+var strLang291 = "So that there is no person in department. "
 var strLang292 = "Can not register in approval route."
 var strLang293 = "Can not add the approval participants!"
 var strLang294 = "The department belongs to another company."
@@ -1140,3 +1140,6 @@ var strLangCSJBDA04 = "An error occurred during the batch circulation.<br>";
 
 //2023-06-27 조수빈 - 전자결재 첨부문서 미리보기 메세지 추가
 var strLangJSBAP01 = "Preview";
+
+/* 2023-07-27 민지수 - 수신처 그룹적용 > 즐겨찾기 추가 시 오류 메세지 추가 */
+var strLangMJSSFA = "Destination groups cannot be added to favorites.";

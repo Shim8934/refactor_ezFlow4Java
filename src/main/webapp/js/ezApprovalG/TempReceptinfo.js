@@ -482,7 +482,7 @@ function btn_AprDeptTempletSave_onclick(mode) {
         return data.getAttribute("DATA1").indexOf(preSusinGroupStr) === 0;
     });
     if (hasSusinGroup) {
-		OpenAlertUI("수신처그룹은 즐겨찾기에 추가할 수 없습니다.");
+		OpenAlertUI(strLangMJSSFA);
         return;
     }
 
