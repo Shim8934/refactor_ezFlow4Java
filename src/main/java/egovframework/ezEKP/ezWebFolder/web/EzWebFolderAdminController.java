@@ -1774,7 +1774,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 			param.put("tenantId", tenantId);
 			param.put("pageNum", pageNum);
 			param.put("pageListSize", pageListSize);
-			
+			param.put("offset",commonUtil.getMinuteUTC(user.getOffset()));
 			JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/getApplyHistoryList",
 					param, request, "post", null);
 			if (resultJson != null) {
@@ -1810,7 +1810,10 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("applyId", applyId);
-		
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		param.put("offset",commonUtil.getMinuteUTC(userInfo.getOffset()));
+
 		JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/getApplyHistory", param, request, "post", null);
 		if (resultJson != null) {
 			reStatus = (String) resultJson.get("status");
@@ -1891,7 +1894,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("applyId", applyId);
-		
+
+		param.put("offset",userInfo.getOffset());
+
 		JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/RefuseToApplyForOpening", param, request, "post", null);
 		if (resultJson != null) {
 			reStatus = (String) resultJson.get("status"); // OK, ERROR
