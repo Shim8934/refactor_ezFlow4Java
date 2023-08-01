@@ -1309,7 +1309,7 @@
              ELSE
              	A.EXTENSIONATTRIBUTE102
              END
-             	A.EXTENSIONATTRIBUTE10,
+             	EXTENSIONATTRIBUTE10,
              A.EXTENSIONATTRIBUTE11 ,
              A.EXTENSIONATTRIBUTE12 ,
              A.EXTENSIONATTRIBUTE13 ,
