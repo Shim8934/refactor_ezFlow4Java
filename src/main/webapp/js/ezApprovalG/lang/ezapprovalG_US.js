@@ -640,12 +640,12 @@ var strLang928 = "Records to retrieve information failed!";
 var strLang929 = "Do not have permission to view this document. <br> Draft, please contact or.";
 // ApprovUI/doApprovAllSelect.aspx
 var strLang930 = "The selected article does not.";
-var strLang931 = "<br> Batch settlement is completed.";
-var strLang931_1 = "Batch settlement is completed.";
-var strLang932 = "An error has occurred in the batch settlement. <br>";
+var strLang931 = "<br> Batch Approval is completed.";
+var strLang931_1 = "Batch Approval is completed.";
+var strLang932 = "An error has occurred in the batch approval. <br>";
 var strLang933 = "Total:";
-var strLang934 = "Items <br>";
-var strLang934_1 = "Items";
+var strLang934 = " Items <br>";
+var strLang934_1 = " Items";
 var strLang935 = "Success:";
 var strLang936 = "Failure:";
 var strLang937 = "Results bulk reassign document.";
