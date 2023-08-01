@@ -4102,7 +4102,7 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I21" parameterClass="Map">
-    	<isEqual property="lang" compareValue="1">
+		<isEqual property="PrimaryLang" compareValue="1" >
     		<![CDATA[
 		    	INSERT ALL
 		    	INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
@@ -4150,7 +4150,7 @@
 		    FROM DUAL
 		    ]]>
     	</isEqual>
-    	<isEqual property="lang" compareValue="3">
+		<isNotEqual property="PrimaryLang" compareValue="1" >
     	    <![CDATA[
 		    	INSERT ALL
 	    		INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
@@ -4197,7 +4197,7 @@
 		    	*
 		    FROM DUAL
 		    ]]>
-    	</isEqual>
+    	</isNotEqual>
     </insert>
 	
 	<insert id="EzOrganAdminDAO.insertCompanyInfo_I22" parameterClass="Map">
