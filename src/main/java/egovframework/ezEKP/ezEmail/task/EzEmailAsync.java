@@ -220,6 +220,12 @@ public class EzEmailAsync {
 				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 				lang = lang == null ? "1" : lang;
+				// 2023-08-01 황인경 - 포탈 > 메일 포틀릿 > 전자설문 게시알림 문구 다국어 지원
+				if (!lang.equals("1")) {
+					subject = "[Notice of Survey] " + title;
+				} else {
+					subject = "[전자설문 게시알림] " + title;
+				}
 				Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 				String creatorName = locale.toString().equals("ko") ? survey.getCreatorName1() : survey.getCreatorName2();
 				logger.debug("userAccount : " + userAccount + ", locale=" + locale);
