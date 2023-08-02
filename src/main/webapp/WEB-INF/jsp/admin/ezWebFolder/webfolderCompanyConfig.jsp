@@ -111,6 +111,10 @@
 				var selectedCompany = document.getElementById("companyList").value;
 				var inputList = ["uploadLimit", "departmentLimit", "userLimit"];
 				
+				let departmentLimit = document.getElementById("departmentLimit").value;
+				let userLimit = document.getElementById("userLimit").value;
+				let uploadLimit = document.getElementById("uploadLimit").value;
+				
 				if (selectedCompany === "*") {
 					inputList.push("companyLimit");
 				}
@@ -131,11 +135,16 @@
 					return;
 				}
 
-				var param = {
-					"departmentLimit" : document.getElementById("departmentLimit").value,
-					"userLimit" : document.getElementById("userLimit").value,
-					"uploadLimit" : document.getElementById("uploadLimit").value,
-					"companyId" : document.getElementById("companyList").value
+				if (uploadLimit <= departmentLimit && uploadLimit <= userLimit){
+					var param = {
+						"departmentLimit" : departmentLimit,
+						"userLimit" : userLimit,
+						"uploadLimit" : uploadLimit,
+						"companyId" : document.getElementById("companyList").value
+					}
+				} else {
+					alert("<spring:message code='ezWebFolder.khj01'/>");
+					return;
 				}
 				
 				if (selectedCompany === "*") {
@@ -150,13 +159,13 @@
 					async: true,
 					success : function(data) {
 						var code = data.code;
-						switch(code) {
+						switch(Number(code)) {
 							case 0: 
 								alert("<spring:message code='ezWebFolder.t182'/>");
 								currentCompanyLimit = document.getElementById("companyLimit").value;
-								currentDepartmentLimit = document.getElementById("departmentLimit").value;
-								currentUserLimit = document.getElementById("userLimit").value;
-								currUploadLimit = document.getElementById("uploadLimit").value;
+								currentDepartmentLimit = departmentLimit;
+								currentUserLimit = userLimit;
+								currUploadLimit = uploadLimit;
 								break;
 							case 1:
 								alert("<spring:message code='ezWebFolder.t306'/>");
@@ -166,6 +175,9 @@
 								break;
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+							case 4:
+								alert("<spring:message code='ezWebFolder.khj01' />");
 								break;
 						}
 					},

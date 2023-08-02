@@ -193,7 +193,7 @@
 				<c:if test="${useAdminBujae == 'YES'}">
 					<h2><span style="display:inline-block;width:100%;" onClick="goPage(14)"><spring:message code='main.t0628'/></span></h2>				
 				</c:if>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage('share')">문서함공유</span></h2>	<!-- 2019-10-11 김민성 - 구문서함 전체 조회 추가 -->
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage('share')"><spring:message code='main.t45'/></span></h2>	<!-- 2019-10-11 김민성 - 구문서함 전체 조회 추가 -->
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span></h2>	

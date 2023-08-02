@@ -1879,7 +1879,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String parentID = request.getParameter("parentID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID, userInfo.getTenantId(), approvalFlag);
+		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID, userInfo.getTenantId(), approvalFlag, userInfo);
 		
 		logger.debug("getTaskCategoryTree ended.");
 		

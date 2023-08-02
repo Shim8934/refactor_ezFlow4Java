@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -507,6 +508,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		logger.debug("saveConfig start");
 		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
 		JSONObject resultCheck = (JSONObject) checkWfAdmin(request, user.getId());
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = new JSONObject();
 		
 		if (!resultCheck.get("status").toString().equals("ok")) {
 			return resultCheck;
@@ -519,6 +522,15 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String companyId     = request.getParameter("companyId");
 		
 		logger.debug("companyLimit: {}, companyLimit: {},: {}, userLimit: {}, uploadLimit: {}, companyId: {}", companyLimit, departmentLimit, userLimit, uploadLimit, companyId);
+
+		if (StringUtils.isNotEmpty(uploadLimit) && StringUtils.isNotEmpty(departmentLimit) && StringUtils.isNotEmpty(userLimit)) {
+			if (uploadLimit.compareTo(departmentLimit) > 0 && uploadLimit.compareTo(userLimit) > 0) {
+
+				resultBody  = (JSONObject) jp.parse("{\"code\":\"4\"}");
+				
+				return resultBody;
+			}
+		}
 		
 		String gwServerUrl   = config.getProperty("config.webFolderGwServerURL");
 		String url           = gwServerUrl + "/rest/ezwebfolderadmin/default/capacity/" + companyId;
@@ -535,8 +547,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		JSONParser jp                 = new JSONParser();
-		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
+		resultBody                    = (JSONObject) jp.parse(result.getBody());
 		
 		logger.debug("saveConfig end");
 		return resultBody;
