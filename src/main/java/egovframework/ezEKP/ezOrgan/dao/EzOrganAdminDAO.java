@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -2377,6 +2378,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public void insertPermissionChHist(PermissionInfoVO vo) throws Exception {
 		update("EzOrganAdminDAO.insertPermissionChHist", vo);
+	}
+	
+	public OrganUserVO getUserDeptInfo(OrganUserVO vo) throws Exception {
+		return (OrganUserVO) select("EzOrganAdminDAO.getUserDeptInfo", vo);
+	}
+	
+	public OrganDeptVO getDeptDisplayNm(OrganDeptVO vo) throws Exception {
+		return (OrganDeptVO) select("EzOrganAdminDAO.getDeptDisplayNm",vo);
+	}
+	
+	public OrganUserVO getAddJobInfo(Map<String, String> map) throws Exception {
+		return (OrganUserVO) select ("EzOrganAdminDAO.getAddJobInfo",map);
 	}
 
 }

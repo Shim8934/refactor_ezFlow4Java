@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -66,4 +67,8 @@ public interface EzSystemAdminService {
     public List<String> getFileExtension(int tenantId) throws Exception;
 
 	public String updateFileExtension(int tenantId, ArrayList<String> updateFileExtension) throws Exception;
+	
+	public void insertUserChangeHist(UserChangeInfoVO userChangeInfoVO , LoginVO userInfo) throws Exception;	
+	List<UserChangeInfoVO> getUserChHistList(int tenantID, String offset, int startPage, int maxItemPerPage, String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
+	public int getUserChHistListCount(int tenantID, String offset, String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
 }

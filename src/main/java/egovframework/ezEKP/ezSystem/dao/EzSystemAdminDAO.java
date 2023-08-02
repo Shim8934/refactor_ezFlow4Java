@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -224,5 +225,18 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 
 	public void updateFileExtension(Map<String,Object> map) throws Exception {
 		update("EzSystemAdminDAO.updateFileExtension", map);
+	}
+	
+	public void insertUserChangeHist(UserChangeInfoVO userChangeInfoVO) throws Exception{
+		insert("EzSystemAdminDAO.insertUserChangeHist", userChangeInfoVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<UserChangeInfoVO> getUserChHistList(Map<String, Object> map) throws Exception{
+		return (List<UserChangeInfoVO>) list("EzSystemAdminDAO.getUserChHistList", map);
+	}
+	
+	public int getUserChHistListCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzSystemAdminDAO.getUserChHistListCount", map);
 	}
 }

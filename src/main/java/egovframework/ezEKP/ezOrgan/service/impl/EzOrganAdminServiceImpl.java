@@ -2756,4 +2756,28 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("insertPermissionChHist ended");
 	}
 
+	@Override
+	public OrganUserVO getUserDeptInfo(String cn, int tenantID) throws Exception {
+		OrganUserVO userVO = new OrganUserVO();
+		userVO.setCn(cn);
+		userVO.setTenantId(tenantID);
+		return ezOrganAdminDao.getUserDeptInfo(userVO);
+	}
+
+	@Override
+	public OrganDeptVO getDeptDisplayNm(String cn, int tenantID) throws Exception {
+		OrganDeptVO deptVO = new OrganDeptVO();
+		deptVO.setCn(cn);
+		deptVO.setTenantId(tenantID);
+		return ezOrganAdminDao.getDeptDisplayNm(deptVO);
+	}
+
+	@Override
+	public OrganUserVO getAddJobInfo(String cn, String deptId) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("CN", cn);
+		map.put("DEPTID", deptId);		
+		return ezOrganAdminDao.getAddJobInfo(map);
+	}
+
 }

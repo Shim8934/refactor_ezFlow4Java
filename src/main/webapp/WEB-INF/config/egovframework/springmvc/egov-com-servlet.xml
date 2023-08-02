@@ -211,6 +211,7 @@
 				<mvc:mapping path="/admin/ezSystem/systemModuleMonitor.do"/>
 				<mvc:mapping path="/admin/ezSystem/multiLoginManager.do"/>
 				<mvc:mapping path="/admin/ezSystem/systemAdminIPManager.do"/>
+				<mvc:mapping path="/admin/ezSystem/systemUserChangeHist.do"/>
             	<!-- 통계 -->
 	            <mvc:mapping path="/ezStatistics/statisticsPerSonalMain.do"/>
 				<mvc:mapping path="/ezStatistics/statisticsMailMain.do"/>

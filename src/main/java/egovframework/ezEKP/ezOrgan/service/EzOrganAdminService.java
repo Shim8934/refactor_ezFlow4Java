@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganAdminService {
@@ -177,4 +178,9 @@ public interface EzOrganAdminService {
 
 	void insertPermissionChHist(List<PermissionInfoVO> vo) throws Exception;
 
+	public OrganUserVO getUserDeptInfo(String cn, int tenantID) throws Exception;
+	
+	public OrganDeptVO getDeptDisplayNm(String cn, int tenantID) throws Exception;
+	
+	public OrganUserVO getAddJobInfo(String cn, String deptId) throws Exception;
 }

@@ -7729,5 +7729,33 @@
 			AND 	u.TENANT_ID = #tenant_id#
 		]]>
 	</insert>
+	
+	<select id="EzOrganAdminDAO.getUserDeptInfo" parameterClass="OrganUserVO" resultClass="OrganUserVO">
+		SELECT DEPARTMENT, DESCRIPTION, DESCRIPTION2
+		FROM TBL_USERMASTER
+		WHERE CN = #cn#
+		AND TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzOrganAdminDAO.getDeptDisplayNm" parameterClass="OrganDeptVO" resultClass="OrganDeptVO">
+		SELECT DISPLAYNAME, DISPLAYNAME2
+		FROM TBL_DEPTMASTER
+		WHERE CN = #cn#
+		AND TENANT_ID = #tenantId#
+	</select>
 
+	<select id="EzOrganAdminDAO.getAddJobInfo" parameterClass="map" resultClass="OrganUserVO">
+		SELECT 
+			A.TITLE, 
+			A.TITLE2 AS title1, 
+			A.TENANT_ID,
+			D.DISPLAYNAME AS description, 
+			D.DISPLAYNAME2 AS description1
+		FROM 
+			TBL_ADDJOBMASTER A JOIN TBL_DEPTMASTER D 
+		ON 
+			A.DEPTID = D.CN AND A.TENANT_ID = D.TENANT_ID
+		WHERE 
+			A.CN = #CN# AND A.DEPTID = #DEPTID#
+	</select>
 </sqlMap>
