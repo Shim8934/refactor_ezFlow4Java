@@ -684,7 +684,7 @@ var strLang1027 = "Fixed comments";
 var strLang1028 = "Year";
 var strLang1029 = "Month";
 var strLang1030 = "Day";
-var strLang1031 = "Can not post e-mail / approval document to photo board or anonymous board or url board.";
+var strLang1031 = "Can not post e-mail / approval-document to photo board or anonymous board or url board.";
 var strLang1039 = "Selected user is out of office.</br>Would you like to add it?";
 
 // DocType : 문서형태 A01
