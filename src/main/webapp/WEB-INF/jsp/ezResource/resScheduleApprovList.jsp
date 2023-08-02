@@ -401,7 +401,7 @@
 				selrow = listview.GetSelectedRows();
 
 				if(selrow.length <= 0){
-					alert("선택된 자원이 없습니다.");
+					alert(strLang253);
 					return false;
 				}
 
