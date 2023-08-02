@@ -1809,10 +1809,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", method=RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public void downloadAttachCommon(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void downloadAttachCommon(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachCommon started.");
 		
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String fileId = request.getParameter("fileid") == null ? "" : request.getParameter("fileid");
 		fileId = commonUtil.detectPathTraversal(fileId);		
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
@@ -1822,14 +1821,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		tenantIdStr = commonUtil.detectPathTraversal(tenantIdStr);
 		
 		int tenantId = Integer.parseInt(tenantIdStr);
-
-		// 2023-08-01 이사라 - 사용자언어로 안내 메시지가 나오도록 수정 (기존에 사용자 선택 언어가 아닌 무조건 primary 언어도 메시지 표출 됨)
-		String serverLang = ezCommonService.selectUserGetLang(loginInfo.getId(), tenantId);
-
-		if (StringUtils.isBlank(serverLang)) {
-			serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-		}
-
+		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
