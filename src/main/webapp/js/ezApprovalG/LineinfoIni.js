@@ -254,9 +254,9 @@ function LineAprTyepSetAll() {
 	            if (AprTypeObj == "") {
 	                pAPRLINE.DeleteRow(pTotalRows[i].id);
 	            }
-	            else {
-	                if (GetAttribute(pTotalRows[i], "DATA12") == "015")
-	                    p_StatusDis = "disabled";
+	            else { /* 2023-08-02 민지수 - 전자결재 > 부서합의 > 회송문서 재기안시 부서 결재유형 선택 활성화 */
+	                /*if (GetAttribute(pTotalRows[i], "DATA12") == "015")
+	                    p_StatusDis = "disabled";*/
 	                
 	                if ($("input:checkbox[id='passAprLine']").is(":checked") && (pTotalRows[i].getAttribute("DATA12") == "004" || pTotalRows[i].getAttribute("DATA12") == "003" || pTotalRows[i].getAttribute("DATA12") == "002")) {
 	                	p_StatusDis = "disabled";
