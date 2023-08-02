@@ -4550,12 +4550,12 @@
 			FORM_HTML2 VARCHAR(3000) DEFAULT NULL
 	]]>
     </statement>
-    
+
     <update id="EzCommonDAO.updateAttitudeFormFormHtml2Column">
 		<![CDATA[
-			UPDATE 
+			UPDATE
 				TBL_ATTITUDE_FORM
-			SET 
+			SET
 				FORM_HTML2 = CASE
 								WHEN FORM_ID = 0 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="3"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
 								WHEN FORM_ID = 1 THEN '<tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="2"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr>'
@@ -4569,8 +4569,8 @@
 								WHEN FORM_ID = 9 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="4"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
 								WHEN FORM_ID = 10 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="3"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr>'
 								ELSE NULL
-							END 
-			WHERE 
+							END
+			WHERE
 				FORM_HTML2 IS NULL
 		]]>
 	</update>
@@ -4636,37 +4636,37 @@
 	<!-- 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 init 메소드 쿼리 -->
 	<update id="EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode1">
 		<![CDATA[
-			UPDATE  
+			UPDATE
 					TBL_USERMASTER
-			SET		
+			SET
 					EXTENSIONATTRIBUTE1 = REPLACE(EXTENSIONATTRIBUTE1, ';f=',';q=')
-			WHERE 	
+			WHERE
 					EXTENSIONATTRIBUTE1 like '%;f=%'
 		]]>
 	</update>
 
 	<update id="EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode2">
 		<![CDATA[
-			UPDATE  
+			UPDATE
 					TBL_USERMASTER
-			SET		
+			SET
 					EXTENSIONATTRIBUTE1 = REPLACE(EXTENSIONATTRIBUTE1, ';ff=',';q=')
-			WHERE 	
+			WHERE
 					EXTENSIONATTRIBUTE1 like '%;ff=%'
 		]]>
 	</update>
 
 	<update id="EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode3">
 		<![CDATA[
-			UPDATE  
+			UPDATE
 					TBL_USERMASTER
-			SET		
+			SET
 					EXTENSIONATTRIBUTE1 = REPLACE(EXTENSIONATTRIBUTE1, ';wf=',';f=')
-			WHERE 	
+			WHERE
 					EXTENSIONATTRIBUTE1 like '%;wf=%'
 		]]>
 	</update>
-    
+
    	<select id="EzCommonDAO.checkScheduleGroup_TransferDateColumn" resultClass="String">
 	<![CDATA[
 		SELECT
@@ -4676,7 +4676,7 @@
 		LIMIT 1
 	]]>
 	</select>
-	
+
 	<statement id="EzCommonDAO.addScheduleTransferDateColumn">
     <![CDATA[
     	ALTER TABLE
@@ -4685,7 +4685,7 @@
     		TRANSFERDATE DATETIME DEFAULT NULL
 	]]>
 	</statement>
-	
+
 	<select id="EzCommonDAO.checkScheduleGroup_GroupColorColumn" resultClass="String">
 	<![CDATA[
 		SELECT
@@ -4695,7 +4695,7 @@
 		LIMIT 1
 	]]>
 	</select>
-	
+
 	<statement id="EzCommonDAO.addScheduleGroupColorColumn">
     <![CDATA[
     	ALTER TABLE
@@ -4703,5 +4703,43 @@
     	ADD
     		GROUPCOLOR VARCHAR(10) DEFAULT NULL
 	]]>
+	</statement>
+
+    <select id="EzCommonDAO.checkTblBoardReplyReact" resultClass="String">
+		<![CDATA[
+			SELECT
+				REPLYID
+			FROM
+				TBL_BOARD_REPLY_REACT
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblBoardReplyReact">
+		CREATE TABLE `tbl_board_reply_react` (
+			`ITEMID` varchar(76) NOT NULL,
+			`REPLYID` varchar(76) NOT NULL,
+			`USERID` varchar(80) NOT NULL,
+			`REACTFLAG` varchar(1) DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL,
+			`COMPANYID` varchar(80) DEFAULT NULL,
+			`REACTDATE` varchar(40) DEFAULT NULL,
+			PRIMARY KEY (`ITEMID`,`REPLYID`,`USERID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardInfoReactFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				REACTFLAG
+			FROM
+				TBL_BOARD_BOARDINFO
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.addBoardReactFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			REACTFLAG VARCHAR(1) DEFAULT NULL
 	</statement>
 </sqlMap>

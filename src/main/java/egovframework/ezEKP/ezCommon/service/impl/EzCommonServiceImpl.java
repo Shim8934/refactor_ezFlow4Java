@@ -2924,4 +2924,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception {
         ezCommonDAO.updateWebFolderAndApprovalCheckPermissionCode();
     }
+
+	@Override
+	public void createTblBoardReplyReact() throws Exception {
+		ezCommonDAO.createTblBoardReplyReact();
+	}
 }

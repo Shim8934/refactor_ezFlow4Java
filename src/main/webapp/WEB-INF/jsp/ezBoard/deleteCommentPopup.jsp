@@ -60,8 +60,7 @@
 						rtnVal = result;
 						if(rtnVal == "OK") {
 							closePopup2();
-							delete_onelinereply_Complete(rtnVal);
-							parent.getBoardComment();
+							parent.delete_onelinereply_Complete(rtnVal);
 						} else {
 							alert("<spring:message code='ezBoard.t267'/>");
 							$('#inpPassword').val("");

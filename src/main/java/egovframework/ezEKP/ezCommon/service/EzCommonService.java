@@ -408,4 +408,6 @@ public interface EzCommonService {
 
 	// 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
 	public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception;
+
+	public void createTblBoardReplyReact() throws Exception;
 }

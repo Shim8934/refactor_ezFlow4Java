@@ -2479,4 +2479,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		update("EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode2");
 		update("EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode3");
     }		
+
+	/* 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가 */
+	public void createTblBoardReplyReact() throws Exception {
+		// 게시판 > 댓글 좋아요/싫어요 반응여부 저장 테이블 추가
+		try {
+			select("EzCommonDAO.checkTblBoardReplyReact");
+		} catch (Exception e) {
+			logger.debug("tbl_board_reply_react doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblBoardReplyReact");
+		}
+
+		// 게시판 > 댓글 좋아요/싫어요 사용여부 옵션 칼럼 추가
+		try {
+			select("EzCommonDAO.checkTblBoardInfoReactFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info reactFlag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardReactFlag");
+		}
+	}
 }

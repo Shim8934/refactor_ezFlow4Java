@@ -104,6 +104,7 @@
 		        var imageContentArray = new Array();
 		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		        var agent = navigator.userAgent.toLowerCase();
+				var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
 
 		        window.onload = function () {
 		            imageViewInit();

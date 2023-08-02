@@ -35,6 +35,7 @@
 			var tabBoardID1 = $.trim("<c:out value='${tabBoardID1}'/>");
 			var tabBoardID2 = $.trim("<c:out value='${tabBoardID2}'/>");
 			var tabBoardID3 = $.trim("<c:out value='${tabBoardID3}'/>");
+			var useBoardReplyReact = "<c:out value='${model.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
 			
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -56,6 +57,12 @@
 				if (useBoardLike == "Y") {
 					$("#chkBoardLike").prop("checked", true);
 	            }
+				/* 2023-07-28 임정은 - 게시판에 댓글 좋아요 기능 추가 */
+				if (useBoardReplyReact == "Y") {
+					$("#chkBoardReplyReact").prop("checked", true);
+	            } else if ($("#chkOneLineNone").is(":checked")) {
+					$("#chkBoardReplyReact").prop("disabled", true);
+				}
 	            if (pAdminType == "y") {
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
 	            }
@@ -151,7 +158,8 @@
 	                    $("#chkform").prop("disabled", true);
 	                    $("#chkApprBoard").prop("disabled", true);
 	                    $("#chkBoardLike").prop("disabled", true);
-	                    
+	                    $("#chkBoardReplyReact").prop("disabled", true);
+
 	                    $("#chkNotify").prop("checked", false);
 	                    $("#chkMailFG_Post").prop("checked", false);
 	                    $("#chkMailFG_Mod").prop("checked", false);
@@ -160,6 +168,7 @@
 	                    $("#chkform").prop("checked", false);
 	                    $("#chkApprBoard").prop("checked", false);
 	                    $("#chkBoardLike").prop("checked", false);
+						$("#chkBoardReplyReact").prop("checked", false);
 	                    
 						/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 disabled 처리 */
 						$("#chkOneLineBottom").prop("disabled", true);
@@ -258,6 +267,12 @@
 	            	useBoardLike = "Y";
 	            } else {
 	            	useBoardLike = "N";
+				}
+
+				if ($("#chkBoardReplyReact").is(":checked")) {
+	            	useBoardReplyReact = "Y";
+	            } else {
+					useBoardReplyReact = "N";
 				}
 	            
 	            // 게시만료일 /* 2019-03-04 홍승비 - 게시판그룹인 경우 게시만료일 체크 분기 타지 않도록 수정 */
@@ -386,7 +401,8 @@
 	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID,
 	            		likeFlag:useBoardLike, noticeBoardMod:pNoticeBoardMod,
 						tabBoardMod1:ptabBoardMod1,tabBoardMod2:ptabBoardMod2,tabBoardMod3:ptabBoardMod3,
-						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment
+						mailFG_Post : mailFG_Post, mailFG_Mod : mailFG_Mod, mailFG_Comment : mailFG_Comment,
+						reactFlag:useBoardReplyReact
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
@@ -552,6 +568,7 @@
 					$("#chkform").prop("disabled", true);
 					$("#chkApprBoard").prop("disabled", true);
 					$("#chkBoardLike").prop("disabled", true);
+					$("#chkBoardReplyReact").prop("disabled", true);
 					/* 2020-05-27 홍승비 - URL 게시판인 경우, 댓글 사용안함 고정 + disabled 처리 */
 					$("#chkOneLineBottom").prop("disabled", true);
 					$("#chkOneLineLayer").prop("disabled", true);
@@ -569,6 +586,7 @@
                     document.getElementById("chkMailFG_Mod").checked = false;
                     document.getElementById("chkMailFG_Comment").checked = false;
                     document.getElementById("chkBoardLike").checked = false;
+                    document.getElementById("chkBoardReplyReact").checked = false;
                    // document.getElementById("chkOneLine").checked = false;
                     document.getElementById("chkOneLineBottom").checked = false;
                     document.getElementById("chkOneLineLayer").checked = false;
@@ -598,6 +616,7 @@
 					}
 					
 					$("#chkBoardLike").prop("disabled", false);
+					$("#chkBoardReplyReact").prop("disabled", false);
 					/* 2020-05-27 홍승비 - URL 게시판이 아닌 경우, 댓글 disabled 해제 */
 					$("#chkOneLineBottom").prop("disabled", false);
 					$("#chkOneLineLayer").prop("disabled", false);
@@ -854,22 +873,34 @@
 		    		$("#txtAttachLimit").val(2048);
 		    	}
 			}
-		    
+
+			/* 2023-07-25 임정은 - 댓글 사용하지 않는 경우 '댓글 좋아요' 기능(chkBoardReplyReact) 비활성화 */
 		    /* 2019-11-05 홍승비 - 댓글 사용여부 체크 시 처리 추가 */
 		    function checkReplyType(chkObj) {
 		    	var chkBottom = document.getElementById("chkOneLineBottom");
 		    	var chkLayer = document.getElementById("chkOneLineLayer");
 		    	var chkNone = document.getElementById("chkOneLineNone");
+
 		    	if (chkObj.id == "chkOneLineBottom" && chkObj.checked) {
 		    		chkLayer.checked = false;
 		    		chkNone.checked = false;
+					$("#chkBoardReplyReact").prop("disabled", false);
+					if (useBoardReplyReact == "Y") {
+						$("#chkBoardReplyReact").prop("checked", true);
+					}
 		    	} else if (chkObj.id == "chkOneLineLayer" && chkObj.checked) {
 		    		chkBottom.checked = false;
 		    		chkNone.checked = false;
+					$("#chkBoardReplyReact").prop("disabled", false);
+					if (useBoardReplyReact == "Y") {
+						$("#chkBoardReplyReact").prop("checked", true);
+					}
 		    	} else { // 기존에 체크된 체크박스를 다시 클릭하는 경우, '사용안함'으로 체크 이동
 		    		chkBottom.checked = false;
 		    		chkLayer.checked = false;
 		    		chkNone.checked = true;
+					document.getElementById("chkBoardReplyReact").checked = false;
+					$("#chkBoardReplyReact").prop("disabled", true);
 		    	}
 		    }
 		    
@@ -1090,6 +1121,7 @@
 	        	<td>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t999020" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.hsb10" />&nbsp;</span>
+					<span style="display:inline-block;"><input type="checkbox" id="chkBoardReplyReact" onclick="checkboardtype()" /><spring:message code="ezBoard.LJE01" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011_1" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
 	        	</td>

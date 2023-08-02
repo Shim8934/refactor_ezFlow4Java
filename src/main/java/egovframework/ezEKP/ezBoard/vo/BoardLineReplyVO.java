@@ -18,6 +18,9 @@ public class BoardLineReplyVO {
 	private String boardID;
 	/** 2018-07-02 홍승비 - deptID 추가 */
 	private String deptID;
+	/** 2023-03-03 이가은 - 게시판 댓글 좋아요, 싫어요 기능 변수 추가 (특정 댓글에 대한 좋아요/싫어요 갯수) */
+	private int re_like;
+	private int re_hate;
 	
 	public String getReplyID() {
 		return replyID;
@@ -67,5 +70,17 @@ public class BoardLineReplyVO {
 	public void setDeptID(String deptID) {
 		this.deptID = deptID;
 	}
-	
+	public int getRe_like() {
+		return re_like;
+	}
+	public void setRe_like(int re_like) {
+		this.re_like = re_like;
+	}
+	public int getRe_hate() {
+		return re_hate;
+	}
+	public void setRe_hate(int re_hate) {
+		this.re_hate = re_hate;
+	}
+
 }
