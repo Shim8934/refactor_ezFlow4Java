@@ -1272,7 +1272,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<h1 id="h1Title">공유자선택</h1>
+		<h1 id="h1Title"><spring:message code='ezApprovalG.share11'/></h1>
 		<div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
@@ -1373,11 +1373,11 @@
 				var ownerId = "";
 				var ownerName = "";
 				if(flag == 'U'){
-					flagName = "사용자";
+					flagName = "<spring:message code='ezApprovalG.share04' />";
 					ownerId = p_ListOrderObject.getAttribute("_DATA2");
 					ownerName =  p_ListOrderObject.getAttribute("_DATA4");
 				} else {
-					flagName = "부서";
+					flagName = "<spring:message code='ezApprovalG.share05' />";
 					var treeView = new TreeView();
 			        treeView.LoadFromID("FromTreeView");
 			        var nodeIdx = treeView.GetSelectNode();
@@ -1386,7 +1386,7 @@
 				}
 				
 				if(!ownerId || ownerId == ""){
-					alert("공유자를 먼저 선택해주세요.");
+					alert("<spring:message code='ezApprovalG.share08' />");
 					return;
 				}
 		        
