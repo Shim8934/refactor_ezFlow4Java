@@ -2747,7 +2747,7 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I21" parameterClass="Map">
-    	<isEqual property="lang" compareValue="1">
+		<isEqual property="PrimaryLang" compareValue="1" >
     		<![CDATA[
 		    	INSERT INTO
 		    		TBL_ATTITUDE_TYPE
@@ -2775,7 +2775,7 @@
 		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
 		    ]]>
     	</isEqual>
-    	<isEqual property="lang" compareValue="3">
+		<isNotEqual property="PrimaryLang" compareValue="1" >
     	    <![CDATA[
 		    	INSERT INTO
 		    		TBL_ATTITUDE_TYPE
@@ -2802,7 +2802,7 @@
 		    			('A19', #companyID#, #tenantID#, '慶弔', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9),
 		    			('A20', #companyID#, #tenantID#, '病休', 'sick leave', '1', 'refresh', 'A05', 9)
 		    ]]>
-    	</isEqual>
+    	</isNotEqual>
     </insert>
   	
   	<insert id="EzOrganAdminDAO.insertCompanyInfo_I22" parameterClass="Map">
