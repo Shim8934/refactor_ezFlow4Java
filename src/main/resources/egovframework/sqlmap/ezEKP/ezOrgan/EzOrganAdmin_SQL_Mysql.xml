@@ -1635,7 +1635,7 @@
                  ('A04','003','승인','1','승인','Approved','決裁','审批',#tenantID#, #companyID#),
                  ('A04','004','반송','1','반송','Rejected','差し戻し','退回',#tenantID#, #companyID#),
                  ('A04','005','보류','1','보류','Hold','保留','保存',#tenantID#, #companyID#),
-                 ('A04','006','회수','1','회수','Withdrew','引き戻し','回收',#tenantID#, #companyID#),
+                 ('A04','006','회수','1','회수','Withdrawn','引き戻し','回收',#tenantID#, #companyID#),
                  ('A04','010','완료','1','완료','Completed','完了','完成',#tenantID#, #companyID#),
                  ('A04','011','도착','1','도착','Arrived','到着','到达',#tenantID#, #companyID#),
                  ('A04','012','지정','1','지정','Designated','未受付','未接收',#tenantID#, #companyID#),
@@ -1897,7 +1897,7 @@
             ('SA04','003','승인','Approved','決裁','审批', '1','승인',#companyID#,#tenantID#),
             ('SA04','004','반송','Rejected','差し戻し','退回', '1','반송',#companyID#,#tenantID#),
             ('SA04','005','보류','Hold','保留','保存', '1','보류',#companyID#,#tenantID#),
-            ('SA04','006','회수','Withdrew','引き戻し','回收', '1','회수',#companyID#,#tenantID#),
+            ('SA04','006','회수','Withdrawn','引き戻し','回收', '1','회수',#companyID#,#tenantID#),
             ('SA04','010','완료','Completed','完了','完成','1','완료', #companyID#,#tenantID#),
             ('SA04','011','도착','Arrived','到着','到达', '1','도착',#companyID#,#tenantID#),
             ('SA04','012','지정','Designated','指定','未接收', '1','지정',#companyID#,#tenantID#),
@@ -2747,7 +2747,7 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I21" parameterClass="Map">
-    	<isEqual property="lang" compareValue="1">
+		<isEqual property="PrimaryLang" compareValue="1" >
     		<![CDATA[
 		    	INSERT INTO
 		    		TBL_ATTITUDE_TYPE
@@ -2775,7 +2775,7 @@
 		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
 		    ]]>
     	</isEqual>
-    	<isEqual property="lang" compareValue="3">
+		<isNotEqual property="PrimaryLang" compareValue="1" >
     	    <![CDATA[
 		    	INSERT INTO
 		    		TBL_ATTITUDE_TYPE
@@ -2802,7 +2802,7 @@
 		    			('A19', #companyID#, #tenantID#, '慶弔', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9),
 		    			('A20', #companyID#, #tenantID#, '病休', 'sick leave', '1', 'refresh', 'A05', 9)
 		    ]]>
-    	</isEqual>
+    	</isNotEqual>
     </insert>
   	
   	<insert id="EzOrganAdminDAO.insertCompanyInfo_I22" parameterClass="Map">

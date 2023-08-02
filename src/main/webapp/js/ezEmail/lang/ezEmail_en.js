@@ -201,9 +201,9 @@ var strLang243 = "Reservations can not store mail\nhas been processed already se
 var strLang244 = "※ 30 minutes before sending mail by clicking the title can be changed. ";
 var strLang245 = "Large attachments";
 var strLang246 = "Download period : ";
-var strLang247 = "Large attachments ";
-var strLang248 = "Days";
-var strLang249 = "Custody";
+var strLang247 = "Large attachments stored for ";
+var strLang248 = " days ";
+var strLang249 = "";
 var strLang250 = "In the field is not enabled for JavaScript.";
 var strLang251 = "copied";
 var strLang252 = "moved";
@@ -321,10 +321,11 @@ var strLangSharedMailbox03 = "Changed password.";
 var strLangReceiverCount01 = "The maximum number of recipients is ";
 var strLangReceiverCount02 = ".";
 
-var strLangHDP01 = "Up to";
-var strLangHDP02 = "Downloadable";
+var strLangHDP01 = "available up to ";
+var strLangHDP02 = " downloads";
 var strLangHDP03 = "Up to {0} files can be attached to a large file.";
 var strLangHDP04 = "You can drag and drop to add files and change the order of added files.";
+var strLangLS001 = " download";
 
 var strLangKSA03 = "Would you like to register for the groupware personal calendar?";
 var strLangKSA04 = "Successfully saved appointment.";

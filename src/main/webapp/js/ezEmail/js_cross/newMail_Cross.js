@@ -2679,8 +2679,10 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     "<td width='50%' align='right' style='font-size:11px; font-weight:normal; color:#666666; padding-right:10px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" +
 	                strLang247 + "<span style='color:#FF0000 ;'>" + _pBigAttachDownloadDay + strLang248 + "</span>" + strLang249;
         
-        if(BigSizeAttachDownloadLimitCount > 0) {
-        	TempText += " / <span style='color:#FF0000 ;'>" + BigSizeAttachDownloadLimitCount + strLangHDP01 + "</span> " + strLangHDP02;
+        if (BigSizeAttachDownloadLimitCount == 1) {
+        	TempText += " / " + strLangHDP01 + " <span style='color:#FF0000 ;'>" + BigSizeAttachDownloadLimitCount + "</span> " + strLangLS001;
+        } else if (BigSizeAttachDownloadLimitCount > 0) {
+        	TempText += " / " + strLangHDP01 + " <span style='color:#FF0000 ;'>" + BigSizeAttachDownloadLimitCount + "</span> " + strLangHDP02;
         }
         
         TempText += "</div></td></tr></table></div>";

@@ -1816,14 +1816,14 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	
 	@Override
 	public String setWebFolderApplyHistory(String primary, int tenantId, String companyId, String folderName, String content, 
-			List<Map<String, String>> memberList, String usingS, String usingE) throws Exception {
+			List<Map<String, String>> memberList, String usingS, String usingE, String timeUTC) throws Exception {
 		logger.debug("setWebFolderApplyHistory started.");
 		
 		String applyId = UUID.randomUUID().toString();
 		logger.debug("applyId=" + applyId);
 
 		// HISTORY
-		insertWebFolderApplyHistory(applyId, tenantId, companyId, folderName, content, usingS, usingE);
+		insertWebFolderApplyHistory(applyId, tenantId, companyId, folderName, content, usingS, usingE, timeUTC);
 		// HISTORY MEMBER
 		insertWebFolderApplyHistoryMember(primary, tenantId, companyId, applyId, memberList);
 		                     
@@ -1832,7 +1832,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	private void insertWebFolderApplyHistory(String applyId, int tenantId, String companyId, String folderName, String content, 
-			String usingS, String usingE) throws Exception {
+			String usingS, String usingE, String timeUTC) throws Exception {
 	
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("applyId", applyId);
@@ -1842,7 +1842,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("content", content);
 		map.put("usingS", usingS);
 		map.put("usingE", usingE);
-		    
+		map.put("timeUTC", timeUTC);
+
 		try {
 			ezWebFolderDAO_m.insertWebFolderApplyHistory(map);
 		} catch (Exception e) {
@@ -1894,22 +1895,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 
 	@Override
-	public List<Map<String, String>> getWebFolderApplyHistoryList(int tenantId, String companyId, int startList, int endList) throws Exception {
+	public List<Map<String, String>> getWebFolderApplyHistoryList(int tenantId, String companyId, int startList, int endList, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("startList", startList);
 		map.put("endList", endList);
+		map.put("offset", offset);
 		
 		List<Map<String, String>> historyList = ezWebFolderDAO_m.getWebFolderApplyHistoryList(map);
 		return historyList;
 	}
 	
 	@Override
-	public Map<String, String> getWebFolderApplyHistory(String applyId) throws Exception {
+	public Map<String, String> getWebFolderApplyHistory(String applyId,String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("applyId", applyId);
-		
+		map.put("offset", offset);
 		
 		Map<String, String> applyHistory = ezWebFolderDAO_m.getWebFolderApplyHistory(map);
 		return applyHistory;
@@ -1943,10 +1945,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 
 	@Override
-	public void changeWebFolderAppliApprovalStatus(String applyId, String status) throws Exception { // status Y=승인, N=거부
+	public void changeWebFolderAppliApprovalStatus(String applyId, String status,String timeUTC) throws Exception { // status Y=승인, N=거부
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("applyId", applyId);
 		map.put("status", status);
+		map.put("timeUTC", timeUTC);
 
 		ezWebFolderDAO_m.changeWebFolderAppliApprovalStatus(map);
 	}

@@ -196,7 +196,7 @@ public class EzWebFolderGWController_m {
 			MCommonVO common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId  = common.getTenantId();
 			String offset = common.getOffSet();
-			
+
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			
 			String permissionResult = ezWebFolderService_y.checkPermission(userId, userInfo.getDeptID(), userInfo.getCompanyID(), folderFileId, folderFileType, tenantId);
@@ -1505,8 +1505,13 @@ public class EzWebFolderGWController_m {
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
 		String companyId = userInfo.getCompanyID();
-		logger.debug("userId=" + userId + ", serverName=" + serverName + ", tenantId=" + tenantId + ", primary=" + primary + ", companyId=" + companyId 
-				+ ", folderName=" + folderName + ", content=" + content + ", usingS=" + usingS + ", usingE=" + usingE);
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+
+		logger.debug("userId=" + userId + ", serverName=" + serverName + ", tenantId=" + tenantId + ", primary=" + primary + ", companyId=" + companyId
+				+ ", folderName=" + folderName + ", content=" + content + ", usingS=" + usingS + ", usingE=" + usingE+". timeUTC="+timeUTC);
 
 		try {
 			// 이름 중복 체크
@@ -1525,7 +1530,7 @@ public class EzWebFolderGWController_m {
 			ObjectMapper objMapper = new ObjectMapper();
 			List<Map<String, String>> memList = objMapper.readValue(jsonArr.toString(), objMapper.getTypeFactory().constructCollectionType(List.class, Map.class));
 
-			applyId = ezWebFolderService_m.setWebFolderApplyHistory(primary, tenantId, companyId, folderName, content, memList, usingS, usingE);
+			applyId = ezWebFolderService_m.setWebFolderApplyHistory(primary, tenantId, companyId, folderName, content, memList, usingS, usingE, timeUTC);
 		} catch (Exception e) {
 			String errorMsg = orElse(e.getMessage(), "");
 			if (errorMsg.equals("HISTORY_ERROR") || errorMsg.equals("HISTORY_MEMBER_ERROR") || errorMsg.equals("DUPLICATE_NAME")) {
@@ -1558,8 +1563,9 @@ public class EzWebFolderGWController_m {
 		
 		int totalSize = 0;
 		JSONArray applicationHistoryArr = new JSONArray();
-		
+
 		String companyId = orElse(request.getParameter("companyId"), "");
+		String offset = orElse(request.getParameter("offset"), "");
 		int tenantId = Integer.parseInt(orElse(request.getParameter("tenantId"), "0"));
 		int pageNum = Integer.parseInt(orElse(request.getParameter("pageNum"), "0")); // 현재 페이지 번호
 		int pageListSize = Integer.parseInt(orElse(request.getParameter("pageListSize"), "0")); // 보여줄 리스트 개수
@@ -1572,7 +1578,7 @@ public class EzWebFolderGWController_m {
 			int endList = pageNum * pageListSize;
 			logger.debug("startList=" + startList + ", endList=" + endList);
 			
-			List<Map<String, String>> historyListMap = ezWebFolderService_m.getWebFolderApplyHistoryList(tenantId, companyId, startList, endList);
+			List<Map<String, String>> historyListMap = ezWebFolderService_m.getWebFolderApplyHistoryList(tenantId, companyId, startList, endList,offset);
 			for (Map<String, String> mm : historyListMap) {
 				applicationHistoryArr.add(new JSONObject(mm));
 			}
@@ -1607,8 +1613,10 @@ public class EzWebFolderGWController_m {
 		String applyId = orElse(request.getParameter("applyId"), "");
 		logger.debug("applyId=" + applyId);
 
+		String offset = orElse(request.getParameter("offset"), "");
+
 		try {
-			Map<String, String> historyMap = ezWebFolderService_m.getWebFolderApplyHistory(applyId);
+			Map<String, String> historyMap = ezWebFolderService_m.getWebFolderApplyHistory(applyId,offset);
 			List<Map<String, String>> historyMemberListMap = ezWebFolderService_m.getWebFolderApplyHistoryMember(applyId);
 			
 			appHistory = historyMap == null ? appHistory : new JSONObject(historyMap);
@@ -1652,11 +1660,15 @@ public class EzWebFolderGWController_m {
 		int tenantId = userInfo.getTenantId();
 		String userCompanyId = userInfo.getCompanyID();
 		String offset = userInfo.getOffset();
-		
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+
 		String companyId = "";
 		
 		try {
-			Map<String, String> historyMap = ezWebFolderService_m.getWebFolderApplyHistory(applyId);
+			Map<String, String> historyMap = ezWebFolderService_m.getWebFolderApplyHistory(applyId,offset);
 			List<Map<String, String>> historyMemberListMap = ezWebFolderService_m.getWebFolderApplyHistoryMember(applyId);
 			
 			if (historyMap != null) {
@@ -1712,7 +1724,7 @@ public class EzWebFolderGWController_m {
 				
 				if (addFolderStatus.equalsIgnoreCase("OK") && addFolderCode == 0) {
 					// 승인
-					ezWebFolderService_m.changeWebFolderAppliApprovalStatus(applyId, "Y");
+					ezWebFolderService_m.changeWebFolderAppliApprovalStatus(applyId, "Y",timeUTC);
 				} else {
 					status = addFolderCode == 8 ? "DUPLICATE_FOLDER_NAME" : "ADD_ERROR";
 				}
@@ -1748,8 +1760,14 @@ public class EzWebFolderGWController_m {
 		String applyId = orElse(request.getParameter("applyId"), "");
 		logger.debug("applyId=" + applyId);
 
+		String offset = orElse(request.getParameter("offset"), "");
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+
 		try {
-			Map<String, String> historyMap = ezWebFolderService_m.getWebFolderApplyHistory(applyId);
+			Map<String, String> historyMap = ezWebFolderService_m.getWebFolderApplyHistory(applyId,offset);
 			List<Map<String, String>> historyMemberListMap = ezWebFolderService_m.getWebFolderApplyHistoryMember(applyId);
 			
 			if (historyMap != null) {
@@ -1763,7 +1781,7 @@ public class EzWebFolderGWController_m {
 				}
 				
 				// 승인 거부
-				ezWebFolderService_m.changeWebFolderAppliApprovalStatus(applyId, "N");
+				ezWebFolderService_m.changeWebFolderAppliApprovalStatus(applyId, "N", timeUTC);
 			}
 		} catch (Exception e) {
 			status = "ERROR";

@@ -2176,7 +2176,7 @@
 				TBL_WEBFOLDER_APPLY_HISTORY 
 			(APPLY_ID, TENANT_ID, COMPANY_ID, FOLDER_NAME, CONTENT, APPLICATION_DATE)
 				VALUES
-			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, SYSDATE)
+			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS'))
 		]]>
 	</insert>
 	
@@ -2224,7 +2224,7 @@
 	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryList" parameterClass="Map" resultMap="applicationHistoryList">
 		<![CDATA[
 		SELECT 
-			RNUM, APPLY_ID, FOLDER_NAME, to_char(APPLICATION_DATE, 'yyyy-mm-dd hh24:mi') as APPLICATION_DATE, APPLICANTNAME, MASTERNAME, MASTERCNT, APPROVAL_STATUS
+			RNUM, APPLY_ID, FOLDER_NAME, to_char(APPLICATION_DATE+ NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-mm-dd hh24:mi') as APPLICATION_DATE, APPLICANTNAME, MASTERNAME, MASTERCNT, APPROVAL_STATUS
 		FROM (
 			SELECT 
 			rownum AS rnum, tt.*
@@ -2245,8 +2245,8 @@
 		<![CDATA[
 			SELECT
 				APPLY_ID,  FOLDER_NAME, CONTENT, 
-				to_char(APPLICATION_DATE, 'yyyy-mm-dd hh24:mi') AS APPLICATION_DATE,
-				to_char(APPROVAL_STATUS_UPDATEDT, 'yyyy-mm-dd hh24:mi') AS APPROVAL_STATUS_UPDATEDT, COMPANY_ID
+				to_char(APPLICATION_DATE+ NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-mm-dd hh24:mi') AS APPLICATION_DATE,
+				to_char(APPROVAL_STATUS_UPDATEDT+ NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-mm-dd hh24:mi') AS APPROVAL_STATUS_UPDATEDT, COMPANY_ID
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY
 			WHERE 
@@ -2303,7 +2303,7 @@
 			TBL_WEBFOLDER_APPLY_HISTORY 
 		SET 
 			APPROVAL_STATUS	 = #status#,
-			APPROVAL_STATUS_UPDATEDT = SYSDATE
+			APPROVAL_STATUS_UPDATEDT = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS')
 		WHERE 
 			APPLY_ID = #applyId#
 	</update>

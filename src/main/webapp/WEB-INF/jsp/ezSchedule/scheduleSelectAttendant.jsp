@@ -603,7 +603,14 @@
 	            if (listContentArry != "") {
 	                for (var i = 0; i < listContentArry.length; i++) {
 	                    var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-	                    var strName = document.getElementById(listContentArry[i]).getAttribute("_data10");
+
+						// 2023-07-31 황인경 - 일정관리 > 일정작성 > 일정반복 및 참석자 > 참석자초대 > 명함보기로 추가 시 이름 다국어 지원
+						if (lang != "1") {
+							var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+						} else {
+							var strName = document.getElementById(listContentArry[i]).getAttribute("_data10");
+						}
+
 	                    var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                    var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
 	                    var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
