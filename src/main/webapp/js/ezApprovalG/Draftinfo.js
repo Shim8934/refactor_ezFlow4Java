@@ -137,7 +137,14 @@ function lvtinfolist_onclick() {
     pTaskS = pSelectedRow[0].cells[4].innerText;
     pTaskY = pSelectedRow[0].cells[5].innerText;
     var Cnt = 0;
-    setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName);
+
+    /* 2023-08-02 민지수 - 전자결재 > 기안하기 > 결재정보 > 문서옵션 > 분류코드 다국어처리 */
+    if (UserLang == 2) {
+        setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName2);
+    } else {
+        setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName);
+    }
+
     document.getElementById("cabinetID").value = pCabinetID;
     document.getElementById("tbItemCode").value = pTaskCode;
     document.getElementById("tbItemName").value = pTaskName
