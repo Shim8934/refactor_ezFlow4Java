@@ -284,7 +284,7 @@
 			<div class="btnpositionNew">
 				<a class="imgbtn" onClick="Add_Address_save()"><span><spring:message code='ezOrgan.t164' /></span></a>
 				<a class="imgbtn" onClick="Delete_Address()"><span><spring:message code='ezOrgan.t165' /></span></a>
-				<a class="imgbtn" style="WIDTH:auto" onClick="Set_Primary()"><span>Primary<spring:message code='ezOrgan.t166' /></span></a>
+				<a class="imgbtn" style="WIDTH:auto" onClick="Set_Primary()"><span><spring:message code='ezOrgan.t166' /></span></a>
 				<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t167' /></span></a>
 			</div>
 		</form>
