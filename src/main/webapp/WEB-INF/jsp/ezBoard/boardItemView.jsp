@@ -98,6 +98,17 @@
 	        var MozNowZoom = 1;
 	        var MozMaxZoom = 2;
 	        var MozMinZoom = 0.8;
+			/* 2023-04-12 이가은 - 답글 기능을 위한 변수 추가 */
+	        var userInfoName = "${userInfo.displayName1}";
+			var replyOpenFlag = 0;
+			var replyModifyFlag = 0;
+			var replyModifyId = "";
+			var replyTextarea = "";
+			var delParentReply = 0;
+			var delChildReply = 0;
+			var delReplyLevel = "";
+			var parentReplyID = "";
+			var replyModifyArray = new Array(); // 2023-08-09 임정은 - 답글 수정 기능을 위한 배열 추가
 	        
 	        function Bigger(doc) {     
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -1641,7 +1652,7 @@
 		    </td>
 		    </tr>
 		    <tr>
-				<td style="vertical-align: top; height: 10px;">
+				<td style="vertical-align: top; height: 10px; padding-bottom:10px;">
 				<table class="content2" style="width:100%;">
 					<!-- 게시자  -->
 					<tr>
@@ -1807,7 +1818,7 @@
 			    </td>
 		  </tr>
 		  <tr>
-		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
+		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px; padding-top:0px;">
 		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:calc(100% - 2px); height:495px; overflow:auto; border:1px solid #ddd"></iframe>
 				
 				<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
@@ -1852,7 +1863,7 @@
 								</c:when>
 								<c:otherwise>
 										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
-											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 										</th>
 									</tr>
 								</c:otherwise>
@@ -1864,7 +1875,7 @@
 											border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle ">
 										<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 										<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
-										<a class='imgbtn' style="vertical-align: middle; margin-bottom: 3px;"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+										<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t321' /></span></a>
 									</th>
 								</tr>
 							</c:if>

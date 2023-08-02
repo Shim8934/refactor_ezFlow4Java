@@ -5601,4 +5601,25 @@
 			TBL_RS_SCHEDULE
 			ADD DEPTID varchar(80) DEFAULT NULL
 	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardOneLineChildReply">
+		<![CDATA[
+			SELECT
+				REPLYLEVEL
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.alterTblBoardOneLineChildReply">
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD
+		(
+			REPLYLEVEL BIGINT(10) NULL,
+		    PARENTREPLYID VARCHAR(100) NULL,
+		    PARENTWRITERNAME VARCHAR(100) NULL,
+		    UPDATEDATE VARCHAR(40) NULL
+		)
+	</statement>
 </sqlMap>

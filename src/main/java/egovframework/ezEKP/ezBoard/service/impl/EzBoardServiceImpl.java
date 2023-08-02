@@ -2232,9 +2232,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", tenantID);
 		
 		try {
-			int totalCount = ezBoardDAO.getBoardOneLineReply(map);
-			
-			if (totalCount > 0) {
+			int totalCount = 0;
+
+			// null로 update했던 부모 댓글을 delete하는 경우 userID값이 공백이므로 댓글을 찾을 수 없음 (부모댓글이 삭제된 뒤 자식댓글이 모두 삭제되는 경우)
+			if (!"".equals(userID)) {
+				totalCount = ezBoardDAO.getBoardOneLineReply(map);
+			}
+
+			if (totalCount > 0 || "".equals(userID)) {
 				ezBoardDAO.deleteOneLineReply(map);
 				
 				rtnValue = "OK_DELETED";
@@ -2561,7 +2566,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 댓글 저장 시 회사ID 삽입하도록 수정 */
 	@Override
-	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception {
+	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, int replyLevel) throws Exception {
 		logger.debug("saveOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2574,6 +2579,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("USERNAME2", userInfo.getDisplayName2());
 		map.put("PCONTENT", content);
 		map.put("PPASSWORD", password);
+		map.put("REPLYLEVEL", replyLevel);
 		map.put("TENANTID", userInfo.getTenantId());
 		map.put("COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
@@ -5281,5 +5287,77 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("confirmBoardItemDeletion ends");
 		return ezBoardDAO.confirmBoardItemDeletion(map);
+	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글에 대한 답글 저장하는 메서드 */
+	@Override
+	public void saveOneLineChildReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, String parentReplyID, int replyLevel, String parentWriterName) throws Exception {
+		logger.debug("saveOneLineChildReply started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_BOARDID", boardID);
+		map.put("v_USERID", userInfo.getId());
+		map.put("v_USERNAME", userInfo.getDisplayName1());
+		map.put("v_USERNAME2", userInfo.getDisplayName2());
+		map.put("v_CONTENT", content);
+		map.put("v_PASSWORD", password);
+		map.put("v_PARENTREPLYID", parentReplyID);
+		map.put("v_REPLYLEVEL", replyLevel);
+		map.put("v_PARENTWRITERNAME", parentWriterName);
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_NOWDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+
+		logger.debug("saveOneLineChildReply ended");
+		ezBoardDAO.saveOneLineChildReply(map);
+	}
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 또는 답글 수정되었을 경우 업데이트하는 메서드 */
+	@Override
+	public void updateOneLineReply(String itemID, String boardID, String replyID, String content, String updateDate, int tenantID) throws Exception {
+		logger.debug("updateOneLineReply started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_BOARDID", boardID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_CONTENT", content);
+		map.put("v_UPDATEDATE", updateDate);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("updateOneLineReply ended");
+		ezBoardDAO.updateOneLineReply(map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 메서드 */
+	@Override
+	public int getChildReplyCnt(String itemID, String boardID, String replyID, int tenantID) throws Exception {
+		logger.debug("getChildReplyCnt started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_BOARDID", boardID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getChildReplyCnt ended");
+		return ezBoardDAO.getChildReplyCnt(map);
+	}
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식이 존재하는 부모댓글 삭제할 경우 해당 댓글 정보를 NULL로 변경해주는 메서드 */
+	@Override
+	public void updateDelParentReply(String replyID, String itemID, String boardID, int tenantID) throws Exception {
+		logger.debug("updateDelParentReply started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_REPLYID", replyID);
+		map.put("v_ITEMID", itemID);
+		map.put("v_BOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("updateDelParentReply ended");
+		ezBoardDAO.updateDelParentReply(map);
 	}
 }

@@ -73,6 +73,15 @@ var strLang189 = "Please enter ";
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
 
 // 2023-03-08 이가은 추가
-var strLangLGE188 = "You cannot 'Like' your own comments.";
-var strLangLGE189 = "You cannot 'Dislike' your own comments.";
-var strLangLGE190 = "This comment has already been deleted.";
+var strLangLGE188 = "Anda tidak dapat menyukai komentar Anda sendiri.";
+var strLangLGE189 = "Anda tidak dapat tidak menyukai komentar Anda sendiri.";
+var strLangLGE190 = "Komentar ini sudah dihapus.";
+
+// 2023-03-30 이가은 추가
+var strLangLGE01 = "Tulis Balasan";
+var strLangLGE02 = "Sembunyikan Balasan";
+var strLangLGE03 = "Daftar";
+var strLangLGE04 = "Batal";
+var strLangLGE05 = "Kata Sandi Publikasi";
+var strLangLGE06 = "Anonim";
+var strLangLGE07 = "Komentar ini telah dihapus oleh penulis.";

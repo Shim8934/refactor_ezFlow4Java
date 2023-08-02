@@ -201,7 +201,7 @@ public interface EzBoardService {
 	
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception;
 
-	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception;
+	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, int replyLevel) throws Exception;
 	
 	public void setBoardList_Config(BoardConfigVO boardConfigVO) throws Exception;
 
@@ -412,4 +412,16 @@ public interface EzBoardService {
 	public List<OrganUserVO> getFavoriteBoardUserList(String boardId, String companyId, int tenantId) throws Exception;
 
 	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception;
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글에 대한 답글 저장하는 메서드 */
+	public void saveOneLineChildReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, String parentReplyID, int replyLevel, String parentWriterName) throws Exception;
+
+	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 또는 답글 수정되었을 경우 업데이트하는 메서드 */
+	public void updateOneLineReply(String itemID, String boardID, String replyID, String content, String updateDate, int tenantID) throws Exception;
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 삭제 시 자식 댓글 개수 리턴하는 메서드 */
+	public int getChildReplyCnt(String itemID, String boardID, String replyID, int tenantID) throws Exception;
+
+	/* 2023-04-12 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 자식이 존재하는 부모댓글 삭제할 경우 해당 댓글 정보를 NULL로 변경해주는 메서드 */
+	public void updateDelParentReply(String replyID, String itemID, String boardID, int tenantID) throws Exception;
 }

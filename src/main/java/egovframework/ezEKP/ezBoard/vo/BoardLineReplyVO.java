@@ -21,7 +21,12 @@ public class BoardLineReplyVO {
 	/** 2023-03-03 이가은 - 게시판 댓글 좋아요, 싫어요 기능 변수 추가 (특정 댓글에 대한 좋아요/싫어요 갯수) */
 	private int re_like;
 	private int re_hate;
-	
+	/** 2023-03-03 이가은 - 댓글 답글 변수 추가 */
+	private int replyLevel;
+	private String parentReplyID;
+	private String parentWriterName;
+	private String updateDate;
+
 	public String getReplyID() {
 		return replyID;
 	}
@@ -82,5 +87,28 @@ public class BoardLineReplyVO {
 	public void setRe_hate(int re_hate) {
 		this.re_hate = re_hate;
 	}
-
+	public int getReplyLevel() {
+		return replyLevel;
+	}
+	public void setReplyLevel(int replyLevel) {
+		this.replyLevel = replyLevel;
+	}
+	public String getParentWriterName() {
+		return parentWriterName;
+	}
+	public void setParentWriterName(String parentWriterName) {
+		this.parentWriterName = parentWriterName;
+	}
+	public String getParentReplyID() {
+		return parentReplyID;
+	}
+	public void setParentReplyID(String parentReplyID) {
+		this.parentReplyID = parentReplyID;
+	}
+	public String getUpdateDate() {
+		return updateDate;
+	}
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
 }

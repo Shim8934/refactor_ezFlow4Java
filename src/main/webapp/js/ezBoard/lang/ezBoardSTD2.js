@@ -76,3 +76,12 @@ var strLangKWCHd01 = "An error occurred while saving security HWP document. Plea
 var strLangLGE188 = "You cannot 'Like' your own comments.";
 var strLangLGE189 = "You cannot 'Dislike' your own comments.";
 var strLangLGE190 = "This comment has already been deleted.";
+
+// 2023-03-30 이가은 추가
+var strLangLGE01 = "Open a Reply";
+var strLangLGE02 = "Collapse a Reply";
+var strLangLGE03 = "Save";
+var strLangLGE04 = "Cancel";
+var strLangLGE05 = "Password";
+var strLangLGE06 = "Anonymous";
+var strLangLGE07 = "This comment has been deleted by its writer.";
