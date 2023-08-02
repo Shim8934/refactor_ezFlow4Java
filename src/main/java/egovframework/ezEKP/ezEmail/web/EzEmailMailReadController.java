@@ -372,7 +372,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							if (i == 0) {
 								if (strArr.length > 1) {
-									toStr = getReceiverHTML(name, address, false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + strArr.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+									toStr = getReceiverHTML(name, address, false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) +"&nbsp;"+ strArr.length +"&nbsp;"+ egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
 								} else {
 									toStr = getReceiverHTML(name, address, false);
 								}
@@ -730,7 +730,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								} else {*/
 									if(i == 0){
 										if(arrRecipientsTo.length > 1){
-											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) +"&nbsp;"+ arrRecipientsTo.length +"&nbsp;"+ egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
 										} else {
 											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
 										}
