@@ -2071,7 +2071,13 @@
 	            compnm2 ,
 	            extensionattribute1 ,
 	            extensionattribute2 ,
-	            extensionattribute3 ,
+	            CASE #primary#
+					WHEN '1' THEN
+						extensionattribute3
+					ELSE
+						compnm2
+					END
+						extensionattribute3,
 	            extensionattribute4 ,
 	            extensionattribute5 ,
 	            extensionattribute6 ,
