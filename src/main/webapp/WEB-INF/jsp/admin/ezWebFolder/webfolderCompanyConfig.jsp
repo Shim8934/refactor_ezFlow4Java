@@ -135,7 +135,7 @@
 					return;
 				}
 
-				if (uploadLimit < departmentLimit && uploadLimit < userLimit){
+				if (uploadLimit <= departmentLimit && uploadLimit <= userLimit){
 					var param = {
 						"departmentLimit" : departmentLimit,
 						"userLimit" : userLimit,
