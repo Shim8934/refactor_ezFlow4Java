@@ -1532,7 +1532,7 @@
                  ('A60','E  ','전송실패','1','전송 실패 (Error)','Error','送信エラー','传输失败',#tenantID#, #companyID#),
                  ('A60','H  ','회송','1','회송 (HweSong)','Return','返送','返回',#tenantID#, #companyID#),
                  ('A60','I  ','접수','1','접수 (Inter..)','Reception progress','受付','收到',#tenantID#, #companyID#),
-                 ('A60','N  ','대기','1','발신 대기 (Not Yet)','No receipt','待機','待机',#tenantID#, #companyID#),
+                 ('A60','N  ','대기','1','발신 대기 (Not Yet)','Waiting','待機','待机',#tenantID#, #companyID#),
                  ('A60','O  ','발송의뢰','1','발송 의뢰 (Offered)','Offered','送信依頼','发送请求',#tenantID#, #companyID#),
                  ('A60','R  ','수신','1','수신 (Received)','Received','受信','接待',#tenantID#, #companyID#),
                  ('A60','S  ','발송','1','발송 (Sent)','Sent','送信','送货',#tenantID#, #companyID#),
