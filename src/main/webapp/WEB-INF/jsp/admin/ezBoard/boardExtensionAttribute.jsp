@@ -525,13 +525,20 @@
 		        listview2.LoadFromID("lvSelectList");
 
 		        var tr2 = listview2.GetSelectedRows();
+                var langTDName ="";
+
+                if (${lang_user} == 1 ) {
+                    langTDName = getNodeText(tr2[0].cells[0]);
+                } else if (${lang_user} == 2 ) {
+                    langTDName = getNodeText(tr2[0].cells[1])
+                }
 
 		        if (tr2.length == 0) {
 		            alert("<spring:message code='ezBoard.t999061'/>");
 		            return;
 		        }
 
-		        if (CheckDuplication(tr2[0].cells[0].innerHTML, "lvXmlHeader", 0) == false) {
+		        if (CheckDuplication(langTDName, "lvXmlHeader", 0) == false) {
 		            alert("<spring:message code='ezBoard.t999057'/>");
 		            return;
 		        }
@@ -542,8 +549,8 @@
 		        }
 
 		        var pparsingXML = "<LISTVIEWDATA><ROWS><ROW>";
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + getNodeText(tr2[0].cells[0]) + "]]></VALUE><DATA1>" + GetAttribute(tr2[0],"DATA1") + "</DATA1></CELL>"; 
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + getNodeText(tr2[0].cells[1]) + "]]></VALUE></CELL>"; 
+                pparsingXML += "<CELL><VALUE><![CDATA[" + langTDName + "]]></VALUE><DATA1>" + GetAttribute(tr2[0],"DATA1") + "</DATA1></CELL>";
+		        pparsingXML += "<CELL><VALUE><![CDATA[" + getNodeText(tr2[0].cells[1]) + "]]></VALUE></CELL>";
 		        pparsingXML += "<CELL><VALUE><![CDATA[80]]></VALUE></CELL>"; 
 		        pparsingXML += "</ROW></ROWS></LISTVIEWDATA>";
 
@@ -770,7 +777,7 @@
 					</HEADER>
 					<HEADER>
 						<NAME><spring:message code='ezBoard.t999037'/></NAME>
-						<WIDTH>50</WIDTH>
+						<WIDTH>80</WIDTH>
 					</HEADER>
 					<HEADER>
 						<NAME><spring:message code='ezBoard.t999038'/></NAME>

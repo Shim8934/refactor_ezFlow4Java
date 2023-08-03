@@ -820,7 +820,7 @@
 		        /* 2018-07-25 홍승비 - 확장칼럼 설정 팝업창 width 조절(일본어 대응) */
 		        if (CrossYN()) {
 		            BoardExtension_dialogArguments[0] = para;
-		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(780, 750));
+		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(1120, 750));
 		            try { ExtensionAttribute.focus(); } catch (e) { }
 		        } else {
 		            var retVal = window.showModalDialog(url, para, "dialogWidth:780px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
