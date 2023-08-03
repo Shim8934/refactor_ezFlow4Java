@@ -2420,7 +2420,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addAttitudeFormFormHtml2Column");
 		}
 	}
-	
+
 	public void createTblUserChangeInfo() {
 		try {
 			select("EzCommonDAO.checkTblUserChangeInfo");
@@ -2430,4 +2430,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblUserChangeInfo");
 		}
 	}
+
+	/* 2023-06-26 민지수 - codelist에 완료문서 추가의견타입 추가 */
+	public void insertOpinionGB(Map<String, Object> map) {
+		String companyId = (String) select("EzCommonDAO.checkCodeListTypeForCompany", map);
+
+		if (companyId == null) {
+			logger.debug("Opinion_type_id 'A17' doesn't exist. insert data...");
+			insert("EzCommonDAO.insertOpinionGB",map);
+		}
+	}
+
 }

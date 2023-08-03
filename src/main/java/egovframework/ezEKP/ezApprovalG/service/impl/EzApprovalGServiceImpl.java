@@ -5,12 +5,12 @@ import java.io.ByteArrayInputStream;
 import java.io.File; 
 import java.io.FileInputStream; 
 import java.io.FileNotFoundException; 
-import java.io.FileOutputStream; 
+import java.io.FileOutputStream;
 import java.io.IOException; 
 import java.io.InputStream; 
 import java.io.InputStreamReader; 
 import java.io.OutputStream; 
-import java.io.OutputStreamWriter; 
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field; 
 import java.lang.reflect.Method; 
 import java.net.HttpURLConnection; 
@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime; 
 import java.time.ZoneId; 
 import java.time.format.DateTimeFormatter; 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar; 
@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern; 
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource; 
 import javax.mail.internet.InternetAddress; 
@@ -307,9 +307,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	final public String staATWhokyul2 = "040";				// 후결
 	
 	// OpinionType
-	final public String staIlBan = "001";			// 일반의견
+    final public String staAdd = "000";         // 추가의견
+    final public String staIlBan = "001";		// 일반의견
 	final public String staBanSong = "002";		// 반송의견
-	final public String staBoRyu = "003";			// 보류의견
+	final public String staBoRyu = "003";		// 보류의견
 	final public String staWheSong = "004";		// 회송의견
 	
 	@Override
@@ -716,7 +717,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        
 			/* 2023-08-30 홍승비 - 전자결재 일반버전 > 수신문 재발송 시 원문서의 의견 플래그 복사하도록 수정 (G버전의 재발송과 동일 쿼리 사용하므로 분기 추가) */
 			map.put("v_HASOPINIONYN", endAprDoc.getHasOpinionYn().trim());
-			
+
 			ezApprovalGDAO.updateDoSendAprDocInfo(map);
 			
 			sentDeptID = endAprDoc.getWriterDeptID();
@@ -781,9 +782,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	   	map.put("v_NEWID", docID);
 	   	map.put("v_orgDocID", orgDocID);
 	   	map.put("receiptCompanyID", companyID);
-	   	
+
 	   	ezApprovalGDAO.copyOpinionsFromOrgDoc2(map);
-	   	
+
 	   	result = "<RESULT>TRUE</RESULT>";
 		
 		logger.debug("doSendOfferS ended");
@@ -1786,8 +1787,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else if (mode.equals("CAPR")) {
 			//결재진행문서
 			listString = getListHeader("033", companyID, lang, tenantID);
-		} else if (mode.equals("CEND")) {
-			//결재진행문서
+		} else if (mode.equals("CEND")|| mode.equals("CADD")) {
+			//결재완료문서
 			listString = getListHeader("034", companyID, lang, tenantID);
 		} else {
 			listString = getListHeader("031", companyID, lang, tenantID);
@@ -9721,7 +9722,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		String primaryData = commonUtil.getPrimaryData(lang, tenantID);
-		String docID = "";
+		//String docID = "";
 		String docList = "";
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
@@ -9791,7 +9792,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				resultXML.append("]]></VALUE>");
-			
+
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("v_DOCID", docXML.getElementsByTagName("DOCID").item(k).getTextContent());
+                map.put("companyID", recordListVO.getCompanyID());
+                map.put("v_TENANTID",tenantID);
+                map.put("v_FLAG","ADDY");
+                String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+                String hasopinionYn = ezApprovalGDAO.getHasopinionYn(map);
+
 				if (p == 0) {
 					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA1>");
 					resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "]]></DATA2>");
@@ -9813,6 +9822,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent()) + "]]></DATA15>");
 					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(k).getTextContent()).trim() + "]]></DATA16>");
 					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()).trim() + "]]></DATA17>");
+
+                    /* 2023-06-26 민지수 - 추가의견 존재 여부 저장 (TRUE, FALSE) */
+                    resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
+                    resultXML.append("<HASOPINIONYN>" + hasopinionYn + "</HASOPINIONYN>");
+                    //resultXML.append("<HASOPINIONYN><![CDATA[" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "]]></HASOPINIONYN>");
 
 					if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals("011") ) {
 						//docID = makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent());
@@ -21077,7 +21091,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + " </VALUE>");
-				
+
+                /* 2023-06-26 민지수 - 리스트 표출을 위한 추가의견 존재여부 추가 */
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("v_DOCID", docXML.getElementsByTagName("DOCID").item(k).getTextContent());
+                map.put("companyID", docXML.getElementsByTagName("COMPANYID").item(k).getTextContent());
+                map.put("v_TENANTID",tenantID);
+                map.put("v_FLAG","ADDY");
+                String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
 					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA2>");
@@ -21092,7 +21114,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
 					resultXML.append("<DATA12>" + docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent() + "</DATA12>");
 					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
-				}
+                    resultXML.append("<HASOPINIONYN><![CDATA[" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "]]></HASOPINIONYN>");
+                    resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
+                }
 				
 				if (fieldName.equals("HASATTACHYN")) {
 					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
@@ -21961,8 +21985,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 					
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offSet)) + "</VALUE>");
-					
+
+                    resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offSet)) + "</VALUE>");
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("v_DOCID", docXML.getElementsByTagName("DOCID").item(k).getTextContent());
+                    map.put("companyID", docXML.getElementsByTagName("COMPANYID").item(k).getTextContent());
+                    map.put("v_TENANTID",tenantID);
+                    map.put("v_FLAG","ADDY");
+                    map.put("v_GongHoiRam","Y");
+                    String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+
 					if (p == 0) {
 						resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
 						resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA2>");
@@ -22011,6 +22043,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<REFORMFLAG>" + (isReform(formId, companyID, tenantID) ? "Y" : "N") + "</REFORMFLAG>");
 						resultXML.append("<APRMEMBERSN>" + makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(k).getTextContent()) + "</APRMEMBERSN>");
 						resultXML.append("<HASOPINIONYN>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</HASOPINIONYN>");
+                        /* 2023-06-26 민지수 - 추가의견 존재 여부 저장 (TRUE, FALSE) */
+                        resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
 					}
 					
 					if (fieldName.equals("HASATTACHYN")) {
@@ -27137,7 +27171,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  				resultXML.append("<CELL>");
 				resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
 			
-				if (firstFlag) { 
+                /* 2023-06-26 민지수 - 리스트 표출을 위한 추가의견 존재여부 추가 */
+                map.put("v_DOCID", docXML.getElementsByTagName("DOCID").item(k).getTextContent());
+                map.put("companyID", docXML.getElementsByTagName("COMPANYID").item(k).getTextContent());
+                map.put("v_TENANTID",tenantID);
+                map.put("v_FLAG","ADDY");
+                String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+
+				if (firstFlag) {
 					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
 					resultXML.append("<DATA2><![CDATA[" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "]]></DATA2>");
 					resultXML.append("<DATA3><![CDATA[" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "]]></DATA3>");
@@ -27152,7 +27193,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA12><![CDATA[" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "]]></DATA12>");
 					resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>"); // 기안 > 문서첨부 >[양식명]을 리스트에서 보여주기위한 DATA99값 추가
 					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
-					resultXML.append("<HASOPINIONYN><![CDATA[" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "]]></HASOPINIONYN>");
+                    resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
+                    resultXML.append("<HASOPINIONYN><![CDATA[" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "]]></HASOPINIONYN>");
+
 					firstFlag = false;
 				}
 				
@@ -34495,4 +34538,99 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("insertRegErrorNoRollbackRecord ended.");
 	}
+
+    /* 2023-06-26 민지수 - 완료문서 추가의견 저장 메소드 */
+    public String updateAddOpinionInfo(Document docXML, String companyID, String lang, int tenantID) throws Exception {
+        logger.debug("updateAddOpinionInfo started");
+
+        String docID = docXML.getElementsByTagName("ROW").item(0).getChildNodes().item(4).getTextContent();
+
+        logger.debug("updateAddOpinionInfo param : docID = " + docID);
+
+        String rtnVal = deleteAddOpinionInfo(docID, companyID, lang, tenantID);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        if (rtnVal.equals("TRUE")) {
+            /* 2023-06-26 민지수 - 추가의견 저장시 일반의견과 순번중복 오류 > 추가의견이 아닌 의견들의 순번 최대값을 가져와 순번 부여 */
+            /* 추가의견을 제외한 의견이 존재하는지 여부 */
+            String oYn = getOpinionYn(docID,companyID, tenantID);
+
+            for (int k = 0; k < docXML.getElementsByTagName("ROW").getLength(); k++) {
+                map.put("v_DOCID", docID);
+                map.put("v_USERID", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(5).getTextContent());
+                map.put("v_OPINIONGB", "000"); // 추가의견으로 삽입
+                map.put("v_CONTENT", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent());
+                map.put("v_USERNAME", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent());
+                map.put("v_USERNAME2", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(11).getTextContent());
+                map.put("v_USERJOBTITLE", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(12).getTextContent());
+                map.put("v_USERJOBTITLE2", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(13).getTextContent());
+                map.put("v_USERDEPTID", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(7).getTextContent());
+                map.put("v_USERDEPTNAME", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(14).getTextContent());
+                map.put("v_USERDEPTNAME2", docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(15).getTextContent());
+                map.put("companyID", companyID);
+                map.put("v_TENANTID", tenantID);
+
+                int existingOpinionSN;
+                // 일반의견이 존재하지 않는 경우 SN이 null > 존재하는 경우에만 SN 값을 가져오도록 함
+                if (oYn.equals("TRUE")) {
+                    existingOpinionSN = ezApprovalGDAO.getExistingOpinionSN(map);
+                } else {
+                    existingOpinionSN = 0;
+                }
+
+                int opinionSN = existingOpinionSN + docXML.getElementsByTagName("ROW").getLength() - k;
+
+                map.put("v_OPINIONSN", opinionSN);
+
+                ezApprovalGDAO.insertAddOptionInfo(map);
+            }
+            map.put("v_DOCID", docID);
+            map.put("v_OpinionYN", "Y");
+            map.put("v_TENANTID", tenantID);
+            ezApprovalGDAO.updateEndAprDocOptionInfo(map);
+        }
+
+        logger.debug("updateAddOpinionInfo ended");
+
+        return rtnVal;
+    }
+
+    /* 2023-06-26 민지수 - 완료문서 추가의견 삭제 */
+    @Override
+    public String deleteAddOpinionInfo(String docID, String companyID, String lang, int tenantID) throws Exception {
+        logger.debug("deleteOpinionInfo started");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("v_OpinionYN", "N");
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantID);
+        map.put("v_FLAG","ADDN");
+
+        ezApprovalGDAO.deleteAddOpinionInfo(map);
+        String rtvl = ezApprovalGDAO.getOpinionAddGB(map);
+
+        /* 다른 의견 타입이 존재하지 않을 경우에만 'n'으로 변경 */
+        if (rtvl.equals("FALSE")) {
+            ezApprovalGDAO.updateEndAprDocOptionInfo(map);
+        }
+
+        logger.debug("deleteOpinionInfo ended");
+        return "TRUE";
+    }
+
+    public String getOpinionYn(String docID, String companyID, int tenantID) throws Exception {
+        logger.debug("getOpinionSn started");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantID);
+        map.put("v_FLAG","ADDN");
+
+        String Result = ezApprovalGDAO.getOpinionAddGB(map);
+
+        logger.debug("getOpinionSn ended");
+        return Result;
+    }
+
 }

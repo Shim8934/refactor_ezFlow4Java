@@ -812,6 +812,7 @@ var strLangAprState21 = "도달";
 var strLangAprState22 = "재요청";
 
 // OpinionGB : 의견 종류
+var strOpinionType0 = "000"; // 2023-07-17 민지수 - 완료문서 추가의견
 var strOpinionType1 = "001";
 var strOpinionType2 = "002";
 var strOpinionType3 = "003";
@@ -821,6 +822,7 @@ var strOpinionType4 = "004";
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
 var strOpinionType8 = "008";
+var strLangOpinionType0 = "추가의견";
 var strLangOpinionType1 = "일반의견";
 var strLangOpinionType2 = "반송의견";
 var strLangOpinionType3 = "보류의견";

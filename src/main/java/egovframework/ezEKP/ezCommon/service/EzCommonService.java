@@ -395,6 +395,9 @@ public interface EzCommonService {
 
 	public void insertHWPSecurityConfig() throws Exception;
 
+	/* 2023-06-26 민지수 - 완료문서 추가의견타입 추가 */
+	public void insertOpinionGB() throws Exception;
+
 	public void alterTblRsResaclAddColumn() throws Exception;
 
 	public void addAttitudeFormFormHtml2Column() throws Exception;

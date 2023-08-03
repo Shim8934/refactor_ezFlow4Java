@@ -2524,14 +2524,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
-		
-		String result = ezApprovalGService.getOpinionInfo(docID, "CAPR", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-		
-		logger.debug("opinionRequest ended.");
-		
-		return result;
+		/* 2023-06-26 민지수 - 문서 state에 따른 진행/완료문서 분기처리 */
+		String state = request.getParameter("state");
+
+		// 진행
+		if (state.equals("001") || state.equals("004") || state.equals("APR")) {
+			String result = ezApprovalGService.getOpinionInfo(docID, "CAPR", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+			logger.debug("opinionRequest ended.");
+			return result;
+		}
+		// 완료
+		else {
+			String result = ezApprovalGService.getOpinionInfo(docID, "CADD", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+			logger.debug("opinionRequest ended.");
+			return result;
+		}
+
 	}
-	
+
 	/**
 	 * 전자결재G 기안 의견삭제 표출 Method
 	 */
@@ -2545,9 +2555,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String isSihangReject = request.getParameter("isSihangReject") != null ? request.getParameter("isSihangReject") : ""; // 시행문의 반송을 위한 플래그 추가
 		String result = "";
-		
+		String pMode = request.getParameter("pMode");
+
 		if (isSihangReject.equals("Y")) { // 미처리문서함에 들어온 내부시행문의 의견 삭제 분기 (완료된 문서의 의견테이블에 접근)
 			result = ezApprovalGService.deleteEndOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		} else if (pMode.equals("END")) { // 2023-06-26 민지수 - 완료문서 추가의견 삭제 분기
+			result = ezApprovalGService.deleteAddOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		} else { // 기존 의견 삭제 분기
 			result = ezApprovalGService.deleteOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		}
@@ -2572,7 +2585,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String isSihangReject = request.getParameter("isSihangReject") != null ? request.getParameter("isSihangReject") : ""; // 시행문의 반송을 위한 플래그 추가
-		
+		String pMode = request.getParameter("pMode");
+
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
@@ -2581,7 +2595,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (isSihangReject.equals("Y")) { // 미처리문서함에 들어온 내부시행문의 반송의견 저장 분기 (완료된 문서의 의견테이블에 접근)
 			result = ezApprovalGService.updateOpinionSihangReject(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-		} else { // 기존 의견 저장 분기
+		} else if (pMode.equals("END")) { // 2023-06-26 민지수 - 완료문서 추가의견 저장 분기
+			result = ezApprovalGService.updateAddOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		}else { // 기존 의견 저장 분기
 			result = ezApprovalGService.updateOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		}
 		
@@ -3989,7 +4005,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
 		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
-		
+
+		/* 2023-07-17 민지수 - 전자결재 > 배부대장 > 진행/완료(APR/END) 체크 */
+		String docAprEnd ="";
+		if ((uFlag != null && uFlag.equals("m03")) || (uFlag != null && uFlag.equals("m14"))) {
+			docAprEnd =  ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
+
 		model.addAttribute("editor", editor);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("signCheck", signCheck);
@@ -4029,7 +4051,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 		
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
-		
+
+		/* 2023-07-13 민지수 - 배부대장 문서 진행/완료(APR/END) 값 전달 */
+		model.addAttribute("docAprEnd", docAprEnd);
+
 		logger.debug("contDocView ended.");
 		
 		return "ezApprovalG/apprGcontDocView";
@@ -11158,9 +11183,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+		/* 2023-07-19 민지수 - [추가의견] 버튼 클릭 시 의견창 모드값 전달 */
+		String opMode = request.getParameter("opMode");
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
-		
+		model.addAttribute("opMode",opMode);
+
 		logger.debug("aprOpinionNew ended.");
 		return "ezApprovalG/apprGaprOpinionNew";
 	}

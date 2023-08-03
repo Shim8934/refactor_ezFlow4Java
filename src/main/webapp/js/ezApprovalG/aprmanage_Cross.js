@@ -3271,3 +3271,60 @@ function delGroupDocInfoByDocID(pDocID, pMode) {
 function btn_newpopup() {
 	lvDocList_DBSelChange();
 }
+
+/* 2023-06-26 민지수 - 추가의견 의견작성창 호출 */
+function openOpinionUI_New_Add(pOpinionType, CompleteFunction) {
+    try {
+        var parameter = new Array();
+        parameter[0] = pDocID;		// DOCID
+        parameter[1] = pOpinionType;// OPINIONTYPE NAME
+        parameter[2] = "";			// DRAFTFLAG 결재는 공백 고정
+        parameter[4] = orgCompanyID;// ORGCOMPANYID
+        parameter[99] = ext;		// EXT
+
+        apropinion_cross_dialogArguments[0] = parameter;
+        if (typeof(CompleteFunction) != "undefined") {
+            apropinion_cross_dialogArguments[1] = CompleteFunction;
+        } else {
+            apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete_Add;
+        }
+
+        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do?opMode=ADD");
+    } catch (e) {
+        alert("openOpinionUI_New ::: " + e.description);
+    }
+}
+
+function openOpinionUI_New_Complete_Add(ret) {
+    try {
+        DivPopUpHidden();
+        if (ret == "Clear") {
+            pHasOpinionYN = "N";
+            var fields = message.GetFieldsList();
+            var field = message.GetListItem(fields, "opinions");
+
+            if (field) {
+                field.innerHTML = " ";
+            }
+        } else
+        // 추가의견은 양식상에 맵핑하지 않음
+        if (ret == "cancel") {
+            //do_nothing
+        } else {
+            var objXML = createXmlDom();
+            objXML = loadXMLString(ret);
+            var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+
+            if (NodeList.length != 0) {
+                pHasOpinionYN = "Y";
+            } else {
+                pHasOpinionYN = "N";
+                ret = "cancel";
+            }
+            // 추가의견은 양식상에 맵핑하지 않음
+           // makeOpinionList_Add(objXML);
+        }
+    } catch (e) {
+        alert("openOpinionUI_New_Complete ::: " + e.description);
+    }
+}

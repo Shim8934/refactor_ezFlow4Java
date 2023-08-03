@@ -58,7 +58,7 @@ function GetDocList(p_FormCd) {
     if (GamSaFlag)
         xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
     else
-        xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", false);
+        xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", true);
 
     xmlhttp.onreadystatechange = getDocList_after;
     xmlhttp.send(xmlpara);
@@ -101,8 +101,12 @@ function getDocList_after() {
 
             ListViewNode = xmlDoc;
 
+            var preDocList = new ListView();
+            preDocList.LoadFromID('DocList');
+            var preSelectedRow = preDocList.GetSelectedRows();
+
             if (NodeListLen > 10) {
-                paging(curpage, nowblock);
+                paging(curpage, nowblock, selRowChangeFlag, preSelectedRow);
             }
             else {
                 if (document.getElementById("lvtDoclist").innerHTML != "")
@@ -117,7 +121,12 @@ function getDocList_after() {
                 DocList.SetUrgentFlag(true);                            
                 DocList.SetSecurityFlag(true);                           
                 DocList.DataSource(ListViewNode);                             
-                DocList.DataBind("lvtDoclist");                          
+                DocList.DataBind("lvtDoclist");
+                if (selRowChangeFlag && preSelectedRow.length > 0) {
+                    // 탭 이동 시 전 탭에서 선택된 row 선택되지 않도록 flag값 변경
+                    selRowChangeFlag = false;
+                    DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));
+                }
                 DocList = null;
 
 
@@ -945,7 +954,7 @@ function lvtDoclist_SelChange() {
     }
 }
 
-function paging(p_page, p_nowblock) {
+function paging(p_page, p_nowblock, selRowChangeFlag, preSelectedRow) {
     var h, j, x_NAME, x_WIDTH, x_HEADER, x_CELL2, x_VALUE2, count;
 
     if (document.getElementById("lvtDoclist").innerHTML != "")
@@ -966,7 +975,11 @@ function paging(p_page, p_nowblock) {
     else 
     	DocList.SetSecurityFlag(true);
     DocList.DataSource(ListViewNode);                             
-    DocList.DataBind("lvtDoclist");                          
+    DocList.DataBind("lvtDoclist");
+    if (selRowChangeFlag && preSelectedRow.length > 0) {
+        selRowChangeFlag = false;
+        DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));
+    }
     DocList = null;
 
     pagingCount(p_page, p_nowblock);
@@ -1402,3 +1415,20 @@ function check_presence2() {
 
         return xmlhttp.responseText.trim();
     }
+
+function openergetDocInfo() {
+    try {
+        // 선택한 row 유지를 위한 Flag 설정
+        selRowChangeFlag = true;
+        // page 유지를 위한 Flag 설정
+        pChackYN = "TRUE";
+        if (contFlag == "END"){
+            GetDocList("END");
+        }
+        else {
+            return;
+        }
+    } catch (e) {
+        alert("openergetDocInfo :: " + e.description);
+    }
+}

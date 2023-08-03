@@ -65,7 +65,10 @@
 			
 	     	// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
-	        
+
+			// 배부대장 문서 진행/완료 여부 플래그 (APR/END)
+			var docAprEnd = "<c:out value ='${docAprEnd}'/>";
+
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
 	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
@@ -87,7 +90,12 @@
 	            aprendopinion_dialogArgument[1] = openOpinionUI_Complete;
 	            DivPopUpShow(530, 520, url);
 	        }
-	        
+
+			/* 2023-06-26 민지수 - 전자결재 > 완료문서 > [추가의견] 클릭 시 동작 함수 추가 */
+			function btnOpinion_add_onclick() {
+				openOpinionUI_New_Add("ADD");
+			}
+
 	        function openOpinionUI_Complete() {
 		        DivPopUpHidden();
 		    }
@@ -572,6 +580,17 @@
 	        var result = GetOpenWindow(openLocation, "", 1050, 970, "YES");
 	        window.close();
 	    }
+
+			window.onbeforeunload = function () {
+				try {
+					if ((window.opener.g_sFlag == undefined) || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01")) {
+						// 전자결재 > 완료문서, 기록물등록대장에만 적용 되도록 조건 추가
+						window.opener.openergetDocInfo();
+					} else {
+						return;
+					}
+				} catch (e) { }
+			}
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden" onload="javascript:window_onload()">
@@ -583,6 +602,10 @@
 		        		<ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnOpinion"><span onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+							<%-- 2023-06-26 민지수 - 추가의견 버튼 추가 --%>
+							<c:if test="${docAprEnd != 'APR'}"> <%-- 2023-07-13 민지수 - 배부대장의 경우 endView(완료문서보기)로 띄우지만 apr(진행중) 문서인 경우 버튼 숨김처리 --%>
+							<li id="btnAddOpinion"><span id="span_btnOpinion_add" onClick="return btnOpinion_add_onclick()"><spring:message code='ezApprovalG.mjsOp01'/></span></li>
+							</c:if>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 	                        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	                        <c:if test="${useBoard == 'YES' }">

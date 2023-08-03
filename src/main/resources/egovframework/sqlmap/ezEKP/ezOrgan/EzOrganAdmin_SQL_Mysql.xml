@@ -1689,6 +1689,7 @@
                  ('A15','001','yyyy.mm.dd hh:mm','1','년-월-일','yyyy.mm.dd hh:mm','yyyy.mm.dd hh:mm','yyyy.mm.dd hh:mm',#tenantID#, #companyID#),
                  ('A15','002','.','1','사인일자 형식','.','.','.',#tenantID#, #companyID#),
                  ('A17','0  ','의견종류','1','의견종류','의견종류',null,null,#tenantID#, #companyID#),
+				 ('A17','000','추가의견','1','추가의견','Add','追加','追加意见',#tenantID#, #companyID#),
                  ('A17','001','일반의견','1','일반의견','General','一般','一般意见',#tenantID#, #companyID#),
                  ('A17','002','반송의견','1','반송의견','Rejection','差し戻し','退回意见',#tenantID#, #companyID#),
                  ('A17','003','보류의견','1','보류의견','Holding','保留','保存意见',#tenantID#, #companyID#),

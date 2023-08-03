@@ -27,6 +27,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/previewmail.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -42,7 +44,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.js')}"></script>
 		<!-- <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
-		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}"> -->   
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}"> -->
 		<script type="text/javascript" id="clientEventHandlersJS">
 				var OrderOption = "";
 		        var OrderCell = "";        
@@ -98,7 +100,8 @@
 				var WriterDeptID = null;
 		        var shareDeptId = "${shareDeptId}";
 		        var isCabinetToRecordFirst = true; // 기록물철등록부에서 기록물보기 메뉴로 최초 진입했는지 판단하기 위한 변수
-		        
+				var selRowChangeFlag = false;
+
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {
@@ -125,10 +128,10 @@
 		            try {
 		                DocList_Flag = "";
 		                pChackYN = "FALSE";
-		
+
 		                PageSize = 10;
 		                Block_Size = 10;
-		
+
 		                initUserRoleinfo();
 		                DocDeptYN = IsDocDept(DeptID);
 		                jobState = "APPROVAL";
@@ -137,7 +140,7 @@
 		            }
 		            catch (e) {
 		            }
-		            
+
 		            settingResize();
 		        };
 		        
@@ -1594,7 +1597,7 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
-		
+
 		        if (tr.length == 0) {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
 		        }
@@ -1613,7 +1616,7 @@
 		            }
 		            pSaveDocID = tr[0].getAttribute("DATA1");
 		        }
-		        
+
 		        /* 2021-10-21 홍승비 - 결재완료문서 통합 PC 저장 시 보안결재 확인동작 추가 */
 				if (tr[0].getAttribute("DATA14") != "" && tr[0].getAttribute("DATA14") >= GetTodayDate()) {
 		            if (CheckAprLine(tr[0].getAttribute("DATA1")) == "TRUE") {
@@ -1982,7 +1985,7 @@
 	                AddOption(rec_year, i, i);
 	            }
 			}
-		    
+
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -2070,7 +2073,7 @@
 	    </div>
 	    <div id="divList" class="div_scroll" style="width: 100%; height: 375px; overflow: AUTO; margin-bottom:10px;">
 	        <div id="lvtDoclist"></div>
-	    </div>	    
+	    </div>
 	    <div id="tblPageRayer"></div>
 	    <div id="trSubInfoTab">
 	        <%-- <div id="tabnav" style="width: 100%">
@@ -2090,9 +2093,9 @@
 				    <p><span id="tagsub2"><spring:message code='ezApprovalG.t950'/></span></p>
 				    <p><span id="tagsub3"><spring:message code='ezApprovalG.t56'/></span></p>
 				    <p><span id="tagsub4"><spring:message code='ezApprovalG.t55'/></span></p>
-			  	</div>	
+			  	</div>
 			</div>
-	
+
 	        <div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	            <div id="lvtDetail" style="border: 0;"></div>
 	        </div>

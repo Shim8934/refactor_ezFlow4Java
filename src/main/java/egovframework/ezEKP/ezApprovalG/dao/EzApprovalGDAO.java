@@ -3884,4 +3884,30 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void insertReuseAttachHistory(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.insertReuseAttachHistory", map);	
 	}
+
+	// 2023-06-26 민지수 - 완료문서 추가의견 저장
+	public void insertAddOptionInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertAddOptionInfo", map);
+	}
+	// 완료문서 추가의견 삭제
+	public void deleteAddOpinionInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteAddOpinionInfo", map);
+	}
+	// 완료문서 추가의견을 제외한 의견 순번 조회
+	public int getExistingOpinionSN(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.selectOpinionSn", map);
+	}
+	// 완료문서 추가의견 존재 여부 조회
+    public String getOpinionAddGB(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.selectOpinionAddGb", map);
+    }
+	// 완료문서 일반의견 존재 여부 조회
+	public String getOpinionYn(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.selectOpinionYn",map);
+	}
+	// 완료문서 의견여부 조회
+	public String getHasopinionYn(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.selectHasOpinionYn",map);
+	}
+
 }

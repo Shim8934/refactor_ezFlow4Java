@@ -77,7 +77,7 @@
 	            pDraftFlag = parent.pDraftFlag;
 	            pDocType = parent.pDocTypeAry[frameNum];
 	            pSusinSN = parent.pSusinSN;
-	            pDocState = parent.pDocState;
+	            pDocState = parent.docState;
 	            SignInfoFlag = parent.SignInfoFlag;
 	            DeptSymbol = parent.DeptSymbol;
 	            approvalFlag = parent.approvalFlag;
@@ -918,7 +918,8 @@
 	        				url : "/ezApprovalG/opinionRequest.do",
 	        				data : {
 	        					docID : parent.pDocIDAry[frameNum],
-	        					orgCompanyID : orgCompanyID
+	        					orgCompanyID : orgCompanyID,
+								state : pDocState
 	        				},
 	        				success: function(xml) {
 	        					result = xml;

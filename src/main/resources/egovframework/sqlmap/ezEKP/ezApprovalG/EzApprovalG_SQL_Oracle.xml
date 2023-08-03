@@ -3751,6 +3751,21 @@
 			AND
 				COMPANYID = #companyID#					
 		</isEqual>
+        <!-- 2023-06-26 민지수 - 추가의견탭에서 추가의견 list만 불러오기 -->
+        <isEqual property="v_MODE" compareValue="CADD">
+            SELECT
+                *
+            FROM
+                TBL_ENDAPROPINIONINFO
+            WHERE
+                DOCID = #v_DOCID#
+            AND
+                TENANT_ID =#v_TENANTID#
+            AND
+                COMPANYID = #companyID#
+            AND
+                OPINIONGB = '000'
+        </isEqual>
 		<isEqual property="v_MODE" compareValue="TMP">
 			SELECT 
 				* 
@@ -3773,7 +3788,8 @@
 			<isNotEqual property="v_MODE" compareValue="END">
 				<isNotEqual property="v_MODE" compareValue="CAPR">
 					<isNotEqual property="v_MODE" compareValue="CEND">
-						<isNotEqual property="v_MODE" compareValue="TMP">
+                        <isNotEqual property="v_MODE" compareValue="CADD">
+						    <isNotEqual property="v_MODE" compareValue="TMP">
 							SELECT 
 								* 
 							FROM 
@@ -3783,13 +3799,14 @@
 							AND 
 								TENANT_ID =#v_TENANTID#
 							AND
-								COMPANYID = #companyID#									
+								COMPANYID = #companyID#
+                            </isNotEqual>
 						</isNotEqual>
 					</isNotEqual>
 				</isNotEqual>
 			</isNotEqual>
 		</isNotEqual>
-		
+
 		<isNotEmpty property="v_ORDEROPTION" >
 			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="9">
 			<isEqual property="v_ORDEROPTIONVALUE" compareValue="opinionsn">
@@ -25899,7 +25916,7 @@
 		<isEmpty property="v_HASOPINIONYN">
      		HasOpinionYN = 'N',
      	</isEmpty>
-            StartDate = TO_DATE(#v_StartDate#, 'YYYY-MM-DD HH24:MI:SS'), 
+            StartDate = TO_DATE(#v_StartDate#, 'YYYY-MM-DD HH24:MI:SS'),
             EndDate = TO_DATE(#v_EndDate#, 'YYYY-MM-DD HH24:MI:SS'),
             WriterID = #v_WriterID#,
             WriterName = #v_WriterName#,
@@ -35400,5 +35417,91 @@
 				DOCID = #beforeDocID#)
 		]]>
 	</insert>
-	
+
+    <!-- 2023-06-26 민지수 - 완료문서 추가의견 삭제 -->
+    <delete id="EzApprovalG.deleteAddOpinionInfo" parameterClass="Map">
+        DELETE FROM
+            TBL_ENDAPROPINIONINFO
+        WHERE
+            DOCID = #v_DOCID#
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            OPINIONGB = '000'
+    </delete>
+
+    <!-- 완료문서 추가의견 저장 -->
+    <insert id="EzApprovalG.insertAddOptionInfo" parameterClass="map">
+        INSERT INTO
+            TBL_ENDAPROPINIONINFO
+        (DocID,      UserID,     OpinionGB,    Content,      UserName,     UserName2,     UserJobTitle,     UserJobTitle2,     UserDeptID,    UserDeptName,     UserDeptName2,      OpinionSN,   TENANT_ID, COMPANYID)
+        VALUES
+            (#v_DOCID#, #v_USERID#, #v_OPINIONGB#, #v_CONTENT#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2# , #v_OPINIONSN#, #v_TENANTID#, #companyID#)
+    </insert>
+
+    <!-- 완료문서 의견순번 조회 (추가의견 제외) -->
+    <select id="EzApprovalG.selectOpinionSn" parameterClass="map" resultClass="Integer">
+        SELECT
+            MAX(OPINIONSN)
+        FROM
+            TBL_ENDAPROPINIONINFO
+        WHERE
+            DOCID = #v_DOCID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            OPINIONGB != '000'
+    </select>
+
+    <!-- 완료문서 추가의견 존재 / 추가의견을 제외한 의견 존재 여부 조회 -->
+    <select id="EzApprovalG.selectOpinionAddGb" parameterClass="map" resultClass="String">
+        SELECT CASE WHEN EXISTS (
+            SELECT
+                1
+            FROM
+            <isNotEmpty property="v_GongHoiRam">
+                TBL_APROPINIONINFO
+            </isNotEmpty>
+            <isEmpty property="v_GongHoiRam">
+                TBL_ENDAPROPINIONINFO
+            </isEmpty>
+            WHERE
+                DOCID = #v_DOCID#
+            AND
+                COMPANYID = #companyID#
+            AND
+                TENANT_ID = #v_TENANTID#
+            <isEqual property="v_FLAG" compareValue="ADDN"> <!--  추가의견을 제외한 의견 존재 여부 -->
+            AND
+                OPINIONGB != '000'
+            </isEqual>
+            <isEqual property="v_FLAG" compareValue="ADDY"> <!-- 추가의견 존재 여부 -->
+            AND
+                OPINIONGB = '000'
+            </isEqual>
+        )
+        THEN 'TRUE'
+        ELSE 'FALSE'
+        END AS Result
+        FROM DUAL
+    </select>
+
+    <!-- 2023-06-26 민지수 - 완료문서 HASOPINIONYN 조회-->
+    <select id="EzApprovalG.selectHasOpinionYn" parameterClass="map" resultClass="String">
+        SELECT
+            HASOPINIONYN
+        FROM
+            TBL_ENDAPRDOCINFO
+        WHERE
+            DOCID = #v_DOCID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+
 </sqlMap>

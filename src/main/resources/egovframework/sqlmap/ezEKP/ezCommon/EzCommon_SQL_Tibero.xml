@@ -4872,4 +4872,27 @@
 			CONSTRAINT "PK_TBL_USER_CHANGE_INFO" PRIMARY KEY ("SEQ")
 		)
     </statement>
+
+	<!-- 2023-06-26 민지수 - codelist에서 companyid 조회 -->
+	<select id="EzCommonDAO.checkCodeListTypeForCompany" resultClass="String">
+		SELECT
+			COMPANYID
+		FROM
+			TBL_CODELIST
+		WHERE
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			NAME2 = #name2#
+		AND
+			CODE2 = #code2#
+	</select>
+
+	<!-- 2023-06-26 민지수 - codelist에 추가의견타입 추가 -->
+	<insert id="EzCommonDAO.insertOpinionGB">
+		INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID,COMPANYID) VALUES
+			(#code1#, #code2#, #name#, #isuse#,#descript#, #name2#, #name3#, #name4#, #tenantId#, #companyId#)
+	</insert>
+
 </sqlMap>
