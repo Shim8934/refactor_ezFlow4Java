@@ -74,7 +74,7 @@ function setStartPage(event) {
 }
 </script>
 <style type="text/css">
-.mainlist {width : 50%}
+.mainlist {width : 640px}
 .mainlist tr :first-child {width : 120px}
 .mainlist tr :nth-child(3) {width : 150px}
 .mainlist tr :nth-child(4) {width : 150px}
