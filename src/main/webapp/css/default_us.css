@@ -1995,7 +1995,7 @@ form{display:inline;margin:0}
 .statistics_addition dl { float:left; margin:0px 0px 0px 10px;overflow:hidden;}
 .colorbox {display:block; border:1px solid #fff; width:12px; height:10px;}
 .colorbox_wrap {border:1px solid #ced0cb; display:inline-block; margin:0px 2px 0px 0px; padding:0px; float:left; }
-.additiontext { margin:0px; padding:0px; font-size:12px; line-height:18px;  float:left; }
+.additiontext { margin:0px; padding:0px; font-size:12px; line-height:18px;  float:left; padding-right:1px;}
 .gray_textbox { border:1px solid #dddada; background:#fafafa; padding:5px 10px; margin:0px 0px 15px 0px ;   vertical-align:middle; clear:both;}
 
 .adminSystem{padding:33px 0px 0px 15px;}
