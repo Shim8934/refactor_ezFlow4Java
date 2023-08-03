@@ -2047,6 +2047,7 @@
         <![CDATA[
 	       SELECT
                BRD_NM BRDNM ,
+               BRD_NM2 BRDNM2 ,
                HR.DISPLAYNAME OWNERNM ,
                HR.MAIL MAILADDRESS  
             FROM
@@ -2077,6 +2078,7 @@
 				DATE_FORMAT(S.STARTDATE, '%Y-%m-%d %T') STARTDATE, 
 				DATE_FORMAT(S.ENDDATE, '%Y-%m-%d %T') ENDDATE, 
 				T.BRD_NM, 
+				T.BRD_NM2,
 				HR.MAIL
 			FROM
 				TBL_RS_SCHEDULE S

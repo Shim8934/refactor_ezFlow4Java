@@ -3481,7 +3481,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsWrapper .skipArea {display: flex;}
 .prevQsWrapper .skipArea .skipArrow {padding: 0px 30px; height: 24px; padding-top: 9px;}
 .prevQsWrapper .skipArea .skipSpan {font-size: 16px; margin-top: 2px; font-weight: normal;}
-.prevQsWrapper .skipArea .skipSelect {margin-top: 9px;}
+.prevQsWrapper .skipArea .skipSelect {margin-top: 9px; width: 135px;}
 
 /* survey Info Btn */
 .srvyTitle_info{display:inline-block; float:right; cursor:pointer;}
