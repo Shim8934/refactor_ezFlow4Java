@@ -2919,4 +2919,479 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("createExcelAddJobList end");
 		return fileName;
 	}
+
+	public List<OrganUserVO> getExportPermissionsList(String primary, String companyId, int tenantId) throws Exception {
+		logger.debug("getExportPermissionsList started");
+
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("primary",  primary);
+		map.put("companyId",  companyId);
+		map.put("tenantId",  tenantId);
+
+		logger.debug("getExportPermissionsList ended");
+
+		return ezOrganAdminDao.getExportPermissionsList(map);
+	}
+
+	@Override
+	public String createExcelPermissionsList(String realPath, String dirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale) throws Exception {
+		logger.debug("createExcelPermissionsList start");
+
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String fileName            = egovMessageSource.getMessage("ezOrgan.t00005", locale).trim() + "_" + formatter.format(date) + ".xlsx";
+		String filePath            = dirPath + fileName;
+		File file                  = new File(dirPath);
+		File file2                 = new File(filePath);
+
+		// temp 폴더가 없는 경우: 만들거나(mkdir), 폴더 안을 깨끗히 비운다.
+		if (file == null || !file.exists()) {
+			file.mkdirs();
+		}
+		else {
+			FileUtils.cleanDirectory(file);
+		}
+
+		// 같은 이름의 파일이 있을 경우: "파일(2).xlsx"으로 만든다.
+		if (file2.exists()) {
+			int pos         = fileName.lastIndexOf('.');
+			String extend   = fileName.substring(pos + 1);
+			String mainName = fileName.substring(0, pos);
+			int k           = 1;
+			fileName        = mainName + "(" + Integer.toString(k) + ")." + extend;
+			filePath        = dirPath + fileName;
+			file2           = new File(filePath);
+
+			while (file2.exists()) {
+				fileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+				filePath = dirPath + fileName;
+			}
+		}
+
+		// 엑셀 파일 생성(workbook). 시트 이름은(sheet1): "ezOrgan.nj001"
+		FileOutputStream fileOut = null;
+		Workbook workbook = new XSSFWorkbook();
+
+		Sheet sheet1 = workbook.createSheet(egovMessageSource.getMessage("ezOrgan.nj001", locale).trim()); // 시트명은 권한 리스트 - 시트는 하나만 생성한다.
+		sheet1.setDefaultRowHeight((short)500);
+
+		//Set style
+		CellStyle centerStyle = workbook.createCellStyle();
+		centerStyle.setWrapText(false);
+		centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		centerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		CellStyle centerStyle2 = workbook.createCellStyle();
+		centerStyle2.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		CellStyle centerStyle3 = workbook.createCellStyle();
+		centerStyle3.setAlignment(CellStyle.ALIGN_LEFT);
+		centerStyle3.setIndention((short)3);
+		centerStyle3.setVerticalAlignment(CellStyle.VERTICAL_CENTER); //중앙정렬
+
+		//sheet1.setColumnWidth(0, 8 * 256);
+
+		//Process first row 가장 위의 칼럼명 만들고
+		Row rowhead1 = sheet1.createRow(0);
+
+		//첫번째 행의 칼럼들을 순차적으로 만들어준다.
+		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("ezCabinet.t105", locale).trim());// 권한
+		rowhead1.createCell(1).setCellValue(egovMessageSource.getMessage("ezOrgan.t218", locale).trim()); // 아이디
+		rowhead1.createCell(2).setCellValue(egovMessageSource.getMessage("ezOrgan.t67", locale).trim()); // 이름
+		rowhead1.createCell(3).setCellValue(egovMessageSource.getMessage("ezOrgan.t69", locale).trim()); // 직위
+		rowhead1.createCell(4).setCellValue(egovMessageSource.getMessage("ezOrgan.t68", locale).trim()); // 부서
+		rowhead1.createCell(5).setCellValue(egovMessageSource.getMessage("ezOrgan.t91", locale).trim()); // 메일주소
+		rowhead1.createCell(6).setCellValue(egovMessageSource.getMessage("ezOrgan.t95", locale).trim());  // 회사전화
+		rowhead1.createCell(7).setCellValue(egovMessageSource.getMessage("ezOrgan.t123", locale).trim());  // 회사이름
+
+		// 첫번째 행의 칼럼들의 스타일을 만들어준다.
+		rowhead1.getCell(0).setCellStyle(centerStyle);
+		rowhead1.getCell(1).setCellStyle(centerStyle);
+		rowhead1.getCell(2).setCellStyle(centerStyle);
+		rowhead1.getCell(3).setCellStyle(centerStyle);
+		rowhead1.getCell(4).setCellStyle(centerStyle);
+		rowhead1.getCell(5).setCellStyle(centerStyle);
+		rowhead1.getCell(6).setCellStyle(centerStyle);
+		rowhead1.getCell(7).setCellStyle(centerStyle);
+
+		int i = 1;
+
+		String permission = "";
+
+		// 액셀 라이브러리가 지원하는 row수: 65536건
+		// 사용자의 권한을 타입별로 나눠준다 (전체관리자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("c=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.t291", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (회사관리자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("k=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.t293", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (부서관리자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("g=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.t295", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (수발신담당자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("a=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.t292", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (심사자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("i=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.t294", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (게시판관리자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("n=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.t297", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (설문관리자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("l=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.t296", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (업무담당자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("w=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.t301", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (기록물관리책임자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("m=1")) {
+				permission = egovMessageSource.getMessage("ezApprovalG.t1753", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (결재조회관리자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("f=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.lhj1", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (웹폴더관리자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("wf=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.t303", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		// 사용자의 권한을 타입별로 나눠준다 (근태관리자)
+		for (OrganUserVO exportPermissionInfo : exportPermissionList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			if (exportPermissionInfo.getExtensionAttribute1().contains("e=1")) {
+				permission = egovMessageSource.getMessage("ezOrgan.kbm01", locale).trim();
+
+				newRow1.createCell(0).setCellValue(permission); // 권한
+				newRow1.createCell(1).setCellValue(exportPermissionInfo.getCn()); // 아이디
+				newRow1.createCell(2).setCellValue(exportPermissionInfo.getDisplayName()); // 이름
+				newRow1.createCell(3).setCellValue(exportPermissionInfo.getTitle()); // 직위
+				newRow1.createCell(4).setCellValue(exportPermissionInfo.getDescription()); // 부서
+				newRow1.createCell(5).setCellValue(exportPermissionInfo.getMail()); // 메일
+				newRow1.createCell(6).setCellValue(exportPermissionInfo.getTelephoneNumber()); // 회사전화
+				newRow1.createCell(7).setCellValue(exportPermissionInfo.getCompany()); // 회사이름
+
+				newRow1.getCell(0).setCellStyle(centerStyle2);
+				newRow1.getCell(1).setCellStyle(centerStyle2);
+				newRow1.getCell(2).setCellStyle(centerStyle2);
+				newRow1.getCell(3).setCellStyle(centerStyle2);
+				newRow1.getCell(4).setCellStyle(centerStyle2);
+				newRow1.getCell(5).setCellStyle(centerStyle2);
+				newRow1.getCell(6).setCellStyle(centerStyle2);
+				newRow1.getCell(7).setCellStyle(centerStyle2);
+
+				i++;
+			}
+		}
+
+		sheet1.setColumnWidth(0, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(1, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(2, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(3, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(4, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(5, ((int)(45 * 1.14388)) * 256); // 메일란
+		sheet1.setColumnWidth(6, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(7, ((int)(15 * 1.14388)) * 256);
+
+//		sheet1.autoSizeColumn(0);
+
+		try {
+			fileOut = new FileOutputStream(filePath);
+			workbook.write(fileOut);
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+			//fileOut.close();
+			IOUtils.closeQuietly(fileOut);
+			workbook.close();
+		}
+		logger.debug("createExcelPermissionsList end");
+		return fileName;
+	}
 }

@@ -5574,6 +5574,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 //		String selectedId     = request.getParameter("selectedId") != null ? request.getParameter("selectedId") : "";	
 //		logger.debug("selectedId: " + selectedId);
 		String isAddJob = request.getParameter("isAddJob") != null ? request.getParameter("isAddJob"): "";
+		String isPermissionsList = request.getParameter("isPermissionsList") != null ? request.getParameter("isPermissionsList") : "";
 
  		LoginVO userInfo = commonUtil.userInfo(loginCookie);
  		JSONObject result = new JSONObject();
@@ -5601,6 +5602,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				String pDirPath = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
 				pDirPath = realPath + pDirPath + "temp" + commonUtil.separator;
 				excelPath = ezOrganAdminService.createExcelAddJobList(realPath + commonUtil.separator, pDirPath, exportAddJobList, primary, locale);
+
+			} else if ("Y".equalsIgnoreCase(isPermissionsList)) {
+				List<OrganUserVO> exportPermissionList = ezOrganAdminService.getExportPermissionsList(primary, companyId, tenantId);
+				String realPath              = request.getServletContext().getRealPath("");
+				String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+				pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
+				excelPath             = ezOrganAdminService.createExcelPermissionsList(realPath + commonUtil.separator, pDirPath, exportPermissionList, primary, locale);
 			} else {
 				List<OrganUserVO> exportUserlist = ezOrganAdminService.getExportUserList(primary, companyId, tenantId);
 				String realPath              = request.getServletContext().getRealPath("");
