@@ -85,7 +85,17 @@
 		<result property="title" 								column="title" 							columnIndex="6"/>
 		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="7"/>
 	</resultMap>
-	
+
+	<resultMap id="exportAddJobListInfo" class="OrganUserVO">
+		<result property="company" 								column="company" 						columnIndex="1"/>
+		<result property="description" 							column="description" 					columnIndex="2"/>
+		<result property="title" 								column="title" 							columnIndex="3"/>
+		<result property="cn" 									column="cn" 							columnIndex="4"/>
+		<result property="displayName" 							column="displayName"					columnIndex="5"/>
+		<result property="addJobDeptNM" 						column="addJobDeptNM" 					columnIndex="6"/>
+		<result property="addJobTitle" 							column="addJobTitle" 					columnIndex="7"/>
+	</resultMap>
+
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -7757,5 +7767,30 @@
 			A.DEPTID = D.CN AND A.TENANT_ID = D.TENANT_ID
 		WHERE 
 			A.CN = #CN# AND A.DEPTID = #DEPTID#
+	</select>
+
+	<select id="EzOrganAdminDAO.getExportAddJobList" parameterClass="Map" resultMap="exportAddJobListInfo">
+		SELECT
+			CASE       WHEN #primary# = '1'       THEN C.COMPANY            ELSE C.COMPANY2     		 END COMPANY,
+			CASE       WHEN #primary# = '1'       THEN C.DESCRIPTION        ELSE C.DESCRIPTION2     	 END DESCRIPTION,
+			CASE       WHEN #primary# = '1'       THEN C.TITLE              ELSE C.TITLE2       		 END TITLE,
+			A.CN,
+			CASE       WHEN #primary# = '1'       THEN C.DISPLAYNAME        ELSE C.DISPLAYNAME2     	 END DISPLAYNAME,
+			CASE       WHEN #primary# = '1'       THEN B.DISPLAYNAME 		ELSE B.DISPLAYNAME2    		 END ADDJOBDEPTNM,
+			CASE       WHEN #primary# = '1'       THEN A.TITLE              ELSE A.TITLE2       		 END ADDJOBTITLE
+		FROM
+			TBL_ADDJOBMASTER A
+		JOIN
+			TBL_DEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+		JOIN
+			TBL_USERMASTER C   ON A.CN = C.CN AND A.TENANT_ID = C.TENANT_ID
+		WHERE
+			A.TENANT_ID = #tenantId#
+		<isNotEmpty property="companyId">
+			AND
+				C.PHYSICALDELIVERYOFFICENAME = #companyId#
+		</isNotEmpty>
+		ORDER BY
+			C.PHYSICALDELIVERYOFFICENAME, C.DISPLAYNAME, B.DISPLAYNAME , C.EXTENSIONATTRIBUTE15
 	</select>
 </sqlMap>

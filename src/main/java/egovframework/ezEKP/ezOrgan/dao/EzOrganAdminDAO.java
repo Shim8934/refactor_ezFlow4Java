@@ -2392,4 +2392,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return (OrganUserVO) select ("EzOrganAdminDAO.getAddJobInfo",map);
 	}
 
+	public List<OrganUserVO> getExportAddJobList(Map<String, Object> map) throws Exception {
+		return (List<OrganUserVO>) list("EzOrganAdminDAO.getExportAddJobList", map);
+	}
+
 }

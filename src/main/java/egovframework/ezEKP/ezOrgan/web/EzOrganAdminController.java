@@ -5573,6 +5573,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// 기능 확장 시 쓸 수 있음. (선택한 부서부터) 
 //		String selectedId     = request.getParameter("selectedId") != null ? request.getParameter("selectedId") : "";	
 //		logger.debug("selectedId: " + selectedId);
+		String isAddJob = request.getParameter("isAddJob") != null ? request.getParameter("isAddJob"): "";
 
  		LoginVO userInfo = commonUtil.userInfo(loginCookie);
  		JSONObject result = new JSONObject();
@@ -5590,12 +5591,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String primary   = userInfo.getPrimary();
 			String companyId = isRollC? "" : userInfo.getCompanyID();
 			int tenantId     = userInfo.getTenantId();
-			
-			List<OrganUserVO> exportUserlist = ezOrganAdminService.getExportUserList(primary, companyId, tenantId);
-			String realPath              = request.getServletContext().getRealPath("");
-			String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
-			pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
-			String excelPath             = ezOrganAdminService.createExcelUsers(realPath + commonUtil.separator, pDirPath, exportUserlist, primary, locale);
+
+			String excelPath = "";
+
+			// 겸직 리스트 요청이라면
+			if ("Y".equalsIgnoreCase(isAddJob)) {
+				List<OrganUserVO> exportAddJobList = ezOrganAdminService.getExportAddJobList(primary, companyId, tenantId);
+				String realPath = request.getServletContext().getRealPath("");
+				String pDirPath = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+				pDirPath = realPath + pDirPath + "temp" + commonUtil.separator;
+				excelPath = ezOrganAdminService.createExcelAddJobList(realPath + commonUtil.separator, pDirPath, exportAddJobList, primary, locale);
+			} else {
+				List<OrganUserVO> exportUserlist = ezOrganAdminService.getExportUserList(primary, companyId, tenantId);
+				String realPath              = request.getServletContext().getRealPath("");
+				String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+				pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
+				excelPath             = ezOrganAdminService.createExcelUsers(realPath + commonUtil.separator, pDirPath, exportUserlist, primary, locale);
+			}
 			
 			if (excelPath.equals("")) {
 				result.put("status", "error");

@@ -183,4 +183,9 @@ public interface EzOrganAdminService {
 	public OrganDeptVO getDeptDisplayNm(String cn, int tenantID) throws Exception;
 	
 	public OrganUserVO getAddJobInfo(String cn, String deptId) throws Exception;
+
+	public List<OrganUserVO> getExportAddJobList(String primary, String companyId, int tenantId) throws Exception;
+
+	public String createExcelAddJobList(String realPath, String dirPath, List<OrganUserVO> exportAddJobList, String primary, Locale locale) throws Exception;
+
 }

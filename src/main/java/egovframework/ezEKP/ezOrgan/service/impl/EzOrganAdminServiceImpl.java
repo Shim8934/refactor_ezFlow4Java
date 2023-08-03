@@ -2780,4 +2780,143 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return ezOrganAdminDao.getAddJobInfo(map);
 	}
 
+	public List<OrganUserVO> getExportAddJobList(String primary, String companyId, int tenantId) throws Exception {
+		logger.debug("getExportAddJobList started");
+
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("primary",  primary);
+		map.put("companyId",  companyId);
+		map.put("tenantId",  tenantId);
+
+		logger.debug("getExportAddJobList ended");
+
+		return ezOrganAdminDao.getExportAddJobList(map);
+	}
+
+	@Override
+	public String createExcelAddJobList(String realPath, String dirPath, List<OrganUserVO> exportAddJobList, String primary, Locale locale) throws Exception {
+		logger.debug("createExcelAddJobList start");
+
+		Date date                  = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String fileName            = egovMessageSource.getMessage("ezOrgan.t00013", locale).trim() + "_" + formatter.format(date) + ".xlsx";
+		String filePath            = dirPath + fileName;
+		File file                  = new File(dirPath);
+		File file2                 = new File(filePath);
+
+		// temp 폴더가 없는 경우: 만들거나(mkdir), 폴더 안을 깨끗히 비운다.
+		if (file == null || !file.exists()) {
+			file.mkdirs();
+		} else {
+			FileUtils.cleanDirectory(file);
+		}
+
+		// 같은 이름의 파일이 있을 경우: "파일(2).xlsx"으로 만든다.
+		if (file2.exists()) {
+			int pos         = fileName.lastIndexOf('.');
+			String extend   = fileName.substring(pos + 1);
+			String mainName = fileName.substring(0, pos);
+			int k           = 1;
+			fileName        = mainName + "(" + Integer.toString(k) + ")." + extend;
+			filePath        = dirPath + fileName;
+			file2           = new File(filePath);
+
+			while (file2.exists()) {
+				fileName = mainName + "(" + Integer.toString(++k) + ")." + extend;
+				filePath = dirPath + fileName;
+			}
+		}
+
+		// 엑셀 파일 생성(workbook). 시트 이름은(sheet1): "ezOrgan.t00017"
+		FileOutputStream fileOut = null;
+		Workbook workbook = new XSSFWorkbook();
+
+		Sheet sheet1 = workbook.createSheet(egovMessageSource.getMessage("ezOrgan.t00017", locale).trim()); // 겸직자 리스트
+		sheet1.setDefaultRowHeight((short)500);
+
+		//Set style
+		CellStyle centerStyle = workbook.createCellStyle();
+		centerStyle.setWrapText(false);
+		centerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		centerStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		CellStyle centerStyle2 = workbook.createCellStyle();
+		centerStyle2.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		CellStyle centerStyle3 = workbook.createCellStyle();
+		centerStyle3.setAlignment(CellStyle.ALIGN_LEFT);
+		centerStyle3.setIndention((short)3);
+		centerStyle3.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+
+		//sheet1.setColumnWidth(0, 8 * 256);
+
+		//Process first row 가장 위의 칼럼명 만들고
+		Row rowhead1 = sheet1.createRow(0);
+
+		rowhead1.createCell(0).setCellValue(egovMessageSource.getMessage("ezAttitude.t218", locale).trim()); // 아이디
+		rowhead1.createCell(1).setCellValue(egovMessageSource.getMessage("ezOrgan.t67", locale).trim()); //이름
+		rowhead1.createCell(2).setCellValue(egovMessageSource.getMessage("ezOrgan.t69", locale).trim()); // 직위 (원부서)
+		rowhead1.createCell(3).setCellValue(egovMessageSource.getMessage("ezOrgan.t68", locale).trim()); // 원부서
+		rowhead1.createCell(4).setCellValue(egovMessageSource.getMessage("ezOrgan.t123", locale).trim()); // 회사이름
+		rowhead1.createCell(5).setCellValue(egovMessageSource.getMessage("ezOrgan.t9905", locale).trim()); // 겸직 부서명
+		rowhead1.createCell(6).setCellValue(egovMessageSource.getMessage("ezOrgan.t69", locale).trim());  // 겸직 직위
+
+		rowhead1.getCell(0).setCellStyle(centerStyle);
+		rowhead1.getCell(1).setCellStyle(centerStyle);
+		rowhead1.getCell(2).setCellStyle(centerStyle);
+		rowhead1.getCell(3).setCellStyle(centerStyle);
+		rowhead1.getCell(4).setCellStyle(centerStyle);
+		rowhead1.getCell(5).setCellStyle(centerStyle);
+		rowhead1.getCell(6).setCellStyle(centerStyle);
+
+		int i = 1;
+
+		// 액셀 라이브러리가 지원하는 row수: 65536건
+		for (OrganUserVO exportAddJobInfo : exportAddJobList) {
+			Row newRow1 = sheet1.createRow(i);
+
+			newRow1.createCell(0).setCellValue(exportAddJobInfo.getCn());
+			newRow1.createCell(1).setCellValue(exportAddJobInfo.getDisplayName());
+			newRow1.createCell(2).setCellValue(exportAddJobInfo.getTitle());
+			newRow1.createCell(3).setCellValue(exportAddJobInfo.getDescription());
+			newRow1.createCell(4).setCellValue(exportAddJobInfo.getCompany());
+			newRow1.createCell(5).setCellValue(exportAddJobInfo.getAddJobDeptNM());
+			newRow1.createCell(6).setCellValue(exportAddJobInfo.getAddJobTitle());
+
+			newRow1.getCell(0).setCellStyle(centerStyle2);
+			newRow1.getCell(1).setCellStyle(centerStyle2);
+			newRow1.getCell(2).setCellStyle(centerStyle2);
+			newRow1.getCell(3).setCellStyle(centerStyle2);
+			newRow1.getCell(4).setCellStyle(centerStyle2);
+			newRow1.getCell(5).setCellStyle(centerStyle2);
+			newRow1.getCell(6).setCellStyle(centerStyle2);
+
+			i++;
+		}
+
+		sheet1.setColumnWidth(0, ((int)(25 * 1.14388)) * 256);
+		sheet1.setColumnWidth(1, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(2, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(3, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(4, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(5, ((int)(15 * 1.14388)) * 256);
+		sheet1.setColumnWidth(6, ((int)(15 * 1.14388)) * 256);
+//		sheet1.autoSizeColumn(0);
+
+		try {
+			fileOut = new FileOutputStream(filePath);
+			workbook.write(fileOut);
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			// 2023-05-16 이사라 : NullPointerException 시큐어코딩
+			//fileOut.close();
+			IOUtils.closeQuietly(fileOut);
+			workbook.close();
+		}
+		logger.debug("createExcelAddJobList end");
+		return fileName;
+	}
 }
