@@ -966,7 +966,7 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 
 /* Image Dialog CSS */
 
-.kk_editor .kk_editor_dialog .kk_dialog_image { width: 400px; }
+.kk_editor .kk_editor_dialog .kk_dialog_image { width: 550px; }
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents { background-color: #ffffff;}
 
 .kk_editor .kk_editor_dialog .kk_dialog_image .kk_dialog_contents .kk_image_dialog_table_td_label { text-align: left; user-select: none;}
