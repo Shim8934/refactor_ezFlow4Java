@@ -1215,7 +1215,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 				String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 				Locale locale;
-				
+
+				String lang = ezCommonService.getTenantConfig("useSecondaryLang", tenantId);
+				if ("YES".equals(lang)){
+					primaryLang="2";
+				}
+
 				switch (primaryLang) {
 				case "1":
 					locale = Locale.KOREA;
