@@ -4451,10 +4451,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 			
 		}
-
 		String displayName = (request.getParameter("displayName") != null ? request.getParameter("displayName") : "");
-		String companyName = ezOrganAdminService.getCompanyName(displayName, user.getTenantId());
-		companyName = companyName + ":" + user.getPrimary();
+
+		String lang = user.getPrimary();
+		String companyName = ezOrganAdminService.getCompanyName(displayName, user.getTenantId(), lang);
+		companyName = companyName + ":" + lang;
 		logger.debug("addJobCompanyName ended.");
 		return companyName;
 	}
