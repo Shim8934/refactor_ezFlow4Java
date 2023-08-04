@@ -630,7 +630,7 @@
 		            		} else if (result == "EMAIL_ERROR") {
 		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t25' />");
 		            		} else {
-		            			alert("'" + selectedValue + "'<spring:message code='ezOrgan.t27' />");
+		            			alert("'" + selectedValue + "' <spring:message code='ezOrgan.t27' />");
 				                getDeptFullTree(selectedCN);
 		            		}
 		            	},
