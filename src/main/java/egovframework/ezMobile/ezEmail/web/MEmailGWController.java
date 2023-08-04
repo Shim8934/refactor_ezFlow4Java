@@ -418,8 +418,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("status", "error");
+			result.put("code", 1);			
 			result.put("data", "");	
 		
 		}
@@ -5713,10 +5713,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("status", "error");
+			result.put("code", 1);			
 			result.put("data", "");	
-		
 		}
         
 		logger.debug("MOBILE G/W MAIL getAddressSubFolder ended.");
@@ -5778,8 +5777,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("status", "error");
+			result.put("code", 1);			
 			result.put("data", "");	
 		
 		}
@@ -5843,8 +5842,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("status", "error");
+			result.put("code", 1);			
 			result.put("data", "");	
 		
 		}
