@@ -5285,7 +5285,10 @@
 
 	<select id="EzOrganAdminDAO.getCompanyName" parameterClass="map" resultClass="String">
 		SELECT
-			EXTENSIONATTRIBUTE3
+			CASE WHEN #v_LANG# = '1'
+			THEN EXTENSIONATTRIBUTE3
+			ELSE COMPNM2
+			END EXTENSIONATTRIBUTE3
 		FROM
 			TBL_DEPTMASTER
 		WHERE

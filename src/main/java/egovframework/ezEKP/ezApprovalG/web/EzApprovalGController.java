@@ -555,8 +555,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// 2022-02-11 박기범 : 직책이 없을경우 null이 들어오는 경우 체크 추가
 		String userGetTitle = userInfo.getTitle() != null ? userInfo.getTitle() : "";
 		String userRealTitle = orgUserInfolist.get(0).getTitle() != null ? orgUserInfolist.get(0).getTitle() : "";
+		String userRealTitle2 = orgUserInfolist.get(0).getTitle() != null ? orgUserInfolist.get(0).getTitle2() : "";
 
-		if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle)) {
+		/* 2023-08-04 민지수 - 부재자 설정값 다국어 처리 */
+		if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle) && !userLang.equals("2")) {
+			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		} else if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle2) && userLang.equals("2")) {
 			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		} else {
 			//buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());

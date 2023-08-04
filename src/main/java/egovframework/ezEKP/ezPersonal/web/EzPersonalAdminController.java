@@ -548,9 +548,17 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<CELL>"); 
 			result.append("<VALUE>" + Math.subtractExact(totalCount, Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(currentPage, 1)), i)) + "</VALUE>");	// number
 			result.append("</CELL>");
-			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");		// title
-			result.append("</CELL>");
+			//2023-08-03 이주원 - 빠른 설문 제목 다국어 표시
+			if (userInfo.getLang().equals("2")){
+				result.append("<CELL>");
+				result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle2()) + "</VALUE>");		// title
+				result.append("</CELL>");
+			} else {
+				result.append("<CELL>");
+				result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");		// title
+				result.append("</CELL>");
+			}
+
 			result.append("<CELL>");
 			result.append("<VALUE>" + startDate.substring(0, 10) + "</VALUE>");	// startDate
 			result.append("</CELL>");
