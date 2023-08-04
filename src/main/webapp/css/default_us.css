@@ -2737,7 +2737,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .categoryPic{float:left; width:91px; height:64px; margin:0px 20px 0px 0px; padding:0px; border:1px solid #e2e3e6;}
 .categoryInfo{float:left; width:calc(100% - 113px); margin:0px; padding:0px; color:#333333; font-size:12px; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .categoryInfo dt{margin:0px; padding:0px;}
-.categoryInfo dt.sort{height:18px; margin:0px 0px 8px 0px; padding:0px 6px; line-height:18px; text-align:center; background:#999; color:#ffffff; font-size:12px; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; display:inline-block;}
+.categoryInfo dt.sort{height:18px; margin:0px 0px 8px 0px; padding:0px 6px; line-height:18px; text-align:center; background:#999; color:#ffffff; font-size:12px; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; display:inline-block; max-width:100%; box-sizing:border-box; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .categoryInfo dt.sortBlue{background:#0dbeff;}
 .categoryInfo dt.sortGreen{background:#81bc3d;}
 .categoryInfo dt.sortOrange{background:#ff8f1e;}
