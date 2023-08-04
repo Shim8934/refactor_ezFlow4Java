@@ -4002,12 +4002,22 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		for (CommunityBoardItemReadVO vo : readerList) {
 			String userTitle = "";
 			String userDeptName = "";
-			if(vo.getUserTitle() != null){
+
+			// 2023-08-04 황인경 - 커뮤니티 > 게시판 > 조회자 정보 > 다국어 처리
+			if (!lang.equals("1")) {
+				vo.setUserName(vo.getUserName2());
+				vo.setUserTitle(vo.getUserTitle2());
+				vo.setUserDeptName(vo.getUserDeptName2());
+				vo.setUserCompanyName(vo.getUserCompanyName2());
+			}
+
+			if (vo.getUserTitle() != null) {
 				userTitle = vo.getUserTitle();
 			}
-			if( vo.getUserDeptName() != null){
+			if (vo.getUserDeptName() != null) {
 				userDeptName =  vo.getUserDeptName();
 			}
+
 			resultXML.append("<ROW>");
 			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><DEPTID><![CDATA[" + vo.getDeptID() + "]]></DEPTID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
