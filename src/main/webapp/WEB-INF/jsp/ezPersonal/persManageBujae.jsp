@@ -589,11 +589,11 @@
 				</tr>
 				<tr id="TR_Appoint_1" deptId="${userInfo.deptID}">
 					<th><spring:message code='ezPersonal.t31'/></th>
-					<td>
+					<td style="padding:3px 4px;">
 						<input type="text" name="TextName_1" id="TextName_1" Width="120" value="${textName}" deptId="" userId="" ReadOnly />
-						<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('', 'TextName_1')"><spring:message code='ezPersonal.t32'/></span></a> 
-		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName_1').value=''; $('#TextName_1').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', ''); $('#TR_Select_${status.count+1}').show();"><spring:message code='ezPersonal.t33'/></span></a>
-		                ${userInfo.deptName} [${userInfo.title}]
+						<a class="imgbtn imgbck" style="vertical-align:middle; margin-bottom:1px;"><span onclick="gIsAppoint = '1';select_person('', 'TextName_1')"><spring:message code='ezPersonal.t32'/></span></a> 
+		                <a class="imgbtn imgbck" style="vertical-align:middle; margin-bottom:1px;"><span onClick="gIsAppoint = '2';document.getElementById('TextName_1').value=''; $('#TextName_1').attr('check','clear'); $('#TextName_${status.count+1}').attr('deptId', ''); $('#TextName_${status.count+1}').attr('userId', ''); $('#TR_Select_${status.count+1}').show();"><spring:message code='ezPersonal.t33'/></span></a>
+		                <p style="margin:5px 0 0 0; line-height:1.3;">${userInfo.deptName} [${userInfo.title}]</p>
 					</td>
 				</tr>
 				<%-- <c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">

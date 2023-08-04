@@ -131,7 +131,7 @@ public interface EzOrganAdminService {
 
 	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
 
-	public String getCompanyName(String displayName, int tenantID) throws Exception;
+	public String getCompanyName(String displayName, int tenantID, String lang) throws Exception;
 	
 	public String insertPermissionGroup(String groupID, String groupName, String createID, String companyID, int tenantID, List<String> groupMemberList) throws Exception;
 	

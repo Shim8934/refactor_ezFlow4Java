@@ -401,7 +401,7 @@
 				selrow = listview.GetSelectedRows();
 
 				if(selrow.length <= 0){
-					alert("선택된 자원이 없습니다.");
+					alert(strLang253);
 					return false;
 				}
 
@@ -835,56 +835,113 @@
 		</script>
 	</head>
 	<body class="mainbody" style="overflow: auto;" id="BodyTop">
-		<xml id="listviewheader" style="display:none">
-			<LISTVIEWDATA>
-    			<HEADERS>
-        			<HEADER>
-            			<NAME>CHECK</NAME>
-            			<WIDTH>2%</WIDTH>
-        			</HEADER>
-        			<HEADER>
-            			<NAME><spring:message code='ezResource.t191'/></NAME>
-            			<WIDTH>4%</WIDTH>
-        			</HEADER>   
-        			<HEADER>
-            			<NAME><spring:message code='ezResource.t224'/></NAME>
-            			<WIDTH>35%</WIDTH>
-        			</HEADER>
-        			<HEADER>
-            			<NAME><spring:message code='ezResource.t202'/></NAME>
-            			<WIDTH>8%</WIDTH>
-        			</HEADER>
-        			<HEADER>
-            			<NAME><spring:message code='ezResource.t212'/></NAME>
-            			<WIDTH>8%</WIDTH>
-        			</HEADER>
-        			<HEADER>
-            			<NAME><spring:message code='ezResource.t132'/></NAME>
-            			<WIDTH>8%</WIDTH>
-        			</HEADER>  
-        			<%-- <HEADER>
-            			<NAME><spring:message code='ezResource.t37'/></NAME>
-            			<WIDTH>5%</WIDTH>
-        			</HEADER> --%>
-        			<HEADER>
-            			<NAME><spring:message code='ezResource.t2003'/></NAME>
-            			<WIDTH>5%</WIDTH>
-        			</HEADER>  
-        			<HEADER>
-            			<NAME><spring:message code='ezResource.t195'/></NAME>
-            			<WIDTH>6%</WIDTH>
-        			</HEADER>
-        			<HEADER>
-            			<NAME><spring:message code='ezResource.kmsr29'/></NAME>
-            			<WIDTH>6%</WIDTH>
-        			</HEADER> 
-        			<HEADER>
-            			<NAME><spring:message code='ezResource.t2004'/></NAME>
-            			<WIDTH>6%</WIDTH>
-        			</HEADER> 					
-    			</HEADERS>
-			</LISTVIEWDATA>
-		</xml>
+		<!-- 2023-08-02 황인경 - 자원관리 > 자원예약목록, 나의 예약현황 > 리스트 헤더 영역 > 다국어 비율 조절 -->
+		<c:choose>
+			<c:when test="${userInfo.lang == 1}">
+				<xml id="listviewheader" style="display:none">
+					<LISTVIEWDATA>
+		    			<HEADERS>
+		        			<HEADER>
+		            			<NAME>CHECK</NAME>
+		            			<WIDTH>2%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t191'/></NAME>
+		            			<WIDTH>4%</WIDTH>
+		        			</HEADER>   
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t224'/></NAME>
+		            			<WIDTH>35%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t202'/></NAME>
+		            			<WIDTH>8%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t212'/></NAME>
+		            			<WIDTH>8%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t132'/></NAME>
+		            			<WIDTH>8%</WIDTH>
+		        			</HEADER>  
+		        			<%-- <HEADER>
+		            			<NAME><spring:message code='ezResource.t37'/></NAME>
+		            			<WIDTH>5%</WIDTH>
+		        			</HEADER> --%>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t2003'/></NAME>
+		            			<WIDTH>5%</WIDTH>
+		        			</HEADER>  
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t195'/></NAME>
+		            			<WIDTH>6%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.kmsr29'/></NAME>
+		            			<WIDTH>6%</WIDTH>
+		        			</HEADER> 
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t2004'/></NAME>
+		            			<WIDTH>6%</WIDTH>
+		        			</HEADER> 					
+		    			</HEADERS>
+					</LISTVIEWDATA>
+				</xml>
+			</c:when>
+			<c:otherwise>
+				<xml id="listviewheader" style="display:none">
+					<LISTVIEWDATA>
+		    			<HEADERS>
+		        			<HEADER>
+		            			<NAME>CHECK</NAME>
+		            			<WIDTH>2%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t191'/></NAME>
+		            			<WIDTH>4%</WIDTH>
+		        			</HEADER>   
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t224'/></NAME>
+		            			<WIDTH>25%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t202'/></NAME>
+		            			<WIDTH>8%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t212'/></NAME>
+		            			<WIDTH>8%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t132'/></NAME>
+		            			<WIDTH>8%</WIDTH>
+		        			</HEADER>  
+		        			<%-- <HEADER>
+		            			<NAME><spring:message code='ezResource.t37'/></NAME>
+		            			<WIDTH>5%</WIDTH>
+		        			</HEADER> --%>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t2003'/></NAME>
+		            			<WIDTH>10%</WIDTH>
+		        			</HEADER>  
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t195'/></NAME>
+		            			<WIDTH>8%</WIDTH>
+		        			</HEADER>
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.kmsr29'/></NAME>
+		            			<WIDTH>6%</WIDTH>
+		        			</HEADER> 
+		        			<HEADER>
+		            			<NAME><spring:message code='ezResource.t2004'/></NAME>
+		            			<WIDTH>9%</WIDTH>
+		        			</HEADER> 					
+		    			</HEADERS>
+					</LISTVIEWDATA>
+				</xml>
+			</c:otherwise>
+		</c:choose>
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
     	<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}' /></h1>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

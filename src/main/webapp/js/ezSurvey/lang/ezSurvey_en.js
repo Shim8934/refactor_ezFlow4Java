@@ -161,7 +161,7 @@ var SurveyMessages = {
 	strPopup     : "팝업 공지 여부를 지정해 주세요.",
 	strSend      : "Send",
 	strNotSend   : "Do not send",
-	strCancelMsg : "Do you want to cancel?.",
+	strCancelMsg : "Do you want to cancel?",
 	
 	/* 2021-12-10 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "Unacceptable extension.",
