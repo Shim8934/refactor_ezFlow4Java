@@ -172,7 +172,14 @@
 		<table class="content">
   			<tr>
     			<th><spring:message code="ezResource.t44" /></th>
-    			<td><c:out value="${getBrdInfo.brdNm}" /><input type=hidden id="UPPER_NM" name="UPPER_NM"  value="<c:out value="${getBrdInfo.brdNm}" />"></td>
+    			<c:choose>
+                    <c:when test="${userInfo.lang eq 1}">
+                        <td><c:out value="${getBrdInfo.brdNm}" /><input type=hidden id="UPPER_NM" name="UPPER_NM"  value="<c:out value="${getBrdInfo.brdNm}" />"></td>
+                    </c:when>
+                    <c:otherwise>
+                        <td><c:out value="${getBrdInfo.brdNm2}" /><input type=hidden id="UPPER_NM" name="UPPER_NM"  value="<c:out value="${getBrdInfo.brdNm2}" />"></td>
+                    </c:otherwise>
+                </c:choose>
   			</tr>
 		</table>
 		<br>

@@ -958,7 +958,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		/* 2020-02-14 홍승비 - 항목명 다국어 처리를 위한 파라미터 추가 */
 		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
-		
+
+		model.addAttribute("lang_user", userInfo.getLang());
 		model.addAttribute("lang_primary", lang_primary);
 		model.addAttribute("lang_secondary", lang_secondary);
 		
@@ -1012,7 +1013,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		List<BoardAttributeVO> list = ezBoardAdminService.getBoardHeader(boardAttributeVO.getColType(), boardAttributeVO.getBoardID(), userInfo.getTenantId());
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ROWS>");
 		
@@ -1031,7 +1032,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				} else if (userInfo.getLang().equals("4")) {
 					sb.append("<CELL><VALUE>" + obj.getColName4() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
 				}
-				
+
 				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getValue() + "</VALUE></CELL>");
 				sb.append("</ROW>");
@@ -1098,7 +1099,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String isAllGroupBoard = "";
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
-		
+
 		/* 2018-10-17 홍승비 - 그룹사게시판이라면 권한설정 버튼을 숨긴다. */
 		String boardGroupID = boardProperty.getBoardGroupID();
 		// 하위게시판인 경우
@@ -1114,9 +1115,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				isAllGroupBoard = "Y";
 			}
 		}
-		
+
 		String boardName = boardProperty.getBoardName();
-		
+
+		if (primary.equals("2")) {
+			boardName = boardProperty.getBoardName2();
+		}
+
 		/* 게시판 권한설정 시 companyID 조건 추가, 겸직한 사원의 경우 해당 겸직정보를 표출함 + 다국어 대응하도록 정보 가져옴 */
 		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId());
 		
