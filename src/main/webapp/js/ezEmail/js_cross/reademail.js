@@ -2,6 +2,7 @@
 
 var m_bPrevNext = false;
 var real_href = "";
+var minimumWidth = 890;
 
 function get_mail(flag) {
     var Flag;
@@ -52,9 +53,11 @@ function get_mail(flag) {
 function ReSend(pURL, pEmail) {
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
+    if (conWidth > minimumWidth)
+        conWidth = minimumWidth;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail);
@@ -105,9 +108,11 @@ function encoding_mail() {
 function reply_onClick() {
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
+    if (conWidth > minimumWidth)
+        conWidth = minimumWidth;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     
     var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=REPLY";
     
@@ -121,9 +126,12 @@ function reply_onClick() {
 function allreply_onClick() {
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
+    if (conWidth > minimumWidth)
+        conWidth = minimumWidth;
+    var pwidth = window.screen.availWidth;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     
     var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=REPLYALL";
     
@@ -137,9 +145,11 @@ function allreply_onClick() {
 function pass_onClick() {
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
+    if (conWidth > minimumWidth)
+        conWidth = minimumWidth;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     
     var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=FORWARD";
     
