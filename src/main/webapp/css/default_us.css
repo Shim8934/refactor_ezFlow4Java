@@ -3716,3 +3716,6 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 
 /* 관리자 페이지 lnb 수정 */
 #left .adminListBox h2{height:auto !important; padding:14px 10px 14px 23px !important; line-height:1.5 !important; white-space:normal;}
+#left .adminListBox .tree_admin_stats + .h2_text{line-height:1.5; height:auto; width:calc(100% - 16px); box-sizing:border-box; white-space:normal; text-overflow:unset; overflow:visible; padding:7px 0 7px 5px;}
+#left .adminListBox .tree_admin_stats + .h2_text:hover{font-weight:normal;}
+#left .adminListBox h2.on .tree_arrow_up{margin:2px 0 0 0;}
