@@ -511,7 +511,7 @@ public class EzScheduleAdminController {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
-			logger.debug("여기로 들어온다고??");
+			logger.debug("scheduleSaveLunarUse accessDenied");
 			return "0";
 		}else{
 			

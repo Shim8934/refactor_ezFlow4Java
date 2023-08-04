@@ -40,6 +40,8 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -384,9 +386,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/organRight.do", method = RequestMethod.GET)
 	public String organRight(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
-		LoginVO user = commonUtil.userInfo(loginCookie);		
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (user == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1054,9 +1056,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/selectDept.do", method = RequestMethod.GET)	
 	public String selectDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		LoginVO user = commonUtil.userInfo(loginCookie);		
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (user == null) {
 			return "cmm/error/adminDenied";
 		}
 				
@@ -1296,6 +1298,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezOrgan/inputPassword.do", method = RequestMethod.GET)
 	public String inputPassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		int tenantId = userInfo.getTenantId();
 		
@@ -2836,9 +2842,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String addJobConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("addJobConfig started.");
 	    
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (user == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2906,9 +2912,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String permissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 	    logger.debug("permissionsList started.");
 	    
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (user == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -3060,10 +3066,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String permissionsCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 	    logger.debug("permissionsCheck started.");
 	    
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (user == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -3119,10 +3125,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String retireUserManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("retireUserManage started");
 	    
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (user == null) {
 			return "cmm/error/adminDenied";
 		}
 		String companyId = user.getCompanyID();
@@ -3366,9 +3372,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String configEmail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("configEmail started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		//관리자 권한 체크
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -3436,9 +3442,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		try {
 			//관리자 권한 체크
-			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 			
-			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			if (userInfo == null) {
 				return returnValue;
 			}
 			
@@ -3524,8 +3530,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		try {
 			//관리자 권한 체크
-			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+			if (userInfo == null) {
 				return returnValue;
 			}
 			int tenantId = userInfo.getTenantId();
@@ -3549,10 +3555,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     public String configUserQuota(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
         logger.debug("configUserQuota started.");
         
-        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
         
         //관리자 권한 체크
-        if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+        if (userInfo == null) {
             return "cmm/error/adminDenied";
         }
         int tenantID = userInfo.getTenantId();        
@@ -3603,8 +3609,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         try {
             //관리자 권한 체크
-            LoginVO userInfo = commonUtil.userInfo(loginCookie);
-            if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+            LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+            if (userInfo == null) {
                 return returnValue;
             }
             
@@ -3707,7 +3713,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		try {
 			// 전체관리자 권한 체크
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			
+
 			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 				return returnValue;
 			}
@@ -3744,9 +3750,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String returnValue = "ERROR";
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -3778,17 +3783,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/setUseDisablePop3Imap.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String setUseDisablePop3Imap(@CookieValue("loginCookie") String loginCookie
+	public ResponseEntity<String> setUseDisablePop3Imap(@CookieValue("loginCookie") String loginCookie
 			, HttpServletRequest req) throws Exception	 {
 		
 		logger.debug("setUseDisablePop3Imap started.");
 		
 		String returnValue = "ERROR"; 
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
+		if (userInfo == null) {
+			logger.debug("setUseDisablePop3Imap accessDenied.");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		
 		int tenantIdNum = userInfo.getTenantId();
@@ -3808,7 +3815,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("setUseDisablePop3Imap ended.");
 		
-		return returnValue;
+		return ResponseEntity.ok().body(returnValue);
 	}
 	
 	/**
@@ -3816,13 +3823,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/admin/ezOrgan/getComanyConfig.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String getComanyConfig(
-			@CookieValue("loginCookie") String loginCookie, Locale locale,
-			Model model,  HttpServletRequest request) throws Exception{
+	public ResponseEntity<String> getComanyConfig(
+			@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
 		//관리자 권한체크
-		LoginVO auth = commonUtil.aprCheckAdmin(loginCookie);
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			logger.debug("getComanyConfig accessDenied.");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		
 		String companyID = request.getParameter("cn");
@@ -3841,7 +3849,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("operatorMailId=" + operatorMailId);
 		logger.debug("getComanyConfig ended.");
-		return operatorMailId;
+		return ResponseEntity.ok().body(operatorMailId);
 	}
 	
 	private boolean createThumbnail(File sourceFile, File targetFile) {
@@ -4046,9 +4054,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String jobTitleList(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobInfoList started.");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -4081,9 +4089,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String jobTitlePopupUI(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitlePopupUI started.");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -4116,13 +4124,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleAction.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jobTitleAction(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+	public ResponseEntity<String> jobTitleAction(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleAction started.");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
+		if (userInfo == null) {
+			logger.debug("jobTitleAction accessDenied.");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 
 		String jobID = request.getParameter("jobID");
@@ -4144,7 +4154,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("Action mode = " + mode + " | " + "Action result = " + result);
 		logger.debug("jobTitleAction ended.");
 		
-		return result;
+		return ResponseEntity.ok().body(result);
 	}
 	/*
 	 * 직함관리 직위/직책 리스트 호출 메서드
@@ -4170,13 +4180,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * */
 	@RequestMapping(value="/admin/ezOrgan/jobTitleDelete.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
 	@ResponseBody
-	public String jobTitleDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+	public ResponseEntity<String> jobTitleDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleListView started.");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("jobTitleListView accessDenied.");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		
 		String jobIDList = request.getParameter("jobIDList");
@@ -4186,7 +4198,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String result = ezOrganAdminService.deleteTitle(type, jobIDList, companyID, userInfo.getTenantId());
 		
 		logger.debug("jobTitleListView ended.");
-		return result;
+		return ResponseEntity.ok().body(result);
 	}
 	/*
 	 * 직함관리 직위/직책 사용중인 사용자 리스트 호출 메서드
@@ -4391,15 +4403,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("saveUserPermissionInfo started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		int tenantId = userInfo.getTenantId();
-		String id = userInfo.getId();
-		String ip = ClientUtil.getClientIP(request);
-		boolean modeCkh = "mode".equalsIgnoreCase(mode); // 권한 모두 삭제를 제외한 경우
-
 		// 관리자 권한 체크
 		if (userInfo == null) {
 			return "EMAIL_ERROR";
 		}
+
+		int tenantId = userInfo.getTenantId();
+		String id = userInfo.getId();
+		String ip = ClientUtil.getClientIP(request);
+		boolean modeCkh = "mode".equalsIgnoreCase(mode); // 권한 모두 삭제를 제외한 경우
 
 		// 권한 널체크
 		if(extensionAttribute1.length == 0) {
@@ -4490,13 +4502,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("saveStoreUserPermissionInfo started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		int tenantId = userInfo.getTenantId();
-		String id = userInfo.getId();
-
 		// 관리자 권한 체크
 		if (userInfo == null) {
 			return "EMAIL_ERROR";
 		}
+
+		int tenantId = userInfo.getTenantId();
+		String id = userInfo.getId();
 
 		// 권한 널체크
 		if(extensionAttribute1.length == 0) {
@@ -4577,9 +4589,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String addJobUserModify(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addJobUserModify started.");
 
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (user == null) {
 			return "cmm/error/adminDenied";
 		}
 
@@ -4619,21 +4631,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/addJobCompanyName.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
-	public String addJobCompanyName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public ResponseEntity<String> addJobCompanyName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("addJobCompanyName started.");
 
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-			
+		if (user == null) {
+			logger.debug("addJobCompanyName accessDenied.");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 
 		String displayName = (request.getParameter("displayName") != null ? request.getParameter("displayName") : "");
 		String companyName = ezOrganAdminService.getCompanyName(displayName, user.getTenantId());
 		companyName = companyName + ":" + user.getPrimary();
 		logger.debug("addJobCompanyName ended.");
-		return companyName;
+		return ResponseEntity.ok().body(companyName);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -4729,11 +4742,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String loginStop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("loginStop started");
 	    
-		LoginVO user = commonUtil.userInfo(loginCookie);
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
 		int rollCheck = 0;
 		
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (user == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -4857,19 +4870,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/admin/ezOrgan/setPermissionGroup.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String setPermissionGroup(
-			@CookieValue("loginCookie") String loginCookie, Locale locale,
-			Model model, @RequestBody String bodyData) throws Exception {
+	public ResponseEntity<String> setPermissionGroup(
+			@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData) throws Exception {
 		logger.debug("setPermissionGroup started.");
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			logger.debug("setPermissionGroup accessDenied.");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-		
-		
-		
+
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 		String groupName = doc.getElementsByTagName("NAME").item(0).getTextContent();
@@ -4916,7 +4928,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("setPermissionGroup ended.");
 
-		return result;
+		return ResponseEntity.ok().body(result);
 	}
 	@RequestMapping(value = "/admin/ezOrgan/getPermissionGroupList.do", method = RequestMethod.POST)	
 	public String getPermissionGroupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -5103,12 +5115,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/admin/ezOrgan/deletePermissionGroupList.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String deletePermissionGroupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ResponseEntity<String> deletePermissionGroupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 	    logger.debug("deletePermissionGroupList started.");
 	    
         LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
         String result = "ERROR";
-        
+
+		if (userInfo == null) {
+			logger.debug("deletePermissionGroupList accessDenied.");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
         try {
         	int tenantID = userInfo.getTenantId();        
             String groupList = request.getParameter("groupList");
@@ -5128,7 +5146,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("deletePermissionGroupList ended.");
 
-		return result;
+		return ResponseEntity.ok().body(result);
 	}
 	
 	
@@ -5539,10 +5557,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
  	@RequestMapping(value = "/admin/ezOrgan/configEmailAdd.do")
  	public String configEmailAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
  		logger.debug("configEmailAdd started.");
- 		
- 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
- 		//관리자 권한 체크
- 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		//관리자 권한 체크
+		if (userInfo == null) {
  			return "cmm/error/adminDenied";
  		}
  		

@@ -21,6 +21,8 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -70,6 +72,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		logger.debug("portalMain started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("portalMain accessDenied.");
+
+			return "cmm/error/adminDenied";
+		}
 		
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
@@ -80,16 +88,10 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         
         model.addAttribute("packageType", packageType);
         model.addAttribute("usePortal", usePortal);
-		
-		if (userInfo == null) {
-			logger.debug("portalMain accessDenied.");
-			
-			return "cmm/error/adminDenied";
-		} else {
-			logger.debug("portalMain ended.");
-			
-			return "/admin/ezNewPortal/portalMain";
-		}
+
+		logger.debug("portalMain ended.");
+
+		return "/admin/ezNewPortal/portalMain";
 	}
 	
 	/**
@@ -101,22 +103,22 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		logger.debug("portalLeftMenu started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("portalLeftMenu accessDenied.");
+
+			return "cmm/error/adminDenied";
+		}
 		
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		String usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
         
         model.addAttribute("packageType", packageType);
         model.addAttribute("usePortal", usePortal);
-		
-		if (userInfo == null) {
-			logger.debug("portalLeftMenu accessDenied.");
-			
-			return "cmm/error/adminDenied";
-		} else {
-			logger.debug("portalLeftMenu ended.");
-			
-			return "/admin/ezNewPortal/portalLeftMenu";
-		}
+
+		logger.debug("portalLeftMenu ended.");
+
+		return "/admin/ezNewPortal/portalLeftMenu";
 	}
 	
 	/**
@@ -784,9 +786,16 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/getSubBoards.do", method=RequestMethod.POST)
 	@ResponseBody
-	public JSONArray getSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, @RequestBody Map<String, Object> paramMap, Model model) throws Exception {
+	public ResponseEntity<JSONArray> getSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, @RequestBody Map<String, Object> paramMap, Model model) throws Exception {
 		logger.debug("getSubBoards started.");
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("getSubBoards accessDenied.");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new JSONArray());
+		}
+
 		String userId = userInfo.getId();
 		String companyId = paramMap.get("companyId").toString();
 		JSONArray subBoards = new JSONArray();
@@ -803,7 +812,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("getSubBoards ended.");
-		return subBoards;
+		return ResponseEntity.ok().body(subBoards);
 	}
 	
 	/**
@@ -935,28 +944,25 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/uploadLogo.do", produces = "text/plain; charset=utf-8", method=RequestMethod.POST)
 	@ResponseBody
-	public String updateCompanyLogo(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+	public String updateCompanyLogo(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request) throws Exception {
 		logger.debug("updateCompanyLogo started");
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		String logoType = request.getParameter("logoType");
+
+		if (userInfo == null ||
+				"L".equalsIgnoreCase(logoType) && !userInfo.getRollInfo().contains("c=1")) {
+			return "rejected";
+		}
+
 		String companyId = request.getParameter("companyId").toString();
 		String url = "/rest/admin/ezPortal/logos/companies/" + companyId;
 		String userId = userInfo.getId();
-		String logoType = request.getParameter("logoType");
 		JSONObject json = new JSONObject();
 		json.put("userId", userId);
         json.put("logoType", logoType);
         String logoUrl = "";
 
-        if (logoType.equals("L")) {
-        	LoginVO adminCheck = commonUtil.checkAdmin(loginCookie);
-        	String isAdmin = adminCheck.getRollInfo();
-        	
-        	if (isAdmin.indexOf("c=1") == -1) {
-        		logoUrl = "rejected";
-        		return logoUrl;
-        	}
-        	
-        }
 		MultipartFile multiFile = request.getFile("file");
 		
 		String realPath = request.getServletContext().getRealPath("");

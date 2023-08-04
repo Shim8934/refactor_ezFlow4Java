@@ -18,6 +18,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -25,6 +26,8 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -113,6 +116,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("personalLeft started");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
         //baonk 추가
         String pollFlag = "";
@@ -141,6 +147,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("manageNotice started");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -164,10 +173,16 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageNoticeList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String manageNoticeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public ResponseEntity<String> manageNoticeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("manageNoticeList started");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("manageNoticeList accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
 		
 		String companyID = request.getParameter("id");
 		int currentPage = Integer.parseInt(request.getParameter("page"));
@@ -212,7 +227,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		result.append("</ROWS></LISTVIEWDATA>");
 		
 		logger.debug("manageNoticeList ended");
-		return result.toString();
+		return ResponseEntity.ok().body(result.toString());
 	}
 	
 	/**
@@ -475,6 +490,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("managePoll started");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
 		String companyId = userInfo.getCompanyID();
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -763,6 +782,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("managePopup started");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
 		String noneActiveX = config.getProperty("NONEACTIVEX");
 		String useEditor = config.getProperty("EDITOR");
 		String companyId = userInfo.getCompanyID();
