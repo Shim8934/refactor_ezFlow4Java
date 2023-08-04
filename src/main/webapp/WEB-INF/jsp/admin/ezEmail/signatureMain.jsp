@@ -63,6 +63,8 @@
 	                _NODATA.style.border = "none";
 	                _NODATA.style.borderBottom = "1px solid #f2f2f2";
 	                _NODATA.style.padding = "0";
+					_NODATA.style.display = "flex";
+					_NODATA.style.justifyContent = "space-between";
 	                _NODATA.innerHTML = "<spring:message code='ezStatistics.t1008'/>";
 	                
 					_TR.appendChild(_NODATA);
@@ -100,6 +102,7 @@
 	                _SPAN.style.overflow = "hidden";
 	                _SPAN.style.textOverflow = "ellipsis";
 	                _SPAN.style.marginLeft = "6px";
+					_SPAN.style.flex = "1";
 	                _TD.appendChild(_SPAN);
 	                _TR.appendChild(_TD);
 	                
