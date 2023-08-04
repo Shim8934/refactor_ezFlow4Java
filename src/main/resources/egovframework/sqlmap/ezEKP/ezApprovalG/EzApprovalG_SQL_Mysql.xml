@@ -5778,7 +5778,7 @@
 				TASKNAME,
 				TASKNAME2,
 				B.SUBCATEGORYCODE,
-				C.NAME$lang$,
+				C.NAME$lang$ NAME,
 				ITEMSECURITY,
 				ISPUBLIC,
 				(SELECT
