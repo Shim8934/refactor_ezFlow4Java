@@ -97,7 +97,7 @@
 	                _SPAN.style.lineHeight = "30px";
 	                _SPAN.style.float = "left";
 	                _SPAN.style.display = "inline-block";
-	                _SPAN.style.width = "228px";
+	                _SPAN.style.width = "235px";
 	                _SPAN.style.whiteSpace = "nowrap";
 	                _SPAN.style.overflow = "hidden";
 	                _SPAN.style.textOverflow = "ellipsis";
