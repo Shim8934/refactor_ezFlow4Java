@@ -1099,7 +1099,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String isAllGroupBoard = "";
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
-		
+
 		/* 2018-10-17 홍승비 - 그룹사게시판이라면 권한설정 버튼을 숨긴다. */
 		String boardGroupID = boardProperty.getBoardGroupID();
 		// 하위게시판인 경우
@@ -1115,9 +1115,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				isAllGroupBoard = "Y";
 			}
 		}
-		
+
 		String boardName = boardProperty.getBoardName();
-		
+
+		if (primary.equals("2")) {
+			boardName = boardProperty.getBoardName2();
+		}
+
 		/* 게시판 권한설정 시 companyID 조건 추가, 겸직한 사원의 경우 해당 겸직정보를 표출함 + 다국어 대응하도록 정보 가져옴 */
 		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId());
 		
