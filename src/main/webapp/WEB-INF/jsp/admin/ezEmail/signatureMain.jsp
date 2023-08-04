@@ -63,8 +63,6 @@
 	                _NODATA.style.border = "none";
 	                _NODATA.style.borderBottom = "1px solid #f2f2f2";
 	                _NODATA.style.padding = "0";
-					_NODATA.style.display = "flex";
-					_NODATA.style.justifyContent = "space-between";
 	                _NODATA.innerHTML = "<spring:message code='ezStatistics.t1008'/>";
 	                
 					_TR.appendChild(_NODATA);
@@ -86,7 +84,9 @@
 	                _TD.style.borderBottom = "1px solid #f2f2f2";
 	                _TD.style.padding = "0 6px";
 	                _TD.style.boxSizing = "border-box";
-	                
+	                _TD.style.display = "flex";
+	                _TD.style.justifyContent = "space-tween";
+
 	                if (userLang != '1') {
 	                	_SPAN.innerText = json[Cnt].displayname2;
 		                _SPAN.title = json[Cnt].displayname2;
