@@ -20,7 +20,6 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

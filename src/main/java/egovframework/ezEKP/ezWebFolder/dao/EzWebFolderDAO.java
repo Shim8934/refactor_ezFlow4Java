@@ -313,8 +313,8 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 		insert("EzWebFolderDAO.insertEncryptedFile", map);
 	}
 
-	public void deleteEncryptedFile(Map<String, Object> map) {
-		delete("EzWebFolderDAO.deleteEncryptedFile", map);
+	public void deleteEncryptedLatestVersion(Map<String, Object> map) {
+		delete("EzWebFolderDAO.deleteEncryptedLatestVersion", map);
 	}
 
 	public void deleteEncryptedAllVersions(Map<String, Object> map) {

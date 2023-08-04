@@ -20,14 +20,11 @@ import egovframework.com.cmm.EgovMessageSource;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.taimos.totp.TOTP;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;

@@ -3441,6 +3441,33 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
    ) ;
 
 --------------------------------------------------------
+--  DDL for Table TBL_USER_CHANGE_INFO
+--------------------------------------------------------
+	
+  CREATE table "TBL_USER_CHANGE_INFO" 
+	("SEQ"		 		NUMBER(19,0),
+	"USERID" 			NVARCHAR2(50),
+	"USERNM" 			NVARCHAR2(100),
+	"USERNM2" 			NVARCHAR2(100),
+	"DEPTID" 			CHAR(50 CHAR),
+	"DEPTNM" 			NVARCHAR2(100),
+	"DEPTNM2" 			NVARCHAR2(100),
+	"COMPANYID" 		CHAR(50 CHAR),
+	"COMPANYNM" 		NVARCHAR2(100),
+	"COMPANYNM2" 		NVARCHAR2(100),
+	"UPDATEDT" 			DATE,
+	"TARGET_DEPTID" 	CHAR(50 CHAR),
+	"TARGET_DEPTNM" 	NVARCHAR2(100),
+	"TARGET_DEPTNM2" 	NVARCHAR2(100),
+	"UPDATE_TYPE" 		NVARCHAR2(50),
+	"EXECUTORID" 		NVARCHAR2(50),
+	"EXECUTORNM" 		NVARCHAR2(100),
+	"EXECUTORNM2" 		NVARCHAR2(100),
+	"EXECUTORIP" 		VARCHAR2(50 CHAR),
+	"TENANTID" 			NUMBER DEFAULT 0
+	);
+	
+--------------------------------------------------------
 --  DDL for Table TBL_CONTAINER
 --------------------------------------------------------
 
@@ -8855,6 +8882,11 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
    CREATE SEQUENCE  "SEQ_TBL_PERMISSION_CHANGE_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_USER_CHANGE_INFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_USER_CHANGE_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
    --------------------------------------------------------
 --  DDL for Sequence SEQ_TBL_C_BOARD
 --------------------------------------------------------
@@ -9439,6 +9471,12 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE INDEX "I_JMS_MIL_MAIL_MODSEQ" ON "JAMES_MAIL" ("MAIL_MODSEQ") 
+  ;
+--------------------------------------------------------
+--  DDL for Index JAMES_MAIL_MAIL_DATE_IDX
+--------------------------------------------------------
+
+  CREATE INDEX "JAMES_MAIL_MAIL_DATE_IDX" ON "JAMES_MAIL" ("MAIL_DATE")
   ;
 --------------------------------------------------------
 --  DDL for Index JAMES_MAIL_BLOB_PK
@@ -10189,6 +10227,13 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "PK_TBL_PERMISSION_CHANGE_INFO" ON "TBL_PERMISSION_CHANGE_INFO" ("SEQUENCE")
+  ;
+
+--------------------------------------------------------
+--  DDL for Index PK_TBL_USER_CHANGE_INFO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_USER_CHANGE_INFO" ON "TBL_USER_CHANGE_INFO" ("SEQ")
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_BOARD
@@ -15276,6 +15321,15 @@ END;
   ALTER TABLE "TBL_PERMISSION_CHANGE_INFO" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "TBL_PERMISSION_CHANGE_INFO" MODIFY ("AUTHORIZERID" NOT NULL ENABLE);
   ALTER TABLE "TBL_PERMISSION_CHANGE_INFO" MODIFY ("SEQUENCE" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_USER_CHANGE_INFO
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_USER_CHANGE_INFO" ADD CONSTRAINT "PK_TBL_USER_CHANGE_INFO" PRIMARY KEY ("SEQ")
+  USING INDEX;
+  ALTER TABLE "TBL_USER_CHANGE_INFO" MODIFY ("TENANTID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_USER_CHANGE_INFO" MODIFY ("USERID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_USER_CHANGE_INFO" MODIFY ("SEQ" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_CONTAINER
 --------------------------------------------------------

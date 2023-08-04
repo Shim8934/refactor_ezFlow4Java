@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGConnDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGConnService;
 import org.w3c.dom.Document;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 

@@ -3,7 +3,6 @@ package egovframework.ezMobile.ezCommon.web;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import javax.annotation.Resource;

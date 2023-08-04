@@ -55,7 +55,8 @@
 			var BlockSize = 10;
 			var positionX = 0;
 			var positionY = 0;
-	    	
+			var exportingExcel = false;
+
 	    	document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 	                return false;
@@ -879,7 +880,68 @@
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
                         "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
-		    
+
+			// 2023-06-26 남진구 - '조직도>겸직관리>엑셀 내려받기'
+			function excelExport() {
+				if (exportingExcel) {
+					return;
+				}
+
+				showProgress();
+				exportingExcel = true;
+
+				$.ajax({
+					type: "POST",
+					url: "/admin/ezOrgan/exportFileLogs.do",
+					data: {
+						"selectedId"  : "",
+						isAddJob : "Y"
+					},
+					dataType: "JSON",
+					async: true,
+					success : function(data) {
+						var code = data.code;
+
+						switch(code) {
+							case 0:
+								var url = "/admin/ezOrgan/downloadExcel.do?fileName=" + encodeURIComponent(data.path);
+								AttachDownFrame.location.href = url;
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
+						}
+					},
+					error : function(error) {
+						alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					}
+				}).complete(function() {
+					hideProgress();
+					exportingExcel = false;
+				});
+			}
+
+			function showProgress() {
+				// $('#progressPanel').width() = 220, $('#loadingLayer').width() = 168
+				var leftSize = (window.innerWidth - 388)/2 + "px"
+				document.getElementById("loadingLayer").style.left = leftSize;
+
+				document.getElementById("progressPanel").style.display = "";
+				document.getElementById("loadingLayer").style.display = "";
+
+				parent.document.getElementById("lef").contentWindow.showProgress();
+			}
+
+			function hideProgress() {
+				document.getElementById("progressPanel").style.display = "none";
+				document.getElementById("loadingLayer").style.display = "none";
+
+				parent.document.getElementById("lef").contentWindow.hideProgress();
+			}
+
 			// xml data -> input checkbox method
 			var cnt;
 			var checkbox_header = function() {
@@ -1057,6 +1119,7 @@
 					<c:if test="${useExternalMailServer eq 'NO'}">
 		            <li onClick="email_onclick()"><span class="icon16 icon16_mail_gray"></span></li>
 		            </c:if>
+					<li id="btnSave"><span onClick="excelExport()"><spring:message code='ezStatistics.t1003' /></span></li>
 		        </ul>
 		    </div>
 		    <script type="text/javascript">
@@ -1098,7 +1161,10 @@
 		            </td>
 		        </tr>
 		    </table>    
-		</form>         
+		</form>
+		<iframe name="AttachDownFrame" id="AttachDownFrame" style="display:none"></iframe>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
+		<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>
 	</body>
 	<script type="text/javascript">
 	    /* Tab1_NewTabIni("tab1"); */

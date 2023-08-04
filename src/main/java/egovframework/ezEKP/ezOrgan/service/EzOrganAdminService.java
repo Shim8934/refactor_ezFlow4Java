@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganAdminService {
@@ -176,5 +177,19 @@ public interface EzOrganAdminService {
 	public List<String> getAutoDeleteOfRetireUserList(int tenantId, int days) throws Exception;
 
 	void insertPermissionChHist(List<PermissionInfoVO> vo) throws Exception;
+
+	public OrganUserVO getUserDeptInfo(String cn, int tenantID) throws Exception;
+	
+	public OrganDeptVO getDeptDisplayNm(String cn, int tenantID) throws Exception;
+	
+	public OrganUserVO getAddJobInfo(String cn, String deptId) throws Exception;
+
+	public List<OrganUserVO> getExportAddJobList(String primary, String companyId, int tenantId) throws Exception;
+
+	public String createExcelAddJobList(String realPath, String dirPath, List<OrganUserVO> exportAddJobList, String primary, Locale locale) throws Exception;
+
+	public List<OrganUserVO> getExportPermissionsList(String primary, String companyId, int tenantId) throws Exception;
+
+	public String createExcelPermissionsList(String realPath, String pDirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale) throws Exception;
 
 }

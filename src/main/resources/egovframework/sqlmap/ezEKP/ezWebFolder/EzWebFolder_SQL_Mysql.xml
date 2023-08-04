@@ -2051,7 +2051,7 @@
 		]]>
 	</insert>
 
-	<delete id="EzWebFolderDAO.deleteEncryptedFile">
+	<delete id="EzWebFolderDAO.deleteEncryptedLatestVersion">
 		<![CDATA[
 				DELETE A
 				FROM

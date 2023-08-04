@@ -10,6 +10,7 @@
 	<typeAlias alias="PasswordPolicyVO" type="egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO"/>
 	<typeAlias alias="MainVO" type="egovframework.let.main.vo.MainVO"/>
 	<typeAlias alias="PermissionInfoVO"	type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO" />
+	<typeAlias alias="UserChangeInfoVO"	type="egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO" />
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -780,4 +781,159 @@
 		    TENANT_ID=#tenantId#
 		]]>
 	</update>
+	
+	<insert id="EzSystemAdminDAO.insertUserChangeHist" parameterClass="UserChangeInfoVO">
+	<![CDATA[
+		INSERT INTO
+			TBL_USER_CHANGE_INFO 
+			(USERID, USERNM, USERNM2, DEPTID, DEPTNM, DEPTNM2, COMPANYID, COMPANYNM, COMPANYNM2, UPDATEDT, TARGET_DEPTID, TARGET_DEPTNM, TARGET_DEPTNM2, UPDATE_TYPE, EXECUTORID, EXECUTORNM, EXECUTORNM2, EXECUTORIP, TENANTID)
+			(SELECT 
+					CN,
+					DISPLAYNAME,
+					DISPLAYNAME2,]]>
+		<isEqual property="updateType" compareValue="mvDept">
+		<![CDATA[	#deptId#,
+					#deptNm#,
+					#deptNm2#,]]>
+		</isEqual>
+		<isNotEqual property="updateType" compareValue="mvDept">
+		<![CDATA[	DEPARTMENT,
+					DESCRIPTION,
+					DESCRIPTION2,]]>
+		</isNotEqual>
+		<![CDATA[	PHYSICALDELIVERYOFFICENAME,
+					COMPANY,
+					COMPANY2,]]>	
+		<isEqual property="targetType" compareValue="addJob">
+		  <![CDATA[ #updatedt#, ]]>
+		</isEqual>
+		<isNotEqual property="targetType" compareValue="addJob">
+		  <![CDATA[ UPDATEDT, ]]>				
+		</isNotEqual>			
+		  <![CDATA[	#targetDeptId#,
+					#targetDeptNm#,
+					#targetDeptNm2#,
+					#updateType#,
+					#executorId#,
+					#executorNm#,
+					#executorNm2#,
+					#executorIp#,
+					TENANT_ID
+			FROM 	]]>
+		<isEqual property="updateType" compareValue="retire">
+					TBL_USERMASTER_RETIRE
+		</isEqual>
+		<isEqual property="updateType" compareValue="delete">
+					TBL_USERMASTER_DELETE
+		</isEqual>	
+		<isNotEqual property="updateType" compareValue="retire">
+			<isNotEqual property="updateType" compareValue="delete">
+					TBL_USERMASTER
+			</isNotEqual>
+		</isNotEqual>
+					WHERE CN = #userId#)				
+	</insert>
+	
+		<sql id="EzSystemAdminDAO.searchQueryForUserChList">
+		<isNotEqual property="companyId" compareValue="Top/organ" prepend="and">
+			COMPANYID = #companyId#
+		</isNotEqual>
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword">
+				<isEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2	LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="3">
+						DEPTNM2	LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="4">
+						TARGET_DEPTNM2 LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="5">
+						<![CDATA[
+						EXECUTORID <> 'ez_sync' 
+						AND (EXECUTORID	LIKE CONCAT('%', #search_keyword#,'%') OR EXECUTORNM2 LIKE CONCAT('%', #search_keyword#,'%'))
+						]]>
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE	CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="3">
+						DEPTNM LIKE	CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="4">
+						TARGET_DEPTNM LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="5">
+					<![CDATA[
+						EXECUTORID <> 'ez_sync' 
+						AND (EXECUTORID	LIKE CONCAT('%', #search_keyword#,'%') OR EXECUTORNM LIKE CONCAT('%', #search_keyword#,'%'))
+					]]>	
+					</isEqual>
+				</isNotEqual>
+				<isEqual property="search_keycode" compareValue="2" >
+						USERID LIKE CONCAT('%', #search_keyword#,'%')
+				</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="search_keycodeForType" prepend="and">
+			UPDATE_TYPE LIKE #search_keycodeForType#
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(UPDATEDT,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(UPDATEDT,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="EzSystemAdminDAO.getUserChHistList" parameterClass="map" resultClass="UserChangeInfoVO">
+		SELECT DATE_ADD(DATE_FORMAT(UPDATEDT, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS UPDATEDT,
+			SEQ,
+			USERID,
+			USERNM,
+			USERNM2,
+			DEPTID,
+			DEPTNM,
+			DEPTNM2,
+			COMPANYID,
+			COMPANYNM,
+			COMPANYNM2,
+			UPDATEDT,
+			TARGET_DEPTID AS targetDeptId,
+			TARGET_DEPTNM AS targetDeptNm,
+			TARGET_DEPTNM2 AS targetDeptNm2,
+			UPDATE_TYPE AS updateType,
+			EXECUTORID,
+			EXECUTORNM,
+			EXECUTORNM2,
+			EXECUTORIP,
+			TENANTID
+		FROM
+			TBL_USER_CHANGE_INFO 
+		WHERE
+			TENANTID=#v_tenantID# 
+		<include
+			refid="EzSystemAdminDAO.searchQueryForUserChList" />
+		ORDER BY	SEQ DESC
+		<isNotEqual property="v_start" compareValue="-1">
+			LIMIT	#v_start#, #pageCount#
+		</isNotEqual>
+	</select>
+	
+	<select id="EzSystemAdminDAO.getUserChHistListCount" parameterClass="map" resultClass="int">
+		SELECT COUNT(SEQ)
+		FROM TBL_USER_CHANGE_INFO
+		WHERE TENANTID = #v_tenantID#
+		<include
+			refid="EzSystemAdminDAO.searchQueryForUserChList" />
+	</select>
+	
 </sqlMap>

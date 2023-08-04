@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGJsonService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGServiceImpl;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;

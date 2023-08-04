@@ -6,10 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +60,6 @@ import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
@@ -974,7 +971,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			fileList = ezWebFolderAdminDAO.getDecryptedAllSubFilePath(map);
 		} else {
 			transformFunc = klibUtil::decrypt;
-			updateFunc = ezWebFolderService::deleteEncryptedFile;
+			updateFunc = ezWebFolderService::deleteEncryptedLatestVersion;
 			fileList = ezWebFolderAdminDAO.getEncryptedAllSubFilePath(map);
 		}
 

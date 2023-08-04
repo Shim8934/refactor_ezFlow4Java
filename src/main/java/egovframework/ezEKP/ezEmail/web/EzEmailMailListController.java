@@ -31,7 +31,6 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.core.pattern.EqualsIgnoreCaseReplacementConverter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;

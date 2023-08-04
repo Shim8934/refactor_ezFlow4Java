@@ -85,7 +85,27 @@
 		<result property="title" 								column="title" 							columnIndex="6"/>
 		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="7"/>
 	</resultMap>
-	
+
+	<resultMap id="exportAddJobListInfo" class="OrganUserVO">
+		<result property="company" 								column="company" 						columnIndex="1"/>
+		<result property="description" 							column="description" 					columnIndex="2"/>
+		<result property="title" 								column="title" 							columnIndex="3"/>
+		<result property="cn" 									column="cn" 							columnIndex="4"/>
+		<result property="displayName" 							column="displayName"					columnIndex="5"/>
+		<result property="addJobDeptNM" 						column="addJobDeptNM" 					columnIndex="6"/>
+		<result property="addJobTitle" 							column="addJobTitle" 					columnIndex="7"/>
+	</resultMap>
+
+	<resultMap id="exportPermissionsList" class="OrganUserVO">
+		<result property="extensionAttribute1" 					column="extensionAttribute1" 			columnIndex="1"/>
+		<result property="cn" 									column="cn" 							columnIndex="2"/>
+		<result property="displayName" 							column="displayName"					columnIndex="3"/>
+		<result property="title" 								column="title" 							columnIndex="4"/>
+		<result property="description" 							column="description" 					columnIndex="5"/>
+		<result property="mail" 								column="mail" 							columnIndex="6"/>
+		<result property="telephoneNumber" 						column="telephoneNumber" 				columnIndex="7"/>
+		<result property="company" 								column="company" 						columnIndex="8"/>
+	</resultMap>
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -5822,5 +5842,91 @@
 			AND 	u.TENANT_ID = #tenant_id#
 		]]>
 	</insert>
+	
+	<select id="EzOrganAdminDAO.getUserDeptInfo" parameterClass="OrganUserVO" resultClass="OrganUserVO">
+		SELECT DEPARTMENT, DESCRIPTION, DESCRIPTION2
+		FROM TBL_USERMASTER
+		WHERE CN = #cn#
+		AND TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzOrganAdminDAO.getDeptDisplayNm" parameterClass="OrganDeptVO" resultClass="OrganDeptVO">
+		SELECT DISPLAYNAME, DISPLAYNAME2
+		FROM TBL_DEPTMASTER
+		WHERE CN = #cn#
+		AND TENANT_ID = #tenantId#
+	</select>
+
+	<select id="EzOrganAdminDAO.getAddJobInfo" parameterClass="map" resultClass="OrganUserVO">
+		SELECT 
+			A.TITLE, 
+			A.TITLE2 AS title1, 
+			A.TENANT_ID,
+			D.DISPLAYNAME AS description, 
+			D.DISPLAYNAME2 AS description1
+		FROM 
+			TBL_ADDJOBMASTER A JOIN TBL_DEPTMASTER D 
+		ON 
+			A.DEPTID = D.CN AND A.TENANT_ID = D.TENANT_ID
+		WHERE 
+			A.CN = #CN# AND A.DEPTID = #DEPTID#
+	</select>
+
+	<select id="EzOrganAdminDAO.getExportAddJobList" parameterClass="Map" resultMap="exportAddJobListInfo">
+		SELECT
+			CASE       WHEN #primary# = '1'       THEN C.COMPANY            ELSE C.COMPANY2     		 END COMPANY,
+			CASE       WHEN #primary# = '1'       THEN C.DESCRIPTION        ELSE C.DESCRIPTION2     	 END DESCRIPTION,
+			CASE	   WHEN #primary# = '1'       THEN C.TITLE              ELSE C.TITLE2                END TITLE,
+			A.CN,
+			CASE       WHEN #primary# = '1'       THEN C.DISPLAYNAME        ELSE C.DISPLAYNAME2     	 END DISPLAYNAME,
+			CASE       WHEN #primary# = '1'       THEN B.DISPLAYNAME 		ELSE B.DISPLAYNAME2    		 END ADDJOBDEPTNM,
+			CASE       WHEN #primary# = '1'       THEN A.TITLE              ELSE A.TITLE2       		 END ADDJOBTITLE
+		FROM
+			TBL_ADDJOBMASTER A
+		JOIN
+			TBL_DEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+		JOIN
+			TBL_USERMASTER C   ON A.CN = C.CN AND A.TENANT_ID = C.TENANT_ID
+		WHERE
+			A.TENANT_ID = #tenantId#
+		<isNotEmpty property="companyId">
+			AND
+				C.PHYSICALDELIVERYOFFICENAME = #companyId#
+		</isNotEmpty>
+		ORDER BY
+			C.PHYSICALDELIVERYOFFICENAME, C.DISPLAYNAME, B.DISPLAYNAME , C.EXTENSIONATTRIBUTE15
+	</select>
+
+	<select id="EzOrganAdminDAO.getExportPermissionsList" parameterClass="Map" resultMap="exportPermissionsList">
+			SELECT
+				EXTENSIONATTRIBUTE1 ,
+				CN,
+				CASE       WHEN #primary# = '1'       THEN DISPLAYNAME        ELSE DISPLAYNAME2     	 END DISPLAYNAME,
+				CASE	   WHEN #primary# = '1'       THEN TITLE              ELSE TITLE2                END TITLE,
+				CASE       WHEN #primary# = '1'       THEN DESCRIPTION        ELSE DESCRIPTION2     	 END DESCRIPTION,
+				MAIL,
+				TELEPHONENUMBER,
+				CASE       WHEN #primary# = '1'       THEN COMPANY            ELSE COMPANY2     		 END COMPANY
+			FROM
+				TBL_USERMASTER
+			WHERE
+				NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
+				AND
+					TENANT_ID = #tenantId#
+				AND
+			<![CDATA[
+				CN <> 'masteradmin'
+			]]>
+			<isNotEmpty property="companyId">
+				AND
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+			</isNotEmpty>
+				AND
+					EXTENSIONATTRIBUTE1 LIKE '%=1%'
+				AND
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			ORDER BY
+				PHYSICALDELIVERYOFFICENAME, DISPLAYNAME, EXTENSIONATTRIBUTE1 desc, DESCRIPTION, EXTENSIONATTRIBUTE15
+	</select>
 
 </sqlMap>

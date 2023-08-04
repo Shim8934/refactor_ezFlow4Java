@@ -4366,7 +4366,7 @@
 	<select id="EzCommonDAO.checkSusinScheduleOffsetColumn">
         <![CDATA[
             SELECT 
-                OFFSET
+                `OFFSET`
             FROM 
                 TBL_SUSINSCHEDULE
             LIMIT 1
@@ -4376,7 +4376,7 @@
         ALTER TABLE 
         	TBL_SUSINSCHEDULE 
 		ADD
-			OFFSET VARCHAR(40) DEFAULT ''
+			`OFFSET` VARCHAR(40) DEFAULT ''
     </statement>
 
 	<select id="EzCommonDAO.checkReceiptHistoryListoption" parameterClass="Map" resultClass="String">

@@ -1,8 +1,5 @@
 package egovframework.ezEKP.ezSystem.vo;
 
-import java.util.Date;
-import java.util.Locale;
-
 public class PermissionInfoVO {
 
 	private int sequence;

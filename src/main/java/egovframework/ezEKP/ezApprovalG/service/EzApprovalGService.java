@@ -11,7 +11,6 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGPreviewVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;

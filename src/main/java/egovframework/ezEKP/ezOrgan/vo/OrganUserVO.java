@@ -130,6 +130,28 @@ public class OrganUserVO {
 	/** 프로필사진 날짜를 업데이트할 것 인지 flag */
 	private boolean doUpdatePhoto;
 
+	/** 겸직 부서명*/
+	private String addJobDeptNM;
+
+	/** 겸직 직위*/
+	private String addJobTitle;
+
+	public String getAddJobTitle() {
+		return addJobTitle;
+	}
+
+	public void setAddJobTitle(String addJobTitle) {
+		this.addJobTitle = addJobTitle;
+	}
+
+	public String getAddJobDeptNM() {
+		return addJobDeptNM;
+	}
+
+	public void setAddJobDeptNM(String addJobDeptNM) {
+		this.addJobDeptNM = addJobDeptNM;
+	}
+
 	public String getJobID() {
 		return jobID;
 	}
@@ -633,5 +655,4 @@ public class OrganUserVO {
 	public void setDoUpdatePhoto(boolean doUpdatePhoto) {
 		this.doUpdatePhoto = doUpdatePhoto;
 	}
-
 }

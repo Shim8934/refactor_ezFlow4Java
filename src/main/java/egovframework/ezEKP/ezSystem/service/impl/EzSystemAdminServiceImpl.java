@@ -1,14 +1,24 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Resource;
@@ -28,6 +38,8 @@ import org.springframework.web.client.RestTemplate;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
@@ -40,6 +52,7 @@ import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.main.vo.MainVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1160,5 +1173,116 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 		logger.debug("updateFileExtension service ended");
 		return "OK";
+	}
+	
+	
+	@Override
+	public void insertUserChangeHist(UserChangeInfoVO userChangeInfoVO, LoginVO userInfo) throws Exception {
+		logger.debug("insertUserChangeHist started.");
+		String updateType = userChangeInfoVO.getUpdateType();
+		
+		if (updateType.equals("clearAddJob") || updateType.equals("grantAddJob")) {
+			// 겸직엔 updatedt가 없으므로 겸직 부여, 해제일경우 현재 시각을 구한다 
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+    		String nowDate = date.format(new Date());
+    		userChangeInfoVO.setUpdatedt(nowDate);
+    		userChangeInfoVO.setTargetType("addJob");
+		} else if (!updateType.equals("mvDept")) {	
+				//targetType이 user일경우 대상부서값이 필요없으므로 ""로 setting 해준다
+				userChangeInfoVO.setTargetDeptId("");
+				userChangeInfoVO.setTargetDeptNm("");
+				userChangeInfoVO.setTargetDeptNm2("");
+		}
+		//인사연동인 경우 
+		if (userChangeInfoVO.getExecutorIp().equals("127.0.0.1")) {
+			userChangeInfoVO.setExecutorId("ez_sync"); 
+			userChangeInfoVO.setExecutorNm("");
+			userChangeInfoVO.setExecutorNm2("");
+		}else { // 수동인 경우 
+			// 처리자 정보를 userInfo에서 값을 꺼내서 setting 
+			userChangeInfoVO.setExecutorId(userInfo.getId()); 
+			userChangeInfoVO.setExecutorNm(userInfo.getDisplayName());
+			userChangeInfoVO.setExecutorNm2(userInfo.getDisplayName2());
+		}
+		
+		logger.debug("insertUserChangeHist ended.");	
+		ezSystemAdminDAO.insertUserChangeHist(userChangeInfoVO);
+		
+	}
+    
+	@Override
+	public List<UserChangeInfoVO> getUserChHistList(int tenantID, String offset, int startPage, int maxItemPerPage,
+			String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate,
+			String companyId, boolean isMaster) throws Exception {
+		
+		
+		logger.debug("getUserChHistList started. tenantID : {}", tenantID);
+		
+		String companyOracleStr = "";
+		String isMasterAdmin = "";
+
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+
+		if (isMaster) {
+			isMasterAdmin = "Y";
+		}
+
+		logger.debug("lang : {} , search_keycode : {} , search_keyword : {} , search_keyType : {}", lang, keycode,keyword,keycodeForType);
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForType", keycodeForType);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("isMasterAdmin", isMasterAdmin);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getUserChHistList ended.");
+		List<UserChangeInfoVO> list = ezSystemAdminDAO.getUserChHistList(params);
+		return list;
+	}
+
+	@Override
+	public int getUserChHistListCount(int tenantID, String offset, String keyword, String keycode,
+			String searchKeycodeForType, String lang, String startDate, String endDate, String companyId,
+			boolean isMaster) throws Exception {
+		logger.debug("getUserChHistListCount started. tenantID : {}", tenantID);
+
+		String companyOracleStr = "";
+		String isMasterAdmin = "";
+
+		if (!"Top/organ".equals(companyId)) {
+			companyOracleStr = " AND COMPANYID ='" + companyId + "'";
+		}
+
+		if (isMaster) {
+			isMasterAdmin = "Y";
+		}
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("search_keycodeForType", searchKeycodeForType);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("isMasterAdmin", isMasterAdmin);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getUserChHistListCount ended.");
+
+		return ezSystemAdminDAO.getUserChHistListCount(params);
 	}
 }

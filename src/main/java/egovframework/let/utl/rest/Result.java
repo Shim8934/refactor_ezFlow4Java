@@ -7,12 +7,11 @@ import com.google.gson.JsonObject;
 
 /**
  * HTTP API 리턴 값으로 사용할 수 있는 DTO이다.<br>
- * 
  * <p>
- * 성공 리턴: {@link Result#success()}, {@link Result#success(data)},
- * {@link Result#successWithCode(code)}, {@link Result#success(code, data)}<br>
- * 실패 리턴: {@link Result#failure()}, {@link Result#failure(data)},
- * {@link Result#failureWithCode(code)}, {@link Result#failure(code, data)}
+ * 성공 리턴: {@link Result#success()}, {@link Result#success(Object data)},
+ * {@link Result#successWithCode(int code)}, {@link Result#success(int code, Object data)}<br>
+ * 실패 리턴: {@link Result#failure()}, {@link Result#failure(Object data)},
+ * {@link Result#failureWithCode(int code)}, {@link Result#failure(int code, Object data)}
  * </p>
  * <p>
  * Result 객체에서 성공 여부는<br>
@@ -22,11 +21,9 @@ import com.google.gson.JsonObject;
  * {@link Rest.RestBuilder#exchangeResult()}<br>
  * GW 리턴 값이 비어있거나 JSON 형식의 문자열이라면 Result 객체로 받아올 수 있으며<br>
  * 이 때의 기본값은 <code>{"status":null,"code":0,"data":null}</code> 이다.
- * 
  * <pre class="code">
  * &#64;Autowired
  * private Rest rest;
- * 
  * &#64;RequestMapping(value = "/example")
  * &#64;ResponseBody
  * public Result example(HttpServletRequest request) throws Exception {
@@ -69,7 +66,7 @@ public class Result {
 
 	/**
 	 * data 값과 함께 성공에 대한 결과를 반환한다.
-	 * 
+	 *
 	 * @return <code>{"status":"ok", "code":0, "data":...}</code>
 	 */
 	public static Result success(Object data) {

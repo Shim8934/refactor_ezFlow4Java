@@ -34,13 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -72,6 +65,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.service.PreResult;
@@ -81,6 +75,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -88,7 +84,6 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.rest.Rest;
-import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -133,6 +128,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzBoardAdminService ezBoardAdminService;
+
+	@Autowired
+	private EzSystemAdminService ezSystemAdminService;
 
     @Autowired
     private EzEmailUtil ezEmailUtil;	
@@ -1125,12 +1123,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				result = "EMAIL_ERROR";
 			}
 		}
-		
+
 		if (result.equals("OK")) {
 	        result = ezOrganAdminService.moveEntry(parentCn, cn, "group", userInfo.getOffset(), tenantID);
-	
+	        	        
 	        logger.debug("moveEntry result=" + result);
 		}
+		
 		
 		//게시판 트리캐시 삭제
 		ezBoardAdminService.trunkBoard(tenantID);
@@ -1417,7 +1416,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         String offset = userInfo.getOffset();
         
         String cnList = request.getParameter("cn");
-        
+
         logger.debug("tenantID=" + tenantID + ",offset=" + offset +",cnList=" + cnList);
         	    
 		String cn[] = cnList.split(",");
@@ -1492,6 +1491,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
 	    		}
 			}
+	
+			
+			//사용자 변경 히스토리 테이블에 insert  
+			UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+			userChangeInfoVO.setUserId(cn[i]);
+			userChangeInfoVO.setTenantId(tenantID);
+			userChangeInfoVO.setUpdateType("retire");
+			userChangeInfoVO.setExecutorIp(ClientUtil.getClientIP(request));
+			userChangeInfoVO.setTargetType("user");
+			
+			try {
+				ezSystemAdminService.insertUserChangeHist(userChangeInfoVO, userInfo);				
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+			
 			// dhlee - end
 		}
 		
@@ -1552,14 +1567,42 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					break;
 				}
 			}
+			
+			// 사용자의 원부서 조회 
+			OrganUserVO originDeptInfo = ezOrganAdminService.getUserDeptInfo(cn[i], tenantID);
 		    
 			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user", userInfo.getOffset(), tenantID);
-		
+				
 			logger.debug("moveEntry result=" + result);
 			
 			if (!result.equals("OK")) {
 				break;
+			}else {
+				
+				//2023-07-03 장혜연 사용자 변경 히스토리 테이블에 값 삽입  
+				UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+				OrganDeptVO targetDeptNm = ezOrganAdminService.getDeptDisplayNm(parentCn, tenantID);
+				userChangeInfoVO.setUserId(cn[i]);
+				userChangeInfoVO.setTenantId(tenantID);
+				userChangeInfoVO.setManualFlag("Y");
+				userChangeInfoVO.setUpdateType("mvDept");
+				userChangeInfoVO.setExecutorIp(ClientUtil.getClientIP(request));
+				userChangeInfoVO.setDeptId(originDeptInfo.getDepartment()); 
+				userChangeInfoVO.setDeptNm(originDeptInfo.getDescription());
+				userChangeInfoVO.setDeptNm2(originDeptInfo.getDescription2());
+				userChangeInfoVO.setTargetDeptId(parentCn);
+				userChangeInfoVO.setTargetDeptNm(targetDeptNm.getDisplayName());
+				userChangeInfoVO.setTargetDeptNm2(targetDeptNm.getDisplayName2());
+				
+				
+				try {
+					ezSystemAdminService.insertUserChangeHist(userChangeInfoVO, userInfo);				
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+							
 			}
+	        	
 		}
 		
 		//게시판 트리캐시 삭제
@@ -1763,6 +1806,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    		rc = ezEmailService.deleteUserMailTemplate(mailAddr, "", "all", realPath, tenantID);
 	    		logger.debug("deleteMailUserTemplate rc=" + rc);
 			}
+			if("OK".equals(result)) {
+				//2023-07-03 장혜연 사용자 변경 히스토리 테이블에 insert  
+				UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+				userChangeInfoVO.setUserId(cn[i]);
+				userChangeInfoVO.setTenantId(tenantID);
+				userChangeInfoVO.setManualFlag("Y");
+				userChangeInfoVO.setUpdateType("delete");
+				userChangeInfoVO.setExecutorIp(ClientUtil.getClientIP(request));
+				userChangeInfoVO.setTargetType("user");
+				
+				try {
+					ezSystemAdminService.insertUserChangeHist(userChangeInfoVO, userInfo);				
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+			
 			// dhlee - end
 		}		
 		
@@ -1855,7 +1915,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         if (userInfo == null) {
         	return "EMAIL_ERROR";
         }
-	    	    
+	    	   
         // JMocha Mail Server가 계정이 소문자로 저장될 필요가 있어 
         // 사용자 아이디를 무조건 소문자로 변환한다.
         // 소문자로 저장되기만 하면 메일 수신 시에는 발신자가 대소문자를 혼합해서 보내도
@@ -2028,7 +2088,27 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						logger.error(e.getMessage(), e);
 					}
 				}
-	        }
+				
+				if (!"".equals(ClientUtil.getClientIP(request))) {
+					
+					logger.debug("saveUserInfo IP : {} ", ClientUtil.getClientIP(request));
+				}
+				
+				
+				//2023-06-27 장혜연 사용자 변경 히스토리 테이블에 insert  
+				UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+				userChangeInfoVO.setUserId(cn);
+				userChangeInfoVO.setTenantId(tenantID);
+				userChangeInfoVO.setUpdateType("add");
+				userChangeInfoVO.setExecutorIp(ClientUtil.getClientIP(request));
+				userChangeInfoVO.setTargetType("user");
+			
+				try {
+					ezSystemAdminService.insertUserChangeHist(userChangeInfoVO, userInfo);				
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
 		}
 		
 		logger.debug("saveUserInfo ended. result=" + result);
@@ -2509,12 +2589,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String delType = doc.getElementsByTagName("DEPTID").item(0).getTextContent().equals("")? "ALL" : ""; //삭제타입(ALL인경우 전체겸직삭제)
 		String delJobId = ""; // 2022-07-06 이사라 - 한 부서에 겸직이 2개 이상 있는 경우 1개만 삭제 시 삭제하는 jobId가 필요하여 추가
 		boolean isAddJobMoreInOneDept = false;
+		List<UserChangeInfoVO> userChInfoList = new ArrayList<UserChangeInfoVO>();
+		String updateType = "";
+		List<String> newAddJobList = new ArrayList<String>();
+		int listidx = 0;
 		
 		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
 			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
 			String manualFlag = Optional.ofNullable(doc.getElementsByTagName("MANUAL_FLAG").item(i)).map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse(null);
 			
 		    if (!titleValue.equals("")) {
+		    	
 		    	String[] titleArray = titleValue.split(":");
 		    	
 		    	// Primary 언어 이름만 있는 경우엔 Secondary 언어 이름을 동일하게 설정한다.
@@ -2529,7 +2614,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     				titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
     				titleInfoWithManualFlag += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue + ":" + manualFlag;
     			}
+    			
+    			// 기존 겸직 부서 + 새로 추가한 부서 모두 list에 담아준다 
+    			newAddJobList.add(doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue );
+ 			
             } else { //선택삭제, 전체겸직삭제인경우
+            	
             	if (doc.getElementsByTagName("DEPTID").item(i).getTextContent().equals("")) { //전체겸직삭제인경우
             		String cn = doc.getElementsByTagName("CN").item(i).getTextContent();
             		List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(cn, "1", tenantID);
@@ -2539,10 +2629,32 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             				deleteTitleInfo = organUserVOList.get(j).getDepartment() + ":" + titleValue;
             			} else {
             				deleteTitleInfo += ";" + organUserVOList.get(j).getDepartment() + ":" + titleValue; 
-            			}
+            			}          			
+            		         			
             		}
-            		
+
             		logger.debug("cn=" + cn + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo);
+            		
+            		
+            		// 2023-07-03 장혜연 전체 겸직 삭제 후 사용자 변경 히스토리에 들어갈 값 vo에 setting (겸직부서의 직위를 가져오기 위해 겸직정보를 지우기 전에 실행)  
+            		updateType = "clearAddJob";
+            		String deletInfo[] = deleteTitleInfo.split(";");
+            		
+            		for (int k=0; k < deletInfo.length; k++) {
+            			UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+            			String deltDeptID[] = deletInfo[k].split(":");	
+            			OrganUserVO jobInfo = ezOrganAdminService.getAddJobInfo(cn, deltDeptID[0]);
+            			userChangeInfoVO.setUserId(cn);
+            			userChangeInfoVO.setTargetDeptId(deltDeptID[0]);
+            			userChangeInfoVO.setTargetDeptNm(jobInfo.getDescription() + "/" + jobInfo.getTitle());
+            			userChangeInfoVO.setTargetDeptNm2(jobInfo.getDescription1() + "/" + jobInfo.getTitle1());            					
+            			
+            			
+            			userChInfoList.add(listidx,userChangeInfoVO);
+            			
+            			listidx++;
+            			
+            		}
             		
             		ezOrganAdminService.updateProperty(cn, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
             		ezOrganAdminService.deleteJob(cn, deleteTitleInfo, tenantID);
@@ -2556,6 +2668,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             		} else {
             			deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
             		}
+            		         		
+            		logger.debug("deleteTitleInfo : {} ", deleteTitleInfo);
             	}
             }
 		    jobID += doc.getElementsByTagName("JOBID").item(i).getTextContent() + ";";
@@ -2570,16 +2684,37 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (!delType.equals("ALL")) { //전체겸직삭제가 아닌 경우
 			logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo + ",delJobId=" + delJobId + ",isAddJobMoreInOneDept=" + isAddJobMoreInOneDept);
 			
-			ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
+			ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID); //usermaster update
 		}
 		
-		if (!deleteTitleInfo.equals("") && !delType.equals("ALL")) {
+		if (!deleteTitleInfo.equals("") && !delType.equals("ALL")) { // 선택 삭제일 시 
+			
+			// 2023-07-03 장혜연 : 선택 삭제 후 사용자 변경 히스토리에 들어갈 값 setting 
+			UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+			updateType = "clearAddJob";
+			String deletInfo[] = deleteTitleInfo.split(";");
+			
+			for (int i=0; i < deletInfo.length; i++) {
+				String deltDeptID[] = deletInfo[i].split(":");	
+
+				OrganUserVO jobInfo = ezOrganAdminService.getAddJobInfo(userID, deltDeptID[0]);
+				userChangeInfoVO.setUserId(userID);
+				userChangeInfoVO.setTargetDeptId(deltDeptID[0]);
+				userChangeInfoVO.setTargetDeptNm(jobInfo.getDescription() + "/" + jobInfo.getTitle());
+				userChangeInfoVO.setTargetDeptNm2(jobInfo.getDescription1() + "/" + jobInfo.getTitle1());   
+				
+				userChInfoList.add(i,userChangeInfoVO);
+			}
+			
 			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID, delJobId, isAddJobMoreInOneDept);
+			
 		} else {
-		    if (!titleInfo.equals("")) {
+		    if (!titleInfo.equals("")) { // 겸직 추가일경우 
 		        List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
 		        StringBuilder sbCurrentJobList = new StringBuilder();
 		        
+		        updateType = "grantAddJob";
+		        List<String> currDeptIdList = new ArrayList<String>();
 		        // 지정된 사용자의 현재 겸직 목록을 구한다.
 		        for (int i = 0; i < organUserVOList.size(); i++) {
 		            OrganUserVO organUserVO = organUserVOList.get(i);
@@ -2589,13 +2724,33 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		            } else {
 		                sbCurrentJobList.append(";" + organUserVO.getDepartment() + "::");
 		            }
+		            
+		            currDeptIdList.add(organUserVO.getDepartment()); 
 		        }
 		        
 		        String currentJobList = sbCurrentJobList.toString();
+		        logger.debug("currentJobList : {} " , currentJobList);
 		        
-		        logger.debug("currentJobList=" + currentJobList);
+		
 		        
-		        if (!currentJobList.equals("")) {
+		        // 2023-07-03 장혜연 현재 겸직정보와 비교하여 새로 추가된 겸직 정보 Vo에 setting  
+		        int index = 0; // list에 넣어줄 index 초기 값 선언 
+		        for (int j = 0; j < newAddJobList.size(); j++){
+		        	String newAddJobInfo[] =  newAddJobList.get(j).split(":");
+		        	if (!currDeptIdList.contains(newAddJobInfo[0])) {
+		  
+		        		UserChangeInfoVO userChVo = new UserChangeInfoVO();
+		        		OrganDeptVO newDeptNm = ezOrganAdminService.getDeptDisplayNm(newAddJobInfo[0], tenantID);
+	        			userChVo.setUserId(userID);
+	        			userChVo.setTargetDeptId(newAddJobInfo[0]);
+	        			userChVo.setTargetDeptNm(newDeptNm.getDisplayName() + "/" + newAddJobInfo[1] );
+	        			userChVo.setTargetDeptNm2(newDeptNm.getDisplayName2() + "/" + newAddJobInfo[2]);   			
+	        			userChInfoList.add(index,userChVo);
+	        			index ++;   		
+		        	}
+		        }
+        
+		        if (!currentJobList.equals("")) {  //현재 겸직이 존재하는 경우 
 		            // 현재 겸직 목록을 모두 삭제한다.
 		            ezOrganAdminService.deleteJob(userID, currentJobList, tenantID);
 		        }
@@ -2604,16 +2759,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		        String sTitle2 = "";
 		        String pDeptID = "";
 		        String manualFlag = "";
+		
 		        
 	            String[] addJobinfo = titleInfoWithManualFlag.split(";");
 	            StringBuilder sb = new StringBuilder();
 	            
-	            for (int i = 0; i < addJobinfo.length; i++) {
+	            for (int i = 0; i < addJobinfo.length; i++) {   // 새로추가한 겸직정보와 + 기존겸직정보 
 	                String[] jobInfo = addJobinfo[i].split(":");
 	                int jobInfoLength = jobInfo.length;
 	                pDeptID = jobInfo[0];
 	                sTitle1 = "";
 	                manualFlag = null;
+	                
 	                
 	                if (jobInfoLength > 2) {
 	                    sTitle1 = jobInfo[1];
@@ -2634,6 +2791,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	                } else {
 	                    sb.append(";" + pDeptID + ":" + sTitle1 + ":" + sTitle2 + ":" + manualFlag);
 	                }
+
 	            }		
 	            
 	            titleInfoWithManualFlag = sb.toString();
@@ -2642,7 +2800,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	            
 	            // 새로운 겸직 목록을 설정한다.
 	            ezOrganAdminService.addJob(userID, titleInfoWithManualFlag, jobID, tenantID);
+
 		    }		    
+		}
+	
+
+		// 2023-07-03 장혜연 공통적으로 들어갈 값들 vo list에 setting 한 후 사용자 변경 히스토리 테이블에 insert 실행 
+		for(int k = 0; k < userChInfoList.size(); k++) {
+		
+			userChInfoList.get(k).setTargetType("addJob");
+			userChInfoList.get(k).setUpdateType(updateType);
+			userChInfoList.get(k).setExecutorIp(ClientUtil.getClientIP(request));
+			userChInfoList.get(k).setManualFlag("Y");
+			userChInfoList.get(k).setTenantId(tenantID);
+			
+			try {				
+				ezSystemAdminService.insertUserChangeHist(userChInfoList.get(k), userInfo);
+			}catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+			
 		}
 		
 		ezBoardAdminService.trunkBoard(tenantID);
@@ -5396,6 +5573,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// 기능 확장 시 쓸 수 있음. (선택한 부서부터) 
 //		String selectedId     = request.getParameter("selectedId") != null ? request.getParameter("selectedId") : "";	
 //		logger.debug("selectedId: " + selectedId);
+		String isAddJob = request.getParameter("isAddJob") != null ? request.getParameter("isAddJob"): "";
+		String isPermissionsList = request.getParameter("isPermissionsList") != null ? request.getParameter("isPermissionsList") : "";
 
  		LoginVO userInfo = commonUtil.userInfo(loginCookie);
  		JSONObject result = new JSONObject();
@@ -5413,12 +5592,30 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String primary   = userInfo.getPrimary();
 			String companyId = isRollC? "" : userInfo.getCompanyID();
 			int tenantId     = userInfo.getTenantId();
-			
-			List<OrganUserVO> exportUserlist = ezOrganAdminService.getExportUserList(primary, companyId, tenantId);
-			String realPath              = request.getServletContext().getRealPath("");
-			String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
-			pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
-			String excelPath             = ezOrganAdminService.createExcelUsers(realPath + commonUtil.separator, pDirPath, exportUserlist, primary, locale);
+
+			String excelPath = "";
+
+			// 겸직 리스트 요청이라면
+			if ("Y".equalsIgnoreCase(isAddJob)) {
+				List<OrganUserVO> exportAddJobList = ezOrganAdminService.getExportAddJobList(primary, companyId, tenantId);
+				String realPath = request.getServletContext().getRealPath("");
+				String pDirPath = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+				pDirPath = realPath + pDirPath + "temp" + commonUtil.separator;
+				excelPath = ezOrganAdminService.createExcelAddJobList(realPath + commonUtil.separator, pDirPath, exportAddJobList, primary, locale);
+
+			} else if ("Y".equalsIgnoreCase(isPermissionsList)) {
+				List<OrganUserVO> exportPermissionList = ezOrganAdminService.getExportPermissionsList(primary, companyId, tenantId);
+				String realPath              = request.getServletContext().getRealPath("");
+				String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+				pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
+				excelPath             = ezOrganAdminService.createExcelPermissionsList(realPath + commonUtil.separator, pDirPath, exportPermissionList, primary, locale);
+			} else {
+				List<OrganUserVO> exportUserlist = ezOrganAdminService.getExportUserList(primary, companyId, tenantId);
+				String realPath              = request.getServletContext().getRealPath("");
+				String pDirPath              = commonUtil.getUploadPath("upload_ezOrgan.ROOT", tenantId) + commonUtil.separator;
+				pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
+				excelPath             = ezOrganAdminService.createExcelUsers(realPath + commonUtil.separator, pDirPath, exportUserlist, primary, locale);
+			}
 			
 			if (excelPath.equals("")) {
 				result.put("status", "error");

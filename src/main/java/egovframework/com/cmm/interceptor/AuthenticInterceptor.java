@@ -18,7 +18,6 @@ import javax.annotation.Resource;
 import javax.naming.ServiceUnavailableException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -103,9 +102,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			} catch (Exception e) { 
 				logger.error(e.getMessage(), e);
 			}
-		} 
-		
-		if (commonUtil.isLoginCookieExists(request, response)) {
+		}
+
+		if ("0".equals(commonUtil.loginCookieExists(request, response))) {
 			try {
 		        String serverName = request.getServerName();
 		        int tenantId = loginService.getTenantId(serverName);
@@ -157,6 +156,14 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			}
 			
 			return true;
+		} else if ("1".equals(commonUtil.loginCookieExists(request, response))) {
+			try {
+				response.sendRedirect("/user/login/login.do?loginSessionFlag=1");
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				return false;
+			}
 		} else {
 			String ezOffice365Auth = "";			
 			int tenantId = -1;

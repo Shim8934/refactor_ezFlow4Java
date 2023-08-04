@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -33985,7 +33985,7 @@
 	<insert id="EzApprovalG.insertSendDocDB" parameterClass="Map">
 		INSERT INTO 
 			TBL_SUSINSCHEDULE
-     	( DOCID , DEPTID , DIRPATH , DOCSTATE , COMPANYID , LANG , TENANTID, OFFSET )
+     	( DOCID , DEPTID , DIRPATH , DOCSTATE , COMPANYID , LANG , TENANTID, `OFFSET` )
      	VALUES 
      	( #v_DOCID# , #v_DEPTID# , #v_DIRPATH# , #v_DOCSTATE# , #v_COMPANYID# , #v_LANG# , #v_TENANTID#, #v_OFFSET# )
 	</insert>
@@ -34009,7 +34009,7 @@
 			COMPANYID,
 			LANG,	
 			TENANTID,
-			OFFSET
+			`OFFSET`
 		FROM TBL_SUSINSCHEDULE
 	</select>
 	

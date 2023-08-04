@@ -9,19 +9,8 @@ import egovframework.ezEKP.ezCar.vo.CarBrdListVO;
 import egovframework.ezEKP.ezCar.vo.CarBrdVO;
 import egovframework.ezEKP.ezCar.vo.CarFormListVO;
 import egovframework.ezEKP.ezCar.vo.CarGetAdmSubClsTreeVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezResource.vo.ResAdminVO;
-import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
-import egovframework.ezEKP.ezResource.vo.ResBrdVO;
-import egovframework.ezEKP.ezResource.vo.ResDateVO;
-import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
-import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
-import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
-import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCarDAO")
