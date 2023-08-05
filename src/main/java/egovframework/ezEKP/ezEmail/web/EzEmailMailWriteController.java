@@ -6606,7 +6606,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 수신인 안내문구 
 	 * 
 	 */
-	private String addCopyrightText (LoginVO userInfo, String mailBody, String type) throws Exception {
+	private String addCopyrightText(LoginVO userInfo, String mailBody, String type) throws Exception {
 		int tenantId = userInfo.getTenantId();
 		String companyId = userInfo.getCompanyID();
 		String defaultFontAndSize = "";
@@ -6626,22 +6626,24 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			defaultFontAndSize = "font-size:" + fontSize + ";font-family:" + fontFamily + ";";
 		}
 		
-		String copyrightDiv = "<p>&nbsp;</p><div id=\"recipientPharse\" style=\"box-sizing:border-box; padding:5px 3px; border:1px solid #999; "
+		String copyrightDiv = "<p>&nbsp;</p><div id=\"recipientPhrase\" style=\"box-sizing:border-box; padding:5px 3px; border:1px solid #999; "
 				+ defaultFontAndSize + " color: rgb(153, 153, 153);\">%s</div>";
-		String useCopyrightMenu = ezCommonService.getTenantConfig("useCopyright", tenantId);
+		String useCopyrightMenu = ezCommonService.getTenantConfig("useCopyrightMenu", tenantId);
 		useCopyrightMenu = useCopyrightMenu.equals("") ? "NO" : useCopyrightMenu;
 		String useCopyright = ezCommonService.getCompanyConfig(tenantId, companyId, "useCopyright");
 		useCopyright = useCopyright.equals("") ? "YES" : useCopyright;
 		String copyrightText = ezEmailUserAdminService.getCopyrightText(userInfo.getTenantId(), companyId);	
-		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId 
-				+ "useCopyright=" + useCopyright + ", copyrightText=" + copyrightText + ", useCopyrightMenu=" + useCopyrightMenu);
+		logger.debug("tenantId=" + tenantId + ",companyId=" + companyId
+				+ ",useCopyright=" + useCopyright + ",useCopyrightMenu=" + useCopyrightMenu);
 
 		if (useCopyrightMenu.equals("YES") && !useCopyright.equals("NO") && !copyrightText.trim().equals("")) {
 			mailBody = mailBody.replaceAll("\\p{Z}", " "); // 유니코드 범주내에서 구분 기호, 공백을  replacAll
 			
-			if ((copyrightText.indexOf("id=\"recipientPharse\"") > -1) || (mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
-				logger.debug("copyrightText ended.");
-				return addCopyrightStr;
+			if (copyrightText.contains("id=\"recipientPhrase\"")
+					|| mailBody.contains(copyrightText)
+					|| mailBody.contains(copyrightText.replace(" ", "&nbsp;"))) {
+				logger.debug("copyrightText already exists.");
+				return "";
 			}
 			
 			if (type.equals("text/html")) {
@@ -6654,7 +6656,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 
-		logger.debug("addCopyrightStr=" + addCopyrightStr);
 		return addCopyrightStr;
 	}
 	
