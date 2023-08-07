@@ -2372,7 +2372,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .btn_writeBox_work .btn_write01{ margin:0px 0px 0px 0px; padding:0px; width:auto; text-align:left; height:30px; line-height:28px; background:#0b56ab; float:none; overflow:hidden; cursor:pointer;}
 .btn_writeBox_work .btn_write01:hover{ background:#1264c1;}
 .btn_writeBox_work span.worksT{font-family:arial, "arial"; font-size:12px; padding:0px 10px 0px 10px; display:inline-block; color:#fff; overflow:hidden; height:30px; line-height:30px;}
-.btn_writeBox_work span.workT{ display:inline-block; margin:0px; padding:0px 0px 0px 10px; font-family:arial, "arial"; font-size:14px; color:#fff; overflow:hidden; height:30px; line-height:28px;}
+.btn_writeBox_work span.workT{ display:inline-block; margin:0px; padding:0px 0px 0px 10px; font-family:arial, "arial"; font-size:12px; color:#fff; overflow:hidden; height:30px; line-height:28px;}
 .btn_writeBox_work .btn_write02{margin:0px 0px 0px 2px; padding:0px; width:98px; text-align:left; height:30px; line-height:28px; background:#196dcb; float:right; overflow:hidden; cursor:pointer;}
 .btn_writeBox_work .btn_write02:hover{ background:#1f79de;}
 
