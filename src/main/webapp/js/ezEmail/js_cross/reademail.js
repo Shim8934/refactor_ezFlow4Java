@@ -162,7 +162,7 @@ function pass_onClick() {
 var mail_movecopy_cross_dialogArguments = new Array();
 function move_onClick() {
     mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
-    mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
+    mail_movecopy_cross_dialogArguments[2] = DivPopUpHiddenReadMail;
     
     var requestUrl = "/ezEmail/mailMoveCopy.do";
     
@@ -173,7 +173,7 @@ function move_onClick() {
     DivPopUpShow(320, 375, requestUrl);
 }
 function move_onclick_Complete(moveUrl) {
-    DivPopUpHidden();
+    DivPopUpHiddenReadMail();
     if (typeof (moveUrl) == "undefined")
         return;
 
@@ -194,6 +194,13 @@ function move_onclick_Complete(moveUrl) {
     
     usedMoveDel = "1";
 }
+
+function DivPopUpHiddenReadMail() {
+	document.getElementById("iFramePanel").style.display = "none";
+	document.getElementById("mailPanel").style.display = "none";
+	document.getElementById("loadingLayer").style.display = "none";
+}
+
 var g_deleteHttp = null;
 function delete_mail_2010(cmd, copyFolderID) {
     try {
@@ -455,7 +462,7 @@ function func_addaddr() {
 
 var address_foldermanage_dialogArguments = new Array();
 function func_addaddr2(result) {
-	DivPopUpHidden();
+	DivPopUpHiddenReadMail();
 	
 	if (result) {
 		address_foldermanage_dialogArguments[1] = func_addaddr_Complete;
@@ -464,7 +471,7 @@ function func_addaddr2(result) {
 }
 
 function func_addaddr_Complete(ret) {
-	DivPopUpHidden();
+	DivPopUpHiddenReadMail();
 
 	if (ret == 0 || ret == 1) {
         return;
