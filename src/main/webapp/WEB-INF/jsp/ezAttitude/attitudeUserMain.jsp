@@ -1342,7 +1342,13 @@
 		    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "234'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
 		    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			objTr.append($("<td style='max-width:10%; width:10%;'></td>").append($("<div style='width:70px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-		    			objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "<spring:message code='ezAttitude.t61'/>" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("<spring:message code='ezAttitude.t61'/>")));
+
+		    			if (uselang == 1) {
+							objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "<spring:message code='ezAttitude.t61'/>" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("<spring:message code='ezAttitude.t61'/>")));
+		    			} else {
+			    			objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "<spring:message code='ezAttitude.t61'/>" + "'></td>").append($("<div style='width:100px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("<spring:message code='ezAttitude.t61'/>")));
+		    			}
+
 		    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    		} 

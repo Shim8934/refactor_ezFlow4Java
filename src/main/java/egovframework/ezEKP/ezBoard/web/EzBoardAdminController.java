@@ -328,9 +328,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
-		
+
+		/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
+		String multiBoardName = "";
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+			multiBoardName = boardPropertyVO.getBoardName();
+		} else {
+			multiBoardName = boardPropertyVO.getBoardName2();
+		}
+
 		model.addAttribute("upperBoardID", parentBoardID);
-		model.addAttribute("boardName", boardPropertyVO.getBoardName());
+		model.addAttribute("boardName", multiBoardName);
 
 		logger.debug("boardOrder ended");
 		return "admin/ezBoard/boardOrder";
@@ -364,14 +372,23 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String upperBoardID = request.getParameter("upperBoardID");
 		String isAdminLeft = "Y";
 		boolean isCompanyAdmin = false;
-		
+		String lang = "";
+
+		/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
+		String multiBoardName = "";
+		if (commonUtil.getPrimaryData(user.getLang(), user.getTenantId()).equals("1")) {
+			lang = "";
+		} else {
+			lang = "2";
+		}
+
 		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
 		if (user.getRollInfo() != null && user.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
 			isCompanyAdmin = true;
 		}
 		
 		// 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가
-		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, "", user.getRollInfo(), user.getTenantId());
+		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", lang, isAdminLeft, isCompanyAdmin, "", user.getRollInfo(), user.getTenantId());
 
 		logger.debug("getSubBoards ended");
 		return boardTree;

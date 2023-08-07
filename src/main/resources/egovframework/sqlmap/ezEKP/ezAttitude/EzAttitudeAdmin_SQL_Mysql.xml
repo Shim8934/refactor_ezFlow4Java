@@ -846,9 +846,9 @@
 		<![CDATA[
 			SELECT
 				A.cn AS writerid,
-				A.displayname$primary$ AS username,
-                A.description$primary$ AS deptname,
-                A.title$primary$ AS usertitle,
+				A.displayname$lang$ AS username,
+                A.description$lang$ AS deptname,
+                A.title$lang$ AS usertitle,
                 A.mail AS useremail,
                 SUBSTR(DATE_ADD(#searchStartDate#, INTERVAL #offsetMin# minute), 1, 10) as startdate
 			FROM

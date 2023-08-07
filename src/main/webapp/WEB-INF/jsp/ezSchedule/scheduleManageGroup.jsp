@@ -214,7 +214,7 @@
 		
 		        var count = strListInfo.split(';').length - 1;
 		        */
-		        if (!confirm(count + "<spring:message code='ezSchedule.t254' />"))
+		        if (!confirm(count + " <spring:message code='ezSchedule.t254' />"))
 		            return; 
 
 		        $.ajax({
@@ -226,7 +226,7 @@
 		    		},
 		    		url : "/ezSchedule/scheduleDelGroup.do",
 		    		success: function(text){
-		    			alert(count + "<spring:message code='ezSchedule.t256' />");
+		    			alert(count + " <spring:message code='ezSchedule.t256' />");
 			            window.location.reload(false);
 		    		},
 		    		error: function(err){

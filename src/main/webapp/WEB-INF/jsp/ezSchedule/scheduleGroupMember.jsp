@@ -377,7 +377,7 @@
 		        	return;
 		        }
 	
-		        if (!confirm(count + "<spring:message code='ezSchedule.t176' />"))
+		        if (!confirm(count + " <spring:message code='ezSchedule.t176' />"))
 		            return;
 		        
 		        $.ajax({
@@ -390,7 +390,7 @@
 		    		},
 		    		url : "/ezSchedule/scheduleDelMember.do",
 		    		success: function(text){
-		    			 alert(count + "<spring:message code='ezSchedule.t178' />");
+		    			 alert(count + " <spring:message code='ezSchedule.t178' />");
 				         window.location.reload(false);   			
 		    		},
 		    		error: function(err){
@@ -419,7 +419,7 @@
 		            return;
 		        }
 	
-		        if (!confirm(count + "<spring:message code='ezSchedule.t182' />"))
+		        if (!confirm(count + " <spring:message code='ezSchedule.t182' />"))
 		            return;
 		        
 		        $.ajax({
@@ -433,7 +433,7 @@
 		    		},
 		    		url : "/ezSchedule/scheduleUpdateMember.do",
 		    		success: function(text){
-		    			alert(count + "<spring:message code='ezSchedule.t184' />");
+		    			alert(count + " <spring:message code='ezSchedule.t184' />");
 			            window.location.reload(false);
 		    		},
 		    		error: function(err){

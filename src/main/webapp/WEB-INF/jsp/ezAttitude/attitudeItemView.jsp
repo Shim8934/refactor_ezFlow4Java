@@ -35,6 +35,7 @@
 			var annualApprStatus = "<c:out value='${attitudeInfo.annualApprStatus}'/>";
 			var docApprStatus = "<c:out value='${attitudeInfo.docApprStatus}'/>";
 			var font = "<c:out value='${font}'/>"
+			var uselang = "<c:out value='${userInfo.lang}'/>";
 			
 			window.onload = function () {
 				setHtml();
@@ -88,6 +89,14 @@
 				//유형명
             	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 				
+				// 2023-08-07 황인경 - 근태관리 > 근태상세보기 > 다국어 처리
+            	if (uselang != "1") {		
+					$("#writerName").siblings("th").text("<spring:message code='ezAttitude.t93'/>");
+					$("#attiTime").siblings("th").text("<spring:message code='ezAttitude.t149'/>");
+					$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
+					$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+				}
+            	
 				$("#typeName").text(" " + typeName);
 				$("#writerName").text(" " + writerName);
 				$("#region").html(" " + region);
