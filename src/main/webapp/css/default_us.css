@@ -3723,3 +3723,6 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 
 /* pos 버튼 크기 수정 */
 .popup .pos2 .imgbck{width:100%; box-sizing:border-box;}
+
+/* 게시판 댓글 등록 버튼 */
+.en_style{width:88% !important;}	/* 텍스트 개수 때문에 틀어짐 */
