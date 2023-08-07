@@ -1,5 +1,6 @@
 ﻿var g_searchHttp = null;
 var g_progresswin = null;
+var minimumWidth = 890;
 
 function showProgress() {
     document.getElementById("progressviewerRayer").style.top = "200px";
@@ -793,12 +794,12 @@ function view_click() {
     var pwidth = window.screen.availWidth;
     var conWidth = pwidth * 0.8;
     
-    if (conWidth > 890) {
-        conWidth = 890;
+    if (conWidth > minimumWidth) {
+        conWidth = minimumWidth;
     }
     
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     
     if (this.parentname == ("/" + strLang65)) {

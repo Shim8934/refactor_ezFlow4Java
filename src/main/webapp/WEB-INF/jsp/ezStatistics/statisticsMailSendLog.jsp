@@ -383,8 +383,8 @@
 								
 								var num = parseInt(attStrArr.length) - 1 ;
 								
-								html += "'>" + attStrArr[0] +" <spring:message code='ezStatistics.t1066'/> ";
-								html += num + "<spring:message code='ezStatistics.t1067'/>" + "</td>";		
+								html += "'>" + attStrArr[0] +" <spring:message code='ezStatistics.ksaMailLog01' arguments='"+num+"'/>"	;
+								html += "</td>";		
 								
 	   	    				} else {
 	   	    					html += " 	<td>" + attStrArr[0] 							+ "</td>";

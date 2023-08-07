@@ -257,7 +257,8 @@
 	        m_rgParams4PostOption["tagMsgBCCu"] = MsgBCC_TRu;
 	        m_rgParams4PostOption["bodyType"] = g_bodyType;
 	        m_rgParams4PostOption["EachMail"] = iseachMail;
-	        m_rgParams4PostOption["SecurityMail"] = pSecurity;
+	        m_rgParams4PostOption["isSecureMail"] = "${isSecureMail}";
+	        m_rgParams4PostOption["secureMail"] = pSecurity;
 	        
 			var moduleType = "${moduleType}";
 	        
@@ -1356,6 +1357,7 @@
         	}
 	    }
 		
+/*		2023-07-21 이사라 - 본문타입 설정을 메일옵션으로 이동하여 메일쓰기창에서 아래 function 불필요하여 주석
 	    function changeTextOption(bodyType) {
 	    	if (bodyType == "1") {
 	        	if (confirm("<spring:message code='ezEmail.lhm28' />")) {
@@ -1386,7 +1388,7 @@
 	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
         		}
 	    	}
-	    }
+	    } */
 	    
 		function ckeditorReload() {
 			if (/chrome/i.test(navigator.userAgent) && message.CKEDITOR) {
@@ -2445,13 +2447,13 @@
 	                            <spring:message code='ezEmail.kasMailTemplate02' /></span></li>
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
-	                    	<li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">
+	                    	<%-- <li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">
 	                        	<input type="checkbox" id="chkSecureMail" />
 	                        	<label for="chkSecureMail" style="color:#333;margin-right:3px"><spring:message code='ezEmail.lhm63' /></label>	                        	
 	                        </li>
 	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;">
 	                            <img src="/images/pbar.gif">
-	                        </li>
+	                        </li> --%>
 	                        <li id="menuTable" class="sel" style="background:none;border:0; padding:0; margin:0; vertical-align:top;">
 	                            <select name="importantSelect" id="importantSelect" onchange="important_change()" style="vertical-align:top;">
 	                                <option value="0"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t360' /></option>
@@ -2477,12 +2479,13 @@
 	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif">
 	                        </li> 
-	                        <li class="sel" style="background:none; border:none; padding:0px;">
+	                        <%-- <li class="sel" style="background:none; border:none; padding:0px;">
 	                            <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
 	                                <option value="0" <c:if test="${bodyType == '0'}">selected</c:if>>HTML</option>
                         		    <option value="1" <c:if test="${bodyType == '1'}">selected</c:if>>PlainText</option>
 	                            </select>
-	                        </li>
+	                        </li> --%>
+	                        <input type="hidden" id="bodyType" name="bodyType" value="${bodyType}"/>
 	                        <c:if test="${useOnlyInnerMail != 'YES' && shareId == null}">
 	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
 	                        	<li class="sel" style="background:none; border:none; padding:0px; width: 110px; ">
@@ -2502,13 +2505,13 @@
 	                <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		      			
-		      			if (useSecureMail == "YES") {
+		      			/*if (useSecureMail == "YES") {
 		    	        	$('.securemail').not('.bar').css('display', '');
 		    	        	
 		    	        	if (isSecureMail == "true") {
 		    	        		document.getElementById("chkSecureMail").checked = true;
 		    	        	}
-		    	        }
+		    	        }*/
 		  			</script>
 	            </td>
 	        </tr>
