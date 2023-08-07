@@ -772,7 +772,7 @@
 								<tr id="selectTR">
 									<th><spring:message code='ezAttitude.t134'/></th>
 									<td colspan="2" id="selectTD">
-										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
+										<select id="selectAtti" style="min-width:80px; width:auto; padding-right:22px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
 												<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03' && item.typeId ne 'A05' && item.typeId ne 'A25'}">
 													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>

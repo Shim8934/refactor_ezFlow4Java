@@ -8318,7 +8318,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String allFG = request.getParameter("allFG");
 		
 		String excelValue = "";
-		
+
+		// 전체문서 조회(완료문서) 및 부서공유함 엑셀 다운로드 시 선택한 회사의 문서 리스트를 다운로드하도록 수정함.
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+
 		if (listType.toUpperCase().equals("DOC")) {
 			String containerID = request.getParameter("cont");
 			String pageNum = request.getParameter("PN");
@@ -12383,5 +12389,5 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("attachItemPreview ended.");
 	}
-	
+
 }

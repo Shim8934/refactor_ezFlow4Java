@@ -113,13 +113,13 @@
 					<c:when test="${gubun == 2}">
 						<tr>
 							<th colspan="2" style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
-									 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
+									 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px" class="en_style">
 								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 							</th>
 					</c:when>
 					<c:otherwise>
 						<tr>
-							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;" class="en_style">
 								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 							</th>
 					</c:otherwise>	
