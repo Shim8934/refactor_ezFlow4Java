@@ -2330,8 +2330,8 @@
 				<c:if test="${adminFlag == 'true'}">
 		        	<li id="btnAbsentedList"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
 		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
-					<li style="<c:if test="${displayFlag == 'false'}"> display:none </c:if>">
-						<select id="authDeptList" style="width:130px; height:28px;" onchange="deptChange()">
+					<li style="float:right; <c:if test="${displayFlag == 'false'}"> display:none </c:if>">
+						<select id="authDeptList" style="min-width:130px; width:auto; height:28px;" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
 								<c:if test="${dept.mine != 'yes' }">
 									<c:if test="${selectedDeptID == dept.deptId}">
@@ -2345,15 +2345,15 @@
 						</select>
 					</li>
 				</c:if>
-			<c:if test="${adminFlag != 'true'}">
-				<select id="authDeptList"
-					style="width: 100px; height: 28px; display: none;"
-					onchange="deptChange()">
-					<option value="<c:out value='${selectedDeptID}'/>" selected><c:out
-							value='${selectedDeptID}' /></option>
-				</select>
-			</c:if>
-		</ul>
+				<c:if test="${adminFlag != 'true'}">
+					<select id="authDeptList"
+						style="min-width:100px; width:auto; height: 28px; display: none;"
+						onchange="deptChange()">
+						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out
+								value='${selectedDeptID}' /></option>
+					</select>
+				</c:if>
+			</ul>
 		</div>
 
 		<div class="calendar_pagenav" style="width:180px;margin-left:-89px;">
