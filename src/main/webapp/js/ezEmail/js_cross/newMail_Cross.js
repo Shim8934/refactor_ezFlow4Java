@@ -751,7 +751,7 @@ function Send_onClick_Complete(ReturnValue) {
             }
             
             // 보안메일 체크되어있을 경우 보안메일 설정 팝업창을 띄운다.
-            if (useSecureMail == "YES" && document.getElementById("chkSecureMail").checked) {
+            if (useSecureMail == "YES" && isSecureMail == "true") {
             	secureMailParams["securePassword"] = securePassword;
             	secureMailParams["secureReadCount"] = secureReadCount;
             	secureMailParams["secureReadDate"] = secureReadDate;
@@ -875,7 +875,7 @@ function Save_onClick_Complete(ReturnValue) {
             if (TrimText(Subject) == "" && !previewChk)
                 Subject = strLang97;
 
-            if (m_rgParams4PostOption["SecurityMail"] == "Security")
+            if (isSecureMail == "true")
                 pSecurity = "3";
             
             var xmlDoc = createXmlDom();
@@ -941,7 +941,7 @@ function Save_onClick_Complete(ReturnValue) {
             }
             
             // 보안메일 체크되어있을 경우 request xml에 보안메일정보 추가
-            if (useSecureMail == "YES" && document.getElementById("chkSecureMail").checked) {
+            if (useSecureMail == "YES" && isSecureMail == "true") {
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREMAIL", "TRUE");
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORD", secureMailParams["securePassword"]);
             	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADCOUNT", secureMailParams["secureReadCount"]);
@@ -3107,15 +3107,15 @@ function Option_onClick() {
     	requestUrl += "?shareId=" + encodeURIComponent(shareId);
     	
     	if (individualmailuser != "0") {
-	        DivPopUpShow(410, 250, requestUrl);
+	        DivPopUpShow(410, 350, requestUrl);
 	    } else {
-	        DivPopUpShow(410, 175, requestUrl);
+	        DivPopUpShow(410, 275, requestUrl);
 	    }
 	} else {
 		if (individualmailuser != "0") {
-	        DivPopUpShow(410, 325, requestUrl);
+	        DivPopUpShow(410, 375, requestUrl);
 	    } else {
-	        DivPopUpShow(410, 250, requestUrl);
+	        DivPopUpShow(410, 320, requestUrl);
 	    }
 	}
     
@@ -3135,8 +3135,53 @@ function Option_onClick_Complete(m_rgParams4PostOption) {
     if (m_rgParams4PostOption["EachMail"] == "true")
         iseachMail = "true";
     else
-        iseachMail = "false";    
+        iseachMail = "false";
+
+    if (m_rgParams4PostOption["secureMail"] == "Security") {
+		isSecureMail = "true";
+	} else {
+		isSecureMail = "false";
+	}
+	
+	changeTextOption(m_rgParams4PostOption["bodyType"]);
 }
+
+/* 2023-07-21 이사라 : 본문타입 설정을 메일옵션으로 이동하여 confirm이 불필요하여 주석처리 함
+					 본문타입은 mailWrite창에서도 필요하여 input hidden id="bodyType"으로 value를 저장 함  */
+function changeTextOption(bodyType) {
+	if (bodyType == "1") {
+    	//if (confirm("<spring:message code='ezEmail.lhm28' />")) {
+        	document.getElementById("plainTextArea").value =  message.GetEditorTextContent();
+    		document.getElementById("tbContentElement").style.display = "none";
+			document.getElementById("plainTextArea").style.display = "";
+			document.getElementById("bodyType").value = m_rgParams4PostOption["bodyType"];
+    		//m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
+        	document.getElementById("SelMailSign").disabled = true;
+        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
+        	
+        	// 대용량 첨부파일 없애기
+        	dadiframe.btnfiledel('big');
+    	/*} else {
+    		//document.getElementById("bodyType").options[0].selected = true;
+    	}*/
+	} else {
+		//message.SetEditorTextContent(document.getElementById("plainTextArea").value);
+		document.getElementById("tbContentElement").style.display = "";
+		ckeditorReload();
+		document.getElementById("plainTextArea").style.display = "none";
+		document.getElementById("bodyType").value = m_rgParams4PostOption["bodyType"];
+		//m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
+		document.getElementById("SelMailSign").disabled = false;
+    	document.getElementById("SelMailSign").classList.remove("disabled"); // plainTextDisable style remove
+		if(totBigSizeAttachMBSize == 0){
+    		dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+		} else {
+    		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
+		}
+	}
+}
+
 function Subject_ReApply() {
     g_bDirty = true;
 

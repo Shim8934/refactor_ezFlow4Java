@@ -506,7 +506,7 @@
 		                    var headerTitle2 = document.getElementById(header_info).getElementsByTagName("td")[3].textContent;
 		                    
 		                    document.getElementById("preview_title").textContent = headerTitle;
-		                    document.getElementById("preview_title2").textContent = headerTitle2 +"<spring:message code='ezOrgan.mse4' />";
+		                    document.getElementById("preview_title2").textContent = headerTitle2 +" <spring:message code='ezOrgan.mse4' />";
 		                    document.getElementById("preview_count").textContent =  userCount;
 		                }	
 

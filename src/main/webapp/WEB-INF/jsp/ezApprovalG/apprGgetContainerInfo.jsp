@@ -1171,6 +1171,12 @@
 		        			}
 		        		}
 		        		
+		        		/* 2023-07-21 한태훈 - 전자결재 일반 버전 > 부서문서함, 분류코드문서함 내보내기시 양식함 아이디가 null로 넘어가
+		        		 결재완료문서 리스트가 다운로드 되는 오류 수정 */ 
+		        		if (approvalFlag == "S") {
+		        			condition[12] = ContainerID;
+		        		}
+		        		
 		                url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
 		                encodeURI(condition[1]) + "&P2=" + encodeURI(condition[2]) + "&P3=" + encodeURI(condition[3]) +
 		                "&P4=" + encodeURI(condition[4]) + "&P5=" + encodeURI(condition[5]) + "&P6=" + encodeURI(condition[6]) +
@@ -1182,7 +1188,13 @@
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition + searchStatus)+ "&allFG=" + AllFG ;
-		               /*for(var i=3; i<=20; i++) {
+		               
+		                // 2023-07-21 한태훈 - 부서공유함에서 회사가 다를 시, 엑셀 내보내기 안되는 오류 수정.
+		                if (orgCompanyID != null && orgCompanyID != "") {
+		        			url += "&orgCompanyID=" + encodeURI(orgCompanyID);
+		                }
+		                
+		                /*for(var i=3; i<=20; i++) {
 		                	condition[i] = "";
 		                }
 		                

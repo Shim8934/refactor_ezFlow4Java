@@ -804,7 +804,11 @@
 		                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                pparsingXML = pparsingXML + "<ROW><CELL>";
 // 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(document.getElementById("txt_TitleName").value) + " : " + MakeXMLString(document.getElementById("txt_TitleName2").value) + ")</VALUE>";
- 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data11"));
+ 		               	if(compName[1] === "1") {
+ 		               		pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data11"));
+ 		               	} else {
+ 		               		pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data12"));
+ 		               	}
  		               	pparsingXML = pparsingXML + "changeComTapString" + compName[0];
  		               	pparsingXML = pparsingXML + "changeDeptTapString" + MakeXMLString(dept[1]) + " (" ;
  		               	if(compName[1] === "1") {

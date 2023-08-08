@@ -3157,7 +3157,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setWriterDeptName2(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
 		item.setWriterCompanyID(xmlData.getElementsByTagName("COMPANYID").item(0).getTextContent());
 		item.setWriterCompanyName(URLDecoder.decode(xmlData.getElementsByTagName("COMPANYNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
-		item.setWriterCompanyName2(URLDecoder.decode(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
+		item.setWriterCompanyName2(URLDecoder.decode(xmlData.getElementsByTagName("COMPANYNAME2").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&").trim(), "utf-8"));
 		item.setWriteDate(dateStr);
 		item.setImportance(Integer.parseInt(xmlData.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
 		item.setTitle(URLDecoder.decode(xmlData.getElementsByTagName("TITLE").item(0).getTextContent().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B").replaceAll("&amp;", "&"), "utf-8").trim());
@@ -4002,12 +4002,22 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		for (CommunityBoardItemReadVO vo : readerList) {
 			String userTitle = "";
 			String userDeptName = "";
-			if(vo.getUserTitle() != null){
+
+			// 2023-08-04 황인경 - 커뮤니티 > 게시판 > 조회자 정보 > 다국어 처리
+			if (!lang.equals("1")) {
+				vo.setUserName(vo.getUserName2());
+				vo.setUserTitle(vo.getUserTitle2());
+				vo.setUserDeptName(vo.getUserDeptName2());
+				vo.setUserCompanyName(vo.getUserCompanyName2());
+			}
+
+			if (vo.getUserTitle() != null) {
 				userTitle = vo.getUserTitle();
 			}
-			if( vo.getUserDeptName() != null){
+			if (vo.getUserDeptName() != null) {
 				userDeptName =  vo.getUserDeptName();
 			}
+
 			resultXML.append("<ROW>");
 			resultXML.append("<CELL><USERID><![CDATA[" + vo.getUserID() + "]]></USERID><DEPTID><![CDATA[" + vo.getDeptID() + "]]></DEPTID><VALUE><![CDATA[" + vo.getUserName() + "]]></VALUE></CELL>");
 			resultXML.append("<CELL><VALUE><![CDATA[" + userDeptName + "]]></VALUE></CELL>");
