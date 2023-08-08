@@ -5078,7 +5078,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("getLoginStopUserList started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
+		String lang = userInfo.getLang();
+
+		if (searchKeyword!=null && !searchKeyword.equals("") && lang.equals("2")){
+			searchKeycode = searchKeycode+"2";
+		}
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
@@ -5136,6 +5140,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("itemCnt", itemCnt);
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("lang",lang);
 
 		logger.debug("getLoginStopUserList ended.");
 
