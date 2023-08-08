@@ -48,6 +48,7 @@
 	    		,success: function(res) {
 	    			var html = "";
 
+                    var lang = res.lang;
    					if (res.itemCnt < 1) {
    						html += "<tr><td colspan=\"6\" style=\"text-align:center;\">" + "<spring:message code='ezOrgan.hdp25' />" + "</td></tr>";
   					} else {
@@ -57,9 +58,15 @@
    							var result;
    								
    							var cn = user.cn;
-   							var userName = user.displayName;
-  							var deptName = user.description;
-  							var companyName = user.company;
+   							if(lang=="1"){
+   							    var userName = user.displayName;
+   							    var deptName = user.description;
+   							    var companyName = user.company;
+   							}else{
+   							    var userName = user.displayName2;
+                                var deptName = user.description2;
+                                var companyName = user.company2;
+   							}
   							var passwordUpdateDT = user.passwordUpdateDT;
   							var durationDays = 0;
   							

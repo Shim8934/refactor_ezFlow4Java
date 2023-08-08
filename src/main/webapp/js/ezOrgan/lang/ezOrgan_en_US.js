@@ -2,7 +2,7 @@
 var strLang2 = "retirees to manage users please select Go."
 var strLang3 = "selected users have been handled retirees."
 var strLang4 = "selected users failed to handle retirement."
-var strLang5 = "people who really want to delete?"
+var strLang5 = " person who really want to delete?"
 var strLang6 = "Please select a user to recover."
 var strLang7 = "people want to restore the user?"
 var strLang8 = "retirement recovery"
