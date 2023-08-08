@@ -153,6 +153,8 @@ public class LoginVO implements Serializable {
     private String mobile;
     /** 부재정보 */
     private String extensionattribute5;
+	/** 직위 ID */
+	private String jobId;
     
 	public String getOtp() {
 		return otp;
@@ -546,5 +548,11 @@ public class LoginVO implements Serializable {
 	}
 	public void setExtensionattribute5(String extensionattribute5) {
 		this.extensionattribute5 = extensionattribute5;
+	}
+	public String getJobId() {
+		return jobId;
+	}
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
 	}
 }

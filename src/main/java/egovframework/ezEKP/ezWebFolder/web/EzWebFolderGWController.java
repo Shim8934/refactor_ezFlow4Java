@@ -1488,8 +1488,10 @@ public class EzWebFolderGWController {
 			String primary         = userInfo.getPrimary();
 			int startRow           = (pageSize * (pageNum - 1)) + 1;
 			int endRow             = pageSize * pageNum;
-			int cnt                = ezOrganAdminService.getPermissionListCount(companyId, type,"","", primary, tenantId);
-			List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyId, type,"","", primary, startRow, endRow, tenantId);
+			// 2023-07-31 전인하 - 웹폴더 > 겸직/사용자 별 권한 설정 옵션에 따른 권한 조회 동작
+			String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", userInfo.getTenantId());
+			int cnt                = ezOrganAdminService.getPermissionListCount(companyId, type,"","", primary, tenantId, permissionBasisDeptYN);
+			List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyId, type,"","", primary, startRow, endRow, tenantId, permissionBasisDeptYN);
 			
 			logger.debug("List size: " + list.size());
 			

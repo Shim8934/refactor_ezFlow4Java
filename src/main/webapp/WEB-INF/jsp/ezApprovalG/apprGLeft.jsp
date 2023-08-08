@@ -1140,6 +1140,8 @@
 		            companyID = UseSelectTitle[7];
 		            CompanyName = UseSelectTitle[8];
 		            CompanyName2 = UseSelectTitle[9];
+		            // 2023-08-28 전인하 > 겸직/사용자 기준 권한 설정 옵션이 추가됨에 따라 권한 정보 호출에 필요한 JobId 데이터를 추가
+		            pJobId = UseSelectTitle[10];
 		            DeptID = UseSelectTitle[0];
 		            ChangeCookies();
 		
@@ -1162,7 +1164,8 @@
 	        				position2 : arr_userinfo[14],
 	        				companyID : companyID,
 	        				companyName : CompanyName,
-	        				companyName2 : CompanyName2
+	        				companyName2 : CompanyName2,
+	        				jobId : pJobId
 	        		},
 	        		success: function(xml){
 	        			/* 2021-10-07 홍승비 - 부재자설정 후 겸직 셀렉트박스에서 겸직정보 변경 시 undefined 알러트 메세지 발생하지 않도록 수정 */

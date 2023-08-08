@@ -88,6 +88,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -232,6 +234,9 @@ public class CommonUtil {
 	
 	@Autowired
 	private Rest rest;
+
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
 
 	Document emptyDocument;
 
@@ -418,7 +423,7 @@ public class CommonUtil {
 			user.setServerName(serverName);
 			
 			return user;
-		}catch(Exception e){
+		}catch(Exception e) {
 			return new LoginVO();
 		}
 	}
@@ -497,6 +502,9 @@ public class CommonUtil {
 				case "APRUI7":
 					user.setCompanyID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
+				case "APRUI8":
+					user.setJobId(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
+					break;
 				}
 			}
 			
@@ -511,11 +519,19 @@ public class CommonUtil {
 				user.setDisplayName(user.getDisplayName2());
 				user.setCompanyName(user.getCompanyName2());
 			}
+
+			// 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 옵션 사용 시 권한정보 호출 분기처리
+			if (ezCommonService.getTenantConfig("permissionBasisDeptYN", user.getTenantId()).equals("Y") && ezOrganAdminService.isThisAddJob(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId()).equals("Y")) {
+				String rollInfo = ezOrganService.getRollInfoBasisDept(user.getId(), user.getTenantId(), user.getDeptID(), user.getJobId());
+				if (rollInfo != null && ! rollInfo.equals("")) {
+					user.setRollInfo(rollInfo);
+				}
+			}
 			
 			logger.debug("aprUserInfo ended");
 			
 			return user;
-		}catch(Exception e){
+		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
 			return new LoginVO();
 		}

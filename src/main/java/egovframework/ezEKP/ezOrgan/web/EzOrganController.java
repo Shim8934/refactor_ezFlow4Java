@@ -324,16 +324,15 @@ public class EzOrganController {
 		logger.debug("searchlist=" + URLDecoder.decode(searchlist, "utf-8") + ",celllist=" + celllist + ",proplist=" + proplist
 		        + ",listtype=" + listtype + ",lang=" + lang + ",page=" + page + ",companyId=" + companyId);
 		
-		if (page == null) {
-			if (companyId.equals("")) {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 10000, lang, tenantID, adminOrgan);
+			if (page == null) {
+				if (companyId.equals("")) {
+					infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 10000, lang, tenantID, adminOrgan);
+				} else {
+					infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 10000, lang, companyId, tenantID, noAddJob, adminOrgan);
+				}
+			} else {
+				infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 10000, lang, page, tenantID, companyId, adminOrgan);
 			}
-			else {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 10000, lang, companyId, tenantID, noAddJob, adminOrgan);
-			}
-		} else {
-			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 10000, lang, page, tenantID, companyId, adminOrgan);
-		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
 		/* jangsewon 주석처리
