@@ -1906,8 +1906,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	        	String tempXmlList = "";
 	        	
 	        	try (InputStreamReader isr = new InputStreamReader(new FileInputStream(f)); 
-	        			BufferedReader br = new BufferedReader(isr);
-	        			OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(f))) {
+	        			BufferedReader br = new BufferedReader(isr)) {
 		        	int read = 0;
 		        	
 					while ((read = br.read()) != -1) {
@@ -1924,9 +1923,13 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
 		            }
 		            
-	            	osw.write(commonUtil.convertDocumentToString(xmldom));
-	            	String crlf = System.getProperty("line.separator");
-	        		osw.append(crlf+crlf);
+					try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(f))) {
+						osw.write(commonUtil.convertDocumentToString(xmldom));
+						String crlf = System.getProperty("line.separator");
+						osw.append(crlf + crlf);
+					} catch (Exception ex) {
+						throw ex;
+					}
 		            
 		            xmlList = strXML;		            
 	        	} catch(Exception e) {
