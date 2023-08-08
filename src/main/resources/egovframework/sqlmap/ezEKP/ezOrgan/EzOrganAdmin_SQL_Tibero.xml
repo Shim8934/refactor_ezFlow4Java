@@ -139,9 +139,13 @@
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
 						a.DISPLAYNAME LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					OR 
+						a.DISPLAYNAME2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
 						a.DESCRIPTION LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					OR  
+						a.DESCRIPTION2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						a.CN LIKE '%' || #search_keyword# || '%' ESCAPE '\'

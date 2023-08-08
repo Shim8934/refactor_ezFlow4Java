@@ -97,9 +97,13 @@
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
 						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
+					OR  
+						DISPLAYNAME2 LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
 						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
+					OR  
+						DESCRIPTION2 LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE CONCAT('%', #search_keyword#,'%')
