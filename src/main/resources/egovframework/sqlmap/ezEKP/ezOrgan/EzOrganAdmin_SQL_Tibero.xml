@@ -4106,11 +4106,11 @@
     		<![CDATA[
 		    	INSERT ALL
 		    	INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '출근', 'inCom', '1', 'inOut', null, 1)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '출근', 'go to work', '1', 'inOut', null, 1)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', 'inOut', null, 3)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '퇴근', 'off work', '1', 'inOut', null, 3)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
@@ -4145,6 +4145,8 @@
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
+    			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A21', #companyID#, #tenantID#, '반반차', 'half and half off', '1', 'refresh', 'A05', 4)
 		    SELECT
 		    	*
 		    FROM DUAL
@@ -4154,11 +4156,11 @@
     	    <![CDATA[
 		    	INSERT ALL
 	    		INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '出勤', 'inCom', '1', 'inOut', null, 1)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '出勤', 'go to work', '1', 'inOut', null, 1)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A02', #companyID#, #tenantID#, '遅刻', 'late', '1', 'inOut', null, 2)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '退勤', 'outCom', '1', 'inOut', null, 3)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '退勤', 'off work', '1', 'inOut', null, 3)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A07', #companyID#, #tenantID#, '休出', 'working Holiday', '1', 'inOut', null, 6)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
@@ -4193,6 +4195,8 @@
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A19', #companyID#, #tenantID#, '慶弔', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A20', #companyID#, #tenantID#, '病休', 'sick leave', '1', 'refresh', 'A05', 9)
+		    	INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A21', #companyID#, #tenantID#, ''半半公暇'', 'half and half off', '1', 'refresh', 'A05', 4)
 		    SELECT
 		    	*
 		    FROM DUAL
@@ -4488,7 +4492,7 @@
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (9, 1, #companyID#, #tenantID#, '근태관리')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (9, 2, #companyID#, #tenantID#, 'Attitude')
+		    VALUES (9, 2, #companyID#, #tenantID#, 'Attendance')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (9, 3, #companyID#, #tenantID#, '勤怠管理')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
