@@ -55,7 +55,11 @@
 		    else if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
 		        window.resizeTo(348, 240);
 		    }
+		    
+		    /* 2023-08-03 홍승비 - 일괄결재 시 중복 결재 등, 모든 알러트의 '확인'버튼 연속 클릭 동작을 방지하도록 disable 처리 */
 		    function btn_OpinionOK_onclick() {
+		    	document.getElementById("Submit1").disabled = true;
+		    	
 		        if (ReturnFunction != null) {
 		            ReturnFunction(true, type, formURL, formDocType);
 		            
