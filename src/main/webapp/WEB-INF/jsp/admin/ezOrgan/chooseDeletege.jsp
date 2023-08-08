@@ -32,9 +32,9 @@
 			
 			var cData = "";
 			if (ReturnFunction == "ALL") {
-				cData = strLangkhj01 + "<spring:message code='ezAddress.kje01' />" + strLang20;
+				cData = "<spring:message code='ezAddress.kje01' />" + strLang20;
 			} else {
-				cData = strLangkhj01 + type + strLang20;
+				cData = type + strLang20;
 			}
 			
 			var checked = (confirm(cData));
@@ -73,7 +73,7 @@
 		      			<label for="radio1"><c:out value='${type}'/><spring:message code='ezOrgan.mse6' /></label>
 		      		</c:if>
 		      		<c:if test="${lang ne '3'}">
-		      			<label for="radio1"><spring:message code='ezezOrgan.KHJ01' /> <c:out value='${type}'/> <spring:message code='ezOrgan.mse6' /></label>
+		      			<label for="radio1"><c:out value='${type}'/> <spring:message code='ezOrgan.mse6' /></label>
 		      		</c:if>
 		      	</td>
 		  	</tr>

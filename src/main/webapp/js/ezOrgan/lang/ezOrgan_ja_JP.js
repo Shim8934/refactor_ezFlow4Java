@@ -30,7 +30,6 @@ var strLang29 = "次";
 var strLang30 = "すべての兼務を解除しますか？";
 var strLang31 = "全体管理者の設定権限がありません。";
 var strLang32 = "のすべての権限を削除してよろしいですか？";
-var strLang33 = "";
 var strLang535 = "データが存在しません";
 var strLangLHM01 = "復職処理は元所属していた会社にのみ可能です。";
 var strLangLHM02 = "削除すると該当社員と関わりのあるデータは削除され、復元できなくなります。";
