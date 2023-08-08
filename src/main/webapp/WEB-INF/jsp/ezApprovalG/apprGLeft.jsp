@@ -1134,9 +1134,9 @@
 	        		url : "/ezApprovalG/ChangeUserInfo.do",
 	        		data : {
 	        				deptID : arr_userinfo[4],
-	        				deptName  : arr_userinfo[5],
+	        				deptName  : arr_userinfo[15],
 	        				deptName2 : arr_userinfo[16],
-	        				position  : arr_userinfo[3],
+	        				position  : arr_userinfo[13],
 	        				position2 : arr_userinfo[14],
 	        				companyID : companyID,
 	        				companyName : CompanyName,
