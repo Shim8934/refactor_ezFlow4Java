@@ -21,7 +21,15 @@
 		var data3 = window.opener.testObj.dataList3;
 		var data4 = window.opener.testObj.dataList4;
 		var type = "<c:out value='${type}'/>";
+		var lang = "<c:out value='${lang}'/>";
 
+
+		window.onload = function () {
+			if(lang == "2"){
+				$('#radio1').next().text("Delete" + " <c:out value='${type}'/> " + " <spring:message code='ezOrgan.mse6' />");
+			}
+		}
+		
 		function Schedule_Confirm(id) {
 			
 			if(radio1.checked) {
@@ -32,9 +40,9 @@
 			
 			var cData = "";
 			if (ReturnFunction == "ALL") {
-				cData = strLangkhj01 + "<spring:message code='ezAddress.kje01' />" + strLang20;
+				cData = strLang33 + "<spring:message code='ezAddress.kje01' />" + strLang20;
 			} else {
-				cData = strLangkhj01 + type + strLang20;
+				cData = strLang33 + type + strLang20;
 			}
 			
 			var checked = (confirm(cData));
@@ -73,7 +81,7 @@
 		      			<label for="radio1"><c:out value='${type}'/><spring:message code='ezOrgan.mse6' /></label>
 		      		</c:if>
 		      		<c:if test="${lang ne '3'}">
-		      			<label for="radio1"><spring:message code='ezezOrgan.KHJ01' /> <c:out value='${type}'/> <spring:message code='ezOrgan.mse6' /></label>
+		      			<label for="radio1"><c:out value='${type}'/> <spring:message code='ezOrgan.mse6' /></label>
 		      		</c:if>
 		      	</td>
 		  	</tr>

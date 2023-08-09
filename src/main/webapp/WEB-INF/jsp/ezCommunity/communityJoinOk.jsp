@@ -142,7 +142,7 @@
 									    if ("${userInfo.lang}" != '3') {
 									    	//2018-07-04 김보미 - 커뮤니티명 길 경우 처리
 // 									        document.getElementById("pMessageContent").innerHTML = "<c:out value = '${userInfo.displayName1}' />" + "<spring:message code = 'ezCommunity.t1087' />" + "<br />(" + "<c:out value = '${clubVO.c_ClubName}' />" + ")</span>Community" + "<spring:message code = 'ezCommunity.t1088' />" + "<br />" + "<spring:message code = 'ezCommunity.t1089' />";
-									        document.getElementById("pMessageContent").innerHTML = "<c:out value = '${userInfo.lang eq 1? userInfo.displayName1 : userInfo.displayName2}' />" + "<spring:message code = 'ezCommunity.t1087' />" + "<br /> <span id='clubName'>(" + "<c:out value = '${clubVO.c_ClubName}' />" + ")</span>Community" + "<spring:message code = 'ezCommunity.t1088' />" + "<br />" + "<spring:message code = 'ezCommunity.t1089' />";
+									        document.getElementById("pMessageContent").innerHTML = "<c:out value = '${userInfo.lang eq 1? userInfo.displayName1 : userInfo.displayName2}' />" + "<spring:message code = 'ezCommunity.t1087' />" + "<br /> <span id='clubName'>(" + "<c:out value = '${clubVO.c_ClubName}' />" + ")</span> &nbsp;Community" + "<spring:message code = 'ezCommunity.t1088' />" + "<br />" + "<spring:message code = 'ezCommunity.t1089' />";
 									    	var clubName = "<c:out value = '${clubVO.c_ClubName}' />";
 									    	if (getByteLength(clubName) > 50) {
 									    		$("#clubName").css({"width":"305px","display":"inline-block", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "margin-bottom":"-5px" });

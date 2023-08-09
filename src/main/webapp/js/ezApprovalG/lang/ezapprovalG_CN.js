@@ -1139,3 +1139,6 @@ var strLangCSJBDA04 = "일괄회람 중 오류가 발생하였습니다.<br>";
 var strLangJSBAP01 = "预览";
 
 var strLangMJSSFA = "收件人组不能添加到收藏夹中。";
+
+/* 2023-08-09 기민혁 - 전자결재 > 결재정보 > 수신처 > 수신처그룹 */
+var strLang974 = "请选择收件人组.";
