@@ -1086,7 +1086,7 @@
 
 		            setButtonReceiveTrue();
 		
-		            // pDocSN, temppDocSN 값은 접수번호(receiptnumber) 필드가 없는 합의문에서 체크할 필요가 없음
+		            // pDocSN, temppDocSN 값은 접수번호(receiptnumber) 필드가 없는 부서합의문에서 체크할 필요가 없음
 		            // 수신접수 페이지에서 회송을 위해 사용되던 변수 및 코드가 그대로 복사된 것으로 추정되어 주석 처리함
 		            /*if (temppDocSN != "") {
 		                hesongok = setCabinetHeSong(temppDocSN);

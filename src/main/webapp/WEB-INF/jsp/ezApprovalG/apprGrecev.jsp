@@ -224,11 +224,19 @@
 		        
 		        var hesongok = true;
 		        if (ret != "cancel") {
+		        	var rtnVal = ExcuteInfo("HESONG_BEFORE");
+					if (!rtnVal) {
+						return;
+					}
+					
 		            setButtonReceiveTrue();
 		
-		            if (temppDocSN != "")
+		            // pDocSN, temppDocSN 값은 접수번호(receiptnumber) 필드가 없는 부서합의문에서 체크할 필요가 없음
+		            // 수신접수 페이지에서 회송을 위해 사용되던 변수 및 코드가 그대로 복사된 것으로 추정되어 주석 처리함
+		            /*if (temppDocSN != "") {
 		                hesongok = setCabinetHeSong(temppDocSN);
-		
+		            }*/
+		            
 		            if (hesongok) {
 		            	var docInfo = document.getElementById("DOCINFO").dataSource;
 						var writerID = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/WRITERID");
@@ -236,7 +244,15 @@
 						var docTitle = SelectSingleNodeValueNew(docInfo, "DOCINFO/DATA/DOCTITLE");
 		            	SendMailToDrafter_Hesong(writerID, writerName, docTitle);
 		                hesongok = setHeSongDocInfo();
-		            }
+		                
+		                if (hesongok) {
+							ExcuteInfo("HESONG_AFTER");
+						} else {
+							ExcuteInfo("HESONG_FAIL");
+						}
+		            } else {
+						ExcuteInfo("HESONG_FAIL");
+					}
 		        }
 		    }
 			
@@ -259,17 +275,13 @@
 			                getDocInfo();
 			
 			                if (pHasOpinionYN == "Y") {
-			                    if (pAprState == "006")
+			                    if (pAprState == "006") {
 			                        pInformationContent = "<spring:message code='ezApprovalG.t124'/><br> <spring:message code='ezApprovalG.t125'/>";
-			                    else
+			                    } else {
 			                        pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t125'/>";
-			
-			                    Ans = OpenInformationUI(pInformationContent);
-			
-			                    if (Ans) {
-			                        //openOpinionUI("Display");
-			                    	openOpinionUI_New("");
 			                    }
+			                    
+			                    Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
 			                }
 			            } else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
 			                var len;
@@ -279,18 +291,13 @@
 			                GetAprDocFormID();
 			                setAttachInfo(pDocID, "APR", lstAttachLink);
 			                getDocInfo();
+			                
 			                if (pHasOpinionYN == "Y") {
 			                    var pInformationContent;
 			                    var Ans;
 			
 			                    pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t125'/>";
-			                    Ans = OpenInformationUI(pInformationContent);
-			
-			                    if (Ans) {
-			                        //openOpinionUI("Display");
-			                        openOpinionUI_New("");
-			                    }
-			
+			                    Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
 			                }
 			            } else if (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
 			                var len;
@@ -302,16 +309,13 @@
 			                GetAprDocFormID();
 			                setAttachInfo(pDocID, "APR", lstAttachLink);
 			                getDocInfo();
+			                
 			                if (pHasOpinionYN == "Y") {
 			                    var pInformationContent;
 			                    var Ans;
 			
 			                    pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t125'/>";
-			                    Ans = OpenInformationUI(pInformationContent);
-			                    if (Ans) {
-			                        //openOpinionUI("Display");
-			                    	openOpinionUI_New("");
-			                    }
+			                    Ans = OpenInformationUI(pInformationContent, CheckOpinionYN_complete);
 			                }
 			            }
 			            else {
@@ -1141,6 +1145,14 @@
 				} else {
 					return false;
 				}
+			}
+		    
+			/* 2023-08-09 홍승비 - 최초 로딩 시 의견 존재여부 체크 후 의견 레이어 팝업 표출을 위한 함수 추가 */
+			function CheckOpinionYN_complete(Ans) {
+				DivPopUpHidden();
+		    	if (Ans) {
+					openOpinionUI_New("");
+		        }
 			}
 		</script>
 	</head>
