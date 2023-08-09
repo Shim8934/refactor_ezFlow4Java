@@ -119,7 +119,7 @@ function do_Attach_Add(ocx_file, forceBigFileUpload) {
 
         ezUtil = null;
         if ((BigSizeAttach == false) && (pBigFileUploadYN == "Y")) {
-            alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLang79);
+            alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLangLS04);
             BigSizeAttach = true;
             pBigFileUpload = "Y";
         }
@@ -372,7 +372,7 @@ function attach_Add1(ocx_file) {
 
     ezUtil = null;
     if ((BigSizeAttach == false) && (pBigFileUploadYN == "Y")) {
-        alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLang79);
+        alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLangLS04);
         BigSizeAttach = true;
         pBigFileUpload = "Y";
     }
@@ -4083,7 +4083,7 @@ function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
     }
 
     if ((BigSizeAttach == false) && (pBigFileUploadYN == "Y")) {
-        alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLang79);
+        alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLangLS04);
         BigSizeAttach = true;
         pBigFileUpload = "Y";
     }
