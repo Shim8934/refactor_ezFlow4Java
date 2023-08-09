@@ -2681,7 +2681,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         
         if (BigSizeAttachDownloadLimitCount == 1) {
         	TempText += " / " + strLangHDP01 + " <span style='color:#FF0000 ;'>" + BigSizeAttachDownloadLimitCount + "</span> " + strLangLS001;
-        } else if (BigSizeAttachDownloadLimitCount > 0) {
+        } else if (BigSizeAttachDownloadLimitCount > 1) {
         	TempText += " / " + strLangHDP01 + " <span style='color:#FF0000 ;'>" + BigSizeAttachDownloadLimitCount + "</span> " + strLangHDP02;
         }
         
