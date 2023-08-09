@@ -2932,7 +2932,7 @@ public class CommonUtil {
 
 		if (!usingSession || usingAsAPI || isLoopbackRequest) {
 			if(validLoginCookie(request)){
-				result = "0";
+				return "0";
 			}else{
 				return "2";
 			}
