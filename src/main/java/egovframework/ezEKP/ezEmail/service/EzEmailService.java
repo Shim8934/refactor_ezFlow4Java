@@ -118,6 +118,7 @@ public interface EzEmailService {
 	public boolean checkUserShareId(String userId, String shareId, int permissionType, int tenantId) throws Exception;
 	public List<MailSharedMailboxVO> getSharedMailboxList(String compId, int tenantId) throws Exception;
 	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId) throws Exception;
+	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId, String lang) throws Exception;
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
 	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
 	public List<MailSharedMailboxVO> getSharedMailboxSearchList(String companyId, int tenantId, String searchValue) throws Exception;

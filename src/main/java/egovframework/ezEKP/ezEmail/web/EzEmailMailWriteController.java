@@ -5800,9 +5800,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String shareId = request.getParameter("shareId");
+		String lang = userInfo.getPrimary();
 		int tenantId = userInfo.getTenantId();
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, tenantId);
+		MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, tenantId, lang);
 		List<MailSharedMailboxUserVO> userList = sharedMailboxInfo.getUserList();
 		String userId = null;
 		OrganUserVO userVO = null;

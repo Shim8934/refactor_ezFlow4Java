@@ -97,6 +97,7 @@ function ListView() {
     this.toString = ListView_ToString;
     this.SetHeightFree = SetHeightFree;
     this.SetEventSetFlag = SetEventSetFlag;
+    this.SetColgroup = SetColgroup;
     var _dataSource = null;
     var _thisID = "";
     var _isMultiSelectable = false;
@@ -124,6 +125,7 @@ function ListView() {
     var _SetHeightFree = false;
     var _HeaderNode = "NAME";
     var _rowEventSetFlag = true;
+    var _Colgroup = null;
     function SetID(pObjID) {
         if (pObjID != "")
             _thisID = pObjID;
@@ -210,6 +212,9 @@ function ListView() {
     }
     function SetEventSetFlag(flag) {
     	_rowEventSetFlag = flag;
+    }
+    function SetColgroup(arry) {
+        _Colgroup = arry;
     }
     function LoadFromID(pTableID) {
         var oList = document.getElementById(pTableID);
@@ -334,8 +339,16 @@ function ListView() {
         RemoveDataBody();
         var newTBody = GetTableBodyObj();
         oList.appendChild(newTBody);
+
+        RemoveColgroup();
+        var newColGroup = GetTableColgroup();
+        if(newColGroup !== undefined) {
+        	oList.appendChild(newColGroup);
+        }
+        
         oldTbody = null;
         newTBody = null;
+        newColGroup = null;
         oList = null;
     }
     function GetTableHeaderObj() {
@@ -440,6 +453,22 @@ function ListView() {
         objTheader.appendChild(objTr);
         objTr = null;
         return objTheader;
+    }
+    function GetTableColgroup() {
+		var oList = document.getElementById(_thisID);
+		if (!oList || _Colgroup == null || !Array.isArray(_Colgroup)) { return; }
+		
+		var oColG = document.createElement("colgroup");
+		var oCol = document.createElement("col");
+		var oColTmp;
+		
+		_Colgroup.forEach(function(ele) {
+			oColTmp = oCol.cloneNode();
+			oColTmp.setAttribute("width", ele);
+			oColG.appendChild(oColTmp);
+		});
+		 
+		return oColG;
     }
     function GetTableBodyObj() {
         var oTbody = document.createElement("TBODY");
@@ -747,6 +776,15 @@ function ListView() {
             }
         }
     }
+    function RemoveColgroup() {
+	     var oList = document.getElementById(_thisID);
+	     if (!oList){ return; }
+	
+	     var oListColgroup = oList.getElementsByTagName("colgroup");
+	     if (oListColgroup.length > 0) {
+	     	oListColgroup[0].remove();
+	     }
+	 }
     function GetRowCount() {
         var arrRow = GetDataRows();
         if (arrRow != null)
