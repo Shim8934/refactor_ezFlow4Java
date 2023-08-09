@@ -5080,9 +5080,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		String lang = userInfo.getLang();
 
-		if (searchKeyword!=null && !searchKeyword.equals("") && lang.equals("2")){
-			searchKeycode = searchKeycode+"2";
-		}
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
