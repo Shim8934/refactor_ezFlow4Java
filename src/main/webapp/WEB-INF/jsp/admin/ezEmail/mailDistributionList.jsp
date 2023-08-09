@@ -190,7 +190,7 @@
 				            return;
 				        }
 				        
-				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
+				        alert(selectedCount + " <spring:message code='ezEmail.t54' />");
 				        //company_change();
 				        selectList_Change();
 			        }
