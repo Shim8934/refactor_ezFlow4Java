@@ -1708,10 +1708,11 @@ public class EzEmailAdminController {
 			
 			String userId = auth.getId();
 			String shareId = request.getParameter("shareId");
+			String lang = auth.getPrimary();
 			int tenantId = auth.getTenantId();
-			logger.debug("userId=" + userId + ",shareId=" + shareId + ",tenantId=" + tenantId);
+			logger.debug("userId={}, shareId={}, tenantId={}, lang={}", userId, shareId, tenantId, lang);
 			
-			MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, auth.getTenantId());
+			MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, auth.getTenantId(), lang);
 			
 			model.addAttribute("sharedMailboxInfo", sharedMailboxInfo);
 		} catch (Exception e) {
