@@ -1143,3 +1143,6 @@ var strLangJSBAP01 = "Preview";
 
 /* 2023-07-27 민지수 - 수신처 그룹적용 > 즐겨찾기 추가 시 오류 메세지 추가 */
 var strLangMJSSFA = "Destination groups cannot be added to favorites.";
+
+/* 2023-08-09 기민혁 - 전자결재 > 결재정보 > 수신처 > 수신처그룹 */
+var strLang974 = "Please select a receiving group.";

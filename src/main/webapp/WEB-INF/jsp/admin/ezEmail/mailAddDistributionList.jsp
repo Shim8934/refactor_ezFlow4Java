@@ -3857,7 +3857,7 @@
 		                        <td style="vertical-align: top;">
 		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
 		                                <span style="min-width: 45px; padding-right:5px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
-		                                <span style="min-width: 45px; padding:0;" class="toTitleCnt" ><b></b><spring:message code='main.t20000' /></span>
+		                                <span style="min-width: 45px; padding:0;" class="toTitleCnt" ><b></b> <spring:message code='main.t20000' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
 		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 501px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
