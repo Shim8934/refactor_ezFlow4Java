@@ -639,7 +639,7 @@ var strLang926 = "An error occurred during upload. \n \nfile type (extension), p
 var strLang928 = "Records to retrieve information failed!";
 var strLang929 = "Do not have permission to view this document. <br> Draft, please contact or.";
 // ApprovUI/doApprovAllSelect.aspx
-var strLang930 = "The selected article does not.";
+var strLang930 = "There are no documents selected.";
 var strLang931 = "<br> Batch Approval is completed.";
 var strLang931_1 = "Batch Approval is completed.";
 var strLang932 = "An error has occurred in the batch approval. <br>";
