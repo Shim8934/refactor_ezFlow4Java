@@ -4769,4 +4769,33 @@
 		)
 	</statement>
 	
+	<select id="EzCommonDAO.checkHWPDownSecurityConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useHwpDownSecurity'
+		AND
+			TENANT_ID = 0
+	</select>
+	<select id="EzCommonDAO.checkHWPSecurityNumConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'HwpSecurityNum'
+		AND
+			TENANT_ID = 0
+	</select>
+	<insert id="EzCommonDAO.insertHWPDownSecurityConfig">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (0, 'useHwpDownSecurity', 'Y', 'Y: 사용 N: 사용안함 (default: Y)', '통합pc저장, 메일 발송, 게시판 게시 시 hwp 결재파일 배포용 문서로 저장', TO_DATE('2023-05-31 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+    </insert>
+    <insert id="EzCommonDAO.insertHWPSecurityNumConfig">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (0, 'HwpSecurityNum', 'Kaoni2023!', 'hwp배포용 문서 비밀번호', 'hwp배포용 문서 비밀번호', TO_DATE('2023-05-31 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+    </insert>
+	
 </sqlMap>
