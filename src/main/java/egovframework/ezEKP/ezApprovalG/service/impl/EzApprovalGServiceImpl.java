@@ -12336,12 +12336,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		
-		if ( !flag.equals("G")) {
+		if (!flag.equals("G")) {
 			ezApprovalGDAO.jiJungInsertReceiptProInfo(map);
 			ezApprovalGDAO.jiJungUpdateReceiptProInfo(map);
 			ezApprovalGDAO.jiJungUpdateReceiptProInfo2(map);
 			ezApprovalGDAO.jiJungDeleteReceiptProInfo(map);
-			ezApprovalGDAO.jiJungDeleteReceiptProInfo2(map);
 			ezApprovalGDAO.jiJungUpdateTbDocDelivery(map);
 		} else {
 			String code = ezApprovalGDAO.selectCodeValue(map);
@@ -12354,7 +12353,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.jiJungUpdateReceiptProInfo4(map);
 			}
 			ezApprovalGDAO.jiJungDeleteReceiptProInfo(map);
-			ezApprovalGDAO.jiJungDeleteReceiptProInfo2(map);
 		}
 		
 		//수신문 반송시 지정하면 결재라인 및 의견을 지워주기 위해 추가
