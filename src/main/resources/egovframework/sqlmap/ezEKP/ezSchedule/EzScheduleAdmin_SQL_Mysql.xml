@@ -27,10 +27,12 @@
 		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
 		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
 		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
-		<result property="creatorid"		column="CREATORID"			columnIndex="5"/>	
+		<result property="creatorid"		column="CREATORID"			columnIndex="5"/>
 		<result property="creatorname"		column="CREATORNAME"		columnIndex="6"/>
+		<result property="creatorname2"		column="CREATORNAME2"		columnIndex="6"/>
 		<result property="precreatorid"   column="PRECREATORID"      columnIndex="11"/>
 		<result property="precreatorname"   column="PRECREATORNAME"      columnIndex="12"/>
+		<result property="precreatorname2"   column="PRECREATORNAME2"      columnIndex="12"/>
 		<result property="modifydate"		column="MODIFYDATE"		columnIndex="10"/>
 	</resultMap>
 	
@@ -159,7 +161,7 @@
 		<![CDATA[
 			select DATE_ADD(DATE_FORMAT(b.modifydate, '%Y-%m-%d %H:%i:%S'),INTERVAL #offset# MINUTE) as modifydate, 
 			DATE_ADD(DATE_FORMAT(b.createdate, '%Y-%m-%d %H:%i:%S'),INTERVAL #offset# MINUTE) as createdate, b.creatorid as creatorid, b.precreatorid as precreatorid,
-			a.groupid as groupid, b.groupname as groupname, b.description as description, b.creatorname as creatorname, b.precreatorname as precreatorname
+			a.groupid as groupid, b.groupname as groupname, b.description as description, b.creatorname as creatorname, b.precreatorname as precreatorname, b.creatorname2 as creatorname2, b.precreatorname2 as precreatorname2
             from tbl_schedulegroupmember a, tbl_schedulegroup b 
             where a.groupid = b.groupid
             ]]>
@@ -186,13 +188,15 @@
 		<isEqual property="v_SEARCHTYPE" compareValue="groupMembers">
 			<![CDATA[
 				AND
-					a.membername = #v_SEARCHVALUE#
+					CASE #v_PRIMARYDATA# WHEN '1' THEN a.membername WHEN '2' THEN a.membername2 END
+					LIKE CONCAT('%', #v_SEARCHVALUE#, '%')
 			]]>
 		</isEqual>
 		<isEqual property="v_SEARCHTYPE" compareValue="creatorname">
 			<![CDATA[
 				AND
-					b.creatorname = #v_SEARCHVALUE#
+					CASE #v_PRIMARYDATA# WHEN '1' THEN b.creatorname WHEN '2' THEN b.creatorname2 END
+					LIKE CONCAT('%', #v_SEARCHVALUE#, '%')
 			]]>
 		</isEqual>
 		<![CDATA[
