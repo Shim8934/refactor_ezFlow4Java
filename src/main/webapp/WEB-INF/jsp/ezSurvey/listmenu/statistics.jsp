@@ -254,6 +254,7 @@
 					
 					txtCont.textContent = responses[i]["texts"];
 					liResp.className    = "txt-response";
+					liResp.style.whiteSpace = "pre-wrap";
 					liResp.appendChild(txtCont);
 					ulElmt.appendChild(liResp);
 				}
