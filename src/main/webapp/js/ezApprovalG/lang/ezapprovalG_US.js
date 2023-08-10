@@ -639,7 +639,7 @@ var strLang926 = "An error occurred during upload. \n \nfile type (extension), p
 var strLang928 = "Records to retrieve information failed!";
 var strLang929 = "Do not have permission to view this document. <br> Draft, please contact or.";
 // ApprovUI/doApprovAllSelect.aspx
-var strLang930 = "The selected article does not.";
+var strLang930 = "There are no documents selected.";
 var strLang931 = "<br> Batch Approval is completed.";
 var strLang931_1 = "Batch Approval is completed.";
 var strLang932 = "An error has occurred in the batch approval. <br>";
@@ -991,7 +991,7 @@ var strLangS195 = "Please re-enter."
 var strLangSHJ1 = "Please specify the final approver after reference.";
 
 var strLangS822 = "User already circulated the ship."
-var strLangS824 = "Circulating self Duplicate";
+var strLangS824 = "Duplicate Circular.";
 var strLangS825 = "Please specify the circulation.";
 var strLangS826 = "I was not sent out circulars.";
 var strLangpjj27 = "A favorite you want to edit, you can edit should be applied to the party circulated a list.";
@@ -1143,3 +1143,6 @@ var strLangJSBAP01 = "Preview";
 
 /* 2023-07-27 민지수 - 수신처 그룹적용 > 즐겨찾기 추가 시 오류 메세지 추가 */
 var strLangMJSSFA = "Destination groups cannot be added to favorites.";
+
+/* 2023-08-09 기민혁 - 전자결재 > 결재정보 > 수신처 > 수신처그룹 */
+var strLang974 = "Please select a receiving group.";

@@ -28334,7 +28334,8 @@
    		UPDATE 
    			TBL_ENDRECEIPTPOINTINFO
    		SET
-   			PROCESSYN = 'B'
+   			PROCESSYN = 'B',
+            PROCESSDATE = #v_SYSDATE#
    		WHERE
    			DOCID = (SELECT 
    						ORGDOCID

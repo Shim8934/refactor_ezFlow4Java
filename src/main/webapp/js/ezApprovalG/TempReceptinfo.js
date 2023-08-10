@@ -154,7 +154,7 @@ function btn_GroupReceptAdd_onclick(flag){
             addSusinGroup(curSelRow);
         }
     } else {
-        alert("수신처그룹을 선택하세요.");
+        OpenAlertUI(strLang974);
     }
 }
 

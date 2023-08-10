@@ -33,7 +33,7 @@ public interface EzScheduleAdminService {
 
 	public List<ScheduleGroupListVO> getMyGroupList(String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate) throws Exception;
 	
-	public List<ScheduleGroupVO> getMyGroupList2 (String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate, int startRow, int maxItemPerPage) throws Exception;
+	public List<ScheduleGroupVO> getMyGroupList2 (String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate, int startRow, int maxItemPerPage, String primaryData) throws Exception;
 	
 	public int getMyGroupMemberListCnt(String groupId, String lang, int tenantId ,String companyID) throws Exception;
 }
