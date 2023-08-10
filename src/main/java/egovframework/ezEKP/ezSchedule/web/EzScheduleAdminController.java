@@ -831,8 +831,13 @@ public class EzScheduleAdminController {
             
             int myMemberListCnt = ezScheduleAdminService.getMyGroupMemberListCnt(data.getGroupId(), loginSimpleVO.getLang(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
             //String cDate = commonUtil.getDateStringInUTC(data.getCreateDate(),loginSimpleVO.getOffset(),false).substring(0,10);
+            // 2023-08-10 황인경 - 관리자 > 일정관리 > 일정그룹관리 > 인원수 다국어 단/복수 처리
+            if (myMemberListCnt > 1) {
+            	result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.hik01", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+            } else {
+            	result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+            }
             
-            result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE><![CDATA[" + data.getDescription() + "]]></VALUE>");
