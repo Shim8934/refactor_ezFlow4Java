@@ -137,9 +137,14 @@
 		            alert("<spring:message code='ezSchedule.t238' />");
 		            return;
 		        }
-	
-		        if (!confirm((check_Value) + "<spring:message code='ezSchedule.t239' />"))
-		            return;
+				
+		        // 2023-08-10 황인경 - 일정관리 > 초대자 
+		        if (check_Value > 1) {
+		        	!confirm((check_Value) + "<spring:message code='ezSchedule.hik02' />");
+		        } else {
+		        	!confirm((check_Value) + "<spring:message code='ezSchedule.t239' />");
+		        }
+		        return;
 		        
 		        $.ajax({
 					type : "POST",

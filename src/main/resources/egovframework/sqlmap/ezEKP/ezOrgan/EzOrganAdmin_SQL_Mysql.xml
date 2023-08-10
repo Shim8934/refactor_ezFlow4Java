@@ -1539,6 +1539,7 @@
                  ('A60','T  ','재발송대기','1','재발송대기 (Try Again)','Try Again','再送待ち','不满等待',#tenantID#, #companyID#),
                  ('A60','V  ','도달','1','도달 (arriVed)','arriVed','到達','抵达',#tenantID#, #companyID#),
                  ('A60','Y  ','수신완료','1','수신완료 (Yes)','Reception complete','受信完了','接收完成',#tenantID#, #companyID#),
+				 ('A60','B  ','발송의뢰반송','1','발송의뢰반송(Return Offered)','Return Offered','送信依頼拒否','拒绝发送请求',#tenantID#, #companyID#),
                  ('F01','0  ','플로우','0','플로우관련 업무 정의','플로우','플로우','플로우',#tenantID#, #companyID#),
                  ('F01','001','Y','1','수발신문을 발신함으로 보낸다.','Y','Y','Y',#tenantID#, #companyID#),
                  ('F01','002','O','1','D:DSN연결;O:OleDB 연결','O','O','O',#tenantID#, #companyID#),

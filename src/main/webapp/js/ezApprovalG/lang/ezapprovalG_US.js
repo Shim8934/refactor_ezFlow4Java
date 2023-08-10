@@ -618,7 +618,7 @@ var strLang879 = "Returned"
 var strLang880 = "Opinion information"
 var strLang888 = "Display document"
 var strLang891 = "Cancelled the approval document."
-var strLang892 = "You can approve the document at the documents to be approved."
+var strLang892 = "You can re-draft the document at to be process."
 var strLang893 = "You collect the draft document."
 var strLang894 = "You can draft the new document at the documents to be approved."
 var strLang895 = "You can approve the documnet, if approval method is approval, confirmation and agreement."
@@ -991,7 +991,7 @@ var strLangS195 = "Please re-enter."
 var strLangSHJ1 = "Please specify the final approver after reference.";
 
 var strLangS822 = "User already circulated the ship."
-var strLangS824 = "Circulating self Duplicate";
+var strLangS824 = "Duplicate Circular.";
 var strLangS825 = "Please specify the circulation.";
 var strLangS826 = "I was not sent out circulars.";
 var strLangpjj27 = "A favorite you want to edit, you can edit should be applied to the party circulated a list.";
@@ -1000,8 +1000,8 @@ var strLangHYJ28 = "The party circulated a list does not exist.";
 var strLang1104 = "The agency can not receive electronic documents. \nCan not be added.";
 
 //2017-11-09 장진혁 추가
-var strLangjjh01 = "Attachment total";
-var strLangjjh02 = "You can upload up to MB.";
+var strLangjjh01 = "The size of attachments can't exceed ";
+var strLangjjh02 = " MB.";
 var strLangjjh03 = "Adding attachment.";
 var strLangjjh04 = "Summary of approval";
 

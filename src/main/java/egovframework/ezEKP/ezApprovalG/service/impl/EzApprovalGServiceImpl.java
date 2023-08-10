@@ -1747,8 +1747,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<DATA9><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle()) + "]]></DATA9>");
 						resultXML.append("<DATA10><![CDATA[" + makeListField(vo.getReceiptPointName()) + "]]></DATA10>");
 						resultXML.append("<DATA11><![CDATA[" + makeListField(vo.getReceiptPointName2()) + "]]></DATA11>");
-						resultXML.append("<DATA12><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle2()) + "]]></DATA12>");
-						resultXML.append("<DATA13><![CDATA[" + makeListField(vo.getReceiptMemberName2()) + "]]></DATA13>");
+                        resultXML.append("<DATA12><![CDATA[" + makeListField(vo.getReceiptMemberName2()) + "]]></DATA12>");
+						resultXML.append("<DATA13><![CDATA[" + makeListField(vo.getReceiptMemberJobTitle2()) + "]]></DATA13>");
+
 					}
 				}
 				
@@ -13044,6 +13045,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
 		map.put("v_DEPTID", deptID);
+        map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		map.put("v_TENANTID", tenantID);
 		
 		ezApprovalGDAO.updateBebuReceiptInfoS(map);

@@ -169,7 +169,7 @@
 					
 	            	if(totalPage == 0){
 		                document.getElementById("ApprovList").innerHTML = "";
-	                	var listheader = loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase());
+	                	var listheader = document.getElementById("listviewheader");
 	                	var xmldom = xmlhttp.responseXML;
 	                	var listview = new ListView();
 	                	listview.SetID("ApprovListView");
@@ -225,7 +225,7 @@
 	            	list += "</ROWS>";
 
 		            list = loadXMLString(list);
-		            var listheader = loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase());
+		            var listheader = document.getElementById("listviewheader");
 	            	SelectSingleNode(listheader, "LISTVIEWDATA").appendChild(list.documentElement)
 
 		            document.getElementById("ApprovList").innerHTML = "";

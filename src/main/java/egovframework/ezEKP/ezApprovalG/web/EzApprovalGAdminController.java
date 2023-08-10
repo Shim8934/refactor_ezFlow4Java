@@ -1667,6 +1667,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
+		model.addAttribute("userLang", userInfo.getLang());
 		
 		logger.debug("apprGReceiveGroup ended.");
 		
