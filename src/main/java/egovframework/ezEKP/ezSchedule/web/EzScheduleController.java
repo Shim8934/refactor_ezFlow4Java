@@ -895,14 +895,22 @@ public class EzScheduleController extends EgovFileMngUtil {
 	public String scheduleGroupMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleGroupMember started ============");
-		
+
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 
 		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
-		
+
+		String primaryData = "";
+		if (commonUtil.getPrimaryData(loginVO.getLang(), loginVO.getTenantId()).equals("1")) {
+			primaryData = "1";
+		} else {
+			primaryData = "2";
+		}
+
+		model.addAttribute("primaryData", primaryData);
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("loginUserId", loginVO.getId());
 		model.addAttribute("loginUserName",loginVO.getDisplayName());
