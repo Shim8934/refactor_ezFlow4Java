@@ -991,7 +991,7 @@ var strLangS195 = "Please re-enter."
 var strLangSHJ1 = "Please specify the final approver after reference.";
 
 var strLangS822 = "User already circulated the ship."
-var strLangS824 = "Circulating self Duplicate";
+var strLangS824 = "Duplicate Circular.";
 var strLangS825 = "Please specify the circulation.";
 var strLangS826 = "I was not sent out circulars.";
 var strLangpjj27 = "A favorite you want to edit, you can edit should be applied to the party circulated a list.";
