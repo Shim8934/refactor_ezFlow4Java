@@ -1104,7 +1104,7 @@
 		    </td>
 		  </tr>
 		  <tr>
-		    <th ><spring:message code='ezApprovalG.t1330'/></th>
+		    <th ><spring:message code='ezApprovalG.KMH02'/></th>
 		    <td ><input type="text" id="DocTitle" name="DocTitle" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
 		    </td>
 		  </tr>
