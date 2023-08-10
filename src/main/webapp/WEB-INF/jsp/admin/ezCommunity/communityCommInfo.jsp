@@ -86,14 +86,7 @@
 			<table class="content" style="margin-top:10px;">
 				<tr> 
 					<th><spring:message code = 'ezCommunity.t9' /></th>
-					<c:choose>
-						<c:when test="${userInfo.lang != '2' }">
-							<td><c:out value = '${memberVO.userName }' /> (<c:out value = '${clubVO.c_SysopID }' />)</td>
-						</c:when>
-						<c:otherwise>
-							<td><c:out value = '${memberVO.userName2 }' /> (<c:out value = '${clubVO.c_SysopID }' />)</td>
-						</c:otherwise>
-					</c:choose>
+					<td><c:out value = '${memberVO.userName }' /> (<c:out value = '${clubVO.c_SysopID }' />)</td>
 				</tr>
 				<tr> 
 					<th><spring:message code = 'ezCommunity.t9991' /></th>
