@@ -132,9 +132,9 @@
 			    	_html +="<td style='white-space:nowrap; text-overflow:ellipsis; overflow:hidden;text-align:center;'>"
 			    		+ allunReadCount + "/" + allMailCount + "</td>";
 			    	_html +="<td style='white-space:nowrap; text-overflow:ellipsis; overflow:hidden;text-align:center;' colspan='2'>"
-			    		+ "<div class='graph_used'><dl><dt><spring:message code='main.t00045' /> </dt><dt><span class='color' id='used_cap'>97MB</span><span id='used_per'>(1.89%)</span></dt>"
+			    		+ "<div class='graph_used'><dl><dt id='capacity' ></dt><dt><span class='color' id='used_cap'></span><span id='used_per'></span></dt>"
 // 			    		+ "<spring:message code='main.t00045' /><span class='mail_spaceText'>&nbsp;<span class='userPer' id='usePer'></span>"
-			    		+ "<dd class='graph'><span class='bar' id='bar'></span></dd><dd class='graph_text' id='graph_text'></dd></div></td></tr>";
+			    		+ "<dd class='graph' id='graphBar' style='display:none;'><span class='bar' id='bar'></span></dd><dd class='graph_text' id='graph_text'></dd></div></td></tr>";
 			    		
 			    	document.getElementById("tbody").innerHTML = _html;
 				} catch (e) {
@@ -473,8 +473,10 @@
                  	       "width" : percent + "%"
                  	   });                 	                   
                  	   //$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
+                 	   $("#capacity").text("<spring:message code='main.t00045' />");
                  	   $("#used_cap").text(useVolume);
                  	   $("#used_per").text("("+percent+"%)");
+                 	   $("#graphBar").css("display","");
                  	   $("#graph_text").text(totalVolume);
                  	   
                  	   //용량 체크(색깔로)
