@@ -848,9 +848,9 @@
 		<![CDATA[
 			SELECT
 				A.cn AS writerid,
-				A.displayname$lang$ AS username,
-                A.description$lang$ AS deptname,
-                A.title$lang$ AS usertitle,
+				A.displayname2$lang$ AS username,
+                A.description2$lang$ AS deptname,
+                A.title2$lang$ AS usertitle,
                 A.mail AS useremail,
                 SUBSTR(DATE_ADD(#searchStartDate#, INTERVAL #offsetMin# minute), 1, 10) as startdate
 			FROM
@@ -887,13 +887,13 @@
 		]]>
 			
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
+			A.description2$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
+			A.displayname2$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
+			A.title2$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			A.department = #searchDeptId#
