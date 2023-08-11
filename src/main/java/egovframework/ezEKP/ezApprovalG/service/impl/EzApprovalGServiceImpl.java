@@ -6544,7 +6544,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 			// 부재자 설정인 경우 proxySign = '代'
 			if (!userID.equals(orgUID)) {
-				proxySign = messageSource.getMessage("ezApproval.t498", userInfo.getLocale());
+                if (!strLang.equals("2")) {
+                    proxySign = messageSource.getMessage("ezApproval.t498", userInfo.getLocale());
+                } else {
+                    proxySign = messageSource.getMessage("ezApprovalG.DSIG01", userInfo.getLocale());
+                }
 			}
 			
 			String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
@@ -7516,7 +7520,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		// 부재자 설정인 경우 proxySign = '代'
 		if (!userID.equals(orgUID)) {
-			proxySign = messageSource.getMessage("ezApproval.t498", userInfo.getLocale());
+            if (!strLang.equals("2")) {
+                proxySign = messageSource.getMessage("ezApproval.t498", userInfo.getLocale());
+            } else {
+                proxySign = messageSource.getMessage("ezApprovalG.DSIG01", userInfo.getLocale());
+            }
 		}
 		
 		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
