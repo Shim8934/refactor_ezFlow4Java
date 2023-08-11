@@ -53,8 +53,6 @@ function get_mail(flag) {
 function ReSend(pURL, pEmail) {
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
-    if (conWidth > minimumWidth)
-        conWidth = minimumWidth;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - minimumWidth) / 2;
@@ -108,8 +106,6 @@ function encoding_mail() {
 function reply_onClick() {
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
-    if (conWidth > minimumWidth)
-        conWidth = minimumWidth;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - minimumWidth) / 2;
@@ -126,9 +122,6 @@ function reply_onClick() {
 function allreply_onClick() {
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
-    if (conWidth > minimumWidth)
-        conWidth = minimumWidth;
-    var pwidth = window.screen.availWidth;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - minimumWidth) / 2;
