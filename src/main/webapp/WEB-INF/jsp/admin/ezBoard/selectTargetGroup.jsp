@@ -2021,7 +2021,7 @@
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
-		        <NAME>권한그룹</NAME>
+		        <NAME><spring:message code='ezSurvey.t116' /></NAME>
 		        <WIDTH>70</WIDTH>
 		      </HEADER>
 		    </HEADERS>
@@ -2048,7 +2048,7 @@
 	            				<span id="jikchekSpan" onclick="jikchekTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t281' /></span>
 	            			</p>
 	            			<p id="orgTabButton4">
-	            				<span id="groupSpan" onclick="groupTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)">권한그룹</span>
+	            				<span id="groupSpan" onclick="groupTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezSurvey.t116' /></span>
 	            			</p>
 	            		</div>
             		</div>
