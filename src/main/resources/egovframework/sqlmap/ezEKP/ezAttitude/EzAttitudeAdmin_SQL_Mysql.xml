@@ -190,6 +190,8 @@
 				TBL_USERMASTER.tenant_id = #tenantId#
 			AND 
 				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+				TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared_mailbox_%'
 		]]>
 		
 		<isNotEmpty prepend="AND" property="companyId">

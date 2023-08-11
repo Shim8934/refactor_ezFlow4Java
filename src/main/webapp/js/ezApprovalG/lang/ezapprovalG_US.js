@@ -1001,7 +1001,7 @@ var strLang1104 = "The agency can not receive electronic documents. \nCan not be
 
 //2017-11-09 장진혁 추가
 var strLangjjh01 = "The size of attachments can't exceed ";
-var strLangjjh02 = " MB.";
+var strLangjjh02 = "MB.";
 var strLangjjh03 = "Adding attachment.";
 var strLangjjh04 = "Summary of approval";
 
