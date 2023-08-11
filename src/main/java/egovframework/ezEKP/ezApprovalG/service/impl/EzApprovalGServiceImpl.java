@@ -7890,11 +7890,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					habYuiAprStateFlag = false;
 				}
 			}
-			
+
 			/* 2022-10-12 홍승비 - 대결자 직후 전결자가 존재하는 경우, 자동으로 결재완료되어야 하므로 문서번호 생성 진행 */
+			/* 2023-08-11 박기범 - addLastKyulJeYN(결재 후에 합의 가능: 1, 2) 값에따라 마지막이 개인순차합의인 경우 허용 */
 			//일반 채번문제 수정 2017-05-15
 //			if ((totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
-			if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011") && habYuiAprStateFlag) {
+			if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK)
+                    && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004") || (aprType.equals("008") && addLastKyulJeYN.equals("1") || addLastKyulJeYN.equals("2")))
+                    && !aprType.equals("007") && !aprStateSign.equals("011") && habYuiAprStateFlag) {
 				if (aprStateSign.equals("012")) {
 					strDeptID = receiveDept;
 					strDeptName = receiveDeptName;
