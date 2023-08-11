@@ -882,6 +882,7 @@ var strLang1138 = "No department ID.";
 var strLang1139 = "You do not have permission to view this document.";
 var strLang1148 = "Accompanying information";
 var strLang1149 = "Approval line information";
+var strLang1150 = "Linked forms cannot be reused.";
 
 // 일반용 S를 붙일 것
 var strLangS6 = "Bounce: signers";

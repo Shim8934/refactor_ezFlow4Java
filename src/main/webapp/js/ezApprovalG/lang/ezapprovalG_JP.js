@@ -882,6 +882,7 @@ var strLang1138 = "部門名がありません。";
 var strLang1139 = "この記事を閲覧する権限がありません。";
 var strLang1148 = "添付情報";
 var strLang1149 = "決裁経路情報";
+var strLang1150 = "連動フォームは再利用できません。";
 
 // 일반용 S를 붙일 것
 var strLangS6 = "差し戻し:署名者";

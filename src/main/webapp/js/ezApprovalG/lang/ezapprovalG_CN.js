@@ -879,6 +879,7 @@ var strLang1138 = "부서아이디가 없습니다.";
 var strLang1139 = "이 문서를 열람할 권한이 없습니다.";
 var strLang1148 = "첨부 정보";
 var strLang1149 = "결재선 정보";
+var strLang1150 = "链接的表单不能重复使用";
 
 // 일반용 S를 붙일 것
 var strLangS6   = "반송:서명자";
