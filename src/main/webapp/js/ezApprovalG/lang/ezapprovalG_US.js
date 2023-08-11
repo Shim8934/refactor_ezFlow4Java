@@ -1146,3 +1146,6 @@ var strLangMJSSFA = "Destination groups cannot be added to favorites.";
 
 /* 2023-08-09 기민혁 - 전자결재 > 결재정보 > 수신처 > 수신처그룹 */
 var strLang974 = "Please select a receiving group.";
+
+/* 2023-08-11 민지수 - 전자결재 > 양식버전 다를 시 오류 메세지 추가 */
+var strLang975 = "The form version is different and cannot be reused.";

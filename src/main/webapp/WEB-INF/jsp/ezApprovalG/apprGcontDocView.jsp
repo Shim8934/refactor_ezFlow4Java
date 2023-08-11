@@ -663,7 +663,7 @@
 						}
 
 						if(form.currVersion != docFormVersion) {
-							var pAlertContent = "양식 버전이 달라 재사용 할 수 없습니다.";
+							var pAlertContent = strLang975;
 							OpenAlertUI(pAlertContent);
 							return;
 						} else if(form.connflag == 'Y') {
