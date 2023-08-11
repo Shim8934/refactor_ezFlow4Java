@@ -3087,13 +3087,13 @@
 	    		(14, 0, 2, #tenantID#, #companyID#, 'Weather'),
 	    		(14, 0, 3, #tenantID#, #companyID#, '天気'),
 	    		(26, 0, 1, #tenantID#, #companyID#, '생일자'),
-	    		(26, 0, 2, #tenantID#, #companyID#, 'birthday'),
+	    		(26, 0, 2, #tenantID#, #companyID#, 'Birthday'),
 	    		(26, 0, 3, #tenantID#, #companyID#, '誕生者'),
 	    		(34, 0, 1, #tenantID#, #companyID#, '슬라이드 이미지'),
 	    		(34, 0, 2, #tenantID#, #companyID#, 'Slide Image'),
 	    		(34, 0, 3, #tenantID#, #companyID#, 'スライド画像'),
 	    		(36, 0, 1, #tenantID#, #companyID#, '사용자 정보'),
-	    		(36, 0, 2, #tenantID#, #companyID#, 'user Info'),
+	    		(36, 0, 2, #tenantID#, #companyID#, 'User Info'),
 	    		(36, 0, 3, #tenantID#, #companyID#, 'ユーザ情報'),
 	    		(47, 4, 1, #tenantID#, #companyID#, '동영상 게시판'),
 	    		(47, 4, 2, #tenantID#, #companyID#, 'Movie Board'),
@@ -3111,10 +3111,10 @@
 	    		(73, 19, 2, #tenantID#, #companyID#, 'Survey'),
 	    		(73, 19, 3, #tenantID#, #companyID#, '電子アンケート'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, #tenantID#, #companyID#, '탭게시판'),
-				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'tabBoard'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'TabBoard'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 3, #tenantID#, #companyID#, 'タブボード'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 1, #tenantID#, #companyID#, '전자문서 차트'),
-				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 2, #tenantID#, #companyID#, 'chart'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 2, #tenantID#, #companyID#, 'Chart'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 3, #tenantID#, #companyID#, '図表')
   		]]>
     </insert>
