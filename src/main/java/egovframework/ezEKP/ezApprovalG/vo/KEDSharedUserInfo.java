@@ -4,7 +4,10 @@ public class KEDSharedUserInfo {
 	private String shareId;
 	private String shareType;
 	private String shareName;
-	
+	private String shareName2;
+
+	public String getShareName2() {	return shareName2; }
+	public void setShareName2(String shareName2) { this.shareName2 = shareName2; }
 	public String getShareName() {
 		return shareName;
 	}

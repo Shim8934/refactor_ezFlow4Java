@@ -6,7 +6,14 @@
 	<c:when test="${fn:length(shareList) > 0}">
 		<c:forEach items="${shareList}" var="share" varStatus="status">
 			<tr class="shareRow" shareId="${share.shareId}" shareType="${share.shareType}">
-				<td style="text-align: center;"><c:out value='${share.shareName }'/></td>
+			<c:choose>
+                <c:when test="${lang eq '1'}">
+                    <td style="text-align: center;"><c:out value='${share.shareName }'/></td>
+                </c:when>
+                <c:otherwise>
+                    <td style="text-align: center;"><c:out value='${share.shareName2 }'/></td>
+                </c:otherwise>
+            </c:choose>
 				<td style="text-align: center;">
 					<c:if test="${share.shareType eq 'U' }">
 						<spring:message code='ezApprovalG.share04'/>
