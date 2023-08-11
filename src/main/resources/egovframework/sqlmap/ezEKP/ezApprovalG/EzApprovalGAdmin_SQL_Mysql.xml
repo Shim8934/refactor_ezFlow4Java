@@ -4637,7 +4637,13 @@
 		        THEN B.DISPLAYNAME
 		        WHEN A.OWNER_TYPE = 'D'
 		        THEN C.DISPLAYNAME
-		        END AS ownerName,
+			END AS ownerName,
+			CASE
+				WHEN A.OWNER_TYPE = 'U'
+				THEN B.DISPLAYNAME2
+				WHEN A.OWNER_TYPE = 'D'
+				THEN C.DISPLAYNAME2
+			END AS ownerName2,
 			A.OWNER_TYPE as ownerType
 		FROM
 			TBL_SHARE_DOC_DIR A
@@ -4661,7 +4667,13 @@
 		        THEN B.DISPLAYNAME
 		        WHEN A.SHARE_TYPE = 'D'
 		        THEN C.DISPLAYNAME
-		        END AS shareName,
+			END AS shareName,
+			CASE
+				WHEN A.SHARE_TYPE = 'U'
+				THEN B.DISPLAYNAME2
+				WHEN A.SHARE_TYPE = 'D'
+				THEN C.DISPLAYNAME2
+			END AS shareName2,
 			A.SHARE_TYPE as shareType
 		FROM
 			TBL_SHARE_DOC_DIR A
