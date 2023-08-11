@@ -667,7 +667,7 @@
 							OpenAlertUI(pAlertContent);
 							return;
 						} else if(form.connflag == 'Y') {
-							var pAlertContent = "연동양식은 재사용 할 수 없습니다.";
+							var pAlertContent = strLang1150;
 		                    OpenAlertUI(pAlertContent);
 							return;
 						}

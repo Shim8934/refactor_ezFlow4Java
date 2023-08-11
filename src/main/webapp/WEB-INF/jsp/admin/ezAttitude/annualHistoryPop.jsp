@@ -132,10 +132,10 @@
         <div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
-	         		<th class="borderLeft" style="width:19%;text-align:center;"><spring:message code='ezAttitude.t63' /></th>
-	            	<th class="borderLeft" style="width:14%;text-align:center;"><spring:message code='ezAttitude.t250' /></th>
-	            	<th class="borderLeft" style="width:14%;text-align:center;"><spring:message code='ezAttitude.t251' /></th>
-	            	<th class="borderLeft" style="width:43%;text-align:center;padding-left: 10px;"><spring:message code='ezAttitude.t248' /></th>
+	         		<th class="borderLeft" style="width:17%;text-align:center;"><spring:message code='ezAttitude.t63' /></th>
+	            	<th class="borderLeft" style="width:18%;text-align:center;"><spring:message code='ezAttitude.t250' /></th>
+	            	<th class="borderLeft" style="width:20%;text-align:center;"><spring:message code='ezAttitude.t251' /></th>
+	            	<th class="borderLeft" style="width:33%;text-align:center;padding-left: 10px;"><spring:message code='ezAttitude.t248' /></th>
 	            	<th class="borderLeft borderRight" style="width:10%;text-align:center;"><spring:message code='ezAttitude.t62' /></th>
                 </tr>
             </table>
@@ -145,10 +145,10 @@
 			    		<c:when test="${not empty resultList }">
 					    	<c:forEach items="${resultList }" var="list">
 					        	<tr>
-					            	<td class="borderLeft" style="width:19%;">
+					            	<td class="borderLeft" style="width:17%;">
 					            		${list.changeDate}
 				        	    	</td>
-					            	<td class="borderLeft" style="width:14%;">
+					            	<td class="borderLeft" style="width:18%;">
 					        	    	<c:set var="originAnnualLastCnt" value="${fn:split(list.originAnnualCnt,'.')[1]}" />
 					        	    	<c:if test="${originAnnualLastCnt == 0 }">
 					        	    		${fn:split(list.originAnnualCnt,'.')[0]}<spring:message code='ezAttitude.t68' />
@@ -160,7 +160,7 @@
 						            		${list.originAnnualCnt}<spring:message code='ezAttitude.t68' />
 					        	    	</c:if>
 				        	    	</td>
-					            	<td class="borderLeft" style="width:14%;">
+					            	<td class="borderLeft" style="width:20%;">
 					        	    	<c:set var="changeAnnualLastCnt" value="${fn:split(list.changeAnnualCnt,'.')[1]}" />
 					        	    	<c:if test="${changeAnnualLastCnt == 0 }">
 					        	    		${fn:split(list.changeAnnualCnt,'.')[0]}<spring:message code='ezAttitude.t68' />
@@ -172,7 +172,7 @@
 						            		${list.changeAnnualCnt}<spring:message code='ezAttitude.t68' />
 					        	    	</c:if>
 				        	    	</td>
-					            	<td class="borderLeft" style="width:43%;text-align: left;padding-left: 10px;" title="${list.changeReason}">
+					            	<td class="borderLeft" style="width:33%;text-align: left;padding-left: 10px;" title="${list.changeReason}">
 					            		${list.changeReason}
 				        	    	</td>
 					            	<td class="borderLeft borderRight" style="width:10%;">

@@ -166,7 +166,7 @@
 	                g_fnaddReceiver = window.dialogArguments["addReceiver"];
 	            try {
 	                document.getElementById('TreeView').innerHTML = "";
-	                var wholeHtml = '<div id="FromTreeView" nodeclick="TreeViewNodeClick" nodedblclick="" requestdata="RequestData" selectnodeid="' + deptid + '">';
+	                var wholeHtml = '<div id="FromTreeView" nodeclick="TreeViewNodeClick" requestdata="RequestData" selectnodeid="' + deptid + '">';
 	                wholeHtml += '<div id="left">';
 	                //2019-09-24 김보미 - 부서명에 특수문자(")가 있을경우에 deptList값이 잘려 부서리스트가 출력되지 않는 버그 수정
 // 	                for (var i = 0; i < deptList.length ; i ++) {
@@ -227,9 +227,12 @@
 	        }
 	        function confirm_onClick_auto() {
                 if (listContentArry != "") {
-                    var strId = document.getElementById(listContentArry[0]).getAttribute("_data2");
-                    var strName = document.getElementById(listContentArry[0]).getAttribute("_data10");
-                    var strDeptName = document.getElementById(listContentArry[0]).getAttribute("_data12");
+                	var selectedTr = document.getElementById(listContentArry[0]);
+                    var strId = selectedTr.getAttribute("_data2");
+                    var strName = "";
+                    strName += selectedTr.getAttribute("_data4") == "" ? "" : selectedTr.getAttribute("_DATA4");
+                    strName += selectedTr.getAttribute("_data6") == "" ? "" : "[" + selectedTr.getAttribute("_DATA6") + "]";;
+                    var strDeptName = selectedTr.getAttribute("_data5");
                 }
                 else {
                     alert("<spring:message code='ezAttitude.t110'/>");
@@ -502,7 +505,7 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                /* M_TR.ondblclick = function () { event_listDBclick(this); }; */
+		                M_TR.ondblclick = function () { event_listDBclick(this); };
 		                M_TR.onselectstart = function () { return false; };
 // 		                M_TR.setAttribute("draggable", true);
 		                if (CrossYN())
@@ -604,7 +607,7 @@
 		                M_TR.onmouseover = function () { event_listMover(this); };
 		                M_TR.onmouseout = function () { event_listMout(this); };
 		                M_TR.onclick = function () { event_listclick(this); };
-		                /* M_TR.ondblclick = function () { event_listDBclick(this); }; */
+		                M_TR.ondblclick = function () { event_listDBclick(this); };
 		                M_TR.onselectstart = function () { return false; };
 		                M_TR.setAttribute("draggable", true);
 		                if (CrossYN())
@@ -1023,6 +1026,10 @@
                     if (callbackFunc != null & typeof (callbackFunc) == "function")
                         callbackFunc(pNodeID, pNodeNM);
                 }
+            }
+            
+            function event_listDBclick(){
+            	confirm_onClick();
             }
 	    </script>
 	</head>

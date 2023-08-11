@@ -4649,7 +4649,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		List<KEDAuthorUserInfo> ownerList = ezApprovalGAdminService.getDocDirOwnerList(userInfo.getCompanyID(), userInfo.getTenantId());
-		
+
+		model.addAttribute("lang", userInfo.getLang());
 		model.addAttribute("ownerList", ownerList);
 		
 		logger.debug("docDirShareManage ended");
@@ -4669,7 +4670,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		List<KEDSharedUserInfo> shareList = ezApprovalGAdminService.getDocDirShareList(ownerId, userInfo.getTenantId());
-		
+
+		model.addAttribute("lang", userInfo.getLang());
 		model.addAttribute("shareList", shareList);
 		
 		logger.debug("docDirShareManage ended");
