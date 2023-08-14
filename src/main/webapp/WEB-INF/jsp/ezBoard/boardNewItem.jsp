@@ -843,18 +843,19 @@
 
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody.replace(/\r\n/g, "@r!n@"));
 
-		        if (gubun == "2")
+		        if (gubun == "2") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", rsa.encrypt(document.getElementById('txtPassWord').value));
-		        else
+		        } else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", "");
-
-		        if (pMode != "new" && pMode != "new1" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == "false") {
-		            if ((document.getElementById("readCount") != undefined) && (document.getElementById("readCount").checked == true)){
+		        }
+		        
+		        if (pMode != "new" && pMode != "new1" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem != "true") {
+		            if ((document.getElementById("readCount") != undefined) && (document.getElementById("readCount").checked == true)) {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "Y");
 		            } else{
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
 		        	}
-		         }else{
+		         } else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "N");
 		        }
 		        
@@ -866,8 +867,8 @@
 					tableCol.push("${item.tableCol}");
 				</c:forEach>
 				
-				for (var i = 0; i < colType.length;i++){
-		        	if(colType[i] == "radio") {
+				for (var i = 0; i < colType.length;i++) {
+		        	if (colType[i] == "radio") {
 		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(GetRadioVal(tableCol[i])));
 		        	} else if(colType[i] == "text") {
 		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
