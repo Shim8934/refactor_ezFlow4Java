@@ -525,6 +525,7 @@
 		        });
 
 				var doc = window.document;
+				if(document.getElementById(obj) == null) return;
 				itemseq = document.getElementById(obj).getAttribute("DATA1");
 				if(itemseq == "0" || itemseq == null || itemseq == "") {
 					return;
