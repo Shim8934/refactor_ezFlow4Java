@@ -115,7 +115,11 @@
 		                document.getElementById("periodblock").style.display = "";
 		                document.getElementById("repeatblock").style.display = "none";
 		                /* 2021-11-25 홍승비 - 일정완료 체크박스 표출에 대응하도록 기간TD의 스타일 조정 */
-		                document.getElementById("periodblockTD").style.width = "65%";
+		                if(document.title == 'Modify'){
+		                document.getElementById("periodblockTD").style.width = "40%";
+		                }else{
+		                document.getElementById("periodblockTD").style.width = "60%";
+		                }
 		                show_repetition_info();
 		            } else if(datetype == "2") {
 		            	document.getElementById("alldaycheck").checked = true;

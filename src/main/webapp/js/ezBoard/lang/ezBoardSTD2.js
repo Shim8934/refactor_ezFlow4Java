@@ -52,7 +52,7 @@ var strLang175 = "You do not have read permissions.";
 var strLang176 = "no delete privileges.";
 var strLang177 = "Please select your posts.";
 var strLang178 = "Are you sure you want read?";
-var strLang179 = "Choose ";
+var strLang179 = ""; // 어순 처리 목적 빈칸
 
 //2017.12.26 강민수92 추가
 var strLang180 = "Are you sure you want to delete a comment ?";
@@ -64,7 +64,10 @@ var strLang185 = "The password is incorrect.";
 var strLang186 = "Comment";
 
 //2021-04-22 김정언 추가
-var strLang187 = "Enter ";
+var strLang187 = ""; // 어순처리 빈칸
+
+var strLang188 = "Please choose ";
+var strLang189 = "Please enter "; 
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
