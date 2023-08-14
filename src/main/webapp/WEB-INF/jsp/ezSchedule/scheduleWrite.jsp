@@ -118,7 +118,7 @@
 		                if(document.title == 'Modify'){
 		                document.getElementById("periodblockTD").style.width = "40%";
 		                }else{
-		                document.getElementById("periodblockTD").style.width = "65%";
+		                document.getElementById("periodblockTD").style.width = "60%";
 		                }
 		                show_repetition_info();
 		            } else if(datetype == "2") {
