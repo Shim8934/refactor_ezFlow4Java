@@ -14482,13 +14482,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map1.put("v_TENANTID", userInfo.getTenantId());
 			map1.put("v_APRTYPE", curAprType);
 			logger.debug("doApproveLineCnt started");
-			// APRSTATE가 진행, 보류인 결재관련 정보
+			// 개인병렬협조, 부서병렬협조이면서 APRSTATE가 진행, 보류인 결재선 카운트 (대기중인 병렬협조는 카운트하지 않음)
 			int subCount = ezApprovalGDAO.doApproveLineCnt(map1);
 			logger.debug("doApproveLineCnt subCount = " +subCount);
 
 			logger.debug("doApproveLineCnt ended");
 			
-			// 마지막 합의자가 아닌 경우
+			// 마지막 병렬합의자가 아닌 경우, 이후 동작을 진행하지 않고 리턴 (마지막 병렬합의자인 경우에만 이후 결재유형들의 진행상태 변경 로직을 진행)
 			if (subCount >= 1) {
 				return strSQL.toString();
 			}
@@ -14760,12 +14760,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						} else {
 							if (docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
 								if (approvalFlag.equals("G")) {
-									if (!curAprType.equals(staATByungRyulHyubJo)) {
+									/* 2023-08-14 홍승비 - 개인병렬협조(합의) - 참조 - 개인병렬협조인 경우, 앞선 개인병렬협조 완료 이후 다음 개인병렬협조들의 상태를 진행으로 변경함 */
+									// doApprove 코드의 최상단에서 현재 결재유형이 병렬협조(합의)인 경우 마지막 병렬협조자가 아니라면 리턴시킴 (진행, 보류 상태의 병렬협조가 존재하는 경우 리턴)
+									// 따라서 이 분기까지 진행되었다는 것은 마지막 병렬협조자임을 의미하며, 참조 결재유형을 사이에 두고 대기중인 다음 병렬협조자를 진행상태로 변경하도록 수정함
+									/*if (!curAprType.equals(staATByungRyulHyubJo)) {*/
 										while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
 											map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 											map3.put("v_APRSTATE", staASJinHang);
 											ezApprovalGDAO.updateAprLineInfo(map3);
 											
+											// G버전에서는 부재설정 시 병렬협조도 자동으로 승인처리함
 											absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID());
 											
 											if (absentReason.trim().equals("")) {
@@ -14786,9 +14790,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 											k += 1;
 										}
 										whileFlag = false;
-									} else {
+									/*} else {
 										k += 1;
-									}
+									}*/
 								} else {
 									// 참조 이후에는 현재 결재타입이 병렬협조인 것의 여부와 상관없이 무조건 병렬협조 결재선들의 Aprstate가 진행으로 바뀌어야한다. 2020-07-15 임민석
 									/*if (!curAprType.equals(staATByungRyulHyubJo)) {*/
@@ -14824,7 +14828,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				                        	rtnVal = false;
 				                        	whileFlag = false;
 				                        } else {
-						k += 1;
+				                        	k += 1;
 				                        }
 									}
 									whileFlag = false;
