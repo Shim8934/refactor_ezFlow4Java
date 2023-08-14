@@ -596,10 +596,10 @@
 	                        	</tr>
 	                        	<tr id="userName" fixed="fix">
 	                        		<th><spring:message code='ezAttitude.t10'/></th>
-	                        		<td><c:out value="${info.userName }"/></td>
+	                        		<td><c:out value="${userInfo.lang eq 1 ? info.userName : info.userName2}"/></td>
 	                        	</tr>
 								<tr id="selectTR" fixed="fix">
-									<th><div style="width:48px;"><spring:message code='ezAttitude.t134'/></div></th>
+									<th><spring:message code='ezAttitude.t134'/></th>
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">

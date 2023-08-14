@@ -290,6 +290,8 @@
 				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND
+    			TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 		
 		<isNotEmpty prepend="AND" property="searchDeptName">
@@ -917,7 +919,11 @@
 			AND
 				A.physicaldeliveryofficename = #companyId#
 			AND
+				A.department not like 'shared\_mailbox\_%'
+			AND
 				A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+    			A.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 			AND
 				B.start_date IS NULL
 		]]>
@@ -1759,6 +1765,8 @@
 				TENANT_ID = #tenantId#
 			AND
 				physicaldeliveryofficename = #companyId#
+			AND
+				TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 			<isNotEmpty prepend="AND" property="userId">
 				CN = #userId#
@@ -1795,6 +1803,8 @@
 				TENANT_ID = #tenantId#
 			AND
 				physicaldeliveryofficename = #companyId#
+			AND
+				TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 			<isNotEmpty prepend="AND" property="userId">
 				CN = #userId#
@@ -2073,6 +2083,8 @@
 				PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND
 				TENANT_ID = #tenantId#
+			AND
+    			TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 			]]>
 		<isNotEmpty prepend="AND" property="userId">
 			<![CDATA[

@@ -883,6 +883,8 @@
 			AND
 				A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
+    			A.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
+			AND
 				B.start_date IS NULL
 		]]>
 			
