@@ -1776,8 +1776,8 @@
 		            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 76px; background-color:white" id="lstAttachLink" ></div>
 		            </td>
 		        <td class="pos2">
-		        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-		        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+		        <a class="imgbtn imgbck" style="width:70px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+		        <a class="imgbtn imgbck" style="width:70px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 		        </td>
 		        <td id="ItemLevel" style="display:none"></td>
 		        </tr>
