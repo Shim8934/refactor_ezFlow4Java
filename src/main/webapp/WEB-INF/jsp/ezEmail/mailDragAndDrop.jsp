@@ -501,6 +501,7 @@
 		
 		    function btnfileup() {
 		        isbigyn = "N";
+		        document.getElementById("file").value = "";
 		        document.getElementById("file").click();
 		    }
 		
