@@ -570,16 +570,16 @@
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content">
 								<tr id="selectTR">
-									<th><div style="width:48px;"><spring:message code='ezAttitude.t134'/></div></th>
+									<th><div style="width:15%;"><spring:message code='ezAttitude.t134'/></div></th>
 									<td colspan="2" id="selectTD">
-										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
+										<select id="selectAtti" style="width:130px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
 												<c:if test="${item.parentId ne 'A05'}">
 													<option id="<c:out value='${item.typeId }'/>" value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
 												</c:if>
 											</c:forEach>
 										</select>
-										<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
+										<select id="subSelectAtti" style="width:130px; margin-left:10px; display: none;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
 												<c:if test="${item.parentId eq 'A05'}">
 													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>

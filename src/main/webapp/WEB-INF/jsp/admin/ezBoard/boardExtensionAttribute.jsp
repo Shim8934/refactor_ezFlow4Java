@@ -66,6 +66,12 @@
 
 		                var headerData = createXmlDom();
 		                headerData = loadXMLString(ExtensionList.innerHTML.toUpperCase());
+		                var headerNmElem = headerData.getElementsByTagName("NAME");
+	                	headerNmElem[0].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_primary}"/>)'
+	                	headerNmElem[1].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_secondary}"/>)'
+	                	headerNmElem[2].textContent = '<spring:message code="ezBoard.t999037"/>'
+	                	headerNmElem[3].textContent = '<spring:message code="ezBoard.t999038"/>'
+	                	headerNmElem[4].textContent = '<spring:message code="ezBoard.t999039"/>'
 		                
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
@@ -101,7 +107,12 @@
 
 		                var headerData = createXmlDom();
 		                headerData = loadXMLString(XmlHeader.innerHTML.toUpperCase());
-
+		                
+		                var headerNmElem = headerData.getElementsByTagName("NAME");
+	                	headerNmElem[0].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_primary}"/>)'
+	                	headerNmElem[1].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_secondary}"/>)'
+	                	headerNmElem[2].textContent = '<spring:message code="ezBoard.t5002"/>'
+	                	
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
 		                    /* 2018.02.12 김기하 */
@@ -768,23 +779,23 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t999037'/></NAME>
+						<NAME></NAME>
 						<WIDTH>80</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t999038'/></NAME>
+						<NAME></NAME>
 						<WIDTH>50</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t999039'/></NAME>
+						<NAME></NAME>
 						<WIDTH>500</WIDTH>
 					</HEADER>
 				</HEADERS>
@@ -794,15 +805,15 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t5002'/></NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 				</HEADERS>
