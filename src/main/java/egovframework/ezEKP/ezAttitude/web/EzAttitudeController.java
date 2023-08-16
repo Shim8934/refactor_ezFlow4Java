@@ -2626,6 +2626,7 @@ public class EzAttitudeController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("loginId", userInfo.getId()) // 관리자의 경우 관리자의 언어 세팅에 맞는 화면 표출 필요.
 				.queryParam("userId", userId)
 				.queryParam("isuse", 1);
 		

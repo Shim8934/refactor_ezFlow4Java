@@ -105,7 +105,7 @@
 						CN LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="quota">
-						ROUND((MAILBOXUSAGE / MAILBOXQUOTA) * 100) = #search_keyword#
+						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
 					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -138,10 +138,10 @@
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
-						a.DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
+						(a.DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%') || a.DISPLAYNAME2 LIKE CONCAT('%', #search_keyword#,'%'))
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
-						a.DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
+						(a.DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%') || a.DESCRIPTION2 LIKE CONCAT('%', #search_keyword#,'%'))
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						a.CN LIKE CONCAT('%', #search_keyword#,'%')
