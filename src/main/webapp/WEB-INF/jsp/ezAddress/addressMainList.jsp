@@ -324,7 +324,7 @@
 	                    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
 	                        alert("<spring:message code='ezAddress.t218' />");
 	                    else {
-	                        alert((listContentArry.length) + "<spring:message code='ezAddress.t219' />");
+	                        alert("<spring:message code='ezAddress.t219' />");
 	                        if (moveUrl["cmd"] == "MOVE") {
 	                            if (searchFlag)
 	                                Get_SearchAddressList();
@@ -461,7 +461,7 @@
 			                alert("<spring:message code='ezAddress.t214' />");
 		                }
 						else {
-		                    alert((listContentArry.length) + "<spring:message code='ezAddress.t215' />");
+		                    alert("<spring:message code='ezAddress.t215' />");
 		                    
 		                    document.getElementById("HeaderAllCheckBox").checked = false;
 		                    

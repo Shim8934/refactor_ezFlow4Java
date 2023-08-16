@@ -260,6 +260,9 @@
 							$("#region").siblings("th").text("<spring:message code='ezAttitude.t47'/>");
 							$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
 							$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+							if (document.getElementById("alldaycheck") != null) {
+								document.getElementById("alldaycheck").nextSibling.textContent = "<spring:message code='ezAttitude.t333'/> ";
+							}
 						}
 						editorResize();
 					}
