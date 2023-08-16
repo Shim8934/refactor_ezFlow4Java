@@ -28,6 +28,9 @@ public class MBoardAttachVO {
 	/** 인코딩 파일경로*/
 	private String encodeFilePath;
 	
+	/** 2023-08-16 홍승비 - 모바일 게시판 > KB, MB 등 단위을 변환하지 않고 사용하기 위한 첨부파일 사이즈(바이트) 추가 */
+	private String realFileSize;
+	
 	public String getItemID() {
 		return itemID;
 	}
@@ -105,5 +108,11 @@ public class MBoardAttachVO {
 	}
 	public void setEncodeFilePath(String encodeFilePath) {
 		this.encodeFilePath = encodeFilePath;
+	}
+	public String getRealFileSize() {
+		return realFileSize;
+	}
+	public void setRealFileSize(String realFileSize) {
+		this.realFileSize = realFileSize;
 	}
 }

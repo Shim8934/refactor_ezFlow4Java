@@ -793,6 +793,10 @@ public class MBoardGWController {
 			String fileSize = "";
 			for (int i=0; i<list.size(); i++) {
 				fileSize = list.get(i).getFileSize();
+				
+				/* 2023-08-16 홍승비 - 모바일 게시판 > KB, MB 등 단위을 변환하지 않고 사용하기 위한 첨부파일 사이즈(바이트) 추가 */
+				list.get(i).setRealFileSize(fileSize);
+				
 				double fs = Double.parseDouble(fileSize);
 				
 				if (fs / 1024 / 1024 > 1) {
@@ -807,7 +811,6 @@ public class MBoardGWController {
 				//filePath 및 fileName 인코딩
 				list.get(i).setEncodeFilePath(URLEncoder.encode(list.get(i).getFilePath(), "UTF-8"));
 				list.get(i).setEncodeFileName(URLEncoder.encode(list.get(i).getFileName(), "UTF-8"));
-				
 			}
 			
 	        result.put("status", "ok");
