@@ -211,5 +211,9 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 	public HashMap<String, Object> getAprMemberBySn(Map<String, Object> map) throws Exception {
 		return (HashMap<String, Object>) select("MApprovalG.getAprMemberBySn", map);
 	}
+
+	public int getIsAbsenteeInfo(Map<String, Object> map) throws Exception {
+		return (int) select("MApprovalG.getIsAbsenteeInfo", map);
+	}
 	
 }
