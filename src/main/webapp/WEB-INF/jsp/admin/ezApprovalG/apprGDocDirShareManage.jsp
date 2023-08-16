@@ -54,7 +54,7 @@
 	</head>
 	<body class="mainbody"> 
 		<h1>
-			<spring:message code='ezApprovalG.share01'/>
+			<spring:message code='main.t45'/>
 		</h1>
 		<div id="mainmenu" style="padding-left: 5px;">
             <ul>
