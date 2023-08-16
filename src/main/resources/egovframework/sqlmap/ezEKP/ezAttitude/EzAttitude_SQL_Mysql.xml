@@ -1021,7 +1021,7 @@
 		<![CDATA[
 			SELECT 
 				A.FORM_ID,
-				A.FORM_HTML
+				A.FORM_HTML2
 			FROM 
 				jmocha.tbl_attitude_form A
 			INNER JOIN
