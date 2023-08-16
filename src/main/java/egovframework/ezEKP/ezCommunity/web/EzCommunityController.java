@@ -2170,6 +2170,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("startDate", pStartDate);
 		model.addAttribute("endDate", pEndDate);
 		model.addAttribute("pSubject", pSubject);
+		model.addAttribute("lang", userInfo.getLang());
 		
 		return "ezCommunity/communityPollAdd";
 	}
