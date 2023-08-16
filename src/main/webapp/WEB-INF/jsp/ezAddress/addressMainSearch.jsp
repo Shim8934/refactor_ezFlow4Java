@@ -249,7 +249,7 @@
 	                    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
 	                        alert("<spring:message code='ezAddress.t218' />");
 	                    else {
-	                        alert((listContentArry.length) + "<spring:message code='ezAddress.t219' />");
+	                        alert("<spring:message code='ezAddress.t219' />");
 	                        if (moveUrl["cmd"] == "MOVE") {
 	                            pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
 	                            if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize)
@@ -292,7 +292,7 @@
 	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
 	                    alert("<spring:message code='ezAddress.t218' />");
 	                else {
-	                    alert((listContentArry.length) + "<spring:message code='ezAddress.t219' />");
+	                    alert("<spring:message code='ezAddress.t219' />");
 	                    if (moveUrl["cmd"] == "MOVE") {
 	                        pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
 	                        if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize)
@@ -345,7 +345,7 @@
 		                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
 		                    alert("<spring:message code='ezAddress.t214' />");
 		                else {
-		                    alert((listContentArry.length) + "<spring:message code='ezAddress.t215' />");
+		                    alert( "<spring:message code='ezAddress.t215' />");
 		                    pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
 		                    if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize)
 		                        pCurrentPage--;
