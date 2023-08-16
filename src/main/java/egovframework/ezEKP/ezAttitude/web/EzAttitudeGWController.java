@@ -616,8 +616,16 @@ public class EzAttitudeGWController {
 			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String statistics = request.getParameter("statistics") == null ? "" : request.getParameter("statistics");
 			String typeIdArr = request.getParameter("typeIdArr") == null ? "" : request.getParameter("typeIdArr");
+			String primary = info.getPrimary();
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, typeIdArr, info.getTenantId(), info.getPrimary());
+			// 관리자의 경우 관리자 언어 세팅에 맞는 데이터 표출 필요.
+			// EzAttitudeController 의 attAdminNewItem.do 에서 userId는 로그인 user의 id가 아닌
+			// 선택한 유저의 id가 넘어와서 로그인 유저의 primary와 선택한 유저의 primary세팅값이 다름.
+			if (request.getParameter("loginId") != null) {
+				primary = mOptionService.commonInfoWeb(serverName, request.getParameter("loginId")).getPrimary();
+			}
+			
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, typeIdArr, info.getTenantId(), primary);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
