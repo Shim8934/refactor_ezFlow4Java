@@ -43,9 +43,23 @@
 				<table id="AprLine" class="mainlist" style="width: 100%;">
 					<thead>
 						<tr>
+								<c:choose>
+						  <c:when test="${lang == '1'}">
 							<th>순번</th>
-							<th>수신자명</th>
+							<th>수신부서</th>
 							<th>수신자성명</th>
+						  </c:when>
+		     		      <c:when test="${lang == '2'}">
+							<th>No.</th>
+							<th>Dept.</th>
+							<th>name</th>
+						  </c:when>
+		     		      <c:when test="${lang == '3'}">
+							<th>順番</th>
+							<th>受信部署名</th>
+							<th>受信者氏名</th>
+						  </c:when>  
+						</c:choose>
 						</tr>
 					</thead>
 					<tbody>
