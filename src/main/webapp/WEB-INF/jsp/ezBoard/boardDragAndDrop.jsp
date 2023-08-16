@@ -51,28 +51,30 @@
 		        } else {
 		            filelist = evt.dataTransfer.files;
 		        }
+		        
 		        var tempfilesize = 0;
 		        var filecnt = file.length;
-
+		        
+		        /* 2023-08-16 홍승비 - 게시물에 첨부파일 추가 시, 파일 사이즈의 총합을 계산하는 첨부파일 크기제한 로직 수정 */
 		        for (var i = 0; i < filelist.length; i++) {
-		            filesize = parseInt(filesize) + parseInt(filelist[i].size);
-		            if (filesize / 1024 / 1024 > window.parent.AttachLimit) {
+					// 기존 첨부파일 사이즈 + 루프 내부에서 계산한 첨부파일 사이즈를 크기제한 사이즈와 비교 
+		            if (((filesize + tempfilesize + parseInt(filelist[i].size)) / 1024 / 1024) > window.parent.AttachLimit) {
 		                if ("${userInfo.lang}" == "2") {
 		                    alert(strLang8 + window.parent.AttachLimit + strLang9);
 		                } else {
 		                    alert(strLang8 + window.parent.AttachLimit + "MB" + strLang9);
 		                }
-		                if (tempfilesize == 0) {
-		                    filesize = parseInt(filesize) - parseInt(filelist[i].size);
-		                } else {
-		                    filesize = parseInt(filesize) - tempfilesize;
-		                }
+		                
+		             	// 첨부파일 크기제한 초과 시, 첨부를 시도한 파일은 전부 초기화
+		             	document.getElementById("file").value = "";
 		                return;
 		            } else {
 		                file[filecnt + i] = filelist[i];
 		                tempfilesize += filelist[i].size;
 		            }
 		        }
+		        
+		        filesize += tempfilesize;
 		        
 		        fileupload();
 		    }
@@ -192,15 +194,15 @@
 		                var is_newfile;
 		                var pNewNodeName = "";
 		                var Rtnval;
+		                var delfilesize = 0;
 		
 		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
 		                is_newfile = document.getElementById("filelist").childNodes[i].getAttribute("NEWFILE");
 		                pNewNodeName = pNewNodeName + pAttachDelFileName + "*)[_-";
+		                delfilesize = parseInt(document.getElementById("filelist").childNodes[i].getAttribute("REALFILESIZE"));
 		                window.parent.DelAttachFileAtList(pNewNodeName);
 		                
-		                var delfilesize;
-		                delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent;
-		                filesize -= delfilesize;
+		                filesize = parseInt(filesize) - delfilesize; // filesize는 계산 시 MB 단위가 아닌 byte 단위로 계산
 		                file.splice(i - 1, 1);
 		                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
 		                i--;
@@ -273,6 +275,20 @@
 				evt.stopPropagation();
 				evt.preventDefault();
 			}
+		    
+		    /* 2023-08-16 홍승비 - 현재 게시물의 첨부파일 사이즈 총합을 계산하여 filesize 변수에 설정하는 함수 */
+		    function initAttachFileSize() {
+		    	filesize = 0; // 첨부파일 사이즈 전역변수 초기화
+		    	var attachListTR = $("#filelist tr");
+		    	
+		    	$.each(attachListTR, function(index, item) {
+		    		var pRealFileSize = item.getAttribute("realfilesize");
+		    		
+		    		if (typeof(pRealFileSize) != "undefined" && pRealFileSize != null) {
+		    			filesize += parseInt(item.getAttribute("realfilesize"));
+		    		}
+		    	});
+		    }
 		</script>
 	</head>  
 	<body style ="width:100%;height:100%;overflow:hidden">

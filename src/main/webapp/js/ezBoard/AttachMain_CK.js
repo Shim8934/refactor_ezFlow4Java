@@ -336,7 +336,8 @@ function AppendFileAttachInfo(ret) {
             if (is_newfile != "DEL") {
                 objTr = document.createElement("TR");
                 objTr.setAttribute("DATA2", ServerFile);
-                objTr.setAttribute("NEWFILE", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]));
+                objTr.setAttribute("NEWFILE", is_newfile);
+                objTr.setAttribute("REALFILESIZE", fileSize);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";
@@ -370,6 +371,11 @@ function AppendFileAttachInfo(ret) {
 
                 dadiframe.document.getElementById("filelist").appendChild(objTr);
             }
+        }
+        
+        /* 2023-08-16 홍승비 - 게시물 첨부파일 초기 로딩 및 추가 시 > 첨부파일 사이즈의 총합을 계산하여 filesize 전역변수에 설정 */
+        if (typeof(dadiframe.initAttachFileSize) != "undefined") {
+        	dadiframe.initAttachFileSize();
         }
     }
     catch (e) { alert("AppendFileAttachInfo :: " + e.description); }

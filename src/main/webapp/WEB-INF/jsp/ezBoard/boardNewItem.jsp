@@ -1558,7 +1558,8 @@
 		    function returnvalue(strXML) {
 		        var xml = loadXMLString(strXML);
 		        var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
-		        var extFlag = false;        
+		        var extFlag = false;
+		        
 		        for (var i = 0; i < nodes.length; i++) {
 		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
 		                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
@@ -1568,9 +1569,9 @@
 		                if (document.getElementById('mode').value == "PHOTO")
 		                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]);
 		            }
-		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
+		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied") {
 		                extFlag = true;
-		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+		            } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
 		                alert(strLang8 + AttachLimit + "MB" + strLang9);
 		                return;
 		            }
@@ -1578,13 +1579,16 @@
 		                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
 		            }
 		        }
-		        if (extFlag)
+		        
+		        if (extFlag) {
 		            alert(strLang54);
-		
-		        if (dadiframe.document.getElementById("lstAttachLink") == null)
+		        }
+		        
+		        if (dadiframe.document.getElementById("lstAttachLink") == null) {
 		            setTimeout(function () { AttachFileInfo(strXML); }, 500);
-		        else
+		        } else {
 		            AttachFileInfo(strXML);
+		        }
 		    }
 		    
 		    var firstnode = true;
