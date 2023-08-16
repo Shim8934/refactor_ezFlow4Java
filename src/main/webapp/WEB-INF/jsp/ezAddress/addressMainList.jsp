@@ -385,7 +385,7 @@
 	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
 	                    alert("<spring:message code='ezAddress.t218' />");
 	                else {
-	                    alert((listContentArry.length) + "<spring:message code='ezAddress.t219' />");
+	                    alert("<spring:message code='ezAddress.t219' />");
 	                    if (moveUrl["cmd"] == "MOVE") {
 	                        if (searchFlag)
 	                            Get_SearchAddressList();
