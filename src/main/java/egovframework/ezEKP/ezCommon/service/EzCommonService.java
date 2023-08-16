@@ -418,4 +418,8 @@ public interface EzCommonService {
 	public void addTblBoardItemTempNoti() throws Exception;
 	
 	public void insertPrvwConfig() throws Exception;
+
+	public void insertPermissionBasisDeptYN_Config() throws Exception;
+	
+	public void createColumnRollInfoInAddJobMaster() throws Exception;
 }

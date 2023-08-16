@@ -2950,5 +2950,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertPrvwConfig() throws Exception {
 		ezCommonDAO.insertPrvwConfig();
 	}
-	
+    
+    @Override
+    public void insertPermissionBasisDeptYN_Config() throws Exception {
+        ezCommonDAO.insertPermissionBasisDeptYN_Config();
+    }
+    
+    @Override
+    public void createColumnRollInfoInAddJobMaster() throws Exception {
+        ezCommonDAO.createColumnRollInfoInAddJobMaster();
+    }
 }
