@@ -627,6 +627,7 @@ public class EzStatisticsApprController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		statApprVO.setTenantID(userInfo.getTenantId());
+		statApprVO.setLang(userInfo.getLang());
 		
 		String result = ezStatisticsAdminService.getSearchList(statApprVO);
 		

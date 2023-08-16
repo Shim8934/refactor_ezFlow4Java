@@ -7985,7 +7985,12 @@ public class EzBoardController extends EgovFileMngUtil{
         
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
-        String subject = "[" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + boardInfo.getBoardName() + "]" + title;
+        String subject;
+        if (userInfo.getLang().equals("1") ) {
+        	subject = "[" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + boardInfo.getBoardName() + "]" + title;
+        } else {
+        	subject = "[" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + "]" + title;
+        }
         
         List<LoginVO> loginVOs = ezBoardService.getSendApprMailList(boardID, userInfo.getLang(), userInfo.getTenantId());
         
