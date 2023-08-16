@@ -1448,7 +1448,7 @@
 		    }
 
 		    //S전용
-		    function SetDocOption(pkeeperiodvaltemp) {
+		    function SetDocOption(pkeeperiodvaltemp, tempSecurityValue) {
 	            var fields = message.GetFieldsList();
 
 	            field = message.GetListItem(fields, "keepperiod");
@@ -1777,7 +1777,7 @@
 		                	pLimitRange = "1";
 		                	pSpecialRecordCode = "1";
 		                	tempPublic = ret[11];
-		                	SetDocOption(ret[20]);
+		                	SetDocOption(ret[20], ret[19]);
 		                }
 		                passAprLine = ret[32];
 		                SummaryFlag = true;
