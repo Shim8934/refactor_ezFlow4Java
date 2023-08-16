@@ -26474,7 +26474,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
 					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
 					resultXML.append("<DATA10><![CDATA[" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "]]></DATA10>");
-					resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>");					
+                    if(lang.equals("2")) {
+                        resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent() + "]]></DATA99>");
+                    } else {
+                        resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>");
+                    }
+
 					firstFlag = false;
 				}
 				
