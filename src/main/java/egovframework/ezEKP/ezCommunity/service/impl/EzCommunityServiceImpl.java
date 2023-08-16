@@ -3761,7 +3761,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 dirPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
                 strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + fileName;
             }
-
+    		File dir = new File(commonUtil.detectPathTraversal(dirPath));
+    		
+    		if (!dir.exists()) {
+    			dir.mkdirs();
+    		}
         	String nowDate = commonUtil.getTodayUTCTime("");
         	strPath = commonUtil.detectPathTraversal(strPath);
         	
@@ -3769,7 +3773,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, no, userInfo.getTenantId());
         	
         	try (PrintWriter pw = new PrintWriter(new File(strPath))) {
-        		File dir = new File(commonUtil.detectPathTraversal(dirPath));
+        		//File dir = new File(commonUtil.detectPathTraversal(dirPath));
         		
         		if (!dir.exists()) {
         			dir.mkdirs();

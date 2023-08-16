@@ -356,11 +356,13 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvAddJobList");		        
 		        
+		        var cnVal = listview.GetSelectedRows()[0].firstChild.firstChild.defaultValue;
+		        
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/getUserAddJobList.do",
-		        	data : {cn : listview.GetSelectedRows()[0].getAttribute("DATA1")},
+		        	data : {cn : cnVal},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		document.getElementById("AddJobList").innerHTML = "";
@@ -525,6 +527,7 @@
 		        });
 
 				var doc = window.document;
+				if(document.getElementById(obj) == null) return;
 				itemseq = document.getElementById(obj).getAttribute("DATA1");
 				if(itemseq == "0" || itemseq == null || itemseq == "") {
 					return;
@@ -638,7 +641,7 @@
 
 				xmlHTTP.open("POST", "/admin/ezOrgan/saveSubTitle.do", false);
 				xmlHTTP.send(xmlDom);
-				UserAddjobList(_RowObject);
+				//UserAddjobList(_RowObject);
 
 				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
 					alert("<spring:message code='ezOrgan.t197' />");
@@ -669,6 +672,7 @@
 								}
 							}
 						}
+						AddJob_List();
 					} else {//
 						// 프리뷰창 디스플레이 변경
 						doc.getElementsByClassName('preview_nodata')[0].style.display = '';
@@ -684,8 +688,9 @@
 							}
 						}
 						rowList = [];
+						parent.lef.goPage(13);
 					}
-					AddJob_List();
+					//AddJob_List();
 					return;
 				}
 			}

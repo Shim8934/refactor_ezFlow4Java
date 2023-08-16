@@ -284,7 +284,7 @@
 			
 		</script>
 	</head>
-	<body class="mainbody" style="min-width:1040px; margin:0; padding:0 10px 10px;">
+	<body class="mainbody">
 		<h1><spring:message code = 'ezCommunity.t2012' /></h1>
     	<div class="subtxt" style="color:#666"><spring:message code = 'ezCommunity.t497' /></div>
     	<form enctype="multipart/form-data" method="post" name="image" action="/ezCommunity/adminLogoOk.do">

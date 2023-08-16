@@ -406,7 +406,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			startDate = cDate + " " + cTime + ":00:00";
 			
 			cDate = cDate.substring(0, 10);
-			endDate = cDate + " " + Integer.toString((Integer.parseInt(cTime) + 1)) + ":00:00";
+			endDate = cDate + " " + String.format("%02d", Integer.parseInt(cTime) + 1) + ":00:00";
 			
 			deptID = userInfo.getDeptID();		// 2020-09-16 김민성 - 현재 설정된 대리 결재자 정보가 없는 경우 사용자의 부서 정보를 가져온다
 		}

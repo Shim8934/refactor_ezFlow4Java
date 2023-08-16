@@ -105,7 +105,7 @@
 						CN LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="quota">
-						ROUND((MAILBOXUSAGE / MAILBOXQUOTA) * 100) = #search_keyword#
+						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
 					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -138,10 +138,10 @@
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
-						a.DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
+						(a.DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%') || a.DISPLAYNAME2 LIKE CONCAT('%', #search_keyword#,'%'))
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
-						a.DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
+						(a.DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%') || a.DESCRIPTION2 LIKE CONCAT('%', #search_keyword#,'%'))
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						a.CN LIKE CONCAT('%', #search_keyword#,'%')
@@ -1618,7 +1618,7 @@
                  ('A03','005','준법감시','0','감사','Audit','遵法監視','监督',#tenantID#, #companyID#),
                  ('A03','006','발송의뢰','0','심사','Request Sending','審査','审查',#tenantID#, #companyID#),
                  ('A03','007','참조','0','참조','Reference','参照','抄送',#tenantID#, #companyID#),
-                 ('A03','008','개인순차합의','1','개인순차협조','Agreement(personal)','個人順次合意','个人顺序协议',#tenantID#, #companyID#),
+                 ('A03','008','개인순차합의','1','개인순차협조','Sequential agreement(personal)','個人順次合意','个人顺序协议',#tenantID#, #companyID#),
                  ('A03','009','개인병렬합의','1','개인병렬협조','Parallel agreement(personal)','個人並列合意','个人并行协议',#tenantID#, #companyID#),
                  ('A03','011','부서순차합의','1','부서순차협조','Sequential agreement(dept.)','部署順次合意','顺序协议(部门)',#tenantID#, #companyID#),
                  ('A03','012','부서병렬합의','1','부서병렬협조','Parallel agreement(dept.)','部署並列合意','并行的协议(部门)',#tenantID#, #companyID#),
@@ -1740,7 +1740,7 @@
            ('SA03','005','준법감시','Audit','遵法監視','监督','0','감사',#companyID#, #tenantID# ),
            ('SA03','006','발송의뢰','Request Sending','審査','审查','0','심사',#companyID#, #tenantID# ),
            ('SA03','007','참조','Reference','参照','抄送','1','참조',#companyID#, #tenantID# ),
-           ('SA03','008','개인순차합의','Agreement(personal)','個人順次合意','个人顺序协议','1','개인순차협조',#companyID#, #tenantID# ),
+           ('SA03','008','개인순차합의','Sequential agreement(personal)','個人順次合意','个人顺序协议','1','개인순차협조',#companyID#, #tenantID# ),
            ('SA03','009','개인병렬합의','Parallel agreement(personal)','個人並列合意','个人并行协议','1','개인병렬협조',#companyID#, #tenantID# ),
            ('SA03','011','부서순차합의','Sequential agreement(dept.)','部署順次合意','顺序协议(部门)','1','부서순차협조',#companyID#, #tenantID# ),
            ('SA03','012','부서병렬합의','Parallel agreement(dept.)','部署並列合意','并行的协议(部门)','1','부서병렬협조',#companyID#, #tenantID# ),
@@ -3087,13 +3087,13 @@
 	    		(14, 0, 2, #tenantID#, #companyID#, 'Weather'),
 	    		(14, 0, 3, #tenantID#, #companyID#, '天気'),
 	    		(26, 0, 1, #tenantID#, #companyID#, '생일자'),
-	    		(26, 0, 2, #tenantID#, #companyID#, 'birthday'),
+	    		(26, 0, 2, #tenantID#, #companyID#, 'Birthday'),
 	    		(26, 0, 3, #tenantID#, #companyID#, '誕生者'),
 	    		(34, 0, 1, #tenantID#, #companyID#, '슬라이드 이미지'),
 	    		(34, 0, 2, #tenantID#, #companyID#, 'Slide Image'),
 	    		(34, 0, 3, #tenantID#, #companyID#, 'スライド画像'),
 	    		(36, 0, 1, #tenantID#, #companyID#, '사용자 정보'),
-	    		(36, 0, 2, #tenantID#, #companyID#, 'user Info'),
+	    		(36, 0, 2, #tenantID#, #companyID#, 'User Info'),
 	    		(36, 0, 3, #tenantID#, #companyID#, 'ユーザ情報'),
 	    		(47, 4, 1, #tenantID#, #companyID#, '동영상 게시판'),
 	    		(47, 4, 2, #tenantID#, #companyID#, 'Movie Board'),
@@ -3111,10 +3111,10 @@
 	    		(73, 19, 2, #tenantID#, #companyID#, 'Survey'),
 	    		(73, 19, 3, #tenantID#, #companyID#, '電子アンケート'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, #tenantID#, #companyID#, '탭게시판'),
-				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'tabBoard'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'TabBoard'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 3, #tenantID#, #companyID#, 'タブボード'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 1, #tenantID#, #companyID#, '전자문서 차트'),
-				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 2, #tenantID#, #companyID#, 'chart'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 2, #tenantID#, #companyID#, 'Chart'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 3, #tenantID#, #companyID#, '図表')
   		]]>
     </insert>

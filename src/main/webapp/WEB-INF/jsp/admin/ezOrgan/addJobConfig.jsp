@@ -909,7 +909,8 @@
 	            }
 	            
 	            try {
- 			    	window.opener.AddJob_List();
+ 			    	//window.opener.AddJob_List();
+ 			    	opener.parent.lef.goPage(13); // right 리로드하여 각 프레임의 count, list가 적용되도록 수정  
  			    	window.close();
  			    } catch (e) {
  			    	window.close();

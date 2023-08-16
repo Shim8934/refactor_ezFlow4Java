@@ -143,9 +143,13 @@
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
 						a.DISPLAYNAME LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					OR
+						a.DISPLAYNAME2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
 						a.DESCRIPTION LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					OR
+						a.DESCRIPTION2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						a.CN LIKE '%' || #search_keyword# || '%' ESCAPE '\'
@@ -1957,7 +1961,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A03','007','참조','0','참조','Reference','参照','抄送',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A03','008','개인순차합의','1','개인순차협조','Agreement(personal)','個人順次合意','个人顺序协议',#tenantID#, #companyID#)
+			VALUES ('A03','008','개인순차합의','1','개인순차협조','Sequential agreement(personal)','個人順次合意','个人顺序协议',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A03','009','개인병렬합의','1','개인병렬협조','Parallel agreement(personal)','個人並列合意','个人并行协议',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -2191,7 +2195,7 @@
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA03','007','참조','Reference','参照','抄送','1','참조',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA03','008','개인순차합의','Agreement(personal)','個人順次合意','个人顺序协议','1','개인순차협조',#companyID#, #tenantID# )
+			VALUES ('SA03','008','개인순차합의','Sequential agreement(personal)','個人順次合意','个人顺序协议','1','개인순차협조',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA03','009','개인병렬합의','Parallel agreement(personal)','個人並列合意','个人并行协议','1','개인병렬협조',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
@@ -4700,7 +4704,7 @@
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (26, 0, 1, #tenantID#, #companyID#, '생일자')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (26, 0, 2, #tenantID#, #companyID#, 'birthday')
+		    VALUES (26, 0, 2, #tenantID#, #companyID#, 'Birthday')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (26, 0, 3, #tenantID#, #companyID#, '誕生者')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
@@ -4712,7 +4716,7 @@
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (36, 0, 1, #tenantID#, #companyID#, '사용자 정보')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (36, 0, 2, #tenantID#, #companyID#, 'user Info')
+		    VALUES (36, 0, 2, #tenantID#, #companyID#, 'User Info')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (36, 0, 3, #tenantID#, #companyID#, 'ユーザ情報')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
@@ -4748,7 +4752,7 @@
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
 		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, #tenantID#, #companyID#, '탭게시판')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'tabBoard')
+		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'TabBoard')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 3, #tenantID#, #companyID#, 'タブボード')
 		SELECT

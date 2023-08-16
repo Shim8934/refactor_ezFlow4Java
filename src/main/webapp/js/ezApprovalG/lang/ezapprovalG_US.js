@@ -19,7 +19,7 @@ var strLang27 = "The opinion of content is following.]"
 var strLang28 = "Title"
 var strLang29 = "Name"
 var strLang30 = "content"
-var strLang31 = "Separation"
+var strLang31 = "Type"
 var strLang32 = "Dept."
 var strLang33 = "Attached file"
 var strLang57 = "assign auditor signature box"
@@ -816,8 +816,8 @@ var strOpinionType4 = "004";
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
 var strOpinionType8 = "008";
-var strLangOpinionType1 = "General Comment";
-var strLangOpinionType2 = "Bounce opinion";
+var strLangOpinionType1 = "General";
+var strLangOpinionType2 = "Rejection";
 var strLangOpinionType3 = "Hold opinion";
 var strLangOpinionType4 = "Return opinion";
 var strLangOpinionType8 = "재배부요청";
@@ -882,6 +882,7 @@ var strLang1138 = "No department ID.";
 var strLang1139 = "You do not have permission to view this document.";
 var strLang1148 = "Accompanying information";
 var strLang1149 = "Approval line information";
+var strLang1150 = "Linked forms cannot be reused.";
 
 // 일반용 S를 붙일 것
 var strLangS6 = "Bounce: signers";
@@ -1001,7 +1002,7 @@ var strLang1104 = "The agency can not receive electronic documents. \nCan not be
 
 //2017-11-09 장진혁 추가
 var strLangjjh01 = "The size of attachments can't exceed ";
-var strLangjjh02 = " MB.";
+var strLangjjh02 = "MB.";
 var strLangjjh03 = "Adding attachment.";
 var strLangjjh04 = "Summary of approval";
 
@@ -1146,3 +1147,6 @@ var strLangMJSSFA = "Destination groups cannot be added to favorites.";
 
 /* 2023-08-09 기민혁 - 전자결재 > 결재정보 > 수신처 > 수신처그룹 */
 var strLang974 = "Please select a receiving group.";
+
+/* 2023-08-11 민지수 - 전자결재 > 양식버전 다를 시 오류 메세지 추가 */
+var strLang975 = "The form version is different and cannot be reused.";

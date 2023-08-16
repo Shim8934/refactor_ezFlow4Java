@@ -312,6 +312,7 @@
                 _Tr.appendChild(_Th);
 
                 _Th = document.createElement("TH");
+                _Th.style.width = "170px"
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1035'/>";
                 _Th.setAttribute( 'title', "<spring:message code='ezStatistics.t1035'/>" );
                 _Tr.appendChild(_Th);

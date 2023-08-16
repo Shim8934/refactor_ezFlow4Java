@@ -65,7 +65,7 @@ var strLang175 = "읽기 권한이 없습니다.";
 var strLang176 = "삭제 권한이 없습니다.";
 var strLang177 = "게시물을 선택해 주세요.";
 var strLang178 = "읽음 표시 하시겠습니까?";
-var strLang179 = "를(을) 선택하세요.";
+var strLang179 = ""; // 어순처리 빈칸
 
 //2017.12.26 강민수92 추가
 var strLang180 = "댓글을 삭제하시겠습니까?";
@@ -77,7 +77,10 @@ var strLang185 = "암호가 올바르지 않습니다.";
 var strLang186 = "댓글";
 
 //2021-04-22 김정언 추가
-var strLang187 = "를(을) 입력하세요.";
+var strLang187 = ""; // 어순처리 빈칸
+
+var strLang188 = "请选择";
+var strLang189 = "请输入"; 
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";

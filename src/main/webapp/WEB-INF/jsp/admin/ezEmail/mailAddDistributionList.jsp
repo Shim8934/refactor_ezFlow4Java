@@ -3668,7 +3668,7 @@
 		                                                <tr>
 		                                                	<td style="width: 110px; color:#333;background-color: #f8f8fa; display:none" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
 		                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-		                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+		                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
 		                                                </tr>
 		                                            </table>
@@ -3676,7 +3676,7 @@
 		                                                <tr>
 		                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t26' /></td>
 		                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-		                                                    <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+		                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
 		                                                </tr>
 		                                            </table>

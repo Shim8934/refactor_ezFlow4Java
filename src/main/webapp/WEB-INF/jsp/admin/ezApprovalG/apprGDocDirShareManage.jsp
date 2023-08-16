@@ -78,7 +78,16 @@
 								</tr>
 								<c:forEach items="${ownerList}" var="owner">
 									<tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName }" ownerType="${owner.ownerType}">
-										<td><c:out value="${owner.ownerName}"></c:out></td>
+										<td>
+										    <c:choose>
+										        <c:when test="${lang eq '1'}">
+                                                    <c:out value="${owner.ownerName}"></c:out>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:out value="${owner.ownerName2}"></c:out>
+                                                </c:otherwise>
+                                            </c:choose>
+										</td>
 										<td>
 											<c:if test="${owner.ownerType eq 'U' }">
 												<spring:message code='ezApprovalG.share04'/>
