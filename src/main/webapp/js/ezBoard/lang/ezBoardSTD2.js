@@ -55,7 +55,7 @@ var strLang178 = "Are you sure you want read?";
 var strLang179 = ""; // 어순 처리 목적 빈칸
 
 //2017.12.26 강민수92 추가
-var strLang180 = "Are you sure you want to delete a comment ?";
+var strLang180 = "Are you sure you want to delete a comment?";
 var strLang181 = "There is no comment.";
 var strLang182 = "Please enter your content.";
 var strLang183 = "Please enter your password.";
