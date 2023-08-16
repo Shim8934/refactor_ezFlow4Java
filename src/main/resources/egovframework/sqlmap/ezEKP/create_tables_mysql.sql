@@ -3268,6 +3268,7 @@ CREATE TABLE `tbl_attitude_form` (
   `FORM_NAME` varchar(80) DEFAULT NULL,
   `FORM_NAME2` varchar(80) DEFAULT NULL,
   `FORM_HTML` varchar(3000) DEFAULT NULL,
+  `FORM_HTML2` varchar(3000) DEFAULT NULL,
   PRIMARY KEY (`FORM_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

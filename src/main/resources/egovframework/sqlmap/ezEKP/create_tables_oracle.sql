@@ -2019,7 +2019,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"TENANT_ID" NUMBER(5,0), 
 	"FORM_NAME" NVARCHAR2(80), 
 	"FORM_NAME2" NVARCHAR2(80), 
-	"FORM_HTML" NCLOB
+	"FORM_HTML" NCLOB,
+	"FORM_HTML2" NCLOB
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_ATTITUDE_MODAPPL
