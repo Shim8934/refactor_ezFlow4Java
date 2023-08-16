@@ -35,6 +35,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -117,6 +118,11 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/admin/ezSystem/systemLeftMenu.do", method = RequestMethod.GET)
 	public String systemLeftMenu(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
 		logger.debug("tenantID=" + userInfo.getTenantId());
 		
 		//관리자 권한체크
@@ -918,7 +924,7 @@ public class EzSystemAdminController {
 				n ++;
 			}
 		}
-		
+
 		serverList = ezSystemAdminService.getServerInfo(localIP, config.getProperty("config." + curServer) ,serverName, getServerList);
 
 		model.addAttribute("serverList", serverList);
@@ -1168,6 +1174,11 @@ public class EzSystemAdminController {
 		logger.debug("systemIPBand started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
 		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
 		
 		if (useIPAccess == null || useIPAccess.equals("")) {
@@ -1193,6 +1204,11 @@ public class EzSystemAdminController {
 		}
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
 		ezSystemAdminService.updateSystemIPAllow(allowResult, userInfo.getTenantId());
 		
 		logger.debug("setUseIPAccess ended");
@@ -1202,10 +1218,17 @@ public class EzSystemAdminController {
 	@ResponseBody
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezSystem/getAllIPBands.do", method=RequestMethod.POST)
-	public JSONArray getAllIPBands(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public ResponseEntity<JSONArray> getAllIPBands(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("setUseIPAccess started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("setUseIPAccess accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new JSONArray());
+		}
+
 		List<IPBandVO> list = ezSystemAdminService.getAllIPBand(userInfo.getTenantId());
 		
 		if (list == null) {
@@ -1225,18 +1248,26 @@ public class EzSystemAdminController {
 		
 		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
 		logger.debug("getAllIPBands ended");
-		return returnJsonArr;
+		return ResponseEntity.ok().body(returnJsonArr);
 	}
 	
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/insertIPBand.do", method=RequestMethod.POST)
-	public void insertIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+	public ResponseEntity<Void> insertIPBand(@CookieValue("loginCookie") String loginCookie, @ModelAttribute IPBandVO ipBand) throws Exception {
 		logger.debug("insertIPBand started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("insertIPBand accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
 		ezSystemAdminService.insertIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation() == null ? "" : ipBand.getExplanation());
 		
 		logger.debug("insertIPBand ended");
+		return ResponseEntity.noContent().build();
 	}
 	
 	@ResponseBody
@@ -1309,6 +1340,11 @@ public class EzSystemAdminController {
 		logger.debug("systemIPAccessList started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if(userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 
@@ -1332,10 +1368,17 @@ public class EzSystemAdminController {
 	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/getAllAccessList.do", method=RequestMethod.POST)
-	public JSONArray getAllAccessList(@CookieValue("loginCookie") String loginCookie, Model model, String companyID) throws Exception {
+	public ResponseEntity<JSONArray> getAllAccessList(@CookieValue("loginCookie") String loginCookie, String companyID) throws Exception {
 		logger.debug("getAllAccessList started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("getAllAccessList accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new JSONArray());
+		}
+
 		List<AccessIdVO> userList = ezSystemAdminService.getAllAccessList(userInfo.getPrimary(), userInfo.getTenantId(), companyID);
 		List<AccessIdVO> deptList = ezSystemAdminService.getAllAccessListDept(userInfo.getPrimary(), userInfo.getTenantId(), companyID);
 		JSONArray returnJsonArr = new JSONArray();
@@ -1361,17 +1404,24 @@ public class EzSystemAdminController {
 		
 		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
 		logger.debug("getAllAccessList ended");
-		
-		return returnJsonArr;
+
+		return ResponseEntity.ok().body(returnJsonArr);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/getAllAccessListCom.do", method=RequestMethod.POST)
-	public JSONArray getAllAccessListCom(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public ResponseEntity<JSONArray> getAllAccessListCom(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getAllAccessListCom started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("getAllAccessListCom accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new JSONArray());
+		}
+
 		List<String> allList = ezSystemAdminService.getAllAccessListCom(userInfo.getTenantId());
 		JSONArray returnJsonArr = new JSONArray();
 		
@@ -1385,19 +1435,28 @@ public class EzSystemAdminController {
 		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
 		logger.debug("getAllAccessListCom ended");
 		
-		return returnJsonArr;
+		return ResponseEntity.ok().body(returnJsonArr);
 	}
 	
 	
 	
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/insertAccessId", method=RequestMethod.POST)
-	public void insertAccessId(@CookieValue("loginCookie") String loginCookie, Model model, String strCnList) throws Exception {
+	public ResponseEntity<Void> insertAccessId(@CookieValue("loginCookie") String loginCookie, String strCnList) throws Exception {
 		logger.debug("insertAccessId started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("insertAccessId accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
 		ezSystemAdminService.insertAccessId(userInfo.getTenantId(), strCnList);
 		logger.debug("insertAccessId ended");
+
+		return ResponseEntity.noContent().build();
 	}
 	
 	@ResponseBody
@@ -1415,6 +1474,11 @@ public class EzSystemAdminController {
 		logger.debug("systemAddAccessList started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
 		String topID = userInfo.getCompanyID();
 		String companyId = request.getParameter("companyId");
 		String adminChk = "false";
@@ -1490,32 +1554,36 @@ public class EzSystemAdminController {
 		logger.debug("systemModuleMonitorOMS started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("systemModuleMonitorOMS accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ModuleSizeVO());
+		}
 		
 		String useModuleUsage = ezCommonService.getTenantConfig("useModuleUsage", userInfo.getTenantId());
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 		
 		ModuleSizeVO moduleSizeVO = null;
-		
-		if(userInfo != null) {
-			if(useModuleUsage != null && useModuleUsage.equalsIgnoreCase("yes")) {
-				List<String> moduleNames = null;
-				
-				switch (packageType) {
-				case CommonUtil.PT_STANDARD:
-					moduleNames = Arrays.asList("mail", "schedule", "board", "approval", "community", "resource");
-					break;
-				case CommonUtil.PT_BASIC:
-					moduleNames = Arrays.asList("mail", "schedule", "board");
-					break;
-				case CommonUtil.PT_MAIL:
-					moduleNames = Arrays.asList("mail");
-					break;
-				}
-				
-				String realPath = commonUtil.getRealPath(request);
-				
-				moduleSizeVO = ezSystemAdminService.getModuleUsage(moduleNames, realPath, userInfo);
+
+		if(useModuleUsage != null && useModuleUsage.equalsIgnoreCase("yes")) {
+			List<String> moduleNames = null;
+
+			switch (packageType) {
+			case CommonUtil.PT_STANDARD:
+				moduleNames = Arrays.asList("mail", "schedule", "board", "approval", "community", "resource");
+				break;
+			case CommonUtil.PT_BASIC:
+				moduleNames = Arrays.asList("mail", "schedule", "board");
+				break;
+			case CommonUtil.PT_MAIL:
+				moduleNames = Arrays.asList("mail");
+				break;
 			}
+
+			String realPath = commonUtil.getRealPath(request);
+
+			moduleSizeVO = ezSystemAdminService.getModuleUsage(moduleNames, realPath, userInfo);
 		}
 		
 		logger.debug("systemModuleMonitorOMS ended");
@@ -1577,13 +1645,18 @@ public class EzSystemAdminController {
 		logger.debug("setCompanyMultiLoginType started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		int tenantID = userInfo.getTenantId();
-		
-		if(userInfo != null) {
-			String useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
-			
-			ezSystemAdminService.setMultiLoginType(multiLoginType, tenantID, companyID, useMultiLogin);
+
+		if (userInfo == null) {
+			logger.debug("setCompanyMultiLoginType accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
+
+		int tenantID = userInfo.getTenantId();
+
+		String useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
+
+		ezSystemAdminService.setMultiLoginType(multiLoginType, tenantID, companyID, useMultiLogin);
 		
 		logger.debug("setCompanyMultiLoginType ended");
 		
@@ -1619,26 +1692,19 @@ public class EzSystemAdminController {
 	// 관리자 ip제한 사용여부 설정
 	@RequestMapping(value="/ezSystem/setUseAdminIPAccess.do", method=RequestMethod.POST)
 	@ResponseBody
-	public String setUseAdminIPAccess(@CookieValue("loginCookie") String loginCookie, Model model, String allowResult) throws Exception {
+	public String setUseAdminIPAccess(@CookieValue("loginCookie") String loginCookie, boolean allowResult) throws Exception {
 		logger.debug("setUseAdminIPAccess started");
 		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		String rollInfo = userInfo.getRollInfo();
-		boolean adminChk = rollInfo.indexOf("c=1") > -1;
-		String returnStr = "OK";
-
-		// input 체크된 값으로 전달되기 때문에 tbl_tenant_config value에 맞게 변경
-		allowResult = allowResult.equals("true") ? "YES" : "NO";
-		
-		if (adminChk) {
-			ezSystemAdminService.updateSystemAdminIPAllow(allowResult, userInfo.getTenantId());
-		} else {
-			returnStr = "adminFail";
+		if (!userInfo.getRollInfo().contains("c=1")) {
+			return "adminFail";
 		}
+
+		ezSystemAdminService.updateSystemAdminIPAllow(allowResult ? "YES" : "NO", userInfo.getTenantId());
 		
 		logger.debug("setUseAdminIPAccess ended");
-		return returnStr;
+		return "OK";
 	}
 	
 	// 관리자 IP 리스트 화면
@@ -1647,6 +1713,10 @@ public class EzSystemAdminController {
 		logger.debug("systemAdminIPBand started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String useAdminIPAccess = ezCommonService.getTenantConfig("useAdminIPAccess", userInfo.getTenantId());
 		useAdminIPAccess = useAdminIPAccess.equals("") ? "NO" : useAdminIPAccess;
@@ -1668,10 +1738,17 @@ public class EzSystemAdminController {
 	@ResponseBody
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezSystem/getAdminAccessIPBand.do", method=RequestMethod.POST)
-	public JSONArray getAdminAccessIPBand(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public ResponseEntity<JSONArray> getAdminAccessIPBand(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getAdminAccessIPBand started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("getAdminAccessIPBand accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new JSONArray());
+		}
+
 		int tenantId = userInfo.getTenantId();
 		
 		List<IPBandVO> list = ezSystemAdminService.getAdminAccessIPBand(tenantId);
@@ -1694,21 +1771,29 @@ public class EzSystemAdminController {
 		
 		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
 		logger.debug("getAdminAccessIPBand ended");
-		return returnJsonArr;
+		return ResponseEntity.ok().body(returnJsonArr);
 	}
 	
 	// 관리자 IP제한 - ip 추가
 	@ResponseBody
 	@RequestMapping(value="/ezSystem/insertAdminIPBand.do", method=RequestMethod.POST)
-	public void insertAdminIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @ModelAttribute IPBandVO ipBand) throws Exception {
+	public ResponseEntity<Void> insertAdminIPBand(@CookieValue("loginCookie") String loginCookie, @ModelAttribute IPBandVO ipBand) throws Exception {
 		logger.debug("insertAdminIPBand started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("insertAdminIPBand accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
 		String ipBandExplaination = ipBand.getExplanation() == null ? "" : ipBand.getExplanation();
 		
 		ezSystemAdminService.insertAdminIPBand(userInfo.getTenantId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBandExplaination);
 		
 		logger.debug("insertAdminIPBand ended");
+		return ResponseEntity.noContent().build();
 	}
 
 	// 관리자 IP제한 - ip 수정
@@ -1971,11 +2056,12 @@ public class EzSystemAdminController {
 		logger.debug("started systemAdminAccessHistList controller.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		int tenantId = userInfo.getTenantId();
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
+
+		int tenantId = userInfo.getTenantId();
 		
 		String offset = userInfo.getOffset();
 		String currPage = req.getParameter("pageNum");

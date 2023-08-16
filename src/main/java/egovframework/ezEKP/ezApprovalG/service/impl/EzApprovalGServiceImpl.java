@@ -6903,10 +6903,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				cal.setTime(format.parse(tmpYear));
 				tmpYear = String.valueOf(cal.get(Calendar.YEAR));
-				
-				/* 2022-10-12 홍승비 - 대결자 직후 전결자가 존재하는 경우, 자동으로 결재완료되어야 하므로 문서번호 생성 진행 */
-				// 대결자 + 전결자로 마감되지 않는 일반적인 결재선인 경우, 현재 결재자가 최종결재자인 경우에만 문서채번 진행 (기존 스펙)
-				if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
+
+                String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+
+                /* 2022-10-12 홍승비 - 대결자 직후 전결자가 존재하는 경우, 자동으로 결재완료되어야 하므로 문서번호 생성 진행 */
+                // 대결자 + 전결자로 마감되지 않는 일반적인 결재선인 경우, 현재 결재자가 최종결재자인 경우에만 문서채번 진행 (기존 스펙)
+                if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK)
+                        && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004") || (aprType.equals("008") && addLastKyulJeYN.equals("1") || addLastKyulJeYN.equals("2")))
+                        && !aprType.equals("007") && !aprStateSign.equals("011")) {
 					if (aprStateSign.equals("012")) {
 						strDeptID = receiveDept;
 						strDeptName = receiveDeptName;
