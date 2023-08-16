@@ -2029,35 +2029,52 @@
 			</isNotEqual>
 		</isEqual>
 	</select>
-	
+
 	<insert id="MApprovalG.insertOpinionInfo" parameterClass="Map">
-		<![CDATA[
-	   		INSERT INTO TBL_APROPINIONINFO (
-	   			DocID,      UserID,     OpinionGB,    Content,      UserName,     UserName2,     UserJobTitle,     UserJobTitle2,     UserDeptID,    UserDeptName,     UserDeptName2,      OpinionSN,   TENANT_ID, COMPANYID
-	   		)
-	   		SELECT
-				#docID#,    CN,			#opinionGB#,  #content#,	U.DISPLAYNAME,  U.DISPLAYNAME2,  A.APRMEMBERJOBTITLE,			   A.APRMEMBERJOBTITLE2,			  U.DEPARTMENT,	 A.APRMEMBERDEPTNAME,	   A.APRMEMBERDEPTNAME2,	   (SELECT CASE WHEN MAX(OPINIONSN) IS NULL THEN 1 ELSE MAX(OPINIONSN) + 1 END OPINIONSN FROM TBL_APROPINIONINFO WHERE TENANT_ID = #tenantID# AND COMPANYID = #companyID# AND DOCID = #docID#), #tenantID#, #companyID#
-			FROM
-				TBL_USERMASTER U
-			INNER JOIN  
-				TBL_APRLINEINFO A
-			ON 
-				U.CN = A.aprmemberid
-			AND 
-				A.TENANT_ID = U.TENANT_ID
-			WHERE 
-				A.TENANT_ID = #tenantID#
-			AND
-				A.COMPANYID = #companyID#
-			AND 
-				A.DOCID = #docID#
-			AND
-				U.CN = #userID#
-			AND
-				A.APRMEMBERSN = #aprMemberSN#
-		]]>
-   </insert>
-   
+		<isEqual property="isAbsentee" compareValue="Y">
+			<![CDATA[
+   				INSERT INTO TBL_APROPINIONINFO (
+   					DocID,      UserID,     OpinionGB,    Content,      UserName,     UserName2,     UserJobTitle,     UserJobTitle2,     UserDeptID,    UserDeptName,     UserDeptName2,      OpinionSN,   TENANT_ID, COMPANYID
+   				)
+  				SELECT
+   					#docID#,   CN,       #opinionGB#, #content#,   DISPLAYNAME, DISPLAYNAME2, TITLE, TITLE2, DEPARTMENT, DESCRIPTION, DESCRIPTION2, (SELECT CASE WHEN MAX(OPINIONSN) IS NULL THEN 1 ELSE MAX(OPINIONSN) + 1 END OPINIONSN FROM TBL_APROPINIONINFO WHERE TENANT_ID = #tenantID# AND COMPANYID = #companyID# AND DOCID = #docID#), #tenantID#, #companyID#
+			    FROM
+			        TBL_USERMASTER
+				WHERE
+				    TENANT_ID = #tenantID#
+				AND
+				    CN = #userID#
+			]]>
+		</isEqual>
+		<isNotEqual property="isAbsentee" compareValue="Y">
+			<![CDATA[
+   				INSERT INTO TBL_APROPINIONINFO (
+  					DocID,      UserID,     OpinionGB,    Content,      UserName,     UserName2,     UserJobTitle,     UserJobTitle2,     UserDeptID,    UserDeptName,     UserDeptName2,      OpinionSN,   TENANT_ID, COMPANYID
+   				)
+   				SELECT
+					#docID#,    CN,#opinionGB#,  #content#,U.DISPLAYNAME,  U.DISPLAYNAME2,  A.APRMEMBERJOBTITLE,   A.APRMEMBERJOBTITLE2,  U.DEPARTMENT, A.APRMEMBERDEPTNAME,   A.APRMEMBERDEPTNAME2,   (SELECT CASE WHEN MAX(OPINIONSN) IS NULL THEN 1 ELSE MAX(OPINIONSN) + 1 END OPINIONSN FROM TBL_APROPINIONINFO WHERE TENANT_ID = #tenantID# AND COMPANYID = #companyID# AND DOCID = #docID#), #tenantID#, #companyID#
+				FROM
+					TBL_USERMASTER U
+				INNER JOIN
+					TBL_APRLINEINFO A
+				ON
+					U.CN = A.aprmemberid
+				AND
+					A.TENANT_ID = U.TENANT_ID
+				WHERE
+					A.TENANT_ID = #tenantID#
+				AND
+					A.COMPANYID = #companyID#
+				AND
+					A.DOCID = #docID#
+				AND
+					U.CN = #userID#
+				AND
+					A.APRMEMBERSN = #aprMemberSN#
+			]]>
+		</isNotEqual>
+	</insert>
+
    <update id="MApprovalG.updateDocOpinionInfo" parameterClass="Map">
    		<![CDATA[
    			UPDATE
@@ -2758,5 +2775,17 @@
 		AND
 			APRMEMBERSN = #v_APRMEMBERSN#
 	</select>
-      
+
+	<select id="MApprovalG.getIsAbsenteeInfo" parameterClass="map" resultClass="Integer">
+		SELECT
+		    COUNT(CN)
+		FROM
+		    TBL_USERMASTER
+		WHERE
+		    TENANT_ID = #tenantID#
+		AND
+		    DATE_FORMAT(RIGHT(EXTENSIONATTRIBUTE5, 16), '%Y-%m-%d %H:%i') > NOW()
+		AND
+		    SUBSTRING_INDEX(EXTENSIONATTRIBUTE5, ":", 1) = #userID#
+	</select>
 </sqlMap>

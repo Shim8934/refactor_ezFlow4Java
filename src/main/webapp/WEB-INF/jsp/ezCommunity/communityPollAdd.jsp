@@ -448,7 +448,6 @@
             <input type="hidden" name="endPollYear" id="endPollYear" value="">
             <input type="hidden" name="endPollMonth" id="endPollMonth" value="">
             <input type="hidden" name="endPollDay" id="endPollDay" value="">
-        	</c:if>
 	    	<table class="content" style="margin-top:12px">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t599' /></th>
@@ -470,7 +469,7 @@
 							<option value="11">Yes / No
 	          				<option value="12"><spring:message code='ezCommunity.t608' />
 	              			<option value="13"><spring:message code='ezCommunity.t609' />
-	                  		<c:if test="${lang == 1}">
+	                  		<c:if test="${userInfo.lang == 1}">
 	                  			<option value="14"><spring:message code='ezCommunity.t610' />
 	                  		</c:if>
 	                    </select>

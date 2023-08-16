@@ -1896,7 +1896,7 @@
                     		<option VALUE="EXTERNAL"><spring:message code="ezEmail.kes004" /></option>
 						</c:if>
 						<c:if test="${'YES'.equalsIgnoreCase(useSecureMail)}">
-                    		<option VALUE="SECUREMAIL"><spring:message code="ezEmail.lhm63" /></option>
+                    		<option VALUE="SECUREMAIL"><spring:message code="ezEmail.kes003" /></option>
                    		</c:if>
                     		<option VALUE="IMPORTANT"><spring:message code="ezEmail.kes047" /></option>
                     	</select>

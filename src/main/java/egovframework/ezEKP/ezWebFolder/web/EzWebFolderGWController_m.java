@@ -1484,7 +1484,7 @@ public class EzWebFolderGWController_m {
 	 * param : folderName, content, memberList
 	 */
 	@RequestMapping(value="/rest/ezwebfolder/{userId}/setApplyHistory", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject setApplyHistory (@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject bodyObj) {
+	public JSONObject setApplyHistory (@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject bodyObj) throws Exception {
 		logger.debug("setApplyHistory Started.");
 		
 		JSONObject result = new JSONObject();
@@ -1506,9 +1506,7 @@ public class EzWebFolderGWController_m {
 		String primary = userInfo.getPrimary();
 		String companyId = userInfo.getCompanyID();
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date                  = new Date();
-		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		String timeUTC =  commonUtil.getTodayUTCTime("");
 
 		logger.debug("userId=" + userId + ", serverName=" + serverName + ", tenantId=" + tenantId + ", primary=" + primary + ", companyId=" + companyId
 				+ ", folderName=" + folderName + ", content=" + content + ", usingS=" + usingS + ", usingE=" + usingE+". timeUTC="+timeUTC);

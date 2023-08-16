@@ -9411,7 +9411,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	    model.addAttribute("receiptName", receiptName);
 	    model.addAttribute("receipts", receipts);
 	    model.addAttribute("susinGroupPrefix", susinGroupPrefix);
-	    
+	    model.addAttribute("lang", userInfo.getLang());
 	    logger.debug("ezReceiptInfo ended");
 	    
 	    return "ezApprovalG/apprGezReceiptInfoIng";
