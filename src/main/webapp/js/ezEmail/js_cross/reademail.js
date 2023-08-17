@@ -138,8 +138,6 @@ function allreply_onClick() {
 function pass_onClick() {
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
-    if (conWidth > minimumWidth)
-        conWidth = minimumWidth;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - minimumWidth) / 2;
