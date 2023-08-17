@@ -1178,10 +1178,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("deptIdList", deptIdList);
-		if (primary.equals("1")) {
-			primary = "";
+		if (userLang.equals("1")) {
+			userLang = "";
 		}
-		map.put("primary", primary);
+		map.put("lang", userLang);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
