@@ -3043,7 +3043,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_LISTOPTION
 (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID)
 VALUES
-('112', 1, '수신자', 200, NULL, 'RECEIPTDEPTNAME', NULL, NULL, '수신자', NULL, 'Receiver', '受信者' , '受信者', NULL, 0, 'Top'),
-('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', NULL, 0, 'Top'),
+('112', 1, '수신자', 200, NULL, 'RECEIPTDEPTNAME', NULL, NULL, '수신자', NULL, 'Receiver', '受信者' , '受信者', NULL,@tenant_id_value, 'Top'),
+('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', NULL,@tenant_id_value, 'Top'),
 ('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', NULL,@tenant_id_value, 'Top');
 
