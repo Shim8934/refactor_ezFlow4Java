@@ -124,13 +124,14 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public void saveACL(String resID, String deptYn, String sdaYn, String memberNam, String memberID, String accessLvl, String companyID, int tenantID) throws Exception {
+	public void saveACL(String resID, String deptYn, String sdaYn, String memberNam, String memberNam2, String memberID, String accessLvl, String companyID, int tenantID) throws Exception {
 		logger.debug("saveACL Start");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_P_ResID", resID);
 		map.put("v_P_Dept_YN", deptYn);
 		map.put("v_P_SDA_YN", sdaYn);
 		map.put("v_P_Member_nam", memberNam);
+		map.put("v_P_Member_nam2", memberNam2);
 		map.put("v_P_Member_ID", memberID);
 		map.put("v_P_Access_lvl", accessLvl);
 		map.put("v_P_CompanyID", companyID);
@@ -461,6 +462,7 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			returnXMLBld.append("<ATTRIBUTE>" + commonUtil.cleanValue(clsACLList.get(i).getMemberNam()) + "</ATTRIBUTE>");
 			returnXMLBld.append("<ATTRIBUTE>" + clsACLList.get(i).getMemberID() + "</ATTRIBUTE>");	
 			returnXMLBld.append("<ATTRIBUTE>" + clsACLList.get(i).getAccessLvl() + "</ATTRIBUTE>");
+			returnXMLBld.append("<ATTRIBUTE>" + commonUtil.cleanValue(clsACLList.get(i).getMemberNam2()) + "</ATTRIBUTE>");
 			returnXMLBld.append("</NODE>");
 		}
 		
@@ -477,6 +479,7 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String deptYN = "";
 		String SDAYN = "";
 		String memberNam = "";
+		String memberNam2 = "";
 		String memberID = "";
 		String accessLvl = "";
 		String companyID = "";
@@ -497,9 +500,10 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				deptYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Dept_YN").getTextContent();
 				SDAYN = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("SDA_YN").getTextContent();
 				memberNam = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_nam").getTextContent();
+				memberNam2 = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_nam2").getTextContent();
 				memberID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_ID").getTextContent();
 				accessLvl = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Access_lvl").getTextContent();
-				saveACL(resID, deptYN, SDAYN, memberNam, memberID, accessLvl, companyID, tenantID);
+				saveACL(resID, deptYN, SDAYN, memberNam, memberNam2, memberID, accessLvl, companyID, tenantID);
 			}
 		}
 		return true;
