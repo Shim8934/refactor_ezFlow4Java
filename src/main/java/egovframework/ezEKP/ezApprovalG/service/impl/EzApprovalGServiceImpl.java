@@ -26437,6 +26437,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			for(i=0; i<hlength; i++) {
 				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
+
+                if(FieldName.toUpperCase().equals("COMPANYNAME") && lang.equals("2")){
+                    FieldName = "COMPANYNAME2";
+                }
 				//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 데이터만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
 				if (FieldName.equals("FORMNAME") || FieldName.equals("EDMSYN") || FieldName.equals("DOCSTATENAME") || FieldName.equals("SENDFLAG") || FieldName.equals("HASATTACHYN") || FieldName.equals("ISPUBLIC")) {
 					continue;
@@ -26470,7 +26474,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
 					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
 					resultXML.append("<DATA10><![CDATA[" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "]]></DATA10>");
-					resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>");					
+                    if(lang.equals("2")) {
+                        resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent() + "]]></DATA99>");
+                    } else {
+                        resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>");
+                    }
+
 					firstFlag = false;
 				}
 				

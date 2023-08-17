@@ -3729,3 +3729,6 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 
 /* 데이트피커 달력 수정 */
 .ui-datepicker{width:auto !important; min-width:180px;}		/* 글자가 길어지면서 기존 고정 크기(180px)를 auto로 변경, 최소 사이즈를 180px로 추가 */
+
+/* 관리자 페이지 통계  평균소요시간*/
+.processTimeTH {white-space: normal;}

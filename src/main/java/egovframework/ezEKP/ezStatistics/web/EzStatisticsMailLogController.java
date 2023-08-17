@@ -337,10 +337,9 @@ public class EzStatisticsMailLogController {
 		String endDate = request.getParameter("searchEndTime");
 		String searchField = request.getParameter("searchField");
 		String searchValue = request.getParameter("searchValue");
-		String isPrimaryLang = "2";
+		String isPrimaryLang = userInfo.getPrimary();
 		String pageNo = request.getParameter("pageNo");
 		String pageSize = request.getParameter("pageSize");
-		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String companyId = request.getParameter("companyId");
 		
 		if (searchField != null && (searchField.equals("recipientEmail") || searchField.equals("senderEmail"))) {
@@ -359,12 +358,6 @@ public class EzStatisticsMailLogController {
 		
 		if (!searchEndTime.isEmpty()) {
 			searchEndTime = searchEndTime.replaceAll("[^0-9]", "");
-		}
-		
-		if (userInfo.getLang().equals(sysLang)) {
-			isPrimaryLang = userInfo.getLang();
-		} else { 
-			isPrimaryLang = sysLang;
 		}
 		
 		if (companyId == null || companyId.equals("Top/organ")) {

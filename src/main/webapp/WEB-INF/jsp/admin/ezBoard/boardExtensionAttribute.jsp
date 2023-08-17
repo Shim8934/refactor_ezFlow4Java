@@ -831,7 +831,7 @@
 				<table class="content" style="width:100%;margin-top:5px">
 					<tr>
 <%-- 						<th style="width:15%"><spring:message code='ezBoard.t999031'/></th> --%>
-						<th style="width:15%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</th>
+						<th style="width:15%"><spring:message code='ezBoard.hsbEx01'/></th>
 				        <td style="width:25%"><input id="txtNameKor" style="width:97%" maxlength="20"/></td>
 <%-- 				        <th style="width:15%"><spring:message code='ezBoard.t999032'/></th> --%>
 				        <th style="width:15%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</th>
@@ -888,7 +888,7 @@
 					        <td style="width:45%">
 					        <table class="content" style="width:100%"> 
 						        <tr>
-							        <th style="width:25%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</th>
+							        <th style="width:25%"><spring:message code='ezBoard.hsbEx01'/></th>
 					                <td style="width:25%" id="HeadName"></td>
 							        <th style="width:25%"><spring:message code='ezBoard.t5002'/></th>
 					                <td style="width:25%"><input id="HeadWidth" style="width:99%" /></td>

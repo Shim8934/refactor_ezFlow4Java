@@ -77,7 +77,15 @@
 									<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share03'/></th>
 								</tr>
 								<c:forEach items="${ownerList}" var="owner">
-									<tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName }" ownerType="${owner.ownerType}">
+								    <c:choose>
+								        <c:when test="${lang eq 1}">
+								            <tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName }" ownerType="${owner.ownerType}">
+								        </c:when>
+								        <c:otherwise>
+								            <tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName2 }" ownerType="${owner.ownerType}">
+								        </c:otherwise>
+								    </c:choose>
+
 										<td>
 										    <c:choose>
 										        <c:when test="${lang eq '1'}">
@@ -168,7 +176,7 @@
 		    		alert(strLang960);
 		    		return;
 		    	}
-		    	
+
 				var url = "/admin/ezApprovalG/docDirOwnerInsert.do";
 				if(flag == 'M'){
 					url += "?ownerId=" + ownerId + "&ownerName=" + encodeURIComponent(ownerName) + "&ownerType=" + encodeURIComponent(ownerType);

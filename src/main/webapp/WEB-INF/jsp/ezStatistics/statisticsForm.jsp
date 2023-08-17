@@ -220,7 +220,10 @@
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1035'/>";
                 _Tr.appendChild(_Th);
                 
-
+                if ("${userInfo.lang}" != "1") {
+	                _Th.classList.add("processTimeTH");
+                }
+                
                 _Table.appendChild(_Tr);
 
                 var resultxml = loadXMLString(text);

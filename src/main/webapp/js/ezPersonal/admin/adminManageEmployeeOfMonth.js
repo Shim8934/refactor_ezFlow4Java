@@ -83,8 +83,11 @@ function renderList(result, selectedYear) {
 		empInfoDivElmt.className = "empInfo";
 		empAddDivElmt.className = "empAdd";*/
 		
-		monthElemt.textContent =  month;
-		titleElmt.textContent = strLangkhj26;
+		var MonthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var monthForString;
+        monthForString = MonthList[month -1];
+        monthElemt.textContent =  monthForString;
+        titleElmt.textContent = '';
 		
 		monthElemt.appendChild(titleElmt);
 		
