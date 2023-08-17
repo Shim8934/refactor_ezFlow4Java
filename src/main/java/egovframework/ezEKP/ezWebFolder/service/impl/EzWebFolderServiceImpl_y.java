@@ -401,7 +401,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("searchFileName", searchFileName);
 		map.put("searchCreateName", searchCreateName);
 		map.put("searchFileType", searchFileType);
-		map.put("pStart", pStart);
+		map.put("pStart", pStart); //여기
 		map.put("pEnd", pEnd);
 		map.put("primary", primary);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -420,8 +420,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
 			if (!searchEndDate.equals("") ) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+				searchStartDate = searchStartDate + " 00:00:00";
+				searchEndDate = searchEndDate + " 23:59:59";
 			}
 		}
 		
@@ -658,8 +658,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
 			if (!searchEndDate.equals("") ) {
-				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-				searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+				searchStartDate = searchStartDate + " 00:00:00";
+				searchEndDate = searchEndDate + " 23:59:59";
 			}
 		}
 		map.put("searchStartDate", searchStartDate);
