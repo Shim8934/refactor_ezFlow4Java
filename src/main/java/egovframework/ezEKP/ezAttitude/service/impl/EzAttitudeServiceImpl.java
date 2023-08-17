@@ -2682,7 +2682,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public String getAttitudeAnnualListCount(String searchUserName,
-			String searchDeptName, String searchTitle, String offsetMin, String companyId, int tenantId) throws Exception {
+			String searchDeptName, String searchTitle, String offsetMin, String companyId, int tenantId, String primary) throws Exception {
 		logger.debug("getAttitudeAnnualListCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2692,6 +2692,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
 		map.put("offsetMin", offsetMin);
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
 		
 		String totalCount = ezAttitudeDAO.getAttitudeAnnualListCount(map);
 		

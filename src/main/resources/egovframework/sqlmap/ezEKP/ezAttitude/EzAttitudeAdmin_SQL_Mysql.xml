@@ -1444,13 +1444,13 @@
 				A.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description LIKE CONCAT('%', #searchDeptName#, '%')
+			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			A.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title LIKE CONCAT('%', #searchTitle#, '%')
+			A.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 	</select>
 	
