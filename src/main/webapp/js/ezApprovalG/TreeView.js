@@ -469,7 +469,7 @@ function TreeView() {
                 // EzOrganDAO.getTBLDeptMaster > CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END DEPTNM 이고,
                 // ezOrgan.service.impl.EzOrganServiceImpl > getTreeNodeInfo() > "<VALUE>" + commonUtil.cleanValue(vo.getDeptNM()) + "</VALUE>" 이고,
                 // (Commit a929ffab5) Hyojin Lee <hyojin0414@kaoni.com> on 16. 12. 19 오전 10:38 이때를 보면 VALUE2는 없음.
-                // [카이스트]는 apprGezApprovalInfo.jsp에서 primary를 삭제해서 에러가 안남. 왜 삭제했는지는 commit을 찾기 힘듦. 
+                // [카이스트]는 apprGezApprovalInfo.jsp에서 primary를 삭제해서 에러가 안남. 왜 삭제했는지는 commit을 찾기 힘듦.
                 /*
                 if (typeof(primary) != 'undefined' && primary != '1') {
                 	if(SelectSingleNodeValue(arrNodes[i], "VALUE2").replace(/ /gi, "") != "\n")

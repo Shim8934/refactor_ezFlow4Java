@@ -117,9 +117,13 @@
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
 						DISPLAYNAME LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					OR	
+						DISPLAYNAME2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
 						DESCRIPTION LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					OR  
+						DESCRIPTION2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE '%' || #search_keyword# || '%' ESCAPE '\'
@@ -159,9 +163,13 @@
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
 						a.DISPLAYNAME LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					OR
+						a.DISPLAYNAME2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
 						a.DESCRIPTION LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					OR
+						a.DESCRIPTION2 LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						a.CN LIKE '%' || #search_keyword# || '%' ESCAPE '\'
@@ -1801,7 +1809,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A60','I  ','접수','1','접수 (Inter..)','Reception progress','受付','收到',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A60','N  ','대기','1','발신 대기 (Not Yet)','No receipt','待機','待机',#tenantID#, #companyID#)
+			VALUES ('A60','N  ','대기','1','발신 대기 (Not Yet)','Waiting','待機','待机',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A60','O  ','발송의뢰','1','발송 의뢰 (Offered)','Offered','送信依頼','发送请求',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -1814,6 +1822,8 @@
 			VALUES ('A60','V  ','도달','1','도달 (arriVed)','arriVed','到達','抵达',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A60','Y  ','수신완료','1','수신완료 (Yes)','Reception complete','受信完了','接收完成',#tenantID#, #companyID#)
+			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID)
+			VALUES ('A60','B  ','발송의뢰반송','1','발송의뢰반송(Return Offered)','Return Offered','送信依頼拒否','拒绝发送请求',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('F01','0  ','플로우','0','플로우관련 업무 정의','플로우','플로우','플로우',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -1971,7 +1981,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A03','007','참조','0','참조','Reference','参照','抄送',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A03','008','개인순차합의','1','개인순차협조','Agreement(personal)','個人順次合意','个人顺序协议',#tenantID#, #companyID#)
+			VALUES ('A03','008','개인순차합의','1','개인순차협조','Sequential agreement(personal)','個人順次合意','个人顺序协议',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A03','009','개인병렬합의','1','개인병렬협조','Parallel agreement(personal)','個人並列合意','个人并行协议',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -2007,7 +2017,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A04','005','보류','1','보류','Hold','保留','保存',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A04','006','회수','1','회수','Withdrew','引き戻し','回收',#tenantID#, #companyID#)
+			VALUES ('A04','006','회수','1','회수','Withdrawn','引き戻し','回收',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A04','010','완료','1','완료','Completed','完了','完成',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -2137,7 +2147,7 @@
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA01','003','수신문',		'Received',		'受信文',		'收件文',		'1',	'수신문',				#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA01','004','시행문',		'시행문',			'施行文',		'?行文',		'1',	'시행문',				#companyID#, #tenantID#)
+			VALUES ('SA01','004','시행문',		'Enforcement',			'施行文',		'?行文',		'1',	'시행문',				#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA01','005','부서합의',		'agreement',	'起案文',		'起案文',		'0',	'기안문',				#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
@@ -2205,7 +2215,7 @@
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA03','007','참조','Reference','参照','抄送','1','참조',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA03','008','개인순차합의','Agreement(personal)','個人順次合意','个人顺序协议','1','개인순차협조',#companyID#, #tenantID# )
+			VALUES ('SA03','008','개인순차합의','Sequential agreement(personal)','個人順次合意','个人顺序协议','1','개인순차협조',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA03','009','개인병렬합의','Parallel agreement(personal)','個人並列合意','个人并行协议','1','개인병렬협조',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
@@ -2522,7 +2532,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
 			VALUES ('SA04','005','보류','1','보류','Hold','保留','保存',#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
-			VALUES ('SA04','006','회수','1','회수','Withdrew','引き戻し','回收',#companyID#, #tenantID#)
+			VALUES ('SA04','006','회수','1','회수','Withdrawn','引き戻し','回收',#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
 			VALUES ('SA04','010','완료','1','완료','Completed','完了','完成',#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
@@ -4122,15 +4132,15 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I21" parameterClass="Map">
-    	<isEqual property="lang" compareValue="1">
+		<isEqual property="PrimaryLang" compareValue="1" >
     		<![CDATA[
 		    	INSERT ALL
 		    	INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '출근', 'inCom', '1', 'inOut', null, 1)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '출근', 'go to work', '1', 'inOut', null, 1)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', 'inOut', null, 3)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '퇴근', 'off work', '1', 'inOut', null, 3)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
@@ -4165,20 +4175,22 @@
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
+    			INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A21', #companyID#, #tenantID#, '반반차', 'half and half off', '1', 'refresh', 'A05', 4)
 		    SELECT
 		    	*
 		    FROM DUAL
 		    ]]>
     	</isEqual>
-    	<isEqual property="lang" compareValue="3">
+		<isNotEqual property="PrimaryLang" compareValue="1" >
     	    <![CDATA[
 		    	INSERT ALL
 	    		INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '出勤', 'inCom', '1', 'inOut', null, 1)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A01', #companyID#, #tenantID#, '出勤', 'go to work', '1', 'inOut', null, 1)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A02', #companyID#, #tenantID#, '遅刻', 'late', '1', 'inOut', null, 2)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
-		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '退勤', 'outCom', '1', 'inOut', null, 3)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A03', #companyID#, #tenantID#, '退勤', 'off work', '1', 'inOut', null, 3)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A07', #companyID#, #tenantID#, '休出', 'working Holiday', '1', 'inOut', null, 6)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
@@ -4213,11 +4225,13 @@
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A19', #companyID#, #tenantID#, '慶弔', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9)
     			INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A20', #companyID#, #tenantID#, '病休', 'sick leave', '1', 'refresh', 'A05', 9)
+		    	INTO TBL_ATTITUDE_TYPE ("ORDER" ,TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
+		    	VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval,'A21', #companyID#, #tenantID#, '半半公暇', 'half and half off', '1', 'refresh', 'A05', 4)
 		    SELECT
 		    	*
 		    FROM DUAL
 		    ]]>
-    	</isEqual>
+    	</isNotEqual>
     </insert>
 	
 	<insert id="EzOrganAdminDAO.insertCompanyInfo_I22" parameterClass="Map">
@@ -4508,7 +4522,7 @@
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (9, 1, #companyID#, #tenantID#, '근태관리')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (9, 2, #companyID#, #tenantID#, 'Attitude')
+		    VALUES (9, 2, #companyID#, #tenantID#, 'Attendance')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (9, 3, #companyID#, #tenantID#, '勤怠管理')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
@@ -4710,7 +4724,7 @@
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (26, 0, 1, #tenantID#, #companyID#, '생일자')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (26, 0, 2, #tenantID#, #companyID#, 'birthday')
+		    VALUES (26, 0, 2, #tenantID#, #companyID#, 'Birthday')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (26, 0, 3, #tenantID#, #companyID#, '誕生者')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
@@ -4722,7 +4736,7 @@
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (36, 0, 1, #tenantID#, #companyID#, '사용자 정보')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES (36, 0, 2, #tenantID#, #companyID#, 'user Info')
+		    VALUES (36, 0, 2, #tenantID#, #companyID#, 'User Info')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES (36, 0, 3, #tenantID#, #companyID#, 'ユーザ情報')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
@@ -4758,7 +4772,7 @@
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
 		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, #tenantID#, #companyID#, '탭게시판')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
-		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'tabBoard')
+		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'TabBoard')
 		    INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
 		    VALUES ((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 3, #tenantID#, #companyID#, 'タブボード')
 		SELECT
@@ -7162,7 +7176,10 @@
 
 	<select id="EzOrganAdminDAO.getCompanyName" parameterClass="map" resultClass="String">
 		SELECT
-			EXTENSIONATTRIBUTE3
+			CASE WHEN #v_LANG# = '1'
+			THEN EXTENSIONATTRIBUTE3
+			ELSE COMPNM2
+			END EXTENSIONATTRIBUTE3
 		FROM
 			TBL_DEPTMASTER
 		WHERE

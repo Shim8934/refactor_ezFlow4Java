@@ -36,22 +36,22 @@
 		    	
 			    if (CrossYN()) {
 			        if (selectedEmail.textContent.indexOf("SMTP") == 0) {
-			            alert("Primary" + "<spring:message code='ezOrgan.t146' />");
+			            alert("Primary " + "<spring:message code='ezOrgan.t146' />");
 			            return;
 			        }
 			        
 			        if (selectedEmail.textContent.indexOf("smtp") != 0) {
-			            alert("SMTP" + "<spring:message code='ezOrgan.t147' />");
+			            alert("SMTP " + "<spring:message code='ezOrgan.t147' />");
 			            return;
 			        }
 			    } else {
 			        if (selectedEmail.innerText.indexOf("SMTP") == 0) {
-			            alert("Primary" + "<spring:message code='ezOrgan.t146' />");
+			            alert("Primary " + "<spring:message code='ezOrgan.t146' />");
 		                return;
 		            }
 			        
 		            if (selectedEmail.innerText.indexOf("smtp") != 0) {
-		                alert("SMTP" + "<spring:message code='ezOrgan.t147' />");
+		                alert("SMTP " + "<spring:message code='ezOrgan.t147' />");
 			            return;
 			        }
 			    }
@@ -130,7 +130,7 @@
 				}
 				
 				if (!Check_ID(email.trim())) {
-					alert("Email" + "<spring:message code='ezOrgan.t153' />");
+					alert("<spring:message code='ezOrgan.t153' />");
 					return;
 				}
 				
@@ -284,7 +284,7 @@
 			<div class="btnpositionNew">
 				<a class="imgbtn" onClick="Add_Address_save()"><span><spring:message code='ezOrgan.t164' /></span></a>
 				<a class="imgbtn" onClick="Delete_Address()"><span><spring:message code='ezOrgan.t165' /></span></a>
-				<a class="imgbtn" style="WIDTH:auto" onClick="Set_Primary()"><span>Primary<spring:message code='ezOrgan.t166' /></span></a>
+				<a class="imgbtn" style="WIDTH:auto" onClick="Set_Primary()"><span><spring:message code='ezOrgan.t166' /></span></a>
 				<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t167' /></span></a>
 			</div>
 		</form>

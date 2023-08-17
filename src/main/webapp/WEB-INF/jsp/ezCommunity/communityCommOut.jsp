@@ -74,7 +74,14 @@
 		    </tr>
 		    <tr>
 		        <th><spring:message code='ezCommunity.t477'/></th>
-		        <td>${club.c_MemberCnt}<spring:message code='ezCommunity.t478'/></td>
+		        <c:choose>
+		        	<c:when test="${club.c_MemberCnt > 1}">
+				        <td>${club.c_MemberCnt} <spring:message code='ezSurvey.t102'/></td>
+			        </c:when>
+			        <c:otherwise>
+				        <td>${club.c_MemberCnt}<spring:message code='ezCommunity.t478'/></td>
+			        </c:otherwise>
+			    </c:choose>
 		    </tr>
 		    <tr>
 		        <th><spring:message code='ezCommunity.t11'/></th>

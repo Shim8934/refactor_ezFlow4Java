@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64.Decoder;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -372,7 +373,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							if (i == 0) {
 								if (strArr.length > 1) {
-									toStr = getReceiverHTML(name, address, false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + strArr.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+									toStr = getReceiverHTML(name, address, false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) +"&nbsp;"+ strArr.length +"&nbsp;"+ egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
 								} else {
 									toStr = getReceiverHTML(name, address, false);
 								}
@@ -730,7 +731,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								} else {*/
 									if(i == 0){
 										if(arrRecipientsTo.length > 1){
-											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) +"&nbsp;"+ arrRecipientsTo.length +"&nbsp;"+ egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
 										} else {
 											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
 										}
@@ -1819,10 +1820,27 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String tenantIdStr = request.getParameter("tid");
 		tenantIdStr = (tenantIdStr == null || tenantIdStr.trim().equals("")) ? "0" : tenantIdStr;
 		tenantIdStr = commonUtil.detectPathTraversal(tenantIdStr);
-		
 		int tenantId = Integer.parseInt(tenantIdStr);
-		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
+		//String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		//Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
+
+		// 2023-08-02 이사라 - 브라우저 언어로 메시지 표출을 위해 수정
+		String acceptLanguage = request.getHeader("Accept-Language"); // ex) Accept-Language: en-US,en;q=0.9,ko;q=0.8,id;q=0.7
+		String twoLetterLang = "";
+		String lang = "";
+
+		if (StringUtils.isNotBlank(acceptLanguage)) {
+			twoLetterLang = acceptLanguage.substring(0, 2);
+			lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang);
+		}
+
+		// 브라우저 언어가 표준지원 언어가 아닐 경우 시스템 언어로 설정
+		if (StringUtils.isBlank(lang)) {
+			lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		}
+
+		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
+
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
 		

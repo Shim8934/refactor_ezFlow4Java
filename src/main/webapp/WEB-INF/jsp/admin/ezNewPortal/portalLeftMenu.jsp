@@ -46,7 +46,7 @@
 					<li><span  class = "list_text" onClick="goPage(8)"><spring:message code='ezPersonal.khj1' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(3)"><spring:message code = 'ezPersonal.hyh1' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(4)"><spring:message code = 'main.t67' /></span></li>
-					<li><span  class = "list_text" onClick="goPage(7)"><spring:message code = 'main.t68' /></span></li>
+					<li><span  class = "list_text" onClick="goPage(7)"><spring:message code = 'ezNewPortal.t019' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(9)"><spring:message code = 'main.t10000' /></span></li>
 				</c:if>
 				<c:if test="${packageType == 'mail'}"> 

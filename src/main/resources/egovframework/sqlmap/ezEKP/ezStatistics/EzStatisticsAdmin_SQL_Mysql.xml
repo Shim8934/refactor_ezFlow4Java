@@ -431,7 +431,7 @@
 		<![CDATA[
 			SELECT 
 				B.FORMID, 
-				A.FORMNAME AS FORMINFO,   
+				IF (#lang# LIKE '1', A.FORMNAME , A.FORMNAME2) AS FORMINFO,   
 				IFNULL(DRAFTCNT, 0) AS DRAFTCNT, 
 				IFNULL(DRAFTINGCNT, 0) AS DRAFTINGCNT, 
 				IFNULL(DRAFTENDCNT, 0) AS DRAFTENDCNT, 
@@ -499,7 +499,7 @@
 	<select id="EzStatisticsAdminDAO.getSearchList_D" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
 		<![CDATA[
 			SELECT 
-				A.DISPLAYNAME ,
+				IF (#lang# LIKE '1', A.DISPLAYNAME , A.DISPLAYNAME2) AS DISPLAYNAME,  
                 IFNULL(DRAFTCNT, 0) DRAFTCNT  ,
                 IFNULL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
                 IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
@@ -561,7 +561,7 @@
 	<select id="EzStatisticsAdminDAO.getSearchList_U" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
 		<![CDATA[
             SELECT 
-            	A.DISPLAYNAME ,
+            	IF (#lang# LIKE '1', A.DISPLAYNAME , A.DISPLAYNAME2) AS DISPLAYNAME, 
                 IFNULL(DRAFTCNT, 0) DRAFTCNT  ,
                 IFNULL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
                 IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,

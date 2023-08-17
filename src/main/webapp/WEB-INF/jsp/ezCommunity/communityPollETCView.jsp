@@ -24,7 +24,15 @@
 		<h1><spring:message code = 'ezCommunity.t665' /></h1>
 
 		<div class="txt" >
-			<b><c:out value = '${etc }' /><spring:message code = 'ezCommunity.t666' /><span class="point"> <c:out value = '${ETCTotal }' /></span><spring:message code = 'ezCommunity.t511' /><b>
+			<b><c:out value = '${etc }' /><spring:message code = 'ezCommunity.t666' /><span class="point"> <c:out value = '${ETCTotal }' /></span>
+			<c:choose>
+				<c:when test="${ETCTotal > 1}">
+					<spring:message code='ezSurvey.t102'/>
+				</c:when>
+				<c:otherwise>
+					<spring:message code = 'ezCommunity.t511' />
+				</c:otherwise>
+			</c:choose><b>
 		</div>
 		
 		<div class="box" style="WIDTH: 400px">

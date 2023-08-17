@@ -836,7 +836,13 @@ public class EzScheduleController extends EgovFileMngUtil {
             int myMemberListCnt = ezScheduleService.getMyGroupMemberListCnt(data.getGroupId(), loginSimpleVO.getLang(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
             String cDate = commonUtil.getDateStringInUTC(data.getCreateDate(),loginSimpleVO.getOffset(),false).substring(0,10);
             
-            result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+            // 2023-08-10 황인경 - 관리자 > 일정관리 > 일정그룹관리 > 인원수 다국어 단/복수 처리
+            if (myMemberListCnt > 1) {
+            	result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.hik01", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+            } else {
+            	result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+            }
+
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE>" + cDate + "</VALUE>");
@@ -893,14 +899,22 @@ public class EzScheduleController extends EgovFileMngUtil {
 	public String scheduleGroupMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleGroupMember started ============");
-		
+
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 
 		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
-		
+
+		String primaryData = "";
+		if (commonUtil.getPrimaryData(loginVO.getLang(), loginVO.getTenantId()).equals("1")) {
+			primaryData = "1";
+		} else {
+			primaryData = "2";
+		}
+
+		model.addAttribute("primaryData", primaryData);
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("loginUserId", loginVO.getId());
 		model.addAttribute("loginUserName",loginVO.getDisplayName());

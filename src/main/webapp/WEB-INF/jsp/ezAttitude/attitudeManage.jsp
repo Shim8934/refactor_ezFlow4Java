@@ -432,17 +432,38 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='6' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t74'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
-	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
-	    				+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
-	    				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
-	    				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
-	    				+ " ~ "
-	    				+ $("#Edatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
-	    				+ $("#Edatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
-	    				+ $("#Edatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>]")
-	    		$("#contentlist table.mainlist tbody").append(resultHtml);
-	    		makePageSelPageAtti();
+	    		if(document.title =='Attendance Information Management'){
+		    		console.log("month = " +$("#Sdatepicker").val().split("-")[1])
+		    		var monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		    		             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		    		var month = monthList[$("#Sdatepicker").val().split("-")[1]-1];
+		    		console.log("test" + month);
+		    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
+					+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+					+ $("#Sdatepicker").val().split("-")[2] +" "
+					+ month +", "
+					+ $("#Sdatepicker").val().split("-")[0] 								 
+					+ " ~ "
+					+ $("#Edatepicker").val().split("-")[2] +" "
+					+ month +", "
+					+ $("#Edatepicker").val().split("-")[0] +"]"				 
+					 )
+		    		$("#contentlist table.mainlist tbody").append(resultHtml);
+		    		makePageSelPageAtti();
+		    		}else{
+			    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
+			    		+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+			    		+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+		 				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+		   				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
+		   				+ " ~ "
+			    		+ $("#Edatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+	     				+ $("#Edatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+			    		+ $("#Edatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>]")
+			    	 	$("#contentlist table.mainlist tbody").append(resultHtml);
+			    	    makePageSelPageAtti();	
+		    			
+		    		}
 	    	}
 	        
 	        function getAttitudeAbsentedList() {
@@ -508,17 +529,39 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.t138' /></td></tr>";	
 	    		}
 	    		
+	    		if(document.title =='Attendance Information Management'){
+	    		console.log("month = " +$("#Sdatepicker").val().split("-")[1])
+	    		var monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	    		             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	    		var month = monthList[$("#Sdatepicker").val().split("-")[1]-1];
+	    		console.log("test" + month);
 	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
 				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t77'/> - " 
-				+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
-				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
-				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
+				+ $("#Sdatepicker").val().split("-")[2] +" "
+				+ month +", "
+				+ $("#Sdatepicker").val().split("-")[0] 								 
 				+ " ~ "
-				+ $("#Edatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
-				+ $("#Edatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
-				+ $("#Edatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>]")
+				+ $("#Edatepicker").val().split("-")[2] +" "
+				+ month +", "
+				+ $("#Edatepicker").val().split("-")[0] +"]"				 
+				 )
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);
 	    		makePageSelPageAtti();
+	    		}else{
+		    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
+		    		+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t77'/> - " 
+		    		+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+	 				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+	   				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
+	   				+ " ~ "
+		    		+ $("#Edatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+     				+ $("#Edatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+		    		+ $("#Edatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>]")
+		    	 	$("#contentlist table.mainlist tbody").append(resultHtml);
+		    	    makePageSelPageAtti();	
+	    			
+	    		}
+	    		
 	    	}
 	        
 	        function getAttitudeHistoryList(){
@@ -624,17 +667,38 @@
 	    			resultHtml = "<tr id='List_TR_noItems'><td colspan='8' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
 	    		}
 	    		
-	    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t57'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
-	    				+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
-	    				+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
-	    				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
-	    				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
-	    				+ " ~ "
-	    				+ $("#Edatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
-	    				+ $("#Edatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
-	    				+ $("#Edatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>]")
-	    		$("#contentlist table.mainlist tbody").append(resultHtml);
-	    		makePageSelPageAtti();
+	    		if(document.title =='Attendance Information Management'){
+		    		console.log("month = " +$("#Sdatepicker").val().split("-")[1])
+		    		var monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		    		             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		    		var month = monthList[$("#Sdatepicker").val().split("-")[1]-1];
+		    		console.log("test" + month);
+		    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
+					+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+					+ $("#Sdatepicker").val().split("-")[2] +" "
+					+ month +", "
+					+ $("#Sdatepicker").val().split("-")[0] 								 
+					+ " ~ "
+					+ $("#Edatepicker").val().split("-")[2] +" "
+					+ month +", "
+					+ $("#Edatepicker").val().split("-")[0] +"]"				 
+					 )
+		    		$("#contentlist table.mainlist tbody").append(resultHtml);
+		    		makePageSelPageAtti();
+		    		}else{
+			    		$("div#miniTitle").html("<img src='/images/ImgIcon/circular_opinion.gif' style='vertical-align:text-bottom' />&nbsp;<spring:message code='ezAttitude.t75'/>   &nbsp;[<spring:message code='ezAttitude.t76'/> " 
+			    		+ '<span style="color:#017BEC;font-weight:bold;">' + totalCount + '</span>' + " <spring:message code='ezAttitude.t78'/> - " 
+			    		+ $("#Sdatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+		 				+ $("#Sdatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+		   				+ $("#Sdatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>"
+		   				+ " ~ "
+			    		+ $("#Edatepicker").val().split("-")[0] + "<spring:message code='ezAttitude.t66'/> "
+	     				+ $("#Edatepicker").val().split("-")[1] + "<spring:message code='ezAttitude.t67'/> "
+			    		+ $("#Edatepicker").val().split("-")[2] + "<spring:message code='ezAttitude.t68'/>]")
+			    	 	$("#contentlist table.mainlist tbody").append(resultHtml);
+			    	    makePageSelPageAtti();	
+		    			
+		    		}
 	    	}
 	        
 	        

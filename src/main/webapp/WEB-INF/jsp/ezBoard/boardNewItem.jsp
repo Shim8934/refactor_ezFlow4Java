@@ -524,7 +524,11 @@
 				<c:forEach items="${boardAttributeListVO}" var = "item" >
 					colType.push("${item.colType}");
 					must.push("${item.must}");
-					colName1.push("${item.colName1}");
+					if ("${userInfo.lang}" == 1) {
+						colName1.push("${item.colName1}");
+					} else {
+						colName1.push("${item.colName2}");
+					}
 					tableCol.push("${item.tableCol}");
 				</c:forEach>
 				
@@ -541,19 +545,19 @@
 		        		if (colType[i] == "radio") {
 		        			if (GetRadioVal(tableCol[i]) == "") {
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName + strLang179);
+	                            alert(strLang188 + colName + strLang179);
 	                            return;
 		        			}
 		        		} else if(colType[i] == "text") {
 		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName + strLang187);
+	                            alert(strLang189 + colName + strLang187);
 	                            return;
 		        			}
 		        		} else if(colType[i] == "check") {
 		        			if(GetCheckVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName + strLang179);
+	                            alert(strLang188 + colName + strLang179);
 	                            return;
 		        			}
 		        		}
@@ -915,7 +919,7 @@
 		                    
 		                    alert("<spring:message code='ezBoard.t399' />");
 		                } else {
-		                    alert("<spring:message code='ezBoard.t400' />" + pStartDate.substr(0, 16) + "<spring:message code='ezBoard.t401' />");
+		                    alert("<spring:message code='ezBoard.t400' />" + " " + pStartDate.substr(0, 16) + "<spring:message code='ezBoard.t401' />");
 		                }
 		                
 		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */

@@ -101,10 +101,10 @@
 			    		</div>
 			   			<div id="atti_area" class="main_main_time">
 	            			<dl class="main_timeCheckIn">
-	                			<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t013' /></dd>
+	                			<dd id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')" style="font-size:11px;"><spring:message code='ezNewPortal.t013' /></dd>
 	                		</dl>
 	                		<dl class="main_timeCheckOut">
-	                   			<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t014' /></dd>
+	                   			<dd id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')" style="font-size:11px;"><spring:message code='ezNewPortal.t014' /></dd>
 	                		</dl>
 		    			</div>
 					</c:when>

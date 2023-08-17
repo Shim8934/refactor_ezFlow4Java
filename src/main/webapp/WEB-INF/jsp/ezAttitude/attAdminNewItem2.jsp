@@ -701,9 +701,16 @@
 	                        		<td id="forId"></td>
 	                        	</tr>
 								<tr id="selectTR" fixed="fix">
-									<th><div style="width:48px;"><spring:message code='ezAttitude.t134'/></div></th>
+									<c:choose>
+										<c:when test="${userInfo.lang == 1}">
+											<th><div style="width:48px;"><spring:message code='ezAttitude.t134'/></div></th>
+										</c:when>
+										<c:otherwise>
+											<th><div style="width:100px;"><spring:message code='ezAttitude.t134'/></div></th>
+										</c:otherwise>
+									</c:choose>
 									<td colspan="2" id="selectTD">
-										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
+										<select id="selectAtti" style="width:130px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
 												<c:if test="${item.parentId ne 'A05'}">
 													<c:if test="${item.typeId ne 'A25'}">
@@ -712,7 +719,7 @@
 												</c:if>
 											</c:forEach>
 										</select>
-										<select id="subSelectAtti" style="width:80px; margin-left:10px; display: none;" onchange="form_change(this)">
+										<select id="subSelectAtti" style="width:130px; margin-left:10px; display: none;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
 												<c:if test="${item.parentId eq 'A05'}">
 													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>

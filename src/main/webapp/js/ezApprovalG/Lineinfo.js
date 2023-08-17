@@ -4626,7 +4626,7 @@ function APRLINEXMLParsingCC() {
             strXML = strXML + "<DATA name='PMemberName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA13")) + "</DATA>";		
             strXML = strXML + "<DATA name='SMemberName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA14")) + "</DATA>";		
             strXML = strXML + "<DATA name='PMemberDeptName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA15")) + "</DATA>";		
-            strXML = strXML + "<DATA name='SMemberDeptName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA6")) + "</DATA>";	
+            strXML = strXML + "<DATA name='SMemberDeptName'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA16")) + "</DATA>";
             strXML = strXML + "<DATA name='PMemberJobTitle'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA17")) + "</DATA>";	
             strXML = strXML + "<DATA name='SMemberJobTitle'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA18")) + "</DATA>";	
             strXML = strXML + "<DATA name='AprType'>" + MakeXMLString(GetAttribute(pTotalRows[i], "DATA11")) + "</DATA>";

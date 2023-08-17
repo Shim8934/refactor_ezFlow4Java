@@ -2746,8 +2746,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Override
 	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId) throws Exception {
+		return getSharedMailboxInfo(shareId, tenantId, null);
+	}
+	
+	@Override
+	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId, String lang) throws Exception {
 		logger.debug("getSharedMailboxInfo started.");
-		logger.debug("shareId=" + shareId + ",tenantId=" + tenantId);
+		
+		lang = (lang != null && !"1".equals(lang)) ? "2" : "1";
+		logger.debug("shareId={}, tenantId={}, lang={}" + tenantId);
 		
 		MailSharedMailboxVO sharedMailboxInfo = null;
 		
@@ -2784,11 +2791,11 @@ public class EzEmailServiceImpl implements EzEmailService {
         			userVO = new MailSharedMailboxUserVO();
         			
         			userVO.setUserId((String)user.get("userId"));
-        			userVO.setUserName((String)user.get("userName"));
+        			userVO.setUserName((String) user.get("userName"+lang));
         			userVO.setDeptId((String)user.get("deptId"));
-        			userVO.setDeptName((String)user.get("deptName"));
+        			userVO.setDeptName((String) user.get("deptName"+lang));
         			userVO.setCompId((String)user.get("compId"));
-        			userVO.setCompName((String)user.get("compName"));
+        			userVO.setCompName((String) user.get("compName"+lang));
         			userVO.setDeletePermission((String)user.get("deletePermission"));
         			userVO.setSendPermission((String)user.get("sendPermission"));
         			userVO.setManagePermission((String)user.get("managePermission"));

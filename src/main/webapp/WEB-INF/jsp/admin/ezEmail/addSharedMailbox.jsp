@@ -176,6 +176,7 @@
                 listview.SetID("MsgToList");
                 listview.SetSelectFlag(false);
                 listview.SetMulSelectable(false);
+	            listview.SetColgroup(['35%','']);
                 listview.SetRowOnDblClick("DeleteReceiver");
                 listview.DataSource(loadXMLString(resultXml));
                 listview.RowDataBind();
@@ -251,6 +252,7 @@
 	            listview.SetSelectFlag(false);
 	            listview.SetMulSelectable(true);
 	            listview.SetRowOnDblClick("DeleteReceiver");
+	            listview.SetColgroup(['35%','']);
 	            listview.DataSource(loadXMLString("<LISTVIEWDATA></LISTVIEWDATA>"));
 	            listview.DataBind(pListView);
 	            listview.RowDataBind();

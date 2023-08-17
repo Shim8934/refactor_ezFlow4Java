@@ -119,10 +119,10 @@
 			<tr>
 				<th style="width:27px;"><input id="checkBoxHeader" type="checkbox" onclick="checkAll(this)"/></th>
 				<th><spring:message code='ezCommunity.t673' /></th>			
-			    <th style="width:170px;"><spring:message code='ezCommunity.t672' /></th>
-			    <th style="width:60px;"><spring:message code='ezCommunity.t674' /></th>
-			    <th style="width:60px;"><spring:message code='ezCommunity.t675' /></th>
-			    <th style="width:60px; padding-left: 15px;"><spring:message code='ezCommunity.t676' /></th>
+			    <th style="width:150px;"><spring:message code='ezCommunity.t672' /></th>
+			    <th style="width:80px;"><spring:message code='ezCommunity.t674' /></th>
+			    <th style="width:80px;"><spring:message code='ezCommunity.t675' /></th>
+			    <th style="width:100px; padding-left: 15px;"><spring:message code='ezCommunity.t676' /></th>
 			</tr>
 				<c:if test="${strXML eq ''}" >
 					<tr>

@@ -5578,7 +5578,7 @@
 				TASKNAME,
 				TASKNAME2,
 				B.SUBCATEGORYCODE,
-				C.NAME$lang$,
+				C.NAME$lang$ NAME,
 				ITEMSECURITY,
 				ISPUBLIC,
 				(SELECT
@@ -9243,9 +9243,13 @@
 								   		 TBL_ENDAPRDOCINFO.WRITERDEPTNAME, 
 								   		 NVL(TBL_ENDAPRDOCINFO.WRITERDEPTNAME2, TBL_ENDAPRDOCINFO.WRITERDEPTNAME) AS WRITERDEPTNAME2, 
 								   		 TBL_ENDAPRDOCINFO.FORMID, 
-								   		 TBL_ENDAPRDOCINFO.CONTAINERID, 
-								   		 TBL_EXPENDAPRDOCINFO.FORMNAME, 
-								   		 NVL(TBL_EXPENDAPRDOCINFO.FORMNAME2, TBL_EXPENDAPRDOCINFO.FORMNAME) AS FORMNAME2, 
+								   		 TBL_ENDAPRDOCINFO.CONTAINERID,
+                                         <isNotEqual property="v_MULTIDATALANG" compareValue="2">
+                                            TBL_EXPENDAPRDOCINFO.FORMNAME,
+                                         </isNotEqual>
+                                         <isEqual property="v_MULTIDATALANG" compareValue="2">
+                                            TBL_EXPENDAPRDOCINFO.FORMNAME2 FORMNAME,
+                                         </isEqual>
 								   		 TBL_EXPENDAPRDOCINFO.STATUS,
 								   		 TBL_ENDAPRDOCINFO.ORGDOCID, 
 								   		 TBL_ENDAPRDOCINFO.ISPUBLIC, 
@@ -9267,8 +9271,12 @@
 							                   WHEN processYN = 'Y' THEN #v_Y#
 						                  ELSE #v_Y# END AS SENDFLAG
 								   		  </isEqual>
-								   		  ,TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
-										  TBL_DEPTMASTER.COMPNM2 companyName2
+                                          <isNotEqual property="v_MULTIDATALANG" compareValue="2">
+                                            ,TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName
+                                          </isNotEqual>
+                                          <isEqual property="v_MULTIDATALANG" compareValue="2">
+                                            ,TBL_DEPTMASTER.COMPNM2 companyName
+                                          </isEqual>
 
 							   	FROM 
 							   			 TBL_ENDAPRDOCINFO 
@@ -28306,7 +28314,8 @@
    		UPDATE 
    			TBL_ENDRECEIPTPOINTINFO
    		SET
-   			PROCESSYN = 'B'
+   			PROCESSYN = 'B',
+            PROCESSDATE = #v_SYSDATE#
    		WHERE
    			DOCID = (SELECT 
    						ORGDOCID

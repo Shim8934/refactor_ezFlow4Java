@@ -190,6 +190,8 @@
 				TBL_USERMASTER.tenant_id = #tenantId#
 			AND 
 				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+				TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared_mailbox_%'
 		]]>
 		
 		<isNotEmpty prepend="AND" property="companyId">
@@ -258,6 +260,8 @@
 				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND
+    			TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 		
 		<isNotEmpty prepend="AND" property="searchDeptName">
@@ -846,9 +850,9 @@
 		<![CDATA[
 			SELECT
 				A.cn AS writerid,
-				A.displayname$primary$ AS username,
-                A.description$primary$ AS deptname,
-                A.title$primary$ AS usertitle,
+				A.displayname$lang$ AS username,
+                A.description$lang$ AS deptname,
+                A.title$lang$ AS usertitle,
                 A.mail AS useremail,
                 SUBSTR(DATE_ADD(#searchStartDate#, INTERVAL #offsetMin# minute), 1, 10) as startdate
 			FROM
@@ -879,19 +883,21 @@
 			AND
 				A.physicaldeliveryofficename = #companyId#
 			AND
+				A.department not like 'shared\_mailbox\_%'
+			AND
 				A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				B.start_date IS NULL
 		]]>
 			
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
+			A.description$lang$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
+			A.displayname$lang$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
+			A.title$lang$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			A.department = #searchDeptId#
@@ -1434,15 +1440,17 @@
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND
+				A.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description LIKE CONCAT('%', #searchDeptName#, '%')
+			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			A.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title LIKE CONCAT('%', #searchTitle#, '%')
+			A.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 	</select>
 	
@@ -1548,6 +1556,8 @@
 					A.PHYSICALDELIVERYOFFICENAME = #companyId#
 				AND			
 					A.CN IN (select CN FROM TBL_USERMASTER WHERE TENANT_ID = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#)
+				AND
+				   A.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
@@ -1692,6 +1702,8 @@
 				TENANT_ID = #tenantId#
 			AND
 				physicaldeliveryofficename = #companyId#
+			AND
+				TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 			<isNotEmpty prepend="AND" property="userId">
 				CN = #userId#
@@ -1728,6 +1740,8 @@
 				TENANT_ID = #tenantId#
 			AND
 				physicaldeliveryofficename = #companyId#
+			AND
+				TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 			<isNotEmpty prepend="AND" property="userId">
 				CN = #userId#
@@ -2024,6 +2038,8 @@
 				PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND
 				TENANT_ID = #tenantId#
+			AND
+    			TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 			]]>
 		<isNotEmpty prepend="AND" property="userId">
 			<![CDATA[

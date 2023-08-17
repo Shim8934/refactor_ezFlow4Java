@@ -768,15 +768,8 @@
 		        for (var i = 0; i < totalLen; i++) {		        	
 		        	var data = new Object();
                     data.memberID = GetAttribute(totalRows[i], "DATA1");
-                    if(lang == "1") {
-                    	data.memberName1 = GetAttribute(totalRows[i], "DATA2");
-                    	data.memberName2 = GetAttribute(totalRows[i], "DATA3");
-                    }
-                    else {
-                    	data.memberName1 = GetAttribute(totalRows[i], "DATA3");
-                    	data.memberName2 = GetAttribute(totalRows[i], "DATA2");
-                    }                     
-                    
+                    data.memberName1 = GetAttribute(totalRows[i], "DATA2");
+                    data.memberName2 = GetAttribute(totalRows[i], "DATA3");
                     memberList.push(data);		            
 		        }
 		        		        
@@ -929,7 +922,7 @@
 		        if (listContentArry != "") {
 		            for (var i = 0; i < listContentArry.length; i++) {
 		                var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-		                var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+		                var strName = document.getElementById(listContentArry[i]).getAttribute("_data11");
 		                var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 		                var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
 		                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data12");
@@ -960,7 +953,7 @@
 		                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 		                    pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 		                    pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-                            
+
 		                    
 /* 		                    if("<c:out value='${userInfo.lang}' />" == "1")
                                 pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " (" + strDeptNM + ") " + "]]></VALUE></CELL></ROW>";
@@ -976,8 +969,8 @@
 		                    	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
-		                    
-		                    
+
+
 		                    var listview = new ListView();
 		                    listview.LoadFromID(listid);
 

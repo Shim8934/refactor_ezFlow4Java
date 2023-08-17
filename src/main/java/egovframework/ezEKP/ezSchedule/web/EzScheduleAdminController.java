@@ -757,7 +757,7 @@ public class EzScheduleAdminController {
 	    public String scheduleGroupList(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 	    	
 	    	logger.debug("============ scheduleGroupList started ============");
-	    	
+
 
 	    	LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 	    	if (userInfo == null) {
@@ -786,26 +786,27 @@ public class EzScheduleAdminController {
 	    	
 	    	
 	    	List<ScheduleGroupVO> myList = new ArrayList<ScheduleGroupVO>();
-	    	
-	    	
-	    	
-	    	myList = ezScheduleAdminService.getMyGroupList2(commonUtil.getMinuteUTC(offset), loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID(), searchType2, searchValue, startDate, endDate, startRow, maxItemPerPage);
-	    	
-	    	
+
+
+			String primaryData = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+
+	    	myList = ezScheduleAdminService.getMyGroupList2(commonUtil.getMinuteUTC(offset), loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID(), searchType2, searchValue, startDate, endDate, startRow, maxItemPerPage, primaryData);
+
+
 		
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
-		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>10%</WIDTH></HEADER>");
+		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>40</WIDTH></HEADER>");
         result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t159", loginSimpleVO.getLocale()) + "</NAME><WIDTH>20%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t160", loginSimpleVO.getLocale()) + "</NAME><WIDTH>30%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb17", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t00002", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb18", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb19", loginSimpleVO.getLocale()) + "</NAME><WIDTH>10%</WIDTH></HEADER></HEADERS>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t160", loginSimpleVO.getLocale()) + "</NAME><WIDTH></WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb17", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t00002", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb18", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb19", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER></HEADERS>");
         result.append("<ROWS>");
 		
         for (int i = 0; i < myList.size(); i++) {
         	ScheduleGroupVO data = myList.get(i);
-        	
+
         	if(data.getPrecreatorname() == null){
         		data.setPrecreatorname("");
         	}
@@ -815,8 +816,15 @@ public class EzScheduleAdminController {
         	if(data.getPrecreatorid() == null){
         		data.setPrecreatorid("");
         	}
-        	
-        	String preCreatorInfo = data.getPrecreatorname()+"("+data.getPrecreatorid()+")";
+
+			/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
+			String preCreatorInfo = "";
+			if (primaryData.equals("1")) {
+				preCreatorInfo = data.getPrecreatorname()+"("+data.getPrecreatorid()+")";
+			} else {
+				preCreatorInfo = data.getPrecreatorname2()+"("+data.getPrecreatorid()+")";
+			}
+
         	if(StringUtils.isEmpty(data.getPrecreatorid())){
         		preCreatorInfo = "";
         	}
@@ -831,15 +839,29 @@ public class EzScheduleAdminController {
             
             int myMemberListCnt = ezScheduleAdminService.getMyGroupMemberListCnt(data.getGroupId(), loginSimpleVO.getLang(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
             //String cDate = commonUtil.getDateStringInUTC(data.getCreateDate(),loginSimpleVO.getOffset(),false).substring(0,10);
+            // 2023-08-10 황인경 - 관리자 > 일정관리 > 일정그룹관리 > 인원수 다국어 단/복수 처리
+            if (myMemberListCnt > 1) {
+            	result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.hik01", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+            } else {
+            	result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
+            }
             
-            result.append("<VALUE><![CDATA[" + data.getGroupName() + " (" + myMemberListCnt + msg.getMessage("ezSchedule.t00003", loginSimpleVO.getLocale()) + ")" + "]]></VALUE>");
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE><![CDATA[" + data.getDescription() + "]]></VALUE>");
             result.append("</CELL>");
-            result.append("<CELL>");
-            result.append("<VALUE>" + data.getCreatorname()+"("+data.getCreatorid()+")" + "</VALUE>");
-            result.append("</CELL>");
+
+			/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
+			if (primaryData.equals("1")) {
+				result.append("<CELL>");
+				result.append("<VALUE>" + data.getCreatorname()+"("+data.getCreatorid()+")" + "</VALUE>");
+				result.append("</CELL>");
+			} else {
+				result.append("<CELL>");
+				result.append("<VALUE>" + data.getCreatorname2() + "(" + data.getCreatorid() + ")" + "</VALUE>");
+				result.append("</CELL>");
+			}
+
             result.append("<CELL>");
             result.append("<VALUE>" + data.getCreateDate() + "</VALUE>");
             result.append("</CELL>");

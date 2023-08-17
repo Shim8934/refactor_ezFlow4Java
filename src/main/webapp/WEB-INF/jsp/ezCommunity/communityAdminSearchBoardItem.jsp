@@ -806,7 +806,7 @@
 		    }
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" style="min-width:1040px; margin:0; padding:0 10px 10px;">
 		<h1><spring:message code = 'ezCommunity.t432' /> <span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>

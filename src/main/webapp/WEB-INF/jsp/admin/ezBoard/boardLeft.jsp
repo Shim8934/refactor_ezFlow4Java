@@ -449,7 +449,7 @@
 		        	<ul class="lnbUL">
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></li>
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t60" /></span></li>
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t500" /></span></li>
+                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t63" /></span></li>
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(2)"><spring:message code="ezBoard.t62" /></span></li>
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(3)"><spring:message code="ezBoard.t64" /></span></li>
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(4)"><spring:message code="ezBoard.t65" /></span></li>

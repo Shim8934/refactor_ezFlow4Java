@@ -771,7 +771,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID, String approvalFlag) throws Exception {
+	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID, String approvalFlag, LoginVO userInfo) throws Exception {
 		logger.debug("getTaskCategoryTree started.");
 		logger.debug("categoryType=" + categoryType);
 		
@@ -807,7 +807,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 			sb.append("<NODE><EXPANDED>FALSE</EXPANDED>");
 			sb.append("<ISLEAF>" + isLeaf + "</ISLEAF>");
-			sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
+			//2023-07-31 이주원 -  pollTitle 다국어_en 적용하기 위해 추가
+			if (userInfo.getLang().equals("2")) {
+				sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE>");
+			}else {
+				sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
+			}
+
 			sb.append("<VALUE2>" + commonUtil.cleanValue(vo.getName2()) + "</VALUE2>");
 			sb.append("<DATA1>" + vo.getCategoryType() + "</DATA1>");
 			

@@ -174,7 +174,7 @@ function close_onclick()
 function translate()
 {
 		console.log('runs translate!')
-		$("#btn_save").text('PC Save');
+		$("#btn_save").text('Save');
 		$("#btn_clear").text('Clear');
 		 
 	}

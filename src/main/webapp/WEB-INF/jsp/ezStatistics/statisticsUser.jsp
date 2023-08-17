@@ -312,8 +312,14 @@
                 _Tr.appendChild(_Th);
 
                 _Th = document.createElement("TH");
+                _Th.style.width = "170px"
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1035'/>";
                 _Th.setAttribute( 'title', "<spring:message code='ezStatistics.t1035'/>" );
+                
+                if ("${userInfo.lang}" != "1") {
+	                _Th.classList.add("processTimeTH");
+                }
+                
                 _Tr.appendChild(_Th);
 
                 _Table.appendChild(_Tr);

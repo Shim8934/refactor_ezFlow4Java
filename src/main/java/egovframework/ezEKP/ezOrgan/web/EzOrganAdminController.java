@@ -4641,10 +4641,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
-
 		String displayName = (request.getParameter("displayName") != null ? request.getParameter("displayName") : "");
-		String companyName = ezOrganAdminService.getCompanyName(displayName, user.getTenantId());
-		companyName = companyName + ":" + user.getPrimary();
+
+		String lang = user.getPrimary();
+		String companyName = ezOrganAdminService.getCompanyName(displayName, user.getTenantId(), lang);
+		companyName = companyName + ":" + lang;
 		logger.debug("addJobCompanyName ended.");
 		return ResponseEntity.ok().body(companyName);
 	}
@@ -5272,7 +5273,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("getLoginStopUserList started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
+		String lang = userInfo.getLang();
+
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
@@ -5330,6 +5332,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("itemCnt", itemCnt);
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("lang",lang);
 
 		logger.debug("getLoginStopUserList ended.");
 

@@ -298,7 +298,7 @@
 		    			<input type="hidden" name="mode" id="mode" />
 		    			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		    		</form>
-					<a class="imgbtn imgbck" style="height: 22px; margin-bottom: 0px;"><span id="btnimagefile" onClick="btnimagefile_onclick()" style="width:25px; line-height: 23px;"><spring:message code='ezOrgan.t101' /></span></a>
+					<a class="imgbtn imgbck" style="height: 22px; margin-bottom: 0px;"><span id="btnimagefile" onClick="btnimagefile_onclick()" style="width:25px; line-height: 23px; justify-content: center; display: flex;"><spring:message code='ezOrgan.t101' /></span></a>
 				</td>
 		  	</tr>
 		</table>

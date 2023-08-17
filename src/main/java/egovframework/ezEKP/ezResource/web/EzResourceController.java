@@ -2425,10 +2425,19 @@ public class EzResourceController extends EgovFileMngUtil {
         	bodyContent.append(userInfo.getDisplayName2() +"[" + userInfo.getDeptName2() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
         }
         
-        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.get(0).getBrdNm()); 
+        // 2023-08-02 황인경 - 자원관리 > 예약시 관리자들에게 메일 발송 처리 > 메일 제목, 본문 실자원명 다국어 지원
+        String brdNm;
+
+		if (userInfo.getPrimary().equals("1")) {
+			brdNm = resInfo.get(0).getBrdNm();
+		} else {
+			brdNm = resInfo.get(0).getBrdNm2();
+		}
+
+		bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " + brdNm);
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
         
-        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + " : " + resInfo.get(0).getBrdNm() + "] " + title;
+        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + " : " + brdNm + "] " + title;
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
     	InternetAddress from = new InternetAddress();
@@ -2471,15 +2480,24 @@ public class EzResourceController extends EgovFileMngUtil {
 		
         StringBuilder bodyContent = new StringBuilder();
         
+        // 2023-08-02 황인경 - 자원관리 > 예약 승인/거절시 작성자들에게 메일 발송 처리 > 메일 제목, 본문 실자원명 다국어 지원
+     	String brdNm;
+
+     	if (userInfo.getPrimary().equals("1")) {
+     		brdNm = resInfo.getBrd_Nm();
+     	} else {
+     		brdNm = resInfo.getBrd_Nm2();
+     	}
+            
         if (approve.equals("1")) {
-        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
-        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm());
-        } else if (approve.equals("0")){
-        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009", userInfo.getLocale()));
-        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm());
+           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
+           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008", userInfo.getLocale()) + " : " + brdNm);
+        } else if (approve.equals("0")) {
+           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009", userInfo.getLocale()));
+           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale()) + " : " + brdNm);
         } else {
-        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900015", userInfo.getLocale()));
-        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900016", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm());
+           	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900015", userInfo.getLocale()));
+           	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900016", userInfo.getLocale()) + " : " + brdNm);
         }
         
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
@@ -2488,12 +2506,13 @@ public class EzResourceController extends EgovFileMngUtil {
         
         String subject = "";
         if (approve.equals("1")) {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
         } else if (approve.equals("0")){
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
         } else {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900017", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
-        } 
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900017", userInfo.getLocale()) + " : " + brdNm + "] " + resInfo.getTitle();
+        }
+        
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
     	InternetAddress from = new InternetAddress();

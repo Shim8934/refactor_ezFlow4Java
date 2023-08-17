@@ -354,9 +354,9 @@
 		                var TaskCodeInsert_Cross = null;
 		                
 		                if (approvalFlag == 'S') {
-			                TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(450, 300)); //이효진 추후수정  사이즈
+			                TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(500, 300)); //이효진 추후수정  사이즈
 		                } else {
-			                TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(450, 780));
+			                TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(500, 780));
 		                }
 		                
 						try { TaskCodeInsert_Cross.focus(); } catch (e) { }
@@ -365,9 +365,9 @@
 		                var retVal = null;
 		                
 		                if (approvalFlag == 'S') {
-			                retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:300px;status:no;help:no;scroll:no;edge:sunken"); //이효진 추후수정  사이즈
+			                retVal = window.showModalDialog(url, para, "dialogWidth:500px;dialogHeight:300px;status:no;help:no;scroll:no;edge:sunken"); //이효진 추후수정  사이즈
 		                } else {
-			                retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780px;status:no;help:no;scroll:no;edge:sunken");		                	
+			                retVal = window.showModalDialog(url, para, "dialogWidth:500px;dialogHeight:780px;status:no;help:no;scroll:no;edge:sunken");
 		                }
 	
 		                if (retVal == "TRUE") {
@@ -438,9 +438,9 @@
 		                    var TaskCodeInsert_Cross = null;
 		                    
 		                    if (approvalFlag == 'S') {
-		                    	TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(450, 300));
+		                    	TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(500, 300));
 		                    } else {
-		                    	TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(450, 780));
+		                    	TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(500, 780));
 		                    }
 		                    
 		                    try { TaskCodeInsert_Cross.focus(); } catch (e) { }
@@ -449,9 +449,9 @@
 		                    var retVal = null;
 		                    
 		                    if (approvalFlag == 'S') {
-		                    	retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:300px;status:no;help:no;scroll:no;edge:sunken");
+		                    	retVal = window.showModalDialog(url, para, "dialogWidth:500px;dialogHeight:300px;status:no;help:no;scroll:no;edge:sunken");
 		                    } else {
-		                    	retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780;status:no;help:no;scroll:no;edge:sunken");
+		                    	retVal = window.showModalDialog(url, para, "dialogWidth:500px;dialogHeight:780;status:no;help:no;scroll:no;edge:sunken");
 		                    }
 		                    
 		                    if (retVal == "TRUE") {

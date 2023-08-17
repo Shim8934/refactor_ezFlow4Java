@@ -152,7 +152,7 @@
 		       // if (bigFileCheck && alertCnt < 2 && isbigyn == "N") {
 		        if (bigFileCheck && isbigyn == "N") {
 		    		// 2018-10-05 재은수정: 일반첨부에서 대용량첨부로 전환될 때 취소 버튼 추가
-		        	var bigFileAttachChk = confirm(strLangKMS01+window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
+		        	var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
 		        	
 		        	if (!bigFileAttachChk) {
 		        		return;
@@ -501,6 +501,7 @@
 		
 		    function btnfileup() {
 		        isbigyn = "N";
+		        document.getElementById("file").value = "";
 		        document.getElementById("file").click();
 		    }
 		
@@ -735,7 +736,7 @@
 		        	if(!bigFileAttachCountCheck(newBigAttachCount)) {
 		        		return;
 		        	}
-		            var bigFileAttachChk = confirm(window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
+		            var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
 		            
 		            if (!bigFileAttachChk) {
 		                return false;

@@ -1272,7 +1272,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<h1 id="h1Title">문서함공유</h1>
+		<h1 id="h1Title"><spring:message code='main.t45'/></h1>
 		<div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
@@ -1365,19 +1365,19 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteShareList();">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <h2 style="display: inline-block;">공유자: </h2>
-	                            <span id="ownerName" style="display: inline-block; width:160px;">
+	                            <h2 style="display: inline-block;"><spring:message code='ezApprovalG.share02'/>: </h2>
+	                            <span id="ownerName" style="display: inline-block; width:110px;">
 	                            </span>
-                            	<a class="imgbtn">
-                            		<span onclick="selectOwner();">선택</span>
+                            	<a class="imgbtn" style="float:right;">
+                            		<span onclick="selectOwner();"><spring:message code='ezApprovalG.select'/></span>
                             	</a>
 	                            <div class="listview">
 			        				<div id="divlvtForm" style="width: 100%; height: 509px;overflow-x:auto;overflow-y:auto; padding:0px;">
 		                            	<table class="mainlist" style="width: 100%;">
 						        			<thead>
 						        				<tr>
-													<th style="text-align: center; border-top:none;">공유대상</th>
-													<th style="text-align: center; border-top:none;">공유타입</th>
+													<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share06'/></th>
+													<th style="text-align: center; border-top:none;"><spring:message code='ezApprovalG.share03'/></th>
 												</tr>
 						        			</thead>
 						        			<tbody id="shareList" style="margin: 0; padding: 0;">
@@ -1386,7 +1386,7 @@
 								        				<div id="preview_nodata" class="preview_nodata" style="margin-top: 70px;">
 											                  <dl class="nodata_sIcon">
 												              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-												              <dd id="nodata_title" style="font-family: malgun gothic">선택된 공유자가 없습니다.</dd>
+												              <dd id="nodata_title" style="font-family: malgun gothic"><spring:message code='ezApprovalG.share12'/></dd>
 											                  </dl>
 										                 </div>
 						        					</td>
@@ -1444,7 +1444,7 @@
 			
 			function insertShareList(flag){
 				if(!ownerId || ownerId == ""){
-					alert("공유자를 먼저 선택해주세요.");
+					alert("<spring:message code='ezApprovalG.share08'/>");
 					return;
 				}
 				
@@ -1453,20 +1453,20 @@
 				
 				var flagName = "";
 				if(flag == 'U'){
-					flagName = "사용자";
+					flagName = "<spring:message code='ezApprovalG.share04' />";
 					shareId = p_ListOrderObject.getAttribute("_DATA2");
 					shareName =  p_ListOrderObject.getAttribute("_DATA4");
 				} else {
-					flagName = "부서";
+					flagName = "<spring:message code='ezApprovalG.share05' />";
 					var treeView = new TreeView();
 			        treeView.LoadFromID("FromTreeView");
 			        var nodeIdx = treeView.GetSelectNode();
 			        shareId = nodeIdx.GetNodeData("CN");
 			        shareName = nodeIdx.GetNodeData("NODENAME");
 				}
-				
+
 				if(ownerId == shareId){
-					alert("공유자를 공유대상으로 지장할 수 없습니다.");
+					alert("<spring:message code='ezApprovalG.share10'/>");
 					return;
 				}
 				
@@ -1479,7 +1479,7 @@
 				});
 				
 				if(isExist){
-					alert("이미 추가된 공유 대상입니다.");
+					alert("<spring:message code='ezApprovalG.share09'/>");
 					return;
 				}
 				
@@ -1498,12 +1498,12 @@
 			
 			function insertDocDirList(){
 				if(!ownerId || ownerId == ""){
-					alert("공유자를 먼저 선택해주세요.");
+					alert("<spring:message code='ezApprovalG.share08' />");
 					return;
 				}
 				
 				if($("#shareList tr.shareRow").length == 0){
-					alert("선택된 공유대상이 없습니다.");
+					alert("<spring:message code='ezApprovalG.share12' />");
 					return;
 				}
 				
@@ -1526,11 +1526,11 @@
 		    				"shareListStr" : shareListStr}, 
 		    		success: function(result) {
 		    			if(result == "YES"){
-		    				alert("저장되었습니다.");
+		    				alert("<spring:message code='ezSystem.ksa06' />");
 		    				opener.location.reload();
 		    				window.close();
 		    			} else {
-		    				alret("저장에 실패하였습니다.");
+		    				alret("<spring:message code='ezSystem.ksa07' />");
 		    			}
 		    		},
 		    		error : function(request, status, error) {

@@ -241,7 +241,13 @@
 	            var rtn = { "id": new Array(), "name": new Array(), "deptname": new Array() };
 	
 	            for (var i = 0; i < totalLen; i++) {
-	                rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
+                    //2023-08-16 이주원 - 일정관리>일정작성>일정반복 및 참석자>참석자초대>참석자 일정조회 시 한글로 표시됨
+	                if (lang == "1") {
+                        rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
+                    } else {
+                        rtn["name"][i] = GetAttribute(totalRows[i], "DATA3");
+                    }
+
 	                rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
 	                rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
 	            }
@@ -603,14 +609,14 @@
 	            if (listContentArry != "") {
 	                for (var i = 0; i < listContentArry.length; i++) {
 	                    var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-	                    var strName = document.getElementById(listContentArry[i]).getAttribute("_data10");
+                        var strName = document.getElementById(listContentArry[i]).getAttribute("_data10");
 	                    var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                    var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
 	                    var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
 	                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 	                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 	                    var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
-	
+
 	                    var listid = "MsgToList";
 	                    var getlistview = new ListView();
 	                    getlistview.LoadFromID(listid);
@@ -1130,7 +1136,14 @@
 
 		        for (var i = 0; i < totalLen; i++) {	        	
 		            rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
-		            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
+
+                    //2023-08-16 이주원 - 일정관리>일정작성>일정반복 및 참석자>참석자초대>명함보기로 추가 시 한글로 표시됨
+		            if (lang == "1") {
+                        rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
+                    } else {
+                        rtn["name"][i] = GetAttribute(totalRows[i], "DATA3");
+                    }
+
 		            rtn["name1"][i] = GetAttribute(totalRows[i], "DATA2");
 		            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
 		            rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");

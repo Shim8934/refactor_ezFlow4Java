@@ -72,6 +72,7 @@
 <resultMap class="PersonalLightPollVO" id="PersonalLightPollVO">
 <result property="itemSeq"              column="ITEMSEQ"  nullValue=""/>
 <result property="pollTitle"            column="POLLTITLE" nullValue=""/>
+<result property="pollTitle2"           column="POLLTITLE2" nullValue=""/>
 <result property="pollSelectionCount"   column="POLLSELECTIONCOUNT" nullValue=""/>
 <result property="startDate"   			column="STARTDATE" nullValue=""/>
 <result property="endDate"   			column="ENDDATE" nullValue=""/>
@@ -109,6 +110,7 @@
 <result property="itemId" 				column="ITEMID" />
 <result property="boardId" 				column="BOARDID" />
 <result property="gubun" 				column="GUBUN" nullValue=""/>
+<result property="writerName2" 			column="WRITERNAME2" />
 </resultMap>
 <resultMap class="PortalUserInfoVO" id="PortalUserInfoVO">
 <result property="userName"				column="USER_NAME"/>
@@ -2522,6 +2524,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			BOARDID,
 			ITEMID,
 			WRITERNAME,
+			WRITERNAME2,
 			STARTDATE,
 			TITLE,
 			GUBUN
@@ -2606,6 +2609,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	]]>
 </select>
 
+<!-- 2023-07-28 황인경 - 즐겨찾기 게시판 포틀릿 > 다국어지원 > 작성자명 -->
 <!-- 2023-02-17 전인하 - 즐겨찾기 게시판 포틀릿에서 익명 게시판을 조회할 때 조인조건으로 불필요한 companyID 제거 -->
 <select id="ezNewPortal.getItemList" parameterClass="Map" resultMap="FavoriteBoardVO">
 	<![CDATA[
@@ -2615,7 +2619,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			STARTDATE,
 			ITEMID,
 			BOARDID,
-			GUBUN
+			GUBUN,
+			WRITERNAME2
 		FROM (
 			SELECT
 				INFO.*, ROWNUM  AS RNUM
@@ -2626,7 +2631,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 					TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#v_OFFSETMIN#/(60*24)) AS STARTDATE,
 					A.ITEMID,
 					A.BOARDID,
-					B.GUBUN
+					B.GUBUN,
+					A.WRITERNAME2
 				FROM
 					TBL_BOARD_ITEM A
 				JOIN

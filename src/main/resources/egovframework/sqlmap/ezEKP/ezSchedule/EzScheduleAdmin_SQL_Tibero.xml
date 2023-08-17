@@ -30,8 +30,10 @@
 		<result property="createDate"		column="CREATEDATE"			columnIndex="4"/>
 		<result property="creatorid"		column="CREATORID"			columnIndex="5"/>	
 		<result property="creatorname"		column="CREATORNAME"		columnIndex="6"/>
+		<result property="creatorname2"		column="CREATORNAME2"		columnIndex="6"/>
 		<result property="precreatorid"   column="PRECREATORID"      columnIndex="11"/>
 		<result property="precreatorname"   column="PRECREATORNAME"      columnIndex="12"/>
+		<result property="precreatorname2"   column="PRECREATORNAME2"      columnIndex="12"/>
 		<result property="modifydate"		column="MODIFYDATE"		columnIndex="10"/>
 	</resultMap>
 	
@@ -163,7 +165,9 @@
 			   X.groupname,
 			   X.description,
 			   X.creatorname,
-			   X.precreatorname
+			   X.precreatorname,
+			   X.creatorname2,
+			   X.precreatorname2
 	   FROM(
 	   
 					
@@ -177,14 +181,16 @@
 						A.groupname,
 						A.description,
 						A.creatorname,
-						A.precreatorname
+						A.precreatorname,
+						A.creatorname2,
+						A.precreatorname2
 					
 					FROM(
 							SELECT 
 							TO_CHAR((b.modifydate + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS modifydate,
 							TO_CHAR((b.createdate + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS createdate,
 							b.creatorid as creatorid, b.precreatorid as precreatorid,
-							a.groupid as groupid, b.groupname as groupname, b.description as description, b.creatorname as creatorname, b.precreatorname as precreatorname
+							a.groupid as groupid, b.groupname as groupname, b.description as description, b.creatorname as creatorname, b.precreatorname as precreatorname, b.creatorname2 as creatorname2, b.precreatorname2 as precreatorname2
 				            FROM
 				            tbl_schedulegroupmember a, tbl_schedulegroup b 
 				            WHERE 
@@ -200,13 +206,17 @@
 								<isEqual property="v_SEARCHTYPE" compareValue="groupMembers">
 								<![CDATA[
 								
-										and a.membername = #v_SEARCHVALUE#
+										and
+										CASE #v_PRIMARYDATA# WHEN '1' THEN a.membername WHEN '2' THEN a.membername2 END
+										LIKE '%'||#v_SEARCHVALUE#||'%' ESCAPE '\'
 								]]>
 								</isEqual>
 								<isEqual property="v_SEARCHTYPE" compareValue="creatorname">
 								<![CDATA[
 								
-										and b.creatorname = #v_SEARCHVALUE#
+										and
+										CASE #v_PRIMARYDATA# WHEN '1' THEN b.creatorname WHEN '2' THEN b.creatorname2 END
+										LIKE '%'||#v_SEARCHVALUE#||'%' ESCAPE '\'
 								]]>
 								</isEqual>
 							
@@ -232,7 +242,7 @@
 				        		b.companyid = #v_COMPANYID#
 				        	
 				         
-				            group by b.modifydate, b.createdate, a.groupid, b.groupname, b.description ,b.creatorid, b.creatorname, b.precreatorname,b.precreatorid
+				            group by b.modifydate, b.createdate, a.groupid, b.groupname, b.description ,b.creatorid, b.creatorname, b.precreatorname,b.precreatorid, b.creatorname2, b.precreatorname2
 				        	order by b.createdate desc
 						]]>)A
 					

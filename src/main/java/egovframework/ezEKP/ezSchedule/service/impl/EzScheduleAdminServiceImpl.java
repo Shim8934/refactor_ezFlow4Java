@@ -205,7 +205,7 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 	
 
 	@Override
-	public List<ScheduleGroupVO> getMyGroupList2 (String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate, int startRow, int maxItemPerPage) throws Exception {	
+	public List<ScheduleGroupVO> getMyGroupList2 (String offset, String userId, int tenantId ,String companyID, String searchType2, String searchValue, String startDate, String endDate, int startRow, int maxItemPerPage, String primaryData) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userId);
 		map.put("v_TENANTID", tenantId);
@@ -217,6 +217,7 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 		map.put("v_STARTROW", startRow);
 		map.put("v_MAXITEMPERPAGE", maxItemPerPage);
 		map.put("offset", offset);
+		map.put("v_PRIMARYDATA", primaryData);
 	
 		
 		List<ScheduleGroupVO> gList = ezScheduleAdminDAO.getMyGroupList2(map);

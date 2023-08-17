@@ -1245,7 +1245,7 @@ form{display:inline;margin:0}
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:arial, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:34px}
-.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:5px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; background-color: #f1f3f5; height:21px}
+.mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:5px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; background-color: #f1f3f5; height:21px; overflow: hidden;}
 .mainlist tr th.title{width:100%; text-align:left;}
 .mainlist tr td{padding:4px 4px 4px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #eaeaea; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
@@ -1995,7 +1995,7 @@ form{display:inline;margin:0}
 .statistics_addition dl { float:left; margin:0px 0px 0px 10px;overflow:hidden;}
 .colorbox {display:block; border:1px solid #fff; width:12px; height:10px;}
 .colorbox_wrap {border:1px solid #ced0cb; display:inline-block; margin:0px 2px 0px 0px; padding:0px; float:left; }
-.additiontext { margin:0px; padding:0px; font-size:12px; line-height:18px;  float:left; }
+.additiontext { margin:0px; padding:0px; font-size:12px; line-height:18px;  float:left; padding-right:1px;}
 .gray_textbox { border:1px solid #dddada; background:#fafafa; padding:5px 10px; margin:0px 0px 15px 0px ;   vertical-align:middle; clear:both;}
 
 .adminSystem{padding:33px 0px 0px 15px;}
@@ -2372,7 +2372,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .btn_writeBox_work .btn_write01{ margin:0px 0px 0px 0px; padding:0px; width:auto; text-align:left; height:30px; line-height:28px; background:#0b56ab; float:none; overflow:hidden; cursor:pointer;}
 .btn_writeBox_work .btn_write01:hover{ background:#1264c1;}
 .btn_writeBox_work span.worksT{font-family:arial, "arial"; font-size:12px; padding:0px 10px 0px 10px; display:inline-block; color:#fff; overflow:hidden; height:30px; line-height:30px;}
-.btn_writeBox_work span.workT{ display:inline-block; margin:0px; padding:0px 0px 0px 10px; font-family:arial, "arial"; font-size:14px; color:#fff; overflow:hidden; height:30px; line-height:28px;}
+.btn_writeBox_work span.workT{ display:inline-block; margin:0px; padding:0px 0px 0px 10px; font-family:arial, "arial"; font-size:12px; color:#fff; overflow:hidden; height:30px; line-height:28px;}
 .btn_writeBox_work .btn_write02{margin:0px 0px 0px 2px; padding:0px; width:98px; text-align:left; height:30px; line-height:28px; background:#196dcb; float:right; overflow:hidden; cursor:pointer;}
 .btn_writeBox_work .btn_write02:hover{ background:#1f79de;}
 
@@ -2522,7 +2522,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 
 /* left mail 용량 */
 .mail_space{height:39px; line-height:39px; background:#bbbfc3; position:absolute; bottom:0px; width:220px;}
-.mail_space .mail_spaceText{font-family:arial, "arial"; font-size:14px; color:#fff; display:inline-block; margin:0px; padding:0px 0px 0px 20px; position:absolute;}
+.mail_space .mail_spaceText{font-family:arial, "arial"; font-size:14px; color:#fff; display:inline-block; margin:0px; position:absolute;width:100%; padding:0 10px; box-sizing:border-box; letter-spacing:-0.5px; text-align:center;}
 .mail_space .mailBar{ display:inline-block; width:0%; height:39px; background:#82b9f6; margin:0px; padding:0px;}
 .mail_space .mailBar.warning{background:#ffb600;}
 .mail_space .mailBar.danger{background:#ff4040;}
@@ -2737,7 +2737,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .categoryPic{float:left; width:91px; height:64px; margin:0px 20px 0px 0px; padding:0px; border:1px solid #e2e3e6;}
 .categoryInfo{float:left; width:calc(100% - 113px); margin:0px; padding:0px; color:#333333; font-size:12px; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .categoryInfo dt{margin:0px; padding:0px;}
-.categoryInfo dt.sort{height:18px; margin:0px 0px 8px 0px; padding:0px 6px; line-height:18px; text-align:center; background:#999; color:#ffffff; font-size:12px; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; display:inline-block;}
+.categoryInfo dt.sort{height:18px; margin:0px 0px 8px 0px; padding:0px 6px; line-height:18px; text-align:center; background:#999; color:#ffffff; font-size:12px; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; display:inline-block; max-width:100%; box-sizing:border-box; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .categoryInfo dt.sortBlue{background:#0dbeff;}
 .categoryInfo dt.sortGreen{background:#81bc3d;}
 .categoryInfo dt.sortOrange{background:#ff8f1e;}
@@ -3475,13 +3475,13 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .othersLogicArea {display: flex; padding-left: 15px;}
 .prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
 .prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
-.skipSelect, .logicSelect {height: 22px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 90px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
+.skipSelect, .logicSelect {height: 22px; padding: 0px 30px 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 90px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
 
 /* skip part */
 .prevQsWrapper .skipArea {display: flex;}
 .prevQsWrapper .skipArea .skipArrow {padding: 0px 30px; height: 24px; padding-top: 9px;}
 .prevQsWrapper .skipArea .skipSpan {font-size: 16px; margin-top: 2px; font-weight: normal;}
-.prevQsWrapper .skipArea .skipSelect {margin-top: 9px;}
+.prevQsWrapper .skipArea .skipSelect {margin-top: 9px; width: 135px;}
 
 /* survey Info Btn */
 .srvyTitle_info{display:inline-block; float:right; cursor:pointer;}
@@ -3707,3 +3707,28 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 /* Search 20230208 */
 .searchBtn.nofilter{right:12px;}
 .searchForm .text{border-right:0 !important;}
+
+
+
+
+
+
+
+/* 관리자 페이지 lnb 수정 */
+#left .adminListBox h2{height:auto !important; padding:14px 10px 14px 23px !important; line-height:1.5 !important; white-space:normal;}
+#left .adminListBox .tree_admin_stats + .h2_text{line-height:1.5; height:auto; width:calc(100% - 16px); box-sizing:border-box; white-space:normal; text-overflow:unset; overflow:visible; padding:7px 0 7px 5px;}
+#left .adminListBox .tree_admin_stats + .h2_text:hover{font-weight:normal;}
+#left .adminListBox h2.on .tree_arrow_up{margin:2px 0 0 0;}
+
+
+/* pos 버튼 크기 수정 */
+.popup .pos2 .imgbck{width:100%; box-sizing:border-box;}
+
+/* 게시판 댓글 등록 버튼 */
+.en_style{width:88% !important;}	/* 텍스트 개수 때문에 틀어짐 */
+
+/* 데이트피커 달력 수정 */
+.ui-datepicker{width:auto !important; min-width:180px;}		/* 글자가 길어지면서 기존 고정 크기(180px)를 auto로 변경, 최소 사이즈를 180px로 추가 */
+
+/* 관리자 페이지 통계  평균소요시간*/
+.processTimeTH {white-space: normal;}

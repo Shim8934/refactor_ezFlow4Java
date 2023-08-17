@@ -25,6 +25,9 @@
 			#cf-purpose h4 {font-size:1em; margin-top:1.33em; margin-bottom:1.33em;}
 			#cf-purpose h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 			#cf-purpose h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
+			#ui-datepicker-div {
+	          width:195px;
+	        }
 		</style>
 		
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

@@ -255,16 +255,8 @@
 		    		(SELECT
 		    			CN as userID,
 					    CN as deptID,
-		  				CASE
-							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-		  					THEN DISPLAYNAME
-		  					ELSE DISPLAYNAME$lang$
-		  				END userName,
-					    CASE
-							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-		  					THEN DISPLAYNAME
-		  					ELSE DISPLAYNAME$lang$
-		  				END deptName,
+		  				DISPLAYNAME$lang$ as userName,
+					    DISPLAYNAME$lang$ as deptName,
 		  				TO_CHAR(' ') as TITLE,
 		  				MAIL,
 					    null as EXTENSIONATTRIBUTE15,
@@ -295,13 +287,9 @@
 	    		(SELECT 
 					CN as userID,
 				    DEPARTMENT as deptID,
-				    CASE
-						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-	  					THEN DISPLAYNAME
-	  					ELSE DISPLAYNAME$lang$
-	  				END userName,
+				    DISPLAYNAME$lang$ as userName,
 	  				DESCRIPTION as deptName,
-	  				TO_CHAR(NVL(TITLE,' ')) as TITLE,
+	  				TO_CHAR(NVL(TITLE$lang$,' ')) as TITLE,
 	  				MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(EXTENSIONATTRIBUTE2) as imageName,
@@ -346,13 +334,9 @@
 				(SELECT
 					B.CN as userID,
 				    A.DEPTID as deptID,
-				    CASE
-						WHEN (B.DISPLAYNAME$lang$ = '' OR B.DISPLAYNAME$lang$ IS NULL) 
-	  					THEN B.DISPLAYNAME
-	  					ELSE B.DISPLAYNAME$lang$
-	  				END userName,
+					B.DISPLAYNAME$lang$ as userName,
 	  				D.DISPLAYNAME$lang$ as deptName,
-	  				TO_CHAR(A.TITLE),
+	  				TO_CHAR(A.TITLE$lang$) as title,
 	  				B.MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 -LENGTH(NVL(A.ORDERBY, '0'))), NVL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(B.EXTENSIONATTRIBUTE2) as imageName,
@@ -390,16 +374,8 @@
 		    		(SELECT
 		    			CN as userID,
 					    CN as deptID,
-		  				CASE
-							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-		  					THEN DISPLAYNAME
-		  					ELSE DISPLAYNAME$lang$
-		  				END userName,
-					    CASE
-							WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-		  					THEN DISPLAYNAME
-		  					ELSE DISPLAYNAME$lang$
-		  				END deptName,
+		  				DISPLAYNAME$lang$ as userName,
+					    DISPLAYNAME$lang$ as deptName,
 		  				TO_CHAR(' ') as TITLE,
 		  				MAIL,
 					    null as EXTENSIONATTRIBUTE15,
@@ -424,13 +400,9 @@
 	    		(SELECT 
 					CN as userID,
 				    DEPARTMENT as deptID,
-				    CASE
-						WHEN (DISPLAYNAME$lang$ = '' OR DISPLAYNAME$lang$ IS NULL) 
-	  					THEN DISPLAYNAME
-	  					ELSE DISPLAYNAME$lang$
-	  				END userName,
+				    DISPLAYNAME$lang$ as userName,
 	  				DESCRIPTION as deptName,
-	  				TO_CHAR(NVL(TITLE,' ')) as TITLE,
+	  				TO_CHAR(NVL(TITLE$lang$,' ')) as TITLE,
 	  				MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(EXTENSIONATTRIBUTE2) as imageName,
@@ -461,13 +433,9 @@
 				(SELECT
 					B.CN as userID,
 				    A.DEPTID as deptID,
-				    CASE
-						WHEN (B.DISPLAYNAME$lang$ = '' OR B.DISPLAYNAME$lang$ IS NULL) 
-	  					THEN B.DISPLAYNAME
-	  					ELSE B.DISPLAYNAME$lang$
-	  				END userName,
+					B.DISPLAYNAME$lang$ as userName,
 	  				D.DISPLAYNAME$lang$ as deptName,
-	  				TO_CHAR(A.TITLE),
+	  				TO_CHAR(A.TITLE$lang$) as title,
 	  				B.MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(A.ORDERBY, '0'))), NVL(A.ORDERBY, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(B.EXTENSIONATTRIBUTE2) as imageName,

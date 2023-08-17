@@ -36,11 +36,13 @@
 				margin-bottom:3px;
 			}
 			img.del {
-				position:relative;
+				position:absolute;
 				z-index:1;
 				float:right;
 				margin-right:2px;
 				cursor:pointer;
+				right:0;
+				top:2px;
 			}
 			.radioTypeText {
 				vertical-align:text-bottom;
@@ -297,7 +299,7 @@
 	                    <a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
 	                    <span class="filename1" id="filename1"></span>
 	                    <input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()" style="display:none">
-	                    <span><img class="prev" id="logoprev" src="" style="width:321.84px;"><img class="del"  id="delLogo" src="/images/i_comm_delete.png" style="top:2px; left:326px; display:none;" onclick="attachDelLogo()"></span>
+	                    <span style="position:relative; display:inline-block; float:right;"><img class="prev" id="logoprev" src="" style="width:321.84px;"><img class="del"  id="delLogo" src="/images/i_comm_delete.png" style="display:none;" onclick="attachDelLogo()"></span>
 	                </td>
 	            </tr>
 	            <tr>
@@ -306,7 +308,7 @@
 	                    <a class="imgbtn" style="vertical-align:middle; margin-top:10px; margin-bottom:0px;"><span id="btn_AttachAdd_thumb" onclick="return btn_AttachSelectThumb_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
 	                    <span class="filename2" id="filename2"></span>
 	                    <input type="file" id="thumb" name="thumb" accept="image/*" onchange="return thumb_onpropertychange()" style="display:none">
-	                    <span><img class="prev" id="thumbprev" src="" style="width:50.4px;"><img class="del"  id="delThumb" src="/images/i_comm_delete.png" style="top:2px; left:55px; display:none;" onclick="attachDelThumb()"></span>
+	                    <span style="position:relative; display:inline-block; float:right;"><img class="prev" id="thumbprev" src="" style="width:50.4px;"><img class="del"  id="delThumb" src="/images/i_comm_delete.png" style="display:none;" onclick="attachDelThumb()"></span>
 	                </td>
 	            </tr>
 	        </table>

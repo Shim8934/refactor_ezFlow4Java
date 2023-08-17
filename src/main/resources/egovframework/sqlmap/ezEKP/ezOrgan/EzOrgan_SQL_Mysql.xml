@@ -1198,7 +1198,16 @@
 	            EXTENSIONATTRIBUTE7 ,
 	            EXTENSIONATTRIBUTE8 ,
 	            EXTENSIONATTRIBUTE9 ,
-	            EXTENSIONATTRIBUTE10 ,
+	            CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	EXTENSIONATTRIBUTE10
+                ELSE
+                	EXTENSIONATTRIBUTE102
+                END
+                	EXTENSIONATTRIBUTE10 ,
 	            EXTENSIONATTRIBUTE11 ,
 	            EXTENSIONATTRIBUTE12 ,
 	            EXTENSIONATTRIBUTE13 ,
@@ -1291,7 +1300,16 @@
              A.EXTENSIONATTRIBUTE7 ,
              A.EXTENSIONATTRIBUTE8 ,
              A.EXTENSIONATTRIBUTE9 ,
-             A.EXTENSIONATTRIBUTE10 ,
+             CASE
+             	#v_LANGDATA#
+             WHEN
+             	'1'
+             THEN
+             	A.EXTENSIONATTRIBUTE10
+             ELSE
+             	A.EXTENSIONATTRIBUTE102
+             END
+             	EXTENSIONATTRIBUTE10,
              A.EXTENSIONATTRIBUTE11 ,
              A.EXTENSIONATTRIBUTE12 ,
              A.EXTENSIONATTRIBUTE13 ,
@@ -2053,7 +2071,13 @@
 	            compnm2 ,
 	            extensionattribute1 ,
 	            extensionattribute2 ,
-	            extensionattribute3 ,
+	            CASE #primary#
+					WHEN '1' THEN
+						extensionattribute3
+					ELSE
+						compnm2
+					END
+						extensionattribute3,
 	            extensionattribute4 ,
 	            extensionattribute5 ,
 	            extensionattribute6 ,
@@ -2331,6 +2355,7 @@
 			CN
 			,DEPARTMENT
 			,TITLE
+			,TITLE2
         FROM TBL_USERMASTER 
        	WHERE CN = #userID#
         AND TENANT_ID = #tenantID#

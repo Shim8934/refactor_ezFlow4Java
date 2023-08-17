@@ -1,4 +1,5 @@
 ﻿﻿var PreviewH_Move = false;
+var minimumWidth = 890;
 function PreviewH_onMouserDown(e) {
     curevent = (typeof event == 'undefined' ? e : event)
 
@@ -213,10 +214,10 @@ function new_mail_onclick(fromE) {
     var conHeight = Math.max(pheight * 0.8, 840);
     var pwidth = window.screen.availWidth;
     var conWidth = pwidth * 0.8;
-    if (conWidth > 890)
-        conWidth = 890;
+    if (conWidth > minimumWidth)
+        conWidth = minimumWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var newwin = window.open(pUrl, "", feature);
@@ -239,10 +240,10 @@ function ReSend(pURL, pEmail) {
     var conHeight = Math.max(pheight * 0.8, 840);
     var pwidth = window.screen.availWidth;
     var conWidth = pwidth * 0.8;
-    if (conWidth > 890)
-        conWidth = 890;
+    if (conWidth > minimumWidth)
+        conWidth = minimumWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail);
@@ -285,10 +286,10 @@ function reply_mail_onclick() {
         var conHeight = Math.max(pheight * 0.8, 840);
         var pwidth = window.screen.availWidth;
         var conWidth = pwidth * 0.8;
-        if (conWidth > 890)
-            conWidth = 890;
+        if (conWidth > minimumWidth)
+            conWidth = minimumWidth;
         var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - 890) / 2;
+        var pLeft = (pwidth - minimumWidth) / 2;
         
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
@@ -329,10 +330,10 @@ function all_reply_mail_onclick() {
         var conHeight = Math.max(pheight * 0.8, 840);
         var pwidth = window.screen.availWidth;
         var conWidth = pwidth * 0.8;
-        if (conWidth > 890)
-            conWidth = 890;
+        if (conWidth > minimumWidth)
+            conWidth = minimumWidth;
         var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - 890) / 2;
+        var pLeft = (pwidth - minimumWidth) / 2;
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
         if (typeof(shareId) != "undefined" && shareId != "") {
@@ -397,10 +398,10 @@ function transmission_mail_onclick() {
         var conHeight = Math.max(pheight * 0.8, 840);
         var pwidth = window.screen.availWidth;
         var conWidth = pwidth * 0.8;
-        if (conWidth > 890)
-            conWidth = 890;
+        if (conWidth > minimumWidth)
+            conWidth = minimumWidth;
         var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - 890) / 2;
+        var pLeft = (pwidth - minimumWidth) / 2;
         var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
         if (typeof(shareId) != "undefined" && shareId != "") {
@@ -1577,10 +1578,10 @@ function callMsgDlg(szContentClass, Href) {
     var conHeight = 720;
     var pwidth = window.screen.availWidth;
     var conWidth = pwidth * 0.8;
-    if (conWidth > 890)
-        conWidth = 890;
+    if (conWidth > minimumWidth)
+        conWidth = minimumWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1";
     if (!g_bdraft) {
         var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);

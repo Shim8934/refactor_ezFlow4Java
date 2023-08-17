@@ -804,7 +804,11 @@
 		                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                pparsingXML = pparsingXML + "<ROW><CELL>";
 // 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(document.getElementById("txt_TitleName").value) + " : " + MakeXMLString(document.getElementById("txt_TitleName2").value) + ")</VALUE>";
- 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data11"));
+ 		               	if(compName[1] === "1") {
+ 		               		pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data11"));
+ 		               	} else {
+ 		               		pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data12"));
+ 		               	}
  		               	pparsingXML = pparsingXML + "changeComTapString" + compName[0];
  		               	pparsingXML = pparsingXML + "changeDeptTapString" + MakeXMLString(dept[1]) + " (" ;
  		               	if(compName[1] === "1") {
@@ -905,7 +909,8 @@
 	            }
 	            
 	            try {
- 			    	window.opener.AddJob_List();
+ 			    	//window.opener.AddJob_List();
+ 			    	opener.parent.lef.goPage(13); // right 리로드하여 각 프레임의 count, list가 적용되도록 수정  
  			    	window.close();
  			    } catch (e) {
  			    	window.close();

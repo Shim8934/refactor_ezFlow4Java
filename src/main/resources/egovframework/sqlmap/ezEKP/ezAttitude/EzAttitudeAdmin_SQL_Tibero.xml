@@ -290,6 +290,8 @@
 				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND
+    			TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 		
 		<isNotEmpty prepend="AND" property="searchDeptName">
@@ -884,9 +886,9 @@
 		<![CDATA[
 			SELECT
 				A.cn AS writerid,
-				A.displayname$primary$ AS username,
-                A.description$primary$ AS deptname,
-                A.title$primary$ AS usertitle,
+				A.displayname$lang$ AS username,
+                A.description$lang$ AS deptname,
+                A.title$lang$ AS usertitle,
                 A.mail AS useremail,
                 SUBSTR(TO_CHAR(TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') + (#offsetMin#/(60*24)), 'YYYY-MM-DD HH24:MI:SS'), 1, 10) as startdate
 			FROM
@@ -916,6 +918,8 @@
 				A.tenant_id = #tenantId#
 			AND
 				A.physicaldeliveryofficename = #companyId#
+			AND
+				A.department not like 'shared\_mailbox\_%'
 			AND
 				A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
@@ -1498,6 +1502,8 @@
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND
+				A.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			<![CDATA[
@@ -1605,7 +1611,9 @@
 				AND 
 					A.PHYSICALDELIVERYOFFICENAME = #companyId#
 				AND			
-					A.CN IN (select CN FROM TBL_USERMASTER WHERE TENANT_ID = 0 AND PHYSICALDELIVERYOFFICENAME = #companyId#)		
+					A.CN IN (select CN FROM TBL_USERMASTER WHERE TENANT_ID = 0 AND PHYSICALDELIVERYOFFICENAME = #companyId#)
+				AND
+					A.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'		
 			]]>
 			<isNotEmpty prepend="AND" property="searchDeptName">
 				<![CDATA[
@@ -1759,6 +1767,8 @@
 				TENANT_ID = #tenantId#
 			AND
 				physicaldeliveryofficename = #companyId#
+			AND
+				TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 			<isNotEmpty prepend="AND" property="userId">
 				CN = #userId#
@@ -1795,6 +1805,8 @@
 				TENANT_ID = #tenantId#
 			AND
 				physicaldeliveryofficename = #companyId#
+			AND
+				TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 		]]>
 			<isNotEmpty prepend="AND" property="userId">
 				CN = #userId#
@@ -2073,6 +2085,8 @@
 				PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND
 				TENANT_ID = #tenantId#
+			AND
+    			TBL_USERMASTER.DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
 			]]>
 		<isNotEmpty prepend="AND" property="userId">
 			<![CDATA[

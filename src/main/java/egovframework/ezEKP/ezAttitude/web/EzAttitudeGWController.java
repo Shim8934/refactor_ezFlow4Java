@@ -616,8 +616,16 @@ public class EzAttitudeGWController {
 			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String statistics = request.getParameter("statistics") == null ? "" : request.getParameter("statistics");
 			String typeIdArr = request.getParameter("typeIdArr") == null ? "" : request.getParameter("typeIdArr");
+			String primary = info.getPrimary();
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, typeIdArr, info.getTenantId(), info.getPrimary());
+			// 관리자의 경우 관리자 언어 세팅에 맞는 데이터 표출 필요.
+			// EzAttitudeController 의 attAdminNewItem.do 에서 userId는 로그인 user의 id가 아닌
+			// 선택한 유저의 id가 넘어와서 로그인 유저의 primary와 선택한 유저의 primary세팅값이 다름.
+			if (request.getParameter("loginId") != null) {
+				primary = mOptionService.commonInfoWeb(serverName, request.getParameter("loginId")).getPrimary();
+			}
+			
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, typeIdArr, info.getTenantId(), primary);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2101,7 +2109,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
 			
-			String totalCount = ezAttitudeService.getAttitudeAnnualListCount(searchUserName, searchDeptName, searchTitle, offsetMin, companyId, tenantId);
+			String totalCount = ezAttitudeService.getAttitudeAnnualListCount(searchUserName, searchDeptName, searchTitle, offsetMin, companyId, tenantId, info.getPrimary());
 			List<AttitudeAnnualVO> list = ezAttitudeService.getAttitudeAnnualList(searchUserName, searchDeptName, searchTitle, orderCell, orderOption, offsetMin, pageNum, listSize, companyId, tenantId, info.getPrimary(), startDate, endDate);
 			
 			JSONObject data = new JSONObject();
@@ -2173,8 +2181,8 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezattitude/users/{userId}/annual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getUserAnnual(@PathVariable String userId, HttpServletRequest request) {
+	@RequestMapping(value="/rest/ezattitude/users/{userId}/{userLang}/annual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getUserAnnual(@PathVariable String userId,@PathVariable String userLang, HttpServletRequest request) {
 		logger.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annual] started.");
 		
 		JSONObject result = new JSONObject();
@@ -2190,7 +2198,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			List<AdminAttitudeVO> list = ezAttitudeService.getUserAnnual(userId, info.getPrimary(), info.getOffSet(), startDate, endDate, orderCell, orderOption, secondYear, companyId, info.getTenantId());
+			List<AdminAttitudeVO> list = ezAttitudeService.getUserAnnual(userId, userLang, info.getOffSet(), startDate, endDate, orderCell, orderOption, secondYear, companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2351,9 +2359,9 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 연차현황 수정내역확인
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/annualHistoryPop", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject annualHistoryPop(@PathVariable String userId, HttpServletRequest request) {
-		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/annualHistoryPop] started.");
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/{userLang}/annualHistoryPop", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject annualHistoryPop(@PathVariable String userId,@PathVariable String userLang, HttpServletRequest request) {
+		logger.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId +"/"+ userLang +"/annualHistoryPop] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2367,11 +2375,12 @@ public class EzAttitudeGWController {
 			map.put("companyId", request.getParameter("companyId"));
 			map.put("tenantId", info.getTenantId());
 			
-			String primary = info.getPrimary();
-			if (primary.equals("1")) {
-				primary = "";
+			String Lang = userLang;
+			//String primary = info.getPrimary();
+			if (Lang.equals("1")) {
+				Lang = "";
 			}
-			map.put("primary", primary);
+			map.put("primary", Lang);
 			
 			List<Map<String,Object>> resultList = ezAttitudeService.getAnnualHistoryList(map);
 			

@@ -39,7 +39,15 @@
 		<h1><spring:message code = 'ezCommunity.t492' /></h1>
 				
 		<div style="margin-top:10px">
-			▒ <spring:message code = 'ezCommunity.t563' /><span class="point"><c:out value = '${postCount}' /></span><spring:message code = 'ezCommunity.t511' />
+			▒ <spring:message code = 'ezCommunity.t563' /><span class="point"><c:out value = '${postCount}' /></span>
+			<c:choose>
+				<c:when test="${postCount > 1}">
+					<spring:message code='ezSurvey.t102'/>
+				</c:when>
+				<c:otherwise>
+					<spring:message code = 'ezCommunity.t511' />
+				</c:otherwise>
+			</c:choose>
 		</div>
 		  
 		<table class="popuplist" style ="width:100%;text-align:center;margin-top:10px">

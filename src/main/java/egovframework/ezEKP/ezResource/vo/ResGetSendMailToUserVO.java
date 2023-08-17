@@ -17,6 +17,8 @@ public class ResGetSendMailToUserVO {
 	private String brd_Nm;
 	/** */
 	private String mail;
+	/** 2023-08-02 황인경 - 자원관리 > 자원예약 > 관리자 승인/거절 메일 > 제목, 본문 실사용자원 다국어 지원  */
+	private String brd_Nm2;
 	
 	public String getWriterID() {
 		return writerID;
@@ -65,5 +67,11 @@ public class ResGetSendMailToUserVO {
 	}
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+	public String getBrd_Nm2() {
+		return brd_Nm2;
+	}
+	public void setBrd_Nm2(String brd_Nm2) {
+		this.brd_Nm2 = brd_Nm2;
 	}
 }

@@ -60,7 +60,7 @@ var strLang75 = "일반 첨부파일 총크기가 ";
 var strLang76 = "를 넘을 수 없습니다.";
 var strLang77 = "한개의 첨부파일 크기가 ";
 var strLang78 = "를 넘는 경우에는 대용량 메일 발송으로 처리됩니다.\n해당 메일의 첨부파일은 ";
-var strLang79 = "이후 자동 삭제됩니다.";
+var strLang79 = "일 이후 자동 삭제됩니다.";
 var strLang80 = "를 업로드 중입니다. ";
 var strLang84 = "을 업로드 중 에러가 발생했습니다.\n서버측 에러";
 var strLang85 = "을 업로드 중 에러가 발생했습니다.";
@@ -150,7 +150,7 @@ var strLang188 = "편지지를 하나만 선택해 주십시요.";
 var strLang191 = "정크 메일";
 var strLang192 = "PERSONAL";
 var strLang193 = "그룹메일을 추가 할 수 없습니다.\n구성원보기선택 버튼을 사용하세요.";
-var strLang194 = "간단주소록은 100개 까지만 설정 가능합니다.";
+var strLang194 = "간편주소록은 100개 까지만 설정 가능합니다.";
 var strLang195 = "간편주소를 입력하는 도중 오류발생.";
 var strLang196 = "이름을 입력하세요.";
 var strLang197 = "메일 주소를 입력하세요.";
@@ -305,6 +305,7 @@ var strLangPYY01 = "자동전달할 메일계정을 선택하세요.";
 var strLangLS01 = "선택된 메일이 없습니다. \n해당 편지함의 모든 메일을 저장하시겠습니까?"
 var strLangLS02 = "선택된 메일이 없습니다. \n검색된 모든 메일을 저장하시겠습니까?"
 var strLangLS03 = "해당 편지함의 검색된 메일은 하나의 zip 파일로 압축되어 다운로드됩니다. \n이 작업은 소요시간이 오래 걸릴 수 있습니다. 진행하시겠습니까?"
+var strLangLS04 = " 이후 자동 삭제됩니다.";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리 일본어 번역X*/
 var strLangHSB01 = "이 게시물은 ";
@@ -321,10 +322,11 @@ var strLangSharedMailbox03 = "암호를 변경하였습니다.";
 var strLangReceiverCount01 = "수신인은 최대 ";
 var strLangReceiverCount02 = "명까지 가능합니다.";
 
-var strLangHDP01 = "회까지";
-var strLangHDP02 = "다운로드 가능";
+var strLangHDP01 = "";
+var strLangHDP02 = "회까지 다운로드 가능";
 var strLangHDP03 = "대용량파일 첨부는 {0}개까지 가능합니다.";
 var strLangHDP04 = "드래그 앤 드롭으로 파일 추가 및 추가한 파일의 순서를 변경할 수 있습니다.";
+var strLangLS001 = "회까지 다운로드 가능";
 
 var strLangKSA03 = "그룹웨어 개인일정에 등록하시겠습니까?";
 var strLangKSA04 = "일정을 저장하였습니다.";

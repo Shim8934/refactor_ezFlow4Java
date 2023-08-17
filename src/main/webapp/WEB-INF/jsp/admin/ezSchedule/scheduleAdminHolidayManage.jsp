@@ -369,8 +369,8 @@
 		            return;
 		        }
 		        // 2018-07-24 천성준 - 삭제 시, 한번더 체크할수 있게
-		        var holidayName = _RowObject.getAttribute("holidayname");
-		        if (confirm(holidayName + "<spring:message code='ezCommunity.t333' />")) {
+		        var holidayName = _RowObject.getAttribute("holidayname2");
+		        if (confirm(holidayName + " " + "<spring:message code='ezCommunity.t333' />")) {
 			        $.ajax({
 			    		type : "POST",
 			    		dataType : "text",
