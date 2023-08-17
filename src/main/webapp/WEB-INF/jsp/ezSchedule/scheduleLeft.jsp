@@ -540,14 +540,14 @@
 <%-- 			    	<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)" style="pointer-events:auto"></span> --%>
 			    		<label class="IDcontainer" onchange="chk_all()">
 							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
-					  		<span class="checkmark" style="background:rgb(125, 125, 125);"></span>
+					  		<span class="checkmark mr5" style="background:rgb(125, 125, 125); margin-top: 7px;"></span>
 					  		<span class="list_text"><spring:message code='ezSchedule.t220'/></span>
 						</label>
 					</li>
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
-					  		<span class="checkmark" style="background:rgb(1, 138, 249);"></span>
+					  		<span class="checkmark mr5" style="background:rgb(1, 138, 249); margin-top: 7px;"></span>
 					  		<span class="list_text"><spring:message code='ezSchedule.t221'/></span>
 						</label>
 					</li>	
@@ -556,7 +556,7 @@
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
 							 	 	<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
-								  	<span class="checkmark" style="background-color:rgb(1, 138, 249);"></span>
+								  	<span class="checkmark mr5" style="background-color:rgb(1, 138, 249); margin-top: 7px;"></span>
 								  	<span class="list_text" title="${sec.secName }"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
 								</label>
 							</li>	
@@ -566,7 +566,7 @@
 						<li>
 							<label class="IDcontainer" onchange="chk_DisplayChange()">
 						  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="9" value="${loginVO.id}" class="checkSelect">
-						  		<span class="checkmark" style="background:rgb(1, 138, 249);"></span>
+						  		<span class="checkmark mr5" style="background:rgb(1, 138, 249); margin-top: 7px;"></span>
 						  		<span class="list_text"><spring:message code='ezSchedule.google03'/></span>
 							</label>
 						</li>
@@ -574,7 +574,7 @@
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
 							<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">
-						  	<span class="checkmark" style="background:rgb(1, 179, 63);"></span>
+						  	<span class="checkmark mr5" style="background:rgb(1, 179, 63); margin-top: 7px;"></span>
 						  	<span class="list_text"><spring:message code='ezSchedule.t222'/></span>
 						</label>
 					</li>					
@@ -584,7 +584,7 @@
 								<li>
 									<label class="IDcontainer" onchange="chk_DisplayChange()">
 										<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
-									  	<span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
+									  	<span class="checkmarkb mr5" style="background-color:rgb(1, 179, 63); margin-top: 7px;"></span>
 									  	<span class="list_text" title="${cum.titleName }"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
 									</label>
 								</li>	
@@ -596,7 +596,7 @@
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
 							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
-							  		<span class="checkmark" style="background-color:#b200ff;"></span>
+							  		<span class="checkmark mr5" style="background-color:#b200ff; margin-top: 7px;"></span>
 							  		<span class="list_text" title="${dep.deptName }"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
 								</label>
 							</li>	
@@ -605,7 +605,7 @@
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="3" value="${loginVO.companyID}" class="checkSelect">
-					  		<span class="checkmark" style="background:rgb(254, 28, 113);"></span>
+					  		<span class="checkmark mr5" style="background:rgb(254, 28, 113); margin-top: 7px;"></span>
 					  		<span class="list_text"><spring:message code='ezSchedule.t223'/></span>
 						</label>
 					</li>	
@@ -613,7 +613,7 @@
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange2(this)">
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="4" value="collaboration" class="checkSelect">
-					  		<span class="checkmark" style="background:rgb(63, 81, 181);"></span>
+					  		<span class="checkmark m5" style="background:rgb(63, 81, 181); margin-top: 7px;"></span>
 					  		<span class="list_text">협업일정</span>
 						</label>
 					</li>	
@@ -623,7 +623,7 @@
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
 							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
-							  		<span class="checkmark" style="background-color: ${group.groupColor }"></span>
+							  		<span class="checkmark mr5" style="background-color: ${group.groupColor }; margin-top: 7px;"></span>
 							  		<span class="list_text" title="${fn:escapeXml(group.groupName)}"><spring:message code='ezSchedule.t375'/>${fn:escapeXml(group.groupName)}</span>
 								</label>
 							</li>	

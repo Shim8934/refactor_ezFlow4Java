@@ -3882,6 +3882,9 @@ input{height: 24px !important;}
 select{min-height: 24px !important;}
 .imgbtn{height: 23px; line-height: 23px; margin-bottom: 0px;}
 .lnbUL div:hover .list_text { color: #0470E4; font-weight: bold; }
+.mr3{margin-right:3px !important}
+#txt_keyword{height: 27px !important;}
+.inf-spanTxt input{margin-bottom: 3px}
 
 /* //20230519 자바 서브페이지 디자인수정*/
 

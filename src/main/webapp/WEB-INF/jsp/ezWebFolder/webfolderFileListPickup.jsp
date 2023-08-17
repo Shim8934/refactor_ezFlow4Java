@@ -110,7 +110,7 @@
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<input type="text" id="searchFileName"  onkeyup="enterkey(this)" style="float:left;margin-right:3px;margin-left:5px;height:31px;" value="" name="searchFileName" placeholder="<spring:message code='ezWebFolder.t523' />">
+				<input type="text" id="searchFileName"  onkeyup="enterkey(this)" style="float:left;margin-right:3px;margin-left:5px;height:31px !important;" value="" name="searchFileName" placeholder="<spring:message code='ezWebFolder.t523' />">
 <!-- 				<input type="text" id="searchFileName" style="float:left;margin-right:3px;height:31px;" value="" name="searchFileName" placeholder="파일명 검색"> -->
 				<li id="SearchOption" mode="off" onclick="search('basic')"><span class="icon16 icon16_search"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>

@@ -1238,7 +1238,7 @@
 	                    	<td>
 	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
-	                                    <table style="margin-top: 3px; width: 100%;">
+	                                    <table style="margin-top: 3px; width: 100%; margin-bottom: 3px;">
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">

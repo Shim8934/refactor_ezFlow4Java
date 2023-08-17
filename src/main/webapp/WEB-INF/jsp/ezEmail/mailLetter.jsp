@@ -106,8 +106,8 @@
 				<th colspan="2" align="center" style="border:1px solid #ddd;padding:0px">
 					<div class="lmtitle lmLetterBoxTitle" style="border-bottom:0px;">
 						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="<spring:message code="ezEmail.t10"/>" style="border-color:#ddd">
-						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span style="line-height:22px"><spring:message code='ezEmail.letter1'/></span></a>
-						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span style="line-height:22px"><spring:message code='ezBoard.t999035'/></span></a>
+						<a id="lmSearch" class="imgbtn" style="margin-top: -3px;" onclick="letterSearch()"><span style="line-height:22px"><spring:message code='ezEmail.letter1'/></span></a>
+						<a id="lmSearchReset" class="imgbtn" style="margin-top: -3px;" onclick="inputReset()"><span style="line-height:22px"><spring:message code='ezBoard.t999035'/></span></a>
 					</div>	
 				</th>
 			</tr>

@@ -1634,7 +1634,7 @@
 							<c:otherwise>
 								<th style="width:10%"><spring:message code='ezBoard.t224' /></th>
 									<td id="PostDate" style="width:120px; white-space:nowrap; padding-right:5px">
-										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate}</div>
+										<div style="vertical-align:middle;width:100%;height:16px;">${boardItem.writeDate}</div>
 									</td>
 									<!-- 게시일 end -->
 							</tr>
@@ -1760,10 +1760,10 @@
 							<c:if test="${guBun == 2}">
 								<tr>
 									<th colspan="2" style="width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #f8f8fa; border-right:1px solid #e2e2e2; text-align:right;
-											border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle">
+											border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle ">
 										<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 										<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
-										<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+										<a class='imgbtn' style="vertical-align: middle; margin-bottom: 3px;"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
 									</th>
 								</tr>
 							</c:if>
@@ -1785,8 +1785,8 @@
 		            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 76px; background-color:white" id="lstAttachLink" ></div>
 		            </td>
 		        <td class="pos2">
-		        <a class="imgbtn imgbck" style="width:70px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-		        <a class="imgbtn imgbck" style="width:70px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+		        <a class="imgbtn imgbck" style="width:60px; margin-bottom: 3px !important;"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+		        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
 		        </td>
 		        <td id="ItemLevel" style="display:none"></td>
 		        </tr>

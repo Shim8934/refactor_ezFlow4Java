@@ -2418,7 +2418,7 @@
 	                        	</c:when>
 	                        	<c:otherwise>
 			                        <td style="width: 300px; vertical-align: baseline;"><span style="line-height: 20px; height: 20px; display: inline-block;">
-			                            <input type="checkbox" id="chkEmergent"></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.t435' /></span>
+			                            <input type="checkbox" style="margin-top: 0px;" id="chkEmergent"></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.t435' /></span>
 	                        	</c:otherwise>
 	                        </c:choose>
 	                            <!-- // 20090913 : 게시판 공지게시 기능 -->
@@ -2726,7 +2726,6 @@
 					<c:when test="${boardInfo.guBun != '3'}">
 				        <tr id="attachIframeTR">
 				            <td style="height: 145px">
-				                <br />
 				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
 				                <input type="hidden" name="mode" id="mode" />
 				            </td>

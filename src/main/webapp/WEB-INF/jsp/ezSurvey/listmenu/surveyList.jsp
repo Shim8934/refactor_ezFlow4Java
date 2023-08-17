@@ -26,7 +26,7 @@
 					<option value="creator"       ><spring:message code='ezSurvey.t24'/></option>
 				</select>
 				
-				<input name="keyword" type="text" id="ssInput">
+				<input name="keyword" type="text" id="ssInput" style="height: 27px !important;">
 				<a id="searchBttnSp"><img src="/images/bsearch_new.gif"></a>
 			</span>
 		</h1>

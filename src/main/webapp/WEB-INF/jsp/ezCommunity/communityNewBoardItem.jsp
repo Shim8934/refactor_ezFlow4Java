@@ -1159,7 +1159,7 @@
 											<div id="lstAttachLink">&nbsp;</div>
 										</td>
 										<td class="pos2" style ="white-space:normal;">
-											<a class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
+											<a class="imgbtn imgbck" style="margin-bottom: 3px !important;"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
 											<br>
 											<a class="imgbtn imgbck"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
 										</td>

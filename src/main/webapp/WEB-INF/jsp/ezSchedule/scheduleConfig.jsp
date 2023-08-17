@@ -246,7 +246,7 @@
 						<div style='height: 75%;'>
 						<!-- 2018-08-10 김보미 - 비서가 없을 경우 dropbox가 내려오지 않도록 변경 -->
  				      	<%--<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;" > --%>
-				      		<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;" <c:if test='${selectList eq null || selectList eq "[]"}'> disabled </c:if>>
+				      		<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: -1px;" <c:if test='${selectList eq null || selectList eq "[]"}'> disabled </c:if>>
 				      			<c:forEach var="item" items="${selectList}">
 				      				<option value="${item.cn}" name="${item.displayName}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}">
 				      					<c:if test="${lang == 1}">
@@ -258,7 +258,7 @@
 				      				</option>
 				      			</c:forEach>
 				      		</select>			      		
-				        	<a class="imgbtn imgbck"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a>
+				        	<a class="imgbtn imgbck" style="margin-top: -1px !important; height: 22px"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a>
 			        	</div>
 			        </td>
 			    </tr>
