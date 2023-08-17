@@ -11,6 +11,8 @@ public class AttitudeFormVO {
 	private String formName2;
 	/** 작성양식html */
 	private String formHtml;
+	/** 작성양식html 영어 */
+	private String formHtml2;
 	
 	public int getFormId() {
 		return formId;
@@ -42,7 +44,10 @@ public class AttitudeFormVO {
 	public void setFormHtml(String formHtml) {
 		this.formHtml = formHtml;
 	}
-	
-	
-
+	public String getFormHtml2() {
+		return formHtml2;
+	}
+	public void setFormHtml2(String formHtml2) {
+		this.formHtml2 = formHtml2;
+	}
 }

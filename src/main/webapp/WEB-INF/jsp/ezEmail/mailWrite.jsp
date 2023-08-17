@@ -1938,13 +1938,14 @@
 	    			attitudeId : attitudeId
 	    		},
 	    		success : function(result) {
+	    			console.log(result.formVO.formHtml2);
 	    			var titleDate = "";
 	    			var objDiv = $("<div></div>");
 	    			var objTable = $("<table></table>").css({"clear":"both", "margin":"0px", "border-collapse":"collapse", "empty-cells":"show"});
-	    			var objTr = $("<tr></tr>").append($("<th></th>").text("구분")).append($("<td></td>").text(result.attitudeVO.typeName));
+	    			var objTr = $("<tr></tr>").append($("<th></th>").text("<spring:message code='ezAttitude.CSJ02'/>")).append($("<td></td>").text(result.attitudeVO.typeName));
 	    			
 	    			objTable.append(objTr);
-	    			objTable.append(result.formVO.formHtml);
+	    			objTable.append(result.formVO.formHtml2);
 	    			objTable.find("input").remove();
 	    			objTable.find("th").css({"border" : "1px solid #d2d2d2", "padding" : "0px", "width" : "100px", "height" : "29px", "background-color" : "#f8f8fa"});
 	    			objTable.find("td").css({"border" : "1px solid #d2d2d2", "padding" : "0px", "width" : "730px", "padding-left":"10px"});
@@ -1971,7 +1972,7 @@
 	    				titleDate = result.attitudeVO.startDate.split(" ")[0];
 	    			}
 	    			
-	    			$("#eSubject").val("[근태보고] " + result.attitudeVO.typeName + "/ " + result.attitudeVO.writerDeptName + " " + result.attitudeVO.writerName + "/ " + titleDate + (result.attitudeVO.region != "" ? "/ " + result.attitudeVO.region : ""));
+	    			$("#eSubject").val("[<spring:message code='ezAttitude.CSJ01'/>] " + result.attitudeVO.typeName + "/ " + result.attitudeVO.writerDeptName + " " + result.attitudeVO.writerName + "/ " + titleDate + (result.attitudeVO.region != "" ? "/ " + result.attitudeVO.region : ""));
 	    			
 	    			objTable.find("#periodblock");
 	    			objTable.find("#writerName").text(result.attitudeVO.writerName);
@@ -1981,18 +1982,18 @@
 	    			objTable.find("#content").html(result.attitudeVO.content);
 	    			switch (mailsel) {
 	                case "0": 
-		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV><p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV><p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.CSJ01'/></strong></span></p><p></p>" + objDiv.html());
 	                    break;
 	                case "1": 
-		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.CSJ01'/></strong></span></p><p></p>" + objDiv.html());
 	                	tempvalue = "1";
 		                break;
 		            case "2": 
-		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.CSJ01'/></strong></span></p><p></p>" + objDiv.html());
 		                tempvalue = "1";
 		                break;
 		            case "3": 
-		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.CSJ01'/></strong></span></p><p></p>" + objDiv.html());
 		                tempvalue = "1";
 		                break;
 	            	}
