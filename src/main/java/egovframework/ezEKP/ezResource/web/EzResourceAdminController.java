@@ -430,13 +430,25 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			String memberNam = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(2).getTextContent();
 			String memberID = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(3).getTextContent();
 			String accessLvl = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(4).getTextContent();
-			
+			String memberNam2 = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(5).getTextContent();
+
+			//2023-08-16 이주원 - 언어설정에 따른 권한대상 텍스트
 			if (accessLvl.equals("1")) {
-				strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t115", locale);
+				if (userInfo.getLang().equals("1")){
+					strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t115", locale);
+				} else {
+					strVal = memberNam2 + " - (" + egovMessageSource.getMessage("ezResource.t115", locale);
+				}
+
 				optAdmLvl = "checked";
 				optUserLvl = "";
 			} else if (accessLvl.equals("2")) {
-				strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t116", locale);
+				if (userInfo.getLang().equals("1")){
+					strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t116", locale);
+				} else {
+					strVal = memberNam2 + " - (" + egovMessageSource.getMessage("ezResource.t116", locale);
+				}
+
 				optAdmLvl = "";
 				optUserLvl = "checked";
 			}
@@ -444,6 +456,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
              strOptions = strOptions + " Dept_YN='" + strDeptYn + "'";
              strOptions = strOptions + " SDA_YN='" + strSDAYN + "'";
              strOptions = strOptions + " Member_nam='" + memberNam + "'";
+			 strOptions = strOptions + " Member_nam2='" + memberNam2 + "'";
              strOptions = strOptions + " Member_ID='" + memberID + "'";
              strOptions = strOptions + " Access_lvl='" + accessLvl + "'>" + strVal;
              strOptions = strOptions + "</OPTION>";
@@ -474,6 +487,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		
 		String useOCS = config.getProperty("config.USE_OCS");
 		model.addAttribute("useOCS", useOCS);
+		model.addAttribute("userLang", userInfo.getLang());
 		return "admin/ezResource/popup/resGwBoardPostRegBoardRight";
 	}
 	

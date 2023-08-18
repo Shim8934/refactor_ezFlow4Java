@@ -44,6 +44,7 @@
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var ReturnFunction;
+	        var userLang = "<c:out value='${userLang}'/>";
 
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -522,7 +523,7 @@
 	        if (listContentArry != "") {
 	            for (var i = 0; i < listContentArry.length; i++) {
 	                var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-	                var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+	                var strName = document.getElementById(listContentArry[i]).getAttribute("_data10");
 	                var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
 	                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
@@ -547,7 +548,13 @@
 	                    pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                    pparsingXML = pparsingXML + "<DATA7>" + jickwe + "</DATA7>";
 	                    pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	                    pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+
+	                    if (userLang == '1') {
+                            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+                        } else {
+                            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
+                        }
+
 	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                    Resultxml = loadXMLString(pparsingXML2);
 
@@ -616,7 +623,13 @@
 	                            pparsingXML = pparsingXML + "<DATA6>" + strName + "</DATA6>";
 	                            pparsingXML = pparsingXML + "<DATA7>" + jickwe + "</DATA7>";
 	                            pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL></ROW>";
+
+	                            if (userLang == '1') {
+                                    pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL></ROW>";
+                                } else {
+                                    pparsingXML = pparsingXML + "<VALUE>" + strName2 + "</VALUE></CELL></ROW>";
+                                }
+
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 
@@ -668,7 +681,8 @@
 		        	        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-		                    pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
+		                    pparsingXML = pparsingXML + "<DATA2><![CDATA[" + nodeIdx.GetNodeData("VALUE1") + "]]></DATA2>";
+                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + nodeIdx.GetNodeData("VALUE2") + "]]></DATA3>";
 		                    pparsingXML = pparsingXML + "<DATA9><![CDATA[" + "D" + "]]></DATA9>";
 		                    pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -1206,10 +1220,11 @@
 	        	if (Check_Everyone.checked) {
 		            SelectedACL = new makeArray(totalLen + 1);
 	            	if (totalLen == 0) {
-	                	SelectedACL[1] = "1^everyone^everyone^D";
+	                	SelectedACL[1] = "1^everyone^everyone^D^everyone";
 	            	} else {
 	                	for (var i = 0; i < totalLen; i++) {
 	                    	var strTxt = GetAttribute(totalRows[i], "DATA2");
+                            var strTxt2 = GetAttribute(totalRows[i], "DATA3");
 	                    	var strId = GetAttribute(totalRows[i], "DATA1");
 	                    	var strDept = "Y";
 	                    	if(GetAttribute(totalRows[i], "DATA9") == "D") {
@@ -1220,9 +1235,9 @@
 		                        strTxt = strTxt.substr(1);
 		                    }
 
-	                    	SelectedACL[i + 1] = "1^" + strId + "^" + strTxt + "^" + strDept;
+	                    	SelectedACL[i + 1] = "1^" + strId + "^" + strTxt + "^" + strDept + "^" + strTxt2;
 	        	            if (totalLen == i + 1) {
-	        	            	SelectedACL[i + 2] = "1^" + pCompanyID + "^everyone^" + strDept;
+	        	            	SelectedACL[i + 2] = "1^" + pCompanyID + "^everyone^" + strDept + "^everyone";
 	                	    }
 	                	}
 	        	    }
@@ -1230,12 +1245,13 @@
 		            SelectedACL = new makeArray(totalLen);
 		            for (var i = 0; i < totalLen; i++) {
 	    	            var strTxt = GetAttribute(totalRows[i], "DATA2");
+                        var strTxt2 = GetAttribute(totalRows[i], "DATA3");
 	                	var strId = GetAttribute(totalRows[i], "DATA1");
 	                	var strDept = "Y";
                     	if(GetAttribute(totalRows[i], "DATA9") == "D") {
                     		strDept = GetAttribute(totalRows[i], "DATA9");
                     	}
-	                	SelectedACL[i + 1] = "1^" + strId + "^" + strTxt + "^" + strDept;
+	                	SelectedACL[i + 1] = "1^" + strId + "^" + strTxt + "^" + strDept + "^" + strTxt2 ;
 	            	}
 	        	}
 
