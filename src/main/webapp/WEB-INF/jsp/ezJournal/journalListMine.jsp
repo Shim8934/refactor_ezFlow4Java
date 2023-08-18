@@ -34,7 +34,7 @@
 				<th id="BoardList_TH_8" onclick="setListOrder(this)" order="7" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:20%;" class="h5_center">
 					<spring:message code='ezJournal.t22'/>
 				</th>
-				<th id="BoardList_TH_9" onclick="setListOrder(this)" order="12" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:45px;" class="h5_center">
+				<th id="BoardList_TH_9" onclick="setListOrder(this)" order="12" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:80px;" class="h5_center">
 					<spring:message code='ezJournal.t110'/>
 				</th>
 				<th id="BoardList_TH_7" onclick="setListOrder(this)" order="11" style="overflow: hidden; white-space: nowrap; cursor: pointer; text-align: center; width:45px;" class="h5_center">
@@ -106,7 +106,7 @@
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20%;">
 						<c:out value='${journal.formName}'/>
 					</td>
-					<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:45px;">
+					<td	onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:80px;">
 						<c:choose>
 							<c:when test="${journal.totalRecv ne 0}">
 								<c:out value='${journal.checkRecv}'/> / <c:out value='${journal.totalRecv}'/>
