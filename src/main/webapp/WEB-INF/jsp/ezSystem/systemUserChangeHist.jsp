@@ -473,7 +473,8 @@
 											case 'grantAddJob' : html += '<spring:message code="ezSystem.jhy07"/>'; break; 
 											default : html += '<spring:message code="ezSystem.jhy08"/>'; 				
 											}
-											html += "	</td>";
+											html += "</td>";
+											html += "	<td>"
 											if (i.executorId == 'ez_sync') {
 												html += '<spring:message code="ezSystem.jhy09"/> </td>';
 												html += "	<td></td>";
