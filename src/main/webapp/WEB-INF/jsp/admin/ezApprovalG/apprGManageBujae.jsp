@@ -39,6 +39,8 @@
 		    var proxybuJaeId = "";
 		    var proxybuJaedeptid = "";
 		    var P_CompanyID = "";
+		    // 2023-08-18 조수빈 - 한 부서에 대한 하나 이상의 직위가 존재하는 경우를 위한 변수.(직위코드)
+		    var jobId = "";
 		
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -194,8 +196,8 @@
 			var type_Complete;
 			var NoneActiveX = "YES";
 			function select_person(type) {
-				if (document.getElementById("deptList") != null && document.getElementById("deptList") != "undefined" && document.getElementById("deptList").value != "") {
-					buJaedeptid = document.getElementById("deptList").value;
+				if (document.getElementById("deptList") != null && document.getElementById("deptList") != "undefined" && document.getElementById("deptList").value.split(":")[0] != "") {
+					buJaedeptid = document.getElementById("deptList").value.split(":")[0];
 				}
 				
 				if(document.getElementById('TextName1').value=='' || document.getElementById('TextName1').value == undefined){
@@ -289,12 +291,13 @@
 		    			$("select#deptList option").remove();
 		    			$("#AddJobDept").hide();
 		    			
+		    			// 2023-08-18 조수빈 - 원부서 원직위에 대해서도 부서, 직위 코드가 필요하기 때문에 생성해야함.
+						for (var i = 0; i < result.AddJobList.length; i++) {
+							$("#deptList").append("<option value='" + result.AddJobList[i].department + ":" + result.AddJobList[i].jobID + "'>" + result.AddJobList[i].description + " [" + result.AddJobList[i].title + "]" + "</option>");
+						}
+		    			
 			            if (result.AddJobList.length > 1) {
 							$("#AddJobDept").show();
-							for (var i = 0; i < result.AddJobList.length; i++) {
-								$("#deptList").append("<option value='" + result.AddJobList[i].department + "'>" +
-										result.AddJobList[i].description);
-							}
 			            } else {
 			            	buJaedeptid = result.AddJobList[0].department;
 			            }
@@ -481,7 +484,8 @@
 		    				proxyuserid : proxyuserid,
 		    				buJae  : pBujae,
 		    				proxy  : pProxy,
-		    				dept : dept
+		    				dept : dept.split(":")[0],
+		    				jobId : dept.split(":")[1]
 		    				},
 		    		success: function(text){
 			            if (gIsAppoint == "1") {
@@ -531,7 +535,8 @@
 		    function Sel_AddJobChange() {
 		        var dept = "";
 		        try {
-			        dept = document.getElementById("deptList").value;
+			        dept = document.getElementById("deptList").value.split(":")[0];
+			        jobId = document.getElementById("deptList").value.split(":")[1];
 		        } catch(e) {}   
 		        
 		        $.ajax({
@@ -541,7 +546,8 @@
 		    		url : "/ezPersonal/manageAddJobBujaeG.do",
 		    		data : {
 		    					dept   : dept,
-		    					bujaeId : buJaeId
+		    					bujaeId : buJaeId,
+		    					jobId : jobId
 		    				},
 		    		success: function(text){
 		  			  deptid = text.deptID;
@@ -598,7 +604,7 @@
 					$("#Edatepicker").datepicker('setDate', nowDate);
 					
 					document.getElementById("TextName1").value = "";
-					document.getElementById("deptList").value = "";
+					document.getElementById("deptList").value.split(":")[0] = "";
 					document.getElementById("TextName").value = "";
 					
 					$("select#deptList option").remove();

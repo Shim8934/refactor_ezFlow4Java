@@ -3996,50 +3996,61 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String buJaeId = request.getParameter("buJaeId");
-		// String proxyuserid = request.getParameter("proxyuserid");
 		String buJaeInfo = request.getParameter("buJae");
-		String buJaeInfo2 = "";
-		String proxyInfo = request.getParameter("proxy");
+		// 실제 값이 들어오지 않는 변수이기 때문에 주석처리해둠.
+//		String proxyInfo = request.getParameter("proxy");
+		// 2023-08-17 조수빈 - 기존의 흐름에 맞추기 위해 파라미터 dept로 dept, jobid를 받게 됨
 		String dept = request.getParameter("dept");
-
-//		String proxyInfo2 = "";
+		String jobId = request.getParameter("jobId");
+		
 		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
 		String pClass = "user";
+		
+		// 2023-08-17 조수빈 - 입력 받은 시간을 UTC 시간으로 저장하기 위한 처리
 		if (buJaeInfo != null && !buJaeInfo.equals("")) {
-			if (buJaeInfo.split(":").length >= 5) {
-				buJaeInfo2 = buJaeInfo.split(":")[0] + ":" + buJaeInfo.split(":")[1] + ":" + buJaeInfo.split(":")[2] + ":" + buJaeInfo.split(":")[3] + ":" + buJaeInfo.split(":")[4] + ":" + buJaeInfo.split(":")[5] + ":"  + buJaeInfo.split(":")[6];
-			}
+			String [] proxyInfoArray = buJaeInfo.split(":");
+			String sTime = proxyInfoArray[3] + ":" + proxyInfoArray[4];
+			String eTime = proxyInfoArray[5] + ":" + proxyInfoArray[6];
+			String sTimeUTC = commonUtil.getDateStringInUTC(sTime, userInfo.getOffset(), true);
+			String eTimeUTC = commonUtil.getDateStringInUTC(eTime, userInfo.getOffset(), true);
 			
-			if (buJaeInfo.split(":").length > 7) {
-				buJaeInfo2 +=  ":" + buJaeInfo.split(":")[7];
-			}
-		}
-		String result = "";
-		String userRealDeptId = "";
-
-
-		userRealDeptId = ezOrganService.getUserOrgDeptId(buJaeId, userInfo.getTenantId(), userInfo.getCompanyID());
-		if (dept == null || dept.equals("") || dept.equals(userRealDeptId)) {
-			result = ezOrganService.updateProperty(buJaeId, "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
-			logger.debug("updateProperty buJaeId:" + buJaeId + " / buJaeInfo2:" + buJaeInfo2);
-		} else {
-			result = ezOrganService.updateAddJobProxy(buJaeId, buJaeInfo2, userInfo.getTenantId(), dept);
-			logger.debug("updateAddJobProxy buJaeId:" + buJaeId + " / buJaeInfo2:" +buJaeInfo2 + " / dept:" + dept);
+			logger.debug(">>>>>>>>>> convert sTime to UTC: " + sTimeUTC);
+			logger.debug(">>>>>>>>>> convert eTime to UTC: " + eTimeUTC);
+			
+			proxyInfoArray[3] = sTimeUTC.split(":")[0];
+			proxyInfoArray[4] = sTimeUTC.split(":")[1];
+			proxyInfoArray[5] = eTimeUTC.split(":")[0];
+			proxyInfoArray[6] = eTimeUTC.split(":")[1];
+			buJaeInfo = String.join(":", proxyInfoArray);
+			
+			logger.debug(">>>>>>>>>> finally proxy: " + buJaeInfo);
 		}
 		
-		if (result.equals("OK")) {
-//			if (proxyInfo.split(":").length >= 5) {
-//				proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
-//			}
-						
-			if (proxyInfo.split("\\|")[0].trim().equals("")) {
-				result = ezOrganService.delProxyUserInfo(buJaeId, userInfo.getTenantId());
-				logger.debug("delProxyUserInfo buJaeId:" + buJaeId);
-			} else {
-				result = ezOrganService.setProxyUserInfo(buJaeId, proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
-				logger.debug("setProxyUserInfo buJaeId:" + buJaeId + "proxyInfo:" + proxyInfo);
-			}
+		String result = "";
+		// 기존의 부서만 구분하는 것은 원부서 겸직에 대한 구분이 될 수 없음. 따라서 jobId도 구분해야함.
+		String userRealJobId = ezOrganService.getPropertyValue(buJaeId, "EXTENSIONATTRIBUTE7", userInfo.getTenantId());
+		String userRealDeptId = ezOrganService.getUserOrgDeptId(buJaeId, userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		// 원부서 원직위일 경우
+		if (dept.equals(userRealDeptId) && jobId.equals(userRealJobId)) {
+			result = ezOrganService.updateProperty(buJaeId, "extensionAttribute5", buJaeInfo, pClass, userInfo.getTenantId());
+			logger.debug("updateProperty buJaeId:" + buJaeId + " / buJaeInfo2:" + buJaeInfo);
+		// 그 외 겸직인 경우
+		} else {
+			result = ezOrganService.updateAddJobProxy(buJaeId, buJaeInfo, userInfo.getTenantId(), dept, jobId);
+			logger.debug("updateAddJobProxy buJaeId:" + buJaeId + " / buJaeInfo2:" + buJaeInfo + " / dept:" + dept);
 		}
+//		
+//		if (result.equals("OK")) {
+//						
+//			if (proxyInfo.split("\\|")[0].trim().equals("")) {
+//				result = ezOrganService.delProxyUserInfo(buJaeId, userInfo.getTenantId());
+//				logger.debug("delProxyUserInfo buJaeId:" + buJaeId);
+//			} else {
+//				result = ezOrganService.setProxyUserInfo(buJaeId, proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
+//				logger.debug("setProxyUserInfo buJaeId:" + buJaeId + "proxyInfo:" + proxyInfo);
+//			}
+//		}
 
 		logger.debug("saveBujae ended");
 		return result;
@@ -4137,7 +4148,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			textName = ezOrganService.getPropertyValue(info[0], "displayname", userInfo.getTenantId());
 			deptID = info[2];
 			startDate = info[3] + ":" + info[4];
+			startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false);
 			endDate = info[5] + ":" + info[6];
+			endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false);
 			
 			if (info.length > 7) {
 				bReason = info[7];
@@ -4201,6 +4214,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		List<OrganUserVO> list = new ArrayList<OrganUserVO>();
 		OrganUserVO bujaeUserInfo = ezOrganService.getUserInfo(buJaeId, userInfo.getLang(), userInfo.getTenantId());
+		bujaeUserInfo.setJobID(bujaeUserInfo.getExtensionAttribute7());
 		list.add(bujaeUserInfo);
 		
 		list.addAll(ezOrganAdminService.getUserAddJobList(buJaeId, userInfo.getPrimary(), userInfo.getTenantId()));
