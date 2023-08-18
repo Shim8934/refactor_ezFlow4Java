@@ -1522,6 +1522,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("strLang", userInfo.getLang());
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("usePrimaryLangOnly", usePrimaryLangOnly);
+		model.addAttribute("useJapanese", ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId()));
 
 		logger.debug("timeZone ended");
 		return "/ezPersonal/persTimeZone";
