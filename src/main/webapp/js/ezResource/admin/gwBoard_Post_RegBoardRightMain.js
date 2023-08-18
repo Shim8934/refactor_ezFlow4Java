@@ -34,7 +34,6 @@ function cmdOk_onclick() {
 					SetAttribute(objRow, "Dept_YN", objOptions.getAttribute("Dept_YN"));
 					SetAttribute(objRow, "SDA_YN", objOptions.getAttribute("SDA_YN"));
 					SetAttribute(objRow, "Member_nam", objOptions.getAttribute("Member_nam"));
-					SetAttribute(objRow, "Member_nam2", objOptions.getAttribute("Member_nam2"));
 					SetAttribute(objRow, "Member_ID", objOptions.getAttribute("Member_ID"));
 					SetAttribute(objRow, "Access_lvl", objOptions.getAttribute("Access_lvl"));
 					SetAttribute(objRow, "CompanyID", pCompanyID);
@@ -67,14 +66,12 @@ function cmdOk_onclick() {
 						objRowData.setAttribute("Dept_YN", objOptions.Dept_YN);
 						objRowData.setAttribute("SDA_YN", objOptions.SDA_YN);
 						objRowData.setAttribute("Member_nam", objOptions.Member_nam);
-						objRowData.setAttribute("Member_nam2", objOptions.Member_nam2);
 						objRowData.setAttribute("Member_ID", objOptions.Member_ID);
 						objRowData.setAttribute("Access_lvl", objOptions.Access_lvl);
 					} else {
 						objRowData.setAttribute("Dept_YN", objOptions.getAttribute("Dept_YN"));
 						objRowData.setAttribute("SDA_YN", objOptions.getAttribute("SDA_YN"));
 						objRowData.setAttribute("Member_nam", objOptions.getAttribute("Member_nam"));
-						objRowData.setAttribute("Member_nam2", objOptions.getAttribute("Member_nam2"));
 						objRowData.setAttribute("Member_ID", objOptions.getAttribute("Member_ID"));
 						objRowData.setAttribute("Access_lvl", objOptions.getAttribute("Access_lvl"));
 					}
@@ -162,13 +159,12 @@ function SetAddACLList(objAddList) {
 			dept_copy1.disabled = true;
 			dept_copy2.disabled = true;
 		}
-
+		
 		if (!IsExist) {
 		    if (CrossYN()) {
 		        AddUser.setAttribute("Dept_YN", pCurrAcl[3]);
 		        AddUser.setAttribute("SDA_YN", "Y");
 		        AddUser.setAttribute("Member_nam", pCurrAcl[2]);
-		        AddUser.setAttribute("Member_nam2", pCurrAcl[4]);
 		        AddUser.setAttribute("Member_ID", pCurrAcl[1]);
 		        AddUser.setAttribute("Access_lvl", "2");
 		        if (i+1 == acl_cnt) {
@@ -179,17 +175,11 @@ function SetAddACLList(objAddList) {
 		        AddUser.Dept_YN = pCurrAcl[3];
 		        AddUser.SDA_YN = "Y";
 		        AddUser.Member_nam = pCurrAcl[2];
-		        AddUser.Member_nam2 = pCurrAcl[4];
 		        AddUser.Member_ID = pCurrAcl[1];
 		        AddUser.Access_lvl = "2";
 		    }
-
-		    if (g_UserLang == '1'){
-		        AddUser.text = pCurrAcl[2] + " - (" + strLang35 + "";
-		    } else {
-		        AddUser.text = pCurrAcl[4] + " - (" + strLang35 + "";
-		    }
-
+			AddUser.text = pCurrAcl[2] + " - (" + strLang35 + "";
+			
 			objUserList.options[User_Cnt] = AddUser;
 
 		}
