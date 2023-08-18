@@ -3058,3 +3058,6 @@ INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPT
 VALUES(@tenant_id_value, 'BigSizeApprAttachDelDay', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 메일 대용량 첨부파일을 삭제한다. (default: 14)', '전자결재 대용량 첨부파일 보존기간', '2023-03-07 14:33:29.000', '전자결재');
 INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'BigSizeApprAttachLimit', '800', 'MB 단위로 대용량 첨부파일의 최대 크기를 지정한다.0: 대용량 첨부파일 사용안함 (default: 800)', '전자결재 대용량 첨부파일 최대 크기', '2023-03-07 14:33:29.000', '전자결재');
+
+INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+VALUES(@tenant_id_value, 'useSecondaryLang', 'YES', '메일 부재설정회신, 용량 경고 메일 등 primarylang이 아닌 무조건 외국어 사용해야하는 컨피그', '제2 외국어 기본으로 사용여부', '2023-08-03 00:00:00.000', '메일');
