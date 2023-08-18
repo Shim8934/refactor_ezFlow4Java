@@ -1938,14 +1938,14 @@
 	    			attitudeId : attitudeId
 	    		},
 	    		success : function(result) {
-	    			console.log(result.formVO.formHtml2);
+	    			console.log(result.formVO.formHtml);
 	    			var titleDate = "";
 	    			var objDiv = $("<div></div>");
 	    			var objTable = $("<table></table>").css({"clear":"both", "margin":"0px", "border-collapse":"collapse", "empty-cells":"show"});
 	    			var objTr = $("<tr></tr>").append($("<th></th>").text("<spring:message code='ezAttitude.CSJ02'/>")).append($("<td></td>").text(result.attitudeVO.typeName));
 	    			
 	    			objTable.append(objTr);
-	    			objTable.append(result.formVO.formHtml2);
+	    			objTable.append(result.formVO.formHtml);
 	    			objTable.find("input").remove();
 	    			objTable.find("th").css({"border" : "1px solid #d2d2d2", "padding" : "0px", "width" : "100px", "height" : "29px", "background-color" : "#f8f8fa"});
 	    			objTable.find("td").css({"border" : "1px solid #d2d2d2", "padding" : "0px", "width" : "730px", "padding-left":"10px"});
