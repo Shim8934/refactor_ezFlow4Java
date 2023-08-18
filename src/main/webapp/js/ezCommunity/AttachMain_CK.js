@@ -38,6 +38,7 @@ function btn_AttachAdd_onclick() {
     	// 특수문자 파싱 이후 파일명 길이를 기준으로 체크
        	$.each($('#file1')[0].files, function(i, file) {
        		if (MakeXMLString(file.name).length > attachFileNameMaxLength) {
+       			document.form.file1.value = "";
        			alert(strLang84 + attachFileNameMaxLength + strLangLHM01);
        			return;
        		}
@@ -48,7 +49,8 @@ function btn_AttachAdd_onclick() {
        	
 		// 현재 첨부된 파일과 기존 첨부된 파일의 사이즈 총합을 비교
 		if ((tempFileSize + uploadedFileSize) / 1024 / 1024 > parseInt(AttachLimit)) {
-			alert(strLang27 + AttachLimit + "MB" + strLang28);
+			document.form.file1.value = ""; // 첨부 실패 시 첨부를 시도한 파일 리스트 초기화
+			alert(strLang27 + AttachLimit + strLang28);
 			return;
 		}
 		else {
@@ -69,8 +71,7 @@ function btn_AttachAdd_onclick() {
 			contentType : false,
 			data : formData,
 			success : function(data){
-				returnvalue(data);
-				uploadedFileSize += tempFileSize; // 업로드 성공 후 첨부파일 사이즈 총합 갱신
+				returnvalue(data); // 업로드 성공 후 첨부파일 사이즈 총합 갱신 (내부적으로 initAttachFileSize 함수 호출)
 			}
 		});
        	
@@ -164,58 +165,46 @@ function btn_ImgDel_onclick(){
 
 
 /* 2023-02-21 홍승비 - 첨부파일 삭제 시 사이즈 계산 로직 추가 */
-function btn_AttachDel_onclick()
-{
-	try
-	{
-	   
+function btn_AttachDel_onclick() {
+	try {
+		
 	    var multi_cnt = document.getElementsByName("fileSelect").length;
-
 	    var j = 0;
-
+	    
 	    for (var i = 0; i < multi_cnt; i++) {
 	        if (document.getElementsByName("fileSelect")[i].checked) {
 	            j++;
 	        }
 	    } 	
-      
-
-	    if (j)
-	    {
+	    
+	    if (j) {
 	        var pInformationContent = "" + strLang32 + "";
 		    var Ans = confirm(pInformationContent);
-		
-		    if(Ans)
-		    {
+		    
+		    if (Ans) {
 			    var pAttachDelSN;
 			    var pAttachDelFileName;
 			    var is_newfile;
 			    var pNewNodeName = "";	// " + strLang15 + "
 			    var Rtnval;
-
-
-			    for (var k = 0; k < multi_cnt; k++) 
-		        {
+			    
+			    for (var k = 0; k < multi_cnt; k++) {
 			    	var fileSelectNode = document.getElementsByName("fileSelect")[k];
-		            if (fileSelectNode.checked) 
-		            {
+		            if (fileSelectNode.checked) {
 		            	fileSelectNode.parentNode.removeChild(fileSelectNode.nextSibling);
 		            	pAttachDelFileName = fileSelectNode.value;
 		                is_newfile = GetAttribute(fileSelectNode, "newfile");
 		                pNewNodeName = pNewNodeName + pAttachDelFileName + "*)[_-";
-
+		                
 		                Rtnval = "TRUE";
-		            }  
+		            }
 		        }
                 
-			
-			    if (Rtnval == "TRUE")
-			    {
+			    if (Rtnval == "TRUE") {
 				    // iframe 및 각종변수 설정 변경
 			        DelAttachFileAtList(pNewNodeName);
-
-			        AppendFileAttachInfo(pAttachListXml);		
-				
+			        AppendFileAttachInfo(pAttachListXml);
+			        
 //				    if (pAttachListXml == "")
 //					    AppendFileAttachInfo("");
 //				    else
@@ -225,19 +214,17 @@ function btn_AttachDel_onclick()
 //					   
 //				    }
 			    }
-			    else
-			    {
+			    else {
 			        var pAlertContent = "" + strLang31 + "";
 				    alert(pAlertContent);
 			    }
 		    }
-	    }else{
-		    	var pAlertContent = "" +strLang89 + "";
-		    	alert(pAlertContent);
+	    } else {
+	    	var pAlertContent = "" + strLang89 + "";
+	    	alert(pAlertContent);
 	    }
 	}
-	catch(ErrMsg)
-	{
+	catch(ErrMsg) {
 	    alert(ErrMsg.description);
     }
 }
@@ -383,16 +370,20 @@ function AppendFileAttachInfo(ret)
 	        var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
 	        var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
 //	        var IncodFileNM = escape(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[1]));
+	        var fileSize = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]);
 	        realFileNM = ReplaceText(realFileNM, "'", "&apos;");
 	        
 	        /* 2020-03-17 홍승비 - 커뮤니티 게시물 첨부파일(특수문자 존재 시) 수정, 삭제 불가능 오류 수정 */
 	        if (is_newfile != "DEL") {
-	            strAttach += "<input type='checkbox' name='fileSelect' newfile='" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) + "' value=\"" + MakeXMLString(ServerFile) + "\" style='vertical-align:middle;'>";
+	        	/* 2023-08-16 홍승비 - 첨부파일 사이즈 계산을 위한 실제 바이트단위 파일사이즈 realfilesize 속성 추가 */
+	            strAttach += "<input type='checkbox' name='fileSelect' newfile='" + is_newfile + "' value=\"" + MakeXMLString(ServerFile) + "\" realfilesize='" + fileSize + "' style='vertical-align:middle;'>";
 	            strAttach += getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]).replace(/%2b/gi, "+").replace(/%3b/gi, ";") + "&nbsp;</a>&nbsp;<br>"
 	        }
 	    }
 	    document.getElementById("lstAttachLink").innerHTML = strAttach;
-		
+	    
+	    /* 2023-08-16 홍승비 - 커뮤니티 게시물 첨부파일 초기 로딩 및 추가, 삭제 시 > 첨부파일 사이즈의 총합을 계산하여 uploadedFileSize 전역변수에 설정 */
+	    initAttachFileSize();
 	}
 	catch(e){alert("AppendFileAttachInfo :: " + e.description);}
 }
