@@ -815,7 +815,7 @@
 	                                <spring:message code='ezSchedule.t312' />
 	                            </th>
 	                            <td >
-	                                <div id="LabelDate" style="word-break: break-all;overflow-y: auto;height: 17px;padding-top: 2px;">
+	                                <div id="LabelDate" style="word-break: break-all;overflow-y: auto;max-height: 30px;padding-top: 2px;">
 	                                    <!-- <asp:Label ID="LabelDate" runat="server"></asp:Label> -->
 	                                    <c:out value="${dateString}" />
 	                                </div>
