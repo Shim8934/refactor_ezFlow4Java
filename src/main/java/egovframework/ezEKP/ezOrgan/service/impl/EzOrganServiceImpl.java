@@ -300,6 +300,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		nodeInfo.append("<NODE>");
 		nodeInfo.append("<VALUE>" + commonUtil.cleanValue(vo.getDeptNM()) + "</VALUE>");
+		nodeInfo.append("<VALUE1>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE1>");
+		nodeInfo.append("<VALUE2>" + commonUtil.cleanValue(vo.getDisplayName2()) + "</VALUE2>");
 		nodeInfo.append("<CN>" + vo.getDepartment() + "</CN>");
 	
 		if (!pPropList.equals("")) {					
