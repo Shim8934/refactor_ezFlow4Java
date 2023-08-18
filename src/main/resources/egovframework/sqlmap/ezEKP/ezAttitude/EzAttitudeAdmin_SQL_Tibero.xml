@@ -1507,17 +1507,17 @@
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
 			<![CDATA[
-				A.description LIKE '%' || #searchDeptName# || '%'
+				A.description$primary$ LIKE '%' || #searchDeptName# || '%'
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			<![CDATA[
-				A.displayname LIKE '%' || #searchUserName# || '%'
+				A.displayname$primary$ LIKE '%' || #searchUserName# || '%'
 			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
 			<![CDATA[
-				A.title LIKE '%' || #searchTitle# || '%'
+				A.title$primary$ LIKE '%' || #searchTitle# || '%'
 			]]>
 		</isNotEmpty>
 	</select>
