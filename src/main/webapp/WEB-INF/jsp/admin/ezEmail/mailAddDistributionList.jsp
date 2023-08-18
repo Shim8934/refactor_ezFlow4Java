@@ -3668,7 +3668,7 @@
 		                                                <tr>
 		                                                	<td style="width: 110px; color:#333;background-color: #f8f8fa; display:none" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
 		                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-		                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+		                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
 		                                                </tr>
 		                                            </table>
@@ -3676,7 +3676,7 @@
 		                                                <tr>
 		                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t26' /></td>
 		                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-		                                                    <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+		                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
 		                                                </tr>
 		                                            </table>
@@ -3857,7 +3857,7 @@
 		                        <td style="vertical-align: top;">
 		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
 		                                <span style="min-width: 45px; padding-right:5px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
-		                                <span style="min-width: 45px; padding:0;" class="toTitleCnt" ><b></b><spring:message code='main.t20000' /></span>
+		                                <span style="min-width: 45px; padding:0;" class="toTitleCnt" ><b></b> <spring:message code='main.t20000' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
 		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 501px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>

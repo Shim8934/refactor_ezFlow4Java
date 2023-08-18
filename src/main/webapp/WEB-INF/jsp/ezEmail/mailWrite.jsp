@@ -257,7 +257,8 @@
 	        m_rgParams4PostOption["tagMsgBCCu"] = MsgBCC_TRu;
 	        m_rgParams4PostOption["bodyType"] = g_bodyType;
 	        m_rgParams4PostOption["EachMail"] = iseachMail;
-	        m_rgParams4PostOption["SecurityMail"] = pSecurity;
+	        m_rgParams4PostOption["isSecureMail"] = "${isSecureMail}";
+	        m_rgParams4PostOption["secureMail"] = pSecurity;
 	        
 			var moduleType = "${moduleType}";
 	        
@@ -1356,6 +1357,7 @@
         	}
 	    }
 		
+/*		2023-07-21 이사라 - 본문타입 설정을 메일옵션으로 이동하여 메일쓰기창에서 아래 function 불필요하여 주석
 	    function changeTextOption(bodyType) {
 	    	if (bodyType == "1") {
 	        	if (confirm("<spring:message code='ezEmail.lhm28' />")) {
@@ -1386,7 +1388,7 @@
 	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
         		}
 	    	}
-	    }
+	    } */
 	    
 		function ckeditorReload() {
 			if (/chrome/i.test(navigator.userAgent) && message.CKEDITOR) {
@@ -1936,10 +1938,11 @@
 	    			attitudeId : attitudeId
 	    		},
 	    		success : function(result) {
+	    			console.log(result.formVO.formHtml);
 	    			var titleDate = "";
 	    			var objDiv = $("<div></div>");
 	    			var objTable = $("<table></table>").css({"clear":"both", "margin":"0px", "border-collapse":"collapse", "empty-cells":"show"});
-	    			var objTr = $("<tr></tr>").append($("<th></th>").text("구분")).append($("<td></td>").text(result.attitudeVO.typeName));
+	    			var objTr = $("<tr></tr>").append($("<th></th>").text("<spring:message code='ezAttitude.CSJ02'/>")).append($("<td></td>").text(result.attitudeVO.typeName));
 	    			
 	    			objTable.append(objTr);
 	    			objTable.append(result.formVO.formHtml);
@@ -1969,7 +1972,7 @@
 	    				titleDate = result.attitudeVO.startDate.split(" ")[0];
 	    			}
 	    			
-	    			$("#eSubject").val("[근태보고] " + result.attitudeVO.typeName + "/ " + result.attitudeVO.writerDeptName + " " + result.attitudeVO.writerName + "/ " + titleDate + (result.attitudeVO.region != "" ? "/ " + result.attitudeVO.region : ""));
+	    			$("#eSubject").val("[<spring:message code='ezAttitude.CSJ01'/>] " + result.attitudeVO.typeName + "/ " + result.attitudeVO.writerDeptName + " " + result.attitudeVO.writerName + "/ " + titleDate + (result.attitudeVO.region != "" ? "/ " + result.attitudeVO.region : ""));
 	    			
 	    			objTable.find("#periodblock");
 	    			objTable.find("#writerName").text(result.attitudeVO.writerName);
@@ -1979,18 +1982,18 @@
 	    			objTable.find("#content").html(result.attitudeVO.content);
 	    			switch (mailsel) {
 	                case "0": 
-		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV><p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV><p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.CSJ01'/></strong></span></p><p></p>" + objDiv.html());
 	                    break;
 	                case "1": 
-		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.CSJ01'/></strong></span></p><p></p>" + objDiv.html());
 	                	tempvalue = "1";
 		                break;
 		            case "2": 
-		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.CSJ01'/></strong></span></p><p></p>" + objDiv.html());
 		                tempvalue = "1";
 		                break;
 		            case "3": 
-		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.CSJ01'/></strong></span></p><p></p>" + objDiv.html());
 		                tempvalue = "1";
 		                break;
 	            	}
@@ -2445,13 +2448,13 @@
 	                            <spring:message code='ezEmail.kasMailTemplate02' /></span></li>
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
-	                    	<li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">
+	                    	<%-- <li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">
 	                        	<input type="checkbox" id="chkSecureMail" />
 	                        	<label for="chkSecureMail" style="color:#333;margin-right:3px"><spring:message code='ezEmail.lhm63' /></label>	                        	
 	                        </li>
 	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;">
 	                            <img src="/images/pbar.gif">
-	                        </li>
+	                        </li> --%>
 	                        <li id="menuTable" class="sel" style="background:none;border:0; padding:0; margin:0; vertical-align:top;">
 	                            <select name="importantSelect" id="importantSelect" onchange="important_change()" style="vertical-align:top;">
 	                                <option value="0"><spring:message code='ezEmail.t359' /> <spring:message code='ezEmail.t360' /></option>
@@ -2477,12 +2480,13 @@
 	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default;  display:none;">
 	                            <img src="/images/pbar.gif">
 	                        </li> 
-	                        <li class="sel" style="background:none; border:none; padding:0px;">
+	                        <%-- <li class="sel" style="background:none; border:none; padding:0px;">
 	                            <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
 	                                <option value="0" <c:if test="${bodyType == '0'}">selected</c:if>>HTML</option>
                         		    <option value="1" <c:if test="${bodyType == '1'}">selected</c:if>>PlainText</option>
 	                            </select>
-	                        </li>
+	                        </li> --%>
+	                        <input type="hidden" id="bodyType" name="bodyType" value="${bodyType}"/>
 	                        <c:if test="${useOnlyInnerMail != 'YES' && shareId == null}">
 	                        	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif"></li>
 	                        	<li class="sel" style="background:none; border:none; padding:0px; width: 110px; ">
@@ -2502,13 +2506,13 @@
 	                <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		      			
-		      			if (useSecureMail == "YES") {
+		      			/*if (useSecureMail == "YES") {
 		    	        	$('.securemail').not('.bar').css('display', '');
 		    	        	
 		    	        	if (isSecureMail == "true") {
 		    	        		document.getElementById("chkSecureMail").checked = true;
 		    	        	}
-		    	        }
+		    	        }*/
 		  			</script>
 	            </td>
 	        </tr>

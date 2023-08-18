@@ -2626,6 +2626,7 @@ public class EzAttitudeController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("loginId", userInfo.getId()) // 관리자의 경우 관리자의 언어 세팅에 맞는 화면 표출 필요.
 				.queryParam("userId", userId)
 				.queryParam("isuse", 1);
 		
@@ -3705,7 +3706,7 @@ public class EzAttitudeController {
 		
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
-		
+		String userLang = userInfo.getLang();
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		String orderCell = request.getParameter("orderCell");
@@ -3714,7 +3715,7 @@ public class EzAttitudeController {
 		
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/annual";
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/" + userLang + "/annual";
 			
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -3810,7 +3811,7 @@ public class EzAttitudeController {
 		logger.debug("excelAnnualListExport started."); 
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		String userLang = userInfo.getLang();
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
 		Locale locale = userInfo.getLocale();
@@ -3818,7 +3819,7 @@ public class EzAttitudeController {
 		String year = request.getParameter("year");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/annual";
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/" + userLang + "/annual";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

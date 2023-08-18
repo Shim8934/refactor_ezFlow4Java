@@ -377,7 +377,7 @@
 		        	return;
 		        }
 	
-		        if (!confirm(count + "<spring:message code='ezSchedule.t176' />"))
+		        if (!confirm(count + " <spring:message code='ezSchedule.t176' />"))
 		            return;
 		        
 		        $.ajax({
@@ -390,7 +390,7 @@
 		    		},
 		    		url : "/ezSchedule/scheduleDelMember.do",
 		    		success: function(text){
-		    			 alert(count + "<spring:message code='ezSchedule.t178' />");
+		    			 alert(count + " <spring:message code='ezSchedule.t178' />");
 				         window.location.reload(false);   			
 		    		},
 		    		error: function(err){
@@ -419,7 +419,7 @@
 		            return;
 		        }
 	
-		        if (!confirm(count + "<spring:message code='ezSchedule.t182' />"))
+		        if (!confirm(count + " <spring:message code='ezSchedule.t182' />"))
 		            return;
 		        
 		        $.ajax({
@@ -433,7 +433,7 @@
 		    		},
 		    		url : "/ezSchedule/scheduleUpdateMember.do",
 		    		success: function(text){
-		    			alert(count + "<spring:message code='ezSchedule.t184' />");
+		    			alert(count + " <spring:message code='ezSchedule.t184' />");
 			            window.location.reload(false);
 		    		},
 		    		error: function(err){
@@ -533,7 +533,7 @@
 		                count++;
 		            }
 		        }
-		       	     
+
 		        if (count == 0) {
 		            alert("<spring:message code='ezSchedule.shb02' />");
 		            return;
@@ -661,8 +661,10 @@
 		                	<input type='checkbox' value="1" memberid="${item.memberId}" memberstatus="${item.status}">
 		                </td> 
 		                <td style="cursor:pointer; white-space:nowrap; text-align:center" title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.memberId}')">
-			                <c:if test="${userInfo.primary == '1'}">${item.memberName}</c:if>
-			                <c:if test="${userInfo.primary != '1'}">${item.memberName2}</c:if>		                 
+		                    <c:choose>
+                               <c:when test="${primaryData == '1'}"> ${item.memberName} </c:when>
+                               <c:otherwise> ${item.memberName2} </c:otherwise>
+		                    </c:choose>
 		                </td> 
 		                <td style="text-align:center">
 		                	<c:if test="${item.status == '0'}"><spring:message code='ezSchedule.t166' /></c:if>

@@ -61,7 +61,7 @@
         	}
 		</script>
 	</head>
-	<body class="popup" style="overflow:hidden"> 
+	<body class="popup"> 
 		<h1><spring:message code = 'ezPersonal.hyh1' /></h1>
 		<div id="close">
 			<ul>

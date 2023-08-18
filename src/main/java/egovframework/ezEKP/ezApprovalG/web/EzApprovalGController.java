@@ -345,6 +345,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String propList = "extensionAttribute4;department;description;title;title2;description2;physicalDeliveryOfficeName;company;company2";
 		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		String myDept = "";
+		String myTitle= "";
 		String subTitleString = "";
 		boolean isSubTitle = false;
 		Document doc = commonUtil.convertStringToDocument(results);
@@ -361,19 +362,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
         int deptListFlag = 0;
         
         myDept = userInfo.getPrimary().equals("1") ? deptName : deptName2;
+		myTitle = userInfo.getPrimary().equals("1") ? title : title2;
         
         if (companyID.equals(userInfo.getCompanyID())) {
 	        if (userInfo.getDeptID().equals(deptID)) {
 	        	if (title.equals("")){
 	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "</option>";
 	        	} else {
-	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "[" + title + "]" + "</option>";
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "[" + myTitle + "]" + "</option>";
 	        	}
 	        } else {
 	        	if (title.equals("")){
 	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "</option>";
 	        	} else {
-	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "[" + title + "]" + "</option>";
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "[" + myTitle + "]" + "</option>";
 	        	}
 	        }
 	        deptListFlag++;
@@ -497,8 +499,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// 2022-02-11 박기범 : 직책이 없을경우 null이 들어오는 경우 체크 추가
 		String userGetTitle = userInfo.getTitle() != null ? userInfo.getTitle() : "";
 		String userRealTitle = orgUserInfolist.get(0).getTitle() != null ? orgUserInfolist.get(0).getTitle() : "";
+		String userRealTitle2 = orgUserInfolist.get(0).getTitle() != null ? orgUserInfolist.get(0).getTitle2() : "";
 
-		if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle)) {
+		/* 2023-08-04 민지수 - 부재자 설정값 다국어 처리 */
+		if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle) && !userLang.equals("2")) {
+			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		} else if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle2) && userLang.equals("2")) {
 			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		} else {
 			//buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
@@ -8256,7 +8262,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String allFG = request.getParameter("allFG");
 		
 		String excelValue = "";
-		
+
+		// 전체문서 조회(완료문서) 및 부서공유함 엑셀 다운로드 시 선택한 회사의 문서 리스트를 다운로드하도록 수정함.
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+
 		if (listType.toUpperCase().equals("DOC")) {
 			String containerID = request.getParameter("cont");
 			String pageNum = request.getParameter("PN");
@@ -9343,7 +9355,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	    model.addAttribute("receiptName", receiptName);
 	    model.addAttribute("receipts", receipts);
 	    model.addAttribute("susinGroupPrefix", susinGroupPrefix);
-	    
+	    model.addAttribute("lang", userInfo.getLang());
 	    logger.debug("ezReceiptInfo ended");
 	    
 	    return "ezApprovalG/apprGezReceiptInfoIng";
@@ -12321,5 +12333,5 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("attachItemPreview ended.");
 	}
-	
+
 }

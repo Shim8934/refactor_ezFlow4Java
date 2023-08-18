@@ -328,9 +328,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
-		
+
+		/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
+		String multiBoardName = "";
+		if (commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+			multiBoardName = boardPropertyVO.getBoardName();
+		} else {
+			multiBoardName = boardPropertyVO.getBoardName2();
+		}
+
 		model.addAttribute("upperBoardID", parentBoardID);
-		model.addAttribute("boardName", boardPropertyVO.getBoardName());
+		model.addAttribute("boardName", multiBoardName);
 
 		logger.debug("boardOrder ended");
 		return "admin/ezBoard/boardOrder";
@@ -364,14 +372,23 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String upperBoardID = request.getParameter("upperBoardID");
 		String isAdminLeft = "Y";
 		boolean isCompanyAdmin = false;
-		
+		String lang = "";
+
+		/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
+		String multiBoardName = "";
+		if (commonUtil.getPrimaryData(user.getLang(), user.getTenantId()).equals("1")) {
+			lang = "";
+		} else {
+			lang = "2";
+		}
+
 		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
 		if (user.getRollInfo() != null && user.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
 			isCompanyAdmin = true;
 		}
 		
 		// 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가
-		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, "", user.getRollInfo(), user.getTenantId());
+		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", lang, isAdminLeft, isCompanyAdmin, "", user.getRollInfo(), user.getTenantId());
 
 		logger.debug("getSubBoards ended");
 		return boardTree;
@@ -958,7 +975,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		/* 2020-02-14 홍승비 - 항목명 다국어 처리를 위한 파라미터 추가 */
 		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
-		
+
+		model.addAttribute("lang_user", userInfo.getLang());
 		model.addAttribute("lang_primary", lang_primary);
 		model.addAttribute("lang_secondary", lang_secondary);
 		
@@ -1012,7 +1030,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		List<BoardAttributeVO> list = ezBoardAdminService.getBoardHeader(boardAttributeVO.getColType(), boardAttributeVO.getBoardID(), userInfo.getTenantId());
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ROWS>");
 		
@@ -1031,7 +1049,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				} else if (userInfo.getLang().equals("4")) {
 					sb.append("<CELL><VALUE>" + obj.getColName4() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
 				}
-				
+
 				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getValue() + "</VALUE></CELL>");
 				sb.append("</ROW>");
@@ -1098,7 +1116,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String isAllGroupBoard = "";
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
-		
+
 		/* 2018-10-17 홍승비 - 그룹사게시판이라면 권한설정 버튼을 숨긴다. */
 		String boardGroupID = boardProperty.getBoardGroupID();
 		// 하위게시판인 경우
@@ -1114,9 +1132,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				isAllGroupBoard = "Y";
 			}
 		}
-		
+
 		String boardName = boardProperty.getBoardName();
-		
+
+		if (primary.equals("2")) {
+			boardName = boardProperty.getBoardName2();
+		}
+
 		/* 게시판 권한설정 시 companyID 조건 추가, 겸직한 사원의 경우 해당 겸직정보를 표출함 + 다국어 대응하도록 정보 가져옴 */
 		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId());
 		

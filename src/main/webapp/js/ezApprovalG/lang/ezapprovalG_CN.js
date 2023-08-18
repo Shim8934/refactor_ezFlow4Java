@@ -879,6 +879,7 @@ var strLang1138 = "부서아이디가 없습니다.";
 var strLang1139 = "이 문서를 열람할 권한이 없습니다.";
 var strLang1148 = "첨부 정보";
 var strLang1149 = "결재선 정보";
+var strLang1150 = "链接的表单不能重复使用";
 
 // 일반용 S를 붙일 것
 var strLangS6   = "반송:서명자";
@@ -1055,7 +1056,7 @@ var strLangHSBPR01 = "Gulim, simsun, simhei, Arial, verdana";
 //var strLangHSBAt00 = ".\nIt will be deleted the attachment files of big e-mail after ";
 var strLangHSBAt00 = "If file exceed the maximum capacity of a regular attachment, it will be treated as a Large attachment.";
 var strLangHSBAt01 = ".";
-var strLangHSBAt02 = "Big";
+var strLangHSBAt02 = "Large";
 var strLangHSBAt03 = "The total size of large dosage attachment files can not exceed ";
 var strLangHSBAt04 = "MB.";
 var strLangHSBAt05 = "Download period : ";
@@ -1137,3 +1138,11 @@ var strLangCSJBDA04 = "일괄회람 중 오류가 발생하였습니다.<br>";
 
 // 2023-06-27 조수빈 - 전자결재 첨부문서 미리보기 메세지 추가
 var strLangJSBAP01 = "预览";
+
+var strLangMJSSFA = "收件人组不能添加到收藏夹中。";
+
+/* 2023-08-09 기민혁 - 전자결재 > 결재정보 > 수신처 > 수신처그룹 */
+var strLang974 = "请选择收件人组.";
+
+/* 2023-08-11 민지수 - 전자결재 > 양식버전 다를 시 오류 메세지 추가 */
+var strLang975 = "格式版本不同，不能重复使用.";

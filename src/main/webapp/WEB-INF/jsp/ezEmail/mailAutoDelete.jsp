@@ -134,7 +134,7 @@
 					<th><spring:message code='ezEmail.t121' /></th>
 					<td>
 						<input id="expiretime" type="text" style="WIDTH:40px" name="text2" maxlength="5">
-						<spring:message code='ezEmail.t122' />
+						<spring:message code='ezEmail.t128' />
 					</td>
 				</tr>
 				<tr>
@@ -159,7 +159,12 @@
 				<c:forEach var="item" items="${list}">
 					<tr> 
 						<td>&nbsp;&nbsp;${item.folderName}</td> 
-						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;">${item.expireTime} <spring:message code='ezEmail.t127' /></td> 
+						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;">
+							${item.expireTime} 
+							<c:choose>
+								<c:when test="${item.expireTime eq '1'}"><spring:message code='ezEmail.t127' /></c:when>
+								<c:otherwise><spring:message code='ezEmail.t122' /></c:otherwise>
+							</c:choose></td> 
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;" ><input type="checkbox" disabled ${item.deleteUnread} name="checkbox2"></td> 
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;">
 							<a class="imgbtn"><span onClick="delete_condition('${item.itemSeq}', '${item.path}')"><spring:message code='ezEmail.t95' /></span></a>

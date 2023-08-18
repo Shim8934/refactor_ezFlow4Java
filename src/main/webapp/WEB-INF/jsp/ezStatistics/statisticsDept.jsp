@@ -263,12 +263,19 @@
                 _Tr.appendChild(_Th);
 
                 _Th = document.createElement("TH");
+                _Th.style.width = "170px"
                 _Th.innerHTML = "<spring:message code='ezStatistics.t1035'/>";
+                
+                if ("${userInfo.lang}" != "1") {
+	                _Th.classList.add("processTimeTH");
+                }
+                
                 _Tr.appendChild(_Th);
 
                 _Table.appendChild(_Tr);
 
                 for (var i = 0; i < SelectNodes(resultxml, "DATA/ROW").length; i++) {
+                	console.log(resultxml);
                     var _Tr2 = document.createElement("TR");
                     var _Td = document.createElement("TD");
                     _Td.innerHTML = getnodetext(SelectSingleNode(SelectNodes(resultxml, "DATA/ROW")[i], "DISPLAYNAME"))

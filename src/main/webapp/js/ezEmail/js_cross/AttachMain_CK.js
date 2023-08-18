@@ -350,8 +350,7 @@ function AppendFileAttachInfo(ret, reuseAttach) {
 
                             
                             if(is_big == "Y") {
-                            	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
-                            	objTd2.innerHTML += "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
+                            	objTd2.innerHTML = "<span style='display:block; text-overflow:ellipsis; overflow:hidden;'>" + replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;") + "&nbsp; <font style='color:blue'>[" + strLangLHM10 + "]</font></span>";
                             } else {
                             	objTd2.innerHTML = "<span style='display:block; text-overflow:ellipsis; overflow:hidden;'>" + replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;") + "</span>";
                             	

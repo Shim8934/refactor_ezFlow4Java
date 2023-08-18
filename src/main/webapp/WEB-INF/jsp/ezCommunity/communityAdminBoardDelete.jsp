@@ -172,7 +172,7 @@
 					<td><b class="point"><c:out value = '${boardName}' /></b></td>
 				</tr>
 				<tr>
-			    	<td colspan="2" style="padding:15px"> <spring:message code = 'ezCommunity.t332' /><b class="point"><c:out value = '${boardName}' /></b><spring:message code = 'ezCommunity.t333' /><br> <spring:message code = 'ezCommunity.t334' /></td>
+			    	<td colspan="2" style="padding:15px"> <spring:message code = 'ezCommunity.t332' /><b class="point"><c:out value = '${boardName}' /></b>&nbsp;<spring:message code = 'ezCommunity.t333' /><br> <spring:message code = 'ezCommunity.t334' /></td>
 			  	</tr>
 			</table>
 			<div class="btnposition btnpositionNew">

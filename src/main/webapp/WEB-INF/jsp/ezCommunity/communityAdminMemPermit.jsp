@@ -61,7 +61,14 @@
  		<div class="subtxt" style="margin-top:10px">
  			<spring:message code = 'ezCommunity.t549' />
  			<span class="point"><c:out value = '${postCount}' /></span>
- 			<spring:message code = 'ezCommunity.t511' />
+ 			<c:choose>
+				<c:when test="${postCount > 1}">
+					<spring:message code='ezSurvey.t102'/>
+				</c:when>
+				<c:otherwise>
+					<spring:message code = 'ezCommunity.t511' />
+				</c:otherwise>
+			</c:choose>
  		</div>
  		
 		<%-- <table class="mainlist" style="width:100%;margin-top:10px">

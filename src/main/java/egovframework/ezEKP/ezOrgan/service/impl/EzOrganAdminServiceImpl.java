@@ -56,6 +56,7 @@ import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import org.stringtemplate.v4.ST;
 
 @Service("EzOrganAdminService")
 public class EzOrganAdminServiceImpl implements EzOrganAdminService {
@@ -2028,13 +2029,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String getCompanyName(String displayName, int tenantID) throws Exception {
+	public String getCompanyName(String displayName, int tenantID, String lang) throws Exception {
 		logger.debug("getCompanyName started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("v_CN", displayName);
 		map.put("v_TENANT_ID", tenantID);
+		map.put("v_LANG", lang);
 
 		String companyName = ezOrganAdminDao.getCompanyName(map);
 
@@ -2385,7 +2387,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
 				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
 				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4>");
-				rtnVal.append("<DATA5><![CDATA[" + getCompanyName(jobList.get(i).getCompanyID(), tenantID) + "]]></DATA5></CELL>");
+				rtnVal.append("<DATA5><![CDATA[" + getCompanyName(jobList.get(i).getCompanyID(), tenantID, lang) + "]]></DATA5></CELL>");
 				rtnVal.append("</ROW>");
 			}
 		}
@@ -2649,7 +2651,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
 				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
 				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4>");
-				rtnVal.append("<DATA5><![CDATA[" + getCompanyName(jobList.get(i).getCompanyID(), tenantID) + "]]></DATA5>");
+				rtnVal.append("<DATA5><![CDATA[" + getCompanyName(jobList.get(i).getCompanyID(), tenantID, lang) + "]]></DATA5>");
 				rtnVal.append("<DISPLAYNAME><![CDATA[" + jobList.get(i).getDisplayName() + "]]></DISPLAYNAME>");
 				rtnVal.append("<DISPLAYNAME2><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></DISPLAYNAME2>");
 				rtnVal.append("</CELL></ROW>");

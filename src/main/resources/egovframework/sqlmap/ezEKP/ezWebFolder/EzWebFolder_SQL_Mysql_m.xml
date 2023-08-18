@@ -1371,7 +1371,7 @@
 				DATE_FORMAT(DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
 				DATE_FORMAT(DATE_ADD(FILES.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 	            FILES.CREATE_NAME1 AS CREATE_NAME1,
-	            FILES.CREATE_NAME1 AS CREATE_NAME2,
+	            FILES.CREATE_NAME2 AS CREATE_NAME2,
 	            FILES.FOLDER_ID AS FILE_FOLDER_ID,
 	            '' as FOLDER_UPPER,
 	            '1' AS SLEVEL,
@@ -1407,7 +1407,7 @@
 				DATE_FORMAT(DATE_ADD(FILES.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATE_DATE,
 				DATE_FORMAT(DATE_ADD(HISTORY.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATE_DATE,
 				FILES.CREATE_NAME1 AS CREATE_NAME1,
-				FILES.CREATE_NAME1 AS CREATE_NAME2,
+				FILES.CREATE_NAME2 AS CREATE_NAME2,
 				FILES.FOLDER_ID AS FILE_FOLDER_ID,
 				'' as FOLDER_UPPER,
 				'1' AS SLEVEL,
@@ -2121,7 +2121,7 @@
 				TBL_WEBFOLDER_APPLY_HISTORY 
 			(APPLY_ID, TENANT_ID, COMPANY_ID, FOLDER_NAME, CONTENT, APPLICATION_DATE)
 				VALUES
-			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, now())
+			(#applyId#, #tenantId#, #companyId#, #folderName#, #content#, #timeUTC#)
 		]]>
 	</insert>
 	
@@ -2168,8 +2168,8 @@
 	
 	<select id="EzWebFolderDAO_m.getWebFolderApplyHistoryList" parameterClass="Map" resultMap="applicationHistoryList">
 		<![CDATA[
-				SELECT 
-					h.APPLY_ID, h.FOLDER_NAME, DATE_FORMAT(h.APPLICATION_DATE, '%Y-%m-%d %H:%i') as APPLICATION_DATE, a.MEMBER_NAME AS applicantName,
+				SELECT
+					h.APPLY_ID, h.FOLDER_NAME, DATE_FORMAT(DATE_ADD(h.APPLICATION_DATE , interval #offset# minute), '%Y-%m-%d %H:%i') as APPLICATION_DATE, a.MEMBER_NAME AS applicantName,
 					ms.member_name AS masterName, ms.cnt AS masterCnt, h.APPROVAL_STATUS
 		]]>
 				<include refid="getWebFolderApplyHistroyQuery" />
@@ -2182,7 +2182,7 @@
 		<![CDATA[
 			SELECT
 				APPLY_ID,  FOLDER_NAME, CONTENT, 
-				DATE_FORMAT(APPLICATION_DATE, '%Y-%m-%d %H:%i') AS APPLICATION_DATE, DATE_FORMAT(APPROVAL_STATUS_UPDATEDT, '%Y-%m-%d %H:%i') AS APPROVAL_STATUS_UPDATEDT, COMPANY_ID
+				DATE_FORMAT(DATE_ADD(APPLICATION_DATE , interval #offset# minute), '%Y-%m-%d %H:%i') AS APPLICATION_DATE, DATE_FORMAT(DATE_ADD(APPROVAL_STATUS_UPDATEDT , interval #offset# minute), '%Y-%m-%d %H:%i') AS APPROVAL_STATUS_UPDATEDT, COMPANY_ID
 			FROM 
 				TBL_WEBFOLDER_APPLY_HISTORY
 			WHERE 
@@ -2239,7 +2239,7 @@
 			TBL_WEBFOLDER_APPLY_HISTORY 
 		SET 
 			APPROVAL_STATUS	 = #status#,
-			APPROVAL_STATUS_UPDATEDT = now()
+			APPROVAL_STATUS_UPDATEDT = #timeUTC#
 		WHERE 
 			APPLY_ID = #applyId#
 	</update>

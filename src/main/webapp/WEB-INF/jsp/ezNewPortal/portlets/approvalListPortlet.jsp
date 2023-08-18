@@ -166,7 +166,16 @@
 			        
 			        str += '		<dl class="apprDL">';
 			        str += '			<dt class="apprPic"><img src="'+ imgsrc +'"></dt>';
-			        str += '			<dd class="apprName">'+ lines[i].aprMemberName +'</dd>';
+			        str += '			<dd class="apprName">';
+			        
+			     	// 2023-07-28 황인경 - 포탈 > 전자결재 포트릿  > 결재선 > 이름 다국어 지원 추가
+					var lang = "${userInfo.lang}";
+					
+			        if (lang != "1") {
+			        	str += lines[i].aprMemberName2 +'</dd>';	
+			        } else {
+			        	str += lines[i].aprMemberName +'</dd>';	
+			        }
 			        
 			        if(i==0) {
 			            str += '			<dd class="'+ apprTextColor +'"><span><spring:message code="ezApprovalG.t30"/></span></dd>';

@@ -5,7 +5,7 @@ var strLang4 = "Returning"
 var strLang5 = "In opinion)" //문서유통
 var strLang6 = "Pre-approval"
 var strLang7 = "Deputy"
-var strLang8 = "For"
+var strLang8 = "For "
 var strLang9 = "Arial"
 var strLang10 = "Confirmation"
 var strLang11 = "Reference"
@@ -19,7 +19,7 @@ var strLang27 = "The opinion of content is following.]"
 var strLang28 = "Title"
 var strLang29 = "Name"
 var strLang30 = "content"
-var strLang31 = "Separation"
+var strLang31 = "Type"
 var strLang32 = "Dept."
 var strLang33 = "Attached file"
 var strLang57 = "assign auditor signature box"
@@ -168,7 +168,7 @@ var strLang287 = "Can not process pre-approval."
 var strLang288 = "Pre-audit"
 var strLang289 = "Watch low-abiding"
 var strLang290 = "Do you want to delete?"
-var strLang291 = "So that there is no person in department."
+var strLang291 = "So that there is no person in department. "
 var strLang292 = "Can not register in approval route."
 var strLang293 = "Can not add the approval participants!"
 var strLang294 = "The department belongs to another company."
@@ -618,7 +618,7 @@ var strLang879 = "Returned"
 var strLang880 = "Opinion information"
 var strLang888 = "Display document"
 var strLang891 = "Cancelled the approval document."
-var strLang892 = "You can approve the document at the documents to be approved."
+var strLang892 = "You can re-draft the document at to be process."
 var strLang893 = "You collect the draft document."
 var strLang894 = "You can draft the new document at the documents to be approved."
 var strLang895 = "You can approve the documnet, if approval method is approval, confirmation and agreement."
@@ -639,17 +639,17 @@ var strLang926 = "An error occurred during upload. \n \nfile type (extension), p
 var strLang928 = "Records to retrieve information failed!";
 var strLang929 = "Do not have permission to view this document. <br> Draft, please contact or.";
 // ApprovUI/doApprovAllSelect.aspx
-var strLang930 = "The selected article does not.";
-var strLang931 = "<br> Batch settlement is completed.";
-var strLang931_1 = "Batch settlement is completed.";
-var strLang932 = "An error has occurred in the batch settlement. <br>";
+var strLang930 = "There are no documents selected.";
+var strLang931 = "<br> Batch Approval is completed.";
+var strLang931_1 = "Batch Approval is completed.";
+var strLang932 = "An error has occurred in the batch approval. <br>";
 var strLang933 = "Total:";
-var strLang934 = "Items <br>";
-var strLang934_1 = "Items";
+var strLang934 = " Items <br>";
+var strLang934_1 = " Items";
 var strLang935 = "Success:";
 var strLang936 = "Failure:";
 var strLang937 = "Results bulk reassign document.";
-var strLang938 = "제외 : ";
+var strLang938 = "Exception : ";
 // ezViewHWP/ezDeptRecev_HWP.js
 var strLang940 = "Prev"
 var strLang941 = "Next"
@@ -684,7 +684,7 @@ var strLang1027 = "Fixed comments";
 var strLang1028 = "Year";
 var strLang1029 = "Month";
 var strLang1030 = "Day";
-var strLang1031 = "Can not post E-mail / approval-document to photo-board or anonymous-board or URL-link-board.";
+var strLang1031 = "Can not post e-mail / approval-document to photo board or anonymous board or url board.";
 var strLang1039 = "Selected user is out of office.</br>Would you like to add it?";
 
 // DocType : 문서형태 A01
@@ -816,8 +816,8 @@ var strOpinionType4 = "004";
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
 var strOpinionType8 = "008";
-var strLangOpinionType1 = "General Comment";
-var strLangOpinionType2 = "Bounce opinion";
+var strLangOpinionType1 = "General";
+var strLangOpinionType2 = "Rejection";
 var strLangOpinionType3 = "Hold opinion";
 var strLangOpinionType4 = "Return opinion";
 var strLangOpinionType8 = "재배부요청";
@@ -840,7 +840,7 @@ var strLangEtcAprState4 = "Return"; // 문서 싸인칸에 표시하는 반송�
 var strLangEtcFile1 = "/xml/ezApprovalG/TreeViewAddDept.xml"; // xml 파일 처리
 var strLangEtcFile2 = "/xml/ezApprovalG/TreeViewTmpAddDept.xml"; // xml 파일 처리
 var strLangEtcFileliban1 = "/xml/ezApproval/TreeViewAddDept2.xml";
-var strLang1101 = "So that there is no manager in department."
+var strLang1101 = "So that there is no manager in department. "
 var strLang1102 = "Can not register in Receiving department."
 var strLang1103 = "Hangul forms do not support the draft inside or recover."
 var strLangFromFile = "HWP is not supported (Draft / Re-draft)."
@@ -882,6 +882,7 @@ var strLang1138 = "No department ID.";
 var strLang1139 = "You do not have permission to view this document.";
 var strLang1148 = "Accompanying information";
 var strLang1149 = "Approval line information";
+var strLang1150 = "Linked forms cannot be reused.";
 
 // 일반용 S를 붙일 것
 var strLangS6 = "Bounce: signers";
@@ -991,7 +992,7 @@ var strLangS195 = "Please re-enter."
 var strLangSHJ1 = "Please specify the final approver after reference.";
 
 var strLangS822 = "User already circulated the ship."
-var strLangS824 = "Circulating self Duplicate";
+var strLangS824 = "Duplicate Circular.";
 var strLangS825 = "Please specify the circulation.";
 var strLangS826 = "I was not sent out circulars.";
 var strLangpjj27 = "A favorite you want to edit, you can edit should be applied to the party circulated a list.";
@@ -1000,8 +1001,8 @@ var strLangHYJ28 = "The party circulated a list does not exist.";
 var strLang1104 = "The agency can not receive electronic documents. \nCan not be added.";
 
 //2017-11-09 장진혁 추가
-var strLangjjh01 = "Attachment total";
-var strLangjjh02 = "You can upload up to MB.";
+var strLangjjh01 = "The size of attachments can't exceed ";
+var strLangjjh02 = "MB.";
 var strLangjjh03 = "Adding attachment.";
 var strLangjjh04 = "Summary of approval";
 
@@ -1058,7 +1059,7 @@ var strLangHSBPR01 = "Arial";
 //var strLangHSBAt00 = ".\nIt will be deleted the attachment files of big e-mail after ";
 var strLangHSBAt00 = "If file exceed the maximum capacity of a regular attachment, it will be treated as a Large attachment.";
 var strLangHSBAt01 = ".";
-var strLangHSBAt02 = "Big";
+var strLangHSBAt02 = "Large";
 var strLangHSBAt03 = "The total size of large dosage attachment files can not exceed ";
 var strLangHSBAt04 = "MB.";
 var strLangHSBAt05 = "Download period : ";
@@ -1140,3 +1141,12 @@ var strLangCSJBDA04 = "An error occurred during the batch circulation.<br>";
 
 //2023-06-27 조수빈 - 전자결재 첨부문서 미리보기 메세지 추가
 var strLangJSBAP01 = "Preview";
+
+/* 2023-07-27 민지수 - 수신처 그룹적용 > 즐겨찾기 추가 시 오류 메세지 추가 */
+var strLangMJSSFA = "Destination groups cannot be added to favorites.";
+
+/* 2023-08-09 기민혁 - 전자결재 > 결재정보 > 수신처 > 수신처그룹 */
+var strLang974 = "Please select a receiving group.";
+
+/* 2023-08-11 민지수 - 전자결재 > 양식버전 다를 시 오류 메세지 추가 */
+var strLang975 = "The form version is different and cannot be reused.";

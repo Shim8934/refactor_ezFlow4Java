@@ -406,7 +406,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			startDate = cDate + " " + cTime + ":00:00";
 			
 			cDate = cDate.substring(0, 10);
-			endDate = cDate + " " + Integer.toString((Integer.parseInt(cTime) + 1)) + ":00:00";
+			endDate = cDate + " " + String.format("%02d", Integer.parseInt(cTime) + 1) + ":00:00";
 			
 			deptID = userInfo.getDeptID();		// 2020-09-16 김민성 - 현재 설정된 대리 결재자 정보가 없는 경우 사용자의 부서 정보를 가져온다
 		}
@@ -821,30 +821,48 @@ public class EzPersonalController extends EgovFileMngUtil {
 //			strHtml += "</table>";
 //			strHtml += "<br>";
 //		}
+		//2023-07-28 황인경 - 설문결과 태그 위치 수정
 		for (int i=0; i<resultDom.getElementsByTagName("ROW").getLength(); i++) {
-			strHtml +=
-			 								    
-					"<li class='poll_list1'>" +
-						"<div class='Pt_QstOptTitleDiv' style='width: 22%;' title='" + array_title[i+1] + "'><span class='Vnum'>" + (i+1)  + "</span><span class='Vtext'>" + array_title[i+1] +"</div>" +
-						"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
-							 "<span class='Pt_QstInfoVotes'>"+ resultDom.getElementsByTagName("COUNT").item(i).getTextContent() + "</span>" +
-							 egovMessageSource.getMessage("ezPersonal.hyh17", locale) + "/" ;
-							 if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
-								 strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + ".0</span>";
-							 } else {
-								 strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "</span>";
-							 }
-						 strHtml += "%</div>"+
-						"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" ;
-							if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0.0") || resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
-								strHtml += "<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>";
-							} else {
-								strHtml += "<p id='graph" + i + "' class='gx_bar11' style='width:" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "%;'></p>" ;
-							}
-						strHtml += "</div>"+
-					"</li>";	
-
+			strHtml += "<li class='poll_list1'>" + "<div class='Pt_QstOptTitleDiv' style='width: 22%;' title='" + array_title[i+1] + "'><span class='Vnum'>" + (i+1)  + 
+					"</span><span class='Vtext'>" + array_title[i+1] +"</div>" + "<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" ;
+			if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0.0") || resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
+				strHtml += "<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>";
+			} else {
+				strHtml += "<p id='graph" + i + "' class='gx_bar11' style='width:" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "%;'></p>" ;
+			}
+			strHtml += "</div>" + "<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + "<span class='Pt_QstInfoVotes'>" + 
+			resultDom.getElementsByTagName("COUNT").item(i).getTextContent() + "</span>" + "/" ; 
+			if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
+				strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + ".0</span>";
+			} else {
+				strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "</span>";
+			}
+			strHtml += "%</div></li>";	
 		}
+		/*for (int i=0; i<resultDom.getElementsByTagName("ROW").getLength(); i++) {
+			strHtml +=
+					
+					"<li class='poll_list1'>" +
+							"<div class='Pt_QstOptTitleDiv' style='width: 22%;' title='" + array_title[i+1] + "'><span class='Vnum'>" + (i+1)  + "</span><span class='Vtext'>" + array_title[i+1] +"</div>" +
+							"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
+							"<span class='Pt_QstInfoVotes'>"+ resultDom.getElementsByTagName("COUNT").item(i).getTextContent() + "</span>" +
+							egovMessageSource.getMessage("ezPersonal.hyh17", locale) + "/" ;
+			if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
+				strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + ".0</span>";
+			} else {
+				strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "</span>";
+			}
+			strHtml += "%</div>"+
+					"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" ;
+			if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0.0") || resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
+				strHtml += "<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>";
+			} else {
+				strHtml += "<p id='graph" + i + "' class='gx_bar11' style='width:" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "%;'></p>" ;
+			}
+			strHtml += "</div>"+
+					"</li>";	
+			
+		}*/
 		
 		model.addAttribute("listPoll", resultDom);
 		model.addAttribute("subject", subject);

@@ -758,7 +758,7 @@
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
-		        		<NAME>권한</NAME>
+		        		<NAME><spring:message code = 'ezNewPortal.t074' /></NAME>
 		        		<WIDTH>70</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>

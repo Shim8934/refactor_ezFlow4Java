@@ -543,7 +543,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" style="margin:0; padding:0 10px 10px; min-width:980px;">
 		<h1><spring:message code="ezSystem.ls07"></spring:message><span id="listInfo"></span></h1>
 		<table style="width: 100%; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
 			<tr>
@@ -562,7 +562,7 @@
 						<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
 					</span> 
 					&nbsp;&nbsp;
-					<span id="topmenu" style="width: 500px">
+					<span id="topmenu" style="display:block; margin-top:3px; padding-left:4px;">
 						<spring:message code="ezSystem.ls08"></spring:message> : &nbsp;
 						<select id="searchKeycodeForRoll"> 
 							<option value="All"><spring:message code="ezEmail.t588"></spring:message></option>

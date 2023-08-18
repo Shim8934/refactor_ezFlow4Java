@@ -2,6 +2,7 @@
 
 var m_bPrevNext = false;
 var real_href = "";
+var minimumWidth = 890;
 
 function get_mail(flag) {
     var Flag;
@@ -54,7 +55,7 @@ function ReSend(pURL, pEmail) {
     var conHeight = pheight * 0.8;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail);
@@ -107,7 +108,7 @@ function reply_onClick() {
     var conHeight = pheight * 0.8;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     
     var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=REPLY";
     
@@ -123,7 +124,7 @@ function allreply_onClick() {
     var conHeight = pheight * 0.8;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     
     var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=REPLYALL";
     
@@ -139,7 +140,7 @@ function pass_onClick() {
     var conHeight = pheight * 0.8;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
+    var pLeft = (pwidth - minimumWidth) / 2;
     
     var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(g_paramURL) + "&cmd=FORWARD";
     
@@ -152,7 +153,7 @@ function pass_onClick() {
 var mail_movecopy_cross_dialogArguments = new Array();
 function move_onClick() {
     mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
-    mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
+    mail_movecopy_cross_dialogArguments[2] = DivPopUpHiddenReadMail;
     
     var requestUrl = "/ezEmail/mailMoveCopy.do";
     
@@ -163,7 +164,7 @@ function move_onClick() {
     DivPopUpShow(320, 375, requestUrl);
 }
 function move_onclick_Complete(moveUrl) {
-    DivPopUpHidden();
+    DivPopUpHiddenReadMail();
     if (typeof (moveUrl) == "undefined")
         return;
 
@@ -184,6 +185,13 @@ function move_onclick_Complete(moveUrl) {
     
     usedMoveDel = "1";
 }
+
+function DivPopUpHiddenReadMail() {
+	document.getElementById("iFramePanel").style.display = "none";
+	document.getElementById("mailPanel").style.display = "none";
+	document.getElementById("loadingLayer").style.display = "none";
+}
+
 var g_deleteHttp = null;
 function delete_mail_2010(cmd, copyFolderID) {
     try {
@@ -445,7 +453,7 @@ function func_addaddr() {
 
 var address_foldermanage_dialogArguments = new Array();
 function func_addaddr2(result) {
-	DivPopUpHidden();
+	DivPopUpHiddenReadMail();
 	
 	if (result) {
 		address_foldermanage_dialogArguments[1] = func_addaddr_Complete;
@@ -454,7 +462,7 @@ function func_addaddr2(result) {
 }
 
 function func_addaddr_Complete(ret) {
-	DivPopUpHidden();
+	DivPopUpHiddenReadMail();
 
 	if (ret == 0 || ret == 1) {
         return;

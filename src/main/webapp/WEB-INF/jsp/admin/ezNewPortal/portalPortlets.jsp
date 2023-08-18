@@ -181,8 +181,16 @@
 			var portletNameListCount = portletNameList.length;
 			var nameList = [];
 			var portletNameEmptyNum = 0;
+			//특수문자  체크
+			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			const regex = new RegExp(special_pattern);
 			
 			for (var i = 0; i < portletNameListCount; i++) {
+				
+				if (regex.test($.trim(portletNameList[i].value))) {
+					alert("<spring:message code='ezNewPortal.ljw01' />");
+				    return;
+				}
 				
 				if ($.trim(portletNameList[i].value) == "") {
 					portletNameEmptyNum++;
@@ -318,9 +326,17 @@
 			var portletNameListCount = portletNameList.length;
 			var nameList = [];
 			var portletNameEmptyNum = 0;
+			// 특수문자 체크
+			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			const regex = new RegExp(special_pattern);
 			
 			for (var i = 0; i < portletNameListCount; i++) {
-	
+
+				if (regex.test($.trim(portletNameList[i].value))){
+					alert("<spring:message code='ezNewPortal.ljw01' />");
+				    return;
+				}
+				
 				if ($.trim(portletNameList[i].value) == "") {
 					portletNameEmptyNum++;
 				}

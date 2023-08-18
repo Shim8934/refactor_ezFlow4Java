@@ -275,7 +275,7 @@
 	                </td>
 	            </tr>
 	            <tr>
-	                <th style="padding-left: 5px; padding-right: 5px;"><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /><span style="color:red"> *</span></th>
+	                <th style="padding-left: 5px; padding-right: 5px;"><spring:message code='ezCommunity.t1529' /> <spring:message code='ezCommunity.t18' /><span style="color:red"> *</span></th>
 	                <td colspan="2">
 	                    <textarea name="intro" maxlength="2000" style="height: 120px; width: 99.5%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;margin:5px"></textarea>
 					</td>

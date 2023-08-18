@@ -2969,7 +2969,7 @@
                                 </tr>
 	                            <tr>
 	                                <td height="36px;" style="background-color: transparent; padding-top: 10px;vertical-align: top">
-	                                 	<input id="textUser2" style="width: 150px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
+	                                 	<input id="textUser2" style="width: 135px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
                                         <a class="imgbtn imgbck2"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
                                         <a class="imgbtn imgbck2" style="vertical-align: middle; margin: auto; <c:if test="${isOuterForm}">display: none;</c:if>"><span onclick="return btnReceiptSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                                	<a class="imgbtn imgbck2" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
@@ -3065,8 +3065,8 @@
 	                                        <tr>
 	                                            <td style="text-align: center; padding-top: 3px">
 	                                                <%-- <a class="imgbtn imgbck2"><span onclick="return btn_GroupReceptAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.G0008'/></span></a> --%>
-                                                    <a class="imgbtn imgbck2"><span onclick="return btn_GroupReceptAdd_onclick('each')" style="width: 60px;">적용</span></a>
-                                                    <a class="imgbtn imgbck2"><span onclick="return btn_GroupReceptAdd_onclick('group')" style="width: 60px;">그룹적용</span></a>
+                                                    <a class="imgbtn imgbck2"><span onclick="return btn_GroupReceptAdd_onclick('each')" style="width: 80px;"><spring:message code='ezApprovalG.t336'/></span></a>
+                                                    <a class="imgbtn imgbck2"><span onclick="return btn_GroupReceptAdd_onclick('group')" style="width: 80px;"><spring:message code='ezApprovalG.KMH01'/></span></a>
 	                                            </td>
 	                                        </tr>
 	                                    </table>

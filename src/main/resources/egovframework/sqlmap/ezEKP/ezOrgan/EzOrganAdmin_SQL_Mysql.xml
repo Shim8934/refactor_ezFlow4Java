@@ -116,10 +116,10 @@
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
-						DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
+						(DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%') || DISPLAYNAME2 LIKE CONCAT('%', #search_keyword#,'%'))
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
-						DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
+						(DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%') || DESCRIPTION2 LIKE CONCAT('%', #search_keyword#,'%'))
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE CONCAT('%', #search_keyword#,'%')
@@ -158,10 +158,10 @@
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
 					<isEqual property="search_keycode" compareValue="userName">
-						a.DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%')
+						(a.DISPLAYNAME LIKE CONCAT('%', #search_keyword#,'%') || a.DISPLAYNAME2 LIKE CONCAT('%', #search_keyword#,'%'))
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="deptName">
-						a.DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%')
+						(a.DESCRIPTION LIKE CONCAT('%', #search_keyword#,'%') || a.DESCRIPTION2 LIKE CONCAT('%', #search_keyword#,'%'))
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						a.CN LIKE CONCAT('%', #search_keyword#,'%')
@@ -1552,13 +1552,14 @@
                  ('A60','E  ','전송실패','1','전송 실패 (Error)','Error','送信エラー','传输失败',#tenantID#, #companyID#),
                  ('A60','H  ','회송','1','회송 (HweSong)','Return','返送','返回',#tenantID#, #companyID#),
                  ('A60','I  ','접수','1','접수 (Inter..)','Reception progress','受付','收到',#tenantID#, #companyID#),
-                 ('A60','N  ','대기','1','발신 대기 (Not Yet)','No receipt','待機','待机',#tenantID#, #companyID#),
+                 ('A60','N  ','대기','1','발신 대기 (Not Yet)','Waiting','待機','待机',#tenantID#, #companyID#),
                  ('A60','O  ','발송의뢰','1','발송 의뢰 (Offered)','Offered','送信依頼','发送请求',#tenantID#, #companyID#),
                  ('A60','R  ','수신','1','수신 (Received)','Received','受信','接待',#tenantID#, #companyID#),
                  ('A60','S  ','발송','1','발송 (Sent)','Sent','送信','送货',#tenantID#, #companyID#),
                  ('A60','T  ','재발송대기','1','재발송대기 (Try Again)','Try Again','再送待ち','不满等待',#tenantID#, #companyID#),
                  ('A60','V  ','도달','1','도달 (arriVed)','arriVed','到達','抵达',#tenantID#, #companyID#),
                  ('A60','Y  ','수신완료','1','수신완료 (Yes)','Reception complete','受信完了','接收完成',#tenantID#, #companyID#),
+				 ('A60','B  ','발송의뢰반송','1','발송의뢰반송(Return Offered)','Return Offered','送信依頼拒否','拒绝发送请求',#tenantID#, #companyID#),
                  ('F01','0  ','플로우','0','플로우관련 업무 정의','플로우','플로우','플로우',#tenantID#, #companyID#),
                  ('F01','001','Y','1','수발신문을 발신함으로 보낸다.','Y','Y','Y',#tenantID#, #companyID#),
                  ('F01','002','O','1','D:DSN연결;O:OleDB 연결','O','O','O',#tenantID#, #companyID#),
@@ -1637,7 +1638,7 @@
                  ('A03','005','준법감시','0','감사','Audit','遵法監視','监督',#tenantID#, #companyID#),
                  ('A03','006','발송의뢰','0','심사','Request Sending','審査','审查',#tenantID#, #companyID#),
                  ('A03','007','참조','0','참조','Reference','参照','抄送',#tenantID#, #companyID#),
-                 ('A03','008','개인순차합의','1','개인순차협조','Agreement(personal)','個人順次合意','个人顺序协议',#tenantID#, #companyID#),
+                 ('A03','008','개인순차합의','1','개인순차협조','Sequential agreement(personal)','個人順次合意','个人顺序协议',#tenantID#, #companyID#),
                  ('A03','009','개인병렬합의','1','개인병렬협조','Parallel agreement(personal)','個人並列合意','个人并行协议',#tenantID#, #companyID#),
                  ('A03','011','부서순차합의','1','부서순차협조','Sequential agreement(dept.)','部署順次合意','顺序协议(部门)',#tenantID#, #companyID#),
                  ('A03','012','부서병렬합의','1','부서병렬협조','Parallel agreement(dept.)','部署並列合意','并行的协议(部门)',#tenantID#, #companyID#),
@@ -1655,7 +1656,7 @@
                  ('A04','003','승인','1','승인','Approved','決裁','审批',#tenantID#, #companyID#),
                  ('A04','004','반송','1','반송','Rejected','差し戻し','退回',#tenantID#, #companyID#),
                  ('A04','005','보류','1','보류','Hold','保留','保存',#tenantID#, #companyID#),
-                 ('A04','006','회수','1','회수','Withdrew','引き戻し','回收',#tenantID#, #companyID#),
+                 ('A04','006','회수','1','회수','Withdrawn','引き戻し','回收',#tenantID#, #companyID#),
                  ('A04','010','완료','1','완료','Completed','完了','完成',#tenantID#, #companyID#),
                  ('A04','011','도착','1','도착','Arrived','到着','到达',#tenantID#, #companyID#),
                  ('A04','012','지정','1','지정','Designated','未受付','未接收',#tenantID#, #companyID#),
@@ -1725,7 +1726,7 @@
 			('SA01','001','기안문',		'Approval',		'起案文',		'起案文',		'1',	'기안문',				#companyID#, #tenantID#),
 			('SA01','002','보고문',		'Report',		'報告文',		'?告文',		'1',	'보고문',				#companyID#, #tenantID#),
 			('SA01','003','수신문',		'Received',		'受信文',		'收件文',		'1',	'수신문',				#companyID#, #tenantID#),
-			('SA01','004','시행문',		'시행문',			'施行文',		'?行文',		'1',	'시행문',				#companyID#, #tenantID#),
+			('SA01','004','시행문',		'Enforcement',			'施行文',		'?行文',		'1',	'시행문',				#companyID#, #tenantID#),
 			('SA01','005','부서합의',		'agreement',	'起案文',		'起案文',		'0',	'기안문',				#companyID#, #tenantID#),
 			('SA01','006','감사문서',		'Inspect',		'監査',		'?察',		'0',	'감사',				#companyID#, #tenantID#),
 			('SA01','007','신청문서',		'application',	'申請',		'申?',		'0',	'신청',				#companyID#, #tenantID#),
@@ -1759,7 +1760,7 @@
            ('SA03','005','준법감시','Audit','遵法監視','监督','0','감사',#companyID#, #tenantID# ),
            ('SA03','006','발송의뢰','Request Sending','審査','审查','0','심사',#companyID#, #tenantID# ),
            ('SA03','007','참조','Reference','参照','抄送','1','참조',#companyID#, #tenantID# ),
-           ('SA03','008','개인순차합의','Agreement(personal)','個人順次合意','个人顺序协议','1','개인순차협조',#companyID#, #tenantID# ),
+           ('SA03','008','개인순차합의','Sequential agreement(personal)','個人順次合意','个人顺序协议','1','개인순차협조',#companyID#, #tenantID# ),
            ('SA03','009','개인병렬합의','Parallel agreement(personal)','個人並列合意','个人并行协议','1','개인병렬협조',#companyID#, #tenantID# ),
            ('SA03','011','부서순차합의','Sequential agreement(dept.)','部署順次合意','顺序协议(部门)','1','부서순차협조',#companyID#, #tenantID# ),
            ('SA03','012','부서병렬합의','Parallel agreement(dept.)','部署並列合意','并行的协议(部门)','1','부서병렬협조',#companyID#, #tenantID# ),
@@ -1917,7 +1918,7 @@
             ('SA04','003','승인','Approved','決裁','审批', '1','승인',#companyID#,#tenantID#),
             ('SA04','004','반송','Rejected','差し戻し','退回', '1','반송',#companyID#,#tenantID#),
             ('SA04','005','보류','Hold','保留','保存', '1','보류',#companyID#,#tenantID#),
-            ('SA04','006','회수','Withdrew','引き戻し','回收', '1','회수',#companyID#,#tenantID#),
+            ('SA04','006','회수','Withdrawn','引き戻し','回收', '1','회수',#companyID#,#tenantID#),
             ('SA04','010','완료','Completed','完了','完成','1','완료', #companyID#,#tenantID#),
             ('SA04','011','도착','Arrived','到着','到达', '1','도착',#companyID#,#tenantID#),
             ('SA04','012','지정','Designated','指定','未接收', '1','지정',#companyID#,#tenantID#),
@@ -2767,15 +2768,15 @@
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I21" parameterClass="Map">
-    	<isEqual property="lang" compareValue="1">
+		<isEqual property="PrimaryLang" compareValue="1" >
     		<![CDATA[
 		    	INSERT INTO
 		    		TBL_ATTITUDE_TYPE
 		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES
-		    			('A01', #companyID#, #tenantID#, '출근', 'inCom', '1', 'inOut', null, 1),
+		    			('A01', #companyID#, #tenantID#, '출근', 'go to work', '1', 'inOut', null, 1),
 		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2),
-		    			('A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', 'inOut', null, 3),
+		    			('A03', #companyID#, #tenantID#, '퇴근', 'off work', '1', 'inOut', null, 3),
 		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6),
 		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', 'trip', null, 8),
 		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', 'trip', null, 6),
@@ -2792,18 +2793,19 @@
 		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', 'refresh', 'A05', 4),
 		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', 'refresh', 'A05', 9),
 		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9),
-		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
+		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9),
+		    			('A21', #companyID#, #tenantID#, '반반차', 'half and half off', '1', 'refresh', 'A05', 4)
 		    ]]>
     	</isEqual>
-    	<isEqual property="lang" compareValue="3">
+		<isNotEqual property="PrimaryLang" compareValue="1" >
     	    <![CDATA[
 		    	INSERT INTO
 		    		TBL_ATTITUDE_TYPE
 		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES
-		    			('A01', #companyID#, #tenantID#, '出勤', 'inCom', '1', 'inOut', null, 1),
+		    			('A01', #companyID#, #tenantID#, '出勤', 'go to work', '1', 'inOut', null, 1),
 		    			('A02', #companyID#, #tenantID#, '遅刻', 'late', '1', 'inOut', null, 2),
-		    			('A03', #companyID#, #tenantID#, '退勤', 'outCom', '1', 'inOut', null, 3),
+		    			('A03', #companyID#, #tenantID#, '退勤', 'off work', '1', 'inOut', null, 3),
 		    			('A07', #companyID#, #tenantID#, '休出', 'working Holiday', '1', 'inOut', null, 6),
 		    			('A04', #companyID#, #tenantID#, '外部勤務', 'outside work', '1', 'trip', null, 8),
 		    			('A06', #companyID#, #tenantID#, '外出', 'outing', '1', 'trip', null, 6),
@@ -2820,9 +2822,10 @@
 		    			('A16', #companyID#, #tenantID#, '午後公暇', 'after official leave', '1', 'refresh', 'A05', 9),
 		    			('A18', #companyID#, #tenantID#, '産休', 'maternity leave', '1', 'refresh', 'A05', 9),
 		    			('A19', #companyID#, #tenantID#, '慶弔', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9),
-		    			('A20', #companyID#, #tenantID#, '病休', 'sick leave', '1', 'refresh', 'A05', 9)
+		    			('A20', #companyID#, #tenantID#, '病休', 'sick leave', '1', 'refresh', 'A05', 9),
+		    			('A21', #companyID#, #tenantID#, '半半有給', 'half and half off', '1', 'refresh', 'A05', 4)
 		    ]]>
-    	</isEqual>
+    	</isNotEqual>
     </insert>
   	
   	<insert id="EzOrganAdminDAO.insertCompanyInfo_I22" parameterClass="Map">
@@ -2994,7 +2997,7 @@
 	    		(8, 2, #companyID#, #tenantID#, 'Journal'),
 	    		(8, 3, #companyID#, #tenantID#, 'ジャーナル'),
 	    		(9, 1, #companyID#, #tenantID#, '근태관리'),
-	    		(9, 2, #companyID#, #tenantID#, 'Attitude'),
+	    		(9, 2, #companyID#, #tenantID#, 'Attendance'),
 	    		(9, 3, #companyID#, #tenantID#, '勤怠管理'),
 	    		(10, 1, #companyID#, #tenantID#, '웹폴더'),
 	    		(10, 2, #companyID#, #tenantID#, 'WebFolder'),
@@ -3104,13 +3107,13 @@
 	    		(14, 0, 2, #tenantID#, #companyID#, 'Weather'),
 	    		(14, 0, 3, #tenantID#, #companyID#, '天気'),
 	    		(26, 0, 1, #tenantID#, #companyID#, '생일자'),
-	    		(26, 0, 2, #tenantID#, #companyID#, 'birthday'),
+	    		(26, 0, 2, #tenantID#, #companyID#, 'Birthday'),
 	    		(26, 0, 3, #tenantID#, #companyID#, '誕生者'),
 	    		(34, 0, 1, #tenantID#, #companyID#, '슬라이드 이미지'),
 	    		(34, 0, 2, #tenantID#, #companyID#, 'Slide Image'),
 	    		(34, 0, 3, #tenantID#, #companyID#, 'スライド画像'),
 	    		(36, 0, 1, #tenantID#, #companyID#, '사용자 정보'),
-	    		(36, 0, 2, #tenantID#, #companyID#, 'user Info'),
+	    		(36, 0, 2, #tenantID#, #companyID#, 'User Info'),
 	    		(36, 0, 3, #tenantID#, #companyID#, 'ユーザ情報'),
 	    		(47, 4, 1, #tenantID#, #companyID#, '동영상 게시판'),
 	    		(47, 4, 2, #tenantID#, #companyID#, 'Movie Board'),
@@ -3128,10 +3131,10 @@
 	    		(73, 19, 2, #tenantID#, #companyID#, 'Survey'),
 	    		(73, 19, 3, #tenantID#, #companyID#, '電子アンケート'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 1, #tenantID#, #companyID#, '탭게시판'),
-				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'tabBoard'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 2, #tenantID#, #companyID#, 'TabBoard'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 3, #tenantID#, #companyID#, 'タブボード'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 1, #tenantID#, #companyID#, '전자문서 차트'),
-				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 2, #tenantID#, #companyID#, 'chart'),
+				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 2, #tenantID#, #companyID#, 'Chart'),
 				((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 3, #tenantID#, #companyID#, '図表')
   		]]>
     </insert>
@@ -5305,7 +5308,10 @@
 
 	<select id="EzOrganAdminDAO.getCompanyName" parameterClass="map" resultClass="String">
 		SELECT
-			EXTENSIONATTRIBUTE3
+			CASE WHEN #v_LANG# = '1'
+			THEN EXTENSIONATTRIBUTE3
+			ELSE COMPNM2
+			END EXTENSIONATTRIBUTE3
 		FROM
 			TBL_DEPTMASTER
 		WHERE

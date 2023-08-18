@@ -3280,7 +3280,8 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String offset = commonUtil.getMinuteUTC(info.getOffSet());
-
+			// 2023-07-28 황인경 즐겨찾기 포틀릿 > 게시판 작성자 > 다국어 지원 추가
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			JSONObject data = new JSONObject();
 
 			data.put("boardId", boardId);
@@ -3290,6 +3291,10 @@ public class EzNewPortalGWController {
 				List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), limit, offset);
 
 				for (FavoriteBoardVO fvo : favNewList) {
+					// 2023-07-28 황인경 - 포탈 > 즐겨찾기 포틀릿 > 작성자 > 다국어 지원 추가
+					if (!lang.equals("")) {
+						fvo.setWriterName(fvo.getWriterName2());
+					}
 					logger.debug("resultList : " + fvo.getItemId());
 				}
 
@@ -3300,6 +3305,10 @@ public class EzNewPortalGWController {
 				List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), limit, offset);
 
 				for (FavoriteBoardVO fvo : favList) {
+					// 2023-07-28 황인경 - 포탈 > 즐겨찾기 포틀릿 > 작성자 > 다국어 지원 추가
+					if (!lang.equals("")) {
+						fvo.setWriterName(fvo.getWriterName2());
+					}
 					logger.debug("resultList : " + fvo.getItemId());
 				}
 
@@ -3834,10 +3843,17 @@ public class EzNewPortalGWController {
 			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			List<Map<String, Object>> answerList = new ArrayList<Map<String, Object>>();
-
+			// 2023-07-28 황인경 - 포탈 > 빠른 설문 포틑릿 > 설문제목 다국어 지원 추가 
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
 			PersonalLightPollVO pollInfo = new PersonalLightPollVO();
 			pollInfo = ezNewPortalService.getPollPortlet(companyId, tenantId, request.getParameter("userId"), offset);
-
+			
+			// 2023-07-28 황인경 - 포탈 > 빠른 설문 포틑릿 > 설문제목 다국어 지원 추가 
+			if (!lang.equals("")) {
+				pollInfo.setPollTitle(pollInfo.getPollTitle2());
+			}
+			
 			int itemSeq = pollInfo.getItemSeq();
 			List<PersonalLightPollVO> pollResult = ezNewPortalService.getPollPortletResult(companyId, tenantId, itemSeq);
 

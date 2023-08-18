@@ -427,7 +427,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	pAttachWarning += egovMessageSource.getMessageExtend("ezEmail.hdp04", new Object[] {pBigAttachDownloadLimitCount}, locale) + ", "; // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부, 1회까지 다운로드 가능,
         }
         
-        pAttachWarning += pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale); // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부, 1회까지 다운로드 가능, 14일후 자동삭제)
+        pAttachWarning += egovMessageSource.getMessage("ezEmail.lhm69", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale); // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부, 1회까지 다운로드 가능, 14일간 보관)
         
         if(totBigSizeMailAttachLimit.equals("0")){
         	pAttachWarning = egovMessageSource.getMessage("ezEmail.kms01", locale) + mailAttachLimit +egovMessageSource.getMessage("ezEmail.kms02", locale);
@@ -5796,9 +5796,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String shareId = request.getParameter("shareId");
+		String lang = userInfo.getPrimary();
 		int tenantId = userInfo.getTenantId();
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, tenantId);
+		MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, tenantId, lang);
 		List<MailSharedMailboxUserVO> userList = sharedMailboxInfo.getUserList();
 		String userId = null;
 		OrganUserVO userVO = null;

@@ -108,8 +108,8 @@ var SurveyMessages = {
 	prevMonth    : "Previous month",
 	nextMonth    : "Next month",
 	strToday     : "Today",
-	monthNames   : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-	dayNames     : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+	monthNames   : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+	dayNames     : ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
 	strNoLogic   : "No logic",
 	strchooseNum : "Please select logic.",
 	strBetweenNum: "Please enter an integer between min and max.",
@@ -161,7 +161,7 @@ var SurveyMessages = {
 	strPopup     : "팝업 공지 여부를 지정해 주세요.",
 	strSend      : "Send",
 	strNotSend   : "Do not send",
-	strCancelMsg : "Do you want to cancel?.",
+	strCancelMsg : "Do you want to cancel?",
 	
 	/* 2021-12-10 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "Unacceptable extension.",

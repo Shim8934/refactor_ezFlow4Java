@@ -220,19 +220,34 @@ public class EzEmailAsync {
 				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 				lang = lang == null ? "1" : lang;
+				// 2023-08-01 황인경 - 포탈 > 메일 포틀릿 > 전자설문 게시알림 문구 다국어 지원
+				if (!lang.equals("1")) {
+					subject = "[Notice of Survey] " + title;
+				} else {
+					subject = "[전자설문 게시알림] " + title;
+				}
 				Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 				String creatorName = locale.toString().equals("ko") ? survey.getCreatorName1() : survey.getCreatorName2();
 				logger.debug("userAccount : " + userAccount + ", locale=" + locale);
 
 				if (i==0) {
-					sb.append("<span>새로운 설문이 추가되었습니다.</span><br><br>");
-					sb.append("<span>- 제목       : </span>");
-					sb.append("<span id='survey_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezSurvey/surveyDetail.do?itemId=" + surveyId + "', '', 'width=835, height=900, scrollbars=yes, resizable=yes')\">");
-					sb.append(commonUtil.cleanValue(title) + "</span><br>");
-					sb.append("<span>- 작성자    : " + creatorName + "</span><br>");
-					sb.append("<span>- 설문종료일 : " + endDateString + "</span>" + realTimeZone + "<br>");
+					if (!lang.equals("1")) {
+						sb.append("<span>A new survey has been added.</span><br><br>");
+						sb.append("<span>- Title       : </span>");
+						sb.append("<span id='survey_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezSurvey/surveyDetail.do?itemId=" + surveyId + "', '', 'width=835, height=900, scrollbars=yes, resizable=yes')\">");
+						sb.append(commonUtil.cleanValue(title) + "</span><br>");
+						sb.append("<span>- Writer    : " + creatorName + "</span><br>");
+						sb.append("<span>- Survey end date : " + endDateString + "</span>" + realTimeZone + "<br>");
+					}else{
+						sb.append("<span>새로운 설문이 추가되었습니다.</span><br><br>");
+						sb.append("<span>- 제목       : </span>");
+						sb.append("<span id='survey_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezSurvey/surveyDetail.do?itemId=" + surveyId + "', '', 'width=835, height=900, scrollbars=yes, resizable=yes')\">");
+						sb.append(commonUtil.cleanValue(title) + "</span><br>");
+						sb.append("<span>- 작성자    : " + creatorName + "</span><br>");
+						sb.append("<span>- 설문종료일 : " + endDateString + "</span>" + realTimeZone + "<br>");
+					}
 				}
-				
+
 				String content = commonUtil.createNotiMailContent(sb.toString(), tenantId, locale);
 				
 				InternetAddress from;

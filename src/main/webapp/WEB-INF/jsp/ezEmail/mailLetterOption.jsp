@@ -116,7 +116,7 @@
 		            } catch (e) { rgParams = dialogArguments; }
 		        }
 		
-	            document.getElementById("postTypeid").selectedIndex = parseInt(rgParams.postType);
+	            document.getElementById("bodyType").value = RetValue["bodyType"];
 		
 		        if (rgParams["replySendTime"] == "1") {
 		            document.getElementById("responseSendid").checked = true;
@@ -158,7 +158,7 @@
 		        }	
 		        
 		        if (shareId == "") {
-		        	document.getElementById("reserveTitle").style.display = "";
+		        	//document.getElementById("reserveTitle").style.display = "";
 		        	document.getElementById("reserveTable").style.display = "";
 		        }
 		        
@@ -171,6 +171,9 @@
 			        }
 		        }
 		        
+				if (rgParams["secureMail"] == "Security" || rgParams["isSecureMail"] == "true") {
+					document.getElementById("chkSecureMail").checked = true;
+				}
 		    }
 		    
 		    function cancel() {
@@ -254,7 +257,15 @@
 		        return pReservationTime;
 		    }
 		
-		    function confirm() {
+		    function confirmOption() {
+		    	if (document.querySelector('#bodyType').value == "1") {
+		    		if (!confirm("<spring:message code='ezEmail.lhm28' />")) {
+						return;
+					}
+		    	}
+				
+				RetValue["bodyType"] = document.querySelector('#bodyType').value;
+		    	
 	            if (document.getElementById("responseSendid").checked == true)
 	                RetValue["replySendTime"] = "1";
 	            else
@@ -289,6 +300,12 @@
 	            //    alert("<spring:message code='ezEmail.t354' />");
 	            //    return;
 	            // }
+	            
+	            if (document.querySelector("#chkSecureMail").checked) {
+	                RetValue["secureMail"] = "Security";
+	            } else {
+	                RetValue["secureMail"] = "Normal";
+	            }
 		
 	            if (individualMailUser > 0) {
 	            	
@@ -305,13 +322,14 @@
 		            window.close();
 		    }
 		
-		    function SecurityMail_onClick() {
-	            if (SecurityMail.checked == true) {
-	                RetValue["SecurityMail"] = "Security";
+		    /* 2023-07-21 이사라 - confirmOption 함수 내에서 처리하도록 수정, 추가로 필요한 경우가 있다면 아래 코드도 수정을 해놨으니 참고
+		    function secureMail_onClick() {
+	            if (document.querySelector("#chkSecureMail").checked) {
+	                RetValue["secureMail"] = "Security";
 	            } else {
-	                RetValue["SecurityMail"] = "Normal";
+	                RetValue["secureMail"] = "Normal";
 	            }
-		    }
+		    }*/
 		
 		    function ReservedSend(obj) {
 		        if (obj.checked) {
@@ -331,26 +349,19 @@
                 <li><span onclick="cancel()"></span></li>
             </ul>
         </div>
-		<table style="width:100%;" class="content">
-			<tr style="display:none;">
-				<th><spring:message code='ezEmail.t363' /></th>
+		<h2 id="etcLang"><spring:message code='ezEmail.t358' /></h2>
+		<table width="100%" class="content">
+			<tr>
 				<td>
-					<select name="postType" style="Width:100px;" onChange="" id="postTypeid">
-						<option><spring:message code='ezEmail.t361' /></option>
-						<option><spring:message code='ezEmail.t364' /></option>
-						<option><spring:message code='ezEmail.t365' /></option>
-						<option><spring:message code='ezEmail.t366' /></option>
-					</select>
-				</td>
-			</tr>
-			<tr style="display:none;">
-				<th><spring:message code='ezEmail.t749' /></th>
-				<td colspan="3">
-					<input type="checkbox" name="SecurityMail" value="checkbox" onClick="SecurityMail_onClick()"><spring:message code='ezEmail.t750' />
+					<spring:message code='ezEmail.t367' /> &nbsp;
+					<select id="bodyType" style="vertical-align:top;">
+			            <option value="0">HTML</option>
+			   		    <option value="1">PlainText</option>
+			        </select>
 				</td>
 			</tr>
 		</table>
-		<h2><spring:message code='ezEmail.t368' /></h2>
+		<h2 style="margin-top:10px"><spring:message code='ezEmail.t368' /></h2>
 		<table style="width:100%;" class="content">
 			<tr style="display:none">
 				<td>
@@ -362,19 +373,6 @@
 				<td>
 					<input type="checkbox" name="responseRead" value="checkbox" onChange="responseRead_onClick()" id = "responseReadid">
 					<span style="vertical-align:middle;"><spring:message code='ezEmail.t370' /> </span>
-					<!-- <c:choose>
-						<c:when test="${isDefaultReceiptExternal == 'YES'}">
-							<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none"</c:if> id="responseReadType" onChange="">
-								<option value="1" selected><spring:message code='ezEmail.t371' /></option>
-								<option value="2"><spring:message code='ezEmail.t372' /></option>
-							</select>
-						</c:when>
-						<c:otherwise>
-							<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none"</c:if> id="responseReadType" onChange="" disabled>
-								<option value="1" selected><spring:message code='ezEmail.t371' /></option>
-							</select>
-						</c:otherwise>
-					</c:choose> -->
 					<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none" </c:if>id="responseReadType" onChange="" style="vertical-align: middle;" <c:if test="${useReceiptExternal != 'YES'}">disabled</c:if>>
 						<option value="1"><spring:message code='ezEmail.t371' /></option>
 						<c:if test="${useReceiptExternal == 'YES'}">
@@ -384,30 +382,35 @@
 				</td>
 			</tr>
 		</table>
-		<h2 id="reserveTitle" style="display:none;margin-top:10px"><spring:message code='ezEmail.t373' /></h2>
-		<table id="reserveTable" class="content" style="display:none;border-top:none;width:100%;">
-			<tr>
+		<%-- <h2 style="margin-top:10px" id="etcLang"><spring:message code='ezEmail.t748' /></h2> --%>
+		<h2 style="margin-top:10px" id="etcLang"><spring:message code='ezEmail.t373' /></h2>
+		<table width="100%" class="content">
+			<tr id="reserveTable" class="content" style="display:none;border-top:none;width:100%;">
 				<td>
 					<input type="checkbox" value="1" id="deliverySend" onclick="ReservedSend(this);">
-					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' /> </span>
+					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' />&nbsp; </span>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
 					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" readonly="readonly"/>
 				</td>
 			</tr>
-		</table>
-		<c:if test="${individualMailUser != '0'}">			
-			<h2 style="margin-top:10px" id="etcLang"><spring:message code='ezEmail.t748' /></h2>
-			<table width="100%" class="content">
+			<c:if test="${individualMailUser != '0'}">	
 				<tr>
 					<td>
-						<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox">
-						<span style="vertical-align:middle;"> <spring:message code='ezEmail.t748' /> </span>
+						<input type="checkbox" name="chkSecureMail" id="chkSecureMail" onClick="secureMail_onClick()" value="checkbox">
+						<span style="vertical-align:middle;"> <spring:message code='ezEmail.t749' /> </span>
 					</td>
 				</tr>
-			</table>  
-		</c:if>
+			</c:if>
+			<tr>
+				<td>
+					<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox">
+					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t748' /> </span>
+				</td>
+			</tr>
+		</table>  
+		
 		<div class="btnposition btnpositionNew">
-			<a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
+			<a class="imgbtn" onClick="confirmOption()" ><span><spring:message code='ezEmail.t38' /></span></a>
 		</div>
 	</body>
 </html>

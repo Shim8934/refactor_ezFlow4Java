@@ -66,6 +66,12 @@
 
 		                var headerData = createXmlDom();
 		                headerData = loadXMLString(ExtensionList.innerHTML.toUpperCase());
+		                var headerNmElem = headerData.getElementsByTagName("NAME");
+	                	headerNmElem[0].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_primary}"/>)'
+	                	headerNmElem[1].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_secondary}"/>)'
+	                	headerNmElem[2].textContent = '<spring:message code="ezBoard.t999037"/>'
+	                	headerNmElem[3].textContent = '<spring:message code="ezBoard.t999038"/>'
+	                	headerNmElem[4].textContent = '<spring:message code="ezBoard.t999039"/>'
 		                
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
@@ -101,7 +107,12 @@
 
 		                var headerData = createXmlDom();
 		                headerData = loadXMLString(XmlHeader.innerHTML.toUpperCase());
-
+		                
+		                var headerNmElem = headerData.getElementsByTagName("NAME");
+	                	headerNmElem[0].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_primary}"/>)'
+	                	headerNmElem[1].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_secondary}"/>)'
+	                	headerNmElem[2].textContent = '<spring:message code="ezBoard.t5002"/>'
+	                	
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
 		                    /* 2018.02.12 김기하 */
@@ -525,13 +536,20 @@
 		        listview2.LoadFromID("lvSelectList");
 
 		        var tr2 = listview2.GetSelectedRows();
+                var langTDName ="";
+
+                if (${lang_user} == 1 ) {
+                    langTDName = getNodeText(tr2[0].cells[0]);
+                } else if (${lang_user} == 2 ) {
+                    langTDName = getNodeText(tr2[0].cells[1])
+                }
 
 		        if (tr2.length == 0) {
 		            alert("<spring:message code='ezBoard.t999061'/>");
 		            return;
 		        }
 
-		        if (CheckDuplication(tr2[0].cells[0].innerHTML, "lvXmlHeader", 0) == false) {
+		        if (CheckDuplication(langTDName, "lvXmlHeader", 0) == false) {
 		            alert("<spring:message code='ezBoard.t999057'/>");
 		            return;
 		        }
@@ -542,8 +560,8 @@
 		        }
 
 		        var pparsingXML = "<LISTVIEWDATA><ROWS><ROW>";
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + getNodeText(tr2[0].cells[0]) + "]]></VALUE><DATA1>" + GetAttribute(tr2[0],"DATA1") + "</DATA1></CELL>"; 
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + getNodeText(tr2[0].cells[1]) + "]]></VALUE></CELL>"; 
+                pparsingXML += "<CELL><VALUE><![CDATA[" + langTDName + "]]></VALUE><DATA1>" + GetAttribute(tr2[0],"DATA1") + "</DATA1></CELL>";
+		        pparsingXML += "<CELL><VALUE><![CDATA[" + getNodeText(tr2[0].cells[1]) + "]]></VALUE></CELL>";
 		        pparsingXML += "<CELL><VALUE><![CDATA[80]]></VALUE></CELL>"; 
 		        pparsingXML += "</ROW></ROWS></LISTVIEWDATA>";
 
@@ -761,23 +779,23 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t999037'/></NAME>
+						<NAME></NAME>
+						<WIDTH>80</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME></NAME>
 						<WIDTH>50</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t999038'/></NAME>
-						<WIDTH>50</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezBoard.t999039'/></NAME>
+						<NAME></NAME>
 						<WIDTH>500</WIDTH>
 					</HEADER>
 				</HEADERS>
@@ -787,15 +805,15 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezBoard.t5002'/></NAME>
+						<NAME></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 				</HEADERS>
@@ -813,7 +831,7 @@
 				<table class="content" style="width:100%;margin-top:5px">
 					<tr>
 <%-- 						<th style="width:15%"><spring:message code='ezBoard.t999031'/></th> --%>
-						<th style="width:15%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</th>
+						<th style="width:15%"><spring:message code='ezBoard.hsbEx01'/></th>
 				        <td style="width:25%"><input id="txtNameKor" style="width:97%" maxlength="20"/></td>
 <%-- 				        <th style="width:15%"><spring:message code='ezBoard.t999032'/></th> --%>
 				        <th style="width:15%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</th>
@@ -870,7 +888,7 @@
 					        <td style="width:45%">
 					        <table class="content" style="width:100%"> 
 						        <tr>
-							        <th style="width:25%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_primary}"/>)</th>
+							        <th style="width:25%"><spring:message code='ezBoard.hsbEx01'/></th>
 					                <td style="width:25%" id="HeadName"></td>
 							        <th style="width:25%"><spring:message code='ezBoard.t5002'/></th>
 					                <td style="width:25%"><input id="HeadWidth" style="width:99%" /></td>

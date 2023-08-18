@@ -12,7 +12,7 @@
 				var width = window.screen.availWidth;
 				var pleftpos = (parseInt(width) - 380) / 2;
 				
-				window.resizeTo(380, 111 + (window.outerHeight - window.innerHeight));	
+				window.resizeTo(420, 111 + (window.outerHeight - window.innerHeight));	
 				//window.moveTo(pleftpos, "");
 			}
 		</script>

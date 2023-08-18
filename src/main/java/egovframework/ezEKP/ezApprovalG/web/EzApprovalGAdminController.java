@@ -1626,6 +1626,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
+		model.addAttribute("userLang", userInfo.getLang());
 		
 		logger.debug("apprGReceiveGroup ended.");
 		
@@ -1838,7 +1839,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String parentID = request.getParameter("parentID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID, userInfo.getTenantId(), approvalFlag);
+		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID, userInfo.getTenantId(), approvalFlag, userInfo);
 		
 		logger.debug("getTaskCategoryTree ended.");
 		
@@ -4607,7 +4608,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		List<KEDAuthorUserInfo> ownerList = ezApprovalGAdminService.getDocDirOwnerList(userInfo.getCompanyID(), userInfo.getTenantId());
-		
+
+		model.addAttribute("lang", userInfo.getLang());
 		model.addAttribute("ownerList", ownerList);
 		
 		logger.debug("docDirShareManage ended");
@@ -4627,7 +4629,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		List<KEDSharedUserInfo> shareList = ezApprovalGAdminService.getDocDirShareList(ownerId, userInfo.getTenantId());
-		
+
+		model.addAttribute("lang", userInfo.getLang());
 		model.addAttribute("shareList", shareList);
 		
 		logger.debug("docDirShareManage ended");

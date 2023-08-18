@@ -703,7 +703,14 @@
 						<th headers="ft" class = "wfFileType		 headListClick" data-column="TRASHCAN_ICON_URL" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
 						<th headers="fn" class = "wfFileName		 headListClick" data-column="TRASHCAN_NAME" ><spring:message code='ezWebFolder.t156'/></th>
 						<th headers="fs" class = "wfFileSize		 headListClick" data-column="TRASHCAN_SIZE" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal;" ><spring:message code='ezWebFolder.t157'/></th>
-						<th headers="un" class = "wfFileCreator		 headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t189'/></th>
+						<c:choose>
+							<c:when test="${userInfo.lang eq 1}">
+								<th headers="un" class = "wfFileCreator		 headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t189'/></th>
+							</c:when>
+							<c:otherwise>
+								<th headers="un" class = "wfFileCreator		 headListClick" data-column="CREATE_NAME2" ><spring:message code='ezWebFolder.t189'/></th>
+							</c:otherwise>
+						</c:choose>
 						<th headers="cd" class = "wfFileFavoriteDate headListClick" data-column="CREATE_DATE" ><spring:message code='ezWebFolder.t190'/></th>
 						<th headers="dd" class = "wfFileFavoriteDate headListClick" data-column="UPDATE_DATE" ><spring:message code='ezWebFolder.t288'/></th>
 						<th              class = "wfFilePath		 " data-column="TRASHCAN_PATH"><spring:message code='ezWebFolder.t199'/></th>

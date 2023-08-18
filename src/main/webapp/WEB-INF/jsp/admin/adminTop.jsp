@@ -199,7 +199,7 @@
 				      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="ezSchedule.t1010" /></span></li>
 				      			</c:if>
 				      			<c:if test="${useBoard == 'YES' }">
-				      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="ezBoard.t0006" /></span></li>
+				      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="ezBoard.t116" /></span></li>
 			      				</c:if>
 			      			</c:if>
 			      			

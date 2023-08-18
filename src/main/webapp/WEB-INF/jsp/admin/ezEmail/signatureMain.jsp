@@ -84,7 +84,9 @@
 	                _TD.style.borderBottom = "1px solid #f2f2f2";
 	                _TD.style.padding = "0 6px";
 	                _TD.style.boxSizing = "border-box";
-	                
+	                _TD.style.display = "flex";
+	                _TD.style.justifyContent = "space-tween";
+
 	                if (userLang != '1') {
 	                	_SPAN.innerText = json[Cnt].displayname2;
 		                _SPAN.title = json[Cnt].displayname2;
@@ -100,6 +102,7 @@
 	                _SPAN.style.overflow = "hidden";
 	                _SPAN.style.textOverflow = "ellipsis";
 	                _SPAN.style.marginLeft = "6px";
+					_SPAN.style.flex = "1";
 	                _TD.appendChild(_SPAN);
 	                _TR.appendChild(_TD);
 	                

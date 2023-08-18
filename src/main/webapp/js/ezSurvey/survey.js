@@ -3793,7 +3793,7 @@ var SurveyCreate     = function() {
 		}
 		else {
 			var userList = qstInf["users"];
-			if (userList.length < 5) {
+			if (userList.length < 1) {
 				for (var i = 0 ; i < userList.length; i++) {
 					var spanElmt = document.createElement("span");
 					spanElmt.textContent = userList[i]["userName"];
@@ -3828,7 +3828,7 @@ var SurveyCreate     = function() {
 				spanElmt3.className   = "user-more";
 				spanElmt3.onclick     = function(e) {SurveyCreate.userMore()};
 				spanElmt1.onclick     = function(e) {SurveyCreate.showUser(userList[0]["userId"], userList[0]["userType"], userList[0]["userName"], userList[0]["deptId"]);};
-				
+
 				surveyUserElmt.appendChild(spanElmt1);
 				surveyUserElmt.appendChild(spanElmt2);
 				surveyUserElmt.appendChild(spanElmt3);

@@ -454,6 +454,9 @@
 			var menuNamesCount = menuNames.length;
 			var menuType = event.data.menuType;
 			var menuNameEmptyNum = 0;
+			//특수문자  체크
+			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			const regex = new RegExp(special_pattern);
 			
 			//메뉴 사용 유무
 			var menuUsed = $(".menuSwitch").find("input[type='checkbox']").prop("checked");
@@ -487,6 +490,11 @@
 				var menuName = menuNames[i];
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
+				
+				if (regex.test($.trim(menuName.value))) {
+					alert("<spring:message code='ezNewPortal.ljw01' />");
+				    return;
+				}
 				
 				if ($.trim(menuName.value) == "") {
 					menuNameEmptyNum++;
@@ -653,6 +661,9 @@
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
 			var menuNameEmptyNum = 0;
+			// 특수문자 체크
+			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			const regex = new RegExp(special_pattern);
 			
 			//메뉴 사용 유무
 			var menuUsed = $(".menuSwitch").find("input[type='checkbox']").prop("checked");
@@ -680,6 +691,11 @@
 				var menuName = menuNames[i];
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
+				
+				if (regex.test($.trim(menuName.value))) {
+					alert("<spring:message code='ezNewPortal.ljw01' />");
+				    return;
+				}
 				
 				if ($.trim(menuName.value) == "") {
 					menuNameEmptyNum++;

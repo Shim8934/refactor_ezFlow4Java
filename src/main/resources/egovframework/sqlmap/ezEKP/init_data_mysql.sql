@@ -3043,7 +3043,18 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_LISTOPTION
 (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID)
 VALUES
-('112', 1, '수신자', 200, NULL, 'RECEIPTDEPTNAME', NULL, NULL, '수신자', NULL, 'Receiver', '受信者' , '受信者', NULL, 0, 'Top'),
-('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', NULL, 0, 'Top'),
+('112', 1, '수신자', 200, NULL, 'RECEIPTDEPTNAME', NULL, NULL, '수신자', NULL, 'Receiver', '受信者' , '受信者', NULL,@tenant_id_value, 'Top'),
+('112', 2, '상태', 100, NULL, 'STATUS', NULL, NULL, '상태', NULL, 'Status', 'ステータス', 'ステータス', NULL,@tenant_id_value, 'Top'),
 ('112', 3, '일자', 300, NULL, 'STATUSDATE', NULL, NULL, '일자', NULL, 'Date', '日付', '日付', NULL,@tenant_id_value, 'Top');
 
+-- 2023.08.17 한슬기 전자결재 첨부파일 관련 config추가(해당 데이터는 ezFlow의 init 메서드에서 tenant_id = 0으로 넣어주고있으나, 멀티테넌트 사용을 위해 스크립트에 추가)
+INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+VALUES(@tenant_id_value, 'ApprAttachLimit', '10', 'MB 단위로 메일 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', '전자결재 일반 첨부파일 최대 크기', '2023-03-07 14:33:29.000', '전자결재');
+INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+VALUES(@tenant_id_value, 'ApprBigSizeAttachDownloadLimitCount', '0', '대용량첨부 다운로드 횟수 제한, 0일 경우 무제한', '전자결재 대용량첨부 다운로드 횟수 제한', '2023-03-07 14:33:29.000', '전자결재');
+INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+VALUES(@tenant_id_value, 'ApprBigSizeAttachLimitCount', '0', '대용량첨부 개수 제한, 0일 경우 무제한', '전자결재 대용량첨부 개수 제한', '2023-03-07 14:33:29.000', '전자결재');
+INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+VALUES(@tenant_id_value, 'BigSizeApprAttachDelDay', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 메일 대용량 첨부파일을 삭제한다. (default: 14)', '전자결재 대용량 첨부파일 보존기간', '2023-03-07 14:33:29.000', '전자결재');
+INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+VALUES(@tenant_id_value, 'BigSizeApprAttachLimit', '800', 'MB 단위로 대용량 첨부파일의 최대 크기를 지정한다.0: 대용량 첨부파일 사용안함 (default: 800)', '전자결재 대용량 첨부파일 최대 크기', '2023-03-07 14:33:29.000', '전자결재');

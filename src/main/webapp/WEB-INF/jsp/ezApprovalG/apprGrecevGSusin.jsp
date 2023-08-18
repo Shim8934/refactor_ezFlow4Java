@@ -1448,7 +1448,7 @@
 		    }
 
 		    //S전용
-		    function SetDocOption(pkeeperiodvaltemp) {
+		    function SetDocOption(pkeeperiodvaltemp, tempSecurityValue) {
 	            var fields = message.GetFieldsList();
 
 	            field = message.GetListItem(fields, "keepperiod");
@@ -1777,7 +1777,7 @@
 		                	pLimitRange = "1";
 		                	pSpecialRecordCode = "1";
 		                	tempPublic = ret[11];
-		                	SetDocOption(ret[20]);
+		                	SetDocOption(ret[20], ret[19]);
 		                }
 		                passAprLine = ret[32];
 		                SummaryFlag = true;
@@ -2021,8 +2021,8 @@
 							<div id="lstAttachLinkDoc" style="height:70px;"></div>
 						</td>
 						<td class="pos2" style="width:8%; background:#fffcfa;">
-							<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-							<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+							<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
 						</td>
                     </tr>
                 </table>

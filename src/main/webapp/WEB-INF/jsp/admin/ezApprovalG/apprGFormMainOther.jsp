@@ -1750,7 +1750,7 @@
                 	<h2 class="receiver_tltype01" style="margin-bottom:5px;">
 		            	<span style="min-width: 45px;">XSLT</span>
 		            </h2>
-                    <span><input type="checkbox" style="margin-left: 0; vertical-align: middle;" id="setBodyXslt" name="setBodyXslt"><label for="setBodyXslt">XSLT를 등록하려면 체크하세요.</label></span>
+                    <span><input type="checkbox" style="margin-left: 0; vertical-align: middle;" id="setBodyXslt" name="setBodyXslt"><label for="setBodyXslt"><spring:message code='ezApprovalG.xslt'/></label></span>
                     <table class="content" style="width:100%; margin-top: 2px;">
                         <tbody>
 	                        <tr id="tr_setXslt">
@@ -1772,7 +1772,7 @@
 		            	<span style="min-width: 45px;">HTML Sample</span>
 		            </h2>
                     <a class="imgbtn">
-                    	<span onclick="ViewHTML()" style="font-weight: bold;">HTML변환</span>   
+                    	<span onclick="ViewHTML()" style="font-weight: bold;"><spring:message code='ezApprovalG.xslt.html'/></span>   
                     </a>                                                      
                     <table class="content" style="width:100%; margin-top: 5px;">
                         <tbody>

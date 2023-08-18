@@ -2464,10 +2464,10 @@ public class EzAttitudeAdminController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
-		
+		String userLang = userInfo.getLang();
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/annualHistoryPop/";
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId +"/"+ userLang + "/annualHistoryPop/";
 			
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2931,10 +2931,11 @@ public class EzAttitudeAdminController {
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String secondYear = request.getParameter("secondYear");
-		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String userLang = userInfo.getLang();
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/annual";
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/" + userLang +"/annual";
 			
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

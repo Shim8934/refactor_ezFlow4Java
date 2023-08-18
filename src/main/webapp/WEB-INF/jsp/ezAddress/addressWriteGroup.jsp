@@ -1247,7 +1247,14 @@
 	                document.getElementById("txtlist_table").style.display = "none";
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                if (pSeach) {
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang_2 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + " : [<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91005;
+						
+						if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) == 1){
+							document.getElementById("SelectDeptNM").innerHTML = document.getElementById("SelectDeptNM").innerHTML + strLang91006 + "</span>]";
+						} else {
+							document.getElementById("SelectDeptNM").innerHTML = document.getElementById("SelectDeptNM").innerHTML + strLang91007 + "</span>]";
+						}
+						
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1262,7 +1269,14 @@
 	                else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang_2 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle; padding-right:3px;\" >" + strLang_1 + "" + " : [<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91005;
+
+						if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) == 1){
+							document.getElementById("SelectDeptNM").innerHTML = document.getElementById("SelectDeptNM").innerHTML + strLang91006 + "</span>]";
+						} else {
+							document.getElementById("SelectDeptNM").innerHTML = document.getElementById("SelectDeptNM").innerHTML + strLang91007 + "</span>]";
+						}
+						
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
