@@ -40,7 +40,7 @@ public interface EzAttitudeService {
 	
 	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, String typeIdArr, int tenantId, String primary) throws Exception;
 	
-	public AttitudeFormVO getFormBody(String typeId, String companyId, int tenantId) throws Exception;
+	public AttitudeFormVO getFormBody(String typeId, String companyId, int tenantId, String lang) throws Exception;
 	
 	public void updateAttitude(String attitudeId, String startDate, String endDate, String region,
 			String mobile, String bizSub, String content, String offset, String ip, String typeId, String dateType, String mode, AttitudeVO attVO, String adminId, MCommonVO info, MCommonVO userInfo, int tenantId, String companyId, String latitude, String longitude) throws Exception;
