@@ -392,8 +392,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 			textName = ezOrganService.getPropertyValue(info[0], "displayname" + lang, userInfo.getTenantId());
 			deptID = info[2];
-			startDate = info[3] + ":" + info[4];
-			endDate = info[5] + ":" + info[6];
+			startDate = commonUtil.getDateStringInUTC((info[3] + ":" + info[4]), userInfo.getOffset(), false);
+			endDate = commonUtil.getDateStringInUTC((info[5] + ":" + info[6]), userInfo.getOffset(), false);
 			
 			if (info.length > 7) {
 				bReason = info[7];
@@ -435,6 +435,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		//겸직리스트 
 		List<OrganUserVO> addJobList = ezOrganAdminService.getUserAddJobList(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+		
+		// 2023-08-17 조수빈 - 겸직에 대한 부재 일자를 DB의 UTC 시간에서 사용자의 offset에 맞도록 변경한다.
+		// 겸직만 부재설정을 한 경우 시간이 반영되지 않는 문제를 해결하기 위해 추가함.
+		// 겸직에 대한 부재 일정이 하나라도 있는 경우 시작일과 종료일은 그 부재 일정으로 설정. (우선순위가 겸직에 대한 첫 번째 부재일정이 됨.) 
+		for (OrganUserVO vo : addJobList) {
+			if (null != vo.getExtensionAttribute5() && vo.getExtensionAttribute5().length() > 0) {
+				String [] proxyInfoArray = vo.getExtensionAttribute5().split(":");
+				startDate = commonUtil.getDateStringInUTC((proxyInfoArray[3] + ":" + proxyInfoArray[4]), userInfo.getOffset(), false);
+				endDate = commonUtil.getDateStringInUTC((proxyInfoArray[5] + ":" + proxyInfoArray[6]), userInfo.getOffset(), false);
+				break;
+			}
+		}
 		
 		model.addAttribute("addJobList", addJobList);
 		model.addAttribute("deptID", deptID);
@@ -2303,6 +2315,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String dept = request.getParameter("dept");
 		String bujaeId = request.getParameter("bujaeId");
 		String result = "";
+		String jobId = request.getParameter("jobId");
 		
 		String userRealDeptId = "";
 		
@@ -2314,11 +2327,16 @@ public class EzPersonalController extends EgovFileMngUtil {
 				result = ezOrganService.getAddJobProxy(userInfo.getId(), dept, userInfo.getTenantId());
 			}
 		} else {
+			// 2023-08-18 조수빈 - 원부서 && 원직위여야 하기 때문에 원직위 조건 추가
 			userRealDeptId = ezOrganService.getUserOrgDeptId(bujaeId, userInfo.getTenantId(), userInfo.getCompanyID());
-			if (dept.equals(userRealDeptId)) {
+			String userRealJobId = ezOrganService.getPropertyValue(bujaeId, "EXTENSIONATTRIBUTE7", userInfo.getTenantId());
+			
+			if (dept.equals(userRealDeptId) && jobId.equals(userRealJobId)) {
 				result = ezOrganService.getPropertyValue(bujaeId, "extensionAttribute5", userInfo.getTenantId());
 			} else {
-				result = ezOrganService.getAddJobProxy(bujaeId, dept, userInfo.getTenantId());
+				// 2023-08-18 조수빈 - 한 부서에 여러 직위가 존재하는 경우 에러가 발생하기 때문에 오버로딩한 다른 메소드를 실행.
+				// result = ezOrganService.getAddJobProxy(bujaeId, dept, userInfo.getTenantId());
+				result = ezOrganService.getAddJobProxy(bujaeId, dept, userInfo.getTenantId(), jobId);
 			}
 		}
 		
@@ -2332,7 +2350,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 			textName = ezOrganService.getPropertyValue(info[0], "displayname", userInfo.getTenantId());
 			deptID = info[2];
 			startDate = info[3] + ":" + info[4];
+			startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false);
 			endDate = info[5] + ":" + info[6];
+			endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false);
+			
 			
 			if (info.length > 7) {
 				bReason = info[7];

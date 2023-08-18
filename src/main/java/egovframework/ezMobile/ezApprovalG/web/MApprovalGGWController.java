@@ -634,14 +634,54 @@ public class MApprovalGGWController {
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			// 2021-02-15 박기범 : 겸직부재중정보 호출 서비스로 교체
 			List<MApprovalGAbsenteeAddJobInfoVO> resultList = mApprovalGService.getAbsenteeAddJobInfo(userInfo);
+			// 2023-08-18 조수빈 - 겸직 부재 정보 리스트 중 부재 설정이 있는 경우 그 설정 문자열만 받을 변수.
+			String absentInfo = "";
+			
+			for (MApprovalGAbsenteeAddJobInfoVO vo : resultList) {
+				// 겸직에 대한 부재정보가 있는 경우 그 값을 absentInfo에 할당하고 반복문 종료. 
+				if (!vo.getAbsenteeInfo().isEmpty()) {
+					absentInfo = vo.getAbsenteeInfo();
+					break;
+				}
+			}
+			
 			MApprovalGAbsenteeInfoVO absenteeInfoVO = mApprovalGService.getAbsenteeInfo(userInfo);
+			
+			// 2023-08-18 조수빈 - DB의 부재 설정 시간은 UTC시이므로 사용자의 offset에 맞게 변경해주어야 함.
+			// 시작일이나 종료일이 빈 값이 아니라면 offset에 맞게 변경.
+			String startDate ="";
+			String endDate = "";
+			
+			// 원부서 원직위에 대한 부재 설정 일자가 있는 경우
+			if (!(null == absenteeInfoVO.getStartDate() || absenteeInfoVO.getStartDate().isEmpty() || null == absenteeInfoVO.getEndDate() || absenteeInfoVO.getEndDate().isEmpty())) {
+				startDate = commonUtil.getDateStringInUTC(absenteeInfoVO.getStartDate(), userInfo.getOffSet(), false);
+				endDate = commonUtil.getDateStringInUTC(absenteeInfoVO.getEndDate(), userInfo.getOffSet(), false);
+			// 원부서 원직위에 대한 설정은 없고 겸직에 대한 부재 설정이 있는 경우
+			} else if (!absentInfo.isEmpty()) {
+				String [] proxyInfoArray = absentInfo.split(":");
+				startDate = commonUtil.getDateStringInUTC((proxyInfoArray[3] + ":" + proxyInfoArray[4]), userInfo.getOffSet(), false);
+				endDate = commonUtil.getDateStringInUTC((proxyInfoArray[5] + ":" + proxyInfoArray[6]), userInfo.getOffSet(), false);
+			// 부재 설정 정보가 아예 없는 경우
+			} else {
+				String cDate = "";
+				String cTime = "";
+				
+				cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffSet(), false);
+				cTime = cDate.split(" ")[1].substring(0, 2);
+				
+				cDate = cDate.substring(0, 10);
+				startDate = cDate + " " + cTime + ":00:00";
+				
+				cDate = cDate.substring(0, 10);
+				endDate = cDate + " " + Integer.toString((Integer.parseInt(cTime) + 1)) + ":00:00";
+			}
 			
 			if (resultList != null && resultList.size() > 0) {
 				result.put("status", "ok");
 				result.put("code", "0");
 				result.put("data", resultList);
-				result.put("startDate",absenteeInfoVO.getStartDate());
-				result.put("endDate",absenteeInfoVO.getEndDate());
+				result.put("startDate", startDate);
+				result.put("endDate", endDate);
 			} else {
 				result.put("status", "ok");
 				result.put("code", "2");
@@ -680,6 +720,15 @@ public class MApprovalGGWController {
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			JSONParser jp = new JSONParser();
 			JSONObject data = (JSONObject) jp.parse(jsonObject.toJSONString());
+
+			// 2023-08-18 조수빈 - 파라미터로 넘어온 값의 시작 / 종료일을 UTC로 변경하기
+			String startDate = data.get("startDate").toString();
+			String endDate = data.get("endDate").toString();
+			startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffSet(), true);
+			endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffSet(), true);
+			data.put("startDate", startDate);
+			data.put("endDate", endDate);
+			
 			int resultCode = mApprovalGService.updateAbsenteeJobInfo(data, userInfo.getUserId(), userInfo.getTenantId());
 			
 			// int resultCode = mApprovalGService.setAbsenteeInfo(absenteeInfoVO);
