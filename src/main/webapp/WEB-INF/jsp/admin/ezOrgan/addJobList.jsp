@@ -534,23 +534,27 @@
 					return;
 				}
 				flags = true;
+				// 2023-08-08 이사라 - 체크박스 id에 '.' 이 들어가는 경우 link로 인식하여 체크되지 않는 오류 수정
+				/*   : $("#" + itemseq)와 같이 id로 셀렉트하는 것이 더 명시적으로 보이나 
+					   id 값에 상관없이 정상 선택이 되고 backend에 정상적으로 값을 전달하는 방법으로 수정 */
+				itemNode = document.getElementById(obj).firstChild.firstChild;
 				if(checkFlag) {
-					if($("#"+itemseq).prop("checked")) {
+					if(itemNode.checked == true) {
 						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
-						$("#" + itemseq).prop("checked", false);
+						itemNode.checked = false;
 					} else {
 						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
-						$("#" + itemseq).prop("checked", true);
+						itemNode.checked = true;
 					}
 				} else {
 					$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
 					$(".checks").prop("checked",false);
-					if($("#" + itemseq).is(":checked")) {
+					if(itemNode.checked == true) {
 						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
-						$("#" + itemseq).prop("checked", false);
+						itemNode.checked = false;
 					} else {
 						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
-						$("#" + itemseq).prop("checked", true);
+						itemNode.checked = true;
 					}
 				}
 
