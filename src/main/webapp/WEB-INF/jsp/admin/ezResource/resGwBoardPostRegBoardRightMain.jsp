@@ -15,7 +15,6 @@
 			g_BrdID = "<c:out value='${brdID}'/>";
 			g_BrdNm = "<c:out value='${brdNm}'/>";
 			g_UserID = "<c:out value='${userInfo.id}'/>";
-			g_UserLang = "<c:out value='${userInfo.getLang()}'/>";
 
 			var L_BrdGb = "<c:out value='${brdGb}'/>";
 			var pCompanyID = "<c:out value='${companyID}'/>";
@@ -41,10 +40,8 @@
 				var strMember_nam;// = CrossYN() ? acllist.options[indexV].getAttribute("Member_nam") : acllist.options[indexV].Member_nam;
 				if (CrossYN()) {
 				    strMember_nam = acllist.options[indexV].getAttribute("Member_nam");
-				    strMember_nam2 = acllist.options[indexV].getAttribute("Member_nam2");
 				} else {
 				    strMember_nam = acllist.options[indexV].getAttribute("Member_nam");
-				    strMember_nam2 = acllist.options[indexV].getAttribute("Member_nam2");
 				    if (strMember_nam == undefined) {
 				        strMember_nam = acllist.options[indexV].Member_nam;
 				    }
@@ -53,11 +50,7 @@
 				var AccLvl = objthis.value ;
 
 				if (AccLvl == "1"){
-					if (g_UserLang == '1') {
-                        strVal = strMember_nam + " - (<spring:message code="ezResource.t104" />";
-                    } else {
-                        strVal = strMember_nam2 + " - (<spring:message code="ezResource.t104" />";
-                    }
+					strVal = strMember_nam + " - (<spring:message code="ezResource.t104" />";
 					
 				    try {
 				        acllist.options[indexV].setAttribute("Access_lvl", AccLvl);
@@ -67,12 +60,8 @@
 				    acllist.options[indexV].innerHTML = strVal;
 	
 				}else{
-                    if (g_UserLang == '1') {
-                        strVal = strMember_nam + " - (<spring:message code="ezResource.t105" />";
-                    } else {
-                        strVal = strMember_nam2 + " - (<spring:message code="ezResource.t105" />";
-                    }
-
+					strVal = strMember_nam + " - (<spring:message code="ezResource.t105" />";
+	
 				    try {
 				        acllist.options[indexV].setAttribute("Access_lvl", AccLvl);
 				        acllist.options[indexV].Access_lvl = AccLvl;
