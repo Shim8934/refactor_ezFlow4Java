@@ -1814,13 +1814,13 @@
 				var xmlCode = document.querySelector("#BodyXml").value.trim();
 
 				if(!xsltCode) {
-					pAlertContent = "XSLT 코드를 입력하세요.";
+					pAlertContent = "<spring:message code='ezApprovalG.xslt01'/>";
 		    		OpenAlertUI(pAlertContent);
 		    		return;
 				}
 
 				if(!xmlCode) {
-					pAlertContent = "XML 코드를 입력하세요.";
+					pAlertContent = "<spring:message code='ezApprovalG.xslt02'/>";
 		    		OpenAlertUI(pAlertContent);
 		    		return;
 				}
@@ -1837,7 +1837,7 @@
 								iframeView.document.body.innerHTML = htmlCode;
 							}
 						} else if(xhr.status === 409) {
-							var pAlertContent = "변환에 실패했습니다.";
+							var pAlertContent = "<spring:message code='ezApprovalG.xslt03'/>";
 							OpenAlertUI(pAlertContent);
 							return;
 						}
