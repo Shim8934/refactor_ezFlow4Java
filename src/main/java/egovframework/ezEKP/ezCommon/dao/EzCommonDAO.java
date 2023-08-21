@@ -2398,5 +2398,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertHWPSecurityNumConfig");
 		}
 	}
-		
+
+	/* 2023-08-21 이주원 - 2023-08-21 이주원 - 자원권한 테이블에 유저명 다국어 지원을 위해 MEMBER_NAM2 컬럼 추가 */
+	public void alterTblRsResaclAddColumn() {
+		try {
+			select("EzCommonDAO.checkRsResaclMemberNam2Column");
+		} catch (Exception e) {
+			logger.debug("TBL_RS_RESACL MEMBER_NAM2 column doesn't exist. creating the column...");
+			update("EzCommonDAO.addRsResaclMemberNam2Column");
+		}
+	}
+
+	// 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
+	public void addAttitudeFormFormHtml2Column() {
+		try {
+			select("EzCommonDAO.checkFormHtml2Column");
+		} catch (Exception e) {
+			logger.debug("TBL_ATTITUDE_FORM FORM_HTML2 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addAttitudeFormFormHtml2Column");
+		}
+	}
 }
