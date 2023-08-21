@@ -4797,18 +4797,33 @@
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES (0, 'HwpSecurityNum', 'Kaoni2023!', 'hwp배포용 문서 비밀번호', 'hwp배포용 문서 비밀번호', TO_DATE('2023-05-31 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
     </insert>
-	
+
+	<select id="EzCommonDAO.checkRsResaclMemberNam2Column">
+		<![CDATA[
+			SELECT
+				MEMBER_NAM2
+			FROM
+				TBL_RS_RESACL
+		]]>
+	</select>
+	<statement id="EzCommonDAO.addRsResaclMemberNam2Column">
+		ALTER TABLE
+			TBL_RS_RESACL
+		ADD
+			MEMBER_NAM2 NVARCHAR(100)
+	</statement>
+
    	<select id="EzCommonDAO.checkFormHtml2Column" resultClass="String">
 	<![CDATA[
-		SELECT 
+		SELECT
 			FORM_HTML2
-		FROM 
+		FROM
 			TBL_ATTITUDE_FORM
 		WHERE
 			ROWNUM = 1
 	]]>
 	</select>
-	
+
     <statement id="EzCommonDAO.addAttitudeFormFormHtml2Column">
 	<![CDATA[
 		ALTER TABLE
@@ -4817,5 +4832,5 @@
 			FORM_HTML2 VARCHAR(3000) DEFAULT NULL
 	]]>
     </statement>
-    
+
 </sqlMap>
