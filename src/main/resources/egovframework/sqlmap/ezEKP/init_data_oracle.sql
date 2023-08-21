@@ -267,6 +267,9 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 -- 전자결재 기록물 등록 시 결재권자 칼럼(APRMEMBERTITLE)에 최종결재자명 또는 최종결재자 직위를 삽입하는 옵션 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'recordAprMemberTitleType', '전자결재 기록물등록 시 결재권자 칼럼에 결재자명 또는 직위를 삽입', 'TITLE', '전자결재 기록물등록 시 결재권자 칼럼에 결재자명 또는 직위를 삽입한다. NAME: 최종결재자명  TITLE: 최종결재자직위 (default: NAME)', TO_DATE('2022-07-26 09:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
 
+-- 일본어 사용 여부 설정
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useJapanese', '일본어 사용여부', 'YES', '일본어 사용여부(YES: 사용, NO: 사용안함, default: YES)', TO_DATE('2023-08-18 17:40:00','yyyy-mm-dd hh24:mi:ss'), '환경설정');
+
 -- 메일 태그 기능 사용 여부 설정
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useMailTag', '메일 태그 기능 사용 여부', 'NO', '메일 태그 기능 사용 여부 (기본값: NO)', TO_DATE('2022-10-05 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 
