@@ -394,5 +394,6 @@ public interface EzCommonService {
 	public void createTblSerialNoRollback() throws Exception;
 
 	public void insertHWPSecurityConfig() throws Exception;
-	
+
+	public void addAttitudeFormFormHtml2Column() throws Exception;
 }
