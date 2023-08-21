@@ -271,7 +271,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				map1.put("v_TENANT_ID", tenantID);
 				
 				OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
-                
+
                 memberInfo[memberCount] = getTreeNodeInfo(result, "", "", "", pPropList, "");
                 memberCount++;
 			}		
@@ -300,6 +300,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		nodeInfo.append("<NODE>");
 		nodeInfo.append("<VALUE>" + commonUtil.cleanValue(vo.getDeptNM()) + "</VALUE>");
+		nodeInfo.append("<VALUE1>" + commonUtil.cleanValue(vo.getDisplayName1()) + "</VALUE1>");
+		nodeInfo.append("<VALUE2>" + commonUtil.cleanValue(vo.getDisplayName2()) + "</VALUE2>");
 		nodeInfo.append("<CN>" + vo.getDepartment() + "</CN>");
 	
 		if (!pPropList.equals("")) {					
@@ -1661,8 +1663,6 @@ public class EzOrganServiceImpl implements EzOrganService {
             constraints.setReturningAttributes(attrIDs);
         }
         
-		// CWE-90 (LDAP 쿼리에 사용 된 특수 요소의 부적절한 무효화) 보안 취약점 대응
-		strFilter = strFilter.replaceAll("\\*", "");
         m_ne = dirCtx.search(strBaseDN + config.getProperty("R_LBaseDN"), strFilter, constraints); 
         
         dirCtx.close(); 
@@ -2636,6 +2636,19 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("tenantID", tenantId);
 		map.put("dept", dept);
 		map.put("title", title);
+		logger.debug("getAddJobProxy2 ended");
+		
+		return ezOrganDAO.getAddJobProxy(map);
+	}
+
+	@Override
+	public String getAddJobProxy(String id, String dept, int tenantId, String jobId) throws Exception {
+		logger.debug("getAddJobProxy2 started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", id);
+		map.put("tenantID", tenantId);
+		map.put("dept", dept);
+		map.put("jobId", jobId);
 		logger.debug("getAddJobProxy2 ended");
 		
 		return ezOrganDAO.getAddJobProxy(map);

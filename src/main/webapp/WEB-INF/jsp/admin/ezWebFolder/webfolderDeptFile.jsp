@@ -270,7 +270,7 @@
 	</head>
 	<body class="mainbody" onload="init('dept');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
 		<h1>
-			<spring:message code='ezWebFolder.t220'/>
+			<spring:message code='ezWebFolder.t527'/>
 			<span id="mailBoxInfo"></span>
 			<div id="capacity-wrapper">
 				<div class="progressbar">

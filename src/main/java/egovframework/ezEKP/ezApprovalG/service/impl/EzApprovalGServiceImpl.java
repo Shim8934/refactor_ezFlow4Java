@@ -22394,7 +22394,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int nodeLength = doc.getElementsByTagName("DATA2").getLength();
 		boolean chkFirst = false;
 		String rtnVal = "";
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("") ,offset, false);
+		String nowDate = commonUtil.getTodayUTCTime("");
 		
 		if (nodeLength > 0) {
 			for (int k = 0; k < nodeLength; k++) {
@@ -29579,17 +29579,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                 
                                 // FileInputStream 는 File object를 생성자 인수로 받을 수 있다.
                                 //input = new FileInputStream(file);
-                                // 복사된 파일의 위치를 지정해준다.
-                                //output = new FileOutputStream(new File(commonUtil.detectPathTraversal(strTarget)));
-								try (FileInputStream input = new FileInputStream(file);
-									 FileOutputStream output = new FileOutputStream(
-												new File(commonUtil.detectPathTraversal(strTarget)))) {
-									int readBuffer = 0;
-									byte[] buffer = new byte[512];
-									while ((readBuffer = input.read(buffer)) != -1) {
-										output.write(buffer, 0, readBuffer);
+								try (FileInputStream input = new FileInputStream(file)){
+									// 복사된 파일의 위치를 지정해준다.
+	                                //output = new FileOutputStream(new File(commonUtil.detectPathTraversal(strTarget)));
+									try (FileOutputStream output = new FileOutputStream(new File(commonUtil.detectPathTraversal(strTarget)))) {
+										int readBuffer = 0;
+										byte[] buffer = new byte[512];
+										while ((readBuffer = input.read(buffer)) != -1) {
+											output.write(buffer, 0, readBuffer);
+										}
+	                                } catch (Exception er) {
+										throw er;
 									}
-                                }
+								} catch (Exception err) {
+									throw err;
+								}
                             } catch (Exception e) {
                                 logger.error(e.getMessage(), e);
                             /*} finally {
@@ -31546,7 +31550,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		list = ezApprovalGDAO.getProxyInfo_U(map);
 		list.addAll(ezApprovalGDAO.getProxyInfo_A(map));
 		
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("") ,offSet, false);
+		// 2023-08-18 조수빈 - 부재 시간은 UTC로 저장하기 때문에 사용자의 offset 비교가 필요하지 않음.
+		String nowDate = commonUtil.getTodayUTCTime("");
 		
 		if (list.size() > 0) {
 			for (ApprGProxyVO proxy : list) {

@@ -3477,3 +3477,6 @@ INSERT ALL
 SELECT
 	*
 FROM DUAL;
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+VALUES(0, 'useSecondaryLang', 'NO', '메일 부재설정회신, 용량 경고 메일 등 primarylang이 아닌 무조건 외국어 사용해야하는 컨피그', '제2 외국어 기본으로 사용여부', TO_DATE('2023-08-03 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');

@@ -903,7 +903,7 @@
                             return;
                         }
                     } else if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "overflow") {
-                        alert(strLang27 + AttachLimit + "MB" + strLang28);
+                        alert(strLang27 + AttachLimit + strLang28);
                         return;
                     } else if(SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") == "denied") {
                         extFlag = true;                            
@@ -956,6 +956,20 @@
 					}
 				});
 	        }
+	        
+	        /* 2023-08-16 홍승비 - 현재 게시물의 첨부파일 사이즈 총합을 계산하여 uploadedFileSize 변수에 설정하는 함수 */
+		    function initAttachFileSize() {
+		    	uploadedFileSize = 0; // 첨부파일 사이즈 전역변수 초기화
+		    	var attachListInput = $("#lstAttachLink input");
+		    	
+		    	$.each(attachListInput, function(index, item) {
+		    		var pRealFileSize = item.getAttribute("realfilesize");
+		    		
+		    		if (typeof(pRealFileSize) != "undefined" && pRealFileSize != null) {
+		    			uploadedFileSize += parseInt(item.getAttribute("realfilesize"));
+		    		}
+		    	});
+		    }
 		</script>
 
 		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">

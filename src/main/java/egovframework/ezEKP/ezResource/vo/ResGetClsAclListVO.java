@@ -7,6 +7,8 @@ public class ResGetClsAclListVO {
 	private String sdaYn;
 	/** 권한 대상자명*/
 	private String memberNam;
+	/** 권한 대상자명2*/
+	private String memberNam2;
 	/** 권한 대상자 아이디*/
 	private String memberID;
 	/** 대상자 구분*/
@@ -27,9 +29,9 @@ public class ResGetClsAclListVO {
 	public String getMemberNam() {
 		return memberNam;
 	}
-	public void setMemberNam(String memberNam) {
-		this.memberNam = memberNam;
-	}
+	public void setMemberNam(String memberNam) { this.memberNam = memberNam; }
+	public String getMemberNam2() { return memberNam2; }
+	public void setMemberNam2(String memberNam2) { this.memberNam2 = memberNam2; }
 	public String getMemberID() {
 		return memberID;
 	}

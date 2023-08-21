@@ -643,7 +643,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezWebFolder.t219' /></h1>
+		<h1><spring:message code='ezWebFolder.t526' /></h1>
 		<div style="margin-left:5px">
 			<div id="companySelect" style="margin: 10px 0px;">
 				<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>

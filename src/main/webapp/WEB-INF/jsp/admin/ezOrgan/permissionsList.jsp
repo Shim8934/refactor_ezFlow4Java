@@ -213,24 +213,25 @@
 					return;
 				}
 
-				
+				// 2023-08-08 이사라 - 체크박스 id에 '.' 이 들어가는 경우 link로 인식하여 체크되지 않는 오류 수정
+				itemNode = document.getElementById(obj).firstChild.firstChild;
 				if(checkFlag) {
-					if($("#"+itemseq).prop("checked")) {
+					if(itemNode.checked == true) {
 						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
-						$("#" + itemseq).prop("checked", false);
+						itemNode.checked = false;
 					} else {
 						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
-						$("#" + itemseq).prop("checked", true);
+						itemNode.checked = true;
 					}
 				} else {
 					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
 					$(".checks").prop("checked",false);
-					if($("#" + itemseq).is(":checked")) {
+					if(itemNode.checked == true) {
 						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
-						$("#" + itemseq).prop("checked", false);
+						itemNode.checked = false;
 					} else {
 						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
-						$("#" + itemseq).prop("checked", true);
+						itemNode.checked = true;
 					}
 				}
 
@@ -261,8 +262,7 @@
 					+ seq 
 					+ "' value='" 
 					+ seq 
-					+ "' onchange='inputFunc(event,"
-					+ seq + ")'></input>";
+					+ "' onchange='inputFunc(event)'></input>";
 				} 
 			}
 			
@@ -290,20 +290,22 @@
 				rowList = [];
 				$("input:checkbox[name='checks']").each(function(){
 					if($(this).is(":checked")){
-						rowList.push(this.value);
+						rowList.push(this);
 					}
 				});
 			}
 			
-			function inputFunc(event, itemseq) {
+			function inputFunc(event) {
 				checkItems();
 				
 				$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
 
 				for (var i = 0; i < rowList.length; i++) {
-					var objID = $("#" + rowList[i])[0].parentNode.parentNode.id;
+					//var objID = $("#" + rowList[i])[0].parentNode.parentNode.id;
+					var objID = rowList[i].parentNode.parentNode.id;
 					$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
-					$("#" + rowList[i]).prop("checked", true);
+					//$("#" + rowList[i]).prop("checked", true);
+					rowList[i].checked = true;
 				}
 			}
 			

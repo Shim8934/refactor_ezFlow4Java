@@ -812,16 +812,37 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		for(int i=0; i<ja.size(); i++) {
 			JSONObject jo = new JSONObject();
+			jo = (JSONObject)ja.get(i);
+			// 2023-08-17 조수빈 - 부재자 입력 시간을 UTC 시간으로 변경하기
+			String proxyInfo = jo.get("proxy").toString();
+			
+			if (proxyInfo.length() > 0) {
+				String [] proxyInfoArray = proxyInfo.split(":");
+				String sTime = proxyInfoArray[3] + ":" + proxyInfoArray[4];
+				String eTime = proxyInfoArray[5] + ":" + proxyInfoArray[6];
+				String sTimeUTC = commonUtil.getDateStringInUTC(sTime, userInfo.getOffset(), true);
+				String eTimeUTC = commonUtil.getDateStringInUTC(eTime, userInfo.getOffset(), true);
+				
+				logger.debug(">>>>>>>>>> convert sTime to UTC: " + sTimeUTC);
+				logger.debug(">>>>>>>>>> convert eTime to UTC: " + eTimeUTC);
+				
+				proxyInfoArray[3] = sTimeUTC.split(":")[0];
+				proxyInfoArray[4] = sTimeUTC.split(":")[1];
+				proxyInfoArray[5] = eTimeUTC.split(":")[0];
+				proxyInfoArray[6] = eTimeUTC.split(":")[1];
+				proxyInfo = String.join(":", proxyInfoArray);
+				
+				logger.debug(">>>>>>>>>> finally proxy: " + proxyInfo);
+			}
+			
 			if(i == 0) {
-				jo = (JSONObject)ja.get(i);
-				result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", jo.get("proxy").toString(), pClass, userInfo.getTenantId());
+				result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", proxyInfo, pClass, userInfo.getTenantId());
 
 				logger.debug("updateProperty proxy:" + jo.get("proxy").toString());
 			} else {
-				jo = (JSONObject)ja.get(i);
-				result = ezOrganService.updateAddJobProxy(userInfo.getId(), jo.get("proxy").toString(), userInfo.getTenantId(), jo.get("deptId").toString(), jo.get("jobId").toString());
+				result = ezOrganService.updateAddJobProxy(userInfo.getId(), proxyInfo, userInfo.getTenantId(), jo.get("deptId").toString(), jo.get("jobId").toString());
 
-				logger.debug("updateAddJobProxy proxy:" + jo.get("proxy").toString() + " / deptId:" + jo.get("deptId").toString() + " / jobId:" + jo.get("jobId").toString());
+				logger.debug("updateAddJobProxy proxy:" + proxyInfo + " / deptId:" + jo.get("deptId").toString() + " / jobId:" + jo.get("jobId").toString());
 			}
 		}
 		

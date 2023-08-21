@@ -42,6 +42,7 @@
 		<result property="deptYn"					column="DEPT_YN"				columnIndex="1"/>
 		<result property="sdaYn"					column="SDA_YN"					columnIndex="1"/>
 		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="1"/>
+		<result property="memberNam2"				column="MEMBER_NAM2"			columnIndex="1"/>
 		<result property="memberID"				    column="MEMBER_ID"				columnIndex="1"/>
 		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="1"/>
 	</resultMap>
@@ -105,10 +106,10 @@
 	<insert id="EzResourceAdminDAO.addClsData_I2" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_RS_RESACL ( 
-				RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID 
+				RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_NAM2, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID
 			)
     		VALUES ( 
-    			#v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', '2', #v_P_CompanyID#, #tenantID#
+    			#v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', 'everyone', '2', #v_P_CompanyID#, #tenantID#
     		)
 		]]>
 	</insert>
@@ -116,10 +117,10 @@
 	<insert id="EzResourceAdminDAO.addClsData_I3" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_RS_RESACL ( 
-				RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID 
+				RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_NAM2, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID
 			)
      		VALUES ( 
-     			#v_Brd_ID#, 'Y', 'Y', #v_P_OwnerNm#, #v_P_OwnerID#, '1', #v_P_CompanyID#, #tenantID# 
+     			#v_Brd_ID#, 'Y', 'Y', #v_P_OwnerNm#, #v_P_OwnerNm2#, #v_P_OwnerID#, '1', #v_P_CompanyID#, #tenantID#
      		)
 		]]>
 	</insert>
@@ -156,6 +157,7 @@
       			DEPT_YN = #v_P_Dept_YN#,
           		SDA_YN = #v_P_SDA_YN#,
           		MEMBER_NAM = #v_P_Member_nam#,
+          		MEMBER_NAM2 = #v_P_Member_nam2#,
           		ACCESS_LVL = #v_P_Access_lvl#
     		WHERE
     			RESID = #v_P_ResID#
@@ -171,10 +173,10 @@
 	<insert id="EzResourceAdminDAO.saveACL" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_RS_RESACL ( 
-				RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID 
+				RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_NAM2, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID
 			)
            	VALUES ( 
-           		#v_P_ResID#, #v_P_Dept_YN#, #v_P_SDA_YN#, #v_P_Member_nam#, #v_P_Member_ID#, #v_P_Access_lvl#, #v_P_CompanyID#, #tenantID# 
+           		#v_P_ResID#, #v_P_Dept_YN#, #v_P_SDA_YN#, #v_P_Member_nam#, #v_P_Member_nam2#, #v_P_Member_ID#, #v_P_Access_lvl#, #v_P_CompanyID#, #tenantID#
            	)
 		]]>
 	</insert>
@@ -532,6 +534,7 @@
 				DEPT_YN , 
             	SDA_YN ,
              	MEMBER_NAM ,
+             	MEMBER_NAM2 ,
              	MEMBER_ID ,
              	ACCESS_LVL 
         	FROM
