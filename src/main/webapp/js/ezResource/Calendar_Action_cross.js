@@ -538,16 +538,16 @@ function tableListControl_Week()
                     }
                     
                     if(holidayName != "" && holidayName2 == "") {
-                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName;
+                		_mth.innerHTML = D_nowdateTitle + " [" + trim(dayname[countdayname]) + "] " + holidayName;
                 	}
                 	else if(holidayName == "" && holidayName2 != "") {
-                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName2;
+                		_mth.innerHTML = D_nowdateTitle + " [" + trim(dayname[countdayname]) + "] " + holidayName2;
                 	}
                 	else if(holidayName != "" && holidayName2 != ""){
-                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName + ", " + holidayName2;
+                		_mth.innerHTML = D_nowdateTitle + " [" + trim(dayname[countdayname]) + "] " + holidayName + ", " + holidayName2;
                 	}
                 	else {
-                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                		_mth.innerHTML = D_nowdateTitle + " [" + trim(dayname[countdayname]) + "]";
                 	}
                     
                     /*if (LunarUse) {
