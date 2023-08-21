@@ -303,7 +303,7 @@
 		        } else if (new Date(strCurrDate) > new Date(strEndDate)) {
 		            alert("<spring:message code='ezPersonal.t15'/>");
 		            return true;
-		        } else if (new Date() > new Date(strEndDate + "T" +$("#Etimepicker").val())) {
+		        } else if (new Date(initdate) > new Date(strEndDate + "T" +$("#Etimepicker").val())) {
 		        	alert("<spring:message code='ezPersonal.t26'/>");
     				return true;
 		        } else if (strStartDate == strEndDate) {

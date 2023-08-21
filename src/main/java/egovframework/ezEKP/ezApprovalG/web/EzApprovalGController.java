@@ -512,7 +512,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		// 202-08-17 조수빈 - DB의 부재 설정 일자를 UTC에서 사용자의 offset 시간대로 변경
-		if (buJaeInfo.length() > 0) {
+		if (null != buJaeInfo && buJaeInfo.length() > 0) {
 			String [] proxyInfoArray = buJaeInfo.split(":");
 			String sTime = proxyInfoArray[3] + ":" + proxyInfoArray[4];
 			String eTime = proxyInfoArray[5] + ":" + proxyInfoArray[6];
