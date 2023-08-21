@@ -2840,4 +2840,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertHWPSecurityConfig() throws Exception {
 		ezCommonDAO.insertHWPSecurityConfig();
 	}
+
+    @Override
+    public void alterTblRsResaclAddColumn() throws Exception {
+        ezCommonDAO.alterTblRsResaclAddColumn();
+    }
+
+	// 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
+	@Override
+	public void addAttitudeFormFormHtml2Column() throws Exception {
+		ezCommonDAO.addAttitudeFormFormHtml2Column();
+	}
 }

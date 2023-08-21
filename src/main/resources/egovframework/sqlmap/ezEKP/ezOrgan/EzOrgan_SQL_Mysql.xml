@@ -871,11 +871,16 @@
 			SELECT
 				CN ,
              	CN DEPARTMENT  ,
-
-				DISPLAYNAME ,
-
-				DISPLAYNAME2 ,
-
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	DISPLAYNAME
+                ELSE
+                	DISPLAYNAME2
+                END
+                	DISPLAYNAME  ,
              	CASE
              		#v_LANGDATA#
                 WHEN

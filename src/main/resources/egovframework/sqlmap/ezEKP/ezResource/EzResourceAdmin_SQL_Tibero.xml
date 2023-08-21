@@ -42,6 +42,7 @@
 		<result property="deptYn"						column="DEPT_YN"					columnIndex="1"/>
 		<result property="sdaYn"						column="SDA_YN"					columnIndex="1"/>
 		<result property="memberNam"				column="MEMBER_NAM"			columnIndex="1"/>
+		<result property="memberNam2"				column="MEMBER_NAM2"			columnIndex="1"/>
 		<result property="memberID"				column="MEMBER_ID"				columnIndex="1"/>
 		<result property="accessLvl"					column="ACCESS_LVL"			columnIndex="1"/>
 	</resultMap>
@@ -105,9 +106,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_RS_RESACL
-   				( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
+   				( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_NAM2, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
     		VALUES
-    			( #v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', '2', RTRIM(#v_P_CompanyID#), #tenantID#)
+    			( #v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', 'everyone', '2', RTRIM(#v_P_CompanyID#), #tenantID#)
 		]]>
 	</insert>
 	
@@ -115,9 +116,9 @@
 		<![CDATA[
 			INSERT INTO 
 				TBL_RS_RESACL
-     			( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
+     			( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_NAM2, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
      		VALUES
-     			( #v_Brd_ID#, 'Y', 'Y', RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerID#), '1', RTRIM(#v_P_CompanyID#), #tenantID# )
+     			( #v_Brd_ID#, 'Y', 'Y', RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerID#), '1', RTRIM(#v_P_CompanyID#), #tenantID# )
 		]]>
 	</insert>
 	
@@ -153,6 +154,7 @@
       			DEPT_YN = #v_P_Dept_YN#,
           		SDA_YN = #v_P_SDA_YN#,
           		MEMBER_NAM = #v_P_Member_nam#,
+          		MEMBER_NAM2 = #v_P_Member_nam2#,
           		ACCESS_LVL = #v_P_Access_lvl#
     		WHERE
     			RESID = #v_P_ResID#
@@ -169,9 +171,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_RS_RESACL
-            	( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
+            	( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_NAM2, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
            	VALUES
-           		( RTRIM(#v_P_ResID#), RTRIM(#v_P_Dept_YN#), RTRIM(#v_P_SDA_YN#),RTRIM(#v_P_Member_nam#), RTRIM(#v_P_Member_ID#), RTRIM(#v_P_Access_lvl#), RTRIM(#v_P_CompanyID#), #tenantID# )
+           		( RTRIM(#v_P_ResID#), RTRIM(#v_P_Dept_YN#), RTRIM(#v_P_SDA_YN#),RTRIM(#v_P_Member_nam#), RTRIM(#v_P_Member_nam2#), RTRIM(#v_P_Member_ID#), RTRIM(#v_P_Access_lvl#), RTRIM(#v_P_CompanyID#), #tenantID# )
 		]]>
 	</insert>
 	
