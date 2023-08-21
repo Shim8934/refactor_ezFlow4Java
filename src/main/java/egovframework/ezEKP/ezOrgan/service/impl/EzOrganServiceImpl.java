@@ -271,7 +271,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				map1.put("v_TENANT_ID", tenantID);
 				
 				OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
-                
+
                 memberInfo[memberCount] = getTreeNodeInfo(result, "", "", "", pPropList, "");
                 memberCount++;
 			}		
@@ -300,7 +300,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		nodeInfo.append("<NODE>");
 		nodeInfo.append("<VALUE>" + commonUtil.cleanValue(vo.getDeptNM()) + "</VALUE>");
-		nodeInfo.append("<VALUE1>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE1>");
+		nodeInfo.append("<VALUE1>" + commonUtil.cleanValue(vo.getDisplayName1()) + "</VALUE1>");
 		nodeInfo.append("<VALUE2>" + commonUtil.cleanValue(vo.getDisplayName2()) + "</VALUE2>");
 		nodeInfo.append("<CN>" + vo.getDepartment() + "</CN>");
 	
