@@ -22394,7 +22394,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int nodeLength = doc.getElementsByTagName("DATA2").getLength();
 		boolean chkFirst = false;
 		String rtnVal = "";
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("") ,offset, false);
+		String nowDate = commonUtil.getTodayUTCTime("");
 		
 		if (nodeLength > 0) {
 			for (int k = 0; k < nodeLength; k++) {
