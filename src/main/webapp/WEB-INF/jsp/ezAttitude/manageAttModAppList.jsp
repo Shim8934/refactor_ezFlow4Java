@@ -1145,14 +1145,14 @@
 					<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 				</th>
 				<th width="60px" colname="NO">NO.</th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="START_DATE"><spring:message code='ezAttitude.t107'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="WRITER_NAME"><spring:message code='ezAttitude.t147'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="WRITER_DEPT_NAME"><spring:message code='ezAttitude.t148'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="ORIGIN_TIME"><spring:message code='ezAttitude.t206'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="NO"><spring:message code='ezAttitude.t207'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:5%;" colname="APPR_STATUS" ><spring:message code='ezAttitude.kje01'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:9%;" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 11%;" colname="START_DATE"><spring:message code='ezAttitude.t107'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 11%;" colname="WRITER_NAME"><spring:message code='ezAttitude.t147'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 11%;" colname="WRITER_DEPT_NAME"><spring:message code='ezAttitude.t148'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:9%;" colname="ORIGIN_TIME"><spring:message code='ezAttitude.t206'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:11%;" colname="NO"><spring:message code='ezAttitude.t207'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:11%;" colname="APPR_STATUS" ><spring:message code='ezAttitude.kje01'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:9%;" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:11%;" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
 				<th width="100px" style="cursor:pointer;" colname="NO"><spring:message code='ezAttitude.t97'/></th>
 			</tr>
 		    
