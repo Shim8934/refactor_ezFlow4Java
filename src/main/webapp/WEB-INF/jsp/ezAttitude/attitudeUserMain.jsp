@@ -2577,7 +2577,7 @@
 		</div>
  -->		
 		<!-- NO,일시만 존재 - 지각,휴근  -->
-		<div id="onlyTimePopup" class="popupwrap1" style="display:none;margin-bottom:50px;<c:if test="${deptFlag == 'true'}">max-width:415px;</c:if><c:if test="${deptFlag != 'true'}">max-width:300px;</c:if>">
+		<div id="onlyTimePopup" class="popupwrap1" style="display:none;margin-bottom:50px;<c:if test="${deptFlag == 'true'}">max-width:515px;</c:if><c:if test="${deptFlag != 'true'}">max-width:400px;</c:if>">
 			<div class="popupJQLayer">
 				<div id="onlyTimePopup_title" class="title"><spring:message code='ezAttitude.t141'/></div>
 				<div id="close">
