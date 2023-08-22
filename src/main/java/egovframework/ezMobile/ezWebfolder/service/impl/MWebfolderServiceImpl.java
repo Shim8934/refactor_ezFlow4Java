@@ -201,11 +201,13 @@ public class MWebfolderServiceImpl implements MWebfolderService {
 		int fldCnt = data.get("fldCnt").getAsInt();
 
 		String folderName = data.get("folderName").getAsString();
+		String folderName2 = data.get("folderName2").getAsString();
 		String folderUpp = data.get("folderUpp").getAsString();
 
 		MWebfolderResult webfolderResult = new MWebfolderResult();
 		webfolderResult.setFiles(files);
 		webfolderResult.setFolderName(folderName);
+		webfolderResult.setFolderName2(folderName2);
 		webfolderResult.setFileCount(fileCnt);
 		webfolderResult.setFolderCount(fldCnt);
 		webfolderResult.setTotalPages(totalPages);

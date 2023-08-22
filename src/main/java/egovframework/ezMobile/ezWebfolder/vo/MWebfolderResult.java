@@ -11,6 +11,7 @@ public class MWebfolderResult {
 	private List<FileVO> files;
 
 	private String folderName;
+	private String folderName2;
 	private String parentFolderId;
 
 	private int totalPages;
@@ -30,6 +31,14 @@ public class MWebfolderResult {
 	}
 
 	public void setFolderName(String folderName) {
+		this.folderName = folderName;
+	}
+	
+	public String getFolderName2() {
+		return folderName;
+	}
+
+	public void setFolderName2(String folderName) {
 		this.folderName = folderName;
 	}
 
