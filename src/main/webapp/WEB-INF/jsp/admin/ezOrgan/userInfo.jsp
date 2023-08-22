@@ -425,6 +425,16 @@
 					birthtype = "N";
 				}
 
+		        // 번호 입력 시에는 숫자 [+ -] 만 입력 가능
+		        var checkNumberArr = [PhoneNumber.value, HomePhone.value, Mobile.value, FaxNum.value];
+		        var regex2 = /^[0-9+\- ]+$/;
+				for (var checkItem of checkNumberArr) {
+					if ("" != checkItem && !regex2.test(checkItem)) {
+						alert("<spring:message code='ezOrgan.ls009' />");
+						return false;
+					}
+				}
+
 				if (useBizmekaSpambox == "YES") {
 					showProgress();
 				}

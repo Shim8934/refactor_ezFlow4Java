@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezPoll.web;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +28,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +45,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 import org.w3c.dom.Document;
+
+import com.google.api.services.drive.Drive.Files;
+import com.ibm.icu.util.RangeValueIterator.Element;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -58,6 +68,7 @@ import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollCommentVO;
 import egovframework.ezEKP.ezPoll.vo.PollEmailSimpleUser;
+import egovframework.ezEKP.ezPoll.vo.PollFilePathVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
@@ -617,14 +628,14 @@ public class EzPollController extends EgovFileMngUtil {
 		String userID = loginVO.getId();
 		String companyID = loginVO.getCompanyID();
 		String numberOfOptions = req.getParameter("numberOfOptions");
-		//String qstTitle = commonUtil.cleanValue(req.getParameter("qst_title"));
+		// String qstTitle = commonUtil.cleanValue(req.getParameter("qst_title"));
 		String qstTitle = req.getParameter("qst_title");
 		String qstContent = commonUtil.stripScriptTags(req.getParameter("hidContent"));
 		String filePath = req.getParameter("hidFilePath");
 		int secretVote = Integer.parseInt(req.getParameter("hidSecreteVote"));
 		String endDate = req.getParameter("hidEndDate");
 		String startDate = req.getParameter("hidStartDate");
-		String createDate = req.getParameter("hidCreateDate"); //20180109
+		String createDate = req.getParameter("hidCreateDate"); // 20180109
 		int numberOfMultiSelect = Integer.parseInt(req.getParameter("multiSelectNumber"));
 		String range = req.getParameter("RangeXMLStr");
 		int resultFirst = Integer.parseInt(req.getParameter("hidResultFirst"));
@@ -636,62 +647,60 @@ public class EzPollController extends EgovFileMngUtil {
 		int sendPostNotice = Integer.parseInt(req.getParameter("hidSendPostNotice"));
 		int openToAll = Integer.parseInt(req.getParameter("hidOpenToAll"));
 		String[] OptRowArr = OptImgFilePath.split("\\|");
-		
+		String orgContent = "";
+
 		Map<String, String> filePathMap = new HashMap<String, String>();
-		if(!OptRowArr[0].equals("")){
-			for(int i = 0; i < OptRowArr.length; i++){
+		if (!OptRowArr[0].equals("")) {
+			for (int i = 0; i < OptRowArr.length; i++) {
 				String mapVal = OptRowArr[i].split("\\//")[0];
 				String mapKey = OptRowArr[i].split("\\//")[1];
 				filePathMap.put(mapKey, mapVal);
 			}
 		}
-		
-		//Get list of options for this question
+
+		// Get list of options for this question
 		List<String> listOptions = new ArrayList<String>();
-		
+
 		for (int i = 1; i <= Integer.parseInt(numberOfOptions); i++) {
 			String optName = "option" + Integer.toString(i);
 			String option = req.getParameter(optName);
-			
-			/*if (option != null && !option.equals("")) {
-				listOptions.add(option);
-			}*/
-			
+
+/*			 if (option != null && !option.equals("")) { listOptions.add(option); } */
+
 			if (option != null && option.equals(filePathMap.get(optName))) {
 				listOptions.add("");
-			}else if(option != null && !option.equals("")){
+			} else if (option != null && !option.equals("")) {
 				listOptions.add(option);
-			}else{
+			} else {
 				listOptions.add(null);
 			}
 		}
-		
-		//Set PollQuestionVO fields
+
+		// Set PollQuestionVO fields
 		pollQuestionVO.setTitle(qstTitle);
-		
+
 		if (qstContent != null && !qstContent.equals("")) {
 			pollQuestionVO.setContent(qstContent);
-		}		
-		
+		}
+
 		if (filePath != null && !filePath.equals("")) {
 			pollQuestionVO.setFilePath(filePath);
-		}	
-		
-		pollQuestionVO.setTenantId(tenantID);		
-		
-		if (range == null || range.equals("") || range.equals("<RANGE></RANGE>")) {
-			pollQuestionVO.setTarget(0);			
 		}
-		else {
+
+		pollQuestionVO.setTenantId(tenantID);
+
+		if (range == null || range.equals("") || range.equals("<RANGE></RANGE>")) {
+			pollQuestionVO.setTarget(0);
+		} else {
 			pollQuestionVO.setTarget(1);
 		}
-		
-		//Set PollQuestionVO fields
+
+		// Set PollQuestionVO fields
 		pollQuestionVO.setCreator(userID);
 		pollQuestionVO.setCreatorName1(loginVO.getDisplayName1());
 		pollQuestionVO.setCreatorName2(loginVO.getDisplayName2());
 		pollQuestionVO.setCreatorDept(loginVO.getDeptID());
-		pollQuestionVO.setCreateDate(createDate); //20180109
+		pollQuestionVO.setCreateDate(createDate); // 20180109
 		pollQuestionVO.setEndDate(endDate);
 		pollQuestionVO.setStartDate(startDate);
 		pollQuestionVO.setSecretVote(secretVote);
@@ -703,60 +712,67 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setSendPostNotice(sendPostNotice);
 		pollQuestionVO.setOpenToAll(openToAll);
 		pollQuestionVO.setCompanyId(companyID);
-		
-		
+
 		if (!qstModifyInfo.equals("")) {
 			pollQuestionVO.setQstId(Integer.parseInt(qstModifyInfo));
-			
-			//Delete all information related to this question
+			// 수정할 경우 다 지우고 다시 넣기 때문에 미리 본 내용을 담아둔다.
+			orgContent = ezPollService.getContent(pollQuestionVO.getQstId(), tenantID);
+			// Delete all information related to this question
 			try {
-				ezPollService.deleteQuestions(pollQuestionVO.getQstId(), loginVO.getTenantId());		
-				ezPollService.deleteUserAndAnswer(pollQuestionVO.getQstId(), loginVO.getTenantId());		
-				ezPollService.deleteQuestionRelated(pollQuestionVO.getQstId(), loginVO.getTenantId());	
-				ezPollService.deleteAnswers(pollQuestionVO.getQstId(), loginVO.getTenantId());	
+				ezPollService.deleteQuestions(pollQuestionVO.getQstId(), loginVO.getTenantId());
+				ezPollService.deleteUserAndAnswer(pollQuestionVO.getQstId(), loginVO.getTenantId());
+				ezPollService.deleteQuestionRelated(pollQuestionVO.getQstId(), loginVO.getTenantId());
+				ezPollService.deleteAnswers(pollQuestionVO.getQstId(), loginVO.getTenantId());
 				ezPollService.deleteUserAndQuestion(pollQuestionVO.getQstId(), loginVO.getTenantId());
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
-		}
-		else {
+		} else {
 			int currentMaxQstID = 0;
-			currentMaxQstID = getQuestionSeq(tenantID);		
+			currentMaxQstID = getQuestionSeq(tenantID);
 			pollQuestionVO.setQstId(currentMaxQstID);
 		}
-		
-		//Insert question in database
+
+		// DB에 들어갈 content의 img path를 upload_vote 아래로 바꿔준다
+		PollFilePathVO pollFilePathVO = changeImgPathInContent(req, pollQuestionVO.getQstId(), qstContent, tenantID, "uploadFile");
+		pollQuestionVO.setContent(pollFilePathVO.getContent());
+
+		// Insert question in database
 		saveQuestion(pollQuestionVO, range, loginVO);
-		
-		//Insert answers/options in database		
+		// 2023-08-18 장혜연 - 본 내용이 있을 경우 수정된 내용의 이미지 파일을 비교하여 삭제한다.
+		if (!"".equals(orgContent) && orgContent != null) {
+			deleteContentImages(req, orgContent, qstContent);
+		}
+		// 2023-08-18 장혜연 - 본 댓글에 첨부파일이 있을 경우 삭제한다.
+		copyUploadImages(req, pollFilePathVO.getCopyFilePathList(), pollFilePathVO.getTargetDirFullPath());
+		// Insert answers/options in database
 		pollAnswerVO.setQstId(pollQuestionVO.getQstId());
 		pollAnswerVO.setTenantId(tenantID);
 		pollAnswerVO.setVotesNumber(0);
-		
+
 		for (int i = 0; i < listOptions.size(); i++) {
-			if(listOptions.get(i) != null){
+			if (listOptions.get(i) != null) {
 				pollAnswerVO.setContent(listOptions.get(i));
 				pollAnswerVO.setAnsId(i + 1);
-				if(filePathMap.containsKey("option" + ( i + 1 ))) {
-					pollAnswerVO.setFilePath(filePathMap.get("option" + ( i + 1 )));
-				}else{
+				if (filePathMap.containsKey("option" + (i + 1))) {
+					pollAnswerVO.setFilePath(filePathMap.get("option" + (i + 1)));
+				} else {
 					pollAnswerVO.setFilePath(null);
 				}
 				ezPollService.insertOption(pollAnswerVO);
 			}
-		}	
-		
-		//Send posting notification mail
-		//메일 발송 체크되어 있고, 투표 등록이나 재사용일 경우 => true
-		if(sendPostNotice == 1 && qstModifyInfo.equals("")){
+		}
+
+		// Send posting notification mail
+		// 메일 발송 체크되어 있고, 투표 등록이나 재사용일 경우 => true
+		if (sendPostNotice == 1 && qstModifyInfo.equals("")) {
 			ezPollService.sendPostNotiMail(loginVO, loginCookie, pollQuestionVO);
 		}
-		
+
 		logger.debug("Question complete finishes!");
 		return "redirect:/ezPoll/pollList.do";
 	}
-	
+
 	@RequestMapping(value="/ezPoll/pollVote.do", method = RequestMethod.GET)
 	public String qstVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PollQuestionVO pollQuestionVO, HttpSession session, RedirectAttributes redirectAttributes, ModelMap model) throws Exception {
 		logger.debug("question vote is running!");			
@@ -1192,7 +1208,7 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("Confirm delete question finishes!");
 		return "/ezPoll/confirmDeleteQst";
 	}	
-	
+
 	@RequestMapping(value="/ezPoll/addComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session, HttpServletResponse response) throws Exception {
@@ -1204,236 +1220,262 @@ public class EzPollController extends EgovFileMngUtil {
 		String fileName = "";
 		String filePath = "";
 		String txtContent = "";
-		String fileType = "";	
+		String fileType = "";
+		String targetDirFullPath = "";
+		List<Map<String, String>> copyFilePathList = new ArrayList<>();
 		int qstId = -1;
-		int cmtId = -1;		
-		
+		int cmtId = -1;
+
 		qstId = Integer.parseInt(request.getParameter("qstId"));
-		cmtId = Integer.parseInt(request.getParameter("cmtId"));		
-		cmtTime = request.getParameter("cmtTime");				
-		
+		cmtId = Integer.parseInt(request.getParameter("cmtId"));
+		cmtTime = request.getParameter("cmtTime");
+
 		if (request.getParameter("cmtAttach") != null) {
 			attachFilePath = request.getParameter("cmtAttach");
 		}
-		
+
 		if (request.getParameter("fileType") != null) {
 			fileType = request.getParameter("fileType");
 		}
-		
+
 		if (request.getParameter("fileName") != null) {
 			fileName = request.getParameter("fileName");
 		}
-		
+
 		if (request.getParameter("filePath") != null) {
 			filePath = request.getParameter("filePath");
-		}		
-		
+		}
+
 		if (request.getParameter("cmtTxt") != null) {
 			txtContent = request.getParameter("cmtTxt");
-		}	
-		
+		}
+
 		if (qstId == -1 || cmtId == -1 || cmtTime.equals("")) {
 			strXML = "<DATA>FAIL</DATA>";
 			return strXML;
 		}
-		
-		//Set PollCommentVO fields
+
+		// Set PollCommentVO fields
 		PollCommentVO pollCmtVO = new PollCommentVO();
 		pollCmtVO.setCmtId(cmtId);
-		pollCmtVO.setQstId(qstId);		
+		pollCmtVO.setQstId(qstId);
 		pollCmtVO.setTenantId(loginVO.getTenantId());
 		pollCmtVO.setUserId(loginVO.getId());
 		pollCmtVO.setUserName1(loginVO.getDisplayName1());
 		pollCmtVO.setUserName2(loginVO.getDisplayName2());
-		pollCmtVO.setCmtTime(cmtTime);		
-		pollCmtVO.setTextContent(txtContent);	
+		pollCmtVO.setCmtTime(cmtTime);
+		pollCmtVO.setTextContent(txtContent);
 		pollCmtVO.setDeptId(loginVO.getDeptID());
 		pollCmtVO.setCompanyId(loginVO.getCompanyID());
-		
+
 		logger.debug("attachFilePath: " + attachFilePath);
-		
-		if (fileType.equals("sticker")) {	
+
+		if (fileType.equals("sticker")) {
 			attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/images/"));
 			pollCmtVO.setImageAttach(attachFilePath);
 			pollCmtVO.setFileAttach("");
 			pollCmtVO.setFileName("");
-			pollCmtVO.setFilePath("");			
-		}
-		else if (fileType.equals("file")) {
-			pollCmtVO.setImageAttach("");			
-			if (fileName.equals("")){
+			pollCmtVO.setFilePath("");
+		} else if (fileType.equals("file")) {
+			pollCmtVO.setImageAttach("");
+			if (fileName.equals("")) {
 				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/fileroot/"));
-				pollCmtVO.setFileAttach(attachFilePath);
+				//fielpath를 upload_common/ -> upload_vote/ 로 이동 
+				PollFilePathVO pollFilePathVO = changeImgPathInContent(request, qstId, attachFilePath,pollCmtVO.getTenantId(), "commentImages");
+				targetDirFullPath = pollFilePathVO.getTargetDirFullPath();
+				copyFilePathList = pollFilePathVO.getCopyFilePathList();
+				pollCmtVO.setFileAttach(pollFilePathVO.getContent());
 				pollCmtVO.setFileName("");
 				pollCmtVO.setFilePath("");
-			}
-			else {
+			} else {
 				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/images/"));
 				pollCmtVO.setFileAttach(attachFilePath);
 				pollCmtVO.setFileName(fileName);
 				pollCmtVO.setFilePath(filePath);
-			}		
-		}
-		else {
+			}
+		} else {
 			pollCmtVO.setImageAttach("");
 			pollCmtVO.setFileAttach("");
 			pollCmtVO.setFileName("");
 			pollCmtVO.setFilePath("");
 		}
-		
-		//Add userImage
-		String imagePath = ezOrganService.getPropertyValue(pollCmtVO.getUserId(), "extensionAttribute2", pollCmtVO.getTenantId());
-		
+
+		// Add userImage
+		String imagePath = ezOrganService.getPropertyValue(pollCmtVO.getUserId(), "extensionAttribute2",
+				pollCmtVO.getTenantId());
+
 		if (imagePath != null && !imagePath.equals("")) {
-			String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", pollCmtVO.getTenantId())+ commonUtil.separator + imagePath;
+			String realPath = commonUtil.getUploadPath("upload_personal.PHOTO", pollCmtVO.getTenantId())
+					+ commonUtil.separator + imagePath;
 			String fullPath = request.getServletContext().getRealPath(realPath);
-			
+
 			if (checkExist(fullPath)) {
 				pollCmtVO.setUserImage("/ezCommon/downloadAttach.do?filePath=" + realPath);
-			}
-			else {
+			} else {
 				pollCmtVO.setUserImage("/images/poll/default_pic_vote.gif");
 			}
 		} else {
 			pollCmtVO.setUserImage("/images/poll/default_pic_vote.gif");
 		}
-		
-		//Process comment
+
+		// Process comment
 		try {
-			//Insert into comment table
+			// Insert into comment table
 			ezPollService.insertCmt(pollCmtVO);
-			
-			String deptId = ezPollService.getQuestionRelatedDept(loginVO.getTenantId(), qstId, loginVO.getId(), loginVO.getDeptID());
-			
-			//Inform all waiting users
-			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"userName1\":\"" + pollCmtVO.getUserName1() + "\", \"userName2\":\"" + pollCmtVO.getUserName2() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
-							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"") + "\","
-							+ " \"cmtTime\":\"" + cmtTime + "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\", \"deptId\":\"" + deptId + "\"}";
-			JSONParser parser = new JSONParser(); 
-			
+			// 2023-08-18 장혜연 - 이미지일 경우 upload_vote 폴더로 복사를한다.
+			if (!"".equals(targetDirFullPath)) {
+				copyUploadImages(request, copyFilePathList, targetDirFullPath);
+			}
+
+			String deptId = ezPollService.getQuestionRelatedDept(loginVO.getTenantId(), qstId, loginVO.getId(),
+					loginVO.getDeptID());
+
+			// Inform all waiting users
+			String result = "{\"cmId\":\"" + cmtId + "\", \"userId\":\"" + loginVO.getId() + "\", \"userName1\":\""
+					+ pollCmtVO.getUserName1() + "\", \"userName2\":\"" + pollCmtVO.getUserName2()
+					+ "\", \"attachFilePath\":\"" + attachFilePath + "\"" + ", \"fileType\":\"" + fileType
+					+ "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\""
+					+ txtContent.replaceAll("\"", "\\\\\"") + "\"," + " \"cmtTime\":\"" + cmtTime
+					+ "\", \"userPhoto\":\"" + pollCmtVO.getUserImage() + "\", \"sessionid\":\""
+					+ egovFileScrty.encryptAES(session.getId()) + "\", \"deptId\":\"" + deptId + "\"}";
+			JSONParser parser = new JSONParser();
+
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/addCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
-			
-			//Set return string 
+
+			// Set return string
 			strXML = "<DATA>OK</DATA>";
-		}
-		catch (Exception e) {			
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			strXML = "<DATA>FAIL</DATA>";
 		}
-		
+
 		logger.debug("Add comment finishes!");
 		return strXML;
 	}
-	
+
 	@RequestMapping(value="/ezPoll/editComment.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String editComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session, HttpServletResponse response) throws Exception {
 		logger.debug("Edit comment is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String strXML = "";		
+		String strXML = "";
 		String attachFilePath = "";
 		String fileName = "";
 		String filePath = "";
 		String txtContent = "";
-		String fileType = "";		
-		int cmtId = -1;		
+		String fileType = "";
+		String targetDirFullPath = "";
+		int cmtId = -1;
 		int qstId = -1;
-		
+		List<Map<String, String>> copyFilePathList = new ArrayList<>();
+		PollCommentVO pollCommentVO = new PollCommentVO();
+
 		qstId = Integer.parseInt(request.getParameter("qstId"));
-		cmtId = Integer.parseInt(request.getParameter("cmtId"));		
-		
+		cmtId = Integer.parseInt(request.getParameter("cmtId"));
+
 		if (request.getParameter("cmtAttach") != null) {
 			attachFilePath = request.getParameter("cmtAttach");
 		}
-		
+
 		if (request.getParameter("fileType") != null) {
 			fileType = request.getParameter("fileType");
 		}
-		
+
 		if (request.getParameter("fileName") != null) {
 			fileName = request.getParameter("fileName");
 		}
-		
+
 		if (request.getParameter("filePath") != null) {
 			filePath = request.getParameter("filePath");
 		}		
-		
+
 		if (request.getParameter("cmtTxt") != null) {
 			txtContent = request.getParameter("cmtTxt");
-		}	
-		
-		logger.debug("cmtAttach: " + attachFilePath + " || fileType: " + fileType + " || fileName: " + fileName + " || filePath: " + filePath + " || txtContent: " + txtContent);
-		
+		}
+
+		logger.debug("cmtAttach: " + attachFilePath + " || fileType: " + fileType + " || fileName: " + fileName
+				+ " || filePath: " + filePath + " || txtContent: " + txtContent);
+
 		if (qstId == -1 || cmtId == -1) {
 			strXML = "<DATA>FAIL</DATA>";
 			return strXML;
 		}
-		
-		//Set PollCommentVO fields
+
+		// Set PollCommentVO fields
 		PollCommentVO pollCmtVO = new PollCommentVO();
-		pollCmtVO.setCmtId(cmtId); 
-		pollCmtVO.setQstId(qstId);		
-		pollCmtVO.setTenantId(loginVO.getTenantId());			
-		pollCmtVO.setTextContent(txtContent);			
-		
-		if (fileType.equals("sticker")) {		
+		pollCmtVO.setCmtId(cmtId);
+		pollCmtVO.setQstId(qstId);
+		pollCmtVO.setTenantId(loginVO.getTenantId());
+		pollCmtVO.setTextContent(txtContent);
+
+		if (fileType.equals("sticker")) {
 			attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/images/"));
 			pollCmtVO.setImageAttach(attachFilePath);
 			pollCmtVO.setFileAttach("");
 			pollCmtVO.setFileName("");
-			pollCmtVO.setFilePath("");			
-		}
-		else if (fileType.equals("file")) {
-			pollCmtVO.setImageAttach("");	
-			
-			if (fileName.equals("")) {				
+			pollCmtVO.setFilePath("");
+		} else if (fileType.equals("file")) {
+			pollCmtVO.setImageAttach("");
+
+			if (fileName.equals("")) {
 				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/fileroot/"));
 				pollCmtVO.setFileAttach(attachFilePath);
 				pollCmtVO.setFileName("");
 				pollCmtVO.setFilePath("");
-			}
-			else {
+			} else {
 				attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/images/"));
 				pollCmtVO.setFileAttach(attachFilePath);
 				pollCmtVO.setFileName(fileName);
 				pollCmtVO.setFilePath(filePath);
-			}		
+			}
 		}
-		else if (fileType.equals("images")) {			
+		else if (fileType.equals("images")) {
 			attachFilePath = attachFilePath.substring(attachFilePath.indexOf("/fileroot/"));
-			pollCmtVO.setFileAttach(attachFilePath);
+			// fielpath를 upload_common/ -> upload_vote/ 로 이동
+			PollFilePathVO pollFilePathVO = changeImgPathInContent(request, qstId, attachFilePath, pollCmtVO.getTenantId(), "commentImages");
+			targetDirFullPath = pollFilePathVO.getTargetDirFullPath();
+			copyFilePathList = pollFilePathVO.getCopyFilePathList();
+			pollCmtVO.setFileAttach(pollFilePathVO.getContent());
 			pollCmtVO.setImageAttach("");
 			pollCmtVO.setFileName("");
 			pollCmtVO.setFilePath("");
-		}
-		else {
+		} else {
 			pollCmtVO.setImageAttach("");
 			pollCmtVO.setFileAttach("");
 			pollCmtVO.setFileName("");
 			pollCmtVO.setFilePath("");
 		}
-		
-		//Process comment
+		// 2023-08-18 장혜연 - 본 댓글의 첨부파일 경로를 가져온다.
+		pollCommentVO = ezPollService.getCmtFileType(cmtId, qstId, pollCmtVO.getTenantId());
+		pollCommentVO.setModFilePath(filePath);
+		// Process comment
 		try {
-			//Update in comment table
+			// Update in comment table
 			ezPollService.updateCmt(pollCmtVO);
-			
-			//Inform all waiting users
-			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
-							+ ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName + "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"") + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";
-			JSONParser parser = new JSONParser(); 
+			// 2023-08-18 장혜연 - 본 댓글에 첨부파일이 있을 경우 삭제한다.
+			deleteCmtImage(request, pollCommentVO);
+			// 2023-08-18 장혜연 - 이미지일 경우 upload_vote 폴더로 복사를한다.
+			if (!"".equals(targetDirFullPath)) {
+				copyUploadImages(request, copyFilePathList, targetDirFullPath);
+			}
+
+			// Inform all waiting users
+			String result = "{\"cmId\":\"" + cmtId + "\", \"userId\":\"" + loginVO.getId() + "\", \"attachFilePath\":\""
+					+ attachFilePath + "\"" + ", \"fileType\":\"" + fileType + "\", \"fileName\":\"" + fileName
+					+ "\", \"filePath\":\"" + filePath + "\", \"txtContent\":\"" + txtContent.replaceAll("\"", "\\\\\"")
+					+ "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";
+			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/editCmtForQst" + qstId + "+" + loginVO.getTenantId(), json);
-			
-			//Set return string
+
+			// Set return string
 			strXML = "<DATA>OK</DATA>";
-		}
-		catch (Exception e) {			
+		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			strXML = "<DATA>FAIL</DATA>";
 		}
-		
+
 		logger.debug("Edit comment finishes!");
 		return strXML;
 	}
@@ -1443,29 +1485,34 @@ public class EzPollController extends EgovFileMngUtil {
 	public String deleteComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpSession session, HttpServletResponse response) throws Exception {
 		logger.debug("Delete comment is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String strXML = "";	
-		int cmtId = -1;		
-		int qstId = -1;		
-		
+		String strXML = "";
+		int cmtId = -1;
+		int qstId = -1;
+
 		qstId = Integer.parseInt(request.getParameter("qstId"));
 		cmtId = Integer.parseInt(request.getParameter("cmtId"));
-		
+
 		if (qstId == -1 || cmtId == -1) {
 			strXML = "<DATA>FAIL</DATA>";
 			return strXML;
 		}
-		
+		// 댓글 삭제 하기 전에 삭제해줄 file path를 가져온다
+		PollCommentVO pollCmtVO = ezPollService.getCmtFileType(cmtId, qstId, loginVO.getTenantId());
+
 		//Process comment
 		try {
 			//Delete entry in comment table
 			ezPollService.deleteSpecificCmt(cmtId, qstId, loginVO.getTenantId());
-			
+
+			//지워줄 파일이 있을경우 삭제를 실행한다
+			deleteCmtImage(request, pollCmtVO);
+
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"sessionid\":\"" + egovFileScrty.encryptAES(session.getId()) + "\"}";
-			JSONParser parser = new JSONParser(); 
+			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(result);
 			this.template.convertAndSend("/reply/deleteCmtInQst" + qstId + "+" + loginVO.getTenantId(), json);
-			
+
 			//Set return string
 			strXML = "<DATA>OK</DATA>";
 		}
@@ -1473,11 +1520,11 @@ public class EzPollController extends EgovFileMngUtil {
 			logger.error(e.getMessage(), e);
 			strXML = "<DATA>FAIL</DATA>";
 		}
-		
+
 		logger.debug("Delete comment finishes!");
 		return strXML;
-	}	
-	
+	}
+
 	@RequestMapping(value="/ezPoll/undoModifyVote.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void undoModifyVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -2906,9 +2953,8 @@ public class EzPollController extends EgovFileMngUtil {
 	}
 	
 	private String questionDelete(String listQstIds, LoginVO loginVO, String pDirPath, String realPath) throws Exception {			
-		String strXML = "";		
+		String strXML = "";
 		String [] qstIdArray = listQstIds.split(",");
-		 
 		try {
 			for (int i = 0; i < qstIdArray.length; i++) {
 				int qstId = Integer.parseInt(qstIdArray[i]);
@@ -3129,4 +3175,157 @@ public class EzPollController extends EgovFileMngUtil {
 		return "redirect:/ezPoll/pollList.do";
 	}
 
+	/**
+	 * 2023-08-18 장혜연 -댓글 이미지, 에디터 이미지 파일 경로를 upload_common -> upload_vote 로 변경한다.
+	 * @param request
+	 * @param qstId
+	 * @param content
+	 * @param tenantId
+	 * @param folderName
+	 * @return
+	 * @throws Exception
+	 */
+	public PollFilePathVO changeImgPathInContent (HttpServletRequest request, int qstId, String content, int tenantId, String folderName) throws Exception{
+		String realPath = request.getServletContext().getRealPath("");
+		String targetDirPath = commonUtil.getUploadPath("upload_vote.ROOT", tenantId) + commonUtil.separator + folderName;
+		String targetDirFullPath = realPath + targetDirPath ;
+		String targetContent = "";
+		List<Map<String, String>> copyFilePathList = new ArrayList<>();
+		// 댓글 이미지일 경우
+		if (folderName.equals("commentImages")) {
+			Map<String, String> copyMap = new HashMap<>();
+			String fileName = content.substring(content.lastIndexOf('/') + 1);
+
+			copyMap.put("sourcePath", request.getServletContext().getRealPath(content));
+			copyMap.put("targetPath", targetDirFullPath + commonUtil.separator + fileName);
+			logger.debug("comment sourcePath : {} ", request.getServletContext().getRealPath(content));
+			logger.debug("comment targetPath : {} ", targetDirFullPath + commonUtil.separator + fileName);
+			copyFilePathList.add(copyMap);
+			targetContent = targetDirPath + commonUtil.separator + fileName;
+			logger.debug("targetContent : {}", targetContent);
+		// 에디터 이미지일 경우
+		} else {
+			org.jsoup.nodes.Document document = Jsoup.parse(content);
+			Elements elements = document.getElementsByTag("img");
+
+			if (!elements.isEmpty()) {
+				for (org.jsoup.nodes.Element element : elements) {
+					Map<String, String> copyMap = new HashMap<>();
+					String fileName = element.attr("src").substring(element.attr("src").lastIndexOf('/') + 1);
+
+					copyMap.put("sourcePath", request.getServletContext().getRealPath(element.attr("src")));
+					copyMap.put("targetPath", targetDirFullPath + commonUtil.separator + fileName);
+
+					element.attr("src", targetDirPath + commonUtil.separator + fileName);
+					copyFilePathList.add(copyMap);
+				}
+				Elements body = document.body().children();
+				targetContent = body.toString();
+			}
+		}
+		// path를 바꿔준 최종 내용, 파일을 복사하기 위해 필요한 source와 target Path를 반환
+		PollFilePathVO pollFilePathVO = new PollFilePathVO(targetContent, copyFilePathList, targetDirFullPath);
+		return pollFilePathVO;
+	}
+
+	/**
+	 * 2023-08-18 장혜연 - 투표 게시물을 업로드 할 경우 common_upload -> common_vote 폴더에 복사 한다.
+	 * @param request
+	 * @param copyImgList
+	 * @param targetDirfullPath
+	 * @throws Exception
+	 */
+	public void copyUploadImages(HttpServletRequest request, List<Map<String, String>> copyImgList, String targetDirfullPath) throws Exception {
+		File folder = new File(targetDirfullPath);
+		// 폴더가 있는지 확인 후 존재하지 않으면 생성
+		if (!folder.exists()) {
+			folder.mkdir();
+		}
+
+		for (int i = 0; i < copyImgList.size(); i++) {
+			// 이미 존재하는 이미지들은 복사를 실행하지 않는다.(수정 시 이미지를 추가 한 경우)
+			if (copyImgList.get(i).get("sourcePath").contains("upload_vote")) {
+				continue;
+			}
+
+			try (FileInputStream inputStream = new FileInputStream(commonUtil.detectPathTraversal(copyImgList.get(i).get("sourcePath")));
+				FileOutputStream outputStream = new FileOutputStream(commonUtil.detectPathTraversal(copyImgList.get(i).get("targetPath")));) {
+				byte[] buffer = new byte[1024];
+				int bytesRead;
+
+				while ((bytesRead = inputStream.read(buffer)) != -1) {
+					outputStream.write(buffer, 0, bytesRead);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * 2023-08-18 장혜연 - 에디터 수정 시 본 내용과 비교하여 삭제 해준다
+	 * @param request
+	 * @param orgContent
+	 * @param modContent
+	 * @throws Exception
+	 */
+	public void deleteContentImages(HttpServletRequest request, String orgContent,  String modContent) throws Exception {
+		// 본 img 태그의 요소들을 가져온다.
+		org.jsoup.nodes.Document orgDocument = Jsoup.parse(orgContent);
+		Elements orgElements = orgDocument.getElementsByTag("img");
+		// 수정된  img 태그의 요소들을 가져온다.
+		org.jsoup.nodes.Document modDocument = Jsoup.parse(modContent);
+		Elements modElements = modDocument.getElementsByTag("img");
+
+		if (!orgElements.isEmpty()) {
+			// 수정된 내용에 이미지 파일이 없을 경우 본 내용의 이미지 파일을 모두 삭제한다.
+			if (modElements.isEmpty()) {
+				for (org.jsoup.nodes.Element orgElement : orgElements) {
+					File file = new File(request.getServletContext().getRealPath(orgElement.attr("src")));
+					file.delete();
+				}
+			}
+			// 본 내용의 이미지 파일이 수정된 내용의 이미지 파일과 같을 경우 그대로 두고 다를경우 삭제한다.
+			for (org.jsoup.nodes.Element orgElement : orgElements) {
+				boolean isDelete = true;
+				for (org.jsoup.nodes.Element modElement : modElements) {
+					if (orgElement.attr("src").equals(modElement.attr("src"))) {
+						isDelete = false;
+						break;
+					}
+				}
+				if (isDelete) {
+					File file = new File(request.getServletContext().getRealPath(orgElement.attr("src")));
+					file.delete();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 2023-08-18 장혜연 - 댓글 수정 시 본 댓글에 파일이 첨부되어 있는 경우 삭제한다
+	 * @param request
+	 * @param pollCmtVO
+	 * @throws Exception
+	 */
+	public void deleteCmtImage(HttpServletRequest request, PollCommentVO pollCmtVO) throws Exception {
+		String cmtImg = pollCmtVO.getFileAttach();
+		if (!("".equals(cmtImg) || cmtImg == null)) {
+			// 파일이 이미지인 경우
+			if (cmtImg.contains("commentImages")) {
+				File file = new File(request.getServletContext().getRealPath(cmtImg));
+				file.delete();
+			} else {
+				String cmtFile = pollCmtVO.getFilePath();
+				// 이미지가 아닐경우 본 댓글의 첨부파일과 수정한 첨부파일이 동일하지 않으면 삭제한다.
+				if (!cmtFile.equals(pollCmtVO.getModFilePath())) {
+					String cmpFilePath = commonUtil.getUploadPath("upload_vote.ROOT", pollCmtVO.getTenantId())
+							+ commonUtil.separator + "uploadFile" + commonUtil.separator + commonUtil.detectPathTraversal(cmtFile);
+
+					File file = new File(request.getServletContext().getRealPath(cmpFilePath));
+					file.delete();
+				}
+			}
+		}
+	}
 }

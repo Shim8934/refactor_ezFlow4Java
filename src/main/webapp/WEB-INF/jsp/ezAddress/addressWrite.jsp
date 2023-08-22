@@ -254,6 +254,20 @@
 		            document.getElementById("TextEmail").focus();
 		            return;
 		        }
+
+		        // 번호 입력 시에는 숫자 [+ -] 만 입력 가능
+		        var textCompanyPhone = document.getElementById("TextCompanyPhone").value;
+		        var textMobile = document.getElementById("TextMobile").value;
+		        var textFax = document.getElementById("TextFax").value;
+
+		        var checkNumberArr = [textCompanyPhone, textMobile, textFax];
+		        var regex2 = /^[0-9+\- ]+$/;
+				for (var checkItem of checkNumberArr) {
+					if ("" != checkItem && !regex2.test(checkItem)) {
+						alert("<spring:message code='ezOrgan.ls009' />");
+						return false;
+					}
+				}
 		
 		        var xmlHTTP = createXMLHttpRequest();
 		        var xmlDom = createXmlDom();

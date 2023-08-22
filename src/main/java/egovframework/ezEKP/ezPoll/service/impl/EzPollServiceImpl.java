@@ -14,7 +14,10 @@ import javax.mail.internet.InternetAddress;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -618,7 +621,8 @@ public class EzPollServiceImpl implements EzPollService{
 		deleteQstFiles(map);
 		deleteAnsFiles(map);
 		deleteCmtFiles(map);
-		
+		// 2023-08-18 장혜연 - 게시물 에디터에 첨부된 이미지를 삭제한다.
+		deleteQstImages(map);
 	}
 	
 	@Override
@@ -948,6 +952,40 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("user_id", userId);
 		
 		return ezPollDAO.getQuestionRelatedDept(map);
+	}
+
+	@Override
+	public String getContent(int qstId, int tenantId) throws Exception {
+		logger.debug("qstid : {}, tenantId : {}", qstId, tenantId );
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("qst_id", qstId);
+		map.put("tenant_id", tenantId);
+		return ezPollDAO.getContent(map);
+	}
+
+	@Override
+	public void deleteQstImages(Map<String, Object> map) throws Exception {
+		String realPath = (String)map.get("realPath");
+		String content = getContent((int)map.get("qst_id"), (int)map.get("tenant_id"));
+
+		Document document = Jsoup.parse(content);
+		Elements elements = document.getElementsByTag("img");
+
+		if (!elements.isEmpty()) {
+			for (Element element : elements) {
+				File file = new File(realPath + element.attr("src"));
+				file.delete();
+			}
+		}
+	}
+
+	@Override
+	public PollCommentVO getCmtFileType(int cmtId, int qstId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("cmt_id", cmtId);
+		map.put("qst_id", qstId);
+		map.put("tenant_id", tenantId);
+		return ezPollDAO.getCmtFile(map);
 	}
 
 }

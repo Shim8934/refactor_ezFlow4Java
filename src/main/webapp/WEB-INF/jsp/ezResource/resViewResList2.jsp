@@ -87,6 +87,7 @@
 		    var lunarUse = "${lunarUse}";
 		    /* select_memorialDays("${lang}"); */
 		    var dayView = "";
+		    var userLang = "${lang}"; // 달력 날짜의 휴일 다국어 처리 위한 용도. (Calendar_Action_cross - tableListControl_Week 참고.)
 		    
 	    	 /* 2019-01-11 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
 		    if(pAdminFg == "") {

@@ -739,7 +739,7 @@
 	            	var strName = p_ListOrderObject.getAttribute("_data4");
 	            	var strMail = p_ListOrderObject.getAttribute("_data3");
 	            	var strData = p_ListOrderObject.getAttribute("_data10");
-	            	var strDept = p_ListOrderObject.getAttribute("_data14");
+	            	var strDept = p_ListOrderObject.getAttribute("_data5");
 	            	
 	            	if (strData == null || strData == "") {
 	            		strData = "c=0;k=0;g=0;a=0;n=0;l=0;f=0;w=0;wf=0;e=0";

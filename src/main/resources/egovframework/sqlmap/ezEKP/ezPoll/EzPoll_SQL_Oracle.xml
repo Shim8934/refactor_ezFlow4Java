@@ -1861,4 +1861,16 @@
 		) 
     ]]>
     </select>
+
+    <select id="EzPollDAO.getContent" parameterClass="Map" resultClass="String">
+    <![CDATA[
+		SELECT CONTENT FROM TBL_VOTE_QUESTION WHERE ID = #qst_id# AND TENANT_ID = #tenant_id#
+    ]]>
+    </select>
+
+    <select id="EzPollDAO.getCmtFile" parameterClass="Map" resultMap="pollComment">
+    <![CDATA[
+		SELECT * FROM TBL_VOTE_COMMENT WHERE ID = #cmt_id# AND QST_ID = #qst_id# AND TENANT_ID = #tenant_id#
+    ]]>
+    </select>
 </sqlMap>
