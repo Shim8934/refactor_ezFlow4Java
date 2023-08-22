@@ -425,6 +425,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			logger.debug("boardDelete ended");
 			return "admin/ezBoard/boardRight";
 		} else {
+			
+			// 2023-08-22 황인경 - 관리자 > 게시판 > 삭제 > 게시판그룹, 게시판명 다국어 처리
+			if (!user.getLang().equals("1")) {
+				boardPropertyVO.setBoardName(boardPropertyVO.getBoardName2());
+				boardPropertyVO.setBoardGroupName(boardPropertyVO.getBoardGroupName2());
+			}
+			
 			model.addAttribute("boardID", boardID);
 			model.addAttribute("boardGroupID", boardGroupID);
 			model.addAttribute("boardName", boardPropertyVO.getBoardName());
@@ -722,6 +729,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			hasSubBoard = "1";
 		} else {
 			hasSubBoard = "0";
+		}
+		
+		// 2023-08-22 황인경 - 관리자 > 게시판 > 게시판 이동 > 게시판명 다국어 처리
+		if (!userInfo.getLang().equals("1")) {
+			boardPropertyVO.setBoardName(boardPropertyVO.getBoardName2());
 		}
 		
 		model.addAttribute("boardID", boardID);
