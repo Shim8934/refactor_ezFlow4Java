@@ -382,22 +382,25 @@ function tableListControl_Week()
                     LunarDate = lunarCalc(oThisDate2.getFullYear(), month, oThisDate2.getDate(), 1);
                     
                     var memorial = memorialDayCheck(oThisDate2, LunarDate);                                    
-                    var yearmemorial = yearmemorialDayCheck(oThisDate2, LunarDate);                   
+                    var yearmemorial = yearmemorialDayCheck(oThisDate2, LunarDate);
 
                     var isholiday = false;
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {    
+                    for (var k = 0; k < memorial.length; k++) {
+                    	// 2023-08-22 한태훈 - 다국어 처리.
+                    	var memorialName = userLang == 1 ? memorial[k].name : memorial[k].name2;
+                    	
                     	// 윤달일 때 기념일 안나타나도록 수정
                         if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
                         	continue;
                         }
                     	if(k == memorial.length-1) {
-                        	holidayName += memorial[k].name;
+                        	holidayName += memorialName;
                         }
                         else {
-                        		holidayName += memorial[k].name + ", ";
+                        		holidayName += memorialName + ", ";
                         }
                         if (memorial[k].holiday) {
                             isholiday = true;
@@ -405,15 +408,18 @@ function tableListControl_Week()
                     }
                     
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	// 2023-08-22 한태훈 - 다국어 처리.
+                    	var yearmemorialName = userLang == 1 ? yearmemorial[k].name : yearmemorial[k].name2;
+                    	
                     	// 윤달일 때 기념일 안나타나도록 수정
                         if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
                         	continue;
                         }
                     	if(k == yearmemorial.length-1) {
-                        	holidayName2 += yearmemorial[k].name;
+                        	holidayName2 += yearmemorialName;
                         }
                         else {
-                        	holidayName2 += yearmemorial[k].name + ", ";
+                        	holidayName2 += yearmemorialName + ", ";
                         }
                         if (yearmemorial[k].holiday) {
                             isholiday = true;
@@ -503,17 +509,20 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {  
+                    for (var k = 0; k < memorial.length; k++) {
+                    	// 2023-08-22 한태훈 - 다국어 처리.
+                    	var memorialName = userLang == 1 ? memorial[k].name : memorial[k].name2;
+                    	
                     	// 윤달일 때 기념일 안나타나도록 수정
                         if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
                         	continue;
                         }
                         
                     	if(k == memorial.length-1) {
-                        	holidayName += memorial[k].name;
+                        	holidayName += memorialName;
                         }
                         else {
-                        	holidayName += memorial[k].name + ", ";
+                        	holidayName += memorialName + ", ";
                         }
                         if (memorial[k].holiday) {
                             isholiday = true;
@@ -521,16 +530,19 @@ function tableListControl_Week()
                     }
                     
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	// 2023-08-22 한태훈 - 다국어 처리.
+                    	var yearmemorialName = userLang == 1 ? yearmemorial[k].name : yearmemorial[k].name2;
+                    	
                     	// 윤달일 때 기념일 안나타나도록 수정
                         if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
                         	continue;
                         }
                         
                     	if(k == yearmemorial.length-1) {
-                        	holidayName2 += yearmemorial[k].name;
+                        	holidayName2 += yearmemorialName;
                         }
                         else {
-                        	holidayName2 += yearmemorial[k].name + ", ";
+                        	holidayName2 += yearmemorialName + ", ";
                         }
                         if (yearmemorial[k].holiday) {
                             isholiday = true;
