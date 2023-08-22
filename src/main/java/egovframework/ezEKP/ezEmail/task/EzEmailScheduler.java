@@ -1122,7 +1122,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId()) + commonUtil.separator + "tempFileUpload");
 			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId()) + commonUtil.separator + "templist");
 			directoryList.add(commonUtil.getUploadPath("upload_mail.ROOT", tenantVO.getTenantId()) + commonUtil.separator + "tempWebfolderFileUpload");
-			directoryList.add(commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantVO.getTenantId()));
+			directoryList.add(commonUtil.getUploadPath("upload_common.ROOT", tenantVO.getTenantId()));
 		}
 		
 		int dayLimit = 2;

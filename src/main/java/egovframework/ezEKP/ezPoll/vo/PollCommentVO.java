@@ -16,7 +16,9 @@ public class PollCommentVO {
 	private String userImage;
 	private String deptId;
 	private String companyId;
-	
+
+	private String modFilePath;
+
 	public int getCmtId() {
 		return cmtId;
 	}
@@ -135,6 +137,14 @@ public class PollCommentVO {
 
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
-	}		
-	
+	}
+
+	public String getModFilePath() {
+		return modFilePath;
+	}
+
+	public void setModFilePath(String modFilePath) {
+		this.modFilePath = modFilePath;
+	}
+
 }

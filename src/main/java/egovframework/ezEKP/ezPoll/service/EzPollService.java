@@ -133,4 +133,10 @@ public interface EzPollService {
 	public String getAddJobDept(int tenantId, int qstId, String userId, String deptId) throws Exception;
 	
 	public String getQuestionRelatedDept(int tenantId, int qstId, String userId, String deptId) throws Exception;
+
+	public String getContent(int qstId, int tenantId) throws Exception;
+
+	public void deleteQstImages(Map<String, Object> map) throws Exception;
+
+	public PollCommentVO getCmtFileType(int cmtId, int qstId, int tenantID) throws Exception;
 }

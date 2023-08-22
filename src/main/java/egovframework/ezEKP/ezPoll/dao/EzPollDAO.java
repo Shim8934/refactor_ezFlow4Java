@@ -269,4 +269,12 @@ public class EzPollDAO extends EgovAbstractDAO {
 		return (String) select("EzPollDAO.getQuestionRelatedDept", map);
 	}
 	
+	public String getContent(Map<String, Object> map) {
+		return (String) select("EzPollDAO.getContent", map);
+	}
+
+	public PollCommentVO getCmtFile(Map<String, Object> map) {
+		return (PollCommentVO) select("EzPollDAO.getCmtFile", map);
+	}
+
 }
