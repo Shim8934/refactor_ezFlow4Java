@@ -712,7 +712,6 @@
 	        }
 	        
 	        function Email_Menu_Click() {
-	        	if ($(event.target).prop("tagName") == "SPAN" && !$(event.target).hasClass("sub_iconLNB")){
 	        	shareId = "";
 	        	deletePermission = "";
 	        	sendPermission = "";
@@ -730,7 +729,6 @@
 	        	detailView();
 	        	window[treeviewStr].select(1);
 	        	openFolder();
-	        	}
 	        }
 	        
 	        function showProgress() {
@@ -1242,6 +1240,8 @@
 	        		
 	        		$("[id='"+h2Id+"']").attr("class", "on")
 	        		$("[id='"+ulId+"']").attr("class", "lnbUL");
+	        		$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+					$("#"+h2Id).children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 	        	}
 				
 	        	/* if ($("#" + h2Id).attr("class") == "off") {
@@ -1614,7 +1614,7 @@
 			        <c:forEach items="${shareInfoList}" var="shareInfo">
 			        	<h2 class="off" id="h2_${shareInfo.shareId}" title="${shareInfo.shareName}" 
 			        		 onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
-			        		<span class="sub_iconLNB tree_arrow_down"></span>
+			        		<span class="sub_iconLNB tree_plus"></span>
 			        		<span class="h2Title" id="h2Title_${shareInfo.shareId}" style="display:inline-block"><c:out value="${shareInfo.shareName}" /></span>&nbsp;&nbsp;
 			        		<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;">
 			        			<c:if test="${shareInfo.totalUnreadCount != '0'}">(${shareInfo.totalUnreadCount})</c:if>
@@ -1624,7 +1624,7 @@
 			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 			        		<li onclick="Open_Search();"><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
 			        		<c:if test="${shareInfo.managePermission eq 'Y'}">
-			        			<li onclick="mail_Config('${shareInfo.shareId}')"><span class="sub_iconLNB tree_setting_gray"></span><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
+			        			<li onclick="mail_Config('${shareInfo.shareId}')"></span><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
 			        		</c:if>
 			        		<c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
 				            	<li onclick="shareMailAddress()"><span class="list_text">스팸편지함</span></li>
@@ -1637,7 +1637,7 @@
 		        </c:if>
 				<c:if test="${useMailTag}">
 					<h2 class="on" id="tagtitle" onclick='openTagFolder();'>
-						<span class="sub_iconLNB tree_arrow_down"></span>
+						<span class="sub_iconLNB tree_plus"></span>
 						<span class="h2Title" style="display:inline-block"><spring:message code="ezEmail.tag" /></span>
 					</h2>
 					<ul class="lnbUL" id="tagcontent">
