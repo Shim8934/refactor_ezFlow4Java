@@ -182,8 +182,9 @@
 					}
 					if (!that.is(":disabled") && !disabled) {
 						child = $("<a>", {
-							"href": "#" + that.val(),
-							"rel": that.val()
+							"href": "javascript:void(0)",
+							"rel": that.val(),
+							"onclick" : location.href + "#" + that.val()
 						}).text(that.text()).bind("click.sb", function (e) {
 							if (e && e.preventDefault) {
 								e.preventDefault();

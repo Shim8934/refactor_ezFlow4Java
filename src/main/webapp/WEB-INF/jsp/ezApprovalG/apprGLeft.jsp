@@ -1106,7 +1106,7 @@
 		    }
 		    var arr_userinfo = new Array();
 		    function ChangeSubtitle(obj) {
-		        var UseSelectTitle = obj.getAttribute("href").split("#")[1].split("|");
+		        var UseSelectTitle = obj.getAttribute("onclick").split("#")[1].split("|");
 		        if ("<c:out value = '${userInfo.deptID}'/>" != UseSelectTitle[0] || userTitle != UseSelectTitle[2]) {
 		            arr_userinfo[4] = UseSelectTitle[0];
 		            arr_userinfo[5] = UseSelectTitle[1];
