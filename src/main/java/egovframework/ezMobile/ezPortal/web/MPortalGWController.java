@@ -757,7 +757,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 			addJobList.add(userVO);
 			
 			List<OrganUserVO> addJobList2 = ezOrganAdminService.getUserAddJobList(userId, lang, tenantId);
-			
+			for (OrganUserVO addJob: addJobList2) {
+				addJob.setTitle(addJob.getTitle().replace("\'","\\'"));
+				addJob.setDescription(addJob.getDescription().replace("\'","\\'"));
+			}
 			addJobList.addAll(addJobList2);
 			
 			dataObject.put("addJobList", addJobList);
