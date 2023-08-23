@@ -639,7 +639,7 @@ public class MApprovalGGWController {
 			
 			for (MApprovalGAbsenteeAddJobInfoVO vo : resultList) {
 				// 겸직에 대한 부재정보가 있는 경우 그 값을 absentInfo에 할당하고 반복문 종료. 
-				if (!vo.getAbsenteeInfo().isEmpty()) {
+				if (null != vo.getAbsenteeInfo() && vo.getAbsenteeInfo().length() > 0) {
 					absentInfo = vo.getAbsenteeInfo();
 					break;
 				}
