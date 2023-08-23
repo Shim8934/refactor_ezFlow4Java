@@ -55,7 +55,7 @@
     <align>center</align>
   </column>
   <column>
-    <heading>Receiver</heading>
+    <heading>To</heading>
     <type>string</type>
     <propname>sender</propname>
     <prop>urn:schemas:httpmail:displayto</prop>
