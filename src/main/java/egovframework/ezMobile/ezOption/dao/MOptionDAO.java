@@ -29,6 +29,10 @@ public class MOptionDAO extends EgovAbstractDAO {
 		insert("EzOptionDAO.updateOption", map);		
 	}
 
+	public void deleteOption(Map<String, Object> map) throws Exception{
+		insert("EzOptionDAO.deleteOption", map);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<MPortalTimeLineVO> getTimeLineList(Map<String, Object> map) throws Exception {
 		return (List<MPortalTimeLineVO>) list("EzOptionDAO.getTimeLineList", map);
