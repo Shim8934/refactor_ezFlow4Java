@@ -7943,7 +7943,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					doc.getElementById("docnumber").text(docNO);
 					
 					if (doc.getElementById("enforcedate") != null) {
-						doc.getElementById("enforcedate").text(commonUtil.getTodayUTCTime("yyyy-MM-dd").replace("-", "."));
+						// 2023-08-25 조수빈 - 시행일자가 UTC 기준으로 적용되어 오전 9시 이전에 시행일자가 기입될 때 하루 전 날짜가 들어가는 문제 수정
+						doc.getElementById("enforcedate").text(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false).replace("-", "."));
 					}
 					
 					retNum = getNDigitNum(cabinetSN, 6);
