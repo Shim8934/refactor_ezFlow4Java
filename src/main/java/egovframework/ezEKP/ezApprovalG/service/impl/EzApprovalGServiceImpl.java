@@ -3008,9 +3008,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getAprLineInfo started.");
 		logger.debug("docID = " + docID + " || userID = " + userID + " || formID = " + formID + " || reDraftFlag = " + reDraftFlag + " || lang = " + lang + " || offset = " + offset + " || mode = " + mode + " || docState = " + docState);
 
+        // 2023-04-10 전인하 - 오라클DB > SUSIN 확인 분기를 타지 못하고 docState가 " "으로 고정되는 논리오류 수정
         if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle") && StringUtils.defaultString(docState).isEmpty()) {
             docState = " ";
-        } else if (StringUtils.defaultString(reDraftFlag).equals("SUSIN")) {
+        }
+        if (StringUtils.defaultString(reDraftFlag).equals("SUSIN")) {
 			docState = "011";
 		}
 
