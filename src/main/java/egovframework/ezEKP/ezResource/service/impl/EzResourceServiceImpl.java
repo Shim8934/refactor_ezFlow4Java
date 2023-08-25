@@ -136,7 +136,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleDateList(map);
 	}
 	
-	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String title, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String title, String writerName, String writerDept, String offset, int tenantID, String lang) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -151,10 +151,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			map.put("v_TITLE", title);
 		}
 		map.put("tenantID", tenantID);
+		map.put("v_lang", lang);
 		return ezResourceDAO.getScheduleList(map);
 	}
 
-	public List<ResGetScheduleVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID, String lang) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -164,11 +165,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pStartDate", startDate);
 		map.put("v_pEndDate", endDate);
 		map.put("tenantID", tenantID);
+		map.put("v_lang", lang);
 		
 		return ezResourceDAO.getScheduleListMain(map);
 	}
 
-	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String title, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String title, String writerName, String writerDept, String offset, int tenantID, String lang) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -184,11 +186,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			map.put("v_TITLE", title);
 		}
 		map.put("tenantID", tenantID);
+		map.put("v_lang", lang);
 		
 		return ezResourceDAO.getScheduleListRepetiti(map);
 	}
 
-	public List<ResGetScheduleVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate, int tenantID, String offset, String lang) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -196,6 +199,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PSTARTDATE", startDate);
 		map.put("tenantID", tenantID);
+		map.put("v_lang", lang);
 		
 		return ezResourceDAO.getScheduleListRepetitim(map);
 	}
@@ -1020,7 +1024,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pTitle, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
+	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pTitle, String pWriterName, String pWriterDept, int tenantID, String offset, String lang) throws Exception {
 		logger.debug("getScheduleXML Start");
 		
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
@@ -1029,7 +1033,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String app = xmlRes.getElementsByTagName("APP").item(0).getTextContent().trim();
 		
 		// 스케줄 정보 가져옴
-		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pTitle, pWriterName, pWriterDept, tenantID, offset);
+		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pTitle, pWriterName, pWriterDept, tenantID, offset, lang);
 		
 		Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
 		
@@ -1322,7 +1326,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnStr.toString();
 	}*/
 	
-	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pTitle, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
+	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pTitle, String pWriterName, String pWriterDept, int tenantID, String offset, String lang) throws Exception {
 		logger.debug("getScheduleList Start");
 
 		String startDateLimit = eDate + " 23:59:59";
@@ -1333,19 +1337,19 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
 		if (pType.equals("")) {
-			getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pTitle, pWriterName, pWriterDept, offset, tenantID);
+			getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pTitle, pWriterName, pWriterDept, offset, tenantID, lang);
 			logger.debug("getScheduleListSize=" + getScheduleList.size());
 		}
 		else if (pType.equals("MAIN")) {
-			getScheduleList = getScheduleListMain(ownerID, companyID, startDateLimit, endDateLimit, offset, tenantID);
+			getScheduleList = getScheduleListMain(ownerID, companyID, startDateLimit, endDateLimit, offset, tenantID, lang);
 			logger.debug("getScheduleListMainSize=" + getScheduleList.size());
 		}
 
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
 		if (pType.equals("")) {
-			getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pTitle, pWriterName, pWriterDept, offset, tenantID);
+			getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pTitle, pWriterName, pWriterDept, offset, tenantID, lang);
 		} else {
-			getScheduleListRept = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset);
+			getScheduleListRept = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset, lang);
 		}
 			
 		// return할 xml string 생성(반복예약)
@@ -4288,6 +4292,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String  offset    = userInfo.getOffset();
 		String  deptID    = userInfo.getDeptID();
 		int     tenantID  = userInfo.getTenantId();
+		String lang = userInfo.getLang();
 		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -4310,7 +4315,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					StringBuilder number   = new StringBuilder();	// 자원1의번호;자원2의번호;....
 					StringBuilder ownName  = new StringBuilder();	// 소유자1의이름;소유자2의이름;...
 					StringBuilder deptName = new StringBuilder();	// 소유자1부서;소유자2의부서
-					String retVal = getScheduleXML(date, resources.get(i).getBrdID(), companyID, "", "P", "", "",  "", "", tenantID, offset);
+					String retVal = getScheduleXML(date, resources.get(i).getBrdID(), companyID, "", "P", "", "",  "", "", tenantID, offset, lang);
 					Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
 					for (int j=0; j<xmlDom2.getDocumentElement().getChildNodes().getLength(); j++) {
 						// 허가되지 않은 자원의 리스트는 skip 비승인0 승인1 
