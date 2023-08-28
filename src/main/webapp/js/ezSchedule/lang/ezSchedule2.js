@@ -95,7 +95,7 @@ var strLang94 = "Please choose the department."
 var strLang95 = "The user belongs to the same department.\r\nPlease choose another department."
 
 // ### 2011-06 GoogleCalendar
-var strLang96 = "Google Enter your e-mail."
+var strLang96 = "Google Enter your email."
 var strLang97 = "Incorrect email address format. \n for example) pat@example.com please enter in the same format as"
 var strLang98 = "Google Enter your password."
 var strLang99 = "Has been saved."

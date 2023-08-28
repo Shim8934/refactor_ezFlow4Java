@@ -149,7 +149,7 @@
 		    function DocumentComplete() {
 		        if (flag == false) {
 		            if (DocHref == "") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1439'/>" + "<br>" + "<spring:message code='ezApprovalG.t440'/>";
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1439'/>" + "<br>" + "<spring:message code='ezApprovalG.t1440'/>";
 		                OpenAlertUI(pAlertContent);
 		                btnClose_onclick();
 		                return;

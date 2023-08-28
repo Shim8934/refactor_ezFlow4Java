@@ -166,7 +166,7 @@
 				        <WIDTH>70</WIDTH>
 		      		</HEADER>
 			      	<HEADER>
-				        <NAME>E-MAIL</NAME>
+				        <NAME>EMAIL</NAME>
 				        <WIDTH>200</WIDTH>
 				    </HEADER>
 		    	</HEADERS>
