@@ -138,13 +138,16 @@
 		            return;
 		        }
 				
-		        // 2023-08-10 황인경 - 일정관리 > 초대자 
+		        // 2023-08-10 황인경 - 일정관리 > 일정보기 > 초대자 > 초대자 삭제 시 > 단/복수 다국어 처리 
 		        if (check_Value > 1) {
-		        	!confirm((check_Value) + "<spring:message code='ezSchedule.hik02' />");
+		        	if(!confirm((check_Value) + "<spring:message code='ezSchedule.hik02' />")){
+				        return;
+		        	}
 		        } else {
-		        	!confirm((check_Value) + "<spring:message code='ezSchedule.t239' />");
+		        	if(!confirm((check_Value) + "<spring:message code='ezSchedule.t239' />")){
+				        return;
+		        	}
 		        }
-		        return;
 		        
 		        $.ajax({
 					type : "POST",
@@ -156,7 +159,12 @@
 						attendantIdList : JSON.stringify(attendantIdList)
 					},
 					success: function(result) {
-						alert((check_Value) + "<spring:message code='ezSchedule.t241' />");
+						
+						if (check_Value > 1){
+							alert((check_Value) + "<spring:message code='ezSchedule.hik03' />");
+						} else {
+							alert((check_Value) + "<spring:message code='ezSchedule.t241' />");
+						}
 						
 			            try {
 			                window.opener.location.reload(false);

@@ -2055,7 +2055,7 @@
 																<th id="TH_1" style="width:18%"><spring:message code='ezLadder.t027'/></th>
 																<th id="TH_2" style="width:20%"><spring:message code='ezLadder.t028'/></th>
 																<th id="TH_3" style="width:16%"><spring:message code='ezLadder.t029'/></th>
-																<th id="TH_4" style="width:41%">E-MAIL</th>
+																<th id="TH_4" style="width:41%">EMAIL</th>
 															</tr>
 														</thead>
 														<tbody id="List_TBODY2">

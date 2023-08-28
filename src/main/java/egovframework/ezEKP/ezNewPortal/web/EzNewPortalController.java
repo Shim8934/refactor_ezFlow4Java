@@ -682,7 +682,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			String imgFolder = "kr";
 			
 			if (userLang.equals("2")) {
-				imgFolder = "kr"; //나중에 en으로 바꾸기
+				imgFolder = "en"; //나중에 en으로 바꾸기
 			} else if (userLang.equals("3")) {
 				imgFolder = "jp";
 			}

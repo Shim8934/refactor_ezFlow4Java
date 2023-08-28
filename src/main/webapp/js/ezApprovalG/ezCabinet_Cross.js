@@ -920,6 +920,11 @@ function InsertToRecListView(Resultxml) {
         if (typeof diffPaging != 'undefined' && diffPaging == "attachDoc") {
             //orgmakePageSelPage(NodeListLen);
             totalPage = parseInt(NodeListLen / PageSize);
+            
+            // 2023-06-26 전인하 - 페이지네이션 오류 수정
+            if ((NodeListLen % PageSize) != 0) {
+                totalPage += 1;
+            }
             makePageSelPageCA(NodeListLen);
         } else {
         	makePageSelPage(NodeListLen);

@@ -1057,7 +1057,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			String imgFolder = "kr";
 			
 			if (userLang.equals("2")) {
-				imgFolder = "kr"; // en으로 나중에 변경 필요
+				imgFolder = "en"; // en으로 나중에 변경 필요
 			} else if (userLang.equals("3")) {
 				imgFolder = "jp";
 			}

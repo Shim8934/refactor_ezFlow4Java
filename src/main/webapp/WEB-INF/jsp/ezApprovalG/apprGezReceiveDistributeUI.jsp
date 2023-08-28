@@ -1526,7 +1526,7 @@
 	                    </div>
 	                </div>
 	                <div id="Organ">
-	                    <div style="overflow: auto; height: 455px; width: 380px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
+	                    <div style="overflow: auto; height: 455px; width: 380px; background-color: #FFFFFF; border: 1px solid #ddd;" id="TreeView"></div>
 	                </div>
 	                <!-- 즐겨찾기 -->
 	                <div id="ReceptTemp" style="display: none;">

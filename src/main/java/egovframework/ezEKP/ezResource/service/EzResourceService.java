@@ -24,7 +24,7 @@ public interface EzResourceService {
 	
 	public ResBrdVO getBrd(int brdID, String companyID, int tenantID) throws Exception;
 	
-	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID, int tenantID) throws Exception;
+	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID, int tenantID, String lang) throws Exception;
 	
 	public void deleteRepetition(String ownerID, int num, String companyID, int tenantID) throws Exception;
 	
@@ -36,7 +36,7 @@ public interface EzResourceService {
 	
 	public int getBrdCnt(int brdID, String companyID, int tenantID) throws Exception;
 
-	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String title, String writerName, String writerDept, int tenantID, String offset) throws Exception;
+	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String title, String writerName, String writerDept, int tenantID, String offset, String lang) throws Exception;
 
 	public String getAdminFlag(String companyID, String brdID, String id, int tenantID, String deptID) throws Exception;
 
@@ -58,7 +58,7 @@ public interface EzResourceService {
 	
 	public boolean deleteRepetition(String xmlStr, String companyID, int tenantID) throws Exception;
 	
-	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID, String offset) throws Exception;
+	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID, String offset, String lang) throws Exception;
 	
 	public boolean multiDelResData(String xmlStr, int tenantID, String realPath) throws Exception;
 	

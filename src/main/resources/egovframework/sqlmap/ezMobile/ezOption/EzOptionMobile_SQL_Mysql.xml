@@ -364,6 +364,17 @@
 					TENANT_ID = #tenantId#
    			]]>
   	</update>
+
+	<delete id="EzOptionDAO.deleteOption" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+                TBL_USERMOBILEINFO
+			WHERE
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				USERID = #userID#
+		]]>
+	</delete>
   	
 </sqlMap>
 

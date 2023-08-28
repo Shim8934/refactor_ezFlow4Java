@@ -4479,7 +4479,7 @@
 		        <WIDTH>40</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME>E-MAIL</NAME>
+		        <NAME>EMAIL</NAME>
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		    </HEADERS>
@@ -4529,7 +4529,7 @@
 		        <WIDTH>65</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME>E-Mail</NAME>
+		        <NAME>Email</NAME>
 		        <WIDTH></WIDTH>
 		      </HEADER>
 		    </HEADERS>

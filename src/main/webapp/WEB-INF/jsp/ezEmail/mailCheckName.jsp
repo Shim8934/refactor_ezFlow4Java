@@ -320,7 +320,7 @@
 						<WIDTH>100</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME>E-MAIL</NAME>
+						<NAME>EMAIL</NAME>
 						<WIDTH>180</WIDTH>
 					</HEADER>
 			</HEADERS>

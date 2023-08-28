@@ -272,7 +272,7 @@ public class MOrganGWController {
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			
-			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID, searchFlag, selectType, optionInfo.getLang(), userInfo.getTenantId(), companyId);
+			List<MOrganListVO> mOrganListVOs = mOrganService.getDeptMemberList(deptID.trim(), searchFlag, selectType, optionInfo.getLang(), userInfo.getTenantId(), companyId);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

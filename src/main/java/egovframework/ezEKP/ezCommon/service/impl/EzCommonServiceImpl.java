@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezCommon.service.impl;
 
+import egovframework.ezMobile.ezOption.dao.MOptionDAO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
@@ -64,6 +66,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	@Resource(name = "EzCommonDAO")
 	private EzCommonDAO ezCommonDAO;
+
+    @Resource(name = "MOptionDAO")
+    private MOptionDAO mOptionDAO;
 
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
@@ -1018,7 +1023,24 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map1.put("timeZone", userInfo.getOffset());
 		map1.put("lang", userInfo.getLang());
 
-		ezCommonDAO.insertTblUserLocalInfo(map1);
+        ezCommonDAO.insertTblUserLocalInfo(map1);
+
+        map1.put("userId",pUserID);
+        map1.put("tenantId",userInfo.getTenantId());
+        MOptionVO mOptionVO = mOptionDAO.optionInfo(map1);
+        if (mOptionVO!=null){
+            map1.put("lang",mOptionVO.getLang());
+            map1.put("mainType",mOptionVO.getMainType());
+            map1.put("listCnt",mOptionVO.getListCnt());
+            map1.put("useSecurity",mOptionVO.getUseSecurity());
+            mOptionDAO.deleteOption(map);
+        }else{
+            map1.put("mainType","D");
+            map1.put("listCnt","10");
+            map1.put("useSecurity","N");
+        }
+
+        mOptionDAO.insertOption(map1);
 
 		return "OK";
 	}
