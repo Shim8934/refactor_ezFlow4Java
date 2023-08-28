@@ -190,7 +190,7 @@
 						var themeImgFolder = "kr";
 						
 						if (userLang == "2") {
-							themeImgFolder = "kr"; //나중에 en으로 바꿔야함! (현재 영문용 이미지가 없음)
+							themeImgFolder = "en"; //나중에 en으로 바꿔야함! (현재 영문용 이미지가 없음)
 						} else if (userLang == "3") {
 							themeImgFolder = "jp";
 						}
