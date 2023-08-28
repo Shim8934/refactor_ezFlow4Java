@@ -1411,7 +1411,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			ResGetScheduleVO getSchedule = new ResGetScheduleVO();
 			
 			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
-				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId());
+				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
 			}
 			
 			num = String.valueOf(getSchedule.getNum());
@@ -1650,7 +1650,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 			ResGetScheduleVO getSchedule = new ResGetScheduleVO();
 			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
-				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId());
+				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
 			}
 			
 			num = getSchedule.getNum();
@@ -1907,7 +1907,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			String num = req.getParameter("num") != null ? req.getParameter("num").trim() : "";
 			String ownerID = req.getParameter("ownerID") != null ? req.getParameter("ownerID").trim() : "";
 		
-			boolean ret = ezResourceService.saveRepetition(companyID, num, ownerID, xmlStr, cmd, userInfo.getTenantId(), userInfo.getOffset());
+			boolean ret = ezResourceService.saveRepetition(companyID, num, ownerID, xmlStr, cmd, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLang());
 				
 			if (ret == true) {
 				returnValue = "OK";

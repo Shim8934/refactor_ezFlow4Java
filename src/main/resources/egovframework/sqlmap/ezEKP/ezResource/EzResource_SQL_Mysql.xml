@@ -1238,8 +1238,8 @@
 				A.PNUM, 
 				A.COMPANYID, 
 				A.WRITERID, 
-				A.DEPTNM, 
-				A.OWNERNM, 
+				IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) DEPTNM, 
+				IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) OWNERNM, 
 				A.TITLE, 
 				A.LOCATION, 
 				A.TIMEDISPLAY, 
@@ -1272,6 +1272,10 @@
 	      				A.NUM = B.NUM
 	      			AND
 	      				A.TENANT_ID = B.TENANT_ID
+	      	LEFT JOIN 
+	      		TBL_USERMASTER U
+	      	ON
+	      		A.WRITERID = U.CN
       		WHERE  
       			A.COMPANYID = #v_pCompanyID#
       		AND 
