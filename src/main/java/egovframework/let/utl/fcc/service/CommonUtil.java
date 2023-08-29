@@ -779,7 +779,7 @@ public class CommonUtil {
 		}
 
 		for (Cookie cookie : cookies) {
-			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")) {
+			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")) {
 				cookie.setMaxAge(0);
 				cookie.setPath("/");
 				response.addCookie(cookie);
