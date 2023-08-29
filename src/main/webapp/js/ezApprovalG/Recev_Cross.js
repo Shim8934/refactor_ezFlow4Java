@@ -1636,14 +1636,9 @@ function SaveDraftDocInfo() {
     }
 
     var aprsign1_cross_dialogArguments = new Array();
-    function openSignUI(parameter)
-    {
-//        try{
-            var signOption = parameter[1];  //20090112 직접서명
-            var objRoot;
-            var objNode;
-            var SignNodeList;
-    
+    function openSignUI(parameter) {
+    	try {
+    		var SignNodeList;
         	var result = "";
         	
         	$.ajax({
@@ -1656,23 +1651,24 @@ function SaveDraftDocInfo() {
         		},
         		success: function(xml){
         			result = xml;
-        		}        			
+        		}
         	});
         	
-            SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW"); 
-            if(SignNodeList.length != 0 || signOption == "YES")     
-            { 
+            SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
+            
+            /* 2023-08-29 홍승비 - 표준모듈에서 직접서명(useDirectSign) 기능 사용하지 않으므로 관련 변수 및 분기 제거 */
+            if (SignNodeList.length != 0) { 
                 var parameter = pUserID;
                 aprsign1_cross_dialogArguments[0] = parameter;
                 aprsign1_cross_dialogArguments[1] = openSignUI_Complete;
-
+                
                 DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
-            }else{
+            } else {
                 openSignUI_Complete("NAME");
             }
-//        }catch(e){
-//            alert("openSignUI : " + e.description);
-//        }
+    	} catch(e) {
+    		alert("openSignUI : " + e);
+    	}
     }
 
     //결재선 지정 UI호출 함수
