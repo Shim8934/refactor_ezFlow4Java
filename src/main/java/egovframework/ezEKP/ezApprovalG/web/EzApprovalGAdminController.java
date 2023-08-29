@@ -1060,6 +1060,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR", tenantId));
 		model.addAttribute("ie11editor", ezCommonService.getTenantConfig("IE11EDITOR", tenantId));
+		model.addAttribute("lang",userInfo.getLang());
 		
 		logger.debug("reformPreviewContent ended.");
 		

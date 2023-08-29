@@ -1486,7 +1486,12 @@ reformUseProc.extendGridRow = function(controlElement) {
 			if (gridElement.tagName == "TABLE") {
 				var rowIndex = reformUseProc.getRowIndexOfControlInGrid(controlElement.id);
 				if (rowIndex != 0) {
-					var rc = confirm("해당 행을 삭제하시겠습니까?");
+					var rc ="";
+					if(userLang == '2'){
+						rc = confirm("Do you want to delete the row?");
+					} else {
+						rc = confirm("해당 행을 삭제하시겠습니까?");
+					}
 					if (rc == true) {
 						if (gridElement.id != "") {
 							var rowCount = reformUseProc.getGridRowCount(gridElement.id);
@@ -1576,7 +1581,12 @@ reformUseProc.extendGridRows = function(controlElement, extendRowCount) {
 			if (gridElement.tagName == "TABLE") {
 				var rowIndex = reformUseProc.getRowIndexOfControlInGrid(controlElement.id);
 				if (rowIndex != 0) {
-					var rc = confirm("해당 행을 삭제하시겠습니까?");
+					var rc ="";
+					if(userLang == '2'){
+						rc = confirm("Do you want to delete the row?");
+					} else {
+						rc = confirm("해당 행을 삭제하시겠습니까?");
+					}
 					if (rc == true) {
 						if (gridElement.id != "") {
 							var rowCount = reformUseProc.getGridRowCount(gridElement.id);
@@ -1660,7 +1670,12 @@ reformUseProc.extendGridRowWithSeqNo = function(controlElement, seqNoColumnIndex
 			if (gridElement.tagName == "TABLE") {
 				var rowIndex = reformUseProc.getRowIndexOfControlInGrid(controlElement.id);
 				if (rowIndex != 0) {
-					var rc = confirm("해당 행을 삭제하시겠습니까?");
+					var rc ="";
+					if(userLang == '2'){
+						rc = confirm("Do you want to delete the row?");
+					} else {
+						rc = confirm("해당 행을 삭제하시겠습니까?");
+					}
 					if (rc == true) {
 						if (gridElement.id != "") {
 							var rowCount = reformUseProc.getGridRowCount(gridElement.id);
