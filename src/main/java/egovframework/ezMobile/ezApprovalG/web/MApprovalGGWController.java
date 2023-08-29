@@ -661,19 +661,6 @@ public class MApprovalGGWController {
 				String [] proxyInfoArray = absentInfo.split(":");
 				startDate = commonUtil.getDateStringInUTC((proxyInfoArray[3] + ":" + proxyInfoArray[4]), userInfo.getOffSet(), false);
 				endDate = commonUtil.getDateStringInUTC((proxyInfoArray[5] + ":" + proxyInfoArray[6]), userInfo.getOffSet(), false);
-			// 부재 설정 정보가 아예 없는 경우
-			} else {
-				String cDate = "";
-				String cTime = "";
-				
-				cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffSet(), false);
-				cTime = cDate.split(" ")[1].substring(0, 2);
-				
-				cDate = cDate.substring(0, 10);
-				startDate = cDate + " " + cTime + ":00:00";
-				
-				cDate = cDate.substring(0, 10);
-				endDate = cDate + " " + Integer.toString((Integer.parseInt(cTime) + 1)) + ":00:00";
 			}
 			
 			if (resultList != null && resultList.size() > 0) {

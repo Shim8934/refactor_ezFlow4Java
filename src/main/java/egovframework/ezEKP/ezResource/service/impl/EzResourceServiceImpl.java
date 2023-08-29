@@ -512,12 +512,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID, int tenantID) throws Exception {
+	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID, int tenantID, String lang) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pNum", pNum);
 		map.put("v_pOwnerID", ownerID);
 		map.put("v_pCompanyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("v_lang", lang);
 		return ezResourceDAO.getSchedule(map);
 	}
 	
@@ -913,7 +914,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				logger.debug("maxNum="+maxNum);
 				map.put("v_MaxNum", maxNum);
 				
-				ResGetScheduleVO vo = getSchedule(Integer.parseInt(pNum), ownerID, companyID, tenantID);
+				String lang = "1";
+				ResGetScheduleVO vo = getSchedule(Integer.parseInt(pNum), ownerID, companyID, tenantID, lang);
 				sDate += " " + commonUtil.getDateStringInUTC(vo.getStartDate(), offset, false).substring(11);
 				eDate += " " + commonUtil.getDateStringInUTC(vo.getEndDate(), offset, false).substring(11);
 				
@@ -2577,7 +2579,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID, String offset) throws Exception {
+	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID, String offset, String lang) throws Exception {
 		String interval = "";
 		String daysOfWeek = "";
 		String daysOfMonth = "";
@@ -2662,7 +2664,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		ResGetScheduleVO resGetSchedule = new ResGetScheduleVO();
 		try {
-			resGetSchedule = getSchedule(Integer.parseInt(num), ownerID, companyID, tenantID);
+			resGetSchedule = getSchedule(Integer.parseInt(num), ownerID, companyID, tenantID, lang);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
