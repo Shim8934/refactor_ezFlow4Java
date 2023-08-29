@@ -36,7 +36,7 @@ public interface EzResourceAdminService {
 	
 	public boolean saveACLLst(String xmlStr, int tenantID) throws Exception;
 	
-	public void addClsData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String brdExplain, String accessNoty, String companyID, String brdNm2, String isCompany, int tenantID) throws Exception;
+	public void addClsData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String brdExplain, String accessNoty, String companyID, String brdNm2, String isCompany, int tenantID, String ownerNm2) throws Exception;
 	
 	public void saveACL(String resID, String deptYn, String sdaYn, String memberNam, String memberNam2, String memberID, String accessLvl, String companyID, int tenantID) throws Exception;
 	
