@@ -688,8 +688,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/helpPortlet.do", method=RequestMethod.GET)
 	public String portalHelpPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalHelpPortlet Start");
-		
+		userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
+		model.addAttribute("lang",userInfo.getLang());
 		
 		return "/ezNewPortal/portlets/helpPortlet";
 	}
