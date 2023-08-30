@@ -754,14 +754,26 @@ public class MPortalGWController extends EgovFileMngUtil {
 			List<OrganUserVO> addJobList = new ArrayList<OrganUserVO>();
 			
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, lang, tenantId);
+			userVO.setTitle1(userVO.getTitle1().replace("\'","\\'"));
+			userVO.setTitle1(userVO.getTitle1().replace("\"","&quot;"));
+			userVO.setTitle2(userVO.getTitle2().replace("\'","\\'"));
+			userVO.setTitle2(userVO.getTitle2().replace("\"","&quot;"));
+			userVO.setDescription1(userVO.getDescription1().replace("\'","\\'"));
+			userVO.setDescription1(userVO.getDescription1().replace("\"","&quot;"));
+			userVO.setDescription2(userVO.getDescription2().replace("\'","\\'"));
+			userVO.setDescription2(userVO.getDescription2().replace("\"","&quot;"));
 			addJobList.add(userVO);
 			
 			List<OrganUserVO> addJobList2 = ezOrganAdminService.getUserAddJobList(userId, lang, tenantId);
 			for (OrganUserVO addJob: addJobList2) {
 				addJob.setTitle1(addJob.getTitle1().replace("\'","\\'"));
+				addJob.setTitle1(addJob.getTitle1().replace("\"","&quot;"));
 				addJob.setTitle2(addJob.getTitle2().replace("\'","\\'"));
+				addJob.setTitle2(addJob.getTitle2().replace("\"","&quot;"));
 				addJob.setDescription1(addJob.getDescription1().replace("\'","\\'"));
+				addJob.setDescription1(addJob.getDescription1().replace("\"","&quot;"));
 				addJob.setDescription2(addJob.getDescription2().replace("\'","\\'"));
+				addJob.setDescription2(addJob.getDescription2().replace("\"","&quot;"));
 			}
 			addJobList.addAll(addJobList2);
 			
