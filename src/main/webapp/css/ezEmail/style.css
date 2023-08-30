@@ -129,13 +129,13 @@ body {
 }
 
 .lmLetterBoxTitle>div:first-child {
-	width: 70px;
+	width: 105px;
 	border-right: 1px solid #ddd;
 	display: inline-block;
 }
 
 .lmLetterBoxTitle>input {
-	width: 170px;
+	width: 138px;
 	color: #393939;
 	border: 1px solid #ddd;
 }
