@@ -1507,6 +1507,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (Files.exists(realPath.resolve("." + reformFunctionRelativePath))) {
 			model.addAttribute("reformFunctionUrl", reformFunctionRelativePath);
 		}
+
+		model.addAttribute("lang",userInfo.getLang());
 		
 		logger.debug("reformApproveHtml ended.");
 		
@@ -5329,6 +5331,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useAllowTextSelection", useAllowTextSelection);
         model.addAttribute("isReform", isReform);
         model.addAttribute("reformFunctionUrl", reformFunctionUrl);
+		model.addAttribute("lang",userInfo.getLang());
 		
 		logger.debug("approvUIcontent ended");
 		
