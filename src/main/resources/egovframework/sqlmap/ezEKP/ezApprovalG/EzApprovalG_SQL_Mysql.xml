@@ -25916,6 +25916,7 @@
          	a.COMPANYID = #companyID# )
     </insert>
     
+    <!-- 2023-08-30 홍승비 - 전자결재 일반버전 > 수신문 재발송 시 원문서의 의견 플래그 복사하도록 수정 (G버전의 재발송과 동일 쿼리 사용하므로 분기 추가) -->
     <update id="EzApprovalG.updateDoSendAprDocInfo" parameterClass="Map">
     	UPDATE 
     		TBL_APRDOCINFO 
@@ -25928,7 +25929,12 @@
             DocTitle = #v_DocTitle#,
             DocNo = #v_DocNo#,
             HasAttachYN = #v_HasAttachYN#,
-            HasOpinionYN = 'N',
+     	<isNotEmpty property="v_HASOPINIONYN">
+     		HasOpinionYN = #v_HASOPINIONYN#,
+     	</isNotEmpty>
+		<isEmpty property="v_HASOPINIONYN">
+     		HasOpinionYN = 'N',
+     	</isEmpty>
             StartDate = #v_StartDate#, 
             EndDate = #v_EndDate#,
             WriterID = #v_WriterID#,
@@ -34902,7 +34908,7 @@
 				COMPANYID = #v_COMPANYID#
 	       	AND
 	       		DOCID = #v_DOCID#
-		)
+		) TEMP
 		LIMIT 1
     </select>
     

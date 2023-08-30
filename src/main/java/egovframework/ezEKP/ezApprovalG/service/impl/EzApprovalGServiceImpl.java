@@ -714,6 +714,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_WriterDeptName2", endAprDoc.getWriterDeptName2());
 			map.put("v_isPublic", endAprDoc.getIsPublic().trim());
 	        
+			/* 2023-08-30 홍승비 - 전자결재 일반버전 > 수신문 재발송 시 원문서의 의견 플래그 복사하도록 수정 (G버전의 재발송과 동일 쿼리 사용하므로 분기 추가) */
+			map.put("v_HASOPINIONYN", endAprDoc.getHasOpinionYn().trim());
+			
 			ezApprovalGDAO.updateDoSendAprDocInfo(map);
 			
 			sentDeptID = endAprDoc.getWriterDeptID();
@@ -772,6 +775,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORGDOCID", orgDocID);
 
 	   	ezApprovalGDAO.insertDosendAprReceiptProcessInfo(map);
+	   	
+	   	/* 2023-08-30 홍승비 - 전자결재 일반버전에서 수신문 재발송 시 원문서의 의견 복사하도록 수정(새롭게 수신문을 만들어 발송하는 동작이므로, 원문서의 의견도 기존 수신문과 동일하게 복사) */
+	   	// 전자결재 G버전의 기록물대장 > 기록물발송목록 > 시행문 재발송과는 다른 동작이므로 주의
+	   	map.put("v_NEWID", docID);
+	   	map.put("v_orgDocID", orgDocID);
+	   	map.put("receiptCompanyID", companyID);
+	   	
+	   	ezApprovalGDAO.copyOpinionsFromOrgDoc2(map);
 	   	
 	   	result = "<RESULT>TRUE</RESULT>";
 		
