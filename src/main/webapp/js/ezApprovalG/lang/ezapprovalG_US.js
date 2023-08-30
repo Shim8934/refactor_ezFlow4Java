@@ -1070,6 +1070,8 @@ var strLangHSBAt09 = "Up to";
 var strLangHSBAt10 = "Downloadable";
 var strLangHSBAt11 = "After the conversion is complete, click OK to download the next file as well.";
 var strLangHSBAt12 = "Please select an attachment.";
+var strLangHSBAt13 = "If the file exceeds ";
+var strLangHSBAt14 = ", it will be treated as a Large attachment.";
 
 var strLang947 = "Departments is unavailable as recipient. \nPlease check!";
 var strLang948 = "Departments unavailable as recipient will be automatically deleted. \nDo you wish to continue?"

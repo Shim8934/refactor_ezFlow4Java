@@ -884,7 +884,7 @@
 		        			alert("일반첨부파일은 총" + apprAttachLimit + "MB까지 가능합니다.");
 		        			return false;
 						} else {
-							bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00);
+							bigFileCheck = confirm(strLangHSBAt13 + apprAttachLimit + "MB" + strLangHSBAt14);
 						}
 						//bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
 		        	}
@@ -1150,7 +1150,7 @@
 		        		bigFileCheck = true;
 		        	} else {
 		        		//bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
-		        		bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00);
+		        		bigFileCheck = confirm(strLangHSBAt13 + apprAttachLimit + "MB" + strLangHSBAt14);
 		        	}
 		        	
 		        	if (bigFileCheck != true) {
