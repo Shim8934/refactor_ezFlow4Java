@@ -2,6 +2,12 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.nio.charset.StandardCharsets;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,6 +61,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -2973,7 +2980,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("excelExportOut started.");
-		
+
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
@@ -2986,17 +2993,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String eMonth = request.getParameter("p3");
 		String mode = request.getParameter("p4");
 		String companyID = request.getParameter("p5");
-		
+
 		if (flag.equals("USER")) {
 			excelValue = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo, approvalFlag);
 		} else {
 			excelValue = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId(), approvalFlag);
 		}
-		
+
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
 		
 		resultExcel.append("\uFEFF");
-		resultExcel.append("<table><tr>");
+		resultExcel.append("<table><tbody><tr>");
 		
 		for (int k = 0; k < objXML.getElementsByTagName("HEADER").getLength(); k++) {
 			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
@@ -3004,12 +3011,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			
 			int width = Integer.parseInt(headerWidth) * 2;
 			
-			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
+			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align='center'><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>");
 		}
-		resultExcel.append("</tr></table>");
-		
-		resultExcel.append("<table>");
-		
+		resultExcel.append("</tr>");
+
 		NodeList objRow = objXML.getElementsByTagName("ROW");
 		
 		for (int k = 0; k < objRow.getLength(); k++) {
@@ -3023,19 +3028,79 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
 				int width = Integer.parseInt(headerWidth) * 2;
 				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align='left'>" + commonUtil.cleanValue(cellValue) + "</p></td>");
 			}
 			resultExcel.append("</tr>");
 		}
-		resultExcel.append("</table>");
-		
+		resultExcel.append("</tbody></table>");
+/*
 		response.setContentType("application/ms-excel");
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_excelExportOutUser" + ".xls\"");
-		
+
 		logger.debug("excelExportOut ended.");
-		
+
 		response.getWriter().write(resultExcel.toString());
+*/
+		// 2023-08-30 이주원 - html형식을 HSSF형식으로 변환후 xls로 다운로드
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			HSSFSheet sheet;
+
+			HSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+			HSSFCellStyle bodyStyle = workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+			Row row;
+			Cell cell;
+
+			String pFileName = "";
+			pFileName = EgovDateUtil.getTodayTime().substring(0, 10) + "_excelExportOutUser";
+			sheet = workbook.createSheet("report");
+
+			String StrAnalysisDate = resultExcel.toString().trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+
+			Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+
+			Node tableNode = analysisData.getElementsByTagName("table").item(0);
+			Node tableHeadNode;
+			Node tableBodyNode;
+
+			tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
+			tableBodyNode = tableNode.getChildNodes().item(0);
+
+			row = sheet.createRow(0);
+
+			for (int i=0; i<tableHeadNode.getChildNodes().getLength(); i++) {
+				cell = row.createCell(i);
+				cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
+				cell.setCellStyle(headerStyle);
+			}
+
+			for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
+				row = sheet.createRow(i+1);
+				Node tr = tableBodyNode.getChildNodes().item(i+1);
+
+				for (int j=0; j<tr.getChildNodes().getLength(); j++) {
+					cell = row.createCell(j);
+					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(bodyStyle);
+				}
+			}
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+			workbook.write(response.getOutputStream());
+
+		}
+
 	}
 	
 	/**

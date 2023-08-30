@@ -31,6 +31,7 @@
 		    }
     	</style>
 	    <script  language="javascript" type="text/javascript">
+			var userLang = '${lang}';
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;

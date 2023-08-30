@@ -16,6 +16,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/unit/openWindowForMail.js')}"></script>
@@ -1333,6 +1334,157 @@
 					error: function() { alert(strLang321); }
 				});
 			}
+
+			//address start
+			function Address_Menu_Click() {
+				LoadAddressTree(true);
+				if (AddressTreeView.selectedIndex() == -1)
+					AddressTreeView.select(1);
+				else
+					selectnode_address();
+
+				// openFolder
+        		$(".lnb H2").attr("class", "off");
+        		$(".lnb UL").attr("class", "lnbUL off");
+
+        		$("#h2Address").attr("class", "on");
+				$("#ul_address").attr("class", "lnbUL");
+
+				applyEllipsisAddressTree();
+			}
+
+			function applyEllipsisAddressTree() {
+				/**
+					1. 왼쪽 메뉴에 존재하는 트리 node를 전부 가져온다.
+					2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
+					3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
+				 */
+				$($("[id^='AddressTreeView_node']"))
+					.each(
+						function(index, element) {
+							var imgCnt = $(element).parent().children('.sub_iconLNB').length - 2;
+							var title = $(element)[0].innerHTML;
+
+							if (imgCnt > 0) {
+								// 최초값 170, 한 블럭의 값 16 이지만 길이가 맞지않아 14로 설정
+								var customWidth = 170 - (14 * imgCnt);
+								$(element).css("width", customWidth + "px");
+								$(element).css("text-align", "justify");
+							}
+						});
+			}
+
+			function selectnode_address() {
+				var nodeIdx = AddressTreeView.selectedIndex();
+				var url = "/ezAddress/addressMainList.do?folderid="
+						+ encodeURIComponent(AddressTreeView.getvalue(nodeIdx,
+								"folderid")) + "&type="
+						+ encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "type"));
+				window.open(url, "right");
+			}
+
+			function address_Search() {
+				window.open("/ezAddress/addressMainSearch.do", "right");
+			}
+
+			var AddressTreeView = null;
+			function LoadAddressTree() {
+				if (AddressTreeView == null) {
+					AddressTreeView = new TreeView('AddressTreeView', 'AddressTreeView');
+
+					AddressTreeView.attachEvent('requestdata', requestdata_address);
+					AddressTreeView.attachEvent('nodeselect', selectnode_address);
+				}
+
+				var xmlHTTP = createXMLHttpRequest();
+				xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
+				xmlHTTP.send();
+				var treeconfig;
+
+				if (CrossYN()) {
+					treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
+				} else {
+					treeconfig = new ActiveXObject("Microsoft.XMLDOM");
+					treeconfig.async = false;
+					treeconfig.loadXML(xmlHTTP.responseText);
+				}
+
+				AddressTreeView.config(treeconfig);
+				AddressTreeView.source(document.getElementById("AddressFolderXML").innerHTML);
+				AddressTreeView.update();
+
+				if (funcCode == "2") {
+					if (subCode != "1" && subCode != "") {
+						AddressTreeView.select(subCode);
+						selectnode_address();
+					} else
+						AddressTreeView.select(1);
+				}
+			}
+
+			function requestdata_address(event) {
+				if (!event) {
+					event = window.event;
+				}
+
+				var nodeIdx = event.nodeIdx;
+
+				if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
+					nodeIdx = arguments[0].nodeIdx;
+				}
+
+				var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "folderid"), 
+						AddressTreeView.getvalue(nodeIdx, "ownerid"),
+						AddressTreeView.getvalue(nodeIdx, "type"))
+						AddressTreeView.putchildxml(nodeIdx, childxml);
+
+				/**
+					주소록 ellipsis 추가
+				 */
+				applyEllipsisAddressTree();
+			}
+
+			var address_foldermanage_dialogArguments = new Array();
+			function address_foldermanage() {
+				address_foldermanage_dialogArguments[1] = address_foldermanage_Complete;
+				var OpenWin = window.open("/ezAddress/addressFolderManage.do",
+						"address_foldermanage", GetOpenWindowfeature(500, 500));
+				try {
+					OpenWin.focus();
+				} catch (e) {
+				}
+			}
+
+			function address_foldermanage_Complete(ret) {
+				if (ret != undefined) {
+					$.ajax({
+						type : "GET",
+						url : "/ezAddress/getRootAddressXML.do",
+						dataType : "text",
+						success : function(data) {
+							document.getElementById("AddressFolderXML").innerHTML = data;
+							LoadAddressTree();
+						},
+						error : function(ee) {
+							alert("error: " + ee.statusText);
+						}
+					});
+				}
+			}
+
+			// 주소록 트리 이름
+			function send_AddressTitle() {
+				var addressNames = document.getElementById('AddressTreeView').getElementsByClassName("node_selected");
+				var addressTitle = addressNames[0].innerText;
+				return addressTitle;
+			}
+
+			// 환경설정 호출
+			function address_Config() {
+				detailView();
+		 		parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
+			}
+			//address end
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1362,9 +1514,10 @@
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
 	    	<div class="left_title" title="<spring:message code="ezEmail.t99000012" />"><spring:message code="ezEmail.t99000012" />
+	    	<%-- 2023-07-31 이사라 - 주소록 email 아래 메뉴로 붙이면서 불필요하여 주석 처리
 	    	<c:if test="${dotNetIntegration eq 'YES'}">
 	    		<span class="sub_iconLNB tree_addressPop" title="<spring:message code="ezEmail.t99000041" />" onclick="goAdress()"></span>
-	    	</c:if>
+	    	</c:if> --%>
 	        	<span class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezEmail.t99000044" />" onclick="mail_Config()"></span>
 	        </div>
 	        <div class="btn_writeBox">
@@ -1398,6 +1551,45 @@
 		            	<li onclick="oepnSpamOutBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
 		        </ul>
+		        <!-- 주소록 -->
+		        <c:if test="${dotNetIntegration eq 'YES'}">
+			        <div class="addressListBox"	style="overflow: hidden; padding-right: 0;">
+						<h2 class="off" id="h2Address" onclick="Address_Menu_Click();">
+							<span class="sub_iconLNB tree_arrow_up"></span>
+							<span class="h2Title" id="h2TitleMail" style="display: inline-block">
+								<spring:message code="ezEmail.t99000041" />
+							</span>
+						</h2>
+						<ul class="lnbUL off" id="ul_address">
+							<div class="tree" id="AddressTreeView">
+								<div class="node_div">
+									<span class="sub_iconLNB tree_blank"></span>
+									<span class="sub_iconLNB tree_adress_individual"></span>
+									<span class="list_text"><spring:message code='ezAddress.t145'/></span>
+								</div>
+								<div class="node_div">
+									<span class="sub_iconLNB tree_blank"></span>
+									<span class="sub_iconLNB tree_adress_department"></span>
+									<span class="list_text"><spring:message code='ezAddress.t146' /></span>
+								</div>
+								<div class="node_div">
+									<span class="sub_iconLNB tree_blank"></span>
+									<span class="sub_iconLNB tree_adress_company"></span>
+									<span class="list_text"><spring:message code='ezAddress.t147' /></span>
+								</div>
+							</div>
+							<li onclick="address_Search()">
+								<span class="sub_iconLNB tree_search"></span>
+								<span class="list_text" title="<spring:message code="ezEmail.t99000042" />"><spring:message code="ezEmail.t99000042" /></span>
+							</li>
+							<li onclick="address_Config()">
+								<span class="sub_iconLNB tree_rightconfig"></span>
+								<span class="list_text" title="<spring:message code="ezEmail.t99000042" />"><spring:message code="ezAddress.ls001" /></span>
+							</li>
+						</ul>
+					</div>
+				</c:if>
+				<!-- 공유사서함  -->
 		        <c:if test="${useSharedMailbox == 'YES'}">
 			        <c:forEach items="${shareInfoList}" var="shareInfo">
 			        	<h2 class="off" id="h2_${shareInfo.shareId}" title="${shareInfo.shareName}" 
@@ -1443,6 +1635,9 @@
 	        <xml id="RootFolderXML" style="display: none;">
 		    	${rootFolderXML}
 		    </xml>
+		    <xml id="AddressFolderXML" style="display: none;">
+				${rootAddressXML} 
+			</xml>
 		    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 			<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="folderPanel" onclick="HiddenFolderMenu();" >&nbsp;</div>   		    		               
 			<div id="folderMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
