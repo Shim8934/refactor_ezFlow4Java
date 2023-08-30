@@ -693,7 +693,7 @@
 									</tr>
 									<tr>
 										<td>
-											<div style="margin: 0px 20px 40px; min-height: 200px; border:1px solid #ddd; padding:10px; border-radius:3px" >
+											<div style="margin: 0px 20px 20px; min-height: 200px; border:1px solid #ddd; padding:10px; border-radius:3px" >
 												<span id="newTargetDiv"></span>
 											</div>
 										</td>
