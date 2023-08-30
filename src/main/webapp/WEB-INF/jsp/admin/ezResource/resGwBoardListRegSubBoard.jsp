@@ -12,6 +12,7 @@
 			g_BrdID  = "<c:out value='${brdID}' />";
 			g_UserID = "<c:out value='${userInfo.id}' />";
 			g_UserNm = "<c:out value='${userInfo.displayName1}' />";
+			g_UserNm2 = "<c:out value='${userInfo.displayName2}' />";
 
 			var L_UpLevel  = "<c:out value='${upLevel}' />";
 			var L_UpStep   = "<c:out value='${upStep}' />";
@@ -50,6 +51,7 @@
 				var pMakerDeptNm = "<c:out value='${userInfo.deptName1}' />"
 				var pMakerUserID = g_UserID;
 				var pMakerUserNm = g_UserNm;
+				var pMakerUserNm2 = g_UserNm2;
 				var pMakerPosition = "<c:out value='${userInfo.title1}' />";
 				var pMakerCall = "";
 				var strCompanyID = pCompanyID;
@@ -78,6 +80,7 @@
 			        	document.getElementById("Brd_NM2").value = document.getElementById("Brd_NM").value;
 			    	}
 			    	createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("Brd_NM2").value);
+			    	createNodeAndInsertText(xmlPara, objNode, "DATA", pMakerUserNm2);
 				} else {
 				    xmlPara = new ActiveXObject("Microsoft.XMLDOM");
 			    	xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -135,6 +138,10 @@
 				    var objNode = xmlPara.createNode(1, "DATA", "");
 			    	objNode.text = document.getElementById("Brd_NM2").value;
 			    	objRootNode.appendChild(objNode);
+
+                    var objNode = xmlPara.createNode(1, "DATA", "");
+                    objNode.text = pMakerUserNm2;
+                    objRootNode.appendChild(objNode);
 				}
 
 				/* 2018-09-05 홍승비 - 자원관리 새 분류 등록 시 에러 alert 메세지 수정 */

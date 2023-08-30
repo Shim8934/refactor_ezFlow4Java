@@ -1481,6 +1481,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("reformBody", reformBody);
+		model.addAttribute("lang", userInfo.getLang());
 		
 		logger.debug("reformDraftHtml ended.");
 		

@@ -27,6 +27,7 @@
 	var args = parent.args;
 	var reformScriptCode = args.reformScriptCode;
 	var isIE11Mode = args.isIE11Mode;
+	var userLang = '${lang}';
 	// reform - end
 	
 	document.onselectstart = function() {

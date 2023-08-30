@@ -1333,45 +1333,38 @@ function SaveDraftDocInfo_susin()
 
 var aprsign1_cross_dialogArguments = new Array();
 function openSignUI(parameter) {
-  try {
-	var signOption = parameter[1];
-    var objRoot;
-    var objNode;
-    var SignNodeList;
-    
-    var result = "";
-    
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezApprovalG/getSignRequest.do",
-		data : {
-			userID : pUserID
-		},
-		success: function(xml){
-			result = xml;
-		}        			
-	});
-  
-	SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW"); 
-	if(SignNodeList.length != 0 || signOption == "YES") {
-		var parameter	= pUserID;
-		aprsign1_cross_dialogArguments[0] = parameter;
-        aprsign1_cross_dialogArguments[1] = openSignUI_Complete;
-        
-        DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
-		/*var url = "/ezApprovalG/aprSign.do";
-		var feature	= "status:no;dialogWidth:350px;dialogHeight:320px;help:no;scroll:no;edge:sunken";
-	    var ret = window.showModalDialog(url,parameter,feature);*/
-     } else {
-		//var ret = "NAME";
-    	 openSignUI_Complete("NAME");
-     }
-    //return ret;
-  } catch(e) {
-    alert("openSignUI : " + e);
-  }
+	try {
+	    var SignNodeList;
+	    var result = "";
+	    
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/getSignRequest.do",
+			data : {
+				userID : pUserID
+			},
+			success: function(xml){
+				result = xml;
+			}
+		});
+		
+		SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
+		
+		/* 2023-08-29 홍승비 - 표준모듈에서 직접서명(useDirectSign) 기능 사용하지 않으므로 관련 변수 및 분기 제거 */
+		if (SignNodeList.length != 0) {
+			var parameter	= pUserID;
+			aprsign1_cross_dialogArguments[0] = parameter;
+	        aprsign1_cross_dialogArguments[1] = openSignUI_Complete;
+	        
+	        DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
+	     } else {
+	    	 openSignUI_Complete("NAME");
+	     }
+	} catch(e) {
+		alert("openSignUI : " + e);
+	}
 }
 
 

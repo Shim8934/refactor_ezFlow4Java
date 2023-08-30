@@ -22,6 +22,7 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.timepicker.js')}"></script>
 <script type="text/javascript">
 	var reformEditorContent = "";
+	var userLang = '${lang}';
 	
 	window.onload = function() {
 		parent.Editor_Complete();
