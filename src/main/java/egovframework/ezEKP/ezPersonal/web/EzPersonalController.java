@@ -469,7 +469,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		// 2023-08-29 조수빈 - 겸직에 대한 부재 정보가 현재 일자와 비교하여 종료일자가 그 이전인 경우 삭제한다.
 		for (int i = 0; i < addJobList.size(); i++) {
 			OrganUserVO vo = addJobList.get(i);
-			String [] proxyInfoArray = vo.getExtensionAttribute5().split(":");
+			String [] proxyInfoArray = (null != vo.getExtensionAttribute5()) ? vo.getExtensionAttribute5().split(":") : new String [] {};
 			if (null != proxyInfoArray && proxyInfoArray.length > 1) {
 				String endStr = proxyInfoArray[5] + ":" + proxyInfoArray[6];
 				LocalDateTime endDateTime = LocalDateTime.parse(endStr, formatter);
