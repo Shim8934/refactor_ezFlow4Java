@@ -362,7 +362,11 @@
 					OR
 					D.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%'))	
 				AND
-					A.TENANT_ID = #tenantID#) 
+					A.TENANT_ID = #tenantID#
+		    	AND 
+		    		B.PHYSICALDELIVERYOFFICENAME = #companyId# 
+		    	AND 
+		    		D.DEPT_CD_PATH NOT LIKE '%trash\_dept%')
 				ORDER BY 
 					EXTENSIONATTRIBUTE15,
 				    userName
