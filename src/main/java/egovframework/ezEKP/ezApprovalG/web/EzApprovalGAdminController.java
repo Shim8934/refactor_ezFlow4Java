@@ -7,6 +7,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -3053,6 +3054,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 
 			HSSFCellStyle bodyStyle = workbook.createCellStyle();
 			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
@@ -3084,6 +3086,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				cell = row.createCell(i);
 				cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
 				cell.setCellStyle(headerStyle);
+
+				sheet.autoSizeColumn(i);
+				sheet.setColumnWidth(i, (sheet.getColumnWidth(i))+1024); //너비 더 넓게
 			}
 
 			for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
@@ -3094,6 +3099,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 					cell = row.createCell(j);
 					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
 					cell.setCellStyle(bodyStyle);
+
+					sheet.autoSizeColumn(j);
+					sheet.setColumnWidth(j, (sheet.getColumnWidth(j))+1024); //너비 더 넓게
 				}
 			}
 			response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
