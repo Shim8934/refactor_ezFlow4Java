@@ -865,13 +865,13 @@
                             var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
                             var AttachUrlA1 = GetAttribute(tr,"DATA1");
                             var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
-                            var AttachUrlA2 = getOriginalFileExtension(AttachUrlA1); //fileExt(.hwp, .ezd, .mht)
+                            var AttachUrlA2 = getOriginalFileExtension(AttachUrlA1); // fileExt(hwp, ezd, mht)
                             AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
                           
                             if (AttachfilenameN1 < 0) {
                                 Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
                             } else {
-                            	if (AttachUrlA2 == ".mht") {
+                            	if (AttachUrlA2 == "mht") { // 마침표가 붙지 않은 확장자를 사용
 		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
 	                        	} else {
 		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
@@ -894,11 +894,12 @@
                                 	window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
                                 } */ 
                                 
+                                /* 2023-09-01 홍승비 - 전자결재 결재문서리스트 하단 첨부탭에서 문서첨부파일을 여는 경우, DOCID에 '.' 문자가 포함되어 전달되는 오류 수정 (비공개문서의 접근권한 체크 등 관련) */
                                 //2018-09-12 천성준 - 전자결재 결재문서리스트 하단 첨부탭에서 첨부파일이 문서첨부일경우 문서보기로 열수있게
                                 try {
 	                                if (GetAttribute(tr,"data4") == strLangCSJ01 || GetAttribute(tr,"data4") == "Document") {
 	                                	var tempStr = AttachUrlA1.split("/");
-	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
+	                                    var docID = tempStr[tempStr.length - 1].replace("." + AttachUrlA2, '');
 	                                    var openLocation;
 	                                    
 	                                    if (AttachUrlA2 == "hwp") {
