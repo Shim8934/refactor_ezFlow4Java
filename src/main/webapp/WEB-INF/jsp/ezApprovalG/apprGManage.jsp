@@ -854,8 +854,27 @@
 		                openUserInfo();
 		                break;
 		            case "2":
-						var url = "/ezApprovalG/ezReceiptInfoIng.do?docId=" + tr.getAttribute("DATA2") + "&receiptId=" + tr.getAttribute("DATA1") + "&receiptName=" + encodeURIComponent(tr.getAttribute("DATA10"));
-						var win = window.open(url, "", GetOpenWindowfeature(1155, 460, false));
+						var win;
+						if (pListTypeValue == "99") {
+							var heigth = window.screen.availHeight;
+							var width = window.screen.availWidth;
+							var left = (parseInt(width) - 540) / 2;
+							var top = (parseInt(heigth) - 220) / 2;
+							var isExtYN = tr.getAttribute("DATA3");
+
+							if (isExtYN.toUpperCase() == "Y") {
+								var url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + tr.getAttribute("DATA2") + "&deptID=" + encodeURI(tr.getAttribute("DATA1"));
+								win = window.open(url, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+							} else {
+								left = (parseInt(width) - 1155) / 2;
+								top = (parseInt(heigth) - 460) / 2;
+								win = window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA2") + "&deptID=" + encodeURI(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+							}
+						} else {
+							var url = "/ezApprovalG/ezReceiptInfoIng.do?docId=" + tr.getAttribute("DATA2") + "&receiptId=" + tr.getAttribute("DATA1") + "&receiptName=" + encodeURIComponent(tr.getAttribute("DATA10"));
+							win = window.open(url, "", GetOpenWindowfeature(1155, 460, false));
+						}
+
 						try { win.focus(); } catch (e) {}
 		                break;
 		            case "4":
