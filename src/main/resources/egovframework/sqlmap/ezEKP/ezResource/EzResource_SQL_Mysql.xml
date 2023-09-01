@@ -628,14 +628,16 @@
                 CHARACTERID ,
                 APPROVEFLAG ,
                 RETURNFLAG,
-                IF(#v_lang# LIKE '1', B.DISPLAYNAME, B.DISPLAYNAME2) OWNERNM  ,
-                IF(#v_lang# LIKE '1', B.DESCRIPTION, B.DESCRIPTION2) DEPTNM  
+                IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM  ,
+                IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM  
            	FROM 
            		TBL_RS_SCHEDULE A
            	LEFT JOIN 
-           		TBL_USERMASTER B
+           		TBL_USERMASTER U
            	ON 
-           		A.WRITERID = B.CN
+           		A.WRITERID = U.CN
+           	AND
+           		A.TENANT_ID = U.TENANT_ID
           	WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -727,14 +729,16 @@
         		TBL_RS_BRD BRD
 			ON
 				SCH.OWNERID = BRD.BRD_ID 
-			LEFT JOIN
-				TBL_USERMASTER U
-			ON
-				SCH.WRITERID = U.CN
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
 			AND
 				SCH.COMPANYID = BRD.BRD_COMPANY
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				SCH.WRITERID = U.CN
+			AND 
+				SCH.TENANT_ID = U.TENANT_ID
 			WHERE
 				STARTDATE <= STR_TO_DATE(#v_pStartDate#, '%Y-%m-%d %T')
         	AND
@@ -795,6 +799,8 @@
            		TBL_USERMASTER U
            	ON 
            		A.WRITERID = U.CN
+           	AND 
+           		A.TENANT_ID = U.TENANT_ID
 			WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -865,6 +871,8 @@
            		TBL_USERMASTER U
            	ON 
            		SCH.WRITERID = U.CN
+           	AND
+           		SCH.TENANT_ID = U.TENANT_ID
         	WHERE
         		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND 
@@ -1276,6 +1284,8 @@
 	      		TBL_USERMASTER U
 	      	ON
 	      		A.WRITERID = U.CN
+	      	AND
+	      		A.TENANT_ID = U.TENANT_ID
       		WHERE  
       			A.COMPANYID = #v_pCompanyID#
       		AND 
