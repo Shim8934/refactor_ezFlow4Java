@@ -377,7 +377,8 @@
 		                break;
 		        }
 		    }
-		
+
+			var favFirst = true;
 		    function Get_Favoritelist(type) {
 		    	var _searchType = "";
 		    	var _searchName = "";
@@ -421,7 +422,10 @@
 		        if (tr) {
 		            listview.SetSelectFlag(true);
 		            document.getElementById('descrip2').innerHTML = tr.getAttribute("DATA2");
-		        }
+		        } else if (favFirst) {
+					favFirst = false;
+					Tab1_MouseClick(document.querySelector('[divname=formlist]'));
+				}
 		    }
 		
 		    function search_press(evt) {
