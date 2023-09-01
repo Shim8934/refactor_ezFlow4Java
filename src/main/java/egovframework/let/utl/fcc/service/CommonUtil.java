@@ -1989,9 +1989,12 @@ public class CommonUtil {
 		String fontStyle = ezCommonService.getTenantConfig("editorFontStyle", tenantID);
 		if(!ObjectUtils.defaultIfNull(fontStyle, "").isEmpty()) {
 			String [] dividedFontStyle = fontStyle.split("\\|");
-			
+
 			fontFamily = dividedFontStyle[0];
-			fontSize = dividedFontStyle[1];
+			if (dividedFontStyle.length >= 2 ){
+				fontSize = dividedFontStyle[1];
+			}
+
 		}
 		
 		return String.format("<DIV id=\"msgBody\" style=\"font-size: %s; font-family: %s;\" name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", fontSize, fontFamily, content);
