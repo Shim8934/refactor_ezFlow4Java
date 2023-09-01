@@ -7539,8 +7539,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (!file.exists()) {
 			file.mkdirs();
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdir();
-			new File(dirPath + boardID + commonUtil.separator + "doc").mkdir();
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
 		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
 			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 		}

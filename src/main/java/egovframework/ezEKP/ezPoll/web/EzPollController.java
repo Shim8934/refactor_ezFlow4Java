@@ -1644,7 +1644,7 @@ public class EzPollController extends EgovFileMngUtil {
             File file = new File(pDirPath + "commentImages");
             
             if (!file.exists()) {
-            	file.mkdir();        
+            	file.mkdirs();        
             }
             
             String newFileName = pUploadSN + "." + extension;  
@@ -1713,7 +1713,7 @@ public class EzPollController extends EgovFileMngUtil {
         File file = new File(pDirPath + "uploadFile");
 
         if (!file.exists()) {
-        	file.mkdir();        
+        	file.mkdirs();        
         }
 
         StringBuffer strXML = new StringBuffer();
@@ -1784,7 +1784,7 @@ public class EzPollController extends EgovFileMngUtil {
             File file = new File(pDirPath + "optImages");
             
             if (!file.exists()) {
-            	file.mkdir();        
+            	file.mkdirs();        
             }
             
             String newFileName = pUploadSN + "." + extension;  
@@ -3239,7 +3239,7 @@ public class EzPollController extends EgovFileMngUtil {
 		File folder = new File(targetDirfullPath);
 		// 폴더가 있는지 확인 후 존재하지 않으면 생성
 		if (!folder.exists()) {
-			folder.mkdir();
+			folder.mkdirs();
 		}
 
 		for (int i = 0; i < copyImgList.size(); i++) {

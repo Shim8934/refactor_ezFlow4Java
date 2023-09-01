@@ -302,7 +302,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
 		
 		if (!file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 		}
 		
 		ezResourceDAO.delAttachFile(attachMap);
@@ -450,7 +450,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		File file = new File(pDirPath + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
 		
 		if (!file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 		}
 		
 		if(!strAttachList1.equals("") && strAttachList1 != null) {

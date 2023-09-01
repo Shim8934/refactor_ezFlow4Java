@@ -2784,7 +2784,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		File tFile = new File(commonUtil.detectPathTraversal(tempUpd));
 		
 		if (uFile.isDirectory()) {
-			uFile.mkdir();
+			uFile.mkdirs();
 		}
 		
 		if (!tFile.isDirectory()) {
@@ -2880,7 +2880,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		File tFile = new File(commonUtil.detectPathTraversal(tempUpd));
 		
 		if (uFile.isDirectory()) {
-			uFile.mkdir();
+			uFile.mkdirs();
 		}
 		
 		if (!tFile.isDirectory()) {
@@ -2996,7 +2996,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		File tFile = new File(commonUtil.detectPathTraversal(tempUpd));
 		
 		if (uFile.isDirectory()) {
-			uFile.mkdir();
+			uFile.mkdirs();
 		}
 		
 		if (!tFile.isDirectory()) {

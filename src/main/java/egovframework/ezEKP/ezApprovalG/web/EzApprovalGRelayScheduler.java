@@ -1195,7 +1195,7 @@ public class EzApprovalGRelayScheduler {
     	String strBackupFile = backupPath + commonUtil.separator + errorfile.getName(); 
     	File backupDir = new File(backupPath);
     	if(!backupDir.isDirectory()) {
-    		backupDir.mkdir();
+    		backupDir.mkdirs();
     	}
     	
     	try {

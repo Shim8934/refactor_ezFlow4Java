@@ -1030,7 +1030,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (!new File(commonUtil.detectPathTraversal(dirPath + boardID)).exists()) {
-			new File(commonUtil.detectPathTraversal(dirPath + boardID)).mkdir();
+			new File(commonUtil.detectPathTraversal(dirPath + boardID)).mkdirs();
 			new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).mkdirs();
 			new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "doc")).mkdirs();
 		} else if (!new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).exists()) {

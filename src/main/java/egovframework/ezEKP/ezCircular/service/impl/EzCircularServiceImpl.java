@@ -203,7 +203,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			File file = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile"));
 
 			if (!file.exists()) {
-	        	file.mkdir();
+	        	file.mkdirs();
 	        }
 			//2018-07-06 김보미 - 파일부분 수정
 //			int fileLength = fileList.split(",").length;
@@ -622,7 +622,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			File file = new File(commonUtil.detectPathTraversal(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + circularID + "_uploadFile"));
 
 			if (!file.exists()) {
-	        	file.mkdir();
+	        	file.mkdirs();
 	        }
 
 			logger.debug("modify fileList : " + fileList);

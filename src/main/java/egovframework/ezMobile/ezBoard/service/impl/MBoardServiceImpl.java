@@ -1450,7 +1450,7 @@ public class MBoardServiceImpl implements MBoardService {
 	    File file = new File(filePath);
 	        
 	    if (!file.exists()) {
-	    	file.mkdir();
+	    	file.mkdirs();
 	    }
 	    
 	    String m_strMHT = "";

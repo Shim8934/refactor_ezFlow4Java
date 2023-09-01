@@ -731,7 +731,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
 			
 			if (!file.exists()) {
-				file.mkdir();
+				file.mkdirs();
 			}
 			
 			String[] attach = fileList.split("/");
@@ -1001,7 +1001,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 				File file = new File(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
 						
 				if (!file.exists()) {
-					file.mkdir();
+					file.mkdirs();
 				}
 				
 				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + "." + extension;

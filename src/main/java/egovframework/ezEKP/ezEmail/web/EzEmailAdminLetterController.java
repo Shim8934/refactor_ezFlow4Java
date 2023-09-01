@@ -736,7 +736,7 @@ public class EzEmailAdminLetterController {
 				if (dir.exists()) {
 
 					File newImages = new File(path + "/images");
-					newImages.mkdir();
+					newImages.mkdirs();
 
 					File[] imgs = dir.listFiles();
 

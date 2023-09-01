@@ -781,7 +781,7 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
 				File file = new File(pDirPath + "uploadFile" + commonUtil.separator + carID + "_uploadFile");
 				
 				if (!file.exists()) {
-					file.mkdir();
+					file.mkdirs();
 				}
 				
 				if(!strAttachList1.equals("") && strAttachList1 != null) {
@@ -951,7 +951,7 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
 				File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + carID + "_uploadFile");
 				
 				if (!file.exists()) {
-					file.mkdir();
+					file.mkdirs();
 				}
 				
 				ezCarDAO.delAttachFile(attachMap);

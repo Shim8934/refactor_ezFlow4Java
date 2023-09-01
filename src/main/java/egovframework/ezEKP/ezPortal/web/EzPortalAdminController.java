@@ -3135,7 +3135,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			File cFile = new File(commonUtil.detectPathTraversal(stordFilePathReal));
 			
 			if (!cFile.isDirectory()) {
-				boolean _flag = cFile.mkdir();
+				boolean _flag = cFile.mkdirs();
 				if (!_flag) {
 					throw new IOException("Directory creation Failed ");
 				}

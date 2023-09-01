@@ -1938,7 +1938,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		File file = new File(commonUtil.detectPathTraversal(defaultPath + mhtPath));
 		if (!file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 		}
 		
 		String newContentPath  = commonUtil.detectPathTraversal(defaultPath + resultPath);
@@ -1960,7 +1960,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		File file = new File(commonUtil.detectPathTraversal(defaultPath + attachPath));
 		if (!file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 		}
 
 		String orgFileName;

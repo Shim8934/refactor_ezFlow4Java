@@ -124,7 +124,7 @@ public String getChildDirectory(String path, String maxCount)
 			dirNew.setReadable(true);
 			dirNew.setWritable(false, true);
 
-			boolean returnRes = dirNew.mkdir();
+			boolean returnRes = dirNew.mkdirs();
 			if(returnRes == false){
 				return "";
 			}
@@ -162,7 +162,7 @@ public String getChildDirectory(String path, String maxCount)
 			dir4.setReadable(true);
 			dir4.setWritable(false, true);
 
-			boolean returnRes = dir4.mkdir();
+			boolean returnRes = dir4.mkdirs();
 			if(returnRes == false){
 				return "";
 			}
@@ -906,7 +906,7 @@ public String tempFolderCreate(String path)
 		tempSubFolder.setReadable(true);
 		tempSubFolder.setWritable(false, true);
 
-		boolean returnRes = tempSubFolder.mkdir();
+		boolean returnRes = tempSubFolder.mkdirs();
 		if(returnRes == false){
 			return "";
 		}

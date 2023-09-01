@@ -3179,7 +3179,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         File file = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile"));
 
         if (!file.exists()) {
-        	file.mkdir();        
+        	file.mkdirs();        
         }
 
         StringBuffer strXML = new StringBuffer();

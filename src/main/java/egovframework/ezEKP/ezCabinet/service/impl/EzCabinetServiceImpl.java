@@ -867,7 +867,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		File file = new File(pDirPath);
 		
-		if (!file.exists() && !file.mkdir()) {
+		if (!file.exists() && !file.mkdirs()) {
 			throw new IOException();
 		}
 		
@@ -1508,7 +1508,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			int totalCnt                       = attachList.size();
 			int attachId                       = ezCabinetDAO.getMaxAttachId(map) + 1;
 			
-			if (!file.exists() && !file.mkdir()) {
+			if (!file.exists() && !file.mkdirs()) {
 				throw new IOException();
 			}
 			

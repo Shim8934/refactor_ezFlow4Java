@@ -2850,7 +2850,7 @@ public class EzResourceController extends EgovFileMngUtil {
         }
         
         if (!tempFile.exists()) {
-        	tempFile.mkdir();
+        	tempFile.mkdirs();
         }
 
         StringBuffer strXML = new StringBuffer();

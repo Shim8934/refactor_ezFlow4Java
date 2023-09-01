@@ -894,7 +894,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		File file = new File(pDirPath);
 		
 		if (!file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 		}
 		
 		List<FileVO> list = new ArrayList<FileVO>();

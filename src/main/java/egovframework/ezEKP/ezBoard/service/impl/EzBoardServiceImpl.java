@@ -4134,9 +4134,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		File file = new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID));
 		
 		if (!file.exists()) {
-			file.mkdir();
-			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc").mkdir();
-			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "uploadFile").mkdir();
+			file.mkdirs();
+			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc").mkdirs();
+			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "uploadFile").mkdirs();
 		}
 		
 		//move 이면 지우고 옮기기

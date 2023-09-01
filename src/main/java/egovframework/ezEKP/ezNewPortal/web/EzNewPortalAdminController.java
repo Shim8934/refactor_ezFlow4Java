@@ -996,7 +996,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         File file = new File(pDirPath + "uploadFile");
 
         if (!file.exists()) {
-        	file.mkdir();        
+        	file.mkdirs();        
         }
         
         String extend = pFileName.substring(pFileName.lastIndexOf(".") + 1);
@@ -1461,7 +1461,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         File file = new File(slidePath);
 
         if (!file.exists()) {
-        	file.mkdir();        
+        	file.mkdirs();        
         }
         
         String extend = pFileName.substring(pFileName.lastIndexOf(".") + 1);

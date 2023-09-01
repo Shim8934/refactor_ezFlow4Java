@@ -1328,7 +1328,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		File file2                 = new File(filePath);
 		
 		if (file == null || !file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 		}
 		else {
 			FileUtils.cleanDirectory(file); 

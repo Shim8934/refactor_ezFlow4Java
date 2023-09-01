@@ -2105,7 +2105,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         File tempFile = new File(pDirPath + "tempUploadFile");
         
         if (!tempFile.exists()) {
-        	tempFile.mkdir();
+        	tempFile.mkdirs();
         }
 
         StringBuffer strXML = new StringBuffer();

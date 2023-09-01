@@ -736,7 +736,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         File file = new File(filePath);
 
         if (!file.exists()) {
-        	file.mkdir();
+        	file.mkdirs();
         }
 
         String url = "";
@@ -861,7 +861,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         File file = new File(commonUtil.detectPathTraversal(m_strLPath));
 
         if (!file.exists()) {
-        	file.mkdir();
+        	file.mkdirs();
         }
 
         OutputStream bos = null;
