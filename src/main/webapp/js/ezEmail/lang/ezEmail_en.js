@@ -305,7 +305,7 @@ var strLangPYY01 = "Please select a mail account to be automatically forwarded."
 var strLangLS01 = "No mail selected. \nAre you sure you want to save all mail in that mailbox?"
 var strLangLS02 = "No mail selected. \nAre you sure you want to save all retrieved mails?"
 var strLangLS03 = "The search results will be downloaded as a single zip file. \nThis process may take a while. Do you want to proceed?"
-var strLangLS04 = "";
+var strLangLS04 = ".";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "This post can be viewed on ";
