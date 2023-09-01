@@ -527,6 +527,7 @@
 	
 		    function lvtDetail_SelChange() { }
 		    
+		    // 전자결재 일반(S)버전에서만 사용하는 문서함검색 함수
 		    var SelCont_dialogArgument = new Array();
 		    function SelCont_onclick() {
 		        var para;
@@ -541,22 +542,26 @@
 		        try {
 		            if (retVal == "")
 		                return;
-		        } catch (e) { }
+		        } catch (e) { console.log(e); }
 	
 		        ContainerID = "";
 		        Init_Flag = "False";
-	
+		        
 		        for (i = 0; i < retVal.length - 1; i++) {
 		            if (retVal[i]) {
 		                ContainerID = ContainerID + "'" + retVal[i] + "',";
 		            }
 		        }
-	
+		        
 		        ContainerID = ContainerID + "'" + retVal[i] + "'";
 		        subCondition = "";
+		        
+		        /* 2023-09-01 홍승비 - 전자결재 일반버전 > 문서함검색 시 최초 동작에 최근 1년 검색조건 디폴트 추가 (다른 전자결재 검색기능과 동일) */
+		        makeDefaultCondition1Year();
+		        
 		        if (ContainerID != "'undefined'") {
 		            document.getElementById("presentcell").innerHTML = unescape("<spring:message code='ezApprovalG.t1516'/>");
-		            GetDocList();
+		            GetDocSearch(); // 일반버전 검색에 대응하는 함수로 변경
 		        }
 		    }
 		    
@@ -1891,6 +1896,23 @@
 		    function btn_newpopup() {
 		    	lvtDoclist_onSel_DBclick();
 		    }
+		    
+	        /* 2023-09-01 홍승비 - 전자결재 일반버전 > 문서함검색 시 최초 동작에 최근 1년 검색조건 디폴트 추가 (다른 전자결재 검색기능과 동일) */
+	        function makeDefaultCondition1Year() {
+				for (var i = 0; i < 25; i++) {
+					condition[i] = "";
+		        }
+	        	
+		        var nowyear = nowDate.substring(0, 4);
+	            var nowmonth = nowDate.substring(5, 7);
+	            var nowday = nowDate.substring(8, 10);
+	            
+	            condition[5] = (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:01";
+				condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+				
+				$('#sel_year').val("ALL"); // 우측 상단 년도 선택 영역 최근 1년으로 갱신 (val의 설정으로는 문서 리스트를 갱신하지 않음)
+	        }
+	        
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top:0px; overflow:auto;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
