@@ -1075,6 +1075,8 @@ var strLangHSBAt09 = "회까지";
 var strLangHSBAt10 = "다운로드 가능";
 var strLangHSBAt11 = "PDF 파일이 변환이 완료된 후 확인을 누르시면 다음 파일도 다운로드 됩니다.";
 var strLangHSBAt12 = "첨부파일을 선택해주세요.";
+var strLangHSBAt13 = "첨부파일의 크기가 ";
+var strLangHSBAt14 = "를 넘는 경우에는 대용량 첨부로 처리됩니다.";
 
 var strLang947 = "해당 부서는 수신처 지정불가입니다. \n확인하여 주십시요!";
 var strLang948 = "수신처지정 불가 리스트에 입력된 부서는 모든 수신처리스트에서 자동 삭제됩니다. \n계속하시겠습니까?"

@@ -1057,10 +1057,10 @@ var strLangHSBPR01 = "Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-
 
 /* 2020-11-12 홍승비 - 전자결재 대용량첨부 추가 */
 //var strLangHSBAt00 = "を超える場合には、大容量メールとして送信処理されます。\n大容量添付は ";
-var strLangHSBAt00 = "を超える場合には、大容量メールとして送信処理されます。 ";
+var strLangHSBAt00 = "を超える場合には、大容量添付ファイルとして処理されます。 ";
 var strLangHSBAt01 = "以後自動削除されます。";
 var strLangHSBAt02 = "大容量";
-var strLangHSBAt03 = "大容量ファイルは ";
+var strLangHSBAt03 = "大容量添付ファイルは ";
 var strLangHSBAt04 = "まで添付可能です。";
 var strLangHSBAt05 = "ダウンロード期間 : ";
 var strLangHSBAt06 = "大容量添付ファイルは、 ";
@@ -1070,6 +1070,8 @@ var strLangHSBAt09 = "回まで";
 var strLangHSBAt10 = "ダウンロード可能";
 var strLangHSBAt11 = "PDFファイルが変換完了後、確認をクリックすると、次のファイルもダウンロードされます。";
 var strLangHSBAt12 = "添付ファイルを選択してください。";
+var strLangHSBAt13 = "添付ファイルサイズが";
+var strLangHSBAt14 = "を超える場合には、大容量添付ファイルとして処理されます。";
 
 var strLang947 = "Departments is unavailable as recipient. \nPlease check!";
 var strLang948 = "Departments unavailable as recipient will be automatically deleted. \nDo you wish to continue?"
