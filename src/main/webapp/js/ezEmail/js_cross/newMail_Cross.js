@@ -699,7 +699,7 @@ function Send_onClick() {
         return;
     }
     
-    if (eSubject.value.length > 120) {
+    if (eSubject.value.length > 150) {
         alert(strLang95);
         eSubject.focus();
         return;
