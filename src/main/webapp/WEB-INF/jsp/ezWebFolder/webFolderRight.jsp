@@ -1175,8 +1175,8 @@
 		</div>
 		<div id="mainmenu">
 			<ul>
-				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
-				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
+				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t161' /></span></li>
+				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t160' /></span></li>
 				<c:if test="${usePreview}">
 					<li id="previewButton"><span onclick="buttons.filePreview()"><spring:message code='main.t4009' /></span></li>
 				</c:if>
