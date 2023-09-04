@@ -42,6 +42,12 @@
 				overflow: hidden;
 			    text-overflow: ellipsis;
 			    display: inline-block;
+			    font-size: 14px;
+			    line-height: 26px;
+			    padding: 0px 0px 0px 3px;
+			}
+			.node_selected{
+				text-decoration: underline !important;
 			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
@@ -440,6 +446,16 @@
 				        if (tempValue == "") {
 				            tempValue = localValue;
 				        } else {
+		 		    	if(event.target.tagName == "SPAN" && event.target.classList.contains("list_text")){
+		 		    		var divElements = document.querySelectorAll('div');
+		 		    		divElements.forEach(function(div) {
+		 		    	        if (div.id.endsWith('_sub')) {
+		 		    	            div.style.display = "none";
+		 		    	        }
+		 		    	    });
+		 		    		$(".tree_minus").attr("class", "sub_iconLNB tree_plus");
+			 		    	$(".node_selected").attr("class","node_normal");
+		 		    	}
 				            localValue = tempValue;
 				        }
 		    	        
@@ -1184,7 +1200,11 @@
 	        		$("#" + val01 + "H2").attr("class", "off");
 	        		$("#" + val01 + "UL").attr("class", "lnbUL off");
 	        		// 2023-06-23 황인경 - 디자인 개선 > 전자결재 > 좌측메뉴 > 트리구조 LNB 이미지 수정
-	        		$("#" + val01 + "H2").children().eq(0).attr("class", "sub_iconLNB tree_plus"); 
+	        		if (val01 == 'person') {
+						$("#" + val01 + "H2").children().eq(1).attr("class", "sub_iconLNB tree_plus"); 
+					} else {
+						$("#" + val01 + "H2").children().eq(0).attr("class", "sub_iconLNB tree_plus"); 
+					}
 	        	} else {
 	        		$(".lnb H2").attr("class", "off");
 	        		$(".lnb UL").attr("class", "lnbUL off");
@@ -1192,7 +1212,11 @@
 	        		$("#" + val01 + "H2").attr("class", "on")
 	        		$("#" + val01 + "UL").attr("class", "lnbUL");
 	        		$('.tree_arrow_down').attr("class", "sub_iconLNB tree_plus");
-	        		$("#" + val01 + "H2").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+	        		if (val01 == 'person') {
+	        			$("#" + val01 + "H2").children().eq(1).attr("class", "sub_iconLNB tree_arrow_down");
+	        		} else {
+		        		$("#" + val01 + "H2").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+	        		}
 	        	}
 	        }
 	        
@@ -1403,15 +1427,15 @@
 				          	</c:forEach>
 			          	</ul>
 		          	</c:if>
-<!-- 		          	<h2 class="off" id="ITEMCONTH2"> -->
-<!-- 		        		<span class="sub_iconLNB tree_arrow_up"></span> -->
+<%-- 		          	<h2 class="off" id="ITEMCONTH2"> --%>
+<%-- 		        		<span class="sub_iconLNB tree_arrow_up"></span> --%>
 <%-- 		        		<span class="h2Title" onclick="openFolder('ITEMCONT');"><spring:message code='ezApproval.t844'/></span> --%>
-<!-- 		        	</h2> -->
-<!-- 					<ul class="off" id="ITEMCONTUL"> -->
+<%-- 		        	</h2> --%>
+<%-- 					<ul class="off" id="ITEMCONTUL"> --%>
 <%-- 			          	<c:forEach var="itemList" items="${itemList}" varStatus="status"> --%>
 <%-- 			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');">${itemList.taskName}(${itemList.keepingPeriod}) </span></li> --%>
 <%-- 			          	</c:forEach> --%>
-<!-- 		          	</ul> -->
+<%-- 		          	</ul> --%>
 			        <h2 class="off" id="personH2">
 			        	<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
 			            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>			            
@@ -1495,7 +1519,7 @@
 		          	</c:if>
 		        </c:if>
 		        
-	        <!-- 전자결재 G - 이후에 css작업 해야됨 -->
+	        <%-- 전자결재 G - 이후에 css작업 해야됨 -- %>
 		        <%-- <c:if test="${approvalFlag eq 'G'}">
 					<h2><span style="width:100%;display:inline-block;" id="m01" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span><ul></ul></h2>
 					<h2><span style="width:100%;display:inline-block;" id="m03" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span><ul></ul></h2>
