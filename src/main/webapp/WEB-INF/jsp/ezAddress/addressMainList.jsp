@@ -37,6 +37,7 @@
 	        var pTotalCnt = "";
 	        var pPageSize = "";
 	        var pMaxPage = "";
+	        var pAddrType = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
 	        var m_strColorSelect = "#f1f8ff";
@@ -818,6 +819,17 @@
 	        	var addressTitle = parent.frames["left"].send_AddressTitle();
 				document.getElementById("presentcell").innerHTML = addressTitle;
 	        }
+	        
+	        $(document).on("change", "#addrTypeSelect", function() {
+	        	pCurrentPage 	= 1;
+	        	pAddrType 		= $(this).val();
+	        	
+	        	if (searchFlag) {
+		        	Get_SearchAddressList();
+	        	} else {
+	        		Get_AddressList();
+	        	}
+	        });
 	    </script>
     </head>
 	<body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -836,6 +848,13 @@
 				<li onClick="delete_address()"><span class="icon16 icon16_delete"></span></li>
 				<li onClick="window.location.reload(false)"><span class="icon16 icon16_refresh"></span></li>
 				<li><span class="icon16 icon16_mail_gray" onClick="write_letter()"></span></li>
+				<li style="background:none;">
+					<select id="addrTypeSelect">
+						<option value="ALL" selected><spring:message code='ezAddress.ksa07' /></option>
+						<option value="GROUP"><spring:message code='ezAddress.ksa08' /></option>
+						<option value="PERSONAL"><spring:message code='ezAddress.ksa09' /></option>
+				    </select>
+				</li>
 				<li style="background:none;float:right">
 					<select id="ListViewType" onchange="View_Change();">
 						<option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>

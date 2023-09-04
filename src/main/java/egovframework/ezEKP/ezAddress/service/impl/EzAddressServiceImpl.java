@@ -155,6 +155,10 @@ public class EzAddressServiceImpl implements EzAddressService {
 
 	@Override
 	public int getAddressCount(int tenantId, String pFolderId, String pOwnerId, String pFilter) throws Exception {
+		return getAddressCount(tenantId, pFolderId, pOwnerId, pFilter, "ALL");
+	}
+	@Override
+	public int getAddressCount(int tenantId, String pFolderId, String pOwnerId, String pFilter, String addressType) throws Exception {
 		int count = 0;
 
 		String filterName = null;
@@ -179,8 +183,9 @@ public class EzAddressServiceImpl implements EzAddressService {
 		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
 		String filterNameParam = "filterName=" + URLEncoder.encode(filterName, "UTF-8");
 		String filterValueParam = "filterValue=" + URLEncoder.encode(filterValue, "UTF-8");
+		String addressTypeParam = "addressType=" + URLEncoder.encode(addressType, "UTF-8");
 
-		String inputParams = ownerIdParam + "&" + folderIdParam + "&" + filterNameParam + "&" + filterValueParam;
+		String inputParams = ownerIdParam + "&" + folderIdParam + "&" + filterNameParam + "&" + filterValueParam + "&" + addressTypeParam;
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
@@ -201,6 +206,10 @@ public class EzAddressServiceImpl implements EzAddressService {
 
 	@Override
 	public int getSearchCount(int tenantId, String[] pIdLists, String pFilter) throws Exception {
+		return getSearchCount(tenantId, pIdLists, pFilter, "ALL");
+	}
+	@Override
+	public int getSearchCount(int tenantId, String[] pIdLists, String pFilter, String addressType) throws Exception {
 		int count = 0;
 
 		String filterName = null;
@@ -216,8 +225,9 @@ public class EzAddressServiceImpl implements EzAddressService {
 
 		String filterNameParam = "filterName=" + URLEncoder.encode(filterName, "UTF-8");
 		String filterValueParam = "filterValue=" + URLEncoder.encode(filterValue, "UTF-8");
+		String addressTypeParam = "addressType=" + URLEncoder.encode(addressType, "UTF-8");
 
-		String inputParams = filterNameParam + "&" + filterValueParam;
+		String inputParams = filterNameParam + "&" + filterValueParam + "&" + addressTypeParam;
 
 		for (String ownerId : pIdLists) {
 			inputParams += "&ownerId=" + URLEncoder.encode(ownerId + "@" + domainName, "UTF-8");
@@ -244,6 +254,11 @@ public class EzAddressServiceImpl implements EzAddressService {
 	@Override
 	public List<AddressVO> getAddressList(int tenantId, String pFolderID, String pOwnerID, String pOrderOption,
 			String pFilter, int count, int start) throws Exception {
+		return getAddressList(tenantId, pFolderID, pOwnerID, pOrderOption, pFilter, count, start, "ALL");
+	}
+	@Override
+	public List<AddressVO> getAddressList(int tenantId, String pFolderID, String pOwnerID, String pOrderOption,
+			String pFilter, int count, int start, String addressType) throws Exception {
 		List<AddressVO> list = new ArrayList<AddressVO>();
 
 		String filterName = null;
@@ -267,9 +282,10 @@ public class EzAddressServiceImpl implements EzAddressService {
 		String countParam = "count=" + count;
 		String filterNameParam = "filterName=" + URLEncoder.encode(filterName, "UTF-8");
 		String filterValueParam = "filterValue=" + URLEncoder.encode(filterValue, "UTF-8");
+		String addressTypeParam = "addressType=" + URLEncoder.encode(addressType, "UTF-8");
 
 		String inputParams = folderIdParam + "&" + ownerIdParam + "&" + orderOptionParam + "&" + startParam + "&"
-				+ countParam + "&" + filterNameParam + "&" + filterValueParam;
+				+ countParam + "&" + filterNameParam + "&" + filterValueParam + "&" + addressTypeParam;
 		logger.debug("inputParams=" + inputParams);
 
 		String strJson = ezEmailUtil.getWebServiceResult(
@@ -385,6 +401,11 @@ public class EzAddressServiceImpl implements EzAddressService {
 	@Override
 	public List<AddressVO> getSearchList(int tenantId, String[] pIdLists, String pOrderOption, String pFilter,
 			int count, int start) throws Exception {
+		return getSearchList(tenantId, pIdLists, pOrderOption, pFilter, count, start, "ALL");
+	}
+	@Override
+	public List<AddressVO> getSearchList(int tenantId, String[] pIdLists, String pOrderOption, String pFilter,
+			int count, int start, String addressType) throws Exception {
 		List<AddressVO> list = new ArrayList<AddressVO>();
 
 		String filterName = null;
@@ -405,9 +426,10 @@ public class EzAddressServiceImpl implements EzAddressService {
 		String countParam = "count=" + count;
 		String filterNameParam = "filterName=" + URLEncoder.encode(filterName, "UTF-8");
 		String filterValueParam = "filterValue=" + URLEncoder.encode(filterValue, "UTF-8");
+		String addressTypeParam = "addressType=" + URLEncoder.encode(addressType, "UTF-8");
 
 		String inputParams = orderOptionParam + "&" + startParam + "&" + countParam + "&" + filterNameParam + "&"
-				+ filterValueParam;
+				+ filterValueParam + "&" + addressTypeParam;
 
 		for (String ownerId : pIdLists) {
 			inputParams += "&ownerId=" + URLEncoder.encode(ownerId + "@" + domainName, "UTF-8");

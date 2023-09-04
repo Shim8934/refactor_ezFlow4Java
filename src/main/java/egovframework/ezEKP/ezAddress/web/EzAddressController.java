@@ -20,6 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -318,6 +319,8 @@ public class EzAddressController{
 			// String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 			String pFolderName = ""; //TODO: folderName setting 안해도 되나?
 			
+			String addressType = xmldom.getElementsByTagName("ADDRTYPE").item(0) != null ? 
+					StringUtils.defaultIfBlank(xmldom.getElementsByTagName("ADDRTYPE").item(0).getTextContent(), "ALL") : "ALL"; // ALL||GROUP||PERSONAL
 			String pOrderOption = "";
 			String pFilter = "";
 			String strCurrentPage = "1";
@@ -337,9 +340,9 @@ public class EzAddressController{
 			
 			int start = pListPageSize * (pCurrentPage - 1);
 			
-			int pFolderMaxCount = ezAddressService.getAddressCount(userInfo.getTenantId(), pFolderID, pOwnerID, pFilter);
+			int pFolderMaxCount = ezAddressService.getAddressCount(userInfo.getTenantId(), pFolderID, pOwnerID, pFilter, addressType);
 			
-			List<AddressVO> addressList = ezAddressService.getAddressList(userInfo.getTenantId(), pFolderID, pOwnerID, pOrderOption, pFilter, pListPageSize, start);
+			List<AddressVO> addressList = ezAddressService.getAddressList(userInfo.getTenantId(), pFolderID, pOwnerID, pOrderOption, pFilter, pListPageSize, start, addressType);
 			
 			StringBuilder sb = new StringBuilder();
 			
@@ -1726,7 +1729,10 @@ public class EzAddressController{
 					pIdLists[i] = userInfo.getCompanyID();
 				}
 			}
-			
+
+
+			String addressType = xmldom.getElementsByTagName("ADDRTYPE").item(0) != null ? 
+					StringUtils.defaultIfBlank(xmldom.getElementsByTagName("ADDRTYPE").item(0).getTextContent(), "ALL") : "ALL"; // ALL||GROUP||PERSONAL
 			String pOrderOption = "";
 			String pFilter = "";
 			String strCurrentPage = "";
@@ -1747,9 +1753,9 @@ public class EzAddressController{
 			int start = pListPageSize * (pCurrentPage - 1);
 			//TODO: pFilter가 항상 a,b 형식인지 확인하기
 			logger.debug("pFilter=" + pFilter);
-			
-			int pFolderMaxCount = ezAddressService.getSearchCount(userInfo.getTenantId(), pIdLists, pFilter);
-			List<AddressVO> addressList = ezAddressService.getSearchList(userInfo.getTenantId(), pIdLists, pOrderOption, pFilter, pListPageSize, start);
+
+			int pFolderMaxCount = ezAddressService.getSearchCount(userInfo.getTenantId(), pIdLists, pFilter, addressType);
+			List<AddressVO> addressList = ezAddressService.getSearchList(userInfo.getTenantId(), pIdLists, pOrderOption, pFilter, pListPageSize, start, addressType);
 			
 			StringBuilder sb = new StringBuilder();
 			
