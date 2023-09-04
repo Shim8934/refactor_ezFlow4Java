@@ -1890,6 +1890,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","시스템");
 			put("property","USEADMINIPACCESS"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
 		}});
+		test.put("useAddrDupliCheck", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useAddrDupliCheck"); // property_name
+			put("property_value","YES");
+			put("config_name","주소록 가져오기 시 기존주소록 중복체크 사용여부");
+			put("regdate","2023-05-16 00:00:00");
+			put("description","주소록 가져오기 시 기존주소록 중복체크 사용여부(default: YES)");
+			put("config_type","주소록");
+			put("property","USEADDRDUPLICHECK"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
+		}});
 		
 		Iterator<String> keys = test.keySet().iterator();
         while( keys.hasNext() ){

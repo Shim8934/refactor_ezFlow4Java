@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -275,6 +277,8 @@ public class EzAddressController{
 			pListType = "card";
 		}
 		
+		String useAddrDupliCheck = ezCommonService.getTenantConfig("useAddrDupliCheck", userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
@@ -285,11 +289,12 @@ public class EzAddressController{
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("pListType", pListType);
+		model.addAttribute("useAddrDupliCheck", useAddrDupliCheck);
 		
 		logger.debug("addressMainList ended.");
 		logger.debug("userInfo=" + userInfo + ",pFolderId=" + pFolderId + ",pFolderType=" + pFolderType + ",pOwerId=" + pOwerId
 				 + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin + ",useEditor=" + useEditor
-				 + ",noneActiveX=" + noneActiveX + ",pListType=" + pListType);
+				 + ",noneActiveX=" + noneActiveX + ",pListType=" + pListType + ",useAddrDupliCheck=" + useAddrDupliCheck);
 		
 		return "ezAddress/addressMainList";
 	}
@@ -2221,6 +2226,223 @@ public class EzAddressController{
 	}
 	
 	/**
+	 * 주소록 가져오기 중복체크 실행 함수
+	 */
+	@RequestMapping(value = "/ezAddress/excelImportDuplicationCheck.do", method = RequestMethod.POST)
+	@SuppressWarnings("unchecked")
+	public String excelImportDuplicationCheck(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Locale locale, Model model) throws Exception {
+		logger.debug("excelImportDuplicationCheck started.");
+		
+		String result = "OK";
+		String folderId = request.getParameter("folderid");
+        String folderType = request.getParameter("foldertype");
+        String ownerId = request.getParameter("ownerid");
+        String format = request.getParameter("format");
+        logger.debug("folderId={}, folderType={}, ownerId={}, format={}", folderId, folderType, ownerId, format);
+
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantId = userInfo.getTenantId();
+        
+		List<MultipartFile> multiFile = request.getFiles("file1");
+		
+        if (multiFile == null || multiFile.get(0) == null) {
+        	logger.error("cannot find file.");
+        	model.addAttribute("result", "ERROR");
+            return "ezAddress/addressImportDuplicationCheckComplete";
+        }
+        
+        if (!format.equals("outlookCSV") && !format.equals("thunderbirdCSV") && !format.equals("googleCSV")) {
+        	format = "outlookCSV";
+        }
+        
+        String[] headerArray = egovMessageSource.getMessage("ezAddress." + format, locale).split(";");
+        String[] usedHeaderArray = null;
+        
+        if (format.equals("outlookCSV")) {
+        	usedHeaderArray = new String[]{
+    			// name, lastName, company, dept, title
+        		headerArray[1], headerArray[3], headerArray[5], headerArray[6], headerArray[7], headerArray[31],
+        		// fax, mobile, email, homePage, companyZip
+        		headerArray[30], headerArray[40], headerArray[77], headerArray[74], headerArray[13],
+        		// companyAddr, homeZip, homeAddr, memo
+        		headerArray[8], headerArray[20], headerArray[15], headerArray[58]     
+        	};
+        } else if (format.equals("thunderbirdCSV")) {
+        	usedHeaderArray = new String[]{
+        		headerArray[0], headerArray[1], headerArray[26], headerArray[25], headerArray[24],       
+        		headerArray[7], headerArray[9], headerArray[11], headerArray[4],  headerArray[27], headerArray[22],  
+        		headerArray[18], headerArray[16], headerArray[12], headerArray[36]       
+        	};
+    	} else if (format.equals("googleCSV")) {
+    		usedHeaderArray = new String[]{
+        		headerArray[0], "", headerArray[43], headerArray[46], headerArray[45], 
+        		"", "", headerArray[32], headerArray[30], headerArray[51],    
+        		"", "", "", headerArray[34], headerArray[25]   
+        	};
+    	}
+        
+        InputStream stream = null;
+        InputStreamReader reader = null;
+        CSVReader csvReader = null;
+        List<String[]> csvList = null;
+        
+        try {
+	        stream = multiFile.get(0).getInputStream();
+	        
+	        String charset = (userInfo.getLang().equals("3")) ? "shift-jis" : (format.equals("googleCSV")) ? "utf-8" : "euc-kr";
+			logger.debug("charset=" + charset);
+			
+	        reader = new InputStreamReader(stream, charset);
+	        csvReader = new CSVReader(reader);
+	        csvList = csvReader.readAll();
+        } catch (IOException e) {
+        	logger.error(e.getMessage());
+        	logger.error(e.getMessage(), e);
+        } finally {
+        	if (csvReader != null) {
+        		try {
+        			csvReader.close();
+        		} catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
+        	}
+        	
+        	if (reader != null) {
+        		try {
+        			reader.close();
+        		} catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
+        	}
+        	
+        	if (stream != null) {
+        		try {
+        			stream.close();
+        		} catch (IOException e) {logger.debug("e.message=" + e.getMessage());}
+        	}
+		}
+        
+        if (csvList == null || csvList.get(0) == null || csvList.get(0).length == 0) {
+        	logger.error("Check CSV file format.");
+        	model.addAttribute("result", "ERROR");
+        	
+            return "ezAddress/addressImportDuplicationCheckComplete";
+        }
+
+        String groupMailStr = egovMessageSource.getMessage("ezAddress.t180", locale);
+        String[] csvHeader = csvList.get(0);
+        String[] csvBody = null;
+        Map<String, String> csvBodyMap = null;
+        
+        // CSV 헤더에 필수 헤더들이 들어있는지 확인 (구글CSV 제외 - 구글CSV는 값을 입력하지 않은 필드의 경우 헤더가 없을 수 있음)
+        if (!format.equals("googleCSV") && !Arrays.asList(csvHeader).containsAll(Arrays.asList(usedHeaderArray))) {
+        	logger.error("Check CSV file format.");
+        	model.addAttribute("result", "FORMAT_ERROR");
+        	
+            return "ezAddress/addressImportDuplicationCheckComplete";
+        }
+
+        // 기존 주소록 목록
+    	List<AddressVO> originalAddr = ezAddressService.getAddressList(tenantId, folderId, ownerId, "", "", 0, 1);
+    	JSONArray duplicateAddr = new JSONArray();
+    	
+        for (int i = 1; i < csvList.size(); i++) {
+        	try {
+        		csvBody = csvList.get(i);
+        		csvBodyMap = new HashMap<String, String>();
+        		
+	        	for (int j = 0; j < csvBody.length; j++) {
+	        		csvBodyMap.put(csvHeader[j], csvBody[j]);
+	        	}
+	        	
+	        	csvBody = new String[usedHeaderArray.length];
+	        	Arrays.fill(csvBody, "");
+	        	
+	        	for (int j = 0; j < usedHeaderArray.length; j++) {
+	        		if (csvBodyMap.get(usedHeaderArray[j]) != null) {
+	        			csvBody[j] = csvBodyMap.get(usedHeaderArray[j]);
+	            	}
+	        	}
+	        	
+	        	// 영어권이 아니면 이름 필드에 성+이름, 영어권이면 이름만
+	        	if (!userInfo.getLang().equals("2")) {
+	        		csvBody[0] = csvBody[1] + " " + csvBody[0];
+	        		csvBody[0] = csvBody[0].trim();
+	        	}
+	        	
+	        	String sName = csvBody[0];
+	        	if (sName.contains("\'") || sName.contains("<") || sName.contains(">") || sName.contains("\"") || sName.contains("&") || sName.contains(";")) {
+	        		sName = csvBody[0].replaceAll("\'", "").replaceAll("<", "").replaceAll(">", "").replaceAll("\"", "").replaceAll("&", "").replaceAll(";", "");
+
+    			}
+	    		
+	        	// 기존 주소록에 등록된 이메일과 동일한 경우 체크
+	        	String newAddrEmail = csvBody[8];
+	        	if (newAddrEmail != null && !"".equals(newAddrEmail.trim()) && !newAddrEmail.equals(groupMailStr)) {
+	        		for (AddressVO vo : originalAddr) {
+		        		if (newAddrEmail.equalsIgnoreCase(vo.getsEmail())) {
+		    	        	JSONObject oriAddr = new JSONObject();
+		    	        	oriAddr.put("name", vo.getsName());
+		    	        	oriAddr.put("email", vo.getsEmail());
+		    	        	
+		    	        	JSONObject newAddr = new JSONObject();
+		    	        	newAddr.put("name", sName);
+		    	        	newAddr.put("email", csvBody[8]);
+		    	        	
+		    	        	JSONObject obj = new JSONObject();
+		            		obj.put("oriAddr", oriAddr);
+		            		obj.put("newAddr", newAddr);
+		            		duplicateAddr.add(obj);
+		        		}
+		        	}
+	        	} // if END
+        	} catch (Exception e) {
+        		result = "ERROR";
+        		logger.error("Import address fail. CSV " + i + "th line.");
+        		
+        		try {
+	        		csvHeader = csvList.get(0);
+	        		csvBody = csvList.get(i);
+	        		
+	        		if (csvHeader != null) {
+	        			String csvHeaderStr = "";
+	        			
+	        			for (int j = 0; j < csvHeader.length; j++) {
+	        				csvHeaderStr += csvHeader[j] + ", ";
+	            		}
+	        			
+	        			logger.error("header line=" + csvHeaderStr);
+	        		} else {
+	        			logger.error("header line is null.");
+	        		}
+	        		
+	        		if (csvBody != null) {
+	        			String csvBodyStr = "";
+	        			
+	        			for (int j=0; j<csvBody.length; j++) {
+	        				csvBodyStr += csvBody[j] + ", ";
+	            		}
+	        			
+	        			logger.error(i + "th line=" + csvBodyStr);
+	        		} else {
+	        			logger.error(i + "th line is null.");
+	        		}
+        		} catch (Exception ex) {logger.debug("e.message=" + ex.getMessage());}
+        		
+        		logger.error(e.getMessage(), e);
+        	}
+        }
+        
+        String state = "OK";
+        if ("OK".equals(result) && duplicateAddr.size() > 0) {
+        	state = "DUPLICATE";
+        }
+        
+        model.addAttribute("result", result);
+        model.addAttribute("state", state);
+        model.addAttribute("duplicateAddr", duplicateAddr);
+        
+        logger.debug("excelImportDuplicationCheck ended.");
+        return "ezAddress/addressImportDuplicationCheckComplete";
+	}
+	
+	/**
 	 * 주소록 가져오기 실행 함수
 	 */
 	@RequestMapping(value = "/ezAddress/excelImport.do", method = RequestMethod.POST)
@@ -2244,6 +2466,9 @@ public class EzAddressController{
         }
         
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        int tenantId = userInfo.getTenantId();
+
+		String useAddrDupliCheck = ezCommonService.getTenantConfig("useAddrDupliCheck", tenantId);
         
         if (!format.equals("outlookCSV") && !format.equals("thunderbirdCSV") && !format.equals("googleCSV")) {
         	format = "outlookCSV";
@@ -2375,7 +2600,11 @@ public class EzAddressController{
         	
             return "ezAddress/addressImportComplete";
         }
-        
+
+        // 기존 주소록 목록
+    	List<AddressVO> originalAddr = ezAddressService.getAddressList(tenantId, folderId, ownerId, "", "", 0, 1);
+    	
+        loop1:
         for (int i = 1; i < csvList.size(); i++) {
         	try {
         		csvBody = csvList.get(i);
@@ -2410,6 +2639,18 @@ public class EzAddressController{
 	        		sName = csvBody[0].replaceAll("\'", "").replaceAll("<", "").replaceAll(">", "").replaceAll("\"", "").replaceAll("&", "").replaceAll(";", "");
 
     			}
+	        	
+	        	// 기존 주소록에 등록된 이메일과 동일한 경우 체크
+	        	if ("YES".equalsIgnoreCase(useAddrDupliCheck)) {
+	        		String newAddrEmail = csvBody[8];
+		        	if (newAddrEmail != null && !"".equals(newAddrEmail.trim()) && !newAddrEmail.equals(groupMailStr)) {
+		        		for (AddressVO vo : originalAddr) {
+			        		if (newAddrEmail.equalsIgnoreCase(vo.getsEmail())) {
+			    	        	continue loop1;
+			        		}
+		        		} // for END
+		        	}
+	        	}
 	        	
         		if (csvBody[8].equals(groupMailStr)) {
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
