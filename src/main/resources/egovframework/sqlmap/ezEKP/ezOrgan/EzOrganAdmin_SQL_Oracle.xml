@@ -25,6 +25,7 @@
 		<result property="physicalDeliveryOfficeName" 			column="physicaldeliveryofficename" 	columnIndex="11"/>
 		<result property="manualFlag"							column="MANUAL_FLAG"					columnIndex="12"/>
 		<result property="extensionAttribute5"					column="extensionAttribute5"			columnIndex="13"/>
+		<result property="extensionAttribute1"					column="ROLLINFO"						columnIndex="14"/>
 		<result property="description1" 						column="description1" 					columnIndex="14"/>
 		<result property="description2" 						column="description2" 					columnIndex="15"/>
 	</resultMap>
@@ -4562,7 +4563,7 @@
 			{CALL EZSP_GETUSERADDJOBLIST(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
-	
+	<!-- 2023-09-06 전인하 - 겸직/사용자 기준으로 권한 부여 설정 모바일 대응 > 겸직 리스트 호출 시 겸직권한 정보 추가로 호출 -->
 	<select id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
 		<![CDATA[
 			SELECT
@@ -4611,12 +4612,13 @@
                 	B.COMPNM2
                 END
                 	COMPANYNAME  ,
-             	A.TITLE T1  ,
-             	A.TITLE2 T2  ,
+             	CASE WHEN C.DEPARTMENT = A.DEPTID THEN C.TITLE ELSE A.TITLE END AS T1  ,
+             	CASE WHEN C.DEPARTMENT = A.DEPTID THEN C.TITLE2 ELSE A.TITLE2 END AS T2  ,
+             	CASE WHEN C.DEPARTMENT = A.DEPTID THEN UNISTR(C.EXTENSIONATTRIBUTE7) ELSE UNISTR(A.JOBID) END AS JOBID,
+             	A.MANUAL_FLAG,
+             	CASE WHEN C.DEPARTMENT = A.DEPTID THEN UNISTR(C.EXTENSIONATTRIBUTE1) ELSE UNISTR(A.ROLL_INFO) END AS ROLLINFO,
              	B.DISPLAYNAME DESCRIPTION1,
-             	B.DISPLAYNAME2 DESCRIPTION2,
-             	A.JOBID,
-             	A.MANUAL_FLAG
+             	B.DISPLAYNAME2 DESCRIPTION2
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN
