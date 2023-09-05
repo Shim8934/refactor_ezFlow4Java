@@ -5879,9 +5879,9 @@
 		ON 
 			A.DEPTID = D.CN AND A.TENANT_ID = D.TENANT_ID
 		WHERE 
-			A.CN = #CN# AND A.DEPTID = #DEPTID#
+			A.CN = #CN# AND A.DEPTID = #DEPTID# AND A.JOBID = #JOBID# AND A.TENANT_ID = #TENANTID#
 	</select>
-
+	
 	<select id="EzOrganAdminDAO.getExportAddJobList" parameterClass="Map" resultMap="exportAddJobListInfo">
 		SELECT
 			CASE       WHEN #primary# = '1'       THEN C.COMPANY            ELSE C.COMPANY2     		 END COMPANY,
