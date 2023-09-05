@@ -2775,10 +2775,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public OrganUserVO getAddJobInfo(String cn, String deptId) throws Exception {
-		Map<String, String> map = new HashMap<String, String>();
+	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
 		map.put("CN", cn);
-		map.put("DEPTID", deptId);		
+		map.put("DEPTID", deptId);
+		map.put("JOBID", jobId);
+		map.put("TENANTID", tenantId);
 		return ezOrganAdminDao.getAddJobInfo(map);
 	}
 

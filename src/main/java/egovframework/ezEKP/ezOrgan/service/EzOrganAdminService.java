@@ -182,7 +182,7 @@ public interface EzOrganAdminService {
 	
 	public OrganDeptVO getDeptDisplayNm(String cn, int tenantID) throws Exception;
 	
-	public OrganUserVO getAddJobInfo(String cn, String deptId) throws Exception;
+	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, int tenantId) throws Exception;
 
 	public List<OrganUserVO> getExportAddJobList(String primary, String companyId, int tenantId) throws Exception;
 
@@ -191,5 +191,4 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getExportPermissionsList(String primary, String companyId, int tenantId) throws Exception;
 
 	public String createExcelPermissionsList(String realPath, String pDirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale) throws Exception;
-
 }
