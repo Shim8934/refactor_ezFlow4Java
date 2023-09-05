@@ -1381,8 +1381,7 @@
 	        
 		      function btnMail_onclick() {
 		    var imgUrl="";
-		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
-		    	background:'#fff',onrendered: function(canvas) {
+		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content")).then(function(canvas) {
 		    		  $.ajax({
 	                        type:"POST",
 	                        dataType:"text",
@@ -1395,7 +1394,7 @@
 	                        }
 	                    });
 		    		  }
-		    		});
+		    		);
 	        var pheight = window.screen.availHeight;
 	        var conHeight = pheight * 0.8;
 	        var pwidth = window.screen.availWidth;
