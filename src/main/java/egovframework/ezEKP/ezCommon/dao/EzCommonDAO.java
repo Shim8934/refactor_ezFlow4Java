@@ -2419,4 +2419,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addAttitudeFormFormHtml2Column");
 		}
 	}
+	
+	public void createTblUserChangeInfo() {
+		try {
+			select("EzCommonDAO.checkTblUserChangeInfo");
+		} catch (Exception e) {
+			logger.debug("TBL_USER_CHANGE_INFO table doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblUserChangeInfo");
+		}
+	}
 }

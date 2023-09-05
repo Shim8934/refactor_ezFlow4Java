@@ -2883,4 +2883,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addAttitudeFormFormHtml2Column() throws Exception {
 		ezCommonDAO.addAttitudeFormFormHtml2Column();
 	}
+
+	@Override
+	public void createTblUserChangeInfo() throws Exception {
+		ezCommonDAO.createTblUserChangeInfo();
+	}
 }

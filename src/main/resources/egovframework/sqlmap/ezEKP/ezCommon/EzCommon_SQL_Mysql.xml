@@ -4551,4 +4551,39 @@
 	]]>
     </statement>
 
+	<select id="EzCommonDAO.checkTblUserChangeInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				SEQ
+			FROM 
+				TBL_USER_CHANGE_INFO
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblUserChangeInfo">
+		CREATE TABLE `tbl_user_change_info` (
+			`SEQ` int(10) NOT NULL AUTO_INCREMENT,
+			`USERID` varchar(80) NOT NULL,
+			`USERNM` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`USERNM2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DEPTID` varchar(80) DEFAULT NULL,
+			`DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`COMPANYID` varchar(120) DEFAULT NULL,
+			`COMPANYNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`COMPANYNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`UPDATEDT` datetime DEFAULT NULL,
+			`TARGET_DEPTID` varchar(80) DEFAULT NULL,
+			`TARGET_DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TARGET_DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`UPDATE_TYPE` varchar(200) DEFAULT NULL,
+			`EXECUTORID` varchar(80) DEFAULT NULL,
+			`EXECUTORNM` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`EXECUTORNM2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`EXECUTORIP` varchar(20) DEFAULT NULL,
+			`TENANTID` mediumint(5) NOT NULL,
+			PRIMARY KEY (`SEQ`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+    </statement>
 </sqlMap>

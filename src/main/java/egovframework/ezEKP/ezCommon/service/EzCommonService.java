@@ -399,4 +399,6 @@ public interface EzCommonService {
 
 	public void addAttitudeFormFormHtml2Column() throws Exception;
 
+	public void createTblUserChangeInfo() throws Exception;
+
 }
