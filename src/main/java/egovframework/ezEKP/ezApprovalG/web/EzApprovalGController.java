@@ -6296,11 +6296,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String hesongFlag = request.getParameter("hesongFlag");
 		
 		// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
-		if (StringUtils.isNotBlank(docId) && "undefined".equalsIgnoreCase(docId)) {
+		if (StringUtils.isNotBlank(docId) && !"undefined".equalsIgnoreCase(docId)) {
 			model.addAttribute("regDocId", docId);
 		}
 		
-		if (StringUtils.isNotBlank(hesongFlag) && "undefined".equalsIgnoreCase(hesongFlag)) {
+		if (StringUtils.isNotBlank(hesongFlag) && !"undefined".equalsIgnoreCase(hesongFlag)) {
 			model.addAttribute("hesongFlag", hesongFlag);
 		}
 		
