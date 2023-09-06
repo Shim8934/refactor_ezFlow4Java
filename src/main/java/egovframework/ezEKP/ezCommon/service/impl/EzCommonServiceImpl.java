@@ -436,16 +436,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	    String tempHtml = htmlBuilder.toString();
 
-        for(String imgSrc : imgSrcs) {
+        for (String imgSrc : imgSrcs) {
             String contentType = "application/octet-stream";
             String extension = ".gif"; //기존확장자가.gif로고정되어있었으므로,디폴트로사용함
 
             InputStream tempIn = null;
             try {
-            	if(imgSrc.contains("222.106.242.180")){
+            	if (imgSrc.contains("222.106.242.180")) {
             		continue;
-            	}else{
-            		contentType = URLConnection.guessContentTypeFromStream(Files.newInputStream(Paths.get(realPath + imgSrc)));
+            	} else {
+            		tempIn = Files.newInputStream(Paths.get(realPath + imgSrc));
+            		contentType = URLConnection.guessContentTypeFromStream(tempIn);
             	}
             } catch (IOException e) {
                 //url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
