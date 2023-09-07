@@ -166,7 +166,7 @@ function deleteBoardCommentPopup() {
 		} else {
 			document.getElementById("mailPanel2").style.height = ($(window).height() + "px");
 		}
-		DivPopUpShow2(376, 191, "/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + delpReplyID + "&replyFlag=true");
+		DivPopUpShow2(376, 191, "/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID) + "&replyID=" + encodeURIComponent(delpReplyID) + "&replyFlag=true");
 	}
 }
 //강민수92
