@@ -53,11 +53,12 @@
 				}
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 				windowResize();
-				functionSetting();
-
 				var clickOutside;
 
-				<c:if test="${!isDotNetIntegration}">
+				<c:if test="${'YES' != dotNetIntegration}">
+				// 2023-09-07 김대현  닷넷일때 사용자 리스트 하단 순서 조정부분이 안보여서 오류가 발생하여 닷넷 사용 유무에 따른 분기처리
+				functionSetting();
+				
 				if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) {
 					clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
 				} else {
