@@ -31563,8 +31563,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		list = ezApprovalGDAO.getProxyInfo_U(map);
 		list.addAll(ezApprovalGDAO.getProxyInfo_A(map));
 		
-		// 2023-08-18 조수빈 - 부재 시간은 UTC로 저장하기 때문에 사용자의 offset 비교가 필요하지 않음.
-		String nowDate = commonUtil.getTodayUTCTime("");
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("") ,offSet, false);
 		
 		if (list.size() > 0) {
 			for (ApprGProxyVO proxy : list) {
