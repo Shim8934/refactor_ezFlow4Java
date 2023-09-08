@@ -2505,10 +2505,7 @@
 			DEPTID = #dept#
 		<isNotEmpty property="title">
 			AND TITLE = #title#
-		</isNotEmpty>
-		<isNotEmpty property="jobId">
-			AND JOBID = #jobId#
-		</isNotEmpty>
+		</isNotEmpty>	
 	</select>
 	
 	<select id="EzOrganDAO.getOrgUserInfo" parameterClass="Map" resultClass="OrganUserVO">

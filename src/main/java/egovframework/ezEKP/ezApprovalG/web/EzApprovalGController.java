@@ -511,24 +511,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTitle(), userInfo.getTenantId());
 		}
 		
-		// 202-08-17 조수빈 - DB의 부재 설정 일자를 UTC에서 사용자의 offset 시간대로 변경
-		if (buJaeInfo.length() > 0) {
-			String [] proxyInfoArray = buJaeInfo.split(":");
-			String sTime = proxyInfoArray[3] + ":" + proxyInfoArray[4];
-			String eTime = proxyInfoArray[5] + ":" + proxyInfoArray[6];
-			String sTimeUTC = commonUtil.getDateStringInUTC(sTime, userInfo.getOffset(), false);
-			String eTimeUTC = commonUtil.getDateStringInUTC(eTime, userInfo.getOffset(), false);
-			
-			logger.debug(">>>>>>>>>> convert sTime to UTC: " + sTimeUTC);
-			logger.debug(">>>>>>>>>> convert eTime to UTC: " + eTimeUTC);
-			
-			proxyInfoArray[3] = sTimeUTC.split(":")[0];
-			proxyInfoArray[4] = sTimeUTC.split(":")[1];
-			proxyInfoArray[5] = eTimeUTC.split(":")[0];
-			proxyInfoArray[6] = eTimeUTC.split(":")[1];
-			buJaeInfo = String.join(":", proxyInfoArray);
-		}
-		
 		if(shareUserId != null && !shareUserId.equals("")){
 			userRealDeptId = ezOrganService.getUserOrgDeptId(shareUserId, userInfo.getTenantId(), userInfo.getCompanyID());
 			userInfo.setId(shareUserId);

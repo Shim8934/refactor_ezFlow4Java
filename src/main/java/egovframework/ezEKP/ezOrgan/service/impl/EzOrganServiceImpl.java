@@ -2640,17 +2640,4 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		return ezOrganDAO.getAddJobProxy(map);
 	}
-
-	@Override
-	public String getAddJobProxy(String id, String dept, int tenantId, String jobId) throws Exception {
-		logger.debug("getAddJobProxy2 started");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userID", id);
-		map.put("tenantID", tenantId);
-		map.put("dept", dept);
-		map.put("jobId", jobId);
-		logger.debug("getAddJobProxy2 ended");
-		
-		return ezOrganDAO.getAddJobProxy(map);
-	}
 }
