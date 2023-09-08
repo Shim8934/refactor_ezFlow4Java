@@ -511,7 +511,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTitle(), userInfo.getTenantId());
 		}
 		
-		// 2023-08-17 조수빈 - DB의 부재 설정 일자를 UTC에서 사용자의 offset 시간대로 변경
+		// 202-08-17 조수빈 - DB의 부재 설정 일자를 UTC에서 사용자의 offset 시간대로 변경
 		if (null != buJaeInfo && buJaeInfo.length() > 0) {
 			String [] proxyInfoArray = buJaeInfo.split(":");
 			String sTime = proxyInfoArray[3] + ":" + proxyInfoArray[4];
