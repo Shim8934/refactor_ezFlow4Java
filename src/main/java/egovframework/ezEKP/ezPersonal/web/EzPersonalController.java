@@ -16,9 +16,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +54,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
 import org.w3c.dom.Document;
 
-import com.google.common.util.concurrent.Service;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -387,46 +383,20 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
-		
 		String cDate = "";
 		String cTime = "";
-		// 2023-08-29 조수빈 - 시작일시를 비교하기 위한 객체 생성
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime currentDateTime = LocalDateTime.parse(commonUtil.getTodayUTCTime("").substring(0, 16), formatter);
-		
 		if (result != null && !result.equals("")) {
 			String[] info = result.split(":");
 			
-			if (null != info && info.length > 1) {
-				String endStr = info[5] + ":" + info[6];
-				LocalDateTime endDateTime = LocalDateTime.parse(endStr, formatter);
-				
-				// 부재 종료일시가 현재 일시보다 이전이면 부재 정보를 삭제한다.
-				if (endDateTime.isBefore(currentDateTime)) {
-					result = "";
-					ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", "", "user", userInfo.getTenantId());
-					cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
-					cTime = cDate.split(" ")[1].substring(0, 2);
-					
-					cDate = cDate.substring(0, 10);
-					startDate = cDate + " " + cTime + ":00:00";
-					
-					cDate = cDate.substring(0, 10);
-					endDate = cDate + " " + String.format("%02d", Integer.parseInt(cTime) + 1) + ":00:00";
-					
-					deptID = userInfo.getDeptID();		// 2020-09-16 김민성 - 현재 설정된 대리 결재자 정보가 없는 경우 사용자의 부서 정보를 가져온다
-				} else {
-					userID = info[0];
-					String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-					textName = ezOrganService.getPropertyValue(info[0], "displayname" + lang, userInfo.getTenantId());
-					deptID = info[2];
-					startDate = commonUtil.getDateStringInUTC((info[3] + ":" + info[4]), userInfo.getOffset(), false);
-					endDate = commonUtil.getDateStringInUTC((info[5] + ":" + info[6]), userInfo.getOffset(), false);
-
-					if (info.length > 7) {
-						bReason = info[7];
-					}
-				}
+			userID = info[0];
+			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+			textName = ezOrganService.getPropertyValue(info[0], "displayname" + lang, userInfo.getTenantId());
+			deptID = info[2];
+			startDate = commonUtil.getDateStringInUTC((info[3] + ":" + info[4]), userInfo.getOffset(), false);
+			endDate = commonUtil.getDateStringInUTC((info[5] + ":" + info[6]), userInfo.getOffset(), false);
+			
+			if (info.length > 7) {
+				bReason = info[7];
 			}
 		} else {
 			cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
@@ -465,22 +435,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		//겸직리스트 
 		List<OrganUserVO> addJobList = ezOrganAdminService.getUserAddJobList(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
-		
-		// 2023-08-29 조수빈 - 겸직에 대한 부재 정보가 현재 일자와 비교하여 종료일자가 그 이전인 경우 삭제한다.
-		for (int i = 0; i < addJobList.size(); i++) {
-			OrganUserVO vo = addJobList.get(i);
-			String [] proxyInfoArray = vo.getExtensionAttribute5().split(":");
-			if (null != proxyInfoArray && proxyInfoArray.length > 1) {
-				String endStr = proxyInfoArray[5] + ":" + proxyInfoArray[6];
-				LocalDateTime endDateTime = LocalDateTime.parse(endStr, formatter);
-				
-				// 부재 시작일시가 현재 일시보다 이전이면 부재 정보를 삭제한다.
-				if (endDateTime.isBefore(currentDateTime)) {
-					addJobList.get(i).setExtensionAttribute5("");
-					ezOrganService.updateAddJobProxy(vo.getCn(), "", vo.getTenantId(), vo.getDepartment(), vo.getJobID());
-				}
-			}
-		}
 		
 		// 2023-08-17 조수빈 - 겸직에 대한 부재 일자를 DB의 UTC 시간에서 사용자의 offset에 맞도록 변경한다.
 		// 겸직만 부재설정을 한 경우 시간이 반영되지 않는 문제를 해결하기 위해 추가함.

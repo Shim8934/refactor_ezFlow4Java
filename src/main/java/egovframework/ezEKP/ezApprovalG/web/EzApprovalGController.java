@@ -458,8 +458,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
 		String buJaeInfo = "";
-		// 2023-08-29 조수빈 - 기존에는 calendar 객체를 사용하여 한국 시간만 보내게 되는 문제가 있어 UTC 기준시를 offset에 맞게 변경하도록 수정.
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String nowDate = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
 		String susinAdmin = "";
 		String listType = request.getParameter("listType");
 		String viewLeftCount = ezCommonService.getTenantConfig("APPROVLEFTCOUNT", userInfo.getTenantId()); 
