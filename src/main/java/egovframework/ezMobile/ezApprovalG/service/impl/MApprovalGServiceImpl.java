@@ -257,6 +257,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		// 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 동작 시 추가 파라미터(의견순번) 삽입, 의견 동작 로직 개선
 		map.put("opinionSN", opinionSN);
 		map.put("aprMemberSN", pAprMemberSN); // 2023-04-28 이가은 - 의견 추가할 경우 실제 결재선상의 부서명, 직위로 표출하기 위해 추가
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
 		int isAbsentee = mApprovalGDAO.getIsAbsenteeInfo(map);
 

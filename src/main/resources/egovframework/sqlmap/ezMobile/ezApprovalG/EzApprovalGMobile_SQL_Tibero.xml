@@ -2650,15 +2650,17 @@
 	</select>
 
 	<select id="MApprovalG.getIsAbsenteeInfo" parameterClass="map" resultClass="Integer">
-		SELECT
-			COUNT(CN)
-		FROM
-			TBL_USERMASTER
-		WHERE
-			TENANT_ID = #tenantID#
-		AND
-			TO_DATE(SUBSTR(EXTENSIONATTRIBUTE5, -16), 'YYYY-MM-DD HH24:mi') > TO_DATE(SYSDATE, 'YYYY-MM-DD HH24:mi')
-		AND
-			SUBSTR(EXTENSIONATTRIBUTE5, 1, INSTR(EXTENSIONATTRIBUTE5, ':', 1, 1) -1) = #userID#
+		<![CDATA[
+			SELECT
+				COUNT(CN)
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				TO_DATE(SUBSTR(EXTENSIONATTRIBUTE5, -16), 'YYYY-MM-DD HH24:mi') > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:mi')
+			AND
+				SUBSTR(EXTENSIONATTRIBUTE5, 1, INSTR(EXTENSIONATTRIBUTE5, ':', 1, 1) -1) = #userID#
+		]]>
 	</select>
 </sqlMap>
