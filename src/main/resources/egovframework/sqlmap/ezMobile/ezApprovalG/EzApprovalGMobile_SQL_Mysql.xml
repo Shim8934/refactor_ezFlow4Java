@@ -2777,17 +2777,15 @@
 	</select>
 
 	<select id="MApprovalG.getIsAbsenteeInfo" parameterClass="map" resultClass="Integer">
-		<![CDATA[
-			SELECT
-			    COUNT(CN)
-			FROM
-			    TBL_USERMASTER
-			WHERE
-			    TENANT_ID = #tenantID#
-			AND
-			    DATE_FORMAT(RIGHT(EXTENSIONATTRIBUTE5, 16), '%Y-%m-%d %H:%i') > #nowDate#
-			AND
-			    SUBSTRING_INDEX(EXTENSIONATTRIBUTE5, ":", 1) = #userID#
-		]]>
+		SELECT
+		    COUNT(CN)
+		FROM
+		    TBL_USERMASTER
+		WHERE
+		    TENANT_ID = #tenantID#
+		AND
+		    DATE_FORMAT(RIGHT(EXTENSIONATTRIBUTE5, 16), '%Y-%m-%d %H:%i') > NOW()
+		AND
+		    SUBSTRING_INDEX(EXTENSIONATTRIBUTE5, ":", 1) = #userID#
 	</select>
 </sqlMap>
