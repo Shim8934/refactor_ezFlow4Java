@@ -7413,7 +7413,7 @@
 					USERID,				USERNM,					USERNM2,				DEPTID,					DEPTNM,
 					DEPTNM2,			TITLE,       			TITLE2,					COMPANYID,				COMPANYNM,
 					COMPANYNM2,			AUTHORIZEDTIME,			ADMINTYPE,				STATUS,					AUTHORIZERID,
-					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP
+					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP,			TENANT_ID
                  )
 			SELECT
 				SEQ_TBL_PERMISSION_CHANGE_INFO.NEXTVAL,
@@ -7451,7 +7451,7 @@
 				 u.COMPANY2,		to_date(#authorizedTime#, 'yyyy-MM-dd HH24:MI:SS'),		#adminType#,			#status#,				#authorizerId#,
 				 (SELECT ua.DISPLAYNAME 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
 				 (SELECT ua.DISPLAYNAME2 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
-				 #authorizerIp#
+				 #authorizerIp#, u.TENANT_ID
 			FROM TBL_USERMASTER u
 			WHERE 	u.CN = #userId#
 			AND 	u.TENANT_ID = #tenant_id#
