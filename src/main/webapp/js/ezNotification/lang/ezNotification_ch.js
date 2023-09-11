@@ -40,7 +40,8 @@ var subType = {
 		cancel : "取消邀请",
 		accept : "邀请已获批准",
 		reject : "拒绝邀请",
-		mod : "修改日程"
+		mod : "修改日程",
+		reminder : "提醒"
 			
 	},
 	resource : {

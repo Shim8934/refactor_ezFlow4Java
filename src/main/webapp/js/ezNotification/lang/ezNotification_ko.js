@@ -40,7 +40,8 @@ var subType = {
 		cancel : "초대취소",
 		accept : "초대승인",
 		reject : "초대거부",
-		mod : "일정수정"
+		mod : "일정수정",
+		reminder : "미리알림"
 	},
 	resource : {
 		reserve : "자원예약",

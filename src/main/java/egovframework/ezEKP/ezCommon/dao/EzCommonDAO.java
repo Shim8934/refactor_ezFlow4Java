@@ -2395,4 +2395,38 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	private String checkGongRamListOption(Map<String, Object> map) {
 		return (String) select("EzCommonDAO.checkGongRamListOption", map);
 	}
+	
+	/** 2023-09-01 한태훈 - 일정관리 > 미리알림 > tbl_schedule_reminder_scheduler 테이블 생성  */
+	public void createTblScheduleReminderScheduler() throws Exception {
+		try {
+			select("EzCommonDAO.checkScheduleReminderScheduler");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULE_REMINDER_SCHEDULER doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblScheduleReminderScheduler");
+		}
+	}
+	
+	/** 2023-09-07 한태훈 - 일정관리 > 설정 > 미리알림 시간 설정 컬럼 추가 */
+	public void addReminderTimeAtTblScheduleConfig() throws Exception {
+		try {
+			select("EzCommonDAO.checkReminderTimeColumnAtTblScheduleConfig");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULECONFIG REMINDERTIME column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addReminderTimeAtTblScheduleConfig");
+		}
+	}
+	
+	/** 2023-09-11 한태훈 - 일정관리 > 미리알림 > 하루종일 일정의 시작 시각 설정 테넌트 컨피그 추가 */
+	public void insertReminderTenantConfig(Map<String, Object> map) throws Exception{
+		map.put("property", "allDaySTimeForReminder");
+		String allDaySTimeForReminder = (String) select("EzCommonDAO.getTenantConfig", map);
+		
+		if (allDaySTimeForReminder == null) {
+			logger.debug("allDaySTimeForReminder tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertAllDaySTimeForReminderTenantConfig", map);
+		}
+	}
+	
 }

@@ -40,7 +40,8 @@ var subType = {
 		cancel : "招待キャンセル",
 		accept : "招待承認",
 		reject : "招待拒否",
-		mod : "スケジュールを編集"
+		mod : "スケジュールを編集",
+		reminder : "リマインダー"
 	},
 	resource : {
 		reserve : "リソース予約",

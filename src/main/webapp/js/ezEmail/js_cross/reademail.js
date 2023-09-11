@@ -1,4 +1,3 @@
-﻿
 var m_bPrevNext = false;
 var real_href = "";
 var minimumWidth = 890;
@@ -1505,5 +1504,26 @@ function openScheduleInfo() {
     }
     
     window.open(requestUrl, "", "height=" + height + "px, width= " + width + "px" + feature);
+}
+
+//2023-09-06 한태훈 - 일정관리 > 미리알림 메일 링크
+function reminderMailLink() {
+	var reminder_link = document.getElementById("reminder_link");
+	var id = reminder_link.getAttribute("scheId");
+	var otherid = reminder_link.getAttribute("otherid");
+	var repeatcount = reminder_link.getAttribute("repeatcount");
+	var date = reminder_link.getAttribute("date");
+	var type = reminder_link.getAttribute("type");
+	var datetype = reminder_link.getAttribute("datetype");
+	var pattern = reminder_link.getAttribute("pattern");
+	var pScreenHeight = window.screen.availHeight;
+    var pScreenWidth = window.screen.availWidth;
+    var height = 750;
+    var width = 800;
+    var pTop = (pScreenHeight - height) / 2;
+    var pLeft = (pScreenWidth - width) / 2;
 	
+	var url = "/ezSchedule/scheduleRead.do?";
+	url += "id=" + encodeURIComponent(id) + "&otherid=" + encodeURIComponent(otherid) +"&repeatcount=" + encodeURIComponent(repeatcount) + "&date=" + encodeURIComponent(date) + "&type=" + encodeURIComponent(type) + "&datetype=" + encodeURIComponent(datetype) + "&pattern=" + encodeURIComponent(pattern);
+	window.open(url, "", "toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=0, resizable=1, height=" + height +"px, width=" + width +"px, top=" + pTop +", left=" + pLeft);
 }

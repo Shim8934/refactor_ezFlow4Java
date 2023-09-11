@@ -40,7 +40,8 @@ var subType = {
 		cancel : "Cancel invitation",
 		accept : "Invitation approved",
 		reject : "Refusal of invitation",
-		mod : "Modify schedule"
+		mod : "Modify schedule",
+		reminder : "Reminder"
 	},
 	resource : {
 		reserve : "Resource reservation",

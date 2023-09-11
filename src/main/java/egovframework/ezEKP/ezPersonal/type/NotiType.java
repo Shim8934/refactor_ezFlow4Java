@@ -41,6 +41,8 @@ public enum NotiType {
 	SCHEDULE_MOD(4, 5),
 	// 초대 일정 삭제
 	SCHEDULE_DELETE(4, 6),
+	// 일정 미리알림
+	SCHEDULE_REMINDER(4, 7),
 	
 	// 자원관리 자원 승인
 	RESOURCE_APPROVE(5, 1),

@@ -7,8 +7,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +32,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.NodeList;
 
@@ -62,11 +66,15 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleReminderVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
+import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
+import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -108,6 +116,9 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Autowired
 	private EzNotificationService ezNotificationService;
+	
+	@Autowired
+	private EzSystemAdminDAO ezSystemAdminDAO;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzScheduleServiceImpl.class);
 	
@@ -606,12 +617,15 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							if (info[3].equals("1")) {
 								newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
 								
+								 /*  2023-08-31 한태훈 - 이게 필요한가..? 2일 날짜에만 특별히 조건을 주는 이유는 없어보입니다. 2월 달인 경우 음력으로 newCal과 date_cal을 만들어서 조건을 주려고 하는 건지,, 모르겠음.
+							  		그러려면 info[4].eqlaus("2") 일때를 봐야함.
 								if (info[5].equals("2")) {
 									//음력으로 newCal 다시 만듬									
 									if (!isFirst || newCal.compareTo(date_cal) >= 0) {
 										generated = true;
 									}
 								}
+								*/
 							} else {
 								int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1); 
 								
@@ -634,7 +648,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								}
 							}
 							
-							if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+							if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.compareTo(date_cal) >= 0)) { // 달이 다를 수 있는데, 날짜만 비교하면 안됨.
 								generated = true;
 							}
 							
@@ -1039,13 +1053,14 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							
 							if (info[3].equals("1")) {
 								newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
-								
+								/* 2023-09-11 한태훈 - 해당 로직은 불필요해보여서 삭제
 								if (info[5].equals("2")) {
 									//음력으로 newCal 다시 만듬									
 									if (!isFirst || newCal.compareTo(date_cal) >= 0) {
 										generated = true;
 									}
 								}
+								*/
 							} else {
 								int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1); 
 								
@@ -1068,7 +1083,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								}
 							}
 							
-							if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+							if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.compareTo(date_cal) >= 0)) {
 								generated = true;
 							}
 							
@@ -1460,7 +1475,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void insertScheduleConfig(String userID, String defaultView,	String startDay, String startTime, String endTime, String autoDelete, int tenantID) throws Exception {
+	public void insertScheduleConfig(String userID, String defaultView,	String startDay, String startTime, String endTime, String autoDelete, int tenantID, String reminderTime) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);		
 		map.put("v_DEFAULTVIEW", defaultView);
@@ -1469,6 +1484,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_ENDTIME", endTime);
 		map.put("v_AUTODELETE", autoDelete);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_REMINDERTIME", reminderTime);
 		
 		if(ezScheduleDAO.getUserScheduleConfig(map) == null) {			
 			map.put("v_INVITATIONMAIL", "Y");
@@ -1501,7 +1517,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	@Override
 	public int insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
 		String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, NodeList attach, NodeList attendantId, 
-		NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId, String companyID, String showtop) throws Exception {
+		NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId, String companyID, String showtop, String offSet, String lang) throws Exception {
 		
 		//본문내용 MHT 저장
 		String mhtPath = commonUtil.separator + "doc";
@@ -1627,6 +1643,17 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId, companyID);
 				}
 			}
+			
+			// 2023-09-04 한태훈 - 개인 일정의 경우 미리알림 스케줄러에 데이터 추가
+			if (scheduletype.equals("1")) {
+				map.put("v_SCHEDULEID", scheduleId);
+				map.put("v_REMINDERSTATUS", "0");
+				map.put("v_OFFSET", offSet);
+				map.put("v_LANG", lang);
+				map.put("v_OFFSETMIN", commonUtil.getMinuteUTC(offSet));
+				ezScheduleDAO.insertReminderSchedule(map);
+			}
+			
 			sID = scheduleId;			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e); //테스트를 위해 추가
@@ -1715,6 +1742,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			ezScheduleDAO.insertScheduleAttach(attachMap);
 		}	
 		
+		// 2023-09-15 - 한태훈 : 일정관리 > 미리알림 스케줄러 미완료 상태로 변경.
+		map.put("v_REMINDERSTATUS", "0");
+		ezScheduleDAO.updateReminderSchedule(map);
+		
 		return 0;
 	}
 
@@ -1728,6 +1759,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		ezScheduleDAO.deleteScheduleRepeChild(map);
 		ezScheduleDAO.deleteScheduleAttach(map);
 		ezScheduleDAO.deleteAttendant(map);
+		/* 2023-09-04 한태훈 미리알림 스케줄러에서 제외 */
+		ezScheduleDAO.deleteReminderSchedule(map);
 		ezScheduleDAO.deleteSchedule(map);
 		/* 2021-11-26 홍승비 - 일정 삭제 시 일정완료 레코드도 삭제 */
 		ezScheduleDAO.deleteScheduleComplete(map);
@@ -1774,6 +1807,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		ezScheduleDAO.deleteAttendantID(map);
 		ezScheduleDAO.deleteAttendantSchedule(map);
+		ezScheduleDAO.deleteAttendantReminderSchedule(map); // 2023-10-27 한태훈 - 참석자 제외의 경우 미리알림에서도 제외
 		
 		int cnt = ezScheduleDAO.getAttendantCount(map);
 		
@@ -1823,7 +1857,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId, String showtop) throws Exception {
+	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId, String showtop, String lang, String offSet) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 				
 		map.put("v_SCHEDULEID", scheduleId);
@@ -1841,6 +1875,20 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			ezScheduleDAO.insertAttendantScheduleDel(map);
 			/* 2021-11-29 홍승비 - 참석자 초대 수락 시, 부모 일정의 일정완료 레코드도 동일하게 삽입 */
 			ezScheduleDAO.insertAttendantScheduleComplete(map);
+			
+			ScheduleInfoVO scheduleInfo = getScheduleInfo(ezScheduleDAO.getCurScheduleId(map) + "", commonUtil.getMinuteUTC(offSet), tenantId, "");
+			/* 2023-09-04 한태훈 - 개인 일정의 경우 미리알림 스케줄러에 데이터 추가 */
+			if (scheduleInfo.getScheduleType().equals("1")) {
+				map.put("scheInfo", scheduleInfo);
+				map.put("v_REMINDERSTATUS", "0");
+				map.put("v_OFFSET", offSet);
+				map.put("v_LANG", lang);
+				map.put("v_OFFSETMIN", commonUtil.getMinuteUTC(offSet));
+				map.put("v_STARTDATE", commonUtil.getDateStringInUTC(scheduleInfo.getStartDate(), offSet, true));
+				map.put("v_ENDDATE", commonUtil.getDateStringInUTC(scheduleInfo.getEndDate(), offSet, true));
+				
+				ezScheduleDAO.insertAttendantReminderSchedule(map);
+			}
 		}
 	}
 
@@ -1882,7 +1930,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void updateDragSchedule(String scheduleid, String userId, String displayName1, String displayName2, String utcStartTime, String utcEndTime,int tenantId, String companyID) throws Exception {
+	public void updateDragSchedule(String scheduleid, String userId, String displayName1, String displayName2, String utcStartTime, String utcEndTime,int tenantId, String companyID, String datetype, String repetition) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_SCHEDULEID", scheduleid);
@@ -1896,10 +1944,17 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 		ezScheduleDAO.updateDragSchedule(map);
 		
+		//해당 일정이 완료 일정이라면, 완료일정의 시작시각과 끝 시각 변경.
+		ezScheduleDAO.updateScheduleComplete(map);
+		
+		// 미리알림 스케줄러 미완료 상태로 변경.
+		map.put("v_REMINDERSTATUS", "0");
+		ezScheduleDAO.updateReminderSchedule(map);
+
 	}
 
 	@Override
-	public void copySchedule(String dragId, String startDate, String endDate, String defaultPath, String offSetMin, int tenantId, String companyId) throws Exception {
+	public void copySchedule(String dragId, String startDate, String endDate, String defaultPath, String offSetMin, int tenantId, String companyId, String lang, String offSet, String completeFG) throws Exception {
 		
 		ScheduleInfoVO info = getScheduleInfo(dragId, offSetMin, tenantId, companyId);
 		
@@ -1955,6 +2010,20 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			
 			insertScheduleAttendant(Integer.toString(scheduleId), attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, tenantId, companyId);
 		}
+		// 2023-09-04 한태훈 - 개인 일정의 경우 미리알림 스케줄러에 데이터 추가
+		if (info.getScheduleType().equals("1")) {
+			map.put("v_SCHEDULEID", scheduleId);
+			map.put("v_REMINDERSTATUS", "0");
+			map.put("v_OFFSET", offSet);
+			map.put("v_LANG", lang);
+			map.put("v_OFFSETMIN", commonUtil.getMinuteUTC(offSet));
+			
+			ezScheduleDAO.insertReminderSchedule(map);
+		}
+		
+		if (completeFG.equals("Y")) { // 일정완료 삽입
+        	insertScheduleComplete(scheduleId + "", "0", "N", startDate, tenantId, companyId);
+        }
 	}
 	
 	private String copyMhtFile(String defaultPath, String mhtPath, String contentPath, String resultPath) throws Exception {
@@ -3354,6 +3423,734 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 		return resultList;
 	}
+
+	@Value("${config.cron.checkReminder}")
+	private String checkReminder;
+
+	@Resource(name = "loginService")
+    private LoginService loginService;
+	
+	@Override
+	public Map<String, List<ScheduleReminderVO>> selectReminderScheList(String nowTimeStr, int tenantId) throws Exception {
+		logger.debug("selectReminderScheList started");
+		//offSet 구하기 -- 한국시간으로 통일.
+		
+		List<ScheduleReminderVO> reminderScheList = new ArrayList<ScheduleReminderVO>(); // 미리알림 대상 일정 리스트
+		List<ScheduleReminderVO> reminderRepeatScheList = new ArrayList<ScheduleReminderVO>(); // 반복일정 리스트
+		Map <Integer, ScheduleReminderVO> repScheForRemind = new HashMap<Integer, ScheduleReminderVO>(); // 반복일정 중 미리 알림 대상
+		List<ScheduleReminderVO> reminderCompleteList = new ArrayList<ScheduleReminderVO> (); // 미리알림 완료 일정 - reminderStatus 를 완료로 변경 목적.
+		
+		String cronMinute = checkReminder.split(" ")[1].split("/")[1];
+		String allDaySTime = ezCommonService.getTenantConfig("allDaySTimeForReminder", tenantId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cronMinute", cronMinute);
+		map.put("nowTime", nowTimeStr);
+		map.put("tenantId", tenantId);
+		map.put("allDaySTime", allDaySTime);
+		// 반복 일정 설정 아니면서 완료 일정이 아닌 스케쥴 리스트 가져오기. -> 모두 미리알림 대상임.
+		reminderScheList = ezScheduleDAO.selectNoRepeatRemindScheList(map);
+		
+		// 반복 일정 설정이 아닌 경우 미리알림 상태 완료로 변경.
+		for (ScheduleReminderVO sche : reminderScheList) {
+			reminderCompleteList.add(sche);
+		}
+		
+		// 반복 일정이면서 전체 완료 일정이 아닌 스케줄 리스트 가져오기.
+		reminderRepeatScheList = ezScheduleDAO.selectRepeatRemindScheList(map);
+		
+		SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
+		Calendar schedulerStartTime = Calendar.getInstance(); // 스케줄러 포함 시작 시각
+		Calendar schedulerSTimePlusCronMin = Calendar.getInstance(); // 스케줄러 시작 시간에 cron 반복 주기 분 더한 시간.
+		Calendar schedulerStartDate = Calendar.getInstance(); // 마지막 반복 주기 날짜와 스케줄러 시간 비교 목적.(시간 정보는 제외하고 날짜만 남기기 위해)
+		Calendar schedulerEndTime = Calendar.getInstance(); // 스케줄러 포함 끝 시각
+		for (ScheduleReminderVO repeatSche : reminderRepeatScheList) {
+			schedulerStartTime.setTime(fm.parse(nowTimeStr));
+			schedulerStartTime.add(Calendar.MINUTE, Integer.parseInt(repeatSche.getOffSetMin()));
+			
+			if (Integer.parseInt(repeatSche.getStartDate().substring(8,10)) != Integer.parseInt(repeatSche.getRemindStartDate().substring(8,10))) {
+				schedulerStartTime.add(Calendar.DATE, 1); // 하루전 알림으로 했을 시 스케줄러가 돌아가는 시점(nowTime)에 하루를 더한 날짜로 비교를 해야한다.
+			}
+			
+			schedulerSTimePlusCronMin.setTime(schedulerStartTime.getTime());
+			schedulerSTimePlusCronMin.add(Calendar.MINUTE, Integer.parseInt(cronMinute));
+			
+			schedulerStartDate.setTime(schedulerStartTime.getTime());
+			setToMidnight(schedulerStartDate);
+			
+			int repeatCount = 1; // 반복횟수
+			
+			schedulerEndTime.setTime(schedulerStartTime.getTime());
+			schedulerEndTime.add(Calendar.MINUTE, Integer.parseInt(cronMinute));
+			
+			String[] repRules = repeatSche.getRepetition().split("\\|");
+			String repCycleRule = repRules[2];
+			String remindStartDate = repeatSche.getRemindStartDate();
+			int maxCycleCount = Integer.parseInt(repRules[0]); // 반복 횟수
+			Calendar startCycleDate = Calendar.getInstance();
+			Calendar lastCycleDate = Calendar.getInstance();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date startTime = sdf.parse(remindStartDate);
+			
+			Calendar endDate = Calendar.getInstance();
+			endDate.setTime(sdf.parse(repeatSche.getEndDate()));
+			startCycleDate.setTime(startTime);
+		
+			switch (repCycleRule) {
+			case "0": // 일반복
+				int repCycleDate = Integer.parseInt(repRules[3]); // 반복 주기
+				
+				if (repCycleDate == 0) { // 매 평일 반복시
+					if (schedulerStartTime.get(Calendar.DAY_OF_WEEK) == 1 || schedulerStartTime.get(Calendar.DAY_OF_WEEK) == 7) { // 주말이라면 패스
+						continue;
+					} else {
+						repeatCount += countWeekDay(startCycleDate, schedulerStartTime);
+					}
+					
+					while (startCycleDate.get(Calendar.DAY_OF_WEEK) == 1 || startCycleDate.get(Calendar.DAY_OF_WEEK) == 7) {
+						startCycleDate.add(Calendar.DATE, 1);
+					}
+				} else { // 매 repCycleDate 마다 반복 시
+			        long diffDateCount = (schedulerStartTime.getTime().getTime() - startCycleDate.getTime().getTime()) / (1000 * 60 * 60 * 24);
+			        if (diffDateCount % repCycleDate != 0) { // 반복주기에 해당하는 날이 아니라면 패스
+			        	continue;
+			        } else {
+			        	repeatCount += diffDateCount / repCycleDate;
+			        }
+				}
+				
+				if (startCycleDate.compareTo(schedulerSTimePlusCronMin) > 0) {
+					continue; // 아직 반복 시작 날짜가 아닌 경우 
+				}
+				
+				lastCycleDate.setTime(startCycleDate.getTime());
+				setToMidnight(lastCycleDate);
+				
+				// 마지막 반복날짜 구함.
+				if (maxCycleCount > 0) { // 반복 횟수가 지정되어있는 경우
+					if (repCycleDate == 0) { // 매 평일 반복시, 매 평일 반복 시 한 주에 일정 가능 날은 5일이다.
+						int repeatCnt = 1;
+						while (repeatCnt < maxCycleCount) {
+							lastCycleDate.add(Calendar.DATE, 1);
+							if (lastCycleDate.get(Calendar.DAY_OF_WEEK) != 1 && lastCycleDate.get(Calendar.DAY_OF_WEEK) != 7) {
+								repeatCnt++;
+							}
+						}
+						
+					} else {
+						lastCycleDate.add(Calendar.DAY_OF_MONTH, (maxCycleCount - 1) * repCycleDate); // 마지막 반복 일정 날짜의 일정 시작 시각으로 세팅됨.
+					}
+					if (lastCycleDate.compareTo(schedulerStartDate) == 0) { // 반복횟수가 지정되어있는 경우, 해당 일정의 날짜가 이미 지난 일정인지 확인. 시작 시각과 스케줄러 시각은 아래에서 공통으로 비교함.
+	        			//마지막 반복 주기라면 완료 일정에 추가 
+	        			reminderCompleteList.add(repeatSche);
+	        		} else if (lastCycleDate.compareTo(schedulerStartDate) < 0) { //반복일정의 경우 완료된 일정날에 삭제가 되지만, 혹시 몰라 일정이 지난 경우 완료될 수 있도록 추가.
+	        			reminderCompleteList.add(repeatSche);
+	        			continue;
+	        		}
+	        	}
+	        	
+				break;
+			case "1": // 주반복
+				int repCycleWeek = Integer.parseInt(repRules[3]);
+				
+				String[] tempRepDays = repRules[4].split(""); // 반복 요일 리스트 (일요일이 0, 토요일이 6)
+				List <Integer> repDays = new ArrayList <Integer>(); // 반복 요일만 존재
+				List <Integer> repDaysAddedStartday = new ArrayList <Integer>(); // 반복 요일에 일정 시작 요일 추가
+				for (String day : tempRepDays) {
+					repDays.add(Integer.parseInt(day) + 1); // (Calendar 객체에선 일요일이 1, 토요일이 7)
+					repDaysAddedStartday.add(Integer.parseInt(day) + 1);
+				}
+				
+				// 현재 시각이 반복 요일에 해당하는 요일이 아니라면 패스
+				if (!repDays.contains(schedulerStartTime.get(Calendar.DAY_OF_WEEK))) {
+					// 매 주 - 반복 요일이 아님.
+					continue;
+				}
+				
+				int startDay = startCycleDate.get(Calendar.DAY_OF_WEEK);
+				repDaysAddedStartday.add(startDay);
+				
+				Collections.sort(repDaysAddedStartday);
+
+				int repStartDay = -1;
+				int repEndDay = -1;
+				// 반복 첫 주기 날짜 구하기
+				for (int i = 0; i < repDaysAddedStartday.size(); i++) {
+					int repDay = repDaysAddedStartday.get(i);
+					if (repDay >= startDay) {
+						// 첫 반복 주기의 시작 날짜 구하기
+						if (i == repDaysAddedStartday.size() - 1) { // 반복 요일들보다 일정 시작 요일이 늦은 경우 일정 시작 날짜의 다음 반복주기 주 첫 반복 요일이 첫 반복 주기의 시작 날짜이다.
+							repStartDay = repDays.get(0);
+							repEndDay = repDays.get(repDays.size() - 1);
+							startCycleDate.add(Calendar.DAY_OF_MONTH, repCycleWeek * 7 - (startDay - repStartDay));
+						} else { // 그 외의 경우에는 일정 요일과 같거나 반복 요일 중에서 일정 요일 바로 다음으로 오는 요일이 첫 반복 주기의 시작 날짜가 된다.
+							repStartDay = repDays.get(i);
+							startCycleDate.add(Calendar.DAY_OF_MONTH, repStartDay - startDay);
+							if (i == 0) {
+								repEndDay = repDays.get(repDays.size() - 1);
+							} else {
+								repEndDay = repDays.get(i - 1);
+							}
+						}
+						
+						break;
+					}
+				}
+				
+				if (startCycleDate.compareTo(schedulerSTimePlusCronMin) > 0) {
+					// 아직 반복 일정 시작 일이 아님.
+					continue;
+				}
+				
+				long diffWeekCount = countDiffWeek(startCycleDate, schedulerStartTime);
+				if (diffWeekCount % repCycleWeek != 0) { // 반복주기에 해당하는 주가 아니라면 패스
+		        	continue;
+				} else {
+					if (schedulerStartTime.get(Calendar.DAY_OF_WEEK) >= repStartDay) {
+						repeatCount += diffWeekCount / repCycleWeek; // 반복 시작 요일보다 현재 요일이 같거나 늦으면, 반복 시작 요일의 반복이 끝나는 주와 동일한 주에 끝남.
+					} else {
+						repeatCount += diffWeekCount / repCycleWeek;
+						repeatCount -= 1; // 반복 시작 요일보다 현재 요일이 빠르면, 반복 시작 요일이 끝나는 주 다음 반복 주차에 끝남.
+					}
+				}
+				
+				lastCycleDate.setTime(startCycleDate.getTime());
+				setToMidnight(lastCycleDate);
+				
+				// 마지막 반복날짜 구함.
+				if (maxCycleCount > 0) { // 반복 횟수가 지정되어있는 경우
+					if (repStartDay == repDays.get(0)) {
+						lastCycleDate.add(Calendar.WEEK_OF_YEAR, (maxCycleCount - 1) * repCycleWeek);
+					} else {
+						lastCycleDate.add(Calendar.WEEK_OF_YEAR, (maxCycleCount) * repCycleWeek);
+					}
+					
+					lastCycleDate.add(Calendar.DAY_OF_MONTH, repEndDay - repStartDay);
+				
+					if (lastCycleDate.compareTo(schedulerStartDate) == 0) {
+						//마지막 반복 주기라면 완료 일정에 추가 
+		        		reminderCompleteList.add(repeatSche);
+					} else if (lastCycleDate.compareTo(schedulerStartDate) < 0) { //반복일정의 경우 완료된 일정날에 삭제가 되지만, 혹시 몰라 일정이 지난 경우 완료될 수 있도록 추가.
+	        			reminderCompleteList.add(repeatSche);
+	        			continue;
+	        		}
+				}
+				
+				break;
+			case "2": // 월반복
+				int repCycleMonth = Integer.parseInt(repRules[4]);
+				switch (repRules[3]) {
+				case "1": // 날짜 반복
+					int repCycleDateOfMonth = Integer.parseInt(repRules[5]);
+					if (schedulerStartTime.get(Calendar.DAY_OF_MONTH) !=  repCycleDateOfMonth) {
+						// 반복 일자에 해당하는 날이 아님
+						continue;
+					}
+					
+					// 시작 날짜 구하기.
+					boolean isExistStartCycleDate = false;
+					if (startCycleDate.getActualMaximum(Calendar.DAY_OF_MONTH) >= repCycleDateOfMonth) {
+						if (startCycleDate.get(Calendar.DAY_OF_MONTH) <= repCycleDateOfMonth) {
+							startCycleDate.set(Calendar.DAY_OF_MONTH, repCycleDateOfMonth);
+							isExistStartCycleDate = true;
+						}
+					}
+					
+					while (!isExistStartCycleDate) {
+						startCycleDate.add(Calendar.MONTH, repCycleMonth);
+						if (startCycleDate.getActualMaximum(Calendar.DAY_OF_MONTH) >= repCycleDateOfMonth) {
+							startCycleDate.set(Calendar.DAY_OF_MONTH, repCycleDateOfMonth);
+							isExistStartCycleDate = true;
+							break;
+						}
+					}
+					
+					if (startCycleDate.compareTo(schedulerSTimePlusCronMin) > 0) {
+						// 아직 첫 일정 시작일이 아님.
+						continue;
+					}
+					
+					int diffMonthCount = countDiffMonth(startCycleDate, schedulerStartTime);
+					
+					if (diffMonthCount % repCycleMonth != 0) {
+						// 반복 주기에 해당하는 달이 아님.
+						continue;
+					}
+					
+					if (maxCycleCount > 0) {
+						lastCycleDate.setTime(startCycleDate.getTime());
+						setToMidnight(lastCycleDate);
+						// 반복 횟수 지정 시 반복 일정 확인.
+						while (repeatCount < maxCycleCount) {
+							lastCycleDate.add(Calendar.MONTH, repCycleMonth);
+							// 해당 달에 반복 일자가 없으면 패스
+							if (lastCycleDate.getActualMaximum(Calendar.DAY_OF_MONTH) < repCycleDateOfMonth) {
+								continue;
+							} else {
+								// repCycleDateOfMonth 31일 같은 경우 MONTH를 1 증가 시킬 때마다 마지막 날짜가 변경될 수 있음.
+								lastCycleDate.set(Calendar.DAY_OF_MONTH, repCycleDateOfMonth);
+							}
+							repeatCount++;
+							if (lastCycleDate.compareTo(schedulerStartDate) == 0) {
+								// 반복 주기를 도는 도중에 현재 날짜를 발견
+								break;
+							}
+						}
+						// 마지막 반복 일자까지 구했는데 해당 일정이 이미 지난 일정이라면 패스
+						if (repeatCount == maxCycleCount && lastCycleDate.compareTo(schedulerStartDate) == 0) {
+							//마지막 반복 주기라면 완료 일정에 추가 
+							reminderCompleteList.add(repeatSche);
+						}  else if (repeatCount == maxCycleCount && lastCycleDate.compareTo(schedulerStartDate) < 0) { //반복일정의 경우 완료된 일정날에 삭제가 되지만, 혹시 몰라 일정이 지난 경우 완료될 수 있도록 추가.
+		        			reminderCompleteList.add(repeatSche);
+		        			continue;
+		        		}
+					} else { 
+						Calendar tempCal = Calendar.getInstance();
+						tempCal.setTime(startCycleDate.getTime());
+						setToMidnight(tempCal);
+						boolean repeatFlag = false;
+						if (maxCycleCount == 0) {// 종료일자가 정해져있는 경우
+							lastCycleDate.setTime(endDate.getTime());
+							setToMidnight(lastCycleDate);
+							repeatFlag = tempCal.compareTo(lastCycleDate) <= 0;
+						} else {
+							repeatFlag = true;
+						}
+						
+						while(repeatFlag) {
+							if (tempCal.compareTo(schedulerStartDate) == 0 || tempCal.compareTo(schedulerStartDate) > 0) {
+								// 반복 주기를 도는 도중에 현재 날짜를 발견하면 멈춤. 현재날짜보다 큰 경우는 없을 텐데 혹시 무한 루프 돌 수 있어서 추가.
+								break;
+							}
+							
+							tempCal.add(Calendar.MONTH, repCycleMonth);
+							// 해당 달에 반복 일자가 없으면 패스
+							if (tempCal.getActualMaximum(Calendar.DAY_OF_MONTH) < repCycleDateOfMonth) {
+								continue;
+							} else {
+								// repCycleDateOfMonth 31일 같은 경우 MONTH를 1 증가 시킬 때마다 마지막 날짜가 변경될 수 있음.
+								tempCal.set(Calendar.DAY_OF_MONTH, repCycleDateOfMonth);
+							}
+							repeatCount++;
+							
+							if (maxCycleCount == 0) {
+								repeatFlag = tempCal.compareTo(lastCycleDate) < 0;
+							}
+							
+						}
+					}
+				
+					break;
+				
+				case "2": // 요일 반복
+					int weekOrder = Integer.parseInt(repRules[5]); // 몇째주
+					int repDayOfWeek = Integer.parseInt(repRules[6]) + 1; // 요일 (Calendar 요일에 맞게 + 1을 함)
+					
+					if (schedulerStartTime.get(Calendar.DAY_OF_WEEK) != repDayOfWeek) {
+						// 반복 요일에 해당하지 않음
+						continue;
+					}
+					
+					Calendar targetDate = Calendar.getInstance(); // 첫 반복 시작 일정이 시작 일정의 달에 있는지 판단하기 위한 임시 객체 
+					targetDate.setTime(startCycleDate.getTime());
+					
+					// 첫 시작 일자 구하기
+					targetDate = setTargetWeekDay(targetDate, weekOrder, repDayOfWeek);
+					
+					if (targetDate.compareTo(startCycleDate) >= 0) {
+						startCycleDate.setTime(targetDate.getTime());
+					} else {
+						startCycleDate.add(Calendar.MONTH, repCycleMonth);
+						startCycleDate = setTargetWeekDay(startCycleDate, weekOrder, repDayOfWeek);
+					}
+					
+					if (startCycleDate.compareTo(schedulerSTimePlusCronMin) > 0) {
+						// 아직 일정 시작날짜가 아님.
+						continue;
+					}
+
+					long diffMonths = countDiffMonth(startCycleDate, schedulerStartTime);
+					
+					if (diffMonths % repCycleMonth != 0) {
+						// 반복 주기 월에 해당하지 않음.
+						continue;
+					} else {
+						repeatCount += diffMonths / repCycleMonth;
+					}
+					
+					Calendar targetCal = Calendar.getInstance();
+					targetCal.setTime(startCycleDate.getTime());
+					
+					targetCal.add(Calendar.MONTH, (int) diffMonths);
+					targetCal = setTargetWeekDay(targetCal, weekOrder, repDayOfWeek);
+					
+					if (targetCal.get(Calendar.DAY_OF_MONTH) != schedulerStartTime.get(Calendar.DAY_OF_MONTH)) {
+						// 반복 주기 월의 날짜가 현재 날짜와 일치하지 않음.
+						continue;
+					}
+					
+					lastCycleDate.setTime(startCycleDate.getTime());
+					setToMidnight(lastCycleDate);
+					
+					if (maxCycleCount > 0) {
+						lastCycleDate.add(Calendar.MONTH, (maxCycleCount - 1) * repCycleMonth);
+						lastCycleDate = setTargetWeekDay(lastCycleDate, weekOrder, repDayOfWeek);
+						
+						if (lastCycleDate.compareTo(schedulerStartDate) == 0) {
+							//마지막 반복 주기라면 완료 일정에 추가 
+							reminderCompleteList.add(repeatSche);
+						} else if (lastCycleDate.compareTo(schedulerStartDate) < 0) { //반복일정의 경우 완료된 일정날에 삭제가 되지만, 혹시 삭제가 되지 않은 경우를 대비해 일정이 지난 경우 완료될 수 있도록 추가.
+		        			reminderCompleteList.add(repeatSche);
+		        			continue;
+		        		}
+					}
+						
+					break;
+				}
+				
+				break;
+			case "3": // 년반복
+				int repMonth = Integer.parseInt(repRules[4]) - 1; //Calendar 객체에는 1월이 0부터 시작.
+				if (schedulerStartTime.get(Calendar.MONTH) != repMonth) {
+					// 매년 반복 월이 아님.
+					continue;
+				}
+				
+				int lastCycleYear = -1;
+				Calendar targetCal = Calendar.getInstance();
+				targetCal.setTime(startCycleDate.getTime()); // 시작 일정의 시간으로 targetCal 세팅
+				switch (repRules[3]) {
+				case "1": // 특정 월 일 반복 
+					int repDate = Integer.parseInt(repRules[5]);
+					if (repDate != schedulerStartTime.get(Calendar.DAY_OF_MONTH)) {
+						// 매년 반복 일이 아님.
+						continue;
+					}
+					
+					// 마지막 반복 일정 비교 목적 세팅
+					targetCal.set(Calendar.YEAR, startCycleDate.get(Calendar.YEAR));
+					targetCal.set(Calendar.MONTH, repMonth);
+					targetCal.set(Calendar.DAY_OF_MONTH, repDate);
+					
+					break;
+				case "2": // 특정 월 주 요일
+					int weekOrder = Integer.parseInt(repRules[5]); // 몇째주
+					int repDayOfWeek = Integer.parseInt(repRules[6]) + 1; // 요일 (Calendar 요일에 맞게 + 1을 함)
+					
+					targetCal.set(Calendar.YEAR, schedulerStartTime.get(Calendar.YEAR));
+					targetCal.set(Calendar.MONTH, repMonth);
+					targetCal = setTargetWeekDay(targetCal, weekOrder, repDayOfWeek);
+					
+					if (targetCal.get(Calendar.DAY_OF_MONTH) != schedulerStartTime.get(Calendar.DAY_OF_MONTH)) {
+						// 매년 반복 주 요일이 아님.
+						continue;
+					}
+					
+					// 첫번째 반복 일정 날짜 구하기 위한 목적 세팅.
+					targetCal.set(Calendar.YEAR, startCycleDate.get(Calendar.YEAR));
+					targetCal = setTargetWeekDay(targetCal, weekOrder, repDayOfWeek);
+					
+					break;	
+				}
+				
+				// 첫 반복일정 시작 날짜 구함.
+				if (targetCal.get(Calendar.DAY_OF_YEAR) >= startCycleDate.get(Calendar.DAY_OF_YEAR)) {
+					// 일정 시작 날짜의 해당 년도부터 반복 시작.
+					repeatCount += schedulerStartTime.get(Calendar.YEAR) - startCycleDate.get(Calendar.YEAR);
+					startCycleDate.setTime(targetCal.getTime());
+				} else {
+					// 일정 시작 날짜의 다음 년도부터 반복 시작.
+					repeatCount += schedulerStartTime.get(Calendar.YEAR) - startCycleDate.get(Calendar.YEAR) - 1;
+					startCycleDate.setTime(targetCal.getTime());
+					startCycleDate.add(Calendar.YEAR, 1);
+					
+					if (repRules[3] == "2") { // 특정 월 주 요일 반복 시 일자 다시 세팅.
+						int weekOrder = Integer.parseInt(repRules[5]); // 몇째주
+						int repDayOfWeek = Integer.parseInt(repRules[6]) + 1; // 요일 (Calendar 요일에 맞게 + 1을 함)
+						startCycleDate = setTargetWeekDay(startCycleDate, weekOrder, repDayOfWeek);
+					}
+				}
+				
+				if (startCycleDate.compareTo(schedulerSTimePlusCronMin) > 0) {
+					continue; // 아직 일정 시작 날짜가 아님.
+				}
+				
+				// 마지막 반복 일정 비교
+				if (maxCycleCount > 0) {
+					lastCycleYear = startCycleDate.get(Calendar.YEAR) + (maxCycleCount - 1);
+					
+					if (lastCycleYear == schedulerStartDate.get(Calendar.YEAR)) {
+						//마지막 반복 주기라면 완료 일정에 추가 
+						reminderCompleteList.add(repeatSche);
+					} else if (lastCycleYear < schedulerStartDate.get(Calendar.YEAR)) { //반복일정의 경우 완료된 일정날에 삭제가 되지만, 혹시 몰라 일정이 지난 경우 완료될 수 있도록 추가.
+	        			reminderCompleteList.add(repeatSche);
+	        			continue;
+	        		}
+					
+				}
+				
+				break;
+			} // switch문 종료
+			repeatSche.setRepeatCount(repeatCount);
+			SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
+			String todayDate = dateSdf.format(schedulerStartTime.getTime());
+			repeatSche.setTodayDate(todayDate);
+			
+			repScheForRemind.put(repeatSche.getScheduleId(), repeatSche);
+			
+			// 종료일자가 정해져 있는 경우, 현재 날짜가 마지막 종료일자라면, reminderStatus를 완료로 변경해줘야함.
+			if (maxCycleCount == 0) {
+				setToMidnight(endDate);
+				if (schedulerStartDate.compareTo(endDate) == 0) { // 종료일자가 정해져있는 경우,종료일이 이미 지난 일정은 쿼리에서 데이터를 가져오지 않음.
+					reminderCompleteList.add(repeatSche);
+				}
+			}
+		} // 반복일정 for문 종료
+		
+		if (repScheForRemind.size() > 0) {
+			// 반복 일정 중 삭제 일정은 알림에서 제거.
+			List<ScheduleReminderVO> repeatDelScheList = ezScheduleDAO.selectRepeatDelScheList(map);
+			for (ScheduleReminderVO delSche : repeatDelScheList) {
+				int delScheId = delSche.getScheduleId();
+				repScheForRemind.remove(delScheId);
+				// 삭제 일정 제외
+			}
+			
+			// 반복 일정 중 완료 일정은 알림에서 제거.
+			List<ScheduleReminderVO> repCompletScheList = ezScheduleDAO.selectRepeatCompletScheList(map);
+			for (ScheduleReminderVO comSche : repCompletScheList) {
+				int comScheId = comSche.getScheduleId();
+				repScheForRemind.remove(comScheId);
+				// 완료 일정 제외
+			}
+		}
+		
+		for (ScheduleReminderVO reminder : repScheForRemind.values()) {
+			reminderScheList.add(reminder);
+		}
+		
+		List<ScheduleReminderVO> expiredScheduleList = ezScheduleDAO.selectExpiredSchedule(map); // 반복일정 중 종료 일정이 지정된 일정의 경우, 종료일정이 현재 시각보다 지난 일정은 reminderStatus를 완료로 변경해준다.
+		
+		if (expiredScheduleList != null && expiredScheduleList.size() > 0) {
+			reminderCompleteList.addAll(expiredScheduleList);
+		}
+
+		Map<String, List<ScheduleReminderVO>> returnMap = new HashMap<String, List<ScheduleReminderVO>>();
+		returnMap.put("reminderScheList", reminderScheList);
+		returnMap.put("reminderCompleteList", reminderCompleteList);
+		
+		logger.debug("selectReminderScheList ended");
+		return returnMap;
+	}
+	
+	private int countWeekDay(Calendar startCycleDate, Calendar schedulerStartTime) {
+		int weekDayCount = 0;
+		Calendar tempCal = Calendar.getInstance();
+		tempCal.setTime(startCycleDate.getTime());
+		tempCal.add(Calendar.DAY_OF_MONTH, 1); // 시작 일정 다음날 부터 판단.
+		while (tempCal.compareTo(schedulerStartTime) <= 0) {
+			int dayOfWeek = tempCal.get(Calendar.DAY_OF_WEEK);
+			if (dayOfWeek != 1 && dayOfWeek != 7) {
+				weekDayCount++;
+			}
+			tempCal.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		if (startCycleDate.get(Calendar.DAY_OF_WEEK) == 1 || startCycleDate.get(Calendar.DAY_OF_WEEK) == 7) {
+			weekDayCount -= 1; // 토요일 또는 일요일이 시작 일정이라면, 해당 날짜는 회차에 포함하면 안됨.
+		}
+		
+		return weekDayCount;
+	}
+	
+	private long countDiffWeek(Calendar startCycleDate, Calendar schedulerStartTime) {
+		// 일정 시작 날짜
+		LocalDate startDate = LocalDate.of(startCycleDate.get(Calendar.YEAR), startCycleDate.get(Calendar.MONTH) + 1, startCycleDate.get(Calendar.DAY_OF_MONTH));
+		// 현재시각
+		LocalDate targetDate = LocalDate.of(schedulerStartTime.get(Calendar.YEAR), schedulerStartTime.get(Calendar.MONTH) + 1, schedulerStartTime.get(Calendar.DAY_OF_MONTH));
+		long weeksBetween = ChronoUnit.WEEKS.between(startDate, targetDate);
+		
+		if (startCycleDate.get(Calendar.DAY_OF_WEEK) > schedulerStartTime.get(Calendar.DAY_OF_WEEK)) {
+			weeksBetween += 1; // 날짜의 차이를 가지고 주를 계산하기 때문에, 주 계산시 오차를 없앰. (ex ) 두 날짜의 차이가 20일이라면 주의 차이가 실제로는 3주가 될 수 있지만, weeksBetween값이 2가 된다.)
+		}
+		
+		return weeksBetween;
+	}
+	
+	private int countDiffMonth(Calendar startCycleDate, Calendar schedulerStartTime) {
+		// 일정 시작 날짜
+		int startDateYear = startCycleDate.get(Calendar.YEAR);
+		int startDateMonth = startCycleDate.get(Calendar.MONTH);
+		int schedulerYear = schedulerStartTime.get(Calendar.YEAR);
+		int schedulerMonth = schedulerStartTime.get(Calendar.MONTH);
+		int monthBetween = (schedulerYear - startDateYear) * 12 + schedulerMonth - startDateMonth;
+		return monthBetween;
+	}
+
+	// 2023-08-30 한태훈 - 일정관리 > 미리알림 > 몇째 주 무슨 요일에 해당하는 날 반환 메소드 
+	public Calendar setTargetWeekDay(Calendar targetDate, int weekOrder, int repDayOfWeek) {
+		int targetDay = -1;
+		if (weekOrder != 5) {// 몇 째주의 설정값(weekOrder)이 마지막 주가 아닌 첫째, 둘째, 셋째, 넷째 주 인경우
+			targetDate.set(Calendar.DAY_OF_MONTH, 1);
+			targetDay = targetDate.get(Calendar.DAY_OF_WEEK);
+			targetDate.add(Calendar.DAY_OF_MONTH, (weekOrder - 1) * 7);
+			targetDate.add(Calendar.DAY_OF_MONTH, repDayOfWeek - targetDay >= 0 ? repDayOfWeek - targetDay : repDayOfWeek - targetDay + 7);
+		} else {// 몇 째주의 설정값(weekOrder)이 마지막 주인경우
+			targetDate.set(Calendar.DAY_OF_MONTH, targetDate.getActualMaximum(Calendar.DAY_OF_MONTH));
+			targetDay = targetDate.get(Calendar.DAY_OF_WEEK);
+			targetDate.add(Calendar.DAY_OF_MONTH, repDayOfWeek - targetDay <= 0 ? repDayOfWeek - targetDay : repDayOfWeek - targetDay - 7);
+		}
+		
+		return targetDate;
+	}
+
+	@Override
+	public void updateCompleteScheduleStatus(List<ScheduleReminderVO> reminderCompleteList, int tenantId) throws Exception {
+		logger.debug("updateCompleteScheduleStatus started");
+		
+		Map<String, Object> reminderStatusMap = new HashMap<String, Object> ();
+		for (ScheduleReminderVO comReminder : reminderCompleteList) {
+			reminderStatusMap.put("v_SCHEDULEID", comReminder.getScheduleId());
+			reminderStatusMap.put("v_REMINDERSTATUS", 1);
+			reminderStatusMap.put("v_TENANTID", tenantId);
+			ezScheduleDAO.updateReminderStatus(reminderStatusMap);
+		}
+		
+		logger.debug("updateCompleteScheduleStatus ended");
+	}
+
+	@Override
+	public void sendReminderMail(ScheduleReminderVO reminderSche) throws Exception {
+		String offSet = reminderSche.getOffSetInfo();
+		String datetype = reminderSche.getDateType();
+		String startdate = reminderSche.getStartDate();
+		String enddate = reminderSche.getEndDate();
+		String lang = reminderSche.getLang();
+		LoginVO tempLoginVO1 = new LoginVO();
+		tempLoginVO1.setId(reminderSche.getCreatorId());
+		tempLoginVO1.setTenantId(reminderSche.getTenantId());
+		tempLoginVO1.setDn("NOPASSWORD");
+		
+		LoginVO fromUserInfo = loginService.selectUser(tempLoginVO1);
+		fromUserInfo.setLang(lang); // 수신알림메일 발송 시 필요한 데이터 추가 (다국어 지원)
+		fromUserInfo.setOffset(offSet);
+		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(fromUserInfo.getLang()));
+		
+		LoginVO tempLoginVO2 = new LoginVO();
+		tempLoginVO2.setId(reminderSche.getOwnerId());
+		tempLoginVO2.setTenantId(reminderSche.getTenantId());
+		tempLoginVO2.setDn("NOPASSWORD");
+		
+		LoginVO toUserInfo = loginService.selectUser(tempLoginVO2);
+		toUserInfo.setLang(lang); // 수신알림메일 발송 시 필요한 데이터 추가 (다국어 지원)
+		toUserInfo.setOffset(offSet);
+		
+		String period = "";
+		
+		String todayDate = reminderSche.getTodayDate();
+		
+		String repetAllDayFlag = "";
+		if (reminderSche.getRepetition() != null) {
+			repetAllDayFlag = reminderSche.getRepetition().split("\\|")[1];
+		}
+		
+		if (datetype.equals("3") && repetAllDayFlag.equals("0")) {
+			period = todayDate + " " + startdate.substring(10,16) + " ~ "+ enddate.substring(10,16) + " (" + egovMessageSource.getMessage("ezSchedule.t343", locale) + ")";
+        } else if (datetype.equals("2")) {
+        	period = todayDate + " (" + egovMessageSource.getMessage("ezSchedule.t280", locale);        	
+        } else if (datetype.equals("3") && repetAllDayFlag.equals("1")) {
+        	period = todayDate + " (" + egovMessageSource.getMessage("ezSchedule.t280", locale) + " (" + egovMessageSource.getMessage("ezSchedule.t343", locale) + ")";
+        } else {
+        	period = todayDate + " " + startdate.substring(10,16) + " ~ "+ enddate.substring(10,16);
+        }
+		
+		String primaryData = "";
+		if (commonUtil.getPrimaryData(lang, reminderSche.getTenantId()).equals("1")) {
+			primaryData = "1";
+		} else {
+			primaryData = "2";
+		}
+		
+		String fromName = primaryData.equals("1") ? reminderSche.getCreatorName() : reminderSche.getCreatorName2();
+		String toName = primaryData.equals("1") ? reminderSche.getOwnerName() : reminderSche.getOwnerName2();
+		String title = reminderSche.getTitle();
+		
+		InternetAddress from = new InternetAddress();
+		from.setPersonal(fromName, "UTF-8");
+		from.setAddress(fromUserInfo.getEmail());
+		
+		List<InternetAddress> toList = new ArrayList<InternetAddress>();
+		InternetAddress to = new InternetAddress();
+		to.setPersonal(toName, "UTF-8");
+		to.setAddress(toUserInfo.getEmail());
+		toList.add(to);
+		InternetAddress[] toArr = toList.toArray(new InternetAddress[toList.size()]);
+		String userId = fromUserInfo.getId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", fromUserInfo.getTenantId());
+		String userAccount = userId + "@" + domainName;
+		String password  = jspw;
+		
+		String subject = egovMessageSource.getMessage("ezSchedule.hth05", locale) + " " + reminderSche.getTitle(); // [일정미리알림] + 일정 제목
+		StringBuilder contentBuilder = new StringBuilder("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+		int scheduleId = reminderSche.getScheduleId();
+		String otherid = "";
+		int repeatcount = reminderSche.getRepeatCount();
+		String date = reminderSche.getTodayDate();
+		String type = reminderSche.getScheduleType();
+		String dateType = reminderSche.getDateType();
+		String pattern = "0";
+		contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj17", locale) + ": " + title + "</span><br>");
+		contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezSchedule.hth06", locale) + ": " + fromName + "</span><br>");
+		contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezSchedule.hth07", locale) + ": " + period + "</span><br><br>");
+		contentBuilder.append("<a id='reminder_link' ");
+		contentBuilder.append("scheId='" + scheduleId + "' otherid='" + otherid + "' repeatcount='" + repeatcount + "' date='" + date + "' type='" + type +"' dateType='" + dateType + "' pattern='" + pattern +"'");
+		contentBuilder.append(" sche-sdate='" + startdate + "' sche-edate='" + enddate + "'");
+		contentBuilder.append(" onclick='javascript:reminderMailLink();' style='cursor: pointer; font-size: 13px; color: blue;'><br>");
+		contentBuilder.append(egovMessageSource.getMessage("ezEmail.hth01", locale));
+		contentBuilder.append("</a>");
+		contentBuilder.append("</td></tr></table>");
+		
+		ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, commonUtil.createNotiMailContent(contentBuilder.toString(), fromUserInfo.getTenantId(), locale), false, EmailImportance.NORMAL);
+		String linkUrl = "/ezSchedule/scheduleRead.do?";
+		linkUrl += "id=" + reminderSche.getScheduleId() + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + type + "&datetype=" + datetype + "&pattern=" + pattern;
+		
+		String linkUrlMobile = "";
+		if (repeatcount > 0) {
+			linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + reminderSche.getScheduleId() + "&startDate=" + startdate + "&endDate=" + enddate + "&repeatCount=" + repeatcount + "&type=monthList" + "&purpose=scheduleInfoDetail" ;
+		} else {
+			linkUrlMobile = "/mobile/ezSchedule/mScheduleDetail.do?scheduleId=" + reminderSche.getScheduleId() + "&startDate=" + startdate + "&endDate=" + enddate + "&type=monthList" + "&purpose=scheduleInfoDetail";
+		}
+		
+		ezNotificationService.sendNoti(reminderSche.getCreatorId(), fromName, reminderSche.getOwnerId(), "SCHEDULE", "REMINDER", title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting", reminderSche.getTenantId(), reminderSche.getCompanyId());
+	}
+	
+	// 2023-09-15 한태훈 - 일정관리 > 일정그룹 정보 가져오기
+	@Override
+	public ScheduleGroupListVO selectScheduleGroupInfo(String groupId, int tenantId) throws Exception {
+		Map <String, Object> map = new HashMap<String, Object> ();
+		map.put("v_GROUPID", groupId);
+		map.put("v_TENANTID", tenantId);
+
+		return ezScheduleDAO.selectScheduleGroupInfo(map);
+	}
+
+	@Override
+	public void updateAllDaySTimeForReminder(String allDaySTimeForReminder, int tenantId) throws Exception {
+		SysParamVO sysParamVO = new SysParamVO();
+		sysParamVO.setTenantID(tenantId);
+		sysParamVO.setName("allDaySTimeForReminder");
+		sysParamVO.setValue(allDaySTimeForReminder);
+		
+		ezSystemAdminDAO.updateSysParam(sysParamVO);
+	}
+	
+	// 시간을 제외한 날짜만 남기기 위해 시간, 분, 초, 밀리초를 0으로 설정하는 메소드
+    private void setToMidnight(Calendar calendar) {
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+    }
 
 }
 

@@ -399,4 +399,14 @@ public interface EzCommonService {
 	public void addUserDeptHideFlag() throws Exception;
 
 	public void insertGongRamListOption() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테이블 추가 */
+	public void createTblScheduleReminderScheduler() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 시간 컬럼 추가 */
+	public void addReminderTimeAtTblScheduleConfig() throws Exception;
+	
+	/* 2023-10-20 한태훈 - 일정관리 > 미리알림 테넌트 컨피그 추가 */
+	public void insertReminderTenantConfig() throws Exception;
+	
 }

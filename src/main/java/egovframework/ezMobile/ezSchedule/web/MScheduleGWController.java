@@ -654,7 +654,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        
 			jsonParam.put("content", content);
 	        
-	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale); 
+	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale, info.getOffSet(), info.getLang()); 
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -1045,7 +1045,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	        String realPath = commonUtil.getRealPath(request);
 	        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
 	        
-	        int resultScheduleID = mScheduleService.insertBoardSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale); 
+	        int resultScheduleID = mScheduleService.insertBoardSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale, info.getOffSet(), info.getLang()); 
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -1178,7 +1178,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			logger.debug("tenantId : " + tenantId + "  displayName : " + displayName + "  status : " + status);
 			
 			for (int i=0; i < scheduleIdList.length; i++) {
-				ezScheduleService.updateAttendant(scheduleIdList[i], userId, displayName, displayName2, status, tenantId, showtop);
+				ezScheduleService.updateAttendant(scheduleIdList[i], userId, displayName, displayName2, status, tenantId, showtop, info.getLang(), info.getOffSet());
 			}
 			
 			result.put("status", "ok");
@@ -1380,7 +1380,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			JSONArray jsonArray = (JSONArray)parser.parse(creatorList);
 			
 			for (int i=0; i < scheduleIdList.length; i++) {
-				ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, info.getTenantId(), "N");
+				ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, info.getTenantId(), "N", info.getLang(), info.getOffSet());
 				JSONObject obj = (JSONObject) jsonArray.get(i);
 				String scheduleId = scheduleIdList[i];
 				String creatorId = (String) obj.get("creatorId");			

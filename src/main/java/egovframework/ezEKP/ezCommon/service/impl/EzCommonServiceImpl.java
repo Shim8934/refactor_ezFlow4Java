@@ -4014,4 +4014,30 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
         }
     }
+    
+    // 2023-09-08 한태훈 - 일정관리 > 미리알림 시간 설정 컬럼 추가
+ 	@Override
+ 	public void addReminderTimeAtTblScheduleConfig() throws Exception {
+ 		ezCommonDAO.addReminderTimeAtTblScheduleConfig();
+ 	}
+ 	
+ 	// 2023-09-08 한태훈 - 일정관리 > 미리알림 스케줄러 테이블 추가
+ 	@Override
+ 	public void createTblScheduleReminderScheduler() throws Exception {
+ 		ezCommonDAO.createTblScheduleReminderScheduler();
+ 	}
+ 	
+ 	// 2023-09-11 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그 추가, 미리알림 시 하루종일 일정의 시작 시각 설정 컨피그 추가
+ 	@Override
+ 	public void insertReminderTenantConfig() throws Exception {
+ 		
+ 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+ 		
+ 		for (TenantVO tenantVo : tenantIdList) {
+ 			Map<String, Object> map = new HashMap<String, Object>();
+ 			map.put("tenantID", tenantVo.getTenantId());
+ 			ezCommonDAO.insertReminderTenantConfig(map);
+ 		}
+ 		
+ 	}
 }

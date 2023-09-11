@@ -74,7 +74,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	private CommonUtil commonUtil;
 
 	@Override
-	public int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale) throws Exception {
+	public int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale, String offSet, String lang) throws Exception {
 		//본문내용 MHT 저장
 		String mhtPath = commonUtil.separator + "doc";
 		/*String uploadFilePath = commonUtil.separator + "uploadFile";*/
@@ -182,6 +182,15 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				
 				insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId);
 			}*/
+			// 2023-09-04 한태훈 - 개인 일정의 경우 미리알림 스케줄러에 데이터 추가
+			if (jsonParam.get("scheduleType").toString().equals("1")) {
+				map.put("v_SCHEDULEID", scheduleId);
+				map.put("v_REMINDERSTATUS", "0");
+				map.put("v_OFFSET", offSet);
+				map.put("v_LANG", lang);
+				map.put("v_OFFSETMIN", commonUtil.getMinuteUTC(offSet));
+				ezScheduleDAO.insertReminderSchedule(map);
+			}
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
@@ -194,7 +203,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}
 
 	@Override
-	public int insertBoardSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale) throws Exception {
+	public int insertBoardSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale, String offSet, String lang) throws Exception {
 		//본문내용 MHT 저장
 		String mhtPath = commonUtil.separator + "doc";
 		/*String uploadFilePath = commonUtil.separator + "uploadFile";*/
@@ -295,6 +304,15 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 				
 				insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId);
 			}*/
+			// 2023-09-04 한태훈 - 개인 일정의 경우 미리알림 스케줄러에 데이터 추가
+			if (jsonParam.get("scheduleType").toString().equals("1")) {
+				map.put("v_SCHEDULEID", scheduleId);
+				map.put("v_REMINDERSTATUS", "0");
+				map.put("v_OFFSET", offSet);
+				map.put("v_LANG", lang);
+				map.put("v_OFFSETMIN", commonUtil.getMinuteUTC(offSet));
+				ezScheduleDAO.insertReminderSchedule(map);
+			}
 			
 			sID = scheduleId;			
 		} catch (Exception e) {
@@ -377,6 +395,10 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			
 			ezScheduleDAO.insertScheduleAttach(attachMap);
 		}	*/
+		
+		// 2023-09-15 - 한태훈 : 일정관리 > 미리알림 스케줄러 미완료 상태로 변경.
+		map.put("v_REMINDERSTATUS", "0");
+		ezScheduleDAO.updateReminderSchedule(map);
 	}
 
 	@Override

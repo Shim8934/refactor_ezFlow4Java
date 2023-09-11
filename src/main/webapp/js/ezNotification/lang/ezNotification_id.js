@@ -40,7 +40,8 @@ var subType = {
 		cancel : "membatalkan undangan",
 		accept : "Undangan disetujui",
 		reject : "Penolakan undangan",
-		mod : "Ubah jadwal"
+		mod : "Ubah jadwal",
+		reminder : "Pengingat"
 	},
 	resource : {
 		reserve : "Reservasi sumber daya",

@@ -1155,11 +1155,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberId = (String) obj.get("memberID");
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
-			String groupName = (String) obj.get("groupName");
-			String description = (String) obj.get("description");
 			
 			ezScheduleService.insertScheduleGroupMember(groupId, memberId, memberName, memberName2, loginVO.getTenantId());
 			
+			ScheduleGroupListVO scheduleGroup = ezScheduleService.selectScheduleGroupInfo(groupId, loginVO.getTenantId());
+			String groupName = scheduleGroup.getGroupName();
+			String description = scheduleGroup.getDescription();
 			//KT텔레캅 통합알람 푸쉬 코드
 		    if(dotNetTotalNotification.equalsIgnoreCase("yes")) {
 		    	try {
@@ -1799,6 +1800,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String displayName = request.getParameter("DISPLAYNAME");
 		String displayName2 = request.getParameter("DISPLAYNAME2");
 		String listSecretary = request.getParameter("LISTSECRETARY");
+		String reminderTime = request.getParameter("REMINDERTIME");
 
 		JSONParser parser = new JSONParser();
 		JSONArray jsonArray = (JSONArray)parser.parse(listSecretary);
@@ -1806,7 +1808,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		/*//기존 환경설정 정보 삭제
 		ezScheduleService.deleteScheduleConfig(userID, tenantID); */
 		//새로운 환경설정 정보 등록
-		ezScheduleService.insertScheduleConfig(userID, defaultView, startDay, startTime, endTime, autoDelete, tenantID);	
+		ezScheduleService.insertScheduleConfig(userID, defaultView, startDay, startTime, endTime, autoDelete, tenantID, reminderTime);
 		//기존 비서정보 삭제
 		ezScheduleService.deleteSecretary(userID, tenantID, companyID);
 		
@@ -2386,7 +2388,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    if (scheduleid == null || scheduleid.equals("")) {
         	//insertSchedule
         	result = ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
-        			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop);
+        			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
        
         	// 참석자 초대 메일 발송
         	if (attendantId != null) {
@@ -3195,7 +3197,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String endDate = (String) obj.get("endDate");
             String showtop = obj.get("showtop") == null ? "N" : obj.get("showtop").toString();
 
-            ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, loginSimpleVO.getTenantId(), showtop);
+            ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, loginSimpleVO.getTenantId(), showtop, loginSimpleVO.getLang(), loginSimpleVO.getOffset());
 
 			String repetition = (String) obj.get("repetition");
 			
@@ -3979,7 +3981,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					
 					//scheduletype 개인일정, importance 중요도보통 설정
 					ezScheduleService.insertSchedule(loginVO.getId(), loginVO.getDisplayName(), loginVO.getDisplayName2(), loginVO.getId(), loginVO.getDisplayName(), loginVO.getDisplayName2(), "1", "2", ispublic, datetype, sdate, edate, repetition, title, location, content, null, 
-						null, null, null, null, null, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop);
+						null, null, null, null, null, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
 					
 					/*for(Object sch : c.getProperties()) {
 						System.out.println(sch);
@@ -4356,7 +4358,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 								
 								//scheduletype 개인일정, importance 중요도보통 설정
 								ezScheduleService.insertSchedule(loginVO.getId(), loginVO.getDisplayName(), loginVO.getDisplayName2(), loginVO.getId(), loginVO.getDisplayName(), loginVO.getDisplayName2(), "1", "2", ispublic, datetype, sdate, edate, repetition, title, location, content, null, 
-									null, null, null, null, null, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop);
+									null, null, null, null, null, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
 								
 								/*for(Object sch : c.getProperties()) {
 									System.out.println(sch);
@@ -4407,6 +4409,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String offset    = loginVO.getOffset();
 		String companyId = loginVO.getCompanyID();
 		int tenantId     = loginVO.getTenantId();
+		String lang      = loginVO.getLang();
 		
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -4416,6 +4419,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String dragId    = request.getParameter("dragId");
 		String dragDay   = request.getParameter("dragDay");
 		String dropDay   = request.getParameter("dropDay");
+		String completeFG   = request.getParameter("completeFG");
 		
 		ScheduleInfoVO info  = ezScheduleService.getScheduleInfo(dragId, offSetMin, tenantId, companyId);
 		String infoStartTime = info.getStartDate().substring(10, 16);
@@ -4483,7 +4487,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				ezScheduleService.insertScheduleRepeDel(dragId, utcDelTime, tenantId, companyId);
 					
 				//일정데이터 복사
-				ezScheduleService.copySchedule(dragId, utcStartTime, utcEndTime, defaultPath, offSetMin, tenantId, companyId);
+				ezScheduleService.copySchedule(dragId, utcStartTime, utcEndTime, defaultPath, offSetMin, tenantId, companyId, lang, offset, completeFG);
 			}
 		}
 		else {
@@ -4511,7 +4515,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 			else {
 				//일정데이터 수정
-				ezScheduleService.updateDragSchedule(dragId, loginVO.getId(), loginVO.getDisplayName1(), loginVO.getDisplayName2(), utcStartTime, utcEndTime, tenantId, companyId);
+				ezScheduleService.updateDragSchedule(dragId, loginVO.getId(), loginVO.getDisplayName1(), loginVO.getDisplayName2(), utcStartTime, utcEndTime, tenantId, companyId, info.getDateType(), info.getRepetition());
 			}
 		}
 		

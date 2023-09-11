@@ -40,7 +40,8 @@ var subType = {
 		cancel : "hủy lời mời",
 		accept : "Lời mời đã được phê duyệt",
 		reject : "Từ chối lời mời",
-		mod : "Sửa đổi lịch trình"
+		mod : "Sửa đổi lịch trình",
+		reminder : "Nhắc nhở"
 	},
 	resource : {
 		reserve : "Dự trữ tài nguyên",
