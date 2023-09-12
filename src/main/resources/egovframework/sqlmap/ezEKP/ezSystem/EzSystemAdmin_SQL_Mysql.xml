@@ -831,7 +831,7 @@
 					TBL_USERMASTER
 			</isNotEqual>
 		</isNotEqual>
-					WHERE CN = #userId#)				
+					WHERE CN = #userId# AND TENANT_ID = #tenantId#)
 	</insert>
 	
 		<sql id="EzSystemAdminDAO.searchQueryForUserChList">
