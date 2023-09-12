@@ -3095,7 +3095,7 @@
 	
 	<select id="EzCommonDAO.checkAttitudeGPSConfig" resultClass="String">
 		SELECT
-			property_value
+			property_name
 		FROM
 			tbl_tenant_config
 		WHERE

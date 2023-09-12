@@ -1592,6 +1592,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	}
 	
 	public void insertAttitudeGPSConfig(Map<String, Object> map) throws Exception {
+		//2023-09-12 김대현 attitudeMapApiKey값은 사용하지 않으면 null이기 때문에 property_name을 return시킴
 		String propertyValue = (String) select("EzCommonDAO.checkAttitudeGPSConfig", map);
 		
 		if (propertyValue == null) {

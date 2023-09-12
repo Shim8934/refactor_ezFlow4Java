@@ -2287,6 +2287,7 @@ CREATE TABLE `tbl_adminreceiptgroup_sub` (
   `COMPANYID` varchar(20) NOT NULL,
   `DEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `EXTRECEPTYN` varchar(5) DEFAULT 'N',
   PRIMARY KEY (`SUBID`,`TENANT_ID`,`COMPANYID`),
   UNIQUE KEY `IDX_TBL_ADMINRECEIPTGROUP_SUB` (`TENANT_ID`,`COMPANYID`,`SUBID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2753,6 +2754,9 @@ CREATE TABLE `tbl_aprattachinfo` (
   `ATTACHUSERDEPTNAME2` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
+  `ISBIGATTACH` varchar(4) DEFAULT 'N',
+  `ISBIGATTACHDEL` varchar(4) DEFAULT 'N',
+  `SAVEDATE` datetime DEFAULT NULL,
   PRIMARY KEY (`DOCID`,`ATTACHFILESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2797,6 +2801,7 @@ CREATE TABLE `tbl_aprdocgroupinfo` (
   `GROUPDOCSN` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
+  `TYPE` varchar(10) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`GROUPDOCSN`,`TABSN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3048,6 +3053,7 @@ CREATE TABLE `tbl_aprreceiptprocessinfo` (
   `PROCESSORJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
+  `ROOTDOCID` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`RECEIVESN`,`DOCID`,`RECEIVEDDEPTID`(255)),
   KEY `IDX_TBL_ARPI_APRSTATE` (`APRSTATE`),
   KEY `IDX_TBL_ARPI_RECEIVEDDEPTID` (`RECEIVEDDEPTID`)
@@ -3099,6 +3105,10 @@ CREATE TABLE `tbl_attitude` (
   `IP` varchar(60) DEFAULT NULL,
   `DATE_TYPE` char(1) NOT NULL,
   `TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `ATTEND_TYPE` char(1) DEFAULT '0',
+  `LATITUDE` float(20,15) DEFAULT NULL,
+  `LONGITUDE` float(20,15) DEFAULT NULL,
+  `WORK_STATUS` char(1) DEFAULT NULL COMMENT 'D : 일근무 H : 반근무',
   PRIMARY KEY (`ATTITUDE_ID`),
   KEY `dateIndex` (`TENANT_ID`,`WRITER_ID`,`START_DATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3613,6 +3623,9 @@ CREATE TABLE `tbl_board_boardinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) DEFAULT NULL,
   `LIKEFLAG` varchar(2) DEFAULT NULL,
+  `MAILFG_POST` varchar(2) DEFAULT NULL,
+  `MAILFG_MOD` varchar(2) DEFAULT NULL,
+  `MAILFG_COMMENT` varchar(2) DEFAULT NULL,
   PRIMARY KEY (`BOARDID`(255),`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4235,6 +4248,7 @@ CREATE TABLE `tbl_c_board` (
   `C_NO` bigint(18) DEFAULT NULL,
   `CHARFILENAME` longtext DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
+  `UPPERNO` bigint(10) DEFAULT NULL,
   PRIMARY KEY (`NO`),
   UNIQUE KEY `IDX_TBL_C_BOARD` (`TENANT_ID`,`NO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5401,6 +5415,9 @@ CREATE TABLE `tbl_comm_boardinfo` (
   `SHOWPOSITION` varchar(2) DEFAULT NULL,
   `SN` bigint(10) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
+  `MAILFG_POST` varchar(2) DEFAULT NULL,
+  `MAILFG_MOD` varchar(2) DEFAULT NULL,
+  `MAILFG_COMMENT` varchar(2) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`C_CLUBNO`,`BOARDID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6253,6 +6270,7 @@ CREATE TABLE `tbl_docdelivery` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
   `ORGANUSERNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXTRECEPTYN` varchar(5) DEFAULT 'N',
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`,`DOCID`,`DEPTID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6436,6 +6454,9 @@ CREATE TABLE `tbl_endattachinfo` (
   `ATTACHUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
+  `ISBIGATTACH` varchar(4) DEFAULT 'N',
+  `ISBIGATTACHDEL` varchar(4) DEFAULT 'N',
+  `SAVEDATE` datetime DEFAULT NULL,
   PRIMARY KEY (`DOCID`,`ATTACHFILESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6846,6 +6867,7 @@ CREATE TABLE `tbl_forminfo` (
   `PASSAPRLINEFLAG` varchar(4) DEFAULT 'N' COMMENT '기결재통과플래그',
   `FORMGUIDE` longtext DEFAULT NULL,
   `APROPTION` varchar(300) DEFAULT NULL COMMENT '양식 세부설정',
+  `SIHANGTYPE` varchar(10) DEFAULT '' COMMENT '전자결재G 시행문 타입',
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -7550,7 +7572,8 @@ CREATE TABLE `tbl_lastaprline` (
   `APRMEMBERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERID`(255),`FORMID`,`APRMEMBERSN`)
+  `docState` varchar(12) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERID`(255),`FORMID`,`APRMEMBERSN`,`docState`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7581,7 +7604,8 @@ CREATE TABLE `tbl_lastdeptline` (
   `RECEIPTMEMBERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERID`(255),`FORMID`,`RECEIPTPOINTID`(255))
+  `docState` varchar(12) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERID`(255),`FORMID`,`RECEIPTPOINTID`(255),`docState`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -12226,6 +12250,7 @@ CREATE TABLE `tbl_survey_participant` (
   `dept_name2` varchar(80) DEFAULT NULL COMMENT '부서 이름(영문)',
   `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `SUBDEPTYN` varchar(2) DEFAULT 'N',
   PRIMARY KEY (`participant_id`,`company_id`,`tenant_id`),
   UNIQUE KEY `participantIdx1` (`survey_id`,`user_type`,`user_id`,`company_id`,`tenant_id`),
   CONSTRAINT `FK_SURVEY_PARTICIPANT` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -12937,6 +12962,9 @@ CREATE TABLE `tbl_tmpattachinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL COMMENT '원문정보공개 첨부파일 플래그',
   `FILEOPENFLAG` char(1) DEFAULT NULL,
+  `ISBIGATTACH` varchar(4) DEFAULT 'N',
+  `ISBIGATTACHDEL` varchar(4) DEFAULT 'N',
+  `SAVEDATE` datetime DEFAULT NULL,
   PRIMARY KEY (`OWNERID`,`SN`,`ATTACHFILESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -14927,6 +14955,7 @@ CREATE TABLE `TBL_SUSINSCHEDULE` (
   `COMPANYID` varchar(20) DEFAULT NULL,
   `LANG` varchar(10) DEFAULT NULL,
   `TENANTID` mediumint(5) DEFAULT NULL,
+  `OFFSET` varchar(40) DEFAULT '',
   PRIMARY KEY (`DOCID`,`COMPANYID`,`TENANTID`),
   UNIQUE KEY `IDX_TBL_SUSINSCHEDULE` (`DOCID`,`TENANTID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -15374,3 +15403,177 @@ FROM
 			(a.CN = b.CN))) USER) v
 WHERE
 	v.TYPE = 'ADDJOB';
+
+CREATE TABLE `tbl_serialnumgen_grant` (
+    `IDX` int(10) NOT NULL AUTO_INCREMENT,
+    `DEPTID` varchar(100) NOT NULL,
+    `DEPTNAME` varchar(100) NOT NULL,
+    `GRANTDEPTID` varchar(100) NOT NULL,
+    `GRANTDEPTNAME` varchar(100) NOT NULL,
+    `TENANT_ID` mediumint(5) NOT NULL,
+    `COMPANYID` varchar(20) NOT NULL,
+    PRIMARY KEY (`IDX`,`DEPTID`,`TENANT_ID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE `tbl_aprattachlimit` (
+    `ATTACHLIMITCNT`  bigint(10) DEFAULT NULL,
+    `TENANT_ID` mediumint(5) NOT NULL,
+    `COMPANYID` varchar(80) NOT NULL,
+    PRIMARY KEY (`TENANT_ID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE TBL_SCHEDULE_COMPLETE (
+   SCHEDULEID BIGINT(10) NOT NULL,
+   REPEATCOUNT BIGINT(10) NOT NULL,
+   ISALLREP VARCHAR(2) NOT NULL DEFAULT 'N',
+   STARTDATE DATETIME NOT NULL,
+   TENANT_ID MEDIUMINT(5),
+   COMPANYID VARCHAR(40),
+   PRIMARY KEY (`SCHEDULEID`, `REPEATCOUNT`, `ISALLREP`, `STARTDATE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE TBL_SERIAL_NOROLLBACK (
+   TYPE1 VARCHAR(200) NOT NULL,
+   TYPE3 VARCHAR(200) NOT NULL,
+   TYPE2 VARCHAR(200) NOT NULL,
+   TIMESEP BIGINT(10) NOT NULL,
+   REGSERIALNO DECIMAL(19, 0) NOT NULL,
+   TENANT_ID DECIMAL(22, 0) NOT NULL DEFAULT 0,
+   COMPANYID VARCHAR(20) NOT NULL,
+   PRIMARY KEY (`TYPE1`, `TYPE3`, `TYPE2`, `TIMESEP`, `REGSERIALNO`, `TENANT_ID`, `COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `tbl_board_tabboard` (
+  `TABID` 		mediumint(2) 	NOT NULL,
+  `BOARDID` 		varchar(80) 	NOT NULL,
+  `TENANT_ID` 	mediumint(5) 	NOT NULL,
+  `COMPANYID` 	varchar(80) 	NOT NULL,
+  `BOARDNAME` 	varchar(255),
+  `BOARDNAME2` 	varchar(255),
+  PRIMARY KEY (`TABID`,`TENANT_ID`, `COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE TBL_APRBIGATTACH_DOWNLOADINFO (
+    DOCID VARCHAR(80) NOT NULL,
+    ATTACHFILESN BIGINT(10) NOT NULL,
+    DOWNLOAD_COUNT BIGINT(10),
+    TENANT_ID MEDIUMINT(5) NOT NULL DEFAULT 0,
+    COMPANYID VARCHAR(20) NOT NULL,
+    PRIMARY KEY (DOCID, ATTACHFILESN, TENANT_ID, COMPANYID)
+);
+
+CREATE TABLE TBL_APRPREVIEW (
+    USERID VARCHAR(80) NOT NULL,
+    PREVIEW VARCHAR(50),
+    TENANT_ID MEDIUMINT(5) NOT NULL,
+    PRIMARY KEY (USERID , TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+ALTER VIEW
+    `vtaskclass` AS
+SELECT
+    `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,
+    `tbl_taskcategory`.`NAME` AS `CNAME`,
+    `tbl_taskcategory`.`NAME2` AS `CNAME2`,
+    `tbl_taskmiddlecategory`.`MCATEGORYCODE` AS `MCATEGORYCODE`,
+    `tbl_taskmiddlecategory`.`NAME` AS `MCNAME`,
+    `tbl_taskmiddlecategory`.`NAME2` AS `MCNAME2`,
+    `tbl_tasksubcategory`.`SUBCATEGORYCODE` AS `SUBCATEGORYCODE`,
+    `tbl_tasksubcategory`.`NAME` AS `SCNAME`,
+    `tbl_tasksubcategory`.`NAME2` AS `SCNAME2`,
+    `tbl_taskcode`.`TASKCODE` AS `TASKCODE`,
+    `tbl_taskcode`.`TASKNAME` AS `TASKNAME`,
+    `tbl_taskcode`.`TASKNAME2` AS `TASKNAME2`,
+    `tbl_taskcode`.`KEEPINGPERIOD` AS `KEEPINGPERIOD`,
+    `tbl_taskcode`.`DISPLAYRECFLAG` AS `DISPLAYRECFLAG`,
+    `tbl_taskcode`.`SPECIALCATALOGFLAG` AS `SPECIALCATALOGFLAG`,
+    `tbl_taskcode`.`SC1` AS `SC1`,
+    `tbl_taskcode`.`SC2` AS `SC2`,
+    `tbl_taskcode`.`SC3` AS `SC3`,
+    `tbl_taskcode`.`TEMPFLAG` AS `TEMPFLAG`,
+    `tbl_taskcode`.`COMPANYID` AS `COMPANYID`,
+    `tbl_taskcode`.`TENANT_ID` AS `TENANT_ID`,
+    `tbl_task_deptinfo`.`PROCESSDEPTCODE` AS `PROCESSDEPTCODE`,
+    `tbl_task_deptinfo`.`PROCESSDEPTNAME` AS `PROCESSDEPTNAME`,
+    `tbl_task_deptinfo`.`PROCESSDEPTNAME2` AS `PROCESSDEPTNAME2`,
+    `tbl_taskcode`.`KEEPINGMETHOD` AS `KEEPINGMETHOD`,
+    `tbl_taskcode`.`KEEPINGPLACE` AS `KEEPINGPLACE`,
+    `tbl_taskcode`.`DISPLAYRECTRASTIME` AS `DISPLAYRECTRASTIME`,
+    `tbl_task_deptinfo`.`DELFLAG` AS `DELFLAG`,
+    `tbl_taskcategory`.`OLDFLAG` AS `OLDFLAG_TOP`,
+    `tbl_taskmiddlecategory`.`OLDFLAG` AS `OLDFLAG_MID`,
+    `tbl_tasksubcategory`.`OLDFLAG` AS `OLDFLAG_SUB`
+FROM
+    ((((`tbl_taskcategory`
+        JOIN `tbl_taskmiddlecategory` ON (`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE`
+            AND `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID`
+            AND `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`))
+        JOIN `tbl_tasksubcategory` ON (`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE`
+        AND `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID`
+        AND `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`))
+        JOIN `tbl_taskcode` ON (`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE`
+        AND `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID`
+        AND `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID`
+        AND `tbl_taskcode`.`DELFLAG` = '0'))
+        LEFT JOIN `tbl_task_deptinfo` ON (`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE`
+        AND `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID`
+        AND `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`))
+WHERE
+        `tbl_task_deptinfo`.`DELFLAG` = '0'
+   OR `tbl_task_deptinfo`.`DELFLAG` IS NULL
+   OR `tbl_task_deptinfo`.`DELFLAG` = '2';
+
+ALTER VIEW
+    `svtaskclass` AS
+SELECT
+    `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,
+    `tbl_taskcategory`.`NAME` AS `CNAME`,
+    `tbl_taskcategory`.`NAME2` AS `CNAME2`,
+    `tbl_taskmiddlecategory`.`MCATEGORYCODE` AS `MCATEGORYCODE`,
+    `tbl_taskmiddlecategory`.`NAME` AS `MCNAME`,
+    `tbl_taskmiddlecategory`.`NAME2` AS `MCNAME2`,
+    `tbl_tasksubcategory`.`SUBCATEGORYCODE` AS `SUBCATEGORYCODE`,
+    `tbl_tasksubcategory`.`NAME` AS `SCNAME`,
+    `tbl_tasksubcategory`.`NAME2` AS `SCNAME2`,
+    `tbl_taskcode`.`TASKCODE` AS `TASKCODE`,
+    `tbl_taskcode`.`TASKNAME` AS `TASKNAME`,
+    `tbl_taskcode`.`TASKNAME2` AS `TASKNAME2`,
+    `tbl_taskcode`.`KEEPINGPERIOD` AS `KEEPINGPERIOD`,
+    `tbl_taskcode`.`DISPLAYRECFLAG` AS `DISPLAYRECFLAG`,
+    `tbl_taskcode`.`SPECIALCATALOGFLAG` AS `SPECIALCATALOGFLAG`,
+    `tbl_taskcode`.`TEMPFLAG` AS `TEMPFLAG`,
+    `tbl_taskcode`.`COMPANYID` AS `COMPANYID`,
+    `tbl_taskcode`.`TENANT_ID` AS `TENANT_ID`,
+    `tbl_task_deptinfo`.`PROCESSDEPTCODE` AS `PROCESSDEPTCODE`,
+    `tbl_task_deptinfo`.`PROCESSDEPTNAME` AS `PROCESSDEPTNAME`,
+    `tbl_task_deptinfo`.`PROCESSDEPTNAME2` AS `PROCESSDEPTNAME2`,
+    `tbl_taskcode`.`KEEPINGMETHOD` AS `KEEPINGMETHOD`,
+    `tbl_taskcode`.`KEEPINGPLACE` AS `KEEPINGPLACE`,
+    `tbl_taskcode`.`DISPLAYRECTRASTIME` AS `DISPLAYRECTRASTIME`,
+    `tbl_taskcode`.`ISPUBLIC` AS `ISPUBLIC`,
+    `tbl_taskcode`.`ITEMSECURITY` AS `ITEMSECURITY`,
+    `tbl_task_deptinfo`.`DELFLAG` AS `DELFLAG`,
+    `tbl_taskcategory`.`OLDFLAG` AS `OLDFLAG_TOP`,
+    `tbl_taskmiddlecategory`.`OLDFLAG` AS `OLDFLAG_MID`,
+    `tbl_tasksubcategory`.`OLDFLAG` AS `OLDFLAG_SUB`
+FROM
+    ((((`tbl_taskcategory`
+        JOIN `tbl_taskmiddlecategory` ON (`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE`
+            AND `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID`
+            AND `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`))
+        JOIN `tbl_tasksubcategory` ON (`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE`
+        AND `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID`
+        AND `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`))
+        JOIN `tbl_taskcode` ON (`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE`
+        AND `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID`
+        AND `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID`))
+        LEFT JOIN `tbl_task_deptinfo` ON (`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE`
+        AND `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID`
+        AND `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`))
+WHERE
+        `tbl_task_deptinfo`.`DELFLAG` = '0'
+   OR `tbl_task_deptinfo`.`DELFLAG` IS NULL
+   OR `tbl_task_deptinfo`.`DELFLAG` = '2';
