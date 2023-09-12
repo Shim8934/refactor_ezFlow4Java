@@ -867,7 +867,7 @@
 		                break;
 		            case "2":
 						var win;
-						if (pListTypeValue == "99") {
+						if (pListTypeValue == "99" || pListTypeValue == "10") {
 							var heigth = window.screen.availHeight;
 							var width = window.screen.availWidth;
 							var left = (parseInt(width) - 540) / 2;
