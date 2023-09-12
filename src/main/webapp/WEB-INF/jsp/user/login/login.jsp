@@ -49,7 +49,7 @@
 			.warning_wrap .layerTitle{margin-bottom: 20px;}
 			
 			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
-			.logo img {width:137px; height:38px;}
+			/*.logo img {width:137px; height:38px;} */
 			
 			#findPwd {
 				color: #393939;
@@ -469,59 +469,80 @@
 			}
 			
 		</script>
+		<script type="text/javascript">
+	        function clearInput(obj){
+	            obj.addEventListener("click",function(){
+	                var btnClear = document.querySelector('.btnClear');
+	                btnClear.parentNode.querySelector('input').value = "";
+	                document.getElementById("uid").className = "input_text focus";
+	                document.getElementById("uid").focus();
+	            })
+	        }
+	
+	        function foc(){
+	            document.getElementById("BC").style.display = "block";
+	        }
+    	</script>
 	</head>	
 	<body class="login_body" onload="fnInit()">
 		<div class="login_wrapper">
-			<div class="login_layout">
-        		<div class="login_form">	                
-	                <form style="display: inherit;" id="loginForm" name="loginForm" method="post">
-	                	<input type="hidden" name="publicModulus" value="${publicModulus}"/>
-	                	<input type="hidden" name="publicExponent" value="${publicExponent}"/>
-	                	<input type="hidden" name="encryptID" />
-	                	<input type="hidden" name="encryptPass"/>
-	                	<input type="hidden" name="encryptOTP"/>
-	                	<input type="hidden" name="nextTime"/>
-	                	
-	                    <fieldset>
-	                    	<p class="logo"><img src="<c:out value='${logoUrl }'/>"></p>   
-	                        <p class="id">
-	                        	<input id="uid" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) document.loginForm.password.focus();" />
-	                        </p>		                 
-	                        <p class="pw">
-	                        	<input id="upw" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" autocomplete="off" />
-	                        </p>
-	                        <c:choose>
-	                        <c:when test="${useOTP}">
-		                        <p class="otp" title="<spring:message code="info.otp.msg" />">
-		                        	<input id="uotp" name="otp" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
+			<div class="login_backImg"></div>
+			<div class="right_wrap">
+				<div class="login_layout">
+        			<div class="login_form">	                
+						<form style="display: inherit;" id="loginForm" name="loginForm" method="post">
+		                	<input type="hidden" name="publicModulus" value="${publicModulus}"/>
+		                	<input type="hidden" name="publicExponent" value="${publicExponent}"/>
+		                	<input type="hidden" name="encryptID" />
+		                	<input type="hidden" name="encryptPass"/>
+		                	<input type="hidden" name="encryptOTP"/>
+		                	<input type="hidden" name="nextTime"/>
+		                	
+		                    <fieldset>
+		                    	<p class="logo"><img src="<c:out value='${logoUrl }'/>"></p>
+		                        <p class="id_txt"><spring:message code="main.login.design01"/></p>
+		                        <p class="id">
+		                        	<input id="uid" name="id" placeholder="<spring:message code="main.login.design02"/>" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC').style.display = 'block';" onKeyPress="if(event.keyCode==13) document.loginForm.password.focus();" />
+		                        	<span class="btnClear" id="BC" onclick="clearInput(this)" style="display:none;"></span>
 		                        </p>
-	                        </c:when>
-	                        <c:otherwise>
-		                        <input id="uotp" name="otp" type="hidden" style="display:none" />
-	                        </c:otherwise>
-	                        </c:choose>
-	                        <p class="btn_login">
-	                        	<label for="LoginButton" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
-	                        		<span id="LoginBtnSpan" style="font-size:24px;">LOGIN</span>
-	                        	</label>
-	                        </p>
-	                        <div class="btnBox">
-		                        <p class="saveid">
-		                        	<input type="checkbox" value="" id="checkId" name="checkId" />
-		                        	<label for="checkId"><span></span>ID Save</label>
+		                        <p class="pw_txt"><spring:message code="main.login.design03"/></p>
+		                        <p class="pw">
+		                        	<input id="upw" name="password" placeholder="<spring:message code="main.login.design04"/>" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" autocomplete="off" />
 		                        </p>
-		                        <c:if test="${usePasswordReset == 'YES'}">
-		                        <p class="btn_password_reset" onclick="openFindPwd();" id="findPwd">
-	                                <span><spring:message code="login.zno025" /></span>
-	                            </p>
-	                            </c:if>
-                        	</div>
-	                        <p class="address" id="rightsYearP"></p>
-	                    </fieldset>
-	                    <input type="hidden" name="message" value="${message}" />		                    
-				    </form>
-				</div>	
-				<div class="login_formBg"></div>														
+		                        <c:choose>
+			                        <c:when test="${useOTP}">
+				                        <p class="otp" title="<spring:message code="info.otp.msg" />">
+				                        	<input id="uotp" name="otp" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
+				                        </p>
+			                        </c:when>
+			                        <c:otherwise>
+				                        <input id="uotp" name="otp" type="hidden" style="display:none" />
+			                        </c:otherwise>
+		                        </c:choose>
+		                        <p class="btn_login">
+		                        	<label for="LoginButton" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
+		                        		<span id="LoginBtnSpan" style="font-size:20px;"><spring:message code="main.login.design05"/></span>
+		                        	</label>
+		                        </p>
+		                        <div class="btnBox">
+			                        <p class="saveid">
+			                        	<input type="checkbox" value="" id="checkId" name="checkId" />
+			                        	<label for="checkId"><span></span><spring:message code="main.login.design06"/></label>
+			                        </p>
+	  		                        <c:if test="${usePasswordReset == 'YES'}"> 
+				                        <p class="find_pw">
+			                                <a id="findPwd" onclick="openFindPwd();" ><spring:message code="login.zno025"/></a>
+			                            </p>
+	 	                            </c:if>
+	                        	</div>
+		                    </fieldset>
+		                    <input type="hidden" name="message" value="${message}" />
+				    	</form>
+					</div>	
+				</div>
+				<div class="copy">
+                	<p id="rightsYearP"></p>
+           		</div>
 			</div>
 		</div>				
 		<div class="noti_layer" style="position:absolute;top:295px;left:800px;display:none;" id="divCapsLock">
@@ -698,7 +719,7 @@
 	        </div>			
 			<div class="password_reset" style="width:660px;">
 				<p class="passwordTitle" style="border-bottom:0px">
-					비밀번호 초기화
+					<spring:message code="login.zno025" />
 				</p>
 				<ul class="passwordForm">
 					<li style="margin-bottom:0px;" class="redText">▒ <spring:message code="login.zno006" /></li>

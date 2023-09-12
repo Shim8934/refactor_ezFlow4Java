@@ -3166,7 +3166,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (loginLogoUrl == null || loginLogoUrl.equals("")) {
-				loginLogoUrl = "/images/kr/login/logo.gif";
+				loginLogoUrl = "/images/kr/login/logo.svg";
 				loginLogoUrlDefault = true;
 			} else {
 				loginLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + loginLogoUrl;
