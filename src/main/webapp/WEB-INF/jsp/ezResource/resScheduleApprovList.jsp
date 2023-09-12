@@ -168,7 +168,6 @@
 	            	totalPage = Math.ceil(new Number(getNodeText(SelectNodes(listxml, "root/totalcount")[0]) / 20));
 					
 	            	if(totalPage == 0){
-		                document.getElementById("ApprovList").innerHTML = "";
 	                	var listheader = document.getElementById("listviewheader");
 	                	var xmldom = xmlhttp.responseXML;
 	                	var listview = new ListView();
@@ -225,10 +224,14 @@
 	            	list += "</ROWS>";
 
 		            list = loadXMLString(list);
-		            var listheader = document.getElementById("listviewheader");
+					var listheader = document.getElementById("listviewheader");
+					var rows = listheader.getElementsByTagName('ROWS');
+					Array.prototype.forEach.call(rows, function (row) {
+						row.parentNode.removeChild(row);
+					});
 	            	SelectSingleNode(listheader, "LISTVIEWDATA").appendChild(list.documentElement)
 
-		            document.getElementById("ApprovList").innerHTML = "";
+		            document.getElementById("ApprovList").innerHTML = ""
 	            	var xmldom = xmlhttp.responseXML;
 	            	var listview = new ListView();
 	            	listview.SetID("ApprovListView");
