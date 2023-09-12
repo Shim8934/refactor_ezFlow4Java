@@ -171,7 +171,21 @@
 					alert("3. <spring:message code="ezResource.t42"/>");
 				} else {
 					alert("<spring:message code="ezResource.t56"/>");
-					window.opener.RefreshPageDoc();
+					
+					/* 2023-09-08 홍승비 - 자원등록 시 부모창을 이동하는 경우, 저장 완료 이후 동작하지 않는 오류 수정 */
+					try {
+						if (typeof(window.opener.RefreshPageDoc) != "undefined") {
+							window.opener.RefreshPageDoc();
+						} else {
+							if (window.opener.parent.left.location.href.indexOf("/ezResource/leftResource.do") > -1) {
+								window.opener.parent.left.location.href = "/ezResource/leftResource.do?flag=SELECT_NO";
+							}
+							window.opener.location.reload(false);
+						}
+					} catch (e) {
+						console.log(e);
+					}
+					
 					window.close();
 				}
 			}
