@@ -166,7 +166,9 @@
 				m_rgParams4PostOption["tagMsgBCC"] = MsgBCC_TR;
 				m_rgParams4PostOption["tagMsgBCCu"] = MsgBCC_TRu;
 				m_rgParams4PostOption["EachMail"] = iseachMail;
-				m_rgParams4PostOption["SecurityMail"] = pSecurity;
+				m_rgParams4PostOption["isSecureMail"] = "${isSecureMail}";
+		        m_rgParams4PostOption["secureMail"] = pSecurity;
+
 		        if(xmpTo.innerHTML != "")
 		        {
 				    var splitAddr = getEmailAddressList(xmpTo.innerHTML);
@@ -1169,12 +1171,13 @@
 		            <li class="bar" style="background:none; border:0;padding-left:0;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif" align="absmiddle"></li>                        
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
                         <img src="/images/pbar.gif"></li> 
-                    <li class="sel" style="background:none; border:none; padding:0px;">
+                    <%-- 메일옵션으로 보안메일과 바디타입 설정이 옮겨져 리팩토링 시 이하 주석 코드 삭제 가능
+                    <li class="sel" style="background:none; border:none; padding:0px; display:none;">
                         <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
                         	<option value="0" <c:if test="${bodyType == '0'}">selected</c:if>>HTML</option>
                         	<option value="1" <c:if test="${bodyType == '1'}">selected</c:if>>PlainText</option>
                         </select>
-                    </li>
+                    </li> --%>
 		            <li style="display:none;">
 		                <select id="SelMailSign" onchange="MailSignSel()">
 		                    <option value='0' selected><spring:message code='ezEmail.t825' /></option>
@@ -1183,13 +1186,13 @@
 		                    <option value='3'><spring:message code='ezEmail.t828' /></option>
 		                </select>
 	                </li>
-				 	<li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
+				 	<%-- <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default; display:none;">
                         <img src="/images/pbar.gif">
                     </li>
                     <li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">
                     	<input type="checkbox" id="chkSecureMail" />
                     	<label for="chkSecureMail"><spring:message code='ezEmail.lhm63' /></label>
-                    </li>
+                    </li> --%>
 		          </ul>
 		        </div>
 		        <div id="close">
@@ -1370,13 +1373,13 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			
-			if (useSecureMail == "YES") {
+			/*if (useSecureMail == "YES") {
 	        	$('.securemail').css('display', '');
 	        	
 	        	if (isSecureMail == "true") {
 	        		document.getElementById("chkSecureMail").checked = true;
 	        	}
-	        }
+	        }*/
 		</script>
 		    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		     <form method="post" id="form" name="form" enctype="multipart/form-data" action="../ezEmail/remote/mail_interuploadX_CK.aspx?timestamp=${stateName}" target="ifrm" style="display:none;" >
