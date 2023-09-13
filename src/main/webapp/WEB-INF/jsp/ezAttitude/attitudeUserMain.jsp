@@ -30,6 +30,10 @@
 		<!-- date Format -->		
 		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/moment.min.js')}"></script>
 		<style>
+			body {
+				overflow: auto !important;
+			}
+
 			#attiStatis table td {
 				color : #777;
 				font-size : 13px;
@@ -2318,7 +2322,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0" onselectstart="return false">
+	<body class="mainbody" marginwidth="0" marginheight="0" onselectstart="return false">
 		<c:if test="${deptFlag != 'true'}">
 			<h1 id="titleimg"><spring:message code='ezAttitude.t143'/></h1>
 		</c:if>
