@@ -537,7 +537,7 @@
 		        	<li>
 			    		<%-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 --%>
 			    		<%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > LNB 이미지 삭제 --%>
-<%-- 			    	<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)" style="pointer-events:auto"></span> --%>
+			    		<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)" style="pointer-events:auto"></span>
 			    		<label class="IDcontainer" onchange="chk_all()">
 							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
 					  		<span class="checkmark mr5" style="background:rgb(125, 125, 125); margin-top: 7px;"></span>
