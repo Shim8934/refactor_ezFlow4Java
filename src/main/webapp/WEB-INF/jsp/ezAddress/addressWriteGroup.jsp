@@ -1636,6 +1636,7 @@
 	            document.getElementById("subtitle").innerText = "<spring:message code='ezAddress.t231' />";
 	            if(!loadaddresstree)
 	                LoadAddressTree();
+	            $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "0px");
 	            loadaddresstree = true;
 	        }
 	
