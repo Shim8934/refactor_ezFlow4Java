@@ -1242,7 +1242,12 @@
 	        		$("[id='"+ulId+"']").attr("class", "lnbUL");
 	        		$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 					$("#"+h2Id).children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+
 	        	}
+				
+				$("#tagtitle").attr("class", "off");
+				$("#tagtitle").children().eq(0).attr("class", "sub_iconLNB tree_plus");
+				$("#tagcontent").attr("class", "lnbUL off");
 				
 	        	/* if ($("#" + h2Id).attr("class") == "off") {
 	        		$(".lnb H2").attr("class", "off");
@@ -1251,6 +1256,7 @@
 	        		$("#" + h2Id).attr("class", "on")
 	        		$("#" + ulId).attr("class", "lnbUL");
 	        	} */
+	        	
 	        }
 			
 			function shareMailAddress(){
@@ -1300,19 +1306,20 @@
 			function goAdress() {
 	            openWindowForMail("/ezEmail/mailMain.do?funCode=2", "", null);
 			}
-			
 
 			function openTagFolder() {
 				if ($("#tagtitle").attr("class") == "on") {
 					$("#tagtitle").attr("class", "off");
+					$("#tagtitle").children().eq(0).attr("class", "sub_iconLNB tree_plus");
 					$("#tagcontent").attr("class", "lnbUL off");
 				} else {
 					$("#tagtitle").attr("class", "on")
+					$("#tagtitle").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 					$("#tagcontent").attr("class", "lnbUL");
 					reloadTags();
 				}
 			}
-
+			
 			function attachTagClickEvent() {
 				$("#tagcontent a").on("click", function() {
 					window.open("/ezEmail/mailList.do?tagName=" + encodeURIComponent(this.innerText), "right");
@@ -1636,14 +1643,14 @@
 			        </c:forEach>
 		        </c:if>
 				<c:if test="${useMailTag}">
-					<h2 class="on" id="tagtitle" onclick='openTagFolder();'>
+					<h2 id="tagtitle" onclick='openTagFolder();'>
 						<span class="sub_iconLNB tree_plus"></span>
 						<span class="h2Title" style="display:inline-block"><spring:message code="ezEmail.tag" /></span>
 					</h2>
-					<ul class="lnbUL" id="tagcontent">
+					<ul class="lnbUL off" id="tagcontent">
 						<li>
 							<c:forEach items="${tags}" var="tag">
-								<a data-idx="${tag.idx}"><c:out value="${tag.name}" /></a>
+								<a data-idx="${tag.idx}" onclick='openTagContent();' ><c:out value="${tag.name}" /></a>
 							</c:forEach>
 						</li>
 					</ul>
