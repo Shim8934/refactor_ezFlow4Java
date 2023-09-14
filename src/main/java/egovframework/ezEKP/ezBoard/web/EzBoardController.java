@@ -9493,6 +9493,34 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 2023-09-14 홍승비 - 동영상게시판 > 동영상의 경로를 문자열로 리턴 (/fileroot/...)
+	 */
+	@RequestMapping(value = "/ezBoard/getBoardMoviePath.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getBoardMoviePath(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getBoardMoviePath started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String type = request.getParameter("type");
+		String boardID = request.getParameter("boardID");
+		String fileName = request.getParameter("fileName");
+		String pSignatureDir = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+		String filePath = "";
+		
+		if (type.equals("BOARDTHUM")) {
+			pSignatureDir = pSignatureDir + commonUtil.separator + boardID + commonUtil.separator + "uploadFile";
+		} else { // BOARDMOVIETEMP
+			pSignatureDir = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
+		}
+		
+		filePath = pSignatureDir + commonUtil.separator + fileName;
+		
+		logger.debug("getBoardMoviePath ended, filePath = " + filePath);
+		return filePath;
+	}
+	
+	/**
 	 * 동영상게시판 앨범수정
 	 */
 	@RequestMapping(value = "/ezBoard/movieAlbumEdit.do", method = RequestMethod.GET)
