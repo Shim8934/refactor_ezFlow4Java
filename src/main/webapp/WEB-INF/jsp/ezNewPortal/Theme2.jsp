@@ -76,7 +76,8 @@
 	                </dl>
             	</c:when>
             	<c:otherwise>
-	            	<dl class="time commuteNone">
+	            	<dl class="current"><spring:message code='ezNewPortal.t012' /></dl>
+	            	<dl class="time">
 	                    <dd id="timeFlow" style="line-height:30px;"></dd>
 	                </dl>            	
             	</c:otherwise>

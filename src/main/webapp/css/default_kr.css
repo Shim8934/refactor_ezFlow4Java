@@ -2411,7 +2411,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
     line-height: 25px;
     border-radius: 2px;}
 /* .lnb h2 span.tree_manage:hover .Personal_Documentation_tooltip{display: block;} */
-.mCSB_container{overflow: visible !important;}
+.mCSB_container{overflow: visible !important; padding-bottom: 20px;}
 
 .left_title, .btn_writeBox .btn_write01, .btn_writeBox .btn_write02, .btn_writeBox_work span.worksT, .btn_writeBox_work span.workT{font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .lnb h2 .h2Title {float:none; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}

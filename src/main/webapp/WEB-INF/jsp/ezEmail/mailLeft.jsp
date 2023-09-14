@@ -1533,6 +1533,9 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
+			#mCSB_1 {
+				height: 645px;
+			}
 			#tagcontent { word-break: break-all; line-height: 215%; }
 			#tagcontent a { padding: 4px; border-radius: 4px; }
 			#tagcontent a:hover { background: #c0ccd5; color: #0470e4; }

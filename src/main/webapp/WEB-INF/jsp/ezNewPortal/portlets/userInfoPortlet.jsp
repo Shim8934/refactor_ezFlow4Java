@@ -26,9 +26,9 @@
 			</dl>
 	            <%-- 임시 --%>
 			<div class="info_btn">
-				<span class="info_portal" id="portletEnv"><span class="info_portal_icon"></span><spring:message code='ezNewPortal.HSBPT01'/></span>
-				<span class="info_set" id="personalEnv"><span class="info_set_icon"></span><spring:message code='ezNewPortal.t006'/></span>
-				<span class="info_logout"><span class="info_logout_icon"></span><spring:message code='ezNewPortal.t008'/></span>
+				<span class="info_portal" id="portletEnv" onclick="viewPortletEnv()"><span class="info_portal_icon"></span><spring:message code='ezNewPortal.HSBPT01'/></span>
+				<span class="info_set" id="personalEnv" onclick="infoSetClick()"><span class="info_set_icon"></span><spring:message code='ezNewPortal.t006'/></span>
+				<span class="info_logout" onclick="infoLogoutClick()"><span class="info_logout_icon"></span><spring:message code='ezNewPortal.t008'/></span>
 			</div>
 <%--			<dd class="infoName">${userName }</dd>
 	            <dd class="infoTeam">${deptName }</dd>

@@ -50,7 +50,7 @@
 					</div>
 				</article>
 	
-				<article class="schedule_small box_shadow schedule_scheduleList" style="width: 50.7%; box-shadow:none;">
+				<article class="schedule_small box_shadow schedule_scheduleList" style="width: 50%; box-shadow:none;">
 					<div class="layDIV">
 						<div class="sCalendarArea">
 							<dl class="portlet_title portlet_schedule sortablePortlet">

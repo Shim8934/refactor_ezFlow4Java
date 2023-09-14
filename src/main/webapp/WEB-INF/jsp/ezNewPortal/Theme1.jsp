@@ -875,7 +875,7 @@
 				});
 				
 				infoRight.forEach(function(item, index) {
-					infoRight[index].style.width = "calc(100% - 194px)";
+					infoRight[index].style.width = "calc(100%)";
 					infoRight[index].style.background = "#ffffff";
 				});
 			} else if (media1590.matches) {
@@ -896,7 +896,7 @@
 				});
 				
 				infoRight.forEach(function(item, index) {
-					infoRight[index].style.width = "calc(100% - 194px)";
+					infoRight[index].style.width = "calc(100%)";
 					infoRight[index].style.background = "#ffffff";
 				});
 			} else if (media1463.matches) {
@@ -917,7 +917,7 @@
 				});
 				
 				infoRight.forEach(function(item, index) {
-					infoRight[index].style.width = "calc(100% - 194px)";
+					infoRight[index].style.width = "calc(100%)";
 					infoRight[index].style.background = "#ffffff";
 				});
 			} else if (media1365.matches) {
