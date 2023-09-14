@@ -22,7 +22,6 @@ function list2_onSel_DBclick() {
 			
 			for(var i = selnode.length-1 ; i >= 0 ; i--){
 				SAPRLINEATTENDADDFunction(selnode[i], "PERSON");
-				initJunGyul();
 			}
     	} else {
     		if (selnode.length != 0) {
@@ -1898,6 +1897,7 @@ function SAprLineAddUser_Complete(RtnVal)
     AprLineAddIndex = AprLineAddIndex + 1; 
     
     LineAprTyepSet();
+	if (AprLineAddUser_Mode == "PERSON") initJunGyul();
 }
 
 
@@ -4771,7 +4771,6 @@ function list2_onSel_DBclick_audit(table_id) {
     			
     			for(var j = selnode.length-1 ; j >= 0 ; j--){
     				SAPRLINEATTENDADDFunction(selnode[j], "PERSON");
-    				initJunGyul();
     			}
         	} else {
         		if (selnode.length != 0) {
