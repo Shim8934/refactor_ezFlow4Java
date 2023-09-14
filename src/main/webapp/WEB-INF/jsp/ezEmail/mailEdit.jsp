@@ -781,16 +781,16 @@
 			
 		    function changeTextOption(bodyType) {
 		    	if (bodyType == "1") {
-		        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
+		        	//if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
 		        		document.getElementById("plainTextArea").value = message.GetEditorTextContent();
 		        		document.getElementById("message").style.display = "none";
 						document.getElementById("plainTextArea").style.display = "";
 		        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 			        	document.getElementById("SelMailSign").disabled = true;
 			        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
-		        	} else {
+		        	/*} else {
 		        		document.getElementById("bodyType").options[0].selected = true;
-		        	}
+		        	}*/
 		    	} else {
 		    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);		    		
 		    		document.getElementById("message").style.display = "";
