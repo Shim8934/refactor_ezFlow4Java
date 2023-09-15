@@ -896,7 +896,8 @@
 		    			+ "&orderCell=" + encodeURIComponent(orderCell) 
 		    			+ "&orderOption=" + encodeURIComponent(orderOption)
 		    			+ "&attitudeType=" + encodeURIComponent(searchAttitudeType)
-		    			+ "&duplicated=duplicated";
+		    			+ "&duplicated=duplicated"
+						+ "&listSize=" + listSize;
 		    	exportExcelframe.target="_blank";
 			}
 	        
