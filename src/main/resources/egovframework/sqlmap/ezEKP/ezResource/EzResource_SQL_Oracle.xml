@@ -614,8 +614,8 @@
                 CHARACTERID ,
                 APPROVEFLAG ,
                 RETURNFLAG,
-            	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM  ,
-                IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM  
+            	DECODE(#v_lang#, '1', U.DISPLAYNAME, U.DISPLAYNAME2) AS OWNERNM  ,
+                DECODE(#v_lang#, '1', U.DESCRIPTION, U.DESCRIPTION2) AS DEPTNM  
            	FROM
            		TBL_RS_SCHEDULE A
            	LEFT JOIN 
@@ -704,8 +704,8 @@
             	CHARACTERID ,
             	SCH.APPROVEFLAG ,
             	SCH.RETURNFLAG,
-            	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM ,
-            	IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM ,
+            	DECODE(#v_lang#, '1', U.DISPLAYNAME, U.DISPLAYNAME2) AS OWNERNM,
+                DECODE(#v_lang#, '1', U.DESCRIPTION, U.DESCRIPTION2) AS DEPTNM,
             	SCH.COMPANYID 
 			FROM
 				TBL_RS_SCHEDULE SCH
@@ -767,8 +767,8 @@
             	CHARACTERID ,
             	APPROVEFLAG ,
             	RETURNFLAG ,
-            	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM , 
-                IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM
+            	DECODE(#v_lang#, '1', U.DISPLAYNAME, U.DISPLAYNAME2) AS OWNERNM  ,
+                DECODE(#v_lang#, '1', U.DESCRIPTION, U.DESCRIPTION2) AS DEPTNM
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
@@ -836,8 +836,8 @@
              	CHARACTERID ,
              	SCH.ApproveFlag ,
              	SCH.returnFlag ,
-             	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM ,
-             	IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM ,
+             	DECODE(#v_lang#, '1', U.DISPLAYNAME, U.DISPLAYNAME2) AS OWNERNM ,
+                DECODE(#v_lang#, '1', U.DESCRIPTION, U.DESCRIPTION2) AS DEPTNM ,
              	SCH.companyID 
         	FROM
         		TBL_RS_SCHEDULE SCH

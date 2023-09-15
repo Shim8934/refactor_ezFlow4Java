@@ -192,8 +192,9 @@
                 var movieContent = document.getElementById("addimagecontent");
                 movieContent.innerHTML += resultHTML;
                 
-                 if (movieContent != null && movieContent != "") {
-                    var movieSrc = "/ezBoard/getBoardMovieInfo.do?type=BOARDMOVIETEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(movieUniqueID);
+                /* 2023-09-14 홍승비 - 게시물 작성창에서 동영상 업로드 시 동영상 재생바 클릭으로 시간 이동되지 않는 현상 수정 (기존 getBoardMovieInfo.do URL이 아닌 실제 파일경로를 사용) */
+				if (movieContent != null && movieContent != "") {
+					var movieSrc = getBoardMoviePath("BOARDMOVIETEMP", pBoardID, movieUniqueID);
                     
                     document.getElementById(movieid).src = movieSrc;
                     bodycount = parseInt(bodycount) + 1;
@@ -238,6 +239,11 @@
 	        
 	        function SaveItem(pMode)
 	        {
+	        	/* 2023-09-14 홍승비 - 동영상 업로드 동작이 완료되기 전까지는 상단 버튼의 동작을 방지 (업로드는 비동기로 동작함) */
+	        	if (isfileup == true) {
+	        		return;
+	        	}
+	        	
 	            if (pBoardID == "") {
 	                if (!SelBoard) {
 	                    alert("<spring:message code='ezBoard.t173'/>");
@@ -431,7 +437,7 @@
 		            xhr = new XMLHttpRequest();
 		            xhr.upload.addEventListener("progress", uploadProgress, false);
 		            xhr.addEventListener("load", uploadComplete, false);
-		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
+		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit, true);
 		            xhr.send(fd);
 		            document.getElementById("progdiv").style.display = "";
 		        }
@@ -479,6 +485,10 @@
 		
 		    // 동영상 추가는 한개만 가능
 		    function btn_MovieAttachAdd() {
+		    	if (isfileup == true) {
+	        		return;
+	        	}
+		    	
 	        	if (document.getElementById("addimagecontent").childNodes.length > 0) {
 	        		alert("<spring:message code ='ezBoard.hsb06' />");
 		        	return;
@@ -490,6 +500,10 @@
 		    
 		    function btn_MovieAttachDel()
 		    {
+		    	if (isfileup == true) {
+	        		return;
+	        	}
+		    	
 				var xmlhttp = createXMLHttpRequest();
 	            var uniqueID = "";
 	            var fd = new FormData();
@@ -567,6 +581,32 @@
 			    
 			 	return canvas.toDataURL();
 			}
+		    
+			/* 2023-09-14 홍승비 - 게시물 작성창에서 동영상 업로드 시 동영상 재생바 클릭으로 시간 이동되지 않는 현상 수정 (getBoardMovieInfo.do URL이 아닌 실제 파일경로를 사용하도록 수정) */
+	        function getBoardMoviePath(pType, pBoardID, movieUniqueID) {
+				var path = "";
+				
+	        	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getBoardMoviePath.do",
+					data : {
+						type : pType,
+						boardID : pBoardID,
+						fileName : movieUniqueID
+					},
+					success : function(result) {
+						path = result;
+					},
+					error : function(err) {
+						console.log(err);
+					}
+				});
+	        	
+	        	return path;
+	        }
+			
 	    </script>
 	</head>
 	<c:if test="${!isCrossBrowser}">
