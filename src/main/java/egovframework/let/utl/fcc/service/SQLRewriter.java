@@ -63,14 +63,14 @@ public class SQLRewriter implements RewritePolicy{
         while(!qPara.isEmpty()) {
             String param = qPara.poll();
             boolean isNum = qTypes.poll().trim().equals("java.lang.Integer");
-            result.append(qQuery.poll());
+            result.append(qQuery.poll().replaceAll("\\s+", " ")).append(" ");
             if (isNum) {
                 result.append(param);
             } else {
                 result.append("'").append(param).append("'");
             }
 
-            result.append(" /**P*/");
+            result.append(" /**P*/ ");
         }
 
         result.append(qQuery.poll());
