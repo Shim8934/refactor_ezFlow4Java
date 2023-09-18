@@ -92,7 +92,9 @@
 						btnClose();
 					} else if (data == -2) {
 						alert("<spring:message code='ezEmail.multiDomain.ksa10' />");
-					} else {
+					} else if (data == -3) {
+                      	alert("<spring:message code='ezEmail.multiDomain.yja01' />");
+                    }else {
 						alert("<spring:message code='main.sp12' />");
 					}
 				},
