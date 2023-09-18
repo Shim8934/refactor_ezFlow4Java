@@ -10116,6 +10116,35 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "PK_TBL_CABINET" ON "TBL_CABINET" ("TENANT_ID", "CABINETID", "COMPANYID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINET_CABINETCLASSNO_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINET_CABINETCLASSNO_IDX" ON "TBL_CABINET" ("CABINETCLASSNO")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINET_CABINETID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINET_CABINETID_IDX" ON "TBL_CABINET" ("CABINETID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINET_CABINETTRANSFERFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINET_CABINETTRANSFERFLAG_IDX" ON "TBL_CABINET" ("CABINETTRANSFERFLAG")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINET_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINET_DELFLAG_IDX" ON "TBL_CABINET" ("DELFLAG")
+;
+
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CABROLEINFO
 --------------------------------------------------------
@@ -11023,6 +11052,42 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "PK__TBL_CABINETCLASS__10216508" ON "TBL_CABINETCLASS" ("TENANT_ID", "CABINETCLASSNO", "COMPANYID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_CABINETCLASSNO_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_CABINETCLASSNO_IDX" ON "TBL_CABINETCLASS" ("CABINETCLASSNO")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_CONFIRMFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_CONFIRMFLAG_IDX" ON "TBL_CABINETCLASS" ("CONFIRMFLAG")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_OWNERDEPTID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_OWNERDEPTID_IDX" ON "TBL_CABINETCLASS" ("OWNERDEPTID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_REGSERIALNO_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_REGSERIALNO_IDX" ON "TBL_CABINETCLASS" ("REGSERIALNO")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_DELFLAG_IDX" ON "TBL_CABINETCLASS" ("DELFLAG")
+;
+
 --------------------------------------------------------
 --  DDL for Index SIGNATURE_TEMPLATE_PK
 --------------------------------------------------------
@@ -11547,6 +11612,14 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_APRLINEINFO_PK" ON "TBL_APRLINEINFO" ("TENANT_ID", "COMPANYID", "DOCID", "APRMEMBERSN") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_APRLINEINFO_APRMEMBERSN_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_APRLINEINFO_APRMEMBERSN_IDX" ON "TBL_APRLINEINFO" ("APRMEMBERSN")
+;
+
 --------------------------------------------------------
 --  DDL for Index LINE_APRMEMBERID_IDX
 --------------------------------------------------------
@@ -11805,6 +11878,15 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_ENDAPRDOCINFO_PK" ON "TBL_ENDAPRDOCINFO" ("TENANT_ID", "COMPANYID", "DOCID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOCINFO_DOCTYPE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_ENDAPRDOCINFO_DOCTYPE_IDX" ON "TBL_ENDAPRDOCINFO" ("DOCTYPE")
+;
+
+
 --------------------------------------------------------
 --  DDL for Index TBL_ENDAPRDOC_CONTAINERID_IDX
 --------------------------------------------------------
@@ -11835,6 +11917,14 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_ENDAPRLINEINFO_PK" ON "TBL_ENDAPRLINEINFO" ("TENANT_ID", "COMPANYID", "DOCID", "APRMEMBERSN") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRLINEINFO_APRMEMBERSN_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_ENDAPRLINEINFO_APRMEMBERSN_IDX" ON "TBL_ENDAPRLINEINFO" ("APRMEMBERSN")
+;
+
 --------------------------------------------------------
 --  DDL for Index ENDAPRLINE_APRMEMBERID_IDX
 --------------------------------------------------------
@@ -11901,6 +11991,28 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_EXPENDAPRDOCINFO_PK" ON "TBL_EXPENDAPRDOCINFO" ("TENANT_ID", "COMPANYID", "DOCID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_EXPENDAPRDOCINFO_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_EXPENDAPRDOCINFO_DELFLAG_IDX" ON "TBL_EXPENDAPRDOCINFO" ("DELFLAG")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_EXPENDAPRDOCINFO_DOCID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_EXPENDAPRDOCINFO_DOCID_IDX" ON "TBL_EXPENDAPRDOCINFO" ("DOCID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_EXPENDAPRDOCINFO_SECURITYCODE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_EXPENDAPRDOCINFO_SECURITYCODE_IDX" ON "TBL_EXPENDAPRDOCINFO" ("SECURITYCODE")
+;
+
 --------------------------------------------------------
 --  DDL for Index TBL_EXPENDAPRLINE_PK
 --------------------------------------------------------
@@ -12247,6 +12359,49 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_RECORD_TEMP_PK" ON "TBL_RECORD_TEMP" ("COMPANYID", "TENANT_ID", "DOCID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_DOCID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_DOCID_IDX" ON "TBL_RECORD" ("DOCID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_RECORDID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_RECORDID_IDX" ON "TBL_RECORD" ("RECORDID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_REGISTERDATE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_REGISTERDATE_IDX" ON "TBL_RECORD" ("REGISTERDATE")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_CREATEDATE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_CREATEDATE_IDX" ON "TBL_RECORD" ("CREATEDATE")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_DOCTYPE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_DOCTYPE_IDX" ON "TBL_RECORD" ("DOCTYPE")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_DELFLAG_IDX" ON "TBL_RECORD" ("DELFLAG")
+;
+
 --------------------------------------------------------
 --  DDL for Index TBL_RECREADHISTORY_PK
 --------------------------------------------------------
@@ -12301,6 +12456,49 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_SEPERATEATTACH_PK" ON "TBL_SEPERATEATTACH" ("TENANT_ID", "COMPANYID", "RECORDID", "SEPERATEATTACHNO") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_CABINETID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_CABINETID_IDX" ON "TBL_SEPERATEATTACH" ("CABINETID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_CONFIRMFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_CONFIRMFLAG_IDX" ON "TBL_SEPERATEATTACH" ("CONFIRMFLAG")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_RECORDID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_RECORDID_IDX" ON "TBL_SEPERATEATTACH" ("RECORDID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_REGISTERTYPE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_REGISTERTYPE_IDX" ON "TBL_SEPERATEATTACH" ("REGISTERTYPE")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_SEPERATEATTACHNO_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_SEPERATEATTACHNO_IDX" ON "TBL_SEPERATEATTACH" ("SEPERATEATTACHNO")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_DELFLAG_IDX" ON "TBL_SEPERATEATTACH" ("DELFLAG")
+;
+
 --------------------------------------------------------
 --  DDL for Index TBL_SEPERATEATTACH_TEMP_PK
 --------------------------------------------------------
