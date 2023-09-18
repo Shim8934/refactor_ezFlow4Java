@@ -216,8 +216,6 @@
 		        }
 		        
 		        isbigyn = "N";
-		        
-		        showAttachInnerNotice();
 		    }
 		    
 		    function checkMailStatusAndFileUpload() {
@@ -838,7 +836,7 @@
 			
 			function showAttachInnerNotice() {
 		        var fileCnt = document.querySelectorAll("#filelist tr[value]").length;
-				if (file.length > 0 || bigfile.length > 0 || fileCnt > 0) {
+                 if (fileCnt > 0) {
 		        	 document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_off";
 		        } else {
 		        	 document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_on";
