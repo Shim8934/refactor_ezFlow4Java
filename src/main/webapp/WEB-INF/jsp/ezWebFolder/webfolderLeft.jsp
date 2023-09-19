@@ -455,6 +455,7 @@
 			
 			function fileTransactionHistory(obj) {
 				window.parent.frames["right"].location.href = "/admin/ezWebFolder/webfolderAdminFileHistory.do?adminFlag=user";
+				optionOnOff();
 			}
 			
 			// 2023-06-15 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 트리구조 LNB 이미지 추가 
@@ -525,15 +526,17 @@
 				<h2 class="off">
 					<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onClick="folder_Manage();"><spring:message code='ezWebFolder.t268'/></span>
 				</h2>	
-				<ul class="lnbUL" id="option">
+<%-- 				<ul class="lnbUL" id="option"> --%>
+				<h2 class="lnbUL" id="option">
                    	<c:if test="${folderListCount > 0}">                   	
-						<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text" onclick="fileTransactionHistory(this);"><spring:message code='ezWebFolder.t128'/></span></li>
+						<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="fileTransactionHistory(this);"><spring:message code='ezWebFolder.t128'/></span>
 	         		</c:if>
-<!--                    	웹폴더 관리자 사용자화면에서 제거  -->
+<%--                    	웹폴더 관리자 사용자화면에서 제거  --%>
 <%--                    	<c:if test="${isWfAdmin == '1'}"> --%> 
 <%-- 						<li><span class="sub_iconLNB tree_appr_department"></span><span class="list_text" onclick="wfAdministrator();"><spring:message code="ezWebFolder.t25" /></span></li><!-- 웹폴더 관리자 --> --%>
 <%-- 					</c:if> --%>
-				</ul>
+				</h2>
+<%-- 				</ul> --%>
 			</div>	
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="folderPanel" onclick="HiddenFolderMenu();" >&nbsp;</div>
 	    <div id="folderMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">

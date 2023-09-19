@@ -1377,8 +1377,8 @@
 						<ul class="lnbUL off" id="USERSHAREUL">
 							<div id="UserShare_0">
 				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
-								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
-								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
+								<i id="imgNode_UserShare_${status.index}" class="sub_iconLNB tree_plus" border="0" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 23px;"></i>
+<%-- 								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded"> --%>
 								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
@@ -1390,7 +1390,7 @@
 					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename="결재완료문서" nodelevel="1" endnode="true" value="결재완료문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
 										<img id="imgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
-										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;">
+<%-- 										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
 										<span onclick="setPresentValue('결재완료문서'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId }" title="결재완료문서" id="spn_DeptShare_${status.index}_1" class="node_normal shareCont">결재완료문서</span>
 									</div>
 								</div>
@@ -1405,8 +1405,8 @@
 			        	</h2>
 						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">				          	
-								<img id="imgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
-								<img id="subImgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
+								<i class="sub_iconLNB tree_plus" id="imgNode_DeptShare_${status.index}" border="0" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 23px;"></i>
+<%-- 								<img id="subImgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded"> --%>
 								<span id="spn_DeptShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${deptShare.shareName }"></c:out>'><c:out value="${deptShare.shareName }"></c:out></span>
 								<div id="DeptShare_${status.index}_sub" style="display:none;">
 									<c:if test="${fn:length(shareUsersItemList) > 0 }">
@@ -1416,7 +1416,7 @@
 									    			<div class="node_div" id="DeptShare_${status.index}_${status2.index}" nodename="${item.formName}" nodelevel="1" endnode="true" value="${item.formName}" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 														<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
 														<img id="imgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
-														<img id="subImgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;">
+<%-- 														<img id="subImgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
 														<span onclick="setPresentValue('${item.formName}'); goFormContainer('${item.formName}', '${deptShare.shareId}'); setBoldText(this);" style="cursor: pointer; width: 135px;" title="${item.formName}" id="spn_DeptShare_${status.index}_${status2.index}" class="node_normal">${item.formName}</span>
 													</div>
 									    		</c:forEach>
@@ -1478,7 +1478,7 @@
 			        <c:if test="${fn:length(userShareList) > 0 }">
 			        	<h2 class="off" id="USERSHAREH2">
 			        		<span class="sub_iconLNB tree_plus"></span>
-			        		<span class="h2Title" onclick="openFolder('USERSHARE');">개인공유함</span>
+			        		<span class="h2Title" onclick="openFolder('USERSHARE');"><spring:message code='ezApprovalG.apprLeft02'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="USERSHAREUL">
 							<div id="UserShare_0">
@@ -1496,7 +1496,7 @@
 					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename="결재완료문서" nodelevel="1" endnode="true" value="결재완료문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
 										<img id="imgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
-										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;">
+<%-- 										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
 										<span onclick="setPresentValue('결재완료문서'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId }" title="결재완료문서" id="spn_DeptShare_${status.index}_1" class="node_normal shareCont">결재완료문서</span>
 									</div>
 								</div>
@@ -1507,7 +1507,7 @@
 		          	<c:if test="${fn:length(deptShareList) > 0 }">
 			        	<h2 class="off" id="DEPTSHAREH2">
 			        		<span class="sub_iconLNB tree_plus"></span>
-			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');">부서공유함</span>
+			        		<span class="h2Title" onclick="openFolder('DEPTSHARE');"><spring:message code='ezApprovalG.apprLeft03'/></span>
 			        	</h2>
 						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">	

@@ -1534,7 +1534,7 @@
 				margin-right: 0px;
 			}
 			#mCSB_1 {
-				height: 645px;
+ 				height: calc(100% - 90px);
 			}
 			#tagcontent { word-break: break-all; line-height: 215%; }
 			#tagcontent a { padding: 4px; border-radius: 4px; }
@@ -1659,9 +1659,6 @@
 					</ul>
 				</c:if>
 	        </div>
-	        <div class="mail_space">
-	        	<span class="mail_spaceText"><spring:message code="main.t00045" />&nbsp;<span class="userPer" id="usePer"></span></span><span  id="myBar" class="mailBar"></span>
-	        </div>
 	        <xml id="RootFolderXML" style="display: none;">
 		    	${rootFolderXML}
 		    </xml>
@@ -1696,5 +1693,8 @@
 		       	}
 			</script>
 	    </div>
+	    <div class="mail_space">
+	        	<span class="mail_spaceText"><spring:message code="main.t00045" />&nbsp;<span class="userPer" id="usePer"></span></span><span  id="myBar" class="mailBar"></span>
+        </div>
 	</body>
 </html>

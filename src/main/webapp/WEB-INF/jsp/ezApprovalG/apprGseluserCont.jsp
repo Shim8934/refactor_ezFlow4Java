@@ -104,6 +104,11 @@
             window.close();
         }      
     </script>
+    <style type="text/css">
+    	.sub_iconLNB.tree_plus, .sub_iconLNB.tree_minus{
+    		margin-top: 0px;
+    	}
+    </style>
 </head>
 <body class="popup">
     <h1><spring:message code='ezApproval.t323'/></h1>

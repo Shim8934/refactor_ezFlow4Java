@@ -2256,7 +2256,7 @@
                     </c:if>
 					<option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100' /></option>
 				</select>
-				<input id="keyword" class="organSearchKeyword searchinputBox"; onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb;"/>
+				<input id="keyword" class="searchinputBox"; onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb;"/>
 				<a class="searchBtn nofilter">
 					<img src="/images/bsearch_new2.png" onClick="search_click()" border="0">
 				</a>

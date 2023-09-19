@@ -291,17 +291,17 @@
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t111' /></th>";
 					
 					if (theme.themeUsed) {
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme' checked><span class='slider round'></span></label></td>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme' checked style='height:0px !important;'><span class='slider round'></span></label></td>";
 					} else {
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme'><span class='slider round'></span></label></td>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme' style='height:0px !important;'><span class='slider round'></span></label></td>";
 					}
 					
 					themesHTML += "<th class='menuIconTH'><spring:message code='ezNewPortal.t110' /></th>";
 					
 					if (theme.themeDefault) {
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme' checked><span class='slider round'></span></label></td></tr>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme' checked style='height:0px !important;'><span class='slider round'></span></label></td></tr>";
 					} else {
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme'><span class='slider round'></span></label></td></tr>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme' style='height:0px !important;'><span class='slider round'></span></label></td></tr>";
 					}
 					
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t112' /></th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						

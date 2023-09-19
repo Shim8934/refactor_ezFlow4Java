@@ -50,6 +50,9 @@
 		    	line-height: 32px;
 		    	margin-bottom: 1px;
 	    	}
+	    	.sub_iconLNB.tree_plus, .sub_iconLNB.tree_minus {
+	    		margin-top : 0px !important;
+	    	} 
 	    </style>
 	    <script type="text/javascript">
 	    	var approvalFlag = "<c:out value ='${approvalFlag}'/>";

@@ -16,6 +16,7 @@
       <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
       <script type="text/javascript" src="${util.addVer('/js/ezResource/organtreeview.htc.js')}"></script>
       <script type="text/javascript" src="${util.addVer('/js/ezResource/control/ListView.htc.js')}"></script>
+      <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
       <script id="clientEventHandlersJS" type="text/javascript">
          var Brd_Id      = "${brdID}";      
          var Brd_Nm      = "<c:out value='${brdNm}' />";      

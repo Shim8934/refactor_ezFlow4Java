@@ -631,6 +631,11 @@
 							 countFlag : "YES"},
 					success: function(xml){
 						returnXML = xml;
+						// 2023-09-15 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 마이게시판 > 마이게판목록 없을 시 여백 조정
+						if (xml.includes("<NODE>")){
+						} else {
+							$("#TreeCtrl_MyBoardTree").css("padding-bottom", "0px");
+						}
 					}        			
 				});	
 		    	

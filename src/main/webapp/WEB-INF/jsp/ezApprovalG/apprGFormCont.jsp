@@ -486,6 +486,11 @@
 		        }
 		    }
 		</script>
+		<style type="text/css">
+			.sub_iconLNB.tree_plus, .sub_iconLNB.tree_minus {
+	    		margin-top : 0px !important;
+	    	} 
+		</style>
 	</head>
 	<body class="popup">
 		<xml id='FORMLIST' style="Display:none">
