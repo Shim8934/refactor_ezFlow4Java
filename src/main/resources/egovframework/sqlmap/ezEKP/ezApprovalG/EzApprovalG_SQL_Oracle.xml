@@ -18914,7 +18914,9 @@
           		TransferDate = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
           		TDeptName = #v_DDeptName#,
           		TDeptName2 = #v_DDeptName2#
-    		WHERE  
+    		WHERE
+                TBL_CABINET.TENANT_ID = #v_TENANTID#
+            AND
     			TRIM(TBL_CABINET.CabinetClassNo) IN ( 
     											SELECT 
     												CabinetClassNo 
@@ -18993,7 +18995,9 @@
           		TransferDate = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
           		TDeptName = #v_DDeptName#,
           		TDeptName2 = #v_DDeptName2#
-    		WHERE  
+    		WHERE
+                TBL_CABINET.TENANT_ID = #v_TENANTID#
+            AND
     			TBL_CABINET.CabinetClassNo IN ( 
     											SELECT 
     												CabinetClassNo 
@@ -19068,7 +19072,9 @@
       		 SET 
       		 	OwnerDeptID = #v_DDeptCode#,
           		OwnerTask = #v_DTaskCode#
-    		 WHERE  
+    		 WHERE
+                TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
+             AND
     		 	TBL_CABINETCLASS.CabinetClassNo IN ( 
     		 										SELECT 
     		 												CabinetClassNo 
@@ -19147,8 +19153,12 @@
           	JOIN 
           		TBL_SEPERATEATTACH    
           	ON 
-          		TBL_CABINET.TCabinetID = TBL_SEPERATEATTACH.CabinetID 
-    		WHERE 
+          		TBL_CABINET.TCabinetID = TBL_SEPERATEATTACH.CabinetID
+   			AND
+                TBL_CABINET.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
+    		WHERE
+                TBL_CABINET.TENANT_ID = #v_TENANTID#
+            AND
     			TBL_SEPERATEATTACH.CabinetID IN ( 
     											SELECT 
     												TBL_CABINET.CabinetID 
