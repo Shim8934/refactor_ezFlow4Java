@@ -26,7 +26,9 @@
 		        var pSeach = RetValue["Search"];
 	
 		        document.getElementById("SelectDeptNM").innerHTML = RetValue["Dept"];
-	
+		        $("#SelectDeptNM").css('vertical-align','top');
+	            $("#SelectDeptNM").children('span').css('vertical-align','top');
+
 		        document.getElementById("Print_DeptUserImgList").innerHTML = "";
 		        document.getElementById("Print_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes
 		        while (document.getElementById("Print_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
@@ -243,23 +245,12 @@
 		            }
 	
 		        }
-	
+	            $('body').css('margin','8px')
 		        window.print();
 			});
 		</script>
 	</head>
-	<body class="popup">
-    <div id="menu">
-        <ul>
-        <li><span class="icon16 popup_icon16_print" onClick="window.print()"></span></li>
-        </ul>
-    </div>
-    <div id="close">
-        <ul>
-        <li><span onClick="window.close()"></span></li>
-        </ul>
-    </div>
-
+	<body>
     <span id="SelectDeptNM" style="font-weight:bold;width:300px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;display:inline-block;vertical-align:bottom;"></span>    
     <table style="width:100%;height:auto;border:1px solid #ddd;display:none;" id="Print_txtlist_table" class="mainlist" > 
               <tr>
