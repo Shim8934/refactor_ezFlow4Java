@@ -1564,8 +1564,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								try {
 									filename[i] = MimeUtility.decodeText(filename[i]);
 									filename[i] = filename[i].replaceAll("[\\\\/:*?\"<>|]", "_")
-												 .replaceAll("[\\t\\r\\n\\v\\f]", "")
-												 .replaceAll("[+]", " ");
+												 .replaceAll("[\\t\\r\\n\\v\\f]", "");
 									filename[i] = commonUtil.normalizeFileName(filename[i]);
 									filename[i] = commonUtil.getUniqueFileName(filename[i], fileNameMap);
 									logger.debug("filename=" + filename[i]);
