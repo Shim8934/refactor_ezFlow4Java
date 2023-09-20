@@ -7005,9 +7005,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             setHwpText("receiptnumber", docNO, hwpFile);
 						}
 						
-						if (findHwpField("receiptdate", hwpFile)) {
+						/*if (findHwpField("receiptdate", hwpFile)) {
 							setHwpText("receiptdate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
-						}
+						}*/
 						
 						retNum = getNDigitNum(cabinetSN, 6);
 						
@@ -7998,9 +7998,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
                     doc.getElementById("receiptnumber").text(docNO);
                     
-                    if (doc.getElementById("receiptdate") != null) {
+                    /*if (doc.getElementById("receiptdate") != null) {
                         doc.getElementById("receiptdate").text(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false).replace("-", "."));
-                    }
+                    }*/
                     
                     retNum = getNDigitNum(cabinetSN, 6);
                     
