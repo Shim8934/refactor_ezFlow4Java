@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 
 public interface EzAddressService {
 	
+	public boolean checkAddressAccessPermission(String addressId, String loginCookie) throws Exception;
 	public Map<String, String> getTopFolderSubCount(int tenantId, String userId, String deptId, String companyId) throws Exception;
 	public String getListType(int tenantId, String userId) throws Exception;
 	public String getListCnt(int tenantId, String userId) throws Exception;
