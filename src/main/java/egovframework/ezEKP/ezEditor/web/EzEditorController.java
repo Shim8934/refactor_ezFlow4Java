@@ -5,9 +5,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
@@ -779,7 +782,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * 쿠쿠닥스 에디터 업로드 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/kukudocsUpload.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezEditor/kukudocsUpload.do", method = RequestMethod.POST, produces="application/json; charset=utf-8")
 	@ResponseBody
 	public String kukudocsUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("kukudocsUpload started.");
@@ -862,7 +865,21 @@ public class EzEditorController extends EgovFileMngUtil {
 
 				// multiFile이 넘어왔을 경우의 처리
 			} else if (multiFile != null) {
-				String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+				// 2023.04.27 한슬기 : fileType이 jsp인 경우 보안상 문제가 될 수 있으므로 error 처리
+				// fileType이 대문자로 들어올 경우에도 비교하기 위해 .toLowerCase();추가하여 소문자로 통일
+				String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1].toLowerCase();
+				
+				// Editor에서 허용하는 fileType(Editor.bundle.js의 IMAGE_TYPE_FILES)
+				List<String> allowFileTypeList = new ArrayList<>(Arrays.asList("png","jpg","jpeg","gif","bmp"));
+				
+				// fileType이 fileTypeList에 포함되어있지 않을 경우 에러메시지 return
+				if(!allowFileTypeList.contains(fileType)) {
+					msg = egovMessageSource.getMessage("fail.common.editor.fileType.warning", locale);
+					result = "{ \"isError\" : true, \"msg\" : \"" + msg + "\" }";
+					logger.debug("This file type is not allowed. allowFileTypeList : {}, fileType:{}", allowFileTypeList, fileType);
+					return result;				
+				}
+				
 				String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
 
 				if (type.equals("MAILSIGNATURE")) { // 메일 서명 저장경로로 이미지 저장
