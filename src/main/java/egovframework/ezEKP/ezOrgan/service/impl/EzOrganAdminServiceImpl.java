@@ -1195,6 +1195,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	        ezOrganAdminDao.deleteCompanyInfo_IKMS7(map);
 	        
+	        //웹폴더 데이터 삭제 
+	        ezOrganAdminDao.deleteCompany_D34(map);
 		    /**
 		     * Active Directory
 		     * - 부서 정보 삭제

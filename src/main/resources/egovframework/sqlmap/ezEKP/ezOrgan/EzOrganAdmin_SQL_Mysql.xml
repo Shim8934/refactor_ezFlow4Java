@@ -3964,6 +3964,16 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D34" parameterClass="Map">
+		DELETE FROM  
+			TBL_WEBFOLDER_FOLDER 
+		WHERE 
+			COMPANY_ID = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#;
+     </delete>
+     
      <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
         DELETE FROM
             TBL_BOARD_MYBOARDS    
