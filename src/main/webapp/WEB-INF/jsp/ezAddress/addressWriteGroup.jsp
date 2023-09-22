@@ -30,9 +30,12 @@
 			.countColor {
 				color:#017BEC;
 			}
+
 			.checkDept {
 				height: 16px !important;
-			}		    	
+			}
+            .mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
+
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
@@ -1526,9 +1529,7 @@
 	            }
 	            
 	            if (selSpan == "orgSpan" && $(".txtlist_DeptTD").length > 0) {
-		        	$(".txtlist_DeptTD").css("display", "none");
-
-			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
+		        	$(".none").css("display", "none");
 		        }
 	        }
 	
@@ -1636,7 +1637,6 @@
 	            document.getElementById("subtitle").innerText = "<spring:message code='ezAddress.t231' />";
 	            if(!loadaddresstree)
 	                LoadAddressTree();
-	            $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "0px");
 	            loadaddresstree = true;
 	        }
 	
@@ -2119,7 +2119,7 @@
 	            selSpan = "orgJobMstSpan" + tabType;
 
 		        $(".txtlist_DeptTD").css("display", "table-cell");
-		        
+
 	            clearOrgTab("orgJobMst");
 		        orgJobMasterListSet(tabType);
 	        }
@@ -2690,7 +2690,7 @@
 	                                    <div style="vertical-align: top; height: 394px; overflow: auto; width: 446px;" id="txtlist_Layer">
 	                                        <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                            <tr>
-	                                                <td style="width: 110px; color:#333;background-color: #f8f8fa; display:none" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
+	                                                <td style="width: 110px; color:#333;background-color: #f8f8fa;" class="td_gray txtlist_DeptTD none"><spring:message code='ezAddress.t54' /></td>
 	                                                <td style="width: 110px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t124' /></td>
 	                                                <td style="width: 90px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t359' /></td>
 	                                                <td style="color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t192' /></td>

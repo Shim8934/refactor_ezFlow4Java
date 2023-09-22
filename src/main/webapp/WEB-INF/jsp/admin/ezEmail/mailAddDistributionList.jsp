@@ -59,6 +59,10 @@
 	    		display: inline-block;
 	    		vertical-align: middle;
 	    	}
+
+
+             .mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
+
 	    </style>
 	    <script>
 	        var cn = "${cn}";
@@ -1063,9 +1067,7 @@
 	            }
 	            
 	            if (selSpan == "orgSpan" && $(".txtlist_DeptTD").length > 0) {
-		        	$(".txtlist_DeptTD").css("display", "none");
-
-			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
+		        	$(".none").css("display", "none");
 		        }
 	        }
 	
@@ -3666,7 +3668,7 @@
 		                                        <div style="vertical-align: top; height: 426px; overflow: auto; width: 446px;" id="txtlist_Layer">
 		                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 		                                                <tr>
-		                                                	<td style="width: 110px; color:#333; display:none; font-weight: bold;" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
+		                                                	<td style="width: 110px; color:#333; font-weight: bold;" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
 		                                                    <td style="width: 100px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
 		                                                    <td style="width: 120px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
