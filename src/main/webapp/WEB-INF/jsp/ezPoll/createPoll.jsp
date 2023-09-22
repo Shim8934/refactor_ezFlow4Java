@@ -57,17 +57,9 @@
 				fd.append("questionId", qstID);
 			    xhr.open("POST", "/ezPoll/undoModifyVote.do");
 			    xhr.send(fd); 
-			    window.close(); */			   
-			    
-		    	$.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezPoll/undoModifyVote.do",
-		    		data : {
-		    			questionId : qst_ID
-		    		}
-		    	});   
+			    window.close(); */
+
+				undoEditing();
 			}	
 			
 			optImgPrevDelete();
@@ -102,6 +94,10 @@
 			
 			fileUploadStart();
 		}
+
+		window.addEventListener('popstate', function(event) {
+			undoEditing();
+		});
 		
 		function preProcessing() {
 			var sHourMinute = null;
@@ -669,7 +665,8 @@
     			compTemp = confirm("<spring:message code='ezPoll.t254' />");
     		}
     		
-    		if (compTemp == true) {        		
+    		if (compTemp == true) {
+				undoEditing();
         		menuQst_List();
     		}
 		}
@@ -1176,6 +1173,18 @@
 			else {
 				seeResultInput[2].checked = true;
 			}
+		}
+
+		function undoEditing() {
+			$.ajax({
+				type : "POST",
+				dataType : "text",
+				async : false,
+				url : "/ezPoll/undoModifyVote.do",
+				data : {
+					questionId : qst_ID
+				}
+			});
 		}
 	  	
 	</script>
