@@ -5716,7 +5716,8 @@ CREATE TABLE `tbl_connection_info` (
   `STATUS` varchar(1) DEFAULT NULL,
   `SESSIONCODE` varchar(200) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`SEQUENCE`)
+  PRIMARY KEY (`SEQUENCE`),
+  KEY `IDX_TENANT_ID_USERID` (`TENANT_ID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -10277,6 +10277,14 @@ CREATE INDEX "TBL_CABINET_DELFLAG_IDX" ON "TBL_CABINET" ("DELFLAG")
 
   CREATE UNIQUE INDEX "PK_TBL_CONNECTION_INFO" ON "TBL_CONNECTION_INFO" ("SEQUENCE") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TCI_TENANT_ID_USERID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX TCI_TENANT_ID_USERID_IDX ON TBL_CONNECTION_INFO (TENANT_ID, USERID)
+  ;
+
 --------------------------------------------------------
 --  DDL for Index PK_TBL_ADMIN_ACCESS_INFO
 --------------------------------------------------------
