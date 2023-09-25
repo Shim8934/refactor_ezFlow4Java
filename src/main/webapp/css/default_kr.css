@@ -3921,3 +3921,25 @@ select{min-height: 24px !important;}
 .lnbUL li.on .list_text { color: #0470E4; font-weight: bold; }
 
 input#inOffice, input#retired, input#stopped{vertical-align:middle;}
+
+/* 20230921 추가수정 */
+.popup_noti_content{overflow: auto;}
+/* 스크롤바 */
+*::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #dedede;
+    border-radius: 8px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
