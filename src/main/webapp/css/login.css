@@ -220,6 +220,7 @@ a{
 
 .id{position: relative;}
 .id .btnClear{position: absolute; top: 0; right: 0; width: 37px; height: inherit; background: url(/images/kr/login/input_icon.svg) center right 17px no-repeat; background-size: 50%; border: none; outline: none; cursor: pointer; }
+.pw .btnClear{position: absolute; top: 0; right: 0; width: 37px; height: inherit; background: url(/images/kr/login/input_icon.svg) center right 17px no-repeat; background-size: 50%; border: none; outline: none; cursor: pointer; }
 
 @media only screen and (max-width : 740px){
 	.login_backImg{display: none;}

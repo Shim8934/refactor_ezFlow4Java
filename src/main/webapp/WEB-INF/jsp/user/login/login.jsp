@@ -468,20 +468,16 @@
 				document.getElementById("rightsYearP").innerText = rightsYearString;
 			}
 			
-		</script>
-		<script type="text/javascript">
+			// 2023-09-21 황인경 - 디자인 개선 > 로그인 페이지 > 아이디/비밀번호 입력칸 clear
 	        function clearInput(obj){
 	            obj.addEventListener("click",function(){
-	                var btnClear = document.querySelector('.btnClear');
-	                btnClear.parentNode.querySelector('input').value = "";
-	                document.getElementById("uid").className = "input_text focus";
-	                document.getElementById("uid").focus();
+	            	var clearObj = $(obj).prev();
+	                clearObj.val("");
+	                clearObj.attr("class","input_text focus");
+	                clearObj.focus();
 	            })
 	        }
 	
-	        function foc(){
-	            document.getElementById("BC").style.display = "block";
-	        }
     	</script>
 	</head>	
 	<body class="login_body" onload="fnInit()">
@@ -507,7 +503,8 @@
 		                        </p>
 		                        <p class="pw_txt"><spring:message code="main.login.design03"/></p>
 		                        <p class="pw">
-		                        	<input id="upw" name="password" placeholder="<spring:message code="main.login.design04"/>" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" autocomplete="off" />
+		                        	<input id="upw" name="password" placeholder="<spring:message code="main.login.design04"/>" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC2').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC2').style.display = 'block';" onKeyPress="if(event.keyCode==13) actionLogin();" autocomplete="off" />
+		                        	<span class="btnClear" id="BC2" onclick="clearInput(this)" style="display:none;"></span>
 		                        </p>
 		                        <c:choose>
 			                        <c:when test="${useOTP}">
