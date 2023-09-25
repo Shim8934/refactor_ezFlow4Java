@@ -2335,7 +2335,7 @@
 		        	<li id="btnAbsentedList"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
 		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
 					<li style="float:right; <c:if test="${displayFlag == 'false'}"> display:none </c:if>">
-						<select id="authDeptList" style="min-width:130px; width:auto; height:28px;" onchange="deptChange()">
+						<select id="authDeptList" style="min-width:130px; max-width:200px; width:auto; height:28px;" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
 								<c:if test="${dept.mine != 'yes' }">
 									<c:if test="${selectedDeptID == dept.deptId}">
