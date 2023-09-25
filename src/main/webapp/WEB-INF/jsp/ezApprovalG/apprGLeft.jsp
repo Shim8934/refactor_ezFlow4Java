@@ -118,6 +118,8 @@
 		         //19.08.05 김보미 - 마우스 클릭시 볼드체   
 		         $(document).on("click", "span.list_text", function(){
 		        	 $("#left li").removeClass("on");
+		        	 $(".node_selected").addClass("node_normal");
+		        	 $(".node_selected").removeClass("node_selected");
 		        	 $(this).parent().addClass("on");
 		         })
 		    });
@@ -405,6 +407,7 @@
 		            
 		            if($(pthis).hasClass('shareCont')){
 	                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>",'',$(pthis).attr("shareUserId"));
+	                    $(".list_text").parent().removeClass("on");
 		            }
 		            if($(pthis).hasClass('deptShare')){
 		            	pListTypeValue = "";
@@ -446,7 +449,7 @@
 				        if (tempValue == "") {
 				            tempValue = localValue;
 				        } else {
-		 		    	if(event.target.tagName == "SPAN" && event.target.classList.contains("list_text")){
+		 		    	if (event.target.tagName == "SPAN" && event.target.classList.contains("list_text") && !event.target.classList.contains("deptShare")) {
 		 		    		var divElements = document.querySelectorAll('div');
 		 		    		divElements.forEach(function(div) {
 		 		    	        if (div.id.endsWith('_sub')) {
@@ -766,6 +769,7 @@
 		    	$(".node_selected").each(function (index) {
 	                $(this).removeClass('node_selected');
 	                $(this).addClass('node_normal');
+	                $("#left li").removeClass('on')
 	            });
 		    	$(elem).removeClass('node_normal');
                 $(elem).addClass('node_selected');
@@ -1064,6 +1068,7 @@
 							//원문공개문서함
 							PresentOpen = "DOC_ADMIN";
 							window.parent.frames.right.document.location.href = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
+							openFolder(pthis.id);
 							break;	
 		            }
 		        } catch (e) { }
@@ -1196,15 +1201,19 @@
 	        }
 	        
 	        function openFolder(val01) {
-	        	if ($("#" + val01 + "H2").attr("class") == "on") {	        	
-	        		$("#" + val01 + "H2").attr("class", "off");
-	        		$("#" + val01 + "UL").attr("class", "lnbUL off");
-	        		// 2023-06-23 황인경 - 디자인 개선 > 전자결재 > 좌측메뉴 > 트리구조 LNB 이미지 수정
-	        		if (val01 == 'person') {
-						$("#" + val01 + "H2").children().eq(1).attr("class", "sub_iconLNB tree_plus"); 
-					} else {
-						$("#" + val01 + "H2").children().eq(0).attr("class", "sub_iconLNB tree_plus"); 
-					}
+	        	if ($("#" + val01 + "H2").attr("class") == "on") {
+
+	        		if (val01 != "openGov") {
+	        			$("#" + val01 + "H2").attr("class", "off");
+		        		$("#" + val01 + "UL").attr("class", "lnbUL off");
+		        		// 2023-06-23 황인경 - 디자인 개선 > 전자결재 > 좌측메뉴 > 트리구조 LNB 이미지 수정
+		        		
+		        		if (val01 == 'person') {
+							$("#" + val01 + "H2").children().eq(1).attr("class", "sub_iconLNB tree_plus"); 
+						} else {
+							$("#" + val01 + "H2").children().eq(0).attr("class", "sub_iconLNB tree_plus"); 
+						}
+	        		}
 	        	} else {
 	        		$(".lnb H2").attr("class", "off");
 	        		$(".lnb UL").attr("class", "lnbUL off");
@@ -1212,10 +1221,14 @@
 	        		$("#" + val01 + "H2").attr("class", "on")
 	        		$("#" + val01 + "UL").attr("class", "lnbUL");
 	        		$('.tree_arrow_down').attr("class", "sub_iconLNB tree_plus");
-	        		if (val01 == 'person') {
-	        			$("#" + val01 + "H2").children().eq(1).attr("class", "sub_iconLNB tree_arrow_down");
-	        		} else {
-		        		$("#" + val01 + "H2").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+
+	        		if (val01 != "openGov") {
+		        		
+		        		if (val01 == 'person') {
+		        			$("#" + val01 + "H2").children().eq(1).attr("class", "sub_iconLNB tree_arrow_down");
+		        		} else {
+			        		$("#" + val01 + "H2").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+		        		}
 	        		}
 	        	}
 	        }
@@ -1405,7 +1418,7 @@
 			        	</h2>
 						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">				          	
-								<i class="sub_iconLNB tree_plus" id="imgNode_DeptShare_${status.index}" border="0" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 23px;"></i>
+								<i id="imgNode_DeptShare_${status.index}" class="sub_iconLNB tree_plus" border="0" onclick="treeicon_toggle('DeptShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_DeptShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 23px;"></i>
 <%-- 								<img id="subImgNode_DeptShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded"> --%>
 								<span id="spn_DeptShare_${status.index}" class="node_normal" style="cursor: pointer; width: 135px;" title='<c:out value="${deptShare.shareName }"></c:out>'><c:out value="${deptShare.shareName }"></c:out></span>
 								<div id="DeptShare_${status.index}_sub" style="display:none;">
@@ -1483,8 +1496,9 @@
 						<ul class="lnbUL off" id="USERSHAREUL">
 							<div id="UserShare_0">
 				          	<c:forEach var="userShare" items="${userShareList}" varStatus="status">				          	
-								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;">
-								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded">
+<%-- 								<img id="imgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/plus.gif" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 10px;"> --%>
+								<i id="imgNode_UserShare_${status.index}" class="sub_iconLNB tree_plus" border="0" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="width: 18px;height: 18px;cursor: pointer;margin-left: 23px;"></i>
+<%-- 								<img id="subImgNode_UserShare_${status.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;" class="mCS_img_loaded"> --%>
 								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName }"></c:out>'><c:out value="${userShare.shareName }"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
@@ -1512,7 +1526,7 @@
 						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">	
 				          		<li class="on">
-				          			<span class="list_text deptShare" id="${deptShare.shareId}" onclick="Open_Func(this)"><c:out value="${deptShare.shareName }"></c:out></span>
+				          			<span class="list_text deptShare" id="${deptShare.shareId}" onclick="Open_Func(this); setBoldText(this);"><c:out value="${deptShare.shareName }"></c:out></span>
 				          		</li>			          	
 				          	</c:forEach>
 			          	</ul>
@@ -1553,8 +1567,8 @@
 				</c:if>
 				<c:if test="${useOpenGov == 'YES'}">
 					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
-						<h2>
-							<span class="h2Title" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span>
+						<h2 class="off" id="openGovH2">
+							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span>
 						</h2>
 					</c:if>
 				</c:if>

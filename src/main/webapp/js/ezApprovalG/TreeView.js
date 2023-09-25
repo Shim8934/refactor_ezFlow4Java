@@ -677,6 +677,8 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
     	document.getElementById("descrip").innerHTML = "";
     }
     
+    $(".node_selected").attr("class", "node_normal");
+    
     if (preSelectID != "" && preSelectID != "undefined" && preSelectID!= null) {
         var objSpan = document.getElementById("spn_" + preSelectID);
         objSpan.className = TreeClasses["normal"];
