@@ -633,9 +633,9 @@ function DayOnMouseClickTop(event) {
  
     //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
     if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
-		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");
+		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("color","red");
 	} else {
-		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("color","black");
 	}
 	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
 	
