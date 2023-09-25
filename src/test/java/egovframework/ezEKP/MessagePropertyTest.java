@@ -164,8 +164,13 @@ public class MessagePropertyTest {
 			
 			while((line = br.readLine()) != null) {
 				if(isPropertyLine(line)) {
-					String propertyNm = line.split("=")[0].trim();
-					String value = convertString(line.split("=")[1].trim());
+					// *String.split()은 오버헤드가 커서: 두 번 실행하는 것보다 변수에 넣고 쓰는 게 이득. (참고: java.lang.String.split(String regex, int limit))
+					// 2개로 자르도록 함.(new String[2]) *limit을 정하지 않으면: '=' 바로 뒤가 공백도 없는 경우 [1]을 갖지 못함. (참고: https://baejangho.com/entry/java-split-limit)
+					String[] keyValue = line.split("=", 2);
+
+					// '=' 자체가 없다면 체크되지 않음. not in message 메세지에 걸려나옴.
+					String propertyNm = keyValue[0].trim();
+					String value = convertString(keyValue[1].trim());
 					
 					if(duplicatedMap.containsKey(propertyNm)) {
 						duplicatedMap.put(propertyNm, duplicatedMap.get(propertyNm) + 1);
