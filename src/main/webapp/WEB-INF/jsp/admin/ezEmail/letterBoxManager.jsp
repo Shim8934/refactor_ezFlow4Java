@@ -21,6 +21,18 @@
 		.jstree-container-ul {
 			margin:2px;
 		}
+		.jstree-default .jstree-themeicon {
+ 			width:0px !important;
+ 			height:0px !important;
+		}
+		.jstree-default>.jstree-no-dots .jstree-closed>.jstree-ocl{
+			background-image: url(/images/OrganTree_cross/plus.png) !important;
+			background-position: center !important;
+		}
+		.jstree-default>.jstree-no-dots .jstree-open>.jstree-ocl {
+			background-image: url(/images/OrganTree_cross/minus.png) !important;
+    		background-position: center !important;
+		}
 	</style>
 	
 	<body style="height: 95%; overflow:hidden;">
