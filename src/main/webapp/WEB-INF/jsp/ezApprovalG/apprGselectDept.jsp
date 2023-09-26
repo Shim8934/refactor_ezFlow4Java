@@ -12,6 +12,8 @@
 			.mainlist tr th {
 				border-top :0px;
 			}
+			.tree_plus {margin-top: -3px !important;}
+			.tree_minus {margin-top: 0px !important;}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OrganTree_Cross.js')}"></SCRIPT>
