@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1739,11 +1740,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			String userIDs = "'" + userId + "'";
 			String proxyOption = "";
 			proxyOption = ezApprovalGService.getIsUse("A23", "001", companyId, lang, tenantId);
+			List<ApprGProxyVO> proxyList = null;
 
 			if (proxyOption.equals("1")) {
-				userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+
+//				userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+				proxyList = ezApprovalGService.getProxyUserInfo(userId, lang, tenantId, offset);
 			}
 			map.put("userIDs", userIDs);
+			map.put("proxyList", proxyList);
 			
 			list = ezNewPortalDAO.getApprovalDoingList(map);
 			result.put("list", list);
@@ -2857,12 +2862,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		String userIDs = "'" + userId + "'";
 		String proxyOption = "";
 		proxyOption = ezApprovalGService.getIsUse("A23", "001", companyId, lang, tenantId);
+		List<ApprGProxyVO> proxyList = null;
 
 		if (proxyOption.equals("1")) {
-			userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+//			userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+			proxyList = ezApprovalGService.getProxyUserInfo(userId, lang, tenantId, offset);
 		}
 		map.put("userIDs", userIDs);
-		
+		map.put("proxyList", proxyList);
 		int doingListCount = ezNewPortalDAO.getApprovalDoingListCount(map);
 		
 		return doingListCount;

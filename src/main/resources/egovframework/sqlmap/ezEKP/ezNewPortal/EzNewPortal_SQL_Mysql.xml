@@ -1505,32 +1505,29 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 									AND
 										TBL_ADDJOBMASTER.cn = #userId#
 									UNION ALL
-									SELECT
-										physicaldeliveryofficename
-									FROM
-										TBL_USERMASTER
-									WHERE
-										cn = #userId#
-									AND
-										tenant_id = #tenantId#
-									)
-			AND
-				LINEINFO.aprmemberid in ($userIDs$)
-			AND
-				DOCINFO.functiontype = '002'
-			AND
-				LINEINFO.aprstate = '002'
-			AND
-				DOCINFO.docstate not in ('015')   
-			AND
-				DOCINFO.startdate between date_sub(now(), interval 1 YEAR) and now()
-			AND
-				IFNULL(GRP.TABSN, 1) = 1		
-			ORDER BY
-				DOCINFO.startdate DESC
-			LIMIT
+									SELECT physicaldeliveryofficename
+									FROM TBL_USERMASTER
+									WHERE cn = #userId#
+									  AND tenant_id = #tenantId#)
+		  AND (LINEINFO.aprmemberid in ($userIDs$)
+	   ]]>
+		<isNotEmpty property="proxyList">
+			<iterate property="proxyList">
+				OR (
+					LINEINFO.APRMEMBERID = #proxyList[].id#
+					AND LINEINFO.APRMEMBERDEPTID = #proxyList[].dept#
+					AND LINEINFO.APRMEMBERJOBTITLE = #proxyList[].title#
+				)
+			</iterate>
+		</isNotEmpty>
+			)
+		  AND DOCINFO.functiontype = '002'
+		  AND LINEINFO.aprstate = '002'
+		  AND DOCINFO.docstate not in ('015')
+		  AND DOCINFO.startdate between date_sub(now(), interval 1 YEAR) and now()
+		  AND IFNULL(GRP.TABSN, 1) = 1
+		ORDER BY DOCINFO.startdate DESC LIMIT
 				3
-		]]>
 	</select>
 	
 	<select id="ezNewPortal.getApprovalDoingLines" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
@@ -1780,7 +1777,18 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 										tenant_id = #tenantId#
 									)
 			AND
-				LINEINFO.aprmemberid in ($userIDs$)
+				(LINEINFO.aprmemberid in ($userIDs$)
+		]]>
+		<isNotEmpty property="proxyList">
+			<iterate property="proxyList">
+				OR (
+					LINEINFO.APRMEMBERID = #proxyList[].id#
+					AND LINEINFO.APRMEMBERDEPTID = #proxyList[].dept#
+					AND LINEINFO.APRMEMBERJOBTITLE = #proxyList[].title#
+					)
+			</iterate>
+		</isNotEmpty>
+			  )
 			AND
 				DOCINFO.functiontype = '002'
 			AND
@@ -1793,7 +1801,6 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				IFNULL(GRP.TABSN, 1) = 1
 			ORDER BY
 				DOCINFO.startdate DESC
-		]]>
 	</select>
 	
 	<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">

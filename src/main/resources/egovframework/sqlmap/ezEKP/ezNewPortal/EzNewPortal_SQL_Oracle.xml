@@ -1690,7 +1690,19 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 													tenant_id = #tenantId#
 												)
 						AND
-							LINEINFO.aprmemberid in ($userIDs$)
+							(LINEINFO.aprmemberid in ($userIDs$)
+		]]>
+		<isNotEmpty property="proxyList">
+			<iterate property="proxyList">
+							OR (
+								LINEINFO.APRMEMBERID = #proxyList[].id#
+								AND LINEINFO.APRMEMBERDEPTID = #proxyList[].dept#
+								AND LINEINFO.APRMEMBERJOBTITLE = #proxyList[].title#
+								)
+			</iterate>
+		</isNotEmpty>
+							 )
+		<![CDATA[
 						AND
 							DOCINFO.functiontype = '002'
 						AND
@@ -1998,13 +2010,25 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 										tenant_id = #tenantId#
 									)
 			AND
-				LINEINFO.aprmemberid in ($userIDs$)
+				(LINEINFO.aprmemberid in ($userIDs$)
+		]]>
+		<isNotEmpty property="proxyList">
+			<iterate property="proxyList">
+				OR (
+				LINEINFO.APRMEMBERID = #proxyList[].id#
+				AND LINEINFO.APRMEMBERDEPTID = #proxyList[].dept#
+				AND LINEINFO.APRMEMBERJOBTITLE = #proxyList[].title#
+				)
+			</iterate>
+		</isNotEmpty>
+				     )
+	  	<![CDATA[
 			AND
 				DOCINFO.functiontype = '002'
 			AND
 				LINEINFO.aprstate = '002'
 			AND
-				DOCINFO.docstate not in ('015')   
+				DOCINFO.docstate not in ('015')
 			AND
 				DOCINFO.startdate >= ADD_MONTHS(SYSDATE,-12)
 			AND
