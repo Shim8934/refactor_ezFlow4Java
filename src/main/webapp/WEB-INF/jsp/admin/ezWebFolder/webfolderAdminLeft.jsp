@@ -206,6 +206,8 @@
 				
 				clearToggle();
 				document.getElementById("lnbUL2").style.display  = "";
+				$("#lnbUL2.spanName").css("font-weight","");
+				document.getElementById("lnbUL2").style.fontWeight = "bold";
 				companyId         = "<c:out value='${company}'/>";
 				getDepartmentData(companyId, "", "folderTree2");
 			}
