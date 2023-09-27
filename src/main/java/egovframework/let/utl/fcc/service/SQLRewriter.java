@@ -1,6 +1,7 @@
 package egovframework.let.utl.fcc.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Core;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.appender.rewrite.RewritePolicy;
@@ -25,28 +26,31 @@ public class SQLRewriter implements RewritePolicy{
 
         String pstm = StringUtils.substringBefore(message, "}").trim().replace("{pstm-", "");
         message = StringUtils.substringAfter(message, "}").trim();
+        Log4jLogEvent.Builder builder = new Log4jLogEvent.Builder(event);
 
         if (message.startsWith("Executing Statement: ")) {
             pstmMap.put(pstm, message.replace("Executing Statement: ", "").trim());
-            return null; // 이 로그 이벤트를 기록하지 않음
+            builder.setLevel(Level.OFF);
         } else if (message.startsWith("Parameters: ")) {
             paramMap.put(pstm, message.replace("Parameters: ", "").trim());
-            return null;
+            builder.setLevel(Level.OFF);
         } else if (message.startsWith("Types: ")) {
             String sql = pstmMap.remove(pstm);
             String para = paramMap.remove(pstm);
             if (sql != null && para != null) {
                 String query = "{pstm-" + pstm + "} Query: " + createQuery(sql, para, message.replace("Types: ", "").trim());
-                return new Log4jLogEvent.Builder(event).setMessage(new SimpleMessage(query)).build();
+                builder.setMessage(new SimpleMessage(query));
             }
         }
 
-        return event;
+        return builder.build();
     }
 
     private String createQuery(String sql, String para, String types) {
         para = para.substring(0, para.length() - 1).substring(1);
         types = types.substring(0, types.length() - 1).substring(1);
+
+        if (StringUtils.isBlank(para)) return sql.replaceAll("\\s+", " ");
 
         Queue<String> qQuery = Stream.of(sql.split("\\?", -1))
                 .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
