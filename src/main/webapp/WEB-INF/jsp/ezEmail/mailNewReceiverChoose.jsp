@@ -4738,11 +4738,11 @@
 	                        <td></td>
 	                        <td style="vertical-align: top; width: 100%;">
 	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
-	                                <img src="/images/ImgIcon/fldr.gif" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
+	                                <img src="" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
 	                                &nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
 	                            </div>
-	                            <div id="AddressListView" class="border_gray" style="width: 100%; height: 399px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
+	                            <div id="AddressListView" class="border_gray" style="height: 399px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
 	                            </div>
 	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; width:auto !important"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 446px; border: 1px solid #ddd; border-top: 0px; height: 27px;">

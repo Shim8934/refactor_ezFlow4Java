@@ -6,10 +6,10 @@
 			<dot_continue path="/images/OrganTree_cross/dot_continue.gif" />
 			<dot_end path="/images/OrganTree_cross/dot_end.gif" />
 			<dot_normal path="/images/OrganTree_cross/dot_normal.gif" />
-			<minus_end path="/images/OrganTree_cross/minus.gif" />
-			<minus_normal path="/images/OrganTree_cross/minus.gif" />
-			<plus_end path="/images/OrganTree_cross/plus.gif" />
-			<plus_normal path="/images/OrganTree_cross/plus.gif" />
+			<minus_end path="/images/OrganTree_cross/minus.png" />
+			<minus_normal path="/images/OrganTree_cross/minus.png" />
+			<plus_end path="/images/OrganTree_cross/plus.png" />
+			<plus_normal path="/images/OrganTree_cross/plus.png" />
       		<node_plus path="/images/OrganTree_cross/plus_normal.gif" />
       		<node_minus path="/images/OrganTree_cross/minus_normal.gif" />
       		<node_end path="/images/OrganTree_cross/dot_end.gif" />
