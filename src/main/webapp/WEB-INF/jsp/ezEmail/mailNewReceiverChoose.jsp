@@ -36,6 +36,11 @@
 			.multiple-sortable-selected td{
 				color: #0684f9 !important;
 			}
+			
+			.checkDept {
+				height: 16px !important;
+			}
+			
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
