@@ -3736,7 +3736,7 @@
 		                        <td></td>
 		                        <td style="vertical-align: top;">
 		                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
-		                                <img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
+		                                <img align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
 		                                <span id="addressFolderName" style="font-weight: normal;"></span>
 		                                -[<span id="addressFolderCnt" style="color: #017BEC;"></span>]
 		                            </div>
