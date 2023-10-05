@@ -23,13 +23,18 @@
 	    		background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px 7px;
 	    	}
 	    	
+	    	#left h2, #TopBoards h2.off {
+  	    		border-top:1px solid transparent; 
+  				border-bottom: 1px solid transparent;  
+			}
+
 	    	#left h2.on, #TopBoards h2.on {
 	    	    font-weight: bold;
-			    background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px 7px;
-			    background-color: #f1f8ff;
-			    color: #333333;
-    			border-top: 1px solid #d1ddec;
-    			border-bottom: 1px solid #d1ddec;
+			    background: url('/images/OrganTree_cross/ic-open.gif') no-repeat 6px 7px !important;
+			    background-color: #F8F9FB !important;
+			    color: #333333 !important;
+    			border-top: 1px solid #d1ddec !important;
+    			border-bottom: 1px solid #d1ddec !important; 
 	    	}
 	    	
 	    	span.node_normal {
