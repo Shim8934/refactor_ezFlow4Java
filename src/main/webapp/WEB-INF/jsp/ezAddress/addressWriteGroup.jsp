@@ -29,6 +29,9 @@
 			}
 			.countColor {
 				color:#017BEC;
+			}
+			.checkDept {
+				height: 16px !important;
 			}		    	
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
