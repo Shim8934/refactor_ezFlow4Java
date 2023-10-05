@@ -212,5 +212,5 @@ public interface EzNewPortalService {
 	public List<FileVO> getWebFolderFileList(String folderId, int tenantId) throws Exception;
 
 	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception;
-
+	public String getUniqueFileName (String dirPath, String fileName) throws Exception;
 }

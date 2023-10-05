@@ -3410,4 +3410,22 @@ ORDER BY
 		)
 	]]>
 </insert>
+
+<select id="ezNewPortal.getEzTalkGateNoticeBoardId" parameterClass="map" resultClass="String">
+	<![CDATA[
+		SELECT 
+			board_id
+		FROM
+			tbl_portal_portlet_comp
+		WHERE
+			portlet_id = 2
+		AND
+			menu_id = 4
+		AND
+			company_id = #v_companyID#
+		AND
+			tenant_id = #v_tenantID#
+	]]>
+</select>
+
 </sqlMap>

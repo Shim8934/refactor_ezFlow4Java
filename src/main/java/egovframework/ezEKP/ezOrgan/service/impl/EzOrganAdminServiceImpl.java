@@ -781,11 +781,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 					map1.put("menuItemSUID"+i, UUID.randomUUID().toString());
 				}
 				
-				ezOrganAdminDao.insertCompanyInfo_I1(map1);
-				ezOrganAdminDao.insertCompanyInfo_I2(map1);
-				ezOrganAdminDao.insertCompanyInfo_I3(map1);
-				ezOrganAdminDao.insertCompanyInfo_I4(map1);
-				ezOrganAdminDao.insertCompanyInfo_I5(map1);
 //				ezOrganAdminDao.insertCompanyInfo_I6(map1);
 				ezOrganAdminDao.insertCompanyInfo_I7(map1);
 				ezOrganAdminDao.insertCompanyInfo_I8(map1);
@@ -805,21 +800,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I18(map1);
 				ezOrganAdminDao.insertCompanyInfo_I19(map1);
 				
-				ezOrganAdminDao.insertCompanyInfo_IKMS(map1);
-				ezOrganAdminDao.insertCompanyInfo_IKMS2(map1);
-				ezOrganAdminDao.insertCompanyInfo_IKMS3(map1);
-				ezOrganAdminDao.insertCompanyInfo_IKMS4(map1);
-				ezOrganAdminDao.insertCompanyInfo_IKMS5(map1);
-				ezOrganAdminDao.insertCompanyInfo_IKMS6(map1);
 				ezOrganAdminDao.insertCompanyInfo_IKMS7(map1);
 				
 				//회사등록시 근태설정(근태규율관리) 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_I20(map1);
 				map1.put("lang", userInfo.getLang());
 				ezOrganAdminDao.insertCompanyInfo_I21(map1);
-				
-				//회사 생성시 서브 메뉴 아이템 insert
-				ezOrganAdminDao.insertCompanyInfo_I22(map1);
 				
 				//회사 생성시 포탈 개인화 기본값 설정 insert
 				ezOrganAdminDao.insertCompanyInfo_I23(map1);
@@ -1170,9 +1156,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        ezOrganAdminDao.deleteDBData(map);
 	        
 	        //회사 삭제시 넣었던 초기데이터 테이블 삭제
-	        ezOrganAdminDao.deleteCompany_D1(map);
-	        ezOrganAdminDao.deleteCompany_D3(map);
-	        ezOrganAdminDao.deleteCompany_D5(map);
 	        ezOrganAdminDao.deleteCompany_D6(map);
 	        ezOrganAdminDao.deleteCompany_D7(map);
 	        ezOrganAdminDao.deleteCompany_D8(map);
@@ -1191,9 +1174,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        //근태설정(근태규율관리) 데이터 삭제 
 	        ezOrganAdminDao.deleteCompany_D20(map);
 	        ezOrganAdminDao.deleteCompany_D21(map);
-
-	        //서브 메뉴 아이템 데이터 삭제
-	        ezOrganAdminDao.deleteCompany_D22(map);
 	        
 	        //포탈 개인화 설정 데이터 삭제
 	        ezOrganAdminDao.deleteCompany_D23(map);
@@ -1211,19 +1191,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        ezOrganAdminDao.deleteCompany_D33(map);
 	        //근태설정(연차설정관리) 데이터 삭제
 	        ezOrganAdminDao.deleteCompanyInfo_IJHS1(map);
-	        
-	        ezOrganAdminDao.deleteCompanyInfo_IKMS(map);
-	        ezOrganAdminDao.deleteCompanyInfo_IKMS2(map);
-	        ezOrganAdminDao.deleteCompanyInfo_IKMS3(map);
-	        ezOrganAdminDao.deleteCompanyInfo_IKMS4(map);
-	        ezOrganAdminDao.deleteCompanyInfo_IKMS5(map);
-	        ezOrganAdminDao.deleteCompanyInfo_IKMS6(map);
+
 	        ezOrganAdminDao.deleteCompanyInfo_IKMS7(map);
-	        
-	        //기본키와 연관된 테이블 먼저 삭제 후 마지막에 삭제 
-	        ezOrganAdminDao.deleteCompany_D2(map);
-	        ezOrganAdminDao.deleteCompany_D4(map);
-	        ezOrganAdminDao.deleteCompany_D19(map);
 	        
 		    /**
 		     * Active Directory

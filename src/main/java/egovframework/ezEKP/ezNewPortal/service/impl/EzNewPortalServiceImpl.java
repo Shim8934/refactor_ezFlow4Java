@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -2945,5 +2946,31 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.addPortalTenantConfig(map);
 		
 		logger.debug("addPortalTenantConfig ended");
+	}
+	
+	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
+		logger.debug("getUniqueFileName started");
+
+		int indexOfDot = fileName.lastIndexOf(".");
+		String strName = fileName.substring(0, indexOfDot);
+		String strExt = fileName.substring(++indexOfDot);
+		
+		boolean bExist = true;
+		int fileCount = 0;
+		
+		File file = new File(commonUtil.detectPathTraversal(dirPath + fileName)); 
+		
+		while (bExist) {
+			if (file.exists()) {
+				fileCount++;
+				fileName = strName + "(" + fileCount + ")." + strExt;
+			} else {
+				bExist = false;
+			}
+		}
+
+		logger.debug("getUniqueFileName ended");
+		
+		return fileName;
 	}
 }

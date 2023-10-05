@@ -1689,7 +1689,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String imageName = xmlDom.getElementsByTagName("FILENAME").item(0).getTextContent();
 		String imageData = xmlDom.getElementsByTagName("DATA").item(0).getTextContent();
 		
-		String pUniqueName = ezPortalAdminService.getUniqueFileName(pServerPath, imageName);
+		String pUniqueName = ezNewPortalService.getUniqueFileName(pServerPath, imageName);
 		
 		byte[] byt = Base64.decode(imageData);
 		String savePath = pServerPath + commonUtil.separator + pUniqueName;
