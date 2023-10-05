@@ -4609,4 +4609,37 @@
 			(#code1#, #code2#, #name#, #isuse#,#descript#, #name2#, #name3#, #name4#, #tenantId#, #companyId#)
 	</insert>
 
+	<!-- 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 init 메소드 쿼리 -->
+	<update id="EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode1">
+		<![CDATA[
+			UPDATE  
+					TBL_USERMASTER
+			SET		
+					EXTENSIONATTRIBUTE1 = REPLACE(EXTENSIONATTRIBUTE1, ';f=',';q=')
+			WHERE 	
+					EXTENSIONATTRIBUTE1 like '%;f=%'
+		]]>
+	</update>
+
+	<update id="EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode2">
+		<![CDATA[
+			UPDATE  
+					TBL_USERMASTER
+			SET		
+					EXTENSIONATTRIBUTE1 = REPLACE(EXTENSIONATTRIBUTE1, ';ff=',';q=')
+			WHERE 	
+					EXTENSIONATTRIBUTE1 like '%;ff=%'
+		]]>
+	</update>
+
+	<update id="EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode3">
+		<![CDATA[
+			UPDATE  
+					TBL_USERMASTER
+			SET		
+					EXTENSIONATTRIBUTE1 = REPLACE(EXTENSIONATTRIBUTE1, ';wf=',';f=')
+			WHERE 	
+					EXTENSIONATTRIBUTE1 like '%;wf=%'
+		]]>
+	</update>
 </sqlMap>

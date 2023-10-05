@@ -1469,7 +1469,7 @@ public class EzWebFolderGWController {
 		int pageNum         = request.getParameter("pageNum")  != null ? Integer.parseInt(request.getParameter("pageNum"))  : -1;
 		int pageSize        = request.getParameter("pageSize") != null ? Integer.parseInt(request.getParameter("pageSize")) : -1;
 		String companyId    = request.getParameter("companyId")!= null ? request.getParameter("companyId")                  : "";
-		String type         = "wf=1";
+		String type         = "f=1";
 		JSONObject result   = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
 		
@@ -1549,7 +1549,7 @@ public class EzWebFolderGWController {
 			date.setTimeZone(TimeZone.getTimeZone("GMT"));
 			
 			String nowDate = date.format(new Date());
-			int pos        = extStr.indexOf("wf=1");
+			int pos        = extStr.indexOf("f=1");
 			
 			if (pos > -1) {
 				logger.debug("Already be webfolder admin!");
@@ -1558,13 +1558,13 @@ public class EzWebFolderGWController {
 				return result;
 			}
 			
-			pos = extStr.indexOf("wf=0;");
+			pos = extStr.indexOf("f=0;");
 			
 			if (pos > -1) {
-				extStr = extStr.replace("wf=0", "wf=1");
+				extStr = extStr.replace("f=0", "f=1");
 			}
 			else {
-				extStr += "wf=1;";
+				extStr += "f=1;";
 			}
 			
 			vo.setExtensionAttribute1(extStr);
@@ -1613,7 +1613,7 @@ public class EzWebFolderGWController {
 			date.setTimeZone(TimeZone.getTimeZone("GMT"));
 			
 			String nowDate = date.format(new Date());
-			int pos        = extStr.indexOf("wf=1;");
+			int pos        = extStr.indexOf("f=1;");
 			
 			if (pos == -1) {
 				logger.debug("Cannot find webfolder admin extension!");
@@ -1622,7 +1622,7 @@ public class EzWebFolderGWController {
 				return result;
 			}
 			
-			extStr = extStr.replace("wf=1;", "");
+			extStr = extStr.replace("f=1;", "");
 			
 			vo.setExtensionAttribute1(extStr);
 			vo.setTenantId(tenantId);
@@ -2709,7 +2709,7 @@ public class EzWebFolderGWController {
 			
 			// 2020-12-16 김은실 - [카이스트] 여기서 권한을 k,wf도 해줘야 하는지 보류.	
 //			String userRoll = userInfo.getRollInfo();
-//			if( (userRoll.contains("c=1") || userRoll.contains("k=1") || userRoll.contains("wf=1")) &&		//webfolderUtil.isWebfolderAdmin(userInfo) &&	
+//			if( (userRoll.contains("c=1") || userRoll.contains("k=1") || userRoll.contains("f=1")) &&		//webfolderUtil.isWebfolderAdmin(userInfo) &&	
 			if (userInfo.getRollInfo().indexOf("c=1")  > -1 && !mode.equals("normal")) {
 				resultList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 				result.put("isAdminMode", true);
