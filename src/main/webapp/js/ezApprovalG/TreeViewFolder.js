@@ -1,4 +1,4 @@
-﻿﻿
+﻿﻿/* 2023-10-05 황인경 - 디자인 개선 > 전자결재 관련 Folder TreeView */
 /*트리의 설정값을 가지고 있는 변수*/
 var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
@@ -145,7 +145,7 @@ function TreeNode() {
         }
 
         //노드 아이콘 생성
-        var imgNode = document.createElement("IMG");
+        var imgNode = document.createElement("I");
         imgNode.id = "imgNode_" + this.NodeID;
         imgNode.border = "0";
         imgNode.style.width = TreeIconSizes["width"];
@@ -165,12 +165,15 @@ function TreeNode() {
                 pUseAgency = false;
             }
         }
-        if (strIsLeaf == "TRUE")
-            imgNode.src = TreeIcons["node_end"];
-        else if (bExpanded)
-        	imgNode.src = TreeIcons["node_minus"];
-        else
-            imgNode.src = TreeIcons["node_plus"];            
+        if (strIsLeaf == "TRUE") {
+			imgNode.src = TreeIcons["node_end"];
+		} else if (bExpanded) {
+			imgNode.classList.remove("sub_iconLNB", "tree_plus");
+			imgNode.classList.add("sub_iconLNB", "tree_minus");
+		} else {
+			imgNode.classList.remove("sub_iconLNB", "tree_minus");
+			imgNode.classList.add("sub_iconLNB", "tree_plus");
+		}
             
         var strTreeID = this.NodeID.substring(0, this.NodeID.indexOf("_"));
 
@@ -186,9 +189,9 @@ function TreeNode() {
         var subImgNode = document.createElement("IMG");
         subImgNode.id = "subImgNode_" + this.NodeID;
         subImgNode.border = "0";
-        subImgNode.style.width = TreeIconSizes["width"];
-        subImgNode.style.height = TreeIconSizes["height"];
-        subImgNode.src = pUseAgency ? TreeImages["iconcomp"] : TreeImages["base"];
+        // subImgNode.style.width = TreeIconSizes["width"];
+        // subImgNode.style.height = TreeIconSizes["height"];
+        // subImgNode.src = pUseAgency ? TreeImages["iconcomp"] : TreeImages["base"];
         treeDiv.innerHTML += subImgNode.outerHTML;
         //
 
@@ -635,14 +638,17 @@ function TreeView() {
 //###########################################################################################
 
 function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
-    var objNodeIcon = document.getElementById(pNodeIconID);
-    //puls 로 통일  2010.04.07
-    if (objNodeIcon) {
-        if (objNodeIcon.src.indexOf(TreeIcons["node_plus"]) > 0)
-            objNodeIcon.src = TreeIcons["node_minus"];
-        else if (objNodeIcon.src.indexOf(TreeIcons["node_minus"]) > 0)
-            objNodeIcon.src = TreeIcons["node_plus"];
-    }
+	var objNodeIcon = document.getElementById(pNodeIconID);
+	//puls 로 통일  2010.04.07
+	if (objNodeIcon) {
+		if (objNodeIcon.classList.contains("tree_plus") > 0) {
+			objNodeIcon.classList.remove("sub_iconLNB", "tree_plus");
+			objNodeIcon.classList.add("sub_iconLNB", "tree_minus");
+		} else if (objNodeIcon.classList.contains("tree_minus") > 0) {
+			objNodeIcon.classList.remove("sub_iconLNB", "tree_minus");
+			objNodeIcon.classList.add("sub_iconLNB", "tree_plus");
+		}
+	}
 
 
     var subDiv = document.getElementById(pNodeID + "_sub");
@@ -684,4 +690,5 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
         if (callbackFunc != null & typeof (callbackFunc) == "function")
             callbackFunc(pNodeID, pNodeNM);
     }
+    $("li.on").attr("class","");
 }
