@@ -729,6 +729,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A15','001','yyyy.mm.dd hh:mm','1','년-월-일','yyyy.mm.dd hh:mm','yyyy.mm.dd hh:mm','yyyy.mm.dd hh:mm','Top',@tenant_id_value);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A15','002','.','1','사인일자 형식','.','.','.','Top',@tenant_id_value);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A17','0  ','의견종류','1','의견종류','의견종류',null,null,'Top',@tenant_id_value);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A17','000','추가의견','1','추가의견','Add','追加','追加意见','Top',@tenant_id_value);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A17','001','일반의견','1','일반의견','General','一般','一般意见','Top',@tenant_id_value);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A17','002','반송의견','1','반송의견','Rejection','差し戻し','退回意见','Top',@tenant_id_value);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A17','003','보류의견','1','보류의견','Holding','保留','保存意见','Top',@tenant_id_value);
