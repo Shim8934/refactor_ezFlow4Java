@@ -22,8 +22,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime; 
-import java.time.ZoneId; 
-import java.time.format.DateTimeFormatter; 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,9 +50,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory; 
 import javax.xml.xpath.XPath; 
 import javax.xml.xpath.XPathConstants; 
-import javax.xml.xpath.XPathFactory; 
+import javax.xml.xpath.XPathFactory;
 
-import kr.dogfoot.hwplib.object.HWPFile; 
+import egovframework.ezEKP.ezApprovalG.vo.*;
+import kr.dogfoot.hwplib.object.HWPFile;
 import kr.dogfoot.hwplib.object.bodytext.Section; 
 import kr.dogfoot.hwplib.object.bodytext.control.Control; 
 import kr.dogfoot.hwplib.object.bodytext.control.ControlTable; 
@@ -104,51 +107,8 @@ import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO; 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService; 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService; 
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetRecVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryLineVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGYesanGamsaVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO; 
-import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO; 
-import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo; 
-import egovframework.ezEKP.ezAttitude.service.EzAttitudeService; 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService; 
 import egovframework.ezEKP.ezEmail.service.EzEmailService; 
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
@@ -18670,7 +18630,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			aprType = staATGongram;
 		}
-		
+
 		String newID = getNewID(companyID, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -34633,4 +34593,69 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         return Result;
     }
 
+
+    /**
+     * 유저의 부재중 설정 정보를 겸직 포함 모두 불러온다.
+     * @param userID
+     * @param tenantID
+     * @return ApprGOutOfOfficeInfoVO <br/>
+     *          LocalDateTime startTime     시작 시간 <br/>
+     *          LocalDateTime endTime       종료 시간 <br/>
+     *          reason                      사유 <br/>
+     *          substituteID                대결자 아이디 <br/>
+     *          substituteName              대결자 이름 <br/>
+     *          substituteDepartment        대결자 부서 <br/>
+     * @throws Exception - TBL_USERMASTER 의 EXTENSIONATTRIBUTE5, TBL_ADDJOBMASTER 의 PXOXY 가 예상한 형식과 다를경우
+     */
+    @Override
+    public List<ApprGOutOfOfficeInfoVO> getListOutOfOfficeInfo(String userID, int tenantID) throws Exception {
+        List<ApprGOutOfOfficeInfoVO> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        map.put("tenantID", tenantID);
+        map.put("userID", userID);
+
+        List<ApprGOutOfOfficeInfoVO> voList = ezApprovalGDAO.getAllProxyInfo(map);
+
+        for (ApprGOutOfOfficeInfoVO vo : voList) {
+            vo.setInfo();
+        }
+
+        return voList;
+    }
+
+    /**
+     * @param userID
+     * @param tenantID
+     * @param userOffset    출력할 유저의 현재 offset
+     * @return ZonedDateTime endTime 현재 부재중이라면 끝나는 시간. 부재중 아닐경우 null
+     */
+    @Override
+    public Optional<ZonedDateTime> getEndOfAbsence(String userID, int tenantID, String userOffset) {
+        String offset = StringUtils.substringAfterLast(userOffset, "|");
+        try {
+            List<ApprGOutOfOfficeInfoVO> listOutOfOfficeInfo = getListOutOfOfficeInfo(userID, tenantID);
+            for (ApprGOutOfOfficeInfoVO vo : listOutOfOfficeInfo) {
+                if (vo.isOutOfOffice()) {
+                    return Optional.of(vo.getEndTime().withZoneSameInstant(ZoneOffset.of(offset)));
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        return Optional.empty();
+    }
+
+
+    /**
+     * 부재 정보를 삭제
+     * 다른 개발자가 부재 관련 개발을 하고 있어
+     * 일단 기존 서비스를 이용하도록 해 놓음.
+     * @param userID
+     * @param tenantID
+     */
+    @Override
+    public void cleanAbsence(String userID, int tenantID) {
+
+    }
 }
