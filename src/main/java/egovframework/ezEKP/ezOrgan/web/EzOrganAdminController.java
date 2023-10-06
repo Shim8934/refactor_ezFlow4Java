@@ -3419,12 +3419,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;background:none;'>");
-		
 		for (String[] aliasAddress : aliasAddressList) {
 			if (aliasAddress[0].equals(primaryAddr)) {
-				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + "</option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + " (Primary)</option>");
 			} else {
-				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + "</option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + " </option>");
 			}
 		}
 		

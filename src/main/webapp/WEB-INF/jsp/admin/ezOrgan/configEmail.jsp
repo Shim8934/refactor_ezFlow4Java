@@ -12,7 +12,7 @@
 			var userId = "${userId}";
 			var companyId = "${companyId}";
 			var configEmailType = "${configEmailType}";
-			
+
 			function Delete_Address() {
 			    var index = document.getElementById("ListEmail").selectedIndex;
 			    
@@ -80,10 +80,11 @@
 			        }
 			        
 			        selectedEmail.textContent = selectedEmail.textContent.replace("smtp", "SMTP");
+			        selectedEmail.textContent += "(Primary)";
 			        
 			        for (var i = 0; i < document.getElementById("ListEmail").length; i++) {
 			            if (i != index && document.getElementById("ListEmail").options[i].textContent.indexOf("SMTP") == 0) {
-			                document.getElementById("ListEmail").options[i].textContent = document.getElementById("ListEmail").options[i].textContent.replace("SMTP", "smtp");
+			                document.getElementById("ListEmail").options[i].textContent = document.getElementById("ListEmail").options[i].textContent.replace("SMTP", "smtp").replace("(Primary)", "");
 			            }
 			        }
 			    }
@@ -215,23 +216,27 @@
 		
 				var primarymail = "";
 				for (var i = 0; i < document.getElementById("ListEmail").length; i++) {
+					/* 2023-10-06 장혜연 : 표시한 Primary를 제거 */
 				    if (CrossYN()) {
 				        if (document.getElementById("ListEmail").options[i].textContent.indexOf("SMTP") == 0) {
-				            primarymail = document.getElementById("ListEmail").options[i].textContent.substr(5);
+				            primarymail = document.getElementById("ListEmail").options[i].textContent.substr(5).slice(0, -10);
 				        }
-						
 				        if (document.getElementById("ListEmail").options[i].getAttribute("type") === "0") {
-				        	createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent);
+							if (document.getElementById("ListEmail").options[i].textContent.includes("(Primary)")) {
+								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent.slice(0, -10));
+							} else {
+								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent);
+							}
 				        }
 				    }
 				    else {
-				        if (document.getElementById("ListEmail").options[i].innerText.indexOf("SMTP") == 0) {
-				            primarymail = document.getElementById("ListEmail").options[i].innerText.substr(5);
-				        }
+						if (document.getElementById("ListEmail").options[i].innerText.indexOf("SMTP") == 0) {
+							primarymail = document.getElementById("ListEmail").options[i].innerText.substr(5);
+						}
 						
-				        if (document.getElementById("ListEmail").options[i].getAttribute("type") === "0") {
-				        	createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].innerText);
-				        }
+						if (document.getElementById("ListEmail").options[i].getAttribute("type") === "0") {
+							createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].innerText);
+						}
 					}
 				}
 		
