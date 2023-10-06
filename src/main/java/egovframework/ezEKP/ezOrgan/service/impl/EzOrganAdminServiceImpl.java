@@ -1156,6 +1156,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        ezOrganAdminDao.deleteDBData(map);
 	        
 	        //회사 삭제시 넣었던 초기데이터 테이블 삭제
+			ezOrganAdminDao.deleteCompany_D5(map);
 	        ezOrganAdminDao.deleteCompany_D6(map);
 	        ezOrganAdminDao.deleteCompany_D7(map);
 	        ezOrganAdminDao.deleteCompany_D8(map);

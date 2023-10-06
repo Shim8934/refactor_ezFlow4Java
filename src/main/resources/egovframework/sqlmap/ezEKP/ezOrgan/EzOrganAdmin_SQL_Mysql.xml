@@ -3721,6 +3721,15 @@
             TENANT_ID = #v_TENANT_ID#
     </delete>
 
+     <delete id="EzOrganAdminDAO.deleteCompany_D5" parameterClass="Map">
+        DELETE FROM
+            TBL_TASKCODE
+        WHERE  
+            TENANT_ID = #v_TENANT_ID#
+        AND 
+            COMPANYID = #v_CN#
+     </delete>
+
      <delete id="EzOrganAdminDAO.deleteCompany_D6" parameterClass="Map">
         DELETE FROM
             TBL_TASKSUBCATEGORY
