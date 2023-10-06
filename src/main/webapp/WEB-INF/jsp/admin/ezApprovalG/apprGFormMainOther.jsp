@@ -1457,7 +1457,7 @@
 			<div id="editor_content" style="padding-top:5px;">
 				<div id="mainmenu">
 					<ul>
-                    	<li id="property"><span onclick="return idSetField_onclick()"><spring:message code='ezApproval.t641'/></span></li>
+                    	<li id="property"><span onclick="return idSetField_onclick()" style="line-height: 24px;"><spring:message code='ezApproval.t641'/></span></li>
                     </ul>
                 </div>
                 <script type="text/javascript">
