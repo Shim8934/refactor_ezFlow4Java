@@ -4990,13 +4990,27 @@
 		]]>
 	</delete>	
 	
+	<!-- 2023-10-10 홍승비 - 삭제예정 레코드 중복삽입 방지 쿼리 추가 -->
 	<insert id="EzBoardDAO.insertDeleteReservedItem" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_DeleteReservedItem (
 				BOARDID,   ITEMID,   TENANT_ID 
 			)
-      		VALUES ( 
-      			#boardID#, #itemID#, #tenantID# 
+			SELECT
+				#boardID#, #itemID#, #tenantID#
+			FROM
+      			DUAL
+      		WHERE NOT EXISTS (
+      			SELECT
+      				1
+      			FROM
+      				TBL_Board_DeleteReservedItem
+      			WHERE
+      				BOARDID = #boardID#
+      			AND
+      				ITEMID = #itemID#
+      			AND
+      				TENANT_ID = #tenantID#
       		)
 		]]>
 	</insert>
@@ -5211,7 +5225,7 @@
   			SELECT 
 				B.BOARDID, 
 				B.ITEMID, 
-			    B.TENANT_ID
+			    B.TENANT_ID AS TENANTID
 			FROM
 				TBL_BOARD_BOARDINFO A
 			JOIN
@@ -5230,14 +5244,15 @@
 								AND
 									BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
 			AND
-				B.ENDDATE < SYS_EXTRACT_UTC(SYSTIMESTAMP) - A.DELETEAFTER
+				B.ENDDATE < TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP) - A.DELETEAFTER, 'YYYY-MM-DD HH24:MI:SS')
 		]]>
   </select>
 	
   <select id="EzBoardDAO.getDeleteReservedBoard" resultClass="BoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_BOARD_DELETERESERVEDBOARD
 		]]>
@@ -5246,7 +5261,9 @@
   <select id="EzBoardDAO.getDeleteReservedBoardItem" resultClass="BoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				ITEMID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_BOARD_DELETERESERVEDITEM
 		]]>

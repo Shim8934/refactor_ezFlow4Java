@@ -3641,7 +3641,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			return "OK";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			logger.debug("deleteItem error");
+			logger.debug("deleteItem error!");
+			logger.error(e.getMessage(), e);
 			return "ERROR";
 		}
 	}

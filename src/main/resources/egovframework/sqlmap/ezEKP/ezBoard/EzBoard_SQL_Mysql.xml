@@ -4778,9 +4778,10 @@
 		]]>
 	</delete>	
 	
+	<!-- 2023-10-10 홍승비 - 삭제예정 레코드 중복삽입 방지 쿼리 추가 -->
 	<insert id="EzBoardDAO.insertDeleteReservedItem" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBL_Board_DeleteReservedItem (
+			INSERT IGNORE INTO TBL_Board_DeleteReservedItem (
 				BOARDID,   ITEMID,   TENANT_ID 
 			)
       		VALUES ( 
@@ -4998,7 +4999,7 @@
   			SELECT 
 				B.BOARDID, 
 				B.ITEMID, 
-			    B.TENANT_ID
+			    B.TENANT_ID AS TENANTID
 			FROM
 				TBL_BOARD_BOARDINFO A
 			JOIN
@@ -5024,7 +5025,8 @@
   <select id="EzBoardDAO.getDeleteReservedBoard" resultClass="BoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_BOARD_DELETERESERVEDBOARD
 		]]>
@@ -5033,7 +5035,9 @@
   <select id="EzBoardDAO.getDeleteReservedBoardItem" resultClass="BoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				ITEMID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_BOARD_DELETERESERVEDITEM
 		]]>
