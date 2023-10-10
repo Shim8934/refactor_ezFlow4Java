@@ -5705,6 +5705,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		
 		logger.debug("totalSaveFileInfo ended.");
 		

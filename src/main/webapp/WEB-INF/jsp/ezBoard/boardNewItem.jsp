@@ -52,7 +52,7 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<!-- Whwp api -->
-        <c:if test="${useHwpDownSecurity eq 'Y' and approvalFlag eq 'G' }">
+        <c:if test="${useHWP eq 'YES' and useHwpDownSecurity eq 'Y' and approvalFlag eq 'G' }">
 	    	<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     		<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
