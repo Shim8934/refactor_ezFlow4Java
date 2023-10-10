@@ -307,6 +307,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
 			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
 	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
+			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -3418,12 +3419,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;background:none;'>");
-		
 		for (String[] aliasAddress : aliasAddressList) {
 			if (aliasAddress[0].equals(primaryAddr)) {
-				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + "</option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + " (Primary)</option>");
 			} else {
-				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + "</option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + " </option>");
 			}
 		}
 		

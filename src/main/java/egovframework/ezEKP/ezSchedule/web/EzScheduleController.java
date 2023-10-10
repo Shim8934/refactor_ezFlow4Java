@@ -61,6 +61,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -168,6 +169,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzScheduleGoogleService googleService;
+
+	@Autowired
+	private EzNewPortalService ezNewPortalService;
 	
 	/**
 	 * 일정관리 인덱스화면 호출함수
@@ -2078,9 +2082,11 @@ public class EzScheduleController extends EgovFileMngUtil {
         }
         
         //2017-11-15 자원관리 사용하지 않을 경우 탭 처리
-        String accessList = ezPortalService.getAccessList(loginVO);
-		boolean checkResourceTab = ezPortalService.checkViewRightBln("6db81dc5-e8ba-49c8-b625-df4fd375a43a", accessList, loginVO.getTenantId());
-
+        //String accessList = ezPortalService.getAccessList(loginVO);
+		//boolean checkResourceTab = ezPortalService.checkViewRightBln("6db81dc5-e8ba-49c8-b625-df4fd375a43a", accessList, loginVO.getTenantId());
+		int reourceId = 6;
+		boolean checkResourceTab = ezNewPortalService.getCheckAuth(reourceId, userID, loginVO.getDeptID(), companyID, tenantID);
+		
         UploadSDate = startDateTime;
         UploadEDate = endDateTime;
         

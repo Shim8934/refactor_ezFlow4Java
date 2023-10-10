@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1739,11 +1741,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			String userIDs = "'" + userId + "'";
 			String proxyOption = "";
 			proxyOption = ezApprovalGService.getIsUse("A23", "001", companyId, lang, tenantId);
+			List<ApprGProxyVO> proxyList = null;
 
 			if (proxyOption.equals("1")) {
-				userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+
+//				userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+				proxyList = ezApprovalGService.getProxyUserInfo(userId, lang, tenantId, offset);
 			}
 			map.put("userIDs", userIDs);
+			map.put("proxyList", proxyList);
 			
 			list = ezNewPortalDAO.getApprovalDoingList(map);
 			result.put("list", list);
@@ -2857,12 +2863,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		String userIDs = "'" + userId + "'";
 		String proxyOption = "";
 		proxyOption = ezApprovalGService.getIsUse("A23", "001", companyId, lang, tenantId);
+		List<ApprGProxyVO> proxyList = null;
 
 		if (proxyOption.equals("1")) {
-			userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+//			userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+			proxyList = ezApprovalGService.getProxyUserInfo(userId, lang, tenantId, offset);
 		}
 		map.put("userIDs", userIDs);
-		
+		map.put("proxyList", proxyList);
 		int doingListCount = ezNewPortalDAO.getApprovalDoingListCount(map);
 		
 		return doingListCount;
@@ -2938,5 +2946,31 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.addPortalTenantConfig(map);
 		
 		logger.debug("addPortalTenantConfig ended");
+	}
+	
+	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
+		logger.debug("getUniqueFileName started");
+
+		int indexOfDot = fileName.lastIndexOf(".");
+		String strName = fileName.substring(0, indexOfDot);
+		String strExt = fileName.substring(++indexOfDot);
+		
+		boolean bExist = true;
+		int fileCount = 0;
+		
+		File file = new File(commonUtil.detectPathTraversal(dirPath + fileName)); 
+		
+		while (bExist) {
+			if (file.exists()) {
+				fileCount++;
+				fileName = strName + "(" + fileCount + ")." + strExt;
+			} else {
+				bExist = false;
+			}
+		}
+
+		logger.debug("getUniqueFileName ended");
+		
+		return fileName;
 	}
 }

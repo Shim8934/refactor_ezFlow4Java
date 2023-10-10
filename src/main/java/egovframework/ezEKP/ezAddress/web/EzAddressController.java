@@ -692,6 +692,13 @@ public class EzAddressController{
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		boolean gyumJikChk = true;
+		boolean checkAddressAccessPermission = ezAddressService.checkAddressAccessPermission(pAddressId, loginCookie);
+		
+		// 2023.05.08 한슬기 : 주소록 url의 addressId를 임의로 수정하여 타 사용자의 주소록을 열람할 수 없도록 검증하는 코드 추가
+		if(!checkAddressAccessPermission) {
+			return "ezAddress/addressRead";
+		}
+		
 		if (userInfo.getGyumJik() != null) {
 			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
 				gyumJikChk = false;

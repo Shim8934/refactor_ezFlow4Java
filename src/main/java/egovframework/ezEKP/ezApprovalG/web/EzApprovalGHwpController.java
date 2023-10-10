@@ -747,7 +747,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
@@ -1547,7 +1547,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
 			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";

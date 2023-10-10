@@ -1722,7 +1722,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		
 		String companyId = user.getCompanyID();
 		String userRoll = user.getRollInfo();
-		if (!(userRoll.contains("c=1") || userRoll.contains("k=1") || userRoll.contains("wf=1"))) {
+		if (!(userRoll.contains("c=1") || userRoll.contains("k=1") || userRoll.contains("f=1"))) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -1986,7 +1986,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		// 2020-11-26 김은실 - (카이스트)회사 폴더별 관리자 지원 기능 
 		String folderManager = request.getParameter("folderManager");
 		
-		if (auth == null && userInfo.getRollInfo().indexOf("wf=1") == -1 && folderManager.isEmpty() ) {
+		if (auth == null && userInfo.getRollInfo().indexOf("f=1") == -1 && folderManager.isEmpty() ) {
 			return "cmm/error/adminDenied";
 		}
 		auth = userInfo;

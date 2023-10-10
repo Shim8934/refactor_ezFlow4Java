@@ -65,9 +65,11 @@
         <c:if test="${isCrossBrowser != true}">
         	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>
-        <script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
-    	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+        <c:if test="${useHwpDownSecurity eq 'Y' and approvalFlag eq 'G' }">
+	    	<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
+    		<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+	    </c:if>
 	    <script type="text/javascript">
 	    $(document).ready(function() {
 	    	window.resizeTo(990, window.outerHeight);

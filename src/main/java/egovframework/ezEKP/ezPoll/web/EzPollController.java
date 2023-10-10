@@ -811,7 +811,16 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get question
 		pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
-		
+
+		if (pollQuestionVO.getIsMofifying() == 1) {
+			String modifyingUser = ezPollService.getModifyingUser(tenantId, qstId);
+			if (loginVO.getId().equals(modifyingUser)) {
+				return "redirect:/ezPoll/pollCreate.do?qstId=" + qstId + "&mode=modify" + "&params=" + params + "&search=" + searchStr + "&searchN=" + searchN;
+			} else {
+				return "redirect:/ezPoll/pollList.do";
+			}
+		}
+
 		if (pollQuestionVO == null) {		
 			redirectAttributes.addAttribute("brdID", 6);
 			return "redirect:/ezPoll/pollList.do";
@@ -1120,13 +1129,18 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		//Get question
 		PollQuestionVO pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
-		
+
 		if (pollQuestionVO.getIsMofifying() == 0) {
 			data = "{\"result\":\"Normal\"}";
 		}
 		else {
-			data = "{\"result\":\"Abnormal\"}";
-		}		
+			String modifyingUser = ezPollService.getModifyingUser(tenantId, qstId);
+			if (loginVO.getId().equals(modifyingUser)) {
+				data = "{\"result\":\"Normal\"}";
+			} else {
+				data = "{\"result\":\"Abnormal\"}";
+			}
+		}
 		
 		logger.debug("check poll finishes!");	
 		return data;		

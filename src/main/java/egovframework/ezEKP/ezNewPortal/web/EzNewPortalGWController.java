@@ -995,7 +995,7 @@ public class EzNewPortalGWController {
 			String roleInfo = "user";
 			
 			// 전체관리자, 회사관리자, 웹폴더관리자면 관리자 버튼이 나타나도록 추가 -> 관리자 안에서 웹폴더관리자는 웹폴더 관리만 나타나도록 수정 
-			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("wf=1") > -1) {
+			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("f=1") > -1) {
 				roleInfo = "admin";
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
@@ -4675,7 +4675,7 @@ public class EzNewPortalGWController {
 				if (info.getRollInfo() != null && info.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(info.getTenantId(), userId, nowDateTime).equals("1")) {
 					susinAdmin = "admin";
 				}
-				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offsetMin);
+				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset);
 				logger.debug("approvalTotalCount : " + approvalTotalCount);
 				
 				Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);

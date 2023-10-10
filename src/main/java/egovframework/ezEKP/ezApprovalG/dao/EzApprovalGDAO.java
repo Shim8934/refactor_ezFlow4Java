@@ -6,52 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezApprovalG.vo.*;
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetRecVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryLineVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovCsvVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGYesanGamsaVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -3908,6 +3865,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	// 완료문서 의견여부 조회
 	public String getHasopinionYn(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.selectHasOpinionYn",map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGOutOfOfficeInfoVO> getAllProxyInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGOutOfOfficeInfoVO>) list("EzApprovalG.getAllProxyInfo", map);
 	}
 
 }

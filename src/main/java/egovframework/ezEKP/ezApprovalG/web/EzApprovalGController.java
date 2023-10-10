@@ -1,19 +1,16 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.*;
 
 import java.io.BufferedInputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
-import java.util.HashMap;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Pattern;
-import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
@@ -33,20 +30,17 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.eclipse.jetty.http.MimeTypes;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
@@ -74,11 +68,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -88,11 +77,6 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
-import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -870,8 +854,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
         }
      
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
-		// c=1 : 전체관리자, k=1 : 회사관리자, f=1 : 문서조회관리자
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		// c=1 : 전체관리자, k=1 : 회사관리자, q=1 : 문서조회관리자
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
 //					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
@@ -6727,7 +6711,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
 			if (docID != null && !docID.equals("")) {
 				String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
 				String[] proxyUserArray = proxyUser.split(",");
@@ -12366,5 +12350,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("attachItemPreview ended.");
 	}
+
+	@GetMapping(value = "/ezApprovalG/endAbsence.do", produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getEndOfAbsence(@CookieValue("loginCookie") String loginCookie) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		Optional<ZonedDateTime> optional = ezApprovalGService.getEndOfAbsence(userInfo.getId(), userInfo.getTenantId(), userInfo.getOffset());
+		System.out.println("id:" + userInfo.getId() + "/tenantId:" + userInfo.getTenantId() + "/offset:" + userInfo.getOffset());
+
+		return optional.map(zonedDateTime -> zonedDateTime.format(formatter)).orElse("");
+	}
+
 
 }

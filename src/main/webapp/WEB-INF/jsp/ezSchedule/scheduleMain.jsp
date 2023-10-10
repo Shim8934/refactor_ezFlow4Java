@@ -747,7 +747,7 @@
 		                    item.onclick();
 		                else */
 		                CalendarView("Calendar",chk_str);
-		                
+		                scrollTop9Hour();
 		                break;
 		                
 		            case "WEEK":
@@ -769,8 +769,8 @@
 		                if (item)
 		                    item.onclick();
 		                else */
-		                    CalendarView("Calendar",chk_str);
-		                
+		                CalendarView("Calendar",chk_str);
+		                scrollTop9Hour();
 		                break;
 
 		            case "MONTH":
@@ -1340,6 +1340,10 @@
 					alert(strLangKHJ7);
 				}
 				RefreshView();
+			}
+			
+			function scrollTop9Hour() {
+				$("#CalDiv").scrollTop($(".today").eq(0).position().top);
 			}
 	    </script>
 	</head>

@@ -1513,7 +1513,7 @@
 					</ul>
 				</c:if> --%>
 				<c:if test="${approvalForDoc == 'Y'}">
-					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'ff=1')}">
+					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
 						<h2 class="off" id="adminH2">
 			            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('admin')"><spring:message code='ezApprovalG.lhj13'/></span>
 						</h2>
@@ -1524,7 +1524,7 @@
 					</c:if>
 				</c:if>
 				<c:if test="${useOpenGov == 'YES'}">
-					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'ff=1')}">
+					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
 						<h2>
 							<span class="h2Title" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span>
 						</h2>
@@ -1655,7 +1655,7 @@
 			</ul>
 			</c:if>
 			<c:if test="${approvalForDoc == 'Y'}">
-			<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'ff=1')}">
+			<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
 				<h2><span  style="width:100%;display:inline-block;" id="approvalForDoc" onClick="Open_Func(this)"><spring:message code='ezApprovalG.lhj13'/></span></h2>
 				<ul>
 					<li id="approvalForDoc_sub01" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.lhj14'/></span></li>

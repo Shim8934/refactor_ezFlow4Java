@@ -2912,4 +2912,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
         logger.debug("insertOpinionGB ended");
     }
+    
+    // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
+    @Override
+    public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception {
+        ezCommonDAO.updateWebFolderAndApprovalCheckPermissionCode();
+    }
 }

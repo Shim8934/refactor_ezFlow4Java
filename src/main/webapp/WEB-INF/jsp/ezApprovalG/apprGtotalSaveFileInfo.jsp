@@ -12,9 +12,12 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
-		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
-    	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+	    <c:if test="${useHwpDownSecurity eq 'Y' and approvalFlag eq 'G' }">
+	    	<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
+    		<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+	    </c:if>
+		
     	
 	    <script type="text/javascript">	
 	        var pDocID = "<c:out value='${docID}'/>";

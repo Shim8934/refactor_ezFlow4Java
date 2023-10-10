@@ -593,10 +593,10 @@
 								<option value="w" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><spring:message code="ezOrgan.t301"></spring:message></option>
 								<option value="m" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><spring:message code="ezOrgan.t300"></spring:message></option>
 								<c:if test="${approvalForDoc}">
-									<option value="f"><spring:message code="ezOrgan.lhj1"></spring:message></option>
+									<option value="q"><spring:message code="ezOrgan.lhj1"></spring:message></option>
 								</c:if>
 								<c:if test="${useWebfolder}">
-									<option value="wf"><spring:message code="ezOrgan.t303"></spring:message></option>
+									<option value="f"><spring:message code="ezOrgan.t303"></spring:message></option>
 								</c:if>
 									<option value="e"<c:if test="${!use_attitude}">style="display:none;"</c:if>><spring:message code="ezOrgan.kbm01"></spring:message></option>
 									<option value="s"<c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><spring:message code="ezOrgan.t9904"></spring:message></option>

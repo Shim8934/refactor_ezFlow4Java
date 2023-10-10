@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzAddressService")
@@ -498,6 +499,36 @@ public class EzAddressServiceImpl implements EzAddressService {
 		}
 
 		return isDuplicate;
+	}
+	
+	/**
+	 * 2023.05.08 한슬기 : 주소록 url의 addressId를 임의로 수정하여 타 사용자의 주소록을 열람할 수 없도록 검증하는 코드 추가
+	 * ownerId가 회사, 부서, 사용자 ID와 하나라도 같을 경우에만 true 리턴
+	 */
+	@Override
+	public boolean checkAddressAccessPermission(String addressId, String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String inputParams = "addressId=" + URLEncoder.encode(addressId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		String strJson = ezEmailUtil.getWebServiceResult(
+				config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getAddressInfo", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject) parser.parse(strJson);
+		JSONObject result = (JSONObject) object.get("result");
+		String ownerId = (String) result.get("ownerId"); 
+		String truncatedOwnerId = ownerId.substring(0, ownerId.indexOf("@")); // ownerId의 @앞부분만 저장
+		
+		//				회사가 같은지 확인								부서가 같은지 확인 								사용자가 같은지 확인
+		if(truncatedOwnerId.equals(userInfo.getCompanyID()) || truncatedOwnerId.equals(userInfo.getDeptID()) || truncatedOwnerId.equals(userInfo.getId())) {
+			return true;
+		}else {
+			logger.debug("Access Denied. truncatedOwnerId : {}, CompanyID : {}, DeptID : {}, userId : {}",
+					truncatedOwnerId, userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId());
+			return false;			
+		}
 	}
 
 	@Override

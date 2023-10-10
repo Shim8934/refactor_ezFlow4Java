@@ -35504,4 +35504,40 @@
             TENANT_ID = #v_TENANTID#
     </select>
 
+    <!-- 2023-10-04 박기범 - 사용자의 모든 부재자설정 조회-->
+    <select id="EzApprovalG.getAllProxyInfo"  parameterClass="Map" resultClass="ApprGOutOfOfficeInfoVO" remapResults="true">
+        SELECT
+            CN USERID,
+            DEPARTMENT DEPTID,
+            EXTENSIONATTRIBUTE5 PROXY,
+            DESCRIPTION DISPLAYNAME,
+            DESCRIPTION2 DISPLAYNAME2,
+            TITLE,
+            TITLE2,
+            '-1' JOBID
+        from
+            TBL_USERMASTER U
+        where
+            CN = #userID#
+          AND
+            TENANT_ID = #tenantID#
+        UNION All
+        SELECT
+            A.CN USERID,
+            A.DEPTID ,
+            UNISTR(A.PROXY),
+            B.DISPLAYNAME,
+            B.DISPLAYNAME2,
+            TITLE,
+            TITLE2,
+            JOBID
+        FROM
+            TBL_ADDJOBMASTER A
+                JOIN
+            TBL_DEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+        WHERE
+            A.CN = #userID#
+          AND
+            A.TENANT_ID = #tenantID#
+    </select>
 </sqlMap>

@@ -1690,7 +1690,19 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 													tenant_id = #tenantId#
 												)
 						AND
-							LINEINFO.aprmemberid in ($userIDs$)
+							(LINEINFO.aprmemberid in ($userIDs$)
+		]]>
+		<isNotEmpty property="proxyList">
+			<iterate property="proxyList">
+							OR (
+								LINEINFO.APRMEMBERID = #proxyList[].id#
+								AND LINEINFO.APRMEMBERDEPTID = #proxyList[].dept#
+								AND LINEINFO.APRMEMBERJOBTITLE = #proxyList[].title#
+								)
+			</iterate>
+		</isNotEmpty>
+							 )
+		<![CDATA[
 						AND
 							DOCINFO.functiontype = '002'
 						AND
@@ -1998,13 +2010,25 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 										tenant_id = #tenantId#
 									)
 			AND
-				LINEINFO.aprmemberid in ($userIDs$)
+				(LINEINFO.aprmemberid in ($userIDs$)
+		]]>
+		<isNotEmpty property="proxyList">
+			<iterate property="proxyList">
+				OR (
+				LINEINFO.APRMEMBERID = #proxyList[].id#
+				AND LINEINFO.APRMEMBERDEPTID = #proxyList[].dept#
+				AND LINEINFO.APRMEMBERJOBTITLE = #proxyList[].title#
+				)
+			</iterate>
+		</isNotEmpty>
+				     )
+	  	<![CDATA[
 			AND
 				DOCINFO.functiontype = '002'
 			AND
 				LINEINFO.aprstate = '002'
 			AND
-				DOCINFO.docstate not in ('015')   
+				DOCINFO.docstate not in ('015')
 			AND
 				DOCINFO.startdate >= ADD_MONTHS(SYSDATE,-12)
 			AND
@@ -3386,4 +3410,22 @@ ORDER BY
 		)
 	]]>
 </insert>
+
+<select id="ezNewPortal.getEzTalkGateNoticeBoardId" parameterClass="map" resultClass="String">
+	<![CDATA[
+		SELECT 
+			board_id
+		FROM
+			tbl_portal_portlet_comp
+		WHERE
+			portlet_id = 2
+		AND
+			menu_id = 4
+		AND
+			company_id = #v_companyID#
+		AND
+			tenant_id = #v_tenantID#
+	]]>
+</select>
+
 </sqlMap>
