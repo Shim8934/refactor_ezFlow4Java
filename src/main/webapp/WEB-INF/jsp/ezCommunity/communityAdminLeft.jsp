@@ -36,6 +36,10 @@
 	    		display:inline-block;
 	    		width:135px;
 	    	}
+	    	#treeUL li.on > span {
+	    		color: black !important;
+	    		font-weight: normal !important;
+	    	}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
