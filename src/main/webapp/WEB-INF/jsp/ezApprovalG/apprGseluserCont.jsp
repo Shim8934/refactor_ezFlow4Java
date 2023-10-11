@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
     <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
-	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewFolder.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
     <script type="text/javascript" id="clientEventHandlersJS">
 	    var pUserID = "<c:out value='${userInfo.id}'/>";
