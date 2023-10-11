@@ -419,10 +419,10 @@
   background: transparent;
 }
 .jstree-default .jstree-open > .jstree-ocl {
-   background-image: url("/images/OrganTree_cross/minus.gif");
+   background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default .jstree-closed > .jstree-ocl {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+  background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default .jstree-leaf > .jstree-ocl {
   background-position: -68px -4px;
@@ -435,10 +435,10 @@
   background: transparent;
 }
 .jstree-default > .jstree-no-dots .jstree-open > .jstree-ocl {
-   background-image: url("/images/OrganTree_cross/minus.gif");
+   background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default > .jstree-no-dots .jstree-closed > .jstree-ocl {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+  background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default .jstree-disabled {
   background: transparent;
@@ -490,10 +490,10 @@
   background: transparent;
 }
 .jstree-default-large.jstree-rtl .jstree-open > .jstree-ocl {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+  background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default-large.jstree-rtl .jstree-closed > .jstree-ocl {
-   background-image: url("/images/OrganTree_cross/minus.gif");
+   background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default.jstree-rtl .jstree-leaf > .jstree-ocl {
   background-position: -68px -36px;
@@ -503,10 +503,10 @@
   background: transparent;
 }
 .jstree-default.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+  background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {
-  background-image: url("/images/OrganTree_cross/minus.gif");
+  background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default .jstree-themeicon-custom {
   background-color: transparent;
@@ -568,7 +568,7 @@
 .jstree-default-small .jstree-node {
   min-height: 18px;
   line-height: 18px;
-  margin-left: 10px;
+  margin-left: 20px;
 /*   min-width: 18px; */
 }
 .jstree-default-small .jstree-anchor {
@@ -593,7 +593,7 @@
 }
 .jstree-default-small .jstree-node,
 .jstree-default-small .jstree-icon {
-	background-image: url("/images/OrganTree_cross/plus.gif");
+	background-image: url("/images/OrganTree_cross/plus.png");
 /*   background-image: url("32px.png"); */
 }
 .jstree-default-small .jstree-node {
@@ -604,10 +604,10 @@
   background: transparent;
 }
 .jstree-default-small .jstree-open > .jstree-ocl {
-	background-image: url("/images/OrganTree_cross/minus.gif");
+	background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default-small .jstree-closed > .jstree-ocl {
-    background-image: url("/images/OrganTree_cross/plus.gif");
+    background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default-small .jstree-leaf > .jstree-ocl {
   background-position: -71px -7px;
@@ -620,10 +620,10 @@
   background: transparent;
 }
 .jstree-default-small > .jstree-no-dots .jstree-open > .jstree-ocl {
-	background-image: url("/images/OrganTree_cross/minus.gif");
+	background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default-small > .jstree-no-dots .jstree-closed > .jstree-ocl {
-	background-image: url("/images/OrganTree_cross/plus.gif");
+	background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default-small .jstree-disabled {
   background: transparent;
@@ -675,10 +675,10 @@
   background: transparent;
 }
 .jstree-default-small.jstree-rtl .jstree-open > .jstree-ocl {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+  background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default-small.jstree-rtl .jstree-closed > .jstree-ocl {
-   background-image: url("/images/OrganTree_cross/minus.gif");
+   background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default-small.jstree-rtl .jstree-leaf > .jstree-ocl {
   background-position: -71px -39px;
@@ -788,10 +788,10 @@
   background: transparent;
 }
 .jstree-default-large .jstree-open > .jstree-ocl {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+  background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default-large .jstree-closed > .jstree-ocl {
-   background-image: url("/images/OrganTree_cross/minus.gif");
+   background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default-large .jstree-leaf > .jstree-ocl {
   background-position: -64px 0px;
@@ -859,10 +859,10 @@
   background: transparent;
 }
 .jstree-default-large.jstree-rtl .jstree-open > .jstree-ocl {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+  background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default-large.jstree-rtl .jstree-closed > .jstree-ocl {
-   background-image: url("/images/OrganTree_cross/minus.gif");
+   background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default-large.jstree-rtl .jstree-leaf > .jstree-ocl {
   background-position: -64px -32px;
@@ -872,10 +872,10 @@
   background: transparent;
 }
 .jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-open > .jstree-ocl {
-  background-image: url("/images/OrganTree_cross/plus.gif");
+  background-image: url("/images/OrganTree_cross/plus.png");
 }
 .jstree-default-large.jstree-rtl > .jstree-no-dots .jstree-closed > .jstree-ocl {
-   background-image: url("/images/OrganTree_cross/minus.gif");
+   background-image: url("/images/OrganTree_cross/minus.png");
 }
 .jstree-default-large .jstree-themeicon-custom {
   background-color: transparent;
@@ -1110,5 +1110,12 @@
   .jstree-default-responsive > .jstree-container-ul > .jstree-node {
     margin-left: 0;
     margin-right: 0;
+  }
+  .jstree-ocl {
+  	margin-top: 10px !important;
+  }
+  
+  #tree > .list_text {
+  	padding: 0px;
   }
 }

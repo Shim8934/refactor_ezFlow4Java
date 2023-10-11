@@ -593,8 +593,7 @@
 					return this.nodeType === 3 && (!this.nodeValue || /^\s+$/.test(this.nodeValue));
 				})
 				.remove();
-			// 2023-06-22 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 트리구조 LNB 이미지 삭제
-			this.element.html("<"+"ol class='jstree-container-ol jstree-children' role='group'><" + "li id='j" + this._id + "_loading' class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='tree-item'><span class=''></i><"+"li class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</li></li></ol>");
+			this.element.html("<"+"ol class='jstree-container-ol jstree-children' role='group'><"+"li id='j"+this._id+"_loading' class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='tree-item'><i class='jstree-icon jstree-ocl'></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
 			this.element.attr('aria-activedescendant','j' + this._id + '_loading');
 			this._data.core.li_height = this.get_container_ol().children("li").first().outerHeight() || 24;
 			this._data.core.node = this._create_prototype_node();
@@ -638,7 +637,7 @@
 			_node.setAttribute('role', 'treeitem');
 			// 2023-06-22 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 트리구조 구조 변경 및 LNB 이미지 삭제
 			_temp1 = document.createElement('SPAN');
-			_temp1.className = '';
+			_temp1.className = 'jstree-icon jstree-ocl';
 			_temp1.setAttribute('role', 'presentation');
 			_node.appendChild(_temp1);
 			_temp1 = document.createElement('LI');
@@ -742,11 +741,10 @@
 							was_click = +(new Date()); // ie does not allow to prevent losing focus
 						}
 					}, this))
-				// 2023-06-22 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 트리구조 LNB 이미지 삭제
-				.on("mousedown.jstree", "", function (e) {
+				.on("mousedown.jstree", ".jstree-ocl", function (e) {
 						e.preventDefault(); // prevent any node inside from losing focus when clicking the open/close icon
 					})
-				.on("click.jstree", "", $.proxy(function (e) {
+				.on("click.jstree", ".jstree-ocl", $.proxy(function (e) {
 						this.toggle_node(e.target);
 					}, this))
 				.on("dblclick.jstree", ".jstree-anchor", $.proxy(function (e) {
@@ -3596,7 +3594,7 @@
 			var c = this.get_container_ol()[0].className;
 			if(!skip_loading) {
 				// 2023-06-22 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 트리구조 클래스 변경
-				this.element.html("<"+"ol class='"+c+"' role='group'><"+"li class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='treeitem' id='j"+this._id+"_loading'><span class=''></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
+				this.element.html("<"+"ol class='"+c+"' role='group'><"+"li class='jstree-initial-node jstree-loading jstree-leaf jstree-last' role='treeitem' id='j"+this._id+"_loading'><span class='jstree-icon jstree-ocl'></i><"+"a class='jstree-anchor' href='#'><i class='jstree-icon jstree-themeicon-hidden'></i>" + this.get_string("Loading ...") + "</a></li></ol>");
 				this.element.attr('aria-activedescendant','j'+this._id+'_loading');
 			}
 			this.load_node($.jstree.root, function (o, s) {
@@ -3629,8 +3627,7 @@
 			var opened = [], to_load = [], s = this._data.core.selected.concat([]);
 			to_load.push(obj.id);
 			if(obj.state.opened === true) { opened.push(obj.id); }
-			this.get_node(obj, true).find('.jstree-open').each(function() { to_load.push(this.id); opened.push(this.id);});
-			//this.get_node(obj, true).find('.jstree-open').each(function() { to_load.push(this.id); opened.push(this.id); });
+			this.get_node(obj, true).find('.jstree-open').each(function() { to_load.push(this.id); opened.push(this.id); });
 			this._load_nodes(to_load, $.proxy(function (nodes) {
 				this.open_node(opened, false, 0);
 				this.select_node(s);
@@ -8462,8 +8459,7 @@
 						var tmp = $.Event('dblclick', { metaKey : e.metaKey, ctrlKey : e.ctrlKey, altKey : e.altKey, shiftKey : e.shiftKey });
 						$(e.currentTarget).closest(".jstree-node").children(".jstree-anchor").first().trigger(tmp).focus();
 					})
-				// 2023-06-22 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 트리구조 LNB 이미지 삭제
-				.on("click.jstree", ".jstree-leaf", $.proxy(function (e) {
+				.on("click.jstree", ".jstree-leaf > .jstree-ocl", $.proxy(function (e) {
 						e.stopImmediatePropagation();
 						var tmp = $.Event('click', { metaKey : e.metaKey, ctrlKey : e.ctrlKey, altKey : e.altKey, shiftKey : e.shiftKey });
 						$(e.currentTarget).closest(".jstree-node").children(".jstree-anchor").first().trigger(tmp).focus();

@@ -26,16 +26,19 @@
 				height: 93%;
 			}
 			.lnbUL li {
-/* 				margin: 0px 0px 0px 10px; */
+ 				margin: 0px 0px 0px 2px;
 			}
 			.jstree-default-small .jstree-node {
 			    min-height: 18px;
 			    line-height: 18px;
-			    margin-left: 7px;
+			    margin-left: 24px;
 			    padding-left: 7px;
 		    }
 		    .lnbUL {
 		    	overflow : auto;
+		    }
+		    #shareUL {
+		    	padding-left: 30px !important;
 		    }
 	    </style>
 		<script type="text/javascript" >

@@ -131,7 +131,7 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 .wfPopup {z-index:2000; position:absolute;}
 
 #left ol.on {padding : 0px 0px 0px 5px;}
-#left ol li {padding : 1px 0px 0px 5px;}
+#left ol li {padding : 1px 0px 0px 0px;}
 /* 2018-08-23 홍승비 - 웹폴더 폴더명 ellipsis 작업 */
 .webfolderTree {min-height:200px; font-size: 20px; padding-bottom:3px;padding-top:5px;}
 
@@ -178,3 +178,5 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #capacity-bar {background-color: #82b9f6; height: 15px; width: 0px;}
 #capacity-percent {display: inline-block; text-align: right;}
 .headListClick {cursor:pointer;}
+
+#tree, #treeDept, #treePer {padding-top: 0px; }
