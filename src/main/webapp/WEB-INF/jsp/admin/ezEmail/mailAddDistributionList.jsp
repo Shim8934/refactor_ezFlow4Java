@@ -3666,9 +3666,9 @@
 		                                        <div style="vertical-align: top; height: 426px; overflow: auto; width: 446px;" id="txtlist_Layer">
 		                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 		                                                <tr>
-		                                                	<td style="width: 110px; color:#333;background-color: #f8f8fa; display:none" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
-		                                                    <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-		                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+		                                                	<td style="width: 110px; color:#333; display:none; font-weight: bold;" class="td_gray txtlist_DeptTD"><spring:message code='ezAddress.t54' /></td>
+		                                                    <td style="width: 100px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
+		                                                    <td style="width: 120px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 		                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
 		                                                </tr>
 		                                            </table>
