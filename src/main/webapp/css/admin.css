@@ -351,3 +351,7 @@ label[for="listOpt2"] { position: relative; top: -4.5px;}
 #receivelist .poll_list1{display:flex; align-items:center;}
 #receivelist .poll_list1 .graphbar1{flex:1;}
 #receivelist .Pt_QstInfoDiv{min-width:100px; text-align:right;}
+
+/* 20231005 수정 */
+.switch{width: 49px; height: 19px; margin-top: -6px;}
+.slider:before{left: 5px;}

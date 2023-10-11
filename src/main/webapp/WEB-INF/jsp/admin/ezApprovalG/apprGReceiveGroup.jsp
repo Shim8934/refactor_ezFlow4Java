@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<style>
+			.btnDwn:hover span{color: #0470E4;}
 			.mainlist tr th { border-top:0px }
 
 			#excelFile {
@@ -734,7 +735,7 @@
 					<li id="3" class="off"><a href="<c:url value="/files/RecipientGroupBulkRegistrationForm.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
 				</c:if>
 				<c:if test="${userLang ne '2'}">
-					<li id="3" class="off"><a href="<c:url value="/files/수신자그룹지정일괄등록양식.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
+					<li id="3" class="off btnDwn"><a href="<c:url value="/files/수신자그룹지정일괄등록양식.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
 				</c:if>
 				<input type="file" name="excelFile" class="important off" id="excelFile" onchange="btn_AttachAdd_onclick()" />
 				<span class="info-message"><spring:message code='ezApprovalG.pgb10'/></span>

@@ -1395,7 +1395,7 @@
 			</table>
             <br />
             <div style="padding-bottom:5px; vertical-align:middle; <c:if test="${approvalFlag != 'S' }">display:none;</c:if>">
-            	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" />
+            	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" style="vertical-align: middle;"/>
             	<span><spring:message code='ezApproval.t00004'/></span>
             </div>
             <table class="content" style="width:100%;">
@@ -1457,7 +1457,7 @@
 			<div id="editor_content" style="padding-top:5px;">
 				<div id="mainmenu">
 					<ul>
-                    	<li id="property"><span onclick="return idSetField_onclick()" style="line-height: 24px;"><spring:message code='ezApproval.t641'/></span></li>
+                    	<li id="property"><span onclick="return idSetField_onclick()"><spring:message code='ezApproval.t641'/></span></li>
                     </ul>
                 </div>
                 <script type="text/javascript">

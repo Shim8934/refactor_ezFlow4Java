@@ -1012,7 +1012,7 @@
 							<input type="text" id="drafter" name="drafter" style="width:84%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 						</td>
 						<td>
-							<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>
+							<input type="checkbox" style="vertical-align: middle; margin: -1px 4px 0px 0px;" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>
 						</td>
 						<td>
 							<span id="topmenu" style="width: 500px">

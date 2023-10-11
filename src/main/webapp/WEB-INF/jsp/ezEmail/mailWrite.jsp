@@ -2563,7 +2563,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <td colspan="3">
+	                        <td colspan="3" style="overflow-y: auto;">
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgToGot" class="viewtxt"></div>
 	                            </div>

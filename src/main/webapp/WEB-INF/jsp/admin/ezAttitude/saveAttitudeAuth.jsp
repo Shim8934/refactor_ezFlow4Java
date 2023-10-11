@@ -221,15 +221,15 @@
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t198' /></th>
-	            <td>
-	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:1px; width:350px" onfocus="this.blur();" readonly="readonly" />
-	                <a class="imgbtn imgbck2" style="margin-top:2px;"><span onclick="select_person()"><spring:message code='ezAttitude.t199' /></span></a>                
+	            <td style="padding: 2px 5px;">
+	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:1px; width:332px" onfocus="this.blur();" readonly="readonly" />
+	                <a class="imgbtn imgbck2" style="margin-top:1px;"><span onclick="select_person()"><spring:message code='ezAttitude.t199' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t190' /></th>
-	            <td style="height: 60px; width: 400px;">
-	                <textarea rows="3" id="txtdept" style="height: 43px; width:338px; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	            <td style="height: 60px; width: 400px; padding-top: 4px;">
+	                <textarea rows="3" id="txtdept" style="height: 43px; width:321px; resize:none; overflow: auto; border-radius: 3px;" onfocus="this.blur();" readonly="readonly" ></textarea>
 	                <a class="imgbtn imgbck2" style="margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.t199' /></span></a>                
 	            </td>
 	        </tr>

@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<style type="text/css">
 			#editBtn {float: right;}
-			#editBtn img {width: 19px;height: 19px;margin-right: 10px;	margin-top: 8px;cursor: pointer;}
+			#editBtn img {margin-right: 10px;	margin-top: 8px;cursor: pointer;}
 			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
 			#logoUrl {height:42px;}

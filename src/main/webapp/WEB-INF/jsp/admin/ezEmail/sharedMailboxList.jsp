@@ -463,8 +463,8 @@
 				</div>
 				<div id="searchInputWrap" style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 518px;padding-left: 5px;">
 					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
-					<a class="imgbtn" style="vertical-align:middle; height: 25.5px; box-sizing: border-box; margin-top: -1px;">
-						<span onclick="search_click()" style="height: 100%; line-height: 2em;"><spring:message code="ezStatistics.t36" /></span>
+					<a class="imgbtn" style="vertical-align:middle; height: 25px; box-sizing: border-box; margin-top: -5px;">
+						<span onclick="search_click()" style="height: 100%;"><spring:message code="ezStatistics.t36" /></span>
 					</a>
 				</div>
 			</div>

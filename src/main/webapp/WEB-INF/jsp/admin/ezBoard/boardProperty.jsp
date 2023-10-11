@@ -991,7 +991,7 @@
 		                <input type="checkbox" id="chkPermanent" onclick="chkPermanent_onclick()" checked />
 		                <spring:message code="ezBoard.t157"/>
 		                <input type="checkbox" id="chkExpires" onclick="chkExpires_onclick()" />
-		                <input type="text" id="txtExpires" style="width: 35px" readonly />
+		                <input type="text" id="txtExpires" style="width: 35px; height: 21px !important;" readonly />
 		                <spring:message code="ezBoard.t158"/>
 	            	</c:if>
 	                <c:if test="${model.itemExpires != '-1'}">   
@@ -1006,9 +1006,9 @@
 	        <tr id="deleteAfterTr" style="${style}">	        
 	        	<c:if test="${model.deleteAfter == '-1'}">
 		            <th><spring:message code="ezBoard.t159"/></th>
-		            <td>
+		            <td style="padding: 7px 5px;">
 		            	<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px" readonly />
+	                	<input type="inputbox" id="deleteafter" style="width: 50px; height:21px !important; margin-top:-2px" readonly />
 	                	<spring:message code="ezBoard.t161"/><br/>
 	                	<input type="checkbox" id="usedeleteafter" onclick="chkDeleteAfter_onclick()"/>
 	                	<spring:message code="ezBoard.t162"/>
@@ -1230,7 +1230,7 @@
 	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
 	            <td>
-	                <input type="text" id="txtAttachLimit" style="width: 33px" onkeydown="onlyNumber()" onkeyup="removeChar()" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="4"/>&nbsp;MB
+	                <input type="text" id="txtAttachLimit" style="width: auto" onkeydown="onlyNumber()" onkeyup="removeChar()" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="4"/>&nbsp;MB
 	            </td>
 	        </tr>
 	        
@@ -1248,7 +1248,7 @@
 	                <table style="width: 300px">
 	                    <tr>
 	                        <td style="width: 100px;">
-	                            <div id="selColor" style="width: 100px; height: 100%; background-color: <c:out value='${model.boardColor}' />; border: 1px solid #686868;"></div>
+	                            <div id="selColor" style="width: 100px; height: 70%; background-color: <c:out value='${model.boardColor}' />; border: 1px solid #686868;"></div>
 	                        </td>
 	                        <td style="width: 100px;">
 	                            <span id="colorID" style="width: 80px;"><c:out value='${model.boardColor}' /></span>

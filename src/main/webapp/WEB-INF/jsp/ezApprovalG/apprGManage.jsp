@@ -2706,7 +2706,7 @@
  		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="ResizeBarPanel"></div>
 	    <div style="width: 8px; height:738px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-			<div class="div_scroll" style="width:100%;HEIGHT:395px; overflow-y:hidden; overflow-x:auto; margin-bottom:10px" id="divList">
+			<div class="div_scroll" style="width:100%;HEIGHT:480px; overflow-y:auto; overflow-x:auto; margin-bottom:10px" id="divList">
 				<div id="lvDocList"></div>
 			</div>
 			

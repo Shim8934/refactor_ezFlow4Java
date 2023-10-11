@@ -117,7 +117,7 @@
             <li><span onclick="return btnCancel_onclick()"></span></li>
         </ul>
     </div>
-    <div class="box" style="WIDTH: 315px; HEIGHT: 340px; BACKGROUND-COLOR: #fff; overflow: auto;" id="divUserContTree"></div>
+    <div class="box" style="WIDTH: 315px; HEIGHT: 340px; BACKGROUND-COLOR: #fff; overflow: auto; padding: 8px 6px; box-sizing: border-box;" id="divUserContTree"></div>
     <div class="btnposition btnpositionNew">
         <a class="imgbtn" onclick="return btnOK_onclick()"><span><spring:message code='ezApprovalG.t105'/></span></a>
     </div>
