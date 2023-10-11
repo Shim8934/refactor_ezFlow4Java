@@ -2312,7 +2312,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 
 .btnbtn { margin-top:10px; text-align: center; }
 
-#Preview_HeaderH, #Preview_HeaderW { background-color: #F8F9FB; }
+/* #Preview_HeaderH, #Preview_HeaderW { background-color: #F8F9FB; } */
 #subject { vertical-align: top;}
 .extraMenu {
 	position: absolute;
