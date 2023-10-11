@@ -26,7 +26,7 @@
 			.set-head { background-color: rgb(228, 238, 254); height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
 			.set-head h1 { font-size: 16px; margin-left: 20px; color:black;}
 			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
-			.ui-portlet { position:relative;  width: 230px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
+			.ui-portlet { position:relative;  width: 220px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
@@ -39,11 +39,11 @@
 			.select-flipster {border:1px solid #2196f3;}
 			.paginationBtn { border: 1px solid black; width: 100px; height: 30px; margin-left:20px; margin-right:20px;}
 			
-			.switch {margin-top:15px;}
+			/*.switch {margin-top:15px;} */
 			.flipster__container {margin-left:-20px;}
 			.mCSB_container {margin-right:10px !important;}
 			.flipster__button {height:65px;}
-			.fixed_span {width:67%; display:inline-block;}
+			.fixed_span {width:67%; display:inline-block; margin-top: 12px;}
 			.fixed_span img { vertical-align: top; margin: 3px 5px 0px 0px;}
 			/* Tooltip text */
 			.fixed_span .tooltiptext {
