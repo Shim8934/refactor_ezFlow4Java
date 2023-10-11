@@ -4023,6 +4023,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 			
 			boardListVO.setWriteDate(commonUtil.getDateStringInUTC(boardListVO.getWriteDate(), userInfo.getOffset(), false));
+			boardListVO.setNotiStart(commonUtil.getDateStringInUTC(boardListVO.getNotiStart(), userInfo.getOffset(), false));
+			boardListVO.setNotiEnd(commonUtil.getDateStringInUTC(boardListVO.getNotiEnd(), userInfo.getOffset(), false));
 			
 			if (mode.equals("reply")) {
 				boardListVO.setItemLevel(String.valueOf((Integer.parseInt(boardListVO.getItemLevel()) + 1)));

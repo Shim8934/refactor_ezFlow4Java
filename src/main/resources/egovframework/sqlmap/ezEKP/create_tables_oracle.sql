@@ -2359,7 +2359,9 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"EXTENSIONATTRIBUTE9" NVARCHAR2(100), 
 	"EXTENSIONATTRIBUTE10" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT NULL, 
-	"CONTENT" CLOB
+	"CONTENT" CLOB,
+	"NTSTARTDATE" varchar(40) DEFAULT NULL,
+    "NTENDDATE" varchar(40) DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_BOARD_ITEM_ATTACHMENTS

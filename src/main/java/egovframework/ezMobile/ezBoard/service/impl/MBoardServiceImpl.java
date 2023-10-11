@@ -682,6 +682,14 @@ public class MBoardServiceImpl implements MBoardService {
 		} else {
 			map.put("startDate", commonUtil.getTodayUTCTime(""));
 		}
+
+		if (boardListVO.get("notiStart") != null && !boardListVO.get("notiStart").equals("")) {
+			map.put("notiStart", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("notiStart")), offset, true));
+		}
+
+		if (boardListVO.get("notiEnd") != null && !boardListVO.get("notiEnd").equals("")) {
+			map.put("notiEnd", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("notiEnd")), offset, true));
+		} 
 		
 		// 모바일에서는 영구게시만 지원
 		map.put("endDate", "9999-12-30 14:59:59");
@@ -832,6 +840,7 @@ public class MBoardServiceImpl implements MBoardService {
 		@SuppressWarnings("unused")
 		boolean saveMHTResult = false;
 		String filePath = commonUtil.getUploadPath("upload_board.ROOT", info.getTenantId());
+		String offset = info.getOffSet();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("writeDate", commonUtil.getTodayUTCTime(""));
@@ -862,6 +871,14 @@ public class MBoardServiceImpl implements MBoardService {
 			map.put("hasAttach", "1");
 		} else {
 			map.put("hasAttach", "0");
+		}
+		
+		if (boardListVO.get("notiStart") != null && !boardListVO.get("notiStart").equals("")) {
+			map.put("notiStart", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("notiStart")), offset, true));
+		}
+
+		if (boardListVO.get("notiEnd") != null && !boardListVO.get("notiEnd").equals("")) {
+			map.put("notiEnd", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("notiEnd")), offset, true));
 		}
 		
 		mBoardDAO.updateItem(map);
