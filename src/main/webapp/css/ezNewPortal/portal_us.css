@@ -293,7 +293,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 /* birthday */
 .birthday{ margin:0px; padding:0px; overflow:hidden; background-color: white; height:197px;} /* 장진혁 추가 */
 .birthTit{ height:30px; box-sizing:border-box; line-height:30px; padding:30px 25px;}
-.birthTit .birthText{margin:0px; padding:0px; font-size:15px; color:#333; font-weight:bold; float:left; line-height: 15px;}
+.birthTit .birthText{margin:0px; padding:0px; font-size:14px; color:#333; font-weight:bold; float:left; line-height: 15px;}
 .birthTit .birthLeftbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer; margin-right:15px; height:15px;}
 .birthTit .birthRighttbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer; border-left: 1px solid #EFECEC; padding-left:15px; height:15px;}
 .birthList{ margin:0px; padding:18px; list-style:none; overflow:hidden;}
@@ -1542,3 +1542,16 @@ div.orbit img{border-radius: 5px;}
 
 /* 2023-06-05 홍승비 - 홈 > 테마2 > 상단 사용자 영역의 일정 캘린더 요일 표기 숨김처리 */
 #scalendarMini_dayOfWeek > th {display: none;}
+
+.full_menu_toggleUL > li{margin-bottom: 0px; padding: 9px 0px; height: 102px;}
+.full_menu_toggleUL_edit > li {padding: 9px 0px; height: 102px;}
+.full_menu_toggle{padding: 0px;}
+.rolling_info .info dd{width: 219px; white-space: nowrap; text-overflow: ellipsis;}
+.birthday{height: 234px;}
+.bestEmployee .emDL .emName, .bestEmployee .emDL .emTeam{width: 170px;}
+
+/* 20231004 수정 */
+#inAttiBtn, #outAttiBtn{font-size: 13px !important;}
+#addr{height: 12px !important;}
+.dataHave{left: 34%;}
+#theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none;}

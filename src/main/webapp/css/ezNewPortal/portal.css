@@ -1588,7 +1588,7 @@ div.orbit img{border-radius: 5px;}
 .full_menu_toggle{padding: 0px;}
 .rolling_info .info dd{width: 219px; white-space: nowrap; text-overflow: ellipsis;}
 .birthday{height: 234px;}
-.bestEmployee .emDL .emName{width: 170px;}
+.bestEmployee .emDL .emName, .bestEmployee .emDL .emTeam{width: 170px;}
 
 /* 20231004 수정 */
 #inAttiBtn, #outAttiBtn{font-size: 13px !important;}

@@ -1525,3 +1525,16 @@ div.orbit img{border-radius: 5px;}
 
 /* 2023-06-05 홍승비 - 홈 > 테마2 > 상단 사용자 영역의 일정 캘린더 요일 표기 숨김처리 */
 #scalendarMini_dayOfWeek > th {display: none;}
+
+.full_menu_toggleUL > li{margin-bottom: 0px; padding: 9px 0px; height: 102px;}
+.full_menu_toggleUL_edit > li {padding: 9px 0px; height: 102px;}
+.full_menu_toggle{padding: 0px;}
+.rolling_info .info dd{width: 219px; white-space: nowrap; text-overflow: ellipsis;}
+.birthday{height: 234px;}
+.bestEmployee .emDL .emName, .bestEmployee .emDL .emTeam{width: 170px;}
+
+/* 20231004 수정 */
+#inAttiBtn, #outAttiBtn{font-size: 13px !important;}
+#addr{height: 12px !important;}
+.dataHave{left: 34%;}
+#theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none;}
