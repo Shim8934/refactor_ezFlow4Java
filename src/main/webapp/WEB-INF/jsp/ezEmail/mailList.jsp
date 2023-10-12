@@ -1639,7 +1639,7 @@
 			.tagli > input + .imgbtn { margin: 0px; vertical-align: middle; }
 			#pre_h_tag_view > img, #pre_w_tag_view > img { width: 11px; height: 11px; cursor: pointer; margin: 0 7px 0 4px; }
 			<c:if test="${not empty tagName}">
-			#tag_subtitle { display: inline-block; max-width: 400px; text-overflow: ellipsis; overflow: hidden; word-break: keep-all; vertical-align: middle; font-size: 17px;}
+			#tag_subtitle { display: inline-block; max-width: 400px; text-overflow: ellipsis; overflow: hidden; word-break: keep-all; vertical-align: middle; font-size: 17px; padding-bottom: 5px; }
 			</c:if>
 			</c:if>
 		</style>
