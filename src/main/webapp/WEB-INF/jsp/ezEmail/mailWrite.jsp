@@ -47,6 +47,7 @@
 			}
 			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
+			.mailAddressAdd { overflow-y: auto; }
 		</style>
 		
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
@@ -2563,7 +2564,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <td colspan="3" style="overflow-y: auto;">
+	                        <td colspan="3" class="mailAddressAdd">
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgToGot" class="viewtxt"></div>
 	                            </div>
@@ -2590,7 +2591,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgCC_TRu">
-	                        <td colspan="3">
+	                        <td colspan="3" class="mailAddressAdd">
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgCCGot" class="viewtxt"></div>
 	                            </div>
@@ -2614,7 +2615,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgBCC_TRu" style="display:none;">
-	                        <td colspan="3">
+	                        <td colspan="3" class="mailAddressAdd">
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgBCCGot" class="viewtxt"></div>
 	                            </div>
