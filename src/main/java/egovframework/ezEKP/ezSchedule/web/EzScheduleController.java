@@ -649,10 +649,10 @@ public class EzScheduleController extends EgovFileMngUtil {
         	sb.append("<option value='" + vo.getDeptId() + "' type='dept'>[" + msg.getMessage("ezSchedule.t996", locale) + "]" + vo.getTitleName() + "</option>");            
         }
      
-        if (loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1")) {
+        if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "c;k")) {
             companyAdmin = "Y";
             deptAdmin = "Y";
-        } else if (loginVO.getRollInfo().contains("g=1")) {
+        } else if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "g")) {
             deptAdmin = "Y";
         }
         
@@ -1857,10 +1857,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		loginVO = commonUtil.userInfo(loginCookie);
 
-        if (loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1")) {
+        if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "c;k")) {
         	pCompanyAdmin = "Y";
         	pDeptAdmin = "Y";
-        } else if (loginVO.getRollInfo().contains("g=1")) {
+        } else if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "g")) {
         	pDeptAdmin = "Y";
         }
 
@@ -1868,11 +1868,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		// 부서관리자겸직권한이 존재하는 겸직부서의 ID를 반환
 		String AdminDeptList = "";
 		if (permissionBasisDeptYN.equals("Y")) {
-			List<OrganUserVO> tempDeptAdminList = ezOrganService.getAllRollInfoForUserBasisDept(loginVO.getId(), loginVO.getTenantId());
+			List<OrganUserVO> tempDeptAdminList = ezOrganService.getAllRollInfoForUserBasisDept(loginVO.getId(), loginVO.getTenantId(), "g=1");
 			for (OrganUserVO rollData : tempDeptAdminList) {
-				if (rollData.getExtensionAttribute1().contains("g=1")) {
-					AdminDeptList = AdminDeptList + rollData.getDepartment() + ";";
-				}
+				AdminDeptList = AdminDeptList + rollData.getDepartment() + ";";
 			}
 			pDeptAdmin = "N"; // permissionBasisDeptYN 옵션 사용 시 해당 플래그가 "Y"면 부서관리자 권한이 없는 타부서에 대해서도 권한을 부릴 수 있는 오류 일으킴
 			model.addAttribute("AdminDeptList", AdminDeptList);
@@ -2779,8 +2777,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         String scheduleType = vo.getScheduleType();
         
         if (!ownerId.equals(userId) && !ownerId.equals(otherid) && !vo.getCreatorId().equals(userId) && !vo.getModifierId().equals(userId)	 
-        	&& (!scheduleType.equals("2") || !ownerId.equals(loginVO.getDeptID()) || (rollInfo.indexOf("c=1") == -1 && rollInfo.indexOf("k=1") == -1 && rollInfo.indexOf("g=1") == -1))
-        	&& (!scheduleType.equals("3") && !scheduleType.equals("2") || (rollInfo.indexOf("c=1") == -1 && rollInfo.indexOf("k=1") == -1)) 
+        	&& (!scheduleType.equals("2") || !ownerId.equals(loginVO.getDeptID()) ||!commonUtil.isAdmin(userId, tenantId, rollInfo, "c;k;g"))
+        	&& (!scheduleType.equals("3") && !scheduleType.equals("2") || !commonUtil.isAdmin(userId, tenantId, rollInfo, "c;k")) 
         	|| vo.getIsReadOnly().equals("Y")
         ) {
         	_admin = "N";
@@ -4601,17 +4599,18 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정 수정권한 구하는 함수
 	 */
-	private String getEditPosible(LoginVO loginVO, ScheduleInfoVO info, List<ScheduleSecretaryVO> tList)  {
+	private String getEditPosible(LoginVO loginVO, ScheduleInfoVO info, List<ScheduleSecretaryVO> tList) throws Exception {
 		//참석자관련권한부여
 		String _editPosible = "Y";
 		String userId = loginVO.getId();
 		String rollInfo = loginVO.getRollInfo();
 		String ownerId = info.getOwnerId();
 		String scheduleType = info.getScheduleType();
+		int tenantId = loginVO.getTenantId();
 						
 		if (!ownerId.equals(userId) && !info.getCreatorId().equals(userId) && !info.getModifierId().equals(userId)	 
-			&& (!scheduleType.equals("2") || !ownerId.equals(loginVO.getDeptID()) || (rollInfo.indexOf("c=1") == -1 && rollInfo.indexOf("k=1") == -1 && rollInfo.indexOf("g=1") == -1))
-			&& (!scheduleType.equals("3") && !scheduleType.equals("2") || (rollInfo.indexOf("c=1") == -1 && rollInfo.indexOf("k=1") == -1)) 
+			&& (!scheduleType.equals("2") || !ownerId.equals(loginVO.getDeptID()) || !commonUtil.isAdmin(userId, tenantId, rollInfo, "c;k;g"))
+			&& (!scheduleType.equals("3") && !scheduleType.equals("2") || !commonUtil.isAdmin(userId, tenantId, rollInfo, "c;k")) 
 			|| info.getIsReadOnly().equals("Y")
 		) {
 			_editPosible = "N";

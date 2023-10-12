@@ -2425,15 +2425,21 @@
 			CN = #v_CN#
 		AND
 			TENANT_ID = #v_TENANT_ID#
-		UNION ALL
-		SELECT
-			CN, DEPTID , ROLL_INFO AS extensionAttribute1, jobID
-		FROM
-			TBL_ADDJOBMASTER
-		WHERE
-			CN = #v_CN#
 		AND
-			TENANT_ID = #v_TENANT_ID#
+			EXTENSIONATTRIBUTE1 like CONCAT('%', #v_PERMISSION_CODE#, '%')
+		<isEqual property="permissionBasisDeptYN" compareValue="Y">
+			UNION ALL
+			SELECT
+				CN, DEPTID , ROLL_INFO AS extensionAttribute1, jobID
+			FROM
+				TBL_ADDJOBMASTER
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				ROLL_INFO LIKE CONCAT('%', #v_PERMISSION_CODE#, '%')
+		</isEqual>
 	</select>
 
 	<!-- 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회 쿼리 -->

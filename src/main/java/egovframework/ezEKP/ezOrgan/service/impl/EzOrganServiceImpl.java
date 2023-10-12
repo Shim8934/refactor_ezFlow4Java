@@ -2678,12 +2678,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	// 2023-08-09 전인하 - 특정 유저의 모든 겸직 권한 호출하는 메소드
 	@Override
-	public List<OrganUserVO> getAllRollInfoForUserBasisDept(String userId, int tenantId) throws Exception {
+	public List<OrganUserVO> getAllRollInfoForUserBasisDept(String userId, int tenantId, String permissionCode) throws Exception {
 		logger.debug("getAllRollInfoForUserBasisDept started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN", userId);
 		map.put("v_TENANT_ID", tenantId);
+		map.put("v_PERMISSION_CODE", permissionCode);
+		map.put("permissionBasisDeptYN", ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantId));
 
 		List<OrganUserVO> returnVal = ezOrganDAO.getAllRollInfoForUserBasisDept(map);
 

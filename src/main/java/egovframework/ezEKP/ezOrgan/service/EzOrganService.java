@@ -123,7 +123,7 @@ public interface EzOrganService {
     public String getRollInfoBasisDept(String userID, int tenantID, String deptID, String jobID) throws Exception;
 
 	// 2023-08-09 전인하 - 특정 유저의 모든 겸직 권한 호출하는 메소드
-	public List<OrganUserVO> getAllRollInfoForUserBasisDept(String userId, int tenantId) throws Exception;
+	public List<OrganUserVO> getAllRollInfoForUserBasisDept(String userId, int tenantId, String permissionCode) throws Exception;
 	
 	// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회
 	public List<OrganUserVO> getAddJobListForEzApprDropdown(String lang, String userId, int tenantId) throws Exception;

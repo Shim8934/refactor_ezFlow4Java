@@ -51,6 +51,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -541,7 +542,7 @@ public class CommonUtil {
 		try{
 			LoginVO user = userInfo(loginCookie);
 	
-			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+			if (!isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;k")) {
 				return null;
 			}else{
 				return user;
@@ -555,7 +556,7 @@ public class CommonUtil {
 		try{
 			LoginVO user = aprUserInfo(loginCookie);
 	
-			if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1){
+			if (!isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;k")){
 				return null;
 			}else{
 				return user;
@@ -2966,4 +2967,21 @@ public class CommonUtil {
 		return result;
 	}
 
+	
+	// 2023-10-11 전인하 - 특정 권한이 겸직 포함하여 존재하는지 취합하여 확인하는 공통메소드
+	// adminCode로 삽입한 문자열은 세미콜론을 구분자로 사용. adminCode중 하나라도 권한이 있을 경우 true 반환
+	// 겸직/사용자 별 권한 설정 기능 옵션 사용여부는 서비스단에서 체크함.
+	public boolean isAdmin(String userId, int tenantId, String rollInfo, String adminCode) throws Exception {
+		String[] adminCodeArr = adminCode.split(";");
+		List<String> adminAllCodeList = new ArrayList<String>(Arrays.asList("c", "g", "n", "e", "l")); // 원직/겸직 권한을 취합할 필요가 있는 권한코드를 해당 배열로 관리함
+		int adminCount = 0;
+		for (String code : adminCodeArr) {
+			if (adminAllCodeList.contains(code)) {
+				adminCount += ezOrganService.getAllRollInfoForUserBasisDept(userId, tenantId, (code + "=1")).size();
+			} else if (rollInfo != null && rollInfo.toLowerCase().contains(code + "=1")) {
+				adminCount ++;
+			}
+		}
+		return adminCount > 0;
+	}
 }
