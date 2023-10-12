@@ -1435,12 +1435,13 @@
 					return;
 				}
 
+				event_listContextMenu(event);
+
 		        if (currentMoverId != '') {
 		        	currentFixingId = document.getElementById(currentMoverId);
 		        } else {
 		        	currentFixingId = document.getElementById(listContentArry[listContentArry.length-1]);
 		        }
-				event_listContextMenu(event);
 			}
 			
 			function onDragEnter(evt) {
