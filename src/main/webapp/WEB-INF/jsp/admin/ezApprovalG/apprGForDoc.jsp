@@ -157,7 +157,7 @@
 				
 				$.ajax({
 	            	type : "POST",
-	            	url : "/ezApprGJson/getStatSearchDocList.do",
+	            	url : "/admin/ezApprovalG/getStatSearchEndDocList.do",
 	            	async : true,
 	            	dataType : "text",
 	            	data : {

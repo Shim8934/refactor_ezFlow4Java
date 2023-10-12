@@ -94,7 +94,7 @@ public class EzApprovalGJsonController {
 	/**
 	 * 전자결재G관리 전체문서조회(완료문서) 문서목록 호출 함수
 	 */
-	@RequestMapping(value = "/ezApprGJson/getStatSearchDocList.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/ezApprovalG/getStatSearchEndDocList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> getStatSearchDocLlist(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getStatSearchDocList started.");
