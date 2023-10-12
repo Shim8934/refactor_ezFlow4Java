@@ -39,7 +39,7 @@
 	.portletInfo {width : 100%;}
 	.portletInfoTD {width:100%;}
 	.portletInfoTD input[type='text'] {width:100%; height:27px; font-size:12px; padding:0px 0px 0px 5px; color:#393939;}
-	.addPortlet {border:1px dashed #aab2ba; text-align:center;height:19.3em; border-radius:0px;}
+	.addPortlet {border:1px dashed #aab2ba; text-align:center;height:254.006px; border-radius:0px;}
 	.addPortlet dl {margin:87px;}
 	.portlet-toggle {cursor:pointer;}
 	.newPortlet .portlet-header {cursor:default;}
