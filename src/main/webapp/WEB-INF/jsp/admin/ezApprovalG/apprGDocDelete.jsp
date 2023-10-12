@@ -38,6 +38,7 @@
 				padding: 8px 5px;
 			}
 			.mainlist tr th {border-top:0px}
+			#usedate { height: 12px !important;}
 		</style>
 		<SCRIPT type="text/javascript" ID="clientEventHandlersJS" >
 		    var Check = false, PeriodDocList;
