@@ -1473,7 +1473,7 @@
 			    </tr> 
 			</table> 
 			<br/>
-			<table style="width:100%;margin-top: -6px;">
+			<table style="width:100%; margin-top: -19px;">
 				<tr>
 			    	<td>
 			        	<table id="TreeViewTD">
@@ -1573,7 +1573,7 @@
 			<!-- 2023-09-06 조소정 - 참석자 일정조회 및 취소 버튼 추가 -->
 			<div class="btnposition btnpositionNew">
 				<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="margin-left: -125px;"><span><spring:message code='ezSchedule.t123' /></span></a>
-			    <a class="imgbtn" onClick="close_onclick()" style="background-color: #0684f9;"><span style="color: #ffffff;"><spring:message code='ezSchedule.t4' /></span></a>
+			    <a class="imgbtn" onClick="close_onclick()"><span><spring:message code='ezSchedule.t4' /></span></a>
 			    <a class="imgbtn" onClick="window.close()" ><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>
 		</form>
