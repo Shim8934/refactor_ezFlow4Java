@@ -2418,6 +2418,20 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("TBL_ATTITUDE_FORM FORM_HTML2 column doesn't exist. creating the column...");
 
 			update("EzCommonDAO.addAttitudeFormFormHtml2Column");
+			update("EzCommonDAO.updateAttitudeFormFormHtml2Column");
+		}
+		
+		// 2023-10-12 조소정 - 근태관리 > 작성 양식 테이블 영어 버전 양식 컬럼값 추가
+		try {
+			Object formHtml2 = select("EzCommonDAO.checkFormHtml2Column");
+
+		    if (formHtml2 == null) {
+				logger.debug("TBL_ATTITUDE_FORM FORM_HTML2 column is empty. insert data...");
+				
+				update("EzCommonDAO.updateAttitudeFormFormHtml2Column");
+		    }
+		} catch (Exception e) {
+		    logger.error(e.getMessage(), e);
 		}
 	}
 
