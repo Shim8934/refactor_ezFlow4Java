@@ -19,6 +19,16 @@
     	.jstree-ocl {
     		margin-top: 6px !important;
     	}
+    	.jstree-default-small .jstree-node {
+    		margin-left: 7px !important;
+    	}
+    	.jstree-clicked {
+    		color: #0470E4 !important;
+    		text-decoration: underline !important;
+    	}
+    	.list_text {
+    		font-size: 14px !important;
+    	}
     </style>
     <script>
 		var lang = "${userinfo.lang}";

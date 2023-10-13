@@ -8,6 +8,19 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<style type="text/css">
+		.jstree-clicked {
+	   		color: #0470E4 !important;
+	   		text-decoration: underline !important;
+	  	}
+	   	.list_text {
+	   		font-size: 14px !important;
+	   	}
+	   	.webfolderMinus {
+			margin-right: 3px;
+	   	}
+	   	
+	</style>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -176,13 +189,16 @@
 				if (previousElmtList[i] != null) {
 					previousElmtList[i].style.color = "";
 					previousElmtList[i].style.fontWeight = "normal";
+					previousElmtList[i].style.textDecoration = "";
 				}
 			}
 			
 			selectedFolder       = obj.getAttribute("name");
 			selectedLevel        = obj.getAttribute("level");
-			obj.style.color      = "#004a87";
+			obj.style.color      = "#0470E4";
 			obj.style.fontWeight = "bold";
+			obj.style.fontWeight = "bold";
+			obj.style.textDecoration ="underline";
 		}
 		
 		function getDetailTree(obj, mode) {
@@ -542,7 +558,7 @@
 			</c:if>
 		</div>
 	</div>
-	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 5px; white-space: nowrap;" id="folderTree"></div>
+	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 10px; white-space: nowrap;" id="folderTree"></div>
 	
 	<div class="btnpositionNew">
 		<c:if test="${type ne 'copy' and isPermittedMove}">
