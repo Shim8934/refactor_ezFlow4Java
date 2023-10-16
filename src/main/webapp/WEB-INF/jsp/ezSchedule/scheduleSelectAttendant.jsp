@@ -163,10 +163,13 @@
 	            	treeView.DataSource(xmlTree);
 	            	treeView.DataBind("TreeView");
 	            	
-	                if (type == "group") {
+	                if (type == "group") { // group : 일정 그룹
 	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezSchedule.t00001' />";
 	                    document.getElementById("btnAddUser").querySelector("span").textContent = "<spring:message code='ezSchedule.groupSchedule.csj01' />";	// 2023-09-06 조소정 - 참석자 일정조회 버튼 활성화
-	                }
+	                } else if (type == "gather") { // gather : 일정 모아보기 그룹
+						document.getElementById("ToTitleStr").textContent = "<spring:message code='ezSchedule.t00001' />";
+						document.getElementById("btnAddUser").style.display = "none";
+					}
 	            }
 	            catch (ErrMsg) {
 	                alert(" TreeViewinitialize : " + ErrMsg.description);

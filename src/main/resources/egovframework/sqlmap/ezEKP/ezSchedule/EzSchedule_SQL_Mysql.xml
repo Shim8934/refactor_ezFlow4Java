@@ -2626,4 +2626,284 @@
 		  AND TENANT_ID = #v_TENANTID#
 		  AND CN = #v_USERID#
 	</select>
+	<!-- 2023-09-27 임정은 - 모아보기 그룹 관리 리스트 리턴하는 메서드 -->
+	<select id="EzScheduleDAO.getMyGatherList" parameterClass="map" resultClass="ScheduleGroupListVO">
+		<![CDATA[
+			select
+				groupid, groupname, description, createdate
+			from
+				tbl_schedulegather
+			where
+				creatorid = #v_USERID#
+			and
+				tenant_id = #v_TENANTID#
+			and
+				companyid = #v_COMPANYID#
+			order by
+				groupname
+		]]>
+	</select>
+
+	<!-- 2023-09-27 임정은 - 모아보기 그룹 관리 리스트별 멤버 수 리턴하는 메서드 -->
+	<select id="EzScheduleDAO.getMyGatherMemberListCnt" parameterClass="map" resultClass="int">
+		<![CDATA[
+			select
+				count(distinct memberid)
+			from (
+				select
+					groupid, memberid, membername, membername2, tenant_id
+				from
+					tbl_schedulegathermember
+				where
+					tenant_id = #v_TENANTID#
+			) A
+			join
+			(
+				SELECT
+					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #v_TENANTID#
+
+				UNION ALL
+
+				SELECT
+					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, B.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A
+				ON
+					A.CN = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID
+				WHERE
+					A.TENANT_ID = #v_TENANTID#
+			) BB
+			ON
+				A.memberid = BB.cn
+			WHERE
+				A.groupid = #v_GROUPID#
+			AND
+				A.tenant_id = #v_TENANTID#
+		]]>
+	</select>
+
+	<!-- 2023-10-04 임정은 - 모아보기 그룹 추가 시 tbl_schedulegather에 insert하는 메서드 -->
+	<insert id="EzScheduleDAO.insertScheduleGather" parameterClass="map">
+		<![CDATA[
+			insert into tbl_schedulegather (
+				groupid, groupname, creatorid, creatorname, creatorname2, description, createdate, tenant_id, companyid
+			) values (
+				#v_GUID#, #v_GROUPNAME#, #v_USERID#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#,	#v_DESCRIPTION#, utc_timestamp(), #v_TENANTID#,	#v_COMPANYID#
+			)
+		]]>
+	</insert>
+
+	<!-- 2023-10-04 임정은 - 모아보기 그룹 추가 시 tbl_schedulegathermember에 insert하는 메서드 -->
+	<insert id="EzScheduleDAO.insertScheduleGatherMember" parameterClass="map">
+		<![CDATA[
+			insert into tbl_schedulegathermember (
+				groupid, memberid, membername, membername2, tenant_id
+			) values (
+				#v_GROUPID#, #v_MEMBERID#, #v_MEMBERNAME#, #v_MEMBERNAME2#,	#v_TENANTID#
+			)
+		]]>
+	</insert>
+
+	<!-- 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 시 상세 정보 리턴하는 메소드 -->
+	<select id="EzScheduleDAO.getMyGatherMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
+		<![CDATA[
+			select
+				A.memberid, A.membername, A.membername2, '' as status, '' as responsedate, BB.mail, BB.department,
+				case #v_LANG#
+					when '1' then concat(A.memberName, '(', BB.description, ')')
+					when '2' then concat(A.memberName2, '(', BB.description2, ')')
+				end info,
+			    BB.DESCRIPTION, BB.DESCRIPTION2
+			from (
+				select
+					groupid, memberid, membername, membername2, tenant_id
+				from
+					tbl_schedulegathermember
+				where
+					tenant_id = #v_TENANTID#
+			) A
+			join (
+				SELECT
+					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #v_TENANTID#
+
+				UNION ALL
+
+				SELECT
+					B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A
+				ON
+					A.CN = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID
+				WHERE
+					A.TENANT_ID = #v_TENANTID#
+			) BB
+			ON
+				A.memberid = BB.cn
+			WHERE
+				A.groupid = #v_GROUPID#
+			AND
+				A.tenant_id = #v_TENANTID#
+			GROUP BY
+				memberid
+		]]>
+	</select>
+
+	<!-- 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 후 삭제 버튼 > tbl_scheduleGather에 delete하는 메서드 -->
+	<delete id="EzScheduleDAO.deleteScheduleGather" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedulegather
+			where
+				groupid = #v_GROUPID#
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+	</delete>
+
+	<!-- 2023-10-04 임정은 - 모아보기 그룹 관리 > 그룹 선택 후 삭제 버튼 > tbl_schedulegathermember에 delete하는 메서드 -->
+	<delete id="EzScheduleDAO.deleteScheduleGatherMember" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedulegathermember
+			where
+				groupid = #v_GROUPID#
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+		<isNotEmpty property="v_MEMBERID">
+			<![CDATA[
+				and
+			    	memberid = #v_MEMBERID#
+			]]>
+		</isNotEmpty>
+	</delete>
+
+	<!-- 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 -->
+	<select id="EzScheduleDAO.getGatherMemberList" parameterClass="map" resultClass="ScheduleGroupListVO">
+		<![CDATA[
+			select
+				A.memberid,
+				E.GROUPNAME,
+				E.DESCRIPTION,
+				A.memberName as membername,
+				A.memberName2 as membername2,
+				A.status as status,
+				date_add(a.responsedate, interval + #v_OFFSETMIN# minute) as responsedate,
+				'' as mail,
+				'' as department,
+				'' as info
+			from (
+				select
+					groupid,
+					memberid,
+					membername,
+					membername2,
+					'' as status,
+					utc_timestamp() as responsedate,
+					tenant_id
+				from
+					tbl_schedulegathermember
+				where
+					tenant_id = #v_TENANTID#
+			) A
+			join (
+				SELECT
+					D.CN,
+					D.DISPLAYNAME,
+					D.COMPANY,
+					D.title,
+					D.MAIL,
+					D.DESCRIPTION,
+					D.DESCRIPTION2,
+					D.department
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #v_TENANTID#
+
+				UNION ALL
+
+				SELECT
+					B.cn,
+					B.DISPLAYNAME,
+					C.COMPNM2 as COMPANY,
+					A.title,
+					b.mail,
+					C.DISPLAYNAME AS DESCRIPTION,
+					C.DISPLAYNAME2 AS DESCRIPTION2,
+					A.deptid
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A
+				ON
+					A.CN = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID
+				WHERE
+					A.TENANT_ID = #v_TENANTID#
+			) BB
+			ON
+				A.memberid = BB.cn
+			JOIN
+				TBL_SCHEDULEGATHER E
+			ON
+				A.GROUPID = E.GROUPID
+			WHERE
+				A.groupid = #v_GROUPID#
+			AND
+				A.tenant_id = #v_TENANTID#
+			GROUP BY
+				memberid
+		]]>
+	</select>
+
+	<!-- 2023-10-05 임정은 - 모아보기 그룹 관리 > 그룹 관리 버튼 > 그룹명, 설명 수정 후 저장 버튼 -->
+	<update id="EzScheduleDAO.updateScheduleGather" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedulegather
+			set
+				groupname = #v_GROUPNAME#,
+				description = #v_DESCRIPTION#
+			where
+				groupid = #v_GUID#
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+	</update>
 </sqlMap>

@@ -563,4 +563,6 @@ public interface EzCommonService {
 	public void createGongramDeleteHistory() throws Exception;
 
 	public void addBoardWriterFlagAndWriterNameType() throws Exception;
+
+	public void createTblScheduleGather() throws Exception;
 }

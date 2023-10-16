@@ -49,6 +49,8 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import org.apache.commons.lang3.StringUtils;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -135,6 +137,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+
+	@Resource(name = "EzScheduleService")
+	private EzScheduleService ezScheduleService;
 
 	@Autowired
 	private EzWebFolderService_y ezWebFolderService_y;
@@ -776,12 +781,15 @@ public class MPortalGWController extends EgovFileMngUtil {
 			// 2023-05-25 이가은 - 전자결재 > 공람문서 메뉴 표출을 위한 approvalFlag 값 추가
 			String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", info.getTenantId());	
 			
+			List<ScheduleGroupListVO> gatherList = ezScheduleService.getMyGatherList(userId, tenantId, companyId); // 2023-10-06 임정은 - 모바일 일정관리 > 일정 모아보기 추가
+
 			dataObject.put("portalAccessCount", portalAccessCount);
 			dataObject.put("footerAccessCount", footerAccessCount);
 			dataObject.put("accessMenuCode", accessMenuCode);
 			dataObject.put("approvalFlag", approvalFlag);
 			dataObject.put("useMobileMail2", useMobileMail2);
-
+			dataObject.put("gatherList", gatherList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", dataObject);
