@@ -35330,7 +35330,7 @@
         FROM
             TBL_USERMASTER U
         WHERE
-            CN = #USERID#
+            CN = #userID#
           AND
             TENANT_ID = #tenantID#
         UNION All
