@@ -169,6 +169,11 @@
 					
 	            	if(totalPage == 0){
 	                	var listheader = document.getElementById("listviewheader");
+						document.getElementById("ApprovList").innerHTML = ""
+						var rows = listheader.getElementsByTagName('ROWS');
+						Array.prototype.forEach.call(rows, function (row) {
+							row.parentNode.removeChild(row);
+						});
 	                	var xmldom = xmlhttp.responseXML;
 	                	var listview = new ListView();
 	                	listview.SetID("ApprovListView");
