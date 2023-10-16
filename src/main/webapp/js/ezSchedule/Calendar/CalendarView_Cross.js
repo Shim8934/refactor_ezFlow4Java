@@ -1404,7 +1404,7 @@ function preWeek() {
 	sDate.setDate(sDate.getDate() - 7);
 	
 	CalendarView('Calendar');
-	scrollTop9Hour();
+	scrollTopTime();
 	}
 
 function nextWeek() {
@@ -1412,7 +1412,7 @@ function nextWeek() {
 	sDate.setDate(sDate.getDate() + 7);
 	
 	CalendarView('Calendar');
-	scrollTop9Hour();
+	scrollTopTime();
 	}
 
 
@@ -1421,7 +1421,7 @@ function preDay() {
 	sDate.setDate(sDate.getDate() - 1);
 	
 	CalendarView('Calendar');
-	scrollTop9Hour();
+	scrollTopTime();
 	}
 
 function nextDay() {
@@ -1429,7 +1429,7 @@ function nextDay() {
 	sDate.setDate(sDate.getDate() + 1);
 	
 	CalendarView('Calendar');
-	scrollTop9Hour();
+	scrollTopTime();
 	}
 
 // 2018-06-11 구해안 Ajax 연동을 위해 CalendarDataSource 함수 생성 및 수정
