@@ -368,7 +368,9 @@ function onreadystatechange_GetDocDeliveryList() {
                             DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
                             DocList.SetTitleIdx(0);                                  
                             DocList.SetUrgentFlag(false);                            
-
+                            // 2023-09-27 전인하 - 배부대장의 보안결재날짜 데이터는 DATA8에 존재하여 SecurityIdx를 교체함, 보안결재플래그 활성화
+                            DocList.SetSecurityFlag(true);                           
+                            DocList.SetSecurityIdx(7);
                             DocList.DataSource(xmlDoc);                             
                             DocList.DataBind("lvtDoclist");                          
                             DocList = null;

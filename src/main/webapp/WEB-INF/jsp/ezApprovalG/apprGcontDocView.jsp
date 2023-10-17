@@ -440,8 +440,11 @@
 		        ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		
+                // 2023-10-16 전인하 - 전자결재G > 기록물배부대장 > 배부대장 문서정보 오류
+                // 문서정보를 무조건 완료문서 DB에서 가져와, 진행문서를 배부대장에서 조회하는 경우 발생하는 문서정보 조회불가 현상을 수정함
+                var initFlag = docAprEnd == "APR" ? "APR" : "END";
 		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
-		        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
+		        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();

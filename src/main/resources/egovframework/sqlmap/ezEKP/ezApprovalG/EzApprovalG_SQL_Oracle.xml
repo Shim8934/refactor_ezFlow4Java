@@ -21309,7 +21309,6 @@
 <!-- 	<procedure id="EzApprovalG.getDeliveryList" parameterClass="Map" resultClass="ApprGDeliveryListVO"> -->
 <!-- 		{CALL EZSP_GETDELIVERYLIST(#v_DEPTID#,#v_SUBQUERY#,#iv_PAGESIZE#,#iv_PAGESIZE2#,#v_ORDEROPTION#,#v_ORDEROPTION2#,#v_MANAGEDEPTID#,#v_ORGANID#,#v_DOCTITLE#,#v_CHARGENAME#,#v_SREGDATE#,#v_EREGDATE#,#v_ISDOCPRINT# ,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	 -->
 <!-- 	</procedure> -->
-    <!-- 2023-09-05 배부대장 리스트 호출 시 보안결재 컬럼을 추가로 조회 -->
 	<select id="EzApprovalG.getDeliveryList" parameterClass="Map" resultClass="ApprGDeliveryListVO"> 
         <![CDATA[
 		SELECT 
@@ -21337,18 +21336,9 @@
                             A.REMARK,
                             A.ORGDOCNUMCODE,
                             A.DOCTITLE,
-                            A.ORGANUSERNAME,
-                            E.SECURITYAPPROVAL
+                            A.ORGANUSERNAME
 				   		FROM 
 				   			TBL_DOCDELIVERY A
-                        LEFT OUTER JOIN
-                            TBL_EXPENDAPRDOCINFO E
-                        ON
-                            A.DOCID = E.DOCID
-                        AND
-                            A.TENANT_ID = E.TENANT_ID
-                        AND
-                            A.COMPANYID = E.COMPANYID
 				   		WHERE 
 				   			A.TENANT_ID = #v_TENANTID#
 				   		AND
@@ -35430,6 +35420,38 @@
 				DOCID = #beforeDocID#)
 		]]>
 	</insert>
+    
+    <!-- 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재 날짜 체크 쿼리 / 진행문서를 조회하는 경우의 분기 추가 -->
+    <select id="EzApprovalG.checkSecurityApprovalDate" parameterClass="Map" resultClass="String">
+        <isEqual property="v_LINEMODE" compareValue="APR">
+            <![CDATA[
+			SELECT
+				NVL(SECURITYAPPROVAL, '')
+			FROM
+				TBL_EXPAPRDOCINFO
+			WHERE
+			    DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+        </isEqual>
+        <isNotEqual property="v_LINEMODE" compareValue="APR">
+            <![CDATA[
+			SELECT
+				NVL(SECURITYAPPROVAL, '')
+			FROM
+				TBL_EXPENDAPRDOCINFO
+			WHERE
+			    DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+        </isNotEqual>
+    </select>
 
     <!-- 2023-06-26 민지수 - 완료문서 추가의견 삭제 -->
     <delete id="EzApprovalG.deleteAddOpinionInfo" parameterClass="Map">
@@ -35553,20 +35575,140 @@
           AND
             A.TENANT_ID = #tenantID#
     </select>
-    
-    <!-- 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재 날짜 체크 쿼리 -->
-    <select id="EzApprovalG.checkSecurityApprovalDate" parameterClass="Map" resultClass="String">
-        <![CDATA[
-			SELECT
-				NVL(SECURITYAPPROVAL, '')
-			FROM
-				TBL_EXPENDAPRDOCINFO
-			WHERE
-			    DOCID = #v_DOCID#
-			AND
-				TENANT_ID = #v_TENANTID#
-			AND
-				COMPANYID = #v_COMPANYID#
-		]]>
+
+    <!-- 2023-09-25 전인하 - 전자결재G > 배부대장 > 진행문서 권한조회 -->
+    <select id ="EzApprovalG.getAccessYNGforAPR" parameterClass="Map" resultClass="String" remapResults="true">
+        <isEqual property="v_FLAG" compareValue="001">
+            <isEqual property="approvalFlag" compareValue="G">
+                <![CDATA[
+					SELECT 
+						PUBLICITYYN 
+			        FROM 
+			        	TBL_EXPAPRDOCINFO 
+			        WHERE  
+			        	DOCID = #v_DOCID#
+			        AND
+						TENANT_ID = #v_TENANTID#
+					AND
+		      			COMPANYID = #companyID#					
+				]]>
+            </isEqual>
+            <isNotEqual property="approvalFlag" compareValue="G">
+                <![CDATA[
+					SELECT 
+						PUBLICITYCODE 
+			        FROM 
+			        	TBL_EXPAPRDOCINFO 
+			        WHERE  
+			        	DOCID = #v_DOCID#
+			        AND
+						TENANT_ID = #v_TENANTID#
+					AND
+		      			COMPANYID = #companyID#					
+				]]>
+            </isNotEqual>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="002">
+            <![CDATA[
+				 SELECT     
+				  		CASE 
+				  			WHEN NVL(COUNT(DocID), 0) > 0 
+				  			THEN 'Y' 
+	             			ELSE 'N'
+	             		END AS RET
+				  FROM
+				  		TBL_APRLINEINFO 
+	       		  WHERE  
+	       				DocID = #v_DOCID#
+	              AND 
+	              		AprMemberID = #v_USERID#
+	              AND
+						TENANT_ID = #v_TENANTID#
+				  AND
+	      				COMPANYID = #companyID#
+			]]>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="003">
+            <![CDATA[
+			 	SELECT 
+			 		DISTINCT SUBSTR(TBL_SEPERATEATTACH.CabinetID, 1, 7) AprMemberDeptID  
+	            FROM 
+	            	TBL_RECORD 
+	            JOIN 
+	            	TBL_SEPERATEATTACH    
+	           	ON 
+	           		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID
+	           	AND 
+	           		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
+	           	AND
+	           		TBL_RECORD.COMPANYID = TBL_SEPERATEATTACH.COMPANYID
+	            WHERE  
+	            	TBL_RECORD.DocID = #v_DOCID#
+	            AND
+					TBL_RECORD.TENANT_ID = #v_TENANTID#
+				AND
+	      			TBL_RECORD.COMPANYID = #companyID#	
+			]]>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="004">
+            <![CDATA[
+				SELECT 
+					APRMEMBERID 
+	            FROM 
+	            	TBL_APRLINEINFO 
+	            WHERE  
+	            	( APRMEMBERSN = '1' )
+	            AND 
+	            	( APRMEMBERID = #v_USERID# )
+	            AND 
+	            	DOCID = #v_DOCID#
+	            AND
+					TENANT_ID = #v_TENANTID#	
+				AND
+	      			COMPANYID = #companyID#	 
+			]]>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="005">
+            <![CDATA[
+				SELECT 
+					SECURITYCODE 
+	            FROM 
+	            	TBL_EXPAPRDOCINFO 
+	            WHERE  
+	            	DOCID = #v_DOCID#
+	            AND
+					TENANT_ID = #v_TENANTID#
+				AND
+	      			COMPANYID = #companyID#	 	
+			]]>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="006">
+            <![CDATA[
+				SELECT 
+					COUNT(TBL_RECROLEINFO.UserRight)  
+	            FROM 
+	            	TBL_RECORD 
+	            JOIN 
+	            	TBL_RECROLEINFO    
+	            ON 
+	            	TBL_RECORD.RecordID = TBL_RECROLEINFO.RecordID
+	            AND
+	            	TBL_RECORD.TENANT_ID = TBL_RECROLEINFO.TENANT_ID
+	            AND
+	            	TBL_RECORD.COMPANYID = TBL_RECROLEINFO.COMPANYID
+	            WHERE  
+	            	( TBL_RECROLEINFO.SeperateAttachNo = '00' )
+	            AND 
+	            	(( TBL_RECROLEINFO.UserID = #v_USERID# AND TBL_RECROLEINFO.UserRight = '1' )
+	                OR
+	            	 (TBL_RECROLEINFO.UserID = 'All_User' AND TBL_RECROLEINFO.UserRight = '2'))
+	            AND 
+	            	TBL_RECORD.DocID = #v_DOCID#
+	            AND
+					TBL_RECORD.TENANT_ID = #v_TENANTID#
+				AND
+					TBL_RECORD.COMPANYID = #companyID#
+			]]>
+        </isEqual>
     </select>
 </sqlMap>

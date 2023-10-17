@@ -1204,6 +1204,9 @@ function pre_chk_Passwd_Complete(Rtn)
             openLocation = "/ezApprovalG/contDocView.do";
         }
         openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&orgCompanyID=" + encodeURI(orgCompanyID);
+        if (typeof g_sFlag != 'undefined' && ["m03", "m14"].includes(g_sFlag)) { // 2023-09-25 전인하 - 미리보기에서 문서 열람 시 메뉴 플래그 전달
+            openLocation += "uFlag=" + g_sFlag;
+        }
         if (share && share == 'share') {
         	openLocation += "&share=Y";
         }

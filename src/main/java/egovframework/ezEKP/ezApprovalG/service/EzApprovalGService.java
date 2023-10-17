@@ -841,7 +841,7 @@ public interface EzApprovalGService {
 	
 	/* 2022-09-21 홍승비 - 전자결재G > 이미 정상적으로 문서번호가 부여된 레코드가 존재하는 경우, TBL_RECORD 중복 삽입 오류 시 현재 문서번호를 롤백하지 않도록 예외처리 레코드 추가 */
 	public void insertRegErrorNoRollbackRecord(String type1, String type2, String type3, int regYear, String sysDate, int regSN, String companyID, int tenantID) throws Exception;
-
+	
     /* 2023-06-26 민지수 - 완료문서 추가의견 삭제 */
     public String deleteAddOpinionInfo(String docID, String companyID, String lang, int tenantId) throws Exception;
 
@@ -858,5 +858,8 @@ public interface EzApprovalGService {
     void cleanAbsence(String userID, int tenantID);
 
     /* 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재여부와 지정된 날짜를 체크하는 메소드 */
-    public String checkSecurityApprovalDate(String docID, String companyID, int tenantID) throws Exception;
+    public String checkSecurityApprovalDate(String docID, String companyID, int tenantID, String linemode) throws Exception;
+
+    // 2023-09-25 전인하 - 전자결재G > 배부대장 미리보기 > 진행문서 열람권한 조회
+    public String getAccessYNGforAPR(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 }

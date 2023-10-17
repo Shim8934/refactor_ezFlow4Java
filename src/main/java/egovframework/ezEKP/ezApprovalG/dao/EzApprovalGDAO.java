@@ -3871,6 +3871,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGOutOfOfficeInfoVO> getAllProxyInfo(Map<String, Object> map) throws Exception {
 		return (List<ApprGOutOfOfficeInfoVO>) list("EzApprovalG.getAllProxyInfo", map);
 	}
+	
+	// 2023-09-25 전인하 - 전자결재G > 배부대장 미리보기 > 진행문서 열람권한 조회
+	public String getAccessYNGforAPR(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getAccessYNGforAPR", map);
+	}
 
     /* 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재 문서인 경우, 지정된 날짜(SECURITYAPPROVAL)를 리턴 */
     public String checkSecurityApprovalDate(Map<String, Object> map)  throws Exception {
