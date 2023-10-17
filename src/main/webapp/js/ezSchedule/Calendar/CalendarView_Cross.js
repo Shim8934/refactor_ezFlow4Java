@@ -350,6 +350,9 @@ function CalendarView(pTagetID,chk_str) {
 
     CalViewSource(chk_str);
     resize();
+    if (typeCal != 0) {
+    	scrollTopTime();
+    }
     
     // 2018-06-07 구해안 datepicker 호출함수    
     var WstartDate, WendDate; 
@@ -1404,7 +1407,6 @@ function preWeek() {
 	sDate.setDate(sDate.getDate() - 7);
 	
 	CalendarView('Calendar');
-	scrollTopTime();
 	}
 
 function nextWeek() {
@@ -1412,7 +1414,6 @@ function nextWeek() {
 	sDate.setDate(sDate.getDate() + 7);
 	
 	CalendarView('Calendar');
-	scrollTopTime();
 	}
 
 
@@ -1421,7 +1422,6 @@ function preDay() {
 	sDate.setDate(sDate.getDate() - 1);
 	
 	CalendarView('Calendar');
-	scrollTopTime();
 	}
 
 function nextDay() {
@@ -1429,7 +1429,6 @@ function nextDay() {
 	sDate.setDate(sDate.getDate() + 1);
 	
 	CalendarView('Calendar');
-	scrollTopTime();
 	}
 
 // 2018-06-11 구해안 Ajax 연동을 위해 CalendarDataSource 함수 생성 및 수정

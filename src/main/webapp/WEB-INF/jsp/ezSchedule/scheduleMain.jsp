@@ -747,7 +747,6 @@
 		                    item.onclick();
 		                else */
 		                CalendarView("Calendar",chk_str);
-		                scrollTopTime();
 		                break;
 		                
 		            case "WEEK":
@@ -770,7 +769,6 @@
 		                    item.onclick();
 		                else */
 		                CalendarView("Calendar",chk_str);
-		                scrollTopTime();
 		                break;
 
 		            case "MONTH":
@@ -815,7 +813,7 @@
 		    function RefreshView() {
 		    	var chk_str = parent.frames["left"].document.getElementById('chk_str').value;
 		    	CalendarView('Calendar',chk_str);
-		    	scrollTopTime();
+
 		        /* if (parent.frames["left"].document.getElementById("iYear")) {
 		            parent.frames["left"].CalendarMiniView("CalendarMini");
 		            parent.frames["left"].CalendarMiniDataSource();
