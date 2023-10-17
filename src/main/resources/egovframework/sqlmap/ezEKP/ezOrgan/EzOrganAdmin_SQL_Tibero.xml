@@ -25,6 +25,8 @@
 		<result property="physicalDeliveryOfficeName" 			column="physicaldeliveryofficename" 	columnIndex="11"/>
 		<result property="manualFlag"							column="MANUAL_FLAG"					columnIndex="12"/>
 		<result property="extensionAttribute5"					column="extensionAttribute5"			columnIndex="13"/>
+		<result property="description1" 						column="description1" 					columnIndex="14"/>
+		<result property="description2" 						column="description2" 					columnIndex="15"/>
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -4611,6 +4613,8 @@
                 	COMPANYNAME  ,
              	A.TITLE T1  ,
              	A.TITLE2 T2  ,
+             	B.DISPLAYNAME DESCRIPTION1,
+             	B.DISPLAYNAME2 DESCRIPTION2,
              	A.JOBID,
              	A.MANUAL_FLAG
         	FROM
