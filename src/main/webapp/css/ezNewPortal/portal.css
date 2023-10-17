@@ -1584,7 +1584,7 @@ div.orbit img{border-radius: 5px;}
 /* 20230612 메인 신규추가 끝 */
 
 .full_menu_toggleUL > li{margin-bottom: 0px; padding: 9px 0px; height: 102px;}
-.full_menu_toggleUL_edit > li {padding: 9px 0px; height: 102px;}
+.full_menu_toggleUL_edit > li {padding: 9px 0px; height: 118px;}
 .full_menu_toggle{padding: 0px;}
 .rolling_info .info dd{width: 219px; white-space: nowrap; text-overflow: ellipsis;}
 .birthday{height: 234px;}
@@ -1595,3 +1595,14 @@ div.orbit img{border-radius: 5px;}
 #addr{height: 12px !important;}
 .dataHave{left: 34%;}
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none;}
+.full_menu_toggleUL > li{height: 118px;}
+@media only screen and (min-width : 1680px ) {
+	.dataHave {
+		left: 39%;
+	}
+}
+@media only screen and (max-width : 1240px) {
+	.dataHave {
+		left: 34%;
+	}
+}
