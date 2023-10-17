@@ -182,7 +182,7 @@
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<div><h1 id="ToTitle" class="receiver_tltype01" style="background: #f8f9fb; padding: 10px 0px 10px 23px; font-size: 16px;"><spring:message code="ezResource.t71" /></h1></div>
 	    		<div id="TreeView" valign="top" style="height:250px; overflow-x:hidden; overflow-y:auto;
-	    			BACKGROUND-COLOR:#f8f9fb;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
+	    			BACKGROUND-COLOR:#f8f9fb; padding-left: 0px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
 					onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
 				</div>
 				<h2><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span></h2>

@@ -3872,7 +3872,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 #left .list_thumbnail li {border-bottom: none;}
 .contents_searchCategory dl dd{font-weight: normal;}
 /* .imgbck{margin: 4px 5px 4px 0px !important} */
-.resLnb_tree{background-color: #F8F9FB; padding-top: 20px; padding-bottom: 3px;}
+.resLnb_tree{background-color: #F8F9FB;padding-top: 8px;padding-bottom: 3px;padding-left: 20px;}
 input[type=text]{height: 26px;}
 .previewmailDL dd.pretext .pretextUL li.preSubject .popup_open{float: left;}
 .wrap_progress h4{border-left: none; color: #333;}

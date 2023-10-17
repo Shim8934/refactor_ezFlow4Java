@@ -1142,6 +1142,7 @@ function organtreeview(thisobjid, elobjid) {
                     }
                     else {
                         //nodeHtml += g_baseImage["dot_end"];
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "0";
                     }
 
