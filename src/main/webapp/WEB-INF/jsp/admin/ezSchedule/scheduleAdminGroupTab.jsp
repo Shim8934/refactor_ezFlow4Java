@@ -8,6 +8,14 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+	    <style>
+	    	.mainlist tr th {
+	    		word-break: break-all;
+	    	}
+	    	.mainlist :not(tr) {
+ 				white-space: normal;
+			}
+	    </style>
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/controls/ListView_Group.js')}"></script>		
@@ -563,7 +571,7 @@
 		 function show_groupinfo2(obj) {
 		    
 		 	var checkRealID = "";
-		 	var feature = GetOpenPosition(540, 550);
+		 	var feature = GetOpenPosition(850, 550);
 		 	
 		 	var checkCnt = 0;
 		 	var allChild = $("#GroupListView")[0].childNodes[1];
@@ -580,6 +588,7 @@
 		 	
 		 	if(obj == 'show'){
 		 		var checkId = $('input:checked')
+ 				var groupColor = checkId[0].parentNode.parentNode.getAttribute("data3");
 		 		
 		 		if(checkId.length > 1){
 		 			alert(strLang276);
@@ -589,7 +598,7 @@
 		 			return;
 		 		}else{
 		 			checkRealID = checkId[0].id.substring(0,checkId[0].id.length -1);
-		 			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "schedule_group_modify", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		 			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID + "&groupColor=" + encodeURIComponent(groupColor), "schedule_group_modify", "height = 550px, width = 850px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		 			return;
 		 		}
 		 	}else{
@@ -598,7 +607,7 @@
 		 		
 		 		
 		 		
-		 		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1"), "", "height = 550px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		 		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1") + "&groupColor=" + encodeURIComponent(selectedTr.getAttribute("data3")), "", "height = 550px, width = 850px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		 		
 		 	}
 			

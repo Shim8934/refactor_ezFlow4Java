@@ -3969,7 +3969,9 @@
 				background = 'Y'
 		]]>                
 	</select>
-	
+
+	<!-- 2023-07-27 임정은 - 댓글 좋아요/싫어요 반응의 카운트 합산을 위해 COUNT, GROUP BY절 추가 -->
+	<!-- GROUP BY절에서는 중복되지 않는 REPLYID 값을 사용하므로 기존 댓글 표출과 차이는 없음 (각 댓글 레코드를 반환) -->
 	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO" remapResults="true">
 		<isNotEqual property="v_GUBUN" compareValue="2">
 			<![CDATA[
@@ -3978,11 +3980,21 @@
 					A.$v_UserName$ AS USERNAME,
 					A.USERID,
 					A.CONTENT,
-					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE,
-					DEPTID
+					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
+					DEPTID,
+					COUNT(CASE WHEN R.REACTFLAG = 'Y' THEN '1' END) AS RE_LIKE,
+				    COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE
 		        FROM
 		        	TBL_BOARD_ONELINEREPLY A
-		        INNER JOIN
+		        LEFT OUTER JOIN
+					TBL_BOARD_REPLY_REACT R
+				ON
+					A.REPLYID = R.REPLYID
+				AND
+					A.ITEMID = R.ITEMID
+				AND
+					A.TENANT_ID = R.TENANT_ID
+		        LEFT OUTER JOIN
 				   (SELECT
 				   		T.*,
 				    	ROW_NUMBER() OVER (PARTITION BY T.CN ORDER BY ROWNUM) CNT 
@@ -4041,6 +4053,8 @@
 		       		A.BOARDID = #v_BoardID#
 				AND 
 					A.ITEMID = #v_ItemID#
+		    	GROUP BY
+					A.REPLYID, $v_UserName$, A.USERID, A.CONTENT, WRITEDATE, DEPTID
 				ORDER BY 
 					writedate ASC
 			]]>
@@ -4048,19 +4062,31 @@
 		<isEqual property="v_GUBUN" compareValue="2">
 			<![CDATA[
 				SELECT 
-					REPLYID, 
+					A.REPLYID,
 					$v_UserName$ AS USERNAME,
-					USERID,
-					CONTENT, 
-					TO_CHAR(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE
+					A.USERID,
+					A.CONTENT,
+					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE,
+					COUNT(CASE WHEN R.REACTFLAG = 'Y' THEN '1' END) AS RE_LIKE,
+				    COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE
 		        FROM 
-		        	TBL_BOARD_ONELINEREPLY 
+		        	TBL_BOARD_ONELINEREPLY A
+		    	LEFT OUTER JOIN
+					TBL_BOARD_REPLY_REACT R
+				ON
+					A.REPLYID = R.REPLYID
+				AND
+					A.ITEMID = R.ITEMID
+				AND
+					A.TENANT_ID = R.TENANT_ID
 		        WHERE  
-		        	tenant_id = #v_TENANTID#
+		        	A.tenant_id = #v_TENANTID#
 		        AND
-		       		boardid = #v_BoardID#
+		       		A.boardid = #v_BoardID#
 				AND 
-					itemid = #v_ItemID#
+					A.itemid = #v_ItemID#
+		        GROUP BY
+					A.REPLYID, $v_UserName$, A.USERID, A.CONTENT, A.WRITEDATE
 				ORDER BY 
 					writedate ASC
 			]]>
@@ -4990,13 +5016,27 @@
 		]]>
 	</delete>	
 	
+	<!-- 2023-10-10 홍승비 - 삭제예정 레코드 중복삽입 방지 쿼리 추가 -->
 	<insert id="EzBoardDAO.insertDeleteReservedItem" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_DeleteReservedItem (
 				BOARDID,   ITEMID,   TENANT_ID 
 			)
-      		VALUES ( 
-      			#boardID#, #itemID#, #tenantID# 
+			SELECT
+				#boardID#, #itemID#, #tenantID#
+			FROM
+      			DUAL
+      		WHERE NOT EXISTS (
+      			SELECT
+      				1
+      			FROM
+      				TBL_Board_DeleteReservedItem
+      			WHERE
+      				BOARDID = #boardID#
+      			AND
+      				ITEMID = #itemID#
+      			AND
+      				TENANT_ID = #tenantID#
       		)
 		]]>
 	</insert>
@@ -5211,7 +5251,7 @@
   			SELECT 
 				B.BOARDID, 
 				B.ITEMID, 
-			    B.TENANT_ID
+			    B.TENANT_ID AS TENANTID
 			FROM
 				TBL_BOARD_BOARDINFO A
 			JOIN
@@ -5230,14 +5270,15 @@
 								AND
 									BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
 			AND
-				B.ENDDATE < SYS_EXTRACT_UTC(SYSTIMESTAMP) - A.DELETEAFTER
+				B.ENDDATE < TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP) - A.DELETEAFTER, 'YYYY-MM-DD HH24:MI:SS')
 		]]>
   </select>
 	
   <select id="EzBoardDAO.getDeleteReservedBoard" resultClass="BoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_BOARD_DELETERESERVEDBOARD
 		]]>
@@ -5246,7 +5287,9 @@
   <select id="EzBoardDAO.getDeleteReservedBoardItem" resultClass="BoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				ITEMID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_BOARD_DELETERESERVEDITEM
 		]]>
@@ -6396,5 +6439,107 @@
 	</isEqual>
 		)
 	</select>
-	
+
+	<!-- 2023-03-07 이가은 - userID를 조건으로 댓글 반응 여부(좋아요 : Y / 싫어요 : N / 미선택 : 공백 또는 null) 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.checkReactUser" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				REACTFLAG
+			FROM
+				TBL_BOARD_REPLY_REACT
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND
+				REPLYID = #v_REPLYID#
+			AND
+				USERID = #v_USERID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<!-- 2023-03-07 이가은 - 댓글 반응 추가하는 쿼리 -->
+	<insert id="EzBoardDAO.inserBoardReact" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_REPLY_REACT(
+				ITEMID,		REPLYID, 	USERID, 	REACTFLAG, 		TENANT_ID, 	COMPANYID, 		REACTDATE
+			)
+			VALUES(
+				#v_ITEMID#, #v_REPLYID#, #v_USERID#, #v_REACTFLAG#, #v_TENANTID#, #v_COMPANYID#, #v_REACTDATE#
+			)
+		]]>
+	</insert>
+
+	<!-- 2023-03-07 이가은 - 댓글 반응 삭제하는 쿼리 -->
+	<delete id="EzBoardDAO.deleteBoardReact" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_BOARD_REPLY_REACT
+			WHERE
+				ITEMID = #v_ITEMID#
+			  AND
+				REPLYID = #v_REPLYID#
+			  AND
+				USERID = #v_USERID#
+			  AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</delete>
+
+	<!-- 2023-03-07 이가은 - 댓글 삭제되었을 경우 반응 모두 삭제하는 쿼리 -->
+	<delete id="EzBoardDAO.allReactDelete" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_BOARD_REPLY_REACT
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND
+				REPLYID = #v_DELREPLYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</delete>
+
+	<!-- 2023-03-08 이가은 - 게시물에 대한 사용자의 댓글 반응 HashMap List로 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.getUserReplyReact" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				O.ITEMID,
+				R.REPLYID,
+				R.USERID,
+				R.REACTFLAG
+			FROM
+				TBL_BOARD_ONELINEREPLY O
+			LEFT OUTER JOIN
+				TBL_BOARD_REPLY_REACT R
+			ON
+				O.ITEMID = R.ITEMID
+			AND
+				O.REPLYID = R.REPLYID
+			AND
+				O.TENANT_ID = R.TENANT_ID
+			WHERE
+				O.ITEMID = #v_ITEMID#
+			AND
+				R.USERID = #v_USERID#
+			AND
+				R.TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<!-- 2023-03-08 이가은 - 댓글 존재여부 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.checkReplyID" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_BOARD_ONELINEREPLY
+		WHERE
+			ITEMID = #v_ITEMID#
+		AND
+			REPLYID = #v_REPLYID#
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
 </sqlMap>

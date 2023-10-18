@@ -80,7 +80,8 @@
 		    var scrollValue = 0;
 		 	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 사용 여부
 	        var useBoardFilePrvw = "<c:out value='${useBoardFilePrvw}'/>";
-	        
+			var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
+
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
 	            window.parent.previewItemSet();
@@ -272,7 +273,7 @@
 	            strAttach += "</ul></div>";
 	            return strAttach;
 	        }
-			
+
 	     	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기
 		    function attachFile_Preview(filePath, fileOrgName) {
 		    	$.ajax({
@@ -295,7 +296,7 @@
 		    		}
 		    	});
 		    }
-	     	
+
 	        function File_Size(totalSize) {
 	            var strSize = "";
 	            if (totalSize > 1024 * 1024) {

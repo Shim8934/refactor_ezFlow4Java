@@ -484,21 +484,24 @@ function ListView() {
         objTr.id = _thisID + "_TH";
         
         //2020-02-18 천성준 - 결재문서리스트 의견표시여부
-        if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
+        // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
+        // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
+        if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined")  || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")) {
         	if (showOpinionImg) {
-        		var objTd = document.createElement("TH");
-            	objTd.id = _thisID + "_TH_OP";
-            	objTd.className = "h5_center";
-            	objTd.style.textAlign = "center";
-            	objTd.width = "15px";
-            	
-            	var oI = document.createElement("i");
-            	oI.className = "fa fa-comments-o";
-            	oI.style.fontSize = "17px";
-            	oI.title = strLang171;
-            	
-            	objTd.appendChild(oI);
-            	objTr.appendChild(objTd);
+                var objTd = document.createElement("TH");
+                objTd.id = _thisID + "_TH_OP";
+                objTd.className = "h5_center";
+                objTd.style.textAlign = "center";
+                objTd.width = "15px";
+
+                var oI = document.createElement("i");
+                oI.className = "fa fa-comments-o";
+                oI.style.fontSize = "17px";
+                oI.title = strLang171;
+
+                objTd.appendChild(oI);
+                objTr.appendChild(objTd);
+                //}
         	}
         }
         
@@ -785,8 +788,10 @@ function ListView() {
                     strValue = oDatas[j].firstChild.nodeValue;
 
                 objTr.setAttribute(strData, strValue);
-                
-                if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
+
+                // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
+                // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
+                if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")) {
                 	if (showOpinionImg) {
                 		if (strData == "HASOPINIONYN" && strValue == "Y") {
                 			hasOpinionFlag = true;
@@ -824,23 +829,34 @@ function ListView() {
                 objTr.appendChild(objTd);
             }             
 
-            if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
+            // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
+            // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
+            if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")) {
             	if (showOpinionImg) {
-            		var objTd = document.createElement("TD");
-                	objTd.style.textAlign = "center";
-                	objTd.width = "15px";
-                	
-            		if (hasOpinionFlag) {
-            			var oI = document.createElement("i");
-                    	oI.className = "fa fa-comments-o";
-                    	oI.style.fontSize = "17px";
-                    	
-                    	objTd.appendChild(oI);
-            		}
-            		objTr.appendChild(objTd);
+                    var objTd = document.createElement("TD");
+                    objTd.className = "OpIcon"
+                    objTd.style.textAlign = "center";
+                    objTd.width = "15px";
+
+                    if (hasOpinionFlag) {
+                        var oI = document.createElement("i");
+                        oI.className = "fa fa-comments-o";
+                        oI.style.fontSize = "17px";
+                        /* 2023-06-26 민지수 - 완료문서 추가의견 존재 여부로 아이콘 파란색 style 부여 */
+                        if (oDatas.length > 17 && oDatas[17].tagName == "ADDOPINION" && oDatas[17].textContent == "TRUE") { //기록물등록대장
+                            oI.style.color = "blue";
+                        } else if (oDatas.length > 14 && oDatas[14].tagName == "ADDOPINION" && oDatas[14].textContent == "TRUE") { // 완료문서
+                            oI.style.color = "blue";
+                        } else if (oDatas.length > 24 && oDatas[24].tagName == "ADDOPINION" && oDatas[24].textContent == "TRUE") { // 공람(회람)완료문서
+                            oI.style.color = "blue";
+                        }
+                        objTd.appendChild(oI);
+                    }
+                    objTr.appendChild(objTd);
+
             	}
-            }           
-            
+            }
+
             for (var j = 0; j < oCells.length; j++) {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
@@ -901,8 +917,8 @@ function ListView() {
                         if (_titleIdx == j) {
                             //20120823 기록물배부대장은 oDatas length가 7까지 들어오므로 추가
                             if(oDatas.length > 13)
-                            {
-                                if(_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
+                            { // 2023-06-26 민지수 - G버전 결재완료 데이터에 동일값("Y")이 존재해 tagName 조건 추가
+                                if(_UrgentFlag && oDatas[13].textContent == "Y" && oDatas[13].tagName != "HASOPINIONYN") { //DATA14값
                                     objTd.style.color = m_UrgentColor;
                                 }                            
                              }

@@ -665,7 +665,7 @@
 					return;
 				}
 				
-				var logincookie = document.cookie.match(/loginCookie=.+?;/)[0].split("=")[1];
+				var logincookie = document.cookie.match(/loginCookie=(.+?)(;|$)/)[0].split("=")[1];
 				logincookie = logincookie.substr(0, logincookie.length-1);
 				
 				var tenantId = "<c:out value='${question.tenantId}'/>";

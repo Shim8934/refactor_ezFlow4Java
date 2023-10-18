@@ -20,7 +20,7 @@
 		var isNewBBHOpinionFlag = false; // 신규 반송/보류/회송의견(002/003/004) 존재여부 플래그
 		
 		var pMode; //APR, END
-		var pOpinionType; //001,002,003,004,008
+		var pOpinionType; // 000(추가의견), 001, 002, 003, 004, 008
 		var pDocID, pDisplay, pDraftFlag, pDocState, pOrgCompanyID, pExt;
 		
 		var pTempRowID = "";
@@ -40,6 +40,8 @@
 		var primary = "<c:out value='${primary}'/>"; // 의견 작성 시 다국어 대응을 위한 변수 (1:기본언어, 2:다국어)
 		
 		var isSihangReject = "N"; // 시행문의 반송기능을 위한 구분값
+
+		var opMode = "<c:out value='${opMode}'/>"; // 추가의견 버튼 클릭 시 창 모드값 저장 (ADD)
 		
 		window.onload = function () {
 			if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
@@ -80,7 +82,7 @@
 			validatePara();
 			
 			pMode = getDocMode(); //APR, END
-			pOpinionType = getOpinionType(pDisplay); //001,002,003,004,008
+			pOpinionType = getOpinionType(pDisplay); // 000(추가의견), 001, 002, 003, 004, 008
 			
 			initOpinionInfo();
 			autoOpinionPopUp(); // 자동으로 의견 작성창 오픈
@@ -104,7 +106,8 @@
 		
 		//[작성], [수정], [삭제] 버튼 상황별 표출
 		function displayButtons() {
-			if ((pMode == "END" && isSihangReject == "N") || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
+			/* 2023-07-13 민지수 - 진행/완료문서 여부에 상관없이 각 의견 버튼 표출하도록 수정 */
+			if ((pDisplay == "Show" && pDocState != "015") || pDocState == "017") {return;}
 			
 			var DisplayMode = pDisplay.toUpperCase();
 			
@@ -213,7 +216,8 @@
 		//[작성] 버튼 클릭
 		var opinionPopup_cross_dialogArguments = new Array();
 		function btn_OpinionAdd_onclick() {
-			if ((pMode == "END" && isSihangReject == "N") || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
+			/* 2023-07-13 민지수 - 진행/완료문서 여부에 상관없이 각 의견 버튼 표출하도록 수정 */
+			if ((pDisplay == "Show" && pDocState != "015") || pDocState == "017") {return;}
 			
 			var parameter = new Array();
 	        parameter[0] = "ADD";
@@ -227,7 +231,7 @@
 		
 		//[수정] 버튼 클릭
 		function btn_OpinionMod_onclick() {
-			if ((pMode == "END" && isSihangReject == "N") || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
+			if ((pDisplay == "Show" && pDocState != "015") || pDocState == "017") {return;}
 			
 			var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
@@ -249,7 +253,7 @@
 		
 		//[삭제] 버튼 클릭
 		function btn_OpinionDel_onclick() {
-			if ((pMode == "END" && isSihangReject == "N") || (pDisplay == "Show" && pDocState != "015") || pDocState == "017"){return;}
+			if ((pDisplay == "Show" && pDocState != "015") || pDocState == "017") {return;}
 			
 			var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
@@ -265,7 +269,8 @@
 		//[확인] 버튼 클릭
 		function btn_OpinionOK_onclick() {
 			if (ModifiedFlag) {
-				if (pOpinionType == "001") { // 일반의견
+				/* 2023-07-13 민지수 - 추가의견(000)일 경우 일반의견(001) 저장시와 동일한 저장로직 타도록 추가 */
+				if (pOpinionType == "001" || pOpinionType == "000") { // 일반의견, 추가의견
 					saveOpinionInfo();
 				} else { // 일반의견이 아니라면, 내가 신규작성한 반송, 보류, 회송의견이 리스트 상에 존재하는 경우에만 의견을 저장한다.
 					if (checkMyOpinionExist(pOpinionType) && isNewBBHOpinionFlag == true) {
@@ -305,7 +310,8 @@
 		
 		//의견 작성창 자동으로 팝업되도록
 		function autoOpinionPopUp() {
-			if (pDisplay != "" && pDisplay.toUpperCase() != "SHOW") { // 일반적인 의견이 아닌 경우 해당 함수 작동
+			/* 2023-07-13 민지수 - 추가의견 모드(ADD)일 경우 의견 작성 팝업이 아닌 의견 보기 팝업을 기본으로 표출 */
+			if (pDisplay != "" && pDisplay.toUpperCase() != "SHOW" && pDisplay != "ADD") { // 일반적인 의견이 아닌 경우 해당 함수 작동
 				var OpinionList = new ListView();
 				OpinionList.LoadFromID("OpinionList");
 				
@@ -338,7 +344,13 @@
 		</style>
 	</head>
 	<body class="popup">
-	    <h1><spring:message code='ezApprovalG.t55'/></h1>
+		<%-- 2023-07-19 민지수 - [추가의견] 클릭 시 팝업 창 타이틀 추가의견으로 표시 --%>
+		<c:if test="${opMode != 'ADD'}">
+			<h1><spring:message code='ezApprovalG.t55'/></h1> <%-- 의견 --%>
+		</c:if>
+		<c:if test="${opMode == 'ADD'}">
+			<h1><spring:message code='ezApprovalG.mjsOp01'/></h1> <%-- 추가의견 --%>
+		</c:if>
 	    
 	    <div id="close">
             <ul><li><span onclick="return btn_OpinionCancel_onclick()"></span></li></ul>

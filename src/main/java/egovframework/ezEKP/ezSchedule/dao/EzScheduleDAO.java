@@ -52,8 +52,8 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ScheduleGroupListVO> getMyGroupList(Map<String, Object> map) throws Exception {
-		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getMyGroupList", map);
+	public List<ScheduleGroupVO> getMyGroupList(Map<String, Object> map) throws Exception {
+		return (List<ScheduleGroupVO>) list("EzScheduleDAO.getMyGroupList", map);
 	}
 	
 	@SuppressWarnings("unchecked")

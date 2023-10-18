@@ -1695,7 +1695,7 @@
 		        }
 		    }
 		    
-		    function setInitOpinion(){
+		    function setInitOpinion() {
 		    	var field = message.GetListItem(message.GetFieldsList(), "opinions");
 		    	if (field) {
 		            try {
@@ -1708,9 +1708,10 @@
 		            		url : "/ezApprovalG/opinionRequest.do",
 		            		data : {
 		            			docID : pDocID,
-		            			orgCompanyID : orgCompanyID
+		            			orgCompanyID : orgCompanyID,
+								state : AprState
 		            		},
-		            		success: function(xml){
+		            		success: function(xml) {
 		            			result = xml;
 		            		}        			
 		            	});

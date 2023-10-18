@@ -658,7 +658,13 @@
 		}
 		// 설문 응답값 획득
 		function saveSurveyResponses() {
-			var periodResult   = checkDate(); // 설문 기간 체크
+			/* 2023-09-15 홍승비 - 설문 응답 기간이 아닌 경우, 이후 동작을 하지 않고 리턴하도록 수정 */
+			// 설문 기간 체크
+			var periodResult = checkDate();
+			if (periodResult == "fail") {
+				return;
+			}
+			
 			// 필수 답변에 응답 여부 체크
 			var requiredResult = checkRequired();
 			var responseResult = "success";
@@ -1147,12 +1153,8 @@
 			
 			today = yyyy + "-" + MM + "-" + dd;
 			
-			if (startDate > today) {
-				alert(SurveyMessages.strNotPeriod + startDate + "~" + endDate);
-				result = "fail";
-			}
-			
-			if (endDate < today) {
+			// 시작일이 오늘 이후이거나, 종료일이 오늘 이전인 경우 설문 응답 불가능
+			if (startDate > today || endDate < today) {
 				alert(SurveyMessages.strNotPeriod + startDate + "~" + endDate);
 				result = "fail";
 			}

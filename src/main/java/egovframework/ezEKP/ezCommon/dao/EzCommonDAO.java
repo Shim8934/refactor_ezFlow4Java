@@ -2418,9 +2418,23 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("TBL_ATTITUDE_FORM FORM_HTML2 column doesn't exist. creating the column...");
 
 			update("EzCommonDAO.addAttitudeFormFormHtml2Column");
+			update("EzCommonDAO.updateAttitudeFormFormHtml2Column");
+		}
+		
+		// 2023-10-12 조소정 - 근태관리 > 작성 양식 테이블 영어 버전 양식 컬럼값 추가
+		try {
+			Object formHtml2 = select("EzCommonDAO.checkFormHtml2Column");
+
+		    if (formHtml2 == null) {
+				logger.debug("TBL_ATTITUDE_FORM FORM_HTML2 column is empty. insert data...");
+				
+				update("EzCommonDAO.updateAttitudeFormFormHtml2Column");
+		    }
+		} catch (Exception e) {
+		    logger.error(e.getMessage(), e);
 		}
 	}
-	
+
 	public void createTblUserChangeInfo() {
 		try {
 			select("EzCommonDAO.checkTblUserChangeInfo");
@@ -2428,6 +2442,62 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("TBL_USER_CHANGE_INFO table doesn't exist. creating the table...");
 
 			update("EzCommonDAO.createTblUserChangeInfo");
+		}
+	}
+
+	/* 2023-06-26 민지수 - codelist에 완료문서 추가의견타입 추가 */
+	public void insertOpinionGB(Map<String, Object> map) {
+		String companyId = (String) select("EzCommonDAO.checkCodeListTypeForCompany", map);
+
+		if (companyId == null) {
+			logger.debug("Opinion_type_id 'A17' doesn't exist. insert data...");
+			insert("EzCommonDAO.insertOpinionGB",map);
+		}
+	}
+	
+	/* 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가(양도일자/그룹색상) */
+	public void addScheduleGroupColumn() {
+		try {
+			select("EzCommonDAO.checkScheduleGroup_TransferDateColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULEGROUP TRANSFERDATE column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addScheduleTransferDateColumn");
+		}
+		try {
+			select("EzCommonDAO.checkScheduleGroup_GroupColorColumn");
+		} catch (Exception e) {
+			logger.debug("TBL_SCHEDULEGROUP GROUPCOLOR column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addScheduleGroupColorColumn");
+		}
+	}
+
+	// 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
+    public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception {
+		update("EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode1");
+		update("EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode2");
+		update("EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode3");
+    }		
+
+	/* 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가 */
+	public void createTblBoardReplyReact() throws Exception {
+		// 게시판 > 댓글 좋아요/싫어요 반응여부 저장 테이블 추가
+		try {
+			select("EzCommonDAO.checkTblBoardReplyReact");
+		} catch (Exception e) {
+			logger.debug("tbl_board_reply_react doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblBoardReplyReact");
+		}
+
+		// 게시판 > 댓글 좋아요/싫어요 사용여부 옵션 칼럼 추가
+		try {
+			select("EzCommonDAO.checkTblBoardInfoReactFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info reactFlag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardReactFlag");
 		}
 	}
 }

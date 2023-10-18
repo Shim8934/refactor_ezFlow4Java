@@ -1,19 +1,16 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.*;
 
 import java.io.BufferedInputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
-import java.util.HashMap;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Pattern;
-import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
@@ -33,20 +30,17 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.eclipse.jetty.http.MimeTypes;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
@@ -74,11 +68,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -88,11 +77,6 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
-import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -870,8 +854,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
         }
      
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
-		// c=1 : 전체관리자, k=1 : 회사관리자, f=1 : 문서조회관리자
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		// c=1 : 전체관리자, k=1 : 회사관리자, q=1 : 문서조회관리자
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
 //					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
@@ -2524,14 +2508,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
-		
-		String result = ezApprovalGService.getOpinionInfo(docID, "CAPR", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-		
-		logger.debug("opinionRequest ended.");
-		
-		return result;
+		/* 2023-06-26 민지수 - 문서 state에 따른 진행/완료문서 분기처리 */
+		String state = request.getParameter("state");
+
+		// 진행
+		if (state.equals("001") || state.equals("004") || state.equals("APR")) {
+			String result = ezApprovalGService.getOpinionInfo(docID, "CAPR", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+			logger.debug("opinionRequest ended.");
+			return result;
+		}
+		// 완료
+		else {
+			String result = ezApprovalGService.getOpinionInfo(docID, "CADD", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+			logger.debug("opinionRequest ended.");
+			return result;
+		}
+
 	}
-	
+
 	/**
 	 * 전자결재G 기안 의견삭제 표출 Method
 	 */
@@ -2545,9 +2539,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String isSihangReject = request.getParameter("isSihangReject") != null ? request.getParameter("isSihangReject") : ""; // 시행문의 반송을 위한 플래그 추가
 		String result = "";
-		
+		String pMode = request.getParameter("pMode");
+
 		if (isSihangReject.equals("Y")) { // 미처리문서함에 들어온 내부시행문의 의견 삭제 분기 (완료된 문서의 의견테이블에 접근)
 			result = ezApprovalGService.deleteEndOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		} else if (pMode.equals("END")) { // 2023-06-26 민지수 - 완료문서 추가의견 삭제 분기
+			result = ezApprovalGService.deleteAddOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		} else { // 기존 의견 삭제 분기
 			result = ezApprovalGService.deleteOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		}
@@ -2572,7 +2569,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String isSihangReject = request.getParameter("isSihangReject") != null ? request.getParameter("isSihangReject") : ""; // 시행문의 반송을 위한 플래그 추가
-		
+		String pMode = request.getParameter("pMode");
+
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
@@ -2581,7 +2579,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (isSihangReject.equals("Y")) { // 미처리문서함에 들어온 내부시행문의 반송의견 저장 분기 (완료된 문서의 의견테이블에 접근)
 			result = ezApprovalGService.updateOpinionSihangReject(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-		} else { // 기존 의견 저장 분기
+		} else if (pMode.equals("END")) { // 2023-06-26 민지수 - 완료문서 추가의견 저장 분기
+			result = ezApprovalGService.updateAddOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		}else { // 기존 의견 저장 분기
 			result = ezApprovalGService.updateOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		}
 		
@@ -3989,7 +3989,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
 		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
-		
+
+		/* 2023-07-17 민지수 - 전자결재 > 배부대장 > 진행/완료(APR/END) 체크 */
+		String docAprEnd ="";
+		if ((uFlag != null && uFlag.equals("m03")) || (uFlag != null && uFlag.equals("m14"))) {
+			docAprEnd =  ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
+
 		model.addAttribute("editor", editor);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("signCheck", signCheck);
@@ -4029,7 +4035,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 		
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
-		
+
+		/* 2023-07-13 민지수 - 배부대장 문서 진행/완료(APR/END) 값 전달 */
+		model.addAttribute("docAprEnd", docAprEnd);
+
 		logger.debug("contDocView ended.");
 		
 		return "ezApprovalG/apprGcontDocView";
@@ -5696,6 +5705,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		
 		logger.debug("totalSaveFileInfo ended.");
 		
@@ -6702,7 +6712,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
 			if (docID != null && !docID.equals("")) {
 				String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
 				String[] proxyUserArray = proxyUser.split(",");
@@ -11158,9 +11168,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+		/* 2023-07-19 민지수 - [추가의견] 버튼 클릭 시 의견창 모드값 전달 */
+		String opMode = request.getParameter("opMode");
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
-		
+		model.addAttribute("opMode",opMode);
+
 		logger.debug("aprOpinionNew ended.");
 		return "ezApprovalG/apprGaprOpinionNew";
 	}
@@ -12337,5 +12351,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("attachItemPreview ended.");
 	}
+
+	@GetMapping(value = "/ezApprovalG/endAbsence.do", produces = MediaType.TEXT_PLAIN_VALUE)
+	@ResponseBody
+	public String getEndOfAbsence(@CookieValue("loginCookie") String loginCookie) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		Optional<ZonedDateTime> optional = ezApprovalGService.getEndOfAbsence(userInfo.getId(), userInfo.getTenantId(), userInfo.getOffset());
+		System.out.println("id:" + userInfo.getId() + "/tenantId:" + userInfo.getTenantId() + "/offset:" + userInfo.getOffset());
+
+		return optional.map(zonedDateTime -> zonedDateTime.format(formatter)).orElse("");
+	}
+
 
 }

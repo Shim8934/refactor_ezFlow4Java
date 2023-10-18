@@ -377,7 +377,7 @@ public class EzEmailMailSearchController {
 								
 					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");				
 					Date receivedDate = df.parse(mailInfo.get("MAIL_DATE"));
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");	
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 					sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 					sb.append(String.format("<DATERECEIVED><![CDATA[%s]]></DATERECEIVED>", sdf.format(receivedDate)));
 										

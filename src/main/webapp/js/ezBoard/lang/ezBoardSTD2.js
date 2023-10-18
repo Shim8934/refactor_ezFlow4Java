@@ -71,3 +71,8 @@ var strLang189 = "Please enter ";
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
+
+// 2023-03-08 이가은 추가
+var strLang188 = "You cannot 'Like' your own comments.";
+var strLang189 = "You cannot 'Dislike' your own comments.";
+var strLang190 = "This comment has already been deleted.";

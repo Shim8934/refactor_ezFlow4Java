@@ -541,10 +541,10 @@ function resultView(xmlDoc) {
         preparedTD(tr, "100%", "left", "middle", subject, subject, 1, false, readStyle);
 
         if (TrimText(datereceived) != "null") {
-            datereceived = GetLocalTime(g_timezone, datereceived);
+            datereceived = GetLocalTime(g_timezone, datereceived).substring(0, 16);
         }
 
-        datereceived = datereceived.replace("T", " ")
+        datereceived = datereceived.replace("T", " ");
         preparedTD(tr, "200px", "left", "middle", datereceived, "", "", false, readStyle);
 
 

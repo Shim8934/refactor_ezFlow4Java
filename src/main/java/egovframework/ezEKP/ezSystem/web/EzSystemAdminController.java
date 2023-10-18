@@ -2755,9 +2755,9 @@ public class EzSystemAdminController {
 				adminType = egovMessageSource.getMessage("ezOrgan.t301", locale);
 			} else if (adminType.contains("m=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.t300", locale);
-			} else if (adminType.contains("f=")) {
+				} else if (adminType.contains("q=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.lhj1", locale);
-			} else if (adminType.contains("wf=")) {
+				} else if (adminType.contains("f=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.t303", locale);
 			} else if (adminType.contains("e=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.kbm01", locale);

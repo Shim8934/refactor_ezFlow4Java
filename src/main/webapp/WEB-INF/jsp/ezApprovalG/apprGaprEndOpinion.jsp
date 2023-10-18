@@ -154,7 +154,8 @@
 		    		url : "/ezApprovalG/opinionRequest.do",
 		    		data : {
 		    			docID : pDocID,
-		    			orgCompanyID : orgCompanyID
+		    			orgCompanyID : orgCompanyID,
+						state : getAprOrEndStr()
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);

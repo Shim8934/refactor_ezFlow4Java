@@ -10,11 +10,11 @@ function initOpinionInfo() {
 	try {
 		var objXML = createXmlDom();
 		
-		if (pMode == "END") {
+		/*if (pMode == "END") { // 완료문서에서 의견리스트 가져올수 있도록 분기처리 주석처리
 			objXML = getEndOpinionList();
-		} else {
+		} else {*/
 			objXML = getOpinionList();
-		}
+		//}
 		
 		document.getElementById("lvOpinionList").innerHTML = "";
 		
@@ -48,7 +48,8 @@ function getOpinionList() {
     		url : "/ezApprovalG/opinionRequest.do",
     		data : {
     			docID : pDocID,
-    			orgCompanyID : pOrgCompanyID
+    			orgCompanyID : pOrgCompanyID,
+				state : pMode
     		},
     		success: function(xml){
     			result = xml;
@@ -127,9 +128,11 @@ function getDocMode() {
 function getOpinionType(para) {
 	var rtnVal = strOpinionType1;
 	var pParameter = para.toUpperCase();
-	
+	/* 2023-06-26 민지수 - row에 보여질 의견 타입 추가 */
 	if (pParameter == "") {
 		rtnVal = strOpinionType1;	//일반의견
+	} else if (pParameter == "ADD") {
+		rtnVal = strOpinionType0;	//추가의견
 	} else if (pParameter == "BANSONG") {
 		rtnVal = strOpinionType2;	//반송의견
 	} else if (pParameter == "BORYU") {
@@ -309,7 +312,8 @@ function saveOpinionInfo() {
 			objXML = getOpinionListInfo();
 			
 			var xmlhttp = new createXMLHttpRequest();
-	        xmlhttp.open("POST", "/ezApprovalG/opinionSave.do?orgCompanyID=" + pOrgCompanyID + "&isSihangReject=" + isSihangReject, false);
+			/* 2023-06-26 민지수 - 완료문서 구분을 위한 pMode 전달 */
+	        xmlhttp.open("POST", "/ezApprovalG/opinionSave.do?orgCompanyID=" + pOrgCompanyID + "&isSihangReject=" + isSihangReject + "&pMode="+ pMode, false);
 	        xmlhttp.send(objXML);
 	        
 	        var RtnVal = xmlhttp.responseText;
@@ -378,7 +382,8 @@ function removeOpinionInfo() {
 		url : "/ezApprovalG/opinionDel.do",
 		data : {
 			docID : pDocID,
-			isSihangReject : isSihangReject
+			isSihangReject : isSihangReject,
+			pMode : pMode
 		},
 		success: function(text){
 			result = text;
@@ -608,9 +613,10 @@ function getOpinionListInfo() {
 
 /*
  * 의견 타입 이름
- * parameter : 001, 002, 003, 004, 008 (String)
+ * parameter : 000, 001, 002, 003, 004, 008 (String)
  * retrun : 일반의견, 반송의견, 보류의견, 회송의견, 재배부요청 (String)
  */
+/* 2023-06-26 민지수 - 완료문서 의견타입 추가 */
 function getOpinionTypeName(strOType) {
 	switch (strOType) {
 		case strOpinionType2:
@@ -627,6 +633,9 @@ function getOpinionTypeName(strOType) {
 			break;
 		case strOpinionType8:
 			return strLangOpinionType8;	//재배부요청
+			break;
+		case strOpinionType0:
+			return strLangOpinionType0; //추가
 			break;
 		default:
 			return strLangOpinionType1;	//일반

@@ -25,6 +25,21 @@
 		<script src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>
 		<script type="text/javascript">
 			var getApprovalList = function(type) {
+				var absence = getAbsence();
+				if (!!absence) {
+					var docsHTML = "<dl class='nodata' '>";
+					docsHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
+					docsHTML += '<dd>';
+					docsHTML += absence
+					docsHTML += ' <spring:message code="ezApprovalG.t1723" /></dd>';
+					docsHTML += '<br>';
+					docsHTML += '<a onclick="popAskAbsence()"; style="cursor:pointer;"><spring:message code="ezApprovalG.pgb11" /></a>';
+					docsHTML += "</dl>";
+
+					document.getElementById('ApprList').innerHTML = docsHTML;
+					return;
+				}
+
 				var request = new XMLHttpRequest();
 				request.open('POST', '/ezNewPortal/getApprovalList.do', true);
 				request.setRequestHeader('Content-Type', 'application/json');
@@ -513,7 +528,46 @@
 		        
 		        return res;
 		    }
-		    
+
+			function getAbsence() {
+				var absence = "";
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/endAbsence.do",
+					success: function(result) {
+						absence = result;
+					}
+				});
+
+				return absence;
+			}
+
+			function clearAbsence(isOk) {
+				if (!isOk) return;
+
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezPersonal/clearAbsence.do",
+					success: function(result) {
+						if (result === "true") {
+							var onTab = document.querySelector('#doingTab.on,#rejectTab.on,#draftTab.on').id;
+							if (!!onTab) {
+								onTab = onTab.replace("Tab", "");
+								getApprovalList(onTab);
+							}
+						}
+					}
+				});
+			}
+
+			function popAskAbsence() {
+				OpenInformationUI("<spring:message code='ezApprovalG.t1724' />", clearAbsence, "absence");
+			}
+
 			getApprovalList("doing");
 		</script>
 	</body>

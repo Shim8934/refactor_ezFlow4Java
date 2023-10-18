@@ -12,7 +12,8 @@ function getOpinionList() {
     		url : "/ezApprovalG/opinionRequest.do",
     		data : {
     			docID : pDocID,
-    			orgCompanyID : orgCompanyID
+    			orgCompanyID : orgCompanyID,
+                state : pDocState
     		},
     		success: function(xml){
     			result = xml;
@@ -461,6 +462,10 @@ function CheckOpinionType() {
         }
         else if (pDisplay == "HeSong") {
             pOpinionType = strOpinionType4;
+        }
+        /* 2023-06-26 민지수 - 완료문서 추가의견인 경우 '000' 삽입 */
+        else if (pDisplay == "ADD") {
+            pOpinionType = strOpinionType0;
         }
     } catch (e) {
         alert("CheckOpinionType :: " + e.description);
@@ -1114,6 +1119,9 @@ function GetOpinionTypeName(strOType) {
             break;
         case strOpinionType4:
             return strLangOpinionType4;
+            break;
+        case strOpinionType0: // 추가의견
+            return strOpinionType0;
             break;
         case strOpinionType1:
         default:

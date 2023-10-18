@@ -1,21 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
-import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
+import egovframework.ezEKP.ezApprovalG.vo.*;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -26,10 +11,9 @@ import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 public interface EzApprovalGService {
 
@@ -857,4 +841,19 @@ public interface EzApprovalGService {
 	
 	/* 2022-09-21 홍승비 - 전자결재G > 이미 정상적으로 문서번호가 부여된 레코드가 존재하는 경우, TBL_RECORD 중복 삽입 오류 시 현재 문서번호를 롤백하지 않도록 예외처리 레코드 추가 */
 	public void insertRegErrorNoRollbackRecord(String type1, String type2, String type3, int regYear, String sysDate, int regSN, String companyID, int tenantID) throws Exception;
+
+    /* 2023-06-26 민지수 - 완료문서 추가의견 삭제 */
+    public String deleteAddOpinionInfo(String docID, String companyID, String lang, int tenantId) throws Exception;
+
+    /* 2023-06-26 민지수 - 완료문서 추가의견 저장 */
+    public String updateAddOpinionInfo(Document docXML, String companyID, String lang, int tenantID) throws Exception;
+
+    /* 2023-10-04 박기범 - 유저의 부재 설정 정보를 list vo 로 호출 */
+    List<ApprGOutOfOfficeInfoVO> getListOutOfOfficeInfo(String userID, int tenantID) throws Exception;
+
+    /* 2023-10-04 박기범 - 유저의 현재 설정된 부재의 끝나는 시간 */
+    Optional<ZonedDateTime> getEndOfAbsence(String userID, int tenantID, String offset);
+
+    /* 2023-10-05 박기범 - 유저의 현재 설정된 부재 클리어 */
+    void cleanAbsence(String userID, int tenantID);
 }

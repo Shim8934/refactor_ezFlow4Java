@@ -1447,6 +1447,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("webHWPUrl", webHWPUrl); // Whwp api Url
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum); // hwp 배포용 문서 해제를 위한 암호
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", loginInfo.getTenantId()));
 		
 		response.setHeader("X-XSS-Protection", "0");
 		

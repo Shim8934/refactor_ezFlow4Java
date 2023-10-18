@@ -7494,7 +7494,7 @@
   			SELECT 
 				B.BOARDID, 
 				B.ITEMID, 
-			    B.TENANT_ID
+			    B.TENANT_ID AS TENANTID
 			FROM
 				TBL_COMM_BOARDINFO A
 			JOIN
@@ -7516,20 +7516,23 @@
 				B.ENDDATE < ADDDATE(utc_timestamp(), - A.DELETEAFTER)
 		]]>
   	</select>
-  
+  	
   	<select id="EzCommunityDAO.getDeleteReservedBoard" resultClass="CommunityBoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_COMM_DELETERESERVEDBOARD
 		]]>
   	</select>
-  
+    
   	<select id="EzCommunityDAO.getDeleteReservedBoardItem" resultClass="CommunityBoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				ITEMID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_COMM_DELETERESERVEDITEM
 		]]>

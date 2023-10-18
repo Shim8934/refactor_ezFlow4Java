@@ -50,10 +50,16 @@ public class EzBoardScheduler {
 
 		String realPath = commonUtil.getRealPath(servletContext);
 		
-		ezBoardService.deleteExpiredItems(realPath);
-		ezBoardService.deleteReservedBoard(realPath);
-		ezBoardService.deleteReservedBoardItem(realPath);
-
+		/* 2023-10-10 홍승비 - 게시물 삭제 스케줄러 > 예외 발생 시 try~catch 로그 추가 */
+		try {
+			ezBoardService.deleteExpiredItems(realPath);
+			ezBoardService.deleteReservedBoard(realPath);
+			ezBoardService.deleteReservedBoardItem(realPath);
+		}
+		catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
 		logger.debug("boardGarbageClear ended");
 	}
 

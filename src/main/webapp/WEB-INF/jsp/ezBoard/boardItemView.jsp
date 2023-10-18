@@ -74,6 +74,7 @@
 			var refreshFlag = "N";
 		    var pUse_Editor = "${useEditor}";
 			var pNoneActiveX = "YES";
+			var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
 		    //추가항목 유무
 		    var pAttributeYN = "${boardInfo.attributeYN}";
 		    var AtttributeCount = "${boardAttrCount}"; 

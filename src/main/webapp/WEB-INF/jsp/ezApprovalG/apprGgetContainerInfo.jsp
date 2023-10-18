@@ -116,6 +116,7 @@
 		    var selobj = null;
 		    var previewInfo = "<c:out value = '${previewInfo}'/>";
 		    var useAprPreview = "<c:out value = '${useAprPreview}'/>";
+			var selRowChangeFlag = false;
  	        
 	        document.onselectstart = function () { return false; };
 	

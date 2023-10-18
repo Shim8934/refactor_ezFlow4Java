@@ -2328,7 +2328,8 @@
 		          	LIKEFLAG = #v_LIKEFLAG#,
 					MAILFG_POST = #v_MAILFG_POST#,
 		          	MAILFG_MOD = #v_MAILFG_MOD#,
-		          	MAILFG_COMMENT = #v_MAILFG_COMMENT#
+		          	MAILFG_COMMENT = #v_MAILFG_COMMENT#,
+		          	REACTFLAG = #v_REACTFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  

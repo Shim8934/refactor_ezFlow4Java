@@ -25,6 +25,8 @@ public class ScheduleGroupListVO {
 	private String info;
 	/** 그룹멤버 부서정보 */
 	private String department;
+	/** 그룹색상 정보 */
+	private String groupColor;
 	
 	
 	public String getGroupId() {
@@ -98,5 +100,11 @@ public class ScheduleGroupListVO {
 	}
 	public void setDepartment(String department) {
 		this.department = department;
+	}
+	public String getGroupColor() {
+		return groupColor;
+	}
+	public void setGroupColor(String groupColor) {
+		this.groupColor = groupColor;
 	}
 }

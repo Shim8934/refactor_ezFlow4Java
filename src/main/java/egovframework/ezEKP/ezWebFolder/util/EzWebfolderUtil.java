@@ -96,7 +96,7 @@ public class EzWebfolderUtil {
 	}
 
 	public boolean isWebfolderAdmin(String rollInfo) {
-		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("wf=1");
+		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("f=1");
 	}
 
 // For WebfolderFile Upload

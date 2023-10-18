@@ -152,7 +152,7 @@
 	            	
 	                if (type == "group") {
 	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezSchedule.t00001' />";
-	                    document.getElementById("btnAddUser").style.display = "none";	
+	                    document.getElementById("btnAddUser").style.display = "";	// 2023-09-06 조소정 - 참석자 일정조회 버튼 활성화
 	                }
 	            }
 	            catch (ErrMsg) {
@@ -1553,9 +1553,11 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
+		<!-- 2023-09-06 조소정 - 참석자 일정조회 및 취소 버튼 추가 -->	    
 		<div class="btnposition btnpositionNew">
-	    	<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="display:none" ><span><spring:message code='ezSchedule.t123' /></span></a>
-	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
+	    	<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="margin-left: -125px;"><span><spring:message code='ezSchedule.t123' /></span></a>
+	    	<a class="imgbtn" onClick="btnok_onclick()" style="background: #0684f9;" ><span class="countColor" style="color: #ffffff;"><spring:message code='ezSchedule.t4' /></span></a>
+	    	<a class="imgbtn" onClick="window.close()()" ><span><spring:message code='ezSchedule.t5' /></span></a>
 		</div>
 	</body>
 </HTML>

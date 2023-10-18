@@ -747,7 +747,6 @@
 		                    item.onclick();
 		                else */
 		                CalendarView("Calendar",chk_str);
-		                
 		                break;
 		                
 		            case "WEEK":
@@ -769,8 +768,7 @@
 		                if (item)
 		                    item.onclick();
 		                else */
-		                    CalendarView("Calendar",chk_str);
-		                
+		                CalendarView("Calendar",chk_str);
 		                break;
 
 		            case "MONTH":
@@ -815,6 +813,7 @@
 		    function RefreshView() {
 		    	var chk_str = parent.frames["left"].document.getElementById('chk_str').value;
 		    	CalendarView('Calendar',chk_str);
+
 		        /* if (parent.frames["left"].document.getElementById("iYear")) {
 		            parent.frames["left"].CalendarMiniView("CalendarMini");
 		            parent.frames["left"].CalendarMiniDataSource();
@@ -1340,6 +1339,10 @@
 					alert(strLangKHJ7);
 				}
 				RefreshView();
+			}
+			
+			function scrollTopTime() {
+				$("#CalDiv").scrollTop($(".today").eq(0).position().top);
 			}
 	    </script>
 	</head>

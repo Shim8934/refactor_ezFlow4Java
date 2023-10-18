@@ -395,10 +395,19 @@ public interface EzCommonService {
 
 	public void insertHWPSecurityConfig() throws Exception;
 
+	/* 2023-06-26 민지수 - 완료문서 추가의견타입 추가 */
+	public void insertOpinionGB() throws Exception;
+
 	public void alterTblRsResaclAddColumn() throws Exception;
 
 	public void addAttitudeFormFormHtml2Column() throws Exception;
 
 	public void createTblUserChangeInfo() throws Exception;
+	
+	public void addScheduleGroupColumn() throws Exception;
 
+	// 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
+	public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception;
+
+	public void createTblBoardReplyReact() throws Exception;
 }

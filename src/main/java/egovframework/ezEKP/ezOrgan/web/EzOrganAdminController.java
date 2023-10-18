@@ -247,7 +247,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가
 			ezCommonService.addDocStateIntoLastLines();
 			ezCommonService.addDocStateIntoLastDeptLines();
-	    	//ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가 (중복)	
+	    	//ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가 (중복)
 	    	ezCommonService.insertAlternateHolidayAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 대체휴무 추가
 	    	ezCommonService.insertBeforeOutComeAttitudeType(); // 2020-06-03  김정언 - 근태관리 휴가유형 전일퇴근 추가
 	    	ezCommonService.insertMobileAttitudeColumn();			// 2020-06-10 김민성 - 모바일 근태관리 기능 추가
@@ -287,7 +287,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.createTblDisableNotiItem(); // 2022-03-11 - 알림환경설정 테이블 추가
     		ezCommonService.addAprDocGroupInfoTypeColumn();	// 2022-02-09 홍승비 - 일괄기안 테이블에 임시저장/결재올림 구분용 타입 칼럼 추가
 			ezCommonService.alterTblRsResaclAddColumn(); // 2023-08-21 이주원 - 자원권한 테이블에 유저명 다국어 지원을 위해 MEMBER_NAM2 컬럼 추가
-			ezCommonService.createTblUserChangeInfo(); // 2023-09-05 장혜연 - 사용자 변경 히스토리 테이블 추가 
+			ezCommonService.createTblUserChangeInfo(); // 2023-09-05 장혜연 - 사용자 변경 히스토리 테이블 추가
 
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
@@ -305,7 +305,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createTblAprpreview(); //2020-11-18 정소미 - 전자결재 미리보기 설정 테이블 추가
 	    	ezCommonService.createTblSerialNoRollback(); // 2022-09-21 홍승비 - 전자결재G > 문서 기록물 레코드 중복삽입 시 에러 롤백방지 기록 테이블 추가
 	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
+			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
 	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
+	    	ezCommonService.addScheduleGroupColumn(); // 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가 (양도일자/그룹 색상)
+			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
+	    	ezCommonService.createTblBoardReplyReact();	// 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -1305,7 +1309,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		
+
 		int tenantId = userInfo.getTenantId();
 		
 		String companyId = request.getParameter("companyId");
@@ -1500,9 +1504,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
 	    		}
 			}
-	
-			
-			//사용자 변경 히스토리 테이블에 insert  
+
+
+			//사용자 변경 히스토리 테이블에 insert
 			UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
 			userChangeInfoVO.setUserId(cn[i]);
 			userChangeInfoVO.setTenantId(tenantID);
@@ -1924,7 +1928,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         if (userInfo == null) {
         	return "EMAIL_ERROR";
         }
-	    	   
+
         // JMocha Mail Server가 계정이 소문자로 저장될 필요가 있어 
         // 사용자 아이디를 무조건 소문자로 변환한다.
         // 소문자로 저장되기만 하면 메일 수신 시에는 발신자가 대소문자를 혼합해서 보내도
@@ -2099,12 +2103,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 				
 				if (!"".equals(ClientUtil.getClientIP(request))) {
-					
+
 					logger.debug("saveUserInfo IP : {} ", ClientUtil.getClientIP(request));
 				}
-				
-				
-				//2023-06-27 장혜연 사용자 변경 히스토리 테이블에 insert  
+
+
+				//2023-06-27 장혜연 사용자 변경 히스토리 테이블에 insert
 				UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
 				userChangeInfoVO.setUserId(cn);
 				userChangeInfoVO.setTenantId(tenantID);
@@ -2716,10 +2720,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID, delJobId, isAddJobMoreInOneDept);
 
 		} else {
-		    if (!titleInfo.equals("")) { // 겸직 추가, 팝업 수정 일경우 
+		    if (!titleInfo.equals("")) { // 겸직 추가, 팝업 수정 일경우
 		        List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
 		        StringBuilder sbCurrentJobList = new StringBuilder();
-		        
+
 		        List<String> currDeptIdList = new ArrayList<String>();
 		        // 지정된 사용자의 현재 겸직 목록을 구한다.
 		        for (int i = 0; i < organUserVOList.size(); i++) {
@@ -3417,12 +3421,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;background:none;'>");
-		
 		for (String[] aliasAddress : aliasAddressList) {
 			if (aliasAddress[0].equals(primaryAddr)) {
-				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + "</option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + " (Primary)</option>");
 			} else {
-				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + "</option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + " </option>");
 			}
 		}
 		
@@ -5647,7 +5650,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
 				excelPath             = ezOrganAdminService.createExcelUsers(realPath + commonUtil.separator, pDirPath, exportUserlist, primary, locale);
 			}
-			
+
 			if (excelPath.equals("")) {
 				result.put("status", "error");
 				result.put("code", 1);

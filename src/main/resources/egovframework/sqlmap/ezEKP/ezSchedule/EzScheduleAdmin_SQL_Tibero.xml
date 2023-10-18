@@ -35,6 +35,8 @@
 		<result property="precreatorname"   column="PRECREATORNAME"      columnIndex="12"/>
 		<result property="precreatorname2"   column="PRECREATORNAME2"      columnIndex="12"/>
 		<result property="modifydate"		column="MODIFYDATE"		columnIndex="10"/>
+		<result property="groupColor"		column="GROUPCOLOR"		columnIndex="13"/>
+		<result property="transferDate"		column="TRANSFERDATE"		columnIndex="14"/>
 	</resultMap>
 	
 	<select id="EzScheduleAdminDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
@@ -159,6 +161,7 @@
 		 	   X.rnum, 
 			   X.MODIFYDATE,
 			   X.CREATEDATE,
+			   X.TRANSFERDATE,
 	           X.creatorid, 
 			   X.precreatorid,
 			   X.groupid, 
@@ -167,7 +170,8 @@
 			   X.creatorname,
 			   X.precreatorname,
 			   X.creatorname2,
-			   X.precreatorname2
+			   X.precreatorname2,
+			   X.groupcolor
 	   FROM(
 	   
 					
@@ -175,6 +179,7 @@
 						ROWNUM AS rnum,
 						A.modifydate,
 						A.createdate,
+						A.transferdate,
 						A.creatorid, 
 						A.precreatorid,
 						A.groupid, 
@@ -183,18 +188,28 @@
 						A.creatorname,
 						A.precreatorname,
 						A.creatorname2,
-						A.precreatorname2
+						A.precreatorname2,
+						A.groupcolor
 					
 					FROM(
 							SELECT 
-							TO_CHAR((b.modifydate + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS modifydate,
-							TO_CHAR((b.createdate + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS createdate,
-							b.creatorid as creatorid, b.precreatorid as precreatorid,
-							a.groupid as groupid, b.groupname as groupname, b.description as description, b.creatorname as creatorname, b.precreatorname as precreatorname, b.creatorname2 as creatorname2, b.precreatorname2 as precreatorname2
+								TO_CHAR((b.modifydate + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS modifydate,
+								TO_CHAR((b.createdate + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS createdate,
+								TO_CHAR((b.transferdate + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS transferdate,
+								b.creatorid as creatorid, 
+								b.precreatorid as precreatorid,
+								a.groupid as groupid, 
+								b.groupname as groupname, 
+								b.description as description, 
+								b.creatorname as creatorname, 
+								b.precreatorname as precreatorname, 
+								b.creatorname2 as creatorname2, 
+								b.precreatorname2 as precreatorname2,
+								b.groupcolor as groupcolor
 				            FROM
-				            tbl_schedulegroupmember a, tbl_schedulegroup b 
+				            	tbl_schedulegroupmember a, tbl_schedulegroup b 
 				            WHERE 
-				            a.groupid = b.groupid
+				            	a.groupid = b.groupid
 				            ]]>
 				        
 						        <isEqual property="v_SEARCHTYPE" compareValue="groupName">
@@ -242,7 +257,7 @@
 				        		b.companyid = #v_COMPANYID#
 				        	
 				         
-				            group by b.modifydate, b.createdate, a.groupid, b.groupname, b.description ,b.creatorid, b.creatorname, b.precreatorname,b.precreatorid, b.creatorname2, b.precreatorname2
+				            group by b.modifydate, b.createdate, b.transferdate, a.groupid, b.groupname, b.description, b.creatorid, b.creatorname, b.precreatorname, b.precreatorid, b.creatorname2, b.precreatorname2, b.groupcolor
 				        	order by b.createdate desc
 						]]>)A
 					

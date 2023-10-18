@@ -823,9 +823,7 @@
 	            <td style="width: 240px;">
 	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" onkeydown="return checkKey()"/>
 	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
-	                <c:if test="${locale eq 'ko'}">
 	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />
-	                </c:if>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t283' /></th>
 	            <td style="width: 240px;" >

@@ -1,64 +1,10 @@
 package egovframework.ezEKP.ezPersonal.web;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.PixelGrabber;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.security.PrivateKey;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.LocaleResolver;
-import org.w3c.dom.Document;
-
 import com.sun.org.apache.xml.internal.security.utils.Base64;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -72,12 +18,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezOrgan.web.EzOrganAdminController;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalNotiDisableItemVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalNotiPreferencesVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.*;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -85,6 +26,36 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.LocaleResolver;
+import org.w3c.dom.Document;
+
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
+import java.io.*;
+import java.nio.file.Files;
+import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /** 
  * @Description [Controller] 사용자 - Personal
@@ -1689,7 +1660,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String imageName = xmlDom.getElementsByTagName("FILENAME").item(0).getTextContent();
 		String imageData = xmlDom.getElementsByTagName("DATA").item(0).getTextContent();
 		
-		String pUniqueName = ezPortalAdminService.getUniqueFileName(pServerPath, imageName);
+		String pUniqueName = ezNewPortalService.getUniqueFileName(pServerPath, imageName);
 		
 		byte[] byt = Base64.decode(imageData);
 		String savePath = pServerPath + commonUtil.separator + pUniqueName;
@@ -2568,4 +2539,30 @@ public class EzPersonalController extends EgovFileMngUtil {
 		return result;
 	}
 
+	// gbp-todo 다른 개발자가 부재중 설정 관련 개발중이라 기존의 로직을 그대로 쓰는 것으로 임시 처리.
+	@PostMapping("/ezPersonal/clearAbsence.do")
+	@ResponseBody
+	public String clearAbsence(@CookieValue("loginCookie") String loginCookie) {
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String proxy = "";
+			String userID = userInfo.getId();
+			int tenantID = userInfo.getTenantId();
+
+			List<ApprGOutOfOfficeInfoVO> listOutOfOfficeInfo = ezApprovalGService.getListOutOfOfficeInfo(userInfo.getId(), userInfo.getTenantId());
+
+			for (ApprGOutOfOfficeInfoVO vo : listOutOfOfficeInfo) {
+				boolean isMainJob = "-1".equals(vo.getJobID());
+				if (isMainJob) {
+					ezOrganService.updateProperty(userID, "extensionAttribute5", proxy, "user", tenantID);
+				} else {
+					ezOrganService.updateAddJobProxy(userID, proxy, tenantID, vo.getDeptID(), vo.getJobID());
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "false";
+		}
+		return "true";
+	}
 }

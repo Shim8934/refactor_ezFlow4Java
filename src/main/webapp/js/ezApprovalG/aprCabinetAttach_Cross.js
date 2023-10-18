@@ -398,6 +398,10 @@ function InsertToRecListView_lv(Resultxml) {
         orgmakePageSelPage(NodeListLen);
         DisplayLineCnt_ezCab(NodeListLen);
 
+        /* 2023-07-20 민지수 - 전자결재 > 기안하기 > 문서첨부 리스트에서는 의견 아이콘 표출하지 않음 */
+        $(".OpIcon").remove();
+        $("#DocList_TH_OP").remove();
+
         selFirstRow(Resultxml);
     } catch (e) { }
 }

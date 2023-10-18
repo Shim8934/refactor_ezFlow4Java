@@ -3768,10 +3768,20 @@
 					A.USERID,
 					A.CONTENT,
 					A.WRITEDATE,
-					DEPTID
+					DEPTID,
+				    COUNT(CASE WHEN R.REACTFLAG = 'Y' THEN '1' END) AS RE_LIKE,
+				    COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE
 		        FROM
 		        	TBL_BOARD_ONELINEREPLY A
-		        INNER JOIN
+		        LEFT OUTER JOIN
+					TBL_BOARD_REPLY_REACT R
+				ON
+					A.REPLYID = R.REPLYID
+				AND
+					A.ITEMID = R.ITEMID
+				AND
+					A.TENANT_ID = R.TENANT_ID
+		        LEFT OUTER JOIN
 				   ((SELECT
 						D.CN, D.DEPARTMENT as DEPTID,
 						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
@@ -3813,7 +3823,9 @@
 					AND
 						C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
 					WHERE
-						A2.TENANT_ID = #v_TENANTID#)) T
+						A2.TENANT_ID = #v_TENANTID#)
+					LIMIT 1
+				) T
 				ON
 					A.USERID = T.CN
 				AND
@@ -3834,21 +3846,31 @@
 		<isEqual property="v_GUBUN" compareValue="2">
 			<![CDATA[
 				SELECT
-					REPLYID,
+					A.REPLYID,
 					$v_UserName$ AS USERNAME,
-					USERID,
-					CONTENT,
-					WRITEDATE
-		        FROM
-		        	TBL_BOARD_ONELINEREPLY
-		        WHERE
-		        	TENANT_ID = #v_TENANTID#
-		        AND
-		       		BOARDID = #v_BoardID#
+					A.USERID,
+					A.CONTENT,
+					A.WRITEDATE,
+					COUNT(CASE WHEN R.REACTFLAG = 'Y' THEN '1' END) AS RE_LIKE,
+					COUNT(CASE WHEN R.REACTFLAG = 'N' THEN '1' END) AS RE_HATE
+				FROM
+					TBL_BOARD_ONELINEREPLY A
+				LEFT OUTER JOIN
+					TBL_BOARD_REPLY_REACT R
+				ON
+					A.REPLYID = R.REPLYID
+				AND
+					A.ITEMID = R.ITEMID
+				AND
+					A.TENANT_ID = R.TENANT_ID
+				WHERE
+					A.TENANT_ID = #v_TENANTID#
+				AND
+					A.BOARDID = #v_BoardID#
 				AND 
-					ITEMID = #v_ItemID#
+					A.ITEMID = #v_ItemID#
 				GROUP BY
-					REPLYID
+					A.REPLYID
 				ORDER BY 
 					WRITEDATE  ASC
 			]]>
@@ -4778,9 +4800,10 @@
 		]]>
 	</delete>	
 	
+	<!-- 2023-10-10 홍승비 - 삭제예정 레코드 중복삽입 방지 쿼리 추가 -->
 	<insert id="EzBoardDAO.insertDeleteReservedItem" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBL_Board_DeleteReservedItem (
+			INSERT IGNORE INTO TBL_Board_DeleteReservedItem (
 				BOARDID,   ITEMID,   TENANT_ID 
 			)
       		VALUES ( 
@@ -4998,7 +5021,7 @@
   			SELECT 
 				B.BOARDID, 
 				B.ITEMID, 
-			    B.TENANT_ID
+			    B.TENANT_ID AS TENANTID
 			FROM
 				TBL_BOARD_BOARDINFO A
 			JOIN
@@ -5024,7 +5047,8 @@
   <select id="EzBoardDAO.getDeleteReservedBoard" resultClass="BoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_BOARD_DELETERESERVEDBOARD
 		]]>
@@ -5033,7 +5057,9 @@
   <select id="EzBoardDAO.getDeleteReservedBoardItem" resultClass="BoardDeleteItemVO">
   		<![CDATA[
   			SELECT
-  				*
+  				BOARDID,
+  				ITEMID,
+  				TENANT_ID AS TENANTID
   			FROM
   				TBL_BOARD_DELETERESERVEDITEM
 		]]>
@@ -5999,7 +6025,7 @@
 			WHERE 
 				ITEMID = #v_itemID# 
 			AND 
-				TENANT_ID = #v_TENANTID# 
+				TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
 	
@@ -6168,4 +6194,109 @@
 		)
 	</select>
 	
+	<!-- 2023-03-07 이가은 - userID를 조건으로 댓글 반응 여부(좋아요 : Y / 싫어요 : N / 미선택 : 공백 또는 null) 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.checkReactUser" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				REACTFLAG
+			FROM
+				TBL_BOARD_REPLY_REACT
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND
+				REPLYID = #v_REPLYID#
+			AND
+				USERID = #v_USERID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
+	<!-- 2023-03-07 이가은 - 댓글 반응 추가하는 쿼리 -->
+	<insert id="EzBoardDAO.inserBoardReact" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_REPLY_REACT(
+				ITEMID,		REPLYID, 	USERID, 	REACTFLAG, 		TENANT_ID, 	COMPANYID, 		REACTDATE
+			)
+			VALUES(
+				#v_ITEMID#, #v_REPLYID#, #v_USERID#, #v_REACTFLAG#, #v_TENANTID#, #v_COMPANYID#, #v_REACTDATE#
+			)
+		]]>
+	</insert>
+	
+	<!-- 2023-03-07 이가은 - 댓글 반응 삭제하는 쿼리 -->
+	<delete id="EzBoardDAO.deleteBoardReact" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_BOARD_REPLY_REACT
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND
+				REPLYID = #v_REPLYID#
+			AND
+				USERID = #v_USERID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</delete>
+	
+	<!-- 2023-03-07 이가은 - 댓글 삭제되었을 경우 반응 모두 삭제하는 쿼리 -->
+	<delete id="EzBoardDAO.allReactDelete" parameterClass="Map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_BOARD_REPLY_REACT
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND
+				REPLYID = #v_DELREPLYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</delete>
+	
+	<!-- 2023-03-08 이가은 - 게시물에 대한 사용자의 댓글 반응 HashMap List로 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.getUserReplyReact" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				O.ITEMID,
+				R.REPLYID,
+				R.USERID,
+				R.REACTFLAG
+			FROM
+				TBL_BOARD_ONELINEREPLY O
+			LEFT OUTER JOIN
+				TBL_BOARD_REPLY_REACT R
+			ON
+				O.ITEMID = R.ITEMID
+			AND
+				O.REPLYID = R.REPLYID
+			AND
+				O.TENANT_ID = R.TENANT_ID
+			WHERE
+				O.ITEMID = #v_ITEMID#
+			AND
+				R.USERID = #v_USERID#
+			AND
+				R.TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
+	<!-- 2023-03-08 이가은 - 댓글 존재여부 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.checkReplyID" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+			FROM 
+				TBL_BOARD_ONELINEREPLY
+			WHERE
+				ITEMID = #v_ITEMID#
+			AND 
+				REPLYID = #v_REPLYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
 </sqlMap>

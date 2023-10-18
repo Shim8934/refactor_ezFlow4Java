@@ -2217,3 +2217,16 @@ function makeResRepetition(startDate, endDate) {
 	
 	g_data["recurrence"] = getXmlString(recurrenceDom);
 }
+
+/* 2023-09-06 조소정 - 일정관리 > 그룹 추가 또는 그룹 관리 팝업창의 그룹 색상을 색상선택 표의 디폴트 색상으로 넘겨줌 */
+function select_groupcolor() {
+	var	groupColor = document.getElementById("groupColorText").innerText;
+	
+	DivPopUpShow(360, 370, "/ezSchedule/scheduleSelectGroupColor.do?&groupColor=" + encodeURIComponent(groupColor));
+}
+
+/* 2023-09-06 조소정 - 색상선택표에서 선택된 그룹색상 부모창에 반영 */
+function select_groupcolor_complete(groupColor) {
+	parent.document.getElementById("groupColor").style.backgroundColor = groupColor;
+	parent.document.getElementById("groupColorText").innerHTML = groupColor;
+}
