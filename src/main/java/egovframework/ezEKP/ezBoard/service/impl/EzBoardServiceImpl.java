@@ -5043,4 +5043,24 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("checkReplyID started");
 		return ezBoardDAO.checkReplyID(map);
 	}
+
+
+	/**
+	 * 해당 게시판의 관리권한 여부를 리턴하는 메서드
+	 * @param rollInfo : 사용자의 롤정보 - userInfo.getRollInfo()
+     */
+	public boolean isBoardAdmin(String boardId, String userId, String deptId, String companyId, int tenantId, String rollInfo){
+		boolean result = false;
+		try {
+			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(boardId, userId, deptId, companyId, tenantId);
+			result = rollInfo != null
+					&& (boardGroupAdmin_FG.equals("OK")
+					|| rollInfo.toLowerCase().contains("c=1;")
+					|| rollInfo.toLowerCase().contains("k=1;")
+					|| rollInfo.toLowerCase().contains("n=1;"));
+		} catch(Exception e){
+			logger.error("isBoardAdmin error : " + e.getMessage(), e);
+        }
+		return result;
+	}
 }

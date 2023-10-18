@@ -395,4 +395,7 @@ public interface EzBoardService {
 	
 	/* 2023-03-08 이가은 - 댓글 존재여부 리턴하는 메서드 */
 	public int checkReplyID(String itemID, String replyID, int tenantID) throws Exception;
+
+	/* 2023-10-17 박기범 - 특정 게시판에 대한 관리자 권한 여부 체크 메서드 */
+	boolean isBoardAdmin(String boardId, String userId, String deptId, String companyId, int tenantId, String rollInfo);
 }
