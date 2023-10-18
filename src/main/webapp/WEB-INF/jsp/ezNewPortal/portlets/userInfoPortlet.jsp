@@ -60,7 +60,7 @@
 	            		</div>
 	        		</c:when>
 	        		<c:otherwise>
-	        			<div class="presentTime presentTime_commuteNone">
+	        			<div class="presentTime">
 	               		 	<p class="timeTxt"><span id="ptlTimeFlow"></span>
 	                		<span class="timeAM">AM</span>
 	                		<span class="timePM">PM</span></p>
