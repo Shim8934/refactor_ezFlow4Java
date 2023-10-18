@@ -3291,6 +3291,15 @@ public class EzNewPortalGWController {
 
 			data.put("boardId", boardId);
 
+			BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
+			String guBun = boardPropertyVO.getGuBun();
+			// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
+			boolean isQnANormal = "5".equals(guBun);
+			if (isQnANormal) {
+				// 해당 게시판 관리자가 아니면 Q&A 게시판 로직으로 변경
+				isQnANormal = !ezBoardService.isBoardAdmin(boardId, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getRollInfo());
+			}
+
 			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새게시물
 
 				List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), limit, offset);
@@ -3305,6 +3314,10 @@ public class EzNewPortalGWController {
 
 				data.put("favList", favNewList);
 
+			} else if (isQnANormal) { // Q&A 게시판
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),
+						boardId, limit, info.getCompanyId(), info.getOffSet(), isQnANormal);
+				data.put("favList", boardList);
 			} else { // 일반게시판
 
 				List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), limit, offset);
@@ -4237,10 +4250,7 @@ public class EzNewPortalGWController {
 		int deptPathCount = deptPathSplit.length;
 
 		try {
-			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(boardId, userId, deptId, companyId, tenantId);
-
-			if (rollInfo != null
-					&& (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+			if (ezBoardService.isBoardAdmin(boardId, userId, deptId, companyId, tenantId, rollInfo)) {
 				authCheck = true;
 			} else {
 				for (int i = 0; i < deptPathCount; i++) {
@@ -4790,12 +4800,20 @@ public class EzNewPortalGWController {
 			if (!accessCheck) {
 				data.put("access", "false");
 			} else {
+				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
+				String guBun = boardPropertyVO.getGuBun();
+				// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
+				boolean isQnANormal = "5".equals(guBun);
+				if (isQnANormal) {
+					// 관리자가 아니면 Q&A 게시판 로직으로 변경
+					isQnANormal = !ezBoardService.isBoardAdmin(boardId, userId, deptId, companyId, tenantId, rollInfo);
+				}
+
 				// 권한이 true이면 boardList불러오기
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(tenantId, boardId, itemCount, companyId, info.getOffset());
-				
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal);
+
 				// 리스트 개수로 utc time 적용시키기
 				int boardListCount = boardList.size();
-				
 				for (int i = 0; i < boardListCount; i++) {
 					String writeDate = boardList.get(i).getStartDate();
 					
@@ -5545,7 +5563,7 @@ public class EzNewPortalGWController {
 			
 			if (tabBoardIdList.size() > 0) {
 				data.put("existence" , "true");
-				
+
 				for (HashMap<String, Object> hashMap : tabBoardIdList) {
 					String tabBoardId = hashMap.get("BOARDID").toString();
 					String tabBoardName = portletLang.equals("1") ? hashMap.get("BOARDNAME").toString() : hashMap.get("BOARDNAME2").toString();
@@ -5553,30 +5571,27 @@ public class EzNewPortalGWController {
 					boolean accessCheckSub = boardAuthCheck(tabBoardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
 					
 					if (accessCheckSub) {
-						List<HashMap<String, Object>> tabBoardList = ezBoardService.getBoardListItem(tabBoardId, userId, 1, 5, 5, "WRITEDATE DESC", "", "1", tenantId);
-						List<JSONObject> tabBoard = new ArrayList<JSONObject>();
-						
-						for (int j = 0; j < tabBoardList.size(); j++) {
-							JSONObject subData = new JSONObject();
-							String writeDateSub = tabBoardList.get(j).get("WRITEDATE").toString();
-							subData.put("writeDate", commonUtil.getDateStringInUTC(writeDateSub, info.getOffset(), false));
-							subData.put("itemID", tabBoardList.get(j).get("ITEMID").toString());
-							subData.put("guBun", tabBoardList.get(j).get("GUBUN").toString());
-							
-							if (tabBoardList.get(j).get("EXTENSIONATTRIBUTE6") != null){
-								subData.put("extensionAttribute6", tabBoardList.get(j).get("EXTENSIONATTRIBUTE6").toString());
-							}
-							
-							subData.put("title", tabBoardList.get(j).get("TITLE").toString());
-							subData.put("writerName", tabBoardList.get(j).get("WRITERNAME").toString());
-							subData.put("writerName2", tabBoardList.get(j).get("WRITERNAME2").toString());
-							subData.put("boardID", tabBoardList.get(j).get("BOARDID").toString());
-							tabBoard.add(subData);
+						BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(tabBoardId, info.getTenantId());
+						String guBun = boardPropertyVO.getGuBun();
+						// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
+						boolean isQnANormal = "5".equals(guBun);
+						if (isQnANormal) {
+							// 관리자가 아니면 Q&A 게시판 로직으로 변경
+							isQnANormal = !ezBoardService.isBoardAdmin(tabBoardId, userId, deptId, companyId, tenantId, rollInfo);
+						}
+
+						List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, tabBoardId, 5, companyId, info.getOffset(), isQnANormal);
+
+						int boardListCount = boardList.size();
+
+						for (int i = 0; i < boardListCount; i++) {
+							String writeDate = boardList.get(i).getStartDate();
+							boardList.get(i).setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
 						}
 						
 						String tabId = hashMap.get("TABID").toString();
 						data.put("tabBoardId" + tabId, tabBoardId);
-						data.put("tabBoard" + tabId, tabBoard);
+						data.put("tabBoard" + tabId, boardList);
 						data.put("tabBoardName" + tabId, tabBoardName);
 					}
 					data.put("portletLang", portletLang);

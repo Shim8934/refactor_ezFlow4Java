@@ -567,9 +567,9 @@
 				else 'no'
 			end as selected
 		from 
-			jmocha.tbl_deptmaster d
+			tbl_deptmaster d
 		left join
-			jmocha.tbl_usermaster u on d.tenant_id = u.TENANT_ID
+			tbl_usermaster u on d.tenant_id = u.TENANT_ID
 		where
 			d.TENANT_ID = #tenantId#
 		and 

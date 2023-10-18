@@ -36,6 +36,8 @@
 <script language="JScript">
 */
 
+document.write("<script type='text/javascript' src='/js/jquery/jquery-1.11.3.min.js'></script>");
+
 function organtreeview(thisobjid, elobjid) {
     window[thisobjid] = this;
     var thisid = thisobjid;

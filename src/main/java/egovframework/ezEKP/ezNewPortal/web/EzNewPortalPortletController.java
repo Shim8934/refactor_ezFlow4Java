@@ -1225,7 +1225,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	
 	// 2020-12-04 탭게시판 리스트 가져오기 - 박기범
 	@RequestMapping(value = "/ezNewPortal/getTabBoardPortlet.do", method=RequestMethod.GET)
-	public String getTabBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale locale) throws Exception {
+	public String getTabBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getTabBoardPortlet Start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
