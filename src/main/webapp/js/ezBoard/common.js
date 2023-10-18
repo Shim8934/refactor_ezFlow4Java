@@ -75,7 +75,7 @@ function getBoardComment() {
 				if (commentBgColor === 1) {
 					boardCommentList += "<tr class='boardComment' boardUserID='" + vo.userID + "' memberID='"
 						+ vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
-						+ 1 + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
+						+ 1 + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:white;'>";
 				} else {
 					boardCommentList += "<tr class='boardComment' boardUserID='" + vo.userID + "' memberID='"
 						+ vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
@@ -112,19 +112,21 @@ function getBoardComment() {
 					}
 				}
 				boardCommentList += "</td>";
-				boardCommentList += "<td style='text-align:right;padding-right:8px;border-bottom:hidden;'>" + vo.writeDate.substring(0, 16) + "</td>";
+				boardCommentList += "<td style='text-align:right; padding-right:8px;";
+				if (reactFlag != null && reactFlag == "Y") boardCommentList += "border-bottom:hidden;";
+				boardCommentList +=	"'>" + vo.writeDate.substring(0, 16) + "</td>";
 				boardCommentList += "</tr>";
 
 				/* 2023-03-07 이가은 - 댓글 좋아요/싫어요 버튼 및 우측 숫자 표출 */
-				if (commentBgColor === 1) {
-					boardCommentList += "<tr class='commentReact" + index + "' style='height:20px; text-align:left; border:1px solid #e2e2e2; background-color:#white;'>";
-				} else {
-					boardCommentList += "<tr class='commentReact" + index + "' style='height:20px; text-align:left; border:1px solid #e2e2e2; background-color:#fafafa;'>";
-				}
-				boardCommentList += "<td style='border-top:hidden;'></td>";
-				boardCommentList += "<td style='border-top:hidden;'></td>";
-				boardCommentList += "<td class='reactTd' style='text-align:right; border-top:hidden; padding-right:13px; float:right;' replyid=" + vo.replyID + ">";
 				if (reactFlag != null && reactFlag == "Y") {
+					if (commentBgColor === 1) {
+						boardCommentList += "<tr class='commentReact" + index + "' style='text-align:left; border:1px solid #e2e2e2; background-color:white;'>";
+					} else {
+						boardCommentList += "<tr class='commentReact" + index + "' style='text-align:left; border:1px solid #e2e2e2; background-color:#fafafa;'>";
+					}
+					boardCommentList += "<td style='border-top:hidden;'></td>";
+					boardCommentList += "<td style='border-top:hidden;'></td>";
+					boardCommentList += "<td class='reactTd' style='text-align:right; height:28px; border-top:hidden; padding-right:13px; float:right;' replyid=" + vo.replyID + ">";
 					if (gubun != 2) {
 						boardCommentList += "<div><p style='float:left; margin-top:0px;'><img src='/images/like_off.png' style='cursor:pointer;' id=Y" + vo.replyID +" replyid=" + vo.replyID + " userid=" + vo.userID + " reactflag=Y index=" + index + " onclick='react_onclick(this)' /></p>";
 						boardCommentList +=	"<p style='width:16px; float:left; margin-top:0px;'><span id='myY" + index +"' style='color:#F55E51;'>"+ vo.re_like +"</span></p>";
@@ -140,14 +142,15 @@ function getBoardComment() {
 						boardCommentList += "</td>";
 						boardCommentList += "</tr>";
 					}
-				} else {
-					boardCommentList += "</td></tr>";
-				}
+				} 
+//				else {
+//					boardCommentList += "</td></tr>";
+//				}
 				commentBgColor = commentBgColor * (-1);
 			}); 
 			  
 			if (list.length == 0) {
-				boardCommentList += "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
+				boardCommentList += "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:white;'>";
 				boardCommentList += "<td colspan='3' style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;"
 									+ "border-right:0px;border-left:0px;text-align:center;background-color:white;'>" 
 									+ strLang181 + "</td>";
