@@ -613,7 +613,7 @@
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange2(this)">
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="4" value="collaboration" class="checkSelect">
-					  		<span class="checkmark m5" style="background:rgb(63, 81, 181); margin-top: 7px;"></span>
+					  		<span class="checkmark mr5" style="background:rgb(63, 81, 181); margin-top: 7px;"></span>
 					  		<span class="list_text">협업일정</span>
 						</label>
 					</li>	
