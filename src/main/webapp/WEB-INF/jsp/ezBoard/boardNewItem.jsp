@@ -138,11 +138,17 @@
 		    
 			/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
+		    var useHWP = "<c:out value='${useHWP}'/>";
+
+			/* 2023-09-25 민지수 - 게시판 > 공지사항 기간설정 시작, 종료시간 변수 */
+			var strNotiStart = "${boardListVO.notiStart}";
+			var strNotiEnd = "${boardListVO.notiEnd}";
+			var offset = "${userInfo.offset}";
 		    
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
-	        	if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
+	        	if (useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
 	        		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
 	        	}
 		    	
