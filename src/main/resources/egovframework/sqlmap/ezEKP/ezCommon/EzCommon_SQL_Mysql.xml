@@ -3903,4 +3903,24 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES (#v_TENANTID#, 'SurveyPostingMaxPeriod', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '전자설문 종료 후 게시기간 설정', '2024-03-26 00:00:00', '전자설문')
 	</insert>
+
+	<select id="EzCommonDAO.checkFileNameColumnForHistory" resultClass="String">
+	<![CDATA[
+		SELECT
+			FILE_NAME
+		FROM
+			TBL_WEBFOLDER_FILE_HISTORY
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterFileNameForWebfolderHistory">
+	<![CDATA[
+		ALTER TABLE
+			TBL_WEBFOLDER_FILE_HISTORY
+			ADD
+				FILE_NAME VARCHAR(250)
+		]]>
+    </statement>
+
 </sqlMap>

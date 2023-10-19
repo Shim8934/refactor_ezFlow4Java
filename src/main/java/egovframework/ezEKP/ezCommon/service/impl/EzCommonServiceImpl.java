@@ -3508,5 +3508,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
             ezCommonDAO.insertSurveyPostingMaxPeriodConfig(map);
         }
+
+    @Override
+    public void alterFileNameForWebfolderHistory() throws Exception {
+        ezCommonDAO.alterFileNameForWebfolderHistory();
     }
 }

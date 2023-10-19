@@ -3853,6 +3853,17 @@
 		)
 	</statement>
 	
+	<select id="EzCommonDAO.checkFileNameColumnForHistory" resultClass="String">
+	<![CDATA[
+		SELECT
+			FILE_NAME
+		FROM
+			TBL_WEBFOLDER_FILE_HISTORY
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
 	<statement id="EzCommonDAO.alterFileNameForWebfolderHistory">
 	<![CDATA[
 		ALTER TABLE

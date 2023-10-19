@@ -1667,7 +1667,8 @@
 				FILE_PATH = #filePath#,
 				UPDATE_DATE = TO_DATE(#timeUTC#, 'YYYY-MM-DD HH24:MI:SS'),
 				UPDATE_ID = #userId#,
-				FILE_SIZE = #fileSize#
+				FILE_SIZE = #fileSize#,
+				FILE_NAME = #fileName#
 			WHERE
 				FILE_ID   = #fileId#
 			AND
