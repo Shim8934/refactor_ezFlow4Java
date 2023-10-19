@@ -5643,8 +5643,18 @@ public class EzNewPortalGWController {
 			if (!accessCheck) {
 				data.put("access", "false");
 			} else {
+				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, info.getTenantId());
+				String guBun = boardPropertyVO.getGuBun();
+				// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
+				
+				boolean isQnANormal = "5".equals(guBun);
+				
+				if (isQnANormal) {
+					// 관리자가 아니면 Q&A 게시판 로직으로 변경
+					isQnANormal = !ezBoardService.isBoardAdmin(boardID, userId, deptId, companyId, tenantId, rollInfo);
+				}
 				// 권한이 true이면 게시물 가져옴 (최대 3개)
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(tenantId, boardID, 3, companyId, info.getOffset());
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardID, 3, companyId, info.getOffset(), isQnANormal);
 				
 				// 리스트 개수로 utc time 적용
 				int boardListCount = boardList.size();
