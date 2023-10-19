@@ -15,6 +15,8 @@
 		width : 280px;
 		height : 450px;
 		cursor : pointer;
+		z-index:-1;
+		margin: 20px;
 	} 
 	
 	.notEmptySlider.noSliderUrl {
@@ -81,6 +83,7 @@
 		            	<img src="/images/ezNewPortal/rolling01.png" width="280" height="450" style="margin:20px;"/>
 	            	</c:otherwise>
 	            </c:choose>
+				<span class="mask" style="width:100%; height:100%; background:white; z-index:0;"></span>
            	 	</div>
 			</div>
            	 	<dl class="info">
