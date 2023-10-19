@@ -166,7 +166,7 @@ function TreeNode() {
             }
         }
         if (strIsLeaf == "TRUE") {
-			imgNode.src = TreeIcons["node_end"];
+			imgNode.style.paddingLeft = "18px";
 		} else if (bExpanded) {
 			imgNode.classList.remove("sub_iconLNB", "tree_plus");
 			imgNode.classList.add("sub_iconLNB", "tree_minus");

@@ -584,7 +584,7 @@
 								<li>
 									<label class="IDcontainer" onchange="chk_DisplayChange()">
 										<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
-									  	<span class="checkmarkb mr5" style="background-color:rgb(1, 179, 63); margin-top: 7px;"></span>
+									  	<span class="checkmark mr5" style="background-color:rgb(1, 179, 63); margin-top: 7px;"></span>
 									  	<span class="list_text" title="${cum.titleName }"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
 									</label>
 								</li>	

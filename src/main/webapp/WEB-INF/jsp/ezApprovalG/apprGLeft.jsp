@@ -1403,7 +1403,7 @@
 					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename="결재완료문서" nodelevel="1" endnode="true" value="결재완료문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
 										<img id="imgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
-<%-- 										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
+										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
 										<span onclick="setPresentValue('결재완료문서'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId }" title="결재완료문서" id="spn_DeptShare_${status.index}_1" class="node_normal shareCont">결재완료문서</span>
 									</div>
 								</div>
@@ -1429,7 +1429,7 @@
 									    			<div class="node_div" id="DeptShare_${status.index}_${status2.index}" nodename="${item.formName}" nodelevel="1" endnode="true" value="${item.formName}" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 														<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
 														<img id="imgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
-<%-- 														<img id="subImgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
+														<img id="subImgNode_DeptShare_${status.index}_${status2.index}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
 														<span onclick="setPresentValue('${item.formName}'); goFormContainer('${item.formName}', '${deptShare.shareId}'); setBoldText(this);" style="cursor: pointer; width: 135px;" title="${item.formName}" id="spn_DeptShare_${status.index}_${status2.index}" class="node_normal">${item.formName}</span>
 													</div>
 									    		</c:forEach>
@@ -1510,7 +1510,7 @@
 					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename="결재완료문서" nodelevel="1" endnode="true" value="결재완료문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
 										<img id="imgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
-<%-- 										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
+										<img id="subImgNode_DeptShare_${status.index}_1" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;">
 										<span onclick="setPresentValue('결재완료문서'); Open_Func(this); setBoldText(this);" style="cursor: pointer; width: 135px;" shareUserId="${userShare.shareId }" title="결재완료문서" id="spn_DeptShare_${status.index}_1" class="node_normal shareCont">결재완료문서</span>
 									</div>
 								</div>
