@@ -1084,7 +1084,7 @@ function organtreeview(thisobjid, elobjid) {
 
         		// 2023-06-22 황인경 - 디자인 개선 > 관리자 > 자원관리, 차량관리 > 좌측메뉴 > 트리구조 style 변경, 계층 2중 빈칸 삭제
                 if ($("h1.receiver_tltype01").length > 0) { // 관리자화면 구분
-                	var nodeHtml = "<span id= 'res" + nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent + "' style='padding: 0 6px; margin: 0 23px; height: 26px; display: inline-block; font-size: 14px;'><span><div class='node_div'>";
+                	var nodeHtml = "<span id= 'res" + nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent + "' style='padding: 0 6px; margin: 0 10px; height: 26px; display: inline-block; font-size: 14px;'><span><div class='node_div'>";
                 } else {
     				var nodeHtml = "<span id= 'res" + nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent + "'><span><div class='node_div'>";
     				
@@ -1094,7 +1094,7 @@ function organtreeview(thisobjid, elobjid) {
 	                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
 	                    } else {
 	                        //nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-	                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
+	                        nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
 	                    }
     				}
                 }
@@ -1140,11 +1140,12 @@ function organtreeview(thisobjid, elobjid) {
                 	// 2023-06-22 황인경 - 디자인 개선 > 관리자 > 차량관리 > 트리구조 계층 2중 빈칸 삭제
                     if (!bEndNode) {
                         //nodeHtml += g_baseImage["dot_normal"];
+                        nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "1";
                     }
                     else {
                         //nodeHtml += g_baseImage["dot_end"];
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
+		               	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "0";
                     }
 
@@ -1260,14 +1261,14 @@ function organtreeview(thisobjid, elobjid) {
                 
             	var nodeHtml = "<span id='res"+nodeXML.getElementsByTagName('NODE')[i].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
 
-                for (var j = 0; j < depth.length; j++) {
+                /*for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")
                         //nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                     	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
                     else
                         //nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                     	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
-                }
+                }*/
 
                 var bEndNode = (i == childLength - 1) ? true : false;
                 if (childNode.selectSingleNode("ISLEAF").text == "FALSE") {
@@ -1305,10 +1306,12 @@ function organtreeview(thisobjid, elobjid) {
                     if (!bEndNode) {
                         //nodeHtml += g_baseImage["dot_normal"];
                     	// 2023-06-22 황인경 - 디자인 개선 > 관리자 > 차량관리 > 트리구조 계층 2중 빈칸 삭제
+                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "1";
                     }
                     else {
                         //nodeHtml += g_baseImage["dot_end"];
+                        nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "0";
                     }
 
