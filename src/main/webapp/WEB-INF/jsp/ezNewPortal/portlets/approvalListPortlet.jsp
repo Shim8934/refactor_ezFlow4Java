@@ -570,8 +570,14 @@
 				});
 			}
 
+			var ezapropinion_cross_dialogArguments = new Array();
 			function popAskAbsence() {
-				OpenInformationUI("<spring:message code='ezApprovalG.t1724' />", clearAbsence, "absence");
+				ezapropinion_cross_dialogArguments[0] = "<spring:message code='ezApprovalG.t1724' />";
+				ezapropinion_cross_dialogArguments[1] = clearAbsence;
+				ezapropinion_cross_dialogArguments[2] = true;
+
+				var OpenWin = window.open("/ezApprovalG/ezAprOpinion.do", "popAskAbsence", GetOpenWindowfeature(330, 205));
+				try { OpenWin.focus(); } catch (e) { }
 			}
 
 			getApprovalList("doing");
