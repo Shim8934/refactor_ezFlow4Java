@@ -14,12 +14,17 @@ function ptlGetAttitudeList(usedTheme) {
 				if (result[i].typeId == "A01") { //출근
  					$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
 					$("#ptlInAttiBtn").removeClass("out").addClass("in");
+					$("#ptlInAttiBtn").addClass("commute_on");	// 출퇴근시 스타일 추가(디자인개선 - uiux팀 조기완)
 					$("#ptlInAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 					
 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
- 					
 					// console.log(usedTheme);
+
+					if(usedTheme == 1 || usedTheme == 3){	// 테마 1,3 출퇴근시 스타일 추가(디자인개선 - uiux팀 조기완)
+						$("#inAttiBtn").addClass("commute_on");	
+					}
+
 					
 					/* 2023-06-01 홍승비 - 테마2 > 디자인 개선을 위해 출근, 퇴근 버튼 클릭 시 표출 수정 (inAttiBtn_txt 영역 대신 inAttiBtn 영역에 시간 표출) */
  					if (usedTheme == 2) {
@@ -34,13 +39,18 @@ function ptlGetAttitudeList(usedTheme) {
  					}
 				} else if (result[i].typeId == "A02") { //지각
 					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
-					
+
+					if(usedTheme == 1 || usedTheme == 3){	// 테마 1,3 출퇴근시 스타일 추가(디자인개선 - uiux팀 조기완)
+						$("#inAttiBtn").addClass("commute_on");	
+					}
+
 					if (usedTheme == 2) {
  						$("#inAttiBtn").parent().addClass("commute_on");
  					}
 					
 					$("#ptlInAttiBtn").attr("onclick", "").unbind("mouseenter");
 					$("#ptlInAttiBtn").removeClass("out").addClass("lateIn");
+					$("#ptlInAttiBtn").addClass("commute_on");	// 출퇴근시 스타일 추가(디자인개선 - uiux팀 조기완)
 					$("#ptlInAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlInAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 					
@@ -57,13 +67,19 @@ function ptlGetAttitudeList(usedTheme) {
  					}
 				} else if (result[i].typeId == "A03") { //퇴근
 //					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+					$("#outAttiBtn").addClass("commute_on");	// 디자인 개선으로 인한 출퇴근시 해당 클래스 추가(uiux- 조기완)
 					
+					if(usedTheme == 1 || usedTheme == 3){	// 테마 1,3 출퇴근시 스타일 추가(디자인개선 - uiux팀 조기완)
+						$("#outAttiBtn").addClass("commute_on");
+					}
+
 					if (usedTheme == 2) {
  						$("#outAttiBtn").parent().addClass("commute_on");
  					}
 					
 //					$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
 					$("#ptlOutAttiBtn").removeClass("out").addClass("in");
+					$("#ptlOutAttiBtn").addClass("commute_on");	// 출퇴근시 스타일 추가(디자인개선 - uiux팀 조기완)
 					$("#ptlOutAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlOutAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
 					
