@@ -461,11 +461,6 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("cmt_time", pollCmtVO.getCmtTime());
 		map.put("dept_id", pollCmtVO.getDeptId());
 		map.put("companyid", pollCmtVO.getDeptId());
-		PollUserVO userVo = ezPollDAO.getIsQuestionUser(map);
-		if(userVo != null){
-			map.put("userType", userVo.getUserType());
-			map.put("userDept", userVo.getDeptId());
-		}
 		
 		ezPollDAO.insertCmt(map);		
 	}
