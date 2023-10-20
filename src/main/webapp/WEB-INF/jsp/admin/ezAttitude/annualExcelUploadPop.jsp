@@ -140,7 +140,7 @@
         	<tr>
 	            <th style="width:100px; text-align:center"><spring:message code='ezAttitude.t257' /></th>
 	            <td>
-	        		<input name="excelFile" id="excelFile" type="file" style="width:100%;" accept=".xls" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
+	        		<input name="excelFile" id="excelFile" type="file" style="width:100%; height: 25px !important;" accept=".xls" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
 	            </td>
 	        </tr>
 <!--         	<tr> -->

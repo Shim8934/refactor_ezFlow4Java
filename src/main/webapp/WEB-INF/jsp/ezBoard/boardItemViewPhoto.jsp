@@ -104,6 +104,7 @@
 		        var imageContentArray = new Array();
 		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		        var agent = navigator.userAgent.toLowerCase();
+				var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
 
 		        window.onload = function () {
 		            imageViewInit();
@@ -1596,7 +1597,7 @@
 		            <tr>
 		              <th style="width:10%"><spring:message code='ezBoard.t223'/></th>
 			              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="WriteUserNM">
-			              	  <div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto">
+			              	  <div style="vertical-align:middle;width:100%;height:16px;">
 								 <span onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")' style="cursor:pointer;"><c:out value="${boardItem.writerName}"/></span>
 							  </div>
 			              </td> 

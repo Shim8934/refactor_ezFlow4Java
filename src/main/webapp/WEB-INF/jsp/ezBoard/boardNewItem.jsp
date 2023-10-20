@@ -52,9 +52,11 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<!-- Whwp api -->
-        <script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
-    	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+        <c:if test="${useHWP eq 'YES' and useHwpDownSecurity eq 'Y' and approvalFlag eq 'G' }">
+	    	<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
+    		<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+	    </c:if>
 	    <script type="text/javascript">
 		    var pUploadFilePath = "${uploadFilePath}";
 		    var pBoardID = "<c:out value='${boardID}'/>";
@@ -136,11 +138,12 @@
 		    
 			/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
+		    var useHWP = "<c:out value='${useHWP}'/>";
 		    
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
-	        	if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
+	        	if (useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
 	        		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
 	        	}
 		    	
@@ -2416,7 +2419,7 @@
 	                        	</c:when>
 	                        	<c:otherwise>
 			                        <td style="width: 300px; vertical-align: baseline;"><span style="line-height: 20px; height: 20px; display: inline-block;">
-			                            <input type="checkbox" id="chkEmergent"></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.t435' /></span>
+			                            <input type="checkbox" style="margin-top: 0px;" id="chkEmergent"></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.t435' /></span>
 	                        	</c:otherwise>
 	                        </c:choose>
 	                            <!-- // 20090913 : 게시판 공지게시 기능 -->
@@ -2526,8 +2529,8 @@
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                            <span id="reservation_date">
-		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; "><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;"readonly readonlyExcept />
-	                                   &nbsp;<a class="imgbtn imgbck" style= "height:21px;margin-top:1px"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
+		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 2px;"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center; margin-bottom: 2px;"readonly readonlyExcept />
+	                                   &nbsp;<a class="imgbtn imgbck" style= "height:22px; margin-top:2px !important"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
 	                            </span>
 	                    </tr>
 	                    <tr id="tdEndDate">
@@ -2724,7 +2727,6 @@
 					<c:when test="${boardInfo.guBun != '3'}">
 				        <tr id="attachIframeTR">
 				            <td style="height: 145px">
-				                <br />
 				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
 				                <input type="hidden" name="mode" id="mode" />
 				            </td>

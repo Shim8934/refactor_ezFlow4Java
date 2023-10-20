@@ -168,8 +168,12 @@
 	            	totalPage = Math.ceil(new Number(getNodeText(SelectNodes(listxml, "root/totalcount")[0]) / 20));
 					
 	            	if(totalPage == 0){
-		                document.getElementById("ApprovList").innerHTML = "";
 	                	var listheader = document.getElementById("listviewheader");
+						document.getElementById("ApprovList").innerHTML = ""
+						var rows = listheader.getElementsByTagName('ROWS');
+						Array.prototype.forEach.call(rows, function (row) {
+							row.parentNode.removeChild(row);
+						});
 	                	var xmldom = xmlhttp.responseXML;
 	                	var listview = new ListView();
 	                	listview.SetID("ApprovListView");
@@ -225,10 +229,14 @@
 	            	list += "</ROWS>";
 
 		            list = loadXMLString(list);
-		            var listheader = document.getElementById("listviewheader");
+					var listheader = document.getElementById("listviewheader");
+					var rows = listheader.getElementsByTagName('ROWS');
+					Array.prototype.forEach.call(rows, function (row) {
+						row.parentNode.removeChild(row);
+					});
 	            	SelectSingleNode(listheader, "LISTVIEWDATA").appendChild(list.documentElement)
 
-		            document.getElementById("ApprovList").innerHTML = "";
+		            document.getElementById("ApprovList").innerHTML = ""
 	            	var xmldom = xmlhttp.responseXML;
 	            	var listview = new ListView();
 	            	listview.SetID("ApprovListView");
@@ -976,23 +984,23 @@
   			</ul>
 		</div>
 		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd;border-bottom:0px; padding:5px 0px 5px 5px">
-    		<a class="imgbtn" style="padding-top:2px; cursor:default;"><span id="Span3"><spring:message code='ezEmail.t556'/></span></a>
+    		<a class="imgbtn" style="cursor:default;"><span id="Span3"><spring:message code='ezEmail.t556'/></span></a>
     		<input id="subject" type="text" style="width: 300px" onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
     		<c:if test="${pType eq 'User'}">
-	    		<a id="writername1" class="imgbtn" style="padding-top:2px; display:none;"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
+	    		<a id="writername1" class="imgbtn" style="display:none;"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
 	    		<input id="writername" type="text" style="width: 80px; display:none;" value='<c:out value="${userInfo.displayName }"/>' onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
-	    		<a id="writerdept1" class="imgbtn" style="padding-top:2px; display:none;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
+	    		<a id="writerdept1" class="imgbtn" style="display:none;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
 	    		<input id="writerdept" type="text" style="width: 120px; display:none;" value='<c:out value="${userInfo.deptName }"/>' onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
 	    	</c:if>
 	    	<c:if test="${pType ne 'User'}">
-	    		<a id="writername1" class="imgbtn" style="padding-top:2px;"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
+	    		<a id="writername1" class="imgbtn"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
 	    		<input id="writername" type="text" style="width: 80px;" onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
 	    		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
-	    		<a id="writerdept1" class="imgbtn" style="padding-top:2px;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
+	    		<a id="writerdept1" class="imgbtn"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
 	    		<input id="writerdept" type="text" style="width: 120px;" onkeyup="if(event.keyCode == 13) getCalendarList('search');"/>
 	    	</c:if>
     		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" readonly>
-       		<a class="imgbtn" style="padding-top:2px"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
+       		<a class="imgbtn"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>
 		<div id="ApprovList" style ="BORDER:0;WIDTH:100%; height:100%;border-top:0px;"></div>
 		<div id="tblPageRayer" style="text-align:center"></div>

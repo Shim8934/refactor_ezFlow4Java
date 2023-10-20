@@ -264,7 +264,7 @@ private String getFileSuffix(final String path) {
 		SaveSubFolder.setReadable(true);
 		SaveSubFolder.setWritable(false, true);
 
-		boolean returnRes = SaveSubFolder.mkdir();
+		boolean returnRes = SaveSubFolder.mkdirs();
 		if(returnRes == false && !SaveSubFolder.exists()){
 			scriptValue = executeScript(response, "invalid_path", "" , useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
 			response.getWriter().println(scriptValue);
@@ -517,7 +517,7 @@ private String getFileSuffix(final String path) {
 						imageSaveSubFolder.setReadable(true);
 						imageSaveSubFolder.setWritable(false, true);
 
-						boolean returnRes = imageSaveSubFolder.mkdir();
+						boolean returnRes = imageSaveSubFolder.mkdirs();
 						if(returnRes == false){
 							scriptValue = executeScript(response, "invalid_path", "" , useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
 							response.getWriter().println(scriptValue);
@@ -533,7 +533,7 @@ private String getFileSuffix(final String path) {
 					imageSaveSubFolder.setReadable(true);
 					imageSaveSubFolder.setWritable(false, true);
 
-					boolean returnRes = imageSaveSubFolder.mkdir();
+					boolean returnRes = imageSaveSubFolder.mkdirs();
 					if(returnRes == false){
 						scriptValue = executeScript(response, "invalid_path", "" , useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
 						response.getWriter().println(scriptValue);

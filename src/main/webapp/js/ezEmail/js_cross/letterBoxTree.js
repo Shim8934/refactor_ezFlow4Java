@@ -151,7 +151,7 @@ function treeView() {
 			},
 			"types" : {
                 "default": {
-                    "icon" :"/images/OrganTree_cross/fldr.gif" 
+//                    "icon" :"/images/OrganTree_cross/fldr.gif" 
                 }
             }
 	});

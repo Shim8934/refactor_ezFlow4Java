@@ -779,7 +779,7 @@ public class CommonUtil {
 		}
 
 		for (Cookie cookie : cookies) {
-			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")) {
+			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")) {
 				cookie.setMaxAge(0);
 				cookie.setPath("/");
 				response.addCookie(cookie);
@@ -1989,9 +1989,12 @@ public class CommonUtil {
 		String fontStyle = ezCommonService.getTenantConfig("editorFontStyle", tenantID);
 		if(!ObjectUtils.defaultIfNull(fontStyle, "").isEmpty()) {
 			String [] dividedFontStyle = fontStyle.split("\\|");
-			
+
 			fontFamily = dividedFontStyle[0];
-			fontSize = dividedFontStyle[1];
+			if (dividedFontStyle.length >= 2 ){
+				fontSize = dividedFontStyle[1];
+			}
+
 		}
 		
 		return String.format("<DIV id=\"msgBody\" style=\"font-size: %s; font-family: %s;\" name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", fontSize, fontFamily, content);

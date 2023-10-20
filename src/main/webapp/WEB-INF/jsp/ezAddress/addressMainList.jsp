@@ -16,6 +16,20 @@
 	    		font-size : 12px;
 	    		font-weight: bold;
 	    	}
+	    	
+        	.dupliPopUpTableHeader th {text-align:center; height:30px;}
+        	.dupliPopUpTableHeader th#dupliPopUpTableHeaderScroll {border: 0; padding: 0;}
+        	
+        	.dupliPopUpTableBodyDIV {overflow-y: auto;height: 170px;}
+        	.dupliPopUpTableBodyDIV::-webkit-scrollbar {width: 5px;}
+        	.dupliPopUpTableBodyDIV::-webkit-scrollbar-thumb {background-color: #d2d2d2; border-radius: 5px}
+        	.dupliPopUpTableBodyDIV::-webkit-scrollbar-track {background-color: #ececec;}
+        
+	        .dupliPopUpTableBody {margin-top:10px;width: 100%;margin: 0;border: 0;}
+	        .dupliPopUpTableBody tr td:first-child {background-color: #e5efff3d;}
+        	.dupliPopUpTableBody td {box-sizing: border-box; padding: 5px; line-height: 18px; word-break: break-word; text-align:left; height:30px; }
+        	.dupliPopUpTableBody td div {font-size: 13px; font-weight: 700; box-sizing: border-box; padding: 3px 5px;}
+        	.dupliPopUpTableBody td span {color: #6b6b6b; box-sizing: border-box; padding: 3px 5px;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -37,6 +51,7 @@
 	        var pTotalCnt = "";
 	        var pPageSize = "";
 	        var pMaxPage = "";
+	        var pAddrType = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
 	        var m_strColorSelect = "#f1f8ff";
@@ -123,6 +138,7 @@
 	        	$("#srarchpopup").css("left", popupX);
 	        	$("#importPopup").css("left", popupX);
 	        	$("#exportPopup").css("left", popupX);
+	        	$("#dupliPopUp").css("left", popupX);
 	        });
 	        
 	        function new_address() {
@@ -757,7 +773,7 @@
 	        function crossImport() {
 	            document.getElementById("file1").click();
 	        }	        
-	        function btn_AttachAdd_onclick() {
+	        function btn_AttachAdd_onclick(actURL) {
 	            var tempname = document.form.file1.value;
 	        	if (tempname == "") {
 		            return;
@@ -785,12 +801,14 @@
 						break;
 					}
 	        	}
-	            
-		        var frm = document.getElementById('form');
-		        frm.action = "/ezAddress/excelImport.do?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID) + "&format=" + encodeURIComponent(format);
+	        	 
+	        	var frm = document.getElementById('form'); 
+		        var actionURL = (actURL !== undefined && actURL != "") ? actURL : "${useAddrDupliCheck.equals('YES') ? '/ezAddress/excelImportDuplicationCheck.do' : '/ezAddress/excelImport.do'}";
+		        frm.action = actionURL + "?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID) + "&format=" + encodeURIComponent(format);
 		        frm.submit();
 		        SearchOptionHidden();
-	        }	        
+	        }	 
+	        
 	        function UploadComplete(result) {
 	        	document.form.file1.value = "";
 		        document.getElementById("loadingLayer").style.display = "none";
@@ -818,7 +836,102 @@
 	        	var addressTitle = parent.frames["left"].send_AddressTitle();
 				document.getElementById("presentcell").innerHTML = addressTitle;
 	        }
-	    </script>
+	        
+	        $(document).on("change", "#addrTypeSelect", function() {
+	        	pCurrentPage 	= 1;
+	        	pAddrType 		= $(this).val();
+	        	
+	        	if (searchFlag) {
+		        	Get_SearchAddressList();
+	        	} else {
+	        		Get_AddressList();
+	        	}
+	        });
+
+			function duplicationCheckComplete(result, state, duplicateAddr) {
+	        	if (result == "OK") {
+		        	if (state == "OK") { // 주소록 중복이 없는 경우
+		        		btn_AttachAdd_onclick("/ezAddress/excelImport.do");
+					} else { // 주소록 중복이 있는 경우
+						showDupliPopUp(duplicateAddr);
+					}
+		        } else {
+		        	if (result == "FORMAT_ERROR") {
+			        	alert("<spring:message code='ezAddress.lhm1' />");
+			        } else {
+			        	alert("<spring:message code='ezAddress.t181' />");
+			        }		        
+			        window.location.reload();
+		        } 
+	        }
+			function showDupliPopUp(list) {
+	        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+
+	        	var jsonList = JSON.parse(list);
+	        	
+	        	var dupliPopUpTableBody = document.getElementsByClassName("dupliPopUpTableBody")[0].getElementsByTagName("tbody");
+	        	for (var i=0; i<jsonList.length; i++){
+	        		var oriList = jsonList[i].oriAddr;
+	        		var newList = jsonList[i].newAddr;
+
+		        	var ele_TR 		= document.createElement("TR");
+		        	var ele_TD 		= document.createElement("TD");
+		        	var ele_DIV 	= document.createElement("DIV");
+		        	var ele_SPAN 	= document.createElement("SPAN");
+	        		
+		        	var oriDiv = ele_DIV.cloneNode();
+			        	oriDiv.textContent 	= oriList.name;
+		        	var oriSpan = ele_SPAN.cloneNode();
+		        		oriSpan.textContent = oriList.email;
+        			var oriTD = ele_TD.cloneNode();
+	        			oriTD.appendChild(oriDiv);
+	        			oriTD.appendChild(oriSpan);
+	        			
+		        	var newDiv 	= ele_DIV.cloneNode();
+			        	newDiv.textContent 	= newList.name;
+		        	var newSpan = ele_SPAN.cloneNode();
+		        		newSpan.textContent = newList.email;
+        			var newTD 	= ele_TD.cloneNode();
+	        			newTD.appendChild(newDiv);
+	        			newTD.appendChild(newSpan);
+
+        			ele_TR.appendChild(oriTD);
+        			ele_TR.appendChild(newTD);
+        			
+        			$(dupliPopUpTableBody).append(ele_TR);
+	        	}
+
+		        document.getElementById("loadingLayer").style.display = "none";
+		        
+	        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+	        	$("#dupliPopUp").css("left", popupX);
+	        	$("#dupliPopUp").modal();
+	        	
+	        	// scroll
+	        	$("#dupliPopUp").css("opacity", 0);
+	        	isDupliPopUpTableHeaderScroll(); 
+	        	$("#dupliPopUp").css("opacity", 1);
+	        	
+	        }
+        	function importAddressConfirm(confirm) {
+        		if (confirm) {
+        			btn_AttachAdd_onclick("/ezAddress/excelImport.do");    	            
+        		} else {
+        			document.form.file1.value = "";
+        			SearchOptionHidden();
+        		}
+        	}
+        	function isDupliPopUpTableHeaderScroll() {
+        		var forScroll = $("#dupliPopUpTableHeaderScroll"); 
+        		
+    			if ($(".dupliPopUpTableBodyDIV").height() < $(".dupliPopUpTableBodyDIV table").height()) {
+    				forScroll.css("display", "");
+    			} else {
+    				forScroll.css("display", "none");
+    			}
+        	}
+
+        </script>
     </head>
 	<body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<h1><span id="presentcell"></span><span id="mailBoxInfo"></span></h1>
@@ -836,6 +949,13 @@
 				<li onClick="delete_address()"><span class="icon16 icon16_delete"></span></li>
 				<li onClick="window.location.reload(false)"><span class="icon16 icon16_refresh"></span></li>
 				<li><span class="icon16 icon16_mail_gray" onClick="write_letter()"></span></li>
+				<li style="background:none;">
+					<select id="addrTypeSelect">
+						<option value="ALL" selected><spring:message code='ezAddress.ksa07' /></option>
+						<option value="GROUP"><spring:message code='ezAddress.ksa08' /></option>
+						<option value="PERSONAL"><spring:message code='ezAddress.ksa09' /></option>
+				    </select>
+				</li>
 				<li style="background:none;float:right">
 					<select id="ListViewType" onchange="View_Change();">
 						<option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>
@@ -1154,6 +1274,55 @@
 			</div>
 		</div>
 		
+		<div id="dupliPopUp" class="popupwrap1" style="display:none;margin-bottom:70px">
+			<div class="popupJQLayer" style="width: 600px;">
+				
+				<div style="position: relative;">
+					<div class="title"><spring:message code='ezAddress.ksa01' /></div>
+					<div id="close" style="top: 3px; right: 0; ">
+			            <ul>
+			                <li><a rel="modal:close"><span onclick="importAddressConfirm()"></span></a></li>
+			            </ul>
+			        </div>
+		        </div>
+		        
+		        <div><spring:message code='ezAddress.ksa02' /></div>
+				<table class="content2 dupliPopUpTable dupliPopUpTableHeader" style="margin-top:10px;width: 100%;">
+					<colgroup>
+						<col width="50%" />
+						<col width="50%" />
+						<col width="1" />
+					</colgroup>
+					<tr>
+						<th><spring:message code='ezAddress.ksa03' /></th>
+						<th style="border-right: 0;"><spring:message code='ezAddress.ksa04' /></th>
+						<th width="1" id="dupliPopUpTableHeaderScroll" style="display:none">&nbsp;</th>
+					</tr>
+				</table>
+				<div class="dupliPopUpTableBodyDIV">
+					<table class="content2 dupliPopUpTable dupliPopUpTableBody">
+						<colgroup>
+							<col width="50%" />
+							<col width="50%" />
+						</colgroup>
+						<tbody></tbody>
+					</table>
+				</div>
+				
+				<br />
+				<table style="width:100%">
+					<tr>
+						<td style="text-align:center;">
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="importAddressConfirm(true)"><spring:message code='ezAddress.ksa05' /></span></a>
+								<a class="imgbtn"><span onClick="importAddressConfirm(false)"><spring:message code='ezAddress.ksa06' /></span></a>
+							</div>								
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
 		<div class="shadow"></div>		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
@@ -1162,7 +1331,7 @@
 	    <span class="loading_layer" style="z-index:6000;position:absolute;top:400px;left:300px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="loadtxt"><spring:message code='ezAddress.t5000' /></span></span></span>
 	    <iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAddress/excelImport.do" target="ifrm">
+	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm">
 	        <input type="file" name="file1" id="file1" accept=".csv" onchange="btn_AttachAdd_onclick()" style="display: none"/>
 	    </form>
 	</body>

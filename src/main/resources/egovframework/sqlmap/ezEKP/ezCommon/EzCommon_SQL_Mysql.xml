@@ -2935,7 +2935,7 @@
 	
 	<select id="EzCommonDAO.checkAttitudeGPSConfig" resultClass="String">
 		SELECT
-			property_value
+			property_name
 		FROM
 			tbl_tenant_config
 		WHERE
@@ -4551,4 +4551,195 @@
 	]]>
     </statement>
 
+    <update id="EzCommonDAO.updateAttitudeFormFormHtml2Column">
+		<![CDATA[
+			UPDATE
+				TBL_ATTITUDE_FORM
+			SET
+				FORM_HTML2 = CASE
+								WHEN FORM_ID = 0 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="3"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
+								WHEN FORM_ID = 1 THEN '<tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="2"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr>'
+								WHEN FORM_ID = 2 THEN '<tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="2"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr>'
+								WHEN FORM_ID = 3 THEN '<tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="2"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr>'
+								WHEN FORM_ID = 4 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="1"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
+								WHEN FORM_ID = 5 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="2"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
+								WHEN FORM_ID = 6 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="3"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
+								WHEN FORM_ID = 7 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="4"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></span></td></tr><tr> <th>Workplace</th> <td id="region" style=""><input name="region" type="text" style="width:98%" value=""  maxlength="200"></td> </tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
+								WHEN FORM_ID = 8 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="5"><input name="checkbox" type="checkbox" id="alldaycheck" style="height:22px;" onclick="allday_change()" value="1">All day <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Workplace</th> <td id="region" style=""><input name="region" type="text" style="width:98%" value=""  maxlength="200"></td> </tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
+								WHEN FORM_ID = 9 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="4"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
+								WHEN FORM_ID = 10 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="3"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr>'
+								ELSE NULL
+							END
+			WHERE
+				FORM_HTML2 IS NULL
+		]]>
+	</update>
+
+	<select id="EzCommonDAO.checkTblUserChangeInfo" resultClass="String">
+		<![CDATA[
+			SELECT
+				SEQ
+			FROM
+				TBL_USER_CHANGE_INFO
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblUserChangeInfo">
+		CREATE TABLE `tbl_user_change_info` (
+			`SEQ` int(10) NOT NULL AUTO_INCREMENT,
+			`USERID` varchar(80) NOT NULL,
+			`USERNM` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`USERNM2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DEPTID` varchar(80) DEFAULT NULL,
+			`DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`COMPANYID` varchar(120) DEFAULT NULL,
+			`COMPANYNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`COMPANYNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`UPDATEDT` datetime DEFAULT NULL,
+			`TARGET_DEPTID` varchar(80) DEFAULT NULL,
+			`TARGET_DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`TARGET_DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`UPDATE_TYPE` varchar(200) DEFAULT NULL,
+			`EXECUTORID` varchar(80) DEFAULT NULL,
+			`EXECUTORNM` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`EXECUTORNM2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+			`EXECUTORIP` varchar(20) DEFAULT NULL,
+			`TENANTID` mediumint(5) NOT NULL,
+			PRIMARY KEY (`SEQ`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+    </statement>
+
+	<!-- 2023-06-26 민지수 - codelist에서 companyid 조회 -->
+	<select id="EzCommonDAO.checkCodeListTypeForCompany" resultClass="String">
+		SELECT
+			COMPANYID
+		FROM
+			TBL_CODELIST
+		WHERE
+			COMPANYID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			NAME2 = #name2#
+		AND
+			CODE2 = #code2#
+	</select>
+
+	<!-- 2023-06-26 민지수 - codelist에 추가의견타입 추가 -->
+	<insert id="EzCommonDAO.insertOpinionGB">
+		INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID,COMPANYID) VALUES
+			(#code1#, #code2#, #name#, #isuse#,#descript#, #name2#, #name3#, #name4#, #tenantId#, #companyId#)
+	</insert>
+
+	<!-- 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 init 메소드 쿼리 -->
+	<update id="EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode1">
+		<![CDATA[
+			UPDATE
+					TBL_USERMASTER
+			SET
+					EXTENSIONATTRIBUTE1 = REPLACE(EXTENSIONATTRIBUTE1, ';f=',';q=')
+			WHERE
+					EXTENSIONATTRIBUTE1 like '%;f=%'
+		]]>
+	</update>
+
+	<update id="EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode2">
+		<![CDATA[
+			UPDATE
+					TBL_USERMASTER
+			SET
+					EXTENSIONATTRIBUTE1 = REPLACE(EXTENSIONATTRIBUTE1, ';ff=',';q=')
+			WHERE
+					EXTENSIONATTRIBUTE1 like '%;ff=%'
+		]]>
+	</update>
+
+	<update id="EzCommonDAO.updateWebFolderAndApprovalCheckPermissionCode3">
+		<![CDATA[
+			UPDATE
+					TBL_USERMASTER
+			SET
+					EXTENSIONATTRIBUTE1 = REPLACE(EXTENSIONATTRIBUTE1, ';wf=',';f=')
+			WHERE
+					EXTENSIONATTRIBUTE1 like '%;wf=%'
+		]]>
+	</update>
+
+   	<select id="EzCommonDAO.checkScheduleGroup_TransferDateColumn" resultClass="String">
+	<![CDATA[
+		SELECT
+			TRANSFERDATE
+		FROM
+			TBL_SCHEDULEGROUP
+		LIMIT 1
+	]]>
+	</select>
+
+	<statement id="EzCommonDAO.addScheduleTransferDateColumn">
+    <![CDATA[
+    	ALTER TABLE
+    		TBL_SCHEDULEGROUP
+    	ADD
+    		TRANSFERDATE DATETIME DEFAULT NULL
+	]]>
+	</statement>
+
+	<select id="EzCommonDAO.checkScheduleGroup_GroupColorColumn" resultClass="String">
+	<![CDATA[
+		SELECT
+			GROUPCOLOR
+		FROM
+			TBL_SCHEDULEGROUP
+		LIMIT 1
+	]]>
+	</select>
+
+	<statement id="EzCommonDAO.addScheduleGroupColorColumn">
+    <![CDATA[
+    	ALTER TABLE
+    		TBL_SCHEDULEGROUP
+    	ADD
+    		GROUPCOLOR VARCHAR(10) DEFAULT NULL
+	]]>
+	</statement>
+
+    <select id="EzCommonDAO.checkTblBoardReplyReact" resultClass="String">
+		<![CDATA[
+			SELECT
+				REPLYID
+			FROM
+				TBL_BOARD_REPLY_REACT
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.createTblBoardReplyReact">
+		CREATE TABLE `tbl_board_reply_react` (
+			`ITEMID` varchar(76) NOT NULL,
+			`REPLYID` varchar(76) NOT NULL,
+			`USERID` varchar(80) NOT NULL,
+			`REACTFLAG` varchar(1) DEFAULT NULL,
+			`TENANT_ID` mediumint(5) NOT NULL,
+			`COMPANYID` varchar(80) DEFAULT NULL,
+			`REACTDATE` varchar(40) DEFAULT NULL,
+			PRIMARY KEY (`ITEMID`,`REPLYID`,`USERID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardInfoReactFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				REACTFLAG
+			FROM
+				TBL_BOARD_BOARDINFO
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.addBoardReactFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			REACTFLAG VARCHAR(1) DEFAULT NULL
+	</statement>
 </sqlMap>

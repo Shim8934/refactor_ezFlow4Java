@@ -30,6 +30,7 @@
 	        var pMaxPage = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
+	        var pAddrType = "";
 	        var m_strColorSelect = "#f1f8ff";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
@@ -385,9 +386,9 @@
 	        <tr>
 	            <th><spring:message code='ezAddress.t314' /></th>
 	            <td>
-	                <input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t145' /></span>
-	                <input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t146' /></span>
-	                <input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t147' /></span>&nbsp;
+	                <input type="checkbox" name="chkType" id="CheckUser" style="margin-top: 3px; margin-bottom: 0px;" /><span onclick="check_click('CheckUser')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t145' /></span>
+	                <input type="checkbox" name="chkType" id="CheckDept" style="margin-top: 3px; margin-bottom: 0px;" /><span onclick="check_click('CheckDept')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t146' /></span>
+	                <input type="checkbox" name="chkType" id="CheckCompany" style="margin-top: 3px; margin-bottom: 0px;" /><span onclick="check_click('CheckCompany')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t147' /></span>&nbsp;
 	                <select name="search_case" id="search_case" style="height:22px; vertical-align:middle;">
 	                    <option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
 	                    <option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>

@@ -496,7 +496,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		int attachId                       = ezCabinetDAO.getMaxAttachId(map) + 1;
 		File file                          = new File(realPath + commonUtil.detectPathTraversal(cabinetPath));
 		
-		if (!file.exists() && !file.mkdir()) {
+		if (!file.exists() && !file.mkdirs()) {
 			throw new IOException();
 		}
 		

@@ -2501,12 +2501,12 @@
 		                <table id="listType1">
 		                    <tr id="ListMsgTo">
 		                        <td style="width: 30px; text-align: center;">
-		                            <img src="/images/arr_r.gif" alt="" width="18" height="18" vspace="2" border="0"
+		                            <img src="/images/kr/cm/arr_right.gif" alt="" width="18" height="18" vspace="2" border="0"
 		                                style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgTo)"><br>
-		                            <img src="/images/arr_l.gif" alt="" width="18" height="18" vspace="2" border="0"
+		                            <img src="/images/kr/cm/arr_left.gif" alt="" width="18" height="18" vspace="2" border="0"
 		                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 		                            <c:if test="${!empty folderManager}">
-		                            <img src="/images/arr_ll.gif" alt="" width="18" height="18" vspace="2" border="0"
+		                            <img src="/images/kr/cm/arr_lleft.gif" alt="" width="18" height="18" vspace="2" border="0"
 		                                style="cursor: pointer;" onclick="DeleteAllReceiver(ListViewMsgTo)"><br>
 	                                </c:if>
 		                        </td>

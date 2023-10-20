@@ -175,7 +175,13 @@
 		            }
 		            
 		            var pAlertContent = "";
-		            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
+		            
+		            if (userLang == "1") {
+			            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
+		            }
+		            else if (userLang == "2") {
+			            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
+		            }
 
 		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
 		            if (Rtnval) {
@@ -190,7 +196,13 @@
 		        		tmpEndDate = proxyEndDate;
 		        		
 		        		var pAlertContent = "";
-		        		pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		        		
+			            if (userLang == "1") {
+				            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
+			            }
+			            else if (userLang == "2") {
+				            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
+			            }
 
 			            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
 			            if (Rtnval) {
@@ -854,8 +866,27 @@
 		                openUserInfo();
 		                break;
 		            case "2":
-						var url = "/ezApprovalG/ezReceiptInfoIng.do?docId=" + tr.getAttribute("DATA2") + "&receiptId=" + tr.getAttribute("DATA1") + "&receiptName=" + encodeURIComponent(tr.getAttribute("DATA10"));
-						var win = window.open(url, "", GetOpenWindowfeature(1155, 460, false));
+						var win;
+						if (pListTypeValue == "99" || pListTypeValue == "10") {
+							var heigth = window.screen.availHeight;
+							var width = window.screen.availWidth;
+							var left = (parseInt(width) - 540) / 2;
+							var top = (parseInt(heigth) - 220) / 2;
+							var isExtYN = tr.getAttribute("DATA3");
+
+							if (isExtYN.toUpperCase() == "Y") {
+								var url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + tr.getAttribute("DATA2") + "&deptID=" + encodeURI(tr.getAttribute("DATA1"));
+								win = window.open(url, "", "height=300px,width=855px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+							} else {
+								left = (parseInt(width) - 1155) / 2;
+								top = (parseInt(heigth) - 460) / 2;
+								win = window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA2") + "&deptID=" + encodeURI(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+							}
+						} else {
+							var url = "/ezApprovalG/ezReceiptInfoIng.do?docId=" + tr.getAttribute("DATA2") + "&receiptId=" + tr.getAttribute("DATA1") + "&receiptName=" + encodeURIComponent(tr.getAttribute("DATA10"));
+							win = window.open(url, "", GetOpenWindowfeature(1155, 460, false));
+						}
+
 						try { win.focus(); } catch (e) {}
 		                break;
 		            case "4":
@@ -865,13 +896,13 @@
                             var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
                             var AttachUrlA1 = GetAttribute(tr,"DATA1");
                             var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
-                            var AttachUrlA2 = getOriginalFileExtension(AttachUrlA1); //fileExt(.hwp, .ezd, .mht)
+                            var AttachUrlA2 = getOriginalFileExtension(AttachUrlA1); // fileExt(hwp, ezd, mht)
                             AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
                           
                             if (AttachfilenameN1 < 0) {
                                 Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
                             } else {
-                            	if (AttachUrlA2 == ".mht") {
+                            	if (AttachUrlA2 == "mht") { // 마침표가 붙지 않은 확장자를 사용
 		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
 	                        	} else {
 		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
@@ -894,11 +925,12 @@
                                 	window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
                                 } */ 
                                 
+                                /* 2023-09-01 홍승비 - 전자결재 결재문서리스트 하단 첨부탭에서 문서첨부파일을 여는 경우, DOCID에 '.' 문자가 포함되어 전달되는 오류 수정 (비공개문서의 접근권한 체크 등 관련) */
                                 //2018-09-12 천성준 - 전자결재 결재문서리스트 하단 첨부탭에서 첨부파일이 문서첨부일경우 문서보기로 열수있게
                                 try {
 	                                if (GetAttribute(tr,"data4") == strLangCSJ01 || GetAttribute(tr,"data4") == "Document") {
 	                                	var tempStr = AttachUrlA1.split("/");
-	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
+	                                    var docID = tempStr[tempStr.length - 1].replace("." + AttachUrlA2, '');
 	                                    var openLocation;
 	                                    
 	                                    if (AttachUrlA2 == "hwp") {
@@ -2674,7 +2706,7 @@
  		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="ResizeBarPanel"></div>
 	    <div style="width: 8px; height:738px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
-			<div class="div_scroll" style="width:100%;HEIGHT:395px; overflow-y:hidden; overflow-x:auto; margin-bottom:10px" id="divList">
+			<div class="div_scroll" style="width:100%;HEIGHT:480px; overflow-y:auto; overflow-x:auto; margin-bottom:10px" id="divList">
 				<div id="lvDocList"></div>
 			</div>
 			

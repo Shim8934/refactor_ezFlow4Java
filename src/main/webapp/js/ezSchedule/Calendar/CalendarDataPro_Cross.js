@@ -505,6 +505,9 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     	pTempData.googleId = SelectSingleNodeValue(objNodes, "GOOGLEID");
     }
     
+    // 2023-09-06 조소정 - 그룹일정 그룹색상 데이터 추가
+    pTempData.GroupColor = SelectSingleNodeValue(objNodes, "GROUPCOLOR");
+
     return pTempData;
 }
 
@@ -749,6 +752,16 @@ function CalMonthDataBind(oAppointment) {
         else if (oAppointment.ScheduleType == 7) {
             oTd.className = "Group";
             oSpan.className = "Group";
+            // 2023-09-06 조소정 - 일정관리 월보기 시 그룹일정 그룹색상 표출
+            if(oAppointment.GroupColor == null || oAppointment.GroupColor == "") {
+            	var groupColor = "#e9de13";
+            	oSpan.style.backgroundColor = groupColor;
+                oSpan.style.border = "1px solid " + groupColor;
+            }
+            else {
+                oSpan.style.backgroundColor = oAppointment.GroupColor;
+                oSpan.style.border = "1px solid " + oAppointment.GroupColor;
+            }
         }
         else if (oAppointment.ScheduleType == 4) {
             oTd.className = "collaboration";
@@ -937,6 +950,16 @@ function CalWeekDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 7) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
+            // 2023-09-06 조소정 - 일정관리 주보기 시 그룹일정 그룹색상 표출
+            if(oAppointment.GroupColor == null || oAppointment.GroupColor == "") {
+            	var groupColor = "#e9de13";
+            	oSpan.style.backgroundColor = groupColor;
+                oSpan.style.border = "1px solid " + groupColor;
+            }
+            else {
+                oSpan.style.backgroundColor = oAppointment.GroupColor;
+                oSpan.style.border = "1px solid " + oAppointment.GroupColor;
+            }
         }
         else if (oAppointment.ScheduleType == 4) {
         	oDiv.className = "calendar_data_collaboration";
@@ -1241,6 +1264,16 @@ function CalDayDataBind(oAppointment, order) {
         else if (oAppointment.ScheduleType == 7) {
             oDiv.className = "calendar_data_Group";
             oSpan.className = "Group";
+            // 2023-09-06 조소정 - 일정관리 일보기 시 그룹일정 그룹색상 표출
+            if(oAppointment.GroupColor == null || oAppointment.GroupColor == "") {
+            	var groupColor = "#e9de13";
+            	oSpan.style.backgroundColor = groupColor;
+                oSpan.style.border = "1px solid " + groupColor;
+            }
+            else {
+                oSpan.style.backgroundColor = oAppointment.GroupColor;
+                oSpan.style.border = "1px solid " + oAppointment.GroupColor;
+            }
         }
         else if (oAppointment.ScheduleType == 4) {
             oDiv.className = "calendar_data_collaboration";

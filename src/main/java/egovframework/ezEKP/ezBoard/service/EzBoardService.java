@@ -377,4 +377,25 @@ public interface EzBoardService {
 	
 	/* 2021-06-23 홍승비 - 댓글알림 메일 발송을 위한 사용자 정보를 map으로 리턴하는 메서드 */
 	public List<HashMap<String, String>> getCommentNoticeMail(String boardID, String itemID, String lang, int tenantID) throws Exception;
+	
+	/* 2023-03-07 이가은 - userID를 조건으로 댓글 반응 여부(좋아요 : Y / 싫어요 : N / 미선택 : 공백 또는 null) 리턴하는 메서드 */
+	public String checkReactUser(String itemID, String replyID, String userID, int tenantID) throws Exception;
+	
+	/* 2023-03-07 이가은 - 댓글 반응 추가하는 메서드 */
+	public void inserBoardReact(String itemID, String replyID, String userID, String reactFlag, int tenantID, String companyID, String reactDate) throws Exception;
+	
+	/* 2023-03-07 이가은 - 댓글 반응 삭제하는 메서드 */
+	public void deleteBoardReact(String itemID, String replyID, String userID, int tenantID) throws Exception;
+	
+	/* 2023-03-07 이가은 - 댓글 삭제되었을 경우 반응 모두 삭제하는 메서드 */
+	public void allReactDelete(String itemID, String delReplyID, int tenantID) throws Exception;
+	
+	/* 2023-03-08 이가은 - 게시물에 대한 사용자의 댓글 반응 HashMap List로 리턴하는 메서드 */
+	public List<HashMap<String, String>> getUserReplyReact(String itemID, String userID, int tenantID) throws Exception;
+	
+	/* 2023-03-08 이가은 - 댓글 존재여부 리턴하는 메서드 */
+	public int checkReplyID(String itemID, String replyID, int tenantID) throws Exception;
+
+	/* 2023-10-17 박기범 - 특정 게시판에 대한 관리자 권한 여부 체크 메서드 */
+	boolean isBoardAdmin(String boardId, String userId, String deptId, String companyId, int tenantId, String rollInfo);
 }

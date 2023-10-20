@@ -163,7 +163,7 @@ public class EzMainAdminController {
 			useBoard = "YES";
 		} 
 		//baonk added
-		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("wf=1") > -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("f=1") > -1) {
 			model.addAttribute("isWFAdmin", "YES");
 		}
 		//end

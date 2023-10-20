@@ -382,7 +382,7 @@
 								<option value="deptName"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
 								<option value="userId"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
 							</select>
-							<input type="text" id="searchKeyword" style="width: 150px; height:22px;" onKeyDown="return keyword_onkeydown(event)"/>
+							<input type="text" id="searchKeyword" style="width: 150px; height:25px;" onKeyDown="return keyword_onkeydown(event)"/>
 							<a class="imgbtn" >
 								<span onclick="javascript:search();"><spring:message code="ezStatistics.t36"></spring:message></span> <!-- 검색 -->
 							</a>

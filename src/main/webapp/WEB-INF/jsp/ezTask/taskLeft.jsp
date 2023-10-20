@@ -9,6 +9,7 @@
 		<title>left_task</title>
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style type="text/css">
 			#mCSB_1_container {
 				margin-right: 0px;
@@ -101,7 +102,17 @@
 		            	break;
 		            	
 		        }
-		    }		   
+		        
+		     	// 2023-06-15 황인경 - 디자인 개선 > 업무관리 > 좌측메뉴 > 메뉴선택 클래스 제어
+				$(".node_selected").attr("class", "list_text");
+				
+				if (event.target.tagName == "LI") {
+					var liChangeSpan = event.target.querySelector(".list_text");
+					liChangeSpan.setAttribute("class", "list_text node_selected");
+				} else {
+					event.target.setAttribute("class", "list_text node_selected");
+				}
+		    }
 		
 	        // 업무작성창 load
 	        function WritePopup() {// 왼쪽(일반업무, 반복업무, 보낸업무) => 왼쪽 업무작성 버튼 입력
@@ -114,22 +125,23 @@
                 window.open("/ezTask/taskWrite.do?flag=other", "", "height=775px, width=790px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 	        }
 	        
+	        // 2023-06-15 황인경 - 디자인 개선 > 업무관리 > 좌측메뉴 > 카운트 괄호 추가 
 	        function cntLoad() {
 	        	// 일반업무
 	        	if (window.parent.frames["right"].cnt > 0) {
-	        		$("#taskCnt").html(window.parent.frames["right"].cnt);
+	        		$("#taskCnt").html("(" + window.parent.frames["right"].cnt + ")");
 	        	} else if(window.parent.frames["right"].cnt == 0) {
 	        		$("#taskCnt").html("");
 	        	}
 	        	// 반복업무
 	        	if (window.parent.frames["right"].cnt3 > 0) {
-	        		$("#task2Cnt").html(window.parent.frames["right"].cnt3);	
+	        		$("#task2Cnt").html("(" + window.parent.frames["right"].cnt3 + ")");
 	        	} else if(window.parent.frames["right"].cnt3 == 0) {
 	        		$("#task2Cnt").html("");
 	        	}
 	        	// 보낸업무
 	        	if (window.parent.frames["right"].cnt2 > 0) {
-	        		$("#task3Cnt").html(window.parent.frames["right"].cnt2);	        		
+	        		$("#task3Cnt").html("(" + window.parent.frames["right"].cnt2 + ")");
 	        	} else if(window.parent.frames["right"].cnt2 == 0) {
 	        		$("#task3Cnt").html("");
 	        	}
@@ -158,16 +170,17 @@
 						count2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
 						count3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
 						
+						// 2023-06-15 황인경 - 디자인 개선 > 업무관리 > 좌측메뉴 > 카운트 괄호 추가 
 						if (count != 0) {
-							$("#taskCnt").html(count);
+							$("#taskCnt").html("(" + count + ")");
 						}
 						
 						if (count3 != 0) {
-							$("#task2Cnt").html(count3);
+							$("#task2Cnt").html("(" + count3 + ")");
 						}
 						
 						if (count2 != 0) {
-							$("#task3Cnt").html(count2);
+							$("#task3Cnt").html("(" + count2 + ")");
 						}
 						
 					},
@@ -187,24 +200,25 @@
 		</script>
 	</head>
 	<body class="newLeft">
-		<div id="left" class="lnb" style="overflow: auto">
+		<div id="left" class="lnb task_left" style="overflow: auto">
 	    	<div class="left_title" title="<spring:message code='ezSchedule.t1011'/>"><spring:message code='ezSchedule.t1011'/>
 	        	<span onClick="Function_Flag(11)" class="sub_iconLNB tree_leftconfig" title="<spring:message code='ezTask.yej01'/>"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="WritePopup()">
-	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezTask.t113' /></p>
+	        	<p class="btn_write01"><spring:message code='ezTask.t113' /></p>
 	        </div>
-	        <div class="taskListBox" style="overflow:hidden; padding-right: 0;">
-		        <ul class="lnbUL">
-                   	<li id='Task' onclick="Function_Flag(3)"><span class="sub_iconLNB tree_task_general"></span><span class="list_text"><spring:message code='ezTask.t200901' /><span id="taskCnt" style="padding-left:10px"></span></span></li>
-                   	<li id="Task2" onclick="Function_Flag(12)"><span class="sub_iconLNB tree_task_repeat"></span><span class="list_text"><spring:message code='ezTask.t200902' /><span id="task2Cnt" style="padding-left:10px"></span></span></li>
-                   	<li id="Task3" onclick="Function_Flag(13)"><span class="sub_iconLNB tree_task_out"></span><span class="list_text"><spring:message code='ezTask.t200903' /><span id="task3Cnt" style="padding-left:10px"></span></span></li>
-		        </ul>
-		        <ul class="lnbUL">
-                   	<li onclick="Function_Flag(7)"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code='ezTask.t180' /></span></li>
-		        </ul>
-	        </div>
+	        <div class="taskListBox mCustomScrollbar _mCS_1 mCS_no_scrollbar" style="overflow: hidden; padding-right: 0px; height: 911px;">
+	        	<div id="mCSB_1" class="mCustomScrollBox mCS-dark mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
+	        		<div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+				        <ul class="lnbUL">
+		                   	<li id='Task' onclick="Function_Flag(3)"><span class="list_text node_selected"><spring:message code='ezTask.t200901' /><span id="taskCnt"></span></span></li>
+		                   	<li id="Task2" onclick="Function_Flag(12)"><span class="list_text"><spring:message code='ezTask.t200902' /><span id="task2Cnt"></span></span></li>
+		                   	<li id="Task3" onclick="Function_Flag(13)"><span class="list_text"><spring:message code='ezTask.t200903' /><span id="task3Cnt"></span></span></li>
+		                   	<li id="Task4" onclick="Function_Flag(7)"><span class="list_text"><spring:message code='ezTask.t180' /></span></li>
+				        </ul>
+			        </div>
+	    		</div>
+    		</div>
 	    </div>
-	</body>
 	</body>
 </html>

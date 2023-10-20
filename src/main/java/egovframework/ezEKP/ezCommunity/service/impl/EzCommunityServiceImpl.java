@@ -7391,11 +7391,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
         File destdir = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID));
         if (!destdir.exists()) {
-        	destdir.mkdir();
+        	destdir.mkdirs();
         	File destdir1 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc"));
-        	destdir1.mkdir();
+        	destdir1.mkdirs();
         	File destdir2 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "uploadFile"));
-        	destdir2.mkdir();
+        	destdir2.mkdirs();
         }
         
         File orgFile = new File(orgFilePath);
@@ -7407,11 +7407,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception {
         File destdir = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID));
         if (!destdir.exists()) {
-        	destdir.mkdir();
+        	destdir.mkdirs();
         	File destdir1 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc"));
-        	destdir1.mkdir();
+        	destdir1.mkdirs();
         	File destdir2 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "uploadFile"));
-        	destdir2.mkdir();
+        	destdir2.mkdirs();
         }
         
         File orgFile = new File(commonUtil.detectPathTraversal(pRef + pOrgFilePath));

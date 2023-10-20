@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -914,7 +916,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
 					imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
 				} else {
-					imgPath = "/images/default_pic.gif";
+					imgPath = "/images/ezNewPortal/info_pic_none.png";
 				}
 				
 				portalUserInfo.setUserImg(imgPath);
@@ -926,7 +928,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
 						imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
 					} else {
-						imgPath = "/images/default_pic.gif";
+						imgPath = "/images/ezNewPortal/info_pic_none.png";
 					}
 					
 					portalUserInfo.setUserBirthday(toSolarDate);
@@ -1445,8 +1447,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String companyId, String offset) throws Exception {
-		logger.debug("deleteCompanyLogo started.");
+	public List<BoardListVO> getBoardPortletInfo (String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal) throws Exception {
+		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("boardId", boardId);
@@ -1454,8 +1456,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("nowDate", nowDate);
-		
-		logger.debug("deleteCompanyLogo ended.");
+		map.put("userId", userId);
+		map.put("isQnANormal", isQnANormal ? "Y" : "N");
+
+		logger.debug("getBoardPortletInfo ended.");
 		return ezNewPortalDAO.getBoardPortletInfo(map);
 		
 	}
@@ -1739,11 +1743,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			String userIDs = "'" + userId + "'";
 			String proxyOption = "";
 			proxyOption = ezApprovalGService.getIsUse("A23", "001", companyId, lang, tenantId);
+			List<ApprGProxyVO> proxyList = null;
 
 			if (proxyOption.equals("1")) {
-				userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+
+//				userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+				proxyList = ezApprovalGService.getProxyUserInfo(userId, lang, tenantId, offset);
 			}
 			map.put("userIDs", userIDs);
+			map.put("proxyList", proxyList);
 			
 			list = ezNewPortalDAO.getApprovalDoingList(map);
 			result.put("list", list);
@@ -2857,12 +2865,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		String userIDs = "'" + userId + "'";
 		String proxyOption = "";
 		proxyOption = ezApprovalGService.getIsUse("A23", "001", companyId, lang, tenantId);
+		List<ApprGProxyVO> proxyList = null;
 
 		if (proxyOption.equals("1")) {
-			userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+//			userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+			proxyList = ezApprovalGService.getProxyUserInfo(userId, lang, tenantId, offset);
 		}
 		map.put("userIDs", userIDs);
-		
+		map.put("proxyList", proxyList);
 		int doingListCount = ezNewPortalDAO.getApprovalDoingListCount(map);
 		
 		return doingListCount;
@@ -2938,5 +2948,31 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		ezNewPortalDAO.addPortalTenantConfig(map);
 		
 		logger.debug("addPortalTenantConfig ended");
+	}
+	
+	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
+		logger.debug("getUniqueFileName started");
+
+		int indexOfDot = fileName.lastIndexOf(".");
+		String strName = fileName.substring(0, indexOfDot);
+		String strExt = fileName.substring(++indexOfDot);
+		
+		boolean bExist = true;
+		int fileCount = 0;
+		
+		File file = new File(commonUtil.detectPathTraversal(dirPath + fileName)); 
+		
+		while (bExist) {
+			if (file.exists()) {
+				fileCount++;
+				fileName = strName + "(" + fileCount + ")." + strExt;
+			} else {
+				bExist = false;
+			}
+		}
+
+		logger.debug("getUniqueFileName ended");
+		
+		return fileName;
 	}
 }

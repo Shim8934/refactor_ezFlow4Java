@@ -746,6 +746,12 @@
 		        window.close();
 		    }
 		</script>
+		<style type="text/css">
+			.switch {
+				margin-left:21px;
+			}
+			
+		</style>
 		
 	</head>
 	<body class="popup">
@@ -760,7 +766,7 @@
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezNewPortal.t074' /></NAME>
 		        		<WIDTH>70</WIDTH>
-		        		<STYLE>border-top:0px;</STYLE>
+		        		<STYLE>border-top:0px; text-align:center;</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
 			</LISTVIEWDATA>

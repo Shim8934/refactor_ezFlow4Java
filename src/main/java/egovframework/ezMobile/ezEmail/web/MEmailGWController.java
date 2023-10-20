@@ -617,8 +617,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					messageJson.put("href", mailId);
 					messageJson.put("folderId", mailIdArr[0]);
 					messageJson.put("messageId", mailIdArr[1]);
-					messageJson.put("fromemail", "");
-									
+
 					// importance
 					int importance = 1;
 					
@@ -653,7 +652,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					
 					if (!senderReceiverFlag) {
 						addressStr = ezEmailUtil.getNameOrAddress(mailInfo.get("SENDER"));
-					// in case of Sent mailbox	
+					// in case of Sent mailbox
 					} else {
 						// To, Cc, Bcc를 모두 포함한다.
 						String recipientsStr = mailInfo.get("RECIPIENT");
@@ -680,7 +679,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					}
 					
 					messageJson.put("sender", addressStr);
-								
+					messageJson.put("fromemail", ezEmailUtil.getAddress(mailInfo.get("SENDER")));
+
 					// subject
 					String subject = mailInfo.get("SUBJECT");								
 					subject = (subject != null) ? subject : "";

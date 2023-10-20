@@ -16,40 +16,42 @@ function getWebFolderFileList() {
 			var fileList = result.data.fileList;
 			var fileLength = fileList.length;
 			
+			/* 2023-06-01 홍승비 - 홈 > 웹폴더 포틀릿 > 디자인 개선을 위해 파일은 최대 4개까지만 표출하도록 수정 */
 			if (fileLength != 0) {
 				fileList.forEach(function(file, index) {
-					var liEl = document.createElement('li');
-					liEl.className = 'webFolderLi';
-					liEl.setAttribute('targetId', file.fileId);
-					liEl.addEventListener('click', function(event) {webFolderFileDownLoad(event, this)}, false);
-					
-					var pEl = document.createElement('p');
-					pEl.className = 'webFolderIcon';
-					
-					var imgEl = setFileTypeTag(file.fileExt);
-					
-					pEl.appendChild(imgEl);
-					
-					var dlEl = document.createElement('dl');
-					dlEl.className = 'webFolderDL';
-					
-					var dtEl = document.createElement('dt');
-					var ddEl1 = document.createElement('dd');
-					var ddEl2 = document.createElement('dd');
-					
-					dtEl.textContent = file.fileName;
-					ddEl1.textContent = userLang == '1'? file.createName1 : file.createName2; 
-					ddEl2.textContent = file.updateDate.substr(0, 10);
-					
-					dlEl.appendChild(dtEl);
-					dlEl.appendChild(ddEl1);
-					dlEl.appendChild(ddEl2);
-					
-					liEl.appendChild(pEl);
-					liEl.appendChild(dlEl);
-					
-					ulEl.appendChild(liEl);
-					
+					if (index < 4) {
+						var liEl = document.createElement('li');
+						liEl.className = 'webFolderLi';
+						liEl.setAttribute('targetId', file.fileId);
+						liEl.addEventListener('click', function(event) {webFolderFileDownLoad(event, this)}, false);
+						
+						var pEl = document.createElement('p');
+						pEl.className = 'webFolderIcon';
+						
+						var imgEl = setFileTypeTag(file.fileExt);
+						
+						pEl.appendChild(imgEl);
+						
+						var dlEl = document.createElement('dl');
+						dlEl.className = 'webFolderDL';
+						
+						var dtEl = document.createElement('dt');
+						var ddEl1 = document.createElement('dd');
+						var ddEl2 = document.createElement('dd');
+						
+						dtEl.textContent = file.fileName;
+						ddEl1.textContent = userLang == '1'? file.createName1 : file.createName2; 
+						ddEl2.textContent = file.updateDate.substr(0, 10);
+						
+						dlEl.appendChild(dtEl);
+						dlEl.appendChild(ddEl1);
+						dlEl.appendChild(ddEl2);
+						
+						liEl.appendChild(pEl);
+						liEl.appendChild(dlEl);
+						
+						ulEl.appendChild(liEl);
+					}
 				});
 			} else {
 				var dlEl = document.createElement('dl');

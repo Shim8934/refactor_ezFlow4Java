@@ -193,7 +193,7 @@
 		SaveSubFolder.setReadable(true);
 		SaveSubFolder.setWritable(false, true);
 
-		boolean returnRes = SaveSubFolder.mkdir();
+		boolean returnRes = SaveSubFolder.mkdirs();
 		if(returnRes == false && !SaveSubFolder.exists()){
 			scriptValue = executeFileScript(response, "invalid_path", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 			response.getWriter().println(scriptValue);
@@ -332,7 +332,7 @@
 						fileSaveSubFolder.setReadable(true);
 						fileSaveSubFolder.setWritable(false, true);
 
-						boolean returnRes = fileSaveSubFolder.mkdir();
+						boolean returnRes = fileSaveSubFolder.mkdirs();
 						if(returnRes == false){
 							scriptValue = executeFileScript(response, "invalid_path", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 							response.getWriter().println(scriptValue);
@@ -348,7 +348,7 @@
 					fileSaveSubFolder.setReadable(true);
 					fileSaveSubFolder.setWritable(false, true);
 
-					boolean returnRes = fileSaveSubFolder.mkdir();
+					boolean returnRes = fileSaveSubFolder.mkdirs();
 					if(returnRes == false){
 						scriptValue = executeFileScript(response, "invalid_path", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 						response.getWriter().println(scriptValue);

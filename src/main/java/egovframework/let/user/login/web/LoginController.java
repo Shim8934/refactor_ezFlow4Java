@@ -1285,7 +1285,7 @@ public class LoginController {
     				cookie.setDomain(ssoDomain);
     			}
     			
-    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")){
+    			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")) {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);
@@ -1349,7 +1349,7 @@ public class LoginController {
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
-    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().equals("multiLoginCookie")){
+    			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*") && !cookie.getName().equals("multiLoginCookie")) {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);

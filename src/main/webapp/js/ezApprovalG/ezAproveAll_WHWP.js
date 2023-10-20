@@ -807,6 +807,8 @@ function SaveApproveInfo(pApproveFlag, currIdx) {
 
 //부모창에서 각 자식프레임에 접근해 호출하므로 docID 전달 시 배열을 사용
 function SaveFileForApprovAll(currIdx) {
+	// 확인, 참조일 경우 파일 저장 안함
+	if (pAprLineType == strAprType2 || pAprLineType == strAprType7) return "TRUE";
 	var result = "";
 	
 	var data = {

@@ -112,7 +112,7 @@
 	            		var li = document.createElement("LI");
 	            		
 	            		var span1 = document.createElement("SPAN");
-	            		span1.setAttribute("class", "sub_iconLNB tree_memo_all");
+	            		//span1.setAttribute("class", "sub_iconLNB tree_memo_all");
 	            		
 	            		var span2 = document.createElement("SPAN");
 	            		span2.setAttribute("class", "node_selected");
@@ -130,7 +130,7 @@
 	            			li2.setAttribute("class", "memo");
 	            			
 	            			var span3 = document.createElement("SPAN");
-	            			span3.setAttribute("class", "sub_iconLNB tree_memo_default");
+	            			//span3.setAttribute("class", "sub_iconLNB tree_memo_default");
 	            			
 	            			var span4 = document.createElement("SPAN");
 	            			span4.setAttribute("class", "node_normal");
@@ -163,10 +163,10 @@
 	    		<span onclick="memoConfig();" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick="memoWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezMemo.t0014" /></p>
+	        	<p class="btn_write01" onclick="memoWrite();"><spring:message code="ezMemo.t0014" /></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
-	        	<ul id="memoListUL" class="lnbUL">
+	        	<ul id="memoListUL" class="lnbUL memoUL">
 	        		<%-- <li class="memo"><span class="sub_iconLNB tree_memo_all"></span><span class="node_selected" onclick="memoClick(this);" folderId="0" folderName="<spring:message code="ezMemo.t0064"/>"><spring:message code="ezMemo.t0064"/></span></li> --%>
 					<%-- <c:forEach items="${folders }" var="folder">
 		        		<li class="memo"><span class="sub_iconLNB tree_memo_default"></span><span class="node_normal" onclick="memoClick(this);" folderId="${folder.folder_id}" folderName="${folder.folder_name}"><c:out value="${folder.folder_name}"></c:out></span></li>

@@ -24,7 +24,6 @@
 			.viewtxtScroller {
 				min-height: 16px;
 				max-height: 16px;
-				overflow-y: auto;
 				margin-bottom: 3px;
 			}
 			.viewtxtWrapper {
@@ -48,6 +47,7 @@
 			}
 			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
+			.mailAddressAdd { overflow-y: auto; }
 		</style>
 		
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
@@ -65,9 +65,11 @@
         <c:if test="${isCrossBrowser != true}">
         	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>
-        <script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
-    	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+        <c:if test="${useHWP eq 'YES' and useHwpDownSecurity eq 'Y' and approvalFlag eq 'G' }">
+	    	<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
+			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
+    		<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+	    </c:if>
 	    <script type="text/javascript">
 	    $(document).ready(function() {
 	    	window.resizeTo(990, window.outerHeight);
@@ -215,11 +217,12 @@
 		
 		/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		var approvalFlag = "<c:out value='${approvalFlag}'/>";
+		var useHWP = "<c:out value='${useHWP}'/>";
      	
 	    window.onload = function () {
 	    	
 	    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
-        	if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
+        	if (useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
         		HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () {isHwpCtrlOpen = true;});
         	}
 	    	
@@ -2562,7 +2565,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <td colspan="3">
+	                        <td colspan="3" class="mailAddressAdd">
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgToGot" class="viewtxt"></div>
 	                            </div>
@@ -2589,7 +2592,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgCC_TRu">
-	                        <td colspan="3">
+	                        <td colspan="3" class="mailAddressAdd">
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgCCGot" class="viewtxt"></div>
 	                            </div>
@@ -2613,7 +2616,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr id="MsgBCC_TRu" style="display:none;">
-	                        <td colspan="3">
+	                        <td colspan="3" class="mailAddressAdd">
 	                        	<div class="viewtxtScroller">
 	                            	<div id="MsgBCCGot" class="viewtxt"></div>
 	                            </div>

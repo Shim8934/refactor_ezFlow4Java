@@ -1067,13 +1067,13 @@
 		<table width="100%" class="content">
 	  		<tr>
 	    		<td>
-	    			<input id="mpDaily" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(0);' />
+	    			<input id="mpDaily" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(0);' />
 	      			<label for="mpDaily" accesskey="D"><spring:message code='ezSchedule.t72' /><u>D</u>)</label>
-	      			<input id="mpWeekly" type="radio" name="optMainPattern" value="radiobutton" checked onClick='showMainPattern(1);' />
+	      			<input id="mpWeekly" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" checked onClick='showMainPattern(1);' />
 	      			<label for="mpWeekly" accesskey="W"><spring:message code='ezSchedule.t73' /><u>W</u>)</label>
-	      			<input id="mpMonthly" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(2);' />
+	      			<input id="mpMonthly" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(2);' />
 	      			<label for="mpMonthly" accesskey="M"><spring:message code='ezSchedule.t74' /><u>M</u>)</label>
-	      			<input id="mpYearly" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(3);' />
+	      			<input id="mpYearly" style="margin-top: -2px;" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(3);' />
 	      			<label for="mpYearly" accesskey="Y"><spring:message code='ezSchedule.t75' /><u>Y</u>)</label>
 	    		</td>
 	  		</tr>
@@ -1224,17 +1224,17 @@
 		    	</td>
 		  	</tr>
 		  	<tr>
-		    	<td><input type="radio" name="optRangeEnd" value="radiobutton" value="-1" checked><spring:message code='ezSchedule.t111' /></td>
+		    	<td><input type="radio" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="-1" checked><spring:message code='ezSchedule.t111' /></td>
 		  	</tr>
 		  	<tr>
 		    	<td>
-		    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" value="1"/><spring:message code='ezSchedule.t112' />
+		    		<input type="radio" id="Instances" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="1"/><spring:message code='ezSchedule.t112' />
 		      		<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" style="text-align:center;" size="4" value='10' /><spring:message code='ezSchedule.t113' />		      		
 		      	</td>
 		  	</tr>
 		  	<tr>
 		    	<td>
-		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0"/><spring:message code='ezSchedule.t114' />
+		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="0"/><spring:message code='ezSchedule.t114' />
 		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		    	</td>
 		  	</tr>

@@ -206,3 +206,14 @@ var googleSyncMessages = {
 		strOnlyGoogle : "Googleカレンダーで提供する機能です。\n 修正、削除、ドラッグ＆ドロップはできません。 ",
 		strConfirmDelete : "同期を無効にしますか？"
 	}
+
+/* 2023-05-31 홍승비 - 일정관리 포틀릿 디자인 개선을 위한 메세지 추가 */
+var strLang125_2 = "個人";
+var strLang126_2 = "部署";
+var strLang127_2 = "会社";
+var strLang130_2 = "グループ";
+var strLang131_2 = "協業";
+var strLang141_2 = "グーグル";
+var strLangHSBScPt1 = "年";
+var strLangHSBScPt2 = "月";
+var strLangHSBScPt3 = "日";

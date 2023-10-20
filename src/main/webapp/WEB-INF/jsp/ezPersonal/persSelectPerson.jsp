@@ -495,7 +495,7 @@
 			    <td style="padding-right:5px">
 			    	<c:if test="${type != 'Proxy'}">
 			    	<div style="padding-top: 3px;">
-					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="width:120px; height:22px; margin-left:5px;" maxLength="50">
+					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="width:120px; height:25px; margin-left:5px;" maxLength="50">
 					    <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
 			    	</div>
 			    	</c:if>
@@ -514,7 +514,7 @@
 				            <option value="mail"><spring:message code='ezPersonal.t75'/></option>
 				            <option value="streetAddress" style="display:none"><spring:message code='ezPersonal.t76'/></option>
 				        </select>
-				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="width:130px; height:22px;" maxLength="50">
+				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="width:130px; height:25px;" maxLength="50">
 				        <a class="imgbtn" style="margin-right:5px;"><span onClick="search_click()"><spring:message code='ezPersonal.t83'/></span></a>
 				    </div>
 			    	</c:if>			    	

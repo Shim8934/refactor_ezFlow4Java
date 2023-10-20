@@ -1142,13 +1142,13 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleGroupListVO> getMyGroupList(String userID, int tenantID, String companyID) throws Exception {	
+	public List<ScheduleGroupVO> getMyGroupList(String userID, int tenantID, String companyID) throws Exception {	
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		
-		List<ScheduleGroupListVO> gList = ezScheduleDAO.getMyGroupList(map);
+		List<ScheduleGroupVO> gList = ezScheduleDAO.getMyGroupList(map);
 		
 		return gList;
 	}
@@ -1301,7 +1301,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void insertScheduleGroup(String gUID, String id, String displayName,	String displayName2, String groupName, String description, int tenantId, String companyID) throws Exception {
+	public void insertScheduleGroup(String gUID, String id, String displayName,	String displayName2, String groupName, String description, int tenantId, String companyID, String groupColor) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GUID", gUID);
 		map.put("v_USERID", id);
@@ -1311,12 +1311,13 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_DESCRIPTION", description);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_COMPANYID", companyID);
+		map.put("v_GROUPCOLOR", groupColor);
 		
 		ezScheduleDAO.insertScheduleGroup(map);
 	}
 
 	@Override
-	public void updateScheduleGroup(String groupId, String id, String displayName,	String displayName2, String groupName, String description, int tenantId, String companyID) throws Exception {
+	public void updateScheduleGroup(String groupId, String id, String displayName,	String displayName2, String groupName, String description, int tenantId, String companyID, String groupColor) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GUID", groupId);
 		map.put("v_USERID", id);
@@ -1326,6 +1327,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_DESCRIPTION", description);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_COMPANYID", companyID);
+		map.put("v_GROUPCOLOR", groupColor);
 		
 		ezScheduleDAO.updateScheduleGroup(map);
 	}
@@ -1938,7 +1940,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		File file = new File(commonUtil.detectPathTraversal(defaultPath + mhtPath));
 		if (!file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 		}
 		
 		String newContentPath  = commonUtil.detectPathTraversal(defaultPath + resultPath);
@@ -1960,7 +1962,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		File file = new File(commonUtil.detectPathTraversal(defaultPath + attachPath));
 		if (!file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 		}
 
 		String orgFileName;

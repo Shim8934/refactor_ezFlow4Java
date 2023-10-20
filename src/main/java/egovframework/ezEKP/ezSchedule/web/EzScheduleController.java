@@ -61,6 +61,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -76,6 +77,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
@@ -168,6 +170,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 	@Autowired
 	private EzScheduleGoogleService googleService;
+
+	@Autowired
+	private EzNewPortalService ezNewPortalService;
 	
 	/**
 	 * 일정관리 인덱스화면 호출함수
@@ -253,7 +258,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 				pubScheDeptVO2.add(vo);
 			}
 		
+		// 2023-09-06 조소정 - Left 메뉴에 로그인한 사용자가 소속된 일정그룹 모두 표출
 		List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId() ,companyID);
+		
+        for (int i = 0; i < groupList.size(); i++) {
+        	ScheduleGroupListVO data = groupList.get(i);
+
+        	if(data.getGroupColor() == null) {
+        		data.setGroupColor("#e9de13");
+        	}
+        }
 				
 		String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", loginVO.getTenantId());
 	    logger.debug("useWorkspaceSchedule : " + useWorkspaceSchedule);
@@ -810,8 +824,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 
 		
-		List<ScheduleGroupListVO> myList = new ArrayList<ScheduleGroupListVO>();
+		List<ScheduleGroupVO> myList = new ArrayList<ScheduleGroupVO>();
 		
+		// 2023-09-06 조소정 - 일정 그룹 관리 > 로그인한 사용자가 그룹장인 일정그룹 표출
 	    myList = ezScheduleService.getMyGroupList(loginSimpleVO.getId(), loginSimpleVO.getTenantId(),loginSimpleVO.getCompanyID());
 		
 		
@@ -823,13 +838,18 @@ public class EzScheduleController extends EgovFileMngUtil {
         result.append("<ROWS>");
 		
         for (int i = 0; i < myList.size(); i++) {
-        	ScheduleGroupListVO data = myList.get(i);
+        	ScheduleGroupVO data = myList.get(i);
+        	
+        	if (data.getGroupColor() == null) {
+        		data.setGroupColor("#e9de13");
+        	}
         	
         	result.append("<ROW>");
             result.append("<CELL>");
             result.append("<VALUE>CHECK</VALUE>");
             result.append("<DATA1>" + data.getGroupId() + "</DATA1>");
             result.append("<DATA2><![CDATA[" + data.getDescription() + "]]></DATA2>");
+            result.append("<DATA3><![CDATA[" + data.getGroupColor() + "]]></DATA3>");
             result.append("</CELL>");
             result.append("<CELL>");
             
@@ -903,6 +923,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
+		String groupColor = request.getParameter("groupColor");
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 
 		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
@@ -921,6 +942,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("loginUserName2", loginVO.getDisplayName2());
 		model.addAttribute("loginUserRoll",loginVO.getRollInfo());
 		model.addAttribute("groupID", groupID);
+		model.addAttribute("groupColor", groupColor);
 		model.addAttribute("memberList", mList);
 		model.addAttribute("groupName", mList.get(0).getGroupName());
 		model.addAttribute("description",mList.get(0).getDescription());
@@ -1147,16 +1169,18 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정그룹관리 그룹 추가 팝업
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleGroupWrite.do", method = RequestMethod.GET)
-	public String scheduleGroupWrite(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
+	public String scheduleGroupWrite(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleGroupWrite started ============");
 		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
+		String groupColor = request.getParameter("groupColor");
 
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("groupColor", groupColor);
 		
 		return "/ezSchedule/scheduleGroupWrite";
 	}
@@ -1198,10 +1222,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String description = request.getParameter("description");
 		String displayName = request.getParameter("displayName");
 		String displayName2 = request.getParameter("displayName2");		
+		String groupColor = request.getParameter("groupColor");
 
 		
 
-		ezScheduleService.updateScheduleGroup(groupId, loginVO.getId(), displayName, displayName2, groupName, description, loginVO.getTenantId() ,loginVO.getCompanyID());
+		ezScheduleService.updateScheduleGroup(groupId, loginVO.getId(), displayName, displayName2, groupName, description, loginVO.getTenantId() ,loginVO.getCompanyID(), groupColor);
 		
 		
 	}
@@ -1223,8 +1248,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String displayName = request.getParameter("displayName");
 		String displayName2 = request.getParameter("displayName2");		
 		String memberList = request.getParameter("memberList");
+		String groupColor = request.getParameter("groupColor");
 		
-		ezScheduleService.insertScheduleGroup(gUID, loginVO.getId(), displayName, displayName2, groupName, description, loginVO.getTenantId() ,loginVO.getCompanyID());
+		ezScheduleService.insertScheduleGroup(gUID, loginVO.getId(), displayName, displayName2, groupName, description, loginVO.getTenantId() ,loginVO.getCompanyID(), groupColor);
 
 		JSONParser parser = new JSONParser();
 		JSONArray jsonArray = (JSONArray)parser.parse(memberList);
@@ -2078,9 +2104,11 @@ public class EzScheduleController extends EgovFileMngUtil {
         }
         
         //2017-11-15 자원관리 사용하지 않을 경우 탭 처리
-        String accessList = ezPortalService.getAccessList(loginVO);
-		boolean checkResourceTab = ezPortalService.checkViewRightBln("6db81dc5-e8ba-49c8-b625-df4fd375a43a", accessList, loginVO.getTenantId());
-
+        //String accessList = ezPortalService.getAccessList(loginVO);
+		//boolean checkResourceTab = ezPortalService.checkViewRightBln("6db81dc5-e8ba-49c8-b625-df4fd375a43a", accessList, loginVO.getTenantId());
+		int reourceId = 6;
+		boolean checkResourceTab = ezNewPortalService.getCheckAuth(reourceId, userID, loginVO.getDeptID(), companyID, tenantID);
+		
         UploadSDate = startDateTime;
         UploadEDate = endDateTime;
         
@@ -3179,7 +3207,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         File file = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile"));
 
         if (!file.exists()) {
-        	file.mkdir();        
+        	file.mkdirs();        
         }
 
         StringBuffer strXML = new StringBuffer();
@@ -4930,5 +4958,17 @@ public class EzScheduleController extends EgovFileMngUtil {
     private String isGoogleSync(LoginVO userInfo) throws Exception {
 	    return googleService.getIsSync(userInfo); 
 	}
-
+    
+    /* 2023-08-31 조소정 - 일정관리 > 그룹 추가 또는 그룹 관리 시 그룹색상선택표 표출 */
+	@RequestMapping(value = "/ezSchedule/scheduleSelectGroupColor.do", method = RequestMethod.GET)
+	public String selectGroupColor(HttpServletRequest request, Model model) throws Exception {
+		logger.debug("============ selectGroupColor started ============");
+		
+		String groupColor = request.getParameter("groupColor");
+		
+		model.addAttribute("groupColor", groupColor);
+		
+		logger.debug("selectGroupColor ended");
+		return "/ezSchedule/scheduleSelectGroupColor";
+	}
 }

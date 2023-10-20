@@ -129,22 +129,44 @@
 	    </script>
 	</head>
 	<body class="newLeft">
-		<div id="left" class="lnb" style="overflow: auto">
+		<%-- 2023-06-23 황인경 - 디자인 개선 > 투표 > 좌측메뉴 > 클래스 및 구조 수정, LNB 이미지 삭제 --%>
+		<div id="left" class="lnb poll_left" style="overflow: auto">
 	    	<div class="left_title" title="<spring:message code='ezBoard.t371'/>">
 	    		<spring:message code='ezBoard.t371'/>
 	    		<span onclick="pollConfig();" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick="pollWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezPoll.t144" /></p>
+	        	<p class="btn_write01" onclick="pollWrite();"><spring:message code="ezPoll.t144" /></p>
 	        </div>
-	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
-				<ul class="lnbUL">
-					<li class="pollDiv"><span class="sub_iconLNB tree_poll_all"></span><span class="node_normal" onclick="pollClick(this)" pollId="1"><spring:message code="ezPoll.hdp18" /></span></li>
-					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ing"></span><span class="node_selected" onclick="pollClick(this)" pollId="2"><spring:message code="ezPoll.psb256" /></span></li>
-					<li class="pollDiv"><span class="sub_iconLNB tree_poll_wait"></span><span class="node_normal" onclick="pollClick(this)" pollId="4"><spring:message code="ezPoll.psb257" /></span></li>
-					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ok"></span><span class="node_normal" onclick="pollClick(this)" pollId="3"><spring:message code="ezPoll.psb258" /></span></li>
-				</ul>
-			</div>	        
+	        <div class="boardListBox mCustomScrollbar _mCS_1 mCS_no_scrollbar" style="overflow: hidden; padding-right: 0px; height: 911px;">
+				<div id="mCSB_1" class="mCustomScrollBox mCS-dark mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
+					<div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+						<ul class="lnbUL">
+							<li class="pollDiv"><span class="node_normal" onclick="pollClick(this)" pollId="1"><spring:message code="ezPoll.hdp18" /></span></li>
+							<li class="pollDiv"><span class="node_selected" onclick="pollClick(this)" pollId="2"><spring:message code="ezPoll.psb256" /></span></li>
+							<li class="pollDiv"><span class="node_normal" onclick="pollClick(this)" pollId="4"><spring:message code="ezPoll.psb257" /></span></li>
+							<li class="pollDiv"><span class="node_normal" onclick="pollClick(this)" pollId="3"><spring:message code="ezPoll.psb258" /></span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
 	    </div>
+<%-- 	    <div id="left" class="lnb" style="overflow: auto">
+	 	    	<div class="left_title" title="<spring:message code='ezBoard.t371'/>">
+	 	    		<spring:message code='ezBoard.t371'/>
+	 	    		<span onclick="pollConfig();" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
+	 	        </div>
+	 	        <div class="btn_writeBox">
+	 	        	<p class="btn_write01" onclick="pollWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezPoll.t144" /></p>
+	 	        </div>
+	 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
+	 				<ul class="lnbUL">
+	 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_all"></span><span class="node_normal" onclick="pollClick(this)" pollId="1"><spring:message code="ezPoll.hdp18" /></span></li>
+	 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ing"></span><span class="node_selected" onclick="pollClick(this)" pollId="2"><spring:message code="ezPoll.psb256" /></span></li>
+	 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_wait"></span><span class="node_normal" onclick="pollClick(this)" pollId="4"><spring:message code="ezPoll.psb257" /></span></li>
+	 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ok"></span><span class="node_normal" onclick="pollClick(this)" pollId="3"><spring:message code="ezPoll.psb258" /></span></li>
+	 				</ul>
+	 			</div>	        
+	 	    </div> --%>
 	</body>
 </html>

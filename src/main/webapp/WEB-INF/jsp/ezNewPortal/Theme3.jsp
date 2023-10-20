@@ -41,6 +41,9 @@
 	.orbit-wrapper .timer {display:none;}
 	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
 	.linkTxt {display: block; width: 78px; text-align: center; color: #333; font-size: 12px; height: 27px; letter-spacing: 0px; overflow: hidden;margin: 0 auto; padding: 2px 0px 0px 0px; word-break: break-all; line-height: 15px; text-overflow: ellipsis; white-space: nowrap;}
+	
+	/* 2023-06-08 홍승비 - 테마3 > 카운트 포틀릿의 li 태그 > 마우스 포인터 스타일 추가 */
+	.theme3CntLi {cursor:pointer;}
 </style>
 </head>
 <body class="mainbg" id="theme3Body">
@@ -101,7 +104,7 @@
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
-	var photoCount = 4;
+	var photoCount = 3;
  	var nowAttiTime = "";
  	var ptlNowAttiTime = "";
  	var beforeAlertDate = "";
@@ -200,11 +203,12 @@
 		linkBtnPre.classList.add('linkBtn_pre');
 		var preBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === 1 || totalCnt*1 === 0) {
+		/* 2023-06-08 홍승비 - 테마3 > 퀵링크 하단 좌우이동 버튼 이미지 통일 */
+		if (quickLinkPage.current*1 === 1 || totalCnt*1 === 0) {
 			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis.png');
 			preBtnImg.setAttribute('id', 'preBtnDis');
 		} else {
-			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn.png');
+			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis.png');
 			preBtnImg.setAttribute('id', 'preBtn');
 		}
 		
@@ -214,11 +218,11 @@
 		linkBtnNext.classList.add('linkBtn_next');
 		var nextBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === totalCnt*1 || totalCnt*1 === 0) {
+		if (quickLinkPage.current*1 === totalCnt*1 || totalCnt*1 === 0) {
 			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis.png');
 			nextBtnImg.setAttribute('id', 'nextBtnDis');
 		} else {
-			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn.png');
+			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis.png');
 			nextBtnImg.setAttribute('id', 'nextBtn');
 		}
 		
@@ -293,9 +297,10 @@
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
 							
-							if(portletId != "34") {
-								$("#" + portletId + "Portlet").css("background", "none");
-							}
+							/* 2023-06-08 홍승비 - 디자인 개선을 위해 테마3의 모든 포틀릿 background 스타일 제거  */
+							//if (portletId != "34") {
+							$("#" + portletId + "Portlet").css("background", "");
+							//}
 							
 							eventSetting(portletId, usedTheme, portletCode, false);
 							
@@ -519,7 +524,7 @@
 				$(".info_left").css("width", "189px");
 				$(".info_left").css("margin-right", "5px");
 				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
-				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("width", "calc(100%)");
 				$(".info_right").css("background", "#ffffff");
 			} else if (media1686.matches) {
 				$(".portlet").addClass("two_column");
@@ -528,7 +533,7 @@
 				$(".info_left").css("width", "189px");
 				$(".info_left").css("margin-right", "5px");
 				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
-				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("width", "calc(100%)");
 				$(".info_right").css("background", "#ffffff");
 			} else if (media1685.matches) {
 				$(".portlet").addClass("two_column");
@@ -537,7 +542,7 @@
 				$(".info_left").css("width", "189px");
 				$(".info_left").css("margin-right", "5px");
 				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
-				$(".info_right").css("width", "calc(100% - 194px)");
+				$(".info_right").css("width", "calc(100%)");
 				$(".info_right").css("background", "#ffffff");
 			} else if (media1589.matches) {
 				$(".portlet").removeClass("two_column");

@@ -307,7 +307,7 @@
 	        		data : {
 	        				deptID   : DeptID,
 	        				cell 	 : "company;description;displayName;title;telephoneNumber",
-	        				prop   : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+	        				prop   : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;userType",
 	        				type 	 : "user"
 	        				},
 	        		success: function(result) {
@@ -523,12 +523,12 @@
 	        if (listContentArry != "") {
 	            for (var i = 0; i < listContentArry.length; i++) {
 	                var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-	                var strName = document.getElementById(listContentArry[i]).getAttribute("_data10");
+	                var strName = document.getElementById(listContentArry[i]).getAttribute("_data11");
 	                var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 	                var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-	                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
-	                var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
-	                var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
+	                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data12");
+	                var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data14");
+	                var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data15");
 	                var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
 
 	                var listid = "MsgToList";
@@ -855,6 +855,11 @@
 	                        Sub_TD1.style.textAlign = "left";
 	                        Sub_TD1.setAttribute("class", "name");
 	                        var pDisplayName = "";
+
+							if($(M_TR).attr("_DATA10") == "addJob")																																															{
+								pDisplayName += "(겸) ";
+							}
+
 	                        var useOCS = "${useOCS}";
 	                        if (useOCS == "YES") {
 	                        pDisplayName += "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>";
@@ -944,7 +949,13 @@
 	                    	}
 
 	                    	var M_TR_TD3 = document.createElement("TD");
-	                    	M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+
+							var jobName = "";
+							if($(M_TR).attr("_DATA10") == "addJob"){
+								jobName += "(겸) ";
+							}
+							jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+							M_TR_TD3.innerHTML = jobName;
 	                    	M_TR_TD3.style.width = "80px";
 
 	                    	var M_TR_TD4 = document.createElement("TD");
@@ -971,7 +982,13 @@
 
 	                    	var M_TR_TD2 = document.createElement("TD");
 	                    	M_TR_TD2.style.width = "80px";
-	                    	M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+
+							var jobName = "";
+							if($(M_TR).attr("_DATA10") == "addJob"){
+								jobName += "(겸) ";
+							}
+							jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+							M_TR_TD2.innerHTML = jobName;
 
 	                    	var M_TR_TD3 = document.createElement("TD");
 	                    	M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
@@ -1031,7 +1048,7 @@
 	        		data : {
 	        				search : document.getElementById("search_type").value + "::" + keyword.value,
 	        				cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-	        				prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+	        				prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;userType",
 	        				type : "user"	
 	        				},
 	        		success: function(result) {

@@ -130,15 +130,14 @@ public class MPortalGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			int tenantId = info.getTenantId();
-			String primary = commonUtil.getPrimaryData(info.getLang(), tenantId);
+			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			String listCnt = request.getParameter("listCnt");
 			String approvalAccess = request.getParameter("approval");
 			String mailAccess = request.getParameter("mail");
 			String scheduleAccess = request.getParameter("schedule");
 			String boardAccess = request.getParameter("board");
 			String resourceAccess = request.getParameter("resource");
-			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", info.getTenantId());
 			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 				useExternalMailServer = "NO";
 			}
@@ -169,12 +168,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 					scheduleList = scheduleInfo.get("list");
 					scheduleCnt = scheduleInfo.get("cnt");
 					
-					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", tenantId);
+					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
 					if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
 						useWorkspaceSchedule = "NO";
 					}
 			        if("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
-			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", tenantId);
+			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
 			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
 			        }
 				}
@@ -184,7 +183,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
 				Locale locale = new Locale(ld);
 				
-				MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
+				MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
 				if ( opt.getLang().equals("1") ) {
 					locale = new Locale("ko");	
 				} else if ( opt.getLang().equals("3") ) {
@@ -199,19 +198,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 
 					if ("true".equals(mailAccess)) {
 						mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-
-						// 2022-11-14 이사라 - 기존에 받은편지함만 카운트 하였으나, 포탈 UX/UI 변경으로 모든 메일함의 안 읽은 편지 수를 카운트 하도록 수정
-						if (!"P".equals(type)) {
-							mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
-						} else {
-							JSONObject mailCntAll = ezEmailService.getUnreadCountAll(null, userId, locale, tenantId);
-							mailCnt = (int) mailCntAll.get("totalUnreadCountInAllAccounts");
-						}
+						mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 
 						// 메일 중요도 색깔 구하기
 						// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
 						if (mailList.stream().anyMatch(mail -> ((JSONObject) mail).get("importance").equals(2))) {
-							String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(tenantId))
+							String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
 									.map(MailColorVO::getImportanceColor).orElse("#ff0000");
 							dataObject.put("importanceColor", importanceColor);
 						}
@@ -227,11 +219,11 @@ public class MPortalGWController extends EgovFileMngUtil {
 				int boardCnt = 0;
 				
 				if (boardAccess.equals("true")) {
-					boardList = mBoardService.getBoardMainList(userId, listCnt, info.getDeptId(), info.getCompanyId(), tenantId, info.getOffSet());
+					boardList = mBoardService.getBoardMainList(userId, listCnt, info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet());
 					
 					/* 2018-07-03 홍승비 - 조건에 companyID 추가 */
 					//새게시물 리스트 카운트
-					boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), tenantId, "");
+					boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
 				}
 				
 				//오늘의자원 리스트
@@ -280,7 +272,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				
 				userInfo.setId(info.getUserId());
 				userInfo.setLocale(locale);
-				userInfo.setTenantId(tenantId);
+				userInfo.setTenantId(info.getTenantId());
 				userInfo.setOffset(info.getOffSet());
 				userInfo.setPrimary(primary);
 		
@@ -318,7 +310,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					// 메일 중요도 색상
 					// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
 					if (hasHighImportance) {
-						String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(tenantId))
+						String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
 								.map(MailColorVO::getImportanceColor).orElse("#ff0000");
 						dataObject.put("importanceColor", importanceColor);
 					}
@@ -371,7 +363,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					String tempEDate = nowDate.substring(0, 10) + " 23:59:59";
 					List<ScheduleInfoVO> schList = mScheduleService.scheduleList(info, tempSDate, tempEDate, "", "", "");
 					
-					String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", tenantId);
+					String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", info.getTenantId());
 					if(useGoogleCalendar.equals("YES")) {
 						userInfo = commonUtil.getUserForGw(userId, serverName);
 						userInfo.setDisplayName(info.getUserName());
@@ -407,12 +399,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 						}
 					}
 					
-					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", tenantId);
+					String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
 					if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
 						useWorkspaceSchedule = "NO";
 					}
 					if("YES".equalsIgnoreCase(useWorkspaceSchedule)) {
-			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", tenantId);
+			        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
 			        	dataObject.put("workspaceHostUrl", workspaceHostUrl);
 			        }
 					
@@ -754,12 +746,26 @@ public class MPortalGWController extends EgovFileMngUtil {
 			List<OrganUserVO> addJobList = new ArrayList<OrganUserVO>();
 			
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, lang, tenantId);
+			userVO.setTitle1(userVO.getTitle1().replace("\'","\\'"));
+			userVO.setTitle1(userVO.getTitle1().replace("\"","&quot;"));
+			userVO.setTitle2(userVO.getTitle2().replace("\'","\\'"));
+			userVO.setTitle2(userVO.getTitle2().replace("\"","&quot;"));
+			userVO.setDescription1(userVO.getDescription1().replace("\'","\\'"));
+			userVO.setDescription1(userVO.getDescription1().replace("\"","&quot;"));
+			userVO.setDescription2(userVO.getDescription2().replace("\'","\\'"));
+			userVO.setDescription2(userVO.getDescription2().replace("\"","&quot;"));
 			addJobList.add(userVO);
 			
 			List<OrganUserVO> addJobList2 = ezOrganAdminService.getUserAddJobList(userId, lang, tenantId);
 			for (OrganUserVO addJob: addJobList2) {
-				addJob.setTitle(addJob.getTitle().replace("\'","\\'"));
-				addJob.setDescription(addJob.getDescription().replace("\'","\\'"));
+				addJob.setTitle1(addJob.getTitle1().replace("\'","\\'"));
+				addJob.setTitle1(addJob.getTitle1().replace("\"","&quot;"));
+				addJob.setTitle2(addJob.getTitle2().replace("\'","\\'"));
+				addJob.setTitle2(addJob.getTitle2().replace("\"","&quot;"));
+				addJob.setDescription1(addJob.getDescription1().replace("\'","\\'"));
+				addJob.setDescription1(addJob.getDescription1().replace("\"","&quot;"));
+				addJob.setDescription2(addJob.getDescription2().replace("\'","\\'"));
+				addJob.setDescription2(addJob.getDescription2().replace("\"","&quot;"));
 			}
 			addJobList.addAll(addJobList2);
 			

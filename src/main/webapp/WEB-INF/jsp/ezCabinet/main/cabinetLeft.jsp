@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}"       type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	</head>
 	
@@ -20,24 +21,24 @@
 			
 			<div class="cabinetListBox">
 				<!-- 나의 캐비넷  -->
-				<h2 id="myCabinet" class="on"><span class="sub_iconLNB tree_arrow_up"></span><span><spring:message code='ezCabinet.t02'/></span></h2>
-				<ul class="lnbUL">
-					<div id="cabinetTree" class="cabinetTree"></div>
+				<h2 id="myCabinet" class="on"><span class="sub_iconLNB tree_arrow_down"></span><span style="font-size: 16px; font-weight: bold;"><spring:message code='ezCabinet.t02'/></span></h2>
+				<ul class="lnbUL on">
+					<li id="cabinetTree"></li>
 					<!-- 캐비넷  관리 -->
-					<li><span class="sub_iconLNB tree_manage" style="float:left"></span><span id="cabinetManagement" class="list_text"><spring:message code='ezCabinet.t03'/></span></li>
+					<li><span id="cabinetManagement" class="list_text"><spring:message code='ezCabinet.t03'/></span></li>
 				</ul>
 				
 				<!-- 연동 캐비넷 -->
-				<h2 id="relatedCabinet"><span class="sub_iconLNB tree_arrow_up"></span><span><spring:message code='ezCabinet.t32'/></span></h2>
-				<ul class="lnbUL off"><div id="cabinetModulesTree" class="cabinetTree2"></div></ul>
+				<h2 id="relatedCabinet"><span class="sub_iconLNB tree_plus"></span><span style="font-size: 16px; font-weight: bold;"><spring:message code='ezCabinet.t32'/></span></h2>
+				<ul class="lnbUL off"><li id="cabinetModulesTree" class="cabinetTree2"></li></ul>
 				
 				<!-- 공유한 캐비넷 -->
-				<h2 id="shareCabinet"><span class="sub_iconLNB tree_arrow_up"></span><span><spring:message code='ezCabinet.t157'/></span></h2>
-				<ul class="lnbUL off"><div id="myShareTree" class="cabinetTree2"></div></ul>
+				<h2 id="shareCabinet"><span class="sub_iconLNB tree_plus"></span><span style="font-size: 16px; font-weight: bold;"><spring:message code='ezCabinet.t157'/></span></h2>
+				<ul class="lnbUL off"><li id="myShareTree" class="cabinetTree2"></li></ul>
 				
 				<!-- 공유받은 캐비넷 -->
-				<h2 id="sharedCabinet"><span class="sub_iconLNB tree_arrow_up"></span><span><spring:message code='ezCabinet.t05'/></span></h2>
-				<ul class="lnbUL off"><div id="cabinetShareTree" class="cabinetTree2"></div></ul>
+				<h2 id="sharedCabinet"><span class="sub_iconLNB tree_plus"></span><span style="font-size: 16px; font-weight: bold;"><spring:message code='ezCabinet.t05'/></span></h2>
+				<ul class="lnbUL off"><li id="cabinetShareTree" class="cabinetTree2"></li></ul>
 			</div>
 			
 			<!-- 용량보기 -->
@@ -120,8 +121,21 @@
 				
 				function handleErrorTree(errorUrl) {window.parent.frames["right"].location.href = errorUrl;}
 				
-				function openCabinet(obj) {
-					var leftDivElmt = document.getElementById("left");
+				function openCabinet(obj) { // 2023-06-23 황인경 - 디자인 개선 > 캐비넷 > 좌측메뉴 > 트리구조 LNB 이미지 수정 및 클래스 제어
+					if ($("#" + obj).hasClass("on")) {
+						$("#" + obj).attr("class", "off");
+						$("#" + obj).next().attr("class", "lnbUL off");
+						$("#" + obj).children().eq(0).attr("class", "sub_iconLNB tree_plus");
+					} else {
+						$("h2.on").attr("class", "off");
+						$(".lnbUL.on").attr("class", "lnbUL off");
+						$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+						$("#" + obj).attr("class", "on");
+						$("#" + obj).next().attr("class", "lnbUL on");
+						$("#" + obj).children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+					}
+
+ 					/*var leftDivElmt = document.getElementById("left");
 					var h2Elmt      = leftDivElmt.querySelectorAll("h2");
 					var ulElmt      = leftDivElmt.querySelectorAll("ul");
 					
@@ -137,7 +151,7 @@
 							h2Elmt[i].className = "on";
 							ulElmt[i].className = "lnbUL";
 						}
-					}
+					} */
 				}
 				
 				function getCabinet(obj) {

@@ -12,7 +12,7 @@
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	#theme2Body .two_column{width:48%;}
-	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
+	/*#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}*/
 	.top_two_column {margin : 0px 0px 25px 0px;}
 	.orbit-wrapper .timer {display:none;}
 	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
@@ -42,37 +42,43 @@
     <div class="sec1Layout_left">
     	<article class="personal">
             <div class="info">
-            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/default_pic.gif" style="border-radius:100px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:100px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
+            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/default_pic.gif" style="border-radius:20px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:20px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
                 <dl class="info_txt">
-                	<dt>${deptName}
-                		<span class="info_set" id="main_personalEnv"></span>
-                		<span id="main_portletEnv" style="float:left;"><img src="/images/admin/frameSetting.png" style="margin-top:11px;margin-left:21px;cursor:pointer;background-color:#b9b9b9; border:1px solid #b9b9b9;"/></span>
+                	<dt>
+                		<%-- 2023-06-15 황인경 - 디자인 개선 > 테마2 > 상단 사용자 정보 > 부서 추가 --%>
+                		<span class="info_team">${deptName}</span>
+                		<span class="info_name">${userName}</span>
+                		<span class="info_icon">
+							<span class="info_set" id="main_personalEnv"><img src="/images/admin/infoSetting.png" alt=""></span>
+							<span id="main_portletEnv"><img src="/images/admin/frameSetting.png"></span>
+                		</span>
                 	</dt>
-                    <dt>${userName} ${userTitle}</dt>
-                    <dd><spring:message code='ezNewPortal.yej06' />&nbsp;:&nbsp;${lastLogin}</dd>
-                    <dd><spring:message code='ezNewPortal.jhy01' />&nbsp;:&nbsp;${lastLoginIP}</dd>
+                    <dd><spring:message code='ezNewPortal.yej06'/> <span>${lastLogin}</span></dd>
+                    <%-- 2023-06-15 황인경 - 디자인 개선 > 테마2 > 상단 사용자 정보 > 최종접속 IP 추가 --%>
+                    <dd><spring:message code='ezNewPortal.hik01'/> <span>${lastLoginIP}</span></dd>
                 </dl>
             </div>
             <div class="personal_content">
             <c:choose>
             	<c:when test="${useAttitude eq 'YES' }">
+            		<%-- 2023-06-15 황인경 - 디자인 개선 > 테마2 > 상단 > 현재시간 문구 추가 --%>
+         			<dl class="current"><spring:message code='ezNewPortal.t012' /></dl>
+					<dl class="time">
+	                    <dd id="timeFlow"></dd>
+	                </dl>
 	                <dl class="commute">
 	                	<dt id="inAttiBtn" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t013' /></dt>
-	                	<dd id="inAttiBtn_txt" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t126' /></dd>
+	                	<%-- <dd id="inAttiBtn_txt" class="main_out" type="A01" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t126' /></dd> --%>
 	                </dl>
 	                <dl class="commute">
 	                	<dt id="outAttiBtn" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t014' /></dt>
-	                	<dd id="outAttiBtn_txt" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t126' /></dd>
-	                </dl>    
-	             	<dl class="time">
-	                	<dt><spring:message code='ezNewPortal.t012' /></dt>
-	                    <dd id="timeFlow"></dd>
-	                </dl>        	
+	                	<%-- <dd id="outAttiBtn_txt" class="main_out" type="A03" datetype="2" onclick="checkHoliday(this, '${usedTheme}')"><spring:message code='ezNewPortal.t126' /></dd> --%>
+	                </dl>
             	</c:when>
             	<c:otherwise>
-	            	<dl class="time commuteNone">
-	                	<dt><spring:message code='ezNewPortal.t012' /></dt>
-	                    <dd id="timeFlow"></dd>
+	            	<dl class="current"><spring:message code='ezNewPortal.t012' /></dl>
+	            	<dl class="time">
+	                    <dd id="timeFlow" style="line-height:30px;"></dd>
 	                </dl>            	
             	</c:otherwise>
             </c:choose>
@@ -81,85 +87,96 @@
         <div class="bannerlink_area">
         	<article class="writebanner">
                 <ul class="writebannerUL">
-                    <li>
-                    	<c:choose>
-                    		<c:when test="${useMail eq 'NO' }">								
-                    			<dl id="NewMail" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="NewMail">
-                           		 	<dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.t015' /></dt>
-                            		<dd id="unreadMailCount" class="iconCount_none">0</dd>
-                        		</dl>
-                    		</c:otherwise>
-                    	</c:choose>
-                    </li>
-                    <li>
-                    	<c:choose>
-                    		<c:when test="${useApproval eq 'NO' }">								
-                    			<dl id="AprSign" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="AprSign">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.t016' /></dt>
-                            		<dd id="approvalCount" class="iconCount_none">0</dd>
-                        		</dl>
-                    		</c:otherwise>
-                    	</c:choose>
-                    </li>
-                    <li>
-                    	<c:choose>
-                    		<c:when test="${useSchedule eq 'NO' }">								
-                    			<dl id="Schedule" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="Schedule">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.gu3' /></dt>
-                            		<dd id="scheduleCount" class="iconCount_none">0</dd>
-                        		</dl>
-                    		</c:otherwise>
-                    	</c:choose>
-                    </li>
-                    <li>
-                    	<c:choose>
-                    		<%-- 
-                    		<c:when test="${useQuestion eq 'NO' }">								
-                    			<dl id="Poll" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="Poll">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.gu4' /></dt>
-                            		<dd id="pollCount" class="iconCount_none">0</dd>
-                       			</dl>
-                    		</c:otherwise>
-                    		 --%>
-                    		<c:when test="${useSurvey eq 'NO' }">								
-                    			<dl id="Survey" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL" id="Survey">
-                            		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
-                            		<dt><spring:message code='ezNewPortal.gu4' /></dt>
-                            		<dd id="surveyCount" class="iconCount_none">0</dd>
-                       			</dl>
-                    		</c:otherwise>
-                    	</c:choose>
-                    </li>
-                    <li>
+                   	<c:choose>
+                   		<c:when test="${useMail eq 'NO'}">
+                   		<li>
+                   			<dl id="NewMail" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+						</li>
+                   		</c:when>
+                   		<c:otherwise>
+                   		<li>
+                       		<dl class="writebannerDL" id="NewMail">
+                       		 	<dt><img src="/images/ezNewPortal/theme2Img/writebanner01.png" alt="<spring:message code='ezNewPortal.t015' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.t015' /></dt>
+                           		<dd id="unreadMailCount" class="iconCount_none">0</dd>
+                       		</dl>
+                       	</li>
+                   		</c:otherwise>
+                   	</c:choose>
+                   	<c:choose>
+                   		<c:when test="${useApproval eq 'NO'}">
+                   		<li>
+                   			<dl id="AprSign" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+						</li>
+                   		</c:when>
+                   		<c:otherwise>
+                   		<li>
+                       		<dl class="writebannerDL" id="AprSign">
+                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner02.png" alt="<spring:message code='ezNewPortal.t016' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.t016' /></dt>
+                           		<dd id="approvalCount" class="iconCount_none">0</dd>
+                       		</dl>
+                       	</li>
+                   		</c:otherwise>
+                   	</c:choose>
+                   	<c:choose>
+                   		<c:when test="${useSchedule eq 'NO'}">
+                   		<li>
+                   			<dl id="Schedule" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+						</li>
+                   		</c:when>
+                   		<c:otherwise>
+                   		<li>
+                       		<dl class="writebannerDL" id="Schedule">
+                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner03.png" alt="<spring:message code='ezNewPortal.gu3' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.gu3' /></dt>
+                           		<dd id="scheduleCount" class="iconCount_none">0</dd>
+                       		</dl>
+                       	</li>
+                   		</c:otherwise>
+                   	</c:choose>
+                   	<c:choose>
+                   	<%-- 구버전 전자설문(useQuestion) 영역 --%>
+                   		<%-- 
+                   		<c:when test="${useQuestion eq 'NO' }">
+                   			<dl id="Poll" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+                   		</c:when>
+                   		<c:otherwise>
+                       		<dl class="writebannerDL" id="Poll">
+                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.gu4' /></dt>
+                           		<dd id="pollCount" class="iconCount_none">0</dd>
+                      			</dl>
+                   		</c:otherwise>
+                   		 --%>
+                   		<c:when test="${useSurvey eq 'NO'}">
+                   		<li>
+                   			<dl id="Survey" class="icon_disabled writebannerDL">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+							</dl>
+						</li>
+                   		</c:when>
+                   		<c:otherwise>
+                   		<li>
+                       		<dl class="writebannerDL" id="Survey">
+                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
+                           		<dt><spring:message code='ezNewPortal.gu4' /></dt>
+                           		<dd id="surveyCount" class="iconCount_none">0</dd>
+                      		</dl>
+                      	</li>
+                   		</c:otherwise>
+                   	</c:choose>
+                    
+                    <%-- 2023-06-05 홍승비 - 디자인 개선을 위해 테마2 상단 영역 회람판 메뉴 표출되지 않도록 숨김 / 협업 메뉴 이미지 교체 --%>
+                    <li style="display:none;">
                     	<c:choose>
                     		<c:when test="${useCircular eq 'NO' }">								
                     			<dl id="Circular" class="icon_disabled writebannerDL">
@@ -175,21 +192,69 @@
                     		</c:otherwise>
                     	</c:choose>
                     </li>
-                    <li>
 					<c:if test="${useEzWorkspace}">
-                    <dl class="writebannerDL" id="ezWorkspace">
-                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
-                        <dt><spring:message code='ezNewPortal.pjg01' /></dt>
-                        <dd class="iconCount_none" id="workspaceCnt">0</dd>
-                    </dl>
-                	</c:if>                        
+					<li>
+	                    <dl class="writebannerDL" id="ezWorkspace">
+	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner05.png" alt="협업"></dt>
+	                        <dt><spring:message code='ezNewPortal.pjg01' /></dt>
+	                        <dd class="iconCount_none" id="workspaceCnt">0</dd>
+	                    </dl>
                     </li>
+                	</c:if>                        
+                    <%-- 조직도, 커뮤니티, 메모 영역 추가 (카운트 없음) --%>
+					<li>
+                    <dl class="writebannerDL" id="Organ">
+                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="조직도"></dt>
+                        <dt><spring:message code='ezNewPortal.t024'/></dt>
+                    </dl>
+                    </li>
+                    <c:if test="${useCommunity eq 'YES'}">
+					<li>
+	                    <dl class="writebannerDL" id="Community">
+	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner07.png" alt="커뮤니티"></dt>
+	                        <dt><spring:message code='main.t1006'/></dt>
+	                    </dl>
+                    </li>
+                    </c:if>
+                    <c:if test="${useMemo eq 'YES'}">
+					<li>
+	                    <dl class="writebannerDL" id="Memo">
+	                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner08.png" alt="메모"></dt>
+	                        <dt><spring:message code='ezMemo.t001'/></dt>
+	                    </dl>
+                    </li>
+                    </c:if>
                 </ul>
             </article>
         </div>
-        </div>
+	</div>
+	
+	<%-- 2023-06-05 홍승비 - 디자인 개선을 위해 테마2 상단 영역 공지사항 게시판 포틀릿 추가 --%>
+	<c:if test="${useBoard eq 'YES'}">
+    <div class="sec1Layout_btm_left">
+        <dl class="portlet_title">
+            <dt class="portletText"><img src="/images/ezNewPortal/theme2Img/sec1_noti.png" alt=""><spring:message code='main.t65'/></dt>
+            <dd class="portletPlus" id="theme2Sec1NoticePlusBtn">
+                <img src="/images/ezNewPortal/portlet_Plus1.png">
+            </dd>
+        </dl>
+        <ul id="theme2Sec1NoticeBoardUL" class="portlet_list">
+			<dl class="nodata">
+				<dt style="padding-top:0px;">
+					<img src="/images/kr/main/noData_sIcon.png">
+				</dt>
+				<dd><spring:message code='ezNewPortal.t018' /></dd>
+			</dl>
+        </ul>
+    </div>
+	</c:if>
+	
+	<c:if test="${useSchedule eq 'YES'}">
     <div class="sec1Layout_middle">
         <div class="main_schedule">
+			<article class="calender">
+            	<div id="CalendarMini_Top"></div>
+            </article>
         	<article class="list">
             	<div class="maintab01">
                 	<p class="left_on" id="pSchedule"><spring:message code='ezNewPortal.t027' /></p>
@@ -198,8 +263,7 @@
                 <div class="scrollbox-play-light">
                 	<div class="scrollbox">
                     	<div class="content">
-                        	<ul class="schedule_list" id="schedule_list_Top">
-                            </ul>
+                        	<ul class="portlet_list" id="schedule_list_Top"></ul>
                         </div>
                         <div class="scrollbar-v scrollbar-v-disabled">
                         	<img class="button-up" style="display:none;">
@@ -209,28 +273,45 @@
                     </div>
                 </div>
             </article>
-            <article class="calender">
-            	<div id="CalendarMini_Top">
-            	
-                </div>
-            </article>
         </div>
-        </div>
-    	<div class="sec1Layout_right">
+	</div>
+	</c:if>
+	
+	<%-- 2023-06-05 홍승비 - 디자인 개선을 위해 테마2 상단 영역 메일/웹폴더 용량 추가 --%>
+	<%-- 실제 기능은 구현 필요 (솔루션 1팀 지원 필요) --%>
+	<div class="sec1Layout_right">
         <article class="event">
-            <p></p>
+        	<c:if test="${useMail eq 'YES'}">
+	        <dl class="portlet_title">
+	            <dt class="portletText"><spring:message code='main.t00045'/></dt>
+	            <dd class="mailGraph" id="mailGraphPortal">
+	                <p class="mGraph"><span id="mGraphSpanPortal"></span></p><span class="mGraph_text" id="useMailBoxPortal"></span>
+	            </dd>
+	        </dl>
+	        </c:if>
+	        <c:if test="${useWebfolder eq 'YES'}">
+	        <dl class="portlet_title">
+	            <dt class="portletText"><spring:message code='ezWebFolder.t10'/></dt>
+	            <dd class="mailGraph" id="usedRatePortal">
+	                <p class="mGraph"><span id="usedRateSpanPortal"></span></p><span class="mGraph_text" id="usingCpacityPortal"></span>
+	            </dd>
+	        </dl>
+	        </c:if>
         </article>
         <article class="exellentEmployee">
-        	<p class="title"><span><spring:message code='ezNewPortal.t127' /></span><span class="color"><spring:message code='ezNewPortal.t128' /></span></p>
+			<dl class="portlet_title">
+	            <dt class="portletText">
+	                <img src="/images/ezNewPortal/theme2Img/icon_excellent.png"><spring:message code='ezNewPortal.t127'/> <spring:message code='ezNewPortal.t128'/>
+	            </dt>
+	        </dl>
             <dl class="excellent_info" id="excellentcontent">
-            	<dt class="pic" id="emPic"></dt>
                 <dt id="exellentEmpName" style="font-size:15px"></dt>
                 <dt id="exellentDeptName" style="font-size:13px; color:#777; font-weight: normal"></dt>
-                <dd><img src="/images/ezNewPortal/theme2Img/icon_excellent.png"></dd>
+                <dd id="emPic"><%-- <img src="/images/ezNewPortal/best_month.png"> --%></dd>
             </dl>
         </article>
     </div>
-    </section>
+	</section>
 </div>
 <div class="section_main">
 	<section>
@@ -277,10 +358,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_Top_EIP.js')}"></script>
 	</c:otherwise>
 </c:choose> --%>
+<%-- 2023-06-07 홍승비 - 테마2 > 상단 사용자 정보 영역 좌측 하단 > 회사별 공지사항 게시판 표출 영역 추가 --%>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/boardPortletTheme2Upper.js')}"></script>
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
-	var photoCount = 4;
+	var photoCount = 3;
  	var nowAttiTime = "";
  	var ptlNowAttiTime = "";
  	var beforeAlertDate = "";
@@ -423,11 +506,12 @@
 		linkBtnPre.classList.add('linkBtn_pre');
 		var preBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === 1 || totalCnt*1 === 0) {
-			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis.png');
+		/* 2023-06-07 홍승비 > 홈 > 테마2 퀵링크 영역 디자인 개선을 위한 이미지 수정 */
+		preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis_bk.png');
+		
+		if (quickLinkPage.current*1 === 1 || totalCnt*1 === 0) {
 			preBtnImg.setAttribute('id', 'preBtnDis');
 		} else {
-			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn.png');
 			preBtnImg.setAttribute('id', 'preBtn');
 		}
 		
@@ -437,11 +521,11 @@
 		linkBtnNext.classList.add('linkBtn_next');
 		var nextBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === totalCnt*1 || totalCnt*1 === 0) {
-			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis.png');
+		nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis_bk.png');
+		
+		if (quickLinkPage.current*1 === totalCnt*1 || totalCnt*1 === 0) {
 			nextBtnImg.setAttribute('id', 'nextBtnDis');
 		} else {
-			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn.png');
 			nextBtnImg.setAttribute('id', 'nextBtn');
 		}
 		
@@ -574,12 +658,14 @@
 				var bestEmployee = result.bestEmployee;
 				var excellentContent = document.getElementById('excellentcontent');
 				
-				if(bestEmployee === null || bestEmployee ==  undefined) {
+				if (bestEmployee === null || bestEmployee ==  undefined) {
 					var emPic = document.getElementById('emPic');
 					
 					var img = document.createElement('img');
  					img.style.width = '100%';
-					img.style.height = '100%'; 
+					img.style.height = '100%';
+ 					img.style.maxWidth = '70px';
+					img.style.maxHeight = '60px';
 					img.src = '\/images/ezNewPortal/bestEmployee_pic_none.png';
 
 					emPic.appendChild(img);
@@ -596,12 +682,14 @@
 					var img = document.createElement('img');
  					img.style.width = '100%';
 					img.style.height = '100%';
+					img.style.maxWidth = '70px';
+					img.style.maxHeight = '60px';
 					img.src = bestEmployee.userImg;
 					
 					emPic.appendChild(img);
 					
 					document.getElementById("exellentDeptName").innerText = bestEmployee.userDeptName;
-					document.getElementById("exellentEmpName").innerText = '"' + bestEmployee.userName + '"';
+					document.getElementById("exellentEmpName").innerText = (bestEmployee.userName + " " + bestEmployee.title);
 				}
 			}
 		});
@@ -672,14 +760,22 @@
 			return;
 		}
 		
+		/* 2023-06-05 홍승비 - 디자인 개선을 위헤 상단 영역 일정 리스트 표출 수정 (li, span 태그 분리 / 클릭 이벤트는 기존 li 태그로 유지) */
         data.forEach(function(item, index) {
-        	if(index > 4) return;
+        	if (index > 4) { return; }
         	var li = document.createElement('li');
+        	var span = document.createElement('span');
+        	
+        	span.className = "txt";
         	
         	// 2020-02-25 김정언
-        	if(item.dateType == "4") {
+        	if (item.dateType == "4") {
+        		/*
         		li.textContent = item.title + " : " + item.creatorName;
             	li.style.cursor = "pointer";
+            	*/
+            	span.innerText = (item.title + " : " + item.creatorName);
+            	
             	li.addEventListener('click', function() {  			    
             		if (CrossYN()) {
     					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", GetOpenWindowfeature(672, 640));
@@ -691,8 +787,12 @@
     				}   		
             	});
         	} else if(item.scheduleType == '9') {
+        		/*
         		li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
 	        	li.style.cursor = "pointer";
+	        	*/
+	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + item.title);
+	        	
 	        	li.addEventListener('click', function() {
 				    var wWeight = "760";
 				    var wHeight = "650";
@@ -704,9 +804,13 @@
 			        window.open("/ezSchedule/googleScheduleRead.do" + "?id=" + encodeURIComponent(item.googleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&startdate=" + item.startDate + "&enddate=" + item.endDate + "&pattern=0","",
 				        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
 	        	});
-        	} else {        		
+        	} else {
+        		/*
 	        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
 	        	li.style.cursor = "pointer";
+	        	*/
+	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + item.title);
+	        	
 	        	li.addEventListener('click', function() {
 				    var wWeight = "760";
 				    var wHeight = "670";
@@ -719,6 +823,8 @@
 				        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
 	        	});
         	}
+        	
+        	li.appendChild(span);
         	schList.appendChild(li);
         });
 	}
@@ -953,6 +1059,9 @@
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
 		var useSchedule = "<c:out value='${useSchedule}'/>";
+		var useCommunity = "<c:out value='${useCommunity}'/>";
+		var useMemo = "<c:out value='${useMemo}'/>";
+		var useBoard = "<c:out value='${useBoard}'/>";
 		
 		//메뉴 이동(위) --- 권한이 YES일 때만 버튼 동작
 		if (useMail !== "NO") {
@@ -977,6 +1086,16 @@
 		
 		if (useApproval !== "NO") {
 			document.getElementById("AprSign").addEventListener('click', function(){quickMenuOpen('ApprG');}, false);
+		}
+		
+		/* 2023-06-05 홍승비 - 테마2 상단 사용자 영역 > 조직도, 커뮤니티, 메모 메뉴 연결 추가 */
+		document.getElementById("Organ").addEventListener('click', function(){quickMenuOpen('Organ');}, false);
+		
+		if (useCommunity !== "NO") {
+			document.getElementById("Community").addEventListener('click', function(){quickMenuOpen('Community');}, false);
+		}
+		if (useMemo !== "NO") {
+			document.getElementById("Memo").addEventListener('click', function(){quickMenuOpen('Memo');}, false);
 		}
 		
 		//ajax로 count 불러오기
@@ -1066,8 +1185,79 @@
 		assembleScheduleList(pScheduleList);
 		
 		schedule_get_holiday_top(); // getholiday를 2번 부른다. 1번만 호출하도록 수정할 필요 있음.
+		
+		/* 2023-06-07 홍승비 - 테마2 > 상단 사용자 정보 영역 좌측 하단 > 회사별 공지사항 게시판 표출 영역 추가 (boardPortletTheme2Upper.js 참고)  */
+		if (useBoard == "YES") {
+			getTheme2NotiBoardItem();
+		}
+		
 		setPortalRefresh();
+		
+		// 2023-06-20 한슬기 - 테마2 > 상단에 메일 용량 표시 추가
+		var getMailCapacity = function() {
+	        var mailCapacityInfo = loadXMLString("${mailCapacityInfo}");
+			var mGraphSpanPortal = $("#mGraphSpanPortal");
+	        var useMailBoxPortal = $("#useMailBoxPortal");
+	        useMailBoxPortal.text(GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[1].textContent
+	        					 + "\/"+GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[0].textContent);
+	        mGraphSpanPortal.css('width', GetChildNodes(SelectNodes(mailCapacityInfo, "DATA/ROW")[0])[2].textContent);
+		}
+		
+		getMailCapacity();
+		
+		// 2023-06-20 한슬기 - 테마2 > 상단에 웹폴더(개인) 용량 표시 추가 
+		<c:if test="${not empty webFolderPersonalFolderId}">
+		
+			var webFolderPersonalFolderCapacity = function() {
+				// 용량정보 표시
+				function getUsageSuffix(webFolderPersonalFolderCapacity) {
+					var max = webFolderPersonalFolderCapacity.totalCapacity * 1024 * 1024;
+					var usage = webFolderPersonalFolderCapacity.totalUsed / 1024;
+					
+					return kilobyteCalculation(usage) + "/" + kilobyteCalculation(max);
+				}
+				
+				// KB, MB, GB 표시
+				function kilobyteCalculation(kilobyte) {
+
+					if (kilobyte >= 1024 * 1024) {
+						return trimDecimal(kilobyte / (1024 * 1024)) + "G";
+					} else if (kilobyte >= 1024) {
+						return trimDecimal(kilobyte / 1024) + "M";
+					} else {
+						return trimDecimal(kilobyte) + "K";
+					}
+				}
+				
+				function trimDecimal(number) {
+					var str = Math.floor(number);
+					
+					return str;
+				}
+				
+				$.ajax({
+					type: "POST",
+					async: true,
+					url: "/ezWebFolder/getCapacity.do",
+					dataType:"json",
+					data: {
+						folderId: ${webFolderPersonalFolderId}
+					},
+					success: function(data) {
+						var webFolderPersonalFolderCapacity = data.capacity;
+						var usedRate = Math.min(webFolderPersonalFolderCapacity.usedRate, 100);
+						var usageSuffix = getUsageSuffix(webFolderPersonalFolderCapacity);
+						
+						$("#usedRateSpanPortal").css("width", usedRate + "%");
+						$("#usingCpacityPortal").text(usageSuffix);
+					}
+				});
+			}
+			
+			webFolderPersonalFolderCapacity();
+		</c:if>
 	});
+	
 </script>
 <!-- 협업 시작-->
 <c:if test="${useEzWorkspace}">

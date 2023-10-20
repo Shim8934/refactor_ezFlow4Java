@@ -243,8 +243,8 @@
 					<spring:message code='ezAttitude.t28' />
 	            </th>
 	            <td style="width: 500px; text-align:left">
-	            	<input type="radio" name="attitude_mod_appl" value="1"/><spring:message code='ezAttitude.t29' />
-	            	<input type="radio" name="attitude_mod_appl" value="0"/><spring:message code='ezAttitude.t30' />
+	            	<input type="radio" name="attitude_mod_appl" style="margin-top: -1px;" value="1"/><spring:message code='ezAttitude.t29' />
+	            	<input type="radio" name="attitude_mod_appl" style="margin-top: -1px;" value="0"/><spring:message code='ezAttitude.t30' />
 	            </td>
 	        </tr>
 		</table>

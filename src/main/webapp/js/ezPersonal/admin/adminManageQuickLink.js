@@ -121,13 +121,21 @@ function event_QuickList(result) {
 function setQuickImg(linkType, linkTypeUrl) {
 	var result;
 	
-	/* 2020-09-11 홍승비 - 사용자가 추가한 퀵링크 이미지의 경우, 정렬 스타일 추가*/
+	/* 2023-06-01 홍승비 - 디자인 개선을 위해 퀵링크 이미지 변경 */
+	/* 2020-09-11 홍승비 - 사용자가 추가한 퀵링크 이미지의 경우, 정렬 스타일 추가 */
 	switch(linkType) {
+		/*
 		case "A" : result = "<img src='/images/admin/link_externalSite.png' id='A'>"; break;
 		case "B" : result = "<img src='/images/admin/link_homePage.png' id='B'>"; break;
 		case "C" : result = "<img src='/images/admin/link_intranet.png' id='C'>"; break;
 		case "D" : result = "<img src='/images/admin/link_connectedPrograms.png' id='D'>"; break;
 		case "E" : result = "<img src='/images/admin/link_blog.png' id='E'>"; break;
+		*/
+		case "A" : result = "<img src='/images/admin/link_03.png' id='A'>"; break;
+		case "B" : result = "<img src='/images/admin/link_04.png' id='B'>"; break;
+		case "C" : result = "<img src='/images/admin/link_02.png' id='C'>"; break;
+		case "D" : result = "<img src='/images/admin/link_05.png' id='D'>"; break; // 2023-06-01 기준 사용하지 않는 분기
+		case "E" : result = "<img src='/images/admin/link_01.png' id='E'>"; break;
 		default : result = "<img src='" + linkTypeUrl + "' style='width:39px; height:38px; padding:0px; margin-top:8px;'>"; break;
 		break;
 	}

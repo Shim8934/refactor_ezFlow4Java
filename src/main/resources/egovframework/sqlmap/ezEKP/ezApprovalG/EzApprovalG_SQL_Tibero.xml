@@ -3751,6 +3751,21 @@
 			AND
 				COMPANYID = #companyID#					
 		</isEqual>
+        <!-- 2023-06-26 민지수 - 추가의견탭에서 추가의견 list만 불러오기 -->
+        <isEqual property="v_MODE" compareValue="CADD">
+            SELECT
+                *
+            FROM
+                TBL_ENDAPROPINIONINFO
+            WHERE
+                DOCID = #v_DOCID#
+            AND
+                TENANT_ID =#v_TENANTID#
+            AND
+                COMPANYID = #companyID#
+            AND
+                OPINIONGB = '000'
+        </isEqual>
 		<isEqual property="v_MODE" compareValue="TMP">
 			SELECT 
 				* 
@@ -3773,7 +3788,8 @@
 			<isNotEqual property="v_MODE" compareValue="END">
 				<isNotEqual property="v_MODE" compareValue="CAPR">
 					<isNotEqual property="v_MODE" compareValue="CEND">
-						<isNotEqual property="v_MODE" compareValue="TMP">
+                        <isNotEqual property="v_MODE" compareValue="CADD">
+						    <isNotEqual property="v_MODE" compareValue="TMP">
 							SELECT 
 								* 
 							FROM 
@@ -3784,12 +3800,13 @@
 								TENANT_ID =#v_TENANTID#
 							AND
 								COMPANYID = #companyID#									
-						</isNotEqual>
+						    </isNotEqual>
+                        </isNotEqual>
 					</isNotEqual>
 				</isNotEqual>
 			</isNotEqual>
 		</isNotEqual>
-		
+
 		<isNotEmpty property="v_ORDEROPTION" >
 			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="9">
 			<isEqual property="v_ORDEROPTIONVALUE" compareValue="opinionsn">
@@ -9250,7 +9267,7 @@
                                          <isEqual property="v_MULTIDATALANG" compareValue="2">
                                             TBL_EXPENDAPRDOCINFO.FORMNAME2 FORMNAME,
                                          </isEqual>
-								   		 TBL_EXPENDAPRDOCINFO.FORMNAME, 
+								   		 TBL_EXPENDAPRDOCINFO.FORMNAME,
 								   		 NVL(TBL_EXPENDAPRDOCINFO.FORMNAME2, TBL_EXPENDAPRDOCINFO.FORMNAME) AS FORMNAME2, 
 								   		 TBL_EXPENDAPRDOCINFO.STATUS,
 								   		 TBL_ENDAPRDOCINFO.ORGDOCID, 
@@ -18916,7 +18933,9 @@
           		TransferDate = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
           		TDeptName = #v_DDeptName#,
           		TDeptName2 = #v_DDeptName2#
-    		WHERE  
+    		WHERE
+                TBL_CABINET.TENANT_ID = #v_TENANTID#
+            AND
     			TRIM(TBL_CABINET.CabinetClassNo) IN ( 
     											SELECT 
     												CabinetClassNo 
@@ -18995,7 +19014,9 @@
           		TransferDate = TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'),
           		TDeptName = #v_DDeptName#,
           		TDeptName2 = #v_DDeptName2#
-    		WHERE  
+    		WHERE
+                TBL_CABINET.TENANT_ID = #v_TENANTID#
+            AND
     			TBL_CABINET.CabinetClassNo IN ( 
     											SELECT 
     												CabinetClassNo 
@@ -19070,7 +19091,9 @@
       		 SET 
       		 	OwnerDeptID = #v_DDeptCode#,
           		OwnerTask = #v_DTaskCode#
-    		 WHERE  
+    		 WHERE
+                TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
+             AND
     		 	TBL_CABINETCLASS.CabinetClassNo IN ( 
     		 										SELECT 
     		 												CabinetClassNo 
@@ -19149,7 +19172,9 @@
           	JOIN 
           		TBL_SEPERATEATTACH    
           	ON 
-          		TBL_CABINET.TCabinetID = TBL_SEPERATEATTACH.CabinetID 
+          		TBL_CABINET.TCabinetID = TBL_SEPERATEATTACH.CabinetID
+            AND
+                TBL_CABINET.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
     		WHERE 
     			TBL_SEPERATEATTACH.CabinetID IN ( 
     											SELECT 
@@ -25608,14 +25633,15 @@
 		 AND 
         	COMPANYID = #companyID#
 	</delete>
-	
+
+    <!-- 2023-06-29 전인하 - 추가배부 동작에서 의견 데이터는 복사하지 않으나, 의견 존재유무 플래그는 이전문서에서 복사하여 의견여부 플래그와 실제 의견 데이터가 일치하지 않는 현상을 수정 -->
 	<insert id="EzApprovalG.insertBebuAprDocInfo" parameterClass="Map">
 		<isEqual property="v_FLAG" compareValue="APR">
 			INSERT INTO 
 				TBL_APRDOCINFO 
 			(     DocID,  FormID, OrgDocID, DocType, DocState, FunctionType,     Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
 			(SELECT 
-				#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
+				#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, 'N', NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID
 			  FROM 
 			  	TBL_APRDOCINFO 
 			  WHERE 
@@ -25871,6 +25897,7 @@
          	a.COMPANYID = #companyID# )
     </insert>
    
+	<!-- 2023-08-30 홍승비 - 전자결재 일반버전 > 수신문 재발송 시 원문서의 의견 플래그 복사하도록 수정 (G버전의 재발송과 동일 쿼리 사용하므로 분기 추가) -->
     <update id="EzApprovalG.updateDoSendAprDocInfo" parameterClass="Map">
     	UPDATE 
     		TBL_APRDOCINFO 
@@ -25883,8 +25910,13 @@
             DocTitle = #v_DocTitle#,
             DocNo = #v_DocNo#,
             HasAttachYN = #v_HasAttachYN#,
-            HasOpinionYN = 'N',
-            StartDate = TO_DATE(#v_StartDate#, 'YYYY-MM-DD HH24:MI:SS'), 
+		<isNotEmpty property="v_HASOPINIONYN">
+     		HasOpinionYN = #v_HASOPINIONYN#,
+     	</isNotEmpty>
+		<isEmpty property="v_HASOPINIONYN">
+     		HasOpinionYN = 'N',
+     	</isEmpty>
+            StartDate = TO_DATE(#v_StartDate#, 'YYYY-MM-DD HH24:MI:SS'),
             EndDate = TO_DATE(#v_EndDate#, 'YYYY-MM-DD HH24:MI:SS'),
             WriterID = #v_WriterID#,
             WriterName = #v_WriterName#,
@@ -28317,7 +28349,7 @@
    			TBL_ENDRECEIPTPOINTINFO
    		SET
    			PROCESSYN = 'B',
-            PROCESSDATE = #v_SYSDATE#
+            PROCESSDATE = TO_DATE(#v_SYSDATE#, 'YYYY-MM-DD HH24:MI:SS')
    		WHERE
    			DOCID = (SELECT 
    						ORGDOCID
@@ -35062,7 +35094,7 @@
     	AND
     		TENANT_ID = #v_TENANTID#
     </update>
-    
+
 	<!-- 2022-06-17 홍승비 - 해당DOCID에 해당하는 문서가 진행중인지, 완료문서인지 문자열으로 리턴  -->
 	<select id="EzApprovalG.getAprOrEndStr" parameterClass="Map" resultClass="String">
 		SELECT
@@ -35385,5 +35417,127 @@
 				DOCID = #beforeDocID#)
 		]]>
 	</insert>
-	
+
+    <!-- 2023-06-26 민지수 - 완료문서 추가의견 삭제 -->
+    <delete id="EzApprovalG.deleteAddOpinionInfo" parameterClass="Map">
+        DELETE FROM
+            TBL_ENDAPROPINIONINFO
+        WHERE
+            DOCID = #v_DOCID#
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            OPINIONGB = '000'
+    </delete>
+
+    <!-- 완료문서 추가의견 저장 -->
+    <insert id="EzApprovalG.insertAddOptionInfo" parameterClass="map">
+        INSERT INTO
+            TBL_ENDAPROPINIONINFO
+        (DocID,      UserID,     OpinionGB,    Content,      UserName,     UserName2,     UserJobTitle,     UserJobTitle2,     UserDeptID,    UserDeptName,     UserDeptName2,      OpinionSN,   TENANT_ID, COMPANYID)
+        VALUES
+            (#v_DOCID#, #v_USERID#, #v_OPINIONGB#, #v_CONTENT#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2# , #v_OPINIONSN#, #v_TENANTID#, #companyID#)
+    </insert>
+
+    <!-- 완료문서 의견순번 조회 (추가의견 제외) -->
+    <select id="EzApprovalG.selectOpinionSn" parameterClass="map" resultClass="Integer">
+        SELECT
+            MAX(OPINIONSN)
+        FROM
+            TBL_ENDAPROPINIONINFO
+        WHERE
+            DOCID = #v_DOCID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            OPINIONGB != '000'
+    </select>
+
+    <!-- 완료문서 추가의견 존재 / 추가의견을 제외한 의견 존재 여부 조회 -->
+    <select id="EzApprovalG.selectOpinionAddGb" parameterClass="map" resultClass="String">
+        SELECT CASE WHEN EXISTS (
+            SELECT
+                1
+            FROM
+            <isNotEmpty property="v_GongHoiRam">
+                TBL_APROPINIONINFO
+            </isNotEmpty>
+            <isEmpty property="v_GongHoiRam">
+                TBL_ENDAPROPINIONINFO
+            </isEmpty>
+            WHERE
+                DOCID = #v_DOCID#
+            AND
+                COMPANYID = #companyID#
+            AND
+                TENANT_ID = #v_TENANTID#
+            <isEqual property="v_FLAG" compareValue="ADDN"> <!--  추가의견을 제외한 의견 존재 여부 -->
+            AND
+                OPINIONGB != '000'
+            </isEqual>
+            <isEqual property="v_FLAG" compareValue="ADDY"> <!-- 추가의견 존재 여부 -->
+            AND
+                OPINIONGB = '000'
+            </isEqual>
+        )
+        THEN 'TRUE'
+        ELSE 'FALSE'
+        END AS Result
+        FROM DUAL
+    </select>
+
+    <!-- 2023-06-26 민지수 - 완료문서 HASOPINIONYN 조회-->
+    <select id="EzApprovalG.selectHasOpinionYn" parameterClass="map" resultClass="String">
+        SELECT
+            HASOPINIONYN
+        FROM
+            TBL_ENDAPRDOCINFO
+        WHERE
+            DOCID = #v_DOCID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+
+    <!-- 2023-10-04 박기범 - 사용자의 모든 부재자설정 조회-->
+    <select id="EzApprovalG.getAllProxyInfo"  parameterClass="Map" resultClass="ApprGOutOfOfficeInfoVO" remapResults="true">
+        SELECT
+            CN USERID,
+            DEPARTMENT DEPTID,
+            EXTENSIONATTRIBUTE5 PROXY,
+            DESCRIPTION DISPLAYNAME,
+            DESCRIPTION2 DISPLAYNAME2,
+            TITLE,
+            TITLE2,
+            '-1' JOBID
+        from
+            TBL_USERMASTER U
+        where
+            CN = #userID#
+          AND
+            TENANT_ID = #tenantID#
+        UNION All
+        SELECT
+            A.CN USERID,
+            A.DEPTID ,
+            UNISTR(A.PROXY),
+            B.DISPLAYNAME,
+            B.DISPLAYNAME2,
+            TITLE,
+            TITLE2,
+            JOBID
+        FROM
+            TBL_ADDJOBMASTER A
+                JOIN
+            TBL_DEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+        WHERE
+            A.CN = #userID#
+          AND
+            A.TENANT_ID = #tenantID#
+    </select>
 </sqlMap>

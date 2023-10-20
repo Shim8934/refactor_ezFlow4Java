@@ -132,56 +132,58 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Scheduled(cron = "${config.cron.mailboxQuotaListUpdate}")
 	public void mailboxQuotaListUpdate() throws Exception {
 		logger.debug("mailboxQuotaListUpdate scheduler started.");
-		
+
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", 0);
-		if(useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
+		if (useExternalMailServer != null && useExternalMailServer.equalsIgnoreCase("YES")) {
 			logger.debug("mailboxQuotaListUpdate scheduler ended.");
 			return;
 		}
-		
+
 		if (!preScheduler("mailboxQuotaListUpdate")) {
 			logger.debug("mailboxQuotaListUpdate scheduler ended.");
 			return;
 		}
-		
-		int tenantID = 0;
+
 		String email = null;
 		IMAPAccess ia = null;
 		Locale locale = Locale.getDefault();
 		String password = jspw;
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
 		String iMAPPort = config.getProperty("config.IMAPPort");
-		
-		List<OrganUserVO> vo = ezOrganAdminService.getAllUserCnList(tenantID);
-		
-		for (OrganUserVO user : vo) {
-			
-			try {
-				String cn = user.getCn();
-				email = cn + "@" + domain;
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
-				
-				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-				
-				long mailboxUsage = storageUsageAndLimit[0];
-				long mailboxQuota = storageUsageAndLimit[1];
-				
-				ezOrganAdminService.updateProperty(cn, "mailboxusage", String.valueOf(mailboxUsage), "user", tenantID);
-				ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
-			} catch (Exception e) {
-				logger.debug("error. user=" + email);
-				logger.error(e.getMessage(), e);
-			} finally {
-				if (ia != null) {
-					ia.close();
+		List<TenantVO> tenantList = ezCommonService.getTenantList();
+
+		for (TenantVO tenant : tenantList) {
+			int tenantID = tenant.getTenantId();
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+			List<OrganUserVO> vo = ezOrganAdminService.getAllUserCnList(tenantID);
+
+			for (OrganUserVO user : vo) {
+
+				try {
+					String cn = user.getCn();
+					email = cn + "@" + domain;
+					ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
+
+					long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+
+					long mailboxUsage = storageUsageAndLimit[0];
+					long mailboxQuota = storageUsageAndLimit[1];
+
+					ezOrganAdminService.updateProperty(cn, "mailboxusage", String.valueOf(mailboxUsage), "user", tenantID);
+					ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
+				} catch (Exception e) {
+					logger.debug("error. user=" + email);
+					logger.error(e.getMessage(), e);
+				} finally {
+					if (ia != null) {
+						ia.close();
+					}
 				}
 			}
 		}
-		
 		logger.debug("mailboxQuotaListUpdate scheduler ended.");
 	}
-	
+
 	/**
 	 * 관리자 - 자동삭제 
 	 */

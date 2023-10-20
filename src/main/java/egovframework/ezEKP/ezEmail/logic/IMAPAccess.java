@@ -63,9 +63,9 @@ public class IMAPAccess {
 	
 	private static final String DEFAULT_FOLDER_NAMES 
 		= "INBOX,보낸 편지함,임시 보관함,지운 편지함,개인 편지함,정크 메일" // 한국어
-		+ ",Sent Items,Drafts,Trash,Personal folder,Junk E-Mail,Sent" // 영어
+		+ ",Sent Items,Drafts,Trash,Personal folder,Junk Email,Sent" // 영어
 		+ ",送信済み,下書き,ゴミ箱,パーソナル,迷惑メール" // 일본어
-		+ ",Kotak Keluar,Konsep,Sampah,Folder Personal,E-mail Junk"; // 인도네시아어
+		+ ",Kotak Keluar,Konsep,Sampah,Folder Personal,Email Junk"; // 인도네시아어
 	private static final Set<String> DEFAULT_FOLDER_NAME_SET = new HashSet<>(Arrays.asList(DEFAULT_FOLDER_NAMES.split(",")));
 	
 	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, 

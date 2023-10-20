@@ -118,7 +118,5 @@ public interface EzOrganService {
 	public String getJobMasterMemberList(String type, String jobID, String celllist, String proplist, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception;
 	
 	public List<OrganUserVO> getOrgUserInfo(String userID, int tenantID, String companyID) throws Exception;
-	// 2023-08-18 조수빈 - 겸직에 대한 조건도 초가한 부재정보 조회 메소드
-	public String getAddJobProxy(String id, String dept, int tenantId, String jobId) throws Exception;
 
 }

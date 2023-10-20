@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezSurvey.css', 'msg'                    )}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/jquery.mCustomScrollbar.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<script type="text/javascript">
 			var surveyId = -1;
 			var isInCreateSurvey = false;
@@ -15,27 +16,37 @@
 	</head>
 	
 	<body class="newLeft over-fl">
-		<div id="left" class="lnb" style="overflow: auto">
+		<div id="left" class="lnb survey_left" style="overflow: auto">
 			<div class="left_title" title="<spring:message code='ezSurvey.t01'/>">
 				<spring:message code='ezSurvey.t01'/>
 				<span id="surveyConfig" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezSurvey.t06"/>"></span>
 			</div>
 			<div class="btn_writeBox">
 				<c:if test="${mode == 1}">
-					<p class="btn_write01" id="createBttn"><span class="sub_iconLNB tree_write"></span><spring:message code='ezSurvey.t19'/></p>
+					<div class="surveyList mCustomScrollbar _mCS_1 mCS_no_scrollbar" style="height: 911px;">
+						<div id="mCSB_1" class="mCustomScrollBox mCS-dark mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
+							<div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+								<p class="btn_write01" id="createBttn"><spring:message code='ezSurvey.t19'/></p>
+							</div>
+						</div>
+					</div>
 				</c:if>
 			</div>
 			
-			<div class="surveyList">
-				<ul class="lnbUL">
-					<li id="totalSurvey"><span class="sub_iconLNB tree_srvy_all"></span><span class="list_text"><spring:message code='ezSurvey.t80'/></span></li>
-					<li id="processingSurvey"><span class="sub_iconLNB tree_srvy_ing"></span><span class="list_text"><spring:message code='ezSurvey.t02'/></span></li>
-					<li id="finishedSurvey"><span class="sub_iconLNB tree_srvy_ok"></span><span class="list_text"><spring:message code='ezSurvey.t03'/></span></li>
-					<c:if test="${mode == 1}">
-						<li id="mySurvey"><span class="sub_iconLNB tree_srvy_my"></span><span class="list_text"><spring:message code='ezSurvey.t04'/></span></li>
-						<li id="draftSurvey"><span class="sub_iconLNB tree_srvy_draft"></span><span class="list_text"><spring:message code='ezSurvey.t05'/></span></li>
-					</c:if>
-				</ul>
+			<div class="surveyList mCustomScrollbar _mCS_1 mCS_no_scrollbar" style="height: 911px;">
+				<div id="mCSB_1" class="mCustomScrollBox mCS-dark mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
+					<div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+						<ul class="lnbUL surveyUL">
+							<li id="totalSurvey"><span class="list_text"><spring:message code='ezSurvey.t80'/></span></li>
+							<li id="processingSurvey"><span class="list_text node_selected"><spring:message code='ezSurvey.t02'/></span></li>
+							<li id="finishedSurvey"><span class="list_text"><spring:message code='ezSurvey.t03'/></span></li>
+							<c:if test="${mode == 1}">
+								<li id="mySurvey"><span class="list_text"><spring:message code='ezSurvey.t04'/></span></li>
+								<li id="draftSurvey"><span class="list_text"><spring:message code='ezSurvey.t05'/></span></li>
+							</c:if>
+						</ul>
+					</div>
+				</div>
 			</div>
 			
 			<%-- 
@@ -85,6 +96,7 @@
 							getDraftSurveyPage();
 							isInCreateSurvey = false;
 						}
+						liSelected();
 					};}
 					if (mySurvey)    {mySurvey.onclick    = function(e) {
 						if (surveyId != -1 || isInCreateSurvey == true) {
@@ -99,6 +111,7 @@
 							getMySurveyPage();
 							isInCreateSurvey = false;
 						}
+						liSelected();
 					};}
 					if (createBttn)  {createBttn.onclick  = function(e) {
 						if (surveyId != -1 || isInCreateSurvey == true) {
@@ -128,6 +141,7 @@
 							getAllSurveyList();
 							isInCreateSurvey = false;
 						}
+						liSelected();
 					});
 					document.getElementById("surveyConfig").addEventListener("click", function(e) {
 						if (surveyId != -1 || isInCreateSurvey == true) {
@@ -156,6 +170,7 @@
 							getProcessingSurveyList();
 							isInCreateSurvey = false;
 						}
+						liSelected();
 					});
 					document.getElementById("finishedSurvey").addEventListener("click", function(e) {
 						if (surveyId != -1 || isInCreateSurvey == true) {
@@ -170,6 +185,7 @@
 							getFinishedSurveyPage();
 							isInCreateSurvey = false;
 						}
+						liSelected();
 					});
 					window.addEventListener("resize", function(e) {windowResize();}, false);
 					//getAllSurveyList();
@@ -207,6 +223,21 @@
 					
 				};
 			}();
+			
+			// 2023-06-15 황인경 - 디자인 개선 > 전자설문 > 좌측메뉴 > 메뉴선택 클래스 제어
+			function liSelected() {
+				if (event.target.classList.contains("list_text")) {
+					$(".node_selected").attr("class", "list_text");
+					
+					if (event.target.tagName == "LI") {
+						var liChangeSpan = event.target.querySelector(".list_text");
+						liChangeSpan.setAttribute("class", "list_text node_selected");
+					} else {
+						event.target.setAttribute("class", "list_text node_selected");
+					}
+				}
+			}
+			
 		</script>
 	</body>
 	

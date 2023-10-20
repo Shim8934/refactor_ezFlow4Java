@@ -1464,7 +1464,8 @@ public class EzEmailAdminController {
 			@RequestParam(required = false) String sortColumn,
 			@RequestParam(required = false) String sortType,
 			@RequestParam(required = false) boolean[] searchFor,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			Locale locale) throws Exception {
 		logger.debug("mailQuotaExcelExport started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -1543,21 +1544,21 @@ public class EzEmailAdminController {
 	
 			row = sheet.createRow(0);
 			cell = row.createCell(0);
-			cell.setCellValue(egovMessageSource.getMessage("main.t252") + " " + totalCount + 
-							  egovMessageSource.getMessage("ezSystem.kyj2"));
+			cell.setCellValue(egovMessageSource.getMessage("main.t252",locale) + " " + totalCount +
+							  egovMessageSource.getMessage("ezSystem.kyj2",locale));
 		
 			row = sheet.createRow(1);
 			cell = row.createCell(0);
-			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04"));
+			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd04",locale));
 			cell.setCellStyle(headerStyle);
 			cell = row.createCell(1);
-			cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113"));
+			cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t113",locale));
 			cell.setCellStyle(headerStyle);
 			cell = row.createCell(2);
-			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd02"));
+			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd02",locale));
 			cell.setCellStyle(headerStyle);
 			cell = row.createCell(3);
-			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03"));
+			cell.setCellValue(egovMessageSource.getMessage("ezEmail.lsd03",locale));
 			cell.setCellStyle(headerStyle);
 		
 			for (int i = 2; i < userList.size() + 2; i++) {

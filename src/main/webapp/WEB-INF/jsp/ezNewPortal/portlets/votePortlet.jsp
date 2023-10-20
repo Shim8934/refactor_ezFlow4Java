@@ -23,10 +23,10 @@
 			<c:choose>
 				<c:when test="${voteCount ne 0 }">
 					<div id="voteList" class="vote_contents">
-					<p class="voteTitle">
-						"<c:out value="${title }" />"
-					</p>
-					<p class="voteBtn votePortlet" id="V<c:out value='${qstId }'/>"><spring:message code="main.t2001"/></p>
+					<div class="voteTitle_all">
+                        <p class="voteTitle"><c:out value="${title}"/></p>
+                        <p class="voteBtn votePortlet" id="V<c:out value='${qstId}'/>"><spring:message code="main.t2001"/></p>
+                    </div>
 					<ul class="voteList">
 						<c:forEach items="${pollAnswer }" var="poll" varStatus="status">
 							<c:if test="${status.index lt 4 }">

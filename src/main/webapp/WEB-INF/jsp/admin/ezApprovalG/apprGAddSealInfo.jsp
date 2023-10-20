@@ -297,7 +297,7 @@
 	    	<tr>
 				<th><spring:message code = 'ezApprovalG.t00010' /></th>
 				<td style="vertical-align:middle;">
-					<input type="text" readonly id="filename" style="width:180px;">
+					<input type="text" readonly id="filename" style="width:177px;">
 	        		<a class="imgbtn imgbck"><label for="file1"><span><spring:message code = 'ezApprovalG.t1251' /></span></label></a>
 	        		<a class="imgbtn imgbck" ><span onClick="btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
 	    		</td>

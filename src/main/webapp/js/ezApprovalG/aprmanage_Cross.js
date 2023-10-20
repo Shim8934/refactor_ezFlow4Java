@@ -112,7 +112,8 @@ function getDocList_after(xml) {
     
 	// 리스트를 닫기 전에 미리 선택한 row가 있을 때를 확인
     var preDocList = new ListView();
-   	preDocList.LoadFromID('DocList');
+    var docListID = "DocList";
+    preDocList.LoadFromID(docListID);
    	var preSelectedRow = preDocList.GetSelectedRows();
 
     makePageSelPage();
@@ -141,7 +142,7 @@ function getDocList_after(xml) {
     //}
     
     var DocList = new ListView();
-    DocList.SetID("DocList");
+    DocList.SetID(docListID);
     DocList.SetMulSelectable(false);
     DocList.SetHeaderOnClick("lvDocList_HeaderClick");
     DocList.SetRowOnClick("lvDocList_SelChange");
@@ -163,10 +164,11 @@ function getDocList_after(xml) {
     	selRowChangeFlag = false;
     	var docListLength = DocList.GetRowCount() - 1;
     	// 마지막 row의 결재가 완료된 후 리스트로 돌아오면 로우가 선택되어 있지 않는 오류 개선
-    	if (docListLength < preSelectedRow[0].getAttribute('id').split("_")[2]) {
+        var beforeSelectedId = preSelectedRow[0].getAttribute('id');
+        if (docListLength < beforeSelectedId.split("_")[2]) {
     		DocList.SetSelectedIndex(docListLength);
     	} else {
-    		DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));
+            tr_select(beforeSelectedId,docListID,true);
     	}
     }    
     DocList = null;
@@ -184,7 +186,7 @@ function getDocList_after(xml) {
         }
         else {
             var DocList = new ListView();
-            DocList.LoadFromID("DocList");
+            DocList.LoadFromID(docListID);
             var oArrRows = DocList.GetSelectedRows();
             
             if (oArrRows.length != "0") {
@@ -3268,4 +3270,61 @@ function delGroupDocInfoByDocID(pDocID, pMode) {
 
 function btn_newpopup() {
 	lvDocList_DBSelChange();
+}
+
+/* 2023-06-26 민지수 - 추가의견 의견작성창 호출 */
+function openOpinionUI_New_Add(pOpinionType, CompleteFunction) {
+    try {
+        var parameter = new Array();
+        parameter[0] = pDocID;		// DOCID
+        parameter[1] = pOpinionType;// OPINIONTYPE NAME
+        parameter[2] = "";			// DRAFTFLAG 결재는 공백 고정
+        parameter[4] = orgCompanyID;// ORGCOMPANYID
+        parameter[99] = ext;		// EXT
+
+        apropinion_cross_dialogArguments[0] = parameter;
+        if (typeof(CompleteFunction) != "undefined") {
+            apropinion_cross_dialogArguments[1] = CompleteFunction;
+        } else {
+            apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete_Add;
+        }
+
+        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do?opMode=ADD");
+    } catch (e) {
+        alert("openOpinionUI_New ::: " + e.description);
+    }
+}
+
+function openOpinionUI_New_Complete_Add(ret) {
+    try {
+        DivPopUpHidden();
+        if (ret == "Clear") {
+            pHasOpinionYN = "N";
+            var fields = message.GetFieldsList();
+            var field = message.GetListItem(fields, "opinions");
+
+            if (field) {
+                field.innerHTML = " ";
+            }
+        } else
+        // 추가의견은 양식상에 맵핑하지 않음
+        if (ret == "cancel") {
+            //do_nothing
+        } else {
+            var objXML = createXmlDom();
+            objXML = loadXMLString(ret);
+            var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+
+            if (NodeList.length != 0) {
+                pHasOpinionYN = "Y";
+            } else {
+                pHasOpinionYN = "N";
+                ret = "cancel";
+            }
+            // 추가의견은 양식상에 맵핑하지 않음
+           // makeOpinionList_Add(objXML);
+        }
+    } catch (e) {
+        alert("openOpinionUI_New_Complete ::: " + e.description);
+    }
 }

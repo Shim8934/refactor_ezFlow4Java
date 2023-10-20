@@ -1047,7 +1047,7 @@
 			<tr style="height:100%;"> 
 				<th nowrap ><spring:message code="ezEmail.t642" /></th>
 				<td style="width:100%, padding:8px;">
-					<div style="margin: 5px 5px 0px 5px;padding: 3px;">
+					<div style="margin: 5px; padding: 3px;">
 					    <select id="select2" style="height: 25px;margin-right: 5px;">
 					    	<option value="ALL"><spring:message code="ezEmail.t643" /></option>      
 						    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
@@ -1077,8 +1077,8 @@
 					    </select>
 				    	<input name="keyword" id="keyword" style="vertical-align: top; display: none;" onkeyup="return search_keypress(event)">
 				    	<input name="prekeyword" id="ALL" style="vertical-align: top;height:25px; margin-right:5px;" onkeyup="return search_keypress(event)" placeholder=<spring:message code="ezEmail.t641" />>
-				    	<a class="imgbtn imgbck" style="margin-left: 4px; height: 25px; vertical-align: middle;">
-					    	<span onclick="addSearch()" style="line-height: 25px; vertical-align: middle; height: 25px;"><spring:message code="ezEmail.pyy02" /></span>
+				    	<a class="imgbtn imgbck" style="margin-left: 4px; height: 22px;">
+					    	<span onclick="addSearch()" style="line-height: 22px; height: 22px;"><spring:message code="ezEmail.pyy02" /></span>
 				    	</a>
 			    	</div>
 			    </td> 
@@ -1087,8 +1087,8 @@
 				<th nowrap><spring:message code="ezEmail.t642" /></th>
 				<td style="width:100%, padding:8px;" >
 					<div class="" style="margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
-						<label for="and"><input class="optRdo" type="radio" name="andor" id="and" value="and" checked><span class="optSpan">AND</span></label>
-						<label for="or"><input class="optRdo" type="radio" name="andor" id="or" value="or"><span class="optSpan">OR</span></label>
+						<label for="and"><input class="optRdo" style="margin-top: 0px;" type="radio" name="andor" id="and" value="and" checked><span class="optSpan">AND</span></label>
+						<label for="or"><input class="optRdo" style="margin-top: 0px;" type="radio" name="andor" id="or" value="or"><span class="optSpan">OR</span></label>
 					</div>
 			    	<div style="margin-bottom: 2px;margin-left: 5px; padding: 0px 3px 3px 3px;">
 						<div style="display: inline-block; margin-right: 5px; margin-top:2px;">
@@ -1129,11 +1129,11 @@
 		     	<th><spring:message code="ezEmail.pyy13" /></th>	
 			    <td style="height: 40px;">
 			    	<div class="" style="/* margin-bottom: 2px; */margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
-						<label for="all"><input class="optRdo" type="radio" id="all" name="attachment" value="all" checked>
+						<label for="all"><input class="optRdo" style="margin-top: 0px;" type="radio" id="all" name="attachment" value="all" checked>
 							<span class="optSpan"><spring:message code="ezEmail.pyy14" /></span></label>
-						<label for="contain"><input class="optRdo" type="radio" id="contain" name="attachment" value="contain">
+						<label for="contain"><input class="optRdo" style="margin-top: 0px;" type="radio" id="contain" name="attachment" value="contain">
 							<span class="optSpan"><spring:message code="ezEmail.pyy15" /></span></label>
-						<label for="Ncontain"><input class="optRdo" type="radio" id="Ncontain" name="attachment" value="Ncontain">
+						<label for="Ncontain"><input class="optRdo" style="margin-top: 0px;" type="radio" id="Ncontain" name="attachment" value="Ncontain">
 							<span class="optSpan"><spring:message code="ezEmail.pyy16" /></span></label>
 					</div>
 			    </td>

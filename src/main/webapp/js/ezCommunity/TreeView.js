@@ -155,7 +155,7 @@ function TreeNode() {
         }
 
         //노드 아이콘 생성
-        var imgNode = document.createElement("IMG");
+        var imgNode = document.createElement("I");
         imgNode.id = "imgNode_" + this.NodeID;
         imgNode.border = "0";
         imgNode.style.width = TreeIconSizes["width"];
@@ -163,6 +163,10 @@ function TreeNode() {
 
         //자식 노드를 가지고 있는 노드인지 체크
         var strIsLeaf = GetAttribute(treeDiv, "ISLEAF");
+
+	    if ($(".sub_iconLNB").length > 0) {
+	    	imgNode.style.paddingLeft = "17px";
+	    }
 
         //기관표시 사용 여부가 true 체크
         if (pUseAgency) {
@@ -181,12 +185,17 @@ function TreeNode() {
             imgNode.src = pUseAgency ? TreeIcons["node_agency"] : TreeIcons["node_plus"];
             
         */
-        if (strIsLeaf == "TRUE")
-            imgNode.src = TreeIcons["node_end"];
-        else if (bExpanded)
-        	imgNode.src = TreeIcons["node_minus"];
-        else
-            imgNode.src = TreeIcons["node_plus"];            
+        if (strIsLeaf == "TRUE") {
+        	imgNode.style.paddingLeft = "17px";
+		} else if (bExpanded) {
+			imgNode.classList.remove("sub_iconLNB", "tree_plus");
+			imgNode.classList.add("sub_iconLNB", "tree_minus");
+			imgNode.style("marginTop") = "0px";
+		} else {
+			imgNode.classList.remove("sub_iconLNB", "tree_minus");
+			imgNode.classList.add("sub_iconLNB", "tree_plus");
+			imgNode.style.marginTop = "0px";
+		}
             
         var strTreeID = this.NodeID.substring(0, this.NodeID.indexOf("_"));
 
@@ -202,9 +211,9 @@ function TreeNode() {
         var subImgNode = document.createElement("IMG");
         subImgNode.id = "subImgNode_" + this.NodeID;
         subImgNode.border = "0";
-        subImgNode.style.width = TreeIconSizes["width"];
-        subImgNode.style.height = TreeIconSizes["height"];
-        subImgNode.src = pUseAgency ? TreeImages["iconcomp"] : TreeImages["base"];
+        //subImgNode.style.width = TreeIconSizes["width"];
+        //subImgNode.style.height = TreeIconSizes["height"];
+        //subImgNode.src = pUseAgency ? TreeImages["iconcomp"] : TreeImages["base"];
         treeDiv.innerHTML += subImgNode.outerHTML;
         //
 
@@ -640,15 +649,14 @@ function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
     var objNodeIcon = document.getElementById(pNodeIconID);
     //puls 로 통일  2010.04.07
     if (objNodeIcon) {
-        if (objNodeIcon.src.indexOf(TreeIcons["node_plus"]) > 0) {
-            document.getElementById(pNodeID).style.height = "";
-            objNodeIcon.src = TreeIcons["node_minus"];
-        }
-        else if (objNodeIcon.src.indexOf(TreeIcons["node_minus"]) > 0) {
-            document.getElementById(pNodeID).style.height = "21px";
-            objNodeIcon.src = TreeIcons["node_plus"];
-        }
-    }
+		if (objNodeIcon.classList.contains("tree_plus") > 0) {
+			objNodeIcon.classList.remove("sub_iconLNB", "tree_plus");
+			objNodeIcon.classList.add("sub_iconLNB", "tree_minus");
+		} else if (objNodeIcon.classList.contains("tree_minus") > 0) {
+			objNodeIcon.classList.remove("sub_iconLNB", "tree_minus");
+			objNodeIcon.classList.add("sub_iconLNB", "tree_plus");
+		}
+	}
 
 
     var subDiv = document.getElementById(pNodeID + "_sub"); //if (objNodeIcon.src.indexOf(TreeIcons["node_minus"]) > 0)

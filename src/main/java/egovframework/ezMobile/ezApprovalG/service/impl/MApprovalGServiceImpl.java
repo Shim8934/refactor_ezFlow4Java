@@ -1260,7 +1260,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		File Folder = new File(realPath + filePath);
 		
 		if(!Folder.exists()) {
-			Folder.mkdir();
+			Folder.mkdirs();
 			logger.debug("폴더 생성 완료!!!");
 		}
 		
@@ -1469,7 +1469,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	    			File uploadPath = new File(realPath + fileUploadPath);
 	    			
 	    			if(!uploadPath.exists()) {
-	    				uploadPath.mkdir();
+	    				uploadPath.mkdirs();
 	    			}
 	    			
 	    			

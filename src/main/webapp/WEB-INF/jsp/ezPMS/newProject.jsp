@@ -489,7 +489,7 @@ var headManagerObj = {};
 				<th><spring:message code='ezPMS.t57' /></th>
 				<td style="width:45%">${userName }</td>
 				<th><spring:message code='ezPMS.t58' /></th>
-				<td><form><input type="radio" name="weightInput" value="autoCalc" style="vertical-align:left" checked><spring:message code='ezPMS.t59' />  <input type="radio" name="weightInput" value="writeCalc"><spring:message code='ezPMS.t60' /></form></td>
+				<td><form><input type="radio" name="weightInput" value="autoCalc" style="vertical-align:left; margin-top: 0px;" checked><spring:message code='ezPMS.t59' />  <input type="radio" name="weightInput" value="writeCalc" style="margin-top: 0px;"><spring:message code='ezPMS.t60' /></form></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t61' /></th>

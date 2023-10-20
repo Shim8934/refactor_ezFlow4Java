@@ -367,7 +367,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent().substring(0, 10));
 			
 			//스케줄 정보 가져옴
-			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, title, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset());
+			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, title, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLang());
 			logger.debug("getScheduleXML=" + reVal);
 			
 			// date타입 변경
@@ -1411,7 +1411,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			ResGetScheduleVO getSchedule = new ResGetScheduleVO();
 			
 			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
-				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId());
+				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
 			}
 			
 			num = String.valueOf(getSchedule.getNum());
@@ -1500,9 +1500,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		// 2019-01-15 김민성 - 자원관리 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
 		//startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
 		//endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
-
-		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd hh:mm:ss", "yyyy-M-d H:mm", "");
-		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd hh:mm:ss", "yyyy-M-d H:mm", "");
+		
+		/* 2023-09-14 홍승비 - 예약시간 중복체크를 위한 시간 포맷에서 오후 12시를 0시로 인식하는 잘못된 포맷 수정 (hh -> HH) */
+		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editor", editor);
@@ -1601,8 +1602,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		String content = "";
 		String ownerID = "";
 		String writerID = "";
-		String checkSDT = "";
-		String checkEDT = "";
 		String allDay = "";
 		String saveApproveFlag = "";
 		String startDateTimeRepeat = "";
@@ -1650,7 +1649,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 			ResGetScheduleVO getSchedule = new ResGetScheduleVO();
 			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
-				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId());
+				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
 			}
 			
 			num = getSchedule.getNum();
@@ -1772,9 +1771,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 		endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 		
-		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
-		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
-		
 		Map<String, Boolean> menuAccessMap = commonUtil.checkMenuAccess(Arrays.asList(new String[] {"schedule"}), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang(), userInfo.getId(), userInfo.getDeptID());
 		boolean useSchedule = menuAccessMap.get("schedule");
 		
@@ -1813,8 +1809,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("saveApproveFlag", saveApproveFlag);
 		model.addAttribute("startDateTimeRepeat", startDateTimeRepeat);
 		model.addAttribute("endDateTimeRepeat", endDateTimeRepeat);
-		model.addAttribute("checkSDT", checkSDT);
-		model.addAttribute("checkEDT", checkEDT);
 		model.addAttribute("useSchedule", useSchedule);
 		
 		if (reFlag.equals("1")) {
@@ -1907,7 +1901,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			String num = req.getParameter("num") != null ? req.getParameter("num").trim() : "";
 			String ownerID = req.getParameter("ownerID") != null ? req.getParameter("ownerID").trim() : "";
 		
-			boolean ret = ezResourceService.saveRepetition(companyID, num, ownerID, xmlStr, cmd, userInfo.getTenantId(), userInfo.getOffset());
+			boolean ret = ezResourceService.saveRepetition(companyID, num, ownerID, xmlStr, cmd, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLang());
 				
 			if (ret == true) {
 				returnValue = "OK";
@@ -2327,19 +2321,17 @@ public class EzResourceController extends EgovFileMngUtil {
 			num = "-1";
 		}
 		
-		logger.debug("frequency: " + frequency);
-		logger.debug("selType: " + selType);
-		logger.debug("endRecurType" + endRecurType);
-		logger.debug("startDateTime" + startDateTime);
-		logger.debug("endDateTime" + endDateTime);
-		logger.debug("interval" + interval);
-		logger.debug("instances" + instances);
-		logger.debug("daysOfWeek" + daysOfWeek);
-		logger.debug("byPosition" + byPosition);
-		logger.debug("daysOfMonth" + daysOfMonth);
-		logger.debug("monthsOfYear" + monthsOfYear);
-		
-		
+		logger.debug("frequency : " + frequency);
+		logger.debug("selType : " + selType);
+		logger.debug("endRecurType : " + endRecurType);
+		logger.debug("startDateTime : " + startDateTime);
+		logger.debug("endDateTime : " + endDateTime);
+		logger.debug("interval : " + interval);
+		logger.debug("instances : " + instances);
+		logger.debug("daysOfWeek : " + daysOfWeek);
+		logger.debug("byPosition : " + byPosition);
+		logger.debug("daysOfMonth : " + daysOfMonth);
+		logger.debug("monthsOfYear : " + monthsOfYear);
 		
 		if (isRep) {
 			logger.debug("===반복예약일 때===");
@@ -2850,7 +2842,7 @@ public class EzResourceController extends EgovFileMngUtil {
         }
         
         if (!tempFile.exists()) {
-        	tempFile.mkdir();
+        	tempFile.mkdirs();
         }
 
         StringBuffer strXML = new StringBuffer();

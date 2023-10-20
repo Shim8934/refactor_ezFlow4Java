@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
     <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
-	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewFolder.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
     <script type="text/javascript" id="clientEventHandlersJS">
 	    var pUserID = "<c:out value='${userInfo.id}'/>";
@@ -104,6 +104,11 @@
             window.close();
         }      
     </script>
+    <style type="text/css">
+    	.sub_iconLNB.tree_plus, .sub_iconLNB.tree_minus{
+    		margin-top: 0px;
+    	}
+    </style>
 </head>
 <body class="popup">
     <h1><spring:message code='ezApproval.t323'/></h1>
@@ -112,7 +117,7 @@
             <li><span onclick="return btnCancel_onclick()"></span></li>
         </ul>
     </div>
-    <div class="box" style="WIDTH: 315px; HEIGHT: 340px; BACKGROUND-COLOR: #fff; overflow: auto;" id="divUserContTree"></div>
+    <div class="box" style="WIDTH: 315px; HEIGHT: 340px; BACKGROUND-COLOR: #fff; overflow: auto; padding: 8px 6px; box-sizing: border-box;" id="divUserContTree"></div>
     <div class="btnposition btnpositionNew">
         <a class="imgbtn" onclick="return btnOK_onclick()"><span><spring:message code='ezApprovalG.t105'/></span></a>
     </div>

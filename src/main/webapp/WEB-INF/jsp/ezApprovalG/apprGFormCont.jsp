@@ -9,11 +9,16 @@
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}"   type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<style type="text/css">
+			#FormTreeView{
+				padding-top: 5px;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewFolder.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getFormCont_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/showModalDialogCallee.js')}"></script>
@@ -377,7 +382,8 @@
 		                break;
 		        }
 		    }
-		
+
+			var favFirst = true;
 		    function Get_Favoritelist(type) {
 		    	var _searchType = "";
 		    	var _searchName = "";
@@ -421,7 +427,10 @@
 		        if (tr) {
 		            listview.SetSelectFlag(true);
 		            document.getElementById('descrip2').innerHTML = tr.getAttribute("DATA2");
-		        }
+		        } else if (favFirst) {
+					favFirst = false;
+					Tab1_MouseClick(document.querySelector('[divname=formlist]'));
+				}
 		    }
 		
 		    function search_press(evt) {
@@ -482,6 +491,11 @@
 		        }
 		    }
 		</script>
+		<style type="text/css">
+			.sub_iconLNB.tree_plus, .sub_iconLNB.tree_minus {
+	    		margin-top : 0px !important;
+	    	} 
+		</style>
 	</head>
 	<body class="popup">
 		<xml id='FORMLIST' style="Display:none">

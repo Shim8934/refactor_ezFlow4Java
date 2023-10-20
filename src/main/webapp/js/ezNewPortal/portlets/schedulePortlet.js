@@ -41,6 +41,7 @@ function getScheduleList_after(resultList, mode, date) {
 		
 		var listHTML = "";
 		listHTML += "<div><ul class='sscheduleUL'>";
+		
 		for (var i = 0; i < 3; i++) {
 			if (resultList[i] != null && resultList[i] != "") {
 				var SCHEDULETYPE = resultList[i].scheduleType;
@@ -56,44 +57,82 @@ function getScheduleList_after(resultList, mode, date) {
 				var startTime = STARTDATE.split(' ')[1].substring(0,5);
 				var endTime = ENDDATE.split(' ')[1].substring(0,5);
 				var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));	
+				var groupColor = resultList[i].groupColor;
+				var classNameForTheme = "";
+				var strLangArrForTheme = new Array();
+				
+				/* 2023-06-22 황인경 - 디자인 개선 > 일정관리 포틀릿 > '그룹' 분기 추가 */
+				/* 2023-05-31 홍승비 - 일정관리 포틀릿 디자인 개선을 위한 클래스 및 메세지 분기 추가 */
+				if (SCHEDULETYPE == 1 || SCHEDULETYPE == 9) {
+					classNameForTheme = "individual";
+				} else if (SCHEDULETYPE == 2) {
+					classNameForTheme = "dept";
+				} else if (SCHEDULETYPE == 3) {
+					classNameForTheme = "company";
+				} else if (SCHEDULETYPE == 7) {
+					classNameForTheme = "group";
+				}
+				
+				if (usedTheme == 1 || usedTheme == 2) {
+					strLangArrForTheme[0] = strLang125_2; // 개인
+					strLangArrForTheme[1] = strLang126_2; // 부서
+					strLangArrForTheme[2] = strLang127_2; // 회사
+					strLangArrForTheme[3] = strLang130_2; // 그룹
+					strLangArrForTheme[4] = strLang131_2; // 협업
+					strLangArrForTheme[5] = strLang141_2; // 구글
+				} else {
+					strLangArrForTheme[0] = strLang125_1;
+					strLangArrForTheme[1] = strLang126_1;
+					strLangArrForTheme[2] = strLang127_1;
+					strLangArrForTheme[3] = strLang130_1;
+					strLangArrForTheme[4] = strLang131_1;
+					strLangArrForTheme[5] = strLang141_1;
+				}
 				
 				// 2020-02-25 김정언 - 근태 현황일 경우에는 근태 상세보기로 이동 (DateType 4 : 근태 현황)
 				if (DATETYPE == "4") {
-					listHTML += "<li class='scheduleLi' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
+					listHTML += "<li class='scheduleLi " + classNameForTheme + "' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
 					listHTML += "<p class='scheduleTime'>";					
-				} else if(SCHEDULETYPE == "9") {
-					listHTML += "<li class='scheduleLi' onClick=\"open_google_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + ENDDATE + "')\">";
+				} else if (SCHEDULETYPE == "9") {
+					listHTML += "<li class='scheduleLi " + classNameForTheme + "' onClick=\"open_google_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + ENDDATE + "')\">";
 					listHTML += "<p class='scheduleTime'>";
-				} else{
-					listHTML += "<li class='scheduleLi' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
+				} else {
+					listHTML += "<li class='scheduleLi " + classNameForTheme + "' onClick=\"open_schedule('" + SCHEDULEID + "','" + PARENTID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\">";
 					listHTML += "<p class='scheduleTime'>";
 				}
 	        	
 				var timeClass = "";
-				if(SCHEDULETYPE == 1) {
+				if (SCHEDULETYPE == 1) {
 					timeClass = "Tindividual";
-					listHTML += "<span class='Tindividual'>" + strLang125_1 + "</span>";
+					listHTML += "<span class='Tindividual'>[" + strLangArrForTheme[0] + "]</span>";
 				} else if (SCHEDULETYPE == 2) {
 					timeClass = "Tdept";
-					listHTML += "<span class='Tdept'>" + strLang126_1 + "</span>";
+					listHTML += "<span class='Tdept'>[" + strLangArrForTheme[1] + "]</span>";
 				} else if (SCHEDULETYPE == 3) {
 					timeClass = "Tcompany";
-					listHTML += "<span class='Tcompany'>" + strLang127_1 + "</span>";
+					listHTML += "<span class='Tcompany'>[" + strLangArrForTheme[2] + "]</span>";
 				} else if (SCHEDULETYPE == 7) {
 					timeClass = "Tgroup";
-					listHTML += "<span class='Tgroup'>" + strLang130_1 + "</span>";
+					// 2023-09-06 조소정 - 일정 포틀릿 그룹일정 그룹색상 표출
+		            if(groupColor == null || groupColor == "") {
+		            	var groupColor = "#e9de13";
+						listHTML += "<span class='Tgroup' style='color: " + groupColor + ";'>[" + strLangArrForTheme[3] + "]</span>";  
+		            }
+		            else {
+						listHTML += "<span class='Tgroup' style='color: " + groupColor + ";'>[" + strLangArrForTheme[3] + "]</span>";
+		            }
 				} else if (SCHEDULETYPE == 4) {
 					timeClass = "Tcollaborate";
-					listHTML += "<span class='Tcollaborate'>" + strLang131_1 + "</span>";
+					listHTML += "<span class='Tcollaborate'>[" + strLangArrForTheme[4] + "]</span>";
 				} else if (SCHEDULETYPE == 9) {
 					timeClass = "Tindividual";
-					listHTML += "<span class='Tindividual'>" + strLang141_1 + "</span>";
+					listHTML += "<span class='Tindividual'>[" + strLangArrForTheme[5] + "]</span>";
 				} else {
 					listHTML += "";
 				}
 				
 				// 2020-02-25 김정언
-				if(DATETYPE == "4") {
+				if (DATETYPE == "4") {
 					if (Number($("#schedule_usedTheme").val()) == 1) {
 						listHTML += "<img class='attiImg' src='/images/ezAttitude/" + CONTENTPATH + ".png' style='margin-left: 8px; vertical-align: sub;'/>"
 						listHTML += "<span class='" + timeClass + "_timeText' style='margin-left:6px; font-size:13px; color:#333; vertical-align: bottom;'>" + TITLE + " : " + CREATORNAME + "</span></p>";
@@ -101,7 +140,7 @@ function getScheduleList_after(resultList, mode, date) {
 						listHTML += "<img class='attiImg' src='/images/ezAttitude/" + CONTENTPATH + ".png' style='margin-left: 8px; vertical-align: sub;'/>"
 						listHTML += "<span class='" + timeClass + "_timeText' style='vertical-align: bottom;'>" + TITLE + " : " + CREATORNAME + "</span></p>";
 					}
-				}else {
+				} else {
 					if (Number($("#schedule_usedTheme").val()) == 1) {
 						listHTML += "<span class='" + timeClass + "_timeText' style='margin-left:6px; font-size:13px; color:#333;'>" + startTime + " ~ " + endTime + "</span></p>";
 					} else {
@@ -118,10 +157,16 @@ function getScheduleList_after(resultList, mode, date) {
 		}
 		listHTML += "</ul'></div>";
 		
-		listHTML += "<dl id='scheduleDate' class='scheduleDate'>";
-		listHTML += "<dt class='dayT'>" + str4[nDay] + "</dt>";//요일
-		listHTML += "<dd class='dayN'>" + sDate[2] + "</dd>";//일
-		listHTML += "</dl>";
+		/* 2023-06-08 홍승비 - 테마3 > 일정 포틀릿 우측 영역 일 및 요일표기 분기처리 */
+		if (usedTheme == 3) {
+			$("#theme3PortletCalTextDT").html("<span>" + sDate[2] + strLangHSBScPt3 + "</span> " + str4[nDay]);
+		}
+		else {
+			listHTML += "<dl id='scheduleDate' class='scheduleDate'>";
+			listHTML += "<dd class='dayN'>" + sDate[2] + "</dd>"; // 일
+			listHTML += "<dt class='dayT'>" + str4[nDay] + "</dt>"; // 요일
+			listHTML += "</dl>";
+		}
 		
 		document.getElementById("scheduleList").innerHTML = listHTML;
 		

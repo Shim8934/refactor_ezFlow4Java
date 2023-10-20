@@ -40,8 +40,8 @@
 				titleTxt = "<spring:message code='ezQuestion.t480'/>";
 			} 
 			
-			document.title = "<spring:message code='ezEmail.jje06'/> " + titleTxt;
-			$(".leTitle")[0].innerText = "<spring:message code='ezEmail.jje06'/> " + titleTxt;
+			document.title = titleTxt + " <spring:message code='ezEmail.ls012'/> ";
+			$(".leTitle")[0].innerText = titleTxt + " <spring:message code='ezEmail.ls012'/>";
 			
 			
 			// 입력정보 클릭, mouse over 이벤트 추가

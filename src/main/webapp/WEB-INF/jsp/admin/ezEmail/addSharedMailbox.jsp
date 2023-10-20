@@ -14,6 +14,7 @@
 	    <script src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}" type="text/javascript"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
 	    <style>
+			input[type=checkbox]{vertical-align: middle;}
 	    	.mainlist thead tr {
 	    		height: 0px;
 	    	}

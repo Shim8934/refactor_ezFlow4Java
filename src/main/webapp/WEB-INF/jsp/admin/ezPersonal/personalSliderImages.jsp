@@ -106,13 +106,13 @@
 		    		sliderHTML += "</label></span></dt>";
 		    		sliderHTML += "</dl>";
 		    		sliderHTML += "<span class='slider-imagePage' data4 = '"+sliderImagePath+"'>";
-		    		sliderHTML += "<IMG src ="+sliderImagePath+" style='width:285px;height:515px'/>";
+		    		sliderHTML += "<IMG src ="+sliderImagePath+" style='width:280px;height:450px'/>";
 		    		sliderHTML += "</span>";
 		    		sliderHTML += "</li>";
 		    		document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	}
 		    	
-		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='width:285px;height:515px;border:1px dashed #aab2ba;'><img src='/images/admin/slideAdd.png' style='display:block;margin:0 auto;margin-top:225px;'></img></div></li>";
+		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='width:280px;height:450px;border:1px dashed #aab2ba;'><img src='/images/admin/slideAdd.png' style='display:block;margin:0 auto;margin-top:225px;'></img></div></li>";
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	
 		    	//슬라이더 추가
@@ -831,7 +831,7 @@
 			.addSlider {display:inline-block;}
 			.addSlider div img {cursor:pointer;}
 			.sliderCDT .sliderSwitch {margin:5px 0px 0px 0px;}
-			.sliderModifyBody .slider-imagePage img {width:285px;height:515px;opacity:0.4;}
+			.sliderModifyBody .slider-imagePage img {width:280px;height:450px;opacity:0.4;}
 			#addSliderBody div.sliderModifyBody {cursor:default;}
 			#addSliderBody div.sliderModifyBody .slider-header-modify {cursor:default;}
 		</style>

@@ -1610,7 +1610,7 @@ public class EzCircularController extends EgovFileMngUtil {
         }
         
         if (!tempFile.exists()) {
-        	tempFile.mkdir();
+        	tempFile.mkdirs();
         }
 
         StringBuffer strXML = new StringBuffer();

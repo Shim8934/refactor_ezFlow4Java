@@ -28,6 +28,7 @@
 				color:#017BEC;
 			}		    	
 	    </style>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_write_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	    
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -37,13 +38,16 @@
         <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<script type="text/javascript">
+	        var pStartTime = "<c:out value='${startTime}' />";
+    	    var pEndTime = "<c:out value='${endTime}' />";
 			var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 		    var pListType = "TXT";
 		    var pListXML_Info = null;
 		    var CurPage = "1";
 		    var lang = "<c:out value='${userInfo.primary}'/>";
-	        		  	
+		    var groupid = "<c:out value='${groupID}' />";
+		  	
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -783,7 +787,8 @@
 						description : document.all("description").value,
 						memberList : JSON.stringify(memberList),
 						displayName : "<c:out value='${userInfo.displayName1}' />",
-						displayName2 : "<c:out value='${userInfo.displayName2}' />"
+						displayName2 : "<c:out value='${userInfo.displayName2}' />",
+						groupColor : document.getElementById("groupColorText").innerHTML
 					} ,
    					success : function(text) {
    						alert("<spring:message code='ezSchedule.t199' />");
@@ -1367,7 +1372,75 @@
 	          	}
 	        	
 	        	$("#spn_deptName").css("width", deptNameWidth);
-	        }	        
+	        }
+		    
+		    /* 2023-09-06 조소정 - 참석자 일정조회 기능 활성화 */
+	        var schedule_add_user_cross_dialogArguments = new Array();
+	        function Add_UserInfo_onclick() {
+	        	console.log('Add_UserInfo_onclick들어옴');
+	            var listView = new ListView();
+	            listView.LoadFromID("MsgToList");
+	
+	            var totalRows = listView.GetDataRows();
+	            var totalLen = totalRows.length;
+	
+	            if (totalLen == 0) {
+	                alert("<spring:message code='ezSchedule.t353' />");
+	                return;
+	            }
+	
+	            var rtn = { "id": new Array(), "name": new Array(), "deptname": new Array() };
+	
+	            for (var i = 0; i < totalLen; i++) {
+                    //2023-08-16 이주원 - 일정관리>일정작성>일정반복 및 참석자>참석자초대>참석자 일정조회 시 한글로 표시됨
+	                if (lang == "1") {
+                        rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
+                    } else {
+                        rtn["name"][i] = GetAttribute(totalRows[i], "DATA3");
+                    }
+
+	                rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
+	                rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
+	            }
+	
+	            var g_param = new Array();
+	
+	            g_param["startTime"] = pStartTime;
+	            g_param["endTime"] = pEndTime;
+	            g_param["entryList"] = rtn;
+	
+	            var cmd, org_num, org_ownerID;
+	
+	            var feature = GetShowModalPosition(695, 430);
+	            if (CrossYN()) {
+	                schedule_add_user_cross_dialogArguments[0] = g_param;
+	                schedule_add_user_cross_dialogArguments[1] = Add_UserInfo_onclick_Complete;
+	                var OpenWin = window.open("/ezSchedule/scheduleAddUser.do?cmd=" + cmd + "&num=" + org_num + "&ownerID=" + org_ownerID, "schedule_Add_User_Cross", GetOpenWindowfeature(695, 430));
+	                try { OpenWin.focus(); } catch (e) { }
+	            } else{
+	                var reParam = window.showModalDialog("/ezSchedule/scheduleAddUser.do?cmd=" + cmd + "&num=" + org_num + "&ownerID=" + org_ownerID, g_param, "edge:sunken; dialogHeight:430px;scroll:no; dialogWidth:695px; status:no; help:no" + feature);
+	                if (typeof (reParam) != "undefined" && reParam != null) {
+	                    idDatepicker.vtLocalDate = reParam["startTime"];
+	                    idDatepicker.vtLocalEndDate = reParam["endTime"];
+	
+	                    if (reParam["entryList"] != "") {
+	                        xmpEntryEmailList.innerText = reParam["entryList"];
+	
+	                        DisplayEntryList();
+	                    }
+	                }
+	            }
+	        }
+	
+	        function Add_UserInfo_onclick_Complete(reParam) {
+	            idDatepicker.vtLocalDate = reParam["startTime"];
+	            idDatepicker.vtLocalEndDate = reParam["endTime"];
+	
+	            if (reParam["entryList"] != "") {
+	                xmpEntryEmailList.innerText = reParam["entryList"];
+	                DisplayEntryList();
+	            }
+	        }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">		
@@ -1378,20 +1451,29 @@
 	                <li><span onclick="window.close()"></span></li>
 	            </ul>
 	        </div>
+	        <!-- 2023-09-06 조소정 - 일정그룹 추가 팝업창에 일정그룹색상 지정할 수 있도록 셀 추가 -->
 			<table class="popuplist" width="100%">
 				<tr> 
-			    	<th style="width:120px; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t202' /></th> 
-			      	<td style="width:200px">
-			        	<input type="text" id="groupname" style="WIDTH:200px; height: 23px;" maxlength=50>
+			    	<th style="width:20%; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t202' /></th> 
+			      	<td style="width:35%; height: 23px; white-space:nowrap; text-align:center;">
+			        	<input type="text" id="groupname" style="WIDTH:100%; height: 23px;">
 			      	</td>
-			      	<th style="width:120px; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t203' /></th> 
-			      	<td>
-			        	<input name="text" type="text" id="description" style="WIDTH:100%; height: 23px;" maxlength=250>
+			      	<th style="width: 20%; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.jsb01' /></th> 
+		      		<td style="width: 100%;">
+			      		<div id="groupColor" style="width: 20px; height: 20px; float: left; margin-top: 1.5px; margin-left: 2px; background-color: #e9de13;"></div>
+			      		<div id="groupColorText" style="width: 90px; height: 20px; float: left; margin-top: 3px; margin-left: 5px; font-size: 13px;">#e9de13</div>
+			        	<a class="imgbtn" onclick="select_groupcolor()" style="float: right;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
+			      	</td>
+			    </tr>
+			    <tr>
+			    	<th style="width:20%; white-space:nowrap; text-align:center"><spring:message code='ezSchedule.t203' /></th> 
+			      	<td colspan=3>
+			        	<input name="text" type="text" id="description" style="width:100%; height: 23px; colspan: 3;">
 			      	</td>
 			    </tr> 
 			</table> 
 			<br/>
-			<table style="width:100%;margin-top: -6px;">
+			<table style="width:100%; margin-top: -19px;">
 				<tr>
 			    	<td>
 			        	<table id="TreeViewTD">
@@ -1488,9 +1570,17 @@
 			    	</td> 
 			  	</tr> 
 			</table> 
+			<!-- 2023-09-06 조소정 - 참석자 일정조회 및 취소 버튼 추가 -->
 			<div class="btnposition btnpositionNew">
-			    <a class="imgbtn" onClick="close_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
+				<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="margin-left: -125px;"><span><spring:message code='ezSchedule.t123' /></span></a>
+			    <a class="imgbtn" onClick="close_onclick()"><span><spring:message code='ezSchedule.t4' /></span></a>
+			    <a class="imgbtn" onClick="window.close()" ><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>
 		</form>
+		<!-- 2023-09-06 조소정 - 색상선택표 표출 시 뒷배경 회색 처리 -->
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </HTML>

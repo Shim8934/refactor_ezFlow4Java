@@ -736,7 +736,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         File file = new File(filePath);
 
         if (!file.exists()) {
-        	file.mkdir();
+        	file.mkdirs();
         }
 
         String url = "";
@@ -861,7 +861,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         File file = new File(commonUtil.detectPathTraversal(m_strLPath));
 
         if (!file.exists()) {
-        	file.mkdir();
+        	file.mkdirs();
         }
 
         OutputStream bos = null;
@@ -1890,6 +1890,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","시스템");
 			put("property","USEADMINIPACCESS"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
 		}});
+		test.put("useAddrDupliCheck", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useAddrDupliCheck"); // property_name
+			put("property_value","YES");
+			put("config_name","주소록 가져오기 시 기존주소록 중복체크 사용여부");
+			put("regdate","2023-05-16 00:00:00");
+			put("description","주소록 가져오기 시 기존주소록 중복체크 사용여부(default: YES)");
+			put("config_type","주소록");
+			put("property","USEADDRDUPLICHECK"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
+		}});
 		
 		Iterator<String> keys = test.keySet().iterator();
         while( keys.hasNext() ){
@@ -2872,5 +2882,51 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addAttitudeFormFormHtml2Column() throws Exception {
 		ezCommonDAO.addAttitudeFormFormHtml2Column();
+	}
+
+	@Override
+	public void createTblUserChangeInfo() throws Exception {
+		ezCommonDAO.createTblUserChangeInfo();
+	}
+
+    /* 2023-06-26  민지수 - 완료문서 추가의견 타입 추가 */
+    public void insertOpinionGB() {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        for (CompanyInfoVO company : companyList) {
+            if (company.getCompanyId() != null) {
+                map.put("code1", "A17");
+                map.put("code2", "000");
+                map.put("name", "추가의견");
+                map.put("isuse", "1");
+                map.put("descript", "추가의견");
+                map.put("name2", "Add");
+                map.put("name3", "追加");
+                map.put("name4", "追加意见");
+                map.put("tenantId", company.getTenantId());
+                map.put("companyId", company.getCompanyId());
+
+                ezCommonDAO.insertOpinionGB(map);
+            }
+        }
+        logger.debug("insertOpinionGB ended");
+    }
+    
+	/* 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가 (양도일자/그룹 색상) */
+	@Override
+	public void addScheduleGroupColumn() throws Exception {
+		ezCommonDAO.addScheduleGroupColumn();
+	}
+
+	// 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 변경하는 메소드
+    @Override
+    public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception {
+        ezCommonDAO.updateWebFolderAndApprovalCheckPermissionCode();
+    }
+
+	@Override
+	public void createTblBoardReplyReact() throws Exception {
+		ezCommonDAO.createTblBoardReplyReact();
 	}
 }

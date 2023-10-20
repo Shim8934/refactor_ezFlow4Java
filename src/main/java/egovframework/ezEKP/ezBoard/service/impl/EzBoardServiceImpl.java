@@ -3641,7 +3641,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			return "OK";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			logger.debug("deleteItem error");
+			logger.debug("deleteItem error!");
+			logger.error(e.getMessage(), e);
 			return "ERROR";
 		}
 	}
@@ -4134,9 +4135,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		File file = new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID));
 		
 		if (!file.exists()) {
-			file.mkdir();
-			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc").mkdir();
-			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "uploadFile").mkdir();
+			file.mkdirs();
+			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc").mkdirs();
+			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "uploadFile").mkdirs();
 		}
 		
 		//move 이면 지우고 옮기기
@@ -4951,5 +4952,115 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getCommentNoticeMail ended");
 		return ezBoardDAO.getCommentNoticeMail(map);
+	}
+
+	/* 2023-03-07 이가은 - userID를 조건으로 댓글 반응 여부(좋아요 : Y / 싫어요 : N / 미선택 : 공백 또는 null) 리턴하는 메서드 */
+	@Override
+	public String checkReactUser(String itemID, String replyID, String userID, int tenantID) throws Exception {
+		logger.debug("checkReactUser started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("checkReactUser ended");
+		return ezBoardDAO.checkReactUser(map);
+	}
+
+	/* 2023-03-07 이가은 - 댓글 반응 추가하는 메서드 */
+	@Override
+	public void inserBoardReact(String itemID, String replyID, String userID, String reactFlag, int tenantID, String companyID, String reactDate) throws Exception {
+		logger.debug("inserBoardReact started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_USERID", userID);
+		map.put("v_REACTFLAG", reactFlag);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_REACTDATE", reactDate);
+
+		logger.debug("inserBoardReact ended");
+		ezBoardDAO.inserBoardReact(map);
+	}
+
+	/* 2023-03-07 이가은 - 댓글 반응 삭제하는 메서드  */
+	@Override
+	public void deleteBoardReact(String itemID, String replyID, String userID, int tenantID) throws Exception {
+		logger.debug("deleteBoardReact started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("deleteBoardReact ended");
+		ezBoardDAO.deleteBoardReact(map);
+	}
+
+	/* 2023-03-07 이가은 - 댓글 삭제되었을 경우 반응 모두 삭제하는 메서드 */
+	@Override
+	public void allReactDelete(String itemID, String delReplyID, int tenantID) throws Exception {
+		logger.debug("allReactDelete started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_DELREPLYID", delReplyID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("allReactDelete ended");
+		ezBoardDAO.allReactDelete(map);
+	}
+
+	/* 2023-03-08 이가은 - 게시물에 대한 사용자의 댓글 반응 HashMap List로 리턴하는 메서드 */
+	@Override
+	public List<HashMap<String, String>> getUserReplyReact(String itemID, String userID, int tenantID) throws Exception {
+		logger.debug("getUserReplyReact started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getUserReplyReact ended");
+		return ezBoardDAO.getUserReplyReact(map);
+	}
+
+	/* 2023-03-08 이가은 - 댓글 존재여부 리턴하는 메서드 */
+	@Override
+	public int checkReplyID(String itemID, String replyID, int tenantID) throws Exception {
+		logger.debug("checkReplyID started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_ITEMID", itemID);
+		map.put("v_REPLYID", replyID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("checkReplyID started");
+		return ezBoardDAO.checkReplyID(map);
+	}
+
+
+	/**
+	 * 해당 게시판의 관리권한 여부를 리턴하는 메서드
+	 * @param rollInfo : 사용자의 롤정보 - userInfo.getRollInfo()
+     */
+	public boolean isBoardAdmin(String boardId, String userId, String deptId, String companyId, int tenantId, String rollInfo){
+		boolean result = false;
+		try {
+			String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(boardId, userId, deptId, companyId, tenantId);
+			result = rollInfo != null
+					&& (boardGroupAdmin_FG.equals("OK")
+					|| rollInfo.toLowerCase().contains("c=1;")
+					|| rollInfo.toLowerCase().contains("k=1;")
+					|| rollInfo.toLowerCase().contains("n=1;"));
+		} catch(Exception e){
+			logger.error("isBoardAdmin error : " + e.getMessage(), e);
+        }
+		return result;
 	}
 }

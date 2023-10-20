@@ -1,4 +1,4 @@
-﻿function TreeView(thisobjid, elobjid) {
+﻿﻿﻿function TreeView(thisobjid, elobjid) {
     window[thisobjid] = this;
     var thisid = thisobjid;
     var element = document.getElementById(elobjid);
@@ -188,6 +188,8 @@
             document.getElementById(g_nodeid + g_selectedIdx).className = g_baseClass["normal"];
         }
 
+        // 2023-06-28 황인경 - 디자인 개선 > 메일 / 주소록 / 회람판 > 좌측메뉴 > 기존에 선택한 span 태그(node_selected) 해제 
+    	$(".list_text.node_selected").removeClass("node_selected");
         document.getElementById(g_nodeid + nodeIdx).className = g_baseClass["selected"];
         g_selectedIdx = nodeIdx;
         g_selectedNode = document.getElementById(g_nodeid + nodeIdx);
@@ -770,55 +772,46 @@
             
             switch (_foldername) {
                 case '_INBOX':
-                    _imgsrc = '/images/ImgIcon/inbox.gif';
-                    spanClass = "sub_iconLNB tree_mail";
+                    // 2023-06-22 황인경 - 디자인 개선 > 메일 > 좌측메뉴 > 트리구조 LNB 이미지 삭제
+                    spanClass = "sub_iconLNB";
                     spanId = "inboxMail";
                     _tempStatus = "Y";
                     break;
                 case '_SENT':
-                    _imgsrc = '/images/ImgIcon/outbox.gif';
-                    spanClass = "sub_iconLNB tree_outmail";
+                    spanClass = "sub_iconLNB";
                     spanId = "sentMail";
                     _tempStatus = "Y";
                     break;
                 case '_DRAFT':
-                    _imgsrc = '/images/ImgIcon/drafts.gif';
-                    spanClass = "sub_iconLNB tree_outbox";
+                    spanClass = "sub_iconLNB";
                     spanId = "draftMail";
                     _tempStatus = "Y";
                     break;
                 case '_JUNK':
-                    _imgsrc = '/images/ImgIcon/junkemail.gif';
-                    spanClass = "sub_iconLNB tree_junk";
+                    spanClass = "sub_iconLNB";
                     spanId = "junkMail";
                     _tempStatus = "Y";
                     break;
                 case '_DELETE':
-                    _imgsrc = '/images/ImgIcon/deleted.gif';
-                    spanClass = "sub_iconLNB tree_delete";
+                    spanClass = "sub_iconLNB";
                     spanId = "deleteMail";
                     _tempStatus = "Y";
                     break;
                 case '_PERSONAL':
-                    _imgsrc = '/images/ImgIcon/sentitems.gif';
-                    spanClass = "sub_iconLNB tree_individual";
+                    spanClass = "sub_iconLNB";
                     spanId = "personalMail";
                     _tempStatus = "Y";
                     break;
                 default:
-                    _imgsrc = '/images/ImgIcon/fldr.gif';
-                	spanClass = "sub_iconLNB tree_tree";
+                    spanClass = "sub_iconLNB";
                 	spanId = "defaultMail";
                 	_tempStatus = "N";
                     break;
             }
             
             if (g_nodeid + g_nodeCount == "AddressTreeView_node_1") {
-            	spanClass = "sub_iconLNB tree_adress_individual";
             } else if (g_nodeid + g_nodeCount == "AddressTreeView_node_2") {
-            	spanClass = "sub_iconLNB tree_adress_department";
             } else if (g_nodeid + g_nodeCount == "AddressTreeView_node_3") {
-            	spanClass = "sub_iconLNB tree_adress_company";
             }
             
             var imgSpan2 = document.createElement("SPAN");
@@ -863,7 +856,8 @@
             
             var folderCount = GetAttribute(childNode, "foldercount");
             if (folderCount > 0) {
-            	SPAN_TAG.innerHTML = GetAttribute(childNode, "caption") + "&nbsp;&nbsp;" + folderCount;
+            	// 2023-06-23 황인경 - 디자인 개선 > 메일 > 좌측메뉴 > 카운트 괄호 추가
+            	SPAN_TAG.innerHTML = GetAttribute(childNode, "caption") + "(" + folderCount + ")"; 
             } else {
             	SPAN_TAG.innerHTML = GetAttribute(childNode, "caption");
             }

@@ -69,17 +69,19 @@ function getBoardComment() {
 			boardCommentList = "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
 			list = result.boardLineReplyVOList;
 			var commentBgColor = 1;
+			var updateCount = parseInt(result.totalCommentCount);
+
 			list.forEach(function(vo, index) {
 				if (commentBgColor === 1) {
 					boardCommentList += "<tr class='boardComment' boardUserID='" + vo.userID + "' memberID='"
 						+ vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
-						+ 1 + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
+						+ 1 + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:white;'>";
 				} else {
 					boardCommentList += "<tr class='boardComment' boardUserID='" + vo.userID + "' memberID='"
 						+ vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
 						+ 1 + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
 				}
-				commentBgColor = commentBgColor * (-1);
+
 				if (gubun == "2") {
 					boardCommentList += "<td style='padding-left:3px;line-height:1.5'>&nbsp;<span>" + vo.userName + "</span></td>";					
 				} else {
@@ -110,12 +112,45 @@ function getBoardComment() {
 					}
 				}
 				boardCommentList += "</td>";
-				boardCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.writeDate.substring(0, 16) + "</td>";
+				boardCommentList += "<td style='text-align:right; padding-right:8px;";
+				if (reactFlag != null && reactFlag == "Y") boardCommentList += "border-bottom:hidden;";
+				boardCommentList +=	"'>" + vo.writeDate.substring(0, 16) + "</td>";
 				boardCommentList += "</tr>";
+
+				/* 2023-03-07 이가은 - 댓글 좋아요/싫어요 버튼 및 우측 숫자 표출 */
+				if (reactFlag != null && reactFlag == "Y") {
+					if (commentBgColor === 1) {
+						boardCommentList += "<tr class='commentReact" + index + "' style='text-align:left; border:1px solid #e2e2e2; background-color:white;'>";
+					} else {
+						boardCommentList += "<tr class='commentReact" + index + "' style='text-align:left; border:1px solid #e2e2e2; background-color:#fafafa;'>";
+					}
+					boardCommentList += "<td style='border-top:hidden;'></td>";
+					boardCommentList += "<td style='border-top:hidden;'></td>";
+					boardCommentList += "<td class='reactTd' style='text-align:right; height:28px; border-top:hidden; padding-right:13px; float:right;' replyid=" + vo.replyID + ">";
+					if (gubun != 2) {
+						boardCommentList += "<div><p style='float:left; margin-top:0px;'><img src='/images/like_off.png' style='cursor:pointer;' id=Y" + vo.replyID +" replyid=" + vo.replyID + " userid=" + vo.userID + " reactflag=Y index=" + index + " onclick='react_onclick(this)' /></p>";
+						boardCommentList +=	"<p style='width:16px; float:left; margin-top:0px;'><span id='myY" + index +"' style='color:#F55E51;'>"+ vo.re_like +"</span></p>";
+						boardCommentList += "<p style='float:left; margin-top:0px; margin-left:15px;'><img src='/images/hate_off.png' style='cursor:pointer;' id=N" + vo.replyID +" replyid=" + vo.replyID + " userid=" + vo.userID + " reactflag=N index=" + index + " onclick='react_onclick(this)'/></p>";
+						boardCommentList += "<p style='width:16px; float:left; margin-top:0px;'><span id='myN" + index +"' style='color:#5381F5;'>" + vo.re_hate + "</span></p></div>";
+						boardCommentList += "</td>";
+						boardCommentList += "</tr>";
+					} else {
+						boardCommentList += "<div><p style='float:left; margin-top:0px;'><img src='/images/like_off.png' style='cursor:pointer;' id=Y" + vo.replyID +" replyid=" + vo.replyID + " userid=anonym reactflag=Y index=" + index + " onclick='react_onclick(this)' /></p>";
+						boardCommentList +=	"<p style='width:16px; float:left; margin-top:0px;'><span id='myY" + index +"' style='color:#F55E51;'>"+ vo.re_like +"</span></p>";
+						boardCommentList += "<p style='float:left; margin-top:0px; margin-left:15px;'><img src='/images/hate_off.png' style='cursor:pointer;' id=N" + vo.replyID +" replyid=" + vo.replyID + " userid=anonym reactflag=N index=" + index + " onclick='react_onclick(this)'/></p>";
+						boardCommentList += "<p style='width:16px; float:left; margin-top:0px;'><span id='myN" + index +"' style='color:#5381F5;'>" + vo.re_hate + "</span></p></div>";
+						boardCommentList += "</td>";
+						boardCommentList += "</tr>";
+					}
+				} 
+//				else {
+//					boardCommentList += "</td></tr>";
+//				}
+				commentBgColor = commentBgColor * (-1);
 			}); 
 			  
 			if (list.length == 0) {
-				boardCommentList += "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
+				boardCommentList += "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:white;'>";
 				boardCommentList += "<td colspan='3' style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;"
 									+ "border-right:0px;border-left:0px;text-align:center;background-color:white;'>" 
 									+ strLang181 + "</td>";
@@ -125,12 +160,14 @@ function getBoardComment() {
 			$("#commentList").html("");
 			$("#commentList").append(boardCommentList);
 			
-			var updateCount ="[" + result.totalCommentCount + "]"; 
 			document.getElementById('onelinereply').value = "";
-			$("#headTitle").html(updateCount);
-			var a = $('#commentCount', parent.document).text(strLang186 + "[" + result.totalCommentCount + "]");
+			$("#headTitle").html("[" + updateCount + "]");
+			var a = $('#commentCount', parent.document).text(strLang186 + "[" + updateCount + "]");
 			
 			nowCommentCount = result.totalCommentCount; // 댓글 옵션처리를 위해 전역변수에 최신 댓글갯수를 부여
+			if (reactFlag != null && reactFlag == "Y") {
+				showUserReplyReact(pItemID); // 사용자별 게시판 댓글 반응 표출 (아이콘 파란색으로 변경, 숫자 볼드 처리)
+			}
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -166,7 +203,7 @@ function deleteBoardCommentPopup() {
 		} else {
 			document.getElementById("mailPanel2").style.height = ($(window).height() + "px");
 		}
-		DivPopUpShow2(376, 191, "/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + delpReplyID + "&replyFlag=true");
+		DivPopUpShow2(376, 191, "/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID) + "&replyID=" + encodeURIComponent(delpReplyID) + "&replyFlag=true");
 	}
 }
 //강민수92
@@ -355,5 +392,60 @@ function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
 			itemID : pItemID,
 			isAllGroupBoard : pIsAllGroupBoard
 		}    			
+	});
+}
+
+/* 2023-03-07 이가은 - 게시판 댓글 좋아요/싫어요 버튼 클릭 동작 함수 */
+function react_onclick(reply) {
+	var xmlhttp = createXMLHttpRequest();
+
+	var replyId = reply.getAttribute('replyid');
+	var replyWriter = reply.getAttribute('userid');
+	var reactFlag = reply.getAttribute('reactflag');
+	var replyIndex = reply.getAttribute('index');
+
+	xmlhttp.open("POST", "/ezBoard/reactAndModeCheck.do?itemID=" + encodeURIComponent(pItemID) + "&replyID=" + encodeURIComponent(replyId) + "&replyWriter=" + replyWriter + "&reactFlag=" + reactFlag, false);
+	xmlhttp.send();
+
+	getBoardComment();
+
+	if (xmlhttp.response == 1) { // 댓글이 존재하지 않는 경우
+		alert(strLang190);
+	} else if (xmlhttp.response == 2) { // 댓글 작성자인 경우 (본인 댓글에 반응 불가)
+		reactFlag == "Y" ? alert(strLang188) : alert(strLang189);
+	} else if (xmlhttp.response == 4) { // 같은 반응을 눌렀을 경우
+		$('#my' + reactFlag + replyIndex).css({"font-weight" : "normal"});
+	}
+}
+
+/* 2023-03-07 이가은 - 게시판 댓글 반응 삭제 함수 */
+function allReactDelete(delpReplyID) {
+	var xmlhttps = createXMLHttpRequest();
+
+	xmlhttps.open("POST", "/ezBoard/allReactDelete.do?itemID=" + encodeURIComponent(pItemID) + "&delReplyID=" + encodeURIComponent(delpReplyID), true);
+	xmlhttps.send();
+}
+
+/* 2023-03-08 이가은 - 사용자별 게시판 댓글 반응 표출 함수 (사용자가 선택한 아이콘 색상변경, 숫자 볼드처리) */
+function showUserReplyReact(pItemID) {
+	$.ajax({
+		type : "GET",
+		async : false,
+		url : "/ezBoard/getUserReplyReact.do",
+		dataType : "json",
+		data : {pItemID : pItemID},
+		success : function(result) {
+			for (var i in result) {
+				var reactFlag = result[i].REACTFLAG;
+				var replyId = result[i].REPLYID;
+
+				if ($('td[replyid="' + replyId + '"]').length == 1) {
+					var replyIndex = $('[id^="'+ reactFlag + replyId + '"]').show()[0].getAttribute('index');
+
+					$('#my' + reactFlag + replyIndex).css({"font-weight" : "bold"});
+					reactFlag == 'Y' ? $('[id^="' + reactFlag + replyId +'"]').show()[0].src = '/images/like_on.png' : $('[id^="' + reactFlag + replyId +'"]').show()[0].src = '/images/hate_on.png';
+				}
+			}
+		}
 	});
 }

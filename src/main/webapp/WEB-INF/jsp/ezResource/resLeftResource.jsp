@@ -215,10 +215,10 @@
 	    		<spring:message code="main.t28" />
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick='resourceWrite()'><span class="sub_iconLNB tree_write"></span><spring:message code="main.t00034" /></p>
+	        	<p class="btn_write01" onclick='resourceWrite()'><spring:message code="main.t00034" /></p>
 	        </div>
 	        <div class="resourceListBox" style="overflow:hidden; padding-right: 0;">
-		        <ul class="lnbUL">
+		        <ul class="lnbUL resLnb_tree">
 		        	<div class="tree onlytree" id="TreeView" style="overflow-y: hidden; height: 100%;"></div>
 		        	<!-- <div class="tree">
 		            	<span>

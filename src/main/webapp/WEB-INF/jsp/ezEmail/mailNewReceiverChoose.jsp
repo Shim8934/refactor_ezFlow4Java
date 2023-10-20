@@ -36,6 +36,11 @@
 			.multiple-sortable-selected td{
 				color: #0684f9 !important;
 			}
+			
+			.checkDept {
+				height: 16px !important;
+			}
+			
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -229,7 +234,7 @@
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
 	                document.getElementById("ListMsgCC").style.display = "none";
 	                document.getElementById("ListMsgBCC").style.display = "none";
-	                document.getElementById("ListViewMsgTo").style.height = "517px";
+	                document.getElementById("ListViewMsgTo").style.height = "510px";
 	                SelectReceiverWindow(ToTitle, ListViewMsgTo);
 	            }
 	            else if (type == "rule") {
@@ -4479,7 +4484,7 @@
 		        <WIDTH>40</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME>E-MAIL</NAME>
+		        <NAME>EMAIL</NAME>
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		    </HEADERS>
@@ -4529,7 +4534,7 @@
 		        <WIDTH>65</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME>E-Mail</NAME>
+		        <NAME>Email</NAME>
 		        <WIDTH></WIDTH>
 		      </HEADER>
 		    </HEADERS>
@@ -4601,7 +4606,7 @@
 	                        <td>
 	                            <div class="portlet_tabpart03" style="background-color: #f1f3f5; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border-bottom: 0px; height:26px;">
-	                                    <table style="margin-top: 4px; width: 100%;">
+	                                    <table style="margin-top: 2px; width: 100%;">
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
@@ -4733,11 +4738,11 @@
 	                        <td></td>
 	                        <td style="vertical-align: top; width: 100%;">
 	                            <div style="margin-top: 3px; vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 23px; padding-top: 7px; padding-left: 5px;">
-	                                <img src="/images/ImgIcon/fldr.gif" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
+	                                <img src="" align="absmiddle" hspace="2" style="cursor: pointer; margin-right:0px;" />
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
 	                                &nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
 	                            </div>
-	                            <div id="AddressListView" class="border_gray" style="width: 100%; height: 399px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
+	                            <div id="AddressListView" class="border_gray" style="height: 399px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea">
 	                            </div>
 	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; width:auto !important"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 446px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
@@ -4853,7 +4858,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.t66' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 140px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(ToTitle,this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 136px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(ToTitle,this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -4871,7 +4876,7 @@
 	                                <span style="min-width: 45px;"><spring:message code='ezEmail.t594' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 140px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(CCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgCC)"></div>
+	                                <div id="ListViewMsgCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 136px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(CCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgCC)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -4889,7 +4894,7 @@
 	                                <span style="min-width: 45px;"><spring:message code='ezEmail.t562' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgBCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 145px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(BCCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgBCC)"></div>
+	                                <div id="ListViewMsgBCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 141px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(BCCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgBCC)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

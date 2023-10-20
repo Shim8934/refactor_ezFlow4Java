@@ -74,6 +74,7 @@
 			var refreshFlag = "N";
 		    var pUse_Editor = "${useEditor}";
 			var pNoneActiveX = "YES";
+			var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
 		    //추가항목 유무
 		    var pAttributeYN = "${boardInfo.attributeYN}";
 		    var AtttributeCount = "${boardAttrCount}"; 
@@ -500,45 +501,53 @@
 		                xmlhttp = null;
 		                try {
 		                	window.opener.leftCountRf(pBoardID);
-						} catch (e) {
-						}
+						} catch (e) {console.log(e);}
 		                try {
 		                    window.opener.refresh_onclick();
-		                } catch (e) {
-		                }
+		                } catch (e) {console.log(e);}
 
 	                    //2019.03.04 유은정 - 게시판 적용
-	                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
-	                    	parent.opener.getNoticePortletList();
-	                    }
+	                    try {
+		                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
+		                    	parent.opener.getNoticePortletList();
+		                    }
+	                    } catch (e) {console.log(e);}
 
-	                    if (window.opener != null && window.opener.getBoardList != undefined) {
-							window.opener.getBoardList();
-	                    }
+	                    try {
+		                    if (window.opener != null && window.opener.getBoardList != undefined) {
+								window.opener.getBoardList();
+		                    }
+	                    } catch (e) {console.log(e);}
 
 	                 	// 게시판 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener.getBoardPortletInfo != undefined) {
-			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
-			            	var customBoardCount = customBoardList.length;
-			            	
-			            	for (var i = 0; i < customBoardCount; i++) {
-			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
-			            		
-			            		if (boardId == pBoardID) {
-			            			var portletId = customBoardList[i].parentElement.id;
-			            			portletId = portletId.substring(0, portletId.indexOf("P"));
-			            			parent.opener.getBoardPortletInfo(portletId);
-			            		}
-			            	}
-			            }
+						try {
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+				            }
+	                 	} catch (e) {console.log(e);}
 	                 	
-			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
-							parent.opener.getBoardList_NewBoardSTD();
-						}
-
-						if(parent.opener.search != undefined){
-							parent.opener.search('skip');
-						}
+	                 	try {
+				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+								parent.opener.getBoardList_NewBoardSTD();
+							}
+	                 	} catch (e) {console.log(e);}
+	                 	
+	                 	try {
+							if (parent.opener.search != undefined){
+								parent.opener.search('skip');
+							}
+	                 	} catch (e) {console.log(e);}
 			            
 		                window.close();
 		            }
@@ -1601,7 +1610,7 @@
 								<tr>
 									<th><spring:message code='ezBoard.t224' /></th>
 									<td id="PostDate" style = "white-space:nowrap; padding-right:5px">
-										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate.substring(0, 16)}</div>
+										<div style="vertical-align:middle;width:100%;height:16px;">${boardItem.writeDate.substring(0, 16)}</div>
 									</td>
 									<!-- 게시일 end -->
 									<!-- 게시 종료일 -->
@@ -1625,7 +1634,7 @@
 							<c:otherwise>
 								<th style="width:10%"><spring:message code='ezBoard.t224' /></th>
 									<td id="PostDate" style="width:120px; white-space:nowrap; padding-right:5px">
-										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate}</div>
+										<div style="vertical-align:middle;width:100%;height:16px;">${boardItem.writeDate}</div>
 									</td>
 									<!-- 게시일 end -->
 							</tr>
@@ -1689,7 +1698,7 @@
 			        <tr>
 			          <th><spring:message code='ezBoard.t323' /></th>
 			             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-			             	<div style="overflow-y:auto;WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
+			             	<div style="WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
 			             </td>
 			        </tr>
 			        <!-- 제목 end -->
@@ -1751,10 +1760,10 @@
 							<c:if test="${guBun == 2}">
 								<tr>
 									<th colspan="2" style="width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #f8f8fa; border-right:1px solid #e2e2e2; text-align:right;
-											border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle">
+											border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle ">
 										<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 										<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
-										<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+										<a class='imgbtn' style="vertical-align: middle; margin-bottom: 3px;"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
 									</th>
 								</tr>
 							</c:if>
@@ -1776,8 +1785,8 @@
 		            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 76px; background-color:white" id="lstAttachLink" ></div>
 		            </td>
 		        <td class="pos2">
-		        <a class="imgbtn imgbck" style="width:70px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-		        <a class="imgbtn imgbck" style="width:70px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+		        <a class="imgbtn imgbck" style="width:60px; margin-bottom: 3px !important;"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+		        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
 		        </td>
 		        <td id="ItemLevel" style="display:none"></td>
 		        </tr>

@@ -742,7 +742,7 @@
 	            	var strDept = p_ListOrderObject.getAttribute("_data5");
 	            	
 	            	if (strData == null || strData == "") {
-	            		strData = "c=0;k=0;g=0;a=0;n=0;l=0;f=0;w=0;wf=0;e=0";
+	            		strData = "c=0;k=0;g=0;a=0;n=0;l=0;q=0;w=0;f=0;e=0";
 	            	}
 	            	
 	            	var _listView = new ListView();
@@ -1343,8 +1343,8 @@
 	        	var titleTxt_l = "<spring:message code='ezOrgan.t296' />";
 	        	var titleTxt_w = "<spring:message code='ezOrgan.t301' />";
 	        	var titleTxt_m = "<spring:message code='ezOrgan.t300' />";
-	        	var titleTxt_f = "<spring:message code='ezOrgan.lhj1' />";
-	        	var titleTxt_wf = "<spring:message code='ezOrgan.t303' />";
+	        	var titleTxt_q = "<spring:message code='ezOrgan.lhj1' />";
+	        	var titleTxt_f = "<spring:message code='ezOrgan.t303' />";
 	        	var titleTxt_e = "<spring:message code='ezOrgan.kbm01' />";
 	        	var titleTxt_s = "<spring:message code='ezOrgan.t9904' />";	// 준법지원인
 	        	
@@ -1430,7 +1430,7 @@
 				        <ROW>
 				            <CELL>
 				                <VALUE><spring:message code='ezOrgan.lhj1'/></VALUE>
-				                <DATA1>ff</DATA1>
+				                <DATA1>q</DATA1>
 				            </CELL>
 				        </ROW>
 				        </c:if>
@@ -1452,7 +1452,7 @@
 	                    <ROW>
 				            <CELL>            
 				                <VALUE><spring:message code='ezOrgan.t303'/></VALUE>
-				                <DATA1>wf</DATA1>
+				                <DATA1>f</DATA1>
 				            </CELL>
 				        </ROW>
 				        </c:if>
@@ -1488,7 +1488,7 @@
 	                            <tr>
 	                                <td>
 	                                	<div style="padding-left:5px;">
-	                                    	<input type="text" name="Input" id="deptkeyword" style="WIDTH: 120px; height:22px;" onkeypress="deptsearch_press()" />
+	                                    	<input type="text" name="Input" id="deptkeyword" style="WIDTH: 120px; height:25px;" onkeypress="deptsearch_press()" />
 	                                        <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezOrgan.t93'/></span></a>
 	                                	</div>
 	                                </td>
@@ -1506,7 +1506,7 @@
 					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 					                            <option value="streetAddress" style="display:none"><spring:message code='ezOrgan.t100'/></option>
 	                                        </select>
-	                                        <input type="text" id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; height:22px; margin: 0px;" />
+	                                        <input type="text" id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; height:25px; margin: 0px;" />
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 	                                    </div>
 	                                </td>    

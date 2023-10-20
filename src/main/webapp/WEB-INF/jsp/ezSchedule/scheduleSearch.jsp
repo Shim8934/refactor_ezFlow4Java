@@ -248,20 +248,20 @@
 		    	<tr> 
 		      		<th><spring:message code='ezSchedule.t348'/></th> 
 		      		<td style="width:100%">
-		      			<div style="vertical-align: middle;height: 74%;width: 100%;">
+		      			<div style="vertical-align: middle;height: 83%;width: 100%;">
 			      			<select name="search_field" style="WIDTH: 70px;height:22px"> 
 			          			<option value="title" <c:if test="${filter eq 'title' }">selected</c:if>><spring:message code='ezSchedule.t272'/></option> 
 			          			<option value="location" <c:if test="${filter eq 'location' }">selected</c:if>><spring:message code='ezSchedule.t273'/></option> 
 			        		</select> 
 			        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" style="height:22px;vertical-align: top" /> 
-			        		<a class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
+			        		<a class="imgbtn imgbck" style="height: 22px;"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
 		        		</div>
 		        	</td> 
 		    	</tr> 
 		    	<tr> 
 		      		<th><spring:message code='ezSchedule.t349'/></th>
 		      		<td>
-		      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
+		      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" style="margin-top: 1px;" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
 		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
 		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		          		<span>&nbsp;(<spring:message code='ezSchedule.t351'/></span> 
@@ -285,7 +285,15 @@
 		  	<table class="mainlist" style="table-layout:fixed;width:100%">
 		    	<tr> 
 		      		<th colspan=2 style="width:30px; text-align:center; padding:0 2px"><img src="/images/ImgIcon/view-importance.gif"></th>      
-		      		<th style="width:50px"><spring:message code='ezSchedule.t270'/></th> 
+		      		<c:choose>
+		      			<c:when test="${lang == 1 }">
+				      		<th style="width:50px">
+		      			</c:when>
+		      			<c:otherwise>
+				      		<th style="width:70px">
+		      			</c:otherwise>
+		      		</c:choose>
+		      		<spring:message code='ezSchedule.t270'/></th> 
 		      		<th style="width:80px"><spring:message code='ezSchedule.t271'/></th> 
 		      		<th style="width:80px"><spring:message code='ezSchedule.t161'/></th> 
 		      		<th style="width:60%"><spring:message code='ezSchedule.t272'/></th>

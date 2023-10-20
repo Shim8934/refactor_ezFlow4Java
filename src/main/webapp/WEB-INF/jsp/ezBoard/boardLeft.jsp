@@ -557,12 +557,14 @@
 		            alert(e.description);
 		        }
 		    }
-		
+			
+		    /* 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 LNB 이미지 수정 */
 		    /* 2019-12-02 홍승비 - 게시판 좌측메뉴에서 마이게시판 설정 아이콘 표출, 의미없는 함수 파라미터 제거 */
 		    function ShowMyBoardItem() {		// 마이 게시판 선택
 		    	/* $(".on").attr("class", "off");
 		    	$(".myb h2").attr("class", "on");
 		    	$(".myb").next().attr("class", "on"); */
+		    	var openSpan = $(event.target);
 		    	
 		    	SetTreeConfig();
 		        document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
@@ -574,15 +576,19 @@
 		        treeView.DataSource(GetMyBoardItem("0"));
 		        treeView.DataBind("TreeCtrl_MyBoardTree");
 	            
-	            $("h2.on").not($("#myBoardList")).attr("class","off");
-	            $("#TopBoardsList .lnbUL").attr("class","off");
+	            $("h2.on").not($("#myBoardList")).attr("class", "off");
+	            $("#TopBoardsList .lnbUL").attr("class", "off");
 	            
 	            if ($("#myBoardList").attr("class") == "off") {
-	            	$("#myBoardList").attr("class","on");
-	            	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL");
+	            	$("#myBoardList").attr("class", "on");
+	            	$("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL");
+	            	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+	            	$("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 	            } else {
-	            	$("#myBoardList").attr("class","off");
-	            	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");	
+	            	$("#myBoardList").attr("class", "off");
+	            	$("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");	
+	            	$(".list_text.node_selected").removeClass("node_selected");
+	            	$("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_plus");
 	            }
 	            
 		        /* 18-05-16 김민성 - tootip 추가 및 글자수 관련 style 수정 */
@@ -625,6 +631,11 @@
 							 countFlag : "YES"},
 					success: function(xml){
 						returnXML = xml;
+						// 2023-09-15 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 마이게시판 > 마이게판목록 없을 시 여백 조정
+						if (xml.includes("<NODE>")){
+						} else {
+							$("#TreeCtrl_MyBoardTree").css("padding-bottom", "0px");
+						}
 					}        			
 				});	
 		    	
@@ -678,10 +689,18 @@
 		            $("h2.on").not(ctr).attr("class","off");
 		            $("#TopBoardsList .lnbUL").attr("class","lnbUL off");
 		            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
+ 		            // 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 LNB 이미지 수정
+		            $("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_plus"); 
 		            
 		            if (ctr.attr("class") == "off") {
-		            	ctr.attr("class","on");		            	
-		            	ctrobj.attr("class","lnbUL");
+		            	ctr.attr("class", "on");		            	
+		            	ctrobj.attr("class", "lnbUL");
+		            	
+		            	if ($(ctr).prop("tagName") == "H2") {
+							$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+		            	}
+		            	
+		            	$(ctr).children().children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 		            	
 		            	/* ctrobj.animate({
 		            		maxHeight: "250px"
@@ -691,6 +710,8 @@
 		            } else {
 		            	ctrobj.attr("class","lnbUL off");
 		            	ctr.attr("class","off");
+		            	
+		            	$(ctr).children().children().eq(0).attr("class", "sub_iconLNB tree_plus");
 		            	
 		            	/* ctrobj.animate({
 		            		maxHeight: "0px"
@@ -878,15 +899,21 @@
 		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
 		            var treeView = new TreeView();
 		            treeView.SetConfig(xmlHTTP.responseXML);
-		    }
+				}
 		    }
 		    
+	    	/* 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '즐겨찾기' LNB 이미지 수정 */
 		    function favoriteList() {
-		    	$("h2.on").attr("class", "off");
-		    	$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
-	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
-		    	
-		    	if (typeof window.parent.frames["right"] == "undefined") {
+		    	var openSpan = $(event.target);
+
+	    		$("h2.on").attr("class", "off");
+		    	openSpan.parent().addClass("on");	
+		    	$(".list_text.node_selected").removeClass("node_selected");
+	            $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+		    	$("#TopBoardsList .lnbUL").attr("class", "lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");
+
+	            if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardItemList_favorite.do";
 				} else {
 		       		window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
@@ -921,6 +948,7 @@
 				} else {
 		        	window.parent.frames["right"].location.href = "/ezBoard/boardItemListMyList.do";
 				}
+		    	liSelected();
 		    }
 		    function TempBoard() {
 		    	if (typeof window.parent.frames["right"] == "undefined") {
@@ -928,6 +956,7 @@
 				} else {
 		        	window.parent.frames["right"].location.href = "/ezBoard/boardItemListTemp.do";
 				}
+		    	liSelected();
 		    }
 		    function boardConfig() {
 		    	if (typeof window.parent.frames["right"] == "undefined") {
@@ -942,6 +971,7 @@
 				} else {
 		        	window.parent.frames["right"].location.href = "/ezBoard/boardReservedItemList.do";
 				}
+		    	liSelected();
 		    }
 		    function Apprboard() {
 		    	$(".ApprDiv").attr("class", "on");
@@ -968,8 +998,20 @@
 		    }
 		    function boardSearch(){
 		    	$("h2.on").attr("class", "off");
-		    	$("#TopBoardsList .lnbUL").attr("class","lnbUL off");
-	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
+		    	// 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '검색' LNB 이미지 수정
+		    	$(".list_text.node_selected").removeClass("node_selected");
+
+		    	var boardSearchH2 = $(event.target);
+		    	
+		    	if (boardSearchH2.prop("tagName") == "SPAN") {
+		    		boardSearchH2.parent().parent().addClass("on");	
+		    	} else {
+		    		boardSearchH2.addClass("on");
+		    	}
+		    	
+	            $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+		    	$("#TopBoardsList .lnbUL").attr("class", "lnbUL off");
+	            $("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");
 	            
 		      	if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardSearchView.do";
@@ -1057,7 +1099,8 @@
 							}
 							
 							if (resultCount > 0) {
-								subBoardName += (" " + resultCount);
+								// 2023-06-23 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 카운트 괄호 추가
+								subBoardName += ("(" + resultCount + ")");
 							}
 							
 							subBoardSpanMy.text(subBoardName);
@@ -1096,6 +1139,20 @@
 		    	
 		    	return result;
 		    }
+		    
+			// 2023-06-28 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 서브메뉴 클래스 제어
+			function liSelected() {
+			  	if (event.target.classList.length == 1) {
+			  		
+			  		if ($(".node_selected").parent().is("div")) {
+			  			$(".node_selected").attr("class", "node_normal");
+			  		} else {
+			  			$(".node_selected").attr("class", "list_text");
+			  		}
+			  		
+			  		$(event.target).addClass("node_selected");
+			  	}
+	        }
 
 	    </script>
 	</head>
@@ -1108,22 +1165,22 @@
 	        	<span onclick="boardConfig()" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick="boardWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezBoard.t999073" /></p>
+	        	<p class="btn_write01" onclick="boardWrite();"><spring:message code="ezBoard.t999073" /></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 		        <div class="lnb_lay">
 			        <h2 onclick="favoriteList()">
-			            <span class="sub_iconLNB tree_board_star"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
+			            <span class="sub_iconLNB tree_plus"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
 			        </h2>
 			        <c:if test="${MyBoardTopFlag != 'NO'}">
 				        <h2 class="off" id="myBoardList"  onclick="ShowMyBoardItem()">
-				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+				            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>
-				        	<li><span class="sub_iconLNB tree_board_my"></span><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
-							<li><span class="sub_iconLNB tree_board_reservation"></span><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
-							<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
+				        	<li><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
+							<li><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
+							<li><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
 				        </ul>
 			        </c:if>
 			        <div id='TopBoardsList'>
@@ -1131,10 +1188,17 @@
 			        		parser = new DOMParser();
 		        		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
 		        			var i = 0;
-		        			$(xmlDoc).find("NODE").each(function(){
+		        			$(xmlDoc).find("NODE").each(function(i) {
 		       			        document.write("<h2 class='off'>");
 		       			     	document.write("<span>");
-		       			     	document.write("<span class='sub_iconLNB tree_arrow_up'></span>");
+
+								if (i == 0) {
+									var nodeValue = $(this).text();
+									document.write("<span class='sub_iconLNB tree_arrow_down'></span>");
+			       			    } else {
+			       			    	document.write("<span class='sub_iconLNB tree_plus'></span>");
+			       			    }
+
 		       			     	document.write("<span id='TreeCtr" + i + "' class='h2Title' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
 		               					+ "\")'>" + MakeXMLString($(this).find("DATA2").text()) + "</span>");
 		       			     	document.write("</span>");
@@ -1150,7 +1214,7 @@
 			        </div>
 			        <c:if test="${MyBoardTopFlag == 'NO'}">
 			        	<h2 class="off" id="myBoardList" onclick="ShowMyBoardItem()">
-				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+				            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul" style="overflow:hidden">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>
@@ -1160,7 +1224,11 @@
 				        </ul>
 				    </c:if>
 			        <ul class="lnbUL">
-                       	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li>
+                       	<%-- 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '검색' 태그 구조, LNB 이미지 수정 --%>
+						<h2 class="off">
+                           	<span><span class="sub_iconLNB tree_plus"></span><span id="" class="h2Title" value="" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></span>
+						</h2>
+<%--                       	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li> --%>
                     	<c:if test="${applyFlag == 'OK'}">
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="Apprboard()"><spring:message code="ezBoard.t999001" /><span id="applyCount"> ${applyCount}</span></span></li>
                     	</c:if>

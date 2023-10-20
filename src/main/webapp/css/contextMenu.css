@@ -18,7 +18,7 @@
 	width:72px; 
 	height:72px; 
 	box-sizing:border-box; 
-	background:#0470e4; 
+	background:#9a9a9a; 
 	cursor:pointer; 
 	border-radius:45px; 
 	-webkit-border-radius:45px; 
@@ -98,7 +98,6 @@
 .quickMenuBottom {
 	display: flex;	
 	justify-content: center;
-	align-items: center;
 	height:25%;
 }
 
@@ -135,6 +134,8 @@
 .quickMenuBtnDiv span {
 	color: white;
 	max-width: 55px;
+	font-size: 14px;
+	padding-top: 5px;
 }
 
 .quickMenuBtnDiv div {
@@ -144,5 +145,4 @@
 
 .quickMenuBtnDiv:hover span{
 	color: #3398fe;
-	font-weight:600;
 }

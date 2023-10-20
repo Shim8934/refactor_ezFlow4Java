@@ -760,7 +760,6 @@
 	                </tr>
 	                <tr>
 	                    <td>
-	                        <br />
 	                        <iframe id="dadiframe" name="dadiframe" style="width:100%;height:100%;border:0px" src="/ezSchedule/scheduleDragAndDrop.do"></iframe>
 	                    </td>
 	                </tr>

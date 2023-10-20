@@ -149,7 +149,7 @@
 		    function DocumentComplete() {
 		        if (flag == false) {
 		            if (DocHref == "") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t1439'/>" + "<br>" + "<spring:message code='ezApprovalG.t440'/>";
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1439'/>" + "<br>" + "<spring:message code='ezApprovalG.t1440'/>";
 		                OpenAlertUI(pAlertContent);
 		                btnClose_onclick();
 		                return;
@@ -400,8 +400,7 @@
 
 		    function btnMail_onclick() {
 		    	var imgUrl="";
-		    	html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
-		    	background:'#fff',onrendered: function(canvas) {
+		    	html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content")).then(function(canvas) {
 					$.ajax({
 	                        type:"POST",
 	                        dataType:"text",
@@ -414,7 +413,7 @@
 	                        }
 	                    });
 					}
-		    	});
+		    	);
 			    var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
@@ -1005,8 +1004,8 @@
 							<div id="lstAttachLinkDoc" style="height:70px;"></div>
 						</td>
 						<td class="pos2" style="width:8%; background:#fffcfa;">
-							<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-							<a class="imgbtn imgbck" style="width:70px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
+							<a class="imgbtn imgbck" style="width:60px; margin-bottom: 3px !important;"><span style="height:24px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+							<a class="imgbtn imgbck" style="width:60px;"><span style="height:24px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a><br/>
 						</td>
                     </tr>
                 </table>

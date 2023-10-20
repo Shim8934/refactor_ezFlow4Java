@@ -365,11 +365,11 @@
 	<table style="width:768px;margin-top:5px;" class="box">
 	  <tr>
 	    <td style="padding:5px">
-	       <input name="SetRadio0" type="radio" onclick="SetToggle('0')" id = "SetRadio0">
+	       <input name="SetRadio0" type="radio" onclick="SetToggle('0')" id = "SetRadio0" style="height: 13px !important; margin-top: 4px !important">
 	      <spring:message code='ezEmail.t206' /><br>
-	       <input name="SetRadio1" type="radio" onclick="SetToggle('1')" id = "SetRadio1">
+	       <input name="SetRadio1" type="radio" onclick="SetToggle('1')" id = "SetRadio1" style="height: 13px !important; margin-top: 4px !important">
 	      <spring:message code='ezEmail.t207' /><br>
-	       <input type="checkbox" name="chkDate" value="checkbox" onclick="CheckDate()" id = "chkDate">
+	       <input type="checkbox" name="chkDate" value="checkbox" onclick="CheckDate()" id = "chkDate" style="height: 13px !important; margin-top: 4px !important">
 	      <spring:message code='ezEmail.t208' /></td>
 	  </tr>
 	</table>
@@ -403,11 +403,12 @@
 	</div>
 	<table id="externalTable" style="width:768px; margin-top:10px;" class="box">
 	  <tr>
-	    <td style="padding:5px"><input type="checkbox" name="chkOut" onclick="CheckOut()" id="chkOut">
+	    <td style="padding:5px">
+		  <input type="checkbox" name="chkOut" onclick="CheckOut()" id="chkOut" style="height: 12px !important;">
 	      <spring:message code='ezEmail.t218' /><br>
-	      <input name="SetOut" type="radio" id="SetOut0">
+	      <input name="SetOut" type="radio" id="SetOut0" style="height: 12px !important;">
 	      <spring:message code='ezEmail.t219' /><br>
-	      <input name="SetOut" type="radio" id="SetOut1">
+	      <input name="SetOut" type="radio" id="SetOut1" style="height: 12px !important;">
 	      <spring:message code='ezEmail.t220' /></td>
 	  </tr>
 	</table>

@@ -1,64 +1,10 @@
 package egovframework.ezEKP.ezPersonal.web;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.PixelGrabber;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.security.PrivateKey;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.LocaleResolver;
-import org.w3c.dom.Document;
-
 import com.sun.org.apache.xml.internal.security.utils.Base64;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -72,12 +18,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezOrgan.web.EzOrganAdminController;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalNotiDisableItemVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalNotiPreferencesVO;
-import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.*;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -85,6 +26,36 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.LocaleResolver;
+import org.w3c.dom.Document;
+
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
+import java.io.*;
+import java.nio.file.Files;
+import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /** 
  * @Description [Controller] 사용자 - Personal
@@ -392,8 +363,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 			textName = ezOrganService.getPropertyValue(info[0], "displayname" + lang, userInfo.getTenantId());
 			deptID = info[2];
-			startDate = commonUtil.getDateStringInUTC((info[3] + ":" + info[4]), userInfo.getOffset(), false);
-			endDate = commonUtil.getDateStringInUTC((info[5] + ":" + info[6]), userInfo.getOffset(), false);
+			startDate = info[3] + ":" + info[4];
+			endDate = info[5] + ":" + info[6];
 			
 			if (info.length > 7) {
 				bReason = info[7];
@@ -435,18 +406,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		//겸직리스트 
 		List<OrganUserVO> addJobList = ezOrganAdminService.getUserAddJobList(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
-		
-		// 2023-08-17 조수빈 - 겸직에 대한 부재 일자를 DB의 UTC 시간에서 사용자의 offset에 맞도록 변경한다.
-		// 겸직만 부재설정을 한 경우 시간이 반영되지 않는 문제를 해결하기 위해 추가함.
-		// 겸직에 대한 부재 일정이 하나라도 있는 경우 시작일과 종료일은 그 부재 일정으로 설정. (우선순위가 겸직에 대한 첫 번째 부재일정이 됨.) 
-		for (OrganUserVO vo : addJobList) {
-			if (null != vo.getExtensionAttribute5() && vo.getExtensionAttribute5().length() > 0) {
-				String [] proxyInfoArray = vo.getExtensionAttribute5().split(":");
-				startDate = commonUtil.getDateStringInUTC((proxyInfoArray[3] + ":" + proxyInfoArray[4]), userInfo.getOffset(), false);
-				endDate = commonUtil.getDateStringInUTC((proxyInfoArray[5] + ":" + proxyInfoArray[6]), userInfo.getOffset(), false);
-				break;
-			}
-		}
 		
 		model.addAttribute("addJobList", addJobList);
 		model.addAttribute("deptID", deptID);
@@ -1701,7 +1660,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String imageName = xmlDom.getElementsByTagName("FILENAME").item(0).getTextContent();
 		String imageData = xmlDom.getElementsByTagName("DATA").item(0).getTextContent();
 		
-		String pUniqueName = ezPortalAdminService.getUniqueFileName(pServerPath, imageName);
+		String pUniqueName = ezNewPortalService.getUniqueFileName(pServerPath, imageName);
 		
 		byte[] byt = Base64.decode(imageData);
 		String savePath = pServerPath + commonUtil.separator + pUniqueName;
@@ -1742,7 +1701,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		    File cFile = new File(commonUtil.detectPathTraversal(stordFilePathReal));
 	
 		    if (!cFile.isDirectory()) {
-				boolean _flag = cFile.mkdir();
+				boolean _flag = cFile.mkdirs();
 				if (!_flag) {
 				    throw new IOException("Directory creation Failed ");
 				}
@@ -2316,7 +2275,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String dept = request.getParameter("dept");
 		String bujaeId = request.getParameter("bujaeId");
 		String result = "";
-		String jobId = request.getParameter("jobId");
 		
 		String userRealDeptId = "";
 		
@@ -2328,16 +2286,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 				result = ezOrganService.getAddJobProxy(userInfo.getId(), dept, userInfo.getTenantId());
 			}
 		} else {
-			// 2023-08-18 조수빈 - 원부서 && 원직위여야 하기 때문에 원직위 조건 추가
 			userRealDeptId = ezOrganService.getUserOrgDeptId(bujaeId, userInfo.getTenantId(), userInfo.getCompanyID());
-			String userRealJobId = ezOrganService.getPropertyValue(bujaeId, "EXTENSIONATTRIBUTE7", userInfo.getTenantId());
-			
-			if (dept.equals(userRealDeptId) && jobId.equals(userRealJobId)) {
+			if (dept.equals(userRealDeptId)) {
 				result = ezOrganService.getPropertyValue(bujaeId, "extensionAttribute5", userInfo.getTenantId());
 			} else {
-				// 2023-08-18 조수빈 - 한 부서에 여러 직위가 존재하는 경우 에러가 발생하기 때문에 오버로딩한 다른 메소드를 실행.
-				// result = ezOrganService.getAddJobProxy(bujaeId, dept, userInfo.getTenantId());
-				result = ezOrganService.getAddJobProxy(bujaeId, dept, userInfo.getTenantId(), jobId);
+				result = ezOrganService.getAddJobProxy(bujaeId, dept, userInfo.getTenantId());
 			}
 		}
 		
@@ -2351,10 +2304,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			textName = ezOrganService.getPropertyValue(info[0], "displayname", userInfo.getTenantId());
 			deptID = info[2];
 			startDate = info[3] + ":" + info[4];
-			startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false);
 			endDate = info[5] + ":" + info[6];
-			endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false);
-			
 			
 			if (info.length > 7) {
 				bReason = info[7];
@@ -2589,4 +2539,30 @@ public class EzPersonalController extends EgovFileMngUtil {
 		return result;
 	}
 
+	// gbp-todo 다른 개발자가 부재중 설정 관련 개발중이라 기존의 로직을 그대로 쓰는 것으로 임시 처리.
+	@PostMapping("/ezPersonal/clearAbsence.do")
+	@ResponseBody
+	public String clearAbsence(@CookieValue("loginCookie") String loginCookie) {
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String proxy = "";
+			String userID = userInfo.getId();
+			int tenantID = userInfo.getTenantId();
+
+			List<ApprGOutOfOfficeInfoVO> listOutOfOfficeInfo = ezApprovalGService.getListOutOfOfficeInfo(userInfo.getId(), userInfo.getTenantId());
+
+			for (ApprGOutOfOfficeInfoVO vo : listOutOfOfficeInfo) {
+				boolean isMainJob = "-1".equals(vo.getJobID());
+				if (isMainJob) {
+					ezOrganService.updateProperty(userID, "extensionAttribute5", proxy, "user", tenantID);
+				} else {
+					ezOrganService.updateAddJobProxy(userID, proxy, tenantID, vo.getDeptID(), vo.getJobID());
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "false";
+		}
+		return "true";
+	}
 }

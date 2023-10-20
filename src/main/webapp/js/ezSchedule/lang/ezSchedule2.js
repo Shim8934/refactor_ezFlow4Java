@@ -15,8 +15,8 @@ var strLang8 = "Do you want to save modified content?"
 var strLang9 = "Enter a subject."
 var strLang10 = "Subject"
 var strLang11 = "Location"
-var strLang17 = "Error occured while saving appointment."
-var strLang18 = "Successfully saved appointment."
+var strLang17 = "Error occured while saving schedule."
+var strLang18 = "Successfully saved schedule."
 var strLang19 = "Attendees list"
 var strLang20 = "Error occured while retrieving organization chart. - "
 var strLang21 = "- There is no user."
@@ -95,7 +95,7 @@ var strLang94 = "Please choose the department."
 var strLang95 = "The user belongs to the same department.\r\nPlease choose another department."
 
 // ### 2011-06 GoogleCalendar
-var strLang96 = "Google Enter your e-mail."
+var strLang96 = "Google Enter your email."
 var strLang97 = "Incorrect email address format. \n for example) pat@example.com please enter in the same format as"
 var strLang98 = "Google Enter your password."
 var strLang99 = "Has been saved."
@@ -206,3 +206,14 @@ var googleSyncMessages = {
 		strOnlyGoogle : "It's only available on Google Calendar.\n Unable to the modification, removal and drag, drop.",
 		strConfirmDelete : "Do you want to cancel the synchronization?"
 	}
+
+/* 2023-05-31 홍승비 - 일정관리 포틀릿 디자인 개선을 위한 메세지 추가 */
+var strLang125_2 = "Personal";
+var strLang126_2 = "Dept";
+var strLang127_2 = "Company";
+var strLang130_2 = "Group";
+var strLang131_2 = "Collabo";
+var strLang141_2 = "Google";
+var strLangHSBScPt1 = "-";
+var strLangHSBScPt2 = ".";
+var strLangHSBScPt3 = "";

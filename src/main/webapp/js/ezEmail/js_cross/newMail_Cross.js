@@ -119,7 +119,7 @@ function do_Attach_Add(ocx_file, forceBigFileUpload) {
 
         ezUtil = null;
         if ((BigSizeAttach == false) && (pBigFileUploadYN == "Y")) {
-            alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLangLS04);
+            alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + strLangLS04);
             BigSizeAttach = true;
             pBigFileUpload = "Y";
         }
@@ -372,7 +372,7 @@ function attach_Add1(ocx_file) {
 
     ezUtil = null;
     if ((BigSizeAttach == false) && (pBigFileUploadYN == "Y")) {
-        alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLangLS04);
+        alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + strLangLS04);
         BigSizeAttach = true;
         pBigFileUpload = "Y";
     }
@@ -699,7 +699,7 @@ function Send_onClick() {
         return;
     }
     
-    if (eSubject.value.length > 120) {
+    if (eSubject.value.length > 150) {
         alert(strLang95);
         eSubject.focus();
         return;
@@ -4082,8 +4082,9 @@ function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
         return;
     }
 
+    /* 2023-09-01 홍승비 - 전자결재문서 메일발송 > 대용량 첨부파일 자동삭제 알러트 메세지 중복 표출되지 않도록 수정 (mailDragAndDrop 페이지의 알러트를 사용) */
     if ((BigSizeAttach == false) && (pBigFileUploadYN == "Y")) {
-        alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + " " + strLangLS04);
+        //alert(strLang77 + BigSizeAttachMBSize + "MB" + strLang78 + BigSizeMailAttachDelDay + strLangLS04);
         BigSizeAttach = true;
         pBigFileUpload = "Y";
     }

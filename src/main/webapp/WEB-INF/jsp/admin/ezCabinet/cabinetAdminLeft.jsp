@@ -10,9 +10,9 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css"/>
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	</head>
-	<body class="newLeft" style="overflow: auto; height:100%">
+	<body class="newLeft" style="overflow: hidden;">
 		<div id="left" class="lnb" style="overflow: auto">
-			<div class="left_title">
+			<div class="admin_left_title">
 				<spring:message code='ezCabinet.t154'/>
 			</div>
 			

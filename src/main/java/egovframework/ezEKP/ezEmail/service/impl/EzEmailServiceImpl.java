@@ -2753,8 +2753,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public MailSharedMailboxVO getSharedMailboxInfo(String shareId, int tenantId, String lang) throws Exception {
 		logger.debug("getSharedMailboxInfo started.");
 		
-		lang = (lang != null && !"1".equals(lang)) ? "2" : "1";
-		logger.debug("shareId={}, tenantId={}, lang={}" + tenantId);
+		lang = (lang != null && !"1".equals(lang)) ? "2" : "";
+		logger.debug("shareId={}, tenantId={}, lang={}",shareId , tenantId, lang);
 		
 		MailSharedMailboxVO sharedMailboxInfo = null;
 		

@@ -84,8 +84,8 @@
 	            <td id="ImfortanceColorValue" style="width: 100px; text-align:center">
 	                ${importanceColor}         
 	            </td>
-	            <td style="width: 100px; text-align:center; padding-top:3px;">
-	                <a class="imgbtn imgbck"><span onclick="SelectColor('ImfortanceColor')" style="vertical-align: middle;"><spring:message code='ezEmail.t408' /></span></a>
+	            <td style="width: 100px; text-align:center; padding-top:3px; padding-bottom: 3px;">
+	                <a class="imgbtn imgbck"><span onclick="SelectColor('ImfortanceColor')"><spring:message code='ezEmail.t408' /></span></a>
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
@@ -97,8 +97,8 @@
 	            <td id="InColorValue" style="width: 100px; text-align:center">
 	                ${inColor}         
 	            </td>
-	            <td style="width: 100px; text-align:center; padding-top:3px;">
-	                <a class="imgbtn imgbck"><span onclick="SelectColor('InColor')" style="vertical-align: middle;"><spring:message code='ezEmail.t408' /></span></a>
+	            <td style="width: 100px; text-align:center; padding-top:3px; padding-bottom: 3px;">
+	                <a class="imgbtn imgbck"><span onclick="SelectColor('InColor')"><spring:message code='ezEmail.t408' /></span></a>
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
@@ -110,8 +110,8 @@
 	            <td id="OutColorValue" style="width: 100px; text-align:center">
 	                ${outColor}         
 	            </td>
-	            <td style="width: 100px; text-align:center; padding-top:3px;">
-	                <a class="imgbtn imgbck"><span onclick="SelectColor('OutColor')" style="vertical-align: middle;"><spring:message code='ezEmail.t408' /></span></a>
+	            <td style="width: 100px; text-align:center; padding-top:3px; padding-bottom: 3px;">
+	                <a class="imgbtn imgbck"><span onclick="SelectColor('OutColor')"><spring:message code='ezEmail.t408' /></span></a>
 	            </td>
 	        </tr>
 	    </table>

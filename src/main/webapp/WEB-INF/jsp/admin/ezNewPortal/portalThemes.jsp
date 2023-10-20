@@ -51,7 +51,8 @@
 			.ui-portlet-content { font-weight: bold; display: inline-block; float: left;cursor:move; border:1px dotted #000;}
 			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
 			.ui-portlet-span { display: inline-block; width: 68%; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-top:12px;}
-			.portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin:13px 0px 10px 0px; vertical-align:top;}
+			/* .portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin:13px 0px 10px 0px; vertical-align:top;} */
+			.portlet_switch {margin: 1px 0px 10px 14px;}
 			.portlet_switch .slider {z-index:10;}
 			.admin_theme_portlet {width : 1042px;}
 			.bottomBtn {clear:both;}
@@ -190,7 +191,7 @@
 						var themeImgFolder = "kr";
 						
 						if (userLang == "2") {
-							themeImgFolder = "kr"; //나중에 en으로 바꿔야함! (현재 영문용 이미지가 없음)
+							themeImgFolder = "en"; //나중에 en으로 바꿔야함! (현재 영문용 이미지가 없음)
 						} else if (userLang == "3") {
 							themeImgFolder = "jp";
 						}
@@ -291,17 +292,17 @@
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t111' /></th>";
 					
 					if (theme.themeUsed) {
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme' checked><span class='slider round'></span></label></td>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme' checked style='height:0px !important;'><span class='slider round'></span></label></td>";
 					} else {
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme'><span class='slider round'></span></label></td>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='usedTheme' style='height:0px !important;'><span class='slider round'></span></label></td>";
 					}
 					
 					themesHTML += "<th class='menuIconTH'><spring:message code='ezNewPortal.t110' /></th>";
 					
 					if (theme.themeDefault) {
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme' checked><span class='slider round'></span></label></td></tr>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme' checked style='height:0px !important;'><span class='slider round'></span></label></td></tr>";
 					} else {
-						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme'><span class='slider round'></span></label></td></tr>";
+						themesHTML += "<td class='menuIconTD'><label class='switch'><input type='checkbox' name='defaultTheme' style='height:0px !important;'><span class='slider round'></span></label></td></tr>";
 					}
 					
 					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t112' /></th><td colspan='4' class='menuIconTD'><input type='text' class='admin_input themeContent' readOnly></td></tr>";						

@@ -1956,7 +1956,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile");
 
 			if (!file.exists()) {
-				file.mkdir();
+				file.mkdirs();
 			}
 
 			String[] attach = fileList.split("/");
@@ -2037,7 +2037,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + projectId + "_uploadFile");
 
 			if (!file.exists()) {
-				file.mkdir();
+				file.mkdirs();
 			}
 
 			String[] attach = fileList.split("/");

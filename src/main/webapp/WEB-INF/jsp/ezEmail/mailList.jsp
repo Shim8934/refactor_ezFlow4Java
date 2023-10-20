@@ -1639,7 +1639,7 @@
 			.tagli > input + .imgbtn { margin: 0px; vertical-align: middle; }
 			#pre_h_tag_view > img, #pre_w_tag_view > img { width: 11px; height: 11px; cursor: pointer; margin: 0 7px 0 4px; }
 			<c:if test="${not empty tagName}">
-			#tag_subtitle { display: inline-block; max-width: 400px; text-overflow: ellipsis; overflow: hidden; word-break: keep-all; vertical-align: middle; }
+			#tag_subtitle { display: inline-block; max-width: 400px; text-overflow: ellipsis; overflow: hidden; word-break: keep-all; vertical-align: middle; font-size: 17px; padding-bottom: 5px; }
 			</c:if>
 			</c:if>
 		</style>
@@ -1660,7 +1660,7 @@
 					<input type="text" id="EdatepickerSimple" style="height:30px;" size="10" disabled="" readonly>
 				</span>
 
-				<select name="searchCheck searchFilter" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; border-right: 0px none;">
+				<select name="searchCheck searchFilter" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
 					<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
 					<c:if test="${isSentItems != true}">
 						<option value="FROM"><spring:message code="ezEmail.t161" /></option>
@@ -1673,7 +1673,7 @@
 					</c:if>
 				</select>
 			  
-				<input name="keyword" id="keywordSearch" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"
+				<input name="keyword" id="keywordSearch" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; height: 27px !important;" onKeyPress="onkeydown_start_search(event);"
 					   onmousedown="keyword_Clear();" placeholder="";/>
 				<a class="searchBtn"><img src="/images/bsearch_new2.png" border="0" onclick="start_search2()"></a>
 				<a class="searchFilterBtn"><img src="/images/bsearch_new2_filter.png" border="0" onclick="addSearch()"></a>
@@ -1896,7 +1896,7 @@
                     		<option VALUE="EXTERNAL"><spring:message code="ezEmail.kes004" /></option>
 						</c:if>
 						<c:if test="${'YES'.equalsIgnoreCase(useSecureMail)}">
-                    		<option VALUE="SECUREMAIL"><spring:message code="ezEmail.kes003" /></option>
+                    		<option VALUE="SECUREMAIL"><spring:message code="ezEmail.yja001" /></option>
                    		</c:if>
                     		<option VALUE="IMPORTANT"><spring:message code="ezEmail.kes047" /></option>
                     	</select>

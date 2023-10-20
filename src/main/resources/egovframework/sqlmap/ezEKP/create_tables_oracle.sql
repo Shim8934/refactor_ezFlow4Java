@@ -1688,7 +1688,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"DEPTNAME" NVARCHAR2(100), 
 	"COMPANYID" VARCHAR2(10 CHAR), 
 	"DEPTNAME2" NVARCHAR2(100), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
+	"TENANT_ID" NUMBER(5,0) DEFAULT 0,
+    "EXTRECEPTYN" VARCHAR2(5) DEFAULT 'N'
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_APRATTACHINFO
@@ -1713,7 +1714,10 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"ATTACHUSERJOBTITLE2" NVARCHAR2(100), 
 	"ATTACHUSERDEPTNAME2" NVARCHAR2(200), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
-	"COMPANYID" VARCHAR2(20 BYTE)
+	"COMPANYID" VARCHAR2(20 BYTE),
+	"ISBIGATTACH" CHAR(1 CHAR) DEFAULT 'N',
+    "ISBIGATTACHDEL" CHAR(1 CHAR) DEFAULT 'N',
+    "SAVEDATE" DATE DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_APRDOCATTACHINFO
@@ -1745,7 +1749,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"TABSN" NUMBER(10,0), 
 	"GROUPDOCSN" NVARCHAR2(80), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
-	"COMPANYID" NVARCHAR2(20)
+	"COMPANYID" NVARCHAR2(20),
+    "TYPE" CHAR(10 CHAR) NOT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_APRDOCINFO
@@ -1862,7 +1867,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"PROCESSORNAME2" NVARCHAR2(100), 
 	"PROCESSORJOBTITLE2" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
-	"COMPANYID" VARCHAR2(20 BYTE)
+	"COMPANYID" VARCHAR2(20 BYTE),
+	"ROOTDOCID" VARCHAR2(80)
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_ATTENDANT
@@ -1899,7 +1905,11 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"IP" NVARCHAR2(60), 
 	"DATE_TYPE" CHAR(1 BYTE), 
 	"TYPE_ID" NVARCHAR2(30), 
-	"BIZSUB" NVARCHAR2(120)
+	"BIZSUB" NVARCHAR2(120),
+	"ATTEND_TYPE" char(1) DEFAULT '0',
+  	"LATITUDE" NUMBER(20,15) DEFAULT NULL,
+  	"LONGITUDE" NUMBER(20,15) DEFAULT NULL,
+  	"WORK_STATUS" CHAR(1) DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_ATTITUDE_ANNUAL
@@ -2225,7 +2235,10 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"ATTRIBUTEYN" CHAR(1 CHAR), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT NULL, 
 	"COMPANYID" VARCHAR2(80 BYTE) DEFAULT NULL, 
-	"LIKEFLAG" NCHAR(1)
+	"LIKEFLAG" NCHAR(1),
+	"MAILFG_POST" CHAR(1 CHAR) DEFAULT NULL,
+	"MAILFG_MOD" CHAR(1 CHAR) DEFAULT NULL,
+	"MAILFG_COMMENT" CHAR(1 CHAR) DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_BOARD_BOARDINFO_ATTRIBUTE
@@ -2264,7 +2277,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"POSTNOTICE" NVARCHAR2(5), 
 	"BOARDGROUPACL" NVARCHAR2(1) DEFAULT 'Y', 
 	"TENANT_ID" NUMBER(5,0) DEFAULT NULL, 
-	"COMPANYID" VARCHAR2(80 BYTE) DEFAULT NULL
+	"COMPANYID" VARCHAR2(80 BYTE) DEFAULT NULL,
+	"TYPE" VARCHAR2(10)
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_BOARD_CONFIGURATION
@@ -2536,17 +2550,6 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"RESULT" NCLOB, 
 	"RESULT2" NCLOB, 
 	"TENANT_ID" NUMBER(5,0) DEFAULT NULL
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_BUILTIN_PARAMETERS
---------------------------------------------------------
-
-  CREATE TABLE "TBL_BUILTIN_PARAMETERS" 
-   (	"PARAMTYPE" NUMBER(10,0), 
-	"PARAMINFO" NVARCHAR2(50), 
-	"DESCRIPTION" NVARCHAR2(255), 
-	"SHORTNAME" NVARCHAR2(50), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_CABINET
@@ -3062,7 +3065,10 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"CHECKUSE" NCHAR(1), 
 	"SHOWPOSITION" NCHAR(1), 
 	"SN" NUMBER(10,0), 
-	"TENANT_ID" NUMBER DEFAULT 0
+	"TENANT_ID" NUMBER DEFAULT 0,
+    "MAILFG_POST" CHAR(1 CHAR) DEFAULT NULL,
+    "MAILFG_MOD" CHAR(1 CHAR) DEFAULT NULL,
+    "MAILFG_COMMENT" CHAR(1 CHAR) DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_BOARDMANAGE
@@ -3533,7 +3539,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"C_CLUBNO" VARCHAR2(20 BYTE), 
 	"C_NO" NUMBER(18,0), 
 	"CHARFILENAME" NCLOB, 
-	"TENANT_ID" NUMBER DEFAULT 0
+	"TENANT_ID" NUMBER DEFAULT 0,
+    "UPPERNO" NUMBER(19, 0)
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_C_CATEGORY
@@ -4026,7 +4033,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"CHARGENAME2" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
 	"COMPANYID" VARCHAR2(20 BYTE), 
-	"ORGANUSERNAME" VARCHAR2(100 BYTE)
+	"ORGANUSERNAME" VARCHAR2(100 BYTE),
+	"EXTRECEPTYN" VARCHAR2(5) DEFAULT 'N'
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_ENDAPRDOCATTACHINFO
@@ -4150,7 +4158,10 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"ATTACHUSERJOBTITLE2" NVARCHAR2(100), 
 	"ATTACHUSERDEPTNAME2" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
-	"COMPANYID" VARCHAR2(20 BYTE)
+	"COMPANYID" VARCHAR2(20 BYTE),
+	"ISBIGATTACH" CHAR(1 CHAR) DEFAULT 'N',
+	"ISBIGATTACHDEL" CHAR(1 CHAR) DEFAULT 'N',
+    "SAVEDATE" DATE
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_ENDRECEIPTPOINTINFO
@@ -4381,7 +4392,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"PASSAPRLINEFLAG" VARCHAR2(4 BYTE) DEFAULT 'N', 
 	"FORMGUIDE" VARCHAR2(2000 CHAR), 
 	"OPENGOVFLAG" NVARCHAR2(4) DEFAULT 'N',
-	"APROPTION" NVARCHAR2(300)
+	"APROPTION" NVARCHAR2(300),
+	"SIHANGTYPE" VARCHAR2(10) DEFAULT ''
    ) ;
 
    COMMENT ON COLUMN "TBL_FORMINFO"."LASTSIGNPOSFLAG" IS 'F:마지막사인칸, O:순서대로';
@@ -4883,7 +4895,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"APRMEMBERJOBTITLE2" NVARCHAR2(100), 
 	"APRMEMBERDEPTNAME2" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
-	"COMPANYID" VARCHAR2(20 BYTE)
+	"COMPANYID" VARCHAR2(20 BYTE),
+	"DOCSTATE" NVARCHAR2(12) DEFAULT '011' NOT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_LASTDEPTLINE
@@ -4908,7 +4921,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"RECEIPTMEMBERNAME2" NVARCHAR2(100), 
 	"RECEIPTMEMBERJOBTITLE2" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
-	"COMPANYID" VARCHAR2(20 BYTE)
+	"COMPANYID" VARCHAR2(20 BYTE),
+	"DOCSTATE" NVARCHAR2(12) DEFAULT '011' NOT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_LASTDOCID
@@ -5074,94 +5088,6 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"COMPANY_ID" VARCHAR2(80 BYTE), 
 	"TENANT_ID" NUMBER(5,0), 
 	"DELETE_FLAG" NUMBER(4,0) DEFAULT '0'
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_MENUITEM_GENERAL
---------------------------------------------------------
-
-  CREATE TABLE "TBL_MENUITEM_GENERAL" 
-   (	"UID_" NVARCHAR2(50), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"TYPE" NUMBER(10,0), 
-	"URL" NVARCHAR2(512), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_MENUITEM_ITEMS_IMAGE
---------------------------------------------------------
-
-  CREATE TABLE "TBL_MENUITEM_ITEMS_IMAGE" 
-   (	"UID_" NVARCHAR2(50), 
-	"OWNERPAGEID" NVARCHAR2(50), 
-	"SKINNUM" NUMBER(10,0), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"DISPLAYNAME2" NVARCHAR2(255), 
-	"IMAGETYPE" NVARCHAR2(50), 
-	"NORMALIMAGEPATH" NVARCHAR2(512), 
-	"OVERIMAGEPATH" NVARCHAR2(512), 
-	"IMAGEWIDTH" NUMBER(10,0), 
-	"IMAGEHEIGHT" NUMBER(10,0), 
-	"LINKURL" NVARCHAR2(512), 
-	"LINKLOCATION" NVARCHAR2(50), 
-	"WINDOWOPTION" NVARCHAR2(150), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_MENUITEM_ITEMS_LOGOS
---------------------------------------------------------
-
-  CREATE TABLE "TBL_MENUITEM_ITEMS_LOGOS" 
-   (	"UID_" NVARCHAR2(50), 
-	"OWNERPAGEID" NVARCHAR2(50), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_MENUITEM_ITEMS_MENUITEMS
---------------------------------------------------------
-
-  CREATE TABLE "TBL_MENUITEM_ITEMS_MENUITEMS" 
-   (	"UID_" NVARCHAR2(50), 
-	"PARENTUID" NVARCHAR2(50), 
-	"PARENTMENUID" NVARCHAR2(50), 
-	"OWNERPAGEID" NVARCHAR2(50), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"DISPLAYNAME2" NVARCHAR2(255), 
-	"SUBFLAG" NUMBER(10,0), 
-	"COLUMNPOS" NUMBER(10,0), 
-	"IMAGEUID" NVARCHAR2(50), 
-	"LINKURL" NVARCHAR2(255), 
-	"LINKLOCATION" NVARCHAR2(50), 
-	"LEFTMARGIN" NUMBER(10,0), 
-	"WINDOWOPTION" NVARCHAR2(150), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_MENUITEM_ITEMS_MENUITEMS_S
---------------------------------------------------------
-
-  CREATE TABLE "TBL_MENUITEM_ITEMS_MENUITEMS_S" 
-   (	"UID_" NVARCHAR2(50), 
-	"PARENTMENUID" NVARCHAR2(50), 
-	"OWNERPAGEID" NVARCHAR2(50), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"DISPLAYNAME2" NVARCHAR2(255), 
-	"COLUMNPOS" NUMBER(10,0), 
-	"IMAGEUID" NVARCHAR2(50), 
-	"LINKURL" NVARCHAR2(512), 
-	"LINKLOCATION" NVARCHAR2(50), 
-	"WINDOWOPTION" NVARCHAR2(150), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_MENUITEM_PARAMETERS
---------------------------------------------------------
-
-  CREATE TABLE "TBL_MENUITEM_PARAMETERS" 
-   (	"UID_" NVARCHAR2(50), 
-	"PARAMNAME" NVARCHAR2(50), 
-	"PARAMVALUE" NVARCHAR2(100), 
-	"PARAMTYPE" NUMBER(10,0), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_MYTASKCODE
@@ -5533,110 +5459,6 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0
    ) ;
 --------------------------------------------------------
---  DDL for Table TBL_PORTALPAGE_CACHE
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTALPAGE_CACHE" 
-   (	"PORTALPAGEID" NVARCHAR2(100), 
-	"ACCESSIDLIST" NVARCHAR2(255), 
-	"RENDEREDHTML" NCLOB, 
-	"COMPANYID" NVARCHAR2(50), 
-	"USERID" NVARCHAR2(50), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTALPAGE_CATEGORY
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTALPAGE_CATEGORY" 
-   (	"CATEGORY" NVARCHAR2(50), 
-	"DISPLAYNAME" NVARCHAR2(100), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTALPAGE_GENERAL
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTALPAGE_GENERAL" 
-   (	"UID_" NVARCHAR2(50), 
-	"PARENTUID" NVARCHAR2(50), 
-	"DEPTH" NUMBER(10,0), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"DISPLAYNAME2" NVARCHAR2(255), 
-	"CREATORID" NVARCHAR2(50), 
-	"CREATORNAME" NVARCHAR2(50), 
-	"CREATEDATE" DATE, 
-	"MODIFYDATE" DATE, 
-	"WIDTH" NUMBER(10,0), 
-	"HEIGHT" NUMBER(10,0), 
-	"ROWLENGTH" NUMBER(10,0), 
-	"COLUMNLENGTH" NUMBER(10,0), 
-	"ROWSPLIT" NVARCHAR2(50), 
-	"COLUMNSPLIT" NVARCHAR2(50), 
-	"GUBUNFLAG" NVARCHAR2(50), 
-	"USEFLAG" NCHAR(10), 
-	"COMPANYID" NVARCHAR2(255), 
-	"BASETYPE" NVARCHAR2(10), 
-	"THEMEUID" NVARCHAR2(38), 
-	"DEFAULTPAGE" CHAR(1 CHAR), 
-	"TABLEVIEWOPTION" CHAR(1 CHAR), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTALPAGE_ITEMS
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTALPAGE_ITEMS" 
-   (	"UID_" NVARCHAR2(50), 
-	"PAGEUID" NVARCHAR2(50), 
-	"PARENTPAGEUID" NVARCHAR2(50), 
-	"OWNERPAGEUID" NVARCHAR2(50), 
-	"PORTLETTYPE" NUMBER(10,0), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"WIDTH" NUMBER(10,0), 
-	"HEIGHT" NUMBER(10,0), 
-	"ROWPOS" NUMBER(10,0), 
-	"COLUMNPOS" NUMBER(10,0), 
-	"CANREMOVE" NUMBER(10,0), 
-	"CANRESIZE" NUMBER(10,0), 
-	"CANREPLACE" NUMBER(10,0), 
-	"ALIGN" NVARCHAR2(50), 
-	"VALIGN" NVARCHAR2(50), 
-	"TOPMARGIN" NUMBER(10,0), 
-	"BOTTOMMARGIN" NUMBER(10,0), 
-	"LEFTMARGIN" NUMBER(10,0), 
-	"RIGHTMARGIN" NUMBER(10,0), 
-	"MANDATORY" NCHAR(10), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTALPAGE_ITEMS_CHANGE
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTALPAGE_ITEMS_CHANGE" 
-   (	"UID_" NVARCHAR2(50), 
-	"PAGEUID" NVARCHAR2(50), 
-	"OWNERPAGEUID" NVARCHAR2(50), 
-	"CREATORID" NVARCHAR2(50), 
-	"CREATORNAME" NVARCHAR2(50), 
-	"CREATEDATE" DATE, 
-	"CHANGEFLAG" NCHAR(10), 
-	"USERPAGEUID" NVARCHAR2(50), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTAL_ACL
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTAL_ACL" 
-   (	"UID_" NVARCHAR2(50), 
-	"ACCESSID" NVARCHAR2(50), 
-	"ACCESSNAME" NVARCHAR2(50), 
-	"VIEW_RIGHT" NUMBER(10,0), 
-	"EDIT_RIGHT" NUMBER(10,0), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
 --  DDL for Table TBL_PORTAL_FRAME
 --------------------------------------------------------
 
@@ -5971,96 +5793,6 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
    COMMENT ON COLUMN "TBL_PORTAL_THEME_USER"."USED_THEME" IS '사용자가 사용하는 테마 아이디';
    COMMENT ON COLUMN "TBL_PORTAL_THEME_USER"."USED_FRAME" IS '사용자가 사용하는 프레임 아이디';
 --------------------------------------------------------
---  DDL for Table TBL_PORTLET_BOARD
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTLET_BOARD" 
-   (	"UID_" NVARCHAR2(50), 
-	"CREATORID" NVARCHAR2(50), 
-	"USERTYPE" NCHAR(10), 
-	"BOARDID" NVARCHAR2(50), 
-	"ITEMCOUNT" NUMBER(10,0), 
-	"ITEMFIELDS" NVARCHAR2(100), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTLET_CATEGORY
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTLET_CATEGORY" 
-   (	"CATEGORY" NVARCHAR2(50), 
-	"DISPLAYNAME" NVARCHAR2(100), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTLET_GENERAL
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTLET_GENERAL" 
-   (	"UID_" NVARCHAR2(50), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"DISPLAYNAME2" NVARCHAR2(255), 
-	"PORTLET_TYPE" NUMBER(10,0), 
-	"URL" NVARCHAR2(512), 
-	"MAXURL" NVARCHAR2(512), 
-	"SHOWTITLEBAR" NCHAR(10), 
-	"USERTYPE" NCHAR(10), 
-	"HEIGHT" NUMBER(10,0), 
-	"GUBUNFLAG" NVARCHAR2(50), 
-	"COMPANYID" NVARCHAR2(255), 
-	"BASETYPE" NVARCHAR2(50), 
-	"USEPOTALGUBUN" NVARCHAR2(50), 
-	"WIDTH" NUMBER(10,0), 
-	"FRAMETYPE" NCHAR(10), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTLET_HTMLPAGE
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTLET_HTMLPAGE" 
-   (	"UID_" NVARCHAR2(50), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"HTMLDATA" NVARCHAR2(200), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTLET_IMAGE
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTLET_IMAGE" 
-   (	"UID_" VARCHAR2(50 CHAR), 
-	"IMAGEPATH" VARCHAR2(250 CHAR), 
-	"IMAGEWIDTH" NUMBER(10,0), 
-	"IMAGEHEIGHT" NUMBER(10,0), 
-	"IMAGETYPE" CHAR(1 CHAR), 
-	"OPENMODE" CHAR(1 CHAR), 
-	"WINDOWOPTION" VARCHAR2(150 CHAR), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTLET_PARAMETERS
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTLET_PARAMETERS" 
-   (	"UID_" NVARCHAR2(50), 
-	"PARAMNAME" NVARCHAR2(50), 
-	"PARAMVALUE" NVARCHAR2(100), 
-	"PARAMTYPE" NUMBER(10,0), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_PORTLET_URL
---------------------------------------------------------
-
-  CREATE TABLE "TBL_PORTLET_URL" 
-   (	"UID_" NVARCHAR2(50), 
-	"CREATORID" NVARCHAR2(50), 
-	"USERTYPE" NCHAR(1), 
-	"URL" NVARCHAR2(200), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
 --  DDL for Table TBL_PREVIOSLYREGI
 --------------------------------------------------------
 
@@ -6094,7 +5826,8 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"CALLBACK" CHAR(1 CHAR), 
 	"HESONG" CHAR(1 CHAR), 
 	"SAVEMAILFLAG" CHAR(1 CHAR), 
-	"TENANT_ID" NUMBER(5,0)
+	"TENANT_ID" NUMBER(5,0),
+	"LINEPASS" NVARCHAR2(2) DEFAULT '0'
    ) ;
 
    COMMENT ON COLUMN "TBL_PS_APPROVNOTIMAILCONF"."ALERT" IS '결재 도착 알림 메일 사용여부';
@@ -6864,7 +6597,9 @@ CREATE TABLE "TBL_GOVSENDDOCHISTORY"
 	"MODIFYDATE" DATE,
 	"PRECREATORID" NVARCHAR2(100),
 	"PRECREATORNAME" NVARCHAR2(100),
-	"PRECREATORNAME2" NVARCHAR2(100)
+	"PRECREATORNAME2" NVARCHAR2(100),
+	"GROUPCOLOR" VARCHAR2(10 BYTE),
+	"TRANSFERDATE" DATE
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHEDULEGROUPMEMBER
@@ -7169,38 +6904,6 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"COMPANYID" VARCHAR2(20 BYTE)
    ) ;
 --------------------------------------------------------
---  DDL for Table TBL_SKIN_GENERAL
---------------------------------------------------------
-
-  CREATE TABLE "TBL_SKIN_GENERAL" 
-   (	"SKINNUM" NUMBER(10,0), 
-	"SKINNAME" NVARCHAR2(100), 
-	"SKINBGFLAG" NCHAR(10), 
-	"SKINBGCOLOR" NVARCHAR2(50), 
-	"SKINBGIMAGE" NVARCHAR2(50), 
-	"SKINFONTCOLOR" NVARCHAR2(50), 
-	"SKINFONTOVERCOLOR" NVARCHAR2(50), 
-	"TENANT_ID" NUMBER(5,0)
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_SKIN_ITEMS
---------------------------------------------------------
-
-  CREATE TABLE "TBL_SKIN_ITEMS" 
-   (	"UID_" NVARCHAR2(50), 
-	"SKINNUM" NUMBER(10,0), 
-	"SKINNAME" NVARCHAR2(100), 
-	"SKINNAME2" NVARCHAR2(100), 
-	"SKINBGFLAG" NCHAR(10), 
-	"SKINBGCOLOR" NVARCHAR2(50), 
-	"SKINBGIMAGE" NVARCHAR2(250), 
-	"SKINFONTCOLOR" NVARCHAR2(50), 
-	"SKINFONTOVERCOLOR" NVARCHAR2(50), 
-	"SKINDEFAULTIMAGE" NVARCHAR2(250), 
-	"SKINDEFAULTCOLOR" NVARCHAR2(50), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
 --  DDL for Table TBL_SPECIALCATALOGINFO_CAB
 --------------------------------------------------------
 
@@ -7351,7 +7054,8 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"DEPT_NAME1" VARCHAR2(80 BYTE) DEFAULT NULL, 
 	"DEPT_NAME2" VARCHAR2(80 BYTE) DEFAULT NULL, 
 	"COMPANY_ID" VARCHAR2(80 BYTE), 
-	"TENANT_ID" NUMBER(5,0)
+	"TENANT_ID" NUMBER(5,0),
+    "SUBDEPTYN" CHAR(1 CHAR) DEFAULT 'N'
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_QUESTION
@@ -7361,7 +7065,7 @@ CREATE TABLE "TBL_CAR_FORM" (
    (	"QUESTION_ID" NUMBER(20,0), 
 	"SURVEY_ID" NUMBER(20,0), 
 	"QUESTION_TYPE" NUMBER(4,0), 
-	"TITLE" VARCHAR2(250 BYTE), 
+	"TITLE" VARCHAR2(750 BYTE),
 	"LEVELS" NUMBER(11,0), 
 	"USE_STATUS" NUMBER(4,0) DEFAULT 0, 
 	"REQUIRED_FLAG" NUMBER(4,0) DEFAULT 0, 
@@ -7686,27 +7390,6 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"TENANT_ID" NUMBER(5,0)
    ) ;
 --------------------------------------------------------
---  DDL for Table TBL_THEME_GENERAL
---------------------------------------------------------
-
-  CREATE TABLE "TBL_THEME_GENERAL" 
-   (	"UID_" NVARCHAR2(38), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"DISPLAYNAME2" NVARCHAR2(255), 
-	"DISPLAYNAME3" NVARCHAR2(255), 
-	"DISPLAYNAME4" NVARCHAR2(255), 
-	"IMAGEURL" NVARCHAR2(500), 
-	"TOPURL" NVARCHAR2(500), 
-	"MAINURL" NVARCHAR2(500), 
-	"COMPANAYID" NVARCHAR2(50), 
-	"CREATORID" NVARCHAR2(50), 
-	"CREATORNM" NVARCHAR2(50), 
-	"CREATEDATE" DATE, 
-	"MODIFYDATE" DATE, 
-	"TOPHEIGHT" NUMBER(10,0), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
 --  DDL for Table TBL_TMPAPRDOCATTACHINFO
 --------------------------------------------------------
 
@@ -7832,7 +7515,10 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"ATTACHUSERJOBTITLE2" NVARCHAR2(100), 
 	"ATTACHUSERDEPTNAME2" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0), 
-	"COMPANYID" VARCHAR2(20 BYTE)
+	"COMPANYID" VARCHAR2(20 BYTE),
+	"ISBIGATTACH" CHAR(1 CHAR) DEFAULT 'N',
+	"ISBIGATTACHDEL" CHAR(1 CHAR) DEFAULT 'N',
+	"SAVEDATE" DATE
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_TMPEXPAPRDOCINFO
@@ -7915,60 +7601,6 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"COMPANYID" VARCHAR2(20 BYTE)
    ) ;
 --------------------------------------------------------
---  DDL for Table TBL_TOPMENU_GENERAL
---------------------------------------------------------
-
-  CREATE TABLE "TBL_TOPMENU_GENERAL" 
-   (	"UID_" NVARCHAR2(50), 
-	"PARENTUID" NVARCHAR2(50), 
-	"DEPTH" NUMBER(10,0), 
-	"DISPLAYNAME" NVARCHAR2(255), 
-	"DISPLAYNAME2" NVARCHAR2(255), 
-	"CREATORID" NVARCHAR2(50), 
-	"CREATORNAME" NVARCHAR2(50), 
-	"CREATEDATE" DATE, 
-	"MODIFYDATE" DATE, 
-	"WIDTH" NUMBER(10,0), 
-	"HEIGHT" NUMBER(10,0), 
-	"ROWLENGTH" NUMBER(10,0), 
-	"COLUMNLENGTH" NUMBER(10,0), 
-	"ROWSPLIT" NVARCHAR2(50), 
-	"COLUMNSPLIT" NVARCHAR2(50), 
-	"USEFLAG" NCHAR(1), 
-	"COMPANYID" NVARCHAR2(255), 
-	"LANG" VARCHAR2(5 CHAR), 
-	"TOPMNID" NVARCHAR2(50), 
-	"BASETYPE" NVARCHAR2(50), 
-	"THEMEUID" NVARCHAR2(38), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_TOPMENU_ITEMS
---------------------------------------------------------
-
-  CREATE TABLE "TBL_TOPMENU_ITEMS" 
-   (	"UID_" NVARCHAR2(50), 
-	"PAGEUID" NVARCHAR2(50), 
-	"PARENTPAGEUID" NVARCHAR2(50), 
-	"OWNERPAGEID" NVARCHAR2(50), 
-	"MENUITEMTYPE" NUMBER(10,0), 
-	"DISPLAYNAME" NVARCHAR2(50), 
-	"WIDTH" NUMBER(10,0), 
-	"HEIGHT" NUMBER(10,0), 
-	"ROWPOS" NUMBER(10,0), 
-	"COLUMNPOS" NUMBER(10,0), 
-	"CANREMOVE" NUMBER(10,0), 
-	"CANRESIZE" NUMBER(10,0), 
-	"CANREPLACE" NUMBER(10,0), 
-	"ALIGN" NVARCHAR2(50), 
-	"VALIGN" NVARCHAR2(50), 
-	"TOPMARGIN" NUMBER(10,0), 
-	"BOTTOMMARGIN" NUMBER(10,0), 
-	"LEFTMARGIN" NUMBER(10,0), 
-	"RIGHTMARGIN" NUMBER(10,0), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
-   ) ;
---------------------------------------------------------
 --  DDL for Table TBL_USERCONT
 --------------------------------------------------------
 
@@ -7992,21 +7624,6 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"DESCRIPTION" VARCHAR2(255 BYTE), 
 	"TENANT_ID" NUMBER, 
 	"COMPANYID" VARCHAR2(20 BYTE)
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_USERINFO
---------------------------------------------------------
-
-  CREATE TABLE "TBL_USERINFO" 
-   (	"USERID" NVARCHAR2(50), 
-	"UID_" NVARCHAR2(50), 
-	"SKINNUM" NUMBER(10,0), 
-	"SKINDEFAULTIMAGE" NVARCHAR2(250), 
-	"SKINDEFAULTCOLOR" NVARCHAR2(50), 
-	"PORTAL_UID" NVARCHAR2(50), 
-	"PORTAL_SKINNUM" NUMBER(10,0), 
-	"LANG" VARCHAR2(5 CHAR), 
-	"TENANT_ID" NUMBER(5,0)
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERLOCALINFO
@@ -8091,7 +7708,7 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE TABLE "TBL_USERMASTER_DELETE" 
-   (	"CN" NVARCHAR2(40), 
+   (	"CN" NVARCHAR2(80), 
 	"DISPLAYNAME" NVARCHAR2(120), 
 	"DISPLAYNAME2" NVARCHAR2(120), 
 	"MAIL" NVARCHAR2(100), 
@@ -8116,7 +7733,7 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"EXTENSIONATTRIBUTE1" NVARCHAR2(200), 
 	"EXTENSIONATTRIBUTE2" NVARCHAR2(200), 
 	"EXTENSIONATTRIBUTE3" NVARCHAR2(2000), 
-	"EXTENSIONATTRIBUTE4" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE4" NVARCHAR2(2000), 
 	"EXTENSIONATTRIBUTE5" NVARCHAR2(200), 
 	"EXTENSIONATTRIBUTE6" NVARCHAR2(200), 
 	"EXTENSIONATTRIBUTE7" NVARCHAR2(200), 
@@ -8131,9 +7748,9 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"EXTENSIONATTRIBUTE15" NVARCHAR2(200), 
 	"ADSPATH" NVARCHAR2(200), 
 	"UPDATEDT" DATE, 
-	"MOBILE_ENABLE" NVARCHAR2(2), 
-	"MOBILE_NOTUSE" NVARCHAR2(2), 
-	"MOBILE_PIN" NVARCHAR2(2), 
+	"MOBILE_ENABLE" NVARCHAR2(4), 
+	"MOBILE_NOTUSE" NVARCHAR2(4), 
+	"MOBILE_PIN" NVARCHAR2(4), 
 	"SIPURI" NVARCHAR2(200), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
 	"PASSWORD" NVARCHAR2(100)
@@ -8143,52 +7760,52 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE TABLE "TBL_USERMASTER_RETIRE" 
-   (	"CN" NVARCHAR2(40), 
-	"DISPLAYNAME" NVARCHAR2(60), 
-	"DISPLAYNAME2" NVARCHAR2(60), 
-	"MAIL" NVARCHAR2(50), 
-	"MAILNICKNAME" NVARCHAR2(50), 
-	"UPNNAME" NVARCHAR2(200), 
-	"DEPARTMENT" NVARCHAR2(40), 
-	"DESCRIPTION" NVARCHAR2(100), 
-	"DESCRIPTION2" NVARCHAR2(100), 
-	"DESCRIPTION3" NVARCHAR2(100), 
-	"PHYSICALDELIVERYOFFICENAME" NVARCHAR2(80), 
-	"COMPANY" NVARCHAR2(100), 
-	"COMPANY2" NVARCHAR2(100), 
-	"TITLE" NVARCHAR2(100), 
-	"TITLE2" NVARCHAR2(100), 
-	"TELEPHONENUMBER" NVARCHAR2(50), 
-	"HOMEPHONE" NVARCHAR2(50), 
-	"FACSIMILETELEPHONENUMBER" NVARCHAR2(50), 
-	"MOBILE" NVARCHAR2(50), 
-	"POSTALCODE" NVARCHAR2(50), 
-	"STREETADDRESS" NVARCHAR2(200), 
-	"INFO" NVARCHAR2(1000), 
-	"EXTENSIONATTRIBUTE1" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE2" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE3" NVARCHAR2(1000), 
-	"EXTENSIONATTRIBUTE4" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE5" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE6" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE7" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE8" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE9" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE10" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE102" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE11" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE12" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE13" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE14" NVARCHAR2(100), 
-	"EXTENSIONATTRIBUTE15" NVARCHAR2(100), 
-	"ADSPATH" NVARCHAR2(100), 
+   (	"CN" NVARCHAR2(80), 
+	"DISPLAYNAME" NVARCHAR2(120), 
+	"DISPLAYNAME2" NVARCHAR2(120), 
+	"MAIL" NVARCHAR2(100), 
+	"MAILNICKNAME" NVARCHAR2(100), 
+	"UPNNAME" NVARCHAR2(400), 
+	"DEPARTMENT" NVARCHAR2(80), 
+	"DESCRIPTION" NVARCHAR2(200), 
+	"DESCRIPTION2" NVARCHAR2(200), 
+	"DESCRIPTION3" NVARCHAR2(200), 
+	"PHYSICALDELIVERYOFFICENAME" NVARCHAR2(160), 
+	"COMPANY" NVARCHAR2(200), 
+	"COMPANY2" NVARCHAR2(200), 
+	"TITLE" NVARCHAR2(200), 
+	"TITLE2" NVARCHAR2(200), 
+	"TELEPHONENUMBER" NVARCHAR2(100), 
+	"HOMEPHONE" NVARCHAR2(100), 
+	"FACSIMILETELEPHONENUMBER" NVARCHAR2(100), 
+	"MOBILE" NVARCHAR2(100), 
+	"POSTALCODE" NVARCHAR2(100), 
+	"STREETADDRESS" NVARCHAR2(400), 
+	"INFO" NVARCHAR2(2000), 
+	"EXTENSIONATTRIBUTE1" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE2" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE3" NVARCHAR2(2000), 
+	"EXTENSIONATTRIBUTE4" NVARCHAR2(2000), 
+	"EXTENSIONATTRIBUTE5" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE6" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE7" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE8" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE9" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE10" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE102" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE11" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE12" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE13" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE14" NVARCHAR2(200), 
+	"EXTENSIONATTRIBUTE15" NVARCHAR2(200), 
+	"ADSPATH" NVARCHAR2(200), 
 	"UPDATEDT" DATE, 
-	"MOBILE_ENABLE" NVARCHAR2(2), 
-	"MOBILE_NOTUSE" NVARCHAR2(2), 
-	"MOBILE_PIN" NVARCHAR2(2), 
+	"MOBILE_ENABLE" NVARCHAR2(4), 
+	"MOBILE_NOTUSE" NVARCHAR2(4), 
+	"MOBILE_PIN" NVARCHAR2(4), 
 	"SIPURI" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
-	"PASSWORD" NVARCHAR2(50)
+	"PASSWORD" NVARCHAR2(100)
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERMOBILEINFO
@@ -8202,20 +7819,6 @@ CREATE TABLE "TBL_CAR_FORM" (
 	"LISTCNT" NUMBER(7,0), 
 	"USESECURITY" CHAR(1 BYTE), 
 	"TENANT_ID" NUMBER(7,0)
-   ) ;
---------------------------------------------------------
---  DDL for Table TBL_USERSTARTPAGE_ITEM
---------------------------------------------------------
-
-  CREATE TABLE "TBL_USERSTARTPAGE_ITEM" 
-   (	"UID_" NVARCHAR2(50), 
-	"PARENTUID" NVARCHAR2(50), 
-	"IMAGEUID" NVARCHAR2(50), 
-	"ACCESSID" NVARCHAR2(50), 
-	"COMPANYID" NVARCHAR2(50), 
-	"LINKURL" NVARCHAR2(255), 
-	"LANG" VARCHAR2(5 CHAR), 
-	"TENANT_ID" NUMBER(5,0) DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_USER_CONFIG
@@ -10075,17 +9678,40 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "PK_TBL_BRDMNG" ON "TBL_QS_BRDMNG" ("BRD_ID", "USER_ID") 
   ;
 --------------------------------------------------------
---  DDL for Index PK_TBL_BUILTIN_PARAMETERS
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_BUILTIN_PARAMETERS" ON "TBL_BUILTIN_PARAMETERS" ("TENANT_ID", "PARAMTYPE") 
-  ;
---------------------------------------------------------
 --  DDL for Index PK_TBL_CABINET
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "PK_TBL_CABINET" ON "TBL_CABINET" ("TENANT_ID", "CABINETID", "COMPANYID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINET_CABINETCLASSNO_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINET_CABINETCLASSNO_IDX" ON "TBL_CABINET" ("CABINETCLASSNO")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINET_CABINETID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINET_CABINETID_IDX" ON "TBL_CABINET" ("CABINETID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINET_CABINETTRANSFERFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINET_CABINETTRANSFERFLAG_IDX" ON "TBL_CABINET" ("CABINETTRANSFERFLAG")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINET_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINET_DELFLAG_IDX" ON "TBL_CABINET" ("DELFLAG")
+;
+
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CABROLEINFO
 --------------------------------------------------------
@@ -10218,6 +9844,14 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "PK_TBL_CONNECTION_INFO" ON "TBL_CONNECTION_INFO" ("SEQUENCE") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TCI_TENANT_ID_USERID_IDX
+--------------------------------------------------------
+
+  CREATE INDEX TCI_TENANT_ID_USERID_IDX ON TBL_CONNECTION_INFO (TENANT_ID, USERID)
+  ;
+
 --------------------------------------------------------
 --  DDL for Index PK_TBL_ADMIN_ACCESS_INFO
 --------------------------------------------------------
@@ -10448,42 +10082,6 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "PK_TBL_LUNARUSE" ON "TBL_LUNARUSE" ("TENANT_ID", "USECOMPANY") 
   ;
 --------------------------------------------------------
---  DDL for Index PK_TBL_MENUITEM_GENERAL
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_MENUITEM_GENERAL" ON "TBL_MENUITEM_GENERAL" ("TENANT_ID", "UID_") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_MENUITEM_ITEMS_IMAGE
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_MENUITEM_ITEMS_IMAGE" ON "TBL_MENUITEM_ITEMS_IMAGE" ("TENANT_ID", "UID_", "OWNERPAGEID", "SKINNUM") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_MENUITEM_ITEMS_LOGOS
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_MENUITEM_ITEMS_LOGOS" ON "TBL_MENUITEM_ITEMS_LOGOS" ("TENANT_ID", "UID_", "OWNERPAGEID") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_MENUITEM_ITEMS_MENUIT
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_MENUITEM_ITEMS_MENUIT" ON "TBL_MENUITEM_ITEMS_MENUITEMS_S" ("TENANT_ID", "UID_") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_MENUITEM_ITEMS_MENUITEM
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_MENUITEM_ITEMS_MENUITEM" ON "TBL_MENUITEM_ITEMS_MENUITEMS" ("TENANT_ID", "UID_") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_MENUITEM_PARAMETERS
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_MENUITEM_PARAMETERS" ON "TBL_MENUITEM_PARAMETERS" ("TENANT_ID", "UID_", "PARAMNAME") 
-  ;
---------------------------------------------------------
 --  DDL for Index PK_TBL_PHOTO_IMAGEITEM
 --------------------------------------------------------
 
@@ -10548,84 +10146,6 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "PK_TBL_POLL_TABLE_ANSWER" ON "TBL_POLL_TABLE_ANSWER" ("TENANT_ID", "BRD_ID", "ITEM_NO", "QUESTION_NO", "ANSWERNO") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTALPAGE_CACHE
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTALPAGE_CACHE" ON "TBL_PORTALPAGE_CACHE" ("TENANT_ID", "PORTALPAGEID", "ACCESSIDLIST") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTALPAGE_CATEGORY
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTALPAGE_CATEGORY" ON "TBL_PORTALPAGE_CATEGORY" ("TENANT_ID", "CATEGORY") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTALPAGE_GENERAL
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTALPAGE_GENERAL" ON "TBL_PORTALPAGE_GENERAL" ("TENANT_ID", "COMPANYID", "UID_") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTALPAGE_ITEMS
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTALPAGE_ITEMS" ON "TBL_PORTALPAGE_ITEMS" ("TENANT_ID", "UID_", "PAGEUID", "OWNERPAGEUID") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTALPAGE_ITEMS_CHANG
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTALPAGE_ITEMS_CHANG" ON "TBL_PORTALPAGE_ITEMS_CHANGE" ("TENANT_ID", "UID_", "PAGEUID", "OWNERPAGEUID", "CREATORID") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTALPAGE_ITEMS_CHANGE
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTALPAGE_ITEMS_CHANGE" ON "TBL_PORTALPAGE_ITEMS_CHANGE" ("UID_", "PAGEUID", "OWNERPAGEUID", "CREATORID") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTAL_ACL
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTAL_ACL" ON "TBL_PORTAL_ACL" ("TENANT_ID", "UID_", "ACCESSID") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTLET_BOARD
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTLET_BOARD" ON "TBL_PORTLET_BOARD" ("TENANT_ID", "UID_", "CREATORID", "USERTYPE", "BOARDID") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTLET_CATEGORY
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTLET_CATEGORY" ON "TBL_PORTLET_CATEGORY" ("TENANT_ID", "CATEGORY") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTLET_HTMLPAGE
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTLET_HTMLPAGE" ON "TBL_PORTLET_HTMLPAGE" ("TENANT_ID", "UID_") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTLET_IMAGE
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTLET_IMAGE" ON "TBL_PORTLET_IMAGE" ("TENANT_ID", "UID_") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTLET_PARAMETERS
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTLET_PARAMETERS" ON "TBL_PORTLET_PARAMETERS" ("TENANT_ID", "UID_", "PARAMNAME") 
-  ;
---------------------------------------------------------
---  DDL for Index PK_TBL_PORTLET_URL
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_PORTLET_URL" ON "TBL_PORTLET_URL" ("TENANT_ID", "UID_", "CREATORID", "USERTYPE") 
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PREVIOSLYREGI
@@ -10844,12 +10364,6 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "PK_TBL_SECRETARY" ON "TBL_SECRETARY" ("TENANT_ID", "USERID", "SECRETARYID") 
   ;
 --------------------------------------------------------
---  DDL for Index PK_TBL_SKIN_ITEMS
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_SKIN_ITEMS" ON "TBL_SKIN_ITEMS" ("TENANT_ID", "UID_", "SKINNUM") 
-  ;
---------------------------------------------------------
 --  DDL for Index PK_TBL_SPECIALCATALOGINFO_CAB
 --------------------------------------------------------
 
@@ -10958,12 +10472,6 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "PK_TBL_TMPEXPAPRDOCINFO" ON "TBL_TMPEXPAPRDOCINFO" ("COMPANYID", "TENANT_ID", "OWNERID", "SN") 
   ;
 --------------------------------------------------------
---  DDL for Index PK_TBL_TOPMENU_ITEMS
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "PK_TBL_TOPMENU_ITEMS" ON "TBL_TOPMENU_ITEMS" ("TENANT_ID", "UID_", "PAGEUID") 
-  ;
---------------------------------------------------------
 --  DDL for Index PK_TBL_USERLOCALINFO
 --------------------------------------------------------
 
@@ -10993,6 +10501,42 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "PK__TBL_CABINETCLASS__10216508" ON "TBL_CABINETCLASS" ("TENANT_ID", "CABINETCLASSNO", "COMPANYID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_CABINETCLASSNO_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_CABINETCLASSNO_IDX" ON "TBL_CABINETCLASS" ("CABINETCLASSNO")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_CONFIRMFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_CONFIRMFLAG_IDX" ON "TBL_CABINETCLASS" ("CONFIRMFLAG")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_OWNERDEPTID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_OWNERDEPTID_IDX" ON "TBL_CABINETCLASS" ("OWNERDEPTID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_REGSERIALNO_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_REGSERIALNO_IDX" ON "TBL_CABINETCLASS" ("REGSERIALNO")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_CABINETCLASS_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_CABINETCLASS_DELFLAG_IDX" ON "TBL_CABINETCLASS" ("DELFLAG")
+;
+
 --------------------------------------------------------
 --  DDL for Index SIGNATURE_TEMPLATE_PK
 --------------------------------------------------------
@@ -11517,6 +11061,14 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_APRLINEINFO_PK" ON "TBL_APRLINEINFO" ("TENANT_ID", "COMPANYID", "DOCID", "APRMEMBERSN") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_APRLINEINFO_APRMEMBERSN_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_APRLINEINFO_APRMEMBERSN_IDX" ON "TBL_APRLINEINFO" ("APRMEMBERSN")
+;
+
 --------------------------------------------------------
 --  DDL for Index LINE_APRMEMBERID_IDX
 --------------------------------------------------------
@@ -11775,6 +11327,15 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_ENDAPRDOCINFO_PK" ON "TBL_ENDAPRDOCINFO" ("TENANT_ID", "COMPANYID", "DOCID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRDOCINFO_DOCTYPE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_ENDAPRDOCINFO_DOCTYPE_IDX" ON "TBL_ENDAPRDOCINFO" ("DOCTYPE")
+;
+
+
 --------------------------------------------------------
 --  DDL for Index TBL_ENDAPRDOC_CONTAINERID_IDX
 --------------------------------------------------------
@@ -11805,6 +11366,14 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_ENDAPRLINEINFO_PK" ON "TBL_ENDAPRLINEINFO" ("TENANT_ID", "COMPANYID", "DOCID", "APRMEMBERSN") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_ENDAPRLINEINFO_APRMEMBERSN_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_ENDAPRLINEINFO_APRMEMBERSN_IDX" ON "TBL_ENDAPRLINEINFO" ("APRMEMBERSN")
+;
+
 --------------------------------------------------------
 --  DDL for Index ENDAPRLINE_APRMEMBERID_IDX
 --------------------------------------------------------
@@ -11871,6 +11440,28 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_EXPENDAPRDOCINFO_PK" ON "TBL_EXPENDAPRDOCINFO" ("TENANT_ID", "COMPANYID", "DOCID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_EXPENDAPRDOCINFO_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_EXPENDAPRDOCINFO_DELFLAG_IDX" ON "TBL_EXPENDAPRDOCINFO" ("DELFLAG")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_EXPENDAPRDOCINFO_DOCID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_EXPENDAPRDOCINFO_DOCID_IDX" ON "TBL_EXPENDAPRDOCINFO" ("DOCID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_EXPENDAPRDOCINFO_SECURITYCODE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_EXPENDAPRDOCINFO_SECURITYCODE_IDX" ON "TBL_EXPENDAPRDOCINFO" ("SECURITYCODE")
+;
+
 --------------------------------------------------------
 --  DDL for Index TBL_EXPENDAPRLINE_PK
 --------------------------------------------------------
@@ -11959,13 +11550,13 @@ CREATE TABLE "TBL_CAR_FORM" (
 --  DDL for Index TBL_LASTAPRLINE_PK
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "TBL_LASTAPRLINE_PK" ON "TBL_LASTAPRLINE" ("TENANT_ID", "COMPANYID", "USERID", "FORMID", "APRMEMBERSN") 
+  CREATE UNIQUE INDEX "TBL_LASTAPRLINE_PK" ON "TBL_LASTAPRLINE" ("TENANT_ID", "COMPANYID", "USERID", "FORMID", "APRMEMBERSN", "DOCSTATE") 
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_LASTDEPTLINE_PK
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "TBL_LASTDEPTLINE_PK" ON "TBL_LASTDEPTLINE" ("TENANT_ID", "COMPANYID", "USERID", "FORMID", "RECEIPTPOINTID") 
+  CREATE UNIQUE INDEX "TBL_LASTDEPTLINE_PK" ON "TBL_LASTDEPTLINE" ("TENANT_ID", "COMPANYID", "USERID", "FORMID", "RECEIPTPOINTID", "DOCSTATE") 
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_LASTDOCID_PK
@@ -12170,12 +11761,6 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_PORTAL_THEME_USER_PK" ON "TBL_PORTAL_THEME_USER" ("USER_ID", "COMPANY_ID", "TENANT_ID", "USED_THEME") 
   ;
 --------------------------------------------------------
---  DDL for Index TBL_PORTLET_GENERAL_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "TBL_PORTLET_GENERAL_PK" ON "TBL_PORTLET_GENERAL" ("TENANT_ID", "COMPANYID", "UID_") 
-  ;
---------------------------------------------------------
 --  DDL for Index TBL_PS_EMPMONTH_PK
 --------------------------------------------------------
 
@@ -12217,6 +11802,49 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_RECORD_TEMP_PK" ON "TBL_RECORD_TEMP" ("COMPANYID", "TENANT_ID", "DOCID") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_DOCID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_DOCID_IDX" ON "TBL_RECORD" ("DOCID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_RECORDID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_RECORDID_IDX" ON "TBL_RECORD" ("RECORDID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_REGISTERDATE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_REGISTERDATE_IDX" ON "TBL_RECORD" ("REGISTERDATE")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_CREATEDATE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_CREATEDATE_IDX" ON "TBL_RECORD" ("CREATEDATE")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_DOCTYPE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_DOCTYPE_IDX" ON "TBL_RECORD" ("DOCTYPE")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_RECORD_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_RECORD_DELFLAG_IDX" ON "TBL_RECORD" ("DELFLAG")
+;
+
 --------------------------------------------------------
 --  DDL for Index TBL_RECREADHISTORY_PK
 --------------------------------------------------------
@@ -12271,6 +11899,49 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE UNIQUE INDEX "TBL_SEPERATEATTACH_PK" ON "TBL_SEPERATEATTACH" ("TENANT_ID", "COMPANYID", "RECORDID", "SEPERATEATTACHNO") 
   ;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_CABINETID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_CABINETID_IDX" ON "TBL_SEPERATEATTACH" ("CABINETID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_CONFIRMFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_CONFIRMFLAG_IDX" ON "TBL_SEPERATEATTACH" ("CONFIRMFLAG")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_RECORDID_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_RECORDID_IDX" ON "TBL_SEPERATEATTACH" ("RECORDID")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_REGISTERTYPE_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_REGISTERTYPE_IDX" ON "TBL_SEPERATEATTACH" ("REGISTERTYPE")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_SEPERATEATTACHNO_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_SEPERATEATTACHNO_IDX" ON "TBL_SEPERATEATTACH" ("SEPERATEATTACHNO")
+;
+
+--------------------------------------------------------
+--  DDL for Index TBL_SEPERATEATTACH_DELFLAG_IDX
+--------------------------------------------------------
+
+CREATE INDEX "TBL_SEPERATEATTACH_DELFLAG_IDX" ON "TBL_SEPERATEATTACH" ("DELFLAG")
+;
+
 --------------------------------------------------------
 --  DDL for Index TBL_SEPERATEATTACH_TEMP_PK
 --------------------------------------------------------
@@ -12288,12 +11959,6 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "TBL_SIGNINFO_PK1" ON "TBL_SIGNINFO" ("TENANT_ID", "COMPANYID", "DOCID", "APRSN", "SIGNNAME") 
-  ;
---------------------------------------------------------
---  DDL for Index TBL_SKIN_GENERAL_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "TBL_SKIN_GENERAL_PK" ON "TBL_SKIN_GENERAL" ("TENANT_ID", "SKINNUM") 
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_SPECIALCATALOGINFO_REC_PK
@@ -12386,13 +12051,7 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_TMPRECEIPTPOINTINFO_PK" ON "TBL_TMPRECEIPTPOINTINFO" ("TENANT_ID", "COMPANYID", "OWNERID", "SN", "RECEIPTPOINTID") 
   ;
 --------------------------------------------------------
---  DDL for Index TBL_TOPMENU_GENERAL_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "TBL_TOPMENU_GENERAL_PK" ON "TBL_TOPMENU_GENERAL" ("TENANT_ID", "COMPANYID", "UID_") 
-  ;
---------------------------------------------------------
---  DDL for Index TBL_USERCONTLIST_PK
+--  DDL for Index 
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "TBL_USERCONTLIST_PK" ON "TBL_USERCONTLIST" ("TENANT_ID", "COMPANYID", "USERCONTID", "DOCID") 
@@ -12404,22 +12063,10 @@ CREATE TABLE "TBL_CAR_FORM" (
   CREATE UNIQUE INDEX "TBL_USERCONT_PK" ON "TBL_USERCONT" ("TENANT_ID", "COMPANYID", "USERCONTID") 
   ;
 --------------------------------------------------------
---  DDL for Index TBL_USERINFO_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "TBL_USERINFO_PK" ON "TBL_USERINFO" ("TENANT_ID", "USERID") 
-  ;
---------------------------------------------------------
 --  DDL for Index TBL_USERMOBILEINFO_PK
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "TBL_USERMOBILEINFO_PK" ON "TBL_USERMOBILEINFO" ("USERID", "TENANT_ID") 
-  ;
---------------------------------------------------------
---  DDL for Index TBL_USERSTARTPAGE_ITEM_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "TBL_USERSTARTPAGE_ITEM_PK" ON "TBL_USERSTARTPAGE_ITEM" ("TENANT_ID", "UID_", "ACCESSID") 
   ;
 --------------------------------------------------------
 --  DDL for Index TBL_USER_CONFIG_PK
@@ -14721,14 +14368,6 @@ END;
   USING INDEX;
   ALTER TABLE "TBL_BOARD_TREECACHE" MODIFY ("QUERY" NOT NULL ENABLE);
 --------------------------------------------------------
---  Constraints for Table TBL_BUILTIN_PARAMETERS
---------------------------------------------------------
-
-  ALTER TABLE "TBL_BUILTIN_PARAMETERS" MODIFY ("PARAMTYPE" NOT NULL ENABLE);
-  ALTER TABLE "TBL_BUILTIN_PARAMETERS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_BUILTIN_PARAMETERS" ADD CONSTRAINT "PK_TBL_BUILTIN_PARAMETERS" PRIMARY KEY ("TENANT_ID", "PARAMTYPE")
-  USING INDEX;
---------------------------------------------------------
 --  Constraints for Table TBL_CABINET
 --------------------------------------------------------
 
@@ -16103,7 +15742,7 @@ END;
 --  Constraints for Table TBL_LASTAPRLINE
 --------------------------------------------------------
 
-  ALTER TABLE "TBL_LASTAPRLINE" ADD CONSTRAINT "TBL_LASTAPRLINE_PK" PRIMARY KEY ("TENANT_ID", "COMPANYID", "USERID", "FORMID", "APRMEMBERSN")
+  ALTER TABLE "TBL_LASTAPRLINE" ADD CONSTRAINT "TBL_LASTAPRLINE_PK" PRIMARY KEY ("TENANT_ID", "COMPANYID", "USERID", "FORMID", "APRMEMBERSN", "DOCSTATE")
   USING INDEX;
   ALTER TABLE "TBL_LASTAPRLINE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "TBL_LASTAPRLINE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -16114,7 +15753,7 @@ END;
 --  Constraints for Table TBL_LASTDEPTLINE
 --------------------------------------------------------
 
-  ALTER TABLE "TBL_LASTDEPTLINE" ADD CONSTRAINT "TBL_LASTDEPTLINE_PK" PRIMARY KEY ("TENANT_ID", "COMPANYID", "USERID", "FORMID", "RECEIPTPOINTID")
+  ALTER TABLE "TBL_LASTDEPTLINE" ADD CONSTRAINT "TBL_LASTDEPTLINE_PK" PRIMARY KEY ("TENANT_ID", "COMPANYID", "USERID", "FORMID", "RECEIPTPOINTID", "DOCSTATE")
   USING INDEX;
   ALTER TABLE "TBL_LASTDEPTLINE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "TBL_LASTDEPTLINE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -16225,58 +15864,6 @@ END;
   ALTER TABLE "TBL_MEMO_FOLDER" MODIFY ("USER_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_MEMO_FOLDER" MODIFY ("FOLDER_NAME" NOT NULL ENABLE);
   ALTER TABLE "TBL_MEMO_FOLDER" MODIFY ("FOLDER_ID" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_MENUITEM_GENERAL
---------------------------------------------------------
-
-  ALTER TABLE "TBL_MENUITEM_GENERAL" ADD CONSTRAINT "PK_TBL_MENUITEM_GENERAL" PRIMARY KEY ("TENANT_ID", "UID_")
-  USING INDEX;
-  ALTER TABLE "TBL_MENUITEM_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_GENERAL" MODIFY ("UID_" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_MENUITEM_ITEMS_IMAGE
---------------------------------------------------------
-
-  ALTER TABLE "TBL_MENUITEM_ITEMS_IMAGE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_IMAGE" MODIFY ("SKINNUM" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_IMAGE" MODIFY ("OWNERPAGEID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_IMAGE" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_IMAGE" ADD CONSTRAINT "PK_TBL_MENUITEM_ITEMS_IMAGE" PRIMARY KEY ("TENANT_ID", "UID_", "OWNERPAGEID", "SKINNUM")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_MENUITEM_ITEMS_LOGOS
---------------------------------------------------------
-
-  ALTER TABLE "TBL_MENUITEM_ITEMS_LOGOS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_LOGOS" MODIFY ("OWNERPAGEID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_LOGOS" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_LOGOS" ADD CONSTRAINT "PK_TBL_MENUITEM_ITEMS_LOGOS" PRIMARY KEY ("TENANT_ID", "UID_", "OWNERPAGEID")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_MENUITEM_ITEMS_MENUITEMS
---------------------------------------------------------
-
-  ALTER TABLE "TBL_MENUITEM_ITEMS_MENUITEMS" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_MENUITEMS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_MENUITEMS" ADD CONSTRAINT "PK_TBL_MENUITEM_ITEMS_MENUITEM" PRIMARY KEY ("TENANT_ID", "UID_")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_MENUITEM_ITEMS_MENUITEMS_S
---------------------------------------------------------
-
-  ALTER TABLE "TBL_MENUITEM_ITEMS_MENUITEMS_S" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_MENUITEMS_S" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_ITEMS_MENUITEMS_S" ADD CONSTRAINT "PK_TBL_MENUITEM_ITEMS_MENUIT_1" PRIMARY KEY ("TENANT_ID", "UID_")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_MENUITEM_PARAMETERS
---------------------------------------------------------
-
-  ALTER TABLE "TBL_MENUITEM_PARAMETERS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_PARAMETERS" MODIFY ("PARAMNAME" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_PARAMETERS" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_MENUITEM_PARAMETERS" ADD CONSTRAINT "PK_TBL_MENUITEM_PARAMETERS" PRIMARY KEY ("TENANT_ID", "UID_", "PARAMNAME")
-  USING INDEX;
 --------------------------------------------------------
 --  Constraints for Table TBL_MYTASKCODE
 --------------------------------------------------------
@@ -16540,63 +16127,6 @@ END;
   ALTER TABLE "TBL_POLL_TABLE_ANSWER" ADD CONSTRAINT "PK_TBL_POLL_TABLE_ANSWER" PRIMARY KEY ("TENANT_ID", "BRD_ID", "ITEM_NO", "QUESTION_NO", "ANSWERNO")
   USING INDEX;
 --------------------------------------------------------
---  Constraints for Table TBL_PORTALPAGE_CACHE
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTALPAGE_CACHE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_CACHE" MODIFY ("ACCESSIDLIST" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_CACHE" MODIFY ("PORTALPAGEID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_CACHE" ADD CONSTRAINT "PK_TBL_PORTALPAGE_CACHE" PRIMARY KEY ("TENANT_ID", "PORTALPAGEID", "ACCESSIDLIST")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_PORTALPAGE_CATEGORY
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTALPAGE_CATEGORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_CATEGORY" MODIFY ("CATEGORY" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_CATEGORY" ADD CONSTRAINT "PK_TBL_PORTALPAGE_CATEGORY" PRIMARY KEY ("TENANT_ID", "CATEGORY")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_PORTALPAGE_GENERAL
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTALPAGE_GENERAL" MODIFY ("COMPANYID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_GENERAL" ADD CONSTRAINT "PK_TBL_PORTALPAGE_GENERAL" PRIMARY KEY ("TENANT_ID", "COMPANYID", "UID_")
-  USING INDEX;
-  ALTER TABLE "TBL_PORTALPAGE_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_GENERAL" MODIFY ("UID_" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_PORTALPAGE_ITEMS
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS" MODIFY ("OWNERPAGEUID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS" MODIFY ("PARENTPAGEUID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS" MODIFY ("PAGEUID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS" ADD CONSTRAINT "PK_TBL_PORTALPAGE_ITEMS" PRIMARY KEY ("TENANT_ID", "UID_", "PAGEUID", "OWNERPAGEUID")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_PORTALPAGE_ITEMS_CHANGE
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS_CHANGE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS_CHANGE" MODIFY ("CREATORID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS_CHANGE" MODIFY ("OWNERPAGEUID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS_CHANGE" MODIFY ("PAGEUID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS_CHANGE" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTALPAGE_ITEMS_CHANGE" ADD CONSTRAINT "PK_TBL_PORTALPAGE_ITEMS_CHANGE" PRIMARY KEY ("TENANT_ID", "UID_", "PAGEUID", "OWNERPAGEUID", "CREATORID")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_PORTAL_ACL
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTAL_ACL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTAL_ACL" MODIFY ("ACCESSID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTAL_ACL" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTAL_ACL" ADD CONSTRAINT "PK_TBL_PORTAL_ACL" PRIMARY KEY ("TENANT_ID", "UID_", "ACCESSID")
-  USING INDEX;
---------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_FRAME
 --------------------------------------------------------
 
@@ -16751,70 +16281,6 @@ END;
   ALTER TABLE "TBL_PORTAL_THEME_USER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_PORTAL_THEME_USER" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_PORTAL_THEME_USER" MODIFY ("USER_ID" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_PORTLET_BOARD
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTLET_BOARD" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_BOARD" MODIFY ("BOARDID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_BOARD" MODIFY ("USERTYPE" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_BOARD" MODIFY ("CREATORID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_BOARD" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_BOARD" ADD CONSTRAINT "PK_TBL_PORTLET_BOARD" PRIMARY KEY ("TENANT_ID", "UID_", "CREATORID", "USERTYPE", "BOARDID")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_PORTLET_CATEGORY
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTLET_CATEGORY" MODIFY ("CATEGORY" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_CATEGORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_CATEGORY" ADD CONSTRAINT "PK_TBL_PORTLET_CATEGORY" PRIMARY KEY ("TENANT_ID", "CATEGORY")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_PORTLET_GENERAL
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTLET_GENERAL" ADD CONSTRAINT "TBL_PORTLET_GENERAL_PK" PRIMARY KEY ("TENANT_ID", "COMPANYID", "UID_")
-  USING INDEX;
-  ALTER TABLE "TBL_PORTLET_GENERAL" MODIFY ("COMPANYID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_GENERAL" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_PORTLET_HTMLPAGE
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTLET_HTMLPAGE" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_HTMLPAGE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_HTMLPAGE" ADD CONSTRAINT "PK_TBL_PORTLET_HTMLPAGE" PRIMARY KEY ("TENANT_ID", "UID_")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_PORTLET_IMAGE
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTLET_IMAGE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_IMAGE" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_IMAGE" ADD CONSTRAINT "PK_TBL_PORTLET_IMAGE" PRIMARY KEY ("TENANT_ID", "UID_")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_PORTLET_PARAMETERS
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTLET_PARAMETERS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_PARAMETERS" MODIFY ("PARAMNAME" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_PARAMETERS" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_PARAMETERS" ADD CONSTRAINT "PK_TBL_PORTLET_PARAMETERS" PRIMARY KEY ("TENANT_ID", "UID_", "PARAMNAME")
-  USING INDEX;
---------------------------------------------------------
---  Constraints for Table TBL_PORTLET_URL
---------------------------------------------------------
-
-  ALTER TABLE "TBL_PORTLET_URL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_URL" MODIFY ("URL" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_URL" MODIFY ("USERTYPE" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_URL" MODIFY ("CREATORID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_URL" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_PORTLET_URL" ADD CONSTRAINT "PK_TBL_PORTLET_URL" PRIMARY KEY ("TENANT_ID", "UID_", "CREATORID", "USERTYPE")
-  USING INDEX;
 --------------------------------------------------------
 --  Constraints for Table TBL_PREVIOSLYREGI
 --------------------------------------------------------
@@ -17441,23 +16907,6 @@ END;
   USING INDEX;
   ALTER TABLE "TBL_SIGNINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
---  Constraints for Table TBL_SKIN_GENERAL
---------------------------------------------------------
-
-  ALTER TABLE "TBL_SKIN_GENERAL" ADD CONSTRAINT "TBL_SKIN_GENERAL_PK" PRIMARY KEY ("TENANT_ID", "SKINNUM")
-  USING INDEX;
-  ALTER TABLE "TBL_SKIN_GENERAL" MODIFY ("SKINNUM" NOT NULL ENABLE);
-  ALTER TABLE "TBL_SKIN_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_SKIN_ITEMS
---------------------------------------------------------
-
-  ALTER TABLE "TBL_SKIN_ITEMS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_SKIN_ITEMS" MODIFY ("SKINNUM" NOT NULL ENABLE);
-  ALTER TABLE "TBL_SKIN_ITEMS" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_SKIN_ITEMS" ADD CONSTRAINT "PK_TBL_SKIN_ITEMS" PRIMARY KEY ("TENANT_ID", "UID_", "SKINNUM")
-  USING INDEX;
---------------------------------------------------------
 --  Constraints for Table TBL_SPECIALCATALOGINFO_CAB
 --------------------------------------------------------
 
@@ -17860,24 +17309,6 @@ END;
   ALTER TABLE "TBL_TMPRECEIPTPOINTINFO" MODIFY ("OWNERID" NOT NULL ENABLE);
   ALTER TABLE "TBL_TMPRECEIPTPOINTINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
---  Constraints for Table TBL_TOPMENU_GENERAL
---------------------------------------------------------
-
-  ALTER TABLE "TBL_TOPMENU_GENERAL" ADD CONSTRAINT "TBL_TOPMENU_GENERAL_PK" PRIMARY KEY ("TENANT_ID", "COMPANYID", "UID_")
-  USING INDEX;
-  ALTER TABLE "TBL_TOPMENU_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_TOPMENU_GENERAL" MODIFY ("COMPANYID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_TOPMENU_GENERAL" MODIFY ("UID_" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_TOPMENU_ITEMS
---------------------------------------------------------
-
-  ALTER TABLE "TBL_TOPMENU_ITEMS" MODIFY ("PAGEUID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_TOPMENU_ITEMS" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_TOPMENU_ITEMS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_TOPMENU_ITEMS" ADD CONSTRAINT "PK_TBL_TOPMENU_ITEMS" PRIMARY KEY ("TENANT_ID", "UID_", "PAGEUID")
-  USING INDEX;
---------------------------------------------------------
 --  Constraints for Table TBL_USERCONT
 --------------------------------------------------------
 
@@ -17897,14 +17328,6 @@ END;
   ALTER TABLE "TBL_USERCONTLIST" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "TBL_USERCONTLIST" MODIFY ("USERCONTID" NOT NULL ENABLE);
   ALTER TABLE "TBL_USERCONTLIST" MODIFY ("DOCID" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_USERINFO
---------------------------------------------------------
-
-  ALTER TABLE "TBL_USERINFO" ADD CONSTRAINT "TBL_USERINFO_PK" PRIMARY KEY ("TENANT_ID", "USERID")
-  USING INDEX;
-  ALTER TABLE "TBL_USERINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_USERINFO" MODIFY ("USERID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_USERLOCALINFO
 --------------------------------------------------------
@@ -17958,18 +17381,6 @@ END;
   ALTER TABLE "TBL_USERMOBILEINFO" MODIFY ("LANG" NOT NULL ENABLE);
   ALTER TABLE "TBL_USERMOBILEINFO" MODIFY ("TIMEZONE" NOT NULL ENABLE);
   ALTER TABLE "TBL_USERMOBILEINFO" MODIFY ("USERID" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TBL_USERSTARTPAGE_ITEM
---------------------------------------------------------
-
-  ALTER TABLE "TBL_USERSTARTPAGE_ITEM" ADD CONSTRAINT "TBL_USERSTARTPAGE_ITEM_PK" PRIMARY KEY ("TENANT_ID", "UID_", "ACCESSID")
-  USING INDEX;
-  ALTER TABLE "TBL_USERSTARTPAGE_ITEM" MODIFY ("LINKURL" NOT NULL ENABLE);
-  ALTER TABLE "TBL_USERSTARTPAGE_ITEM" MODIFY ("COMPANYID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_USERSTARTPAGE_ITEM" MODIFY ("ACCESSID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_USERSTARTPAGE_ITEM" MODIFY ("PARENTUID" NOT NULL ENABLE);
-  ALTER TABLE "TBL_USERSTARTPAGE_ITEM" MODIFY ("UID_" NOT NULL ENABLE);
-  ALTER TABLE "TBL_USERSTARTPAGE_ITEM" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_USER_CONFIG
 --------------------------------------------------------
@@ -18909,6 +18320,7 @@ CREATE TABLE "TBL_SUSINSCHEDULE" (
   "COMPANYID" VARCHAR2(20) DEFAULT NULL,
   "LANG" NVARCHAR2(10) DEFAULT NULL,
   "TENANTID" NUMBER DEFAULT NULL,
+  "OFFSET" CHAR(10 CHAR) DEFAULT '',
   CONSTRAINT SUSINSCHEDULE_PK PRIMARY KEY ("DOCID", "COMPANYID", "TENANTID")
 ) ;
 
@@ -19289,3 +18701,95 @@ FROM
 			(a.CN = b.CN))) ) v
 WHERE
 	v.TYPE = 'ADDJOB';
+
+CREATE TABLE TBL_SERIALNUMGEN_GRANT (
+    "IDX" NUMBER(10,0) NOT NULL ENABLE,
+    "DEPTID" NVARCHAR2(100) NOT NULL ENABLE,
+    "DEPTNAME" NVARCHAR2(100) NOT NULL ENABLE,
+    "GRANTDEPTID" NVARCHAR2(100) NOT NULL ENABLE,
+    "GRANTDEPTNAME" NVARCHAR2(100) NOT NULL ENABLE,
+    "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+    "COMPANYID" NVARCHAR2(20) NOT NULL ENABLE,
+    CONSTRAINT "SERIALNUMGEN_GRANT_PK" PRIMARY KEY ("IDX", "DEPTID", "TENANT_ID", "COMPANYID")
+);
+
+CREATE TABLE "TBL_APRATTACHLIMIT" (
+    "ATTACHLIMITCNT" NUMBER(10,0),
+    "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+    "COMPANYID" NVARCHAR2(80) NOT NULL ENABLE,
+    CONSTRAINT "PK_TBL_APRATTACHLIMIT" PRIMARY KEY ("TENANT_ID", "COMPANYID")
+);
+
+CREATE TABLE TBL_SCHEDULE_COMPLETE (
+    SCHEDULEID NUMBER(10) NOT NULL,
+    REPEATCOUNT NUMBER(10) NOT NULL,
+    ISALLREP NCHAR(1) DEFAULT 'N',
+    STARTDATE DATE NOT NULL,
+    TENANT_ID NUMBER(5),
+    COMPANYID VARCHAR2(40),
+    CONSTRAINT TBL_SCHEDULE_COMPLETE_PK PRIMARY KEY (SCHEDULEID, REPEATCOUNT, ISALLREP, STARTDATE)
+);
+
+CREATE TABLE TBL_SERIAL_NOROLLBACK (
+   TYPE1 VARCHAR2(50 CHAR) NOT NULL,
+   TYPE3 VARCHAR2(50 CHAR) NOT NULL,
+   TYPE2 VARCHAR2(50 CHAR) NOT NULL,
+   TIMESEP NUMBER(10,0) NOT NULL,
+   REGSERIALNO NUMBER(19,0) NOT NULL,
+   TENANT_ID NUMBER(38,0) DEFAULT 0,
+   COMPANYID VARCHAR2(20 BYTE) NOT NULL,
+   CONSTRAINT "TBL_SR_NOROLLBACK_PK" PRIMARY KEY (TYPE1, TYPE3, TYPE2, TIMESEP, REGSERIALNO, TENANT_ID, COMPANYID)
+);
+
+CREATE TABLE TBL_BOARD_TABBOARD (
+    TABID 		NUMBER(2,0) 	NOT NULL,
+    BOARDID 	NVARCHAR2(40) 	NOT NULL,
+    TENANT_ID 	NUMBER(5,0) 	NOT NULL,
+    COMPANYID 	NVARCHAR2(80) 	NOT NULL,
+    BOARDNAME 	NVARCHAR2(255),
+    BOARDNAME2 	NVARCHAR2(255),
+    CONSTRAINT "TBL_BOARD_TABBOARD_PK" PRIMARY KEY (TABID, TENANT_ID, COMPANYID)
+);
+
+CREATE TABLE "TBL_APRBIGATTACH_DOWNLOADINFO" (
+    "DOCID" CHAR(20 BYTE) NOT NULL ENABLE,
+    "ATTACHFILESN" NUMBER(10,0) NOT NULL ENABLE,
+    "DOWNLOAD_COUNT" NUMBER,
+    "TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE,
+    "COMPANYID" VARCHAR2(20 BYTE) NOT NULL ENABLE,
+     CONSTRAINT "TBL_APRBIGATTACH_DLINFO_PK" PRIMARY KEY ("DOCID", "ATTACHFILESN", "TENANT_ID", "COMPANYID")
+);
+
+CREATE TABLE TBL_APRPREVIEW (
+    USERID NVARCHAR2(80) NOT NULL,
+    PREVIEW NVARCHAR2(50),
+    TENANT_ID NUMBER NOT NULL,
+    CONSTRAINT "TBL_APRPREVIEW_PK" PRIMARY KEY (USERID , TENANT_ID)
+);
+
+CREATE TABLE TBL_PS_POPUP_USER (
+   "ITEMSEQ" NUMBER(10,0) NOT NULL ENABLE,
+   "USER_ID" NVARCHAR2(50) NOT NULL ENABLE,
+   "USER_TYPE" NVARCHAR2(10) NOT NULL ENABLE,
+   "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+   "COMPANYID" NVARCHAR2(20) NOT NULL ENABLE,
+   "SUBDEPT_PERMITTED" NUMBER(11),
+   "SN" NUMBER(11) DEFAULT 0,
+   CONSTRAINT "PK_PS_POPUP_USER" PRIMARY KEY ("ITEMSEQ", "USER_ID", "USER_TYPE", "TENANT_ID", "COMPANYID")
+);
+
+CREATE TABLE TBL_SHARE_DOC_DIR (
+   "OWNER_ID" NVARCHAR2(45) NOT NULL ENABLE,
+   "SHARE_ID" NVARCHAR2(45) NOT NULL ENABLE,
+   "SHARE_TYPE" NVARCHAR2(45),
+   "TENANT_ID" NUMBER(5, 0) NOT NULL ENABLE,
+   "OWNER_TYPE" NVARCHAR2(45),
+   CONSTRAINT "PK_SHARE_DOC_DIR" PRIMARY KEY ("OWNER_ID", "SHARE_ID", "TENANT_ID")
+);
+
+CREATE TABLE TBL_BOARD_NOTICEBOARD (
+   BOARDID NVARCHAR2(40) NOT NULL,
+   TENANT_ID NUMBER(5,0) NOT NULL,
+   COMPANYID VARCHAR2(80) NOT NULL,
+   CONSTRAINT "TBL_BOARD_NOTICEBOARD_PK" PRIMARY KEY (BOARDID, TENANT_ID, COMPANYID)
+);

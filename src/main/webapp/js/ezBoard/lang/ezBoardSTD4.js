@@ -84,3 +84,8 @@ var strLang189 = "请输入";
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
+
+// 2023-03-08 이가은 추가
+var strLang188 = "본인의 댓글에는 '좋아요'를 하실 수 없습니다.";
+var strLang189 = "본인의 댓글에는 '싫어요'를 하실 수 없습니다.";
+var strLang190 = "이미 삭제된 댓글입니다.";

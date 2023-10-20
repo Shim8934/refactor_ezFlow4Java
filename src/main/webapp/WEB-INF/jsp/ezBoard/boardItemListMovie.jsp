@@ -1029,7 +1029,7 @@
 				    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 				    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 				    	</select>
-						<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+						<input id="txt_keyword" class="searchinputBox" style="height: 27px !important;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 				        <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
 					</span>
 				</h1>

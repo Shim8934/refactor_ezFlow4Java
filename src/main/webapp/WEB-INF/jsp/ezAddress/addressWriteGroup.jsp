@@ -29,6 +29,9 @@
 			}
 			.countColor {
 				color:#017BEC;
+			}
+			.checkDept {
+				height: 16px !important;
 			}		    	
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
@@ -2521,7 +2524,7 @@
 		        <WIDTH>40</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME>E-MAIL</NAME>
+		        <NAME>EMAIL</NAME>
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		    </HEADERS>
@@ -2539,7 +2542,7 @@
 		        <WIDTH>65</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME>E-Mail</NAME>
+		        <NAME>Email</NAME>
 		        <WIDTH>115</WIDTH>
 		      </HEADER>
 		    </HEADERS>
@@ -2722,7 +2725,7 @@
 	                                </td>	                                
 	                                <td>
 	                                    <div style="vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 3px; padding-left: 5px;padding-bottom:2px">
-	                                    	<img src="/images/ImgIcon/fldr.gif" align="absmiddle" hspace="2" style="cursor: pointer"/><span id="addressFolderName"></span>&nbsp;&nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
+	                                    	<img align="absmiddle" hspace="2" style="cursor: pointer"/><span id="addressFolderName"></span>&nbsp;&nbsp;<span id="addressFolderCnt" style="color: #017BEC;"></span>
 	                            		</div>
 	                                    <div id="AddressListView" style="BORDER: #ddd 1px solid; OVERFLOW: auto; WIDTH: 446px; HEIGHT: 436px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
 	                                    <div id="tblPageRayer"  style="border:#ddd 1px solid;border-top:0px;width:auto !important"></div>

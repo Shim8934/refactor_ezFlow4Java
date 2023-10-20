@@ -84,6 +84,7 @@
 			        chk_DisplayChange();
 			        chk_DisplayChange2();
 			    }
+			    liSelected();
 			}   
 			function FindByAttributeValue(attribute, value, element_type)    {
 				element_type = element_type || "*";
@@ -232,6 +233,7 @@
 						chk_str += $('#select-all').val();
 					}
 				}
+				liSelected();
 			}
 			
 			//2018-06-08 구해안 left checkbox 함수
@@ -391,6 +393,7 @@
 		            case 6:		// schedule search
 		            	$('.checkSelect').each(function() {
 				            $(this).prop('checked',false);			            
+				            liSelected();
 				        });
 		            	isCalendarView = false;
 		            	$('#select-all').prop('checked',false);
@@ -408,6 +411,7 @@
 		            	isCalendarView = false;
 		            	$('#select-all').prop('checked',false);
 		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
+		                liSelected();
 		                break;
 		            case 11:		// Search public calendar
 		            	$('.checkSelect').each(function() {
@@ -495,36 +499,55 @@
 					chk_str += $('#select-all').val();
 				}
 	        }
+	        
+	        // 2023-06-30 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 일정검색, 공개일정검색 선택 항목 클래스 제어
+	        function liSelected() {
+	        	$(".list_text.node_selected").removeClass("node_selected");
+
+	        	var liSelected = $(event.target);
+	        	
+	            if (liSelected.prop("tagName") == "LI") {
+	            	liSelected.children().addClass("node_selected");
+	            } else {
+	            	liSelected .addClass("node_selected");
+	            }
+	        }
+	        
 		</script>
 	</head>
 
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
 			<input type="hidden" id="chk_str" value="" />
-	    	<!-- <div class="lnb_btn"></div> -->
-	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<%-- <div class="lnb_btn"></div> --%>
+	        <%-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼 --%>
 	    	<div class="left_title" title="<spring:message code='ezSchedule.t1010'/>">
 	    		<spring:message code='ezSchedule.t1010'/>
 	        	<span id='Schedule_Config' onClick="Function_Flag('11')" class="sub_iconLNB tree_leftconfig" title="<spring:message code='ezPersonal.t999900007'/>"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="WriteSchedule()">
-	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezSchedule.t214'/></p>
+	        	<p class="btn_write01"><spring:message code='ezSchedule.t214'/></p>
 	        </div>
         	<div class="scheduleListBox" style="overflow:hidden; padding-right: 0;">
+		        <%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 최상위 '일정관리' 메뉴 표시 추가 --%>
+	        	<h2 class="on">
+			            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="" onclick="('')"><spring:message code='ezSchedule.t1010'/></span>
+		        </h2>
 		        <ul class="lnbUL">
 		        	<li>
-			    		<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
+			    		<%-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 --%>
+			    		<%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > LNB 이미지 삭제 --%>
 			    		<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)" style="pointer-events:auto"></span>
 			    		<label class="IDcontainer" onchange="chk_all()">
 							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
-					  		<span class="checkmark" style="background:rgb(125, 125, 125);"></span>
+					  		<span class="checkmark mr5" style="background:rgb(125, 125, 125); margin-top: 7px;"></span>
 					  		<span class="list_text"><spring:message code='ezSchedule.t220'/></span>
 						</label>
 					</li>
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
-					  		<span class="checkmark" style="background:rgb(1, 138, 249);"></span>
+					  		<span class="checkmark mr5" style="background:rgb(1, 138, 249); margin-top: 7px;"></span>
 					  		<span class="list_text"><spring:message code='ezSchedule.t221'/></span>
 						</label>
 					</li>	
@@ -533,7 +556,7 @@
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
 							 	 	<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
-								  	<span class="checkmark" style="background-color:rgb(1, 138, 249);"></span>
+								  	<span class="checkmark mr5" style="background-color:rgb(1, 138, 249); margin-top: 7px;"></span>
 								  	<span class="list_text" title="${sec.secName }"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
 								</label>
 							</li>	
@@ -543,7 +566,7 @@
 						<li>
 							<label class="IDcontainer" onchange="chk_DisplayChange()">
 						  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="9" value="${loginVO.id}" class="checkSelect">
-						  		<span class="checkmark" style="background:rgb(1, 138, 249);"></span>
+						  		<span class="checkmark mr5" style="background:rgb(1, 138, 249); margin-top: 7px;"></span>
 						  		<span class="list_text"><spring:message code='ezSchedule.google03'/></span>
 							</label>
 						</li>
@@ -551,7 +574,7 @@
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
 							<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">
-						  	<span class="checkmark" style="background:rgb(1, 179, 63);"></span>
+						  	<span class="checkmark mr5" style="background:rgb(1, 179, 63); margin-top: 7px;"></span>
 						  	<span class="list_text"><spring:message code='ezSchedule.t222'/></span>
 						</label>
 					</li>					
@@ -561,7 +584,7 @@
 								<li>
 									<label class="IDcontainer" onchange="chk_DisplayChange()">
 										<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
-									  	<span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
+									  	<span class="checkmark mr5" style="background-color:rgb(1, 179, 63); margin-top: 7px;"></span>
 									  	<span class="list_text" title="${cum.titleName }"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
 									</label>
 								</li>	
@@ -573,7 +596,7 @@
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
 							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
-							  		<span class="checkmark" style="background-color:#b200ff;"></span>
+							  		<span class="checkmark mr5" style="background-color:#b200ff; margin-top: 7px;"></span>
 							  		<span class="list_text" title="${dep.deptName }"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
 								</label>
 							</li>	
@@ -582,7 +605,7 @@
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange()">
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="3" value="${loginVO.companyID}" class="checkSelect">
-					  		<span class="checkmark" style="background:rgb(254, 28, 113);"></span>
+					  		<span class="checkmark mr5" style="background:rgb(254, 28, 113); margin-top: 7px;"></span>
 					  		<span class="list_text"><spring:message code='ezSchedule.t223'/></span>
 						</label>
 					</li>	
@@ -590,7 +613,7 @@
 					<li>
 						<label class="IDcontainer" onchange="chk_DisplayChange2(this)">
 					  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="4" value="collaboration" class="checkSelect">
-					  		<span class="checkmark" style="background:rgb(63, 81, 181);"></span>
+					  		<span class="checkmark mr5" style="background:rgb(63, 81, 181); margin-top: 7px;"></span>
 					  		<span class="list_text">협업일정</span>
 						</label>
 					</li>	
@@ -600,17 +623,20 @@
 							<li>
 								<label class="IDcontainer" onchange="chk_DisplayChange()">
 							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
-							  		<span class="checkmark" style="background-color:#e9de13;"></span>
+							  		<span class="checkmark mr5" style="background-color: ${group.groupColor }; margin-top: 7px;"></span>
 							  		<span class="list_text" title="${fn:escapeXml(group.groupName)}"><spring:message code='ezSchedule.t375'/>${fn:escapeXml(group.groupName)}</span>
 								</label>
 							</li>	
 						</c:forEach>
 					</c:if>
+					<%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > LNB 이미지, 구조 수정 --%>
+                  	<li class="ul_2Box"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
+                  	<li><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
 		        </ul>
-		        <ul class="lnbUL">
-                  	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
-                  	<li><span class="sub_iconLNB tree_pims_search_open"></span><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
-		        </ul>
+<%-- 		    <ul class="lnbUL">
+	            	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onClick="Function_Flag(6)"><spring:message code='ezSchedule.t1018'/></span></li>
+    	        	<li><span class="sub_iconLNB tree_pims_search_open"></span><span class="list_text" onClick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span></li>
+	 		    </ul> --%>
 	        </div>
 	    </div>
 	    

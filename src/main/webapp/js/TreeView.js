@@ -1,4 +1,4 @@
-﻿
+﻿﻿﻿
 //트리의 설정값을 가지고 있는 변수
 var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
@@ -220,12 +220,13 @@ function TreeNode() {
             subImgNode.src = TreeImages["iconboard"];
         }
         
+        /* 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 LNB 이미지 삭제 */
         /* 2019-05-08 홍승비 - 마이게시판의 하위게시판과 상위폴더(분류) 이미지 분리 */
-        if (IMAGETYPE == "BOARD") {
+		/*if (IMAGETYPE == "BOARD") {
         	treeDiv.innerHTML += subImgNode.outerHTML;
         } else {
         	treeDiv.innerHTML += "<span class='sub_iconLNB tree_folder'></span>";
-        }
+        }*/
         
         //노드 이름 SPAN 생성
         var spnNode = document.createElement("SPAN");
@@ -741,4 +742,7 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
         if (callbackFunc != null & typeof (callbackFunc) == "function")
             callbackFunc(pNodeID, pNodeNM);
     }
+    
+    // 2023-06-28 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 메뉴선택 클래스 제어
+	$(".list_text.node_selected").removeClass("node_selected");
 }

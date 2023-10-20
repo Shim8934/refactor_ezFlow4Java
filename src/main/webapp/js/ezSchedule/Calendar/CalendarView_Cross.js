@@ -350,6 +350,9 @@ function CalendarView(pTagetID,chk_str) {
 
     CalViewSource(chk_str);
     resize();
+    if (typeCal != 0) {
+    	scrollTopTime();
+    }
     
     // 2018-06-07 구해안 datepicker 호출함수    
     var WstartDate, WendDate; 

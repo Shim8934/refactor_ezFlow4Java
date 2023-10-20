@@ -41,9 +41,9 @@ function CalendarMiniView(pTagetID) {
         mTable.setAttribute("width", "100%");
         var mTr = document.createElement("TR");
 
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_prev"
-		mTd.setAttribute("style","position: relative; z-index: 999;");
+        var mTd1 = document.createElement("TD");
+        mTd1.className = "btn_prev"
+		mTd1.setAttribute("style","position: relative; z-index: 999;");
         var mSpan = document.createElement("SPAN");
         mSpan.style.cursor = "pointer";
         //mSpan.style.marginLeft = "6px";
@@ -59,11 +59,15 @@ function CalendarMiniView(pTagetID) {
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "preMonth()");
         mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
-
-        var mTd = document.createElement("TD");
-        mTd.className = "calendar_mini_day"
+        mTd1.appendChild(mSpan);
+        
+        /* 2023-06-08 홍승비 - 테마3 > 일정 포틀릿 상단 > 좌우이동 버튼과 년월 표기 순서 변경 */
+        if (Number($("#schedule_usedTheme").val()) !== 3) {
+        	mTr.appendChild(mTd1);
+        }
+        
+        var mTd2 = document.createElement("TD");
+        mTd2.className = "calendar_mini_day"
         
         var mSel = document.createElement("SELECT");
  		mSel.style.display = "none";///
@@ -84,7 +88,7 @@ function CalendarMiniView(pTagetID) {
             mSel.appendChild(mOpt);
         }
 
-        mTd.appendChild(mSel);
+        mTd2.appendChild(mSel);
 
         var mSel = document.createElement("SELECT");
         mSel.style.marginLeft = "10px";
@@ -106,33 +110,48 @@ function CalendarMiniView(pTagetID) {
             mOpt.appendChild(mText);
             mSel.appendChild(mOpt);
         }       
-        mTd.appendChild(mSel);
+        mTd2.appendChild(mSel);
         
         var iySpan = document.createElement("SPAN");
         iySpan.setAttribute("id", "iYear");
 
         var curYear = sDate.getFullYear();
         var yText = document.createTextNode(curYear);
+        
+        if (Number($("#schedule_usedTheme").val()) === 3) {
+        	yText.textContent = curYear + strLangHSBScPt1 + " "; // "년 " 표기
+        }
+        
         iySpan.appendChild(yText);
 
-        mTd.appendChild(iySpan);
+        mTd2.appendChild(iySpan);
 
-        var dotText = document.createTextNode(".");
-        mTd.appendChild(dotText);
+        if (Number($("#schedule_usedTheme").val()) !== 3) {
+	        var dotText = document.createTextNode(".");
+	        mTd2.appendChild(dotText);
+        }
 
         var imSpan = document.createElement("SPAN");//년 월 select박스인것 바꿔야할듯
         imSpan.setAttribute("id", "iMon");
 
         var curMonth = sDate.getMonth() + 1;
         var mText = document.createTextNode(curMonth);
+        
+        if (Number($("#schedule_usedTheme").val()) === 3) {
+        	mText.textContent = curMonth + strLangHSBScPt2; // "월" 표기
+        }
+        
         imSpan.appendChild(mText);
         
-        mTd.appendChild(imSpan);
-        mTr.appendChild(mTd);
+        mTd2.appendChild(imSpan);
+        
+        if (Number($("#schedule_usedTheme").val()) !== 3) {
+        	mTr.appendChild(mTd2);
+        }
 
-        var mTd = document.createElement("TD");
-        mTd.className = "btn_next";
-		mTd.setAttribute("style","position: relative; z-index: 999;");
+        var mTd3 = document.createElement("TD");
+        mTd3.className = "btn_next";
+		mTd3.setAttribute("style","position: relative; z-index: 999;");
         var mSpan = document.createElement("SPAN");
         mSpan.style.cursor = "pointer";
         //mSpan.style.marginRight = "6px";
@@ -146,9 +165,18 @@ function CalendarMiniView(pTagetID) {
         mImg.setAttribute("border", "0");
         mImg.setAttribute("onclick", "nextMonth()");
         mSpan.appendChild(mImg);
-        mTd.appendChild(mSpan);
-        mTr.appendChild(mTd);
+        mTd3.appendChild(mSpan);
+        
+        if (Number($("#schedule_usedTheme").val()) !== 3) {
+        	mTr.appendChild(mTd3);
+        }
 
+        // 테마3 > 년월, 좌우이동버튼을 좌측에서부터 순서대로 표출
+        if (Number($("#schedule_usedTheme").val()) === 3) {
+        	mTr.appendChild(mTd2);
+        	mTr.appendChild(mTd1);
+        	mTr.appendChild(mTd3);
+        }
 
         mTable.appendChild(mTr);
         objElm.appendChild(mTable);

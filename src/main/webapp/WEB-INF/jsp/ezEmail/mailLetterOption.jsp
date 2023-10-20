@@ -387,28 +387,27 @@
 		<table width="100%" class="content">
 			<tr id="reserveTable" class="content" style="display:none;border-top:none;width:100%;">
 				<td>
-					<input type="checkbox" value="1" id="deliverySend" onclick="ReservedSend(this);">
-					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' />&nbsp; </span>
+					<input type="checkbox" value="1" id="deliverySend" style="margin-top: 6px;" onclick="ReservedSend(this);">
+					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' /> </span>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
 					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" readonly="readonly"/>
 				</td>
 			</tr>
-			<c:if test="${individualMailUser != '0'}">	
-				<tr>
-					<td>
-						<input type="checkbox" name="chkSecureMail" id="chkSecureMail" onClick="secureMail_onClick()" value="checkbox">
-						<span style="vertical-align:middle;"> <spring:message code='ezEmail.t749' /> </span>
-					</td>
-				</tr>
-			</c:if>
 			<tr>
 				<td>
-					<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox">
+					<input type="checkbox" name="chkSecureMail" id="chkSecureMail" onClick="secureMail_onClick()" value="checkbox">
+					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t749' /> </span>
+				</td>
+			</tr>
+			<c:if test="${individualMailUser != '0'}">	
+			<tr>
+				<td>
+					<input type="checkbox" name="eachMailSend" style="margin-top: 6px;" id="eachMailSend" value="checkbox">
 					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t748' /> </span>
 				</td>
 			</tr>
+			</c:if>
 		</table>  
-		
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" onClick="confirmOption()" ><span><spring:message code='ezEmail.t38' /></span></a>
 		</div>

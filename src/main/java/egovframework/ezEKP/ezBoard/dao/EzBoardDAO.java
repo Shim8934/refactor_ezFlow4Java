@@ -707,7 +707,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	// 20181210 김윤진 - ezTalk Notice Board ID 가져오기.
 	public String getEzTalkGateNoticeBoardId(Map<String, Object> map) throws Exception {
-		return (String) select("EzPortalDAO.getEzTalkGateNoticeBoardId", map);
+		return (String) select("ezNewPortal.getEzTalkGateNoticeBoardId", map);
 	}
 	
 	/* 2019-01-15 홍승비 - 수정일(updateDate)만을 업데이트하는 쿼리 추가 */
@@ -831,5 +831,36 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, String>> getCommentNoticeMail(Map<String, Object> map) throws Exception {
 		return (List<HashMap<String, String>>) list("EzBoardDAO.getCommentNoticeMail", map);
+	}
+	
+	/* 2023-03-07 이가은 - userID를 조건으로 댓글 반응 여부(좋아요 : Y / 싫어요 : N / 미선택 : 공백 또는 null) 리턴하는 쿼리  */
+	public String checkReactUser(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.checkReactUser", map);
+	}
+	
+	/* 2023-03-07 이가은 - 댓글 반응 추가하는 쿼리 */
+	public void inserBoardReact(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.inserBoardReact", map);
+	}
+	
+	/* 2023-03-07 이가은 - 댓글 반응 삭제하는 쿼리 */
+	public void deleteBoardReact(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteBoardReact", map);
+	}
+
+	/* 2023-03-07 이가은 - 댓글 삭제되었을 경우 반응 모두 삭제하는 쿼리 */
+	public void allReactDelete(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.allReactDelete", map);
+	}
+
+	/* 2023-03-08 이가은 - 게시물에 대한 사용자의 댓글 반응 HashMap List로 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, String>> getUserReplyReact(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, String>>) list("EzBoardDAO.getUserReplyReact", map);
+	}
+	
+	/* 2023-03-08 이가은 - 댓글 존재여부 리턴하는 쿼리 */
+	public int checkReplyID(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.checkReplyID", map);
 	}
 }

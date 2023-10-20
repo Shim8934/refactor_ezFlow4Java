@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
@@ -39,7 +40,7 @@ public interface EzScheduleService {
 	
 	public List<ScheduleGroupListVO> getScheduleGroupList(String userId, int tenantId ,String companyID) throws Exception;
 
-	public List<ScheduleGroupListVO> getMyGroupList(String userId, int tenantId ,String companyID) throws Exception;
+	public List<ScheduleGroupVO> getMyGroupList(String userId, int tenantId ,String companyID) throws Exception;
 	
 	public List<ScheduleGroupListVO> getGroupMemberList(String groupId,	String lang, int tenantId, String offSetMin ,String companyID) throws Exception;
 	
@@ -92,9 +93,9 @@ public interface EzScheduleService {
 
 	public void insertScheduleGroupMember(String groupId, String memberId, String memberName, String memberName2, int tenantId) throws Exception;
 
-	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID) throws Exception;	
+	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID, String groupColor) throws Exception;	
 	
-	public void updateScheduleGroup(String groupId,String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID) throws Exception;
+	public void updateScheduleGroup(String groupId,String id, String displayName, String displayName2, String groupName, String description, int tenantId ,String companyID, String groupColor) throws Exception;
 	
 	public void deleteScheduleConfig(String userID, int tenantID) throws Exception;
 

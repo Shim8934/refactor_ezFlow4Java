@@ -233,6 +233,9 @@
 	            if (ctr.attr("class") == "off") {
 	            	ctr.attr("class","on");		            	
 	            	ctrobj.attr("class","lnbUL");
+	            	/* 2023-06-22 황인경 - 디자인 개선 > 관리자 > 게시판 > 좌측메뉴 트리구조 확장 LNB 이미지 추가  */
+	            	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+	            	$(ctr).children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 	            	
 	            	/* ctrobj.animate({
 	            		maxHeight: "250px"
@@ -242,6 +245,7 @@
 	            } else {
 	            	ctrobj.attr("class","lnbUL off");
 	            	ctr.attr("class","off");
+	            	$(ctr).children().eq(0).attr("class", "sub_iconLNB tree_plus");
 	            	
 	            	/* ctrobj.animate({
 	            		maxHeight: "0px"
@@ -348,6 +352,10 @@
 	                default:
 	                    break;
 	            }
+
+        		// 2023-07-03 황인경 - 디자인 개선 > 관리자 > 게시판 > 좌측메뉴 하단 영역 > 메뉴 선택 시 on class 제어
+    	        $("li.on").attr("class", "");
+    			$(event.target).parent().attr("class", "on");
 	        }
 	        
 	        /* 2018-12-28 홍승비 - '+/-' 아이콘 > img -> span 태그로 변경된 부분 id 찾도록 수정 */
@@ -442,21 +450,21 @@
 	</head>
 	<body class="newLeft">
 	    <div id="left" class="lnb" style="overflow: auto">
-	        <div class="left_title"><spring:message code="ezBoard.t58" /></div>
+	        <div class="admin_left_title"><spring:message code="ezBoard.t58" /></div>
 	        <div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	        	<div class="lnb_lay">
 		        	<div id="TopBoard"></div>
 		        	<ul class="lnbUL">
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></li>
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t60" /></span></li>
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t63" /></span></li>
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(2)"><spring:message code="ezBoard.t62" /></span></li>
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(3)"><spring:message code="ezBoard.t64" /></span></li>
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(4)"><spring:message code="ezBoard.t65" /></span></li>
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(5)"><spring:message code="ezBoard.t66" /></span></li>
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(8)"><spring:message code="ezBoard.t5006" /></span></li>
+                       	<li><span class="list_text" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></li>
+                       	<li><span class="list_text" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t60" /></span></li>
+                       	<li><span class="list_text" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t500" /></span></li>
+                       	<li><span class="list_text" onclick="OpenRightMenu(2)"><spring:message code="ezBoard.t62" /></span></li>
+                       	<li><span class="list_text" onclick="OpenRightMenu(3)"><spring:message code="ezBoard.t64" /></span></li>
+                       	<li><span class="list_text" onclick="OpenRightMenu(4)"><spring:message code="ezBoard.t65" /></span></li>
+                       	<li><span class="list_text" onclick="OpenRightMenu(5)"><spring:message code="ezBoard.t66" /></span></li>
+                       	<li><span class="list_text" onclick="OpenRightMenu(8)"><spring:message code="ezBoard.t5006" /></span></li>
                        	<%-- 2022-09-27 홍승비 - 트리캐시 일괄생성기능 추가 --%>
-                       	<li style=""><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" onclick="OpenRightMenu(9)"><spring:message code="ezBoard.HSBAt001" /></span></li>
+                       	<li style=""><span class="list_text" onclick="OpenRightMenu(9)"><spring:message code="ezBoard.HSBAt001" /></span></li>
 			        </ul>
 		        </div>
 	        </div>
@@ -474,7 +482,7 @@
 				success: function(result){
 					$.each(result, function(idx, item){	        					
 						$.each(item, function(idx, i){
-							strHTML += "<h2 class='off'><span class='sub_iconLNB tree_arrow_up'></span><span AccessLevel='1' class='h2Title' id='TreeCtr" + idx + "' value='" + i.boardId;
+							strHTML += "<h2 class='off'><span class='sub_iconLNB tree_plus'></span><span AccessLevel='1' class='h2Title' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
 	                        strHTML += i.boardName + "</span></h2>";
 	                        strHTML += "<ul class='lnbUL off'><div class='tree onlytree' name='BoardTree' id='TreeCtrl" + idx + "obj'>";

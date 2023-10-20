@@ -26,6 +26,11 @@
 		            return true;
 		    };
 
+	        /* 2023-09-06 조소정 - 관리자단 > 일정관리 > 일정그룹관리 > 그룹 정보 변경 후 일정그룹관리 메뉴 페이지 새로고침 */
+	        function groupRefresh() {
+	        	goPage(6);
+	        }
+
 			function goPage(idx) {
 				var url = "";
 				switch(idx) {

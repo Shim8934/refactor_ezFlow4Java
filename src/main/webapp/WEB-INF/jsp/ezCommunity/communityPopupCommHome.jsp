@@ -79,11 +79,11 @@
 		            for (var i = 0; i < SelectNodes(treedom, "TREEVIEWDATA/NODE").length; i++) {
 		                var h2 = document.createElement("H2");
 		                var span = document.createElement("SPAN");
-		                var img = document.createElement("IMG");
+		                /*var img = document.createElement("IMG");
 		                img.src = "/images/kr/community/type1/icon_board.gif";
 		                img.style.width = "16px";
 		                img.style.height = "16px";
-		                span.appendChild(img);
+		                span.appendChild(img);*/
 		                span.innerHTML += SelectSingleNodeValue(SelectNodes(treedom, "TREEVIEWDATA/NODE")[i], "DATA2");
 		                h2.appendChild(span);
 		                //h2.appendChild(img);
@@ -960,8 +960,8 @@
 		            </div>
 		            
 		            <ul class="info_count">
-		        		<li class="icon_member"> <span class="count" id="membercnt"></span></li>
-		         		<li class="icon_board"> <span class="count" id="itemcnt"></span></li>
+		        		<li class="icon_member"><span class="txt"><spring:message code="ezCommunity.t477"></spring:message></span><span class="count" id="membercnt"></span></li>
+		         		<li class="icon_board"><span class="txt"><spring:message code="ezCommunity.design01"></spring:message></span><span class="count" id="itemcnt"></span></li>
 		          	</ul>
 		            <ul class="info_list">
 			            <li id="regdate"></li>
@@ -981,11 +981,11 @@
        			<div id="left" class="leftmenu">
         			<div id="treediv">
         			</div>
-         			<h3 id="btn_guest" onclick ="go_menu(this)"><img src="/images/kr/community/type1/icon_visitor.gif" width="16" height="16"><spring:message code='ezCommunity.t570' /></h3>
-         			<h3 id="btn_QsPoll" onclick ="go_menu(this)"><img src="/images/kr/community/type1/icon_poll.gif" width="16" height="16"><spring:message code='ezCommunity.t598' /></h3>
-         			<h3 id="btn_MemberInfo" onclick ="go_menu(this)"><img src="/images/kr/community/type1/icon_member.gif" width="16" height="16"><spring:message code='ezCommunity.t723' /></h3>
+         			<h3 id="btn_guest" onclick ="go_menu(this)"><spring:message code='ezCommunity.t570' /></h3>
+         			<h3 id="btn_QsPoll" onclick ="go_menu(this)"><spring:message code='ezCommunity.t598' /></h3>
+         			<h3 id="btn_MemberInfo" onclick ="go_menu(this)"><spring:message code='ezCommunity.t723' /></h3>
          			<c:if test="${joinFlag }">
-         				<h3 id="btn_MemberOut" onclick ="go_menu(this)"><img src="/images/kr/community/type1/icon_x.gif" width="16" height="16"><spring:message code='ezCommunity.t1108' /></h3>
+         				<h3 id="btn_MemberOut" onclick ="go_menu(this)"><spring:message code='ezCommunity.t1108' /></h3>
          			</c:if>
       			</div>
   			</div>

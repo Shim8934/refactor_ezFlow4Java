@@ -829,6 +829,9 @@
 		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 		    </script>
 		    <div class="portlet_tabpart01" style="padding-bottom:3px; width:100%;">
+		    <%-- 2023-09-18 전인하 - 웹폴더 권한 코드를 f로 변경, 결재조회관리자 권한코드를 q로 변경, 전체 권한 코드를 주석으로 남김 --%>
+		    <%-- 권한을 추가할 권한코드는 알파벳 한자리로 작성하여야 합니다. 2자리 이상으로 작성할 경우, 끝자리가 서로 같은 권한이 잘못 부여되는 오류동작을 일으킵니다. --%>
+		    <%-- c:전체관리자 / k:회사관리자 / g:부서관리자 / a:수발신담당자 / i:심사자 / n:게시관리자 / l:설문관리자 / w:업무담당자 / m:기록물관리책임자 / q:결재조회관리자 / f:웹폴더관리자 / e:근태관리자 --%>
 		        <div class="portlet_tabpart01_top" id="tab1">
 	                <p id="Permission_sub1"><span divname="c" id="1tab1"><spring:message code='ezOrgan.t291' /></span></p>
 	                <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
@@ -847,10 +850,10 @@
 		                <p id="Permission_sub8" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
 		                <p id="Permission_sub9" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="m" id="1tab9"><spring:message code='ezOrgan.t300' /></span></p>
 		                <c:if test="${approvalForDoc == 'Y'}">
-		                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
+		                	<p id="Permission_sub10"><span divname="q" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 		                </c:if>
 		                <c:if test="${useWebfolder == 'YES'}">
-		                <p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+		                <p id="Permission_sub11"><span divname="f" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
 		                </c:if>
 		                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="e" id="1tab12"><spring:message code='ezOrgan.kbm01' /></span></p>
 		                

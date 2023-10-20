@@ -1,4 +1,4 @@
-﻿/*
+﻿﻿﻿/*
 <public:component urn="www.asitaka.com:organtreeview">
 
 <public:property name="config" put="put_config" />
@@ -1148,9 +1148,10 @@ function organtreeview(thisobjid, elobjid) {
                 }
 				else
 				{
-				    if (findchildnodevalue(childNode, "DATA7") == 1) //자원관리에서 1:분류 2:자원 이미지 달리표현하기 2008-09-30
+				    if (findchildnodevalue(childNode, "DATA7") == 1) { // 자원관리에서 1:분류 2:자원 이미지 달리표현하기 2008-09-30
 					    //nodeHtml += ("<img src='" + g_images["BASE"] + "'>"); 
-				    	nodeHtml += "<span class='sub_iconLNB tree_folder'></span>"; 
+				    	// 2023-07-20 황인경 - 디자인 개선 > 차량관리 > 트리구조 폴더 이미지 삭제
+					}
 				    else
 				        if (findchildnodevalue(childNode, "DATA15") == 1)
 				            //nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");

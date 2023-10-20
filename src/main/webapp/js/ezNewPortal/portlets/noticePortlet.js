@@ -47,11 +47,26 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 		
 		var text = "";
 		
+		/* 2023-05-31 홍승비 - 디자인 개선을 위한 공지사항 게시판 포틀릿 게시물 영역 표출 수정, 기존 코드 주석처리 */
+		/*
 		if (today < writeDate) {
 			text = '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="noti_new">N</dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>';
 		} else {
 			text = '<li class="notiLI" data1="'+data.itemID+'" data2="'+data.boardID+'" data3="'+data.guBun+'"><dl class="notiDL0'+index+'"><dt class="noti_num">'+index+'</dt><dt class="N"></dt><dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd></dl></li>'; 
 		}
+		*/
+		
+		text = '<li class="notiLI" data1="' + data.itemID + '" data2="' + data.boardID + '" data3="' + data.guBun + '"><dl class="notiDL0' + index + '">';
+		
+		if (Number($("#noticePortlet_usedTheme").val()) === 3) {
+			text += '<dt>' + index + '</dt>';
+		}
+		else {
+			text += '<dt class="noti_img"></dt>';
+		}
+		
+		text += '<dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd><dd class="noti_date">' + (data.writeDate).substring(5, 16) + '</dd></dl></li>';
+		
 		return text;
 	};
 	

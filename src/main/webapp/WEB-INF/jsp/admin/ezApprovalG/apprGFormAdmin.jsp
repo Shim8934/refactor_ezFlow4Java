@@ -12,12 +12,14 @@
 			.mainlist_free tr th {
 				border-top:0px;
 			}
+			.tree_plus {margin-top: -3px !important;}
+			.tree_minus {margin-top: 0px !important;}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewFolder.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/FormCont.js')}"></script>
 		<script type="text/javascript">
@@ -716,11 +718,11 @@
 		    		<select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">${docType}</select>
 		      	</td>
 				<td style="white-space: nowrap;border:0px;background-color: #f8f8fa;">
-					<select id="searchoption" style="height:22px; margin-top: 3px;">
+					<select id="searchoption" style="height:22px;">
 						<option value="1"><spring:message code = 'ezApprovalG.t442' /></option>
 						<option value="2"><spring:message code = 'ezApprovalG.t598' /></option>
 					</select>
-					<input id="forminfo" onkeypress="search_press(event)" type="text" style="height:22px; vertical-align: baseline;" />
+					<input id="forminfo" onkeypress="search_press(event)" type="text" style="height:25px; vertical-align: baseline;" />
 					<a class="imgbtn imgbck" onclick="searchform()" style="margin-top: 3px;"><span><spring:message code = 'ezApprovalG.t111' /></span></a>
 					<a class="imgbtn imgbck" onclick="reset()" style="margin-top: 3px;"><span><spring:message code = 'ezApprovalG.t1301' /></span></a>
 				</td>

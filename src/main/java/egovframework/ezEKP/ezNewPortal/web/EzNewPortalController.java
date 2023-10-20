@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -27,16 +28,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ibm.icu.impl.TimeZoneGenericNames.Pattern;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.web.EzEmailConfigController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.FolderTreeVO;
+import egovframework.ezEKP.ezWebFolder.web.EzWebFolderController;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -53,6 +60,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzEmailConfigController ezEmailConfigController; 
+
+	@Autowired
+	private EzWebFolderService_y ezWebFolderService_y;
 	
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
@@ -245,6 +258,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("menuList", data.get("menuList"));
 			model.addAttribute("popupNotiList", popupNotiListAfter);
 			model.addAttribute("useActiveX", data.get("useActiveX"));
+			model.addAttribute("lang",userInfo.getLang());
 			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
 				model.addAttribute("utilAdminUrl", data.get("utilAdminUrl"));
 			}
@@ -434,7 +448,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 포탈 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezNewPortal/newPortalPortalPage.do", method=RequestMethod.GET)
-	public String portalMainPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+	public String portalMainPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale local) throws Exception { // 2023-06-14 한슬기 - 디자인 개선> 테마2 > 상단 영역 메일/웹폴더 용량 표시 추가를 위해 Locale local 추가해주었음
 		logger.debug("portalMainPage Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
@@ -454,6 +468,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			boolean useEzWorkspace = "YES".equals(data.get("useEzWorkspace"));
+			String usedTheme = data.get("usedTheme").toString();
+			
 			model.addAttribute("portletOrder", data.get("portletOrder"));
 			model.addAttribute("usedTheme", data.get("usedTheme"));
 			model.addAttribute("usedFrame", data.get("usedFrame"));
@@ -485,7 +501,27 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				model.addAttribute("workspaceContextRootUrl", data.get("workspaceContextRootUrl"));
 			//}
 
-			String usedTheme = data.get("usedTheme").toString();
+			/* 2023-06-05 홍승비 - 게시판, 커뮤니티, 메모, 웹폴더 모듈 사용여부 테넌트 컨피그 추가 */
+			model.addAttribute("useBoard", data.get("useBoard"));
+			model.addAttribute("useCommunity", data.get("useCommunity"));
+			model.addAttribute("useMemo", data.get("useMemo"));
+			model.addAttribute("useWebfolder", data.get("useWebfolder"));
+			
+			
+			// 2023-06-15 한슬기 - 디자인 개선 테마2 > 상단 영역 메일/웹폴더(개인) 용량 표시 추가
+			if (usedTheme.equals("2")) {
+				// 2023-06-14 한슬기 - 디자인 개선 테마2 > 상단 영역 메일 용량 표시 추가를 위한 메일용량정보(xml)
+				String mailCapacityInfo = ezEmailConfigController.mailGetUse(loginCookie, local, model, req);
+				
+				// 2023-06-20 한슬기 - 디자인 개선 테마2 > 웹폴더(개인) 용량표시 추가를 위한 FolderId 값 추출
+				String webFolderPersonalFolderId = ezWebFolderService_y.getFolderTree(userInfo.getId(), userInfo.getDeptID(),
+												  userInfo.getCompanyName(), "U", userInfo.getPrimary(), userInfo.getTenantId(), "", false)
+												  .stream().findFirst().map(FolderTreeVO::getId).orElse("");
+				
+				model.addAttribute("mailCapacityInfo", mailCapacityInfo);
+				model.addAttribute("webFolderPersonalFolderId", webFolderPersonalFolderId);
+			}
+			
 			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);
 		}
@@ -682,7 +718,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			String imgFolder = "kr";
 			
 			if (userLang.equals("2")) {
-				imgFolder = "kr"; //나중에 en으로 바꾸기
+				imgFolder = "en"; //나중에 en으로 바꾸기
 			} else if (userLang.equals("3")) {
 				imgFolder = "jp";
 			}

@@ -9,15 +9,17 @@
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style type="text/css">
-		#selDept {
-			background : none;
-			overflow-y : auto;
-			overflow-x : auto;
-			padding-right : 0px;
-		}
-		.popup h2.h2_dot {
-			padding-top: 0px;
-		}
+			#selDept {
+				background : none;
+				overflow-y : auto;
+				overflow-x : auto;
+				padding-right : 0px;
+			}
+			.popup h2.h2_dot {
+				padding-top: 0px;
+			}
+			.tree_plus {margin-top: -3px !important;}
+			.tree_minus {margin-top: 0px !important;}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -483,9 +485,9 @@
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t798' /></th>
 	            <td>
-	                <input type="radio" id="rdTotal" name="rdTotal" value="radiobutton" checked onclick="return rdTotal_onclick()">
+	                <input type="radio" id="rdTotal" name="rdTotal" style="margin-top: 0px;" value="radiobutton" checked onclick="return rdTotal_onclick()">
 	                <spring:message code = 'ezApprovalG.t1659' />
-	                <input type="radio" id="rdGroup" name="rdGroup" value="radiobutton" onclick="return rdGroup_onclick()">
+	                <input type="radio" id="rdGroup" name="rdGroup" style="margin-top: 0px;" value="radiobutton" onclick="return rdGroup_onclick()">
 	                <spring:message code = 'ezApprovalG.t1660' /></td>
 	        </tr>
 	    </table>

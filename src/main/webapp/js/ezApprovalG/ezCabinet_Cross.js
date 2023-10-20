@@ -899,6 +899,11 @@ function InsertToRecListView(Resultxml) {
             xmlDoc = createXmlDom();
             xmlDoc.appendChild(ListViewData);
         }
+
+        var preDocList = new ListView();
+        preDocList.LoadFromID('DocList');
+        var preSelectedRow = preDocList.GetSelectedRows();
+
         xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
@@ -914,12 +919,23 @@ function InsertToRecListView(Resultxml) {
         DocList.SetSecurityFlag(true);
         DocList.SetSecurityIdx(13);
         DocList.DataSource(xmlDoc);                             
-        DocList.DataBind("lvtDoclist");                          
+        DocList.DataBind("lvtDoclist");
+
+        if (selRowChangeFlag && preSelectedRow.length > 0) {
+            // 탭 이동 시 전 탭에서 선택된 row 선택되지 않도록 flag값 변경
+            selRowChangeFlag = false;
+            DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));
+        }
         DocList = null;
 
         if (typeof diffPaging != 'undefined' && diffPaging == "attachDoc") {
             //orgmakePageSelPage(NodeListLen);
             totalPage = parseInt(NodeListLen / PageSize);
+            
+            // 2023-06-26 전인하 - 페이지네이션 오류 수정
+            if ((NodeListLen % PageSize) != 0) {
+                totalPage += 1;
+            }
             makePageSelPageCA(NodeListLen);
         } else {
         	makePageSelPage(NodeListLen);
@@ -1338,8 +1354,8 @@ function ViewDoc_onclick_Complete(Rtn) {
 	                    return;
 	                }
             	} else {
-            		if (g_uFlag == "m03") {
-                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+            		if (g_uFlag == "m03") { /* 2023-07-13 민지수 - 배부대장 메뉴 flag값 전달 */
+                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
                 	} else {
                 		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
                 	}
@@ -1769,6 +1785,8 @@ function openergetDocInfo() {
         GetCaninetList();
     }
     else if (DocList_Flag == "RECORD") {
+        // 선택한 row 유지를 위한 Flag 설정
+        selRowChangeFlag = true;
         GetRecordList();
     }
     else {

@@ -62,19 +62,36 @@ var assemblePollList = function (poll) {
 	var str = '';
 	var itemSeq = poll.pollInfo.itemSeq;
 	
+	/* 2023-06-01 홍승비 - 빠른설문 포틀릿 > 디자인 개선을 위해 전체적인 태그 구성 및 스타일 수정 */
+	/*
 	str += '<p class="pollTitle" id="pollTitle"></p>';
 	str += '<p class="pollBtn" id="pollBtn" data1="' + itemSeq +'">' + messages.strLang24 + '</p>';	
 	str += '<div class="pollList">';
-	for (var i=0; i<answerList.length; i++) {
-		if(answerList[i].answer.trim() !== '') {
+	*/
+	str += '<div class="voteTitle_all"><p class="voteTitle" id="pollTitle"></p>';
+	str += '<p class="voteBtn" id="pollBtn" data1="' + itemSeq +'">' + messages.strLang24 + '</p></div>';
+	str += '<ul class="voteList">';
+	
+	for (var i = 0; i < answerList.length; i++) {
+		if (answerList[i].answer.trim() !== '') {
 			var percentage = 0;
+			
 			if (answerList[i].count) {
 				percentage = (answerList[i].count / poll.pollInfo.count * 1) * 100;	
 			}
+			/*
 			str += '<li class="pollListLi pollList_0'+ answerList[i].result +'">';
 			str += '<div class="pollT" style="width:22%"><span class="Vnum">'+ answerList[i].result +'</span><span class="Vtext">'+ answerList[i].answer +'</span></div>';
 			str += '<div class="percent" id="percent1">' + Math.round(percentage) + '%</div>';
 			str += '<div class="pollGraph" id="divGraph' + answerList[i].result + '" style="display: block;">';
+			str += '	<span id="pollGraph' + answerList[i].result + '" style="width:'+ percentage +'%"></span>';
+			str += '</div>';
+			str += '</li>';
+			*/
+			str += '<li class="voteList_0'+ answerList[i].result +'">';
+			str += '<div class="voteT"><span class="Vnum">'+ answerList[i].result +'</span><span class="Vtext"> ' + answerList[i].answer +'</span></div>';
+			str += '<div class="percent" id="percent1">' + Math.round(percentage) + '%</div>';
+			str += '<div class="voteGraph" id="divGraph' + answerList[i].result + '" style="display: block;">';
 			str += '	<span id="pollGraph' + answerList[i].result + '" style="width:'+ percentage +'%"></span>';
 			str += '</div>';
 			str += '</li>';
@@ -83,7 +100,7 @@ var assemblePollList = function (poll) {
 	str += '</div>';
 	
 	document.getElementById('pollInfo').innerHTML = str;
-	document.getElementById('pollTitle').textContent = '"'+ poll.pollInfo.pollTitle +'"';
+	document.getElementById('pollTitle').textContent = poll.pollInfo.pollTitle;
 	document.getElementById('pollBtn').addEventListener('click', function() {
 		if (poll.pollInfo.result != 0) {
 			joinPoll(true, poll.pollInfo.itemSeq);

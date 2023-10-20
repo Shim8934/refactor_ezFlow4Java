@@ -2,6 +2,13 @@ package egovframework.ezEKP.ezApprovalG.web;
 
 import java.nio.charset.StandardCharsets;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,6 +62,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1060,6 +1068,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR", tenantId));
 		model.addAttribute("ie11editor", ezCommonService.getTenantConfig("IE11EDITOR", tenantId));
+		model.addAttribute("lang",userInfo.getLang());
 		
 		logger.debug("reformPreviewContent ended.");
 		
@@ -2972,7 +2981,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("excelExportOut started.");
-		
+
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
@@ -2985,17 +2994,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String eMonth = request.getParameter("p3");
 		String mode = request.getParameter("p4");
 		String companyID = request.getParameter("p5");
-		
+
 		if (flag.equals("USER")) {
 			excelValue = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo, approvalFlag);
 		} else {
 			excelValue = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId(), approvalFlag);
 		}
-		
+
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
 		
 		resultExcel.append("\uFEFF");
-		resultExcel.append("<table><tr>");
+		resultExcel.append("<table><tbody><tr>");
 		
 		for (int k = 0; k < objXML.getElementsByTagName("HEADER").getLength(); k++) {
 			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
@@ -3003,12 +3012,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			
 			int width = Integer.parseInt(headerWidth) * 2;
 			
-			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
+			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align='center'><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>");
 		}
-		resultExcel.append("</tr></table>");
-		
-		resultExcel.append("<table>");
-		
+		resultExcel.append("</tr>");
+
 		NodeList objRow = objXML.getElementsByTagName("ROW");
 		
 		for (int k = 0; k < objRow.getLength(); k++) {
@@ -3022,19 +3029,86 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
 				int width = Integer.parseInt(headerWidth) * 2;
 				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align='left'>" + commonUtil.cleanValue(cellValue) + "</p></td>");
 			}
 			resultExcel.append("</tr>");
 		}
-		resultExcel.append("</table>");
-		
+		resultExcel.append("</tbody></table>");
+/*
 		response.setContentType("application/ms-excel");
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_excelExportOutUser" + ".xls\"");
-		
+
 		logger.debug("excelExportOut ended.");
-		
+
 		response.getWriter().write(resultExcel.toString());
+*/
+		// 2023-08-30 이주원 - html형식을 HSSF형식으로 변환후 xls로 다운로드
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			HSSFSheet sheet;
+
+			HSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+			HSSFCellStyle bodyStyle = workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+			Row row;
+			Cell cell;
+
+			String pFileName = "";
+			pFileName = EgovDateUtil.getTodayTime().substring(0, 10) + "_excelExportOutUser";
+			sheet = workbook.createSheet("report");
+
+			String StrAnalysisDate = resultExcel.toString().trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+
+			Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+
+			Node tableNode = analysisData.getElementsByTagName("table").item(0);
+			Node tableHeadNode;
+			Node tableBodyNode;
+
+			tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
+			tableBodyNode = tableNode.getChildNodes().item(0);
+
+			row = sheet.createRow(0);
+
+			for (int i=0; i<tableHeadNode.getChildNodes().getLength(); i++) {
+				cell = row.createCell(i);
+				cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
+				cell.setCellStyle(headerStyle);
+
+				sheet.autoSizeColumn(i);
+				sheet.setColumnWidth(i, (sheet.getColumnWidth(i))+1024); //너비 더 넓게
+			}
+
+			for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
+				row = sheet.createRow(i+1);
+				Node tr = tableBodyNode.getChildNodes().item(i+1);
+
+				for (int j=0; j<tr.getChildNodes().getLength(); j++) {
+					cell = row.createCell(j);
+					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(bodyStyle);
+
+					sheet.autoSizeColumn(j);
+					sheet.setColumnWidth(j, (sheet.getColumnWidth(j))+1024); //너비 더 넓게
+				}
+			}
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+			workbook.write(response.getOutputStream());
+
+		}
+
 	}
 	
 	/**
@@ -3051,7 +3125,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("q=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -3260,7 +3334,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("q=1")) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -3996,61 +4070,50 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String buJaeId = request.getParameter("buJaeId");
+		// String proxyuserid = request.getParameter("proxyuserid");
 		String buJaeInfo = request.getParameter("buJae");
-		// 실제 값이 들어오지 않는 변수이기 때문에 주석처리해둠.
-//		String proxyInfo = request.getParameter("proxy");
-		// 2023-08-17 조수빈 - 기존의 흐름에 맞추기 위해 파라미터 dept로 dept, jobid를 받게 됨
+		String buJaeInfo2 = "";
+		String proxyInfo = request.getParameter("proxy");
 		String dept = request.getParameter("dept");
-		String jobId = request.getParameter("jobId");
-		
+
+//		String proxyInfo2 = "";
 		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
 		String pClass = "user";
-		
-		// 2023-08-17 조수빈 - 입력 받은 시간을 UTC 시간으로 저장하기 위한 처리
 		if (buJaeInfo != null && !buJaeInfo.equals("")) {
-			String [] proxyInfoArray = buJaeInfo.split(":");
-			String sTime = proxyInfoArray[3] + ":" + proxyInfoArray[4];
-			String eTime = proxyInfoArray[5] + ":" + proxyInfoArray[6];
-			String sTimeUTC = commonUtil.getDateStringInUTC(sTime, userInfo.getOffset(), true);
-			String eTimeUTC = commonUtil.getDateStringInUTC(eTime, userInfo.getOffset(), true);
+			if (buJaeInfo.split(":").length >= 5) {
+				buJaeInfo2 = buJaeInfo.split(":")[0] + ":" + buJaeInfo.split(":")[1] + ":" + buJaeInfo.split(":")[2] + ":" + buJaeInfo.split(":")[3] + ":" + buJaeInfo.split(":")[4] + ":" + buJaeInfo.split(":")[5] + ":"  + buJaeInfo.split(":")[6];
+			}
 			
-			logger.debug(">>>>>>>>>> convert sTime to UTC: " + sTimeUTC);
-			logger.debug(">>>>>>>>>> convert eTime to UTC: " + eTimeUTC);
-			
-			proxyInfoArray[3] = sTimeUTC.split(":")[0];
-			proxyInfoArray[4] = sTimeUTC.split(":")[1];
-			proxyInfoArray[5] = eTimeUTC.split(":")[0];
-			proxyInfoArray[6] = eTimeUTC.split(":")[1];
-			buJaeInfo = String.join(":", proxyInfoArray);
-			
-			logger.debug(">>>>>>>>>> finally proxy: " + buJaeInfo);
+			if (buJaeInfo.split(":").length > 7) {
+				buJaeInfo2 +=  ":" + buJaeInfo.split(":")[7];
+			}
 		}
-		
 		String result = "";
-		// 기존의 부서만 구분하는 것은 원부서 겸직에 대한 구분이 될 수 없음. 따라서 jobId도 구분해야함.
-		String userRealJobId = ezOrganService.getPropertyValue(buJaeId, "EXTENSIONATTRIBUTE7", userInfo.getTenantId());
-		String userRealDeptId = ezOrganService.getUserOrgDeptId(buJaeId, userInfo.getTenantId(), userInfo.getCompanyID());
-		
-		// 원부서 원직위일 경우
-		if (dept.equals(userRealDeptId) && jobId.equals(userRealJobId)) {
-			result = ezOrganService.updateProperty(buJaeId, "extensionAttribute5", buJaeInfo, pClass, userInfo.getTenantId());
-			logger.debug("updateProperty buJaeId:" + buJaeId + " / buJaeInfo2:" + buJaeInfo);
-		// 그 외 겸직인 경우
+		String userRealDeptId = "";
+
+
+		userRealDeptId = ezOrganService.getUserOrgDeptId(buJaeId, userInfo.getTenantId(), userInfo.getCompanyID());
+		if (dept == null || dept.equals("") || dept.equals(userRealDeptId)) {
+			result = ezOrganService.updateProperty(buJaeId, "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
+			logger.debug("updateProperty buJaeId:" + buJaeId + " / buJaeInfo2:" + buJaeInfo2);
 		} else {
-			result = ezOrganService.updateAddJobProxy(buJaeId, buJaeInfo, userInfo.getTenantId(), dept, jobId);
-			logger.debug("updateAddJobProxy buJaeId:" + buJaeId + " / buJaeInfo2:" + buJaeInfo + " / dept:" + dept);
+			result = ezOrganService.updateAddJobProxy(buJaeId, buJaeInfo2, userInfo.getTenantId(), dept);
+			logger.debug("updateAddJobProxy buJaeId:" + buJaeId + " / buJaeInfo2:" +buJaeInfo2 + " / dept:" + dept);
 		}
-//		
-//		if (result.equals("OK")) {
-//						
-//			if (proxyInfo.split("\\|")[0].trim().equals("")) {
-//				result = ezOrganService.delProxyUserInfo(buJaeId, userInfo.getTenantId());
-//				logger.debug("delProxyUserInfo buJaeId:" + buJaeId);
-//			} else {
-//				result = ezOrganService.setProxyUserInfo(buJaeId, proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
-//				logger.debug("setProxyUserInfo buJaeId:" + buJaeId + "proxyInfo:" + proxyInfo);
+		
+		if (result.equals("OK")) {
+//			if (proxyInfo.split(":").length >= 5) {
+//				proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
 //			}
-//		}
+						
+			if (proxyInfo.split("\\|")[0].trim().equals("")) {
+				result = ezOrganService.delProxyUserInfo(buJaeId, userInfo.getTenantId());
+				logger.debug("delProxyUserInfo buJaeId:" + buJaeId);
+			} else {
+				result = ezOrganService.setProxyUserInfo(buJaeId, proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
+				logger.debug("setProxyUserInfo buJaeId:" + buJaeId + "proxyInfo:" + proxyInfo);
+			}
+		}
 
 		logger.debug("saveBujae ended");
 		return result;
@@ -4148,9 +4211,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			textName = ezOrganService.getPropertyValue(info[0], "displayname", userInfo.getTenantId());
 			deptID = info[2];
 			startDate = info[3] + ":" + info[4];
-			startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false);
 			endDate = info[5] + ":" + info[6];
-			endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false);
 			
 			if (info.length > 7) {
 				bReason = info[7];
@@ -4214,7 +4275,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		List<OrganUserVO> list = new ArrayList<OrganUserVO>();
 		OrganUserVO bujaeUserInfo = ezOrganService.getUserInfo(buJaeId, userInfo.getLang(), userInfo.getTenantId());
-		bujaeUserInfo.setJobID(bujaeUserInfo.getExtensionAttribute7());
 		list.add(bujaeUserInfo);
 		
 		list.addAll(ezOrganAdminService.getUserAddJobList(buJaeId, userInfo.getPrimary(), userInfo.getTenantId()));
@@ -4353,7 +4413,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("q=1")) {
 			return "cmm/error/adminDenied";
 		}
 
@@ -5102,7 +5162,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());		
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;		
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("q=1")) {
 			return "cmm/error/adminDenied"; 
 		}		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());

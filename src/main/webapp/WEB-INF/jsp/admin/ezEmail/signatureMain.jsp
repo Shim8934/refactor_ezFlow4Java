@@ -320,7 +320,7 @@
 				cursor: pointer;
 				outline: none;
 				height: 22px;
-				line-height: 17px;
+				line-height: 21px;
 				vertical-align: middle;
 			}
 			
@@ -351,7 +351,7 @@
 								<div style="border-top: 0px">
 									<spring:message code='ezEmail.jje06'/>
 								</div>
-								<input type="text" id="signSearchInput" onkeydown="signSearchEnter()" style="height:22px;">
+								<input type="text" id="signSearchInput" onkeydown="signSearchEnter()" style="width: auto; height:22px !important;">
 								<div class="lmLetterBoxTitSearch">
 									<button class="lmTop" onclick="searchSignList()">
 										<spring:message code='ezBoard.t188'/>

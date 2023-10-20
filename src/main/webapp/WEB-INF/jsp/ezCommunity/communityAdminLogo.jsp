@@ -325,10 +325,10 @@
 		        </tr>
 		        <tr style="height:20px;text-align:center;">
 		            <td>
-		                <input type="radio" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/><span class="radioTypeText">Type1</span>
+		                <input type="radio" style="vertical-align: top; margin-top: 0px" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/><span class="radioTypeText">Type1</span>
 		            </td>
 		            <td>
-		                <input type="radio" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type2</span>
+		                <input type="radio" style="vertical-align: top; margin-top: 0px" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type2</span>
 		            </td>
 		        </tr>
 		        <tr style="height:190px;">
@@ -341,10 +341,10 @@
 		        </tr>
 		        <tr style="height:20px;text-align:center;">
 		            <td>
-		                <input type="radio" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type3</span>
+		                <input type="radio" style="vertical-align: top; margin-top: 0px" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type3</span>
 		            </td>
 		            <td>
-		                <input type="radio" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type4</span>
+		                <input type="radio" style="vertical-align: top; margin-top: 0px" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/><span class="radioTypeText">Type4</span>
 		            </td>
 		        </tr>
 	    	</table>

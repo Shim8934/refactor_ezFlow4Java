@@ -628,10 +628,16 @@
                 CHARACTERID ,
                 APPROVEFLAG ,
                 RETURNFLAG,
-                OWNERNM  ,
-                DEPTNM  
+                IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM  ,
+                IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM  
            	FROM 
            		TBL_RS_SCHEDULE A
+           	LEFT JOIN 
+           		TBL_USERMASTER U
+           	ON 
+           		A.WRITERID = U.CN
+           	AND
+           		A.TENANT_ID = U.TENANT_ID
           	WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -697,7 +703,7 @@
 				NUM ,
             	PNUM ,
             	SCH.OWNERID ,
-            	TITLE ,
+            	SCH.TITLE TITLE,
             	LOCATION ,
             	TIMEDISPLAY ,
             	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
@@ -714,8 +720,8 @@
             	CHARACTERID ,
             	SCH.APPROVEFLAG ,
             	SCH.RETURNFLAG,
-            	SCH.OWNERNM ,
-            	DEPTNM ,
+            	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM ,
+            	IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM ,
             	SCH.COMPANYID 
 			FROM
 				TBL_RS_SCHEDULE SCH
@@ -727,6 +733,12 @@
 				SCH.TENANT_ID = BRD.TENANT_ID	
 			AND
 				SCH.COMPANYID = BRD.BRD_COMPANY
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				SCH.WRITERID = U.CN
+			AND 
+				SCH.TENANT_ID = U.TENANT_ID
 			WHERE
 				STARTDATE <= STR_TO_DATE(#v_pStartDate#, '%Y-%m-%d %T')
         	AND
@@ -771,8 +783,8 @@
             	CHARACTERID ,
             	APPROVEFLAG ,
             	RETURNFLAG ,
-                OWNERNM  ,
-                DEPTNM  
+                IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM  ,
+                IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM  
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
@@ -783,6 +795,12 @@
 				A.num = C.num
 			AND
 				A.TENANT_ID = C.TENANT_ID	
+			LEFT JOIN 
+           		TBL_USERMASTER U
+           	ON 
+           		A.WRITERID = U.CN
+           	AND 
+           		A.TENANT_ID = U.TENANT_ID
 			WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -819,7 +837,7 @@
 				NUM ,
              	PNUM ,
              	SCH.ownerID ,
-             	TITLE ,
+             	SCH.TITLE ,
              	LOCATION ,
              	TIMEDISPLAY ,
              	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
@@ -836,8 +854,8 @@
              	CHARACTERID ,
              	SCH.ApproveFlag ,
              	SCH.returnFlag ,
-             	SCH.ownerNM ,
-             	DEPTNM ,
+             	IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) OWNERNM ,
+             	IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) DEPTNM ,
              	SCH.companyID 
         	FROM
         		TBL_RS_SCHEDULE SCH
@@ -849,6 +867,12 @@
 				SCH.TENANT_ID = BRD.TENANT_ID	
 			AND
 				SCH.COMPANYID = BRD.BRD_COMPANY				
+			LEFT JOIN 
+           		TBL_USERMASTER U
+           	ON 
+           		SCH.WRITERID = U.CN
+           	AND
+           		SCH.TENANT_ID = U.TENANT_ID
         	WHERE
         		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND 
@@ -1222,8 +1246,8 @@
 				A.PNUM, 
 				A.COMPANYID, 
 				A.WRITERID, 
-				A.DEPTNM, 
-				A.OWNERNM, 
+				IF(#v_lang# LIKE '1', U.DISPLAYNAME, U.DISPLAYNAME2) DEPTNM, 
+				IF(#v_lang# LIKE '1', U.DESCRIPTION, U.DESCRIPTION2) OWNERNM, 
 				A.TITLE, 
 				A.LOCATION, 
 				A.TIMEDISPLAY, 
@@ -1256,6 +1280,12 @@
 	      				A.NUM = B.NUM
 	      			AND
 	      				A.TENANT_ID = B.TENANT_ID
+	      	LEFT JOIN 
+	      		TBL_USERMASTER U
+	      	ON
+	      		A.WRITERID = U.CN
+	      	AND
+	      		A.TENANT_ID = U.TENANT_ID
       		WHERE  
       			A.COMPANYID = #v_pCompanyID#
       		AND 

@@ -7,12 +7,13 @@
 <head>
 </head>
 <body>
+	<input id="noticePortlet_usedTheme" type="hidden" value="<c:out value='${usedTheme}'/>">
 	<article class="notice box_shadow">
 	<div class="layDIV">
 		<dl class="portlet_title sortablePortlet">
 			<dt class="portletText"><c:out value='${portletName }'/></dt>
 			<dd class="portletPlus" id="noticePlus">
-				<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+				<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
 			</dd>
 		</dl>
 		<div id="BoardList_NewBoard">

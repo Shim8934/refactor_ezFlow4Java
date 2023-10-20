@@ -320,8 +320,10 @@ function BottomPropertyTable(parentTD) {
     var SPAN2 = document.createElement("SPAN");
 
     setNodeText(SPAN1 , strLang786);
+    SPAN1.style.padding = "3px 8px 0 8px";
     SPAN1.onclick = btnApply_click;
     setNodeText(SPAN2 , strLang787);
+    SPAN2.style.padding = "3px 8px 0 8px";
     SPAN2.onclick = btnCancel_click;
     LI1.appendChild(SPAN1);
     LI2.appendChild(SPAN2);

@@ -15,13 +15,13 @@
 	    	top:35px;
 	    	right:0px;
 	    	background:white;
-	    	padding:25px;
+	    	padding:15px;
 	    	border:1px solid #999;
 	    	width:120px;
 	    	list-style-image:url("/images/kr/cm/dot_blue.gif");
 	    }
 	    .tabpart01UL li {
-	    	height:20px;
+	    	height:23px;
 	    	color:#777;
 			white-space: nowrap;
 		    text-overflow: ellipsis;

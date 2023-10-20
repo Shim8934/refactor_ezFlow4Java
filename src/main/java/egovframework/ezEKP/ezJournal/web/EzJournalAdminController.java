@@ -493,7 +493,7 @@ public class EzJournalAdminController {
 			model.addAttribute("selectedUser", request.getParameter("userId"));
 			model.addAttribute("selectedUserName", request.getParameter("userName"));
 			
-			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+request.getParameter("userId")+"/author-depts", null, request,"get",null);
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users/"+request.getParameter("userId")+"/author-depts?lang="+commonUtil.userInfo(loginCookie).getLang(), null, request,"get",null);
 			
 			String status = resultBody.get("status").toString();
 			
@@ -582,6 +582,7 @@ public class EzJournalAdminController {
 		
 		param.put("userId",userId);
 		param.put("companyId", request.getParameter("companyId"));
+		param.put("lang", commonUtil.userInfo(loginCookie).getLang());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request,"get",null);
 		String status = resultBody.get("status").toString();

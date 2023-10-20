@@ -1,4 +1,4 @@
-﻿/*
+﻿﻿﻿/*
 <public:component urn="www.asitaka.com:organtreeview">
 
 <public:property name="config" put="put_config" />
@@ -35,6 +35,8 @@
 
 <script language="JScript">
 */
+
+document.write("<script type='text/javascript' src='/js/jquery/jquery-1.11.3.min.js'></script>");
 
 function organtreeview(thisobjid, elobjid) {
     window[thisobjid] = this;
@@ -1080,18 +1082,24 @@ function organtreeview(thisobjid, elobjid) {
                 var nodeCount = g_nodeCount;
                 var mydepth = depth;
 
-            	var nodeHtml = "<span id= 'res"+nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
-            	k++;
-
-                for (var j = 0; j < depth.length; j++) {
-                    if (depth.charAt(j) == "1")
-                        //nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
-                    else
-                        //nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
+        		// 2023-06-22 황인경 - 디자인 개선 > 관리자 > 자원관리, 차량관리 > 좌측메뉴 > 트리구조 style 변경, 계층 2중 빈칸 삭제
+                if ($("h1.receiver_tltype01").length > 0) { // 관리자화면 구분
+                	var nodeHtml = "<span id= 'res" + nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent + "' style='padding: 0 6px; margin: 0 10px; height: 26px; display: inline-block; font-size: 14px;'><span><div class='node_div'>";
+                } else {
+    				var nodeHtml = "<span id= 'res" + nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent + "'><span><div class='node_div'>";
+    				
+    				for (var j = 0; j < depth.length; j++) {
+	                    if (depth.charAt(j) == "1") {
+	                        //nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+	                    	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
+	                    } else {
+	                        //nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
+	                        nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
+	                    }
+    				}
                 }
-
+            	k++;
+            	
                 var bEndNode = (i == childLength - 1) ? true : false;
                 if (findchildnodevalue(childNode, 'ISLEAF') == "FALSE") {
                     bParent = true;
@@ -1129,14 +1137,15 @@ function organtreeview(thisobjid, elobjid) {
                     //nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + nodeCount + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                 }
                 else {
+                	// 2023-06-22 황인경 - 디자인 개선 > 관리자 > 차량관리 > 트리구조 계층 2중 빈칸 삭제
                     if (!bEndNode) {
                         //nodeHtml += g_baseImage["dot_normal"];
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
+                        nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "1";
                     }
                     else {
                         //nodeHtml += g_baseImage["dot_end"];
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
+		               	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "0";
                     }
 
@@ -1148,9 +1157,10 @@ function organtreeview(thisobjid, elobjid) {
                 }
 				else
 				{
-				    if (findchildnodevalue(childNode, "DATA7") == 1) //자원관리에서 1:분류 2:자원 이미지 달리표현하기 2008-09-30
-					    //nodeHtml += ("<img src='" + g_images["BASE"] + "'>"); 
-				    	nodeHtml += "<span class='sub_iconLNB tree_folder'></span>"; 
+				    if (findchildnodevalue(childNode, "DATA7") == 1) { // 자원관리에서 1:분류 2:자원 이미지 달리표현하기 2008-09-30
+				    	//nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
+				    	// 2023-06-22 황인경 - 디자인 개선 > 관리자 > 차량관리 > 트리구조 폴더 이미지 삭제
+					}
 				    else
 				        if (findchildnodevalue(childNode, "DATA15") == 1)
 				            //nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
@@ -1251,14 +1261,14 @@ function organtreeview(thisobjid, elobjid) {
                 
             	var nodeHtml = "<span id='res"+nodeXML.getElementsByTagName('NODE')[i].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
 
-                for (var j = 0; j < depth.length; j++) {
+                /*for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")
                         //nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                     	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
                     else
                         //nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "' height='" + g_imageHeight + "'>");
                     	nodeHtml += "<span class='sub_iconLNB tree_blank'></span>";
-                }
+                }*/
 
                 var bEndNode = (i == childLength - 1) ? true : false;
                 if (childNode.selectSingleNode("ISLEAF").text == "FALSE") {
@@ -1295,12 +1305,13 @@ function organtreeview(thisobjid, elobjid) {
                 else {
                     if (!bEndNode) {
                         //nodeHtml += g_baseImage["dot_normal"];
+                    	// 2023-06-22 황인경 - 디자인 개선 > 관리자 > 차량관리 > 트리구조 계층 2중 빈칸 삭제
                     	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "1";
                     }
                     else {
                         //nodeHtml += g_baseImage["dot_end"];
-                    	nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
+                        nodeHtml += "<span class='sub_iconLNB tree_blank' id='" + g_toggleid + nodeCount + "'></span>";
                         mydepth += "0";
                     }
 

@@ -13,8 +13,10 @@
 <style type="text/css">
 	.notEmptySlider {
 		width : 280px;
-		height : 515px;
+		height : 450px;
 		cursor : pointer;
+		z-index:-1;
+		margin: 20px;
 	} 
 	
 	.notEmptySlider.noSliderUrl {
@@ -30,13 +32,13 @@
 		cursor : pointer;
 		display: block;
 	}
-	.slider_section {height:515px; width:280px;}
+	.slider_section {height:490px; width:320px;}
 	.right_float {float:right;}
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
-	.portlet {height:250px; margin:20px 0px 0px 20px;background-color:#ffffff;}
-	.infoImg img {width:60px; height:60px; border-radius:90px;-webkit-border-radius:90px;}
+	.portlet {height:250px; margin:20px 0px 0px 20px; background-color:#ffffff; border-radius:5px;}
+	.infoImg img {width:60px; height:60px;}
 	.attitudePtl {border:none;}
 	.orbit-wrapper .timer {display:none;}
 	.linkIcon {display: block; margin: 0 auto; padding: 9px 0px 5px 0px; text-align: center;}
@@ -65,22 +67,23 @@
 	            		<c:forEach items="${sliderList}" var="slider">
 		            		<c:choose>
 		            			<c:when test="${slider.url eq '' }">
-									<img src="${slider.imagePath}" class="notEmptySlider noSliderUrl" onclick="windowOpen('${slider.url}')" />
+									<img src="${slider.imagePath}" class="notEmptySlider noSliderUrl" onclick="windowOpen('${slider.url}')" style="margin:20px;"/>
 		            			</c:when>
 		            			<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
-		            				<img src="${slider.imagePath}" class="notEmptySlider" onclick="windowOpen('${slider.url}')" />
+		            				<img src="${slider.imagePath}" class="notEmptySlider" onclick="windowOpen('${slider.url}')" style="margin:20px;"/>
 		            			</c:when>
 		           		 		<c:otherwise> 
-									<img src="${slider.imagePath}" class="notEmptySlider" onclick="windowOpen('${slider.url}')" />
+									<img src="${slider.imagePath}" class="notEmptySlider" onclick="windowOpen('${slider.url}')" style="margin:20px;"/>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 	           		</c:when>
 	            	<c:otherwise>
-		            	<img src="/images/ezNewPortal/rolling01.png" width="280" height="515" />
-		            	<img src="/images/ezNewPortal/rolling01.png" width="280" height="515" />
+		            	<img src="/images/ezNewPortal/rolling01.png" width="280" height="450" style="margin:20px;"/>
+		            	<img src="/images/ezNewPortal/rolling01.png" width="280" height="450" style="margin:20px;"/>
 	            	</c:otherwise>
 	            </c:choose>
+				<span class="mask" style="width:100%; height:100%; background:white; z-index:0;"></span>
            	 	</div>
 			</div>
            	 	<dl class="info">
@@ -88,9 +91,14 @@
                		<dd class="infoName">${userName} ${userTitle}</dd>
                 	<dd class="infoTeam">${deptName}</dd>
                 	<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
-                	<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
-                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;"><img src="/images/admin/frameSetting.png" /></dd><!-- 임시용 -->
+                	<%--<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
+                	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;"><img src="/images/admin/frameSetting.png" /></dd> --%>
            		</dl>
+           		<%-- 기존 아이콘 버튼 -> 메세지를 표출하는 설정 버튼으로 분리 --%>
+                <div class="info_btn">
+                    <span class="info_portal" id="portletEnv"><span class="info_portal_icon"></span><spring:message code='ezNewPortal.HSBPT01'/></span><%-- 포탈설정 --%>
+                    <span class="info_set" id="personalEnv"><span class="info_set_icon"></span><spring:message code='ezNewPortal.t006'/></span><%-- 환경설정 --%>
+                </div>
 			</article>
 			<article class="main_time_check">
 				<c:choose>
@@ -197,7 +205,7 @@
 						</c:when>
 						<c:otherwise>
             				<dl id="Survey">
-                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
+                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
                     			<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
                     			<dd id="surveyCount" class="iconCount_none">0</dd>
                 			</dl>
@@ -212,7 +220,7 @@
 						</c:when>
 						<c:otherwise>
                 			<dl id="Circular"> 
-                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
+                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
                     			<dd class="iconText"><spring:message code='ezNewPortal.gu5' /></dd>
                     			<dd id="circularCount" class="iconCount_none">0</dd>
                 			</dl>
@@ -220,7 +228,7 @@
 					</c:choose>
 					<c:if test="${useEzWorkspace}">
                 		<dl id="ezWorkspace"> 
-                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
+                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon06.png"></dt>
                     		<dd class="iconText"><spring:message code='ezNewPortal.pjg01' /></dd>
                     		<dd class="iconCount_none" id="workspaceCnt">0</dd>
                 		</dl>
@@ -331,7 +339,7 @@
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
-	var photoCount = 4;
+	var photoCount = 3;
  	var nowAttiTime = "";
  	var ptlNowAttiTime = "";
  	var beforeAlertDate = "";
@@ -443,11 +451,12 @@
 		linkBtnPre.classList.add('linkBtn_pre');
 		var preBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === 1 || totalCnt*1 === 0) {
-			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis.png');
+		/* 2023-06-01 홍승비 > 홈 > 테마1 퀵링크 영역 디자인 개선을 위한 이미지 수정 */
+		preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn_dis_bk.png');
+		
+		if (quickLinkPage.current * 1 === 1 || totalCnt * 1 === 0) {
 			preBtnImg.setAttribute('id', 'preBtnDis');
 		} else {
-			preBtnImg.setAttribute('src', '/images/ezNewPortal/link_preBtn.png');
 			preBtnImg.setAttribute('id', 'preBtn');
 		}
 		
@@ -457,11 +466,11 @@
 		linkBtnNext.classList.add('linkBtn_next');
 		var nextBtnImg = document.createElement('img');
 		
-		if(quickLinkPage.current*1 === totalCnt*1 || totalCnt*1 === 0) {
-			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis.png');
+		nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn_dis_bk.png');
+		
+		if (quickLinkPage.current * 1 === totalCnt * 1 || totalCnt * 1 === 0) {
 			nextBtnImg.setAttribute('id', 'nextBtnDis');
 		} else {
-			nextBtnImg.setAttribute('src', '/images/ezNewPortal/link_nextBtn.png');
 			nextBtnImg.setAttribute('id', 'nextBtn');
 		}
 		
@@ -791,7 +800,7 @@
 							var useApproval = result.useApproval;
 							var useSchedule = result.useSchedule;
 							var useAttitude = result.useAttitude;
-							refreshPortlet(useQuestion, useCircular, useMail, useApproval, useSchedule, useAttitude); /
+							refreshPortlet(useQuestion, useCircular, useMail, useApproval, useSchedule, useAttitude);
 						} else {
 							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
 						}
@@ -869,7 +878,7 @@
 				});
 				
 				infoRight.forEach(function(item, index) {
-					infoRight[index].style.width = "calc(100% - 194px)";
+					infoRight[index].style.width = "calc(100%)";
 					infoRight[index].style.background = "#ffffff";
 				});
 			} else if (media1590.matches) {
@@ -890,7 +899,7 @@
 				});
 				
 				infoRight.forEach(function(item, index) {
-					infoRight[index].style.width = "calc(100% - 194px)";
+					infoRight[index].style.width = "calc(100%)";
 					infoRight[index].style.background = "#ffffff";
 				});
 			} else if (media1463.matches) {
@@ -911,7 +920,7 @@
 				});
 				
 				infoRight.forEach(function(item, index) {
-					infoRight[index].style.width = "calc(100% - 194px)";
+					infoRight[index].style.width = "calc(100%)";
 					infoRight[index].style.background = "#ffffff";
 				});
 			} else if (media1365.matches) {

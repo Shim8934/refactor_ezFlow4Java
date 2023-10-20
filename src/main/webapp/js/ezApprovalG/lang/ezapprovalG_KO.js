@@ -812,6 +812,7 @@ var strLangAprState21 = "도달";
 var strLangAprState22 = "재요청";
 
 // OpinionGB : 의견 종류
+var strOpinionType0 = "000"; // 2023-07-17 민지수 - 완료문서 추가의견
 var strOpinionType1 = "001";
 var strOpinionType2 = "002";
 var strOpinionType3 = "003";
@@ -821,6 +822,7 @@ var strOpinionType4 = "004";
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
 var strOpinionType8 = "008";
+var strLangOpinionType0 = "추가의견";
 var strLangOpinionType1 = "일반의견";
 var strLangOpinionType2 = "반송의견";
 var strLangOpinionType3 = "보류의견";
@@ -953,7 +955,7 @@ var strLangS304 = "다시 확인하여 주십시요";
 var strLangS385 = "문서를 선택하여 주십시오";
 var strLangS386 = "문서를 등록하였습니다.";
 var strLangS387 = "문서를 문서함에서 삭제하시겠습니까?";
-var strLangS506 = "결재선에 합의가 있으면";
+var strLangS506 = "이후 결재 과정에 합의가 있으면";
 var strLangS514 = "기안자";
 var strLangS554 = "검색어를 입력해주세요.";
 var strLangS574 = "리스트를 선택해 주십시오.";
@@ -1075,6 +1077,8 @@ var strLangHSBAt09 = "회까지";
 var strLangHSBAt10 = "다운로드 가능";
 var strLangHSBAt11 = "PDF 파일이 변환이 완료된 후 확인을 누르시면 다음 파일도 다운로드 됩니다.";
 var strLangHSBAt12 = "첨부파일을 선택해주세요.";
+var strLangHSBAt13 = "첨부파일의 크기가 ";
+var strLangHSBAt14 = "를 넘는 경우에는 대용량 첨부로 처리됩니다.";
 
 var strLang947 = "해당 부서는 수신처 지정불가입니다. \n확인하여 주십시요!";
 var strLang948 = "수신처지정 불가 리스트에 입력된 부서는 모든 수신처리스트에서 자동 삭제됩니다. \n계속하시겠습니까?"

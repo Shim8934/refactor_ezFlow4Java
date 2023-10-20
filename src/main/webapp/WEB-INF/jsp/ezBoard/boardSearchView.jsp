@@ -529,7 +529,7 @@
 				<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code='ezCircular.t138'/></label>
 				<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly"> ~
 				<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
-				<a class="imgbtn imgbck" style="vertical-align:middle;margin-left:10px;"><span onClick="search('basic')" style="vertical-align: middle"><spring:message code='ezBoard.t188' /></span></a>
+				<a class="imgbtn imgbck" style="vertical-align:middle;margin-left:10px;"><span onClick="search('basic')" style="vertical-align: middle; line-height: 20px;"><spring:message code='ezBoard.t188' /></span></a>
 			</td>
 		</tr>
 	</table>

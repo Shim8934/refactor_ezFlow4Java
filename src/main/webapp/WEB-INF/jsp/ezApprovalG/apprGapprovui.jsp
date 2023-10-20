@@ -463,8 +463,9 @@
 		        }
 		        message.SetEditable(false);
 		    }
-		    
-		    function setInitOpinion(){
+
+			/* 2023-06-26 민지수 - 완료문서일 경우 분기처리를 위해 docstate 전달 */
+		    function setInitOpinion() {
 		    	var field = message.GetListItem(message.GetFieldsList(), "opinions");
 		    	if (field) {
 		            try {
@@ -477,9 +478,10 @@
 		            		url : "/ezApprovalG/opinionRequest.do",
 		            		data : {
 		            			docID : pDocID,
-		            			orgCompanyID : orgCompanyID
+		            			orgCompanyID : orgCompanyID,
+								state : docState
 		            		},
-		            		success: function(xml){
+		            		success: function(xml) {
 		            			result = xml;
 		            		}        			
 		            	});
@@ -1518,8 +1520,7 @@
 		    
 		    function btnMail_onclick() {
 		    	var imgUrl="";
-		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
-		    	background:'#fff',onrendered: function(canvas) {
+		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content")).then(function(canvas) {
 		    	    $.ajax({
                         type:"POST",
                         dataType:"text",
@@ -1532,7 +1533,7 @@
                         }
                     });
 		    	}
-		    });
+		    );
 	        var pheight = window.screen.availHeight;
 	        var conHeight = pheight * 0.8;
 	        var pwidth = window.screen.availWidth;

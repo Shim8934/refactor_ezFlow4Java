@@ -195,12 +195,13 @@ function displaySubFolder(divTree, divElmt, list) {
 		imgElmt.onclick = function() {getDetailTree(this);};
 		
 		if (list["subDepts"] == null) {
-			imgElmt.src = "/images/OrganTree_cross/plus.gif";
+			// 2023-07-03 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 공유 > 조직도 트리구조 이미지 수정
+			imgElmt.src = "/images/OrganTree_cross/plus_normal.gif";
 			imgElmt.setAttribute("class", "webfolderPlus");
 			return;
 		}
 		
-		imgElmt.src = "/images/OrganTree_cross/minus.gif";
+		imgElmt.src = "/images/OrganTree_cross/minus_normal.gif";
 		imgElmt.setAttribute("class", "webfolderMinus");
 		
 		var len = list["subDepts"].length;
@@ -225,18 +226,19 @@ function getDetailTree(obj) {
 		var childElmt = obj.parentElement.lastElementChild;
 		
 		if (obj.className == "webfolderMinus") {
-			obj.src= "/images/OrganTree_cross/plus.gif";
+			// 2023-07-03 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 공유 > 조직도 트리구조 이미지 수정
+			obj.src= "/images/OrganTree_cross/plus_normal.gif";
 			obj.setAttribute("class", "webfolderPlus");
 			childElmt.style.display = "none";
 		}
 		else {
-			obj.src= "/images/OrganTree_cross/minus.gif";
+			obj.src= "/images/OrganTree_cross/minus_normal.gif";
 			obj.setAttribute("class", "webfolderMinus");
 			childElmt.style.display = "";
 		}
 	}
 	else {
-		obj.src = "/images/OrganTree_cross/minus.gif";
+		obj.src = "/images/OrganTree_cross/minus_normal.gif";
 		obj.setAttribute("class", "webfolderMinus");
 		
 		$.ajax({
@@ -305,7 +307,7 @@ function getSelected(obj) {
 	}
 	
 	selectedDept         = obj.getAttribute("name");
-	obj.style.color      = "#004a87";
+	obj.style.color      = "#0470E4"; // 2023-07-03 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 공유 > 조직도 > 부서선택 style 변경
 	obj.style.fontWeight = "bold";
 	
 	$.ajax({
@@ -856,12 +858,13 @@ function displaySubDepts(divTree, divElmt, list) {
 		imgElmt.onclick = function() {getDetailTree2(this);};
 		
 		if (list["subDepts"] == null) {
-			imgElmt.src = "/images/OrganTree_cross/plus.gif";
+			// 2023-07-03 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 공유 > 조직도 트리구조 이미지 수정
+			imgElmt.src = "/images/OrganTree_cross/plus_normal.gif";
 			imgElmt.setAttribute("class", "webfolderPlus");
 			return;
 		}
 		
-		imgElmt.src = "/images/OrganTree_cross/minus.gif";
+		imgElmt.src = "/images/OrganTree_cross/minus_normal.gif";
 		imgElmt.setAttribute("class", "webfolderMinus");
 		
 		var len = list["subDepts"].length;
@@ -886,18 +889,19 @@ function getDetailTree2(obj) {
 		var childElmt = obj.parentElement.lastElementChild;
 		
 		if (obj.className == "webfolderMinus") {
-			obj.src= "/images/OrganTree_cross/plus.gif";
+			// 2023-07-03 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 공유 > 조직도 트리구조 이미지 수정
+			obj.src= "/images/OrganTree_cross/plus_normal.gif";
 			obj.setAttribute("class", "webfolderPlus");
 			childElmt.style.display = "none";
 		}
 		else {
-			obj.src= "/images/OrganTree_cross/minus.gif";
+			obj.src= "/images/OrganTree_cross/minus_normal.gif";
 			obj.setAttribute("class", "webfolderMinus");
 			childElmt.style.display = "";
 		}
 	}
 	else {
-		obj.src = "/images/OrganTree_cross/minus.gif";
+		obj.src = "/images/OrganTree_cross/minus_normal.gif";
 		obj.setAttribute("class", "webfolderMinus");
 		
 		$.ajax({
@@ -966,7 +970,7 @@ function getSelectedDept(obj) {
 	}
 	
 	selectedDept         = obj.getAttribute("name");
-	obj.style.color      = "#004a87";
+	obj.style.color      = "#0470E4"; // 2023-07-03 황인경 - 디자인 개선 > 웹폴더 > 좌측메뉴 > 공유 > 조직도 > 부서선택 style 변경
 	obj.style.fontWeight = "bold";
 }
 

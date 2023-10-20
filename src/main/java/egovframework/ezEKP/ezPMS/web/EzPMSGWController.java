@@ -4502,7 +4502,7 @@ public class EzPMSGWController {
 			}
 
 			if (!tempFile.exists()) {
-				tempFile.mkdir();
+				tempFile.mkdirs();
 			}
 
 			for (int i = 0; i < cnt; i++) {

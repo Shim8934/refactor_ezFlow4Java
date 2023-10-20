@@ -71,6 +71,7 @@ function Get_AddressList() {
         xmlHTTPAddressList.open("POST", "/myoffice/ezAddress/Remote/address_list.aspx", true);
     }*/
     createNodeAndInsertText(xmlpara, objNode, "FILTER", pFilterDB);
+    createNodeAndInsertText(xmlpara, objNode, "ADDRTYPE", pAddrType);
     xmlHTTPAddressList.open("POST", "/ezAddress/addressList.do", true);
     
     xmlHTTPAddressList.onreadystatechange = Complete_Get_AddressList;
@@ -101,6 +102,7 @@ function Get_SearchAddressList() {
     createNodeAndInsertText(xmlDom, objNode, "ORDERBY", pOrderOption);
     createNodeAndInsertText(xmlDom, objNode, "FILTER", filter);
     createNodeAndInsertText(xmlDom, objNode, "PAGE", pCurrentPage);
+    createNodeAndInsertText(xmlDom, objNode, "ADDRTYPE", pAddrType);
     xmlHTTPAddressList.open("POST", "/ezAddress/addressGetSearchList.do", true);
     xmlHTTPAddressList.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
     xmlHTTPAddressList.onreadystatechange = Complete_Get_AddressList;

@@ -34,6 +34,8 @@
 		<result property="precreatorname"   column="PRECREATORNAME"      columnIndex="12"/>
 		<result property="precreatorname2"   column="PRECREATORNAME2"      columnIndex="12"/>
 		<result property="modifydate"		column="MODIFYDATE"		columnIndex="10"/>
+		<result property="groupColor"		column="GROUPCOLOR"		columnIndex="13"/>
+		<result property="transferDate"		column="TRANSFERDATE"		columnIndex="14"/>
 	</resultMap>
 	
 	
@@ -159,11 +161,24 @@
 
 	<select id="EzScheduleAdminDAO.getMyGroupList2" parameterClass="map" resultMap="scheduleGroupVO">
 		<![CDATA[
-			select DATE_ADD(DATE_FORMAT(b.modifydate, '%Y-%m-%d %H:%i:%S'),INTERVAL #offset# MINUTE) as modifydate, 
-			DATE_ADD(DATE_FORMAT(b.createdate, '%Y-%m-%d %H:%i:%S'),INTERVAL #offset# MINUTE) as createdate, b.creatorid as creatorid, b.precreatorid as precreatorid,
-			a.groupid as groupid, b.groupname as groupname, b.description as description, b.creatorname as creatorname, b.precreatorname as precreatorname, b.creatorname2 as creatorname2, b.precreatorname2 as precreatorname2
-            from tbl_schedulegroupmember a, tbl_schedulegroup b 
-            where a.groupid = b.groupid
+			select 
+				DATE_ADD(DATE_FORMAT(b.modifydate, '%Y-%m-%d %H:%i:%S'),INTERVAL #offset# MINUTE) as modifydate, 
+				DATE_ADD(DATE_FORMAT(b.createdate, '%Y-%m-%d %H:%i:%S'),INTERVAL #offset# MINUTE) as createdate, 
+				DATE_ADD(DATE_FORMAT(b.transferdate, '%Y-%m-%d %H:%i:%S'),INTERVAL #offset# MINUTE) as transferdate, 
+				b.creatorid as creatorid, 
+				b.precreatorid as precreatorid,
+				a.groupid as groupid, 
+				b.groupname as groupname, 
+				b.description as description, 
+				b.creatorname as creatorname, 
+				b.precreatorname as precreatorname, 
+				b.creatorname2 as creatorname2, 
+				b.precreatorname2 as precreatorname2,
+				b.groupcolor as groupcolor
+            from 
+            	tbl_schedulegroupmember a, tbl_schedulegroup b 
+            where 
+            	a.groupid = b.groupid
             ]]>
         <isEqual property="v_SEARCHTYPE" compareValue="groupName">
 			<![CDATA[

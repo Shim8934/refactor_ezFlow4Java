@@ -806,6 +806,7 @@ var strLangAprState21 = "도달";
 var strLangAprState22 = "재요청";
 
 // OpinionGB : 의견 종류
+var strOpinionType0 = "000"; // 2023-07-17 민지수 - 완료문서 추가의견
 var strOpinionType1 = "001";
 var strOpinionType2 = "002";
 var strOpinionType3 = "003";
@@ -814,6 +815,7 @@ var strOpinionType4 = "004";
 // 2011.06.17 추가
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
+var strLangOpinionType0 = "追加";
 var strLangOpinionType1 = "一般";
 var strLangOpinionType2 = "拒绝";
 var strLangOpinionType3 = "保留";
@@ -945,7 +947,7 @@ var strLangS304 = "다시 확인하여 주십시요";
 var strLangS385 = "문서를 선택하여 주십시오";
 var strLangS386 = "문서를 등록하였습니다.";
 var strLangS387 = "문서를 문서함에서 삭제하시겠습니까?";
-var strLangS506 = "결재선에 합의가 있으면";
+var strLangS506 = "이후 결재 과정에 합의가 있으면";
 var strLangS514 = "기안자";
 var strLangS554 = "검색어를 입력해주세요.";
 var strLangS574 = "리스트를 선택해 주십시오.";
@@ -1067,6 +1069,8 @@ var strLangHSBAt09 = "Up to";
 var strLangHSBAt10 = "Downloadable";
 var strLangHSBAt11 = "After the conversion is complete, click OK to download the next file as well.";
 var strLangHSBAt12 = "Please select an attachment.";
+var strLangHSBAt13 = "If the file exceeds ";
+var strLangHSBAt14 = ", it will be treated as a Large attachment.";
 
 var strLang947 = "Departments is unavailable as recipient. \nPlease check!";
 var strLang948 = "Departments unavailable as recipient will be automatically deleted. \nDo you wish to continue?"

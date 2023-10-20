@@ -8,6 +8,19 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<style type="text/css">
+		.jstree-clicked {
+	   		color: #0470E4 !important;
+	   		text-decoration: underline !important;
+	  	}
+	   	.list_text {
+	   		font-size: 14px !important;
+	   	}
+	   	.webfolderMinus {
+			margin-right: 3px;
+	   	}
+	   	
+	</style>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -119,9 +132,9 @@
 			imgElmt.setAttribute("id" , list["folderId"]);
 			imgElmt.setAttribute("level" , level);
 			
-			var imgElmt2 = document.createElement("img");
+			/* var imgElmt2 = document.createElement("img");
 			imgElmt2.setAttribute("class", "webfolderImg");
-			imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
+			imgElmt2.src = "/images/OrganTree_cross/fldr.gif"; */
 			
 			var spanFolderName = document.createElement("span");
 			spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
@@ -131,7 +144,7 @@
 			spanFolderName.onclick = function() {getSelected(this);};
 			
 			divElmt.appendChild(imgElmt);
-			divElmt.appendChild(imgElmt2);
+			//divElmt.appendChild(imgElmt2);
 			divElmt.appendChild(spanFolderName);
 			divTree.appendChild(divElmt);
 			
@@ -148,12 +161,12 @@
 				}
 				
 				if (list["listSubFolders"] == null) {
-					imgElmt.src = "/images/OrganTree_cross/plus_normal.gif";
+					imgElmt.src = "/images/OrganTree_cross/plus.png";
 					imgElmt.setAttribute("class", "webfolderPlus");
 					return;
 				}
 				
-				imgElmt.src = "/images/OrganTree_cross/minus_normal.gif";
+				imgElmt.src = "/images/OrganTree_cross/minus.png";
 				imgElmt.setAttribute("class", "webfolderMinus");
 				
 				var len = list["listSubFolders"].length;
@@ -176,13 +189,16 @@
 				if (previousElmtList[i] != null) {
 					previousElmtList[i].style.color = "";
 					previousElmtList[i].style.fontWeight = "normal";
+					previousElmtList[i].style.textDecoration = "";
 				}
 			}
 			
 			selectedFolder       = obj.getAttribute("name");
 			selectedLevel        = obj.getAttribute("level");
-			obj.style.color      = "#004a87";
+			obj.style.color      = "#0470E4";
 			obj.style.fontWeight = "bold";
+			obj.style.fontWeight = "bold";
+			obj.style.textDecoration ="underline";
 		}
 		
 		function getDetailTree(obj, mode) {
@@ -195,18 +211,18 @@
 				var childElmt = obj.parentElement.lastElementChild;
 				
 				if (obj.className == "webfolderMinus") {
-					obj.src = "/images/OrganTree_cross/plus.gif";
+					obj.src = "/images/OrganTree_cross/plus.png";
 					obj.setAttribute("class", "webfolderPlus");
 					childElmt.style.display = "none";
 				}
 				else {
-					obj.src = "/images/OrganTree_cross/minus.gif";
+					obj.src = "/images/OrganTree_cross/minus.png";
 					obj.setAttribute("class", "webfolderMinus");
 					childElmt.style.display = "";
 				}
 			}
 			else {
-				obj.src = "/images/OrganTree_cross/minus.gif";
+				obj.src = "/images/OrganTree_cross/minus.png";
 				obj.setAttribute("class", "webfolderMinus");
 				
 				$.ajax({
@@ -542,7 +558,7 @@
 			</c:if>
 		</div>
 	</div>
-	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 5px; white-space: nowrap;" id="folderTree"></div>
+	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 10px; white-space: nowrap;" id="folderTree"></div>
 	
 	<div class="btnpositionNew">
 		<c:if test="${type ne 'copy' and isPermittedMove}">

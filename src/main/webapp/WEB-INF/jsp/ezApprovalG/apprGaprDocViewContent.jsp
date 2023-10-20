@@ -192,7 +192,7 @@
                             for (var j = 0; j < _HTMLTag.getElementsByTagName("*").length; j++) {
                                 if (_HTMLTag.getElementsByTagName("*")[j].id.toLocaleLowerCase() == "body") {
                                     _DocBody = _HTMLTag.getElementsByTagName("*")[j].innerHTML;
-                                    _OrgHTMLTag.getElementsByTagName("*")[i].innerHTML = htmldiff(_DocOrgBody, _DocBody);
+									_OrgHTMLTag.getElementsByTagName("*")[i].innerHTML = $(_DocBody).find("tr").length == $(_DocOrgBody).find("tr").length ? htmldiff(_DocOrgBody, _DocBody) : _DocOrgBody;
                                     break;
                                 }
                             }

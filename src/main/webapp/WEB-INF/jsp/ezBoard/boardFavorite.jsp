@@ -325,7 +325,7 @@
             	</li>
         	</ul>
     	</div>
-    	<div style="border: 1px solid #dbdbda; width: 435px; height: 385px;">
+    	<div style="border: 1px solid #dbdbda; width: 435px; height: 394px;">
         	<table class="mainlist" style="width: 100%;">
             	<tr>
                 	<th style="width: 12%;"><span><spring:message code="ezBoard.t00016" /></span></th>

@@ -108,13 +108,14 @@
 				var imgElmt = document.createElement("img");
 				imgElmt.setAttribute("id" , list["folderId"]);
 				
-				var imgElmt2 = document.createElement("img");
-				imgElmt2.setAttribute("class", "webfolderImg");
-				imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
+// 				var imgElmt2 = document.createElement("img");
+// 				imgElmt2.setAttribute("class", "webfolderImg");
+// 				imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 				
 				var spanFolderName = document.createElement("span");
 				if (list["folderLevel"] == 0) {
 					spanFolderName.textContent = primary == "1" ? list["folderName"]+"(" + list["ownerId"]+")" : list["folderName2"]+"(" + list["ownerId"]+")";
+					spanFolderName.style.verticalAlign = "bottom";
 				} else {
 					spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
 				}
@@ -127,7 +128,7 @@
 				spanFolderName.onclick = function() {getSelected(this);};
 				
 				divElmt.appendChild(imgElmt);
-				divElmt.appendChild(imgElmt2);
+// 				divElmt.appendChild(imgElmt2);
 				divElmt.appendChild(spanFolderName);
 				divTree.appendChild(divElmt);
 				
@@ -139,12 +140,13 @@
 					imgElmt.onclick = function() {getDetailTree(this);};
 					
 					if (list["listSubFolders"] == null) {
-						imgElmt.src = "/images/OrganTree_cross/plus.gif";
+						imgElmt.src = "/images/OrganTree_cross/plus.png";
 						imgElmt.setAttribute("class", "webfolderPlus");
+						
 						return;
 					}
 					
-					imgElmt.src = "/images/OrganTree_cross/minus.gif";
+					imgElmt.src = "/images/OrganTree_cross/minus.png";
 					imgElmt.setAttribute("class", "webfolderMinus");
 					
 					var len = list["listSubFolders"].length;
@@ -260,18 +262,18 @@
 					var childElmt = obj.parentElement.lastElementChild;
 					
 					if (obj.className == "webfolderMinus") {
-						obj.src= "/images/OrganTree_cross/plus.gif";
+						obj.src= "/images/OrganTree_cross/plus.png";
 						obj.setAttribute("class", "webfolderPlus");
 						childElmt.style.display = "none";
 					}
 					else {
-						obj.src= "/images/OrganTree_cross/minus.gif";
+						obj.src= "/images/OrganTree_cross/minus.png";
 						obj.setAttribute("class", "webfolderMinus");
 						childElmt.style.display = "";
 					}
 				}
 				else {
-					obj.src = "/images/OrganTree_cross/minus.gif";
+					obj.src = "/images/OrganTree_cross/minus.png";
 					obj.setAttribute("class", "webfolderMinus");
 					
 					$.ajax({
@@ -693,7 +695,7 @@
 									</tr>
 									<tr>
 										<td>
-											<div style="margin: 0px 20px 40px; min-height: 200px; border:1px solid #ddd; padding:10px; border-radius:3px" >
+											<div style="margin: 0px 20px 20px; min-height: 200px; border:1px solid #ddd; padding:10px; border-radius:3px" >
 												<span id="newTargetDiv"></span>
 											</div>
 										</td>

@@ -39,7 +39,7 @@
 	.portletInfo {width : 100%;}
 	.portletInfoTD {width:100%;}
 	.portletInfoTD input[type='text'] {width:100%; height:27px; font-size:12px; padding:0px 0px 0px 5px; color:#393939;}
-	.addPortlet {border:1px dashed #aab2ba; text-align:center;height:19.3em; border-radius:0px;}
+	.addPortlet {border:1px dashed #aab2ba; text-align:center;height:254.006px; border-radius:0px;}
 	.addPortlet dl {margin:87px;}
 	.portlet-toggle {cursor:pointer;}
 	.newPortlet .portlet-header {cursor:default;}
@@ -51,7 +51,7 @@
 	span.addCancel{ background:#6c6c6c;}
 	.portlet_header_name {width:60%;display:inline-block;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
 	/* switch */
-	.switch {position: absolute;display: inline-block;width: 60px;height: 22px;margin-top:-10px;}
+	.switch {position: absolute;display: inline-block;width: 53px;height: 22px;margin-top:-10px;}
 	.switch input {opacity: 0;width: 0;height: 0;}
 	.slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
 	.slider:before {  position: absolute;  content: "";  height: 13px;  width: 13px;  left: 8px;  bottom: 5px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}

@@ -201,7 +201,16 @@ public class EzSystemAdminController {
 			}			
 		}
 		
-		List<String> defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.KOREA).split(";"));
+		String lang = userInfo.getLang();
+		List<String> defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.KOREA).split(";")); 
+		
+		// 2023-08-30 황인경 - 관리자 > 시스템 > 패러미터 > 에디터 폰트 > 다국어 처리
+		if (lang.equals("2")) {
+			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.ENGLISH).split(";"));
+		} else if (lang.equals("3")) {
+			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", Locale.JAPAN).split(";"));
+		} 
+		
 		List<String> defaultFontSizeList = Arrays.asList("8px,9px,10px,11px,12px,13px,14px,16px,18px,20px,24px,30px,36px,54px,72px".split(","));
 		String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", userInfo.getTenantId());
 		String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", userInfo.getTenantId());
@@ -2746,9 +2755,9 @@ public class EzSystemAdminController {
 				adminType = egovMessageSource.getMessage("ezOrgan.t301", locale);
 			} else if (adminType.contains("m=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.t300", locale);
-			} else if (adminType.contains("f=")) {
+				} else if (adminType.contains("q=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.lhj1", locale);
-			} else if (adminType.contains("wf=")) {
+				} else if (adminType.contains("f=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.t303", locale);
 			} else if (adminType.contains("e=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.kbm01", locale);

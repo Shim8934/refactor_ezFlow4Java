@@ -247,7 +247,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가
 			ezCommonService.addDocStateIntoLastLines();
 			ezCommonService.addDocStateIntoLastDeptLines();
-	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가	
+	    	//ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가 (중복)
 	    	ezCommonService.insertAlternateHolidayAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 대체휴무 추가
 	    	ezCommonService.insertBeforeOutComeAttitudeType(); // 2020-06-03  김정언 - 근태관리 휴가유형 전일퇴근 추가
 	    	ezCommonService.insertMobileAttitudeColumn();			// 2020-06-10 김민성 - 모바일 근태관리 기능 추가
@@ -287,6 +287,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.createTblDisableNotiItem(); // 2022-03-11 - 알림환경설정 테이블 추가
     		ezCommonService.addAprDocGroupInfoTypeColumn();	// 2022-02-09 홍승비 - 일괄기안 테이블에 임시저장/결재올림 구분용 타입 칼럼 추가
 			ezCommonService.alterTblRsResaclAddColumn(); // 2023-08-21 이주원 - 자원권한 테이블에 유저명 다국어 지원을 위해 MEMBER_NAM2 컬럼 추가
+			ezCommonService.createTblUserChangeInfo(); // 2023-09-05 장혜연 - 사용자 변경 히스토리 테이블 추가
 
 	    	// webfolder
 	    	ezCommonService.addWebfolderUserSubdeptPermittedColumn(); 	//2020-10-19 김은실 - 웹폴더 > 하위부서 허용 여부 추가
@@ -304,7 +305,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createTblAprpreview(); //2020-11-18 정소미 - 전자결재 미리보기 설정 테이블 추가
 	    	ezCommonService.createTblSerialNoRollback(); // 2022-09-21 홍승비 - 전자결재G > 문서 기록물 레코드 중복삽입 시 에러 롤백방지 기록 테이블 추가
 	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
+			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
 	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
+	    	ezCommonService.addScheduleGroupColumn(); // 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가 (양도일자/그룹 색상)
+			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
+	    	ezCommonService.createTblBoardReplyReact();	// 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -1304,7 +1309,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		
+
 		int tenantId = userInfo.getTenantId();
 		
 		String companyId = request.getParameter("companyId");
@@ -1499,9 +1504,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
 	    		}
 			}
-	
-			
-			//사용자 변경 히스토리 테이블에 insert  
+
+
+			//사용자 변경 히스토리 테이블에 insert
 			UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
 			userChangeInfoVO.setUserId(cn[i]);
 			userChangeInfoVO.setTenantId(tenantID);
@@ -1923,7 +1928,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         if (userInfo == null) {
         	return "EMAIL_ERROR";
         }
-	    	   
+
         // JMocha Mail Server가 계정이 소문자로 저장될 필요가 있어 
         // 사용자 아이디를 무조건 소문자로 변환한다.
         // 소문자로 저장되기만 하면 메일 수신 시에는 발신자가 대소문자를 혼합해서 보내도
@@ -2098,12 +2103,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 				
 				if (!"".equals(ClientUtil.getClientIP(request))) {
-					
+
 					logger.debug("saveUserInfo IP : {} ", ClientUtil.getClientIP(request));
 				}
-				
-				
-				//2023-06-27 장혜연 사용자 변경 히스토리 테이블에 insert  
+
+
+				//2023-06-27 장혜연 사용자 변경 히스토리 테이블에 insert
 				UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
 				userChangeInfoVO.setUserId(cn);
 				userChangeInfoVO.setTenantId(tenantID);
@@ -2575,116 +2580,114 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String saveSubTitle(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, Model model) throws Exception{
         logger.debug("saveSubTitle started.");
-        
-        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-        
-        if (userInfo == null) {
-        	return "EMAIL_ERROR";
-        }
-        
-        int tenantID = userInfo.getTenantId();        
-        
-        logger.debug("tenantID=" + tenantID);
-	    logger.debug("data=" + data);
-        
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "EMAIL_ERROR";
+		}
+
+		int tenantID = userInfo.getTenantId();
+
+		logger.debug("tenantID=" + tenantID);
+		logger.debug("data=" + data);
+
 		Document doc = commonUtil.convertStringToDocument(data);
-		
+
 		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String titleInfo = "";
 		String titleInfoWithManualFlag = "";
 		String deleteTitleInfo = "";
 		String jobID = "";
-		String delType = doc.getElementsByTagName("DEPTID").item(0).getTextContent().equals("")? "ALL" : ""; //삭제타입(ALL인경우 전체겸직삭제)
+		String delType = doc.getElementsByTagName("DEPTID").item(0).getTextContent().equals("") ? "ALL" : ""; // 삭제타입(ALL인경우
+																												// 전체겸직삭제)
 		String delJobId = ""; // 2022-07-06 이사라 - 한 부서에 겸직이 2개 이상 있는 경우 1개만 삭제 시 삭제하는 jobId가 필요하여 추가
 		boolean isAddJobMoreInOneDept = false;
 		List<UserChangeInfoVO> userChInfoList = new ArrayList<UserChangeInfoVO>();
 		String updateType = "";
-		List<String> newAddJobList = new ArrayList<String>();
-		int listidx = 0;
-		
+		List<OrganUserVO> newAddJobList = new ArrayList<>();
+
 		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
 			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
-			String manualFlag = Optional.ofNullable(doc.getElementsByTagName("MANUAL_FLAG").item(i)).map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse(null);
-			
-		    if (!titleValue.equals("")) {
-		    	
-		    	String[] titleArray = titleValue.split(":");
-		    	
-		    	// Primary 언어 이름만 있는 경우엔 Secondary 언어 이름을 동일하게 설정한다.
-		    	if (titleArray.length == 1) {
-		    		titleValue = titleArray[0] + ":" + titleArray[0];
-		    	}
-		    	
-    			if (titleInfo.equals("")) {
-    				titleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
-    				titleInfoWithManualFlag = titleInfo + ":" + manualFlag;
-    			} else {
-    				titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
-    				titleInfoWithManualFlag += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue + ":" + manualFlag;
-    			}
-    			
-    			// 기존 겸직 부서 + 새로 추가한 부서 모두 list에 담아준다 
-    			newAddJobList.add(doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue );
- 			
-            } else { //선택삭제, 전체겸직삭제인경우
-            	
-            	if (doc.getElementsByTagName("DEPTID").item(i).getTextContent().equals("")) { //전체겸직삭제인경우
-            		String cn = doc.getElementsByTagName("CN").item(i).getTextContent();
-            		List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(cn, "1", tenantID);
-            		
-            		for (int j = 0; j < organUserVOList.size(); j++) {
-            			if (deleteTitleInfo.equals("")) {
-            				deleteTitleInfo = organUserVOList.get(j).getDepartment() + ":" + titleValue;
-            			} else {
-            				deleteTitleInfo += ";" + organUserVOList.get(j).getDepartment() + ":" + titleValue; 
-            			}          			
-            		         			
-            		}
+			String manualFlag = Optional.ofNullable(doc.getElementsByTagName("MANUAL_FLAG").item(i))
+					.map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse(null);
+
+			if (!titleValue.equals("")) {
+
+				String[] titleArray = titleValue.split(":");
+
+				// Primary 언어 이름만 있는 경우엔 Secondary 언어 이름을 동일하게 설정한다.
+				if (titleArray.length == 1) {
+					titleValue = titleArray[0] + ":" + titleArray[0];
+				}
+
+				if (titleInfo.equals("")) {
+					titleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
+					titleInfoWithManualFlag = titleInfo + ":" + manualFlag;
+				} else {
+					titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
+					titleInfoWithManualFlag += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":"
+							+ titleValue + ":" + manualFlag;
+				}
+
+				// 기존 겸직정보와 비교하기 위해 수정된 겸직정보를 list에 담아준다
+				OrganUserVO organVo = new OrganUserVO();
+				String[] title = titleValue.split(":");
+				organVo.setDepartment(doc.getElementsByTagName("DEPTID").item(i).getTextContent());
+				organVo.setJobID(doc.getElementsByTagName("JOBID").item(i).getTextContent());
+				organVo.setTitle(title[0]);
+				organVo.setTitle2(title[1]);
+				newAddJobList.add(organVo);
+
+			} else { // 선택삭제, 전체겸직삭제인경우
+
+				updateType = "clearAddJob";
+				if (doc.getElementsByTagName("DEPTID").item(i).getTextContent().equals("")) { // 전체겸직삭제인경우
+					String cn = doc.getElementsByTagName("CN").item(i).getTextContent();
+					List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(cn, "1", tenantID);
+
+					for (int j = 0; j < organUserVOList.size(); j++) {
+						if (deleteTitleInfo.equals("")) {
+							deleteTitleInfo = organUserVOList.get(j).getDepartment() + ":" + titleValue;
+						} else {
+							deleteTitleInfo += ";" + organUserVOList.get(j).getDepartment() + ":" + titleValue;
+						}
+
+						// 2023-07-03 장혜연 겸직 전체 삭제 정보 사용자 변경 히스토리에 들어갈 값 vo에 setting (겸직부서의 직위를 가져오기 위해
+						// 겸직정보를 지우기 전에 실행)
+						UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+						userChangeInfoVO.setUserId(cn);
+						userChangeInfoVO.setTargetDeptId(organUserVOList.get(j).getDepartment());
+						userChangeInfoVO.setTargetDeptNm(organUserVOList.get(j).getDescription1() + "/" + organUserVOList.get(j).getTitle1());
+						userChangeInfoVO.setTargetDeptNm2(organUserVOList.get(j).getDescription2() + "/" + organUserVOList.get(j).getTitle2());
+						userChangeInfoVO.setUpdateType(updateType);
+						userChInfoList.add(userChangeInfoVO);
+					}
 
             		logger.debug("cn=" + cn + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo);
-            		
-            		
-            		// 2023-07-03 장혜연 전체 겸직 삭제 후 사용자 변경 히스토리에 들어갈 값 vo에 setting (겸직부서의 직위를 가져오기 위해 겸직정보를 지우기 전에 실행)  
-            		updateType = "clearAddJob";
-            		String deletInfo[] = deleteTitleInfo.split(";");
-            		
-            		for (int k=0; k < deletInfo.length; k++) {
-            			UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
-            			String deltDeptID[] = deletInfo[k].split(":");	
-            			OrganUserVO jobInfo = ezOrganAdminService.getAddJobInfo(cn, deltDeptID[0]);
-            			userChangeInfoVO.setUserId(cn);
-            			userChangeInfoVO.setTargetDeptId(deltDeptID[0]);
-            			userChangeInfoVO.setTargetDeptNm(jobInfo.getDescription() + "/" + jobInfo.getTitle());
-            			userChangeInfoVO.setTargetDeptNm2(jobInfo.getDescription1() + "/" + jobInfo.getTitle1());            					
-            			
-            			
-            			userChInfoList.add(listidx,userChangeInfoVO);
-            			
-            			listidx++;
-            			
-            		}
-            		
-            		ezOrganAdminService.updateProperty(cn, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
-            		ezOrganAdminService.deleteJob(cn, deleteTitleInfo, tenantID);
-            		
-            		deleteTitleInfo = "";
-            	}
-            	else { //선택삭제인경우
-            		if (deleteTitleInfo.equals("")) {
-            			deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
-						delJobId = doc.getElementsByTagName("JOBID").item(i).getTextContent(); // 아이콘 선택삭제는 1개씩 가능하여 else쪽에는 추가 안함
-            		} else {
-            			deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
-            		}
-            		         		
-            		logger.debug("deleteTitleInfo : {} ", deleteTitleInfo);
-            	}
-            }
-		    jobID += doc.getElementsByTagName("JOBID").item(i).getTextContent() + ";";
-		} //for문완료
+
+					ezOrganAdminService.updateProperty(cn, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID);
+					ezOrganAdminService.deleteJob(cn, deleteTitleInfo, tenantID);
+
+					deleteTitleInfo = "";
+				} else { // 선택삭제인경우
+					if (deleteTitleInfo.equals("")) {
+						deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
+						delJobId = doc.getElementsByTagName("JOBID").item(i).getTextContent(); // 아이콘 선택삭제는 1개씩 가능하여
+					// else쪽에는 추가 안함
+					} else {
+						deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
+					}
+
+					logger.debug("deleteTitleInfo : {} ", deleteTitleInfo);
+				}
+			}
+			jobID += doc.getElementsByTagName("JOBID").item(i).getTextContent() + ";";
+		} // for문완료
 		jobID = jobID.substring(0, jobID.length() - 1);
-		
-		// 2022-07-06 이사라 - 한 부서에 겸직이 2개 이상 있는 경우 1개만 삭제 시 rewrite테이블에서 삭제되는 것을 방지하기 위해 이중겸직인지 확인
+
+		// 2022-07-06 이사라 - 한 부서에 겸직이 2개 이상 있는 경우 1개만 삭제 시 rewrite테이블에서 삭제되는 것을 방지하기 위해
+		// 이중겸직인지 확인
 		if (StringUtils.isNotEmpty(delJobId)) {
 			isAddJobMoreInOneDept = ezOrganAdminService.getAddJobCountInOneDept(userID, deleteTitleInfo, tenantID) > 1 ? true : false;
 		}
@@ -2696,32 +2699,31 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		if (!deleteTitleInfo.equals("") && !delType.equals("ALL")) { // 선택 삭제일 시 
-			
-			// 2023-07-03 장혜연 : 선택 삭제 후 사용자 변경 히스토리에 들어갈 값 setting 
+
+			// 2023-07-03 장혜연 : 선택 삭제 후 사용자 변경 히스토리에 들어갈 값 setting
 			UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
 			updateType = "clearAddJob";
 			String deletInfo[] = deleteTitleInfo.split(";");
-			
-			for (int i=0; i < deletInfo.length; i++) {
-				String deltDeptID[] = deletInfo[i].split(":");	
 
-				OrganUserVO jobInfo = ezOrganAdminService.getAddJobInfo(userID, deltDeptID[0]);
+			for (int i = 0; i < deletInfo.length; i++) {
+				String deltDeptID[] = deletInfo[i].split(":");
+				OrganUserVO jobInfo = ezOrganAdminService.getAddJobInfo(userID, deltDeptID[0], delJobId, tenantID);
 				userChangeInfoVO.setUserId(userID);
 				userChangeInfoVO.setTargetDeptId(deltDeptID[0]);
 				userChangeInfoVO.setTargetDeptNm(jobInfo.getDescription() + "/" + jobInfo.getTitle());
-				userChangeInfoVO.setTargetDeptNm2(jobInfo.getDescription1() + "/" + jobInfo.getTitle1());   
-				
-				userChInfoList.add(i,userChangeInfoVO);
+				userChangeInfoVO.setTargetDeptNm2(jobInfo.getDescription1() + "/" + jobInfo.getTitle1());
+				userChangeInfoVO.setUpdateType(updateType);
+
+				userChInfoList.add(i, userChangeInfoVO);
 			}
-			
+
 			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID, delJobId, isAddJobMoreInOneDept);
-			
+
 		} else {
-		    if (!titleInfo.equals("")) { // 겸직 추가일경우 
+		    if (!titleInfo.equals("")) { // 겸직 추가, 팝업 수정 일경우
 		        List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
 		        StringBuilder sbCurrentJobList = new StringBuilder();
-		        
-		        updateType = "grantAddJob";
+
 		        List<String> currDeptIdList = new ArrayList<String>();
 		        // 지정된 사용자의 현재 겸직 목록을 구한다.
 		        for (int i = 0; i < organUserVOList.size(); i++) {
@@ -2735,108 +2737,118 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		            
 		            currDeptIdList.add(organUserVO.getDepartment()); 
 		        }
-		        
-		        String currentJobList = sbCurrentJobList.toString();
-		        logger.debug("currentJobList : {} " , currentJobList);
-		        
-		
-		        
-		        // 2023-07-03 장혜연 현재 겸직정보와 비교하여 새로 추가된 겸직 정보 Vo에 setting  
-		        int index = 0; // list에 넣어줄 index 초기 값 선언 
-		        for (int j = 0; j < newAddJobList.size(); j++){
-		        	String newAddJobInfo[] =  newAddJobList.get(j).split(":");
-		        	if (!currDeptIdList.contains(newAddJobInfo[0])) {
-		  
-		        		UserChangeInfoVO userChVo = new UserChangeInfoVO();
-		        		OrganDeptVO newDeptNm = ezOrganAdminService.getDeptDisplayNm(newAddJobInfo[0], tenantID);
-	        			userChVo.setUserId(userID);
-	        			userChVo.setTargetDeptId(newAddJobInfo[0]);
-	        			userChVo.setTargetDeptNm(newDeptNm.getDisplayName() + "/" + newAddJobInfo[1] );
-	        			userChVo.setTargetDeptNm2(newDeptNm.getDisplayName2() + "/" + newAddJobInfo[2]);   			
-	        			userChInfoList.add(index,userChVo);
-	        			index ++;   		
-		        	}
-		        }
-        
-		        if (!currentJobList.equals("")) {  //현재 겸직이 존재하는 경우 
-		            // 현재 겸직 목록을 모두 삭제한다.
-		            ezOrganAdminService.deleteJob(userID, currentJobList, tenantID);
-		        }
-		        
-		        String sTitle1 = "";
-		        String sTitle2 = "";
-		        String pDeptID = "";
-		        String manualFlag = "";
-		
-		        
-	            String[] addJobinfo = titleInfoWithManualFlag.split(";");
-	            StringBuilder sb = new StringBuilder();
-	            
-	            for (int i = 0; i < addJobinfo.length; i++) {   // 새로추가한 겸직정보와 + 기존겸직정보 
-	                String[] jobInfo = addJobinfo[i].split(":");
-	                int jobInfoLength = jobInfo.length;
-	                pDeptID = jobInfo[0];
-	                sTitle1 = "";
-	                manualFlag = null;
-	                
-	                
-	                if (jobInfoLength > 2) {
-	                    sTitle1 = jobInfo[1];
-	                    manualFlag = jobInfo[jobInfoLength - 1];
-	                }
-	                
-	                sTitle2 = "";
-	                
-	                if (jobInfoLength > 3) {
-	                    sTitle2 = jobInfo[2];
-	                } else {
-	                    sTitle2 = sTitle1;
-	                }
-	                
-	                
-	                if (i == 0) {
-	                    sb.append(pDeptID + ":" + sTitle1 + ":" + sTitle2 + ":" + manualFlag);
-	                } else {
-	                    sb.append(";" + pDeptID + ":" + sTitle1 + ":" + sTitle2 + ":" + manualFlag);
-	                }
 
-	            }		
-	            
-	            titleInfoWithManualFlag = sb.toString();
-	            
-	            logger.debug("new titleInfo with manualFlag=" + titleInfoWithManualFlag);
-	            
-	            // 새로운 겸직 목록을 설정한다.
-	            ezOrganAdminService.addJob(userID, titleInfoWithManualFlag, jobID, tenantID);
+				String currentJobList = sbCurrentJobList.toString();
+				logger.debug("currentJobList : {} ", currentJobList);
+				// 장혜연 2023-09-01 : 기존 겸직과 수정된 겸직을 비교하여 해제된 겸직 정보를 사용자 변경 히스토리 vo에 setting 한다.
+				for (OrganUserVO orgAddJob : organUserVOList) {
+					boolean isContainedNewList = newAddJobList.stream()
+							.anyMatch(newAddJob -> newAddJob.getDepartment().equals(orgAddJob.getDepartment())
+									&& newAddJob.getJobID().equals(orgAddJob.getJobID()));
+					if (!isContainedNewList) {
+						UserChangeInfoVO userChVo = new UserChangeInfoVO();
+						updateType = "clearAddJob";
+						userChVo.setUserId(userID);
+						userChVo.setTargetDeptId(orgAddJob.getDepartment());
+						userChVo.setTargetDeptNm(orgAddJob.getDescription1() + "/" + orgAddJob.getTitle());
+						userChVo.setTargetDeptNm2(orgAddJob.getDescription2() + "/" + orgAddJob.getTitle2());
+						userChVo.setUpdateType(updateType);
+						userChInfoList.add(userChVo);
 
-		    }		    
+					}
+				}
+				// 장혜연 2023-09-01 : 기존 겸직과 수정된 겸직을 비교하여 부여된 겸직 정보를 사용자 변경 히스토리 vo에 setting 한다.
+				for (OrganUserVO newAddJob : newAddJobList) {
+					boolean isContainedOrgList = organUserVOList.stream()
+							.anyMatch(orgAddJob -> orgAddJob.getDepartment().equals(newAddJob.getDepartment())
+									&& orgAddJob.getJobID().equals(newAddJob.getJobID()));
+					if (!isContainedOrgList) {
+						updateType = "grantAddJob";
+						UserChangeInfoVO userChVo = new UserChangeInfoVO();
+						OrganDeptVO newDeptNm = ezOrganAdminService.getDeptDisplayNm(newAddJob.getDepartment(), tenantID);
+						userChVo.setUserId(userID);
+						userChVo.setTargetDeptId(newAddJob.getDepartment());
+						userChVo.setTargetDeptNm(newDeptNm.getDisplayName() + "/" + newAddJob.getTitle());
+						userChVo.setTargetDeptNm2(newDeptNm.getDisplayName2() + "/" + newAddJob.getTitle2());
+						userChVo.setUpdateType(updateType);
+						userChInfoList.add(userChVo);
+					}
+				}
+
+				if (!currentJobList.equals("")) { // 현재 겸직이 존재하는 경우
+					// 현재 겸직 목록을 모두 삭제한다.
+					ezOrganAdminService.deleteJob(userID, currentJobList, tenantID);
+				}
+
+				String sTitle1 = "";
+				String sTitle2 = "";
+				String pDeptID = "";
+				String manualFlag = "";
+
+				String[] addJobinfo = titleInfoWithManualFlag.split(";");
+				StringBuilder sb = new StringBuilder();
+
+				for (int i = 0; i < addJobinfo.length; i++) { // 새로추가한 겸직정보와 + 기존겸직정보
+					String[] jobInfo = addJobinfo[i].split(":");
+					int jobInfoLength = jobInfo.length;
+					pDeptID = jobInfo[0];
+					sTitle1 = "";
+					manualFlag = null;
+
+					if (jobInfoLength > 2) {
+						sTitle1 = jobInfo[1];
+						manualFlag = jobInfo[jobInfoLength - 1];
+					}
+
+					sTitle2 = "";
+
+					if (jobInfoLength > 3) {
+						sTitle2 = jobInfo[2];
+					} else {
+						sTitle2 = sTitle1;
+					}
+
+					if (i == 0) {
+						sb.append(pDeptID + ":" + sTitle1 + ":" + sTitle2 + ":" + manualFlag);
+					} else {
+						sb.append(";" + pDeptID + ":" + sTitle1 + ":" + sTitle2 + ":" + manualFlag);
+					}
+
+				}
+
+				titleInfoWithManualFlag = sb.toString();
+
+				logger.debug("new titleInfo with manualFlag=" + titleInfoWithManualFlag);
+
+				// 새로운 겸직 목록을 설정한다.
+				ezOrganAdminService.addJob(userID, titleInfoWithManualFlag, jobID, tenantID);
+
+			}
 		}
-	
 
-		// 2023-07-03 장혜연 공통적으로 들어갈 값들 vo list에 setting 한 후 사용자 변경 히스토리 테이블에 insert 실행 
-		for(int k = 0; k < userChInfoList.size(); k++) {
-		
+		// 2023-07-03 장혜연 공통적으로 들어갈 값들 vo list에 setting 한 후 사용자 변경 히스토리 테이블에 insert 실행
+		for (int k = 0; k < userChInfoList.size(); k++) {
+
 			userChInfoList.get(k).setTargetType("addJob");
-			userChInfoList.get(k).setUpdateType(updateType);
 			userChInfoList.get(k).setExecutorIp(ClientUtil.getClientIP(request));
 			userChInfoList.get(k).setManualFlag("Y");
 			userChInfoList.get(k).setTenantId(tenantID);
-			
-			try {				
+
+			try {
 				ezSystemAdminService.insertUserChangeHist(userChInfoList.get(k), userInfo);
-			}catch (Exception e) {
+			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
-			
+
 		}
-		
+
 		ezBoardAdminService.trunkBoard(tenantID);
-		
+
 		logger.debug("saveSubTitle ended.");
-		
+
 		return "OK";
 	}
-	
+
 	/**
 	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
 	 */
@@ -3409,12 +3421,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;background:none;'>");
-		
 		for (String[] aliasAddress : aliasAddressList) {
 			if (aliasAddress[0].equals(primaryAddr)) {
-				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + "</option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + " (Primary)</option>");
 			} else {
-				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + "</option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + " </option>");
 			}
 		}
 		
@@ -5639,7 +5650,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				pDirPath                     = realPath + pDirPath + "temp" + commonUtil.separator;
 				excelPath             = ezOrganAdminService.createExcelUsers(realPath + commonUtil.separator, pDirPath, exportUserlist, primary, locale);
 			}
-			
+
 			if (excelPath.equals("")) {
 				result.put("status", "error");
 				result.put("code", 1);

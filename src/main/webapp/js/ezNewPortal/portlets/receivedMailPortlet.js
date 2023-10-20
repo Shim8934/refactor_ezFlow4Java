@@ -15,7 +15,7 @@ function getMailList() {
 			mailPercent = result.mailPercent
 			var mailboxDetail = result.mailboxDetail;
 			var mailboxQuotaStr = result.mailboxQuotaStr;
-			var mailList = result.mailList;
+			var mailList = !!result.mailList ? result.mailList : [];
 			var readClass = "";
 			var href = "";
 			var subject = "";

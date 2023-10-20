@@ -14,8 +14,14 @@
                 	<dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
                 	<dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
                 	<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /></span></dt>                	
-                	<dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
+                	<%-- 2023-06-22 황인경 - 디자인 개선 > 전자결재 포틀릿 > '+' 더보기 태그 위치 변경 --%>
+<%--                <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>                	 --%>
             	</dl>
+            	<dl class="portlet_tab_plus">
+                	<dd class="portletPlus" onclick="Appmore_btnClick()">
+                		<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+               		</dd>
+				</dl>
             	<ul id ="ApprList" class="portlet_list"></ul>
         	</div>
 		</article>
@@ -25,6 +31,21 @@
 		<script src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>
 		<script type="text/javascript">
 			var getApprovalList = function(type) {
+				var absence = getAbsence();
+				if (!!absence) {
+					var docsHTML = "<dl class='nodata' '>";
+					docsHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
+					docsHTML += '<dd>';
+					docsHTML += absence
+					docsHTML += ' <spring:message code="ezApprovalG.t1723" /></dd>';
+					docsHTML += '<br>';
+					docsHTML += '<a onclick="popAskAbsence()"; style="cursor:pointer;"><spring:message code="ezApprovalG.pgb11" /></a>';
+					docsHTML += "</dl>";
+
+					document.getElementById('ApprList').innerHTML = docsHTML;
+					return;
+				}
+
 				var request = new XMLHttpRequest();
 				request.open('POST', '/ezNewPortal/getApprovalList.do', true);
 				request.setRequestHeader('Content-Type', 'application/json');
@@ -150,7 +171,7 @@
 			    
 			    for(var i=0; i<listSize; i++){
 			        console.log("img", lines[i].ext2);
-			        var imgsrc = lines[i].ext2 !== null && lines[i].ext2 !== '' ? "/ezCommon/downloadAttach.do?filePath=" + imgPath + "/" + lines[i].ext2 : "/images/kr/main/bestEmployee_pic_none.png";
+			        var imgsrc = lines[i].ext2 !== null && lines[i].ext2 !== '' ? "/ezCommon/downloadAttach.do?filePath=" + imgPath + "/" + lines[i].ext2 : "/images/ezNewPortal/info_pic_none.png";
 			        var apprTextColor = "";
 			        
 			        // 승인 003, 진행 002, 대기, 001
@@ -513,7 +534,52 @@
 		        
 		        return res;
 		    }
-		    
+
+			function getAbsence() {
+				var absence = "";
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/endAbsence.do",
+					success: function(result) {
+						absence = result;
+					}
+				});
+
+				return absence;
+			}
+
+			function clearAbsence(isOk) {
+				if (!isOk) return;
+
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezPersonal/clearAbsence.do",
+					success: function(result) {
+						if (result === "true") {
+							var onTab = document.querySelector('#doingTab.on,#rejectTab.on,#draftTab.on').id;
+							if (!!onTab) {
+								onTab = onTab.replace("Tab", "");
+								getApprovalList(onTab);
+							}
+						}
+					}
+				});
+			}
+
+			var ezapropinion_cross_dialogArguments = new Array();
+			function popAskAbsence() {
+				ezapropinion_cross_dialogArguments[0] = "<spring:message code='ezApprovalG.t1724' />";
+				ezapropinion_cross_dialogArguments[1] = clearAbsence;
+				ezapropinion_cross_dialogArguments[2] = true;
+
+				var OpenWin = window.open("/ezApprovalG/ezAprOpinion.do", "popAskAbsence", GetOpenWindowfeature(330, 205));
+				try { OpenWin.focus(); } catch (e) { }
+			}
+
 			getApprovalList("doing");
 		</script>
 	</body>

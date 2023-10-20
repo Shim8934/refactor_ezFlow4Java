@@ -25,11 +25,12 @@
 			<div class="admin_left_title" title="<spring:message code='ezNewPortal.t053' />"><spring:message code='ezNewPortal.t053' /></div>
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<!-- themes -->
-				<h2 class="on"><span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPortal.jjh01' /></span></h2>
+				<h2 class="on"><span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezPortal.jjh01' /></span></h2>
+
 				<ul class="lnbUL">
 				<c:if test="${packageType != 'mail'}">  
 				<c:if test="${usePortal eq 'YES' }">
-					<li><span class = "list_text leftMenu_btn" id = "themes"><spring:message code='ezNewPortal.t054' /></span></li>
+					<li class="on"><span class = "list_text leftMenu_btn" id = "themes"><spring:message code='ezNewPortal.t054' /></span></li>
 					<li><span class = "list_text leftMenu_btn" id = "menus"><spring:message code='ezNewPortal.t055' /></span></li>
 					<li><span class = "list_text leftMenu_btn" id = "portlets"><spring:message code='ezNewPortal.t056' /></span></li>
 				</c:if>
@@ -40,8 +41,8 @@
 				</c:if>
 				</ul>
 				<c:if test="${usePortal eq 'YES' }">
-				<h2 class="on"><span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPortal.jjh02' /></span></h2>
-				<ul class="lnbUL">
+				<h2 class="off"><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezPortal.jjh02' /></span></h2>
+				<ul class="lnbUL off">
 				<c:if test="${packageType != 'mail'}">  
 					<li><span  class = "list_text" onClick="goPage(8)"><spring:message code='ezPersonal.khj1' /></span></li>
 					<li><span  class = "list_text" onClick="goPage(3)"><spring:message code = 'ezPersonal.hyh1' /></span></li>
@@ -85,6 +86,7 @@
 					}
 					
 					window.open(url,"right");
+					liSelected();
 				});
 			});
 		}
@@ -146,7 +148,32 @@
 		            break;
 		    }
 			parent.frames["right"].location.href = url;
+			liSelected();
 		}
+        
+        // 2023-07-03 황인경 - 디자인 개선 > 관리자 > 포탈 > 좌측메뉴 > 트리구조 메뉴 선택 
+        function liSelected() {
+	        $("li.on").attr("class", "");
+			$(event.target).parent().attr("class", "on");
+        } 
+        
+        // 2023-07-03 황인경 - 디자인 개선 > 관리자 > 포탈 > 좌측메뉴 > 트리구조 LNB 이미지 추가 
+        function openFolder() {
+        	var h2Title = $(event.target).parent();
+        	
+        	if (h2Title.hasClass("on")) {
+        		h2Title.attr("class", "off");
+        		h2Title.next().addClass("off");
+        		h2Title.children().eq(0).attr("class", "sub_iconLNB tree_plus");
+        	} else {
+        		$("h2.on").attr("class", "off");
+        		$(".lnbUL").attr("class", "lnbUL off");
+        		h2Title.attr("class", "on");
+        		h2Title.next().removeClass("off");
+        		$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
+        		h2Title.children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+        	}
+        }
 		
 	</script>
 </html>

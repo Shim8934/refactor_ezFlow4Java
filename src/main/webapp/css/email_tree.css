@@ -1,14 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap');
+
 .node_div { line-height:10px !important;}
 
 .node_normal
 {
-    font-size: 13px;
-    height: 30px;
-    line-height: 30px;
-    color: #393939;
+    font-size: 14px;
+    height: 26px;
+    line-height: 26px;
+    color: #333;
     display: inline-block;
-    padding: 0px 0px 0px 5px;
-    font-family: Malgun Gothic, Gulim;
+    padding: 0px 0px 0px 3px;
+    font-family: 'Noto Sans KR', sans-serif;
     cursor: pointer;
     width: 76%;
     white-space: nowrap;
@@ -18,13 +20,13 @@
 }
 .node_selected
 {
-    font-size: 13px;
-    height: 30px;
-    line-height: 30px;
-    color: #0470e4;
+    font-size: 14px;
+    height: 26px;
+    line-height: 26px;
+    color: #0470E4;
     display: inline-block;
-    padding: 0px 0px 0px 5px;
-    font-family: Malgun Gothic, Gulim;
+    padding: 0px 0px 0px 3px;
+    font-family: 'Noto Sans KR', sans-serif;
     cursor: pointer;
     width: 76%;
     white-space: nowrap;
@@ -32,9 +34,11 @@
     overflow: hidden;
     box-sizing: border-box;
     font-weight: bold;
+    text-decoration: underline !important;
 }
 .node_normal:hover
 {
-    color:#0470e4; 
+    color:#0470E4 !important; 
     font-weight:bold;
 } 
+

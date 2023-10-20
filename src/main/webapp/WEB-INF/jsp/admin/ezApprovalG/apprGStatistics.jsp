@@ -268,7 +268,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezApprovalG.t1297' />
+	    <h1><spring:message code = 'main.t42' />
 			<%-- 2020-10-22 홍승비 - 회사선택 셀렉트박스 추가 --%>
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">

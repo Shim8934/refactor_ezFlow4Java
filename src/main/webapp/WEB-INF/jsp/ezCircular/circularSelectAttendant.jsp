@@ -2035,7 +2035,7 @@
 	                    	<td id="circularOrgan_content" style="display:none;">
 	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 1px; padding:0px; border-top: 0px;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea; height:30px;">
-	                                    <table style="margin-top: 5px; width: 100%;">
+	                                    <table style="margin-top: 3px; width: 100%;">
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
@@ -2054,7 +2054,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezCircular.t159' /></option>
 	                                                        <option value="streetAddress" usedefault="0" style="display:none"><spring:message code='ezCircular.t160' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:21px">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:24px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezCircular.t85' /></span></a>
 	                                                </div>
 	                                            </td>
@@ -2163,7 +2163,7 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;position: absolute;top: 56px;width: 237px;">
+	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:13px;position: absolute;top: 44px;width: 237px; height: 26px !important;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezCircular.t34'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="border-top: 1px solid #ddd;">

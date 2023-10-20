@@ -59,7 +59,7 @@ function renderData(companyId, result, mode, rootDiv) {
 	
 	var spanCompany = document.getElementById(compFolderId).nextSibling.nextSibling;
 	spanCompany.style.color      = "#004a87";
-	spanCompany.style.fontWeight = "bold";
+	//spanCompany.style.fontWeight = "bold";
 	
 	divTree.style.display = "";
 }
@@ -79,16 +79,23 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	var imgElmt = document.createElement("img");
 	imgElmt.setAttribute("id" , list["folderId"]);
 	
-	var imgElmt2 = document.createElement("img");
-	imgElmt2.setAttribute("class", "webfolderImg");
-	imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
+//	var imgElmt2 = document.createElement("img");
+//	imgElmt2.setAttribute("class", "webfolderImg");
+//	imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 	
 	var spanFolderName = document.createElement("span");
 	if (list["folderLevel"] == 0) {
 		spanFolderName.textContent = primary == "1" ? list["folderName"]+"(" + list["ownerId"]+")" : list["folderName2"]+"(" + list["ownerId"]+")";
+		spanFolderName.style.verticalAlign = "bottom";
 		companyId = list["ownerId"];
+		
+		if (divTree.id == "folderTree") {
+			spanFolderName.style.fontWeight = "bold";
+		}
+		
 	} else {
 		spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
+		spanFolderName.style.fontWeight = "normal";
 	}
 	spanFolderName.setAttribute("class", "spanName");
 	spanFolderName.setAttribute("name", list["folderId"]);
@@ -104,7 +111,7 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	 }
 	
 	divElmt.appendChild(imgElmt);
-	divElmt.appendChild(imgElmt2);
+//	divElmt.appendChild(imgElmt2);
 	divElmt.appendChild(spanFolderName);
 	divTree.appendChild(divElmt);
 	
@@ -116,12 +123,12 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 		imgElmt.onclick = function() {getDetailTree(this, folderType);};
 		
 		if (list["listSubFolders"] == null) {
-			imgElmt.src = "/images/OrganTree_cross/plus.gif";
+			imgElmt.src = "/images/OrganTree_cross/plus.png";
 			imgElmt.setAttribute("class", "webfolderPlus");
 			return;
 		}
 		
-		imgElmt.src = "/images/OrganTree_cross/minus.gif";
+		imgElmt.src = "/images/OrganTree_cross/minus.png";
 		imgElmt.setAttribute("class", "webfolderMinus");
 		
 		var len = list["listSubFolders"].length;
@@ -173,18 +180,18 @@ function getDetailTree(obj, folderType) {
 		var childElmt = obj.parentElement.lastElementChild;
 		
 		if (obj.className == "webfolderMinus") {
-			obj.src= "/images/OrganTree_cross/plus.gif";
+			obj.src= "/images/OrganTree_cross/plus.png";
 			obj.setAttribute("class", "webfolderPlus");
 			childElmt.style.display = "none";
 		}
 		else {
-			obj.src= "/images/OrganTree_cross/minus.gif";
+			obj.src= "/images/OrganTree_cross/minus.png";
 			obj.setAttribute("class", "webfolderMinus");
 			childElmt.style.display = "";
 		}
 	}
 	else {
-		obj.src = "/images/OrganTree_cross/minus.gif";
+		obj.src = "/images/OrganTree_cross/minus.png";
 		obj.setAttribute("class", "webfolderMinus");
 		
 		$.ajax({
@@ -297,6 +304,11 @@ function renderData2(companyId, result, mode, rootDiv) {
 	for (var i = 0; i < result.length; i++) {
 		var divDept  = document.createElement("div");
 		displaySubFolder(divTree, divDept, result[i], "dept");
+		divDept.style.fontWeight = "normal";
+		
+		if (i == 0) {
+			divDept.style.fontWeight = "bold";
+		}
 	}
 	
 	var spanFirstDept = document.getElementById(selectedFolder).nextSibling.nextSibling;

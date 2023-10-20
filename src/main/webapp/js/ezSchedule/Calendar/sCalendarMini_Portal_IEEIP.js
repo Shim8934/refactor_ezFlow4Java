@@ -421,7 +421,10 @@ function GetTableMiniBodyObjTop() {
 
     var oTbody = document.createElement("TBODY");
     var objTr = document.createElement("TR");
-
+    
+    /* 2023-06-05 홍승비 - 포탈 홈 > 디자인 개선을 위해  테마2에서 사용되는 미니캘린더 영역의 요일 표기 숨김처리 (id 부여 후 .css 파일로 조정) */
+    objTr.setAttribute("id", "scalendarMini_dayOfWeek");
+    
     // day of the week Start
     for (var j = 0; j < 7; j++) {
         var objTD = document.createElement("TH");

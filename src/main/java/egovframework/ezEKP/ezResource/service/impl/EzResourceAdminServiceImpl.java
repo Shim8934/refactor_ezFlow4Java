@@ -86,7 +86,7 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public void addClsData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall,String brdNm,
-			String brdExplain, String accessNoty, String companyID, String brdNm2, String isCompany, int tenantID) throws Exception {
+			String brdExplain, String accessNoty, String companyID, String brdNm2, String isCompany, int tenantID, String ownerNm2) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_P_ClassGB", classGB);
 		map.put("v_P_ODeptID", deptID);
@@ -102,6 +102,7 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_P_Brd_NM2", brdNm2);
 		map.put("v_P_IS_COMPANY", isCompany);
 		map.put("tenantID", tenantID);
+		map.put("v_P_OwnerNm2", ownerNm2);
 		
 		int brdID = 0;
 		
@@ -293,13 +294,14 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String accessNoty = xmlRes.getElementsByTagName("DATA").item(9).getTextContent().trim();
 		String companyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		String brdNm2 = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
+		String ownerNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
 		String isCompany = "";
 		
 		if (xmlRes.getElementsByTagName("ISCOMPANY").getLength() > 0) {
 			isCompany = xmlRes.getElementsByTagName("ISCOMPANY").item(0).getTextContent();
 		}
 		
-		addClsData(classGB, deptID, deptNm, ownerID, ownerNm, ownerPos, ownerCall, brdNm, brdExplain, accessNoty, companyID, brdNm2, isCompany, tenantID);
+		addClsData(classGB, deptID, deptNm, ownerID, ownerNm, ownerPos, ownerCall, brdNm, brdExplain, accessNoty, companyID, brdNm2, isCompany, tenantID, ownerNm2);
 		return true;
 	}
 	

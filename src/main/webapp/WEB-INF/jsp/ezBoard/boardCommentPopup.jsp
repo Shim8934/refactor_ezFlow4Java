@@ -77,6 +77,7 @@
 			var checkpassword_dialogArguments = new Array();
 			var delpReplyID;
 			var rsa = new RSAKey();
+			var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
 			
 			$(document).ready(function(){
 				rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);

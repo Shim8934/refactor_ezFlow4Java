@@ -1909,6 +1909,9 @@ function getfieldValue(pfield) {
     return rtnVal;
 }
 function SaveFile() {
+    // 확인, 참조일 경우 파일 저장 안함
+    if (pAprLineType == strAprType2 || pAprLineType == strAprType7) return "TRUE";
+
 	var result = "";
     var mhtBody = "";
 	mhtBody = message.Get_EditorBodyHTML();

@@ -697,8 +697,8 @@
 							<span class="preview_count" id="preview_count"></span>
 							<span id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px; margin-top: -9px;">
 								<select id="searchType" style="height: 26px; width: 60px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
-								<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
-								<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
+								<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px; margin-right: -2px;">
+								<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.png" style="width: 26px; height: 24px; margin-top:2px;" border="0" onClick="search()"></a>
 							</span>
 						</p>
 					</div>

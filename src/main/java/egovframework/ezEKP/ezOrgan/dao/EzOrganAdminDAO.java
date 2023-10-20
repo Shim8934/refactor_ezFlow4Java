@@ -1091,27 +1091,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteDBData_D6(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteDBData_D6", map);
     }
-	
-	public void deleteCompany_D1(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.deleteCompany_D1", map);
-    }
-	
-	public void deleteCompany_D2(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.deleteCompany_D2", map);
-    }
-	
-	public void deleteCompany_D3(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.deleteCompany_D3", map);
-    }
-	
-	public void deleteCompany_D4(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.deleteCompany_D4", map);
-    }
-	
-	public void deleteCompany_D5(Map<String, Object> map) throws Exception {
+
+ 	public void deleteCompany_D5(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteCompany_D5", map);
     }
-	
+
 	public void deleteCompany_D6(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteCompany_D6", map);
     }
@@ -1175,11 +1159,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteCompany_D21(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompany_D21", map);
 	}
-	
-	public void deleteCompany_D22(Map<String, Object> map) throws Exception {
-		delete("EzOrganAdminDAO.deleteCompany_D22", map);
-	}
-	
+
 	public void deleteCompany_D23(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompany_D23", map);
 	}
@@ -1223,31 +1203,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteCompany_D33(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompany_D33", map);
 	}
-	
-	public void deleteCompanyInfo_IKMS(Map<String, Object> map) throws Exception {
-		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS", map);
+
+	public void deleteCompany_D34(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompany_D34", map);
 	}
-	
-	public void deleteCompanyInfo_IKMS2(Map<String, Object> map) throws Exception {
-		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS2", map);
-	}
-	
-	public void deleteCompanyInfo_IKMS3(Map<String, Object> map) throws Exception {
-		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS3", map);
-	}
-	
-	public void deleteCompanyInfo_IKMS4(Map<String, Object> map) throws Exception {
-		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS4", map);
-	}
-	
-	public void deleteCompanyInfo_IKMS5(Map<String, Object> map) throws Exception {
-		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS5", map);
-	}
-	
-	public void deleteCompanyInfo_IKMS6(Map<String, Object> map) throws Exception {
-		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS6", map);
-	}
-	
+
 	public void deleteCompanyInfo_IKMS7(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteCompanyInfo_IKMS7", map);
 	}
@@ -1312,27 +1272,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         
         logger.debug("updateDeptCompanyDisplayName ended.");
     }
-    
-    public void insertCompanyInfo_I1(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_I1", map);
-    }
-    
-    public void insertCompanyInfo_I2(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_I2", map);
-    }
-    
-    public void insertCompanyInfo_I3(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_I3", map);
-    }
-    
-    public void insertCompanyInfo_I4(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_I4", map);
-    }
-    
-    public void insertCompanyInfo_I5(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_I5", map);
-    }
-    
+
     public void insertCompanyInfo_I6(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I6", map);
     }
@@ -1398,10 +1338,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertCompanyInfo_I21(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I21", map);
     }
-    public void insertCompanyInfo_I22(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_I22", map);
-    }
-    
+
     public void insertCompanyInfo_I23(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I23", map);
     }
@@ -1449,31 +1386,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertCompanyInfo_IJHS1(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_IJHS1", map);
     }
-    
-    public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS", map);
-    }
-    
-    public void insertCompanyInfo_IKMS2(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS2", map);
-    }
-    
-    public void insertCompanyInfo_IKMS3(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS3", map);
-    }
 
-    public void insertCompanyInfo_IKMS4(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS4", map);
-    }
-    
-    public void insertCompanyInfo_IKMS5(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS5", map);
-    }
-    
-    public void insertCompanyInfo_IKMS6(Map<String, Object> map) throws Exception {
-    	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS6", map);
-    }
-    
     public void insertCompanyInfo_IKMS7(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS7", map);
     }
@@ -2384,7 +2297,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		return (OrganDeptVO) select("EzOrganAdminDAO.getDeptDisplayNm",vo);
 	}
 	
-	public OrganUserVO getAddJobInfo(Map<String, String> map) throws Exception {
+	public OrganUserVO getAddJobInfo(Map<String, Object> map) throws Exception {
 		return (OrganUserVO) select ("EzOrganAdminDAO.getAddJobInfo",map);
 	}
 

@@ -819,9 +819,10 @@ public class EzBoardController extends EgovFileMngUtil{
 					   
 					   strName = "";
 					   
+					   /* 2023-06-28 황인경 - 디자인 개선 > 게시판 > 마이게시판 > 좌측메뉴 > 게시물 카운트 괄호 추가 */
 					   /* 2018-12-11 홍승비 - 마이게시판리스트 우측 게시물 갯수에서 괄호 제거 */
 					   if (intCount != 0) {
-						   strName = " " + intCount;
+						   strName = "(" + intCount + ")";
 					   }
 					   
 					   nList.item(i).getChildNodes().item(0).setTextContent(nList.item(i).getChildNodes().item(0).getTextContent() + strName);
@@ -1192,7 +1193,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setAttributeYN(strProp.getAttributeYN());
 			boardInfo.setLikeFlag(strProp.getLikeFlag());
 			boardInfo.setOneLineReply(strProp.getOneLineReply()); // 댓글옵션정보 추가
-			
+			boardInfo.setReactFlag(strProp.getReactFlag()); // 댓글 좋아요/싫어요 사용여부 플래그 추가
+
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
 			
@@ -3430,8 +3432,9 @@ public class EzBoardController extends EgovFileMngUtil{
 						
 						String strName = "";
 						
+						/* 2023-06-28 황인경 - 디자인 개선 > 게시판 > 마이게시판 > 좌측메뉴 > 게시물 카운트 괄호 추가 */
 						if (intCount != 0) {
-							strName = " " + intCount;
+							strName = "(" + intCount + ")";
 						}
 						
 						node.getChildNodes().item(0).setTextContent(node.getChildNodes().item(0).getTextContent() + strName);
@@ -4186,6 +4189,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("webHWPUrl", webHWPUrl);
 		model.addAttribute("HwpSecurityNum", HwpSecurityNum);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -7539,8 +7543,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (!file.exists()) {
 			file.mkdirs();
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdir();
-			new File(dirPath + boardID + commonUtil.separator + "doc").mkdir();
+			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
 		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
 			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 		}
@@ -9493,6 +9497,34 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 2023-09-14 홍승비 - 동영상게시판 > 동영상의 경로를 문자열로 리턴 (/fileroot/...)
+	 */
+	@RequestMapping(value = "/ezBoard/getBoardMoviePath.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getBoardMoviePath(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getBoardMoviePath started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String type = request.getParameter("type");
+		String boardID = request.getParameter("boardID");
+		String fileName = request.getParameter("fileName");
+		String pSignatureDir = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+		String filePath = "";
+		
+		if (type.equals("BOARDTHUM")) {
+			pSignatureDir = pSignatureDir + commonUtil.separator + boardID + commonUtil.separator + "uploadFile";
+		} else { // BOARDMOVIETEMP
+			pSignatureDir = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
+		}
+		
+		filePath = pSignatureDir + commonUtil.separator + fileName;
+		
+		logger.debug("getBoardMoviePath ended, filePath = " + filePath);
+		return filePath;
+	}
+	
+	/**
 	 * 동영상게시판 앨범수정
 	 */
 	@RequestMapping(value = "/ezBoard/movieAlbumEdit.do", method = RequestMethod.GET)
@@ -10295,7 +10327,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardItemViewHomePage ended");
 	    return "ezBoard/boardItemViewHomePage";
 	}
-	
 
 	// 2023-05-22 조수빈 - 게시판 첨부파일 미리보기
 	// 게시판 첨부파일 미리보기 아이콘 생성 시 useBoardFilePrvw 테넌트 컨피크를 체크하므로, 해당 테넌트 컨피그의 값이 1(사용)인 경우에만 컨트롤러 접근 가능
@@ -10357,6 +10388,80 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		logger.debug("attachItemPreview ended.");
 	}
-	
-	
+
+	/**
+	 * 2023-03-07 이가은 - 댓글 반응 제어 메서드 (삽입, 삭제, 댓글 좋아요/싫어요 선택 조건 체크 등을 분기처리하여 진행)
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ezBoard/reactAndModeCheck.do", method = RequestMethod.POST)
+	public int reactAndModeCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.debug("reactAndModeCheck started.");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String itemId = request.getParameter("itemID");
+		String replyId = request.getParameter("replyID");
+		String replyWriter = request.getParameter("replyWriter");
+		String reactFlag = request.getParameter("reactFlag");
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		String reactDate = commonUtil.getTodayUTCTime("");
+
+		int isReplyFlag = ezBoardService.checkReplyID(itemId, replyId, tenantId);
+		String react = ezBoardService.checkReactUser(itemId, replyId, userId, tenantId);
+
+		logger.debug("reactAndModeCheck ended.");
+
+		if (isReplyFlag == 0) {
+			return 1;	// 댓글이 존재하지 않는 경우
+		} else if (replyWriter.equals(userId)) {
+			return 2;	// 댓글 작성자인 경우
+		} else if (react == null || react.equals("")) {
+			ezBoardService.inserBoardReact(itemId, replyId, userId, reactFlag, tenantId, companyId, reactDate);
+			return 3;	// '좋아요' 또는 '싫어요' 추가되는 경우
+		} else if (reactFlag.equals(react)) {
+			ezBoardService.deleteBoardReact(itemId, replyId, userId, tenantId);
+			return 4;	// 같은 반응을 눌렀을 경우
+		} else {
+			ezBoardService.deleteBoardReact(itemId, replyId, userId, tenantId);
+			ezBoardService.inserBoardReact(itemId, replyId, userId, reactFlag, tenantId, companyId, reactDate);
+			return 5;	// 다른 반응을 눌렀을 경우
+		}
+	}
+
+	/**
+	 * 2023-03-07 이가은 - 댓글 삭제되었을 경우 모든 반응 삭제하는 메서드
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ezBoard/allReactDelete.do", method = RequestMethod.POST)
+	public void allReactDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.debug("allReactDelete started.");
+
+		String itemID = request.getParameter("itemID");
+		String delReplyID = request.getParameter("delReplyID");
+		userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+
+		ezBoardService.allReactDelete(itemID, delReplyID, tenantID);
+		logger.debug("allReactDelete ended.");
+	}
+
+	/**
+	 * 2023-03-08 이가은 -  게시물에 대한 사용자의 댓글 반응 HashMap List로 리턴하는 메서드
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ezBoard/getUserReplyReact.do", method = RequestMethod.GET)
+	public List<HashMap<String, String>> getUserReplyReact(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.debug("getUserReplyReact started.");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String itemID = request.getParameter("pItemID");
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+
+		List<HashMap<String, String>> getUserReplyReactList = ezBoardService.getUserReplyReact(itemID, userID, tenantID);
+
+		logger.debug("getUserReplyReact ended.");
+		return getUserReplyReactList;
+	}
 }

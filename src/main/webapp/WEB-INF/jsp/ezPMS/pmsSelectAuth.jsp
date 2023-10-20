@@ -737,21 +737,21 @@
 		                  	
 	                        <td style="width: 30px; text-align: center;">
 	                        	<div>
-	                            	<img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(manager)"><br>
-	                            	<img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(manager)">
+	                            	<img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(manager)"><br>
+	                            	<img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(manager)">
 	                        	</div>                            
 	                            <div style="margin-top:100px;">
-	                            	<img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(participant)"><br>
-	                            	<img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(participant)">
+	                            	<img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(participant)"><br>
+	                            	<img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(participant)">
 	                        	</div>
 	                        	<div style="margin-top:100px;">
-	                            	<img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(viewer)"><br>
-	                            	<img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(viewer)">
+	                            	<img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(viewer)"><br>
+	                            	<img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(viewer)">
 	                        	</div>
 	                        </td>
 	                        
 	                        <td style="vertical-align: top;">
-	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
+	                        	<div style="display: inline-flex; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
 										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager" onclick="SelectReceiverWindow(manager,managerList)">
 											<spring:message code='ezPMS.t63' /> (<span id="managerCNT" style="padding: 0px; color: #017BEC;"></span>)
@@ -762,7 +762,7 @@
 									<div id="managerList" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto; background-color: rgb(246, 246, 246); cursor: pointer;" onclick="SelectReceiverWindow(manager,managerList)"></div>
 								</div>
 								
-								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
+								<div style="display: inline-flex; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
 										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="participant" onclick="SelectReceiverWindow(participant,participantList)">
 											<spring:message code='ezPMS.t64' /> (<span id="participantCNT" style="padding: 0px; color: #017BEC;"></span>)
@@ -773,7 +773,7 @@
 									<div id="participantList" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto; background-color: rgb(246, 246, 246); cursor: pointer;" onclick="SelectReceiverWindow(participant,participantList)"></div>
 								</div>
 								
-								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
+								<div style="display: inline-flex; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
 										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="viewer" onclick="SelectReceiverWindow(viewer,viewerList)">
 											<spring:message code='ezPMS.t65' /> (<span id="viewerCNT" style="padding: 0px; color: #017BEC;"></span>)

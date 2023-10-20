@@ -73,11 +73,16 @@
 				color:#ffffff;
 			}
 			.topInfoP input[type="checkbox"] {
-				margin: 11px 5px 0px 0px;
+				margin: 5px 5px 0px 0px;
 				/* width: 13px;
 				height: 13px; */
 				vertical-align: top;
 			}
+
+			.albumTitle{
+				font-weight: 500;
+			}
+
 			.albumThumbImg {
 				height: 100%;
 				max-height: 100px;

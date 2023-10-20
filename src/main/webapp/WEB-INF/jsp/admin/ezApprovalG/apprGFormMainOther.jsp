@@ -1395,7 +1395,7 @@
 			</table>
             <br />
             <div style="padding-bottom:5px; vertical-align:middle; <c:if test="${approvalFlag != 'S' }">display:none;</c:if>">
-            	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" />
+            	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" style="vertical-align: middle;"/>
             	<span><spring:message code='ezApproval.t00004'/></span>
             </div>
             <table class="content" style="width:100%;">

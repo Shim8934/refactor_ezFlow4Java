@@ -684,7 +684,7 @@ var strLang1027 = "Fixed comments";
 var strLang1028 = "Year";
 var strLang1029 = "Month";
 var strLang1030 = "Day";
-var strLang1031 = "Can not post e-mail / approval-document to photo board or anonymous board or url board.";
+var strLang1031 = "Can not post email / approval-document to photo board or anonymous board or url board.";
 var strLang1039 = "Selected user is out of office.</br>Would you like to add it?";
 
 // DocType : 문서형태 A01
@@ -807,6 +807,7 @@ var strLangAprState21 = "Holding";
 var strLangAprState22 = "Returning";
 
 // OpinionGB : 의견 종류
+var strOpinionType0 = "000"; // 2023-07-17 민지수 - 완료문서 추가의견
 var strOpinionType1 = "001";
 var strOpinionType2 = "002";
 var strOpinionType3 = "003";
@@ -948,7 +949,7 @@ var strLangS304 = "Please check again.";
 var strLangS385 = "Please select a document";
 var strLangS386 = "It has registered documents.";
 var strLangS387 = "Are you sure you want to remove the document from the document?";
-var strLangS506 = "If there is agreement on the approve line";
+var strLangS506 = "If there is an agreement after this";
 var strLangS514 = "Drafter";
 var strLangS554 = "Please enter a keyword.";
 var strLangS574 = "Please choose a list.";
@@ -1070,6 +1071,8 @@ var strLangHSBAt09 = "Up to";
 var strLangHSBAt10 = "Downloadable";
 var strLangHSBAt11 = "After the conversion is complete, click OK to download the next file as well.";
 var strLangHSBAt12 = "Please select an attachment.";
+var strLangHSBAt13 = "If the file exceeds ";
+var strLangHSBAt14 = ", it will be treated as a Large attachment.";
 
 var strLang947 = "Departments is unavailable as recipient. \nPlease check!";
 var strLang948 = "Departments unavailable as recipient will be automatically deleted. \nDo you wish to continue?"

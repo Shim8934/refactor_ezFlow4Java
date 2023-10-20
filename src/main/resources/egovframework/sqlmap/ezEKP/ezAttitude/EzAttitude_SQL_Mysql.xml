@@ -675,7 +675,7 @@
 					a.writer_id as WRITER_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.appl_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') as APPL_DATE
 			FROM 
-				jmocha.tbl_attitude_modappl a 
+				tbl_attitude_modappl a
 			inner 
 				join tbl_attitude b 
 			on 
@@ -727,7 +727,7 @@
 				a.writer_title$lang$ AS WRITER_TITLE,
 				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
 			FROM 
-				jmocha.tbl_attitude_modappl a
+				tbl_attitude_modappl a
 			inner 
 				join tbl_attitude b 
 			on 
@@ -780,7 +780,7 @@
 						) + COUNT(TYPE_ID) AS COUNT,
 			       TYPE_ID
 			FROM   
-				jmocha.tbl_attitude
+				tbl_attitude
 			WHERE  
 				(
 			]]>
@@ -829,7 +829,7 @@
 			SELECT
 				count(*)
 			FROM 
-				jmocha.tbl_attitude_modappl a 
+				tbl_attitude_modappl a
 			inner 
 				join tbl_attitude b 
 			on 
@@ -853,7 +853,7 @@
 			SELECT
 				count(*)
 			FROM 
-				jmocha.tbl_attitude_modappl a 
+				tbl_attitude_modappl a
 			inner 
 				join tbl_attitude b 
 			on 
@@ -1023,9 +1023,9 @@
 				A.FORM_ID,
 				A.FORM_HTML$lang$ AS FORM_HTML
 			FROM 
-				jmocha.tbl_attitude_form A
+				tbl_attitude_form A
 			INNER JOIN
-				jmocha.tbl_attitude_type B
+				tbl_attitude_type B
 			ON
 				A.FORM_ID = B.FORM_ID
 			AND
@@ -1927,7 +1927,7 @@
 			SELECT
 				appr_status as APPR_STATUS
 			FROM 
-				jmocha.tbl_attitude_modappl
+				tbl_attitude_modappl
 			where 
 				COMPANY_ID = #companyId#
 			and 
@@ -1978,7 +1978,7 @@
 						), 0) AS ANNUAL_COUNT,
 						MONTH(#startDate#) AS MONTH
 			FROM   
-				jmocha.tbl_attitude
+				tbl_attitude
 			WHERE
 				WRITER_ID = #userId#
 			AND
@@ -2211,7 +2211,7 @@
 			SELECT
 				appr_status as APPR_STATUS
 			FROM 
-				jmocha.tbl_attitude_annual_canappl
+				tbl_attitude_annual_canappl
 			where 
 				COMPANY_ID = #companyId#
 			and 
@@ -2265,7 +2265,7 @@
 			SELECT
 				count(*)
 			FROM 
-				jmocha.tbl_attitude_annual_canappl a 
+				tbl_attitude_annual_canappl a
 			inner 
 				join tbl_attitude b 
 			on 
@@ -2300,7 +2300,7 @@
 					a.writer_id as WRITER_ID,
 					DATE_FORMAT(DATE_ADD(DATE_FORMAT(a.appl_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') as APPL_DATE
 			FROM 
-				jmocha.tbl_attitude_annual_canappl a 
+				tbl_attitude_annual_canappl a
 			inner 
 				join tbl_attitude b 
 			on 
@@ -2340,7 +2340,7 @@
 				a.writer_title$lang$ AS WRITER_TITLE,
 				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
 			FROM 
-				jmocha.tbl_attitude_annual_canappl a
+				tbl_attitude_annual_canappl a
 			inner 
 				join tbl_attitude b 
 			on 

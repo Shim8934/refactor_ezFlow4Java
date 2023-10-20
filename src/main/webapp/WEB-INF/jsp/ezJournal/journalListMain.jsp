@@ -1080,7 +1080,7 @@
 	       		<option value="journalWriter"><spring:message code='ezJournal.t34' /></option>
        		</c:if>
        	</select>
-		<input id="searchValue" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
+		<input id="searchValue" class="searchinputBox" style="height: 27px !important;border: 1px solid #cbcbcb;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
 		<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onclick="quickSearch()"></a>
 	</span>
 	</h1>

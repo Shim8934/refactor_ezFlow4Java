@@ -143,6 +143,8 @@ public class BoardPropertyVO {
 	private String mailFG_Post;
 	private String mailFG_Mod;
 	private String mailFG_Comment;
+	/** 2023-07-13 임정은 - 게시판 댓글 좋아요, 싫어요 기능 플래그 추가 */
+	private String reactFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -562,6 +564,13 @@ public class BoardPropertyVO {
 	}
 	public void setMailFG_Comment(String mailFG_Comment) {
 		this.mailFG_Comment = mailFG_Comment;
+	}
+
+	public String getReactFlag() {
+		return reactFlag;
+	}
+	public void setReactFlag(String reactFlag) {
+		this.reactFlag = reactFlag;
 	}
 	
 }

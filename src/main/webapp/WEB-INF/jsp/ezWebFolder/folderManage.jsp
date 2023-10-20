@@ -15,6 +15,21 @@
     <link rel="stylesheet" href="${util.addVer('/js/ezWebFolder/jsTree/dist/themes/default/style.css')}" />
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/jsTree/dist/jstree.js')}"></script>
     <link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+    <style type="text/css">
+    	.jstree-ocl {
+    		margin-top: 6px !important;
+    	}
+    	.jstree-default-small .jstree-node {
+    		margin-left: 7px !important;
+    	}
+    	.jstree-clicked {
+    		color: #0470E4 !important;
+    		text-decoration: underline !important;
+    	}
+    	.list_text {
+    		font-size: 14px !important;
+    	}
+    </style>
     <script>
 		var lang = "${userinfo.lang}";
 		var PostTreeView = null;

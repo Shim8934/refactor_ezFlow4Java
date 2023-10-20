@@ -450,7 +450,7 @@
 
                 nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "'>");
 
-                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/fldr.gif'>");
+                //nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/fldr.gif'>");
 
                 nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
 					    g_baseClass["normal"] + "'");
@@ -532,7 +532,7 @@
 
                 nodeHtml += ("' id='" + g_toggleid + g_nodeCount + "'>");
 
-                nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/fldr.gif'>");
+                //nodeHtml += ("<img id='" + g_imageid + g_nodeCount + "' src='/images/ImgIcon/fldr.gif'>");
 
                 nodeHtml += ("<span id='" + g_nodeid + g_nodeCount + "' class='" +
 					    g_baseClass["normal"] + "'");
@@ -919,7 +919,7 @@
 
             for (var j = 0; j < depth.length; j++) {
                 if (depth.charAt(j) == "1")
-                    nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "'>");
+                    nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='" + g_imageWidth + "' height='15px;'>");
                 else
                     nodeHtml += ("<img src='" + g_baseImage["space"] + "' width='" + g_imageWidth + "'>");
             }
@@ -940,7 +940,7 @@
                     mydepth += "0";
                 }
 
-                nodeHtml += ("' style='cursor:pointer' id='" + g_toggleid + g_nodeCount + "' width='" + g_imageWidth + "'>");
+                nodeHtml += ("' style='cursor:pointer; padding:0 7px 0 7px;' id='" + g_toggleid + g_nodeCount + "'>");
             }
             else {
                 if (!bEndNode) {
@@ -977,7 +977,8 @@
                     _imgsrc = '/images/ImgIcon/sentitems.gif';
                     break;
                 default:
-                    _imgsrc = '/images/ImgIcon/fldr.gif';
+                    _imgsrc = '';
+                	//_imgsrc = '/images/ImgIcon/fldr.gif';
                     break;
 
             }

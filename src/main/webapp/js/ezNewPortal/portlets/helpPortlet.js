@@ -12,5 +12,8 @@ var helpPortletLoadFunc = function () {
 	}
 		
 	/* 이벤트 추가 */
-	document.getElementById("helpDetail").addEventListener('click', helpDetail );	
+	/* 2023-08-29 민지수 - 다국어 버전 > 그룹웨어 영어매뉴얼 다운되도록 수정 */
+	if (userLang != "2") {
+		document.getElementById("helpDetail").addEventListener('click', helpDetail);
+	}
 }

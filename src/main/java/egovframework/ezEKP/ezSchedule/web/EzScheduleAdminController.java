@@ -795,13 +795,16 @@ public class EzScheduleAdminController {
 
 		
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
-		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>40</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t159", loginSimpleVO.getLocale()) + "</NAME><WIDTH>20%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t160", loginSimpleVO.getLocale()) + "</NAME><WIDTH></WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb17", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t00002", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb18", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER>");
-        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb19", loginSimpleVO.getLocale()) + "</NAME><WIDTH>12%</WIDTH></HEADER></HEADERS>");
+		result.append("<HEADERS><HEADER><NAME>CHECK</NAME><WIDTH>30</WIDTH></HEADER>");
+		/* 2023-09-06 조소정 - 관리자 > 일정관리 > 일정그룹관리 > 그룹 정보 테이블에 그룹 색상, 수정일자 셀 헤더 추가 및 셀 너비 지정 */
+		result.append("<HEADER><NAME>GROUPCOLOR</NAME><WIDTH>20</WIDTH></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t159", loginSimpleVO.getLocale()) + "</NAME></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t160", loginSimpleVO.getLocale()) + "</NAME></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb17", loginSimpleVO.getLocale()) + "</NAME></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.t00002", loginSimpleVO.getLocale()) + "</NAME></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.csj04", loginSimpleVO.getLocale()) + "</NAME></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb18", loginSimpleVO.getLocale()) + "</NAME></HEADER>");
+        result.append("<HEADER><NAME>" + msg.getMessage("ezSchedule.shb19", loginSimpleVO.getLocale()) + "</NAME></HEADER></HEADERS>");
         result.append("<ROWS>");
 		
         for (int i = 0; i < myList.size(); i++) {
@@ -815,6 +818,12 @@ public class EzScheduleAdminController {
         	}
         	if(data.getPrecreatorid() == null){
         		data.setPrecreatorid("");
+        	}
+        	if(data.getTransferDate() == null){
+        		data.setTransferDate("");
+        	}
+        	if(data.getGroupColor() == null) {
+        		data.setGroupColor("#e9de13");
         	}
 
 			/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
@@ -834,6 +843,13 @@ public class EzScheduleAdminController {
             result.append("<VALUE>CHECK</VALUE>");
             result.append("<DATA1>" + data.getGroupId() + "</DATA1>");
             result.append("<DATA2><![CDATA[" + data.getDescription() + "]]></DATA2>");
+            result.append("<DATA3><![CDATA[" + data.getGroupColor() + "]]></DATA3>");
+            result.append("</CELL>");
+            
+            /* 2023-09-06 조소정 - 관리자 > 일정관리 > 일정그룹관리 > 그룹 정보 테이블 바디에 그룹 색상 추가 */
+            result.append("<CELL>");
+            result.append("<VALUE>GROUPCOLOR</VALUE>");
+            result.append("<DATA1><![CDATA[" + data.getGroupColor() + "]]></DATA1>");
             result.append("</CELL>");
             result.append("<CELL>");
             
@@ -865,12 +881,17 @@ public class EzScheduleAdminController {
             result.append("<CELL>");
             result.append("<VALUE>" + data.getCreateDate() + "</VALUE>");
             result.append("</CELL>");
+            /* 2023-09-06 조소정 - 관리자 > 일정관리 > 일정그룹관리 > 그룹 정보 테이블 바디 수정일자 표출되도록 수정 */
+            result.append("<CELL>");
+            result.append("<VALUE>" + data.getModifydate() + "</VALUE>");
+            result.append("</CELL>");
             result.append("<CELL>");
            /* result.append("<VALUE>" + data.getPrecreatorname()+"("+data.getPrecreatorid()+")" + "</VALUE>");*/
             result.append("<VALUE>" + preCreatorInfo + "</VALUE>");
             result.append("</CELL>");
+            /* 2023-09-06 조소정 - 관리자 > 일정관리 > 일정그룹관리 > 그룹 정보 테이블 바디 양도일자 표출되도록 수정 */
             result.append("<CELL>");
-            result.append("<VALUE>" + data.getModifydate() + "</VALUE>");
+            result.append("<VALUE>" + data.getTransferDate() + "</VALUE>");
             result.append("</CELL>");
             result.append("</ROW>");
         }
