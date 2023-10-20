@@ -364,23 +364,15 @@
 	</update>
 	
 	<insert id="ezNewPortal.insertMenu" parameterClass="Map">
-		<selectKey keyProperty="menuId" resultClass="Integer">
-			SELECT
-				AUTO_INCREMENT
-			FROM
-				INFORMATION_SCHEMA.TABLES
-			WHERE
-				TABLE_NAME = "TBL_PORTAL_MENU"
-			AND
-				table_schema = 'jmocha';
-		</selectKey>
-		
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_MENU
 				(menu_url, menu_type, icon_url, default_order)
 			VALUES
 				(#menuUrl#, #menuType#, #iconUrl#, (SELECT MAX(A.default_order) + 1 FROM TBL_PORTAL_MENU A))
 		]]>
+		<selectKey keyProperty="menuId" resultClass="Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
 	
 	<insert id="ezNewPortal.insertMenuComp" parameterClass="Map">
