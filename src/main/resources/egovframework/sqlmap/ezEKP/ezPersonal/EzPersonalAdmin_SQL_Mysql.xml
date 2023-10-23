@@ -721,18 +721,8 @@
 		]]>
 	</insert>
 	
-	<!-- 	TBL_PS_POPUP 테이블에 ITEMSEQ 컬럼 AUTO_INCREMENT 추가하기 -->
+
 	<insert id="EzPersonalAdmin.EZSP_INSERTPOPUP" parameterClass="Map">
-		<selectKey keyProperty="menuId" resultClass="Integer">
-			SELECT
-				AUTO_INCREMENT
-			FROM
-				INFORMATION_SCHEMA.TABLES
-			WHERE
-				TABLE_NAME = "TBL_PS_POPUP"
-			AND
-				table_schema = 'jmocha';
-		</selectKey>
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_POPUP
@@ -740,6 +730,9 @@
 			VALUES 
 				( #v_pCompanyID#, DATE_FORMAT(#v_pStartDate#, '%Y-%m-%d %H:%i:%s'), DATE_FORMAT(#v_pEndDate#, '%Y-%m-%d %H:%i:%s'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID#, 1, #skinValue#)
 		]]>
+		<selectKey keyProperty="menuId" resultClass="Integer">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
 	
 	<update id="EzPersonalAdmin.EZSP_UPDATEPOPUP" parameterClass="Map">
