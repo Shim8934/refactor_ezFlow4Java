@@ -233,7 +233,7 @@ function GetDocSearch() {
 	    if (GamSaFlag){
 	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
 	    } else {
-	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", false);
+	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", true);
 	    }
 	    xmlhttp.onreadystatechange = getsearchDocListS_after;		
 	    xmlhttp.send(xmlpara);
@@ -1422,10 +1422,12 @@ function openergetDocInfo() {
         selRowChangeFlag = true;
         // page 유지를 위한 Flag 설정
         pChackYN = "TRUE";
-        if (contFlag == "END"){
+        if (contFlag == "END" && approvalFlag == 'G') {
             GetDocList("END");
         }
-        else {
+        else if (contFlag == "END" && approvalFlag == 'S') {
+            GetDocSearch();
+        } else {
             return;
         }
     } catch (e) {
