@@ -65,12 +65,13 @@ function ChkCabRoleInfo(selRow) {
                 g_bConfirm = true;
             else
                 g_bConfirm = false;
-            
-            if (MenuType == "1" && g_bDeptCharger) {
+
+            // voc.kaoni.com(#125383) - 전자결재G > 업무담당자 > 대장등록과 열람권한 설정 가능
+            /*if (MenuType == "1" && g_bDeptCharger) {
             	g_bCabCharger = true;
-            } else {
-            	g_bCabCharger = ISCabCharger(CabClassNo, UserID);
-            }
+            } else {*/
+            g_bCabCharger = ISCabCharger(CabClassNo, UserID);
+            // }
             
             ezCabMunuCtl(MenuType, selRow);
         }
