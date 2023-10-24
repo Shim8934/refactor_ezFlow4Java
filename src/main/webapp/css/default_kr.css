@@ -2550,7 +2550,7 @@ div#txtContent table {margin:auto;}
 .tree_webfolder_team{ background-position:-130px -104px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 웹폴더 부서폴더 */
 .tree_webfolder_individual{ background-position:-156px -104px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 웹폴더 개인폴더 */
 
-.tree_resource_standard{ background-position:-234px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 기본아이콘 */
+.tree_resource_standard{ background-position:-234px -52px; width:16px; height:16px; display:inline-block; margin: 5px 2px 0px 0px; cursor:pointer;} /* tree 자원관리 기본아이콘 */
 .tree_resource_ok{ background-position:-260px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 승인아이콘 */
 .tree_resource_no{ background-position:-286px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 비승인아이콘 */
 
@@ -3615,7 +3615,7 @@ input[type=range]::-ms-tooltip {display: none;}
 /* 2019-05-17 김민성 - 자원관리 개선*/
 .mainmenuTabUL_left {  position: absolute;top: 7px;left: -10px; list-style:none; margin:0px; padding:0px; }
 .mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px;}
-.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px; cursor:default;}
+.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px 3px 0 0; cursor:default;}
 .mainmenuTabUL_left li .icon { vertical-align:middle;}
 
 .tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
@@ -3941,7 +3941,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .file td input{margin: -2px 4px 0px 0px; vertical-align: middle;}
 #txtLimitRange{width: 60% !important;}
 
-.tree_resource_standard{background-position: -260px -52px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;}
+/*.tree_resource_standard{background-position: -260px -52px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;}*/
 .tree_resource_unused{background-position: -312px -52px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;}
 
 /* 스위치 위치수정 */
