@@ -3591,7 +3591,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* 검색 */
 .searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:0px;}
-.searchBtn{ position:absolute; right:5px; top:3px;}
+.searchBtn{ position:absolute; right:35px; top:3px;}
 .searchinputBox{width:230px; border-radius: 3px; outline: none;}
 
 /* 유은정 - 메뉴명 개수 | 회사 선택 이미지 위치*/
@@ -3694,7 +3694,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 
 /* 20200608 검색필터 추가 */
 .searchForm.searchFilter{position:relative; margin-right:48px;}
-.searchFilterBtn{position:absolute; right:-50px; top:-2px;}
+.searchFilterBtn{position:absolute; right:0px; top:0px;}
 .layerPopup_new{display:none; position:absolute; right:-48px; top:39px; width:400px; height:395px; padding:20px; border:1px solid #999999; background:#ffffff; box-shadow:2px 3px 4px rgba(0,0,0,0.1); box-sizing:border-box;}
 .layerPopup_new select{width:75px; height:30px;}
 .content_layout{clear:both; margin:0px; padding:0px; list-style:none; overflow:hidden;}
