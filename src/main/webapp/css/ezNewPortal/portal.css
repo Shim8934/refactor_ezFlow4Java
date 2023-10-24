@@ -1085,7 +1085,7 @@ line-height: 28px;}
 
 #theme2Body .collaborate_tab{background: #fff; border:1px solid #EFECEC; border-radius: 0 0 0 5px;}
 
-#theme2Body .apprgraph{border: 1px solid #EFECEC; border-radius: 3px; margin:0 15px;}
+#theme2Body .apprgraph{border-radius: 3px; margin:0 15px;}
 #theme2Body .apprgraph_area{padding-bottom:10px;}
 
 #theme2Body .time_check{background: #F4F4F4;}
