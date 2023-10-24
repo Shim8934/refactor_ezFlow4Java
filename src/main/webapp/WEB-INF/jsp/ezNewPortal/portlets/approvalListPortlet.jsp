@@ -10,18 +10,20 @@
 	<body>
 		<article class="approval box_shadow">
 			<div class="layDIV approval">
-            	<dl class="portlet_tab sortablePortlet">
-                	<dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
-                	<dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
-                	<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /></span></dt>                	
-                	<%-- 2023-06-22 황인경 - 디자인 개선 > 전자결재 포틀릿 > '+' 더보기 태그 위치 변경 --%>
-<%--                <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>                	 --%>
-            	</dl>
-            	<dl class="portlet_tab_plus">
-                	<dd class="portletPlus" onclick="Appmore_btnClick()">
-                		<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-               		</dd>
-				</dl>
+				<div class="sortablePortlet">
+					<dl class="portlet_tab">
+						<dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
+						<dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
+						<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /></span></dt>
+						<%-- 2023-06-22 황인경 - 디자인 개선 > 전자결재 포틀릿 > '+' 더보기 태그 위치 변경 --%>
+	<%--                <dd class="portletPlus" onclick="Appmore_btnClick()"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>                	 --%>
+					</dl>
+					<dl class="portlet_tab_plus">
+						<dd class="portletPlus" onclick="Appmore_btnClick()">
+							<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+						</dd>
+					</dl>
+				</div>
             	<ul id ="ApprList" class="portlet_list"></ul>
         	</div>
 		</article>
@@ -141,7 +143,7 @@
 		    }
 			
 			var Appmore_btnClick = function() {
-				if (document.querySelector("div.layDIV.approval dl.portlet_tab.sortablePortlet dt.on").id == "doingTab") {
+				if (document.querySelector("div.layDIV.approval dl.portlet_tab dt.on").id == "doingTab") {
 					window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
 				} else {
 					window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
@@ -220,7 +222,7 @@
 			/** 결재 오픈 */
 			function opendocview(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID) {
 		        var openLocation = "";
-		        var selectedTapId = document.querySelector("div.layDIV.approval dl.portlet_tab.sortablePortlet dt.on").id;
+		        var selectedTapId = document.querySelector("div.layDIV.approval dl.portlet_tab dt.on").id;
 				
 	            if (selectedTapId != "draftTab") {
 	                if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {

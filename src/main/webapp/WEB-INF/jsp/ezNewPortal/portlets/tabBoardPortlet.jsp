@@ -11,30 +11,32 @@
 	<input type="hidden" value="<c:out value='${usedTheme }'/>" id="usedTheme">
 	<article class="box_shadow">
 		<div class="layDIV" id="tabBoard">
-           <dl class="portlet_tab sortablePortlet">
-           		<dt class="portletText" id="tabBoardPortletName"><span><c:out value='${portletName }'/></span></dt>
+			<div class="sortablePortlet">
+				<dl class="portlet_tab">
+				<dt class="portletText" id="tabBoardPortletName"><span><c:out value='${portletName }'/></span></dt>
 				<dt id="tabBoardList1Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
 				<dt id="tabBoardList2Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
 				<dt id="tabBoardList3Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
 				<%--  2023-06-23 황인경 - 디자인 개선 > 탭게시판 포틀릿 > '+' 더보기 태그 위치 변경 --%>
-<%--			<dd class="portletPlus" id="tabBoardPlus" onclick="tabBoardPlus()">
-	 			    <img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+				<%--			<dd class="portletPlus" id="tabBoardPlus" onclick="tabBoardPlus()">
+				<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd> --%>
-		   </dl>
-		   <dl class="portlet_tab_plus">
+				</dl>
+			</div>
+			<dl class="portlet_tab_plus">
 				<dd class="portletPlus" id="tabBoardPlus" onclick="tabBoardPlus()">
-				    <img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd>
-		   </dl>
-		   <div id="notexistence" class="portlet_list">
+			</dl>
+			<div id="notexistence" class="portlet_list">
 				<dl class='nodata' id="notexistence">
-                	<dt><img src='/images/kr/main/noData_sIcon.png'></dt>
-                	<dd><spring:message code='ezNewPortal.t018' /></dd>
-                </dl>
-		   </div>
-           <ul class="portlet_list" id="tabBoardList1" style="display: none;"></ul>
-           <ul class="portlet_list" id="tabBoardList2" style="display: none;"></ul>
-		   <ul class="portlet_list" id="tabBoardList3" style="display: none;"></ul>
+					<dt><img src='/images/kr/main/noData_sIcon.png'></dt>
+					<dd><spring:message code='ezNewPortal.t018' /></dd>
+				</dl>
+			</div>
+			<ul class="portlet_list" id="tabBoardList1" style="display: none;"></ul>
+			<ul class="portlet_list" id="tabBoardList2" style="display: none;"></ul>
+			<ul class="portlet_list" id="tabBoardList3" style="display: none;"></ul>
     	</div>
     </article>
 </body>
