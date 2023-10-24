@@ -319,7 +319,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .main_main_time .main_timeCheckIn .main_lateIn{ margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #0470e4; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
 .main_main_time .main_timeCheckIn .main_out{ margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#333; width:63px; height:34px; line-height:34px; text-align:center; cursor:pointer;} /* 장진혁 */
 .main_main_time .main_timeCheckOut{ margin:0 0 0 5px; padding:0px; float:left;}
-.main_main_time .main_timeCheckOut .main_in{ margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #0470e4; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
+.main_main_time .main_timeCheckOut .main_in{ margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
 .main_main_time .main_timeCheckOut .main_out{ margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#0470e4; width:63px; height:34px; line-height:34px; text-align:center; cursor:pointer;}
 .main_main_time .main_timeCheckIn .main_out:hover, .main_main_time .main_timeCheckOut .main_out:hover{color:#388CE5;}
 
