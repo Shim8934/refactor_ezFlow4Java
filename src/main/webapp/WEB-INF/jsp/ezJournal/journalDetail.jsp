@@ -153,7 +153,7 @@
 							<!-- 작성자 -->
 							<th style="width: 10%;"><spring:message code='ezJournal.t34' /></th>
 							<td style="width: 40%; white-space: nowrap">
-								<div style="vertical-align: middle; height: 16px; overflow-y: auto; cursor: pointer" onclick='OpenUserInfo("${journal.writerId}")'>
+								<div style="vertical-align: middle; height: 16px; cursor: pointer" onclick='OpenUserInfo("${journal.writerId}")'>
 									<c:out value="${journal.writerName}" />
 								</div>
 							</td>
@@ -178,7 +178,7 @@
 						<tr>
 							<th><spring:message code='ezJournal.t184' /></th>
 							<td width="100%" id="cTitle" style="WORD-WRAP: break-word; word-break: break-all; line-height: 16px;" colspan=3>
-								<div id="journalTitle" style="overflow-y: auto; vertical-align: middle">
+								<div id="journalTitle" style="vertical-align: middle">
 									<c:out value=" ${journal.journalTitle}" />
 								</div>
 							</td>
