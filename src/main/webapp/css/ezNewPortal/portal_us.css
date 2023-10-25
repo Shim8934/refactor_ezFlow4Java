@@ -355,7 +355,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .bestEmployee{ margin:0px 20px; padding:25px 0 0 0; border-top:1px solid #EFECEC; box-sizing:border-box; position: relative;}
 .bestEmployee .emPic { position: absolute; right: 25px; top: 24px; margin: 0px; padding: 15px 10px; float: left; background: url(/images/ezNewPortal/best_frame.png) no-repeat right bottom;}
 .bestEmployee .emPic img{border-radius: 50px; width:50px;}
-.bestEmployee .emDL{ margin:0px; padding:15px 20px; overflow:hidden;border-radius: 5px;background: url(/images/ezNewPortal/bestEmplotee_btm.png) no-repeat 185px 35px #f4f4f4;}
+.bestEmployee .emDL{ margin:0px; padding:15px 20px; overflow:hidden;border-radius: 5px;background: 185px 35px #f4f4f4;}
 
 .bestEmployee .emDL .emTit{ margin:0px; padding:0 0 2px 0; font-size:15px; color:#388CE5; font-weight:500;}
 .bestEmployee .emDL .emName{ margin:0px; padding:0 0 2px 0; font-size:14px; color:#333333; font-weight:bold;}
@@ -1360,9 +1360,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .collaborate_tab li{height:30px; line-height:30px; padding:0px 10px;  cursor: pointer; margin:10px; border-radius: 30px; font-weight: 700;}
 .collaborate_tab li:hover {color:#FFF; background: #388CE5;}
 .collaborate_tab li.on {color:#FFF; background: #388CE5;}
-.collaborate_tab li span{display:inline-block; width:100%; padding:0px; background:url(../images/kr/main/collaborateTab_arrow.png) right center no-repeat; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
-.collaborate_tab li:hover span{ background:url(../images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
-.collaborate_tab li.on span{background:url(../images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
+.collaborate_tab li span{display:inline-block; width:100%; padding:0px; background:url(/images/kr/main/collaborateTab_arrow.png) right center no-repeat; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.collaborate_tab li:hover span{ background:url(/images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
+.collaborate_tab li.on span{background:url(/images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
 .collaborate_list {float:left; width:75%; height:186px; margin:0px; padding:0px;}
 .collaborate_listTab {height: 30px; margin:10px 13px 0px 13px; padding:0px;}
 .collaborate_listTab dt{float:left; margin:0px 6px 0px 0px; padding:3px 6px; font-size:13px; font-weight:700; color:#333; border:1px solid #d8d8d8; border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px; cursor:pointer;}
