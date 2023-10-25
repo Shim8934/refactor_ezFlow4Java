@@ -229,7 +229,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .portlet_list{ margin:0px; padding:10px 0px; list-style:none; } 
 .portlet_list li{ margin:0px 7px; padding:0px 8px 0px 17px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 10px 16px; font-size:13px; color:#444; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor: pointer;}
 .portlet_list li:last-child{ border-bottom:none;}
-.portlet_list li .txt { float:left; padding:0px 0px 0px 0px; width:61%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing: -0.5;}
+.portlet_list li .txt { float:left; padding:0px 0px 0px 0px; width:61%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing: -0.5; font-size:13px;}
 .portlet_list li .txt:hover{ color:#000; }
 .portlet_list li .name {width:55px; text-align:right;overflow:hidden;  letter-spacing: -0.5; float:right; display:inline-block; white-space:nowrap; text-overflow:ellipsis; padding-right:7px;}
 .portlet_list li .date {float:right; width:70px; text-align:right;overflow:hidden; letter-spacing:-0.5px; padding:0px 8px 0px 0px; }
@@ -1174,9 +1174,9 @@ line-height: 28px;}
 #theme3Body .time_check{background: #A3BEE8;}
 #theme3Body .main_time .timeCheckIn{background: #8CAEDE; color:#fff; box-shadow: none; border:1px solid #fff;}
 #theme3Body .main_time .timeCheckIn.lateIn{color:#0470e4;}
-#theme3Body .main_time .timeCheckIn.commute_on{background:rgba(140,169,207,0.5); border-color:#6F90BC;}
+#theme3Body .main_time .timeCheckIn.commute_on{background:rgba(153,182,222,0.68); border-color:#6F90BC;}
 #theme3Body .main_time .timeCheckOut{background: #8CAEDE; color:#fff; box-shadow: none; border:1px solid #fff;}
-#theme3Body .main_time .timeCheckOut.commute_on{background:rgba(140,169,207,0.5); border-color:#6F90BC;}
+#theme3Body .main_time .timeCheckOut.commute_on{background:rgba(153,182,222,0.68); border-color:#6F90BC;}
 #theme3Body .presentTime .timeTxt span{color:#fff;}
 #theme3Body .presentTime .timeTxt{margin:15px 0px; padding:0px; text-align:center;background: url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat  45px 6px;}
 
