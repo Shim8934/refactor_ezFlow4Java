@@ -3591,6 +3591,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* 검색 */
 .searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:0px;}
+.searchBtn.nofilter{right:6px;}
 .searchBtn{ position:absolute; right:35px; top:3px;}
 .searchinputBox{width:230px; border-radius: 3px; outline: none;}
 
