@@ -224,12 +224,12 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 
 /* portlet_list */
 .portlet_list{ margin:0px; padding:10px 0px; list-style:none;} 
-.portlet_list li{ margin:0px 7px; padding:0px 8px 0px 17px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 10px 16px; font-size:13px; color:#393939; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor: pointer;}
+.portlet_list li{ margin:0px 7px; padding:0px 8px 0px 17px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 10px 16px; font-size:13px; color:#444; height:36px; line-height:34px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor: pointer;}
 .portlet_list li:last-child{ border-bottom:none;}
-.portlet_list li .txt { float:left; padding:0px 0px 0px 0px; width:61%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing: -0.5;}
+.portlet_list li .txt { float:left; padding:0px 0px 0px 0px; width:61%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing: -0.5; color:#444;}
 .portlet_list li .txt:hover{color:#000;}
-.portlet_list li .name {width:55px; text-align:right;overflow:hidden; letter-spacing: -0.5; float:right; display:inline-block; white-space:nowrap; text-overflow:ellipsis; padding-right:7px;}
-.portlet_list li .date {float:right; width:70px; text-align:right;overflow:hidden; letter-spacing:-0.5px; padding:0px 8px 0px 0px; }
+.portlet_list li .name {width:55px; text-align:right;overflow:hidden; letter-spacing: -0.5; float:right; display:inline-block; white-space:nowrap; text-overflow:ellipsis; padding-right:7px; color:#444;}
+.portlet_list li .date {float:right; width:70px; text-align:right;overflow:hidden; letter-spacing:-0.5px; padding:0px 8px 0px 0px;  color:#444;}
 
 /* portlet_list mail */
 .portlet_list li.mail_close{ background:url(/images/ezNewPortal/mail_close.gif) no-repeat 9px center; padding:0px 5px 0px 34px; font-weight:bold;}
@@ -255,7 +255,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .noti_portlet_list .notiLI .noti_num{margin:0px 1px 0px 0px; padding:0px; font-size:13px; color:#fff; font-weight:bold; width:24px; height:24px; line-height:23px; background:#0470e4; text-align:center; border:1px solid #0064d0; box-sizing:border-box; position:absolute; left:0px; top:0px;}
 .noti_portlet_list .notiLI .noti_new{margin:0px; padding:0px; font-size:13px; color:#fff; font-weight:bold; position:absolute; left:25px; top:0px; width:24px; height:24px; text-align:center; line-height:23px; background:#ff6c00;}
 .noti_portlet_list .notiLI .noti_text{margin:15px 0px 5px 0px; padding:0; font-size:14px; color:#444; height:83px; line-height:20px; width:100%; box-sizing:border-box;white-space:normal; text-overflow:ellipsis;overflow:hidden;word-wrap:break-word; -webkit-line-clamp:3; -webkit-box-orient:vertical; display:-webkit-box;}
-.noti_portlet_list .notiLI .noti_date{margin:0; text-align: right;}
+.noti_portlet_list .notiLI .noti_date{margin:0; text-align: right; color:#444;}
 .portlet_list li.notiLI02{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
 .portlet_list li.notiLI03{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
 
@@ -268,7 +268,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .first_approval .approval_content .apprDL{margin:0px; padding:0px 0px 0px 10px; float:left; overflow:hidden; width:30%; box-sizing:border-box;}
 .first_approval .approval_content .apprDL .apprPic{margin:0px; padding:0px; width:40px; height:40px; border:1px solid #e7e7e7; border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; float:left; margin-top:4px;}
 .first_approval .approval_content .apprDL .apprPic img{border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; width:40px; height:40px;}
-.first_approval .approval_content .apprDL .apprName{line-height:25px; margin:0px; padding:0px 0px 0px 0px; font-size:13px; color:#393939; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; text-align:center;}
+.first_approval .approval_content .apprDL .apprName{line-height:25px; margin:0px; padding:0px 0px 0px 0px; font-size:13px; color:#444; overflow:hidden; white-space: nowrap; text-overflow: ellipsis; text-align:center;}
 .first_approval .approval_content .apprDL .apprText_blue{ margin:0px; padding:0px; overflow:hidden; text-align:center;}
 .first_approval .approval_content .apprDL .apprText_blue span{margin:0px 0px 0px 0px; padding:0px 6px; height:19px; line-height:18px; background:#0470e4; font-size:12px; color:#fff; border-radius:3px; overflow:hidden; display:inline-block;}
 .first_approval .approval_content .apprDL .apprText_green{margin:0px; padding:0px; overflow:hidden; text-align:center;}
@@ -279,7 +279,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 
 /* portlet_tab */
 .portlet_tab{height:50px; margin:0px 0px 0px 0px; white-space:nowrap; font-size:18px; border-bottom:1px solid #EFECEC; box-sizing:border-box; position:relative;}
-.portlet_tab dt{float:left; height:50px; line-height:50px; margin:0 5px; color:#333; cursor:pointer; font-weight:500; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:170px;}
+.portlet_tab dt{float:left; height:50px; line-height:50px; margin:0 5px; color:#444; cursor:pointer; font-weight:500; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:170px;}
 
 .portlet_tab dt span:hover{color:#0470E4;}
 .portlet_tab dt span{ display:inline-block; height:50px; padding:0px 5px;}
@@ -308,21 +308,19 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .main_time_check{ box-sizing:border-box; overflow:hidden; margin:10px 20px 25px 20px; padding:0; background: #f4f4f4; border-radius: 5px;}
 .main_presentTime{ text-align:center;width: 105px; height:66px; float:left;padding-left: 5px;box-sizing: border-box;overflow:hidden;}
 .main_presentTime .main_timeTit{ font-size:12px; color:#888; margin:0px; padding:10px 0px 0px 0px;}
-.main_presentTime .main_timeText{font-size: 20px;letter-spacing: 0px; font-weight: 500;}
+.main_presentTime .main_timeText{font-size: 20px;letter-spacing: 0px; font-weight: 500; color:#444;}
 .main_main_time{padding:16px 0px 0px 0px;}
 .main_main_time .main_timeCheckIn{ margin:0px; padding:0px; float:left;}
 
-.main_main_time .main_timeCheckIn .main_in{margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #333; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;}
+.main_main_time .main_timeCheckIn .main_in{margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #444; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;}
 .main_main_time .main_timeCheckIn .main_lateIn{margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #0470e4; width: 80px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
-.main_main_time .main_timeCheckIn .main_out{margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#333; width:80px; height:34px; line-height:34px; text-align:center; cursor:pointer; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;} /* 장진혁 */
+.main_main_time .main_timeCheckIn .commute_on{background:#F4F4F4; border:1px solid #fff; box-sizing:border-box; line-height:32px;}
+.main_main_time .main_timeCheckIn .main_out{margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#444; width:80px; height:34px; line-height:34px; text-align:center; cursor:pointer; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;} /* 장진혁 */
 .main_main_time .main_timeCheckOut{ margin:0 0 0 5px; padding:0px; float:left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-<<<<<<< Updated upstream
-.main_main_time .main_timeCheckOut .main_in{ margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
-.main_main_time .main_timeCheckOut .main_out{margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#0470e4; width:63px; height:34px; line-height:34px; text-align:center; cursor:pointer;}
-=======
-.main_main_time .main_timeCheckOut .main_in{ margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #0470e4; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
-.main_main_time .main_timeCheckOut .main_out{margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#0470e4; width:80px; height:34px; line-height:34px; text-align:center; cursor:pointer;}
->>>>>>> Stashed changes
+
+.main_main_time .main_timeCheckOut .main_in{ margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; width: 80px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
+.main_main_time .main_timeCheckOut .main_out{margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#444; width:80px; height:34px; line-height:34px; text-align:center; cursor:pointer;}
+.main_main_time .main_timeCheckOut .commute_on{background:#F4F4F4; border:1px solid #fff; box-sizing:border-box; line-height:32px;}
 .main_main_time .main_timeCheckIn .main_out:hover, .main_main_time .main_timeCheckOut .main_out:hover{color:#388CE5;}
 
 /* countingIcon */
@@ -331,7 +329,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .countingIcon02{display: flex; justify-content: flex-start; padding:30px 10px 0px 10px;}
 .countingIcon dl{ margin:0px 20px 0 0; padding:0px; position:relative; float:left; cursor:pointer; text-align:center;}
 .countingIcon dl dt.iconImg{ margin:0px; padding:0px; width:70px; height:65px; background: #F3F9FF; border-radius: 15px; display:flex; justify-content: center; align-items: center;}
-.countingIcon dl dd.iconText{ margin:0px; padding:8px 0 0 0; font-size:13px; color:#333; text-align:center; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 70px;}
+.countingIcon dl dd.iconText{ margin:0px; padding:8px 0 0 0; font-size:13px; color:#444; text-align:center; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 70px;}
 .countingIcon dl dd.iconCount{ margin:0px; padding:1px 8px; font-size:12px; color:#fff; position:absolute;  right:-8px; top:-5px;  background:#0470E4; border:1px solid #0470E4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
 .countingIcon dl dd.iconCount_none{ margin:0px; padding:1px 8px; font-size:12px; color:#fff; position:absolute; right:-8px; top:-5px; background:#b4b4b4; border:1px solid #a4a4a4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
 .countingIcon .iconCircle_none{width:58px; height:58px; margin:0px auto; padding:0px; background:#f8f8f8; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;border:1px solid #e9e9e9;}
@@ -340,7 +338,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 /* birthday */
 .birthday{ margin:0px; padding:0px; overflow:hidden; background-color: white; height:197px;} /* 장진혁 추가 */
 .birthTit{ height:30px; box-sizing:border-box; line-height:30px; padding:30px 25px;}
-.birthTit .birthText{margin:0px; padding:0px; font-size:14px; color:#333; font-weight:bold; float:left; line-height: 15px;}
+.birthTit .birthText{margin:0px; padding:0px; font-size:14px; color:#444; font-weight:bold; float:left; line-height: 15px;}
 .birthTit .birthLeftbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer; margin-right:15px; height:15px;}
 .birthTit .birthRighttbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer; border-left: 1px solid #EFECEC; padding-left:15px; height:15px;}
 .birthList{ margin:0px; padding:18px; list-style:none; overflow:hidden;}
@@ -348,17 +346,20 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .birthList li .theme1_birthListDL{ margin:0px; padding:0px;  overflow:hidden;}
 .birthList li .theme1_birthListDL .theme1_birthPic{margin:0px; padding:0px 5px 0px 0px; float:left;}
 .birthList li .theme1_birthListDL .theme1_birthPic img{border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; border:1px solid #e7e7e7;}
-.birthList li .theme1_birthListDL .theme1_birthName{margin:0px; padding:0px; font-size:13px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .theme1_birthListDL .theme1_birthName{margin:0px; padding:0px; font-size:13px; color:#444; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
 .birthList li .theme1_birthListDL .theme1_birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
 
 /* bestEmployee */
 .bestEmployee{ margin:0px 20px; padding:25px 0 0 0; border-top:1px solid #EFECEC; box-sizing:border-box; position: relative;}
 .bestEmployee .emPic { position: absolute; right: 25px; top: 24px; margin: 0px; padding: 15px 10px; float: left; background: url(/images/ezNewPortal/best_frame.png) no-repeat right bottom;}
 .bestEmployee .emPic img{border-radius: 50px; width:50px;}
-.bestEmployee .emDL{ margin:0px; padding:15px 20px; overflow:hidden;border-radius: 5px;background: 185px 35px #f4f4f4;}
+.bestEmployee .emDL{ margin:0px; padding:15px 20px; overflow:hidden;border-radius: 5px; background: 185px 35px #f4f4f4;}
+.bestEmployee .emDL .nodata{text-align:left;}
+
+
 
 .bestEmployee .emDL .emTit{ margin:0px; padding:0 0 2px 0; font-size:15px; color:#388CE5; font-weight:500;}
-.bestEmployee .emDL .emName{ margin:0px; padding:0 0 2px 0; font-size:14px; color:#333333; font-weight:bold;}
+.bestEmployee .emDL .emName{ margin:0px; padding:0 0 2px 0; font-size:14px; color:#444; font-weight:bold;}
 .bestEmployee .emDL .emTeam{ margin:0px; padding:0px; font-size:12px; color:#777777;}
 
 /* notice */
@@ -416,13 +417,15 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .sCalendarArea .scalender {overflow:hidden; float:left; width:96%; margin:2px 5px 5px 5px; padding:1px; /* box-sizing:border-box; */ /*border-right:1px solid #e7e7e7;*/}
 .scalendar_mini_title{table-layout:fixed; text-align:center; height:25px; margin:10px 0px; padding:0px 10px 0px 3px;}
 .scalendar_mini_title .btn_prev{width:14.2%;  padding:0px 1px; cursor:pointer;}
-.scalendar_mini_title .calendar_mini_day{width:100%; text-align:center; color:#333; font-size:16px; font-weight:bold;}
+.scalendar_mini_title .btn_prev span img{margin-top:4px;}
+.scalendar_mini_title .calendar_mini_day{width:100%; text-align:center; color:#444; font-size:16px; font-weight:bold;}
 .scalendar_mini_title .btn_next{width:14.2%; padding:0px 1px; cursor:pointer;}
+.scalendar_mini_title .btn_next span img{margin-top:4px;}
 .scalendar_mini{table-layout:fixed; border-collapse: collapse;}
-.scalendar_mini th{color:#000; margin:0; padding:2px 0px 10px 0px; border-top:0 none; font-size:13px; border-left:0 none; font-weight:500; }
+.scalendar_mini th{color:#444; margin:0; padding:2px 0px 10px 0px; border-top:0 none; font-size:13px; border-left:0 none; font-weight:500; }
 .scalendar_mini th.sun{color:#cd3b3b;}
 .scalendar_mini th.sat{color:#0470e4;}
-.scalendar_mini td {height:26px; text-align:center; cursor:pointer; color:#333333; position: relative; font-size:12px;}
+.scalendar_mini td {height:26px; text-align:center; cursor:pointer; color:#444; position: relative; font-size:12px;}
 .scalendar_mini td.sun{color:#fc4a4a;}
 .scalendar_mini td.sat{color:#46abfc;}
 .scalendar_mini td.gray{color:#8a8e9b;}
@@ -434,7 +437,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden;height:203px; background: white}
 .scheduleDate{height:191px; margin:0px;padding: 12px 15px 0px 10px;float: none; background:#ffffff; text-align:center;}
 .scheduleDate .dayT{margin:0px; padding:0 0px 0px 0px; font-size:13px; color:#888888;}
-.scheduleDate .dayN{margin:0px; padding:10px 0 0 0px; font-size:20px; font-weight:bold; color:#333;}
+.scheduleDate .dayN{margin:0px; padding:10px 0 0 0px; font-size:20px; font-weight:bold; color:#444;}
 .sscheduleUL{margin:0px;padding: 0px 0px 0px 0px;list-style:none;float: right;overflow:hidden;width:80%;height: 214px;box-sizing: border-box;}
 .sscheduleUL .scheduleLi{margin:10px;padding: 6px 0px 12px 14px;height:35px; cursor: pointer;}
 .sscheduleUL .scheduleLi .scheduleTime{margin:0px; padding:0px 0px 1px 0px;}
@@ -466,12 +469,12 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 /* bookmark_approval */
 .apprgraph {overflow:hidden; box-sizing:border-box;}
 .apprgraph_area {padding: 5px 0px 0px 0px; margin:0 15px; overflow:hidden;}
-.apprgraph_area dl{ margin:0px 0px 0px 0; padding:0px 0px 0px 0px; float:left; width:20%; display:flex; justify-content: center;}
+.apprgraph_area dl{ margin:0px 0px 0px 0; padding:0px 0px 0px 0px; float:left; width:20%; display:flex; justify-content: center; color:#444;}
 
 .apprgraph_area  dl dt { float:left; margin:0px; padding:0px; font-size:13px; font-weight:400; height:25px; line-height:24px; text-align:center;}
 .apprgraph_area  dl dd { margin:0px; padding:0px; font-size:12px; font-weight:bold; height:25px; line-height:24px; text-align:left; margin-left:5px;}
 
-.apprgraph_text{font-size:16px; font-weight: 500; margin:5px 15px;}
+.apprgraph_text{font-size:16px; font-weight: 500; margin:5px 15px; color:#444;}
 .apprgraph_area .graph_bar{width:100%; height:10px; background: #EAEAEA; border-radius: 5px; margin-top:30px;}
 .apprgraph_area .bookmarkG01, .apprgraph_area .bookmarkG02, .apprgraph_area .bookmarkG03, .apprgraph_area .bookmarkG04, .apprgraph_area .bookmarkG05{position:relative;}
 .apprgraph_area .bookmarkG01 .dot{width:10px; height:10px; border-radius: 10px; background: #59A9FD; border:3px solid #fff; position:absolute; top: 27px;}
@@ -482,7 +485,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 
 .bookmark{ overflow:hidden; margin:0 15px; padding:0px 0px 10px; list-style:none; box-sizing:border-box; display:flex; justify-content: space-between; overflow:hidden;}
 .bookmark .bookmarkLi{ margin:2px 0px; padding:0px; width:18%; box-sizing:border-box; border:1px solid #EFECEC; background:url(/images/ezNewPortal/bookmarkIcon.png) no-repeat center 12px; height:90px; font-size:14px; color:#555; text-align:center; float:left; display:table-row; border-radius: 5px;}
-.bookmark .bookmarkLi_none{margin:2px 0px; padding:0px; width:18%; box-sizing:border-box; border:1px solid #e7e7e7; background:url(/images/ezNewPortal/bookmarkIcon_none.png) no-repeat center; height:90px; font-size:14px; color:#393939; text-align:center; float:left; display:table-row;  border-radius: 5px;}
+.bookmark .bookmarkLi_none{margin:2px 0px; padding:0px; width:18%; box-sizing:border-box; border:1px solid #e7e7e7; background:url(/images/ezNewPortal/bookmarkIcon_none.png) no-repeat center; height:90px; font-size:14px; color:#444; text-align:center; float:left; display:table-row;  border-radius: 5px;}
 .bookmark .bookmarkLi:hover{ background:#0470E4 url(/images/ezNewPortal/bookmarkIcon_hover.png) no-repeat center 12px; border:1px solid #0470E4;}
 .bookmark .bookmarkLi:hover span{ color:#fff;}
 .bookmark .bookmarkLi span{ display:table-cell; padding:40px 3px 10px 3px; vertical-align:middle; cursor:pointer; letter-spacing:-1px;}
@@ -495,9 +498,9 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .comPic .best{ margin:0px 0px 0px 0px; padding:0px; position:absolute; left:-5px; top:-8px; z-index:1000;}
 .comPic .best img{ transition:none; image-rendering:auto;}
 .comPic img{position:relative; width:100%; height:100%; display:block; transition: -webkit-transform .2s cubic-bezier(.165,.84,.44,1); transition: transform .2s cubic-bezier(.165,.84,.44,1); transition: transform .2s cubic-bezier(.165,.84,.44,1),-webkit-transform .2s cubic-bezier(.165,.84,.44,1); image-rendering: -webkit-optimize-contrast; border-radius: 5px;}
-.comTit{margin: 0px auto; padding: 10px 0px; font-size: 13px; color:#555; font-weight:bold; text-align:center; width:80%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.comTit{margin: 0px auto; padding: 10px 0px; font-size: 13px; color:#444; font-weight:bold; text-align:center; width:80%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .comTit_none{ color:#c0c0c0;margin:0px; padding:10px 0px; font-size:13px; font-weight:bold; text-align:center;}
-.comText{margin: 0 auto; padding: 0px;font-size: 12px;color: #555; text-align: center; width: 80%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; height:20px;}
+.comText{margin: 0 auto; padding: 0px;font-size: 12px;color: #444; text-align: center; width: 80%; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; height:20px;}
 
 /* board */
 .board{overflow:hidden;}
@@ -577,7 +580,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .pollList .pollListLi:nth-child(10) .pollT .Vnum {background:#81bc3d;}
 
 /* top_menu Button */
-.topMenuBtn{margin: 4px 5px 0px 0px;padding: 0px 10px;float:right;font-size: 12px;line-height: 23px;height: 24px;background: #fff;font-weight: bold;border-top: 1px solid #c7c7c7;border-left: 1px solid #c7c7c7;border-right: 1px solid #c7c7c7;border-bottom: 1px solid #909193;cursor:pointer;color: #393939;}
+.topMenuBtn{margin: 4px 5px 0px 0px;padding: 0px 10px;float:right;font-size: 12px;line-height: 23px;height: 24px;background: #fff;font-weight: bold;border-top: 1px solid #c7c7c7;border-left: 1px solid #c7c7c7;border-right: 1px solid #c7c7c7;border-bottom: 1px solid #909193;cursor:pointer;color: #444;}
 .topMenuBtn:hover{border:1px solid #0470e4; color:#0470e4;}
 .menu_toggle_context {height:35px;background: #f5f4f4;border-top: 1px solid #d9d9d9;margin: -1px 0px 0px 0px;}
 .menu_toggle_context .initOrder {float: left;margin: 4px 5px 0px 5px;}
@@ -660,10 +663,10 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 .info{position:relative; height:70px; margin:20px 0px 0px 25px; padding:0px;}
 .info .infoImg{float:left; margin:0px 24px 0px 0px; padding:0px;}
-.info .infoName{margin:0px; padding:0px; color:#444445; font-size:18px; font-weight:bold;}
+.info .infoName{margin:0px; padding:0px; color:#444444; font-size:18px; font-weight:bold;}
 .info .infoTeam{margin:10px 0px 0px 0px; padding:0 0 0 8px; color:#888888; font-size:14px; font-weight: 400;}
 .info .infoMail{ width:90%;  margin :20px 0px 0px 0px; padding:0px 0px 0px 18px; color:#444445; font-size:14px; background:url(/images/ezNewPortal/theme3Img/infoicon_mail.png )no-repeat 0px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;  }
-.info .infoTime{margin:10px 0px 0px 0px; padding:0px 0px 0px 18px; color:#444445; font-size:14px;}
+.info .infoTime{margin:10px 0px 0px 0px; padding:0px 0px 0px 18px; color:#444444; font-size:14px;}
 .info .infoTime span{color:#888;  padding-left:8px;}
 .info .infoSet img{vertical-align:middle;}
 .info .infoLogout{z-index:101; position:absolute; top:-20px; right:16px; width:27px; height:27px; margin:0px; padding:0px; text-align:center; background:#ccc;  border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px; cursor:pointer;}
@@ -681,7 +684,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .time_check{height:76px; margin:5px 20px; padding:0px; background:#F4F4F4; border-radius: 5px;}
 .presentTime{float:left; width:calc(100% - 220px); height:76px; margin:0px; padding:0px;}
 .presentTime .timeTxt{margin:22px 0px; padding:0px; text-align:center;background: url(/images/kr/main/present_time_icon.png) no-repeat  30px 6px;}
-.presentTime .timeTxt span{vertical-align:middle; color:#454242; font-size:20px; font-weight:500; padding-left:20px;}
+.presentTime .timeTxt span{vertical-align:middle; color:#444; font-size:20px; font-weight:500; padding-left:20px;}
 .presentTime .timeTxt span.timeAM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
 .presentTime .timeTxt span.timePM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
 .presentTime_commuteNone{width:100%;}
@@ -694,7 +697,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .main_time .timeCheckIn.lateIn dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
 .main_time .timeCheckIn dd{margin:0px; padding:0px;}
-.main_time .timeCheckOut{float:left; ; margin:0 0 0 15px; padding:8px 22px; border-radius: 5px;; color:#444; font-size:13px; text-align:center; background:#fff; cursor:pointer; box-shadow:0px 0px 5px #ddd;}
+.main_time .timeCheckOut{float:left; ; margin:0 0 0 15px; padding:0; border-radius: 5px;; color:#444; font-size:13px; text-align:center; background:#fff; cursor:pointer; box-shadow:0px 0px 5px #ddd; width:95px; height:34px; line-height:34px;}
+.main_time .timeCheckOut.commute_on{background:#F4F4F4; border:1px solid #fff; box-sizing:border-box; line-height:32px;}
 .main_time .timeCheckOut.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: pointer;}
 .main_time .timeCheckOut.in dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckOut dt{margin:15px 0px 12px 0px; padding:0px;}
@@ -715,9 +719,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .writebanner_leftContents dl dt span.icon_approval{display:inline-block; vertical-align:top; margin:17px 0px 0px 0px; background:url(/images/ezNewPortal/theme3Img/quick_icon5.png) no-repeat center;}
 .writebanner_leftContents dl dt span.iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
 .writebanner_leftContents dl dt.txt{font-size:14px;}
-.writebanner_leftContents dl dd{position:absolute; top:17px; right:22%; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebanner_leftContents dl dd{position:absolute; top:17px; right:22%; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(57,74,93,0.48); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebanner_rightContents{float:left; width:75%; background:#ffffff;}
-.writebanner_leftContents .countZero{background:rgba(0,0,0,0.2);}
+.writebanner_leftContents .countZero{background:rgba(57,74,93,0.2);}
 .writebannerTop{overflow:hidden; list-style:none; margin:0px; padding:19px 0px; border-bottom:1px solid #EFECEC;}
 .writebannerTop li{float:left; width:33.3%; cursor:pointer;}
 .writebannerBottom{overflow:hidden; list-style:none; margin:0px; padding:20px 0px;}
@@ -733,8 +737,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .writebannerIcon .iconCircle .iconReturn{background:url(/images/ezNewPortal/theme3Img/quick_icon7.png) no-repeat center;;}
 .writebannerIcon .iconCircle .iconReceive{background:url(/images/ezNewPortal/theme3Img/quick_icon8.png) no-repeat center;}
 .writebannerIcon .iconText{margin:10px 0px 0px 0px; padding:0px; color:#333; font-size:14px;}
-.writebannerIcon .count{position:absolute; top:-2px; right:12%; margin:0px 0px 0px 12px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
-.writebannerIcon .countZero{background:rgba(0,0,0,0.2);}
+.writebannerIcon .count{position:absolute; top:-2px; right:12%; margin:0px 0px 0px 12px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(57,74,93,0.48); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebannerIcon .countZero{background:rgba(57,74,93,0.2);}
 
 @media only screen and (max-width :1730px) and (min-width :1680px) {
 	/*.info .infoImg{margin:0px 24px 0px 0px;} */
@@ -746,7 +750,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .birthList li .birthListDL{ margin:0px; padding:0px;  overflow:hidden;cursor:pointer;}
 .birthList li .birthListDL .birthPic{margin:0px; padding:0px 7px 0px 0px; float:left;}
 .birthList li .birthListDL .birthPic img{width:36px; height:36px; border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; border:1px solid #e7e7e7;}
-.birthList li .birthListDL .birthName{margin:0px 0px 0px 0px; padding:0px; font-size:13px; color:#333; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
+.birthList li .birthListDL .birthName{margin:0px 0px 0px 0px; padding:0px; font-size:13px; color:#444; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
 .birthList li .birthListDL .birthTeam{margin:0px; padding:0px; font-size:12px; color:#888888; overflow:hidden; white-space: nowrap; text-overflow: ellipsis;}
 .birthList hr {display:block; margin-block-start:0.7em; margin-block-end:0.7em;}
 
@@ -857,7 +861,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 /* 날씨 포틀릿 여기서부터  하단에 추가해주시면 됩니다. */
 /* .box_shadow{overflow:hidden; height:250px; margin:20px 0px 0px 16px; padding0px; background:#fff; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family:Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;} */
-.portlet_title .portletText{float:left; overflow:hidden; margin:0px; padding:0px 0px 0px 15px; color:#333; font-size:18px; font-weight:500; letter-spacing:-1px;}
+.portlet_title .portletText{float:left; overflow:hidden; margin:0px; padding:0px 0px 0px 15px; color:#444; font-size:18px; font-weight:500; letter-spacing:-1px;}
 /* .portlet_title .portletPlus{float:right; overflow:hidden; margin:0px; padding:0px; cursor:pointer;} */
 .portlet_title .portletPlus .weatherSelect{width:78px; height:28px; margin:-6px 0px 0px 0px; padding:0px; border:1px solid #c0c0c0; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; vertical-align: top;}
 .weather_content{height:100px; margin:0; position: relative;}
@@ -873,13 +877,13 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .weather_title .weatherPer li span.iconbg01{background:#45aaff;}
 .weather_title .weatherPer li span.iconbg02{background:#88bb8b;}
 .weather_title .weatherPer li span.iconbg03{background:#b896c3;}
-.weather_title .weatherPer li span.text{color:#000; font-size:14px; margin-bottom:2px;}
+.weather_title .weatherPer li span.text{color:#444; font-size:14px; margin-bottom:2px;}
 .weather_title .weatherPer li span.text span{font-weight:bold;}
 .weather_mini{overflow:hidden; background: #F4F4F4;}
 .weather_mini dl{float:left; width:calc(25% - 12px); margin:0px 5px; padding:11px 0px;}
 .weather_mini dl dt{float:left; width:calc(50% - 12px); margin:8px 3px; padding:0px; text-align:center;}
 .weather_mini dl dt img{vertical-align:middle;}
-.weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:13px; text-align:left;}
+.weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#444; font-size:13px; text-align:left;}
 .weather_mini dl dd span{display:block; line-height:22px;}
 
 .weather_title .weatherPresent dt img{width:90px;}
@@ -1396,7 +1400,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .resources_portlet .portlet_title .portletText{ width:34%;}
 .resources_portlet .resources_calendal{ margin:0px; padding:10px 10px 0px 10px; float:right; overflow:hidden; height:45px;}
 .resources_portlet .resources_calendal .DatePicker_class{ height:30px; margin:0px 0px 0px 0px; width:110px; text-align:center; vertical-align:top;}
-.resources_portlet input {box-sizing: border-box; border: 1px solid #dedede; font-size: 12px; color: #393939; text-decoration: none; outline: none;}
+.resources_portlet input {box-sizing: border-box; border: 1px solid #dedede; font-size: 13px; color: #444; text-decoration: none; outline: none;}
 .resources_portlet .resources_calendal img{position:absolute; right:86px; top:17px; margin:0px 0px 0px 0px; padding:0px 0px 0px 0px; cursor:pointer;}
 .resources_portlet .resources_setting{ margin:0px; padding:17px 5px; float:right; cursor:pointer;}
 
@@ -1408,7 +1412,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .resource_listBoxUL .resource_listBoxDL { margin: 0px; padding: 0px; }
 .resource_listBoxUL .resource_listBoxDL dt { position: relative; float: left; width: 130px; height: 25px; margin: 0px; padding: 0px 9px 0px 0px; cursor: pointer; z-index:100; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 .resource_listBoxUL .resource_listBoxDL dt .icon_tree {float:left; margin-top:3px; margin-right:5px;}
-.resource_listBoxUL .resource_listBoxDL dt .resource_list_text {float:none; font-size:14px; color:#555; padding:8px 0px 0px 8px; box-sizing: border-box; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; vertical-align: middle; position: relative; top: 3px; font-weight: 500;}
+.resource_listBoxUL .resource_listBoxDL dt .resource_list_text {float:none; font-size:14px; color:#444; padding:8px 0px 0px 8px; box-sizing: border-box; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; vertical-align: middle; position: relative; top: 0px; font-weight: 500;}
 .resource_listBoxUL .resource_listBoxDL dt:hover .resource_list_text {font-weight:bold;}
 .resource_listBoxUL .resource_listBoxDL dd {position:relative; float: none; margin: 0px; height: 22px; padding: 0px 0px 0px 0px; white-space:nowrap;}
 .resource_listBoxUL .resource_listBoxDL dd > .resource_list_item { position: relative; display: inline-block; width: 90px; height: 22px; line-height: 18px; margin: 2px -4px 0px 10px; padding: 1px 9px; border-radius: 3px; background-color:#E6EFFA; border: 1px solid #E6EFFA; color: #444; text-align: center; box-sizing: border-box; cursor: pointer; font-size:13px;}
@@ -1433,7 +1437,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 input, label, textarea, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
 	font-size:14px;
-	color: #393939;
+	color: #444;
 	text-decoration: none;
 	ime-mode:active;
 }
@@ -1492,8 +1496,8 @@ nav .navUL li:hover:before{width:50%; transition:all 0.2s ease;}
 nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 
 
-.bookmark .bookmarkLi{ margin:2px 0px; padding:0px; width:18%; box-sizing:border-box; border:1px solid #EFECEC; background:url(/images/ezNewPortal/bookmarkIcon.png) no-repeat center 12px; height:90px; font-size:14px; color:#555; text-align:center; float:left; display:table-row; border-radius: 5px; }
-.bookmark .bookmarkLi_none{margin:2px 0px; padding:0px; width:18%; box-sizing:border-box; border:1px solid #e7e7e7; background:url(/images/ezNewPortal/bookmarkIcon_none.png) no-repeat center; height:90px; font-size:14px; color:#555; text-align:center; float:left; display:table-row;  border-radius: 5px;}
+.bookmark .bookmarkLi{ margin:2px 0px; padding:0px; width:18%; box-sizing:border-box; border:1px solid #EFECEC; background:url(/images/ezNewPortal/bookmarkIcon.png) no-repeat center 12px; height:90px; font-size:14px; color:#444; text-align:center; float:left; display:table-row; border-radius: 5px; }
+.bookmark .bookmarkLi_none{margin:2px 0px; padding:0px; width:18%; box-sizing:border-box; border:1px solid #e7e7e7; background:url(/images/ezNewPortal/bookmarkIcon_none.png) no-repeat center; height:90px; font-size:14px; color:#444; text-align:center; float:left; display:table-row;  border-radius: 5px;}
 .bookmark .bookmarkLi:hover{ background:#0470E4 url(/images/ezNewPortal/bookmarkIcon_hover.png) no-repeat center 12px; border:1px solid #0470E4; transition:all 0.2s linear;}
 .bookmark .bookmarkLi:hover span{ color:#fff;  transition:all 0.2s linear;}
 .bookmark .bookmarkLi span{ display:table-cell; padding:40px 3px 10px 3px; vertical-align:middle; cursor:pointer; letter-spacing:-1px; height:30px !important;}
@@ -1512,6 +1516,8 @@ nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 .collaborate_tab li{transition:all 0.2s linear;}
 #theme3Body .bannerText dd.bannerBtn{transition:all 0.2s linear;}
 .bannerText dd.bannerBtn{transition:all 0.2s linear;}
+.bannerText dd.bannerBtn a{color:#0470e4 !important;}
+.bannerText dd.bannerBtn:hover a{color:#fff !important;}
 
 /* 20230530 자바 디자인 수정 */
 .full_menu_toggleUL > li { float: left; width: 100px; height: 88px; background:#fff; border-right: none; border-bottom: none; box-sizing: border-box; cursor:pointer; margin-bottom: 15px;} 
@@ -1527,9 +1533,10 @@ nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 /* 20230601 포탈메인 css수정 */
 .info .infoTime{margin: 5px 0px 0px 0px;}
 .main_time .timeCheckIn{font-size: 14px;}
-.main_time .timeCheckOut.in{font-size: 14px; font-weight: bold; background: #fff; cursor: pointer; border: 1px solid #fff; padding: 0px 25px; height: 34px; line-height: 40px; box-sizing: border-box; color:#0470e4;}
-.main_time .timeCheckIn { float: left; margin: 0px; padding: 0px 12px; border-radius: 5px; color: #444; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
-.main_time .timeCheckIn.lateIn{ float: left; margin: 0px; padding: 0px 25px; border-radius: 5px; color:#0470e4; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
+.main_time .timeCheckOut.in{font-size: 14px; font-weight: bold; background: #fff; cursor: pointer; border: 1px solid #fff; padding: 0px 25px; height: 34px; line-height: 40px; box-sizing: border-box; color:#444;}
+.main_time .timeCheckIn {width:95px; float: left; margin: 0px; padding: 0px; border-radius: 5px; color: #444; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
+.main_time .timeCheckIn.lateIn{ float: left; margin: 0px; padding: 0; border-radius: 5px; color:#0470e4; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
+.main_time .timeCheckIn.commute_on{background:#F4F4F4; border:1px solid #fff; box-sizing:border-box; line-height:32px;}
 .main_time .timeCheckIn.lateIn dd{margin: 0px;}
 .time_check{height: 60px;}
 .presentTime{height: 60px;}
@@ -1613,3 +1620,4 @@ div.orbit img{border-radius: 5px;}
 		left: 34%;
 	}
 }
+
