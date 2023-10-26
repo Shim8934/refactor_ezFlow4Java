@@ -960,8 +960,8 @@
 		            </div>
 		            
 		            <ul class="info_count">
-		        		<li class="icon_member"><span class="txt"><spring:message code="ezCommunity.t477"></spring:message></span><span class="count" id="membercnt"></span></li>
-		         		<li class="icon_board"><span class="txt"><spring:message code="ezCommunity.design01"></spring:message></span><span class="count" id="itemcnt"></span></li>
+		        		<li class="icon_member"><span class="txt"><spring:message code="ezCommunity.design02"/></span><span class="count" id="membercnt"></span></li>
+		         		<li class="icon_board"><span class="txt"><spring:message code="ezCommunity.design01"/></span><span class="count" id="itemcnt"></span></li>
 		          	</ul>
 		            <ul class="info_list">
 			            <li id="regdate"></li>
