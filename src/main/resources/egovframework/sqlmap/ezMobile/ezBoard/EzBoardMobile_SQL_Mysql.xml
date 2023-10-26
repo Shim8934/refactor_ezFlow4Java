@@ -444,7 +444,7 @@
 		</isEqual>
 			ORDER BY
 				A.NotiNo ASC,
-				A.parentwritedate ASC,
+				A.parentwritedate DESC,
 				A.writedate DESC
 		<![CDATA[
 			LIMIT
