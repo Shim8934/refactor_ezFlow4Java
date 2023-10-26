@@ -312,11 +312,11 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .main_main_time{padding:16px 0px 0px 0px;}
 .main_main_time .main_timeCheckIn{ margin:0px; padding:0px; float:left;}
 
-.main_main_time .main_timeCheckIn .main_in{margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #444; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;}
+.main_main_time .main_timeCheckIn .main_in{margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #444; width: 80px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;}
 .main_main_time .main_timeCheckIn .main_lateIn{margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #0470e4; width: 80px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
 .main_main_time .main_timeCheckIn .commute_on{background:#F4F4F4; border:1px solid #fff; box-sizing:border-box; line-height:32px;}
 .main_main_time .main_timeCheckIn .main_out{margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#444; width:80px; height:34px; line-height:34px; text-align:center; cursor:pointer; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;} /* 장진혁 */
-.main_main_time .main_timeCheckOut{ margin:0 0 0 5px; padding:0px; float:left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.main_main_time .main_timeCheckOut{ margin:0 0 0 5px; padding:0px; float:left; }
 
 .main_main_time .main_timeCheckOut .main_in{ margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; width: 80px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
 .main_main_time .main_timeCheckOut .main_out{margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#444; width:80px; height:34px; line-height:34px; text-align:center; cursor:pointer;}
@@ -1535,7 +1535,7 @@ nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 /* 20230601 포탈메인 css수정 */
 .info .infoTime{margin: 5px 0px 0px 0px;}
 .main_time .timeCheckIn{font-size: 14px;}
-.main_time .timeCheckOut.in{font-size: 14px; font-weight: bold; background: #fff; cursor: pointer; border: 1px solid #fff; padding: 0px 25px; height: 35px; line-height: 42px; box-sizing: border-box; color:#444;}
+.main_time .timeCheckOut.in{font-size: 14px; font-weight: bold; background: #fff; cursor: pointer; border: 1px solid #fff; padding: 0px 25px; height: 34px; line-height: 41px; box-sizing: border-box; color:#444;}
 .main_time .timeCheckIn {width:95px; float: left; margin: 0px; padding: 0px; border-radius: 5px; color: #444; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
 .main_time .timeCheckIn.lateIn{ float: left; margin: 0px; padding: 0; border-radius: 5px; color:#0470e4; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
 .main_time .timeCheckIn.lateIn dd{margin: 0px;}
