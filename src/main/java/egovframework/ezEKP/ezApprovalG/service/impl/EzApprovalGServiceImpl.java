@@ -6846,7 +6846,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         signInfo2 = habSem;
                         signText2 = commonUtil.getTodayUTCTime("");
 						
-						String[] signAry = {tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), signText};
+						String[] signAry = {signText};
 						
 						setHwpText(hwpFile, habSign, signAry);
 						setHwpText(habSem, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
