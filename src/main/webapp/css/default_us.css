@@ -3757,7 +3757,6 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 
 /* Search 20230208 */
 .searchBtn.nofilter{right:12px;}
-.searchForm .text{border-right:0 !important;}
 
 /* 2023-10-18 디자인 개선 건으로 인한 css 삭제 */
 /* /* 관리자 페이지 lnb 수정 */ */
@@ -3920,3 +3919,6 @@ select{min-height: 24px !important;}
 .cabTable .cabName, .cabTable2 .cabName{font-size:13px;}
 
 .lnbUL li.on .list_text { color: #0470E4; font-weight: bold; }
+
+#usePer { font-size: 12px;}
+.mail_spaceText { font-size: 12px !important;}
