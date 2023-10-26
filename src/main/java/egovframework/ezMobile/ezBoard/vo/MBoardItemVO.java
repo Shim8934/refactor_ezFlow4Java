@@ -139,6 +139,10 @@ public class MBoardItemVO {
 	private String mainImageID;
 	/** 새로운게시물 여부*/
 	private String newItemFlag;
+	/** 2023-09-25 민지수 - 공지사항 기간설정 시작날짜 */
+	private String notiStart;
+	/** 2023-09-25 민지수 - 공지사항 기간설정 종료날짜 */
+	private String notiEnd;
 	
 	public String getUserID() {
 		return userID;
@@ -553,6 +557,18 @@ public class MBoardItemVO {
 	}
 	public void setNewItemFlag(String newItemFlag) {
 		this.newItemFlag = newItemFlag;
+	}	
+	public String getNotiStart() {
+		return notiStart;
+	}	
+	public void setNotiStart(String notiStart) {
+		this.notiStart = notiStart;
+	}	
+	public String getNotiEnd() {
+		return notiEnd;
+	}	
+	public void setNotiEnd(String notiEnd) {
+		this.notiEnd = notiEnd;
 	}
 	
 }

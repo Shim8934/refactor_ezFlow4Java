@@ -139,7 +139,11 @@
 			/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		    var useHWP = "<c:out value='${useHWP}'/>";
-		    
+
+			/* 2023-09-25 민지수 - 게시판 > 공지사항 기간설정 시작, 종료시간 변수 */
+			var strNotiStart = "${boardListVO.notiStart}";
+			var strNotiEnd = "${boardListVO.notiEnd}";
+
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
@@ -273,6 +277,10 @@
 			    
 			    FirstFlag = true;
 			    ChkPermanent();
+				/* 2023-09-25 민지수 - 게시물 로드시 정보 불러오도록 추가 */
+				NotiPost_onclick();
+				Noti_setTime();
+
 			    FirstFlag = false;
 			    try {
 			        if (document.getElementById("txtTitle").value == "")
@@ -343,12 +351,35 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
+				$("#noti_start").datepicker({ /* 게시판 > 공지사항 시작날짜 */
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true
+				});
+				$("#noti_end").datepicker({ /* 게시판 > 공지사항 종료날짜 */
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true
+				});
 		        var settime = "${startDateTime}";
 		        var NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 		        NowDate.setMonth(NowDate.getMonth() - 1);
-		        
+				var NtNowDate = new Date(strNow.substring(0, 10));
+				var NtEndDate = new Date(strNow.substring(0, 10));
+				NtEndDate.setMonth(NtEndDate.getMonth() + 1);
+
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
+				$("#noti_start").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#noti_start").datepicker('setDate', NtNowDate);
+				$("#noti_end").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#noti_end").datepicker('setDate', NtEndDate);
 		        $('#Stimepicker').timepicker();
 		        $('#Stimepicker').timepicker('setTime', NowDate);
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
@@ -570,7 +601,9 @@
 		        var newID = "";
 		        var pStartDate = GetStartDate();
 		        var pEndDate = GetEndDate();
-		        
+				var pNtStartDate = "";
+				var pNtEndDate = "";
+
 		        if (document.getElementById("ChkPermanence").checked == false) {
 		            var configEndDate = Number(ReplaceText("${endDateTime}", "-", ""));
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
@@ -637,6 +670,45 @@
 		        if (pStartDate == "" && pReservedItem == "true") {
 		            strParentWriteDate = "";
 		        }
+
+				if (document.getElementById("noticePost").checked) { //공지사항인 경우
+					if(!(document.getElementById("NotiPeriod").checked) && !(document.getElementById("NotiPermanece").checked)){
+						alert("<spring:message code='ezBoard.Notimjs07'/>");
+						return;
+					}
+					if(document.getElementById("NotiPeriod").checked){ //기간설정인 경우 시작일
+						pNtStartDate = $('#noti_start').val() + " 00:00:00";
+					}
+					if (document.getElementById("NotiPermanece").checked) { //영구공지인 경우 종료일
+						pNtStartDate = strNow;
+						pNtEndDate = "9999-12-30 23:59:59";
+					} else {
+						pNtEndDate = $('#noti_end').val() + " " + "23:59:59"; //기간설정인 경우 종료일
+					}
+					if (pNtStartDate != "" && pNtStartDate.substring(0, 10) < strNow.substring(0, 10)) {
+						alert("<spring:message code='ezBoard.Notimjs02'/>");
+						return;
+					}
+					if (pNtEndDate != "" && pNtEndDate <= strNow) {
+						alert("<spring:message code='ezBoard.Notimjs03'/>");
+						return;
+					}
+					if (pNtStartDate != "" && pNtEndDate != "" && pNtEndDate < pNtStartDate) {
+						alert("<spring:message code='ezBoard.Notimjs04'/>");
+						return;
+					}
+
+					if (pStartDate!= "" && pNtStartDate != "" && pStartDate.substring(0,10) > pNtStartDate.substring(0,10)){
+						alert("<spring:message code='ezBoard.Notimjs08'/>");
+						return;
+					}
+
+					if (pEndDate != "" && pNtEndDate != "" && pEndDate < pNtEndDate) {
+						alert("<spring:message code='ezBoard.Notimjs09'/>");
+						return;
+					}
+				}
+
 		        newID = "{" +NewGuid+ "}";
 		        var xmlDom = createXmlDom();
 		        var xmlhttp = createXMLHttpRequest();
@@ -765,6 +837,8 @@
 		        //gubun 사용해야되서 추가
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "GUBUN", gubun);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE1", "");
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "NTSTARTDATE", pNtStartDate);
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "NTENDDATE", pNtEndDate);
 
 		        if (gubun != "3" && document.getElementById('noticePost').checked) {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE2", "1");
@@ -1121,6 +1195,42 @@
 		        	document.getElementById("reservation_date").style.visibility = "hidden";
 		        }
 		    }
+
+			function NotiPost_onclick() {
+				if (document.getElementById("noticePost").checked) {
+					document.getElementById("noti_setTime").style.display = "";
+					if (document.getElementById("NotiPeriod").checked) {
+						document.getElementById("notiTimeset").style.display ="";
+					} else {
+						document.getElementById("notiTimeset").style.display ="none";
+					}
+				} else {
+					document.getElementById("noti_setTime").style.display = "none";
+				}
+			}
+
+			function Noti_setTime() { /* 2023-09-22 민지수 - 게시물 수정 시 기존 정보로 불러오도록 구현 */
+				if (strNotiEnd != null && strNotiEnd != ""){
+					if (strNotiEnd.substring(0, 4) == "9999") {
+						document.getElementById("NotiPermanece").checked = true;
+					} else {
+						document.getElementById("NotiPeriod").checked = true;
+						$("#noti_end").datepicker('setDate', strNotiEnd);
+
+						if (strNotiStart.substring(0,10) < strNow.substring(0,10)) { // 설정했던 공지 시작날짜가 현재날짜보다 이전이면 현재날짜로 세팅
+							$("#noti_start").datepicker('setDate',strNow);
+						} else { // 현재날짜보다 이후이면 설정한 날짜로 세팅
+							$("#noti_start").datepicker('setDate',strNotiStart);
+						}
+						document.getElementById("notiTimeset").style.display ="";
+					}
+				} else if(document.getElementById("NotiPeriod").checked){
+					document.getElementById("notiTimeset").style.display ="";
+				} else {
+					document.getElementById("notiTimeset").style.display ="none";
+				}
+			}
+
 		    function PreviewItem() {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -1730,6 +1840,8 @@
 		                document.getElementById("BoardSpan").innerHTML = ret[1];
 		                InitializeSettings();
 		                ChkPermanent();
+						NotiPost_onclick();
+						Noti_setTime();
 		                pBoardType = "";
 		                
 		                if (pcheckForm.toUpperCase() == "TRUE") {
@@ -1792,6 +1904,8 @@
 	                document.getElementById("BoardSpan").innerHTML = ret[1];
 	                InitializeSettings();
 	                ChkPermanent();
+					NotiPost_onclick();
+					Noti_setTime();
 	                pBoardType = "";
 	
 	                if (pcheckForm.toUpperCase() == "TRUE") {
@@ -2427,10 +2541,10 @@
 	                            	<c:when test="${mode != 'reply'}">
 	                            		<c:choose>
 	                            			<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true') && boardListVO.extensionAttribute2 == '1'}">
-									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" checked /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
+									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" checked onclick="NotiPost_onclick()"/></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
 	                            			</c:when>
 	                            			<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true')}">
-									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
+									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" onclick="NotiPost_onclick()"/></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
 	                            			</c:when>
 	                            			<c:otherwise>
 									              &nbsp;<input type="checkbox" style="display: none" id="noticePost" />
@@ -2446,6 +2560,19 @@
 								</c:if>	
 		                        </td>
 	                    </tr>
+
+						<tr id="noti_setTime" style="display: none"> <%-- 공지사항 기간설정 --%>
+							<th><spring:message code='ezBoard.Notimjs06' /></th>
+							<td colspan="3" style="width: 300px; vertical-align: baseline;">
+								<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="radio" id="NotiPeriod" name="isNoti" onclick="NotiPost_onclick()" style="margin-bottom: 5px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.Notimjs05' /></span>
+								<span id = "notiTimeset" style="display: none;">
+										<input type="text" id="noti_start" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 3px; ">
+										~ <input type="text" id="noti_end" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 3px; "></span>
+								&nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;">
+										<input type="radio" id="NotiPermanece" name="isNoti" onclick="NotiPost_onclick()" style="margin-bottom: 5px;"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.Notimjs01' /></span>
+								</span>
+							</td>
+						</tr>
              			<!-- 추가 항목이 있을 경우 -->
              			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
              				<tr>

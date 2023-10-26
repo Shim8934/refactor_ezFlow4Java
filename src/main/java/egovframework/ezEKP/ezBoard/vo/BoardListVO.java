@@ -148,6 +148,10 @@ public class BoardListVO {
 	private String oneLineReply;
 	/** 2019-12-02 홍승비 - 임시저장 기능과 예약게시 기능의 동시 사용을 위한 예약게시물 여부 변수 추가 */
 	private String isReserved;
+	/** 2023-09-25 민지수 - 공지사항 기간설정 시작날짜 */
+	private String notiStart;
+	/** 2023-09-25 민지수 - 공지사항 기간설정 종료날짜 */
+	private String notiEnd;
 
 	public int getrNum() {
 		return rNum;
@@ -586,5 +590,17 @@ public class BoardListVO {
 	}
 	public void setIsReserved(String isReserved) {
 		this.isReserved = isReserved;
+	}
+	public String getNotiStart() {
+		return notiStart;
+	}
+	public void setNotiStart(String notiStart) {
+		this.notiStart = notiStart;
+	}
+	public String getNotiEnd() {
+		return notiEnd;
+	}
+	public void setNotiEnd(String notiEnd) {
+		this.notiEnd = notiEnd;
 	}
 }

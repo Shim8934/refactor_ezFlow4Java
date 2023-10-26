@@ -4742,4 +4742,69 @@
 		ADD
 			REACTFLAG VARCHAR(1) DEFAULT NULL
 	</statement>
+
+	<!-- 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblBoardItemNotiColumn">
+        <![CDATA[
+		SELECT
+			NTSTARTDATE,
+			NTENDDATE
+		FROM
+			TBL_BOARD_ITEM
+				LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addTblBoardItemNotiColumn">
+		ALTER TABLE
+			TBL_BOARD_ITEM
+		ADD (
+			NTSTARTDATE varchar(40) DEFAULT NULL,
+			NTENDDATE varchar(40) DEFAULT NULL
+			)
+	</statement>
+
+	<!-- 2023-09-25 민지수 - 게시판 > 존재하던 공지사항 게시물 > 영구공지로 기본 설정 -->
+	<update id="EzCommonDAO.addTblBoardItemNoti">
+		UPDATE
+		    TBL_BOARD_ITEM
+		SET
+		    NTSTARTDATE = #NtStartDate#,
+		    NTENDDATE = #NtEndDate#
+		WHERE
+			EXTENSIONATTRIBUTE2 = 1
+	</update>
+
+	<!-- 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblBoardItemTempNotiColumn">
+        <![CDATA[
+		SELECT
+			NTSTARTDATE,
+			NTENDDATE
+		FROM
+			TBL_BOARD_ITEM_TEMP
+			LIMIT 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addTblBoardItemTempNotiColumn">
+		ALTER TABLE
+			TBL_BOARD_ITEM_TEMP
+			ADD (
+			NTSTARTDATE varchar(40) DEFAULT NULL,
+			NTENDDATE varchar(40) DEFAULT NULL
+			)
+	</statement>
+
+	<!-- 2023-09-25 민지수 - 게시판 > 임시저장 > 존재하던 게시물 > 영구공지로 기본 설정 -->
+	<update id="EzCommonDAO.addTblBoardItemTempNoti">
+		UPDATE
+			TBL_BOARD_ITEM_TEMP
+		SET
+			NTSTARTDATE = #NtStartDate#,
+			NTENDDATE = #NtEndDate#
+		WHERE
+			EXTENSIONATTRIBUTE2 = 1
+	</update>
+
 </sqlMap>

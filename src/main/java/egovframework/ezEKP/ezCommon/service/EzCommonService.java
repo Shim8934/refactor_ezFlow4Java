@@ -410,4 +410,10 @@ public interface EzCommonService {
 	public void updateWebFolderAndApprovalCheckPermissionCode() throws Exception;
 
 	public void createTblBoardReplyReact() throws Exception;
+	
+	/* 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 */
+	public void addTblBoardItemNoti() throws Exception;
+
+	/* 2023-09-25 민지수 - 게시판 > 임시보관함 > 공지게시물 > 기간설정 컬럼 추가 */
+	public void addTblBoardItemTempNoti() throws Exception;
 }
