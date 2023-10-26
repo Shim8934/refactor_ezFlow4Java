@@ -695,8 +695,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 .main_time{float:right; width:220px; margin:20px 0 0 0; padding:0px;}
 .main_time .timeCheckIn{float:left; ; margin:0px; padding:8px 22px; border-radius: 5px;; color:#444; font-size:13px; text-align:center; background:#fff; cursor:pointer; box-shadow:0px 0px 5px #ddd;}
-.main_time .timeCheckIn.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
-.main_time .timeCheckIn.in dd{margin:-4px 0px 0px 0px;}
+.main_time .timeCheckIn.in{font-size:14px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckIn.lateIn{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckIn.lateIn dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}

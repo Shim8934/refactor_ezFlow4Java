@@ -338,7 +338,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 /* birthday */
 .birthday{ margin:0px; padding:0px; overflow:hidden; background-color: white; height:197px;} /* 장진혁 추가 */
 .birthTit{ height:30px; box-sizing:border-box; line-height:30px; padding:30px 25px;}
-.birthTit .birthText{margin:0px; padding:0px; font-size:14px; color:#444; font-weight:bold; float:left; line-height: 15px;}
+.birthTit .birthText{margin:0px; padding:0px; font-size:13px; color:#444; font-weight:bold; float:left; line-height: 15px;}
 .birthTit .birthLeftbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer; margin-right:15px; height:15px;}
 .birthTit .birthRighttbtn{ display:inline-block; margin:0px; padding:0px; overflow:hidden; float:right; cursor:pointer; border-left: 1px solid #EFECEC; padding-left:15px; height:15px;}
 .birthList{ margin:0px; padding:18px; list-style:none; overflow:hidden;}
@@ -691,8 +691,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 .main_time{float:right; width:220px; margin:20px 0 0 0; padding:0px;}
 .main_time .timeCheckIn{float:left; ; margin:0px; padding:8px 22px; border-radius: 5px;; color:#444; font-size:13px; text-align:center; background:#fff; cursor:pointer; box-shadow:0px 0px 5px #ddd;}
-.main_time .timeCheckIn.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
-.main_time .timeCheckIn.in dd{margin:-4px 0px 0px 0px;}
+.main_time .timeCheckIn.in{font-size:14px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckIn.lateIn{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckIn.lateIn dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
@@ -1073,7 +1072,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 #theme2Body .collaborate_tab{background: #fff; border:1px solid #EFECEC; border-radius: 0 0 0 5px;}
 
-#theme2Body .apprgraph{border: 1px solid #EFECEC; border-radius: 3px; margin:0 15px;}
+#theme2Body .apprgraph{border-radius: 3px; margin:0 15px;}
 #theme2Body .apprgraph_area{padding-bottom:10px;}
 
 #theme2Body .time_check{background: #F4F4F4;}
@@ -1537,11 +1536,12 @@ nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 /* 20230601 포탈메인 css수정 */
 .info .infoTime{margin: 5px 0px 0px 0px;}
 .main_time .timeCheckIn{font-size: 14px;}
-.main_time .timeCheckOut.in{font-size: 14px; font-weight: bold; background: #fff; cursor: pointer; border: 1px solid #fff; padding: 0px 25px; height: 34px; line-height: 40px; box-sizing: border-box; color:#444;}
+.main_time .timeCheckOut.in{font-size: 14px; font-weight: bold; background: #fff; cursor: pointer; border: 1px solid #fff; padding: 0px 25px; height: 35px; line-height: 42px; box-sizing: border-box; color:#444;}
 .main_time .timeCheckIn {width:95px; float: left; margin: 0px; padding: 0px; border-radius: 5px; color: #444; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
 .main_time .timeCheckIn.lateIn{ float: left; margin: 0px; padding: 0; border-radius: 5px; color:#0470e4; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
-.main_time .timeCheckIn.commute_on{background:#F4F4F4; border:1px solid #fff; box-sizing:border-box; line-height:32px;}
 .main_time .timeCheckIn.lateIn dd{margin: 0px;}
+.main_time .timeCheckIn.commute_on{background:#F4F4F4; border:1px solid #fff; box-sizing:border-box; line-height:32px;}
+.main_time .timeCheckOut.commute_on{background:#F4F4F4; }
 .time_check{height: 60px;}
 .presentTime{height: 60px;}
 .presentTime .timeTxt{margin-top: 14px;}
@@ -1625,3 +1625,6 @@ div.orbit img{border-radius: 5px;}
 	}
 }
 
+.writebanner_leftContents > .work {
+	border-bottom: none;	
+}
