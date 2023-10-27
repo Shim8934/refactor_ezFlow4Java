@@ -251,6 +251,11 @@
 		    }
 		    function pop_addcon() {
 		    	
+		    	if (inboxRuleCon1.value.includes(";")) {
+		    		alert(strLangLS05);
+		    		return;
+		    	}
+
 		    	if (inboxRuleCon1.value.trim().length == 0) {
 		    		alert(strLangKYJ03);
 		    		inboxRuleCon1.value = "";
