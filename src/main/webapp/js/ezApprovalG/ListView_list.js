@@ -478,8 +478,9 @@ function ListView() {
         
         //2020-02-18 천성준 - 결재문서리스트 의견표시여부
         // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
+        // 부서공유함 (g_sFlag) == 'docShare' 조건 추가
         // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
-        if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined")  || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")) {
+        if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined")  || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
         	if (showOpinionImg) {
                 var objTd = document.createElement("TH");
                 objTd.id = _thisID + "_TH_OP";
@@ -783,8 +784,9 @@ function ListView() {
                 objTr.setAttribute(strData, strValue);
 
                 // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
+                // 부서공유함 (g_sFlag) == 'docShare' 조건 추가
                 // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
-                if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")) {
+                if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
                 	if (showOpinionImg) {
                 		if (strData == "HASOPINIONYN" && strValue == "Y") {
                 			hasOpinionFlag = true;
@@ -823,8 +825,9 @@ function ListView() {
             }             
 
             // 2023-06-26 민지수 - 기록물등록대장 (g_sFlag) == 'm01' 조건 추가
+            // 부서공유함 (g_sFlag) == 'docShare' 조건 추가
             // S,G 버전 구분하지 않고 의견 아이콘 표시 > approvalFlag 조건 (S/G) 제거
-            if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01")) {
+            if ((_thisID == "DocList" && typeof(approvalFlag) != "undefined" && typeof(g_sFlag) == "undefined") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "m01") || (_thisID == "DocList" && typeof(g_sFlag) != "undefined" && g_sFlag == "docShare")) {
             	if (showOpinionImg) {
                     var objTd = document.createElement("TD");
                     objTd.className = "OpIcon"

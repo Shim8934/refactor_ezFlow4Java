@@ -633,8 +633,8 @@
 
 			window.onbeforeunload = function () {
 				try {
-					if ((window.opener.g_sFlag == undefined && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01")) {
-						// 전자결재 > 완료문서, 기록물등록대장에만 적용 되도록 조건 추가
+					if ((window.opener.g_sFlag == undefined  && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "docShare")) {
+						// 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
 						window.opener.openergetDocInfo();
 					} else {
 						return;
