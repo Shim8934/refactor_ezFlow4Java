@@ -410,9 +410,9 @@ function react_onclick(reply) {
 	getBoardComment();
 
 	if (xmlhttp.response == 1) { // 댓글이 존재하지 않는 경우
-		alert(strLang190);
+		alert(strLangLGE190);
 	} else if (xmlhttp.response == 2) { // 댓글 작성자인 경우 (본인 댓글에 반응 불가)
-		reactFlag == "Y" ? alert(strLang188) : alert(strLang189);
+		reactFlag == "Y" ? alert(strLangLGE188) : alert(strLangLGE189);
 	} else if (xmlhttp.response == 4) { // 같은 반응을 눌렀을 경우
 		$('#my' + reactFlag + replyIndex).css({"font-weight" : "normal"});
 	}

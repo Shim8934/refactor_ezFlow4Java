@@ -553,7 +553,7 @@
 			    try {
 			        if (btnSendDraftEnable == "false") {
 			            var pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
-			            OpenAlertUI(pAlertContent);
+			            OpenAlertUI(pAlertContent, check_btnSendDraft);
 			            return;
 			        }
 			

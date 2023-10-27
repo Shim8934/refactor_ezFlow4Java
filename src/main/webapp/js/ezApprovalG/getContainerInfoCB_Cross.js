@@ -1,5 +1,7 @@
 var g_CurrentFormCd = "_DEF_1";
 var publicityYN = "";
+// 2023-05-29  전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기가 삽입되는 페이지 구분값(g_sFlag) 변수배열 추가
+var cabinetPreviewItemFlagArr = ['m01', 'm03', 'm05', 'm06', 'm12', 'm13', 'm14', 'UNTREATED', 'docShare']; 
 
 
 function DisplayLineCnt(Resultxml, viewtype) {
@@ -124,7 +126,9 @@ function getdoclistSub_after(xml) {
             }
         }
     }
-    catch (e) { }
+    catch (e) { 
+        console.log(e);
+    }
 }
 
 function selFirstRow(Resultxml) {
@@ -141,6 +145,27 @@ function selFirstRow(Resultxml) {
         WriterID = "";
         WriterDeptID = "";
         getDataInfo();
+    }
+    /* 2022-07-04 홍승비 - 결재완료문서가 존재하는 경우 */
+    if ($("#PreviewRayerH").length && $("#PreviewRayerH").css("display") != "none") {
+    // 2023-06-30 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 레이어 팝업 호출 메소드를 타입에 따라 나눔
+        if (typeof cabinetPreviewItemFlagArr != 'undefined' && typeof g_sFlag != 'undefined' && cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+            PreviewRayerChange("H", 'Cabinet'); // 기록물
+        } else {
+            PreviewRayerChange("H", 'Container'); // 완료문서
+        }
+        if (CrossYN()) {
+            if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+                ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = strLang930;	        			
+            }
+        } else {
+            if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
+                ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLang930;		            		
+            }
+        }
+    } else if ($("#PreviewRayerH").length) {
+        // 2023-07-13 전인하 - 전자결재 > 문서 미리보기 > 미리보기영역 사용하지 않는 메뉴일 경우 미리보기창을 닫는 것이 아니라 프리뷰 레이어 영역을 display: none 처리함
+        $("#PreviewRayerH").css("display", "none");
     }
 }
 
@@ -343,13 +368,20 @@ function onreadystatechange_GetDocDeliveryList() {
                             DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
                             DocList.SetTitleIdx(0);                                  
                             DocList.SetUrgentFlag(false);                            
-
+                            // 2023-09-27 전인하 - 배부대장의 보안결재날짜 데이터는 DATA8에 존재하여 SecurityIdx를 교체함, 보안결재플래그 활성화
+                            DocList.SetSecurityFlag(true);                           
+                            DocList.SetSecurityIdx(7);
                             DocList.DataSource(xmlDoc);                             
                             DocList.DataBind("lvtDoclist");                          
                             DocList = null;
 
                             makePageSelPage(NodeListLen);
                             selFirstRow(Resultxml);
+                        }
+                        // 2023-06-15 전인하 - 전자결재G > 기록물대장 미리보기 -  초기 로딩이 끝난 뒤 미리보기가 열린 상태일 경우 미리보기 여는 분기 삽입
+                        // 리스트 로딩보다 미리보기 열람 분기가 먼저 이루어지는 것을 개선
+                        if (typeof previewInfo != 'undefined' && previewInfo != "OFF" && typeof cabinetPreviewItemFlagArr != 'undefined' && cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+                            PreviewRayerChange(pPreviewShow_HOW, 'Cabinet');
                         }
                     }
                     else {
@@ -398,11 +430,23 @@ function lvtDoclist_SelChange() {
     var tr = DocList.GetSelectedRows();
     if (tr.length > 0) {
         processRowClick(tr[0]);
-        
-        /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
-        var headerNameTD = $(event.target).attr("headerName");
-        if (headerNameTD != null && typeof(headerNameTD) != "undefined" && (headerNameTD == "DOCTITLE" || headerNameTD == "RECTITLE" || headerNameTD == "TITLE")) {
-        	lvtDoclist_onSel_DBclick();
+        // 2023-07-10 전인하 - 전자결재G > 기록물대장 미리보기 - tr 클릭 시 관리자페이지가 아닐 때, 미리보기 표출 동작 삽입
+        if (useAprPreview == "YES" && typeof cabinetPreviewItemFlagArr != 'undefined' && cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+            if ($("#PreviewRayerH").length && $("#PreviewRayerH").css("display") != "none") {
+                PreviewRayerChange("H", 'Cabinet');
+            } else {
+                /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
+                var headerNameTD = $(event.target).attr("headerName");
+                if (headerNameTD != null && typeof(headerNameTD) != "undefined" && (headerNameTD == "DOCTITLE" || headerNameTD == "RECTITLE" || headerNameTD == "TITLE")) {
+                    lvtDoclist_onSel_DBclick();
+                }
+            }
+        } else {
+            /* 2021-03-24 홍승비 - 제목 클릭 시 원클릭 이벤트로 전자결재 읽기, 결재 팝업창을 표출 */
+            var headerNameTD = $(event.target).attr("headerName");
+            if (headerNameTD != null && typeof(headerNameTD) != "undefined" && (headerNameTD == "DOCTITLE" || headerNameTD == "RECTITLE" || headerNameTD == "TITLE")) {
+                lvtDoclist_onSel_DBclick();
+            }
         }
     }
 }

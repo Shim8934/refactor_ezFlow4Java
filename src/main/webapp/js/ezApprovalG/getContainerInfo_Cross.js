@@ -562,7 +562,9 @@ function getsearchDocList_after() {
         }
         HiddenMailProgress();
     }
-    catch (e) { }
+    catch (e) { 
+        console.log(e);
+    }
 }
 
 function getsearchDocListS_after() {
@@ -744,7 +746,12 @@ function selFirstRow(Resultxml) {
     
     /* 2022-07-04 홍승비 - 결재완료문서가 존재하는 경우 */
     if ($("#PreviewRayerH").length && $("#PreviewRayerH").css("display") != "none") {
-    	PreviewRayerChange("H", 'Manage');
+    // 2023-06-30 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 레이어 팝업 호출 메소드를 타입에 따라 나눔
+        if (typeof cabinetPreviewItemFlagArr != 'undefined' && typeof g_sFlag != 'undefined' && cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+            PreviewRayerChange("H", 'Cabinet'); // 기록물
+        } else {
+            PreviewRayerChange("H", 'Container'); // 완료문서
+        }
     	if (CrossYN()) {
     		if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
         		ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = strLang930;	        			
@@ -755,7 +762,8 @@ function selFirstRow(Resultxml) {
         	}
         }
     } else if ($("#PreviewRayerH").length) {
-    	PreviewRayerChange("NONE", 'Manage');
+        // 2023-07-13 전인하 - 전자결재 > 문서 미리보기 > 미리보기영역 사용하지 않는 메뉴일 경우 미리보기창을 닫는 것이 아니라 프리뷰 레이어 영역을 display: none 처리함
+        $("#PreviewRayerH").css("display", "none");
     }
 }
 

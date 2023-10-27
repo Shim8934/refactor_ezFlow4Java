@@ -23832,7 +23832,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ISDOCPRINT", isdocprint);
 		
         List<ApprGDeliveryListVO> docList =ezApprovalGDAO.getDeliveryList(map);
- 	   StringBuffer sb = new StringBuffer();
+ 	    // 2023-10-16 전인하 - 전자결재G > 기록물배부대장 > 문서정보 오류 > 배부대장 리스트 호출 시 진행문서 여부 판별하여 보안결재여부 정보 호출
+        for (int j = 0; j < docList.size(); j++) {
+           String lineModeFlag = getLineModeFlag(docList.get(j).getDocID(), userInfo.getId(), companyID, tenantID);
+           String securityApprovalDate = checkSecurityApprovalDate(docList.get(j).getDocID(), companyID, tenantID, lineModeFlag);
+           docList.get(j).setSecurityApproval(securityApprovalDate);
+       }
+        
+        StringBuffer sb = new StringBuffer();
        sb.append("<DATA>");
     
        for (int j = 0; j < docList.size(); j++) {
@@ -23876,7 +23883,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     resultXML.append("<DATA5>" + makeXMLString(docXML.getElementsByTagName("CHARGEID").item(j).getTextContent().trim()) + "</DATA5>");
                     resultXML.append("<DATA6>" + makeXMLString(docXML.getElementsByTagName("DEPTID").item(j).getTextContent().trim()) + "</DATA6>");
                     resultXML.append("<DATA7>" + makeXMLString(docXML.getElementsByTagName("ORGDOCNUMCODE").item(j).getTextContent().trim()) + "</DATA7>");
-				}
+                    // 2023-09-05 전인하 - 배부대장 > 리스트조회 시 보안결재정보 함께 호출
+                    resultXML.append("<DATA8>" + makeXMLString(docXML.getElementsByTagName("SECURITYAPPROVAL").item(j).getTextContent().trim()) + "</DATA8>");
+                }
 				resultXML.append("</CELL>");
 			}
 			resultXML.append("</ROW>");
@@ -34658,4 +34667,163 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     public void cleanAbsence(String userID, int tenantID) {
 
     }
+    
+    // 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재여부와 지정된 날짜를 체크하는 메소드
+    @Override
+    public String checkSecurityApprovalDate(String docID, String companyID, int tenantID, String linemode) throws Exception {
+        logger.debug("checkSecurityApprovalDate started");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("v_COMPANYID", companyID);
+        map.put("v_TENANTID", tenantID);
+        // 2023-09-25 전인하 - 진행문서를 조회하는 경우를 체크하기 위한 파라미터 추가
+        map.put("v_LINEMODE", linemode);
+        String result = ezApprovalGDAO.checkSecurityApprovalDate(map);
+
+        logger.debug("checkSecurityApprovalDate ended");
+        return result;
+    }
+    
+    // 2023-09-25 전인하 - 전자결재G > 배부대장 미리보기 > 진행문서 열람권한 조회
+    @Override
+    public String getAccessYNGforAPR(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
+        logger.debug("getAccessYNGforAPR started.");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantID);
+        map.put("companyID", companyID);
+        map.put("v_USERID", userID);
+        map.put("approvalFlag", approvalFlag);
+        
+        boolean rtnVal = true;
+        mode = mode.trim().toUpperCase();
+
+        if (mode.length() != 3) {
+            mode = "NNN";
+        }
+
+        String publicityCode = "1";
+        String publicityFlag = "ALL";
+
+        //공개/비공개 권한 체크
+        if (mode.substring(0, 1).equals("Y")) {
+            map.put("v_FLAG", "001");
+            logger.debug("getAccessYNGforAPR Param : v_DOCID =" + docID + "v_TENANTID =" + tenantID + "v_USERID=" + userID +" companyID = " + companyID +  "v_FLAG=" +  "001");
+
+            publicityCode = makeListField(ezApprovalGDAO.getAccessYNGforAPR(map)).trim();
+            logger.debug("getAccessYNGforAPR Value : publicityCode =" + publicityCode);
+
+            if (approvalFlag.equals("G")) {
+                publicityCode = publicityCode.length() <= 0 || publicityCode.equals(" ") || publicityCode.equals("Y") ? "1" : "3";
+            } else {
+                publicityCode = publicityCode.equals("Y") || publicityCode.length() <= 0 ? "1" : "3";
+            }
+
+            publicityFlag = getCode2Name("A50", publicityCode, companyID, lang, tenantID);
+
+            switch (publicityFlag) {
+                case "ALL":
+                    rtnVal = true;
+                    break;
+
+                case "DEPT":
+                    map.put("v_FLAG", "002");
+                    logger.debug("getAccessYNGforAPR Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "002");
+
+                    String isLineInfo3 = makeListField(ezApprovalGDAO.getAccessYNGforAPR(map));
+                    logger.debug("getAccessYNGforAPR Value : isLineInfo3 =" + isLineInfo3);
+
+                    if (isLineInfo3.equals("Y")) {
+                        rtnVal = true;
+                    } else {
+                        map.put("v_FLAG", "003");
+                        logger.debug("getAccessYNGforAPR Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "003");
+
+                        String drafterDeptID = makeListField(ezApprovalGDAO.getAccessYNGforAPR(map));
+                        logger.debug("getAccessYNGforAPR Value : drafterDeptID =" + drafterDeptID);
+
+                        String result = ezOrganService.getPropertyList(userID, "extensionAttribute4;department", commonUtil.getPrimaryData(lang, tenantID), tenantID);
+
+                        rtnVal = result.toLowerCase().lastIndexOf(drafterDeptID.toLowerCase()) >= 0 && drafterDeptID.trim().length() > 0 ? true : false;
+                    }
+                    break;
+
+                case "LINE":
+                    map.put("v_FLAG", "002");
+                    logger.debug("getAccessYNGforAPR Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "002");
+
+                    String isLineInfo2 = makeListField(ezApprovalGDAO.getAccessYNGforAPR(map));
+                    logger.debug("getAccessYNGforAPR Value : isLineInfo2 =" + isLineInfo2);
+
+                    rtnVal = isLineInfo2.equals("Y") ? true : false;
+                    break;
+
+                case "DRAFT":
+                    map.put("v_FLAG", "004");
+                    logger.debug("getAccessYNGforAPR Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "004");
+
+                    String drafterYN = makeListField(ezApprovalGDAO.getAccessYNGforAPR(map));
+                    logger.debug("getAccessYNGforAPR Value : drafterYN =" + drafterYN);
+
+                    rtnVal = drafterYN.trim().equals("") ? false : true;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        //보안등급으로 권한 체크(사용자정보에 있는 등급으로 권한 체크함)
+        if (publicityFlag.equals("ALL") && mode.substring(1, 2).equals("Y")) {
+            String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
+
+            if (userSecurityCode == null || userSecurityCode.trim().equals("")) {
+                userSecurityCode = "0";
+                map.put("v_FLAG", "005");
+                logger.debug("getAccessYNGforAPR Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "005");
+
+                String docSecurityCode = makeListField(ezApprovalGDAO.getAccessYNGforAPR(map));
+                logger.debug("getAccessYNGforAPR Value : docSecurityCode =" + docSecurityCode);
+
+                if (docSecurityCode.trim().equals("")) {
+                    docSecurityCode = "999";
+                }
+                rtnVal = Integer.parseInt(userSecurityCode) <= Integer.parseInt(docSecurityCode) ? true : false;
+
+                if (getIsUse("A22", "005", companyID, lang, tenantID).equals("1")) {
+                    map.put("v_FLAG", "002");
+                    logger.debug("getAccessYNGforAPR Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "002");
+
+                    String isLineInfo = makeListField(ezApprovalGDAO.getAccessYNGforAPR(map));
+                    logger.debug("getAccessYNGforAPR Value : isLineInfo =" + isLineInfo);
+
+                    if (isLineInfo.equals("Y")) {
+                        rtnVal = true;
+                    }
+                }
+            }
+        }
+
+        //열람권한으로 권한 체크
+        if (!rtnVal && mode.substring(2).equals("Y")) {
+            map.put("v_FLAG", "006");
+            logger.debug("getAccessYNGforAPR Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "006");
+
+            String allUserRight = ezApprovalGDAO.getAccessYNGforAPR(map);
+            logger.debug("getAccessYNGforAPR Value : allUserRight =" + allUserRight);
+
+            if (allUserRight.length() <= 0) {
+                allUserRight = "0";
+            }
+
+            if (Integer.parseInt(allUserRight) > 0) {
+                rtnVal = true;
+            }
+        }
+        
+        logger.debug("getAccessYNGforAPR ended.");
+        return rtnVal ? "<RESULT>TRUE</RESULT>" : "<RESULT>TRUE</RESULT>";
+    } 
 }
