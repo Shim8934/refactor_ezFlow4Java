@@ -270,6 +270,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	    String regMi = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(14,16);
 	    
 	    String apprTotalAttachLimit = ezCommonService.getTenantConfig("ApprTotalAttachLimit", userInfo.getTenantId());
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
 	    
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("useEditor", useEditor);
@@ -279,7 +280,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	    model.addAttribute("regH", regH);
 	    model.addAttribute("regMi", regMi);
 	    model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
-	    
+	    model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+
 		logger.debug("regRecord ended");
 
 	    return "ezApprovalG/apprGregrecord";

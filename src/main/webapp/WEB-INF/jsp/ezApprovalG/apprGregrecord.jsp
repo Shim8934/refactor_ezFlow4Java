@@ -64,6 +64,7 @@
     var orgCompanyID = "";
     var ext = "mht";
     var tooltipLevelFlag = "Y"
+    var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
     
     window.onload = function () {
         if (window.dialogArguments != null) {
