@@ -73,6 +73,6 @@ var strLang189 = "Please enter ";
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
 
 // 2023-03-08 이가은 추가
-var strLang188 = "You cannot 'Like' your own comments.";
-var strLang189 = "You cannot 'Dislike' your own comments.";
-var strLang190 = "This comment has already been deleted.";
+var strLangLGE188 = "You cannot 'Like' your own comments.";
+var strLangLGE189 = "You cannot 'Dislike' your own comments.";
+var strLangLGE190 = "This comment has already been deleted.";
