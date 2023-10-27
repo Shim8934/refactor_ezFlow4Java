@@ -5004,7 +5004,8 @@
                 TBL_USERMASTER
             SET 
                 DESCRIPTION = #displayName#,
-                DESCRIPTION2 = #displayName2#
+                DESCRIPTION2 = #displayName2#,
+                UPDATEDT = #nowDate#
             WHERE
                 DEPARTMENT = #cn#
             AND
