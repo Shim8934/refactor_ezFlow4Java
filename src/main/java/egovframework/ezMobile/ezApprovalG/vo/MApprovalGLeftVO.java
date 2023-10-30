@@ -17,6 +17,10 @@ public class MApprovalGLeftVO {
 	private int aprDraftCount;
 	/** 공유결재문서갯수*/
 	private int aprShareCount;
+	/** 공람할문서갯수*/
+	private int gongRamCount;
+	/** 공람완료문서갯수*/
+	private int gongRamEndCount;
 	
 	public String getCompanyId() {
 		return companyId;
@@ -66,5 +70,16 @@ public class MApprovalGLeftVO {
 	public void setAprShareCount(int aprShareCount) {
 		this.aprShareCount = aprShareCount;
 	}
-	
+	public int getGongRamCount() {
+		return gongRamCount;
+	}
+	public void setGongRamCount(int gongRamCount) {
+		this.gongRamCount = gongRamCount;
+	}
+	public int getGongRamEndCount() {
+		return gongRamEndCount;
+	}
+	public void setGongRamEndCount(int gongRamEndCount) {
+		this.gongRamEndCount = gongRamEndCount;
+	}
 }

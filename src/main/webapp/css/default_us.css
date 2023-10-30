@@ -1241,7 +1241,7 @@ form{display:inline;margin:0}
 .mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; font-weight:normal; background-color: #f1f3f5;}
 .mainlist_free tr th.title{width:100%; text-align:left;}
 
-.mainlist_free tr td{ border:0px; font-weight:normal; font-size:13px; color:#333; padding:6px 6px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
+.mainlist_free tr td{ border:0px; font-weight:normal; font-size:13px; color:#333; padding:6px 6px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0; word-break:break-all;}
 .mainlist_free tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
