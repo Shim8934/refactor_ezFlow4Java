@@ -1160,7 +1160,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .main_time .timeCheckIn.lateIn{color:#0470e4;}
 #theme3Body .main_time .timeCheckIn.commute_on{background:rgba(153,182,222,0.68); border-color:#6F90BC;}
 #theme3Body .main_time .timeCheckOut{background: #8CAEDE; color:#fff; box-shadow: none; border:1px solid #fff;}
-#theme3Body .main_time .timeCheckOut.commute_on{background:rgba(140,169,207,0.5); border-color:#6F90BC;}
+#theme3Body .main_time .timeCheckOut.commute_on{background:rgba(153,182,222,0.68); border-color:#6F90BC;}
 #theme3Body .presentTime .timeTxt span{color:#fff;}
 #theme3Body .presentTime .timeTxt{margin:15px 0px; padding:0px; text-align:center;background: url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat 45px 6px;}
 
