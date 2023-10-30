@@ -3925,5 +3925,4 @@ select{min-height: 24px !important;}
 
 #left .adminListBox h2{white-space:normal; word-break:keep-all; height:auto !important; line-height:1.5 !important;}
 #left .adminListBox h2 span{font-size:15px !important;}
-#left .adminListBox h2.on{background:#F8F9FB !important;}
-#left .adminListBox h2:hover{background:#F8F9FB !important;}
+#left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}

@@ -84,12 +84,14 @@
 					theme : "dark"
 				});
 
+				// 관리자 페이지 lnb 선택시 클래스 추가
 				$("#left .adminListBox h2").click(function(){
 					$("#left .adminListBox h2").removeClass("on");
 					$(this).addClass("on");
 				})
 
 				$("#left .adminListBox h2").eq(0).addClass("on");
+				// //관리자 페이지 lnb 선택시 클래스 추가
 			});
 
 			function leftResize(){
