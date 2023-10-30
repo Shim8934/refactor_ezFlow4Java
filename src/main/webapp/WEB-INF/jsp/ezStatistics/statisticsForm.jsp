@@ -366,7 +366,7 @@
 	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics('eDate')" readonly="readonly">
 	                     &nbsp;&nbsp;<spring:message code='ezStatistics.t1032'/> : 
 	        			<input id="formname" type="text" style="width: 100px;" onkeypress="search_press(event)" />
-	                     <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="getforminfo()"><spring:message code='ezStatistics.t36'/></span></a>
+	                     <a class="imgbtn" style="height:22px"><span onclick="getforminfo()"><spring:message code='ezStatistics.t36'/></span></a>
 	                 </span>
 	             </td>
 	             <td>

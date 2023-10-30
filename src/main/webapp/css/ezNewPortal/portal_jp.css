@@ -273,8 +273,8 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .main_main_time .main_timeCheckIn .main_in{margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #333; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;}
 .main_main_time .main_timeCheckIn .main_lateIn{margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #0470e4; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
 .main_main_time .main_timeCheckIn .main_out{margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#333; width:63px; height:34px; line-height:34px; text-align:center; cursor:pointer;} /* 장진혁 */
-.main_main_time .main_timeCheckOut{ margin:0 0 0 5px; padding:0px; float:left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-.main_main_time .main_timeCheckOut .main_in{ margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; color: #0470e4; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer;} /* 장진혁 */
+.main_main_time .main_timeCheckOut{ margin:0 0 0 5px; padding:0px; float:left; white-space: nowrap; }
+.main_main_time .main_timeCheckOut .main_in{ margin: 0px; padding: 0px; background: #fff; border-radius: 5px; box-shadow: 0px 0px 5px #ddd; font-size: 14px; font-weight: 500; width: 63px; height: 34px; line-height: 34px; text-align: center; cursor: pointer; color: #333;} /* 장진혁 */
 .main_main_time .main_timeCheckOut .main_out{margin:0px; padding:0px; background: #fff; border-radius: 5px; box-shadow:0px 0px 5px #ddd; font-size:14px; font-weight:500; color:#0470e4; width:63px; height:34px; line-height:34px; text-align:center; cursor:pointer;}
 .main_main_time .main_timeCheckIn .main_out:hover, .main_main_time .main_timeCheckOut .main_out:hover{color:#388CE5;}
 
@@ -308,7 +308,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .bestEmployee{margin:0px 20px; padding:25px 0 0 0;border-top:1px solid #EFECEC;box-sizing:border-box; position: relative;}
 .bestEmployee .emPic{ position: absolute; right: 25px; top: 24px; margin:0px; padding:15px 10px; float:left; background: url(/images/ezNewPortal/best_frame.png) no-repeat right bottom;}
 .bestEmployee .emPic img{border-radius: 50px; width:50px;}
-.bestEmployee .emDL{ margin:0px; padding:15px 20px; overflow:hidden;border-radius: 5px;background: url('/images/ezNewPortal/bestEmplotee_btm.png') no-repeat 185px 35px #f4f4f4;}
+.bestEmployee .emDL{ margin:0px; padding:15px 20px; overflow:hidden;border-radius: 5px;background: 185px 35px #f4f4f4;}
 
 .bestEmployee .emDL .emTit{ margin:0px; padding:0 0 2px 0; font-size:15px; color:#388CE5; font-weight:500;}
 .bestEmployee .emDL .emName{ margin:0px; padding:0 0 2px 0; font-size:14px; color:#333333; font-weight:bold;}
@@ -643,8 +643,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 .main_time{float:right; width:220px; margin:20px 0 0 0; padding:0px;}
 .main_time .timeCheckIn{float:left; ; margin:0px; padding:8px 22px; border-radius: 5px; color:#444; font-size:13px; text-align:center; background:#fff; cursor:pointer; box-shadow:0px 0px 5px #ddd;}
-.main_time .timeCheckIn.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
-.main_time .timeCheckIn.in dd{margin:-4px 0px 0px 0px;}
+.main_time .timeCheckIn.in{font-size:14px; font-weight:bold; background:#45c3fb; cursor: default; box-shadow: 0px 0px 5px #ddd; } 
 .main_time .timeCheckIn.lateIn{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
 .main_time .timeCheckIn.lateIn dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
@@ -670,7 +669,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .writebanner_leftContents dl dt span.icon_approval{display:inline-block; vertical-align:top; margin:17px 0px 0px 0px; background:url(/images/ezNewPortal/theme3Img/quick_icon5.png) no-repeat center;}
 .writebanner_leftContents dl dt span.iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
 .writebanner_leftContents dl dt.txt{font-size:14px;}
-.writebanner_leftContents dl dd{position:absolute; top:17px; right:22%; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebanner_leftContents dl dd{position:absolute; top:17px; right:22%; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(57,74,93,0.48); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebanner_rightContents{float:left; width:75%; background:#ffffff;}
 .writebanner_leftContents .countZero{background:rgba(0,0,0,0.2);}
 .writebannerTop{overflow:hidden; list-style:none; margin:0px; padding:19px 0px; border-bottom:1px solid #EFECEC;}
@@ -688,7 +687,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .writebannerIcon .iconCircle .iconReturn{background:url(/images/ezNewPortal/theme3Img/quick_icon7.png) no-repeat center;;}
 .writebannerIcon .iconCircle .iconReceive{background:url(/images/ezNewPortal/theme3Img/quick_icon8.png) no-repeat center;}
 .writebannerIcon .iconText{margin:10px 0px 0px 0px; padding:0px; color:#333; font-size:14px;}
-.writebannerIcon .count{position:absolute; top:-2px; right:12%; margin:0px 0px 0px 12px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebannerIcon .count{position:absolute; top:-2px; right:12%; margin:0px 0px 0px 12px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(57,74,93,0.48); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebannerIcon .countZero{background:rgba(0,0,0,0.2);}
 
 @media only screen and (max-width :1730px) and (min-width :1680px) {
@@ -897,10 +896,10 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .personal_content p{margin:0px; padding:0px; color:#777; font-size:14px; border-bottom:none;}
 #theme2Body .personal_content dl{float:left; margin:0px; padding:0px;}
 #theme2Body .personal_content dl.commute{width:calc(50% - 7px); height:32px; margin:5px 2px 0px 2px; background:#fff; box-shadow: 0px 0px 5px #ddd; cursor:pointer; border-radius: 5px;}
-#theme2Body .personal_content dl.commute dt{margin:5px 0px 5px 0px; padding:0px; text-align:center; color:#333; font-size:14px; font-weight:500;}
+#theme2Body .personal_content dl.commute dt{margin:0; padding:0px; text-align:center; color:#333; font-size:14px; font-weight:bold; height:100%; line-height:32px;}
 #theme2Body .personal_content dl.commute dt:hover{color:#388CE5;}
 #theme2Body .personal_content dl.commute dd{margin:0px; padding:0px; text-align:center; color:#777; font-size:14px;}
-#theme2Body .personal_content dl.commute_on{border:1px solid #fff; color:#0670e5;}
+#theme2Body .personal_content dl.commute_on{color:#333; border:1px solid #fff; background:#ECF2F9; font-weight: bold;}
 #theme2Body .personal_content dl.commute_on dd{margin:-4px 0px 0px 0px; color:#0670e5;; font-size:18px; font-weight:bold;}
 #theme2Body .personal_content dl.commuteNone{height:68px; background:#ffffff; border:1px solid #cddee6; text-align:center; color:#000000;}
 #theme2Body .personal_content dl.commuteNone dt{display:inline-block; margin:0px 5px 0px 0px; padding:0px; vertical-align:middle; font-size:18px; font-weight:normal; line-height:62px;}
@@ -1029,7 +1028,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 #theme2Body .collaborate_tab{background: #fff; border:1px solid #EFECEC; border-radius: 0 0 0 5px;}
 
-#theme2Body .apprgraph{border: 1px solid #EFECEC; border-radius: 3px; margin:0 15px;}
+#theme2Body .apprgraph{border-radius: 3px; margin:0 15px;}
 #theme2Body .apprgraph_area{padding-bottom:10px;}
 
 #theme2Body .time_check{background: #F4F4F4;}
@@ -1161,7 +1160,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .bannerText dd.bannerBtn{border:1px solid #388CE5; box-shadow: none;}
 #theme3Body .bannerText dd.bannerBtn:hover{background: #388CE5; color:#fff;}
 
-#theme3Body .dataHave{top:22px;}
 #theme3Body .scalendar_mini th{color:#fff;}
 #theme3Body .scalendar_mini th.sun{color:#fff;}
 #theme3Body .scalendar_mini th.sat{color:#fff;}
@@ -1321,16 +1319,16 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .collaborate_tab li{height:30px; line-height:30px; padding:0px 10px;  cursor: pointer; margin:10px; border-radius: 30px; font-weight: 700;}
 .collaborate_tab li:hover {color:#FFF; background: #388CE5;}
 .collaborate_tab li.on {color:#FFF; background: #388CE5;}
-.collaborate_tab li span{display:inline-block; width:100%; padding:0px; background:url(../images/kr/main/collaborateTab_arrow.png) right center no-repeat; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
-.collaborate_tab li:hover span{ background:url(../images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
-.collaborate_tab li.on span{background:url(../images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
+.collaborate_tab li span{display:inline-block; width:100%; padding:0px; background:url(/images/kr/main/collaborateTab_arrow.png) right center no-repeat; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.collaborate_tab li:hover span{ background:url(/images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
+.collaborate_tab li.on span{background:url(/images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
 .collaborate_list {float:left; width:75%; height:186px; margin:0px; padding:0px;}
 .collaborate_listTab {height: 30px; margin:10px 13px 0px 13px; padding:0px;}
 .collaborate_listTab dt{float:left; margin:0px 6px 0px 0px; padding:3px 6px; font-size:13px; font-weight:700; color:#333; border:1px solid #d8d8d8; border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px; cursor:pointer;}
 .collaborate_listTab dt.on{border:1px solid #388CE5; color:#388CE5;}
 .collaborate_listTab dt:hover{border:1px solid #388CE5; color:#388CE5;}
 .collaborate_list .listtype_txt{list-style:none; margin:8px; height:140px; overflow:hidden; padding:0px;}
-.collaborate_list .listtype_txt li{overflow:hidden; margin-bottom:6px; padding:0px 0px 0px 8px; color:#555555; height:30px; line-height:28px; font-size:13px; cursor:pointer; background:url(../images/kr/main/collaborateList_point.png) 0px 15px no-repeat;}
+.collaborate_list .listtype_txt li{overflow:hidden; margin-bottom:6px; padding:0px 0px 0px 8px; color:#555555; height:30px; line-height:28px; font-size:13px; cursor:pointer; background:url(/images/kr/main/collaborateList_point.png) 0px 15px no-repeat;}
 .collaborate_list .listtype_txt span{display:inline-block;}
 .collaborate_list .listtype_txt span.txt{float:left; width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .collaborate_list .listtype_txt span.txt:hover{color:#000;}
@@ -1463,10 +1461,24 @@ nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 /* 20230601 포탈메인 css수정 */
 .info .infoTime{margin: 5px 0px 0px 0px;}
 .main_time .timeCheckIn{font-size: 14px;}
-.main_time .timeCheckOut.in{font-size: 14px; font-weight: bold; background: #fff; cursor: pointer; border: 1px solid #fff; padding: 0px 25px; height: 34px; line-height: 40px; box-sizing: border-box; color:#0470e4;}
+.main_time .timeCheckOut.in{font-size: 14px; font-weight: bold; background: #fff; cursor: pointer; border: 1px solid #fff; padding: 0px 25px; height: 36px; line-height: 42px; box-sizing: border-box; color:#333;}
 .main_time .timeCheckIn { float: left; margin: 0px; padding: 0px 25px; border-radius: 5px; color: #444; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
 .main_time .timeCheckIn.lateIn{ float: left; margin: 0px; padding: 0px 25px; border-radius: 5px; color:#0470e4; font-size: 14px; text-align: center; background: #fff; cursor: pointer; box-shadow: 0px 0px 5px #ddd; height: 34px; line-height: 34px;}
 .main_time .timeCheckIn.lateIn dd{margin: 0px;}
+.main_time .timeCheckIn.commute_on{background:#F4F4F4; border:1px solid #fff;}
+.main_time .timeCheckOut.commute_on{background:#F4F4F4;}
+#theme2Body .personal_content dl.commute dt.main_lateIn{color:#0470e4;}
+#theme3Body .main_time .timeCheckIn.lateIn {color:#0470e4;}
+#theme3Body .main_time .timeCheckIn.commute_on {
+    background: rgba(153,182,222,0.68);
+    border-color: #6F90BC;
+}
+#theme3Body .main_time .timeCheckOut.commute_on {
+    background: rgba(153,182,222,0.68);
+    border-color: #6F90BC;
+}
+.main_main_time .main_timeCheckIn .commute_on{background:#F4F4F4; border:1px solid #fff; box-sizing:border-box; line-height:32px;}
+.main_main_time .main_timeCheckOut .commute_on{background:#F4F4F4; border:1px solid #fff; box-sizing:border-box; line-height:32px;}
 .time_check{height: 60px;}
 .presentTime{height: 60px;}
 .presentTime .timeTxt{margin-top: 20px;}
@@ -1541,7 +1553,7 @@ div.orbit img{border-radius: 5px;}
 .full_menu_toggleUL > li{height: 118px;}
 @media only screen and (min-width : 1680px ) {
 	.dataHave {
-		left: 39%;
+		left: 48%;
 	}
 }
 @media only screen and (max-width : 1240px) {
@@ -1549,3 +1561,11 @@ div.orbit img{border-radius: 5px;}
 		left: 34%;
 	}
 }
+.writebanner_leftContents > .work {
+	border-bottom: none;	
+}
+
+#CalendarMini_Top .dataHave{
+	left: 39%;
+}
+

@@ -179,4 +179,4 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #capacity-percent {display: inline-block; text-align: right;}
 .headListClick {cursor:pointer;}
 
-#tree, #treeDept, #treePer {padding-top: 0px; }
+#tree, #treeDept, #treePer {padding-top: 0px; padding-left: 4px;}

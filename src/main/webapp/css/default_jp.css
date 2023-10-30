@@ -2698,7 +2698,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .communityListBox .lnb_comText{margin-top:40px;}
 
 .community_section01{height:82px; margin:0px 0px 20px 0px; padding:0px; background:#F1F1FA;  border-radius: 5px;}
-.contents_bannerCommunity{height:82px; margin:0px; padding:0px; background:url(../images/kr/community/bannerbg.png) right top no-repeat; text-align:center;  border-radius: 5px; padding-top:20px; box-sizing: border-box;}
+.contents_bannerCommunity{height:82px; margin:0px; padding:0px; background:url(../images/kr/community/bannerbg.png) right top no-repeat; text-align:center;  border-radius: 5px; box-sizing: border-box;}
 .contents_bannerCommunity p{margin:0px; padding:0px; text-align:center;}
 .contents_bannerCommunity .banner_txt{display:flex; justify-content: center; align-items: center; height:82px; font-size:23px; color:#121E68; font-weight: bold;}
 .contents_bannerCommunity .banner_txt span{font-size:23px; color:#437DEA; font-weight: bold;height:82px; line-height: 82px; position:relative;}
@@ -3755,7 +3755,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 
 /* Search 20230208 */
 .searchBtn.nofilter{right:12px;}
-.searchForm .text{border-right:0 !important;}
+
 /* 리스트 로딩 */
 /* *, */
 /* *:before, */

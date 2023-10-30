@@ -484,7 +484,7 @@
 		            &nbsp;&nbsp;
 					<spring:message code='ezStatistics.t1013' /> : 
                     <input id="deptkeyword" type="text" style="width: 100px;height:24px" onkeypress="search_press(event)" />
-                    <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="searchdept()"><spring:message code='ezStatistics.t36' /></span></a>
+                    <a class="imgbtn" style="height:22px"><span onclick="searchdept()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;
                     	<spring:message code='ezStatistics.kbm3' /> : 
 	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="width: 120px; padding-right:40px;height:24px">

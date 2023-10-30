@@ -1528,7 +1528,6 @@
 			}
 			.userPer {
 				font-family: Malgun gothic;
-				font-size: 14px;
 			}
 			#mCSB_1_container {
 				margin-right: 0px;
