@@ -83,6 +83,13 @@
 				$(".adminListBox").mCustomScrollbar({
 					theme : "dark"
 				});
+
+				$("#left .adminListBox h2").click(function(){
+					$("#left .adminListBox h2").removeClass("on");
+					$(this).addClass("on");
+				})
+
+				$("#left .adminListBox h2").eq(0).addClass("on");
 			});
 
 			function leftResize(){
