@@ -5101,4 +5101,36 @@
 			EXTENSIONATTRIBUTE2 = 1
 	</update>
 
+	<select id="EzCommonDAO.checkUseAprFilePrvwConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useAprFilePrvw'
+		AND
+			TENANT_ID = 0
+	</select>
+	
+	<select id="EzCommonDAO.checkUseBoardFilePrvwConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useBoardFilePrvw'
+		AND
+			TENANT_ID = 0
+	</select>
+	
+	<insert id="EzCommonDAO.insertUseAprFilePrvwConfig">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+        VALUES (0, 'useAprFilePrvw', '결재문서 첨부파일 미리보기 기능 사용 여부', '1', '결재문서 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', TO_DATE('2023-06-29 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+    </insert>
+    
+    <insert id="EzCommonDAO.insertUseBoardFilePrvwConfig">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+        VALUES (0, 'useBoardFilePrvw', '게시판 첨부파일 미리보기 기능 사용 여부', '1', '게시판 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', TO_DATE('2023-06-29 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판')
+    </insert>
+    
 </sqlMap>
