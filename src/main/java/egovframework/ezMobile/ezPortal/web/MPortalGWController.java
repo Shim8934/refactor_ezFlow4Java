@@ -138,12 +138,10 @@ public class MPortalGWController extends EgovFileMngUtil {
 			String boardAccess = request.getParameter("board");
 			String resourceAccess = request.getParameter("resource");
 			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", info.getTenantId());
-			String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", info.getTenantId());	// 2023-05-25 이가은 - 전자결재 > 공람문서 메뉴 표출을 위한 approvalFlag 값 추가
 			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 				useExternalMailServer = "NO";
 			}
 			dataObject.put("useExternalMailServer", useExternalMailServer);
-			dataObject.put("approvalFlag", approvalFlag);
 			
 			if (type != null && !type.equals("T")) {
 				/* 결재  */
@@ -707,13 +705,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 			}
 			logger.debug("[access result] footerAccessCount : " + footerAccessCount + ", accessMenuCode : " + accessMenuCode.toString() + ", portalAccessCount : " + portalAccessCount);
 			
-			// 2023-05-25 이가은 - 전자결재 > 공람문서 메뉴 표출을 위한 approvalFlag 값 추가
-			String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", info.getTenantId());	
-			
 			dataObject.put("portalAccessCount", portalAccessCount);
 			dataObject.put("footerAccessCount", footerAccessCount);
 			dataObject.put("accessMenuCode", accessMenuCode);
-			dataObject.put("approvalFlag", approvalFlag);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
