@@ -1620,3 +1620,18 @@ div.orbit img{border-radius: 5px;}
 		left: 34%;
 	}
 }
+
+/* 20231030 포탈수정 */
+.util li:hover .util_logout {background-position: -92px -32px;}
+#theme3Body .sscheduleUL .scheduleLi{padding: 8px 0px 12px 14px; margin: 0px 20px 10px 20px;}
+.webFolder .webFolderLi .webFolderDL dt{color: #444;}
+.webFolder .webFolderLi .webFolderDL dd{color: #444;}
+.bestEmployee .emDL .nodata dd{text-align:left}
+.portlet_list li .txt{width: 65%;}
+.weather_title .weatherPresent dt img{width: 87px;}
+.weather_title .weatherPer{margin: 24px 0px;}
+.weather_title .weatherPer li{margin: 2px 0px; line-height: 22px;}
+.weather_title{height: 119px;}
+#theme2Body .weather_mini{background: #F4F4F4; border: none;}
+.weather_mini dl{float: left; width: calc(25% - 49px); margin: 0px 5px; padding: 14px 0px;}
+#theme2Body .noti_portlet_list .notiLI .noti_date{text-align: left;}

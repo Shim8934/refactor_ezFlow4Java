@@ -3945,3 +3945,6 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 /* 스위치 위치수정 */
 .switch {position: relative;display: inline-block;width: 45px;height: 19px;margin-top: 2px;vertical-align: middle;}
 .slider:before{position: absolute; content: ""; height: 13px; width: 13px; left: 6px; border-radius: 25px; bottom: 3px; background-color: white; -webkit-transition: .4s; transition: .4s;}
+
+/* 20231030 css추가 */
+.mail_space .mailBar{border-radius: 5px;}
