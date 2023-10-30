@@ -197,7 +197,7 @@
 
 		    /* 2018-11-30 홍승비 - 확장칼럼 항목타입 초기 옵션 value 분기 수정 */
 		    function radioType_onClick(pValue) {
-		    	if (pValue == "text" || pValue == null || pValue == "") {
+		    	if (pValue == "text" || pValue == null || pValue == "" || pValue == "cal") {
 		            document.getElementById("AddDel").style.display = "none";
 		            document.getElementById("Gubun").innerHTML = "";
 		        }
@@ -847,6 +847,7 @@
 				                <option value="text"><spring:message code='ezBoard.hyj06'/></option>
 				                <option value="radio"><spring:message code='ezBoard.hyj07'/></option>
 				                <option value="check"><spring:message code='ezBoard.hyj08'/></option>
+								<option value="cal"><spring:message code='ezBoard.MJSBC01'/></option>
 				            </select>
 				        </td>
 				        <td colspan="4">

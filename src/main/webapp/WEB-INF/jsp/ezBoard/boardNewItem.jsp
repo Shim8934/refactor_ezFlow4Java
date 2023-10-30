@@ -229,7 +229,9 @@
 			            				document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
 			            			} else if (colType[i] == "check") {
 			            				SetCheckVal(tableCol[i], getExtensionValue(tableCol[i]));
-			            			}
+			            			} else if (colType[i] == "cal") {
+										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
+									}									
 			    				}
 			            	}
 			            }
@@ -367,6 +369,14 @@
 					buttonImage: "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly: true
 				});
+				$(".cal").datepicker({ /* 게시판 > 확장컬럼 날짜형식 */
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true
+				});
 		        var settime = "${startDateTime}";
 		        var NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 		        NowDate.setMonth(NowDate.getMonth() - 1);
@@ -383,6 +393,8 @@
 		        $('#Stimepicker').timepicker();
 		        $('#Stimepicker').timepicker('setTime', NowDate);
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+				$(".cal").datepicker("option", "dateFormat", "yy-mm-dd");
+				$(".cal").datepicker('setDate', NtNowDate);
 		
 		        $("#Sdatepicker2").datepicker({
 		            changeMonth: true,
@@ -955,7 +967,9 @@
 		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
 		        	} else if(colType[i] == "check") {
 		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(GetCheckVal(tableCol[i])));
-		        	}
+		        	} else if(colType[i] == "cal") {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
+					}
 				}
 
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
@@ -2615,6 +2629,11 @@
 						                	</c:forEach>
 						                </td>
              						</c:when>
+									<c:when test="${boardAttributeVO.colType == 'cal'}">
+										<td colspan="3">
+											<input type="text" class="cal" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'"/>
+										</td>
+									</c:when>
              					</c:choose>
              				</tr>
              			</c:forEach>
