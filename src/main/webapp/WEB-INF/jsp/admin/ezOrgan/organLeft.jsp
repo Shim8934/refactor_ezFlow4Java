@@ -84,14 +84,11 @@
 					theme : "dark"
 				});
 
-				// 관리자 페이지 lnb 선택시 클래스 추가
-				$("#left .adminListBox h2").click(function(){
+				$("#left .adminListBox h2 span").click(function(){
 					$("#left .adminListBox h2").removeClass("on");
-					$(this).addClass("on");
+					$(this).parent().addClass("on");
 				})
-
-				$("#left .adminListBox h2").eq(0).addClass("on");
-				// //관리자 페이지 lnb 선택시 클래스 추가
+				
 			});
 
 			function leftResize(){
@@ -111,7 +108,7 @@
 				<spring:message code='main.t8' />
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<h2>
+				<h2 class="on">
 					<span class="list_text" id="Organ" onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
 				</h2> 
 			<c:if test="${dotNetIntegration ne 'YES'}">

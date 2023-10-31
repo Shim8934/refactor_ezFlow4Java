@@ -41,6 +41,9 @@ function NavigateBrdAdmin_Res(pFlag) {
 	}else{
 		alert("" + strLang1 + "");
 	}
+	
+	$("#left .adminListBox h2").removeClass("on");
+	$(event.target).parent().addClass("on");
 }
 
 function NavigateBrdAdminleft(pFlag) {

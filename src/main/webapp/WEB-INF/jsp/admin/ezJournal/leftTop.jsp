@@ -42,6 +42,12 @@
 						break;
 				}
 				window.open(url,"right");
+				
+				$("#left .adminListBox h2 span").click(function(){
+					$("#left .adminListBox h2").removeClass("on");
+					$(this).parent().addClass("on");
+				})
+				
 			}    
 			
 			$(document).ready(function() {
@@ -64,7 +70,7 @@
 		<div id="left" class="lnb" style="overflow: auto">
 			<div class="admin_left_title" title="<spring:message code='ezJournal.t1'/>"><spring:message code='ezJournal.t1'/></div>			
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<h2><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t2'/></span></h2>	
+				<h2 class="on"><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t2'/></span></h2>	
 				<h2><span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t3'/></span></h2>	
 				<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezJournal.t4'/></span></h2>	
 			</div>
