@@ -1633,5 +1633,14 @@ div.orbit img{border-radius: 5px;}
 .weather_title .weatherPer li{margin: 2px 0px; line-height: 22px;}
 .weather_title{height: 119px;}
 #theme2Body .weather_mini{background: #F4F4F4; border: none;}
-.weather_mini dl{float: left; width: calc(25% - 49px); margin: 0px 5px; padding: 14px 0px;}
+.weather_mini dl{float: left; width: calc(25% - 10px); margin: 0px 5px; padding: 14px 0px;}
 #theme2Body .noti_portlet_list .notiLI .noti_date{text-align: left;}
+
+.collaborate_tab li span{background: none;}
+.collaborate_list .listtype_txt li{background: none;}
+#theme2Body .collaborate_tab{background: #F4F4F4;}
+#theme2Body .scalendar_mini_title .btn_prev span img, #theme2Body .scalendar_mini_title .btn_next span img{margin-top: 4px;}
+.sscheduleUL .scheduleLi .scheduleTime .Tcollaborate{padding: 0px; font-size: 13px; color: #3f51b5; font-weight: 700; background: none;}
+.sscheduleUL .scheduleLi{background: #e4e7f7; border-radius: 5px;}
+.presentTime .timeTxt span{padding-left: 35px;}
+#ptlTimeFlow{background: url(/images/kr/main/present_time_icon.png) no-repeat  1px 6px;}
