@@ -186,7 +186,7 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>0</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
-    	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
+    	pAttachxml = pAttachxml + "<DATA1><![CDATA[" + temppFileLocation + "]]></DATA1>";
     	pAttachxml = pAttachxml + "<DATA2>" + pAttachSN + "</DATA2>";
     	pAttachxml = pAttachxml + "<DATA3>" + pDocID + "</DATA3>";
     	pAttachxml = pAttachxml + "<DATA4>" + MakeXMLString(pUserID) + "</DATA4>";
@@ -196,10 +196,10 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<DATA8>" + temppFileSize + "</DATA8>";
     	//pAttachxml = pAttachxml + "<DATA9>" + MakeXMLString(retValue[1]) + "</DATA9>";
     	pAttachxml = pAttachxml + "<DATA9>1</DATA9>";
-    	pAttachxml = pAttachxml + "<DATA10>" + MakeXMLString(temppFileName) + "</DATA10>";
+    	pAttachxml = pAttachxml + "<DATA10><![CDATA[" + temppFileName + "]]></DATA10>";
     	pAttachxml = pAttachxml + "<DATA11>" + MakeXMLString(BodyAttach) + "</DATA11>";
     	//pAttachxml = pAttachxml + "<DATA12>" + MakeXMLString(retValue[2]) + "</DATA12>";
-    	pAttachxml = pAttachxml + "<DATA12>" + MakeXMLString(retValue) + "</DATA12>";
+    	pAttachxml = pAttachxml + "<DATA12><![CDATA[" + retValue + "]]></DATA12>";
     	pAttachxml = pAttachxml + "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
     	pAttachxml = pAttachxml + "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";
     	pAttachxml = pAttachxml + "<DATA15>" + MakeXMLString(arr_userinfo[13]) + "</DATA15>";
@@ -239,7 +239,7 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>100</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
-    	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
+    	pAttachxml = pAttachxml + "<DATA1><![CDATA[" + temppFileLocation + "]]></DATA1>";
     	pAttachxml = pAttachxml + "<DATA2>" + pAttachSN + "</DATA2>";
     	pAttachxml = pAttachxml + "<DATA3>" + pDocID + "</DATA3>";
     	pAttachxml = pAttachxml + "<DATA4>" + MakeXMLString(pUserID) + "</DATA4>";
@@ -248,9 +248,9 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<DATA7>" + MakeXMLString(pDeptName) + "</DATA7>";
     	pAttachxml = pAttachxml + "<DATA8>" + temppFileSize + "</DATA8>";
     	pAttachxml = pAttachxml + "<DATA9>1</DATA9>";
-    	pAttachxml = pAttachxml + "<DATA10>" + MakeXMLString(temppFileName) + "</DATA10>";
+    	pAttachxml = pAttachxml + "<DATA10><![CDATA[" + temppFileName + "]]></DATA10>";
     	pAttachxml = pAttachxml + "<DATA11>" + MakeXMLString(BodyAttach) + "</DATA11>";
-    	pAttachxml = pAttachxml + "<DATA12>" + MakeXMLString(retValue) + "</DATA12>";
+    	pAttachxml = pAttachxml + "<DATA12><![CDATA[" + retValue + "]]></DATA12>";
     	pAttachxml = pAttachxml + "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
     	pAttachxml = pAttachxml + "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";
     	pAttachxml = pAttachxml + "<DATA15>" + MakeXMLString(arr_userinfo[13]) + "</DATA15>";

@@ -202,10 +202,10 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0' style='vertical-align:sub;'>";
                 strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a>";
                 
-                // 23.05.25. 조수빈 첨부파일 미리보기 아이콘 추가
+                // 2023-05-25 조수빈 - 첨부파일 미리보기 아이콘 추가
                 if (typeof useAprFilePrvw !== 'undefined' && useAprFilePrvw == "1") {
-                	strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title=\"" + strLangJSBAP01 + "\" onclick=\"attachFile_Preview('" + javaURLEncode(xmlFilePath) + "', '" + javaURLEncode(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
-                }
+                	strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title=\"" + strLangJSBAP01 + "\" onclick=\"attachFile_Preview('" + filepath + "', '" + encodeURIComponent(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
+				}
                 
                 if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "ISBIGATTACH") == "Y") { // 대용량첨부파일 표시
                 	strAttach = strAttach + " <font style='color:blue'>[" + strLangHSBAt02 + "]</font> &nbsp;</span>";

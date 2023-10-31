@@ -416,4 +416,6 @@ public interface EzCommonService {
 
 	/* 2023-09-25 민지수 - 게시판 > 임시보관함 > 공지게시물 > 기간설정 컬럼 추가 */
 	public void addTblBoardItemTempNoti() throws Exception;
+	
+	public void insertPrvwConfig() throws Exception;
 }
