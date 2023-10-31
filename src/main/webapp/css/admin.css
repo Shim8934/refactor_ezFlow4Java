@@ -304,8 +304,8 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .organSearchContent {float:left; padding: 2px 2px 0px 2px;}
 .organSearchKeyword {width:100px; height:27px;}
 .organSearchEnter {width:50px;float:right;padding:4px;background:#f8f8fa;border:1px solid #d2d2d2;}
-label[for="listOpt1"] { position: relative; top: -4.5px;}
-label[for="listOpt2"] { position: relative; top: -4.5px;}
+label[for="listOpt1"] { position: relative; top: -2.5px; vertical-align:top;}
+label[for="listOpt2"] { position: relative; top: -2.5px; vertical-align:top;}
 
 .admin_quicklink #AccessList {height:174px;overflow-y:auto;}
 .admin_quicklink #AccessList table td {border:0px;}
