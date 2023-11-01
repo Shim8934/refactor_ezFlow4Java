@@ -150,7 +150,7 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .util li:hover .util_employee_search { background-position: -0px -31px; }/* 직원검색 */
 .util li:hover .util_set { background-position: -31px -31px; }/* 환경설정 */
 .util li:hover .util_help { background-position: -61px -31px; }/* 도움말 */
-.util li:hover .util_logout { background-position: -93px -31px; }/* 로그아웃 */
+.util li:hover .util_logout { background-position: -92px -32px; }/* 로그아웃 */
 .util li:hover .util_systemlink { background-position: -84px -21px; }/* 시스템링크 */
 .util li:hover .util_frame{background-position: -186px -124px; }/* 프레임아이콘 */
 .util li:hover .util_messenger { background-position: -186px -155px; }/* 메신저다운로드 */

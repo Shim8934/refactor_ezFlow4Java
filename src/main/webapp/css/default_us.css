@@ -2539,7 +2539,7 @@ div#txtContent table {margin:auto;}
 /* left mail 용량 */
 .mail_space{height:34px; line-height:33px; background:#bbbfc3; position:absolute; bottom:25px; width:190px; border-radius: 5px; left: 13px;}
 .mail_space .mail_spaceText{font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana'; font-size:14px; color:#333; display:inline-block; margin:0px; padding:0px 0px 0px 8px; position:absolute; bottom: 38px;}
-.mail_space .mailBar{ display:inline-block; width:0%; height:34px; background:#82b9f6; margin:0px; padding:0px; border-radius: 10px; line-height: 36px;}
+.mail_space .mailBar{ display:inline-block; width:0%; height:34px; background:#82b9f6; margin:0px; padding:0px; border-radius: 5px; line-height: 36px;}
 .mail_space .mailBar.warning{background:#ffb600;}
 .mail_space .mailBar.danger{background:#ff4040;}
 
@@ -3151,10 +3151,10 @@ h2, #menu span {font-size: 12px;}
 /*.headpanel{float:left; height:48px; margin:0px; padding:0px; display: block; background:url(../images/ezSurvey/survey_progressBG_bar.png) top left repeat-x; width:auto;}*/
 .headpanel{float:left; height:48px; margin:0px; padding:0px; display: flex; background:url(../images/ezSurvey/survey_progressBG_bar.png) top left repeat-x;}
 /*.headpanel .crust {float:left; position:relative; clear:none; display:block; zoom:1; max-width:50%; margin:0px; padding:6px 0px;}*/
-.headpanel .crust {position:relative; clear:none; display:inline-block; zoom:1; width:25%; margin:0px; padding:6px 0px;}
+.headpanel .crust {position:relative; clear:none; display:inline-block; zoom:1; width:200px; margin:0px; padding:6px 0px;}
 .headpanel .crust a.crumb>span {display:inline-block; vertical-align:middle; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:100%; font-size:14px;}
 .headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {color:#0470e4;}
-.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 38px; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; align-items: center; text-align:center; min-width: 110px;}
+.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; align-items: center; text-align:center; min-width: 110px;}
 
 .headpanel .crust{background:url(../images/ezSurvey/survey_progressBG.png) top center no-repeat;}
 .headpanel .crust.selected{background:url(../images/ezSurvey/survey_progressBG_on.png) top center no-repeat;}
@@ -3926,3 +3926,5 @@ select{min-height: 24px !important;}
 #left .adminListBox h2{white-space:normal; word-break:keep-all; height:auto !important; line-height:1.5 !important;}
 #left .adminListBox h2 span{font-size:15px !important;}
 #left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
+
+.inf-spanTxt input{margin-top:-3px;}
