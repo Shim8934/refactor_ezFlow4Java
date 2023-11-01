@@ -231,7 +231,9 @@
 			            				SetCheckVal(tableCol[i], getExtensionValue(tableCol[i]));
 			            			} else if (colType[i] == "cal") {
 										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
-									}									
+									} else if (colType[i] == "select") {
+										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
+									}
 			    				}
 			            	}
 			            }
@@ -968,6 +970,8 @@
 		        	} else if(colType[i] == "check") {
 		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(GetCheckVal(tableCol[i])));
 		        	} else if(colType[i] == "cal") {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
+					} else if(colType[i] == "select") {
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
 					}
 				}
@@ -2632,6 +2636,15 @@
 									<c:when test="${boardAttributeVO.colType == 'cal'}">
 										<td colspan="3">
 											<input type="text" class="cal" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'"/>
+										</td>
+									</c:when>
+									<c:when test="${boardAttributeVO.colType == 'select'}">
+										<td colspan="3">
+											<select id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'>
+											<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">												
+													<option value="${fn:split(boardAttributeVO.value, '|')[status.index]}">${fn:split(boardAttributeVO.value, '|')[status.index]}</option>
+											</c:forEach>
+											</select>
 										</td>
 									</c:when>
              					</c:choose>
