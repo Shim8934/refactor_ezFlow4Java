@@ -2560,8 +2560,8 @@ div#txtContent table {margin:auto;}
 .icon16_print{background-position:-78px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 인쇄아이콘 */
 .icon16_refresh{background-position:-26px 0px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 새로고침아이콘 */
 .icon16_clickmore{background-position:-52px 0px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 메뉴버튼 더보기아이콘 */
-.calendarleft{background-position:-130px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 달력 왼쪽 화살표 */
-.calendarright{background-position:-156px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 달력 오른쪽 화살표 */
+.calendarleft{background-position:-130px -52px !important; width:16px; height:16px; display:inline-block; margin: 1px 0px 0px 0px; cursor:pointer;} /* icon16 달력 왼쪽 화살표 */
+.calendarright{background-position:-156px -52px !important; width:16px; height:16px; display:inline-block; margin: 1px 0px 0px 0px; cursor:pointer;} /* icon16 달력 오른쪽 화살표 */
 .minical_btn{background-position:-104px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 12px; cursor:pointer;} /* icon16 미니달력 버튼 */
 .icon16_search{background-position:-182px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 검색버튼아이콘 */
 .icon16_star{background-position:-208px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 즐겨찾기 별 아이콘 */

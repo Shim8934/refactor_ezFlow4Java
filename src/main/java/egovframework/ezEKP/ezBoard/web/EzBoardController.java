@@ -3812,7 +3812,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 기능 사용 여부
 		String useBoardFilePrvw = ezCommonService.getTenantConfig("useBoardFilePrvw", userInfo.getTenantId());
+		// 2023-10-26 조수빈 - 문서변환 솔루션 사용 여부
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
 		
+		if (useBoardFilePrvw.equals("1") && useImageConvertServer.equals("1")) {
+			useBoardFilePrvw = "1";
+		} else {
+			useBoardFilePrvw = "0";
+		}
+		 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
@@ -7218,7 +7226,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 2023-05-26 조수빈 - 게시판 첨부파일 미리보기 기능 사용 여부
 		String useBoardFilePrvw = ezCommonService.getTenantConfig("useBoardFilePrvw", userInfo.getTenantId());
-		
+		// 2023-10-26 조수빈 - 문서변환 솔루션 사용 여부
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+				
+		if (useBoardFilePrvw.equals("1") && useImageConvertServer.equals("1")) {
+			useBoardFilePrvw = "1";
+		} else {
+			useBoardFilePrvw = "0";
+		}
+				 
 		model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
 		model.addAttribute("gubun", boardInfo.getGuBun());
 		model.addAttribute("itemID", itemID);
@@ -10345,7 +10361,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			// 기존 파일 객체 생성
 			pFilePath = URLDecoder.decode(pFilePath, "UTF-8");
 			fileName = URLDecoder.decode(fileName, "UTF-8");
+
 			logger.debug("filePath : {}",pFilePath);
+			
 			String realPath = commonUtil.getRealPath(request);
 			File srcFile = new File(commonUtil.detectPathTraversal(realPath + pFilePath));
 			

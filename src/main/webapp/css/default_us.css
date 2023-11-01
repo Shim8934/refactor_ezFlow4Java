@@ -2530,6 +2530,7 @@ div#txtContent table {margin:auto;}
 /* left LNB tree text */
 .lnb h2 .h2Title, .h2_text, .h2_text .tRed, .confirmation{font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .lnb h2 .h2Title{font-size:14px; font-weight:bold; color:#393939; padding:0px 0px 0px 0px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; box-sizing:border-box;}
+.lnb h2 .list_text{font-size:14px;font-weight:bold;color:#393939;padding:0px 0px 0px 0px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;box-sizing:border-box;float: none;display: block;}
 .h2_text{ font-size:13px; height:30px; line-height:30px; color:#393939; display:inline-block; padding:0px 0px 0px 5px; cursor:pointer;white-space:nowrap; text-overflow:ellipsis; overflow: hidden; box-sizing:border-box;}
 .h2_text .tRed{ font-weight:bold; color:#ff0000; padding:0px 0px 0px 2px;}
 .h2_text:hover{ color:#0470e4; font-weight:bold;}
@@ -2563,8 +2564,8 @@ div#txtContent table {margin:auto;}
 .icon16_print{background-position:-78px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 인쇄아이콘 */
 .icon16_refresh{background-position:-26px 0px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 새로고침아이콘 */
 .icon16_clickmore{background-position:-52px 0px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 메뉴버튼 더보기아이콘 */
-.calendarleft{background-position:-130px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 달력 왼쪽 화살표 */
-.calendarright{background-position:-156px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 달력 오른쪽 화살표 */
+.calendarleft{background-position:-130px -52px !important; width:16px; height:16px; display:inline-block; margin: 1px 0px 0px 0px; cursor:pointer;} /* icon16 달력 왼쪽 화살표 */
+.calendarright{background-position:-156px -52px !important; width:16px; height:16px; display:inline-block; margin: 1px 0px 0px 0px; cursor:pointer;} /* icon16 달력 오른쪽 화살표 */
 .minical_btn{background-position:-104px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 12px; cursor:pointer;} /* icon16 미니달력 버튼 */
 .icon16_search{background-position:-182px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 검색버튼아이콘 */
 .icon16_star{background-position:-208px -52px !important; width:16px; height:16px; display:inline-block; margin: 6px 0px 0px 0px; cursor:pointer;} /* icon16 즐겨찾기 별 아이콘 */
@@ -3928,3 +3929,5 @@ select{min-height: 24px !important;}
 #left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
 
 .inf-spanTxt input{margin-top:-3px;}
+
+.modal{max-width:500px;}

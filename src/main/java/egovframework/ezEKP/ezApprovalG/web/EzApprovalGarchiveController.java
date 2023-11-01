@@ -222,6 +222,17 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
 		}
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		// 2023-10-26 조수빈 - 문서변환 솔루션 사용 여부
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+		
+		if (useAprFilePrvw.equals("1") && useImageConvertServer.equals("1")) {
+			useAprFilePrvw = "1";
+		} else {
+			useAprFilePrvw = "0";
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docHref", docHref);
@@ -235,6 +246,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("g_RecID", g_RecID);
 		model.addAttribute("g_SepAttNo", g_SepAttNo);
 		model.addAttribute("docID", docID);
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("contDocView_NoDoc ended");
 		
@@ -268,10 +280,18 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	    String regD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(8,10);
 	    String regH = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(11,13);
 	    String regMi = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(14,16);
-	    
 	    String apprTotalAttachLimit = ezCommonService.getTenantConfig("ApprTotalAttachLimit", userInfo.getTenantId());
-		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
-	    
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+ 		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+ 		// 2023-10-26 조수빈 - 문서변환 솔루션 사용 여부
+ 		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+ 		
+ 		if (useAprFilePrvw.equals("1") && useImageConvertServer.equals("1")) {
+ 			useAprFilePrvw = "1";
+ 		} else {
+ 			useAprFilePrvw = "0";
+ 		}
+ 		
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("useEditor", useEditor);
 	    model.addAttribute("regY", regY);

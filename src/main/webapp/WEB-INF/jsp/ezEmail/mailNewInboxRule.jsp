@@ -77,13 +77,13 @@
 		        span.innerHTML = "<br /><span><span onclick='deleteCell(this)' style='cursor:pointer;'><img src='/images/ImgIcon/delete.png' align='absmiddle'  height='16' style='margin-top:-3px;' hspace='2' /></span>";
 		
 		        switch (obj.id) {
-		            case "ConArea":
+		            case "ConArea":		// 포함 Contain
 		                span.innerHTML += inboxRuleCon.innerHTML + "</span>";
 		                break;
-		            case "ActArea":
+		            case "ActArea":		// 수행 Action
 		                span.innerHTML += inboxRuleAct.innerHTML + "</span>";
 		                break;
-		            case "ExptArea":
+		            case "ExptArea":	// 제외	Exception
 		                span.innerHTML += inboxRuleExpt.innerHTML + "</span>";
 		                break;
 		        }
@@ -265,7 +265,7 @@
 		    	
 		        if (inboxRuleCon1.value.length > 0) {
 		            var ischeck = true;
-		            if (_RuleKind == "SENDER" || _RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION")
+		            if (checkRulekind(_RuleKind))
 		                ischeck = IsEmail(inboxRuleCon1.value);
 		
 		            var isSenderAddress = true;
@@ -301,48 +301,47 @@
 
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-		                    ConCellRow.outerHTML = "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><span></span><div>";
-		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  span").text(inboxRuleCon1.value);
-		                    inboxRuleCon1.value = "";
-		                    inboxRuleCon1.focus();
+							ConCellRow.setAttribute("value",inboxRuleCon1.value);
+							ConCellRow.firstChild.innerText = inboxRuleCon1.value;
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><span></span><div>";
-		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  span").text(inboxRuleCon1.value);
-		                    inboxRuleCon1.value = "";
-		                    inboxRuleCon1.focus();
+							Conitems.innerHTML += createCellRow(inboxRuleCon1.value, inboxRuleCon1.value);
 		                }
 		            }
 		            else {
 		                alert(strLang222);
-		                inboxRuleCon1.value = "";
-		                inboxRuleCon1.focus();
 		                inputBtn.textContent = strLang239;
 		                ConCellRow = null;
 		            }
+
+					// 위(ischeck) 로직 공통
+					inboxRuleCon1.value = "";
+					inboxRuleCon1.focus();
 		        }
 		        else
 		            alert(strLang223);
 		    }
 		    function pop_addcon2(rulekind, value, i) {
 		        if (value.length > 0) {
-		            if (rulekind == "SENDER" || rulekind == "RECEIVER" || rulekind == "FORWARD" || rulekind == "REDIRECTION") {
-		                if (value.split("<").length > 1) {
-		                    var mailaddress = value.split("<")[1].replace(">", "");
-		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><span>" + MakeXMLString(value) + "</span><div>";
-		                }
-		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><span>" + value + "</span><div>";
-		                }
+		            if (checkRulekind(rulekind) && value.split("<").length > 1) {
+						var mailaddress = value.split("<")[1].replace(">", "");
+						Conitems.innerHTML += createCellRow(mailaddress, MakeXMLString(value));
 		            }
 		            else {
-		                Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><span></span><div>";
-		                $("div#Conitems div:nth-child(" + i + ")  span").text(value);
+						Conitems.innerHTML += createCellRow(value, value);
 		            }
 		        }
 		    }
+			function createCellRow(value, spanText) {
+				return "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;'" +
+						" ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);'" +
+						" value='" + value + "'><span>" + spanText + "</span></div>";
+			}
+			function checkRulekind(rulekind) {
+				return (rulekind == "SENDER" || rulekind == "RECEIVER" || rulekind == "FORWARD" || rulekind == "REDIRECTION");
+			}
 		    function event_Mover(obj) {
 		        if (obj != _popObj)
 		            obj.style.backgroundColor = "#EDEDED";
@@ -599,7 +598,7 @@
 		                pop_addcon2(_RuleKind, _value, i+1);
 		            }
 		        }
-		        if (_RuleKind == "SENDER" || _RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION") {
+		        if (checkRulekind(_RuleKind)) {
 		            document.getElementById("ReceiverSelecttd").style.width = "54%";
 		            document.getElementById("ReceiverSelect").style.display = "";
 		        }

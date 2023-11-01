@@ -847,7 +847,7 @@
 		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
 		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a>";
 		            // 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
-		            if (useBoardFilePrvw == "1") {
+		            if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1") {
 			            strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filenameOrg) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
 		            }
 		            strAttach += "<br>";
