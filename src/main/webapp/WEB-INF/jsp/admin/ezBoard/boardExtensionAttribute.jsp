@@ -848,6 +848,7 @@
 				                <option value="radio"><spring:message code='ezBoard.hyj07'/></option>
 				                <option value="check"><spring:message code='ezBoard.hyj08'/></option>
 								<option value="cal"><spring:message code='ezBoard.MJSBC01'/></option>
+								<option value="select"><spring:message code='ezBoard.MJSBC02'/></option>
 				            </select>
 				        </td>
 				        <td colspan="4">

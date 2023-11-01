@@ -2525,4 +2525,18 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	}
 
+	public void insertPrvwConfig() {
+		String useAprFilePrvw = (String) select("EzCommonDAO.checkUseAprFilePrvwConfig");
+		String useBoardFilePrvw = (String) select("EzCommonDAO.checkUseBoardFilePrvwConfig");
+		
+		if (useAprFilePrvw == null) {
+			logger.debug("useAprFilePrvw tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseAprFilePrvwConfig");
+		}
+		
+		if (useBoardFilePrvw == null) {
+			logger.debug("useBoardFilePrvw tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseBoardFilePrvwConfig");
+		}
+	}
 }

@@ -2945,4 +2945,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         map.put("NtEndDate","9999-12-30 14:59:59"); // 이미 존재하는 게시물 > 영구공지
         ezCommonDAO.addTblBoardItemTempNoti(map);
     }
+    
+	@Override
+	public void insertPrvwConfig() throws Exception {
+		ezCommonDAO.insertPrvwConfig();
+	}
+	
 }

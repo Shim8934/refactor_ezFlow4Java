@@ -93,7 +93,7 @@
 					<td>
 		                <table style="table-layout:fixed;width:410px;">
 		                    <tr>
-		                        <td style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:410px;">
+		                        <td style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:410px; padding-left: 0px;">
 		                        	<c:choose>   
 			                            <c:when test="${userInfo.primary != '2' }">
 											<c:out value = '${clubVO.c_ClubName}' />
@@ -170,7 +170,7 @@
 						</c:when>
 						
 						<c:otherwise>
-							<th><spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t18' /></th>
+							<th><spring:message code = 'ezCommunity.design03' /><spring:message code = 'ezCommunity.t18' /></th>
 							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff;Width:98%; Height:120px; cursor:default;
 								 border:none; resize:none;" readonly><c:out value = '${newInfo}' /></textarea></td>
 						</c:otherwise>
