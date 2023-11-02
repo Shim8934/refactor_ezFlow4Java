@@ -3565,7 +3565,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* 2019-05-17 김민성 - 자원관리 개선*/
 .mainmenuTabUL_left {  position: absolute;top: 7px;left: -10px; list-style:none; margin:0px; padding:0px; }
-.mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px;}
+.mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px; line-height:19px;}
 .mainmenuTabUL_left li  .tree_resource_standard, .mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px 3px 0 0; cursor:default;}
 .mainmenuTabUL_left li .icon { vertical-align:middle;}
 
