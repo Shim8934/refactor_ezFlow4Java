@@ -3937,7 +3937,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 /* 20231004 자바 서브 추가 */
 #addr{margin: 0px 4px 0px 0px; vertical-align: middle;}
 #TreeView{padding: 6px 8px; box-sizing: border-box;}
-.file td input{margin: -2px 4px 0px 0px; vertical-align: middle;}
+.file td input{margin: -4px 4px 0px 0px; vertical-align: middle;}
 #txtLimitRange{width: 60% !important;}
 
 /*.tree_resource_standard{background-position: -260px -52px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;}*/
