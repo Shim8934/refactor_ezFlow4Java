@@ -1616,5 +1616,6 @@ div.orbit img{border-radius: 5px;}
 .main_time .timeCheckIn.lateIn{color: #333;}
 #theme2Body .personal_content dl.commute dt.main_lateIn{color: #333;}
 #theme3Body .main_time .timeCheckIn.commute_on{border-color: #6F90BC;}
+#theme1Body .presentTime .timeTxt{background: url(/images/kr/main/present_time_icon.png) no-repeat  121px 0px;}
 
 /* //20231101 디자인 css 추가 */
