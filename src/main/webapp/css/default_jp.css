@@ -3897,3 +3897,7 @@ select{min-height: 24px !important;}
 .cabTable .cabName, .cabTable2 .cabName{font-size:13px;}
 
 .lnbUL li.on .list_text { color: #0470E4; font-weight: bold; }
+
+
+/* 20231102 디자인 css 추가 */
+.imgbtn span{line-height: 23px;}
