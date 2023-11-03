@@ -41,6 +41,9 @@
 				height: 16px !important;
 			}
 			
+			/* 탭 태그 위치 수정으로 인한 css 수정 */
+			.popup h2{padding-top:4px !important;}
+			.receiver_tltype01{line-height:28px;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -4559,34 +4562,34 @@
         <div id="mailReceiverInfoTxt" style="margin-bottom: 7px; display:none; ">
 			<span>※ <spring:message code='ezEmail.ksa15' /></span>
 		</div>
+		<div class="portlet_tabpart01" style="margin:0px;">
+			<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
+				<p id="orgTabButton">
+					<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t591' /></span>
+				</p>
+				<p id="orgJobMasterTabButton1">
+					<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList01' /></span>
+				</p>
+				<p id="orgJobMasterTabButton2">
+					<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList02' /></span>
+				</p>
+				<p id="contactTabButton">
+					<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t592' /></span>
+				</p>
+				<p id="dlTabButton">
+					<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t593' /></span>
+				</p>
+				<p id="sharedMailboxTabButton" style="display: none;">
+					<span id="sharedMailboxSpan" onclick="sharedMailboxTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.sharedMailbox02' /></span>
+				</p>
+				<p id="inputTabButton" style="display: none;">
+					<span id="inputSpan" onclick="inputTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t244' /></span>
+				</p>
+			</div>
+		</div>
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
-	            	<div class="portlet_tabpart01" style="margin:0px;">
-	            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
-	            			<p id="orgTabButton">
-	            				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t591' /></span>
-	            			</p>
-	            			<p id="orgJobMasterTabButton1">
-	            				<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList01' /></span>
-	            			</p>
-	            			<p id="orgJobMasterTabButton2">
-	            				<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList02' /></span>
-	            			</p>
-	            			<p id="contactTabButton">
-	            				<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t592' /></span>
-	            			</p>
-	            			<p id="dlTabButton">
-	            				<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t593' /></span>
-	            			</p>
-	            			<p id="sharedMailboxTabButton" style="display: none;">
-	            				<span id="sharedMailboxSpan" onclick="sharedMailboxTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.sharedMailbox02' /></span>
-	            			</p>
-	            			<p id="inputTabButton" style="display: none;">
-	            				<span id="inputSpan" onclick="inputTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t244' /></span>
-	            			</p>
-	            		</div>
-	            	</div>
 	                <%-- <div id="tabnav" style="float: left; width: 100%;">
 	                    <ul>
 	                        <li id="orgTabButton"><span onclick="orgTabButton_onClick()">
@@ -4849,7 +4852,7 @@
 	                    <tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgTo)"><br>
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgTo)">
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
@@ -4858,7 +4861,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.t66' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 136px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(ToTitle,this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(ToTitle,this)" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -4866,7 +4869,7 @@
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgCC)"><br>
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgCC)">
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgCC)">
 	                        </td>
@@ -4876,7 +4879,7 @@
 	                                <span style="min-width: 45px;"><spring:message code='ezEmail.t594' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 136px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(CCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgCC)"></div>
+	                                <div id="ListViewMsgCC" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto;" onclick="SelectReceiverWindow(CCTitle,this)" ondblclick="DeleteReceiver(ListViewMsgCC)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -4884,7 +4887,7 @@
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgBCC)"><br>
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgBCC)">
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgBCC)">
 	                        </td>
