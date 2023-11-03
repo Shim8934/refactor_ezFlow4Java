@@ -3627,6 +3627,7 @@ CREATE TABLE `tbl_board_boardinfo` (
   `MAILFG_POST` varchar(2) DEFAULT NULL,
   `MAILFG_MOD` varchar(2) DEFAULT NULL,
   `MAILFG_COMMENT` varchar(2) DEFAULT NULL,
+  `REACTFLAG` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`BOARDID`(255),`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
