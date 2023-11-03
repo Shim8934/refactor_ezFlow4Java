@@ -335,3 +335,5 @@ label[for="listOpt2"] { position: relative; top: -4.5px;}
 .adminTopTitle {cursor:pointer;}
 .concurrentUL .concurrentLI .conlistDL {width:calc(28% - 45px);}
 .concurrentUL .concurrentLI .conlistDL .conlistText {max-width:calc(100% - 45px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+
+.switch{width:49px; height:19px; margin-top:-2px; vertical-align:middle;}

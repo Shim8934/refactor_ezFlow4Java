@@ -98,7 +98,7 @@
 	
 	.portletAuthSetting {
 		position: absolute;
-	    right: 20px;
+	    right: 17px;
 	    top: 53px;
         cursor: pointer;
         display: inline-block;

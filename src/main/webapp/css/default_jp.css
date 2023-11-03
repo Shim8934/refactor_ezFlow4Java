@@ -50,7 +50,8 @@ h2 {margin:2px 0; font-size:14px;}
 .margin ul, li{ MARGIN:auto; }
 .margin table { border-collapse: separate; } 
 
-.file td input {margin:-4px 4px 0 0; vertical-align:middle;}
+.file td input {margin:-2px 4px 0 0; vertical-align:middle;}
+
 .file2 td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
 select {-webkit-appearance: none; border:1px solid #dedede;min-height:25px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat right 1px center; padding-right:18px;background-color: white; border-radius: 3px; outline: none; cursor: pointer;}
 select::-ms-expand {
@@ -3901,4 +3902,3 @@ select{min-height: 24px !important;}
 .imgbtn span{line-height: 23px;}
 
 .file .pos2 > .imgbtn > span{width:65px !important;}
-

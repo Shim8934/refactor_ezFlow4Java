@@ -710,7 +710,7 @@
 		    </c:otherwise>
 	    </c:choose>
 	        <div class="portlet_tabpart01">
-		        <div class="portlet_tabpart01_top" id="tab1">
+		        <div class="portlet_tabnew01_top" id="tab1" style="border-bottom:none;">
 		        	<c:choose>
 						<c:when test="${flag eq 'email' && shareId == null}">
 					    	<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
