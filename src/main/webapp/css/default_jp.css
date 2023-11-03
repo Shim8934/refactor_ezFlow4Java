@@ -2537,7 +2537,7 @@ div#txtContent table {margin:auto;}
 /* left mail 용량 */
 .mail_space{height:34px; line-height:33px; background:#bbbfc3; position:absolute; bottom:25px; width:190px; border-radius: 5px; left: 13px;}
 .mail_space .mail_spaceText{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:14px; color:#333; display:inline-block; margin:0px; padding:0px 0px 0px 8px; position:absolute; bottom: 38px;}
-.mail_space .mailBar{ display:inline-block; width:0%; height:34px; background:#82b9f6; margin:0px; padding:0px; border-radius: 10px; line-height: 36px;}
+.mail_space .mailBar{ display:inline-block; width:0%; height:34px; background:#82b9f6; margin:0px; padding:0px; border-radius: 5px; line-height: 36px;}
 .mail_space .mailBar.warning{background:#ffb600;}
 .mail_space .mailBar.danger{background:#ff4040;}
 

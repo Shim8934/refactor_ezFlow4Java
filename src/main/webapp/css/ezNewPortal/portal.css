@@ -1607,7 +1607,7 @@ div.orbit img{border-radius: 5px;}
 /* 20231004 수정 */
 #inAttiBtn, #outAttiBtn{font-size: 13px !important;}
 #addr{height: 12px !important;}
-.dataHave{left: 34%;}
+.dataHave{left: 36%;}
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none;}
 .full_menu_toggleUL > li{height: 118px;}
 @media only screen and (min-width : 1680px ) {
