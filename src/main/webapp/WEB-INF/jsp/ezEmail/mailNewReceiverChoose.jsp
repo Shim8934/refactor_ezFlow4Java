@@ -41,7 +41,6 @@
 				height: 16px !important;
 			}
 			
-			/* 탭 태그 위치 수정으로 인한 css 수정 */
 			.popup h2{padding-top:4px !important;}
 			.receiver_tltype01{line-height:28px;}
 	    </style>
@@ -4852,7 +4851,7 @@
 	                    <tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgTo)">
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgTo)"><br>
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
@@ -4869,12 +4868,11 @@
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgCC)">
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgCC)"><br>
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgCC)">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <br />
 	                            <h2 id="CCTitle" class="receiver_tltype02" onclick="SelectReceiverWindow(CCTitle,ListViewMsgCC)" style="cursor: pointer;">
 	                                <span style="min-width: 45px;"><spring:message code='ezEmail.t594' /></span>
 	                            </h2>
@@ -4887,12 +4885,11 @@
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgBCC)">
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgBCC)"><br>
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgBCC)">
 	                        </td>
 	                        <td style="vertical-align: top;">
-	                            <br />
 	                            <h2 id="BCCTitle" class="receiver_tltype02" onclick="SelectReceiverWindow(BCCTitle,ListViewMsgBCC)" style="cursor: pointer;">
 	                                <span style="min-width: 45px;"><spring:message code='ezEmail.t562' /></span>
 	                            </h2>
