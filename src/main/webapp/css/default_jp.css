@@ -3902,3 +3902,5 @@ select{min-height: 24px !important;}
 .imgbtn span{line-height: 23px;}
 
 .file .pos2 > .imgbtn > span{width:65px !important;}
+
+.imgbtn{padding-right: 12px;}
