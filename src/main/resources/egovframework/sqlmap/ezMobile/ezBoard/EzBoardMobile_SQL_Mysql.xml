@@ -1253,10 +1253,11 @@
 	                        A.TreeViewOrder TreeViewOrder  ,
 	                        A.BoardColor BoardColor  ,
 	                        A.Gubun ,
-	                        B.BOARDGROUPACL BOARDGROUPACL  
+	                        B.BOARDGROUPACL BOARDGROUPACL,
+	                        A.NotUsedFlag  
 	                    FROM 
 	                        TBL_Board_BoardInfo A
-	                   WHERE
+	                   	WHERE
 		          			A.TENANT_ID = #tenantID#
 		          		AND
 			                (A.companyid = #companyID# OR	TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
@@ -1287,7 +1288,8 @@
 	                        A.TreeViewOrder TreeViewOrder  ,
 	                        A.BoardColor BoardColor  ,
 	                        A.Gubun ,
-	                        B.BOARDGROUPACL BOARDGROUPACL
+	                        B.BOARDGROUPACL BOARDGROUPACL,
+	                        A.NotUsedFlag
 		                FROM 
 		                	TBL_Board_BoardInfo A
 		                JOIN 
@@ -1356,7 +1358,8 @@
 							A.TreeViewOrder TreeViewOrder  ,
 	                        A.BoardColor BoardColor  ,
 	                        A.Gubun ,
-	                        B.BOARDGROUPACL BOARDGROUPACL
+	                        B.BOARDGROUPACL BOARDGROUPACL,
+	                        A.NotUsedFlag
 		                FROM 
 		                	TBL_Board_BoardInfo A
 		                JOIN 
@@ -1450,7 +1453,8 @@
 	                        A.TreeViewOrder ,
 	                        A.BoardColor BoardColor,
 	                        A.Gubun ,
-	                        '' BoardGroupACL
+	                        '' BoardGroupACL,
+	                        A.NotUsedFlag
 	                    FROM 
 	                        TBL_Board_BoardInfo A
 	                    WHERE
@@ -1485,7 +1489,8 @@
 	                        A.TreeViewOrder ,
 	                        A.BoardColor BoardColor,
 	                        A.Gubun ,
-	                        '' BoardGroupACL
+	                        '' BoardGroupACL,
+	                        A.NotUsedFlag
 		           		FROM 
 		           			TBL_Board_BoardInfo A
 		          		WHERE
@@ -1518,7 +1523,8 @@
 	                        A.TreeViewOrder ,
 	                        A.BoardColor BoardColor,
 	                        A.Gubun ,
-	                        '' BoardGroupACL
+	                        '' BoardGroupACL,
+	                        A.NotUsedFlag
 		           		FROM 
 		           			TBL_Board_BoardInfo A
 					]]>
@@ -1603,7 +1609,8 @@
 	                     AG.TreeViewOrder ,
 	                     AG.BoardColor BoardColor,
 	                     AG.Gubun ,
-	                     '' BoardGroupACL
+	                     '' BoardGroupACL,
+	                     AG.NotUsedFlag
 	           		FROM 
 	           			TBL_Board_BoardInfo AG
 	           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">

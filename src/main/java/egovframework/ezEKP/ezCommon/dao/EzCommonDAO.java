@@ -3565,4 +3565,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	 /* 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가 */
+	 public void addBoardNotUsedFlag() throws Exception {
+		 try {
+			 select("EzCommonDAO.checkBoardNotUsedFlag");
+		 } catch (Exception e) {
+			 logger.debug("tbl_board_info notusedflag doesn't exist. creating the column...");
+	
+	         update("EzCommonDAO.addBoardNotUsedFlag");
+	     }
+	 }
 }

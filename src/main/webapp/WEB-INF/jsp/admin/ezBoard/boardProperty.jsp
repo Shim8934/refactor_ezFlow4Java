@@ -47,6 +47,7 @@
 			var starRatingFlag = "<c:out value='${model.starRatingFlag}'/>";
 			var boardType = "${ model.guBun }";
 			var versionManageFlag = false;
+			var useBoardNotUsed = $.trim("<c:out value='${model.notUsedFlag}'/>");
 			
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -134,6 +135,11 @@
 	                } else {
 	                	$("#chkApprBoard").prop("disabled",true);
 	                }
+	            }
+	            
+	            /* 2023-10-30 조소정 - 게시판 사용안함 여부 기능 추가 */
+				if (useBoardNotUsed == "Y") {
+					$("#chkBoardNotUsed").prop("checked", true);
 	            }
 
 				if (writerFlag == "Y") {
@@ -581,6 +587,13 @@
 					if (!createModifyHistory()) { return; }
 				}
 
+   	            /* 2023-10-30 조소정 - 게시판 사용안함 여부 기능 추가 */
+	            if ($("#chkBoardNotUsed").is(":checked")) {
+	            	useBoardNotUsed = "Y";
+	            } else {
+	            	useBoardNotUsed = "N";
+				}
+
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
@@ -601,7 +614,7 @@
 						reactFlag:useBoardReplyReact, useKeyword:useKeyword, publicFlag:publicFlag,
 						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
 						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard, writerFlag : writerFlag,
-						starRatingFlag:starRatingFlag, versionManage : vmf
+						starRatingFlag:starRatingFlag, versionManage : vmf, notUsedFlag:useBoardNotUsed
 	            	},
 	            	success : function(result) {
 	            	    if (result == "success") {
@@ -1479,6 +1492,7 @@
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
 	        	    <span style="display:inline-block;"><input type="checkbox" id="keyWord" onclick="checkboardtype()" /><spring:message code="ezApprovalG.t1200" />&nbsp;</span>
 	        	    <span style="display:inline-block;"><input type="checkbox" id="chkStarRating" onclick="checkboardtype()" /><spring:message code="ezBoard.lhr001" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardNotUsed" onclick="checkboardtype()" /><spring:message code="ezBoard.CSJ01" />&nbsp;</span>
 	        	</td>
 	        </tr>
 	        

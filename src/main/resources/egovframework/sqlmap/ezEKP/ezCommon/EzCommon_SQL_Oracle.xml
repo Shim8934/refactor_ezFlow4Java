@@ -8282,4 +8282,23 @@
 					PORTLETCODE = 'mSchedule'
 			)
 	</update>
+    
+	<!-- 2024-10-28 조소정 - 게시판 > 일반설정 > 사용안함 여부 플래그 추가 -->
+    <select id="EzCommonDAO.checkBoardNotUsedFlag" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		NOTUSEDFLAG
+            FROM
+                TBL_BOARD_BOARDINFO
+            WHERE
+            	ROWNUM = 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardNotUsedFlag">
+        ALTER TABLE
+            TBL_BOARD_BOARDINFO
+        ADD
+            NOTUSEDFLAG CHAR(1 CHAR) DEFAULT 'N' NOT NULL
+    </statement>
 </sqlMap>

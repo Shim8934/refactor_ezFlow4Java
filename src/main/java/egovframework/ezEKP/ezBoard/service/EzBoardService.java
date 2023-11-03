@@ -600,4 +600,9 @@ public interface EzBoardService {
 	public String checkIsNewestVersion(String boardID, String itemID, int tenantID, String version) throws Exception;
 
 	public String getBoardTitle(String contentLocation, int tenantId) throws Exception;
+
+	public List<String> getBoardIdList(String strXML) throws Exception;
+
+	public String getBoardInfoByList(LoginVO userInfo, List<String> boardIdList, String strXML) throws Exception;
+
 }
