@@ -1616,6 +1616,18 @@ div.orbit img{border-radius: 5px;}
 .main_time .timeCheckIn.lateIn{color: #333;}
 #theme2Body .personal_content dl.commute dt.main_lateIn{color: #333;}
 #theme3Body .main_time .timeCheckIn.commute_on{border-color: #6F90BC;}
-#theme1Body .presentTime .timeTxt{background: url(/images/kr/main/present_time_icon.png) no-repeat  121px 0px;}
+
+.main_main_time .main_timeCheckOut .main_out{color: #333;}
+#ptlTimeFlow{margin: 22px 0px; padding: 0px; text-align: center; background: url(/images/kr/main/present_time_icon.png) no-repeat 1px 0px; padding-left: 31px;}
+.presentTime .timeTxt{background: none;}
+#theme3Body #ptlTimeFlow{background: url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat 0px; padding-left: 31px;}
+#theme3Body .presentTime .timeTxt{background: none;}
+#theme3Body .sscheduleUL .scheduleLi.individual{border: 1px solid #C8DFFF;}
+#theme3Body .sscheduleUL .scheduleLi.group{border: 1px solid #eae4b9; border-radius: 10px;}
+#theme3Body .comListDL01, #theme3Body .comListDL02{margin: 11px 0px 0px 0px;}
+.portlet_list li .txt{font-size: 14px;}
+.first_approval .approval_content .apprDL .apprText_blue span,
+.first_approval .approval_content .apprDL .apprText_green span,
+.first_approval .approval_content .apprDL .apprText_orange span{padding: 1px 7px;}
 
 /* //20231101 디자인 css 추가 */
