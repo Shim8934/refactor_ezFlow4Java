@@ -437,7 +437,7 @@ form{display:inline;margin:0}
 	padding: 0px 9px;
 	font-size:13px;
 	font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
-	line-height:28px;
+	line-height:30px;
 	box-sizing:border-box;
 }
 /* mainmenu 의 아이콘 */
@@ -589,7 +589,7 @@ form{display:inline;margin:0}
     background: white;
     border: 1px solid #CECECE;
     height: 25px;
-    padding: 0px 10px 2px 10px;
+    padding: 0px 10px 0px 10px;
     line-height: 25px;
     font-size: 13px !important;
     color: #333;
@@ -2371,7 +2371,7 @@ div#txtContent table {margin:auto;}
 .btn_writeBox .btn_write01{ margin:0px 0px 0px 0px; padding:0px; width:auto; text-align:center; height:35px; line-height:35px; background:#fff; float:none; overflow:hidden; font-size:14px; color:#0470E4; cursor:pointer; border: 1px solid #388CE5; border-radius: 3px;}
 .btn_writeBox .btn_write01:hover{ background:#f1f8ff; transition: all .25s;}
 .btn_writeBox .btn_write01 .tree_write{ width:16px; height:16px; background-position:0px -26px; display:inline-block; margin:6px 5px 0px 0px;}
-.btn_writeBox .btn_write02{margin:0px 0px 0px 7px; padding:0px; width:92px; text-align:center; height:35px; line-height:35px; background:#fff; float:right; overflow:hidden; font-size:14px; color:#333; cursor:pointer; border-radius: 3px; border: 1px solid #BABEC7;}
+.btn_writeBox .btn_write02{margin:0px 0px 0px 7px; padding:0px; width:92px; text-align:center; height:35px; line-height:35px; background:#fff; float:right; overflow:hidden; font-size:15px; color:#333; cursor:pointer; border-radius: 3px; border: 1px solid #BABEC7;}
 .btn_writeBox .btn_write02:hover{ background:#f1f8ff; border: 1px solid #388CE5; color: #388CE5;transition: all .25s;}
 .btn_writeBox .btn_write02 .tree_Mwrite{ width:16px; height:16px; background-position:0px -52px; display:inline-block; margin:6px 5px 0px 0px;}
 
@@ -2645,7 +2645,7 @@ div#txtContent table {margin:auto;}
 .mainmenuTab {position:relative;margin: -9px 15px 11px 15px;}
 .mainmenuTab .mainmenuTabUL { text-align: center; padding: 0px 0px 0px 1px; margin: 0px; }
 .mainmenuTab .mainmenuTabUL li { display: inline-block; }
-.mainmenuTab .mainmenuTabUL li span { display: inline-block; height:31px; line-height:29px; padding: 0px 21px; margin: 0px 1px 0px 1px; text-align: center; font-size: 14px;color: #BABEC7; cursor: pointer; background: #fff; border:1px solid #BABEC7; box-sizing:border-box; border-radius: 3px;}
+.mainmenuTab .mainmenuTabUL li span { display: inline-block; height:31px; line-height:31px; padding: 0px 21px; margin: 0px 1px 0px 1px; text-align: center; font-size: 14px;color: #BABEC7; cursor: pointer; background: #fff; border:1px solid #BABEC7; box-sizing:border-box; border-radius: 3px;}
 .mainmenuTab .mainmenuTabUL li:hover span { position: relative; background: #f1f8ff; color: #0470E4; border:1px solid #3d8fea; box-sizing:border-box; }
 .mainmenuTab .mainmenuTabUL li.on span { position: relative; background: #fff; color: #0470E4; border:1px solid #388CE5; box-sizing:border-box; border-radius: 3px;}
 .mainmenuTab .mainmenuTabUL li.on span:hover{background: #f1f8ff; color: #0470E4; }
