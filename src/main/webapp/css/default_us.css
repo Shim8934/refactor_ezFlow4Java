@@ -1899,7 +1899,7 @@ form{display:inline;margin:0}
 
 
 .receiver_tltype01 {height:28px!important;  padding:0px 0px 0px 0px; /*background:url(../images/kr/cm/title_bg.gif) no-repeat left*/; display:block; line-height:32px; margin:0px; }
-.receiver_tltype01 span {font-size:14px; font-weight:bold; color:#388CE5; height:28px;display:inline-block;padding:0px 25px 0px 0px;}
+.receiver_tltype01 span {font-size:13px; font-weight:bold; color:#388CE5; height:28px;display:inline-block;padding:0px 25px 0px 0px;}
 
 .receiver_tltype02 {height:28px!important;  padding:0px 0px 0px 0px!important;  /*background:url(../images/kr/cm/title_bg.gif) no-repeat left;*/ display:block; line-height:28px; margin:0px;}
 .receiver_tltype02 span {font-size:14px; font-weight:bold; color:#388CE5; height:28px;display:inline-block;padding:0px 25px 0px 0px; min-width:49px;}
@@ -3925,7 +3925,7 @@ select{min-height: 24px !important;}
 .mail_spaceText { font-size: 12px !important;}
 
 #left .adminListBox h2{white-space:normal; word-break:keep-all; height:auto !important; line-height:1.5 !important;}
-#left .adminListBox h2 span{font-size:15px !important;}
+#left .adminListBox h2 span{font-size:15px !important; white-space:normal;}
 #left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
 
 .inf-spanTxt input{margin-top:-3px;}
@@ -3933,3 +3933,6 @@ select{min-height: 24px !important;}
 .modal{max-width:500px;}
 .webfolderListBoxOT .btn_write01{line-height:1.8;}
 #layer_Viewpopup .popupwrap2 .list_element th{width:100px !important;}
+input#inOffice, input#retired, input#stopped{vertical-align:middle;}
+.lmLetterBoxTitle>div:first-child{width:110px !important; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.lmLetterBoxTitle>input{width:130px !important; vertical-align:top; margin-top:4px;}
