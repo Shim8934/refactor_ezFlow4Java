@@ -686,7 +686,7 @@
 									<tr>
 										<td>
 											<div style="margin: 20px 20px 5px; min-height: 36px;">
-												<div style="display: inline-block; width: 70px; line-height: 30px;" id= "displayUsers">
+												<div style="display: inline-block; line-height: 30px;" id= "displayUsers">
 													<img src="/images/kr/left/left_dot02.gif"/>
 													<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>
 												</div>
@@ -703,14 +703,14 @@
 									<tr>
 										<td>
 											<div style="text-align:center;" id="listBttn1">
-												<a class="webfolderBttn"><span onclick="saveChanges();" ><spring:message code='ezWebFolder.t133'/></span></a>
-												<a class="webfolderBttn"><span onclick="newFolder();"   ><spring:message code='ezWebFolder.t206'/></span></a>
-												<a class="webfolderBttn"><span onclick="moveFolder();"  ><spring:message code='ezWebFolder.t251'/></span></a>
-												<a class="webfolderBttn"><span onclick="deleteFolder();"><spring:message code='ezWebFolder.t111'/></span></a>
+												<a class="imgbtn"><span onclick="saveChanges();" ><spring:message code='ezWebFolder.t133'/></span></a>
+												<a class="imgbtn"><span onclick="newFolder();"   ><spring:message code='ezWebFolder.t206'/></span></a>
+												<a class="imgbtn"><span onclick="moveFolder();"  ><spring:message code='ezWebFolder.t251'/></span></a>
+												<a class="imgbtn"><span onclick="deleteFolder();"><spring:message code='ezWebFolder.t111'/></span></a>
 											</div>
 											<div style="text-align:center; display: none;" id="listBttn2">
-												<a class="webfolderBttn"><span onclick="saveNewFolder();"><spring:message code='ezWebFolder.t133'/></span></a>
-												<a class="webfolderBttn"><span onclick="cancelAdd();"    ><spring:message code='ezWebFolder.t112'/></span></a>
+												<a class="imgbtn"><span onclick="saveNewFolder();"><spring:message code='ezWebFolder.t133'/></span></a>
+												<a class="imgbtn"><span onclick="cancelAdd();"    ><spring:message code='ezWebFolder.t112'/></span></a>
 											</div>
 										</td>
 									</tr>

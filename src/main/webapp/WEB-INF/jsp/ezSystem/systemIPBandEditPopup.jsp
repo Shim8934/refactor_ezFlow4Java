@@ -160,8 +160,8 @@
 			    </tr>
 			    <tr>
 					<th><spring:message code='ezSystem.jje5'/></th>
-					<td><form id="myForm"><input name="ipBand" type="text" size="3" maxlength="3" id="ipBand1">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand2">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand3">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand4"></form>
-						&nbsp;<span><spring:message code='ezSystem.jje13'/></span>
+					<td style="padding:3px 5px;"><form id="myForm"><input name="ipBand" type="text" size="3" maxlength="3" id="ipBand1">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand2">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand3">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand4"></form>
+						&nbsp;<span style="display:block; margin-top:3px;"><spring:message code='ezSystem.jje13'/></span>
 			    </tr>
 			    <tr>
 					<th><spring:message code='ezBoard.t155'/></th>

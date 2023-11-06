@@ -3903,10 +3903,12 @@ select{min-height: 24px !important;}
 
 .file .pos2 > .imgbtn > span{width:65px !important;}
 
-<<<<<<< Updated upstream
 input#inOffice, input#retired, input#stopped{vertical-align:middle;}
-=======
+
 .portlet_tabnew01_top p span {line-height: 26px !important;}
 .contents_categoryView{overflow: auto;}
 .content input{margin-top: 0px;}
->>>>>>> Stashed changes
+
+#left .adminListBox h2{white-space:normal; word-break:break-all; height:auto !important; line-height:1.5 !important;}
+#left .adminListBox h2 span{font-size:15px !important; white-space:normal;}
+#left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}

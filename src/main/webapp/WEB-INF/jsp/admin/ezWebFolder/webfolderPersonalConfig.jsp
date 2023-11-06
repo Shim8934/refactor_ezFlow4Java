@@ -643,8 +643,8 @@
 				<div style="position: absolute; top: 0px; right: 2px; height: 27px;">
 					<span style="height: 20px; line-height: 20px; display: inline; font-size: 14px;"><spring:message code='ezWebFolder.t145'/></span>
 					<input id="storageVal" type="text" style="width: 100px; height: 27px; border-radius: 5px; border: 1px solid #b3b3b3; padding-left: 5px;" placeholder="<spring:message code='ezWebFolder.t132' />" onKeyup="this.value=this.value.replace(/[^\.0-9]/g,'');" />
-					<a id="btnChange" class="webfolderBttn2" onClick="changeStorageVal();"><span><spring:message code='ezWebFolder.t124'/></span></a>
-					<a id="btnBack" class="webfolderBttn2" onClick="changeToDefault();"   ><span><spring:message code='ezWebFolder.t125'/></span></a>
+					<a id="btnChange" class="imgbtn" onClick="changeStorageVal();"><span><spring:message code='ezWebFolder.t124'/></span></a>
+					<a id="btnBack" class="imgbtn" onClick="changeToDefault();"   ><span><spring:message code='ezWebFolder.t125'/></span></a>
 				</div>
 			</div>
 			
