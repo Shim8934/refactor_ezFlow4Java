@@ -1943,4 +1943,9 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		return mBoardDAO.checkThisReplyExist(map);
 	}
+	
+	public String getGubun(String BoardID) throws Exception {
+		String gubun = mBoardDAO.getGubun(BoardID);
+		return gubun;
+	}
 }

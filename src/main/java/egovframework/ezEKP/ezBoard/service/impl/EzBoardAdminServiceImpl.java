@@ -1426,4 +1426,35 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			return Collections.emptyList();
 		}
 	}
+	
+	@Override
+	public void deleteMyBoardData(String type, String boardID, int tenantID) throws Exception {
+	    logger.debug("deleteMyBoardData started");
+
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("boardID", boardID);
+	    map.put("tenantID", tenantID);
+
+	    if ("MyBoards".equals(type)) {
+	        ezBoardAdminDAO.deleteMyBoardsOnCategoryChange(map);
+	    } else if ("MyBoardTree".equals(type)) {
+	        ezBoardAdminDAO.deleteMyBoardTreeOnCategoryChange(map);
+	    }
+
+	    logger.debug("deleteMyBoardData ended");
+	}
+
+	@Override
+	public int getBoardItemCnt(String boardID, int tenantId) throws Exception {
+	    logger.debug("getBoardItemCnt started");
+
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("boardID", boardID);
+	    map.put("tenantID", tenantId);
+
+	    int result = ezBoardAdminDAO.getBoardItemCnt(map);
+	    
+	    logger.debug("getBoardItemCnt ended");
+	    return result;
+	}
 }

@@ -109,4 +109,6 @@ public interface MBoardService {
 
 	/* 2023-11-13 전인하 - 부모댓글인지 체크 (자식댓글 갯수 반환) */
 	public int checkThisReplyExist(String replyId, String itemId, int tenantId) throws Exception;
+	
+	public String getGubun(String BoardID) throws Exception;
 }

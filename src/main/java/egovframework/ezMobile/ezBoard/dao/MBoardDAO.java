@@ -258,4 +258,9 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public int checkThisReplyExist(Map<String, Object> map) {
 		return (int) select("MBoardDAO.checkThisReplyExist", map);
 	}
+	
+	/* 2023-11-07 민지수 - 모바일 게시판 > 게시판 구분값 조회 추가 */
+	public String getGubun(String BoardID) throws Exception {
+		return (String) select("MBoardDAO.getGubun", BoardID);
+	}
 }

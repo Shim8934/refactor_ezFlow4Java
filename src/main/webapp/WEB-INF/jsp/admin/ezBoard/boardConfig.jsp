@@ -27,8 +27,16 @@
 	                document.body.style.WebkitUserSelect = 'none';
 	                document.body.style.khtmlUserSelect = 'none';
 	                document.body.style.oUserSelect = 'none';
-	                document.body.style.UserSelect = 'none';3333-01-1864112
-	            }   	
+	                document.body.style.UserSelect = 'none';
+	            }
+	            
+				if (pBoardType == 10){ // 카테고리 게시판인 경우 게시물 리스트 숨김처리 및 일반설정탭으로 로드되도록 조건 설정
+					document.getElementById("BoardEnv_sub1").style.display = "none";
+					TabId = "1tab2";
+				} else {
+					TabId = "1tab1";
+				}
+				
 	            document.getElementById(TabId).setAttribute("class", "tabon");
 	            Tab1_SelectID = TabId;
 

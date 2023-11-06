@@ -2516,4 +2516,13 @@
 		AND
 			USERNAME IS NOT NULL;
 	</select>
+	
+	<select id="MBoardDAO.getGubun" parameterClass="String" resultClass="String">
+		SELECT
+			GUBUN
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			BOARDID = #BOARDID#
+	</select>  	
 </sqlMap>

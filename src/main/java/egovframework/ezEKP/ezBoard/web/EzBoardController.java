@@ -881,38 +881,28 @@ public class EzBoardController extends EgovFileMngUtil{
 			sb.append("<NODE>");
 			
 			// 2023-11-29 조소정 - 게시판 > 마이게시판 일본어, 중국어 TreeName 컬럼 추가
-			String treeName;
+			String treeName = resultList.get(i).getTreeName();
 
-			if (lang.equals("")) {
-			    treeName = resultList.get(i).getTreeName();
-			} else if (lang.equals("2")) {
+			if ("2".equals(lang)) {
 			    treeName = resultList.get(i).getTreeName2();
-			} else {
-			    treeName = resultList.get(i).getTreeName();
-			    if (lang.equals("3") && resultList.get(i).getTreeName3() != null && !resultList.get(i).getTreeName3().equals("")) {
-			        treeName = resultList.get(i).getTreeName3();
-			    } else if (lang.equals("4") && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().equals("")) {
-			        treeName = resultList.get(i).getTreeName4();
-			    }
+			} else if ("3".equals(lang) && resultList.get(i).getTreeName3() != null && !resultList.get(i).getTreeName3().isEmpty()) {
+			    treeName = resultList.get(i).getTreeName3();
+			} else if ("4".equals(lang) && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().isEmpty()) {
+			    treeName = resultList.get(i).getTreeName4();
 			}
 			
 			sb.append("<VALUE><![CDATA[" + treeName + "]]></VALUE>");
 			sb.append("<STYLE><![CDATA[]]></STYLE>");
 			sb.append("<DATA1>" + resultList.get(i).getTreeId().trim() + "</DATA1>");
 			
-			String treeNameData2;
+			String treeNameData2 = resultList.get(i).getTreeName().trim();
 
-			if (lang.equals("")) {
-				treeNameData2 = resultList.get(i).getTreeName().trim();
-			} else if (lang.equals("2")) {
+			if ("2".equals(lang)) {
 				treeNameData2 = resultList.get(i).getTreeName2().trim();
-			} else {
-				treeNameData2 = resultList.get(i).getTreeName2().trim();
-				if (lang.equals("3") && resultList.get(i).getTreeName3() != null && !resultList.get(i).getTreeName3().isEmpty()) {
-					treeNameData2 = resultList.get(i).getTreeName3().trim();
-				} else if (lang.equals("4") && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().isEmpty()) {
-					treeNameData2 = resultList.get(i).getTreeName4().trim();
-				}
+			} else if ("3".equals(lang) && resultList.get(i).getTreeName3() != null && !resultList.get(i).getTreeName3().isEmpty()) {
+				treeNameData2 = resultList.get(i).getTreeName3().trim();
+			} else if ("4".equals(lang) && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().isEmpty()) {
+				treeNameData2 = resultList.get(i).getTreeName4().trim();
 			}
 
 			sb.append("<DATA2><![CDATA[" + treeNameData2 + "]]></DATA2>");			

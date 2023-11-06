@@ -2465,7 +2465,7 @@
         	)
 		]]>
 	</insert>
-
+  
 	<!-- 2023-11-13 전인하 - 모바일 게시판 댓글 수정 -->
 	<update id="MBoardDAO.updateOneLineReply" parameterClass="Map">
 		<![CDATA[
@@ -2515,5 +2515,14 @@
 			ITEMID = #PITEMID#
 		AND
 			USERNAME IS NOT NULL;
+	</select>
+	
+	<select id="MBoardDAO.getGubun" parameterClass="String" resultClass="String">
+		SELECT
+			GUBUN
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			BOARDID = #BOARDID#
 	</select>
 </sqlMap>

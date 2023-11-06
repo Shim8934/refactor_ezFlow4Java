@@ -718,6 +718,12 @@ public class MBoardGWController {
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 새게시물 카운트 표시 시 companyID 조건 추가 */
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
+
+			// rootBoardId의 guBun 값 전달 > 카테고리게시판인 경우 동작을 막기위함
+			if (!rootBoardID.equals("top")) {
+				String guBun = mBoardService.getGubun(rootBoardID);
+				result.put("guBun",guBun);
+			}
 			
 			data.put("list", list);
 			data.put("listCount", listCount);
