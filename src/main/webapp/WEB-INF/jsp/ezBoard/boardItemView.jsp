@@ -1553,7 +1553,7 @@
 						<th style="width:10%;"><spring:message code='ezBoard.t223' /></th>
 						<c:choose>
 							<c:when test="${guBun != '2'}">
-								<td id="WriteUserNM" style="width:40%; white-space:nowrap">
+								<td id="WriteUserNM" style="width:40%;">
 									<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
 										<c:out value="${boardItem.writerName}"/>
 									</div>
@@ -1618,8 +1618,8 @@
 								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
 								<c:choose>
 									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-										<td id="EndDate" style="padding-right:5px;  white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
+										<td id="EndDate" style="padding-right:5px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
 										</td>
 									</c:when>
 									<c:otherwise>

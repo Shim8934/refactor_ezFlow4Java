@@ -1675,7 +1675,7 @@ div.orbit img{border-radius: 5px;}
 #theme3Body .main_time .timeCheckIn.commute_on{border-color: #6F90BC;}
 
 .main_main_time .main_timeCheckOut .main_out{color: #333;}
-#ptlTimeFlow{margin: 22px 0px; padding: 0px; text-align: center; background: url(/images/kr/main/present_time_icon.png) no-repeat 1px 5px; padding-left: 31px;}
+#ptlTimeFlow{margin: 22px 0px; padding: 0px; text-align: center; background: url(/images/kr/main/present_time_icon.png) no-repeat 1px 6px; padding-left: 31px;}
 .presentTime .timeTxt{background: none;}
 #theme3Body #ptlTimeFlow{background: url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat 0px 5px; padding-left: 31px;}
 #theme3Body .presentTime .timeTxt{background: none;}
