@@ -1,7 +1,36 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
-import egovframework.ezEKP.ezApprovalG.vo.*;
-import egovframework.ezEKP.ezOrgan.vo.*;
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 import java.io.BufferedInputStream;
 import java.net.URL;
@@ -31,7 +60,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.eclipse.jetty.http.MimeTypes;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -41,7 +69,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,10 +85,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -74,32 +102,28 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
 import java.security.PrivateKey;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
-import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.let.utl.fcc.service.KlibUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 
 /** 
@@ -338,7 +362,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
         logger.debug("getUserSubTitle started");       
 
-		// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > JobId 정보 조회 위해 로직 변경 - 
+		// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > JobId 정보 조회 위해 로직 변경 -
 		// extensionAttribute4의 정보만 조회하여 리스트를 구성하는 것에서, 필요한 정보를 DB에서 가져오는 것으로 변경.
 		// 해당 과정에 겸직 드롭다운 정렬이 포함됨.
 		String propList = "extensionAttribute4;department;description;title;title2;description2;physicalDeliveryOfficeName;company;company2;extensionAttribute7";
@@ -382,7 +406,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         }
 		
 		String lang = userInfo.getPrimary().equals("1") ? "" : "2";
-		
+
         if (! userAddJobList.equals("")) {
         	for (int k = 0; k < userAddJobList.size(); k++) {
 				OrganUserVO addJobVal = userAddJobList.get(k);
@@ -4042,12 +4066,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
-		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
-			if (docAprEnd.equals("APR")) {
-				pass = ezApprovalGService.getAccessYNGforAPR(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+        String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
+        if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
+			// 2023-11-06 박기범 - 문서첨부에서 문서를 열 경우 첨부문서의 권한이 아니라 문서의 권한으로 체크
+			if (isDocAttach && ezApprovalGService.isAttachDoc(docID, docAttachParent, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId())) {
+				if (docAprEnd.equals("APR")) {
+					pass = ezApprovalGService.getAccessYNGforAPR(docAttachParent, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+				} else {
+					pass = ezApprovalGService.getAccessYNG(docAttachParent, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+				}
 			} else {
-				pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+				if (docAprEnd.equals("APR")) {
+					pass = ezApprovalGService.getAccessYNGforAPR(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+				} else {
+					pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+				}
 			}
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
@@ -9933,7 +9966,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		// 2023-08-28 전인하 - 전자결재 > 좌측 드롭다운 이용하여 겸직 변경 > 겸직 변경 시 쿠키로 jobId 삽입
 		String jobId = request.getParameter("jobId");
-		
+
 		Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(deptID, "utf-8"));
     	cookieID0.setPath("/");
     	response.addCookie(cookieID0);
@@ -9969,7 +10002,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Cookie cookieID8 = new Cookie("APRUI8", URLEncoder.encode(jobId, "utf-8"));
 		cookieID8.setPath("/");
 		response.addCookie(cookieID8);
-    	
+
 		logger.debug("ChangeUserInfo ended");
 	}
 	
