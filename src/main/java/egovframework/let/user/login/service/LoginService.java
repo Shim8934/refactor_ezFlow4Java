@@ -7,6 +7,7 @@ import java.util.Map;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 
 
 /**
@@ -62,6 +63,12 @@ public interface LoginService {
 	void updateUserForReduceLoginCnt(LoginVO vo) throws Exception;
 
 	public void insertLog(LoginVO vo) throws Exception;
+
+	void insertSession(SessionVO vo) throws Exception;
+
+	void updateSession(String ezSessionId) throws Exception;
+
+	SessionVO getSession(String ezSessionId) throws Exception;
 
 	public void updateLog(LoginVO vo) throws Exception;
 	

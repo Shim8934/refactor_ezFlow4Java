@@ -156,6 +156,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createMailTemplateSequence();
     		ezCommonService.createJmochaMailboxProgress();
 	    	ezCommonService.alterTblAddjobMaster();
+	    	ezCommonService.createTblSession(); // 2023-11-07 이사라 - DB 기반 세션 테이블 생성
 	    	ezCommonService.createUserMailTemplate(); // 2020-07-27 김수아 - 메일 템플릿 테이블 생성
 	    	ezCommonService.createMailOutOfOfficeTemplate(); // 2020-07-17 김수아 - 부재중 설정 템플릿 테이블 생성
 	    	ezCommonService.createTblCompanyConfig();

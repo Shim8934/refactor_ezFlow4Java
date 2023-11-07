@@ -14,6 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,6 +61,7 @@ import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -1155,6 +1157,24 @@ public class LoginController {
 		String cInfo = serverName + "///" + userId + "///" + "encryptedUserPw" + "///" + ipAddress + "///" + "userPw" + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID;
 		String loginCookie = egovFileScrty.encryptAES(cInfo);
 		
+		// DB 기반 세션 방식 적용하는 경우
+		// 2023-10-31 이사라 - ezSessionId를 생성하여 loginCookie에 담는다. 실제 로그인쿠키는 DB에 저장
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+
+		if (useDbSession) {
+			String ezSessionId = UUID.randomUUID().toString();
+
+			SessionVO vo = new SessionVO();
+			vo.setEzSessionId(ezSessionId);
+			vo.setLoginCookie(loginCookie);
+			vo.setTenantId(tenantId);
+
+			loginService.insertSession(vo);
+
+			// 생성한 SessionId를 로그인쿠키에 담아 사용하여 기존의 loginCookie를 param으로 사용하는 controller 코드를 그대로 이용
+			loginCookie = ezSessionId;
+		}
+
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);
     	cookieID.setPath("/");
     	response.addCookie(cookieID);
@@ -1190,7 +1210,7 @@ public class LoginController {
 
 		String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
 		
-    	if (!useSession.isEmpty()) {
+    	if (!useSession.isEmpty() && !useDbSession) {
     		int sessionTime = 0;
     		
     		try {

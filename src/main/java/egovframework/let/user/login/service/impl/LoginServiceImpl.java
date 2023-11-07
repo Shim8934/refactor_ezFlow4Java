@@ -35,6 +35,7 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.FindPwdInfoVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -207,6 +208,20 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		loginDAO.insertLog(vo);
 	}
 
+	@Override
+	public void insertSession(SessionVO vo) throws Exception {
+		loginDAO.insertSession(vo);
+	}
+
+	@Override
+	public void updateSession(String ezSessionId) throws Exception {
+		loginDAO.updateSession(ezSessionId);
+	}
+
+	@Override
+	public SessionVO getSession(String ezSessionId) throws Exception {
+		return loginDAO.getSession(ezSessionId);
+	}
 
 	@Override
 	public void updateLog(LoginVO vo) throws Exception {

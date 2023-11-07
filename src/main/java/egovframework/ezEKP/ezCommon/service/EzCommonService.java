@@ -34,6 +34,8 @@ public interface EzCommonService {
 	
 	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, String realPath, Locale locale, String domain, String scheme) throws Exception;
 	
+	void createTblSession() throws Exception;
+
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception;
 	
 	public String selectUserGetLang(String userID, int tenantID) throws Exception;
