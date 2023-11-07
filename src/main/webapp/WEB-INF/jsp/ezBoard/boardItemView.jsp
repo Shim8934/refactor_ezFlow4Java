@@ -1618,12 +1618,12 @@
 								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
 								<c:choose>
 									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-										<td id="EndDate" style="padding-right:5px;  white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
+										<td id="EndDate" style="padding-right:5px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
 										</td>
 									</c:when>
 									<c:otherwise>
-										<td id="EndDate" style="padding-right:15px;  white-space:nowrap">
+										<td id="EndDate" style="padding-right:15px;">
 											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
 										</td>
 									</c:otherwise>
@@ -1644,13 +1644,13 @@
 								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
 								<c:choose>
 									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-										<td colspan="3" id="EndDate" style="padding-right:5px; width:120px; white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
+										<td colspan="3" id="EndDate" style="padding-right:5px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
 										</td>
 									</c:when>
 									<c:otherwise>
-										<td colspan="3" id="EndDate" style="padding-right:15px; width:120px; white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
+										<td colspan="3" id="EndDate" style="padding-right:15px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
 										</td>
 									</c:otherwise>
 								</c:choose>
