@@ -21,8 +21,8 @@
 				<spring:message code='ezSurvey.t01'/>
 				<span id="surveyConfig" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezSurvey.t06"/>"></span>
 			</div>
-			<div class="btn_writeBox">
-				<c:if test="${mode == 1}">
+			<c:if test="${mode == 1}">
+				<div class="btn_writeBox">
 					<div class="surveyList mCustomScrollbar _mCS_1 mCS_no_scrollbar" style="height: 911px;">
 						<div id="mCSB_1" class="mCustomScrollBox mCS-dark mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
 							<div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
@@ -30,8 +30,8 @@
 							</div>
 						</div>
 					</div>
-				</c:if>
-			</div>
+				</div>
+			</c:if>
 			
 			<div class="surveyList mCustomScrollbar _mCS_1 mCS_no_scrollbar" style="height: 911px;">
 				<div id="mCSB_1" class="mCustomScrollBox mCS-dark mCSB_vertical mCSB_inside" tabindex="0" style="max-height: none;">
