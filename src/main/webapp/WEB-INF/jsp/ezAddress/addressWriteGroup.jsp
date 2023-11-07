@@ -2594,13 +2594,13 @@
 			</div>
 	        <table>
 	            <tr>
-	                <!-- <td>
+	                <%-- <td>
 	                    <table style="width: 100%">
 	                        <tr>
 	                            <td style="height: 35px;">
 	                                <h2 id="subtitle" style="display: none"><spring:message code='ezAddress.t231' /></h2>
 	                                
-	                                <%-- <div id="tabnav" style="float: left; width: 100%;">
+	                                 <!-- <div id="tabnav" style="float: left; width: 100%;">
 	                                    <ul style="margin:0;">
 	                                        <li id="orgTabButton"><span onclick="orgTabButton_onClick()">
 	                                            <spring:message code='ezAddress.t351' /></span></li>
@@ -2612,11 +2612,11 @@
 	                                </div>
 		                            <script type="text/javascript">
 		                                selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-		                            </script> --%>
+		                            </script> -->
 	                            </td>
 	                        </tr>
 	                    </table>
-	                </td> -->
+	                </td> --%>
 					<td rowspan="2" style="width: 665px; height: 375px; vertical-align: top; padding-top:5px;">
 	                    <div id="ManualView" style="DISPLAY: none; height: 488px; width: 648px; padding: 10px; border-right: 1px solid #ddd" class="box">
 	                        <table class="content">
