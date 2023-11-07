@@ -2032,7 +2032,7 @@
 	            var label = document.createElement("LABEL");
 	            label.style.display = "inline-block";
 	            label.style.verticalAlign = "top";
-	            label.style.marginTop = "10px";
+	            label.style.marginTop = "8px";
 	            label.style.marginBottom = "5px";
 	
 	            label.innerHTML = "<spring:message code='ezBoard.t5009' />";

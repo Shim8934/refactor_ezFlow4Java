@@ -3827,7 +3827,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .lnb h2.on{padding: 9px 10px 9px 23px !important}
 .lnbUL > .tree.onlytree{margin-bottom: 0px;}
 .h2_text{font-size: 14px;}
-.tree_resource_ok,.tree_resource_no,.tree_resource_refuse{margin: 5px 2px 0px 0px}
+
 
 .circular_left .lnbUL{background: #F8F9FB; padding: 15px 0px 17px 0px}
 .circular_left .lnbUL li{margin: 0px 20px 0 35px;}
@@ -3918,4 +3918,17 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .contents_categoryView{overflow: auto;}
 .content input{margin-top: 0px;}
 
-.popup #divList{overflow: auto;}
+.popup #divList{overflow: auto;}/*게시 팝업 조회자 스크롤*/
+.tree_resource_standard{ background-position:-234px -52px; width:16px; height:16px; display:inline-block; margin: 0px 2px 0px 0px; cursor:pointer;} /* tree 자원관리 기본아이콘 */
+.tree_resource_ok{ background-position:-260px -52px; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 승인아이콘 */
+.tree_resource_no{ background-position:-286px -52px; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 비승인아이콘 */
+.tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 0px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
+
+.resLnb_tree .tree_resource_standard,
+.resLnb_tree .tree_resource_ok,
+.resLnb_tree .tree_resource_no,
+.resLnb_tree .tree_resource_refuse{margin-top: 4px}/*자원 LNB영역 아이콘*/
+
+.content input{margin-top: 0px;}
+.searchinputBox{height: 27px !important;}
+#lstAttachLink{height: 112px !important;}
