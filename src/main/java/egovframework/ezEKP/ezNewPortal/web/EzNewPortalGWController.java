@@ -3567,14 +3567,7 @@ public class EzNewPortalGWController {
 
 				Folder folder = ia.getFolder(folderPath);
 				
-				// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
-				// 통해 비효율적으로 구하는 관계로 folder open 전에 호출함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
-				// 더 효율적임.				
-				int unreadCount = ia.getUnreadCount(folderPath);
-				
-				folder.open(Folder.READ_ONLY);
-
-				Message[] messages = null;
+				int unreadCount = 0;
 
 				// set mailCount
 				int mailCount = 7;
@@ -3583,55 +3576,116 @@ public class EzNewPortalGWController {
 				// mailCount = unreadCount;
 				// }
 
-				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId(), "");
-
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-				int messagesLength = messages.length;
 				List<Map<Object, String>> mailList = new ArrayList<Map<Object, String>>();
+				String useRDBOnlyMailList = ezCommonService.getTenantConfig("useRDBOnlyMailList", info.getTenantId());
 
-				for (int i = 0; i < messagesLength; i++) {
-					Message message = messages[i];
-					UIDFolder uidFolder = (UIDFolder) message.getFolder();
+				if (useRDBOnlyMailList.equals("YES")) {
+					Map<String, Object> extraMap = new HashMap<String, Object>();
+					List<Map<String, String>> messageList = ezEmailUtil.searchFolderUsingRDBOnly(userAccount, folderPath, null, null, null, new Date(), false,
+							false, false, "receivedDate", false, 0, mailCount, false, extraMap, info.getTenantId(), false, "");
 
-					// href
-					String href = "INBOX/" + uidFolder.getUID(message);
+					unreadCount = (int)extraMap.get("mailboxUnreadMailCount");
 
-					// received date
-					Date receivedDate = message.getReceivedDate();
-					String receivedDateStr = sdf.format(receivedDate);
-					receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffset(), false);
+					for (Map<String, String> mailInfo : messageList) {
+						// href
+						String href = mailInfo.get("MAIL_ID");
 
-					// sender
-					String sender = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+						// received date
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+						Date receivedDate = sdf.parse(mailInfo.get("MAIL_DATE"));
+						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+						String receivedDateStr = sdf.format(receivedDate);
 
-					// subject
-					String subject = ezEmailUtil.getSubject(message);
-					subject = (subject != null) ? subject : "";
+						receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffset(), false);
 
-					if (ezEmailUtil.hasSecureMailFlag(message)) {
-						subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+						// sender
+						String sender = ezEmailUtil.getNameOrAddress(mailInfo.get("SENDER"));
+
+						// subject
+						String subject =  mailInfo.get("SUBJECT");
+						subject = (subject != null) ? subject : "";
+						subject = commonUtil.cleanValue(subject);
+
+						if ("1".equals(mailInfo.get("MAIL_IS_SECURED"))) {
+							subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+						}
+
+						int readFlag = "1".equals(mailInfo.get("MAIL_IS_SEEN")) ? 1 : 0;
+						String readClass = "";
+
+						if (readFlag == 0) {
+							readClass = "mail_close";
+						} else {
+							readClass = "mail_open";
+						}
+
+						Map<Object, String> mailMap = new HashMap<Object, String>();
+						mailMap.put("href", href);
+						mailMap.put("receivedDateStr", receivedDateStr.substring(5));
+						mailMap.put("sender", sender);
+						mailMap.put("subject", subject);
+						mailMap.put("readClass", readClass);
+
+						mailList.add(mailMap);
 					}
+				} else {
+					// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+					// 통해 비효율적으로 구하는 관계로 folder open 전에 호출함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+					// 더 효율적임.
+					unreadCount = ia.getUnreadCount(folderPath);
 
-					int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
-					String readClass = "";
+					folder.open(Folder.READ_ONLY);
 
-					if (readFlag == 0) {
-						readClass = "mail_close";
-					} else {
-						readClass = "mail_open";
+					Message[] messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId(), "");
+
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+					sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+					int messagesLength = messages.length;
+
+					for (int i = 0; i < messagesLength; i++) {
+						Message message = messages[i];
+						UIDFolder uidFolder = (UIDFolder) message.getFolder();
+
+						// href
+						String href = "INBOX/" + uidFolder.getUID(message);
+
+						// received date
+						Date receivedDate = message.getReceivedDate();
+						String receivedDateStr = sdf.format(receivedDate);
+						receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffset(), false);
+
+						// sender
+						String sender = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+
+						// subject
+						String subject = ezEmailUtil.getSubject(message);
+						subject = (subject != null) ? subject : "";
+
+						if (ezEmailUtil.hasSecureMailFlag(message)) {
+							subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+						}
+
+						int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
+						String readClass = "";
+
+						if (readFlag == 0) {
+							readClass = "mail_close";
+						} else {
+							readClass = "mail_open";
+						}
+
+						Map<Object, String> mailMap = new HashMap<Object, String>();
+						mailMap.put("href", href);
+						mailMap.put("receivedDateStr", receivedDateStr.substring(5));
+						mailMap.put("sender", sender);
+						mailMap.put("subject", subject);
+						mailMap.put("readClass", readClass);
+
+						mailList.add(mailMap);
 					}
-
-					Map<Object, String> mailMap = new HashMap<Object, String>();
-					mailMap.put("href", href);
-					mailMap.put("receivedDateStr", receivedDateStr.substring(5));
-					mailMap.put("sender", sender);
-					mailMap.put("subject", subject);
-					mailMap.put("readClass", readClass);
-
-					mailList.add(mailMap);
 				}
+
 				data.put("mailList", mailList);
 				data.put("unreadCount", unreadCount);
 				data.put("mailboxQuotaStr", mailboxQuotaStr);
