@@ -2047,8 +2047,8 @@
 	            var a = document.createElement("A");
 	            a.className = "imgbtn imgbck";
 	            a.style.verticalAlign = "top";
-	            a.style.marginTop = "5px";
-	            a.style.marginLeft = "10px";
+	            a.style.marginTop = "5px !important";
+	            a.style.marginLeft = "10px !important";
 	
 	            var span = document.createElement("SPAN");
 	            span.innerHTML = "<spring:message code='ezBoard.t5010' />";

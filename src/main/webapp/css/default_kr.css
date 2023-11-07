@@ -3952,3 +3952,5 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 
 
 #left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
+
+.popup #divList{overflow: auto;}
