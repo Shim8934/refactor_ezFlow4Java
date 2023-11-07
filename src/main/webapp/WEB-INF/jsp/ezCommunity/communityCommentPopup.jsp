@@ -119,7 +119,7 @@
 					</c:when>
 					<c:otherwise>
 						<tr>
-							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;" class="en_style">
+							<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;" class="en_style">
 								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 							</th>
 					</c:otherwise>	
