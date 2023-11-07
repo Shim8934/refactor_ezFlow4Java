@@ -2549,7 +2549,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
     "REPLYLEVEL" NUMBER(10,0),
     "PARENTREPLYID" NVARCHAR2(100),
     "PARENTWRITERNAME" NVARCHAR2(50),
-    "UPDATEDATE" DATE
+    "UPDATEDATE" DATE,
+    "IMAGECONTENT" NVARCHAR2(600) DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_BOARD_TREECACHE

@@ -27,6 +27,9 @@ public class BoardLineReplyVO {
 	private String parentWriterName;
 	private String updateDate;
 
+	// 2023-10-30 전인하 - 이모티콘
+	private String imageContent;
+	
 	public String getReplyID() {
 		return replyID;
 	}
@@ -110,5 +113,12 @@ public class BoardLineReplyVO {
 	}
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
+	}
+	
+	public String getImageContent() {
+		return imageContent;
+	}
+	public void setImageContent(String imageContent) {
+		this.imageContent = imageContent;
 	}
 }

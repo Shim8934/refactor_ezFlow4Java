@@ -1179,7 +1179,7 @@
 	    					AND
 	    						ITEMID = A.ItemID
 	    					AND
-	    					    CONTENT IS NOT NULL) ONELINECNT,
+						(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
 	      					A.UPPERITEMIDTREE,
 	      					A.DOCNO,
 	      					'' AS NOTICE,
@@ -1417,7 +1417,7 @@
 						  AND
 						  	ITEMID = A.ITEMID
 						  AND
-						    CONTENT IS NOT NULL) as ONELINECNT,
+							(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) as ONELINECNT,
 		   				A.UPPERITEMIDTREE,
 		   				A.DOCNO,
 		   			    '' AS NOTICE,
@@ -1544,7 +1544,7 @@
 	    				AND
 	    					ITEMID = A.ITEMID
 						AND
-	    				    CONTENT IS NOT NULL) ONELINECNT  ,
+	    				    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT  ,
 		                A.UPPERITEMIDTREE ,
 		                A.DOCNO ,
 		                A.EXTENSIONATTRIBUTE2 NOTICE  ,
@@ -1646,7 +1646,7 @@
 		    				AND
 		    					ITEMID = A.ItemID
 		    				AND
-		    				    CONTENT IS NOT NULL) ONELINECNT  ,
+		    					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
 		                    A.UPPERITEMIDTREE ,
 		                    A.DOCNO ,
 		                    A.EXTENSIONATTRIBUTE2 NOTICE  ,
@@ -1718,7 +1718,7 @@
     				AND
     					ITEMID = A.ItemID
     				AND
-    				    CONTENT IS NOT NULL) ONELINECNT  ,
+    					(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
                     A.UPPERITEMIDTREE ,
                     A.DOCNO ,
                     A.EXTENSIONATTRIBUTE2 NOTICE  ,
@@ -1790,7 +1790,7 @@
 	    				AND
 	    					ITEMID = A.ItemID
 						AND
-							CONTENT IS NOT NULL) ONELINECNT  ,
+						(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT  ,
 		   				A.UPPERITEMIDTREE,
 		   				A.DOCNO,
 		   				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
@@ -1885,7 +1885,7 @@
 	    				AND
 	    					ITEMID = A.ItemID
 						AND
-							CONTENT IS NOT NULL) ONELINECNT  ,
+						(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT,
 		   				A.UPPERITEMIDTREE,
 		   				A.DOCNO,
 		   				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
@@ -2079,7 +2079,7 @@
 	    				AND
 	    					ITEMID = A.ItemID
 	    				AND
-	    				    CONTENT IS NOT NULL) ONELINECNT  ,
+						(CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)) ONELINECNT  ,
 		   				A.DOCNO,
 		   				A.MAINCONTENT,
 		   				B.FILEPATH,
@@ -4028,7 +4028,8 @@
 					NVL(A.PARENTREPLYID, A.REPLYID) AS GROUPID,
 					NVL2(A.PARENTREPLYID, D.WRITEDATE, A.WRITEDATE) AS GROUPDATE,
 					NVL(A.REPLYLEVEL, 1) AS REPLYLEVEL,
-					TO_CHAR(A.UPDATEDATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
+					TO_CHAR(A.UPDATEDATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE,
+				    IMAGECONTENT
 		        FROM
 		        	TBL_BOARD_ONELINEREPLY A
 		        LEFT OUTER JOIN
@@ -4104,7 +4105,7 @@
 					A.ITEMID = #v_ItemID#
 		    	GROUP BY
 					A.REPLYID, A.$v_UserName$, A.USERID, A.CONTENT, A.WRITEDATE, DEPTID,
-					A.PARENTREPLYID, A.REPLYLEVEL, A.PARENTWRITERNAME, A.UPDATEDATE, D.WRITEDATE
+					A.PARENTREPLYID, A.REPLYLEVEL, A.PARENTWRITERNAME, A.UPDATEDATE, D.WRITEDATE, A.IMAGECONTENT
 				ORDER BY
 					GROUPDATE, GROUPID, A.WRITEDATE
 			]]>
@@ -4124,7 +4125,8 @@
 					NVL(A.PARENTREPLYID, A.REPLYID) AS GROUPID,
 					NVL2(A.PARENTREPLYID, D.WRITEDATE, A.WRITEDATE) AS GROUPDATE,
 					NVL(A.REPLYLEVEL, 1) AS REPLYLEVEL,
-					TO_CHAR(A.UPDATEDATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE
+					TO_CHAR(A.UPDATEDATE, 'YYYY-MM-DD HH24:MI:SS') AS UPDATEDATE,
+				    IMAGECONTENT
 		        FROM 
 		        	TBL_BOARD_ONELINEREPLY A
 		        LEFT OUTER JOIN
@@ -4147,7 +4149,7 @@
 					A.itemid = #v_ItemID#
 		        GROUP BY
 					A.REPLYID, A.$v_UserName$, A.USERID, A.CONTENT, A.WRITEDATE,
-					A.PARENTREPLYID, A.REPLYLEVEL, A.PARENTWRITERNAME, A.UPDATEDATE, D.WRITEDATE
+					A.PARENTREPLYID, A.REPLYLEVEL, A.PARENTWRITERNAME, A.UPDATEDATE, D.WRITEDATE, A.IMAGECONTENT
 				ORDER BY 
 					GROUPDATE, GROUPID, A.WRITEDATE
 			]]>
@@ -5141,10 +5143,10 @@
 	<insert id="EzBoardDAO.saveOneLineReply" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_ONELINEREPLY (
-				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,     content, 		password, 	  tenant_id, companyid
+				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password, 	  tenant_id, companyid, IMAGECONTENT
 			)
         	VALUES (
-        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),	  #PCONTENT#,	#PPASSWORD# , #TENANTID#, #COMPANYID#
+        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),	  #PCONTENT#,	#PPASSWORD# , #TENANTID#, #COMPANYID#, #v_EMOTICON#
         	)
 		]]>
 	</insert>
@@ -5487,7 +5489,7 @@
             AND 
             	ItemID = #itemID#
 			AND
-       		    CONTENT IS NOT NULL
+       		    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)
 		]]>
   </select>
   
@@ -6349,7 +6351,7 @@
 			AND 
 				TENANT_ID = #v_TENANTID#
 			AND
-			    CONTENT IS NOT NULL
+			    (CONTENT IS NOT NULL OR IMAGECONTENT IS NOT NULL)
 		]]>
 	</select>
 	
@@ -6678,10 +6680,10 @@
 	<insert id="EzBoardDAO.saveOneLineChildReply" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_ONELINEREPLY (
-				itemid, replyid, boardid, userid, username, username2, writedate, content, password, parentreplyid,	replylevel,	parentwritername, tenant_id, companyid
+				itemid, replyid, boardid, userid, username, username2, writedate, content, password, parentreplyid,	replylevel,	parentwritername, tenant_id, companyid, imageContent
 			)
 			VALUES (
-				#v_ITEMID#, #v_REPLYID#, #v_BOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, TO_DATE(#v_NOWDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_CONTENT#, #v_PASSWORD#, #v_PARENTREPLYID#, #v_REPLYLEVEL#, #v_PARENTWRITERNAME#, #v_TENANTID#, #v_COMPANYID#
+				#v_ITEMID#, #v_REPLYID#, #v_BOARDID#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, TO_DATE(#v_NOWDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_CONTENT#, #v_PASSWORD#, #v_PARENTREPLYID#, #v_REPLYLEVEL#, #v_PARENTWRITERNAME#, #v_TENANTID#, #v_COMPANYID#, #v_EMOTICON#
 			)
 		]]>
 	</insert>
@@ -6693,7 +6695,8 @@
 			    TBL_BOARD_ONELINEREPLY
 			SET
 			    CONTENT = #v_CONTENT#,
-			    UPDATEDATE = TO_DATE(#v_UPDATEDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			    UPDATEDATE = TO_DATE(#v_UPDATEDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+			    IMAGECONTENT = #v_EMOTICON#
 			WHERE
 			    ITEMID = #v_ITEMID#
 			AND
@@ -6731,7 +6734,8 @@
 				USERNAME = NULL,
 				USERNAME2 = NULL,
 				CONTENT = NULL,
-				UPDATEDATE = NULL
+				UPDATEDATE = NULL,
+				IMAGECONTENT = NULL
 			WHERE
 				REPLYID = #v_REPLYID#
 			AND

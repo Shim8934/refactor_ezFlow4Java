@@ -2566,7 +2566,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 댓글 저장 시 회사ID 삽입하도록 수정 */
 	@Override
-	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, int replyLevel) throws Exception {
+	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, int replyLevel, String imageContent) throws Exception {
 		logger.debug("saveOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2583,6 +2583,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("TENANTID", userInfo.getTenantId());
 		map.put("COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		map.put("v_EMOTICON", imageContent);
 		
 		ezBoardDAO.saveOneLineReply(map);
 
@@ -5291,7 +5292,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글에 대한 답글 저장하는 메서드 */
 	@Override
-	public void saveOneLineChildReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, String parentReplyID, int replyLevel, String parentWriterName) throws Exception {
+	public void saveOneLineChildReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password, String parentReplyID, int replyLevel, String parentWriterName, String imageContent) throws Exception {
 		logger.debug("saveOneLineChildReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5309,6 +5310,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_NOWDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
+		map.put("v_EMOTICON", imageContent);
 
 		logger.debug("saveOneLineChildReply ended");
 		ezBoardDAO.saveOneLineChildReply(map);
@@ -5316,7 +5318,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	/* 2023-03-30 이가은 - 게시물 댓글의 답글 작성/수정기능 추가 > 댓글 또는 답글 수정되었을 경우 업데이트하는 메서드 */
 	@Override
-	public void updateOneLineReply(String itemID, String boardID, String replyID, String content, String updateDate, int tenantID) throws Exception {
+	public void updateOneLineReply(String itemID, String boardID, String replyID, String content, String updateDate, int tenantID, String imageContent) throws Exception {
 		logger.debug("updateOneLineReply started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5326,6 +5328,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_CONTENT", content);
 		map.put("v_UPDATEDATE", updateDate);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_EMOTICON", imageContent);
 
 		logger.debug("updateOneLineReply ended");
 		ezBoardDAO.updateOneLineReply(map);

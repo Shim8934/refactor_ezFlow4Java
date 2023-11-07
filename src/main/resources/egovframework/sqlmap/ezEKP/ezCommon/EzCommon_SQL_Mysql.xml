@@ -5622,4 +5622,22 @@
 		    UPDATEDATE VARCHAR(40) NULL
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+			SELECT
+				IMAGECONTENT
+			FROM
+				TBL_BOARD_ONELINEREPLY
+			LIMIT 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.insertTblBoardOneReplyImageContentColumn">
+		<![CDATA[
+		ALTER TABLE
+			TBL_BOARD_ONELINEREPLY
+		ADD
+			IMAGECONTENT varchar(600) NULL
+		]]>
+	</statement>
 </sqlMap>

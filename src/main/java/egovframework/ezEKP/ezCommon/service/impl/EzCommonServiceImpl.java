@@ -4327,4 +4327,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void alterTblBoardOneLineChildReply() throws Exception {
 		ezCommonDAO.alterTblBoardOneLineChildReply();
 	}
+    
+    // 2023-11-07 전인하 - 댓글 이모티콘 관련 컬럼 추가    
+    @Override
+    public void insertBoardReplyCommentEmoticon() throws Exception {
+        ezCommonDAO.insertBoardReplyCommentEmoticon();
+    }
 }

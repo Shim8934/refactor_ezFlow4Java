@@ -2750,4 +2750,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterTblBoardOneLineChildReply");
 		}
 	}
+
+	/* 2023-11-07 전인하 - 댓글 이모티콘 삽입 칼럼 추가 */
+	public void insertBoardReplyCommentEmoticon() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardOneReplyImageContentColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_board_onelinereply imageContent doesn't exit. creatin the column...");
+
+			update("EzCommonDAO.insertTblBoardOneReplyImageContentColumn");
+		}
+	}
 }

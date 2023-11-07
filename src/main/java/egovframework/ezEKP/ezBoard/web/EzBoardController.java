@@ -7566,6 +7566,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		int replyLevel = Integer.parseInt(request.getParameter("replyLevel"));
 		String parentReplyID = "";
 		String parentWriterName = "";
+		String emoticonContent = commonUtil.stripScriptTags(request.getParameter("emoticonContent"));
 
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		
@@ -7583,12 +7584,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		content = content.replace("'", "''");
 		
 		if (replyLevel == 1) {	// 부모댓글 저장
-			ezBoardService.saveOneLineReply(itemID, replyID, boardID, userInfo, content, password, replyLevel);
+			ezBoardService.saveOneLineReply(itemID, replyID, boardID, userInfo, content, password, replyLevel, emoticonContent);
 		} else { // 자식댓글 저장
 			parentReplyID = commonUtil.stripScriptTags(request.getParameter("parentReplyId"));
 			parentWriterName = request.getParameter("parentWriterName");
 
-			ezBoardService.saveOneLineChildReply(itemID, replyID, boardID, userInfo, content, password, parentReplyID, replyLevel, parentWriterName);
+			ezBoardService.saveOneLineChildReply(itemID, replyID, boardID, userInfo, content, password, parentReplyID, replyLevel, parentWriterName, emoticonContent);
 		}
 		logger.debug("saveOneLineReply ended");
 	}
@@ -11195,9 +11196,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String content = request.getParameter("content");
 		int tenantID = userInfo.getTenantId();
 		String updateDate = commonUtil.getTodayUTCTime("");
+		String imageContent = request.getParameter("imageContent");
 
-		ezBoardService.updateOneLineReply(itemID, boardID, replyID, content, updateDate, tenantID);
-
+		ezBoardService.updateOneLineReply(itemID, boardID, replyID, content, updateDate, tenantID, imageContent);
 		logger.debug("updateOneLineReply ended");
 	}
 
