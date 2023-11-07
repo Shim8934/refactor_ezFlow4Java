@@ -50,7 +50,7 @@ h2 {margin:2px 0; font-size:14px;}
 .margin ul, li{ MARGIN:auto; }
 .margin table { border-collapse: separate; } 
 
-.file td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
+.file td input {margin:-2px 4px 0 0; vertical-align:middle;}
 .file2 td input { border: expression((this.type=='text')?'none':((this.type=='checkbox')?'none':''));}
 select {-webkit-appearance: none; border:1px solid #dedede;min-height:25px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat right 1px center; padding-right:18px;background-color: white; border-radius: 3px; outline: none; cursor: pointer;}
 select::-ms-expand {
@@ -3561,8 +3561,8 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* 2019-05-17 김민성 - 자원관리 개선*/
 .mainmenuTabUL_left {  position: absolute;top: 7px;left: -10px; list-style:none; margin:0px; padding:0px; }
-.mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px;}
-.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px; cursor:default;}
+.mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px; line-height:19px;}
+.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px 3px 0 0; cursor:default;}
 .mainmenuTabUL_left li .icon { vertical-align:middle;}
 
 .tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
@@ -3897,3 +3897,8 @@ select{min-height: 24px !important;}
 .cabTable .cabName, .cabTable2 .cabName{font-size:13px;}
 
 .lnbUL li.on .list_text { color: #0470E4; font-weight: bold; }
+
+.imgbtn span{line-height: 23px;}
+
+.file .pos2 > .imgbtn > span{width:65px !important;}
+

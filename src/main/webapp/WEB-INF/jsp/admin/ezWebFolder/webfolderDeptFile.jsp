@@ -290,10 +290,10 @@
 		
 		<div id="mainmenu" style="position: relative; margin-left: 5px;">
 			<ul>
-				<li id="" class="important" onclick="fileDownload();"><span><spring:message code='ezWebFolder.t186'/></span></li>
+				<li id="" class="important" onclick="fileDownload();"><span><spring:message code='ezWebFolder.t161'/></span></li>
 				<!-- root에서 파일업로드 되도록하려면 아래를 주석  -->
 <%-- 				<c:if test="${level != '0'}"> --%>
-				<li id="uploadBttn" class="important" onclick="fileUpload();"><span><spring:message code='ezWebFolder.t187'/></span></li>
+				<li id="uploadBttn" class="important" onclick="fileUpload();"><span><spring:message code='ezWebFolder.t160'/></span></li>
 <%-- 				</c:if> --%>
 <%-- 				<c:if test="${usePreview}">
 					<li id="previewButton"><span onclick="filePreview()"><spring:message code='main.t4009' /></span></li>

@@ -108,7 +108,7 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .util li:hover .util_employee_search { background-position: -0px -31px; }/* 직원검색 */
 .util li:hover .util_set { background-position: -31px -31px; }/* 환경설정 */
 .util li:hover .util_help { background-position: -61px -31px; }/* 도움말 */
-.util li:hover .util_logout { background-position: -93px -31px; }/* 로그아웃 */
+.util li:hover .util_logout { background-position: -92px -32px; }/* 로그아웃 */
 .util li:hover .util_systemlink { background-position: -84px -21px; }/* 시스템링크 */
 .util li:hover .util_frame{background-position: -186px -124px; }/* 프레임아이콘 */
 .util li:hover .util_messenger { background-position: -186px -155px; }/* 메신저다운로드 */
@@ -266,7 +266,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .main_time_check{ box-sizing:border-box; overflow:hidden; margin:10px 20px 25px 20px; padding:0; background: #f4f4f4; border-radius: 5px;}
 .main_presentTime{ text-align:center;width: 130px; height:66px; float:left;padding-left: 5px;box-sizing: border-box;overflow:hidden; line-height: 22px;}
 .main_presentTime .main_timeTit{ font-size:12px; color:#888; margin:0px; padding:10px 0px 0px 0px;}
-.main_presentTime .main_timeText{font-size: 20px;letter-spacing: 0px; font-weight: 500;}
+.main_presentTime .main_timeText{font-size: 20px;letter-spacing: 0px; font-weight: 600}
 .main_main_time{padding:16px 0px 0px 0px;}
 .main_main_time .main_timeCheckIn{ margin:0px; padding:0px; float:left;}
 
@@ -285,8 +285,8 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .countingIcon dl{ margin:0px 20px 0 0; padding:0px; position:relative; float:left; cursor:pointer; text-align:center;}
 .countingIcon dl dt.iconImg{ margin:0px; padding:0px; width:70px; height:65px; background: #F3F9FF; border-radius: 15px; display:flex; justify-content: center; align-items: center;}
 .countingIcon dl dd.iconText{ margin:0px; padding:8px 0 0 0; font-size:13px; color:#333; text-align:center; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 70px;}
-.countingIcon dl dd.iconCount{ margin:0px; padding:1px 8px; font-size:12px; color:#fff; position:absolute;right:-8px; top:-5px;background:#0470E4; border:1px solid #0470E4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-.countingIcon dl dd.iconCount_none{ margin:0px; padding:1px 8px; font-size:12px; color:#fff; position:absolute; right:-8px; top:-5px; background:#b4b4b4; border:1px solid #a4a4a4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
+.countingIcon dl dd.iconCount{ margin:0px; padding:4px 8px; font-size:12px; color:#fff; position:absolute;right:-8px; top:-5px;background:#0470E4; border:1px solid #0470E4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
+.countingIcon dl dd.iconCount_none{ margin:0px; padding:4px 8px; font-size:12px; color:#fff; position:absolute; right:-8px; top:-5px; background:#b4b4b4; border:1px solid #a4a4a4; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
 .countingIcon .iconCircle_none{width:58px; height:58px; margin:0px auto; padding:0px; background:#f8f8f8; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;border:1px solid #e9e9e9;}
 .countingIcon .iconCircle_none .iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
 .countingIcon dl.icon_disabled {cursor:default;}
@@ -308,7 +308,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .bestEmployee{margin:0px 20px; padding:25px 0 0 0;border-top:1px solid #EFECEC;box-sizing:border-box; position: relative;}
 .bestEmployee .emPic{ position: absolute; right: 25px; top: 24px; margin:0px; padding:15px 10px; float:left; background: url(/images/ezNewPortal/best_frame.png) no-repeat right bottom;}
 .bestEmployee .emPic img{border-radius: 50px; width:50px;}
-.bestEmployee .emDL{ margin:0px; padding:15px 20px; overflow:hidden;border-radius: 5px;background: 185px 35px #f4f4f4;}
+.bestEmployee .emDL{ margin:0px; padding:27px 20px; overflow:hidden;border-radius: 5px;background: 185px 35px #f4f4f4;}
 
 .bestEmployee .emDL .emTit{ margin:0px; padding:0 0 2px 0; font-size:15px; color:#388CE5; font-weight:500;}
 .bestEmployee .emDL .emName{ margin:0px; padding:0 0 2px 0; font-size:14px; color:#333333; font-weight:bold;}
@@ -601,9 +601,9 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .nodata{ margin:0px; padding:0px; text-align:center;}
 .nodata dt{ margin:0px; padding:50px 0px 15px 0px;}
 .nodata dd{ margin:0px; padding:0px; font-size:13px; color:#c0c0c0; font-weight: normal;}
+.bestEmployee .emDL .nodata dd{text-align: left;}
 
-
-.dataHave {position:absolute; top:2px; left:42%; font-weight: bold; font-size: 18px; }
+.dataHave {position:absolute; top:2px; left:42%; font-weight: bold; }
 
 /* layer */
 .layerpopup {background : #ffffff; border-radius : 4px;}
@@ -635,8 +635,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 /* time_check */
 .time_check{height:76px; margin:5px 20px; padding:0px; background:#F4F4F4; border-radius: 5px;}
 .presentTime{float:left; width:calc(100% - 220px); height:76px; margin:0px; padding:0px;}
-.presentTime .timeTxt{margin:22px 0px; padding:0px; text-align:center;background: url(/images/kr/main/present_time_icon.png) no-repeat  30px 6px;}
-.presentTime .timeTxt span{vertical-align:middle; color:#454242; font-size:20px; font-weight:500; padding-left:20px; }
+.presentTime .timeTxt{margin:22px 0px; padding:0px; text-align:center;background: url(/images/kr/main/present_time_icon.png) no-repeat  66px 0px;}
+.presentTime .timeTxt span{vertical-align:middle; color:#454242; font-size:20px; font-weight:600; padding-left:20px; }
 .presentTime .timeTxt span.timeAM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
 .presentTime .timeTxt span.timePM{margin:0px 0px 0px 10px; padding:0px; font-size:12px; font-weight:normal;}
 .presentTime_commuteNone{width:100%;}
@@ -669,7 +669,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .writebanner_leftContents dl dt span.icon_approval{display:inline-block; vertical-align:top; margin:17px 0px 0px 0px; background:url(/images/ezNewPortal/theme3Img/quick_icon5.png) no-repeat center;}
 .writebanner_leftContents dl dt span.iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
 .writebanner_leftContents dl dt.txt{font-size:14px;}
-.writebanner_leftContents dl dd{position:absolute; top:17px; right:22%; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(57,74,93,0.48); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebanner_leftContents dl dd{position:absolute; top:17px; right:22%; margin:0px; padding:5px 8px; color:#ffffff; font-size:12px; background:rgba(57,74,93,0.48); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebanner_rightContents{float:left; width:75%; background:#ffffff;}
 .writebanner_leftContents .countZero{background:rgba(0,0,0,0.2);}
 .writebannerTop{overflow:hidden; list-style:none; margin:0px; padding:19px 0px; border-bottom:1px solid #EFECEC;}
@@ -687,8 +687,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .writebannerIcon .iconCircle .iconReturn{background:url(/images/ezNewPortal/theme3Img/quick_icon7.png) no-repeat center;;}
 .writebannerIcon .iconCircle .iconReceive{background:url(/images/ezNewPortal/theme3Img/quick_icon8.png) no-repeat center;}
 .writebannerIcon .iconText{margin:10px 0px 0px 0px; padding:0px; color:#333; font-size:14px;}
-.writebannerIcon .count{position:absolute; top:-2px; right:12%; margin:0px 0px 0px 12px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(57,74,93,0.48); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
-.writebannerIcon .countZero{background:rgba(0,0,0,0.2);}
+.writebannerIcon .count{position:absolute; top:-2px; right:12%; margin:0px 0px 0px 12px; padding:5px 8px; color:#ffffff; font-size:12px; background:rgba(57,74,93,0.48); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebannerIcon .countZero{background:rgba(57,74,93,0.2)}
 
 @media only screen and (max-width :1730px) and (min-width :1680px) {
 	/*.info .infoImg{margin:0px 24px 0px 0px;} */
@@ -849,7 +849,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .portlet_title{border-bottom: 1px solid #EFECEC;}
 #theme2Body .section1_bg{width:100%; height:400px; margin:0px; padding:0 20px; box-sizing: border-box; background:#E8EFF8;}
 #theme2Body .section1{margin:0px; padding:0px; vertical-align:top; overflow:hidden; padding-bottom:14px; padding-top:14px; float:none; max-width:1920px; box-sizing:border-box; margin:0 auto;}
-#theme2Body .section1 .sec1Layout_left{overflow:hidden;padding:0px 0px 10px 20px; box-sizing:border-box; }
+#theme2Body .section1 .sec1Layout_left{overflow:hidden;padding:0px 0px 10px 0px; box-sizing:border-box; }
 #theme2Body .section1 .sec1Layout_btm_left{overflow:hidden; float:left; box-sizing:border-box; background: #fff; border-radius: 10px; box-shadow: 0px 0px 3px #ddd; height:190px;}
 #theme2Body .section1 .portlet_title{border:none; padding-top:5px;}
 #theme2Body .section1 .sec1Layout_btm_left .portlet_title .portletText img{margin:14px 8px 0 0;}
@@ -884,7 +884,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .info_txt{list-style:none; float:left; width:calc(100% - 88px); margin:0px 0px 0px 15px; padding:0px; line-height:22px; position:relative;}
 #theme2Body .info_txt dt{display:block; margin:6px 0 12px 0px; padding:0px; color:#000; font-size:20px; font-weight:bold; }
 #theme2Body .info_txt dt:first-child{font-size:14px; margin: 3px 0 0 0; position:relative;}
-#theme2Body .info_txt dd{margin:0 0 5px 0; padding:0px; font-size:14px;}
+#theme2Body .info_txt dd{margin:0 0 5px 0; padding:0px; font-size:13px; line-height:1.4;}
 #theme2Body .info_txt dd span{color: #888;}
 
 
@@ -906,7 +906,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .personal_content dl.commuteNone dd{display:inline-block; margin:0px; padding:0px; vertical-align:middle; font-size:24px; font-weight:bold; line-height:62px;}
 #theme2Body .personal_content dl.time{ height:30px; width:100%; text-align:center;}
 
-#theme2Body .personal_content dl.time dd{margin:-4px 0px 0px 0px; padding:0px; color:#000; font-size:20px;}
+#theme2Body .personal_content dl.time dd{margin:4px 0px 0px 0px; padding:0px; color:#000; font-size:20px;}
 #theme2Body .personal_content dl.commuteNone{width:calc(100% - 2px); border:1px solid #dfdfdf; text-align:center;}
 #theme2Body .personal_content dl.commuteNone dt{margin:0px; padding:0px; line-height:66px;}
 #theme2Body .personal_content dl.commuteNone dd{margin:0px; padding:0px; line-height:64px;}
@@ -916,8 +916,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .writebanner .writebannerUL li{float:left; width:12.5%; margin:0px 0px 19px 0px; padding:0px; text-align:center; cursor:pointer;}
 #theme2Body .writebanner .writebannerDL{position:relative; margin:0px; padding:0px;}
 #theme2Body .writebanner .writebannerDL dt{margin:10px 0px; padding:0px; text-align:center; color:#000000; font-size:14px; letter-spacing:-1px;}
-#theme2Body .writebanner .writebannerDL dd{position:absolute; top:-4px; right:18px; margin:0px 0px 0px 16px; padding:1px 8px 2px 8px; color:#ffffff; text-align:center; font-size:12px; font-weight:500; background:rgba(2, 4, 6, 0.4);  border-radius:40px;-webkit-border-radius:40px;-moz-border-radius:40px;}
-#theme2Body .writebanner .writebannerDL dd.iconCount_none{background:#97b6c3;}
+#theme2Body .writebanner .writebannerDL dd{position:absolute; top:-7px; right:18px; margin:0px 0px 0px 16px; padding:5px 10px 4px 10px; color:#ffffff; text-align:center; font-size:12px; font-weight:500; background:rgba(2, 4, 6, 0.4);  border-radius:40px;-webkit-border-radius:40px;-moz-border-radius:40px;}
+#theme2Body .writebanner .writebannerDL dd.iconCount_none{background:rgba(2, 4, 6, 0.2);}
 #theme2Body .writebanner .iconCircle_none{width:65px; height:65px; margin:0px auto; padding:0px; background:#f3f3f3; border-radius:58px;-webkit-border-radius:58px;-moz-border-radius:58px;border:1px solid #e9e9e9;}
 #theme2Body .writebanner .iconCircle_none .iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:19px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
 #theme2Body .writebanner dl.icon_disabled {cursor:default;margin-left:11px;}
@@ -1367,7 +1367,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .resource_listBoxUL .resource_listBoxDL { margin: 0px; padding: 0px; }
 .resource_listBoxUL .resource_listBoxDL dt { position: relative; float: left; width: 130px; height: 25px; margin: 0px; padding: 0px 9px 0px 0px; cursor: pointer; z-index:100; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 .resource_listBoxUL .resource_listBoxDL dt .icon_tree {float:left; margin-top:3px; margin-right:5px;}
-.resource_listBoxUL .resource_listBoxDL dt .resource_list_text {float:none; font-size:14px; color:#555; padding:8px 0px 0px 8px; box-sizing: border-box; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; vertical-align: middle; position: relative; top: 3px; font-weight: 500;}
+.resource_listBoxUL .resource_listBoxDL dt .resource_list_text {float:none; font-size:14px; color:#444; padding:8px 0px 0px 8px; box-sizing: border-box; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; vertical-align: middle; position: relative; top: 3px; font-weight: normal;}
 .resource_listBoxUL .resource_listBoxDL dt:hover .resource_list_text {font-weight:bold;}
 .resource_listBoxUL .resource_listBoxDL dd {position:relative; float: none; margin: 0px; height: 22px; padding: 0px 0px 0px 0px; white-space:nowrap;}
 .resource_listBoxUL .resource_listBoxDL dd > .resource_list_item { position: relative; display: inline-block; width: 90px; height: 22px; line-height: 18px; margin: 2px -4px 0px 10px; padding: 1px 9px; border-radius: 3px; background-color:#E6EFFA; border: 1px solid #E6EFFA; color: #444; text-align: center; box-sizing: border-box; cursor: pointer; font-size:13px;}
@@ -1389,8 +1389,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 }
 
 input, label, textarea, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
-	font-size:14px;
-	color: #393939;
+	font-size:13px;
+	color: #444;
 	text-decoration: none;
 	ime-mode:active;
 }
@@ -1468,10 +1468,10 @@ nav .navUL li:hover:after{width:50%; transition:all 0.2s ease;}
 .main_time .timeCheckIn.commute_on{background:#F4F4F4; border:1px solid #fff;}
 .main_time .timeCheckOut.commute_on{background:#F4F4F4;}
 #theme2Body .personal_content dl.commute dt.main_lateIn{color:#0470e4;}
-#theme3Body .main_time .timeCheckIn.lateIn {color:#0470e4;}
+#theme3Body .main_time .timeCheckIn.lateIn {color:#fff;}
 #theme3Body .main_time .timeCheckIn.commute_on {
     background: rgba(153,182,222,0.68);
-    border-color: #6F90BC;
+    border-color: #fff;
 }
 #theme3Body .main_time .timeCheckOut.commute_on {
     background: rgba(153,182,222,0.68);
@@ -1548,7 +1548,7 @@ div.orbit img{border-radius: 5px;}
 /* 20231004 수정 */
 #inAttiBtn, #outAttiBtn{font-size: 13px !important;}
 #addr{height: 12px !important;}
-.dataHave{left: 34%;}
+.dataHave{left: 47%;}
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{display: block; border: none;}
 .full_menu_toggleUL > li{height: 118px;}
 @media only screen and (min-width : 1680px ) {
@@ -1558,7 +1558,7 @@ div.orbit img{border-radius: 5px;}
 }
 @media only screen and (max-width : 1240px) {
 	.dataHave {
-		left: 34%;
+		left: 45%;
 	}
 }
 .writebanner_leftContents > .work {
@@ -1569,3 +1569,46 @@ div.orbit img{border-radius: 5px;}
 	left: 39%;
 }
 
+/* 20231101 디자인 css 추가 */
+.util li:hover .util_logout {background-position: -92px -32px;}
+#theme3Body .sscheduleUL .scheduleLi{padding: 8px 0px 12px 14px; margin: 0px 20px 10px 20px;}
+.webFolder .webFolderLi .webFolderDL dt{color: #444;}
+.webFolder .webFolderLi .webFolderDL dd{color: #444;}
+.bestEmployee .emDL .nodata dd{text-align:left}
+.portlet_list li .txt{width: 65%;}
+.weather_title .weatherPresent dt img{width: 87px;}
+.weather_title .weatherPer{margin: 24px 0px;}
+.weather_title .weatherPer li{margin: 2px 0px; line-height: 22px;}
+.weather_title{height: 119px;}
+#theme2Body .weather_mini{background: #F4F4F4; border: none;}
+.weather_mini dl{float: left; width: calc(25% - 10px); margin: 0px 5px; padding: 14px 0px;}
+#theme2Body .noti_portlet_list .notiLI .noti_date{text-align: left;}
+.collaborate_tab li span{background: none;}
+.collaborate_list .listtype_txt li{background: none;}
+#theme2Body .collaborate_tab{background: #F4F4F4;}
+#theme2Body .scalendar_mini_title .btn_prev span img, #theme2Body .scalendar_mini_title .btn_next span img{margin-top: 4px;}
+.sscheduleUL .scheduleLi .scheduleTime .Tcollaborate{padding: 0px; font-size: 13px; color: #3f51b5; font-weight: 700; background: none;}
+.sscheduleUL .scheduleLi{background: #e4e7f7; border-radius: 5px;}
+
+.presentTime .timeTxt span{padding-left: 35px;}
+#theme3Body .portlet_title .portletText{font-weight: 500; color: #000;}
+#theme3Body .aside_quick .quickmenu_title{background: rgba(255, 255, 255, 0.5); color: #000; border-bottom: 1px solid #C5E5E5;}
+#theme3Body .aside_quick .quickmenu li{border-bottom: none;}
+#theme3Body .aside_link .linkBtn{background: #B3C3CF;}
+#theme3Body .contextMenuBtn{background: rgb(28 58 90 / 50%) !important;}
+#theme3Body .noti_portlet_list .notiLI .noti_date{color: #000;}
+#theme3Body .portlet_list li.mail_open{color: #333;}
+#theme3Body .portlet_list li .txt{color: #333;}
+.noti_portlet_list .notiLI .noti_text{color: #333;}
+#ApprList{padding: 0px;}
+#theme3Body .first_approval .approval_content{padding: 8px 0px 0px 0px;}
+#theme3Body .presentTime .timeTxt{background: url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat 118px 0px; margin: 20px 0px;}
+#theme3Body .portlet_tab{box-shadow: 0px 3px 7px 0px rgb(0 0 0 / 7%);}
+#theme3Body .first_approval .approval_content .apprDL .apprText_blue span,
+#theme3Body .first_approval .approval_content .apprDL .apprText_green span,
+#theme3Body .first_approval .approval_content .apprDL .apprText_orange span{border-radius: 20px;}
+.comTit{color: #333; font-size: 15px; padding: 10px 0px 3px 0px;}
+.comText{font-size: 13px;}
+.quick_ul .quick_num{padding: 4px 8px;}햣 
+.switch{    position: relative; display: inline-block; width: 45px; height: 19px; margin-top: -5px; vertical-align: middle;}
+/* //20231101 디자인 css 추가 */

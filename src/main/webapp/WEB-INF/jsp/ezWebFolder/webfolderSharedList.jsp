@@ -1083,8 +1083,8 @@
 			
 			<div id="mainmenu">
 				<ul>
-					<li class="important" onclick="buttons.fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
-					<li class="important" id="uploadBtn" style="display:none;" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
+					<li class="important" onclick="buttons.fileDownload()"><span><spring:message code='ezWebFolder.t161'/></span></li>
+					<li class="important" id="uploadBtn" style="display:none;" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t160'/></span></li>
 					<c:if test="${usePreview}">
 						<li id="previewButton"><span onclick="buttons.filePreview()"><spring:message code='main.t4009' /></span></li>
 					</c:if>
