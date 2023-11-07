@@ -2573,32 +2573,33 @@
 	                </td>
 	            </tr>
 	        </table>
-	        <table style="margin-top: 7px">
+			<div class="portlet_tabpart01" style="margin:5px 0 0 0;">
+				<div class="portlet_tabpart01_top" id="tab1">
+					<p id="orgTabButton">
+						<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezAddress.t351' /></span>
+					</p>
+					<p id="orgJobMasterTabButton1">
+						<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList01' /></span>
+					</p>
+					<p id="orgJobMasterTabButton2">
+						<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList02' /></span>
+					</p>
+					<p id="contactTabButton">
+						<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezAddress.t231' /></span>
+					</p>
+					<p id="dlTabButton">
+						<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezAddress.t361' /></span>
+					</p>
+				</div>
+			</div>
+	        <table>
 	            <tr>
-	                <td>
+	                <!-- <td>
 	                    <table style="width: 100%">
 	                        <tr>
 	                            <td style="height: 35px;">
 	                                <h2 id="subtitle" style="display: none"><spring:message code='ezAddress.t231' /></h2>
-	                                <div class="portlet_tabpart01" style="margin:0px;">
-					            		<div class="portlet_tabpart01_top" id="tab1">
-					            			<p id="orgTabButton">
-					            				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezAddress.t351' /></span>
-					            			</p>
-					            			<p id="orgJobMasterTabButton1">
-					            				<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList01' /></span>
-					            			</p>
-					            			<p id="orgJobMasterTabButton2">
-					            				<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList02' /></span>
-					            			</p>
-					            			<p id="contactTabButton">
-					            				<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezAddress.t231' /></span>
-					            			</p>
-					            			<p id="dlTabButton">
-					            				<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezAddress.t361' /></span>
-					            			</p>
-					            		</div>
-					            	</div>
+	                                
 	                                <%-- <div id="tabnav" style="float: left; width: 100%;">
 	                                    <ul style="margin:0;">
 	                                        <li id="orgTabButton"><span onclick="orgTabButton_onClick()">
@@ -2615,16 +2616,8 @@
 	                            </td>
 	                        </tr>
 	                    </table>
-	                </td>
-	                <td></td>
-	                <td>
-	                    <h2 id="ToTitle" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="font-weight: bold; height: 36px!important; line-height: 36px; position: absolute; top:85px; width:232px;">
-	                        <span style="min-width:45px;" id="ToTitleStr"><spring:message code='ezAddress.t364' /></span>
-	                    </h2>
-	                </td>
-	            </tr>
-	            <tr>
-	                <td style="width: 665px; height: 375px; vertical-align: top;">
+	                </td> -->
+					<td rowspan="2" style="width: 665px; height: 375px; vertical-align: top; padding-top:5px;">
 	                    <div id="ManualView" style="DISPLAY: none; height: 488px; width: 648px; padding: 10px; border-right: 1px solid #ddd" class="box">
 	                        <table class="content">
 	                            <tr>
@@ -2734,13 +2727,21 @@
 	                        </table>
 	                    </div>
 	                </td>
+	                <td></td>
+	                <td>
+	                    <h2 id="ToTitle" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="font-weight: bold; height: 36px!important; line-height: 36px; top:85px; width:232px;">
+	                        <span style="min-width:45px;" id="ToTitleStr"><spring:message code='ezAddress.t364' /></span>
+	                    </h2>
+	                </td>
+	            </tr>
+	            <tr>
 	                <td style="width: 30px; text-align: center">
 	                    <img src="/images/kr/cm/arr_right.gif" width="16" height="16" onclick="InsertReceiver(ListViewMsgTo)" style="CURSOR: pointer; margin-top: 2px; margin-bottom: 2px;">
 	                    <img src="/images/kr/cm/arr_left.gif" width="16" height="16" onclick="DeleteReceiver(ListViewMsgTo)" style="CURSOR: pointer; margin-top: 2px; margin-bottom: 2px;">
 	                </td>
 	                <td style="vertical-align: top;">
 	                    <div class="listview">
-	                        <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event)" style="border: 0px solid; width: 245px; height: 507px; overflow:auto;" onrowdblclick="DeleteReceiver(this)" onclick="SelectReceiverWindow(this)"></div>
+	                        <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event)" style="border: 0px solid; width: 245px; height: 472px; overflow:auto;" onrowdblclick="DeleteReceiver(this)" onclick="SelectReceiverWindow(this)"></div>
 	                    </div>
 	                </td>
 	            </tr>
