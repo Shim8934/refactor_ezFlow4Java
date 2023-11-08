@@ -3962,6 +3962,11 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .resLnb_tree .tree_resource_standard,
 .resLnb_tree .tree_resource_ok,
 .resLnb_tree .tree_resource_no,
-.resLnb_tree .tree_resource_refuse{margin-top: 4px}
+.resLnb_tree .tree_resource_refuse{margin-top: 4px}/*자원 LNB영역 아이콘*/
+
+#TreeView .tree_resource_standard,
+#TreeView .tree_resource_ok,
+#TreeView .tree_resource_no,
+#TreeView .tree_resource_refuse{margin-top: 4px}
 
 .content input{margin-top: 0px;}
