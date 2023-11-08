@@ -800,7 +800,7 @@
 	        receiverData["window"] = this;
 	        mail_newreceiverchoose_dialogArguments[0] = receiverData;
 	        mail_newreceiverchoose_dialogArguments[1] = new_Address_Complete;
-	        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, "mail_foldermanage_Cross", GetOpenWindowfeature(970, 655));
+	        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 655));
 	        try { OpenWin.focus(); } catch (e) { }
 	    }
 	

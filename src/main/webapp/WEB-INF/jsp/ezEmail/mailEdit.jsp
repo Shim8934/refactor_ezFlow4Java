@@ -438,10 +438,10 @@
 			    mail_newreceiverchoose_dialogArguments[0] = receiverData;
 		        mail_newreceiverchoose_dialogArguments[1] = new_Address_Complete;
 			    if (CrossYN()) {
-				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=970,height=655,status=no');
+				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=1120,height=655,status=no');
 		            try { OpenWin.focus(); } catch (e) { }
 			    } else {
-				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
+				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:1120px; status:no; help:no; edge:sunken");
                 }
 		        Simple_Choice();
 		    }
