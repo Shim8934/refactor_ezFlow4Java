@@ -268,6 +268,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		if (lang.equals("1")) {
 			lang = "";
+		} else {
+			lang = "2";
 		}
 		map.put("lang", lang);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
@@ -1184,6 +1186,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("deptIdList", deptIdList);
 		if (userLang.equals("1")) {
 			userLang = "";
+		} else {
+			userLang = "2";
 		}
 		map.put("lang", userLang);
 		
