@@ -146,7 +146,7 @@
 			var url = "/ezSystem/systemIPBandEditPopup.do";
 			if (type === "add") {
 				url += "?type=add";
-				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
+				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 			} else {
 				var selectedList = $("#tblIP tbody tr[selected=true]");
 				if (selectedList.length > 1) {
@@ -170,7 +170,7 @@
 			
 			url += "?type=modify&ipNo=" + ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + encodeURIComponent(explanation);
 			
-			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
+			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 		}
 		
 		function deleteIPBand() {

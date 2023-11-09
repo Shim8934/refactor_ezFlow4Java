@@ -1553,7 +1553,7 @@
 						<th style="width:10%;"><spring:message code='ezBoard.t223' /></th>
 						<c:choose>
 							<c:when test="${guBun != '2'}">
-								<td id="WriteUserNM" style="width:40%; white-space:nowrap">
+								<td id="WriteUserNM" style="width:40%;">
 									<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
 										<c:out value="${boardItem.writerName}"/>
 									</div>
@@ -1618,12 +1618,12 @@
 								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
 								<c:choose>
 									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-										<td id="EndDate" style="padding-right:5px;  white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
+										<td id="EndDate" style="padding-right:5px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
 										</td>
 									</c:when>
 									<c:otherwise>
-										<td id="EndDate" style="padding-right:15px;  white-space:nowrap">
+										<td id="EndDate" style="padding-right:15px;">
 											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
 										</td>
 									</c:otherwise>
@@ -1644,13 +1644,13 @@
 								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
 								<c:choose>
 									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-										<td colspan="3" id="EndDate" style="padding-right:5px; width:120px; white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
+										<td colspan="3" id="EndDate" style="padding-right:5px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
 										</td>
 									</c:when>
 									<c:otherwise>
-										<td colspan="3" id="EndDate" style="padding-right:15px; width:120px; white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
+										<td colspan="3" id="EndDate" style="padding-right:15px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
 										</td>
 									</c:otherwise>
 								</c:choose>
@@ -1740,7 +1740,7 @@
 								</c:when>
 								<c:otherwise>
 									<tr>
-										<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+										<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 											<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 										</th>
 								</c:otherwise>	

@@ -552,11 +552,13 @@
 	   			});
 	   			
 	   			/* 2019-12-04 홍승비 - 다국어 환경에서 즐겨찾기 버튼 마진 수정 */
-	   			if (lang == "2") {
+	   			/* !important 적용불가 - 태그에 margin-left : auto !important 로 수정 => auto로 한,영,일 언어 전부 적용 가능
+				if (lang == "2") {
 	   				document.getElementById("addFavoriteLineA").style.marginLeft = "53px";
 	   			} else if (lang == "3") {
 	   				document.getElementById("addFavoriteLineA").style.marginLeft = "57px";
 	   			}
+				*/
    			});
 	   		
 	   		var Tab1_SelectID = "1tab1";
@@ -768,7 +770,7 @@
 		                            <h2 class="receiver_tltype01" style="border-bottom:none;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
-								 	<a id="addFavoriteLineA" class="imgbtn imgbck" style="margin-top: 4px !important; margin-left: 81px !important;">
+								 	<a id="addFavoriteLineA" class="imgbtn imgbck" style="margin-top: 4px !important; margin-left: auto !important;">
 								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
 								 	</a>
 								</div>

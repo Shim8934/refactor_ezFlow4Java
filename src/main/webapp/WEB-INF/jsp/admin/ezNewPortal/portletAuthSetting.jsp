@@ -7,7 +7,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code="ezNewPortal.yej08"/></title>
-<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
+<!-- <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css"> -->
+<!-- portal.css 필요없음 - 적용시 팝업에 스크롤 생김 -->
 <link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -128,7 +129,7 @@
 			var portletId = "<c:out value='${portletId}'/>";
 			
 			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + portletId + "&companyId=" + companyValue + "&mode=portlet";
-			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 660));		// 높이 수정 650 > 660
 		    	try { OpenWin.focus(); } catch (e) { }
 		}
 		

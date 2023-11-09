@@ -1,4 +1,4 @@
-TD,input, text, div:not(.slick-slide.slick-current.slick-center, .adminTopTitle),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY:  arial;}
+TD,input, text, div:not(.slick-slide.slick-current.slick-center, .adminTopTitle),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 input,SELECT{HEIGHT: 20px}
 .td{empty-cells:show}
 TEXTAREA{padding:5px}
@@ -31,7 +31,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .pstitle{background-color: ECECEC;padding-left:10px;padding-right:10px;padding-top:5px;padding-bottom:5px;white-space: nowrap;word-break:keep-all;word-wrap:normal}
 .btnposition{padding-right:10px;text-align:right}
 
-.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: arial;padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
+.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
 
 
 /* �Ʒ����ʹ� ���ֹ��� css - ������ ���������*/
@@ -51,7 +51,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 {
     FONT-SIZE: 9pt;
     COLOR: darkblue;
-    FONT-FAMILY:  arial;
+    FONT-FAMILY:  'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
     TEXT-DECORATION: underline;
     cursGroupor: help
 }
@@ -73,7 +73,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
     COLOR: black;
     PADDING-TOP: 5px;
     BORDER-BOTTOM: black 1px solid;
-    FONT-FAMILY:  arial;
+    FONT-FAMILY:  'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
 }
 
 
@@ -86,7 +86,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	height:46px;
 	line-height:46px; 
 	margin:0px;
-	font-family: arial;
+	font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
 	padding:0px 10px;}
 #adminmenu{
 	clear: both;
@@ -124,7 +124,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 #adminmenu li.on span{height:30px;line-height: 30px; color: rgb(0, 72, 149)}
 .adminsub{background-color:#f5f5f5;height:25px}
 
-TD,input, text, div:not(.slick-slide.slick-current.slick-center, .adminTopTitle),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: malgun gothic, arial,verdana;}
+TD,input, text, div:not(.slick-slide.slick-current.slick-center, .adminTopTitle),select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 input,SELECT{HEIGHT: 20px}
 .td{empty-cells:show}
 TEXTAREA{padding:5px}
@@ -159,7 +159,7 @@ li {float:left;margin:10px;}
 .pstitle{background-color: ECECEC;padding-left:10px;padding-right:10px;padding-top:5px;padding-bottom:5px;white-space: nowrap;word-break:keep-all;word-wrap:normal}
 .btnposition{padding-right:10px;text-align:right}
 
-.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: malgun gothic,arial,verdana;padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
+.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
 
 .rpad{PADDING-RIGHT: 20px;TEXT-ALIGN: right}
 .atitle_stat{PADDING-RIGHT: 0px;COLOR: #ffffff;HEIGHT: 25px;BACKGROUND-COLOR: #a5b8dd}
@@ -177,7 +177,7 @@ li {float:left;margin:10px;}
 {
     FONT-SIZE: 9pt;
     COLOR: darkblue;
-    FONT-FAMILY: malgun gothic, arial,verdana;
+    FONT-FAMILY: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
     TEXT-DECORATION: underline;
     cursGroupor: help
 }
@@ -199,7 +199,7 @@ li {float:left;margin:10px;}
     COLOR: black;
     PADDING-TOP: 5px;
     BORDER-BOTTOM: black 1px solid;
-    FONT-FAMILY: malgun gothic, arial,verdana;
+    FONT-FAMILY: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
 }
 
 
@@ -212,7 +212,7 @@ li {float:left;margin:10px;}
 	height:46px;
 	line-height:46px; 
 	margin:0px;
-	font-family: Malgun Gothic, malgun gothic;
+	font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
 	padding:0px 10px;}
 #adminmenu{
 	clear: both;
@@ -235,7 +235,7 @@ li {float:left;margin:10px;}
 	margin:0px 2px 0px 0px;
 	height:41px;
 	line-height: 35px;
-	font-family: Malgun Gothic, malgun gothic;
+	font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
 	padding:0px 15px;
 	vertical-align:middle;
 	cursor:pointer;
@@ -250,7 +250,7 @@ li {float:left;margin:10px;}
 }
 #adminmenu li.on span{height:30px;line-height: 30px;color: #e4e8ec;} 
 .adminsub{background-color:#f5f5f5;height:25px}
-.adminTopTitle{float:left;width:192px;font-size:20px;padding:5px 10px 10px 18px;background:#687077;color:white;font-weight:bold;font-family: Malgun Gothic, malgun gothic;}
+.adminTopTitle{float:left;width:192px;font-size:20px;padding:5px 10px 10px 18px;background:#687077;color:white;font-weight:bold;font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 
 .jinhang {width:16px;height:16px;margin-left:15px;margin-top:5px;}
 
@@ -290,7 +290,7 @@ li:nth-last-child(1) {border-bottom:0px;}
 .spanPollCount {float: right;width:50%;display:inline-block;text-align:right;}
 
 /* admin menu */
-.admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:auto; font-family:Malgun Gothic;}
+.admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:auto; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .admin_menuDL{ margin:0px; padding:0px; height:44px; line-height:42px; background:#edf7ff; border:1px solid #2196f3; box-sizing:border-box;}
 .admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; float:left;}
 .admin_menuDL .admin_menuX{ margin:0px; padding:0px;}
@@ -310,7 +310,7 @@ li:nth-last-child(1) {border-bottom:0px;}
 .bottomBtn .btnA:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
 
 /* admin thema */
-.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:797px; height:398px; font-family:Malgun Gothic;}
+.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:797px; height:398px; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .admin_thema .menuIconTH{ margin:0px; padding:0px; width:161px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
 .admin_thema .menuIconTD{ margin:0px; padding:0px 5px 0px 5px; border:1px solid #dfdfdf; color:#393939; letter-spacing:-1px;}
 .admin_thema .menuIconTD_img{margin:0px; padding:20px 5px 20px 5px; border:1px solid #dfdfdf; color:#393939; text-align:center;}
@@ -321,7 +321,7 @@ li:nth-last-child(1) {border-bottom:0px;}
 .Ared{color:#ff0000;}
 
 /* switch */
-.switch {position: relative;display: inline-block;width: 60px;height:18px;margin-top:-9px;}
+.switch {position: relative;display: inline-block;width: 60px;height:18px;margin-top:0px; vertical-align:middle;}
 .switch input {opacity: 0;width: 0;height: 0;}
 .slider {  position: absolute;  cursor: pointer;  top: 0;  left: 0;  right: 0;  bottom: 0; border-radius:30px;  background-color: #ccc;  -webkit-transition: .4s;  transition: .4s;}
 .slider:before {  position: absolute;  content: "";  height: 13px;  width: 13px;  left: 8px; border-radius:25px;  bottom: 3px;  background-color: white;  -webkit-transition: .4s;  transition: .4s;}
@@ -351,7 +351,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .admin_quicklink .linkAdd .listBottom{ margin:0px; padding:35px 0px 0px 0px; box-sizing:border-box; text-align:center;}
 .admin_quicklink .linkAdd .listBottom .quickLink_info{ font-size:13px; color:#666;}
 
-.admin_quickList{ margin:0px; padding:0px; width:926px; height:auto; font-family:Malgun Gothic;}
+.admin_quickList{ margin:0px; padding:0px; width:926px; height:auto; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .quickTable01{ margin:0px 0px 0px 0px; padding:0px; float:left; width:334px; height:171px; border:1px solid #dfdfdf; border-collapse:collapse; clear:none !important }
 .quickTable02{ margin:0px 0px 0px 10px; padding:0px; float:left; height:171px; width:275px; border:1px solid #dfdfdf; border-collapse:collapse; clear:none !important }
 .quickLinkTH{ margin:0px; padding:0px 0px 0px 10px; width:90px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:left;}

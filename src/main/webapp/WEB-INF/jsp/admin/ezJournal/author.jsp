@@ -26,10 +26,10 @@
 				url+="?companyId="+companyId;
 				
 		    	if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
-					window.open(url, "authorView", GetOpenWindowfeature(523, 203));
+					window.open(url, "authorView", GetOpenWindowfeature(523, 215));
 				} else {
-					window.open(url, "authorView", GetOpenWindowfeature(520, 200));
-				}
+					window.open(url, "authorView", GetOpenWindowfeature(520, 215));
+				}	// 높이값 수정 (203,200 > 215) : 언어별 textarea 높이가 다름, 한국어가 가장 큼
 			}
 			
 			function updateAuth() {
@@ -42,10 +42,10 @@
 					url += "&userId=" + encodeURIComponent(userId) + "&userName=" + encodeURIComponent(selectedUserName);
 					
 					if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
-						window.open(url, "authorView", GetOpenWindowfeature(523, 203));
+						window.open(url, "authorView", GetOpenWindowfeature(523, 215));
 					} else {
-						window.open(url, "authorView", GetOpenWindowfeature(520, 200));
-					}
+						window.open(url, "authorView", GetOpenWindowfeature(520, 215));
+					}	// 높이값 수정 (203,200 > 215) : 언어별 textarea 높이가 다름, 한국어가 가장 큼
 				} else {
 					alert("<spring:message code='ezJournal.t219' />");
 				}

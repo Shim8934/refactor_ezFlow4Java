@@ -179,7 +179,8 @@
 			
 			if (type == "add") {
 				var url = "/ezSystem/systemIPBandEditPopup.do?pageType=adminIpAccess&type=add";
-				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
+				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
+				// 예) 를 하단으로 내리면서 팝업 사이즈 수정(188 > 210)
 			} else if (type == "modify") {
 				if (selectedList.length > 1) {
 					alert("<spring:message code='ezSystem.jje8'/>"); return;
@@ -204,7 +205,7 @@
 			var param = "?pageType=adminIpAccess&type=modify&ipNo=" + ipNo;
 			url = url + param;
 			
-			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
+			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 		}
 		
 		// IP 대역 등록 및 수정
@@ -212,7 +213,7 @@
 			var url = "/ezSystem/systemIPBandEditPopup.do";
 			if (type === "add") {
 				url += "?type=add&pageType=adminIpAccess";
-				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
+				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 			} else {
 				var selectedList = $("#tblIP tbody tr[selected=true]");
 				if (selectedList.length > 1) {

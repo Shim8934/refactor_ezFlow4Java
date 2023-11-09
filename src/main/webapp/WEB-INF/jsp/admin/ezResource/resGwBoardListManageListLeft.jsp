@@ -185,7 +185,7 @@
 	    			BACKGROUND-COLOR:#f8f9fb; padding-left: 0px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
 					onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
 				</div>
-				<h2><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span></h2>
+				<h2 class="on"><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('NEW')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t23" /></span></h2>
 				<h2><span onClick="NavigateBrdAdmin_Res('ACL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t24" /></span></h2>
 				<h2><span onClick="brdlistsInit();NavigateBrdAdmin_Res('STEP')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t25" /></span></h2>

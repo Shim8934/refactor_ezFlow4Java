@@ -412,7 +412,8 @@ function fileMove() {
 		_folderType = "C";
 	} 
 	
-	DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin&folderType=" + _folderType);
+	DivPopUpShow(530, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + filesList.toString() + "&mode=admin&folderType=" + _folderType);
+	// 팝업 사이즈 수정(450 > 530) : 다국어 버튼 & 셀렉트박스 곂침
 }
 
 function openFileVersionHistory() {

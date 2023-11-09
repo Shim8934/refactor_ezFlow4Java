@@ -2032,7 +2032,7 @@
 	            var label = document.createElement("LABEL");
 	            label.style.display = "inline-block";
 	            label.style.verticalAlign = "top";
-	            label.style.marginTop = "10px";
+	            label.style.marginTop = "8px";
 	            label.style.marginBottom = "5px";
 	
 	            label.innerHTML = "<spring:message code='ezBoard.t5009' />";
@@ -2047,8 +2047,8 @@
 	            var a = document.createElement("A");
 	            a.className = "imgbtn imgbck";
 	            a.style.verticalAlign = "top";
-	            a.style.marginTop = "5px";
-	            a.style.marginLeft = "10px";
+	            a.style.marginTop = "5px !important";
+	            a.style.marginLeft = "10px !important";
 	
 	            var span = document.createElement("SPAN");
 	            span.innerHTML = "<spring:message code='ezBoard.t5010' />";

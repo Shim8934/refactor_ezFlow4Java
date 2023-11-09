@@ -252,8 +252,8 @@
 				</table>
 			</div>
 			<div class="wfcompstdiv">
-				<a class="webfolderBttn"><span onclick="save();" ><spring:message code='ezWebFolder.t133'/></span></a>
-				<a class="webfolderBttn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112'/></span></a>
+				<a class="imgbtn"><span onclick="save();" ><spring:message code='ezWebFolder.t133'/></span></a>
+				<a class="imgbtn"><span onclick="cancel();"><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
 		</div>	
 	</body>

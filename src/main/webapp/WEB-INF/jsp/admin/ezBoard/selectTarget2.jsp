@@ -710,7 +710,7 @@
 		    	</td>
 		    	<td></td>
 		    	<td>
-		    	<h2 class="receiver_tltype01" style="margin-bottom: -15px;">
+		    	<h2 class="receiver_tltype01">
 		    		<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezBoard.t999003' /></span>
 		    	</h2>
 		    	</td>
@@ -746,7 +746,7 @@
 		            </tr>
 		            <tr>
 		                <td>
-		                <div class="listview" style="margin-top: 6px;">
+		                <div class="listview" style="margin-top: 4px;">
 		                    <div id=ListViewMsgTo style ="BORDER:0;HEIGHT: 440px; WIDTH:230px;overflow:auto"></div>
 		                </div>
 		                </td>

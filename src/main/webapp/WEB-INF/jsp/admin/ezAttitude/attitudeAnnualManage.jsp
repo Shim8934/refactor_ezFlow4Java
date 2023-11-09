@@ -474,7 +474,7 @@
 			//엑셀로 등록 팝업
 	    	function annualExcelUploadPop(userId, year) {
 	        	var url = "/admin/ezAttitude/annualExcelUploadPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 200));
+				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(520, 200));	// 팝업 사이즈 수정(500 > 520) : 일본어 버튼 아래로 내려감
 	        } 
 			
 			//전체 연차 변경 팝업
@@ -486,7 +486,7 @@
 			//사용연차 수 팝업
 			function useAnnualHistory (userId) {
 				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&companyId=" + pCompanyId;
-				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(755, 600));
+				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(870, 600)); // 팝업 사이즈 수정(755 > 870) : 다국어(영어,일본) 휴가일수 아래로 내려옴
 			}
 	    	
 			//로우의 총 연차수 링크 클릭 시

@@ -127,6 +127,12 @@
 						break;
 				}
 				window.open(url,"right");
+				
+				$("#left .adminListBox h2 span").click(function(){
+					$("#left .adminListBox h2").removeClass("on");
+					$(this).parent().addClass("on");
+				})
+				
 			}
 
 			$(document).ready(function() {
@@ -164,7 +170,7 @@
 				<spring:message code='main.t78' />
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<h2>
+				<h2 class="on">
 					<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
 				</h2>
 				<c:if test="${cChk == '1'}">

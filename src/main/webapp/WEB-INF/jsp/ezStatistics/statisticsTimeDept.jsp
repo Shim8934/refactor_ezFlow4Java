@@ -473,7 +473,7 @@
 	                    <spring:message code='ezStatistics.t55'/>
 	       				&nbsp;&nbsp;<spring:message code='ezStatistics.t1013'/> : 
 	             		<input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
-	                    <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="searchdept()"><spring:message code='ezStatistics.t36'/></span></a>
+	                    <a class="imgbtn" style="height:22px"><span onclick="searchdept()"><spring:message code='ezStatistics.t36'/></span></a>
 	                </span>
 	            </td>
 	            <td>

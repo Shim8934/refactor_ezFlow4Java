@@ -88,6 +88,12 @@
 				parent.frames[1].location.href = "/admin/ezSystem/systemFileExtension.do";
 				break;
 	    }
+	    
+	    $("#left .adminListBox h2 span").click(function(){
+			$("#left .adminListBox h2").removeClass("on");
+			$(this).parent().addClass("on");
+		})
+				
     }
 
 //     function goPage(idx)
@@ -124,10 +130,16 @@
 	    <div id="left" class="lnb" style="overflow: auto">
 		    <div class="admin_left_title" title="<spring:message code='main.t10011' />"><spring:message code='main.t10011' /></div>
 		    <div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-	            <c:if test="${cChk == '1' }">
-	            	<h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="menu_change('PARAMETER')" ><spring:message code='main.kms1' /></span></h2>
-	            </c:if>
-	            <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
+		    	<c:choose>
+		            <c:when test="${cChk == '1' }">
+		            	<h2 class="on"><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="menu_change('PARAMETER')" ><spring:message code='main.kms1' /></span></h2>
+			            <h2>
+		            </c:when>
+		            <c:otherwise>
+		            	<h2 class="on">
+		            </c:otherwise>
+	            </c:choose>
+	            <span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
 	            <h2><span id="ADMINACCESSHIST" style="display:inline-block;width:100%;" onClick="menu_change('ADMINACCESSHIST')" ><spring:message code='ezSystem.ls07' /></span></h2>
 				<h2><span id="USERCHANGEHIST" style="display:inline-block;width:100%;" onClick="menu_change('USERCHANGEHIST')" ><spring:message code='ezSystem.jhy01' /></span></h2>
 				<h2><span id="PERMISSIONCHHIST" style="display:inline-block;width:100%;" onClick="menu_change('PERMISSIONCHHIST')" ><spring:message code='ezOrgan.ls06' /></span></h2>

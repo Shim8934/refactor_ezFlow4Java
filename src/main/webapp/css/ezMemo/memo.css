@@ -33,7 +33,7 @@ select::-ms-expand {
 .memo06{ background:url(../../images/ezMemo/memo06.png) no-repeat left center; }
 .memoTit{ margin:4px 5px 0px 5px; padding:0px 10px; height:37px; line-height:35px; overflow:hidden;}
 .memoTit input:not(.kangnam){ width: 13px; height: 13px; vertical-align: middle; float:left; margin-top:10px; margin-right:5px; }
-.memoTit input{ vertical-align: middle; float:left; margin-top:10px; margin-right:5px; }
+.memoTit input{ vertical-align: middle; float:left; margin-top:6px; margin-right:5px; }
 .memoTit .mtitText{ margin:0px; padding:0px; font-family:malgun gothic; color:#696969; font-size:14px; float:left;}
 
 .memo01 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px 0px; width:16px; height:16px; cursor:pointer;}

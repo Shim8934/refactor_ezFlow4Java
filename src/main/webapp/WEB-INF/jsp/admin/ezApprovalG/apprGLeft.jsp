@@ -129,6 +129,12 @@
 				}
 				
 				window.open(url,"right");
+				
+				$("#left .adminListBox h2 span").click(function(){
+					$("#left .adminListBox h2").removeClass("on");
+					$(this).parent().addClass("on");
+				})
+				
 			}
 		    
 		    $(document).ready(function() {
@@ -152,7 +158,7 @@
 			<div class="admin_left_title" title="<spring:message code='main.t10'/>"><spring:message code='main.t25'/></div>
 			
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-	        	<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t10'/></span></h2>
+	        	<h2 class="on"><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t10'/></span></h2>
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(15)"><spring:message code='ezApprovalG.csj02'/></span></h2>
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t36'/></span></h2>
 				

@@ -3577,36 +3577,36 @@
 		            	</tr>
 		            </c:if>
 		        </table>
+				<div class="portlet_tabpart01" style="margin:0px;">
+					<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px; margin-top:5px;">
+						<p id="orgTabButton">
+							<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t591' /></span>
+						</p>
+						<p id="orgJobMasterTabButton1">
+							<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList01' /></span>
+						</p>
+						<p id="orgJobMasterTabButton2">
+							<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList02' /></span>
+						</p>
+						<p id="contactTabButton">
+							<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t592' /></span>
+						</p>
+						<p id="dlTabButton">
+							<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t593' /></span>
+						</p>
+						<p id="inputTabButton">
+							<span id="inputSpan" onclick="inputTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t244' /></span>
+					</p>
+						<c:if test="${userDL eq 'modify'}">
+						<p id="userDlApplyButton">
+							<span id="userDlSpan" onclick="userDlApplyButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.userDL12' /></span>
+						</p>
+						</c:if>
+					</div>
+				</div>
 		    <table style="width:100%;margin-top:10px">
 		        <tr>
 		            <td style="vertical-align: top;">
-		            	<div class="portlet_tabpart01" style="margin:0px;">
-		            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
-		            			<p id="orgTabButton">
-		            				<span id="orgSpan" onclick="orgTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t591' /></span>
-		            			</p>
-		            			<p id="orgJobMasterTabButton1">
-		            				<span id="orgJobMstSpan1" onclick="orgJobMasterTabButton_onClick(1)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList01' /></span>
-		            			</p>
-		            			<p id="orgJobMasterTabButton2">
-		            				<span id="orgJobMstSpan2" onclick="orgJobMasterTabButton_onClick(2)" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.ksaOrganList02' /></span>
-		            			</p>
-		            			<p id="contactTabButton">
-	            					<span id="contactSpan" onclick="contactTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t592' /></span>
-	            				</p>
-		            			<p id="dlTabButton">
-		            				<span id="dlSpan" onclick="dlTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t593' /></span>
-		            			</p>
-		            			<p id="inputTabButton">
-	            					<span id="inputSpan" onclick="inputTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t244' /></span>
-	            			</p>
-	            				<c:if test="${userDL eq 'modify'}">
-		            			<p id="userDlApplyButton">
-	            					<span id="userDlSpan" onclick="userDlApplyButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.userDL12' /></span>
-		            			</p>
-		            			</c:if>
-		            		</div>
-	            		</div>
 		                <table id="TreeViewTD">
 		                    <tr>
 		                        <td>
@@ -3857,10 +3857,10 @@
 		                        <td style="vertical-align: top;">
 		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
 		                                <span style="min-width: 45px; padding-right:5px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
-		                                <span style="min-width: 45px; padding:0;" class="toTitleCnt" ><b></b> <spring:message code='main.t20000' /></span>
+		                                <span style="min-width:0; padding:0;" class="toTitleCnt" ><b></b> <spring:message code='main.t20000' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
-		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 501px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height:464px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 		                            </div>
 		                        </td>
 		                    </tr>

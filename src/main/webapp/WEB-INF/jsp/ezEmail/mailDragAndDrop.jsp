@@ -19,6 +19,7 @@
 			
 			.attachInnerNotice_p_on {
 				text-align: center;
+				margin: 10px 0 0 0;
 			}
 			
 			.attachInnerNotice_p_off {

@@ -12,7 +12,7 @@
 	    <title><spring:message code='ezEmail.t904' /></title>
 	</head>
 	<body class="mainbody" style="min-width: 835px;">
-		<div class="portlet_tabnew01_top" id="tab1">
+		<div class="portlet_tabpart01_top" id="tab1">
 			<p id="Mail_sub0">
 				<span id="1tab0"><spring:message code='ezEmail.userDL16' /></span>
 			</p>
