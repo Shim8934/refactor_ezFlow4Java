@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.WebUtils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -504,10 +505,12 @@ public class LoginController {
 
         	// masteradmin의 암호로 로그인 가능하여 masteradmin 암호가 맞는 경우
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
-        	if (masteradminLogin) {
-        		// 2021-12-23 이사라 : 세션ID를 세션코드로 입력 
-	        	String sessionCode =  request.getSession().getId();
-	        	logger.debug("Login sessionCode = " + sessionCode);
+			if (masteradminLogin) {
+				// 로그인 쿠기 생성 & ezSessionId (uuid) 값을 리턴 받아 로그정보로 사용
+				String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
+
+				String sessionCode = getSessionId(request, ezSessionId);
+				logger.debug("Login sessionCode : {} masteradminLogin = ", _uid, sessionCode);
 	        	
         		//접속 로그정보 저장
         		resultVO.setIp(ClientUtil.getClientIP(request));
@@ -524,8 +527,8 @@ public class LoginController {
 				
 				loginService.insertLog(resultVO);
         		
-				//로그인 쿠기 생성
-				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
+				/*//로그인 쿠기 생성
+				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);*/
 				
 				/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
@@ -660,9 +663,11 @@ public class LoginController {
     					//IP Address,  마지막 login시간 저장
     					loginService.updateUser(loginVO);
     					
-    					// 2021-12-23 이사라 : 세션ID를 세션코드로 입력 
-    		        	String sessionCode =  request.getSession().getId();
-    		        	logger.debug("Login sessionCode = " + sessionCode);
+						// 로그인 쿠기 생성 & ezSessionId (uuid) 값을 리턴 받아 로그정보로 사용
+						String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
+
+						String sessionCode = getSessionId(request, ezSessionId);
+						logger.debug("Login sessionCode : {} user = ", _uid, sessionCode);
     		        	
     					//접속 로그정보 저장
     					resultVO.setIp(ip);
@@ -679,7 +684,7 @@ public class LoginController {
     					
     					loginService.insertLog(resultVO);
     	
-    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
+    					//createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
     		        	
 						/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
     		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
@@ -923,6 +928,26 @@ public class LoginController {
 		}
     }
     
+	private String getSessionId(HttpServletRequest request, String ezSessionId) {
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+		String sessionCode = "";
+
+		try {
+			if (useDbSession && StringUtils.isNotBlank(ezSessionId)) { // 로그인
+				sessionCode = ezSessionId;
+			} else if (useDbSession && StringUtils.isBlank(ezSessionId)) { // 로그아웃
+				sessionCode = loginCookie.getValue();
+			} else {
+				sessionCode = request.getSession().getId();
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return sessionCode;
+	}
+
     public boolean ipAccessCheck(LoginVO loginVO) throws Exception {
     	logger.debug("ipAccessCheck start");
     	logger.debug("userIP=" + loginVO.getIp());
@@ -1082,7 +1107,7 @@ public class LoginController {
 	    }
 	}
 
-    public void createLoginCookie(
+    public String createLoginCookie(
     				String userId, String userPw, String encryptedUserPw, int tenantId, 
     				HttpServletRequest request, HttpServletResponse response, String deptID, String companyID
     				) throws Exception {
@@ -1160,9 +1185,10 @@ public class LoginController {
 		// DB 기반 세션 방식 적용하는 경우
 		// 2023-10-31 이사라 - ezSessionId를 생성하여 loginCookie에 담는다. 실제 로그인쿠키는 DB에 저장
 		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+		String ezSessionId = "";
 
 		if (useDbSession) {
-			String ezSessionId = UUID.randomUUID().toString();
+			ezSessionId = UUID.randomUUID().toString();
 
 			SessionVO vo = new SessionVO();
 			vo.setEzSessionId(ezSessionId);
@@ -1224,6 +1250,8 @@ public class LoginController {
 	        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
         	}
     	}    	
+
+    	return ezSessionId;
     }
     
 	// 2023-03-22 이사라 : [TFA] 2-factor 설정화면
@@ -1333,7 +1361,7 @@ public class LoginController {
         }
         
         // 2021-12-23 이사라 : 세션ID를 세션코드로 입력
-        String sessionCode =  request.getSession().getId();
+        String sessionCode = getSessionId(request, "");
     	logger.debug("Logout sessionCode = " + sessionCode);
     	
         // 2018.10.22 이석화 추가 - 세션 제거 
