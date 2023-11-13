@@ -361,18 +361,7 @@ public class CommonUtil {
 		}
 
 		try{
-			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
-			String decData = "";
-
-			if (useDbSession) {
-				String ezSessionId = loginCookie;
-				SessionVO resultVO = loginService.getSession(ezSessionId);
-
-				decData = egovFileScrty.decryptAES(resultVO.getLoginCookie());
-
-			} else {
-				decData = egovFileScrty.decryptAES(loginCookie);
-			}
+			String decData = decryptedLoginCookie(loginCookie);
 
 			String[] decDataArray = decData.split("///");
 			String serverName = decDataArray[0];
@@ -437,18 +426,7 @@ public class CommonUtil {
 	
 	public LoginSimpleVO userInfoSimple(String loginCookie) {
 		try{
-			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
-			String decData = "";
-
-			if (useDbSession) {
-				String ezSessionId = loginCookie;
-				SessionVO resultVO = loginService.getSession(ezSessionId);
-
-				decData = egovFileScrty.decryptAES(resultVO.getLoginCookie());
-
-			} else {
-				decData = egovFileScrty.decryptAES(loginCookie);
-			}
+			String decData = decryptedLoginCookie(loginCookie);
 
 			String[] decDataArray = decData.split("///", -1);
 			
@@ -482,6 +460,28 @@ public class CommonUtil {
 		}
 	}
 	
+	private String decryptedLoginCookie(String loginCookie) {
+		String decData = "";
+
+		try {
+			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+
+			if (useDbSession) {
+				String ezSessionId = loginCookie;
+				SessionVO resultVO = loginService.getSession(ezSessionId);
+
+				decData = egovFileScrty.decryptAES(resultVO.getLoginCookie());
+
+			} else {
+				decData = egovFileScrty.decryptAES(loginCookie);
+			}
+		} catch (Exception e) {
+			logger.debug("invaild decryptedLoginCookie");
+		}
+
+		return decData;
+	}
+
 	public LoginVO aprUserInfo(String loginCookie) {
 		try{
 			logger.debug("aprUserInfo started");
@@ -603,18 +603,7 @@ public class CommonUtil {
 
 	public List<String> getUserIdAndPassword(String loginCookie) {
 		try{
-			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
-			String decData = "";
-
-			if (useDbSession) {
-				String ezSessionId = loginCookie;
-				SessionVO resultVO = loginService.getSession(ezSessionId);
-
-				decData = egovFileScrty.decryptAES(resultVO.getLoginCookie());
-
-			} else {
-				decData = egovFileScrty.decryptAES(loginCookie);
-			}
+			String decData = decryptedLoginCookie(loginCookie);
 
 			List<String> returnObject = new ArrayList<String>();
 			
@@ -782,18 +771,8 @@ public class CommonUtil {
 		}
 
 		try {
-			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 			String ip = ClientUtil.getClientIP(request);
-			String decryptedLoginCookie = "";
-
-			if (useDbSession) {
-				String ezSessionId = loginCookie.getValue();
-				SessionVO resultVO = loginService.getSession(ezSessionId);
-
-				decryptedLoginCookie = egovFileScrty.decryptAES(resultVO.getLoginCookie());
-			} else {
-				decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
-			}
+			String decryptedLoginCookie = decryptedLoginCookie(loginCookie.getValue());
 
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
 			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
@@ -1982,18 +1961,7 @@ public class CommonUtil {
 				}
 				
 				if(loginCookie != null) {
-					
-					boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
-					String decryptedLoginCookie = "";
-
-					if (useDbSession) {
-						String ezSessionId = loginCookie.getValue();
-						SessionVO resultVO = loginService.getSession(ezSessionId);
-
-						decryptedLoginCookie = egovFileScrty.decryptAES(resultVO.getLoginCookie());
-					} else {
-						decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
-					}
+					String decryptedLoginCookie = decryptedLoginCookie(loginCookie.getValue());
 
 					String[] cookieInfo = decryptedLoginCookie.split("///");
 
@@ -3000,8 +2968,9 @@ public class CommonUtil {
 		}
 
 		if(validSessionLoginCookie(request, response)){
+			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
-			if (true) {
+			if (useDbSession) {
 				Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
 
 				if (loginCookie == null) {
@@ -3021,7 +2990,6 @@ public class CommonUtil {
 					} else {
 						clearAllCookies(request, response);
 						request.getSession().invalidate();
-
 						return "1";
 					}
 
