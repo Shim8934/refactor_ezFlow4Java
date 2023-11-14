@@ -100,4 +100,13 @@ public interface MBoardService {
 
 	/* 2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 */
 	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content) throws Exception;
+	
+	/* 2023-11-13 전인하 - 모바일 게시판 댓글 수정 */
+	public void updateOneLineReply(String contentId, String replyID, String content, int tenantId) throws Exception;
+
+	/* 2023-11-13 전인하 - 모바일 게시판 대댓글 삽입 */
+	public void saveOneLineReReply(String contentId, String boardId, String replyID, String parentReplyID, String content, String password, MCommonVO info) throws Exception;
+
+	/* 2023-11-13 전인하 - 부모댓글인지 체크 (자식댓글 갯수 반환) */
+	public int checkThisReplyExist(String replyId, String itemId, int tenantId) throws Exception;
 }

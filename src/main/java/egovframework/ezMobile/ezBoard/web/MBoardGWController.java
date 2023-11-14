@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -26,6 +27,8 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
+import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -114,6 +117,9 @@ public class MBoardGWController {
 	
 	@Resource(name = "jspw")
 	private String jspw;
+
+	@Resource(name = "MBoardDAO")
+	private MBoardDAO mBoardDAO;
 	
 	/**
 	 * 모바일 G/W 게시판 [GET] 새게시물 리스트
@@ -2014,6 +2020,8 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String gubun = request.getParameter("gubun");
+			String replyLevel = request.getParameter("replyLevel");
+			String parentReplyID = request.getParameter("parentReplyID");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 			
@@ -2024,9 +2032,25 @@ public class MBoardGWController {
 			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("n=1") > -1) {
 				gubun = "2";
 			}
-			*/
+			*/				
 			
-			String resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId());
+			String resStr = "";
+			if (Integer.parseInt(replyLevel) != 1) { // 최상위부모댓글이 아닌 경우
+				resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId()); // 무조건 삭제
+				int sibilingsCnt = ezBoardService.getChildReplyCnt(contentId, boardId, parentReplyID, info.getTenantId()); // 형제댓글 갯수
+				int parentReplyExistFlag = mBoardService.checkThisReplyExist(parentReplyID, contentId, info.getTenantId()); // 부모댓글 실존여부 (존재할경우 1, 아니면 0)
+				if (sibilingsCnt == 0 && parentReplyExistFlag == 0) { // 형제댓글이 존재하지 않고, 부모댓글은 이미 지워진 상태일 때 null 삽입되어있던 부모댓글을 지운다.
+					ezBoardService.deleteOneLineReply("", parentReplyID, gubun, info.getTenantId());
+				}
+			} else { // 최상위 부모댓글인 경우 자식 댓글이 존재한다면 null 삽입, 자식댓글이 없다면 일반 삭제.
+				int childCnt = ezBoardService.getChildReplyCnt(contentId, boardId, replyID, info.getTenantId());
+				if (childCnt == 0) {
+					resStr = ezBoardService.deleteOneLineReply(userID, replyID, gubun, info.getTenantId());
+				} else {
+					ezBoardService.updateDelParentReply(replyID, contentId, boardId, info.getTenantId());
+					resStr = "OK_DELETED";
+				}
+			}
 			
 	        result.put("status", resStr);
 			result.put("code", 0);			
@@ -2053,6 +2077,86 @@ public class MBoardGWController {
                          .replaceAll("\\%28", "(")
                          .replaceAll("\\%29", ")")
                          .replaceAll("\\%7E", "~");
+	    return result;
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 댓글 수정 */
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateBoardComment(@PathVariable String boardId, @PathVariable String contentId, @PathVariable String replyID, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userID = request.getParameter("userID");
+			String content = request.getParameter("content");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userID);
+
+			content = content.replace("'", "''");
+			
+			mBoardService.updateOneLineReply(contentId, replyID, content, info.getTenantId());
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents/{contentId}/comments/{replyID}] ended.");
+
+		return result;
+	}
+
+	/* 2023-11-13 전인하 - 모바일 게시판 대댓글 작성 */
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}", method=RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject insertReplyBoardComment(@PathVariable String boardId, @PathVariable String contentId, @PathVariable String replyID, HttpServletRequest request) throws Exception {
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userID = request.getParameter("userID");
+			String content = request.getParameter("content");
+			String parentReplyID = request.getParameter("parentReplyID");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
+
+			logger.debug("serverName = " + serverName + " | userId = " + userID);
+
+			content = content.replace("'", "''");
+
+			// 패스워드 삽입 로직
+			// 추후 모바일 익명게시판에서 댓글 지원할 때 아래 password 변수에 "" 대신 사용자가 입력한 비밀번호를 삽입하면 됨
+			// 현시점에서는 모바일 익명게시판에서 댓글 지원하지 않으므로 단순 null에러 방지 목적으로 삽입함
+			String password = "";
+			String prm = egovFileScrty.getPrm();
+			String pre = egovFileScrty.getPre();
+			PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+
+			String rpwd = EgovFileScrty.decryptRsa(pk, "");
+			password = EgovFileScrty.encryptPassword(rpwd, "unknown");
+			
+			 mBoardService.saveOneLineReReply(contentId, boardId, replyID, parentReplyID, content, password, info);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1); 
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents/{contentId}/replyComments/{replyID}] ended.");
+
 	    return result;
 	}
 	
