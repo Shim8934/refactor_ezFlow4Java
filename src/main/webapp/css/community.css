@@ -473,7 +473,7 @@ img { border:0px;}
 
 #cmhome_type2 .info_list {
     border-top: #E1E1E1;
-    padding: 10px 20px 20px 20px;
+    padding: 10px 10px 20px 20px;
     list-style: none;
     font-size: 12px;
 }
@@ -711,7 +711,7 @@ img { border:0px;}
 
 #cmhome_type3 .info_list {
     border-top: #E1E1E1;
-    padding: 10px 20px 20px 20px;
+    padding: 10px 10px 20px 20px;
     list-style: none;
     font-size: 12px;
 }
@@ -950,7 +950,7 @@ img { border:0px;}
 
 #cmhome_type4 .info_list {
     border-top: #E1E1E1;
-    padding: 10px 20px 20px 20px;
+    padding: 10px 10px 20px 20px;
     list-style: none;
     font-size: 12px;
 }
@@ -1583,3 +1583,7 @@ _list li {
 #cpublic{margin-top:2px;}
 #mailBoxInfo{font-weight: normal;}
 .urgency{color:red !important;}
+
+/* 20231114 커뮤 수정 */
+.admin_menu span{padding: 3px 0px 0px 23px; height: 18px;}
+/* //20231114 커뮤 수정 */
