@@ -694,9 +694,11 @@ public class LoginController {
     		        	
     		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
     		        	//session = request.getSession();
+
+						boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
     		        	
     		        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-    		        	if (!useSession.equals("")) {
+						if (!useSession.equals("") && !useDbSession) { // DB 세션을 사용하면 세션 유지 시간 설정이 불필요 함
     		        		int sessionTime = Integer.parseInt(useSession);
     		        		
 	    		        	if (sessionTime != 0) {

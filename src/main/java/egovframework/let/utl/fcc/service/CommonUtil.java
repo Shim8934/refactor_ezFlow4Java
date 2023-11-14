@@ -361,7 +361,7 @@ public class CommonUtil {
 		}
 
 		try{
-			String decData = decryptedLoginCookie(loginCookie);
+			String decData = getDecryptedLoginCookie(loginCookie);
 
 			String[] decDataArray = decData.split("///");
 			String serverName = decDataArray[0];
@@ -426,7 +426,7 @@ public class CommonUtil {
 	
 	public LoginSimpleVO userInfoSimple(String loginCookie) {
 		try{
-			String decData = decryptedLoginCookie(loginCookie);
+			String decData = getDecryptedLoginCookie(loginCookie);
 
 			String[] decDataArray = decData.split("///", -1);
 			
@@ -460,7 +460,7 @@ public class CommonUtil {
 		}
 	}
 	
-	private String decryptedLoginCookie(String loginCookie) {
+	private String getDecryptedLoginCookie(String loginCookie) {
 		String decData = "";
 
 		try {
@@ -476,7 +476,7 @@ public class CommonUtil {
 				decData = egovFileScrty.decryptAES(loginCookie);
 			}
 		} catch (Exception e) {
-			logger.debug("invaild decryptedLoginCookie");
+			logger.error(e.getMessage(), e);
 		}
 
 		return decData;
@@ -603,7 +603,7 @@ public class CommonUtil {
 
 	public List<String> getUserIdAndPassword(String loginCookie) {
 		try{
-			String decData = decryptedLoginCookie(loginCookie);
+			String decData = getDecryptedLoginCookie(loginCookie);
 
 			List<String> returnObject = new ArrayList<String>();
 			
@@ -772,7 +772,7 @@ public class CommonUtil {
 
 		try {
 			String ip = ClientUtil.getClientIP(request);
-			String decryptedLoginCookie = decryptedLoginCookie(loginCookie.getValue());
+			String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
 
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
 			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
@@ -785,8 +785,9 @@ public class CommonUtil {
 
 	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
-		if (session == null) {
+		if (!useDbSession && session == null) {
 			clearAllCookies(request, response);
 
 			return false;
@@ -1961,7 +1962,7 @@ public class CommonUtil {
 				}
 				
 				if(loginCookie != null) {
-					String decryptedLoginCookie = decryptedLoginCookie(loginCookie.getValue());
+					String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
 
 					String[] cookieInfo = decryptedLoginCookie.split("///");
 
