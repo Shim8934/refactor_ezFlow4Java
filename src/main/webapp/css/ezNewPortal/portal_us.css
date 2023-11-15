@@ -1701,5 +1701,7 @@ div.orbit img{border-radius: 5px;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li .txt span{color: #2D2D2D;}
 .first_approval .approval_content{padding: 9px 0px 3px 0px;}
 .portlet_list li.first_approval{height: 103px;}
+.portlet_list li .txt{width: 57% !important;}
+.portlet_list li .name{width: 102px;}
 /* //20231101 디자인 css 추가 */
 
