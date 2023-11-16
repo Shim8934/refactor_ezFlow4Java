@@ -3943,6 +3943,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .contents_bannerCommunity p img{height: 49px;}
 .contents_categoryViewList{height: 351px;}
 .contents_listCommunity li{color: #333;}
+.contents_searchCategory dl dt.searchinput input{height: 34px !important;}
 
 /* 스크롤바 */
 *::-webkit-scrollbar {

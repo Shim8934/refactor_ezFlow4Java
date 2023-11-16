@@ -521,6 +521,7 @@ img { border:0px;}
 }
 #cmhome_type2 .btn_join img {
 	vertical-align:middle;
+	display: none;
 }
 
 #cmhome_type2 .leftmenu {
@@ -759,6 +760,8 @@ img { border:0px;}
 }
 #cmhome_type3 .btn_join img {
 	vertical-align:middle;
+	display: none;
+
 }
 
 #cmhome_type3 .leftmenu {
@@ -1000,6 +1003,8 @@ img { border:0px;}
 }
 #cmhome_type4 .btn_join img {
 	vertical-align:middle;
+	display: none;
+
 }
 
 #cmhome_type4 .leftmenu {
@@ -1262,6 +1267,7 @@ _list li {
 }
 #cmhome_type5 .btn_join img {
 	vertical-align:middle;
+	display: none;
 }
 
 #cmhome_type5 .leftmenu {
@@ -1598,7 +1604,7 @@ _list li {
 .cmhome_left .info .info_count{padding: 4px 10px 11px !important; height: auto !important;}
 .cmhome_left .info .info_list{padding: 11px 6px 6px 9px !important;}
 .cmhome_left .info .info_box{padding: 15px 10px 2px 6px !important;}
-#btn_MemberIn{margin-top: 10px;}
+#btn_MemberIn, #btn_MemberJoinIng{margin-top: 10px !important;}
 #btn_MemberIn img{display: none;}
 .cmhome_left .info .info_list li{word-break: break-all !important;}
 .btype_list .title{border-bottom: 1px solid #d8d8d8;}
@@ -1620,4 +1626,6 @@ _list li {
 #img_TreeViewTreeCtrl0_0{vertical-align: top !important; margin-top: 6px !important;}
 .cmhome_left .leftmenu .tree_minus {background-position: 4px -79px !important; margin-top:4px !important}
 .cmhome_left .leftmenu .tree_plus {background-position: 3px -106px !important; margin-top:4px !important}
+
+
 /* //20231114 커뮤 수정 */

@@ -994,7 +994,7 @@
             		<span class="bgimg"></span>
             		<p id="copdesc"></p>
 		        </div>
-        		<div id="mainboard" style="height:560px; overflow:auto; display:none;"></div>
+        		<div id="mainboard" style="overflow:auto; display:none;"></div>
         		<iframe id="rightfrm" style="width:100%; height:560px; border:0; display:none" frameborder="0"></iframe>
         		<div class="makeguide" id="makeguide" style="display: none;">
             		<p><img src="<spring:message code='ezCommunity.i5' />"></p>
