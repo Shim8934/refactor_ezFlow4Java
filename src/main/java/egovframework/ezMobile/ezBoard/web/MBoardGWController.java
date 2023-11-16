@@ -1949,6 +1949,7 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String content = request.getParameter("content");
+			String imageContent = request.getParameter("imageContent"); // 2023-11-16 전인하 - 모바일 > 게시판 > 이모티콘 삽입 > 이모티콘 정보 추가
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 			
@@ -1956,7 +1957,7 @@ public class MBoardGWController {
 			
 			content = content.replace("'", "''");
 			
-			mBoardService.saveOneLineReply(contentId, replyID, boardId, userID, info.getUserName(), info.getUserName2(), info.getTenantId(), info.getCompanyId(), content);
+			mBoardService.saveOneLineReply(contentId, replyID, boardId, userID, info.getUserName(), info.getUserName2(), info.getTenantId(), info.getCompanyId(), content, imageContent);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -2090,6 +2091,7 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String content = request.getParameter("content");
+			String imageContent = request.getParameter("imageContent"); // 2023-11-16 전인하 - 모바일 > 게시판 > 이모티콘 삽입 > 이모티콘 정보 추가
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 
@@ -2097,7 +2099,7 @@ public class MBoardGWController {
 
 			content = content.replace("'", "''");
 			
-			mBoardService.updateOneLineReply(contentId, replyID, content, info.getTenantId());
+			mBoardService.updateOneLineReply(contentId, replyID, content, info.getTenantId(), imageContent);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2125,6 +2127,7 @@ public class MBoardGWController {
 			String userID = request.getParameter("userID");
 			String content = request.getParameter("content");
 			String parentReplyID = request.getParameter("parentReplyID");
+			String imageContent = request.getParameter("imageContent"); // 2023-11-16 전인하 - 모바일 > 게시판 > 이모티콘 삽입 > 이모티콘 정보 추가
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 
@@ -2143,7 +2146,7 @@ public class MBoardGWController {
 			String rpwd = EgovFileScrty.decryptRsa(pk, "");
 			password = EgovFileScrty.encryptPassword(rpwd, "unknown");
 			
-			 mBoardService.saveOneLineReReply(contentId, boardId, replyID, parentReplyID, content, password, info);
+			mBoardService.saveOneLineReReply(contentId, boardId, replyID, parentReplyID, content, password, info, imageContent);
 
 			result.put("status", "ok");
 			result.put("code", 0);
