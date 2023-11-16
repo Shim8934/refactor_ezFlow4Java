@@ -3957,3 +3957,9 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .searchinputBox{height: 27px !important;}
 
 #normalScreen .file .imgbtn{margin-bottom: 2px !important;}
+
+
+.community_section01{height: 101px;}
+.contents_bannerCommunity{height: 103px; padding-top: 25px;}
+.contents_bannerCommunity p img{height: 49px;}
+.contents_categoryViewList{height: 351px;}
