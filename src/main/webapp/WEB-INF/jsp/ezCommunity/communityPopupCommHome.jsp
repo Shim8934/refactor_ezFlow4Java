@@ -915,7 +915,7 @@
 				    		},
 				    		success: function (result) { // Y, N
 				    			if (result == "Y" && $("#" + spanImgNodeID).length < 1) { // 게시판명 span 영역에 아이콘 추가 또는 제거
-				    				$("#" + spanNodeID).append(" <img id='" + spanImgNodeID + "' src='/images/kr/community/communityPortlet_iconnew.gif' style='vertical-align:bottom;'>");
+				    				$("#" + spanNodeID).append(" <img id='" + spanImgNodeID + "' src='/images/kr/community/communityPortlet_iconnew.gif' style='vertical-align:top; margin-top: 6px'>");
 				    			} else if (result != "Y" && $("#" + spanImgNodeID).length > 0) {
 				    				$("#" + spanImgNodeID).remove();
 				    			}

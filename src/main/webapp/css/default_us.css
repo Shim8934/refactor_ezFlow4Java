@@ -3964,6 +3964,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .contents_bannerCommunity p img{height: 49px;}
 .contents_categoryViewList{height: 351px;}
 .admin_menu span {padding: 4px 0px 0px 23px !important;} 
+.contents_listCommunity li{color: #333;}
 
 /* 스크롤바 */
 *::-webkit-scrollbar {

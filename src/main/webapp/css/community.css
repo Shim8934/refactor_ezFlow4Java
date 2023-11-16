@@ -415,9 +415,10 @@ img { border:0px;}
 }
 #cmhome_type2 .info_box .master p {
     padding: 0px;
-    margin: 4px 0 0 0px;
     line-height: 18px;
     display: inline-block;
+	margin: -2px 0px 0px 0px;
+	width: 109px;
 	
 }
 #cmhome_type2 .info_box .pic {
@@ -653,9 +654,10 @@ img { border:0px;}
 }
 #cmhome_type3 .info_box .master p {
     padding: 0px;
-    margin: 4px 0 0 0px;
     line-height: 18px;
     display: inline-block;
+	margin: -2px 0px 0px 0px;
+	width: 109px;
 	
 }
 #cmhome_type3 .info_box .pic {
@@ -892,9 +894,10 @@ img { border:0px;}
 }
 #cmhome_type4 .info_box .master p {
     padding: 0px;
-    margin: 4px 0 0 0px;
     line-height: 18px;
     display: inline-block;
+	margin: -2px 0px 0px 0px;
+	width: 109px;
 	
 }
 #cmhome_type4 .info_box .pic {
@@ -1136,13 +1139,14 @@ img { border:0px;}
 	color:#333;
 }
 #cmhome_type5 .info_box .master p {
-	padding:0px;
-	margin:4px 0 0 0px;
-	line-height:18px;
-	display:inline-block;
-
+    padding: 0px;
+    line-height: 18px;
+    display: inline-block;
+	margin: -2px 0px 0px 0px;
+	width: 109px;
 	
 }
+
 #cmhome_type5 .info_box .pic {
 	position:absolute;
 	top:15px;
@@ -1587,7 +1591,6 @@ _list li {
 
 /* 20231114 커뮤 수정 */
 .admin_menu span{padding: 3px 0px 0px 23px; height: 18px;}
-#cmhome_type5 .info_box .master p{margin: -2px 0px 0px 0px; width: 109px !important;}
 .info_box #pic{left: 7px !important;}
 .info_box #pic img{width: 55px !important; height: 55px !important;}
 #mastericon{padding: 0px !important;}
@@ -1606,4 +1609,15 @@ _list li {
 .introduce .bgimg{height: 60px !important;}
 .cmhome_right .introduce{padding: 0px !important;}
 .cmhome_right .introduce p{height: 67px !important;}
+.cmhomelist tr td{color: #333;}
+
+
+#cmhome_type3 .btype_list .title{color: #ada74b;}
+#cmhome_type4 .btype_list .title{color: #37634a;}
+
+.cmhome_left .leftmenu .node_selected{ height: 26px !important; line-height: 26px !important; }
+.cmhome_left .leftmenu .node_normal{ height: 26px !important; line-height: 26px !important; }
+#img_TreeViewTreeCtrl0_0{vertical-align: top !important; margin-top: 6px !important;}
+.cmhome_left .leftmenu .tree_minus {background-position: 4px -79px !important; margin-top:4px !important}
+.cmhome_left .leftmenu .tree_plus {background-position: 3px -106px !important; margin-top:4px !important}
 /* //20231114 커뮤 수정 */
