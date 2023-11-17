@@ -3915,7 +3915,6 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 #left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
 
 .portlet_tabnew01_top p span {line-height: 26px !important;}
-.contents_categoryView{overflow: auto;}
 .content input{margin-top: 0px;}
 
 .popup #divList{overflow: auto;}/*게시 팝업 조회자 스크롤*/
@@ -3937,3 +3936,31 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .content input{margin-top: 0px;}
 .searchinputBox{height: 27px !important;}
 #lstAttachLink{height: 112px !important;}
+
+
+.community_section01{height: 101px;}
+.contents_bannerCommunity{height: 103px; padding-top: 25px;}
+.contents_bannerCommunity p img{height: 49px;}
+.contents_categoryViewList{height: 351px;}
+.contents_listCommunity li{color: #333;}
+.contents_searchCategory dl dt.searchinput input{height: 34px !important;}
+
+/* 스크롤바 */
+*::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #dedede;
+    border-radius: 8px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
