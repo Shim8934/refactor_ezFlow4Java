@@ -16,6 +16,8 @@ public class SessionVO {
 	private int timeDiff;
 	/** 테넌트ID*/
 	private int tenantId;
+	/** 웹, 모바일 구분을 위한 타입*/
+	private String type;
 
 	// Getter & Setter
 	public String getEzSessionId() {
@@ -72,5 +74,13 @@ public class SessionVO {
 
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

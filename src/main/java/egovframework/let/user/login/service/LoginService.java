@@ -1,5 +1,6 @@
 package egovframework.let.user.login.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -63,6 +64,8 @@ public interface LoginService {
 	void updateUserForReduceLoginCnt(LoginVO vo) throws Exception;
 
 	public void insertLog(LoginVO vo) throws Exception;
+
+	void updateDbSessionLog(HashMap<String, Object> map) throws Exception;
 
 	void insertSession(SessionVO vo) throws Exception;
 

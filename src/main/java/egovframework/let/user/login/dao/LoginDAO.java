@@ -131,6 +131,14 @@ public class LoginDAO extends EgovAbstractDAO {
     	insertLogForLocal(vo);       
     }
 
+	private void updateDbSessionLogForLocal(HashMap<String, Object> map) throws Exception {
+		update("loginDAO.updateDbSessionLog", map);
+	}
+
+	public void updateDbSessionLog(HashMap<String, Object> map) throws Exception {
+		updateDbSessionLogForLocal(map);
+	}
+
 	private void insertSessionForLocal(SessionVO vo) throws Exception {
 		update("loginDAO.insertSession", vo);
 	}

@@ -1196,6 +1196,7 @@ public class LoginController {
 			vo.setEzSessionId(ezSessionId);
 			vo.setLoginCookie(loginCookie);
 			vo.setTenantId(tenantId);
+			vo.setType("useSession");
 
 			loginService.insertSession(vo);
 

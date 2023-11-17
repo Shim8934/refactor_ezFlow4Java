@@ -209,6 +209,11 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 
 	@Override
+	public void updateDbSessionLog(HashMap<String, Object> map) throws Exception {
+		loginDAO.updateDbSessionLog(map);
+	}
+
+	@Override
 	public void insertSession(SessionVO vo) throws Exception {
 		loginDAO.insertSession(vo);
 	}
