@@ -3604,7 +3604,6 @@ public class EzNewPortalGWController {
 						// subject
 						String subject =  mailInfo.get("SUBJECT");
 						subject = (subject != null) ? subject : "";
-						subject = commonUtil.cleanValue(subject);
 
 						if ("1".equals(mailInfo.get("MAIL_IS_SECURED"))) {
 							subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
