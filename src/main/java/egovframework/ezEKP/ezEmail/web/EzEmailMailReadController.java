@@ -23,10 +23,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Spliterator;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -50,6 +53,7 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.JsonElement;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
@@ -971,14 +975,26 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					f.close(true);
 
-					JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
-							.formParam("userAccount", userEmail)
-							.formParam("folderPath", folderPath)
-							.formParam("mailUid", uid)
-							.exchangeJgwResult();
-					logger.debug("jgw getTagList result: {}", tagResult);
-					// tagResult.getResult()
-					// tags = tagResult.succeeded() ? tagResult.getResultAsJsonObject().getAsJsonArray().iterator(). : null;
+					try {
+						JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
+								.formParam("userAccount", userEmail)
+								.formParam("folderPath", folderPath)
+								.formParam("mailUid", uid)
+								.exchangeJgwResult();
+						logger.debug("jgw getTagList result: {}", tagResult);
+
+						if (tagResult.succeeded()) {
+							Spliterator<JsonElement> tagIterator = tagResult.getResultAsJsonElement().getAsJsonArray().spliterator();
+
+							tags = StreamSupport.stream(tagIterator, false)
+									.map(jsonElement -> jsonElement.getAsJsonObject().get("name").getAsString())
+									.toArray(String[]::new);
+						} else {
+							tags = new String[0];
+						}
+					} catch (Exception e) {
+						logger.error("get tag error:", e);
+					}
 				}
 			}
 		} catch (MessagingException e) {
@@ -2661,13 +2677,24 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							logger.debug("Message's seen flag changed to true.");
 						}
 
-						JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
-								.formParam("userAccount", userEmail)
-								.formParam("folderPath", folderPath)
-								.formParam("mailUid", uid)
-								.exchangeJgwResult();
-						logger.debug("jgw getTagList result: {}", tagResult);
-						tags = tagResult.succeeded() ? tagResult.getResult(String.class) : "";
+						try {
+							JgwResult tagResult = rest.jgw().url("/jMochaEzEmail/getTagList")
+									.formParam("userAccount", userEmail)
+									.formParam("folderPath", folderPath)
+									.formParam("mailUid", uid)
+									.exchangeJgwResult();
+							logger.debug("jgw getTagList result: {}", tagResult);
+
+							if (tagResult.succeeded()) {
+								Spliterator<JsonElement> tagIterator = tagResult.getResultAsJsonElement().getAsJsonArray().spliterator();
+
+								tags = StreamSupport.stream(tagIterator, false)
+										.map(jsonElement -> jsonElement.getAsJsonObject().get("name").getAsString())
+										.collect(Collectors.joining("|"));
+							}
+						} catch (Exception e) {
+							logger.error("get tag error:", e);
+						}
 					}
 					f.close(true);
 				}
