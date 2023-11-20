@@ -27,7 +27,7 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 /* .logo{width:288px; height:38px; margin:70px auto 56px; text-align:center;} */
 /* .id { width: 306px; height: 55px; margin: 0px auto 15px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_id.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; } */
 /* .pw { width: 306px; height: 55px; margin: 0px auto 25px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_pw.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; } */
-.otp { width: 306px; height: 55px; margin: 0px auto 18px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_otp.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
+/* .otp { width: 306px; height: 55px; margin: 0px auto 18px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_otp.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; } */
 .btn_login  { margin:0px; padding:0px; }
 .login_form .btn_login { display: block; width: 306px; height: 65px; line-height: 65px; margin: 0px auto 0px auto; padding: 0px 0px 0px 0px; background: #1543a9; text-align: center; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; box-sizing: border-box; cursor: pointer; font-size: 24px; color: #fff; }
 .login_form .btn_login:hover { background: #0e2e74; }
@@ -252,3 +252,11 @@ a{
 }
 
 /* 20230906 자바업그레이드 로그인 CSS */
+
+/* 20231120 로그인 OTP영역 추가 */
+.otp_txt{font-size: 16px; margin-bottom: 10px;}
+.otp{width: 100%; height: 55px; margin: 0px; border-radius: 5px; border: 1px solid #E4E4E4; cursor: pointer;}
+#uotp{width: 100%; height: 55px; font-size: 18px; border: 0px solid #fff; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; padding-left: 15px;}
+.otp input::placeholder{color: #B8B8B8 !important; font-size: 16px; font-weight: 500 !important;}
+.otp .btnClear{position: absolute; top: 0; right: 0; width: 37px; height: inherit; background: url(../images/kr/login/input_icon.svg) center right 17px no-repeat; background-size: 50%; border: none; outline: none; cursor: pointer; }
+/* //20231120 로그인 OTP영역 추가 */
