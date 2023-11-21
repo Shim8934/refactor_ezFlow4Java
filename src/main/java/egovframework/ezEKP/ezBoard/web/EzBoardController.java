@@ -1449,6 +1449,17 @@ public class EzBoardController extends EgovFileMngUtil{
     						resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
     						resultXML.append("<DATA10></DATA10>");
     						resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
+    						
+    						/* 2023-11-17 홍승비 - 게시물 승인 시 게시(답변)알림메일 발송 기능을 위한 파라미터 추가 */
+    						if (noticeList.get(k).get("COMPANYID") == null || noticeList.get(k).get("COMPANYID").equals("")) {
+    							resultXML.append("<ISALLGROUPBOARD>Y</ISALLGROUPBOARD>"); // 그룹사게시판 여부 (그룹사게시판은 회사ID 없음)
+    						} else {
+    							resultXML.append("<ISALLGROUPBOARD>N</ISALLGROUPBOARD>");
+    						}
+    						
+    						resultXML.append("<UPPERITEMIDTREE>" + noticeList.get(k).get("UPPERITEMIDTREE") + "</UPPERITEMIDTREE>");
+    						resultXML.append("<PARENTWRITEDATE>" + noticeList.get(k).get("PARENTWRITEDATE") + "</PARENTWRITEDATE>");
+    						resultXML.append("<DOCNO>" + noticeList.get(k).get("DOCNO") + "</DOCNO>");
     					}
     					
     					resultXML.append("</CELL>");
@@ -1570,6 +1581,17 @@ public class EzBoardController extends EgovFileMngUtil{
     				resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
     				resultXML.append("<DATA10>" + boardListItem.get(j).get("GUBUN") + "</DATA10>");
     				resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
+    				
+    				/* 2023-11-17 홍승비 - 게시물 승인 시 게시(답변)알림메일 발송 기능을 위한 파라미터 추가 */
+					if (boardListItem.get(j).get("COMPANYID") == null || boardListItem.get(j).get("COMPANYID").equals("")) {
+						resultXML.append("<ISALLGROUPBOARD>Y</ISALLGROUPBOARD>"); // 그룹사게시판 여부 (그룹사게시판은 회사ID 없음)
+					} else {
+						resultXML.append("<ISALLGROUPBOARD>N</ISALLGROUPBOARD>");
+					}
+					
+					resultXML.append("<UPPERITEMIDTREE>" + boardListItem.get(j).get("UPPERITEMIDTREE") + "</UPPERITEMIDTREE>");
+					resultXML.append("<PARENTWRITEDATE>" + boardListItem.get(j).get("PARENTWRITEDATE") + "</PARENTWRITEDATE>");
+					resultXML.append("<DOCNO>" + boardListItem.get(j).get("DOCNO") + "</DOCNO>");
     			}
     			
     			resultXML.append("</CELL>");
@@ -9931,7 +9953,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			useAppr = boardProp.getApprFlag();
 		}
 		
-		logger.debug("getBoardApprProperty ended.");
+		logger.debug("getBoardApprProperty ended, getApprFlag result = " + useAppr);
 		return useAppr;
 	}
 	

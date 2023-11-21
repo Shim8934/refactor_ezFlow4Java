@@ -92,6 +92,7 @@
 	        var saveItemBoardId = "";
 	        var SelBoard = false;
 	        var pNoneActiveX = "YES";
+	        var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
 		        
 	        function window_onload() {
 	            try{
@@ -365,20 +366,28 @@
 	                    xmlhttp.open("POST", "/ezBoard/deleteTempItem.do?mode=PHOTO", false);
 	                    xmlhttp.send(strItemID);
 	                    
-	                    /* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
-						if (pMode == "new") {
-						    xmlhttp = createXMLHttpRequest();
-							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
-							xmlhttp.send();		
-							xmlhttp = null;
-						}
-						if (pMode == "reply") { // 동영상게시물은 답변기능 없으므로, 타지 않는 분기
-						    xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
-						    xmlhttp.send();
-						    xmlhttp = null;
-						}
-						
+	                    /* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림메일을 보내지 않도록 수정 + 답변알림메일을 보내지 않도록 수정 */
+	                	if ("${boardInfo.apprFlag}" != "Y") {
+		                    /* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
+							if (pMode == "new") {
+							    xmlhttp = createXMLHttpRequest();
+								xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
+								xmlhttp.send();
+								xmlhttp = null;
+							}
+							if (pMode == "reply") { // 동영상게시물은 답변기능 없으므로, 타지 않는 분기
+							    xmlhttp = createXMLHttpRequest();
+							    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
+							    xmlhttp.send();
+							    xmlhttp = null;
+							}
+							
+							/* 2023-11-17 홍승비 - 동영상게시판 게시알림(일반 사용자 대상 발송) 추가 (승인게시판의 경우, 게시물 승인 전에 게시알림 메일 사용안함) */
+		                    if (pMode == "new") { // 게시알림
+		                    	sendBoardAlertMail("new", pBoardID, newID, isAllGroupBoard);
+		                    }
+	                	}
+	                    
 						/* 2019-05-08 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
 						if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 						    xmlhttp = createXMLHttpRequest();
@@ -606,6 +615,22 @@
 	        	
 	        	return path;
 	        }
+			
+	    	/* 2023-11-17 홍승비 - 일반 사용자(접근 권한자)의 '게시알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	    	function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+	    		$.ajax({
+	    			type : "POST",
+	    			dataType : "text",
+	    			async : true,
+	    			url : "/ezBoard/sendBoardAlertMail.do",
+	    			data : {
+	    				mode : pMode,
+	    				boardID : pBoardID,
+	    				itemID : pItemID,
+	    				isAllGroupBoard : pIsAllGroupBoard
+	    			}
+	    		});
+	    	}
 			
 	    </script>
 	</head>
