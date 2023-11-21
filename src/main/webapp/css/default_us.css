@@ -2261,7 +2261,7 @@ div#txtContent table {margin:auto;}
 
 .btnbtn { margin-top:10px; text-align: center; }
 
-#Preview_HeaderH, #Preview_HeaderW { background-color: #F8F9FB; }
+/* #Preview_HeaderH, #Preview_HeaderW { background-color: #F8F9FB; } */
 #subject { vertical-align: top;}
 .extraMenu {
 	position: absolute;
