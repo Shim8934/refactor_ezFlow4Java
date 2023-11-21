@@ -258,5 +258,16 @@ a{
 .otp{width: 100%; height: 55px; margin: 0px; border-radius: 5px; border: 1px solid #E4E4E4; cursor: pointer;}
 #uotp{width: 100%; height: 55px; font-size: 18px; border: 0px solid #fff; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; padding-left: 15px;}
 .otp input::placeholder{color: #B8B8B8 !important; font-size: 16px; font-weight: 500 !important;}
-.otp .btnClear{position: absolute; top: 0; right: 0; width: 37px; height: inherit; background: url(../images/kr/login/input_icon.svg) center right 17px no-repeat; background-size: 50%; border: none; outline: none; cursor: pointer; }
+.otp .btnClear{position: absolute; top: 0; right: 0; width: 37px; height: inherit; background: url(../images/kr/login/input_icon.svg) center right 17px no-repeat; background-size: 50%; border: none; outline: none; cursor: pointer;}
+.login_layout { width: 490px; height: 544px; position: absolute; left: 50%; top: 50%; margin-top: -272px; margin-left: -245px;}
+.logo {margin: 0px auto 44px;text-align: center;}
+
+@media only screen and (max-height : 762px){
+.id, .pw, .otp{height: 50px;}
+#uid, #upw, #uotp{height: 50px !important;}
+.pw_txt, .id_txt, .otp_txt{margin-top: 8px;}
+.login_form .btn_login{height: 55px; line-height: 55px; margin: 20px auto 0px auto;}
+.btnBox{margin-top: 17px;}
+.logo{margin: 0px auto 34px;}
+}
 /* //20231120 로그인 OTP영역 추가 */
