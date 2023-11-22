@@ -440,7 +440,13 @@
 		                    	deptDd.innerText = getNodeText(SelectNodes(UserAddJobList[0], "DESCRIPTION")[Cnt])
 		                    }
 		                    
-		                    jobNameDd.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")";
+		                    jobNameDd.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]);
+	                        var role = getNodeText(SelectNodes(UserAddJobList[0], "ROLE")[Cnt]);
+		                        if (null != role && "" != role){
+		                        	jobNameDd.textContent += " / " + role + ")";	                        	
+		                        } else {
+		                        	jobNameDd.textContent += ")";
+	                        }
 		                    
 		                    ///////tooltip
 		                    var tooltipDiv = document.createElement("div");
@@ -462,7 +468,13 @@
 		                    	deptSpan.innerText = getNodeText(SelectNodes(UserAddJobList[0], "DESCRIPTION")[Cnt])
 		                    }
 		                    
-		                    jobNameSpan.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")";
+		                    jobNameSpan.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]);
+	                        var role = getNodeText(SelectNodes(UserAddJobList[0], "ROLE")[Cnt]);
+	                        if (null != role && "" != role){
+		                        	jobNameSpan.textContent += " / " + role + ")";	                        	
+		                        } else {
+		                        	jobNameSpan.textContent += ")";
+	                        }
 
 		                    tooltipDiv.appendChild(companySpan);
 		                    tooltipDiv.appendChild(deptSpan);

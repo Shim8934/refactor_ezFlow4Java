@@ -41,6 +41,14 @@ public class OrganUserVO {
 	private String title1;
 	/** */
 	private String title2;
+	/** 직책명*/
+	private String role;
+	
+	private String role1;
+	
+	private String role2;
+	/** 직책코드*/
+	private String roleCd;
 	/** */
 	private String telephoneNumber;
 	/** */
@@ -662,5 +670,37 @@ public class OrganUserVO {
 
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
+
+	}
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getRole1() {
+		return role1;
+	}
+
+	public void setRole1(String role1) {
+		this.role1 = role1;
+	}
+	
+	public String getRole2() {
+		return role2;
+	}
+
+	public void setRole2(String role2) {
+		this.role2 = role2;
+	}
+
+	public String getRoleCd() {
+		return roleCd;
+	}
+
+	public void setRoleCd(String roleCd) {
+		this.roleCd = roleCd;
 	}
 }

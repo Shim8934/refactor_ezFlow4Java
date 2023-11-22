@@ -28,6 +28,10 @@
 		<result property="extensionAttribute1"					column="ROLLINFO"						columnIndex="14"/>
 		<result property="description1" 						column="description1" 					columnIndex="14"/>
 		<result property="description2" 						column="description2" 					columnIndex="15"/>
+		<result property="role" 								column="ROLE" 							columnIndex="16"/>
+		<result property="role1" 								column="R1" 							columnIndex="17"/>
+		<result property="role2" 								column="R2" 							columnIndex="18"/>
+		<result property="roleCd" 								column="ROLECD" 						columnIndex="19"/>
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -2933,6 +2937,16 @@
                 WHEN
                 	'1'
                 THEN
+                	A.ROLE
+                ELSE
+                	A.ROLE2
+                END
+                	ROLE  ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
                 	C.DISPLAYNAME
                 ELSE
                 	C.DISPLAYNAME2
@@ -2965,6 +2979,11 @@
              	CASE WHEN C.DEPARTMENT = A.DEPTID THEN C.EXTENSIONATTRIBUTE1 ELSE A.ROLL_INFO END AS ROLLINFO,
              	B.DISPLAYNAME DESCRIPTION1,
              	B.DISPLAYNAME2 DESCRIPTION2
+             	A.ROLE R1,
+             	A.ROLE2 R2,
+             	A.JOBID  ,
+             	A.ROLECD,
+             	A.MANUAL_FLAG
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN
@@ -3003,9 +3022,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_ADDJOBMASTER
-              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID, MANUAL_FLAG )
+              	( CN, DEPTID, TITLE, TITLE2, ROLE, ROLE2, ROLECD, TENANT_ID, ORDERBY, JOBID, MANUAL_FLAG )
            VALUES
-           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0 , #v_JOBID#, #v_MANUAL_FLAG#)
+           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_ROLE#, #v_ROLE2#, #v_ROLECD#, #v_TENANT_ID#, 0 , #v_JOBID#, #v_MANUAL_FLAG#)
 		]]>
 	</insert>
 	

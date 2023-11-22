@@ -1318,23 +1318,27 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void addJob(String userID, String titleInfo, String jobID, int tenantID) throws Exception {
+	public void addJob(String userID, String titleInfo, String jobID, String roleInfo, int tenantID) throws Exception {
 	    logger.debug("addJob started");
-	    logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",jobID=" + jobID + ",tenantID=" + tenantID);
-	    
+	    logger.debug("userID={}, titleInfo={}, jobID={}, roleInfo={}, tenantID={}",userID, titleInfo, jobID, roleInfo, tenantID);
 		String sTitle1 = "";
         String sTitle2 = "";
         String pDeptID = "";
         String manualFlag = "";
-        
         if (!titleInfo.equals("")) {
             String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
             
         	String[] addJobinfo = titleInfo.split(";");
         	String[] jobIDinfo = jobID.split(";");
+        	String[] addJobRoleInfo = roleInfo.split(";");
         	
             for (int i = 0; i < addJobinfo.length; i++) {
+            	// 직책은 없을 수 도 있으니 값을 초기화 한다 
+            	String sRole1 = "";
+                String sRole2 = "";
+                String roleCd = "";
             	String[] userInfo = addJobinfo[i].split(":");
+            	String [] userRoleInfo = addJobRoleInfo[i].split(":");
             	pDeptID = userInfo[0];
             	manualFlag = userInfo[userInfo.length - 1];
             	
@@ -1354,6 +1358,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                     sTitle2 = sTitle1;
                 }
                 
+                if (userRoleInfo.length > 1) {
+                	sRole1 = userRoleInfo[1];
+                	sRole2 = userRoleInfo[2];
+                	roleCd = userRoleInfo[0];
+                }
+                
                 // 해당 User가 겸직할 부서의 Group Email 주소에 User를 등록한다.                  
                 String groupAddr = pDeptID + "@" + domain;
                 String mailAddr = userID + "@" + domain;
@@ -1369,6 +1379,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_DEPTID", pDeptID);
             		map.put("v_TITLE1", sTitle1);
             		map.put("v_TITLE2", sTitle2);
+            		map.put("v_ROLE", sRole1);
+            		map.put("v_ROLE2", sRole2);
+            		map.put("v_ROLECD", roleCd);
             		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
             		map.put("v_JOBID", jobIDinfo[i]);

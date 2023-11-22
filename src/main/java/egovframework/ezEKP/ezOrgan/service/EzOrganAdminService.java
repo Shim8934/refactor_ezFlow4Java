@@ -87,7 +87,7 @@ public interface EzOrganAdminService {
 	
 	public void insertDBData_user(OrganUserVO vo, String oriPass) throws Exception;
 
-	public void addJob(String userID, String titleInfo, String jobID, int tenantID) throws Exception;
+	public void addJob(String userID, String titleInfo, String jobID, String roleInfo, int tenantID) throws Exception;
 	
     public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception;	
 
