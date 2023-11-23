@@ -1400,8 +1400,8 @@ public class MLoginGWController {
 	}
 
 	@PostMapping(value = "/mobile/ezUser/update/session/mEzSessionId/{mEzSessionId}")
-	public void updateSession(@PathVariable String mEzSessionId) throws Exception {
-		loginService.updateSession(mEzSessionId);
+	public void updateSession(@PathVariable String mEzSessionId, String mloginCookie) throws Exception {
+		loginService.updateSession(mEzSessionId, mloginCookie);
 	}
 
     /**

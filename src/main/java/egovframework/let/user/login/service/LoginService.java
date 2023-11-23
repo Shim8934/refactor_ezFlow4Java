@@ -69,7 +69,7 @@ public interface LoginService {
 
 	void insertSession(SessionVO vo) throws Exception;
 
-	void updateSession(String ezSessionId) throws Exception;
+	void updateSession(String ezSessionId, String loginCookie) throws Exception;
 
 	SessionVO getSession(String ezSessionId) throws Exception;
 

@@ -482,15 +482,16 @@
         ]]>
     </insert>
 
-	<update id="loginDAO.updateSession" parameterClass="String">
-        <![CDATA[
+	<update id="loginDAO.updateSession" parameterClass="Map">
             UPDATE
             	TBL_SESSION
     		SET
     			LAST_ACCESS_TIME = utc_timestamp()
+    		<isNotEmpty prepend="," property="loginCookie">
+    			LOGINCOOKIE = #loginCookie#
+    		</isNotEmpty>
     		WHERE
     			SESSION_ID 	= #ezSessionId#
-        ]]>
     </update>
 
    	<select id="loginDAO.getSession" parameterClass="String" resultMap="session">

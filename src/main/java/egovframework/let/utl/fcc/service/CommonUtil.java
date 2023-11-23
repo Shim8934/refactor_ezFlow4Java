@@ -460,7 +460,7 @@ public class CommonUtil {
 		}
 	}
 	
-	private String getDecryptedLoginCookie(String loginCookie) {
+	public String getDecryptedLoginCookie(String loginCookie) {
 		String decData = "";
 
 		try {
@@ -755,8 +755,10 @@ public class CommonUtil {
 		boolean usingAsAPI = "yes".equalsIgnoreCase(request.getHeader("Use-As-API"));
 		// request 아이피가 127.0.0.1 일 때는 세션 콘피그 무시함 (인사연동)
 		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
+		// useDbSession 체크가 이 부분에서 필수 요소는 아니나 예외처리 보강
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
-		if (!usingSession || usingAsAPI || isLoopbackRequest) {
+		if (!useDbSession && (!usingSession || usingAsAPI || isLoopbackRequest)) {
 			return validLoginCookie(request);
 		}
 
@@ -2985,8 +2987,8 @@ public class CommonUtil {
 					int maxInactiveInterval = resultVO.getMaxInactiveInterval();
 					int timediff = resultVO.getTimeDiff();
 
-					if (maxInactiveInterval > timediff) {
-						loginService.updateSession(ezSessionId);
+					if (maxInactiveInterval > timediff || maxInactiveInterval == 0) { // DB에 저장 당시 세션 사용 안함 (maxInactiveInterval == 0)인 경우도 pass
+						loginService.updateSession(ezSessionId, "");
 						return "0";
 					} else {
 						clearAllCookies(request, response);

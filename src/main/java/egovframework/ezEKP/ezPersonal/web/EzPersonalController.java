@@ -21,6 +21,7 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.*;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -122,6 +123,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@Autowired
     private EzEmailUtil ezEmailUtil;
 	
+	@Autowired
+    private LoginService loginService;
+
 	@Autowired
 	private EzOrganAdminController ezOrganAdminController;
 	
@@ -1499,6 +1503,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String timeZone = "";
 		String lang = "";
 		String returnValue = "";
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+		String ezSessionId = loginCookie; // useDbSession가 true인 경우에만 사용
 		
 		if (req.getParameter("timeZone") != null && !req.getParameter("timeZone").equals("")) {
 			timeZone = req.getParameter("timeZone");
@@ -1532,15 +1538,26 @@ public class EzPersonalController extends EgovFileMngUtil {
 			String cookieValue1 = "";
 			Cookie[] cookies = req.getCookies();
 			if (cookies != null) {
+				/* loginCookie를 파라미터로 받기때문에 for이 불필요하여 주석 처리
 				for (int i=0; i<cookies.length; i++) {
 					if (cookies[i].getName().equals("loginCookie")) {
 						cookieValue1 = egovFileScrty.decryptAES(cookies[i].getValue());
 					}
-				}
+				}*/
+
+				cookieValue1 = commonUtil.getDecryptedLoginCookie(loginCookie);
+
 				//loginCookie에 lang값, locale값 설정
 				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2] + "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///" + lang + "///" + timeZone  + "///" + userInfo.getTenantId() + "///" + userInfo.getDeptID() +  "///" + userInfo.getCompanyID();
+				loginCookie = egovFileScrty.encryptAES(cInfo);
 				
-				Cookie cookieID = new Cookie("loginCookie", egovFileScrty.encryptAES(cInfo));
+				if (useDbSession) {
+					loginService.updateSession(ezSessionId, loginCookie);
+		
+					loginCookie = ezSessionId;
+				}
+
+				Cookie cookieID = new Cookie("loginCookie", loginCookie);
 				cookieID.setPath("/");
 				resp.addCookie(cookieID);
 			}

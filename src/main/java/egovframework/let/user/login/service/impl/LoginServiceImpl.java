@@ -219,8 +219,12 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 
 	@Override
-	public void updateSession(String ezSessionId) throws Exception {
-		loginDAO.updateSession(ezSessionId);
+	public void updateSession(String ezSessionId, String loginCookie) throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("ezSessionId", ezSessionId);
+		map.put("loginCookie", loginCookie);
+		
+		loginDAO.updateSession(map);
 	}
 
 	@Override

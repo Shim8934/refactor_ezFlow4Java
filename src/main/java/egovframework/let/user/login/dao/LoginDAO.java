@@ -147,12 +147,12 @@ public class LoginDAO extends EgovAbstractDAO {
 		insertSessionForLocal(vo);
 	}
 
-	public void updateSession(String ezSessionId) throws Exception {
-		updateSessionForLocal(ezSessionId);
+	public void updateSession(Map<String, String> map) throws Exception {
+		updateSessionForLocal(map);
 	}
 
-	private void updateSessionForLocal(String ezSessionId) throws Exception {
-		update("loginDAO.updateSession", ezSessionId);
+	private void updateSessionForLocal(Map<String, String> map) throws Exception {
+		update("loginDAO.updateSession", map);
 	}
 
 	public SessionVO getSession(String ezSessionId) throws Exception {
