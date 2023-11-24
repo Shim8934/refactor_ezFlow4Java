@@ -458,12 +458,17 @@
 		    }
 		</script>
 	</head>
-	<c:if test="${userLang == '3'}">
-	<c:set var="tableWidth" value="750" />
-	</c:if>
-	<c:if test="${userLang != '3'}">
-	<c:set var="tableWidth" value="720" />
-	</c:if>
+	<c:choose>
+		<c:when test="${userLang == '3'}">
+		<c:set var="tableWidth" value="750" />
+		</c:when>
+		<c:when test="${userLang == '2'}">
+		<c:set var="tableWidth" value="730" />
+		</c:when>
+		<c:otherwise test="${userLang != '3'}">
+		<c:set var="tableWidth" value="720" />
+		</c:otherwise>
+		</c:choose>
 	<body onload="javascript:window_onload()" style="margin-left:10px;margin-right:10px;">
 		<br>
 		<div class="txt" style="margin-bottom:25px">
@@ -520,7 +525,8 @@
 		</table> 
 		<br>
 		<h2 class="h2_dot"><spring:message code='ezEmail.t700' /></h2> 
-		<table class="content" style="width:${tableWidth}px;">
+		<!-- <table class="content" style="width:${tableWidth}px;"> -->
+		<table class="content" style="width:770px;">
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer2" id="popServer2" class="textarea" style="width:200px" disabled /> 
