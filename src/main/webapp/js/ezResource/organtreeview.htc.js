@@ -1169,7 +1169,7 @@ function organtreeview(thisobjid, elobjid) {
 				            //nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
 				        	nodeHtml += "<span class='sub_iconLNB tree_resource_standard'></span>";
 				        else
-				        	nodeHtml += "<span class='sub_iconLNB tree_resource_unused'></span>";
+				        	nodeHtml += "<span class='sub_iconLNB tree_resource_refuse'></span>";
 				}
 
                 var nodeWidth = treeWidth - (mydepth.length * 16);
@@ -1333,7 +1333,7 @@ function organtreeview(thisobjid, elobjid) {
 				            //nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
 				        	nodeHtml += "<span class='sub_iconLNB tree_resource_standard'></span>";
 				        else
-				        	nodeHtml += "<span class='sub_iconLNB tree_resource_unused'></span>";
+				        	nodeHtml += "<span class='sub_iconLNB tree_resource_refuse'></span>";
 				}
 
                 if (childNode.selectSingleNode("SELECT") != null) {

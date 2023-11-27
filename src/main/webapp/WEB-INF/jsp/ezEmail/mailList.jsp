@@ -1653,7 +1653,7 @@
 		<h1><c:out value='${folderName}'/><span id="mailBoxInfo"></span><span id ="resultCount" style="display:none;"></span>
 		</c:if>
 		<span id ="searchDate" style="display:;font-weight:normal;"></span>
-			<span class="searchForm" style="margin-right:0px;">
+			<span class="searchForm" style="padding-right:30px;">
 				<!-- 2022-12-29 이사라 : 기본검색 시 검색기간을 추가 -->
 				<span id="datepickerSimple" style="display:none;">
 					<input type="text" id="SdatepickerSimple" style="height:30px;" disabled="" readonly size="10" readonly> ~ 

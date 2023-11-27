@@ -623,7 +623,7 @@
 		            	<option value="2"><spring:message code='ezStatistics.t113' /></option>
 					</select>
                     <input id="keyword" type="text" style="width: 100px;height:24px" onkeypress="search_press(event)" />
-                    <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
+                    <a class="imgbtn" style="height:22px"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;
                     	<spring:message code='ezStatistics.kbm3' /> : 
 	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="width: 120px; height:24px; padding-right:40px;">

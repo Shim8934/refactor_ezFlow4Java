@@ -1528,7 +1528,6 @@
 			}
 			.userPer {
 				font-family: Malgun gothic;
-				font-size: 14px;
 			}
 			#mCSB_1_container {
 				margin-right: 0px;
@@ -1625,7 +1624,7 @@
 			        	<h2 class="off" id="h2_${shareInfo.shareId}" title="${shareInfo.shareName}" 
 			        		 onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
 			        		<span class="sub_iconLNB tree_plus"></span>
-			        		<span class="h2Title" id="h2Title_${shareInfo.shareId}" style="display:inline-block"><c:out value="${shareInfo.shareName}" /></span>&nbsp;&nbsp;
+			        		<span class="h2Title" id="h2Title_${shareInfo.shareId}" style="display:inline-block"><c:out value="${shareInfo.shareName}" /></span>
 			        		<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;">
 			        			<c:if test="${shareInfo.totalUnreadCount != '0'}">(${shareInfo.totalUnreadCount})</c:if>
 			        		</span>

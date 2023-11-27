@@ -641,7 +641,7 @@
 	                 <option value="2"><spring:message code='ezStatistics.t113'/></option>
 	             </select>
 	                     <input id="keyword" type="text" style="width: 100px;" onkeypress="search_press(event)" />
-	                     <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="search()"><spring:message code='ezStatistics.t36'/></span></a>
+	                     <a class="imgbtn" style="height:22px"><span onclick="search()"><spring:message code='ezStatistics.t36'/></span></a>
 	                 </span>
 	             </td>
 	             <td>

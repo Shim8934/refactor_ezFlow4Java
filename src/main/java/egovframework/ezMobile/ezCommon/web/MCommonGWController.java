@@ -3,6 +3,8 @@ package egovframework.ezMobile.ezCommon.web;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 
 import javax.annotation.Resource;
@@ -64,8 +66,10 @@ public class MCommonGWController {
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] started.");
 		
 		String filePath = request.getParameter("filePath");
+		filePath = filePath == null ? "" : URLDecoder.decode(filePath, StandardCharsets.UTF_8.name());
 		logger.debug("filePath = " + filePath);
 		String fileName = (request.getParameter("fileName") == null) ? "" : request.getParameter("fileName");
+		fileName = fileName == null ? "" : URLDecoder.decode(fileName, StandardCharsets.UTF_8.name());
 		logger.debug("fileName = " + fileName);
 		String realPath = commonUtil.getRealPath(request);
 		

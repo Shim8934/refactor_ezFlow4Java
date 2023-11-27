@@ -1250,7 +1250,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
     public void updateUserDeptDisplayName(OrganDeptVO vo) throws Exception {
         logger.debug("updateUserDeptDisplayName started.");
-        logger.debug("displayName=" + vo.getDisplayName() + ",displayName2=" + vo.getDisplayName2());
+        logger.debug("displayName = {}, displayName = {}, nowDate = {}", vo.getDisplayName(), vo.getDisplayName2(), vo.getNowDate());
         
         update("EzOrganAdminDAO.updateUserDeptDisplayName", vo);
         

@@ -148,10 +148,14 @@ public class MApprovalGGWController {
 				lastDate = approvalGDocInfoVOs.get(approvalGDocInfoVOs.size() - 1).getStartDate();
 			}
 			
+			// 2023-05-25 이가은 - 전자결재 > 공람문서 메뉴 표출을 위한 approvalFlag 값 추가
+			String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+			
 			JSONObject totalData = new JSONObject();
 			
 			totalData.put("docInfos", approvalGDocInfoVOs);
 			totalData.put("lastDate", lastDate);
+			totalData.put("approvalFlag", approvalFlag);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -252,12 +256,16 @@ public class MApprovalGGWController {
 			// 20180824 조진호 - 모바일 viewerflag 값 추가
         	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", userInfo.getTenantId());
         	
+        	// 2023-05-25 이가은 - 전자결재 > 공람문서 메뉴 표출을 위한 approvalFlag 값 추가
+        	String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+        	
 			JSONObject totalData = new JSONObject();
 			
 			totalData.put("bodyHTML", bodyHTML);
 			totalData.put("docInfo", approvalGDocInfoVO);
 			totalData.put("callBackYN", callBackYN);
 			totalData.put("useMobileViewer", useMobileViewer);
+			totalData.put("approvalFlag", approvalFlag);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -636,6 +644,10 @@ public class MApprovalGGWController {
 			List<MApprovalGAbsenteeAddJobInfoVO> resultList = mApprovalGService.getAbsenteeAddJobInfo(userInfo);
 			MApprovalGAbsenteeInfoVO absenteeInfoVO = mApprovalGService.getAbsenteeInfo(userInfo);
 			
+			// 2023-05-25 이가은 - 전자결재 > 공람문서 메뉴 표출을 위한 approvalFlag 값 추가
+			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+			result.put("approvalFlag", approvalFlag);
+			
 			if (resultList != null && resultList.size() > 0) {
 				result.put("status", "ok");
 				result.put("code", "0");
@@ -790,7 +802,7 @@ public class MApprovalGGWController {
 	}
 
 	/**
-	 * 모바일 G/W 전자결재 [PUT] 결재(APR), 반송(BAN), 보류(BO), 회수(HWE), 참조(CHECK)
+	 * 모바일 G/W 전자결재 [PUT] 결재(APR), 반송(BAN), 보류(BO), 회수(HWE), 참조(CHECK), 공람(GR)
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/approve/{type:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
@@ -825,7 +837,12 @@ public class MApprovalGGWController {
 			String rtnVal = "";
 			
 			//docId로만 정보 가져오기
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getOffSet(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
+			MApprovalGDocInfoVO approvalGDocInfoVO = null;
+			if (type.equalsIgnoreCase("GR")) {
+				approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "GR", optionInfo.getLang(), userInfo.getOffSet(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
+			} else {
+				approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", optionInfo.getLang(), userInfo.getOffSet(), userInfo.getCompanyId(), userInfo.getTenantId(), aprMemberSN, mode);
+			}
 			
 			LoginVO loginVO = new LoginVO();
 			
@@ -924,6 +941,18 @@ public class MApprovalGGWController {
 				}
 			} else if (type.equals("CHECK")) {
 				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "", "017", "", "");
+				
+				if (rtnVal != null && !rtnVal.equals("FALSE")) {
+					result.put("status", "ok");
+					result.put("code", "0");
+					result.put("data", "SUCCESS");
+				} else {
+					result.put("status", "ok");
+					result.put("code", "2");
+					result.put("data", "FAIL");
+				}
+			} else if (type.equals("GR")) {
+				rtnVal = ezApprovalGService.gongRamUpdate(docId, userInfo.getUserId(), userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");

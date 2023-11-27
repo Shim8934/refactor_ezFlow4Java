@@ -965,7 +965,7 @@
 		                <li><a rel="modal:close"><span onclick="popup_close()"></span></a></li>
 		            </ul>
 		        </div>
-				<table style="display: block; width: 478px; margin: 10px 0px 0px 1px;" class="popuplist">
+				<table style="display: block; margin: 10px 0px 0px 1px;" class="popuplist">
 					<tr>
 						<th nowrap><spring:message code='ezAttitude.t104' /></th>
 						<td style="width: 100%;"><input id="appr_search" class="input_text" type="text" onkeydown="" onkeyup="search_keypress(event);" style="width: 100%;" /></td>
@@ -973,7 +973,7 @@
 					<tr>
 						<th><spring:message code='ezAttitude.t137' /></th>
 						<td>
-							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()">
+							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()" style="vertical-align:middle;">
 							<label for="usepostdate"><spring:message code='ezAttitude.t105' /></label>&nbsp;
 							<input type="text" id="Sdatepicker"	style="width: 80px; text-align: center;" /> 
 							~ 

@@ -65,12 +65,13 @@ function ChkCabRoleInfo(selRow) {
                 g_bConfirm = true;
             else
                 g_bConfirm = false;
-            
-            if (MenuType == "1" && g_bDeptCharger) {
+
+            // voc.kaoni.com(#125383) - 전자결재G > 업무담당자 > 대장등록과 열람권한 설정 가능
+            /*if (MenuType == "1" && g_bDeptCharger) {
             	g_bCabCharger = true;
-            } else {
-            	g_bCabCharger = ISCabCharger(CabClassNo, UserID);
-            }
+            } else {*/
+            g_bCabCharger = ISCabCharger(CabClassNo, UserID);
+            // }
             
             ezCabMunuCtl(MenuType, selRow);
         }
@@ -977,6 +978,11 @@ function onreadystatechange_RecList() {
                         }
                     }
                     InsertToRecListView(Resultxml);
+                    // 2023-06-15 전인하 - 전자결재G > 기록물대장 미리보기 - 초기 로딩이 끝난 뒤 미리보기가 열린 상태일 경우 미리보기 여는 분기 삽입
+                    // 리스트 로딩보다 미리보기 여는 분기가 먼저 실행되는 것을 방지함
+                    if (typeof previewInfo != 'undefined' && previewInfo != "OFF" && typeof cabinetPreviewItemFlagArr != 'undefined' && cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+                        PreviewRayerChange(pPreviewShow_HOW, 'Cabinet');
+                    }
                     break;
 
                 default:
@@ -1245,21 +1251,22 @@ function ViewDoc_onclick() {
     var tr = DocList.GetSelectedRows();
     if (tr.length > 0) {
         var selRow = tr[0];
-        if (DocList_Flag == "RECORD") {
-            if (trim_Cross(selRow.getAttribute("DATA14")) != "null" && trim_Cross(selRow.getAttribute("DATA14")) != "" && trim_Cross(selRow.getAttribute("DATA14")) >= GetTodayDate()) {
-                if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE") {
+        // 2023-09-05 기록물 등록대장 미리보기 - 배부대장 문서보기 분기처리 추가, 비공개문서에 대한 누락된 분기처리(전체관리자는 비공개문서 열람할 수 있음) 추가
+        if (DocList_Flag == "RECORD" || DocList_Flag == "Delivery") {
+            var securityApprovalFlag = DocList_Flag == "RECORD" ? trim_Cross(selRow.getAttribute("DATA14")) : trim_Cross(selRow.getAttribute("DATA8"));
+            if (securityApprovalFlag != "null" && securityApprovalFlag != "" && securityApprovalFlag >= GetTodayDate()) {
+                if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE" || GetUserRole() == "Admin" ) {
                     chk_Passwd(UserID, ViewDoc_onclick_Complete);
-                }
-                else {
+                } else {
                     OpenAlertUI(strLang580);
                     return "";
                 }
-            }
-            else
-            	 ViewDoc_onclick_Complete("True");
-        }
-        else
+            } else {
+                ViewDoc_onclick_Complete("True");
+            }  	 
+        } else {
             ViewDoc_onclick_Complete("True");
+        }           
     }
     else {
         OpenAlertUI(strLang584);
@@ -1300,7 +1307,7 @@ function ViewDoc_onclick_Complete(Rtn) {
         if (trim_Cross(pURL) == "") {
             if (trim_Cross(DocID) == "") {
                 OpenAlertUI(strLang260);
-            } else if (g_uFlag == "m03") {
+            } else if (g_uFlag == "m03" || g_uFlag == "m14") {  // 2023-09-25 전인하 - 배부대장 메뉴 flag값 전달
             	var pAlertContent = "배부문서는 최초접수시 생성되므로 배부받은 부서에서 접수를 하여야 열람할 수 있습니다.";
                 OpenAlertUI(pAlertContent);
                 return "";
@@ -1342,7 +1349,7 @@ function ViewDoc_onclick_Complete(Rtn) {
             if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
             	if(useWebHWP == "NO") {
 	            	if (isIE()) {
-	                	if (g_uFlag == "m03") {
+	                	if (g_uFlag == "m03" || g_uFlag == "m14") {  // 2023-09-25 전인하 - 배부대장 메뉴 flag값 전달
 	                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
 	                	} else {
 	                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
@@ -1354,14 +1361,14 @@ function ViewDoc_onclick_Complete(Rtn) {
 	                    return;
 	                }
             	} else {
-            		if (g_uFlag == "m03") { /* 2023-07-13 민지수 - 배부대장 메뉴 flag값 전달 */
+            		if (g_uFlag == "m03" || g_uFlag == "m14") { /* 2023-07-13 민지수 - 배부대장 메뉴 flag값 전달 */
                 		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
                 	} else {
                 		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
                 	}
             	}
             } else {
-	            if (g_uFlag == "m03") {
+	            if (g_uFlag == "m03" || g_uFlag == "m14") { // 2023-09-25 전인하 - 배부대장 메뉴 flag값 전달
 	                openLocation = "/ezApprovalG/contDocView.do";
 	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
 	            } else {
@@ -2130,5 +2137,23 @@ function getProduceYear(cabinetClassNo) {
 	});
 	
 	return resY;
+}
+
+// 2023-09-25 전인하 - 전자결재G > 배부대장 미리보기 > 문서 진행/완료여부 조회
+function getLineMode(pDocID) {
+    var rtnVal = "";
+    $.ajax({
+        type : "POST",
+        dataType : "text",
+        async : false,
+        url : "/ezApprovalG/getLineMode.do",
+        data : {
+                docID : pDocID
+                },
+        success: function(xml) {
+            rtnVal = xml;
+        }        			
+    });
+    return rtnVal;
 }
 

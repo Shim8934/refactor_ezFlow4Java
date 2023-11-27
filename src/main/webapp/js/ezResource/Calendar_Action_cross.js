@@ -704,11 +704,11 @@ function tableListControl_Week()
 
                 var approveflag_name = "";
                 if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 1)
-                    approveflag_name = "icon_02";
+                    approveflag_name = "sub_iconLNB tree_resource_ok";
                 else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 0)
-                    approveflag_name = "icon_01";
+                    approveflag_name = "sub_iconLNB tree_resource_no";
                 else 
-                	approveflag_name = "icon_03";
+                	approveflag_name = "sub_iconLNB tree_resource_refuse";
 
                 var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[1].split(":");
                 var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[1].split(":");
@@ -858,11 +858,11 @@ function makeTable(xmldom, pNum, dayType) {
 
     var approveflag_name = "";
     if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 1)
-        approveflag_name = "icon_02";
+        approveflag_name = "sub_iconLNB tree_resource_ok";
     else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 0)
-        approveflag_name = "icon_01";
+        approveflag_name = "sub_iconLNB tree_resource_no";
     else
-    	approveflag_name = "icon_03";
+    	approveflag_name = "sub_iconLNB tree_resource_refuse";
 
     var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[1].split(":");
     var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[1].split(":");

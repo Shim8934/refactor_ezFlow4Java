@@ -318,7 +318,7 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		</script>
 		
-		<table class="content" style="width:415px">
+		<table class="content">
 		  	<tr> 
 		    	<th><spring:message code = 'ezApprovalG.t1250' /></th>
 		    	<td id="SealName">

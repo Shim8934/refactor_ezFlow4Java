@@ -1,7 +1,4 @@
-﻿/* @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap'); */
-
-
-/* 노토산스 font */
+﻿/* 노토산스 font */
 @font-face {
 	font-family: 'Noto Sans KR';
 	font-style: normal;
@@ -487,7 +484,7 @@ form{display:inline;margin:0}
 	padding: 0px 9px;
 	font-size:13px;
 	font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
-	line-height:28px;
+	line-height:29px;
 	box-sizing:border-box;
 }
 
@@ -743,7 +740,7 @@ form{display:inline;margin:0}
 }
 
 .content input {vertical-align:middle; border:1px solid #dedede; height:24px; border-radius: 3px;}
-.content input[type=checkbox] {height:20px;}
+.content input[type=checkbox] {height:20px !important;}
 
 .content td, .file td, .file2 td{
 	width: 100%;
@@ -1292,7 +1289,7 @@ form{display:inline;margin:0}
 .mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; font-weight:normal; background-color: #f1f3f5;}
 .mainlist_free tr th.title{width:100%; text-align:left;}
 
-.mainlist_free tr td{ border:0px; font-weight:normal; font-size:13px; color:#333; padding:6px 6px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
+.mainlist_free tr td{ border:0px; font-weight:normal; font-size:13px; color:#333; padding:6px 6px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0; word-break:break-all;}
 .mainlist_free tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
@@ -2228,7 +2225,7 @@ form{display:inline;margin:0}
 .content_poll{border:0px !important;}
 .content_poll .pollTd01{ border:none;}
 .content_poll tbody{border:0px;}
-.content td .createPoll_title{margin:0px 0px 10px 0px; padding:0px 12px 0px 12px; height:50px; border: 1px solid #ddd;}
+.content td .createPoll_title{margin:0px 0px 10px 0px; padding:0px 12px 0px 12px; height:50px !important; border: 1px solid #ddd;}
 
 
 
@@ -2550,7 +2547,7 @@ div#txtContent table {margin:auto;}
 .tree_webfolder_team{ background-position:-130px -104px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 웹폴더 부서폴더 */
 .tree_webfolder_individual{ background-position:-156px -104px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 웹폴더 개인폴더 */
 
-.tree_resource_standard{ background-position:-234px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 기본아이콘 */
+.tree_resource_standard{ background-position:-234px -52px; width:16px; height:16px; display:inline-block; margin: 5px 2px 0px 0px; cursor:pointer;} /* tree 자원관리 기본아이콘 */
 .tree_resource_ok{ background-position:-260px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 승인아이콘 */
 .tree_resource_no{ background-position:-286px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 비승인아이콘 */
 
@@ -2590,7 +2587,7 @@ div#txtContent table {margin:auto;}
 /* left mail 용량 */
 .mail_space{height:34px; line-height:33px; background:#bbbfc3; position:absolute; bottom:25px; width:190px; border-radius: 5px; left: 13px;}
 .mail_space .mail_spaceText{font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana'; font-size:14px; color:#333; display:inline-block; margin:0px; padding:0px 0px 0px 8px; position:absolute; bottom: 38px;}
-.mail_space .mailBar{ display:inline-block; width:0%; height:34px; background:#82b9f6; margin:0px; padding:0px; border-radius: 10px; line-height: 36px;}
+.mail_space .mailBar{ display:inline-block; width:0%; height:34px; background:#82b9f6; margin:0px; padding:0px; border-radius: 5px; line-height: 36px;}
 .mail_space .mailBar.warning{background:#ffb600;}
 .mail_space .mailBar.danger{background:#ff4040;}
 
@@ -3230,7 +3227,7 @@ h2, #menu span {font-size: 12px;}
 /**** survey information table start ****/
 .survey-nminfo {margin:0px 0px 10px 0px;}
 .surveyTitle{width:100%; margin:0px; padding:0px; line-height: 20px;}
-.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
+.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px !important; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
 .info-input-ttl {font-size:16px; font-weight:bold; color:#333;}
 .info-input-pp {font-size:14px;}
 .textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border:1px solid #388CE5; outline: none;}
@@ -3591,8 +3588,10 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* 검색 */
 .searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:0px;}
-.searchBtn{ position:absolute; right:5px; top:3px;}
-.searchinputBox{width:230px; border-radius: 3px; outline: none;}
+.searchForm input{height:27px !important;}
+.searchBtn.nofilter{right:6px;}
+.searchBtn{ position:absolute; right:35px; top:3px;}
+.searchinputBox{width:230px; border-radius: 3px; outline: none; padding-right:25px;}
 
 /* 유은정 - 메뉴명 개수 | 회사 선택 이미지 위치*/
 .title_bar {margin-left:5px;vertical-align:middle;}
@@ -3615,7 +3614,7 @@ input[type=range]::-ms-tooltip {display: none;}
 /* 2019-05-17 김민성 - 자원관리 개선*/
 .mainmenuTabUL_left {  position: absolute;top: 7px;left: -10px; list-style:none; margin:0px; padding:0px; }
 .mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px;}
-.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px; cursor:default;}
+.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px 3px 0 0; cursor:default;}
 .mainmenuTabUL_left li .icon { vertical-align:middle;}
 
 .tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
@@ -3694,8 +3693,8 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 
 /* 20200608 검색필터 추가 */
 .searchForm.searchFilter{position:relative; margin-right:48px;}
-.searchFilterBtn{position:absolute; right:-50px; top:-2px;}
-.layerPopup_new{display:none; position:absolute; right:-48px; top:39px; width:400px; height:395px; padding:20px; border:1px solid #999999; background:#ffffff; box-shadow:2px 3px 4px rgba(0,0,0,0.1); box-sizing:border-box;}
+.searchFilterBtn{position:absolute; right:0px; top:0px;}
+.layerPopup_new{display:none; position:absolute; right:0px; top:39px; width:400px; height:395px; padding:20px; border:1px solid #999999; background:#ffffff; box-shadow:2px 3px 4px rgba(0,0,0,0.1); box-sizing:border-box;}
 .layerPopup_new select{width:75px; height:30px;}
 .content_layout{clear:both; margin:0px; padding:0px; list-style:none; overflow:hidden;}
 .content_layout_left{float:left;}
@@ -3844,7 +3843,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .lnb h2.on{padding: 9px 10px 9px 23px !important}
 .lnbUL > .tree.onlytree{margin-bottom: 0px;}
 .h2_text{font-size: 14px;}
-.tree_resource_ok,.tree_resource_no,.tree_resource_refuse{margin: 5px 2px 0px 0px}
+
 
 .circular_left .lnbUL{background: #F8F9FB; padding: 15px 0px 17px 0px}
 .circular_left .lnbUL li{margin: 0px 20px 0 35px;}
@@ -3891,10 +3890,10 @@ select{min-height: 24px !important;}
 /* 20230619 자바 서브 추가 */
 .warningbox .warningimg img{width: 95px !important; height:95px !important;}
 .lnb h2 span{font-size:16px !important;}
-.organMainmenu ul li.newSelect{float: left; margin: 0 5px 0 0; padding: 0 15px; height: 34px; font-size: 14px; line-height: 32px; background: #fff; color: #000; border: 1px solid #babec7; border-radius: 3px; box-sizing: border-box; cursor: pointer; position: relative;}
+.organMainmenu ul li.newSelect{float: left; margin: 0 5px 0 0; padding: 0 15px; height: 34px; font-size: 14px; line-height: 32px; background: #fff; color: #000; border: 1px solid #babec7; border-radius: 3px; cursor: pointer; position: relative;}
 .icon_sel{background-image: url(../images/arrow_iconset.png) !important ;background-size: 8px; display: inline-block; width: 16px !important; height: 16px !important; line-height: 0px !important; padding: 0px !important; margin: 6px 0px 0px 0px;background-repeat: no-repeat; background-color: transparent !important; box-shadow: none !important; border: 0px none !important; border-radius: 0px !important; vertical-align: top !important; overflow: hidden;}
-.collapse_down {background-position: 0px -13px !important; margin: 6px 0px 0px 0px; cursor: pointer;}
-.collapse_up {background-position: 0px 5px !important; margin: 6px 0px 0px 0px; cursor: pointer;}
+.collapse_down {background-position: 0px -13px !important; margin: 8px 0px 0px 0px; cursor: pointer;}
+.collapse_up {background-position: 0px 5px !important; margin: 8px 0px 0px 0px; cursor: pointer;}
 .organMainmenu ul.selectUL li ul.option_horizontal_list{position: absolute; left: 0px; top: 28px; min-width: 100px; max-width: 180px; list-style: none; margin: 0px; padding: 0px 0px; background: #ffffff; border: 1px solid #808080; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; box-shadow: 2px 2px 10px rgb(0 0 0 / 18%); z-index: 10000; display: block; height: auto !important; overflow: auto !important; max-height: 200px !important;}
 .organMainmenu ul.selectUL li .option_horizontal_list li{float: none !important; height: 28px !important; line-height: 30px; margin: 0px !important; padding: 0px 10px !important; font-size: 12px; color: #444; vertical-align: top; box-sizing: border-box; border: 0px none; border-radius: 0px; background: transparent; box-shadow: none; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; border: none !important;}
 .organMainmenu ul.selectUL li .option_horizontal_list li:hover{background: #e2ecfa; border: 0 none; color: #333333;}
@@ -3938,12 +3937,36 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 /* 20231004 자바 서브 추가 */
 #addr{margin: 0px 4px 0px 0px; vertical-align: middle;}
 #TreeView{padding: 6px 8px; box-sizing: border-box;}
-.file td input{margin: -2px 4px 0px 0px; vertical-align: middle;}
+.file td input{margin: -4px 4px 0px 0px; vertical-align: middle;}
 #txtLimitRange{width: 60% !important;}
 
-.tree_resource_standard{background-position: -260px -52px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;}
+/*.tree_resource_standard{background-position: -260px -52px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;}*/
 .tree_resource_unused{background-position: -312px -52px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;}
 
 /* 스위치 위치수정 */
 .switch {position: relative;display: inline-block;width: 45px;height: 19px;margin-top: 2px;vertical-align: middle;}
 .slider:before{position: absolute; content: ""; height: 13px; width: 13px; left: 6px; border-radius: 25px; bottom: 3px; background-color: white; -webkit-transition: .4s; transition: .4s;}
+
+/* 20231030 css추가 */
+.mail_space .mailBar{border-radius: 5px;}
+
+
+#left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
+
+.popup #divList{overflow: auto;}
+.tree_resource_standard{ background-position:-234px -52px; width:16px; height:16px; display:inline-block; margin: 0px 2px 0px 0px; cursor:pointer;} /* tree 자원관리 기본아이콘 */
+.tree_resource_ok{ background-position:-260px -52px; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 승인아이콘 */
+.tree_resource_no{ background-position:-286px -52px; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* tree 자원관리 비승인아이콘 */
+.tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 0px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
+
+.resLnb_tree .tree_resource_standard,
+.resLnb_tree .tree_resource_ok,
+.resLnb_tree .tree_resource_no,
+.resLnb_tree .tree_resource_refuse{margin-top: 4px}/*자원 LNB영역 아이콘*/
+
+#TreeView .tree_resource_standard,
+#TreeView .tree_resource_ok,
+#TreeView .tree_resource_no,
+#TreeView .tree_resource_refuse{margin-top: 4px}
+
+.content input{margin-top: 0px;}

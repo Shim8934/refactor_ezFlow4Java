@@ -2929,4 +2929,26 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createTblBoardReplyReact() throws Exception {
 		ezCommonDAO.createTblBoardReplyReact();
 	}
+
+    /* 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 */
+    public void addTblBoardItemNoti() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("NtStartDate", commonUtil.getTodayUTCTime(""));
+        map.put("NtEndDate","9999-12-30 14:59:59"); // 이미 존재하는 게시물 > 영구공지
+        ezCommonDAO.addTblBoardItemNoti(map);
+    }
+
+    /* 2023-09-25 민지수 - 게시판 > 임시보관함 > 공지게시물 > 기간설정 컬럼 추가 */
+    public void addTblBoardItemTempNoti() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("NtStartDate", commonUtil.getTodayUTCTime(""));
+        map.put("NtEndDate","9999-12-30 14:59:59"); // 이미 존재하는 게시물 > 영구공지
+        ezCommonDAO.addTblBoardItemTempNoti(map);
+    }
+    
+	@Override
+	public void insertPrvwConfig() throws Exception {
+		ezCommonDAO.insertPrvwConfig();
+	}
+	
 }

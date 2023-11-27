@@ -489,7 +489,7 @@
 		    function pop_addcon() {
 		        if (inboxRuleCon1.value.length > 0) {
 		            var ischeck = true;
-		            if (_RuleKind == "SENDER" || _RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION")
+		            if (checkRuleKind(_RuleKind))
 		                ischeck = IsEmail(inboxRuleCon1.value);
 		
 		            var isSenderAddress = true;
@@ -524,46 +524,44 @@
 		            }
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-		                	ConCellRow.outerHTML = "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><span></span><div>";
-		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  span").text(inboxRuleCon1.value);
-		                    inboxRuleCon1.value = "";
-		                    inboxRuleCon1.focus();
+							ConCellRow.setAttribute('value', inboxRuleCon1.value);
+							ConCellRow.firstChild.innerText = inboxRuleCon1.value;
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><span>" + inboxRuleCon1.value + "</span><div>";
-		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  span").text(inboxRuleCon1.value);
-		                    inboxRuleCon1.value = "";
-		                    inboxRuleCon1.focus();
+							Conitems.innerHTML += createCellRow(inboxRuleCon1.value, inboxRuleCon1.value);
 		                }
 		            }
 		            else {
 		                alert(strLang222);
-		                inboxRuleCon1.value = "";
-		                inboxRuleCon1.focus();
 		            }
+
+					inboxRuleCon1.value = "";
+					inboxRuleCon1.focus();
 		        }
 		        else
 		            alert(strLang223);
 		    }
 		    function pop_addcon2(RuleKind, value, i) {
 		        if (value.length > 0) {
-		            if (RuleKind == "SENDER" || RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION") {
-		                if (value.split("<").length > 1) {
-		                    var mailaddress = value.split("<")[1].replace(">", "");
-		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><span>" + MakeXMLString(value) + "</span><div>";
-		                }
-		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><span>" + value + "</span><div>";
-		                }
-		            }
+		            if (checkRuleKind(RuleKind) && value.split("<").length > 1) {
+						var mailaddress = value.split("<")[1].replace(">", "");
+						Conitems.innerHTML += createCellRow(mailaddress, MakeXMLString(value));
+					}
 		            else {
-		                Conitems.innerHTML += "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;' ondblclick='pop_modify(this);' ondblclick='' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><span></span><div>";
-		                $("div#Conitems div:nth-child(" + i + ")  span").text(value);
+						Conitems.innerHTML += createCellRow(value, value);
 		            }
 		        }
 		    }
+			function createCellRow(value, spanText) {
+				return "<div style='font-size:small;max-height:55px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px; overflow-y: auto;'" +
+						" ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);'" +
+						" value='" + value + "'><span>" + spanText + "</span></div>";
+			}
+			function checkRuleKind(RuleKind) {
+				return (RuleKind == "SENDER" || RuleKind == "RECEIVER" || RuleKind == "FORWARD" || RuleKind == "REDIRECTION");
+			}
 		    function event_Mover(obj) {
 		        if (obj != _popObj)
 		            obj.style.backgroundColor = "#EDEDED";
@@ -610,7 +608,7 @@
 		                pop_addcon2(_RuleKind, _value, i+1);
 		            }
 		        }
-		        if (_RuleKind == "SENDER" || _RuleKind == "RECEIVER" || _RuleKind == "FORWARD" || _RuleKind == "REDIRECTION") {
+		        if (checkRuleKind(_RuleKind)) {
 		            document.getElementById("ReceiverSelecttd").style.width = "54%";
 		            document.getElementById("ReceiverSelect").style.display = "";
 		        }
@@ -951,7 +949,7 @@
 		        receiverData["window"] = this;
 		        mail_newreceiverchoose_dialogArguments[0] = receiverData;
 		        mail_newreceiverchoose_dialogArguments[1] = addReceiver;
-		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&RuleKind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(970, 655));
+		        var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type + "&RuleKind=" + _RuleKind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 655));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function addReceiver(pListView) {

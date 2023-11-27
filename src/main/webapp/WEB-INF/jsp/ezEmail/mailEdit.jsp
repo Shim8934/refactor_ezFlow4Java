@@ -438,10 +438,10 @@
 			    mail_newreceiverchoose_dialogArguments[0] = receiverData;
 		        mail_newreceiverchoose_dialogArguments[1] = new_Address_Complete;
 			    if (CrossYN()) {
-				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=970,height=655,status=no');
+				    var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, 'width=1120,height=655,status=no');
 		            try { OpenWin.focus(); } catch (e) { }
 			    } else {
-				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:970px; status:no; help:no; edge:sunken");
+				    window.showModalDialog("/ezEmail/mailNewReceiverChoose.do?defaultwin=&type=" + type, receiverData, "dialogHeight:655px;dialogWidth:1120px; status:no; help:no; edge:sunken");
                 }
 		        Simple_Choice();
 		    }
@@ -1171,6 +1171,7 @@
 		            <li class="bar" style="background:none; border:0;padding-left:0;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif" align="absmiddle"></li>                        
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
                         <img src="/images/pbar.gif"></li> 
+                    <input id="bodyType" type=hidden value="${bodyType}">
                     <%-- 메일옵션으로 보안메일과 바디타입 설정이 옮겨져 리팩토링 시 이하 주석 코드 삭제 가능
                     <li class="sel" style="background:none; border:none; padding:0px; display:none;">
                         <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">

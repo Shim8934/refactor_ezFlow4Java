@@ -298,6 +298,8 @@ public class MBoardGWController {
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
+			boardItem.setNotiStart(commonUtil.getDateStringInUTC(boardItem.getNotiStart(), info.getOffSet(),false));
+			boardItem.setNotiEnd(commonUtil.getDateStringInUTC(boardItem.getNotiEnd(), info.getOffSet(),false));
 			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			

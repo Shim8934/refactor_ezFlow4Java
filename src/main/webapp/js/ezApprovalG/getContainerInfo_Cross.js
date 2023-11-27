@@ -233,7 +233,7 @@ function GetDocSearch() {
 	    if (GamSaFlag){
 	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
 	    } else {
-	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", false);
+	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", true);
 	    }
 	    xmlhttp.onreadystatechange = getsearchDocListS_after;		
 	    xmlhttp.send(xmlpara);
@@ -562,7 +562,9 @@ function getsearchDocList_after() {
         }
         HiddenMailProgress();
     }
-    catch (e) { }
+    catch (e) { 
+        console.log(e);
+    }
 }
 
 function getsearchDocListS_after() {
@@ -587,9 +589,12 @@ function getsearchDocListS_after() {
                 else
                     NodeListLen = 0;
             }
+            var preDocList = new ListView();
+            preDocList.LoadFromID('DocList');
+            var preSelectedRow = preDocList.GetSelectedRows();
 
             if (NodeListLen > 10) {
-                paging(curpage, nowblock);
+                paging(curpage, nowblock, selRowChangeFlag, preSelectedRow);
             }
             else {
                 if (document.getElementById("lvtDoclist").innerHTML != "")
@@ -605,6 +610,11 @@ function getsearchDocListS_after() {
                 DocList.SetUrgentFlag(false);
                 DocList.DataSource(ListViewNode);
                 DocList.DataBind("lvtDoclist");
+                if (selRowChangeFlag && preSelectedRow.length > 0) {
+                    // 탭 이동 시 전 탭에서 선택된 row 선택되지 않도록 flag값 변경
+                    selRowChangeFlag = false;
+                    DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));
+                }
                 DocList = null;
 
                 pagingCount(curpage, nowblock);
@@ -736,7 +746,12 @@ function selFirstRow(Resultxml) {
     
     /* 2022-07-04 홍승비 - 결재완료문서가 존재하는 경우 */
     if ($("#PreviewRayerH").length && $("#PreviewRayerH").css("display") != "none") {
-    	PreviewRayerChange("H", 'Manage');
+    // 2023-06-30 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 레이어 팝업 호출 메소드를 타입에 따라 나눔
+        if (typeof cabinetPreviewItemFlagArr != 'undefined' && typeof g_sFlag != 'undefined' && cabinetPreviewItemFlagArr.includes(g_sFlag)) {
+            PreviewRayerChange("H", 'Cabinet'); // 기록물
+        } else {
+            PreviewRayerChange("H", 'Container'); // 완료문서
+        }
     	if (CrossYN()) {
     		if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
         		ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = strLang930;	        			
@@ -747,7 +762,8 @@ function selFirstRow(Resultxml) {
         	}
         }
     } else if ($("#PreviewRayerH").length) {
-    	PreviewRayerChange("NONE", 'Manage');
+        // 2023-07-13 전인하 - 전자결재 > 문서 미리보기 > 미리보기영역 사용하지 않는 메뉴일 경우 미리보기창을 닫는 것이 아니라 프리뷰 레이어 영역을 display: none 처리함
+        $("#PreviewRayerH").css("display", "none");
     }
 }
 
@@ -1422,10 +1438,11 @@ function openergetDocInfo() {
         selRowChangeFlag = true;
         // page 유지를 위한 Flag 설정
         pChackYN = "TRUE";
-        if (contFlag == "END"){
+        if (contFlag == "END" && approvalFlag == 'G') {
             GetDocList("END");
-        }
-        else {
+        } else if (contFlag == "END" && approvalFlag == 'S') {
+            GetDocSearch();
+        } else {
             return;
         }
     } catch (e) {

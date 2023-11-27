@@ -130,8 +130,8 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
 	            <td>
-	                <textarea rows="3" id="txtdept" style="margin-top:2px; margin-bottom:2px; width:338px; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
-	                <a class="imgbtn imgbck2" style="margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezJournal.t223' /></span></a>                
+	                <textarea rows="3" id="txtdept" style="margin-top:2px; margin-bottom:2px; width:338px; resize: none; vertical-align:middle;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <a class="imgbtn imgbck2" style="vertical-align:middle !important;"><span onclick="selectDept()"><spring:message code='ezJournal.t223' /></span></a>                
 	            </td>
 	        </tr>
 	    </table>

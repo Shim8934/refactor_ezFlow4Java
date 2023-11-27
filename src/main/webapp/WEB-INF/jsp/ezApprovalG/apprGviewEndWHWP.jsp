@@ -142,11 +142,19 @@
                 
 	        }
 	
-			function QuitWindow() {
-			    menu.style.display = "none";
-			    alert("<spring:message code='ezApprovalG.t1443'/>\n<spring:message code='ezApprovalG.t1444'/>");
-			    btnClose_onclick();
-			    window.close();
+			function QuitWindow() {		
+			 // 2023-09-05 전인하 - 전자결재G > 기록물대장 미리보기 - 사용자에게 열람권한이 없을 때 미리보기 영역에서 문서가 열렸을 경우 미리보기 프레임에 공백 페이지 삽입. 
+			 // mht에 대해서만 적용되어있었던 처리를 whwp에서도 동일 적용함
+             // 2022-07-29 홍승비 - 미리보기 영역으로 열린 경우, iframe src 자체를 공백으로 변경 */
+                var ifrmPreViewH = window.parent.document.getElementById("ifrmPreViewH");
+                if (ifrmPreViewH != null && window.self.frameElement.id == "ifrmPreViewH") {
+                    ifrmPreViewH.src = "<spring:message code='main.kms4'/>";
+                } else {
+                    menu.style.display = "none";
+                    alert(strLang1139);
+                    btnClose_onclick();
+                    window.close();
+                }
 			}
 	
 			/* function OpenAlertUI(pAlertContent, CompleteFunction) {
@@ -276,8 +284,10 @@
 			function btnDocInfo_onclick() {
 				ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
-		        
-				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END";
+                // 2023-10-16 전인하 - 전자결재G > 기록물배부대장 > 배부대장 문서정보 오류
+                // 문서정보를 무조건 완료문서 DB에서 가져와, 진행문서를 배부대장에서 조회하는 경우 발생하는 문서정보 조회불가 현상을 수정함
+		        var ingFlag = docAprEnd == "APR" ? "APR" : "END";
+				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + ingFlag;
 			    //var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    //var RtnVal = window.showModalDialog(url, "", feature);
 				DivPopUpShow(420, 520, url);

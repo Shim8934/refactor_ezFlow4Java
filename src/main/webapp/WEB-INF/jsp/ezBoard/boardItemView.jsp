@@ -83,6 +83,12 @@
 		    var scrollValue = 0;
 		 	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 사용 여부
 		    var useBoardFilePrvw = "<c:out value='${useBoardFilePrvw}'/>";
+		    
+		    /* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
+			var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
+			var strUpperItemIDTree = "<c:out value='${boardItem.upperItemIDTree}'/>";
+			var strParentWriteDate = "<c:out value='${boardItem.parentWriteDate}'/>"; // 답변게시물 판별용 부모게시물 NO(PARENTWRITEDATE)
+			var strDocNo = "<c:out value='${boardItem.docNo}'/>"; // 답변게시물 판별용 현재게시물 NO(DOCNO)
 
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
@@ -847,7 +853,7 @@
 		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
 		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a>";
 		            // 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
-		            if (useBoardFilePrvw == "1") {
+		            if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1") {
 			            strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filenameOrg) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
 		            }
 		            strAttach += "<br>";
@@ -1326,7 +1332,7 @@
 		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
 		    function Appr_onclick(pFlag) {
-		        if (pFlag == "C") {
+		        if (pFlag == "C") { // 반려
 		            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
@@ -1336,10 +1342,26 @@
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "OK") {
-		                if (pFlag == "Y")
+		            	/* 2023-11-17 홍승비 - 승인게시판의 게시물 승인 시 게시알림메일 발송 기능 추가 */
+		                if (pFlag == "Y") { // 승인
+		                	// 해당 게시판의 관리자에게 게시알림메일 발송 (게시판 권한설정 > 관리자 권한자인 경우 '게시 메일로 알림' 옵션)
+		                	sendPostNotiMail(pBoardID, pItemID);
+		                	
+		                	// 답변게시물이 아닌 경우
+			                if (strParentWriteDate == strDocNo) {
+			                	// 해당 게시판의 일반 사용자(접근 권한자)에게 게시알림메일 발송 (게시판 일반설정 > 메일알림 > '게시알림' 옵션)
+			                	sendBoardAlertMail("new", pBoardID, pItemID, isAllGroupBoard);
+			                }
+			                else { // 답변게시물인 경우
+			                	// 해당 게시물의 부모게시물 작성자에게 답변알림메일 발송 (게시판 일반설정 > 메일알림 > '답변알림' 옵션)
+			                	sendReplyNoticeMail(pBoardID, pItemID, strUpperItemIDTree);
+			                }
+		                	
 		                    alert("<spring:message code='ezBoard.t999002' />");
-		                else
+		                }
+		                else { // 반려
 		                    alert("<spring:message code='ezBoard.t999009' />");
+		                }
 		            }
 		            try {
 						window.opener.leftCountRf(pBoardID);
@@ -1438,6 +1460,51 @@
 		  	    str = ReplaceText(str, "&amp;", "&");
 		        return str;
 		    }
+		    
+	        /* 2023-11-17 홍승비 - 관리자 권한자의 '게시 메일로 알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendPostNotiMail(pBoardID, pItemID) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/sendPostNotiMail.do",
+					data : {
+						boardID : pBoardID,
+						itemID : pItemID
+					}
+				});
+	        }
+		    
+	        /* 2023-11-17 홍승비 - 일반 사용자(접근 권한자)의 '게시알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/sendBoardAlertMail.do",
+					data : {
+						mode : pMode,
+						boardID : pBoardID,
+						itemID : pItemID,
+						isAllGroupBoard : pIsAllGroupBoard
+					}
+				});
+	        }
+	        
+	        /* 2023-11-17 홍승비 - 답변게시물의 부모게시물 작성자의 '답변알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+	        function sendReplyNoticeMail(pBoardID, pItemID, pStrUpperItemIDTree) {
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/sendReplyNoticeMail.do",
+					data : {
+						boardID : pBoardID,
+						itemID : pItemID,
+						itemTreeID : pStrUpperItemIDTree
+					}
+				});
+	        }
 		    
 		</script>
 	</head>
@@ -1553,7 +1620,7 @@
 						<th style="width:10%;"><spring:message code='ezBoard.t223' /></th>
 						<c:choose>
 							<c:when test="${guBun != '2'}">
-								<td id="WriteUserNM" style="width:40%; white-space:nowrap">
+								<td id="WriteUserNM" style="width:40%;">
 									<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
 										<c:out value="${boardItem.writerName}"/>
 									</div>
@@ -1618,12 +1685,12 @@
 								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
 								<c:choose>
 									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-										<td id="EndDate" style="padding-right:5px;  white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
+										<td id="EndDate" style="padding-right:5px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
 										</td>
 									</c:when>
 									<c:otherwise>
-										<td id="EndDate" style="padding-right:15px;  white-space:nowrap">
+										<td id="EndDate" style="padding-right:15px;">
 											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
 										</td>
 									</c:otherwise>
@@ -1644,13 +1711,13 @@
 								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
 								<c:choose>
 									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-										<td colspan="3" id="EndDate" style="padding-right:5px; width:120px; white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
+										<td colspan="3" id="EndDate" style="padding-right:5px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
 										</td>
 									</c:when>
 									<c:otherwise>
-										<td colspan="3" id="EndDate" style="padding-right:15px; width:120px; white-space:nowrap">
-											<div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
+										<td colspan="3" id="EndDate" style="padding-right:15px;">
+											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
 										</td>
 									</c:otherwise>
 								</c:choose>
@@ -1740,7 +1807,7 @@
 								</c:when>
 								<c:otherwise>
 									<tr>
-										<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+										<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 											<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 										</th>
 								</c:otherwise>	

@@ -569,9 +569,9 @@
 		   
 		 
 		 function show_groupinfo2(obj) {
-		    
+		    // 영어에서 ui 틀어짐 : 850 > 900 으로 수치 변경
 		 	var checkRealID = "";
-		 	var feature = GetOpenPosition(850, 550);
+		 	var feature = GetOpenPosition(900, 550);
 		 	
 		 	var checkCnt = 0;
 		 	var allChild = $("#GroupListView")[0].childNodes[1];
@@ -598,7 +598,7 @@
 		 			return;
 		 		}else{
 		 			checkRealID = checkId[0].id.substring(0,checkId[0].id.length -1);
-		 			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID + "&groupColor=" + encodeURIComponent(groupColor), "schedule_group_modify", "height = 550px, width = 850px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		 			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID + "&groupColor=" + encodeURIComponent(groupColor), "schedule_group_modify", "height = 550px, width = 900px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		 			return;
 		 		}
 		 	}else{
@@ -607,7 +607,7 @@
 		 		
 		 		
 		 		
-		 		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1") + "&groupColor=" + encodeURIComponent(selectedTr.getAttribute("data3")), "", "height = 550px, width = 850px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		 		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1") + "&groupColor=" + encodeURIComponent(selectedTr.getAttribute("data3")), "", "height = 550px, width = 900px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		 		
 		 	}
 			

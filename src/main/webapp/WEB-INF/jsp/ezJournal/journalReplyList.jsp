@@ -162,7 +162,7 @@
 		<div style='height:100%;overflow-y:auto;'>
 			<table class="mainlist" style="width:99.5%" >
 				<tr>
-					<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+					<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 						<textarea id="replyContent" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 					</th>
 					<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">

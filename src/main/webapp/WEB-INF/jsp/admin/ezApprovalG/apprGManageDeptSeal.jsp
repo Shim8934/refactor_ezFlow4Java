@@ -230,7 +230,8 @@
 	            AddDeptSealInfo_dialogArguments[1] = btnAdd_onclick_complete;
 	            
 	            var url = "/admin/ezApprovalG/addDeptSealInfo.do";
-	            var addSealWindow = window.open(url, "", GetOpenWindowfeature(435, 390));
+	            var addSealWindow = window.open(url, "", GetOpenWindowfeature(475, 390));
+				// 팝업 사이즈 수정(435 > 475) : 다국어 버튼 아래로 내려감
 	            try { addSealWindow.focus(); } catch (e) {}   
 	    	}
 	        

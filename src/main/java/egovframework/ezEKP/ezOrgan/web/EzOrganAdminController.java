@@ -310,6 +310,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addScheduleGroupColumn(); // 2023-08-31 조소정 - 일정관리 > 일정그룹 테이블에 컬럼 추가 (양도일자/그룹 색상)
 			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
 	    	ezCommonService.createTblBoardReplyReact();	// 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가
+			ezCommonService.addTblBoardItemNoti(); /* 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 */
+			ezCommonService.addTblBoardItemTempNoti(); /* 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 */
+	    	ezCommonService.insertPrvwConfig(); // 2023-10-27 조수빈 - 전자결재 / 게시판 모듈 미리보기 테넌트 컨피그 2건 추가
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

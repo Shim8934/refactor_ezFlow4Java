@@ -2500,4 +2500,43 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardReactFlag");
 		}
 	}
+
+	/* 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 */
+	public void addTblBoardItemNoti(Map<String, Object> map) {
+		try {
+			select("EzCommonDAO.checkTblBoardItemNotiColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_board_item NTSTARTDATE,NTENDDATE column doesn't exist. creating the column...");
+			update("EzCommonDAO.addTblBoardItemNotiColumn");
+			update("EzCommonDAO.addTblBoardItemNoti",map);
+		}
+
+	}
+
+	/* 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 */
+	public void addTblBoardItemTempNoti(Map<String, Object> map) {
+		try {
+			select("EzCommonDAO.checkTblBoardItemTempNotiColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_board_item_temp NTSTARTDATE,NTENDDATE column doesn't exist. creating the column...");
+			update("EzCommonDAO.addTblBoardItemTempNotiColumn");
+			update("EzCommonDAO.addTblBoardItemTempNoti",map);
+		}
+
+	}
+
+	public void insertPrvwConfig() {
+		String useAprFilePrvw = (String) select("EzCommonDAO.checkUseAprFilePrvwConfig");
+		String useBoardFilePrvw = (String) select("EzCommonDAO.checkUseBoardFilePrvwConfig");
+		
+		if (useAprFilePrvw == null) {
+			logger.debug("useAprFilePrvw tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseAprFilePrvwConfig");
+		}
+		
+		if (useBoardFilePrvw == null) {
+			logger.debug("useBoardFilePrvw tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseBoardFilePrvwConfig");
+		}
+	}
 }

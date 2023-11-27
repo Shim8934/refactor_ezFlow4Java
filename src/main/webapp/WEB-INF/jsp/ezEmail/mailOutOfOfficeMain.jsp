@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	</head>
 	<body class="mainbody">
-		<div class="portlet_tabnew01_top" id="tab1">
+		<div class="portlet_tabpart01_top" id="tab1">
 			<p id="Mail_sub0">
 				<span id="1tab0"><spring:message code='ezEmail.t203' /></span>
 			</p>

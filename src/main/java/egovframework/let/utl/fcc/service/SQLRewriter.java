@@ -38,8 +38,16 @@ public class SQLRewriter implements RewritePolicy{
             String sql = pstmMap.remove(pstm);
             String para = paramMap.remove(pstm);
             if (sql != null && para != null) {
-                String query = "{pstm-" + pstm + "} Query: " + createQuery(sql, para, message.replace("Types: ", "").trim());
-                builder.setMessage(new SimpleMessage(query));
+                String preStr = "{pstm-" + pstm + "} ";
+                try {
+                    String query = preStr + "Query: " + createQuery(sql, para, message.replace("Types: ", "").trim());
+                    builder.setMessage(new SimpleMessage(query));
+                } catch (Exception e) {
+                    SimpleMessage message1 = new SimpleMessage(preStr + "Executing Statement: " + sql + "\r\n " +
+                            preStr + "Parameters: [" + para + "]\r\n " +
+                            preStr + "Types: [" + message + "]");
+                    builder.setMessage(message1);
+                }
             }
         }
 
@@ -63,6 +71,10 @@ public class SQLRewriter implements RewritePolicy{
                 .collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
 
         StringBuilder result = new StringBuilder();
+
+        if (!qPara.isEmpty() && qPara.size() != qTypes.size()) {
+            throw new RuntimeException("Parameter count does not match Parameter Type count");
+        }
 
         while(!qPara.isEmpty()) {
             String param = qPara.poll();

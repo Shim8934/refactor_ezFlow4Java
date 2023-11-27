@@ -1309,7 +1309,7 @@
 		    	configmyboard_dialogArguments[0] = "";
 		    	
 		        if (CrossYN()) {
-		            OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), "MyBoardConfig", 525, 418); 
+		            OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), "MyBoardConfig", 600, 418); // 사이즈 수정(525 > 600) : 일본어 버튼 아래로 내려감
 		            try {
 		            	OpenWin.focus();
 		            	
@@ -1330,7 +1330,7 @@
 		            } catch (e) { }
 		        }
 		        else
-		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), null, "dialogHeight:418px; dialogWidth:525px; status:no; help:no; scroll:no; edge:sunken");
+		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), null, "dialogHeight:418px; dialogWidth:600px; status:no; help:no; scroll:no; edge:sunken");
 		    }
 		
 		    function ChangeNotiOrder() {

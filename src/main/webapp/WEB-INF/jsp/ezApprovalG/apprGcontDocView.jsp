@@ -194,16 +194,15 @@
 		        }
 		    }
 		    function QuitWindow() {
-// 		        OpenAlertUI(strLang929);
-				alert(strLang1139);
-		        btnClose_onclick();
-		        window.close();
-		        
+                // 2023-06-19 전인하 - 전자결재G > 기록물대장 미리보기 - 사용자에게 열람권한이 없을 때 미리보기 영역에서 문서가 열렸을 경우 미리보기 프레임에 공백 페이지 삽입
 		        /* 2022-07-29 홍승비 - 미리보기 영역으로 열린 경우, iframe src 자체를 공백으로 변경 */
-		        var ifrmPreViewH = window.parent.document.getElementById("ifrmPreViewH");
-		        if (ifrmPreViewH != null) {
-		        	ifrmPreViewH.src = "<spring:message code='main.kms4'/>";
-		        	ifrmPreViewH.contentDocument.getElementById("ifrmviewEmptyText").textContent = strLang930;	
+                var ifrmPreViewH = window.parent.document.getElementById("ifrmPreViewH");
+                if (ifrmPreViewH != null && window.self.frameElement.id == "ifrmPreViewH") {
+                    ifrmPreViewH.src = "<spring:message code='main.kms4'/>";
+                } else {
+                    alert(strLang1139);
+                    btnClose_onclick();
+                    window.close();
 		        }
 		    }
 		    function CheckOpinionInfo() {
@@ -441,8 +440,11 @@
 		        ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		
+                // 2023-10-16 전인하 - 전자결재G > 기록물배부대장 > 배부대장 문서정보 오류
+                // 문서정보를 무조건 완료문서 DB에서 가져와, 진행문서를 배부대장에서 조회하는 경우 발생하는 문서정보 조회불가 현상을 수정함
+                var initFlag = docAprEnd == "APR" ? "APR" : "END";
 		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
-		        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
+		        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();

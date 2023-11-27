@@ -139,7 +139,14 @@
 			/* 2023-07-04 김우철 - 전자결재 일반버전에서 테넌트 컨피그 useHwpDownSecurity값에 상관없이 대응하기 위한 변수 */
 		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		    var useHWP = "<c:out value='${useHWP}'/>";
-		    
+
+			/* 2023-09-25 민지수 - 게시판 > 공지사항 기간설정 시작, 종료시간 변수 */
+			var strNotiStart = "${boardListVO.notiStart}";
+			var strNotiEnd = "${boardListVO.notiEnd}";
+			
+			/* 2023-11-17 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 수정알림메일을 발송하지 않도록 파라미터 추가 */
+			var itemApprFlag = "<c:out value='${boardListVO.apprFlag}'/>";
+
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
@@ -225,7 +232,11 @@
 			            				document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
 			            			} else if (colType[i] == "check") {
 			            				SetCheckVal(tableCol[i], getExtensionValue(tableCol[i]));
-			            			}
+			            			} else if (colType[i] == "cal") {
+										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
+									} else if (colType[i] == "select") {
+										document.getElementById(tableCol[i]).value = getExtensionValue(tableCol[i]);
+									}
 			    				}
 			            	}
 			            }
@@ -273,6 +284,10 @@
 			    
 			    FirstFlag = true;
 			    ChkPermanent();
+				/* 2023-09-25 민지수 - 게시물 로드시 정보 불러오도록 추가 */
+				NotiPost_onclick();
+				Noti_setTime();
+
 			    FirstFlag = false;
 			    try {
 			        if (document.getElementById("txtTitle").value == "")
@@ -343,15 +358,48 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
+				$("#noti_start").datepicker({ /* 게시판 > 공지사항 시작날짜 */
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true
+				});
+				$("#noti_end").datepicker({ /* 게시판 > 공지사항 종료날짜 */
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true
+				});
+				$(".cal").datepicker({ /* 게시판 > 확장컬럼 날짜형식 */
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true
+				});
 		        var settime = "${startDateTime}";
 		        var NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 		        NowDate.setMonth(NowDate.getMonth() - 1);
-		        
+				var NtNowDate = new Date(strNow.substring(0, 10));
+				var NtEndDate = new Date(strNow.substring(0, 10));
+				NtEndDate.setMonth(NtEndDate.getMonth() + 1);
+
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
+				$("#noti_start").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#noti_start").datepicker('setDate', NtNowDate);
+				$("#noti_end").datepicker("option", "dateFormat", "yy-mm-dd");
+				$("#noti_end").datepicker('setDate', NtEndDate);
 		        $('#Stimepicker').timepicker();
 		        $('#Stimepicker').timepicker('setTime', NowDate);
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+				$(".cal").datepicker("option", "dateFormat", "yy-mm-dd");
+				$(".cal").datepicker('setDate', NtNowDate);
 		
 		        $("#Sdatepicker2").datepicker({
 		            changeMonth: true,
@@ -570,7 +618,9 @@
 		        var newID = "";
 		        var pStartDate = GetStartDate();
 		        var pEndDate = GetEndDate();
-		        
+				var pNtStartDate = "";
+				var pNtEndDate = "";
+
 		        if (document.getElementById("ChkPermanence").checked == false) {
 		            var configEndDate = Number(ReplaceText("${endDateTime}", "-", ""));
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
@@ -637,6 +687,45 @@
 		        if (pStartDate == "" && pReservedItem == "true") {
 		            strParentWriteDate = "";
 		        }
+
+				if (document.getElementById("noticePost").checked) { //공지사항인 경우
+					if(!(document.getElementById("NotiPeriod").checked) && !(document.getElementById("NotiPermanece").checked)){
+						alert("<spring:message code='ezBoard.Notimjs07'/>");
+						return;
+					}
+					if(document.getElementById("NotiPeriod").checked){ //기간설정인 경우 시작일
+						pNtStartDate = $('#noti_start').val() + " 00:00:00";
+					}
+					if (document.getElementById("NotiPermanece").checked) { //영구공지인 경우 종료일
+						pNtStartDate = strNow;
+						pNtEndDate = "9999-12-30 23:59:59";
+					} else {
+						pNtEndDate = $('#noti_end').val() + " " + "23:59:59"; //기간설정인 경우 종료일
+					}
+					if (pNtStartDate != "" && pNtStartDate.substring(0, 10) < strNow.substring(0, 10)) {
+						alert("<spring:message code='ezBoard.Notimjs02'/>");
+						return;
+					}
+					if (pNtEndDate != "" && pNtEndDate <= strNow) {
+						alert("<spring:message code='ezBoard.Notimjs03'/>");
+						return;
+					}
+					if (pNtStartDate != "" && pNtEndDate != "" && pNtEndDate < pNtStartDate) {
+						alert("<spring:message code='ezBoard.Notimjs04'/>");
+						return;
+					}
+
+					if (pStartDate!= "" && pNtStartDate != "" && pStartDate.substring(0,10) > pNtStartDate.substring(0,10)){
+						alert("<spring:message code='ezBoard.Notimjs08'/>");
+						return;
+					}
+
+					if (pEndDate != "" && pNtEndDate != "" && pEndDate < pNtEndDate) {
+						alert("<spring:message code='ezBoard.Notimjs09'/>");
+						return;
+					}
+				}
+
 		        newID = "{" +NewGuid+ "}";
 		        var xmlDom = createXmlDom();
 		        var xmlhttp = createXMLHttpRequest();
@@ -765,6 +854,8 @@
 		        //gubun 사용해야되서 추가
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "GUBUN", gubun);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE1", "");
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "NTSTARTDATE", pNtStartDate);
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "NTENDDATE", pNtEndDate);
 
 		        if (gubun != "3" && document.getElementById('noticePost').checked) {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE2", "1");
@@ -881,7 +972,11 @@
 		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
 		        	} else if(colType[i] == "check") {
 		        		createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(GetCheckVal(tableCol[i])));
-		        	}
+		        	} else if(colType[i] == "cal") {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
+					} else if(colType[i] == "select") {
+						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, tableCol[i].toUpperCase(), MakeXMLString(document.getElementById(tableCol[i]).value));
+					}
 				}
 
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
@@ -899,24 +994,29 @@
 		            
 		            if (pMode != "temp") {
 		                if (document.getElementById("chk_reservation").checked == false) {
-		                	/* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
-		                    if (strItemID == "" || (strItemID != "" && orgMode == "temp")) {
-		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
-		                        xmlhttp.send();
-		                        xmlhttp = null;
-		                    }
-		                    if (pMode == "reply") {
-		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
-		                        xmlhttp.send();
-		                        xmlhttp = null;
-		                    }
-		                    
-		                    /* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송), 수정알림 추가 (승인게시판인 경우 게시알림 메일 사용안함) */
+		                	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림메일을 보내지 않도록 수정 + 답변알림메일을 보내지 않도록 수정 */
+		                	if ("${boardInfo.apprFlag}" != "Y") {
+			                	/* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
+			                    if (strItemID == "" || (strItemID != "" && orgMode == "temp")) {
+			                        xmlhttp = createXMLHttpRequest();
+			                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
+			                        xmlhttp.send();
+			                        xmlhttp = null;
+			                    }
+			                    if (pMode == "reply") {
+			                        xmlhttp = createXMLHttpRequest();
+			                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
+			                        xmlhttp.send();
+			                        xmlhttp = null;
+			                    }
+		                	}
+		                	
+		                    /* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송), 수정알림 추가 (승인게시판의 경우, 게시물 승인 전에 게시알림 메일 사용안함) */
 		                    if (("${boardInfo.apprFlag}" != "Y") && (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pMode == "save")) { // 게시알림
 		                    	sendBoardAlertMail("new", pBoardID, newID, isAllGroupBoard);
-		                    } else if (pMode == "modify") { // 수정알림
+		                    }
+		                    /* 2023-11-17 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 수정알림메일을 발송하지 않도록 수정 */
+		                    else if ((itemApprFlag == null || itemApprFlag == "Y") && pMode == "modify") { // 수정알림 (반려된 게시물이 아닌 경우에만 발송)
 		                    	sendBoardAlertMail("modify", pBoardID, strItemID, isAllGroupBoard);
 		                    }
 		                    
@@ -925,10 +1025,16 @@
 		                    alert("<spring:message code='ezBoard.t400' />" + " " + pStartDate.substr(0, 16) + "<spring:message code='ezBoard.t401' />");
 		                }
 		                
+		                /* 2019-05-07 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 승인요청 알림메일 발송하도록 수정 */
 		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
-		                if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
+		                if (("${boardInfo.apprMail_FG}" == "Y") && ((pMode != "modify") || ((itemApprFlag != null && itemApprFlag != "Y") && pMode == "modify"))) {
+		                	var tItemID = strItemID; // 게시물 수정(재작성)
+		                	if (pMode != "modify") { // 신규 게시물 등록
+		                		tItemID = newID;
+		                	}
+		                	
 		                    xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
+		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(tItemID), false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
 		                }
@@ -1121,6 +1227,42 @@
 		        	document.getElementById("reservation_date").style.visibility = "hidden";
 		        }
 		    }
+
+			function NotiPost_onclick() {
+				if (document.getElementById("noticePost").checked) {
+					document.getElementById("noti_setTime").style.display = "";
+					if (document.getElementById("NotiPeriod").checked) {
+						document.getElementById("notiTimeset").style.display ="";
+					} else {
+						document.getElementById("notiTimeset").style.display ="none";
+					}
+				} else {
+					document.getElementById("noti_setTime").style.display = "none";
+				}
+			}
+
+			function Noti_setTime() { /* 2023-09-22 민지수 - 게시물 수정 시 기존 정보로 불러오도록 구현 */
+				if (strNotiEnd != null && strNotiEnd != ""){
+					if (strNotiEnd.substring(0, 4) == "9999") {
+						document.getElementById("NotiPermanece").checked = true;
+					} else {
+						document.getElementById("NotiPeriod").checked = true;
+						$("#noti_end").datepicker('setDate', strNotiEnd);
+
+						if (strNotiStart.substring(0,10) < strNow.substring(0,10)) { // 설정했던 공지 시작날짜가 현재날짜보다 이전이면 현재날짜로 세팅
+							$("#noti_start").datepicker('setDate',strNow);
+						} else { // 현재날짜보다 이후이면 설정한 날짜로 세팅
+							$("#noti_start").datepicker('setDate',strNotiStart);
+						}
+						document.getElementById("notiTimeset").style.display ="";
+					}
+				} else if(document.getElementById("NotiPeriod").checked){
+					document.getElementById("notiTimeset").style.display ="";
+				} else {
+					document.getElementById("notiTimeset").style.display ="none";
+				}
+			}
+
 		    function PreviewItem() {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -1730,6 +1872,8 @@
 		                document.getElementById("BoardSpan").innerHTML = ret[1];
 		                InitializeSettings();
 		                ChkPermanent();
+						NotiPost_onclick();
+						Noti_setTime();
 		                pBoardType = "";
 		                
 		                if (pcheckForm.toUpperCase() == "TRUE") {
@@ -1792,6 +1936,8 @@
 	                document.getElementById("BoardSpan").innerHTML = ret[1];
 	                InitializeSettings();
 	                ChkPermanent();
+					NotiPost_onclick();
+					Noti_setTime();
 	                pBoardType = "";
 	
 	                if (pcheckForm.toUpperCase() == "TRUE") {
@@ -1900,7 +2046,7 @@
 	            var label = document.createElement("LABEL");
 	            label.style.display = "inline-block";
 	            label.style.verticalAlign = "top";
-	            label.style.marginTop = "10px";
+	            label.style.marginTop = "8px";
 	            label.style.marginBottom = "5px";
 	
 	            label.innerHTML = "<spring:message code='ezBoard.t5009' />";
@@ -1915,8 +2061,8 @@
 	            var a = document.createElement("A");
 	            a.className = "imgbtn imgbck";
 	            a.style.verticalAlign = "top";
-	            a.style.marginTop = "5px";
-	            a.style.marginLeft = "10px";
+	            a.style.marginTop = "5px !important";
+	            a.style.marginLeft = "10px !important";
 	
 	            var span = document.createElement("SPAN");
 	            span.innerHTML = "<spring:message code='ezBoard.t5010' />";
@@ -2427,10 +2573,10 @@
 	                            	<c:when test="${mode != 'reply'}">
 	                            		<c:choose>
 	                            			<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true') && boardListVO.extensionAttribute2 == '1'}">
-									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" checked /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
+									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" checked onclick="NotiPost_onclick()"/></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
 	                            			</c:when>
 	                            			<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true')}">
-									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
+									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" onclick="NotiPost_onclick()"/></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
 	                            			</c:when>
 	                            			<c:otherwise>
 									              &nbsp;<input type="checkbox" style="display: none" id="noticePost" />
@@ -2446,6 +2592,19 @@
 								</c:if>	
 		                        </td>
 	                    </tr>
+
+						<tr id="noti_setTime" style="display: none"> <%-- 공지사항 기간설정 --%>
+							<th><spring:message code='ezBoard.Notimjs06' /></th>
+							<td colspan="3" style="width: 300px; vertical-align: baseline;">
+								<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="radio" id="NotiPeriod" name="isNoti" onclick="NotiPost_onclick()" style="margin-bottom: 5px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.Notimjs05' /></span>
+								<span id = "notiTimeset" style="display: none;">
+										<input type="text" id="noti_start" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 3px; ">
+										~ <input type="text" id="noti_end" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 3px; "></span>
+								&nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;">
+										<input type="radio" id="NotiPermanece" name="isNoti" onclick="NotiPost_onclick()" style="margin-bottom: 5px;"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.Notimjs01' /></span>
+								</span>
+							</td>
+						</tr>
              			<!-- 추가 항목이 있을 경우 -->
              			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
              				<tr>
@@ -2488,6 +2647,20 @@
 						                	</c:forEach>
 						                </td>
              						</c:when>
+									<c:when test="${boardAttributeVO.colType == 'cal'}">
+										<td colspan="3">
+											<input type="text" class="cal" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'"/>
+										</td>
+									</c:when>
+									<c:when test="${boardAttributeVO.colType == 'select'}">
+										<td colspan="3">
+											<select id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'>
+											<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">												
+													<option value="${fn:split(boardAttributeVO.value, '|')[status.index]}">${fn:split(boardAttributeVO.value, '|')[status.index]}</option>
+											</c:forEach>
+											</select>
+										</td>
+									</c:when>
              					</c:choose>
              				</tr>
              			</c:forEach>

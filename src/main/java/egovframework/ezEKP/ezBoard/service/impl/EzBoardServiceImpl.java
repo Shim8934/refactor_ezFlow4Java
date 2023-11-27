@@ -4100,6 +4100,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} else { // READCOUNT값은 기본적으로 0으로 삽입된다.
 			boardListVO.setReadCount(0);
 		}
+
+		/* 2023-11-16 홍승비 - 게시물 복사 및 이동 시 공지사항 기간설정값을 가져오지 않는 오류 null 체크 부분 수정 (쿼리단 미수정, 차후 수정 필요) */
+		/* 2023-09-25 민지수 - 게시판 > 공지사항 > 공지 시작, 종료일 추가 */
+		if (doc.getElementsByTagName("NTSTARTDATE").item(0) != null && doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent().equals("")) {
+			boardListVO.setNotiStart(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+		}
+
+		if (doc.getElementsByTagName("NTENDDATE").item(0) != null && doc.getElementsByTagName("NTENDDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("NTENDDATE").item(0).getTextContent().equals("")) {
+			boardListVO.setNotiEnd(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+		}
 		
 		if (pMode.equals("modify")) {
 			brdUpdateItem(boardListVO, "BOARD");

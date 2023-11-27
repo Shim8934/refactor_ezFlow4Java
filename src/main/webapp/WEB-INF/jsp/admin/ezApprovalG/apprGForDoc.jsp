@@ -719,10 +719,10 @@
 				    ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 				    var ezStatisticsSearch_Cross;
 				    if (approvalFlag == "S") {
-					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 314));
+					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(560, 314));
 				    } else {
-					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 404));
-				    }
+					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(560, 404));
+				    }	// 팝업 사이즈 수정(510 > 560) : 다국어 버튼 아래로 떨어짐
 
 				    try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 				    }

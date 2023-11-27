@@ -19,6 +19,7 @@
 			
 			.attachInnerNotice_p_on {
 				text-align: center;
+				margin: 10px 0 0 0;
 			}
 			
 			.attachInnerNotice_p_off {
@@ -865,7 +866,7 @@
                 <a class="imgbtn imgbck" id="btnBigFileUpload" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
                 <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
                 <c:if test="${useWebfolder == 'YES'}">
-                	<a class="imgbtn imgbck" onclick="filePicker()" style="display:none"><span><spring:message code='ezWebFolder.pyy02' /></span></a>   
+                	<a class="imgbtn imgbck" onclick="filePicker()"><span><spring:message code='ezWebFolder.pyy02' /></span></a>
                 </c:if>
             </span>
             <div id="progdiv" class="progarea" style="display:none">

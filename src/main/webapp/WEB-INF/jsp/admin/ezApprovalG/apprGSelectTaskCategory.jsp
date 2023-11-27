@@ -210,7 +210,7 @@
                 <li><span onclick="return btncancel_onclick()"></span></li>
             </ul>
         </div>
-	    <h2 id="maintitle" style="height: 30px;"><span id="tdCateType" style="color: orange"></span></b><spring:message code = 'ezApprovalG.t696' /><br>
+	    <h2 id="maintitle" style="height: 36px;"><span id="tdCateType" style="color: orange"></span></b><spring:message code = 'ezApprovalG.t696' /><br>
         <spring:message code = 'ezApprovalG.t697' /><span id="tdPCode" style="color: orange"></span></b><spring:message code = 'ezApprovalG.t698' /></h2>
     	<table class="content">
 	        <tr>

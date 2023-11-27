@@ -106,6 +106,9 @@
 		        var agent = navigator.userAgent.toLowerCase();
 				var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
 
+				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
+				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
+				
 		        window.onload = function () {
 		            imageViewInit();
 		            pageimageout();
@@ -1144,7 +1147,7 @@
 		            }
 		        }
 		        function Appr_onclick(pFlag) {
-		            if (pFlag == "C") {
+		            if (pFlag == "C") { // 반려
 		                var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
@@ -1154,10 +1157,19 @@
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "OK") {
-		                    if (pFlag == "Y")
-		                        alert("<spring:message code='ezBoard.t999002'/>");
-		                    else
+		                	/* 2023-11-17 홍승비 - 승인게시판의 게시물 승인 시 게시알림메일 발송 기능 추가 (포토/썸네일 게시판은 답변게시물 사용 불가) */
+		                	if (pFlag == "Y") { // 승인
+		                		// 해당 게시판의 관리자에게 게시알림메일 발송 (게시판 권한설정 > 관리자 권한자인 경우 '게시 메일로 알림' 옵션)
+		                		sendPostNotiMail(pBoardID, pItemID);
+		                		
+	                			// 해당 게시판의 일반 사용자(접근 권한자)에게 게시알림메일 발송 (게시판 일반설정 > 메일알림 > '게시알림' 옵션)
+	                			sendBoardAlertMail("new", pBoardID, pItemID, isAllGroupBoard);
+		                		
+		                		alert("<spring:message code='ezBoard.t999002' />");
+		                	}
+		                	else { // 반려
 		                        alert("<spring:message code='ezBoard.t999009'/>");
+		                    }
 		                }
 		
 		                try {
@@ -1534,6 +1546,36 @@
 			    		refreshFlag = "N";
 			    	}
 			    }
+			    
+				/* 2023-11-17 홍승비 - 관리자 권한자의 '게시 메일로 알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+				function sendPostNotiMail(pBoardID, pItemID) {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : true,
+						url : "/ezBoard/sendPostNotiMail.do",
+						data : {
+							boardID : pBoardID,
+							itemID : pItemID
+						}
+					});
+				}
+				
+				/* 2023-11-17 홍승비 - 일반 사용자(접근 권한자)의 '게시알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+				function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : true,
+						url : "/ezBoard/sendBoardAlertMail.do",
+						data : {
+							mode : pMode,
+							boardID : pBoardID,
+							itemID : pItemID,
+							isAllGroupBoard : pIsAllGroupBoard
+						}
+					});
+				}
 		        
 		</script>
 	</head>
@@ -1759,7 +1801,7 @@
 	        	<div style='height:auto;'>
 					<table class="mainlist" style="width:100%; min-width:745px; margin-top:8px;" >
 						<tr>
-							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+							<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 							</th>
 							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">

@@ -2238,7 +2238,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"LIKEFLAG" NCHAR(1),
 	"MAILFG_POST" CHAR(1 CHAR) DEFAULT NULL,
 	"MAILFG_MOD" CHAR(1 CHAR) DEFAULT NULL,
-	"MAILFG_COMMENT" CHAR(1 CHAR) DEFAULT NULL
+	"MAILFG_COMMENT" CHAR(1 CHAR) DEFAULT NULL,
+	"REACTFLAG" NCHAR(1) DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_BOARD_BOARDINFO_ATTRIBUTE
@@ -2359,7 +2360,9 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"EXTENSIONATTRIBUTE9" NVARCHAR2(100), 
 	"EXTENSIONATTRIBUTE10" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT NULL, 
-	"CONTENT" CLOB
+	"CONTENT" CLOB,
+	"NTSTARTDATE" varchar(40) DEFAULT NULL,
+    "NTENDDATE" varchar(40) DEFAULT NULL
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_BOARD_ITEM_ATTACHMENTS

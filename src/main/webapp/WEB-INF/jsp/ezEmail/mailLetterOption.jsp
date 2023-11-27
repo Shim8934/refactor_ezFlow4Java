@@ -393,12 +393,14 @@
 					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" readonly="readonly"/>
 				</td>
 			</tr>
+			<c:if test="${useSecureMail == 'YES'}">
 			<tr>
 				<td>
 					<input type="checkbox" name="chkSecureMail" id="chkSecureMail" onClick="secureMail_onClick()" value="checkbox">
 					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t749' /> </span>
 				</td>
 			</tr>
+			</c:if>
 			<c:if test="${individualMailUser != '0'}">	
 			<tr>
 				<td>

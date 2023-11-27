@@ -268,6 +268,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		if (lang.equals("1")) {
 			lang = "";
+		} else {
+			lang = "2";
 		}
 		map.put("lang", lang);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
@@ -1117,7 +1119,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
-		map.put("listSize", StringUtils.isBlank(listSize) ? 0 : Integer.parseInt(listSize));
+		map.put("listSize", StringUtils.isBlank(listSize) ? null : Integer.parseInt(listSize));
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1184,6 +1186,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("deptIdList", deptIdList);
 		if (userLang.equals("1")) {
 			userLang = "";
+		} else {
+			userLang = "2";
 		}
 		map.put("lang", userLang);
 		
@@ -2083,7 +2087,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
-		map.put("listSize", StringUtils.isBlank(listSize) ? 0 : Integer.parseInt(listSize));
+		map.put("listSize", StringUtils.isBlank(listSize) ? null : Integer.parseInt(listSize));
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);

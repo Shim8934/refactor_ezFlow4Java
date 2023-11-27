@@ -265,7 +265,7 @@
 	                + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "' realFileName='" + filename + "'>" + filename + " (" + filesize + ")</a>";	                
 	              	strAttach += "</span>";
 	             	// 2023-05-23 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
-		            if (useBoardFilePrvw == "1") {
+		            if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1") {
 			        	strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
 		            }
 	                strAttach += "</li><br>";
@@ -466,7 +466,7 @@
 						</c:when>
 						<c:otherwise>
 							<tr>
-								<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+								<th style="text-align:center; width: 88%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 									<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 								</th>
 						</c:otherwise>	

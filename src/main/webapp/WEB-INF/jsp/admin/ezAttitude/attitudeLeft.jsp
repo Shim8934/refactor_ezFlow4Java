@@ -61,6 +61,12 @@
 						break;
 				}
 				window.open(url, "attitude_main");
+				
+				$("#left .adminListBox h2 span").click(function(){
+					$("#left .adminListBox h2").removeClass("on");
+					$(this).parent().addClass("on");
+				})
+
 			}
 			
 			$(document).ready(function() {
@@ -83,7 +89,7 @@
 		<div id="left" class="lnb" style="overflow: auto">
 			<div class="admin_left_title" title="attitude"><spring:message code='ezAttitude.t1'/></div>
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<h2><span onClick="moveToPage(1)"><spring:message code = 'ezAttitude.t2' /></span></h2>
+				<h2 class="on"><span onClick="moveToPage(1)"><spring:message code = 'ezAttitude.t2' /></span></h2>
 				<h2><span onClick="moveToPage(2)"><spring:message code = 'ezAttitude.t3' /></span></h2>
 				<h2><span onClick="moveToPage(3)"><spring:message code = 'ezAttitude.t4' /></span></h2>
 				<h2><span onClick="moveToPage(4)"><spring:message code = 'ezAttitude.t7' /></span></h2>

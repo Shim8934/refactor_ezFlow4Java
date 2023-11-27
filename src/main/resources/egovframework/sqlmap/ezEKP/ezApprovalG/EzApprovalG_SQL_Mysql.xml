@@ -21474,57 +21474,57 @@
 					A.* 
 				FROM ( 
 						SELECT  
-							SN, 
-							DOCID, 
-							HREF, 
-							RECEIPTDATE, 
-							ORGANID, 
-							ORGAN, 
-							ORGAN2, 
-							DOCNUMBER, 
-							MANAGEDEPTID,
-				   			MANAGEDEPT, 
-				   			MANAGEDEPT2, 
-				   			CHARGEID, 
-				   			CHARGENAME, 
-				   			CHARGENAME2, 
-				   			DEPTID, 
-				   			REMARK, 
-				   			ORGDOCNUMCODE, 
-				   			DOCTITLE,
-				   			ORGANUSERNAME
+							B.SN,
+                            B.DOCID,
+                            B.HREF,
+                            B.RECEIPTDATE,
+                            B.ORGANID,
+                            B.ORGAN,
+                            B.ORGAN2,
+                            B.DOCNUMBER,
+                            B.MANAGEDEPTID,
+                            B.MANAGEDEPT,
+                            B.MANAGEDEPT2,
+                            B.CHARGEID,
+                            B.CHARGENAME,
+                            B.CHARGENAME2,
+                            B.DEPTID,
+                            B.REMARK,
+                            B.ORGDOCNUMCODE,
+                            B.DOCTITLE,
+                            B.ORGANUSERNAME
 				   		FROM 
-				   			TBL_DOCDELIVERY 
+				   			TBL_DOCDELIVERY B
 				   		WHERE 
-				   			TENANT_ID = #v_TENANTID#
+				   			B.TENANT_ID = #v_TENANTID#
 				   		AND
-	        				COMPANYID = #companyID#
+	        				B.COMPANYID = #companyID#
 				        AND
-				            EXTRECEPTYN = #v_EXTRECEPTYN#
+				            B.EXTRECEPTYN = #v_EXTRECEPTYN#
 				        <isNotEmpty property="v_DEPTID">
 				        AND
-				            DEPTID = #v_DEPTID# 
+				            B.DEPTID = #v_DEPTID# 
 				        </isNotEmpty>
 				   		$v_SUBQUERY$
 				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE">
 				   			AND 
-				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE#
+				   				B.SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE#
 				   		</isEqual>
 				   		<isNotEmpty property="v_MANAGEDEPTID" >
 				   		 	AND 
-				   		 		MANAGEDEPTID = #v_MANAGEDEPTID#
+				   		 		B.MANAGEDEPTID = #v_MANAGEDEPTID#
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_ORGANID" >
 				   		 	 AND 
-				   		 	 	ORGANID = #v_ORGANID#
+				   		 	 	B.ORGANID = #v_ORGANID#
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_DOCTITLE" >
 				   		 	AND 
-				   		 		DOCTITLE LIKE '%$v_DOCTITLE$%'
+				   		 		B.DOCTITLE LIKE '%$v_DOCTITLE$%'
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_CHARGENAME" >
 				   		 	AND 
-				   		 		CHARGENAME LIKE '%$v_CHARGENAME$%'
+				   		 		B.CHARGENAME LIKE '%$v_CHARGENAME$%'
 				   		</isNotEmpty>
 				   		<isNotEmpty property="v_SREGDATE" >
 				   		 	AND 
@@ -21554,7 +21554,7 @@
 				   		</isNotEmpty>
 				   		<isEmpty property="v_ORDEROPTION">
 				   			ORDER BY 
-				   				RECEIPTDATE DESC, SN DESC
+				   				B.RECEIPTDATE DESC, B.SN DESC
 				   		</isEmpty>
 				   		<![CDATA[	
 				   		LIMIT #v_PAGESIZE#
@@ -35166,6 +35166,38 @@
          AND
          	COMPANYID = #companyID#
 	</select>
+
+    <!-- 2023-06-20 전인하 - 전자결재G > 기록물대장 미리보기 - 보안결재 날짜 체크 쿼리 -->
+    <select id="EzApprovalG.checkSecurityApprovalDate" parameterClass="Map" resultClass="String">
+        <isEqual property="v_LINEMODE" compareValue="APR">
+        <![CDATA[
+			SELECT
+				IFNULL(SECURITYAPPROVAL, '')
+			FROM
+				TBL_EXPAPRDOCINFO
+			WHERE
+			    DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+        </isEqual>
+        <isNotEqual property="v_LINEMODE" compareValue="APR">
+        <![CDATA[
+			SELECT
+				IFNULL(SECURITYAPPROVAL, '')
+			FROM
+				TBL_EXPENDAPRDOCINFO
+			WHERE
+			    DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+		]]>
+        </isNotEqual>
+    </select>
 	
 	<!-- 2023-02-02 홍승비 - 부서수신함 > 접수 > 수신문 지정 시, 완료된 원문서의 수신자 정보를 갱신 (동일 부서에 대하여 새롭게 지정된 수신자 "개인"의 정보로 갱신 / 승인상태는 "대기"로 유지) -->
 	<update id="EzApprovalG.updateSusinEndReceiptPointInfoForJiJung" parameterClass="Map">
@@ -35351,5 +35383,141 @@
             A.CN = #userID#
           AND
             A.TENANT_ID = #tenantID#
+    </select>
+
+    <!-- 2023-09-25 전인하 - 전자결재G > 배부대장 > 진행문서 권한조회 -->
+    <select id ="EzApprovalG.getAccessYNGforAPR" parameterClass="Map" resultClass="String" remapResults="true">
+        <isEqual property="v_FLAG" compareValue="001">
+            <isEqual property="approvalFlag" compareValue="G">
+                <![CDATA[
+					SELECT 
+						PUBLICITYYN 
+			        FROM 
+			        	TBL_EXPAPRDOCINFO 
+			        WHERE  
+			        	DOCID = #v_DOCID#
+			        AND
+						TENANT_ID = #v_TENANTID#
+					AND
+		      			COMPANYID = #companyID#					
+				]]>
+            </isEqual>
+            <isNotEqual property="approvalFlag" compareValue="G">
+                <![CDATA[
+					SELECT 
+						PUBLICITYCODE 
+			        FROM 
+			        	TBL_EXPAPRDOCINFO 
+			        WHERE  
+			        	DOCID = #v_DOCID#
+			        AND
+						TENANT_ID = #v_TENANTID#
+					AND
+		      			COMPANYID = #companyID#					
+				]]>
+            </isNotEqual>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="002">
+            <![CDATA[
+				 SELECT     
+				  		CASE 
+				  			WHEN IFNULL(COUNT(DocID), 0) > 0 
+				  			THEN 'Y' 
+	             			ELSE 'N'
+	             		END AS RET
+				  FROM
+				  		TBL_APRLINEINFO 
+	       		  WHERE  
+	       				DocID = #v_DOCID#
+	              AND 
+	              		AprMemberID = #v_USERID#
+	              AND
+						TENANT_ID = #v_TENANTID#
+				  AND
+	      				COMPANYID = #companyID#
+			]]>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="003">
+            <![CDATA[
+			 	SELECT 
+			 		DISTINCT SUBSTR(TBL_SEPERATEATTACH.CabinetID, 1, 7) AprMemberDeptID  
+	            FROM 
+	            	TBL_RECORD 
+	            JOIN 
+	            	TBL_SEPERATEATTACH    
+	           	ON 
+	           		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID
+	           	AND 
+	           		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
+	           	AND
+	           		TBL_RECORD.COMPANYID = TBL_SEPERATEATTACH.COMPANYID
+	            WHERE  
+	            	TBL_RECORD.DocID = #v_DOCID#
+	            AND
+					TBL_RECORD.TENANT_ID = #v_TENANTID#
+				AND
+	      			TBL_RECORD.COMPANYID = #companyID#	
+			]]>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="004">
+            <![CDATA[
+				SELECT 
+					APRMEMBERID 
+	            FROM 
+	            	TBL_APRLINEINFO 
+	            WHERE  
+	            	( APRMEMBERSN = '1' )
+	            AND 
+	            	( APRMEMBERID = #v_USERID# )
+	            AND 
+	            	DOCID = #v_DOCID#
+	            AND
+					TENANT_ID = #v_TENANTID#	
+				AND
+	      			COMPANYID = #companyID#	 
+			]]>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="005">
+            <![CDATA[
+				SELECT 
+					SECURITYCODE 
+	            FROM 
+	            	TBL_EXPAPRDOCINFO 
+	            WHERE  
+	            	DOCID = #v_DOCID#
+	            AND
+					TENANT_ID = #v_TENANTID#
+				AND
+	      			COMPANYID = #companyID#	 	
+			]]>
+        </isEqual>
+        <isEqual property="v_FLAG" compareValue="006">
+            <![CDATA[
+				SELECT 
+					COUNT(TBL_RECROLEINFO.UserRight)  
+	            FROM 
+	            	TBL_RECORD 
+	            JOIN 
+	            	TBL_RECROLEINFO    
+	            ON 
+	            	TBL_RECORD.RecordID = TBL_RECROLEINFO.RecordID
+	            AND
+	            	TBL_RECORD.TENANT_ID = TBL_RECROLEINFO.TENANT_ID
+	            AND
+	            	TBL_RECORD.COMPANYID = TBL_RECROLEINFO.COMPANYID
+	            WHERE  
+	            	( TBL_RECROLEINFO.SeperateAttachNo = '00' )
+	            AND 
+	            	(( TBL_RECROLEINFO.UserID = #v_USERID# AND TBL_RECROLEINFO.UserRight = '1' )
+	                OR
+	            	 (TBL_RECROLEINFO.UserID = 'All_User' AND TBL_RECROLEINFO.UserRight = '2'))
+	            AND 
+	            	TBL_RECORD.DocID = #v_DOCID#
+	            AND
+					TBL_RECORD.TENANT_ID = #v_TENANTID#
+				AND
+					TBL_RECORD.COMPANYID = #companyID#
+			]]>
+        </isEqual>
     </select>
 </sqlMap>

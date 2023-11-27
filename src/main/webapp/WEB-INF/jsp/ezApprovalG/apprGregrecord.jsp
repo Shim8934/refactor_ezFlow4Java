@@ -64,6 +64,9 @@
     var orgCompanyID = "";
     var ext = "mht";
     var tooltipLevelFlag = "Y"
+
+  	// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
+	var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
     
     window.onload = function () {
         if (window.dialogArguments != null) {
@@ -562,7 +565,7 @@
 		<td style="width: 50%;">
 			<table style="width:100%; border-bottom: 0px; border-right: 0px;" class="content">
 				<tr>
-					<th style="border-bottom: 0px; padding-right:29px;"><spring:message code='ezApprovalG.t1063'/></th>
+					<th style="border-bottom: 0px; padding-right:31px;"><spring:message code='ezApprovalG.t1063'/></th>
        				<td style="border-bottom: 0px; border-right: 0px;">
        				<span id="tdCabinetName" style="display:inline-block; vertical-align:middle; width:80%;">&nbsp;</span>
        				<a class="imgbtn imgbck" style="display:inline-block; vertical-align:middle;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>

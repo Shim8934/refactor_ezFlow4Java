@@ -254,8 +254,8 @@
 		        
 		        /* 2018-05-10 홍승비 - 디폴트 로고인 경우 타입에 맞추어 로고 변경하도록 수정 */
 		        if (document.getElementById("logoprev").src.indexOf("default_logo_") > -1) {
-		    	   	document.getElementById("logoprev").src =  "/images/ezCommunity/logo/default_logo_" + checkValue + ".jpg";
-		           	document.getElementById("defaultLogo").value = "default_logo_" + checkValue + ".jpg";
+		    	   	document.getElementById("logoprev").src =  "/images/ezCommunity/logo/default_logo_" + checkValue + ".png";
+		           	document.getElementById("defaultLogo").value = "default_logo_" + checkValue + ".png";
 		        }
 		    }
 		        
@@ -271,8 +271,8 @@
 			   	document.getElementById("filename1").innerText = "";
 		       	document.getElementById("logo").value = "";
 		       	document.getElementById("delLogo").style.display = "none";
-		       	document.getElementById("logoprev").src = "/images/ezCommunity/logo/default_logo_" + checkValue + ".jpg";
-		       	document.getElementById("defaultLogo").value = "default_logo_" + checkValue + ".jpg";
+		       	document.getElementById("logoprev").src = "/images/ezCommunity/logo/default_logo_" + checkValue + ".png";
+		       	document.getElementById("defaultLogo").value = "default_logo_" + checkValue + ".png";
 		    }
 			function attachDelThumb() {
 				document.getElementById("filename2").innerText = "";

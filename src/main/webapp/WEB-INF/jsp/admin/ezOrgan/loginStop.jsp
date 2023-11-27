@@ -394,7 +394,7 @@
 				</tr>
 			</table>
 		</div>
-		<iframe id="loginStop_ifrm" style="width: 100%; height:780px;" frameborder="0"></iframe>
+		<iframe id="loginStop_ifrm" style="width: 100%; height:900px;" frameborder="0"></iframe>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>

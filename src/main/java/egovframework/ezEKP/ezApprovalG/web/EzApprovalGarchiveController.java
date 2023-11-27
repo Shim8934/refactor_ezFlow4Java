@@ -131,6 +131,15 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		deptInfo  = doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
 		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent().trim();
 		
+		// 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 전자결재 미리보기영역 관련 변수 추가
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String previewInfo = "OFF";
+		String useAprPreview = ezCommonService.getTenantConfig("useAprPreview", userInfo.getTenantId());
+		
+		if (useAprPreview.equalsIgnoreCase("YES")) {
+			previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId());
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("dirpath", dirpath);
@@ -144,6 +153,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("sFlag", sFlag);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("shareDeptId", shareDeptId);
+        model.addAttribute("previewInfo", previewInfo);
+		model.addAttribute("useAprPreview", useAprPreview);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("cabinetMain ended");
 		
@@ -210,6 +222,17 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
 		}
 		
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+		// 2023-10-26 조수빈 - 문서변환 솔루션 사용 여부
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+		
+		if (useAprFilePrvw.equals("1") && useImageConvertServer.equals("1")) {
+			useAprFilePrvw = "1";
+		} else {
+			useAprFilePrvw = "0";
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("docHref", docHref);
@@ -223,6 +246,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		model.addAttribute("g_RecID", g_RecID);
 		model.addAttribute("g_SepAttNo", g_SepAttNo);
 		model.addAttribute("docID", docID);
+		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		logger.debug("contDocView_NoDoc ended");
 		
@@ -256,9 +280,18 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	    String regD = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(8,10);
 	    String regH = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(11,13);
 	    String regMi = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(14,16);
-	    
 	    String apprTotalAttachLimit = ezCommonService.getTenantConfig("ApprTotalAttachLimit", userInfo.getTenantId());
-	    
+		// 2023-05-26 조수빈 - 전자결재 첨부파일 미리보기 기능 사용 여부
+ 		String useAprFilePrvw = ezCommonService.getTenantConfig("useAprFilePrvw", userInfo.getTenantId());
+ 		// 2023-10-26 조수빈 - 문서변환 솔루션 사용 여부
+ 		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+ 		
+ 		if (useAprFilePrvw.equals("1") && useImageConvertServer.equals("1")) {
+ 			useAprFilePrvw = "1";
+ 		} else {
+ 			useAprFilePrvw = "0";
+ 		}
+ 		
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("useEditor", useEditor);
 	    model.addAttribute("regY", regY);
@@ -267,7 +300,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	    model.addAttribute("regH", regH);
 	    model.addAttribute("regMi", regMi);
 	    model.addAttribute("apprTotalAttachLimit", apprTotalAttachLimit);
-	    
+	    model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+
 		logger.debug("regRecord ended");
 
 	    return "ezApprovalG/apprGregrecord";

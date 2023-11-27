@@ -14,6 +14,9 @@
 	    	#mCSB_1_container {
 				margin-right: 0px;
 			}
+			.lnbUL li .list_text {
+				width: 125%;
+			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

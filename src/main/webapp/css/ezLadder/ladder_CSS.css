@@ -70,7 +70,7 @@
 
 #attendantList input, #itemList input, #tempItemList input {
     width: 100%;
-    height: 30px;
+    height: 30px !important;
     text-align: center;
 }
 
@@ -264,4 +264,8 @@
 	border: 1px solid #ccc;
 	border-radius: 35px;
 	overflow: hidden;
+}
+
+#inputAttendant, #title {
+	height: 100% !important;
 }

@@ -1286,10 +1286,10 @@
 		        <ul class="lnbUL" id="apprUL">
 					<li><span class="list_text" id="APPROVAL1" onclick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><spring:message code='ezApprovalG.t1747'/><span id=COUNT1></span></span></li>
                    	<c:if test="${whoKyulYN == '1'}">
-                       	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="MYCONTWHO" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)"><spring:message code='ezApproval.pjj34'/><span id="COUNTWHO"></span></span></li>
+                       	<li><span class="list_text" id="MYCONTWHO" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)"><spring:message code='ezApproval.pjj34'/><span id="COUNTWHO"></span></span></li>
 	                </c:if>
                    	<c:if test="${approvalFlag == 'S' && useShareApproval == 'YES' }">
-                       	<li><span class="sub_iconLNB tree_appr"></span><span class="list_text" id="APPROVAL11" onclick="setPresentValue('<spring:message code='ezApprovalG.bhs03'/>');convMain('11','')"><spring:message code='ezApprovalG.bhs03'/><span id=COUNT11></span></span></li>
+                       	<li><span class="list_text" id="APPROVAL11" onclick="setPresentValue('<spring:message code='ezApprovalG.bhs03'/>');convMain('11','')"><spring:message code='ezApprovalG.bhs03'/><span id=COUNT11></span></span></li>
 					</c:if>
                    	<li><span class="list_text" id="APPROVAL2" onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><spring:message code='ezApprovalG.t1706'/><span id=COUNT2></span></span></li>
                    	<li><span class="list_text" id="APPROVAL3" onclick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><spring:message code='ezApprovalG.t1748'/><span id=COUNT3></span></span></li>

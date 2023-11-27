@@ -5034,4 +5034,103 @@
 		ADD
 			REACTFLAG NCHAR(1) DEFAULT NULL
 	</statement>
+
+	<!-- 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblBoardItemNotiColumn">
+        <![CDATA[
+		SELECT
+			NTSTARTDATE,
+			NTENDDATE
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			ROWNUM <= 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addTblBoardItemNotiColumn">
+		ALTER TABLE
+			TBL_BOARD_ITEM
+		ADD (
+			NTSTARTDATE varchar(40) DEFAULT NULL,
+			NTENDDATE varchar(40) DEFAULT NULL
+			)
+	</statement>
+
+	<!-- 2023-09-25 민지수 - 게시판 > 존재하던 게시물 > 영구공지로 기본 설정 -->
+	<update id="EzCommonDAO.addTblBoardItemNoti">
+		UPDATE
+			TBL_BOARD_ITEM
+		SET
+			NTSTARTDATE = #NtStartDate#,
+			NTENDDATE = #NtEndDate#
+		WHERE
+			EXTENSIONATTRIBUTE2 = 1
+	</update>
+
+	<!-- 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 -->
+	<select id="EzCommonDAO.checkTblBoardItemTempNotiColumn">
+        <![CDATA[
+		SELECT
+			NTSTARTDATE,
+			NTENDDATE
+		FROM
+			TBL_BOARD_ITEM_TEMP
+		WHERE
+			ROWNUM <= 1
+		]]>
+    </select>
+
+	<statement id="EzCommonDAO.addTblBoardItemTempNotiColumn">
+		ALTER TABLE
+			TBL_BOARD_ITEM_TEMP
+			ADD (
+			NTSTARTDATE varchar(40) DEFAULT NULL,
+			NTENDDATE varchar(40) DEFAULT NULL
+			)
+	</statement>
+
+	<!-- 2023-09-25 민지수 - 게시판 > 임시저장 > 존재하던 공지 게시물 > 영구공지로 기본 설정 -->
+	<update id="EzCommonDAO.addTblBoardItemTempNoti">
+		UPDATE
+			TBL_BOARD_ITEM_TEMP
+		SET
+			NTSTARTDATE = #NtStartDate#,
+			NTENDDATE = #NtEndDate#
+		WHERE
+			EXTENSIONATTRIBUTE2 = 1
+	</update>
+
+	<select id="EzCommonDAO.checkUseAprFilePrvwConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useAprFilePrvw'
+		AND
+			TENANT_ID = 0
+	</select>
+	
+	<select id="EzCommonDAO.checkUseBoardFilePrvwConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useBoardFilePrvw'
+		AND
+			TENANT_ID = 0
+	</select>
+	
+	<insert id="EzCommonDAO.insertUseAprFilePrvwConfig">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+        VALUES (0, 'useAprFilePrvw', '결재문서 첨부파일 미리보기 기능 사용 여부', '1', '결재문서 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', TO_DATE('2023-06-29 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+    </insert>
+    
+    <insert id="EzCommonDAO.insertUseBoardFilePrvwConfig">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+        VALUES (0, 'useBoardFilePrvw', '게시판 첨부파일 미리보기 기능 사용 여부', '1', '게시판 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', TO_DATE('2023-06-29 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판')
+    </insert>
+    
 </sqlMap>
