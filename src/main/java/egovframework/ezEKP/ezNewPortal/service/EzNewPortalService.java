@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -223,5 +224,23 @@ public interface EzNewPortalService {
 	 * @throws Exception
 	 */
 	public List<DeptViewVO> getDeptViewList (String userId, String companyId, int tenantId, String lang) throws Exception;
+
+	/**
+	 * 해당부서의 사원리스트
+	 * @param tenantId
+	 * @param deptId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<MenuAuthorUserVO> getDeptUserList (int tenantId, String key, String value, String companyId, String lang, String curPage) throws Exception;
+
+	/**
+	 * 해당부서의 사원수
+	 * @param tenantId
+	 * @param deptId
+	 * @return
+	 * @throws Exception
+	 */
+	public int getDeptUserListCount (int tenantId, String key, String value,String companyId, String lang) throws Exception;
 
 }

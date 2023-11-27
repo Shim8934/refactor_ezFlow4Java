@@ -63,6 +63,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -5738,10 +5739,10 @@ public class EzNewPortalGWController {
 	}
 
 	/**
-	 * 업무일지 G/W [GET] 부서리스트
+	 * 관리자>포탈>메뉴관리>권한설정 G/W [GET] 부서리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezPortal/depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/admin/ezPortal/depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public JSONObject getDeptList(HttpServletRequest request) throws Exception {
 		logger.debug("ezNewPortal G/W getDeptList started.");
 
@@ -5771,6 +5772,55 @@ public class EzNewPortalGWController {
 		}
 
 		logger.debug("ezNewPortal G/W getDeptList ended.");
+		return result;
+	}
+
+	/**
+	 * 관리자>포탈>메뉴관리>권한설정 G/W [GET] 사원리스트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/admin/ezPortal/users", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getUserList(HttpServletRequest request) throws Exception {
+		logger.debug("ezPortal G/W getUserList started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String key = request.getParameter("key");
+			String value = request.getParameter("value");
+			String companyId = request.getParameter("companyId");
+			String curPage = request.getParameter("curPage");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			if (companyId == null || companyId.equals("")) {
+				companyId = info.getCompanyId();
+			}
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+
+			List<MenuAuthorUserVO> userList = ezNewPortalService.getDeptUserList(info.getTenantId(), key, value, companyId, lang, curPage);
+			int userCount = ezNewPortalService.getDeptUserListCount(info.getTenantId(), key, value, companyId, lang);
+
+			// 하위부서 포함
+			String containLow= ezCommonService.getTenantConfig("containLow", info.getTenantId());
+			int totalCount2 = 0;
+
+			if (containLow.equals("YES") && key.equals("DEPARTMENT")) {
+				totalCount2 = ezOrganService.getMemberListCount2(value, null, totalCount2, containLow, info.getTenantId());
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", userList);
+			result.put("totalCount", userCount);
+			result.put("totalCount2", totalCount2);
+			result.put("containLow", containLow);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+
+		logger.debug("ezPortal G/W getUserList ended.");
 		return result;
 	}
 }

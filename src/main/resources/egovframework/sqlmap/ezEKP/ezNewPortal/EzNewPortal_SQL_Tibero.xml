@@ -23,7 +23,6 @@
 <typeAlias alias="OrganDeptVO" type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 <typeAlias alias="webFolderFileVO" type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
 <typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
-<typeAlias alias="portalDeptViewVO" 	type="egovframework.ezEKP.ezNewPortal.vo.DeptViewVO" />
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -183,14 +182,6 @@
 <result property="updateDate" column="UPDATE_DATE" />
 <result property="deleterId" column="DELETER_ID" />
 <result property="tenantId" column="TENANT_ID" />
-</resultMap>
-<resultMap class="portalDeptViewVO" id="deptViewMap">
-	<result property="id" 				column="id" />
-	<result property="parent" 			column="parent" />
-	<result property="companyId" 		column="companyId" />
-	<result property="text" 			column="text" />
-	<result property="isComp" 			column="isComp" />
-	<result property="myDept" 			column="myDept" />
 </resultMap>
 <!-- 공지사항 포틀릿 가져오기 -->
 <select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
@@ -3409,54 +3400,5 @@ ORDER BY
 		AND
 			tenant_id = #v_tenantID#
 	]]>
-</select>
-
-<!-- 조직도 만들기 위한 쿼리 -->
-<select id="ezNewPortal.selectDeptList" parameterClass="map" resultMap="deptViewMap">
-	select
-	d.CN as id,
-	case
-	when d.extensionattribute1 = null
-	<isNotEmpty property="companyId">
-		or d.CN = #companyId#
-	</isNotEmpty>
-	then N'##'
-	else d.EXTENSIONATTRIBUTE1
-	end as parent,
-	d.extensionattribute2 as companyId,
-	d.DISPLAYNAME$lang$ as text,
-	case
-	when d.CN = d.extensionattribute2 then 'comp'
-	else 'dept'
-	end as isComp,
-	case
-	when d.CN = u.DEPARTMENT then 'yes'
-	else 'no'
-	end as myDept
-	from
-	tbl_deptmaster d
-	left join
-	tbl_usermaster u
-	on
-	d.tenant_id = u.TENANT_ID
-	where
-	d.tenant_id = #tenantId#
-	and
-	u.CN = #userId#
-	and
-	u.tenant_id = #tenantId#
-	and
-	(
-	((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0
-	and
-	d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
-	or
-	(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
-	)
-	<isNotEmpty property="companyId">
-		and
-		d.EXTENSIONATTRIBUTE2 = #companyId#
-	</isNotEmpty>
-	ORDER BY lpad(nvl(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
 </select>
 </sqlMap>
