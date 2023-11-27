@@ -153,8 +153,8 @@
 		    <table class="mainlist" id="SaveTBL" style="width:100%">
 		        <tr>
 		            <th style="width:100px; text-align:center; border-top:0px; border-right:1px solid #dbdbda;"><spring:message code='ezEmail.t78' /></th>
-		            <td style="width:115px; border-right:1px solid #dbdbda;">
-		                <input id="defaultWarn" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultWarn}" style="width:83%; text-align:right"> GB
+		            <td style="width:125px; border-right:1px solid #dbdbda;">
+		                <input id="defaultWarn" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultWarn}" style="width:80%; text-align:right"> GB
 		            </td>
 		        	<td style="width:40px;text-align: center">
 		        		<img src="/images/plusicon.png" style="cursor:pointer" onClick="valuePlus(defaultWarn);">
@@ -163,8 +163,8 @@
 		        </tr>     
 		        <tr>
 		            <th style="width:100px; text-align:center; border-bottom:0px; border-right:1px solid #dbdbda;"><spring:message code='ezEmail.t80' /></th>
-		            <td style="width:115px; border-bottom:0px; border-right:1px solid #dbdbda;">
-		                <input id="defaultMax" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultMax}" style="width:83%; text-align:right"> GB
+		            <td style="width:125px; border-bottom:0px; border-right:1px solid #dbdbda;">
+		                <input id="defaultMax" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultMax}" style="width:80%; text-align:right"> GB
 		            </td>
 		        	<td style="width:40px;text-align: center">
 		        		<img src="/images/plusicon.png" style="cursor:pointer" onClick="valuePlus(defaultMax)">

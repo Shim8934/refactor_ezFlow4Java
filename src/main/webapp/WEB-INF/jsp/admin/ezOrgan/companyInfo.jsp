@@ -245,7 +245,7 @@
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t121' /><span style="color:red"> *</span></th> 
 		    	<td>
-		    		<c:set var="companyIdWidth" value="${pageType eq 'add' ? 'width:45%;' : 'width:100%;' }" />
+		    		<c:set var="companyIdWidth" value="${pageType eq 'add' ? 'width:42%;' : 'width:100%;' }" />
 		    		<input id="CompanyID" style="<c:out value="${companyIdWidth }" /> -moz-box-sizing:border-box;box-sizing:border-box;" maxlength="20">
 					<c:if test="${pageType eq 'add' }">
 				    	<span style="font-weight: bold; ">@</span>

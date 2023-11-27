@@ -848,7 +848,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 }
 
 @media only screen and (max-width :1386px) {
-	.sscheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 10px; float:left; font-size:11px; color:#b2b2b2; background:url(/images/ezNewPortal/schedule_nodataIcon.png) no-repeat left center;}
+	.sscheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 29px; float:left; font-size:11px; color:#b2b2b2; background:url(/images/ezNewPortal/schedule_nodataIcon.png) no-repeat left center;}
 	.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 9px 0px 0px; padding:0px; float:right; cursor:pointer;}
 }
 
@@ -1701,7 +1701,6 @@ div.orbit img{border-radius: 5px;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li .txt span{color: #2D2D2D;}
 .first_approval .approval_content{padding: 9px 0px 3px 0px;}
 .portlet_list li.first_approval{height: 103px;}
-.portlet_list li .txt{width: 57% !important;}
-.portlet_list li .name{width: 102px;}
+.portlet_list li .txt{width: 56% !important;}
+.portlet_list li .name{width: 93px;}
 /* //20231101 디자인 css 추가 */
-
