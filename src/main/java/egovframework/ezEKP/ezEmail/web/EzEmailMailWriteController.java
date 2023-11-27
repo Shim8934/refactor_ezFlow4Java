@@ -5395,6 +5395,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		int tenantId = userInfo.getTenantId();
 		
 		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", tenantId);
+		String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", tenantId);
 		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", tenantId);
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", tenantId);
@@ -5422,6 +5423,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("individualMailUser", individualMailUser);
+		model.addAttribute("useSecureMail", useSecureMail);
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("useReceiptExternal", useReceiptExternal);
 		
