@@ -143,6 +143,9 @@
 			/* 2023-09-25 민지수 - 게시판 > 공지사항 기간설정 시작, 종료시간 변수 */
 			var strNotiStart = "${boardListVO.notiStart}";
 			var strNotiEnd = "${boardListVO.notiEnd}";
+			
+			/* 2023-11-17 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 수정알림메일을 발송하지 않도록 파라미터 추가 */
+			var itemApprFlag = "<c:out value='${boardListVO.apprFlag}'/>";
 
 		    window.onload = function () {
 		    	
@@ -991,24 +994,29 @@
 		            
 		            if (pMode != "temp") {
 		                if (document.getElementById("chk_reservation").checked == false) {
-		                	/* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
-		                    if (strItemID == "" || (strItemID != "" && orgMode == "temp")) {
-		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
-		                        xmlhttp.send();
-		                        xmlhttp = null;
-		                    }
-		                    if (pMode == "reply") {
-		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
-		                        xmlhttp.send();
-		                        xmlhttp = null;
-		                    }
-		                    
-		                    /* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송), 수정알림 추가 (승인게시판인 경우 게시알림 메일 사용안함) */
+		                	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림메일을 보내지 않도록 수정 + 답변알림메일을 보내지 않도록 수정 */
+		                	if ("${boardInfo.apprFlag}" != "Y") {
+			                	/* 2022-08-24 홍승비 - 임시저장한 게시물 저장(등록) 시, 해당 게시판의 관리자에게 게시알림메일이 가지 않는 오류 수정 */
+			                    if (strItemID == "" || (strItemID != "" && orgMode == "temp")) {
+			                        xmlhttp = createXMLHttpRequest();
+			                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
+			                        xmlhttp.send();
+			                        xmlhttp = null;
+			                    }
+			                    if (pMode == "reply") {
+			                        xmlhttp = createXMLHttpRequest();
+			                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
+			                        xmlhttp.send();
+			                        xmlhttp = null;
+			                    }
+		                	}
+		                	
+		                    /* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송), 수정알림 추가 (승인게시판의 경우, 게시물 승인 전에 게시알림 메일 사용안함) */
 		                    if (("${boardInfo.apprFlag}" != "Y") && (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pMode == "save")) { // 게시알림
 		                    	sendBoardAlertMail("new", pBoardID, newID, isAllGroupBoard);
-		                    } else if (pMode == "modify") { // 수정알림
+		                    }
+		                    /* 2023-11-17 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 수정알림메일을 발송하지 않도록 수정 */
+		                    else if ((itemApprFlag == null || itemApprFlag == "Y") && pMode == "modify") { // 수정알림 (반려된 게시물이 아닌 경우에만 발송)
 		                    	sendBoardAlertMail("modify", pBoardID, strItemID, isAllGroupBoard);
 		                    }
 		                    
@@ -1017,10 +1025,16 @@
 		                    alert("<spring:message code='ezBoard.t400' />" + " " + pStartDate.substr(0, 16) + "<spring:message code='ezBoard.t401' />");
 		                }
 		                
+		                /* 2019-05-07 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 승인요청 알림메일 발송하도록 수정 */
 		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
-		                if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
+		                if (("${boardInfo.apprMail_FG}" == "Y") && ((pMode != "modify") || ((itemApprFlag != null && itemApprFlag != "Y") && pMode == "modify"))) {
+		                	var tItemID = strItemID; // 게시물 수정(재작성)
+		                	if (pMode != "modify") { // 신규 게시물 등록
+		                		tItemID = newID;
+		                	}
+		                	
 		                    xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
+		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(tItemID), false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
 		                }

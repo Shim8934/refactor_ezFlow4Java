@@ -896,32 +896,36 @@
 		        }
 		        
 		        var strItemList = "";
-		        var arrListSet = new Set();
+		        var arrListSet = new Set(); // 좌측 게시물 카운트 갱신을 위한 게시판ID Set
 		        arrList = strListInfo.split(";");
+		        
 		        for (i = 0; i < arrList.length - 1; i++) {
 		            strItemList += arrList[i].split(",")[0] + ";";
 		            arrListSet.add(document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";");
 		        }
 		        
-		        if (pFlag == "C") {
+		        if (pFlag == "C") { // 반려
 		        	if(confirm("<spring:message code='ezBoard.pjg02'/>")){
 			            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + encodeURIComponent(strItemList) + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 			            try { OpenWin.focus(); } catch (e) { }
 		        	}
 		        }
-		        else {
-		        	
-		        	if(confirm("<spring:message code='ezBoard.pjg01'/>")){
+		        else { // 승인
+		        	if (confirm("<spring:message code='ezBoard.pjg01'/>")) {
 			            var xmlhttp = createXMLHttpRequest();
 			            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + encodeURIComponent(strItemList) + "&mode=" + pFlag, false);
 			            xmlhttp.send();
 			
 			            if (xmlhttp.responseText == "OK") {
-			                if (pFlag == "Y")
+			                if (pFlag == "Y") {
+			                	/* 2023-11-17 홍승비 - 승인게시판의 게시물 승인 시 게시알림메일 발송 기능 추가 */
+			                	sendMailForApprList(strItemList);
+			                	
 			                    alert("<spring:message code='ezBoard.t999002'/>");
-			                else
+			                } else {
 			                    alert("<spring:message code='ezBoard.t999009'/>");
-			
+			                }
+			                
 			                if (CurPage == totalPage) {
 			                    var SelList = new ListView();
 			                    SelList.LoadFromID("BoardList");
@@ -975,6 +979,83 @@
 	            }
 		    }
 			
+		    /* 2023-11-17 홍승비 - 승인게시판의 게시물 승인 시 게시알림메일 발송 기능 추가, 메일발송을 위한 총괄함수 구현 */
+        	function sendMailForApprList(pStrItemList) {
+		   		var itemIDs = pStrItemList.split(";"); // 게시물의 ID 배열
+		   		
+		   		// 각 게시물마다 필요한 파라미터를 전달하여 메일발송 루프 진행
+		   		for (var i = 0; i < itemIDs.length; i++) {
+		   			var tItemID = itemIDs[i];
+		   			var itemTR = $("tr[data2='" + tItemID + "']"); // 게시물 TR
+		   			
+		   			if (itemTR.length > 0) {
+			   			var tBoardID = itemTR.attr("data1");
+			   			var tIsAllGroupBoard = itemTR.attr("isallgroupboard");
+			   			var tStrUpperItemIDTree = itemTR.attr("upperitemidtree");
+			   			var tParentWriteDate = itemTR.attr("parentwritedate");
+			   			var tDocNo = itemTR.attr("docno");
+			   			
+			   			// 해당 게시판의 관리자에게 게시알림메일 발송 (게시판 권한설정 > 관리자 권한자인 경우 '게시 메일로 알림' 옵션)
+			   			sendPostNotiMail(tBoardID, tItemID);
+			   			
+			   			// 답변게시물이 아닌 경우
+			   			if (tParentWriteDate == tDocNo) {
+			   				// 해당 게시판의 일반 사용자(접근 권한자)에게 게시알림메일 발송 (게시판 일반설정 > 메일알림 > '게시알림' 옵션)
+			   				sendBoardAlertMail("new", tBoardID, tItemID, tIsAllGroupBoard);
+			   			}
+			   			else { // 답변게시물인 경우
+			   				// 해당 게시물의 부모게시물 작성자에게 답변알림메일 발송 (게시판 일반설정 > 메일알림 > '답변알림' 옵션)
+			   				sendReplyNoticeMail(tBoardID, tItemID, tStrUpperItemIDTree);
+			   			}
+		   			}
+		   		}
+		    }
+			
+        	/* 2023-11-17 홍승비 - 관리자 권한자의 '게시 메일로 알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+        	function sendPostNotiMail(pBoardID, pItemID) {
+        		$.ajax({
+        			type : "POST",
+        			dataType : "text",
+        			async : true,
+        			url : "/ezBoard/sendPostNotiMail.do",
+        			data : {
+        				boardID : pBoardID,
+        				itemID : pItemID
+        			}
+        		});
+        	}
+        	
+        	/* 2023-11-17 홍승비 - 일반 사용자(접근 권한자)의 '게시알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+        	function sendBoardAlertMail(pMode, pBoardID, pItemID, pIsAllGroupBoard) {
+        		$.ajax({
+        			type : "POST",
+        			dataType : "text",
+        			async : true,
+        			url : "/ezBoard/sendBoardAlertMail.do",
+        			data : {
+        				mode : pMode,
+        				boardID : pBoardID,
+        				itemID : pItemID,
+        				isAllGroupBoard : pIsAllGroupBoard
+        			}
+        		});
+        	}
+        	
+        	/* 2023-11-17 홍승비 - 답변게시물의 부모게시물 작성자의 '답변알림' 옵션에 대한 게시판 메일알림 함수 추가, 비동기로 백그라운드 동작 */
+        	function sendReplyNoticeMail(pBoardID, pItemID, pStrUpperItemIDTree) {
+        		$.ajax({
+        			type : "POST",
+        			dataType : "text",
+        			async : true,
+        			url : "/ezBoard/sendReplyNoticeMail.do",
+        			data : {
+        				boardID : pBoardID,
+        				itemID : pItemID,
+        				itemTreeID : pStrUpperItemIDTree
+        			}
+        		});
+        	}
+        	
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">

@@ -376,25 +376,26 @@
 				    xmlhttp = null;
 				    xmldom = null;
 				    if (pMode != "temp") {
-						if (strItemID == "")
-						{
-						    xmlhttp = createXMLHttpRequest();
-							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
-							xmlhttp.send();		
-							xmlhttp = null;
-						}
-						if (pMode == "reply")
-						{
-						    xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
-						    xmlhttp.send();
-						    xmlhttp = null;
-						}
-						
-						 /* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송), 수정알림 추가 (승인게시판인 경우 게시알림 메일 사용안함) */
-	                    if (("${boardInfo.apprFlag}" != "Y") && pMode == "new") { // 게시알림
-	                    	sendBoardAlertMail("new", pBoardID, itemid, isAllGroupBoard);
-	                    }
+				    	/* 2023-11-15 홍승비 - 승인게시판의 경우, 게시물 승인 전에 관리자에게 게시알림메일을 보내지 않도록 수정 + 답변알림메일을 보내지 않도록 수정 */
+	                	if ("${boardInfo.apprFlag}" != "Y") {
+							if (strItemID == "") {
+							    xmlhttp = createXMLHttpRequest();
+								xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
+								xmlhttp.send();
+								xmlhttp = null;
+							}
+							if (pMode == "reply") {
+							    xmlhttp = createXMLHttpRequest();
+							    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
+							    xmlhttp.send();
+							    xmlhttp = null;
+							}
+							
+							/* 2021-06-22 홍승비 - 게시판 게시알림(일반 사용자 대상 발송) 추가 (승인게시판의 경우, 게시물 승인 전에 게시알림 메일 사용안함) */
+		                    if (pMode == "new") { // 게시알림
+		                    	sendBoardAlertMail("new", pBoardID, itemid, isAllGroupBoard);
+		                    }
+	                	}
 						
 						/* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
 						if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {

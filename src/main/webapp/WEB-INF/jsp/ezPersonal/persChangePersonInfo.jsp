@@ -554,7 +554,7 @@
         		</tr>
     		</table> 
     		<div class="btnpositionJsp" style="width:50%">
-        		<a class="imgbtn" onclick="return PassWordChange()"><span><spring:message code='ezPersonal.t34'/></span></a>
+        		<a class="imgbtn" onclick="return PassWordChange()"><span id="ButtonChangePassword"><spring:message code='ezPersonal.t34'/></span></a>
         		<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>
     		</c:if>

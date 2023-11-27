@@ -1596,6 +1596,7 @@
         	ROWNUM_ >= #v_START#
 	</select>
 	
+	<!-- 2023-11-17 홍승비 - 게시물 승인 시 게시(답변)알림메일 발송 기능을 위한 게시판의 COMPANYID 칼럼 추가 리턴 -->
 	<select id="EzBoardDAO.getMyNoticePostItem" parameterClass="Map" resultClass="HashMap">
 		<isEqual property="v_TYPE" compareValue="Y">
 			<![CDATA[
@@ -1640,7 +1641,8 @@
 		                    A.EXTENSIONATTRIBUTE2 NOTICE  ,
 		                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 		                    B.GUBUN AS GUBUN,
-		                    A.APPRFLAG APPRFLAG  
+		                    A.APPRFLAG APPRFLAG,
+                    		B.COMPANYID
 		            	 FROM 
 		            	 	TBL_Board_Item A
 		            	 JOIN 
@@ -1911,6 +1913,7 @@
 		]]>
 	</select>
 	
+	<!-- 2023-11-17 홍승비 - 게시물 승인 시 게시(답변)알림메일 발송 기능을 위한 게시판의 COMPANYID 칼럼 추가 리턴 -->
 	<select id="EzBoardDAO.getApprBoardListItem" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			SELECT 
@@ -1953,7 +1956,8 @@
 				   			A.DOCNO,
 				   			CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 				   			B.GUBUN  AS GUBUN,
-				   		    '' AS NOTICE
+				   		    '' AS NOTICE,
+	   			    		B.COMPANYID
 		   			   FROM 
 		   			   		TBL_BOARD_ITEM A 
 		   			   INNER JOIN 

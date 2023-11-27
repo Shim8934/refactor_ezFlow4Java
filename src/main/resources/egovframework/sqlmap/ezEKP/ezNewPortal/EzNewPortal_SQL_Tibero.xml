@@ -183,7 +183,6 @@
 <result property="deleterId" column="DELETER_ID" />
 <result property="tenantId" column="TENANT_ID" />
 </resultMap>
-
 <!-- 공지사항 포틀릿 가져오기 -->
 <select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
 	<![CDATA[

@@ -8,6 +8,8 @@
 	<typeAlias alias="PortletInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO"/>
 	<typeAlias alias="ThemeAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.ThemeAuthVO"/>
 	<typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
+	<typeAlias alias="portalDeptViewVO" 	type="egovframework.ezEKP.ezNewPortal.vo.DeptViewVO" />
+	<typeAlias alias="MenuAuthorUserVO" 	type="egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO" />
 	<resultMap class="java.util.HashMap" id="ThemeAuthMap">
 		<result property="themeId" column="THEMEID" />
 		<result property="userId" column="USERID" />
@@ -24,8 +26,26 @@
 		<result property="userType" column="USERTYPE" />
 		<result property="accessYN" column="ACCESSYN" javaType="boolean"/>
 	</resultMap>
-	
-	
+	<resultMap class="portalDeptViewVO" id="deptViewMap">
+		<result property="id" 				column="id" />
+		<result property="parent" 			column="parent" />
+		<result property="companyId" 		column="companyId" />
+		<result property="text" 			column="text" />
+		<result property="isComp" 			column="isComp" />
+		<result property="myDept" 			column="myDept" />
+	</resultMap>
+	<resultMap class="MenuAuthorUserVO" id="userMap">
+		<result property="userName"				column="user_name" />
+		<result property="userId" 				column="user_id" />
+		<result property="jikwi" 				column="jikwi" />
+		<result property="mail" 				column="mail" />
+		<result property="deptId" 			column="dept_id" />
+		<result property="deptName" 			column="dept_name" />
+		<result property="userImg" 				column="user_img" />
+		<result property="extensionAttribute15" column="extensionAttribute15"	/>
+		<result property="userType" 			column="userType"	/>
+	</resultMap>
+
 	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
 			SELECT
@@ -1215,5 +1235,157 @@
 		HAVING
 			COUNT(B.theme_id) > 1
 	]]>
+	</select>
+
+	<!-- 조직도 만들기 위한 쿼리 -->
+	<select id="ezNewPortal.selectDeptList" parameterClass="map" resultMap="deptViewMap">
+		select
+		d.CN as id,
+		IF(d.extensionattribute1 = null
+		<isNotEmpty property="companyId">
+			or d.CN=#companyId#
+		</isNotEmpty>
+		,'##', d.EXTENSIONATTRIBUTE1) as parent,
+		d.extensionattribute2 as companyId,
+		d.DISPLAYNAME$lang$ as text,
+		case d.CN
+		when d.extensionattribute2 then 'comp'
+		else 'dept'
+		end as isComp,
+		case d.CN
+		when u.DEPARTMENT then 'yes'
+		else 'no'
+		end as myDept
+		from
+		tbl_deptmaster d
+		left join
+		tbl_usermaster u
+		on
+		d.tenant_id = u.TENANT_ID
+		where
+		d.tenant_id = #tenantId#
+		and
+		u.CN = #userId#
+		and
+		u.tenant_id = #tenantId#
+		and
+		(
+		((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0
+		and
+		d.extensionattribute2 = u.PHYSICALDELIVERYOFFICENAME))
+		or
+		(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
+		)
+		and
+		not((d.extensionattribute1 is null or d.extensionattribute1 = '') and d.cn <![CDATA[<>]]> d.extensionattribute2)
+		<isNotEmpty property="companyId">
+			and
+			d.EXTENSIONATTRIBUTE2 = #companyId#
+		</isNotEmpty>
+		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$lang$
+	</select>
+
+	<!-- 해당부서의 사원리스트 -->
+	<select id="ezNewPortal.selectUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
+		select * from
+		(	select
+		DISPLAYNAME$lang$ as user_name,
+		CN as user_id,
+		TITLE$lang$ as jikwi,
+		MAIL as mail,
+		DEPARTMENT as dept_id,
+		DESCRIPTION$lang$ as dept_name,
+		EXTENSIONATTRIBUTE2 as user_img,
+		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+		'user' as userType
+		from
+		tbl_usermaster
+		where
+		TENANT_ID = #tenantId#
+		and
+		PHYSICALDELIVERYOFFICENAME = #companyId#
+		and
+		CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+		<isNotEqual property="key" compareValue="DEPARTMENT">
+			and
+			$key$ like concat('%', #value#, '%')
+		</isNotEqual>
+		<isEqual property="key" compareValue="DEPARTMENT">
+			and
+			$key$ = #value#
+		</isEqual>
+		union all
+		select
+		A.DISPLAYNAME$lang$ as user_name,
+		A.CN as user_id,
+		B.TITLE$lang$ as jikwi,
+		A.MAIL as mail,
+		B.DEPTID as dept_id,
+		C.DISPLAYNAME$lang$ as dept_name,
+		A.EXTENSIONATTRIBUTE2 as user_img,
+		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
+		'addJob' as userType
+		from
+		tbl_addjobmaster B
+		join
+		tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+		join
+		tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+		where
+		B.TENANT_ID = #tenantId#
+		<isNotEqual property="key" compareValue="DEPARTMENT">
+			and
+			A.$key$ like concat('%', #value#, '%')
+		</isNotEqual>
+		<isEqual property="key" compareValue="DEPARTMENT">
+			and
+			B.DEPTID = #value#
+		</isEqual>
+		) AA
+		ORDER BY 8 ASC, 1 ASC
+		LIMIT $curPage$, $pageSize$
+	</select>
+
+	<!-- 해당부서의 사원수 -->
+	<select id="ezNewPortal.getDeptUserListCount" parameterClass="Map" resultClass="Integer">
+		select count(*) AS count from
+		(	select
+		CN as user_id
+		from
+		tbl_usermaster
+		where
+		TENANT_ID = #tenantId#
+		and
+		PHYSICALDELIVERYOFFICENAME = #companyId#
+		and
+		CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+		<isNotEqual property="key" compareValue="DEPARTMENT">
+			and
+			$key$ like concat('%', #value#, '%')
+		</isNotEqual>
+		<isEqual property="key" compareValue="DEPARTMENT">
+			and
+			$key$ = #value#
+		</isEqual>
+		union all
+		select
+		A.CN as user_id
+		from
+		tbl_addjobmaster B
+		join
+		tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+		join
+		tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+		where
+		B.TENANT_ID = #tenantId#
+		<isNotEqual property="key" compareValue="DEPARTMENT">
+			and
+			A.$key$ like concat('%', #value#, '%')
+		</isNotEqual>
+		<isEqual property="key" compareValue="DEPARTMENT">
+			and
+			B.DEPTID = #value#
+		</isEqual>
+		) AA
 	</select>
 </sqlMap>

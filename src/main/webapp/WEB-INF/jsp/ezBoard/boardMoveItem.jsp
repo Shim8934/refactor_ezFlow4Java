@@ -34,6 +34,9 @@
 		    var xmlDom_treeview = createXmlDom();
 		    var ReturnFunction;
 		    
+		    /* 2023-11-16 홍승비 - 이동 대상 게시판의 승인여부를 변수에 저장 */
+		    var apprFlag = "";
+		    
 		    /* 2018-07-11 홍승비 - 서로 다른 유형의 게시판 간 이동 시도 시 메세지 수정 */
 		    var board_alertArguments = new Array();
 		    function Select() {
@@ -152,8 +155,12 @@
 		            
 			        /* 2019-07-02 홍승비 - 승인게시판에 게시물 복사, 이동 시에도 승인메일 보내도록 수정 */
 			        sendApprMail(pDestBoardID, returnItemIDStr);
-			        /* 2019-12-17 홍승비 - 게시물 이동 시에도 게시알림 메일을 보내도록 수정 */
-			        sendNotiMail(pDestBoardID, returnItemIDStr);
+			        
+			        /* 2023-11-16 홍승비 - 이동 대상 게시판의 승인여부를 체크한 다음 게시알림 메일을 발송 */
+			        if (apprFlag != "Y") {
+				        /* 2019-12-17 홍승비 - 게시물 이동 시에도 게시알림 메일을 보내도록 수정 */
+				        sendNotiMail(pDestBoardID, returnItemIDStr);
+			        }
 		        } 
 		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
 		        	//var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t497' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t497'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -335,7 +342,7 @@
 		        $.ajax({
 					type : "GET",
 					dataType : "text",
-					async : true,
+					async : false,
 					url : "/ezBoard/getBoardApprProperty.do",
 					data : {
 						boardID : pDestBoardID
@@ -343,6 +350,9 @@
 					success: function(result){
 						var xmlhttp;
 						var itemIDs = returnItemIDStr.split(";");
+						
+						/* 2023-11-16 홍승비 - 이동 대상 게시판의 승인여부를 변수에 저장 */
+						apprFlag = result;
 						
 					 	if (result == "Y") {
 							for (var i = 0; i < itemIDs.length - 1 ;i++) {

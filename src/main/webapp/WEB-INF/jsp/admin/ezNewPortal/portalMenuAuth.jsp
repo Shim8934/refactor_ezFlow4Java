@@ -402,7 +402,7 @@
 	   			$.ajax({
 	   				type:"post",
 	   				dataType:"html",
-	   				url:"/admin/ezJournal/userList.do",
+	   				url:"/admin/ezNewPortal/userList.do",
 	   				data:{"key" : key, "value" : value, "deptName" : deptName, "companyId":"<c:out value='${companyId}'/>", "listType" : listType, "curPage" : CurPage },
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");

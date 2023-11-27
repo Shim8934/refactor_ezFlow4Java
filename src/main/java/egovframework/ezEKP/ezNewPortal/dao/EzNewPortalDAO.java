@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezNewPortal.dao;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
+import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
@@ -678,5 +680,29 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	public void addPortalTenantConfig(Map<String, Object> map) {
 		insert("ezNewPortal.addPortalTenantConfig", map);
+	}
+
+	/**
+	 * 조직도에 쓸 부서리스트 가져오기
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<DeptViewVO> getDeptViewVO(Map<String, Object> map){
+		return (List<DeptViewVO>) list("ezNewPortal.selectDeptList",map);
+	}
+
+	/**
+	 * 해당부서의 사원 리스트 가져오기
+	 * @param map
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<MenuAuthorUserVO> getDeptUserList(Map<String, Object> map){
+		return (List<MenuAuthorUserVO>) list("ezNewPortal.selectUserList",map);
+	}
+
+	public int getDeptUserListCount(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getDeptUserListCount", map);
 	}
 }
