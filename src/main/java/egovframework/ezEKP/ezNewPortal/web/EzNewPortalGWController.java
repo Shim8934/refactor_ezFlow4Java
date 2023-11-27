@@ -20,6 +20,7 @@ import javax.mail.Message;
 import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -5680,6 +5681,43 @@ public class EzNewPortalGWController {
 		}
 		logger.debug("ezNewPortal G/W getTheme2NotiBoardItemList ended.");
 
+		return result;
+	}
+
+	/**
+	 * 업무일지 G/W [GET] 부서리스트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezPortal/depts", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject getDeptList(HttpServletRequest request) throws Exception {
+		logger.debug("ezNewPortal G/W getDeptList started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+
+			logger.debug("userId : " + userId);
+			String companyId = request.getParameter("companyId");
+
+			if (companyId == null || companyId.equals("")) {
+				companyId = info.getCompanyId();
+			}
+			String lang = request.getParameter("lang") != null ? commonUtil.getMultiData(request.getParameter("lang"), info.getTenantId()) : commonUtil.getMultiData(info.getLang(), info.getTenantId());;
+			List<DeptViewVO> deptList = ezNewPortalService.getDeptViewList(userId, companyId, info.getTenantId(),lang);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", deptList);
+		} catch (Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+
+		logger.debug("ezNewPortal G/W getDeptList ended.");
 		return result;
 	}
 }

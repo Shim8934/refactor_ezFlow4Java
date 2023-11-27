@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
+import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -2974,5 +2975,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("getUniqueFileName ended");
 		
 		return fileName;
+	}
+
+	@Override
+	public List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang) throws Exception {
+		logger.debug("getDeptViewList started");
+
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		param.put("companyId", companyId);
+		param.put("lang", lang);
+		List<DeptViewVO> deptList = ezNewPortalDAO.getDeptViewVO(param);
+		for(int i=0; i < deptList.size(); i++) {
+			deptList.get(i).setText(commonUtil.cleanValue(deptList.get(i).getText()));
+		}
+
+		logger.debug("getDeptViewList ended");
+		return deptList;
 	}
 }

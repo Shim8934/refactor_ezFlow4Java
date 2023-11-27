@@ -190,7 +190,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		param.put("userId", userInfo.getId());
 		param.put("companyId", request.getParameter("companyId"));
 		
-		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
+		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezPortal/depts", param, request, "get", null);
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
