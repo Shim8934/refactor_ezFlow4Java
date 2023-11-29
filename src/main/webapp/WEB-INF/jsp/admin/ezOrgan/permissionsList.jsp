@@ -36,6 +36,7 @@
 			var type = "";
 			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
 			var exportingExcel = false;
+			var itemseq; // 2023-07-31 전인하 - 변수 선언부분을 상단으로 변경 (not undefined 에러 방지)
 
 			document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -208,7 +209,8 @@
 				}
 
 				var doc = window.document;
-				itemseq = document.getElementById(obj).getAttribute("DATA1");
+				// 2023-08-11 전인하 - 겸직/사용자 별 권한 설정 기능 - 각 체크박스의 id값 달라짐에 따라 id값 사용부 수정
+				itemseq = document.getElementById(obj).childNodes[0].childNodes[0].getAttribute("id");
 				if(itemseq == "0") {
 					return;
 				}
@@ -258,11 +260,13 @@
 				for (i; i < cnt; i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
 					
+					// 2023-07-20 전인하 - 관리자 > 조직도 > 권한관리 > 겸직/사용자별로 권한 설정 기능
+					// 리스트에서  CN이 PK로 쓰이지 않음에 따라(한 사용자에 대해 겸직별로 다양한 권한 부여 가능) 고유아이디 생성, 부여
 					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
-					+ seq 
+					+ seq + "_" + i
 					+ "' value='" 
 					+ seq 
-					+ "' onchange='inputFunc(event)'></input>";
+					+ "' onchange='inputFunc(event," + seq + "_" + i + ")'></input>";
 				} 
 			}
 			
@@ -289,8 +293,11 @@
 			function checkItems() {
 				rowList = [];
 				$("input:checkbox[name='checks']").each(function(){
+				    // 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 리스트 체크박스 동작 개선
+				    // 체크된 tr들을 등록/삭제/메일발송 팝업으로 넘길 때 userID와 deptID 데이터를 동시에 넘김
+				    var tempObj = document.getElementById(this.id).parentNode.parentNode;
 					if($(this).is(":checked")){
-						rowList.push(this);
+						rowList.push(tempObj.getAttribute("data1") + ";" + tempObj.getAttribute("data6") + ";" + tempObj.getAttribute("data7")); // this: userId, data6: deptId, data7 : jobId
 					}
 				});
 			}
@@ -298,19 +305,21 @@
 			function inputFunc(event) {
 				checkItems();
 				
-				$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
-
-				for (var i = 0; i < rowList.length; i++) {
-					//var objID = $("#" + rowList[i])[0].parentNode.parentNode.id;
-					var objID = rowList[i].parentNode.parentNode.id;
-					$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
-					//$("#" + rowList[i]).prop("checked", true);
-					rowList[i].checked = true;
-				}
+                // 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 리스트 체크박스 동작 개선
+                // 체크된 TR의 배경 음영이 비정상동작하는 것을 수정
+                
+                var permissionListObj = document.getElementById("lvPermissionList").childNodes[1].childNodes;
+                for (var i = 0; i < permissionListObj.length; i++) {
+                    var tempPermissionObj = permissionListObj[i].getAttribute("data1") + ";" + permissionListObj[i].getAttribute("data6") + ";" + permissionListObj[i].getAttribute("data7");
+                    if (rowList.includes(tempPermissionObj)) {
+                        $("#" + permissionListObj[i].id + " td").css("background-color", "rgb(241, 248, 255)");
+                        $("#" + permissionListObj[i].childNodes[1].childNodes[1]).prop("checked", true);
+                    } else {
+                        $("#" + permissionListObj[i].id + " td").css("background-color", "rgb(255, 255, 255)");
+                        $("#" + permissionListObj[i].childNodes[1].childNodes[1]).prop("checked", false);
+                    }
+                }             
 			}
-			
-			var itemseq;
-			
 			
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -542,12 +551,17 @@
 				var dataList3 = new Array();
 				var dataList4 = new Array();
 				var dataList5 = new Array();
+				// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 권한 삭제 동작 변수에 deptid, jobid 리스트 추가
+				var dataList6 = new Array(); // deptId
+				var dataList7 = new Array(); // jobId
 
 				$("input[name='checks']:checked").each(function(){
 					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
 					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
 					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
 					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
+					dataList6.push(this.parentElement.parentElement.getAttribute("DATA6"));
+					dataList7.push(this.parentElement.parentElement.getAttribute("DATA7"));
 				}); 
 				
 				
@@ -595,14 +609,12 @@
 							cn : dataList, 
 							extensionAttribute1: dataList2,
 							permissionChType : dataList5,
+							dept : dataList6,
+							job : dataList7,
 							mode : mode
 						},
 						success : function(result){
-							if (mode == "ALL") {
-								Permissions_List();
-							} else {
-								Permissions_List();
-							}
+						    Permissions_List();
 						},
 						error : function(){
 							alert(strLang15);

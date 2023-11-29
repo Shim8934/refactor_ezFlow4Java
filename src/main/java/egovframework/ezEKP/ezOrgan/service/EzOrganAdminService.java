@@ -24,7 +24,8 @@ public interface EzOrganAdminService {
 
 	int getAddJobCountInOneDept(String cn, String deptId, int tenantId) throws Exception;
 	
-	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID) throws Exception;
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 권한 조회 메소드 수정
+	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID, String permissionBasisDeptYN) throws Exception;
 
 	public List<OrganUserVO> getRetireList(int pPage, int pPageRow, int tenantID, String offset, String searchStartDate, String searchEndDate, String searchField, String searchValue, String searchCompanyID) throws Exception;
 	
@@ -56,7 +57,8 @@ public interface EzOrganAdminService {
 	
 	public int getRetireListCount(int pPage, int pPageRow, int tenantID, String searchStartDate, String searchEndDate, String searchKeycode, String searchKeyword, String searchCompanyID) throws Exception;
 
-	public int getPermissionListCount(String companyID, String type, String searchType, String searchValue, String strLang, int tenantID) throws Exception;
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 권한 카운트 조회 메소드 수정
+	public int getPermissionListCount(String companyID, String type, String searchType, String searchValue, String strLang, int tenantID, String permissionBasisDeptYN) throws Exception;
 
 	public void insertDBData_company(String cn, String displayName, String displayName2, String mailAddr, String parentCn, String ldapPath,
 					String extensionAttribute15, String skipInitData, String manualFlag, int tenantID, LoginVO userInfo) throws Exception;
@@ -177,7 +179,7 @@ public interface EzOrganAdminService {
 	public List<String> getAutoDeleteOfRetireUserList(int tenantId, int days) throws Exception;
 
 	void insertPermissionChHist(List<PermissionInfoVO> vo) throws Exception;
-
+	
 	public OrganUserVO getUserDeptInfo(String cn, int tenantID) throws Exception;
 	
 	public OrganDeptVO getDeptDisplayNm(String cn, int tenantID) throws Exception;
@@ -191,4 +193,13 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getExportPermissionsList(String primary, String companyId, int tenantId) throws Exception;
 
 	public String createExcelPermissionsList(String realPath, String pDirPath, List<OrganUserVO> exportPermissionList, String primary, Locale locale) throws Exception;
+	
+	// 2023-08-25 전인하 - 해당 유저가 원직인지 겸직인지 확인 메소드
+	String isThisAddJob(String cn, int tenant_id, String DeptId, String jobId) throws Exception;
+	
+	// 2023-08-24 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/부서별 권한 설정 옵션에 따른 권한 히스토리 삽입 메소드
+	void insertPermissionChHistBasisDept(List<PermissionInfoVO> vo) throws Exception;
+	
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/부서별 권한 설정 옵션에 따른 권한 수정 메소드
+	public void updatePermissionBasisDept(List<OrganUserVO> vo) throws Exception;
 }

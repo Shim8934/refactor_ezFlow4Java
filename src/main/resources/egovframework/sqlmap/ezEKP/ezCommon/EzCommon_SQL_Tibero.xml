@@ -5131,4 +5131,40 @@
         VALUES (0, 'useBoardFilePrvw', '게시판 첨부파일 미리보기 기능 사용 여부', '1', '게시판 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', TO_DATE('2023-06-29 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판')
     </insert>
     
+	<select id="EzCommonDAO.checkPermissionBasisDeptYN_Config" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'permissionBasisDeptYN'
+		AND
+			TENANT_ID = 0
+	</select>
+
+	<insert id="EzCommonDAO.insertPermissionBasisDeptYN_Config">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES ('0', 'permissionBasisDeptYN', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', '조직도 권한부여 기준 설정', sysdate, '조직도')
+	</insert>
+	
+	<select id="EzCommonDAO.checkRollInfoInAddJob" resultClass="String">
+		<![CDATA[
+			SELECT
+				ROLL_INFO
+			FROM
+				TBL_ADDJOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.AddRollInfoInAddJobColumn">
+		<![CDATA[
+			ALTER TABLE
+				TBL_ADDJOBMASTER
+			ADD (
+				ROLL_INFO 	VARCHAR(200) 	DEFAULT 	'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;'
+			)
+		]]>
+	</statement>
 </sqlMap>

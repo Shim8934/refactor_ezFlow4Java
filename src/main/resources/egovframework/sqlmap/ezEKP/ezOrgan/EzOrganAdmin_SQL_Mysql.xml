@@ -25,6 +25,7 @@
 		<result property="physicalDeliveryOfficeName" 			column="physicaldeliveryofficename" 	columnIndex="11"/>
 		<result property="manualFlag"							column="MANUAL_FLAG"					columnIndex="12"/>
 		<result property="extensionAttribute5"					column="extensionAttribute5"			columnIndex="13"/>
+		<result property="extensionAttribute1"					column="ROLLINFO"						columnIndex="14"/>
 		<result property="description1" 						column="description1" 					columnIndex="14"/>
 		<result property="description2" 						column="description2" 					columnIndex="15"/>
 	</resultMap>
@@ -38,7 +39,8 @@
 		<result property="description" 							column="description" 					columnIndex="6"/>		
 		<result property="telephoneNumber" 						column="telephoneNumber" 				columnIndex="7"/>		
 		<result property="company" 								column="company" 						columnIndex="8"/>
-		<result property="department" 							column="department"						columnIndex="9"/>		
+		<result property="department" 							column="department"						columnIndex="9"/>
+		<result property="jobID" 							column="extensionAttribute7"				columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap id="retireList" class="OrganUserVO">
@@ -2907,7 +2909,7 @@
 			{CALL EZSP_GETUSERADDJOBLIST(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
-	
+	<!-- 2023-09-06 전인하 - 겸직/사용자 기준으로 권한 부여 설정 모바일 대응 > 겸직 리스트 호출 시 겸직권한 정보 추가로 호출 -->
 	<select id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
 		<![CDATA[
 			SELECT
@@ -2956,12 +2958,13 @@
                 	B.COMPNM2
                 END
                 	COMPANYNAME  ,
-             	A.TITLE T1  ,
-             	A.TITLE2 T2,
+             	CASE WHEN C.DEPARTMENT = A.DEPTID THEN C.TITLE ELSE A.TITLE END AS T1  ,
+             	CASE WHEN C.DEPARTMENT = A.DEPTID THEN C.TITLE2 ELSE A.TITLE2 END AS T2  ,
+             	CASE WHEN C.DEPARTMENT = A.DEPTID THEN C.EXTENSIONATTRIBUTE7 ELSE A.JOBID END AS JOBID,
+             	A.MANUAL_FLAG,
+             	CASE WHEN C.DEPARTMENT = A.DEPTID THEN C.EXTENSIONATTRIBUTE1 ELSE A.ROLL_INFO END AS ROLLINFO,
              	B.DISPLAYNAME DESCRIPTION1,
-             	B.DISPLAYNAME2 DESCRIPTION2,
-             	A.JOBID  ,
-             	A.MANUAL_FLAG
+             	B.DISPLAYNAME2 DESCRIPTION2
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN
@@ -3027,47 +3030,105 @@
 		]]>
 	</procedure> -->
 	
+	<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/부서 별 권한 카운트 조회 -->	
 	<select id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(EXTENSIONATTRIBUTE1)
-	 		FROM
-	 			TBL_USERMASTER
-   			WHERE
-   				NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL 
-      		AND
-      			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-            AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                  
-      		AND
-      			TENANT_ID = #v_TENANT_ID#	
-      		AND
-      			EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
-		]]>
-		
-		<isNotEmpty property="searchValue" prepend="AND">
-			<isEqual property="searchType" compareValue="cn">
-				cn LIKE CONCAT('%', #searchValue#,'%')
-			</isEqual>
-			<isEqual property="searchType" compareValue="displayname">
-				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#,'%')
-			</isEqual>
-			<isEqual property="searchType" compareValue="title">
-				title LIKE CONCAT('%', #searchValue#,'%')
-			</isEqual>
-			<isEqual property="searchType" compareValue="description">
-				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#,'%')
-			</isEqual>
-			<isEqual property="searchType" compareValue="mail">
-				mail LIKE CONCAT('%', #searchValue#,'%')
-			</isEqual>
-			<isEqual property="searchType" compareValue="telephonenumber">
-				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
-			</isEqual>
-			<isEqual property="searchType" compareValue="company">
-				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT('%', #searchValue#,'%')
-			</isEqual>
-		</isNotEmpty>
+				SUM(CNT)
+			FROM (
+				SELECT
+					COUNT(*) as CNT
+				FROM
+					TBL_USERMASTER U 
+				WHERE
+					NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
+				AND
+					PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+				AND
+					EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+				AND 
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
+				AND
+					TENANT_ID = #v_TENANT_ID#
+				]]>
+			<isNotEmpty property="searchValue" prepend="AND">
+				<isEqual property="searchType" compareValue="cn">
+					U.cn LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="displayname">
+					CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="title">
+					CASE #v_LANGDATA# WHEN '1' THEN U.title ELSE U.title2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="description">
+						CASE #v_LANGDATA# WHEN '1' THEN U.description ELSE U.description2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="mail">
+					U.mail LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="telephonenumber">
+					U.telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="company">
+					CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+			</isNotEmpty>
+			<isEqual property="permissionBasisDeptYN" compareValue="Y">
+				<![CDATA[
+				UNION ALL
+				SELECT
+					COUNT(*) as CNT
+				FROM
+					TBL_ADDJOBMASTER J
+				INNER JOIN
+					TBL_DEPTMASTER D
+				ON
+					D.CN = J.DEPTID
+				AND
+					D.TENANT_ID = J.TENANT_ID
+				JOIN
+					TBL_USERMASTER U 
+				ON
+					U.CN = J.CN
+				AND 
+					U.TENANT_ID = J.TENANT_ID 
+				WHERE
+					NULLIF(J.ROLL_INFO, '') IS NOT NULL
+				AND
+					U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+				AND
+					J.ROLL_INFO LIKE '%$v_TYPE$%'
+				AND 
+					J.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
+				AND
+					J.TENANT_ID = #v_TENANT_ID#
+				]]>
+			<isNotEmpty property="searchValue" prepend="AND">
+				<isEqual property="searchType" compareValue="cn">
+					U.cn LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="displayname">
+					CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="title">
+					CASE #v_LANGDATA# WHEN '1' THEN J.TITLE ELSE J.TITLE2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="description">
+					CASE #v_LANGDATA# WHEN '1' THEN D.displayname ELSE D.displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="mail">
+					U.mail LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="telephonenumber">
+					U.telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="company">
+					CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+			</isNotEmpty>
+		</isEqual>
+		) A
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
@@ -3077,6 +3138,7 @@
 	</procedure> -->
 	
 	<select id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
+		<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/부서 별 권한 조회 -->
 		<![CDATA[
 			SELECT
 				CN, 
@@ -3087,44 +3149,107 @@
 				TELEPHONENUMBER,
 				CASE #v_LANGDATA# WHEN '1' THEN COMPANY ELSE COMPANY2 END AS COMPANY,
 				EXTENSIONATTRIBUTE1,
-				DEPARTMENT
+				DEPARTMENT,
+				EXTENSIONATTRIBUTE7
 			FROM
-				TBL_USERMASTER 
+				TBL_USERMASTER U 
 			WHERE
-				NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
+				NULLIF(U.EXTENSIONATTRIBUTE1, '') IS NOT NULL
 			AND
-				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+				U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
 			AND
-				EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+				U.EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
 			AND 
-				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
+				U.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
 			AND
-				TENANT_ID = #v_TENANT_ID#
-		]]>
-		
+				U.TENANT_ID = #v_TENANT_ID#
+			]]>
+			<isNotEmpty property="searchValue" prepend="AND">
+				<isEqual property="searchType" compareValue="cn">
+					U.cn LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="displayname">
+					CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="title">
+					CASE #v_LANGDATA# WHEN '1' THEN U.title ELSE U.title2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="description">
+					CASE #v_LANGDATA# WHEN '1' THEN U.description ELSE U.description2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="mail">
+					U.mail LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="telephonenumber">
+					U.telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+				<isEqual property="searchType" compareValue="company">
+					CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT('%', #searchValue#,'%')
+				</isEqual>
+			</isNotEmpty>
+		<isEqual property="permissionBasisDeptYN" compareValue="Y">
+		<![CDATA[
+			UNION ALL
+			SELECT
+				U.CN,
+				CASE #v_LANGDATA# WHEN '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END AS DISPLAYNAME,
+				CASE #v_LANGDATA# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS DESCRIPTION,
+				CASE #v_LANGDATA# WHEN '1' THEN J.TITLE ELSE J.TITLE2 END AS TITLE,
+				U.MAIL,
+				U.TELEPHONENUMBER,
+				CASE #v_LANGDATA# WHEN '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY,
+				J.ROLL_INFO AS EXTENSIONATTRIBUTE1,
+				D.CN AS DEPARTMENT,
+				J.JOBID AS EXTENSIONATTRIBUTE7
+			FROM
+				TBL_ADDJOBMASTER J
+			INNER JOIN
+				TBL_DEPTMASTER D
+			ON
+				D.CN = J.DEPTID
+			AND
+				D.TENANT_ID = J.TENANT_ID
+			JOIN
+				TBL_USERMASTER U 
+			ON
+				U.CN = J.CN
+			AND 
+				U.TENANT_ID = J.TENANT_ID 
+			WHERE
+				NULLIF(J.ROLL_INFO, '') IS NOT NULL
+			AND
+				U.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				J.ROLL_INFO LIKE '%$v_TYPE$%'
+			AND 
+				J.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
+			AND
+				J.TENANT_ID = #v_TENANT_ID#
+			]]>
 		<isNotEmpty property="searchValue" prepend="AND">
 			<isEqual property="searchType" compareValue="cn">
-				cn LIKE CONCAT('%', #searchValue#,'%')
+				U.cn LIKE CONCAT('%', #searchValue#,'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="displayname">
-				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+				CASE #v_LANGDATA# WHEN '1' THEN U.displayname ELSE U.displayname2 END LIKE CONCAT('%', #searchValue#,'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="title">
-				title LIKE CONCAT('%', #searchValue#,'%')
+				CASE #v_LANGDATA# WHEN '1' THEN J.TITLE ELSE J.TITLE2 END LIKE CONCAT('%', #searchValue#,'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="description">
-				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#,'%')
+				CASE #v_LANGDATA# WHEN '1' THEN D.displayname ELSE D.displayname2 END LIKE CONCAT('%', #searchValue#,'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="mail">
-				mail LIKE CONCAT('%', #searchValue#,'%')
+				U.mail LIKE CONCAT('%', #searchValue#,'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="telephonenumber">
-				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+				U.telephonenumber LIKE CONCAT('%', #searchValue#,'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="company">
-				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT('%', #searchValue#,'%')
+				CASE #v_LANGDATA# WHEN '1' THEN U.company ELSE U.company2 END LIKE CONCAT('%', #searchValue#,'%')
 			</isEqual>
 		</isNotEmpty>
+		</isEqual>
 		
 		<![CDATA[
 			ORDER BY DISPLAYNAME
@@ -5289,4 +5414,77 @@
 				PHYSICALDELIVERYOFFICENAME, DISPLAYNAME, EXTENSIONATTRIBUTE1 desc, DESCRIPTION, EXTENSIONATTRIBUTE15
 	</select>
 
+	<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/부서 별 권한 변경 히스토리 삽입 -->
+	<insert id="EzOrganAdminDAO.insertPermissionChHistBasisDept" parameterClass="PermissionInfoVO">
+	<![CDATA[
+		INSERT INTO
+			TBL_PERMISSION_CHANGE_INFO (
+				USERID,				USERNM,					USERNM2,				DEPTID,					DEPTNM,
+				DEPTNM2,			TITLE,       			TITLE2,					COMPANYID,				COMPANYNM,
+				COMPANYNM2,			AUTHORIZEDTIME,			ADMINTYPE,				STATUS,					AUTHORIZERID,
+				AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP
+			 )
+		SELECT 
+			#userId#,			U.displayName,			U.displayName2,			#deptId#,				
+			(SELECT ua.DISPLAYNAME 	FROM TBL_DEPTMASTER ua WHERE CN = #deptId# AND TENANT_ID = #tenant_id#),
+			(SELECT ua.DISPLAYNAME2 	FROM TBL_DEPTMASTER ua WHERE CN = #deptId# AND TENANT_ID = #tenant_id#),
+			CASE WHEN U.DEPARTMENT = #deptId# AND U.EXTENSIONATTRIBUTE7 = #jobId# THEN U.TITLE ELSE (SELECT adj.TITLE FROM TBL_ADDJOBMASTER adj WHERE adj.CN = #userId# AND adj.DEPTID = #deptId# AND adj.JOBID = #jobId# and adj.TENANT_ID = #tenant_id# ) END	 AS TITLE,
+			CASE WHEN U.DEPARTMENT = #deptId# AND U.EXTENSIONATTRIBUTE7 = #jobId# THEN U.TITLE2 ELSE (SELECT adj.TITLE2 FROM TBL_ADDJOBMASTER adj WHERE adj.CN = #userId# AND adj.DEPTID = #deptId# AND adj.JOBID = #jobId# and adj.TENANT_ID = #tenant_id# ) END AS TITLE2,
+			U.PHYSICALDELIVERYOFFICENAME,  	U.COMPANY,
+			U.COMPANY2,			#authorizedTime#,		#adminType#,					#status#,		#authorizerId#,
+			(SELECT ua.DISPLAYNAME 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
+			(SELECT ua.DISPLAYNAME2 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
+			#authorizerIp#
+		FROM
+			TBL_USERMASTER u
+		WHERE 	
+			U.CN = #userId#
+		AND 	
+			U.TENANT_ID = #tenant_id#
+		]]>
+	</insert>
+
+	<!-- 2023-08-24 전인하 - 겸직/부서 별 권한 설정 기능 - 해당 직책이 원직인지 겸직인지 확인 쿼리 (겸직일 경우 1, 아닐 경우 0 반환) -->
+	<select id="EzOrganAdminDAO.isThisAddJob" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_ADDJOBMASTER
+		WHERE
+			CN = #v_CN# 
+		AND 
+			TENANT_ID = #v_TENANT_ID#
+		AND 
+			DEPTID = #v_DEPTID#
+		AND 
+			JOBID = #v_JOBID#
+	</select>
+
+	<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/부서 별 권한 수정 (원직) -->
+	<update id="EzOrganAdminDAO.updatePermissionIntoUserMaster"	parameterClass="map">
+		UPDATE
+			TBL_USERMASTER
+		SET
+			EXTENSIONATTRIBUTE1 = #v_PERMMSION#
+		WHERE
+			CN = #v_CN#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+	</update>
+
+	<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/부서 별 권한 수정 (겸직) -->
+	<update id="EzOrganAdminDAO.updatePermissionIntoAddJobMaster"	parameterClass="map">
+		UPDATE
+			TBL_ADDJOBMASTER
+		SET
+			ROLL_INFO = #v_PERMMSION#
+		WHERE
+			CN = #v_CN#
+		AND
+			DEPTID = #v_DEPTID#
+		AND
+			JOBID = #v_JOBID#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+	</update>
 </sqlMap>

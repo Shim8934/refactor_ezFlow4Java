@@ -1001,7 +1001,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             	nextTitle = egovMessageSource.getMessage("ezCommunity.t193", userInfo.getLocale());
             }
             
-            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0) {
+            if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k")) {
             	cAdmin = "admin";
             }
             
@@ -2543,7 +2543,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String rtnValue = "";
 		boolean result = false;
 
-		if (rollInfo.indexOf("c=1") < 0) {
+		if (!commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c")) {
 			rtnValue = getClubCHK(id, clubID, boardID, userInfo.getTenantId());
 		} else {
 			rtnValue = "1";
@@ -2634,7 +2634,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         }
         
         for (int i = 0; i < brdBoardTreeList.size(); i++) {
-        	if (strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
+        	if (!commonUtil.isAdmin(pUserID, tenantID, strRollInfo, "c;n;k")) {
                 if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardID()) > -1) {
                 	continue;
                 }
@@ -2730,7 +2730,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;t")) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("true");
 			boardInfo.setListView_FG("true");
@@ -4511,7 +4511,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		if (!strSysopID.equals(id)){
-			if (rollInfo.indexOf("c=1") < 0 ) {
+			if (!commonUtil.isAdmin(id, tenantID, rollInfo, "c")) {
 				if (strIsIN.equals("1") && strCompanyID.equals(companyID)) {
 					sysopCheck = 1;
 				} 

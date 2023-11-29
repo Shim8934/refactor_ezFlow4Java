@@ -10462,6 +10462,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_DEPTID", deptID);
 		map.put("v_TENANTID", tenantID);
+        
+        // 2023-08-08 전인하 - 겸직/사용자 별 권한 설정 기능 > 수발신담당자 체크 시 겸직/부서 별 권한 설정 적용
+        String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID);
+        map.put("permissionBasisDeptYN", permissionBasisDeptYN);
+        
 		int rtnVal = ezApprovalGDAO.receiverChk(map);
 		
 		if (rtnVal == 0) {
@@ -33225,15 +33230,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         int tenantID = userInfo.getTenantId();
         int docCount = 0;
         
+        // 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 > 적용부 > (준법지원인 관련) 권한 조회 수정
+        // 준법지원인 권한은 표준 사항은 아니나, 컴파일 에러 방지 위해 삽입함
+        String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", userInfo.getTenantId());
+        
 		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		
-        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID);
+        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID, permissionBasisDeptYN);
 
         logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
                 + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow
                 + ",totalCount=" + cnt);
         
-        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, searchType, searchValue, strLang, startRow, endRow, tenantID);
+        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, searchType, searchValue, strLang, startRow, endRow, tenantID, permissionBasisDeptYN);
         
         int memberCount = 0;		
 		String[] memberInfo = new String[list.size()];

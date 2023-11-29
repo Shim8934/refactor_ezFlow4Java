@@ -66,7 +66,9 @@
 	        var extraArry = new Array();
 	        var deleteArry = new Array();
 			var packageType = "${packageType}";
-
+			
+			// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/사용자 별 권한 설정 옵션에 따른 변수 삽입
+			var permissionBasisDeptYN = "${permissionBasisDeptYN}"
 			
 		    $(document).ready(function(){
 		    	try {
@@ -246,7 +248,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype;department;extensionAttribute7", type : "user", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -419,9 +421,9 @@
 	                    Sub_TD1.setAttribute("class", "name");
 	                    var pDisplayName = "";
 	                    
-	                    if( !pSeach && $(M_TR).attr("_DATA20" ) == "addJob"){
-		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
-		            	} else if( pSeach && $(M_TR).attr("_DATA19") == "addJob" ){
+	                    // 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/사용자 별 권한 설정 옵션에 따라 부서, 직위 정보를 다루게 됨에 따라, 
+	                    // DATA의 셀이 _DATA12 이후로 두 번호씩 밀려 해당부분 수정하였으며, 검색 개선에 따라 검색했을 때에도 _DATA21이 겸직여부라 분기 삭제함
+	                    if($(M_TR).attr("_DATA22" ) == "addJob") {
 		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
 		            	}
 	                    
@@ -514,7 +516,7 @@
 	                        var M_TR_TD3 = document.createElement("TD");
 	                        
 	                        var jobName = "";
-	                        if($(M_TR).attr("_DATA19") == "addJob"){
+	                        if($(M_TR).attr("_DATA22") == "addJob") {
 			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
 			            	}	      
 	                        
@@ -545,7 +547,7 @@
 	                        var M_TR_TD2 = document.createElement("TD");
 	                        M_TR_TD2.style.width = "80px";
 	                        var jobName = "";
-	                        if($(M_TR).attr("_DATA20") == "addJob"){
+	                        if($(M_TR).attr("_DATA22") == "addJob") {
 			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
 			            	}	      
 	                        
@@ -723,22 +725,27 @@
 	            
 	            var addJob = "";
 	            if (pSeach){
-		            addJob = GetAttribute(p_ListOrderObject, "_data19");
+		            addJob = GetAttribute(p_ListOrderObject, "_data21");
 	            } else {
-		            addJob = GetAttribute(p_ListOrderObject, "_data20");
+		            addJob = GetAttribute(p_ListOrderObject, "_data22");
 	            }
 	            
 	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
 	                alert(strLang13);
 	                return;
-	            } else if(addJob == "addJob"){
+	            } else if(addJob == "addJob" && permissionBasisDeptYN != "Y") {
 	            	alert("<spring:message code='ezOrgan.psb01' />");
 	                return;
 	            } else {
 	            	var strId = p_ListOrderObject.getAttribute("_data2");
 	            	var strName = p_ListOrderObject.getAttribute("_data4");
 	            	var strMail = p_ListOrderObject.getAttribute("_data3");
+					var strDeptID = p_ListOrderObject.getAttribute("_data12");
+					var strJobID = p_ListOrderObject.getAttribute("_data13");
 	            	var strData = p_ListOrderObject.getAttribute("_data10");
+	            	var strDept = p_ListOrderObject.getAttribute("_data16");
+	            	var strTitleName = p_ListOrderObject.getAttribute("_data6"); // 우측 권한리스트에 직위 컬럼 추가
+	            	var isThisAddJob = p_ListOrderObject.getAttribute("_data22"); // 겸직여부 확인
 	            	var strDept = p_ListOrderObject.getAttribute("_data5");
 	            	
 	            	if (strData == null || strData == "") {
@@ -750,17 +757,25 @@
 	            	var arrRows = _listView.GetDataRows();
 	            	
 	            	for (var i =0; i < arrRows.length; i++) {
-	            		if (strId == arrRows[i].getAttribute("data1")){
-	            			alert("<spring:message code='ezOrgan.mse2' />");
-	            			return;
+	            		if (strId == arrRows[i].getAttribute("data1")) {
+	            		// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/사용자 별 권한 설정 옵션에 따른 분기 추가
+	            		// 리스트뷰 객체의 각 tr에 "data5" 속성으로 부서 ID 삽입
+	            		    if (permissionBasisDeptYN == "Y") {
+	            		        if (strDeptID == arrRows[i].getAttribute("data5") && strJobID == arrRows[i].getAttribute("data6")) {
+                                    alert("<spring:message code='ezOrgan.mse2' />");
+                                    return;
+                                }
+	            		    } else {
+                                alert("<spring:message code='ezOrgan.mse2' />");
+                                return;
+	            		    }
 	            		}
 	            	}
 	            	
 	            	for (var i=0; i < deleteArry.length; i++) {
-	            		if(strId == deleteArry[i].data1){
-	            			console.log(deleteArry[i].data1);
+	            	    // 2023-08-17 전인하 - 권한 등록/수정 리스트 동작 시 부서, 직위 데이터를 추가하여 겸직권한이 잘못 조작되지 않도록 수정
+	            		if (strId == deleteArry[i].data1 && strDeptID == deleteArry[i].data4 && strJobID == deleteArry[i].data5) {
 	            			deleteArry.splice(i, 1);
-	            			console.log(deleteArry);
 	            		}
 	            	}
 	            	
@@ -787,6 +802,8 @@
 			                extraInfo.data1 = strId;
 			                extraInfo.data2 = strData;
 			                extraInfo.data3 = DelValue; // 2022-01-20 이사라 - 변경하는 권한
+							extraInfo.data4 = strDeptID; // 2023-07-31 전인하 - 해당 권한의 부서 ID
+							extraInfo.data5 = strJobID; // 2023-07-31 전인하 - 해당 권한의 직위 ID
 			                
 			                extraArry.push(extraInfo);
 			                
@@ -800,9 +817,16 @@
 		            		pparsingXML = pparsingXML + "<DATA2>" + strData + "</DATA2>";
 		            		pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strName) + "</DATA3>";
 		            		pparsingXML = pparsingXML + "<DATA4>" + strMail + "</DATA4>";
+							pparsingXML = pparsingXML + "<DATA5>" + strDeptID + "</DATA5>";
+							pparsingXML = pparsingXML + "<DATA6>" + strJobID + "</DATA6>";
 		            		pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE>";
 		            		pparsingXML = pparsingXML + "<CLASSNAME>userName</CLASSNAME></CELL>";
 		            		pparsingXML = pparsingXML + "<CELL><VALUE>" + MakeXMLString(strDept) + "</VALUE></CELL></ROW>";
+	            		    if (isThisAddJob == "addJob") {  // 우측 권한리스트에 직위 컬럼 추가, 겸직 정보 삽입
+		            		    pparsingXML = pparsingXML + "<CELL><VALUE>" + "<spring:message code='ezOrgan.psb03'/> " + MakeXMLString(strTitleName) + "</VALUE></CELL></ROW>";
+		            		} else {
+		            		    pparsingXML = pparsingXML + "<CELL><VALUE>" + MakeXMLString(strTitleName) + "</VALUE></CELL></ROW>";
+		            		}
 		            		pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
 		            		Resultxml = loadXMLString(pparsingXML2);
 			                
@@ -906,6 +930,8 @@
 	            var arrRows = selList.GetSelectedRows();
 	            var strId = arrRows[0].getAttribute("data1");
 	            var strData = arrRows[0].getAttribute("data2")
+	            var strDeptID = arrRows[0].getAttribute("data5");
+	            var strJobID = arrRows[0].getAttribute("data6")
 	            
 	            var tempDelType = delType;
 			    var DelValue = tempDelType + "=0";
@@ -918,8 +944,8 @@
 			    strData = strData.replace(tempDelType, DelValue);
 			    
 			    for (var i=0; i < extraArry.length; i++) {
-            		if(strId == extraArry[i].data1){
-            			console.log(extraArry[i].data1);
+			        // 2023-08-17 전인하 - 권한 등록/수정 리스트 동작 시 부서데이터를 추가하여 겸직권한이 엉뚱하게 조작되지 않도록 조치함
+            		if (strId == extraArry[i].data1 && strDeptID == extraArry[i].data4 && strJobID == extraArry[i].data5) {
             			extraArry.splice(i, 1);
             			console.log(extraArry);
             		}
@@ -929,6 +955,8 @@
 			    deleteInfo.data1 = strId;
 			    deleteInfo.data2 = strData;
 			    deleteInfo.data3 = DelValue; // 2022-01-20 이사라 - 변경하는 권한
+			    deleteInfo.data4 = strDeptID; // 2023-07-31 전인하 - 해당 권한의 부서 ID
+			    deleteInfo.data5 = strJobID; // 2023-07-31 전인하 - 해당 권한의 job ID
 			    
 			    deleteArry.push(deleteInfo);
 			    
@@ -1084,7 +1112,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
 		        	data : {search : document.getElementById("search_type").value + "::" + encodeURIComponent(document.getElementById("keyword").value), cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;userType", type : "user", adminOrgan : "y", noAddJob : "Y"},
+		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;userType;department;extensionAttribute7", type : "user", adminOrgan : "y", noAddJob : "N"}, // noAddJob 플래그 변경 - 필요함.
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
@@ -1139,6 +1167,9 @@
 		    	var data1 = new Array();
 		    	var data2 = new Array();
 				var data3 = new Array();
+				// 2023-07-31 전인하 - 변경된 권한 정보를 저장할 때, data4 배열에 부서정보 담아 반환 - 컨트롤러에서 처리
+		    	var data4 = new Array(); 
+		    	var data5 = new Array();
 		    	
 		    	totalArry = extraArry.concat(deleteArry);
 		    	
@@ -1146,6 +1177,8 @@
 		        	data1.push(totalArry[i].data1);
 			        data2.push(totalArry[i].data2);
 			        data3.push(totalArry[i].data3);
+					data4.push(totalArry[i].data4);
+					data5.push(totalArry[i].data5);
 		        }
 
 				if(data1.length == 0 || data2.length == 0) {
@@ -1163,7 +1196,7 @@
 	            	dataType : "text",
 	            	url : "/admin/ezOrgan/saveStoreUserInfo.do",
 	            	async : false,
-					data : {parentCn : "", cn : data1, extensionAttribute1 : data2, permissionChType : data3},
+					data : {parentCn : "", cn : data1, extensionAttribute1 : data2, permissionChType : data3, dept: data4, job: data5},
 	            	success : function(result){
 	            		 alert(strLang14);
 	            	

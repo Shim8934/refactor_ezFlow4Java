@@ -434,4 +434,18 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (String) select("EzOrganDAO.getCompanyId", parameter);
 	}
 
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/사용자 별 권한 설정 옵션에 따른 권한 조회 메소드
+	public String getRollInfoBasisDept(Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.selectPermissionBasisDept", map);
+	}
+	
+	// 2023-08-09 전인하 - 특정 유저의 모든 겸직 권한 호출하는 메소드
+	public List<OrganUserVO> getAllRollInfoForUserBasisDept(Map<String, Object> map) throws Exception {
+		return (List<OrganUserVO>) list("EzOrganDAO.getAllRollInfoForUserBasisDept", map);
+	}
+	
+	// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회
+	public List<OrganUserVO> getAddJobListForEzApprDropdown(Map<String, Object> map) throws Exception {
+		return (List<OrganUserVO>) list("EzOrganDAO.addJobListForEzApprDropdown", map);
+	}
 }

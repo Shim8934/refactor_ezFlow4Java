@@ -152,8 +152,6 @@
 	    		});
 	    		
 	    		makeoptionyear();
-	    		//2020.01.06 김정언 - 개인연차현황 selectBox option 최근 날짜로 선택 되도록 변경
-	    		$("#searchYear option:eq(0)").prop("selected", true);
 	    		getUserAnnualList();
 	    		
 	    		var height = parseInt(document.documentElement.clientHeight - 235);
@@ -242,6 +240,9 @@
 	                $("#searchYear").html(optionHtml);
 	                $("#searchYear").val(selyear);
 	    		}
+                //2020.01.06 김정언 - 개인연차현황 selectBox option 최근 날짜로 선택 되도록 변경
+                //2023-11-28 전인하 - 개인연차현황 selectBox option 선택이 리스트호출보다 늦은 시점이어서 에러 발생하는 것을 수정함
+                $("#searchYear option:eq(0)").prop("selected", true);
 
 	    		//리스트
 	    		getUserAnnualList();

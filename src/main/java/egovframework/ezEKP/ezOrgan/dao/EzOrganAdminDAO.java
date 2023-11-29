@@ -2308,4 +2308,23 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getExportPermissionsList(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getExportPermissionsList", map);
 	}
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/사용자 기준으로 권한 설정 옵션 사용하면서 권한 변경 시 권한 히스토리 삽입
+	public void insertPermissionChHistBasisDept(PermissionInfoVO vo) throws Exception {
+		update("EzOrganAdminDAO.insertPermissionChHistBasisDept", vo);
+	}
+
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 권한 삽입 대상의 원직/겸직 여부 확인
+	public int isThisAddJob(HashMap<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.isThisAddJob", map);
+	}
+
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 원직일 경우의 권한 삽입
+	public void updatePermissionIntoUserMaster(HashMap<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updatePermissionIntoUserMaster", map);
+	}
+
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직일 경우의 권한 삽입
+	public void updatePermissionIntoAddJobMaster(HashMap<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updatePermissionIntoAddJobMaster", map);
+	}
 }

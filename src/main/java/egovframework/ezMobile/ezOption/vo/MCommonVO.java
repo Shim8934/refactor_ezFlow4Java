@@ -44,6 +44,9 @@ public class MCommonVO {
 	/** 2018-11-02 박종균 - 최종 로그인 시간 추가 */
 	private String lastLogin;
 	
+	/** 2023-08-28 전인하 - 직위 ID 추가 */
+	private String jobId;
+	
 	public String getLastLogin() {
 		return lastLogin;
 	}
@@ -204,5 +207,11 @@ public class MCommonVO {
 		this.phone = phone;
 	}
 	
+	public String getJobId() {
+		return jobId;
+	}
 	
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
+	}
 }

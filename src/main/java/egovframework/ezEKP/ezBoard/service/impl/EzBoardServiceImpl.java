@@ -2756,7 +2756,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		/* 2019-06-05 홍승비 - 사간겸직으로 회사변경 시 변경된 관리자 권한 반영되도록 수정 */
 		// 전체관리자가 아닌 회사관리자/게시판관리자 플래그 추가
-		if (rollInfo != null && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+		if (commonUtil.isAdmin(pUserID, tenantID, rollInfo, "k;n")) {
 			isNormalAdmin = true;
 		}
 		

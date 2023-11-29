@@ -71,6 +71,10 @@
 	        var repStartDate = "<c:out value='${repStartDate}'/>";
 		    var timeCheck = false;
 		    var timeSelect = false;
+		    // 2023-08-09 전인하 - 일정관리 > 부서관리자 겸직 권한이 있을 시, 부서관리자 권한이 있는 겸직의 부서 일정 작성/수정 기능 
+		    var permissionBasisDeptYN = "<c:out value='${permissionBasisDeptYN}'/>"; // 겸직/사용자 기준 권한부여 옵션 여부
+		    var adminDeptListTemp = "<c:out value='${AdminDeptList}'/>"; // 부서관리자 권한이 존재하는 부서 id string
+		    var adminDeptList = adminDeptListTemp.split(";").filter(Boolean);
 		    
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {

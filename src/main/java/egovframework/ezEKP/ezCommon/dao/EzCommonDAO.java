@@ -2539,4 +2539,21 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertUseBoardFilePrvwConfig");
 		}
 	}
+	public void insertPermissionBasisDeptYN_Config()  throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkPermissionBasisDeptYN_Config");
+		if (propertyValue == null) {
+			logger.debug("PermissionBasisDeptYN tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertPermissionBasisDeptYN_Config");
+		}
+	}
+
+	public void createColumnRollInfoInAddJobMaster()  throws Exception {
+		try {
+			select("EzCommonDAO.checkRollInfoInAddJob");
+		} catch (Exception e) {
+			logger.debug("TBL_ADDJOBMASTER ROLL_INFO column doesn't exist. creating the column... ");
+
+			update("EzCommonDAO.AddRollInfoInAddJobColumn");
+		}
+	}
 }
