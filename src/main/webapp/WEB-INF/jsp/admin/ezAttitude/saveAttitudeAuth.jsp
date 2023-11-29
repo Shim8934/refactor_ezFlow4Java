@@ -222,14 +222,14 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t198' /></th>
 	            <td style="padding: 2px 5px;">
-	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:1px; width:325px" onfocus="this.blur();" readonly="readonly" />
+	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:1px; width:318px" onfocus="this.blur();" readonly="readonly" />
 	                <a class="imgbtn imgbck2" style="margin-top:1px;"><span onclick="select_person()"><spring:message code='ezAttitude.t199' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t190' /></th>
 	            <td style="height: 60px; width: 400px; padding-top: 4px;">
-	                <textarea rows="3" id="txtdept" style="height: 43px; width:313px; resize:none; overflow: auto; border-radius: 3px;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <textarea rows="3" id="txtdept" style="height: 43px; width:306px; resize:none; overflow: auto; border-radius: 3px;" onfocus="this.blur();" readonly="readonly" ></textarea>
 	                <a class="imgbtn imgbck2" style="margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.t199' /></span></a>                
 	            </td>
 	        </tr>

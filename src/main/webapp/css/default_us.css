@@ -3968,6 +3968,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .contents_searchCategory dl dt.searchinput input{height: 34px !important;}
 #lmSearchInput{width: 70% !important}
 
+.calendar_pagenav .spanText {margin-top: -3px;}
 /* 스크롤바 */
 *::-webkit-scrollbar {
     width: 12px;
