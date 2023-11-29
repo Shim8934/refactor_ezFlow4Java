@@ -24,9 +24,9 @@
 				-ms-overflow-style: none !important;
 			}
 	    	#contentlist table.mainlist tr:not(.tr_noItems) td {
-	    		overflow : hidden;
+	    		/* overflow : hidden;
 	    		white-space : nowrap;
-	    		text-overflow : ellipsis;
+	    		text-overflow : ellipsis; */
 	    	}
 	    	tr.hover:hover {background:#eee; color:#fff;}
 			.selectTR {background-color: #f1f8ff;}
@@ -571,16 +571,16 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
-						<th style="padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="NO">NO.</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="joinDate"><spring:message code='ezAttitude.t289' /></th>
-						<th style="width:8%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="basicAnnualCnt"><spring:message code='ezAttitude.t290' /></th>
-						<th style="width:8%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="additionalAnnualCnt"><spring:message code='ezAttitude.t291' /></th>
-						<th style="width:8%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
-						<th style="width:8%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname=""><spring:message code='ezAttitude.t253' /></th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
+						<th style="padding-left: 15px; width: 60px" colname="NO">NO.</th>
+						<th style="width: 90px;cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
+						<th style="width: 100px; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
+						<th style="width: 128px; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
+						<th style="width:150px; cursor: pointer;" colname="joinDate"><spring:message code='ezAttitude.t289' /></th>
+						<th style="width:166px; cursor: pointer;" colname="basicAnnualCnt"><spring:message code='ezAttitude.t290' /></th>
+						<th style="width:184px; cursor: pointer;" colname="additionalAnnualCnt"><spring:message code='ezAttitude.t291' /></th>
+						<th style="width:117px;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
+						<th style="width:140px;" colname=""><spring:message code='ezAttitude.t253' /></th>
+						<th style="width:149px; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
 					</tr>
 				</thead>
 				<tbody>
