@@ -463,9 +463,9 @@
 		<c:set var="tableWidth" value="750" />
 		</c:when>
 		<c:when test="${userLang == '2'}">
-		<c:set var="tableWidth" value="730" />
+		<c:set var="tableWidth" value="770" />
 		</c:when>
-		<c:otherwise test="${userLang != '3'}">
+		<c:otherwise>
 		<c:set var="tableWidth" value="720" />
 		</c:otherwise>
 		</c:choose>
@@ -525,8 +525,7 @@
 		</table> 
 		<br>
 		<h2 class="h2_dot"><spring:message code='ezEmail.t700' /></h2> 
-		<!-- <table class="content" style="width:${tableWidth}px;"> -->
-		<table class="content" style="width:770px;">
+		<table class="content" style="width:${tableWidth}px;">
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer2" id="popServer2" class="textarea" style="width:200px" disabled /> 
