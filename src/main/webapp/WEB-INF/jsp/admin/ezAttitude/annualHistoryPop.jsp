@@ -23,7 +23,6 @@
 	    	table.mainlist tr:not(.tr_noItems) td {
 	    		table-layout : fixed;
 	    		overflow : hidden;
-	    		white-space : nowrap;
 	    		text-overflow : ellipsis;
 	    		text-align:center;
 	    	}
@@ -54,7 +53,7 @@
 		    	});
 		    	
 		    	if ($("#contentlist tr").length > 13) { //스크롤이 생길 경우 처리
-		    		var addTh = "<th class='borderRight' style='width: 9px;'></th>";
+		    		var addTh = "<th class='borderRight' style='width: 0.5%;'></th>";
 		    		$(".mainlist tr th:eq(4)").after(addTh);
 		    		$(".mainlist tr th:eq(4)").removeClass("borderRight");
 		    	}

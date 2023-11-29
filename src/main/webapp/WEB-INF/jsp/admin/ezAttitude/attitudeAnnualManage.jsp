@@ -498,7 +498,7 @@
 			//수정내역팝업
 	    	function annualHistoryPop(userId) {
 	        	var url = "/admin/ezAttitude/annualHistoryPop.do?userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 510));
+				window.open(url, "annualHistoryPop", GetOpenWindowfeature(870, 510)); // 팝업 사이즈 수정(750 > 870) : 다국어(영어) 헤더 영역 글씨 겹침
 	        }
 			
 			//입사일 입력 팝업
