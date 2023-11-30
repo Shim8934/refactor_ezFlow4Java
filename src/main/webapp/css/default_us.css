@@ -2661,7 +2661,7 @@ div#txtContent table {margin:auto;}
 .admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; float:left;}
 .admin_menuDL .admin_menuX{ margin:0px; padding:0px;}
 .admin_menu_content{ margin:0px; padding:15px 10px; box-sizing:border-box; overflow:hidden; border-left:1px solid #cfd0d2; border-right:1px solid #cfd0d2; border-bottom:1px solid #cfd0d2;}
-.adminMenu_icon{ margin:0px 10px 0px 0px; padding:0px; float:left;}
+.adminMenu_icon{ margin:0px 6px 0px 0px; padding:0px; float:left;}
 .adminMenu_icon .admenuIcon{ margin:0px; padding:0px; width:74px; height:69px; border:1px solid #b9d7f6; background:#f1f8ff; box-sizing:border-box;}
 .adminMenu_icon .admenuIcon_up{ margin:10px 0px 0px 0px; padding:0px 4px; cursor:pointer; font-size:12px; color: #000; height:31px; line-height:29px; box-sizing:border-box; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193; text-align:center; border-radius: 3px; font-weight: normal;}
 .adminMenu_icon .admenuIcon_up:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
@@ -3346,7 +3346,7 @@ input::-ms-clear {display: none;}
 .quesDiv .qstnRow .dd-container .dd-option-image, .dd-selected-image {vertical-align:middle; margin-right:20px; max-width:64px;}
 .quesDiv .qstnRow .dd-container .dd-image-right { float:right; margin-right:15px; margin-left:5px;}
 .quesDiv .qstnRow .dd-container .dd-container{ position:relative;}
-.quesDiv .qstnRow .dd-container .dd-selected-text {font-size:14px; font-weight:normal; color:#333;}
+.quesDiv .qstnRow .dd-container .dd-selected-text {font-size:13px; font-weight:normal; color:#333;}
 .quesDiv .qstnAtt .qstnFileInfo .fileList ul {width: 100%; margin-left: -39px;}
 .quesDiv .qstnAtt .qstnFileInfo .fileList ul .attFileInf {text-align: left;}
 .quesDiv .option_wrap {width: 20%; border-radius: 10px; margin-right:155px; float: right; border: 1px solid #d7d7d7; height: 0px; display:none;}
