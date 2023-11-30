@@ -668,3 +668,16 @@ function unEscapeHtml(text) {
 
     return text.replace(/&amp;|&lt;|&gt;|&quot;|&#034;|&#039;/g, function(m) { return map[m]; });
 }
+
+function adjustFontSizeToFitWidth(nodeId, desiredWidth) {
+    var node = document.getElementById(nodeId);
+    var fontSize = 1;
+    node.style.fontSize = fontSize + 'px';
+
+    // 텍스트가 요소의 폭에 맞을 때까지 폰트 크기를 조절
+    while (node.scrollWidth < desiredWidth && fontSize < 100) {
+        fontSize++;
+        node.style.fontSize = fontSize + 'px';
+    }
+    node.style.fontSize = (fontSize - 1) + 'px';
+}

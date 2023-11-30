@@ -96,6 +96,11 @@ var doughnutOptions = {
 				return value;
 			}
 		}
+	},
+	legendCallback: function(chart) {
+		alert(1);
+		console.debug(chart);
+		// Return the HTML string here.
 	}
 };
 
@@ -167,17 +172,17 @@ function getYearlyDocCount() {
     };
     request.send();
 }
-
+var myBar, myDoughnut;
 function initChart() {
 	var ctx = document.getElementById("canvas").getContext("2d");
-	var myBar = new Chart(ctx, {
+	myBar = new Chart(ctx, {
 		type: 'bar',
 		data: barData,
 		options: barOptions
 	});
 
 	var dctx = document.getElementById("canvas2").getContext("2d");
-	var myDoughnut = new Chart(dctx, {
+	myDoughnut = new Chart(dctx, {
 		type: 'doughnut',
 		data: doughnutData,
 		options: doughnutOptions
@@ -187,26 +192,14 @@ function initChart() {
 
 // 도넛그래프 가운데 숫자길이에 따른 폰트 지정
 function doughnutCountModification() {
-	// 0이상~10억 미만까지 범위, 각 숫자 자릿수일 경우의 폰트 사이즈 크기 배열(px) 
-	var modificationSize = new Array(30, 30, 23, 21, 18, 15, 12, 11, 10, 10);
+	// 0이상~10억 미만까지 범위, 각 숫자 자릿수일 경우의 폰트 사이즈 크기 배열(px)
 	var sumDataStr = sumData.toString();
-
-	if (sumDataStr.length < 11) {
-		var fontSize = modificationSize[sumDataStr.length - 1];
-	} else {
-		var fontSize = 10;
-	}
-	
+	sumDataStr = "53555";
 	var countSpan = document.getElementById("yearProduceCountsSpan");
 	// 총합 쉼표 처리
 	sumDataStr = sumDataStr.split(/(?=(?:...)*$)/).join(',');
 	countSpan.innerText = sumDataStr;
-	countSpan.setAttribute("style", "font-size:" + fontSize + "px;");
-	document.getElementById("countsDiv").style.width = "190px"
-	// 영어일 경우 폰트 위치 조절
-	if (typeof portletLang != "undefined" && portletLang != null && portletLang == 2) {
-		document.getElementById("countsDiv").style.width = "178px";
-	}
+	adjustFontSizeToFitWidth('yearProduceCountsSpan', 53);
 }
 
 function randomScaling() {
@@ -310,3 +303,23 @@ function doughnutOn() {
 	document.querySelector("#chartRight").style.width = "75%";
 	barOptions.legend.display = false;
 }
+
+// var defaultLegendClickHandler = Chart.defaults.global.legend.onClick;
+function newLegendClickHandler(e, legendItem) {
+	var index = legendItem.datasetIndex;
+	console.log(index);
+
+	if (index > 1) {
+		// Do the original logic
+		// defaultLegendClickHandler(e, legendItem);
+	} else {
+		let ci = this.chart;
+		[
+			ci.getDatasetMeta(0),
+			ci.getDatasetMeta(1)
+		].forEach(function(meta) {
+			meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+		});
+		ci.update();
+	}
+};
