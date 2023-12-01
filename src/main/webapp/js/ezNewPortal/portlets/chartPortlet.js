@@ -200,17 +200,31 @@ function initChart() {
 function doughnutCountModification() {
 	var chartArea = myDoughnut.chart.chartArea;
 	var radius = myDoughnut.chart.innerRadius;
-	document.getElementById("countsDiv").style.width = (chartArea.right - chartArea.left) + "px";
-	document.getElementById("countsDiv").style.height = (chartArea.bottom - chartArea.top) + "px";
+	var width = chartArea.right - chartArea.left;
+	var height = chartArea.bottom - chartArea.top;
+	var size = radius * 2 - 2;
+
+	document.getElementById("countsDiv").style.width = size + "px";
+	document.getElementById("countsDiv").style.height = size + "px";
+	document.getElementById("countsDiv").style.left = ((width - size) / 2) + "px";
+	document.getElementById("countsDiv").style.top = ((height - size) / 2 + chartArea.top) + "px";
 
 	// 0이상~10억 미만까지 범위, 각 숫자 자릿수일 경우의 폰트 사이즈 크기 배열(px)
 	// var sumDataStr = sumData.toString();
-	var sumDataStr = myDoughnut.chart.getDatasetMeta(0).total + "";
+	var sumDataStr = myDoughnut.chart.getDatasetMeta(0).total;
 	var countSpan = document.getElementById("yearProduceCountsSpan");
 	// 총합 쉼표 처리
-	sumDataStr = sumDataStr.split(/(?=(?:...)*$)/).join(',');
-	countSpan.innerText = sumDataStr;
-	adjustFontSizeToFitWidth('yearProduceCountsSpan', radius * 2, radius * 2);
+	$({ val : parseInt(countSpan.innerText.replaceAll(',','')) }).animate({ val : sumDataStr }, {
+		duration: 1000,
+		step: function() {
+			countSpan.innerText = Math.floor(this.val).toString().split(/(?=(?:...)*$)/).join(',');
+			adjustFontSizeToFitWidth('yearProduceCountsSpan', size, size);
+		},
+		complete: function() {
+			countSpan.innerText = Math.floor(this.val).toString().split(/(?=(?:...)*$)/).join(',');
+			adjustFontSizeToFitWidth('yearProduceCountsSpan', size, size);
+		}
+	});
 }
 
 function randomScaling() {
@@ -311,7 +325,7 @@ function sumArray(arr) {
 
 function doughnutOn() {
 	document.querySelector("#chartLeft").style.display = "";
-	document.querySelector("#chartRight").style.width = "75%";
+	document.querySelector("#chartRight").style.width = "calc(75% - 20px)";
 	barOptions.legend.display = false;
 }
 
