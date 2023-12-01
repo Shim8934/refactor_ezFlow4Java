@@ -188,18 +188,29 @@ function initChart() {
 		options: doughnutOptions
 	});
 	doughnutCountModification();
+	var canvas2 = document.getElementById('canvas2');
+	var observer = new MutationObserver(doughnutCountModification);
+	observer.observe(canvas2, {
+		attributes: true
+	});
+	canvas2.addEventListener('click', doughnutCountModification);
 }
 
 // 도넛그래프 가운데 숫자길이에 따른 폰트 지정
 function doughnutCountModification() {
+	var chartArea = myDoughnut.chart.chartArea;
+	var radius = myDoughnut.chart.innerRadius;
+	document.getElementById("countsDiv").style.width = (chartArea.right - chartArea.left) + "px";
+	document.getElementById("countsDiv").style.height = (chartArea.bottom - chartArea.top) + "px";
+
 	// 0이상~10억 미만까지 범위, 각 숫자 자릿수일 경우의 폰트 사이즈 크기 배열(px)
-	var sumDataStr = sumData.toString();
-	sumDataStr = "53555";
+	// var sumDataStr = sumData.toString();
+	var sumDataStr = myDoughnut.chart.getDatasetMeta(0).total + "";
 	var countSpan = document.getElementById("yearProduceCountsSpan");
 	// 총합 쉼표 처리
 	sumDataStr = sumDataStr.split(/(?=(?:...)*$)/).join(',');
 	countSpan.innerText = sumDataStr;
-	adjustFontSizeToFitWidth('yearProduceCountsSpan', 53);
+	adjustFontSizeToFitWidth('yearProduceCountsSpan', radius * 2, radius * 2);
 }
 
 function randomScaling() {

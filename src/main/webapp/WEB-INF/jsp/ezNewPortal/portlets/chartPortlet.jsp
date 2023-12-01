@@ -20,12 +20,9 @@
 }
 #countsDiv{
 	float: left;
-    bottom: 141px;
-    position: relative;
-    height: 164px;
-    width: 100%;
+    position: absolute;
+	bottom: 0;
     text-align: center;
-    z-index: -10;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -34,8 +31,7 @@
     color: rgb(63 76 95);
     font-size: 15px;
     font-weight: bold;
-    vertical-align: middle;
-    display: table-cell;
+	height: auto;
 }
 #chartRight{
 	border-left: 1px solid #dbdbdb;
