@@ -8,6 +8,8 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -48,6 +50,12 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
 	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
+
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
+
 	@Override
 	public MCommonVO commonInfo(String serverName, String userId) throws Exception {
 		logger.debug("commonInfo started");

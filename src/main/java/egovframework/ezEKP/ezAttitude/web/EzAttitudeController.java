@@ -500,10 +500,10 @@ public class EzAttitudeController {
 		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		boolean attitudeAdminCheck = false;
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("e=1") != -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
 			attitudeAdminCheck = true;
 			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
 			attitudeAdminCheck = true;
 		}		
 		
@@ -1536,12 +1536,12 @@ public class EzAttitudeController {
 			resultj.put("list", list);
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("e=1") != -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , e -> 회사의 모든부서
 			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
 			adminFlag = "true";
 			// g -> 자신의 부서 + auth TB 확인해볼것.
 		}
@@ -1945,10 +1945,10 @@ public class EzAttitudeController {
 			}
 		}
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("e=1") != -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
 			adminFlag = "true";
 			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
 			adminFlag = "true";
 		}
 		
@@ -2151,10 +2151,10 @@ public class EzAttitudeController {
 		String url = "";
 		
 		//전체관리자(c), 회사관리자(k), 근태관리자(e) 면 모든부서..
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("e=1") != -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
 			adminFlag = "true";
 			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
 			adminFlag = "true";
 		}
 		
@@ -2339,7 +2339,7 @@ public class EzAttitudeController {
 				+ " || searchEndDate = " + searchEndDate + " || searchAttitudeType = " + searchAttitudeType + " || pageNum = " + pageNum + " || listSize = " + listSize
 				+ " || orderCell = " + orderCell + "orderOption = " + orderOption + "||searchDeptId =" + searchDeptId);
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("e=1") != -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
 			isAdmin = "Y";
 		}
 		
@@ -2466,10 +2466,10 @@ public class EzAttitudeController {
 		//해당 근태에 대한 부서
 		deptId = (String) attitudeVO.get("deptId") == null ? "null" : (String) attitudeVO.get("deptId");
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("e=1") != -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
 			adminFlag = "true";
 			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
 			adminFlag = "true";
 		}
 		
@@ -2870,15 +2870,16 @@ public class EzAttitudeController {
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("e=1") != -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
 			adminFlag = "true";
 			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
 			adminFlag = "true";
 		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		// 2023-10-18 전인하 - 근태관리 > 근태정보관리 > 근태입력 > 대상자 > 조직도 호출 시 사용되는 restAPI 변경
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -4440,12 +4441,12 @@ public class EzAttitudeController {
 			resultj.put("list", list);
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("e=1") != -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
 			adminFlag = "true";
 			//권한부서 리스트
 			//c , k , e -> 회사의 모든부서
 			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
 			adminFlag = "true";
 			// g -> 자신의 부서 + auth TB 확인해볼것.
 		}
@@ -4584,10 +4585,10 @@ public class EzAttitudeController {
 			}
 		}
 		
-		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("e=1") != -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
 			adminFlag = "true";
 			isAllDept = "Y";
-		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
 			adminFlag = "true";
 		}
 		

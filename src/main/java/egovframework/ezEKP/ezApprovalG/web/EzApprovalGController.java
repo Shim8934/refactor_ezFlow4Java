@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
 import egovframework.ezEKP.ezApprovalG.vo.*;
+import egovframework.ezEKP.ezOrgan.vo.*;
 
 import java.io.BufferedInputStream;
 import java.net.URL;
@@ -326,15 +327,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
         logger.debug("getUserSubTitle started");       
 
-		String propList = "extensionAttribute4;department;description;title;title2;description2;physicalDeliveryOfficeName;company;company2";
+		// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > JobId 정보 조회 위해 로직 변경 - 
+		// extensionAttribute4의 정보만 조회하여 리스트를 구성하는 것에서, 필요한 정보를 DB에서 가져오는 것으로 변경.
+		// 해당 과정에 겸직 드롭다운 정렬이 포함됨.
+		String propList = "extensionAttribute4;department;description;title;title2;description2;physicalDeliveryOfficeName;company;company2;extensionAttribute7";
 		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		String myDept = "";
 		String myTitle= "";
 		String subTitleString = "";
 		boolean isSubTitle = false;
 		Document doc = commonUtil.convertStringToDocument(results);
-		
-		String deptInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
+
+		List<OrganUserVO> userAddJobList = ezOrganService.getAddJobListForEzApprDropdown(userInfo.getPrimary(), userInfo.getId(), userInfo.getTenantId());
         String deptID = doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
         String deptName = doc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
         String title = doc.getElementsByTagName("TITLE1").item(0).getTextContent();
@@ -343,81 +347,63 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String companyID = doc.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent();
         String companyName = doc.getElementsByTagName("COMPANY").item(0).getTextContent();
         String companyName2 = doc.getElementsByTagName("COMPANY2").item(0).getTextContent();
+		String extensionAttribute7 = doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent();
         int deptListFlag = 0;
         
         myDept = userInfo.getPrimary().equals("1") ? deptName : deptName2;
 		myTitle = userInfo.getPrimary().equals("1") ? title : title2;
-        
+		
         if (companyID.equals(userInfo.getCompanyID())) {
 	        if (userInfo.getDeptID().equals(deptID)) {
 	        	if (title.equals("")){
-	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "</option>";
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "|" + extensionAttribute7 + "'  selected >" + myDept + "</option>";
 	        	} else {
-	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "[" + myTitle + "]" + "</option>";
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "|" + extensionAttribute7 + "'  selected >" + myDept + "[" + myTitle + "]" + "</option>";
 	        	}
 	        } else {
 	        	if (title.equals("")){
-	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "</option>";
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "|" + extensionAttribute7 + "' >" + myDept + "</option>";
 	        	} else {
-	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "[" + myTitle + "]" + "</option>";
+	        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "|" + extensionAttribute7 + "' >" + myDept + "[" + myTitle + "]" + "</option>";
 	        	}
 	        }
 	        deptListFlag++;
         }
-        
-        String lang = "";
-        
-        if (!userInfo.getPrimary().equals("1")) {
-        	lang = "2";
-        }
-        
-        if (!deptInfo.equals("")) {
-        	String[] deptList = deptInfo.split(";");
-        	
-        	for (int k = 0; k < deptList.length; k++) {
-        		String[] subList = deptList[k].split(":");
-        		String pTitle_ = "";
-                String pTitle1_ = ""; 
-                String pTitle2_ = "";
-                
-                
-                if (subList.length > 2) {
-                	pTitle_ = userInfo.getPrimary().equals("1") ? commonUtil.cleanValue(subList[1]) : commonUtil.cleanValue(subList[2]);
-                }
-                
-                if (subList.length > 1) {
-                    pTitle1_ = commonUtil.cleanValue(subList[1]);
-                }
- 
-                if (subList.length > 2) {
-                    pTitle2_ = commonUtil.cleanValue(subList[2]);
-                } else {
-                    pTitle2_ = pTitle1_;
-                }
-                
-                String pDeptNM1_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DISPLAYNAME", userInfo.getTenantId()));
-                String pDeptNM2_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DISPLAYNAME2", userInfo.getTenantId()));
-                String pCompanyID_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "EXTENSIONATTRIBUTE2", userInfo.getTenantId()));
-                String pCompanyName_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "EXTENSIONATTRIBUTE3", userInfo.getTenantId()));
-                String pCompanyName2_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "COMPNM2", userInfo.getTenantId()));
-                String pDeptNM_ = userInfo.getPrimary().equals("1") ? pDeptNM1_ : pDeptNM2_;
-                
+		
+		String lang = userInfo.getPrimary().equals("1") ? "" : "2";
+		
+        if (! userAddJobList.equals("")) {
+        	for (int k = 0; k < userAddJobList.size(); k++) {
+				OrganUserVO addJobVal = userAddJobList.get(k);
+				String pDeptNM_ = commonUtil.cleanValue(addJobVal.getDescription());
+                String pDeptNM1_ = commonUtil.cleanValue(addJobVal.getDescription1());
+                String pDeptNM2_ = commonUtil.cleanValue(addJobVal.getDescription2());
+				// 2023-10-06 전인하 - 전자결재 > 좌측메뉴 겸직선택 드롭다운 > 겸직 드롭다운 조작 시 회사ID, 회사 이름 정보가 제대로 조회되지 않는 오류 수정
+				String pCompanyID_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(addJobVal.getDepartment(), "EXTENSIONATTRIBUTE2", userInfo.getTenantId()));
+				String pCompanyName_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(addJobVal.getDepartment(), "EXTENSIONATTRIBUTE3", userInfo.getTenantId()));
+				String pCompanyName2_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(addJobVal.getDepartment(), "COMPNM2", userInfo.getTenantId()));
+				String pJobid = commonUtil.cleanValue(addJobVal.getJobID());
+				String pTitle_ =  commonUtil.cleanValue(addJobVal.getTitle());
+				String pTitle1_ = commonUtil.cleanValue(addJobVal.getTitle1());
+				String pTitle2_= commonUtil.cleanValue(addJobVal.getTitle2());
+				String displayName = commonUtil.cleanValue(ezOrganService.getPropertyValue(addJobVal.getDepartment(), "DisplayName" + lang, userInfo.getTenantId()));
+				
                 if (pCompanyID_.equals(userInfo.getCompanyID())) {
-	                if (userInfo.getDeptID().equals(subList[0])) {
+	                if (userInfo.getDeptID().equals(addJobVal.getDepartment())) {
 	                    if (pTitle_.equals("")) {
-	                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "'  selected>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "</option>";
+	                    	subTitleString += "<option  value='" + addJobVal.getDepartment() + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "|" + pJobid + "'  selected>" + displayName + "</option>";
 	                    } else {
-	                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "'  selected>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "[" + pTitle_ + "]" + "</option>";
+	                    	subTitleString += "<option  value='" + addJobVal.getDepartment() + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "|" + pJobid + "'  selected>" + displayName + "[" + pTitle_ + "]" + "</option>";
 	                    }
 	                } else {
 	                    if (pTitle_.equals("")) {
-	                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "' >" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "</option>";
+	                    	subTitleString += "<option  value='" + addJobVal.getDepartment() + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "|" + pJobid + "' >" + displayName + "</option>";
 	                    } else {
-	                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "' >" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "[" + pTitle_ + "]" + "</option>";
+	                    	subTitleString += "<option  value='" + addJobVal.getDepartment() + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "|" + pJobid + "' >" + displayName + "[" + pTitle_ + "]" + "</option>";
 	                    }
 	                }
 	                deptListFlag ++;
-                } 
+				}
         	}
         }
         if (deptListFlag > 1) {
@@ -9587,6 +9573,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String companyName = request.getParameter("companyName");
 		String companyName2 = request.getParameter("companyName2");
 		
+		// 2023-08-28 전인하 - 전자결재 > 좌측 드롭다운 이용하여 겸직 변경 > 겸직 변경 시 쿠키로 jobId 삽입
+		String jobId = request.getParameter("jobId");
+		
 		Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(deptID, "utf-8"));
     	cookieID0.setPath("/");
     	response.addCookie(cookieID0);
@@ -9618,6 +9607,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
     	Cookie cookieID7 = new Cookie("APRUI7", URLEncoder.encode(companyID, "utf-8"));
     	cookieID7.setPath("/");
     	response.addCookie(cookieID7);
+
+		Cookie cookieID8 = new Cookie("APRUI8", URLEncoder.encode(jobId, "utf-8"));
+		cookieID8.setPath("/");
+		response.addCookie(cookieID8);
     	
 		logger.debug("ChangeUserInfo ended");
 	}

@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>chartPortlet</title>
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/moment.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/chart.js')}"></script>
 <style>
@@ -19,21 +20,18 @@
 }
 #countsDiv{
 	float: left;
-    bottom: 141px;
-    position: relative;
-    height: 164px;
-    width: 188px;
+    position: absolute;
+	bottom: 0;
     text-align: center;
-    z-index: -10;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 #yearProduceCountsSpan{
     color: rgb(63 76 95);
     font-size: 15px;
     font-weight: bold;
-    height: 164px;
-    vertical-align: middle;
-    display: table-cell;
-    width: 188px;
+	height: auto;
 }
 #chartRight{
 	border-left: 1px solid #dbdbdb;

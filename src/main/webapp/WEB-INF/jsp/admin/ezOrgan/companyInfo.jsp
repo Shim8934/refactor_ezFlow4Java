@@ -84,11 +84,13 @@
 					OpenAlertUI("<spring:message code='ezOrgan.t113'/>");
 					return;
 				}
-				
+
+				/* ID 길이 제한 체크 제거
 				if (CompanyID.value.length < 3) {
 					OpenAlertUI("<spring:message code='ezOrgan.t114'/>");
 					return;
 				}
+				*/
 				
 				if (!Check_ID(CompanyID.value, isAdd)) {
 					OpenAlertUI("<spring:message code='ezOrgan.t115'/>");

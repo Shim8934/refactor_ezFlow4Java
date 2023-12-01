@@ -625,7 +625,7 @@ public class EzSurveyGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result.put("code", isSurveyAdmin(userInfo.getRollInfo()) ? 0 : 3);
+			result.put("code", isSurveyAdmin(userInfo) ? 0 : 3);
 			result.put("status", "ok");
 		}
 		catch (Exception e) {
@@ -711,7 +711,7 @@ public class EzSurveyGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result.put("mode", isSurveyAdmin(userInfo.getRollInfo()) ? 1 : 0);
+			result.put("mode", isSurveyAdmin(userInfo) ? 1 : 0);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}
@@ -747,7 +747,7 @@ public class EzSurveyGWController {
 			String realPath    = request.getServletContext().getRealPath("");
 			
 			if (mode.equals("reuse")) {
-				if (!isSurveyAdmin(userInfo.getRollInfo())) {
+				if (!isSurveyAdmin(userInfo)) {
 					result.put("status", "error");
 					result.put("code", 3);
 				}
@@ -860,10 +860,7 @@ public class EzSurveyGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			Long surveyId    = Long.parseLong(itemId);
 			String realPath  = request.getServletContext().getRealPath("");
-			String adminYN = "N";
-			if(userInfo.getRollInfo().contains("c=1") || userInfo.getRollInfo().contains("k=1") || userInfo.getRollInfo().contains("l=1")){ 
-				adminYN = "Y";
-			}
+			String adminYN = isSurveyAdmin(userInfo) ? "Y" : "N";
 			result           = surveyService.getSurveyStatistic(surveyId, realPath, userInfo, adminYN);
 			// 2019-03-05 황윤호 권한 체크 (전체 | 회사 | 설문)
 			result.put("adminYN", adminYN);
@@ -877,8 +874,8 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	private boolean isSurveyAdmin(String rollInfo) {
-		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("l=1");
+	private boolean isSurveyAdmin(LoginVO userInfo) throws Exception {
+		return commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;l;k");
 	}
 	
 	@RequestMapping(value="/rest/ezsurvey/check/respondent", method= RequestMethod.GET, produces="application/json;charset=utf-8")

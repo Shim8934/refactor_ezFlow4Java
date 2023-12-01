@@ -87,6 +87,29 @@
 		<result property="company" 								column="company" 						columnIndex="3"/>		
 	</resultMap>
 	
+	<resultMap id="userInfoForRoles" class="OrganUserVO">
+		<result property="cn" 									column="cn" 							columnIndex="1"/>
+		<result property="department" 					        column="department" 			        columnIndex="2"/>
+		<result property="extensionAttribute1" 				    column="extensionAttribute1"	        columnIndex="3"/>
+		<result property="jobID"								column="jobID"	        				columnIndex="4"/>
+	</resultMap>
+
+	<resultMap id="addJobList" class="OrganUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>
+		<result property="department" 							column="department"						columnIndex="2"/>
+		<result property="jobID" 							    column="extensionAttribute7"			columnIndex="3"/>
+		<result property="companyId"							column="companyId"						columnIndex="4"/>
+		<result property="title" 								column="title" 							columnIndex="5"/>
+		<result property="title1" 								column="title1" 						columnIndex="6"/>
+		<result property="title2" 								column="title2" 						columnIndex="7"/>
+		<result property="description" 							column="description" 					columnIndex="8"/>
+		<result property="description1" 						column="description1" 					columnIndex="9"/>
+		<result property="description2" 						column="description2" 					columnIndex="10"/>
+		<result property="company" 								column="company" 						columnIndex="11"/>
+		<result property="company1" 							column="company1" 						columnIndex="12"/>
+		<result property="company2" 							column="company2" 						columnIndex="13"/>
+	</resultMap>
+	
 	<sql id="organSearchTrashDept_user">
 		<isNotEqual property="adminOrgan" compareValue="y">
 			<![CDATA[
@@ -1291,13 +1314,22 @@
              A.FACSIMILETELEPHONENUMBER ,
              A.STREETADDRESS ,
              A.INFO ,
-             A.EXTENSIONATTRIBUTE1 ,
+             ]]>
+			<!-- 2023-08-22 전인하 - 유저 겸직 부서/사용자 기준 설정 - 
+			permissionBasisDeptYN 옵션에 따라 addJobMaster 테이블에 ROLLINFO 컬럼 사용시 분기 처리, JOBID 정보를 정확한 ID로 호출 -->
+			<isEqual property="permissionBasisDeptYN" compareValue="Y">
+				B.ROLL_INFO AS EXTENSIONATTRIBUTE1 ,
+			</isEqual>
+			<isNotEqual  property="permissionBasisDeptYN" compareValue="Y">
+				A.EXTENSIONATTRIBUTE1 ,
+			</isNotEqual>
+			<![CDATA[             
              A.EXTENSIONATTRIBUTE2 ,
              A.EXTENSIONATTRIBUTE3 ,
              A.EXTENSIONATTRIBUTE4 ,
              CAST(B.PROXY AS VARCHAR(200)) AS EXTENSIONATTRIBUTE5 ,
              A.EXTENSIONATTRIBUTE6 ,
-             A.EXTENSIONATTRIBUTE7 ,
+             B.JOBID as EXTENSIONATTRIBUTE7 ,
              A.EXTENSIONATTRIBUTE8 ,
              A.EXTENSIONATTRIBUTE9 ,
              CASE
@@ -1752,7 +1784,7 @@
 	                'Y' ISADDJOB 
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-	            $strSQLForMySQL$ 
+	            $strSQLForAddJobForMySQL$ 
 	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
 	            <include refid="organSearchTrashDept_user"/>
 	            AND A.TENANT_ID = #v_TENANT_ID# 
@@ -1795,7 +1827,7 @@
 			
             $strSizeForMySQL$
             ) a
-            ORDER BY type DESC, NAME ASC	 				
+            ORDER BY type DESC, ISADDJOB DESC, NAME ASC	 				
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -2367,4 +2399,93 @@
 		WHERE cn = #userId# AND tenant_id = #tenantId#
 	</select>
 
+	<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/사용자 기준 권한 설정 옵션 사용 시 유저 정보에 해당하는 겸직 권한 조회 -->
+	<select id="EzOrganDAO.selectPermissionBasisDept" resultClass="String">
+		SELECT
+			ROLL_INFO
+		FROM
+			TBL_ADDJOBMASTER
+		WHERE
+			CN = #v_CN#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			DEPTID = #v_DEPTID#
+		AND
+			JOBID = #v_JOBID#
+	</select>
+
+	<!-- 2023-08-09 전인하 - 특정 유저의 모든 겸직 권한 호출하는 쿼리 -->
+	<select id = "EzOrganDAO.getAllRollInfoForUserBasisDept" parameterClass = "map" resultMap= "userInfoForRoles">
+		SELECT
+			CN, DEPARTMENT, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE7 as jobID
+		FROM
+			TBL_USERMASTER
+		WHERE
+			CN = #v_CN#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			EXTENSIONATTRIBUTE1 like CONCAT('%', #v_PERMISSION_CODE#, '%')
+		<isEqual property="permissionBasisDeptYN" compareValue="Y">
+			UNION ALL
+			SELECT
+				CN, DEPTID , ROLL_INFO AS extensionAttribute1, jobID
+			FROM
+				TBL_ADDJOBMASTER
+			WHERE
+				CN = #v_CN#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			AND
+				ROLL_INFO LIKE CONCAT('%', #v_PERMISSION_CODE#, '%')
+		</isEqual>
+	</select>
+
+	<!-- 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회 쿼리 -->
+	<select id="EzOrganDAO.addJobListForEzApprDropdown" parameterClass="Map" resultMap="addJobList">
+		SELECT
+			U.CN,
+			D.CN AS DEPARTMENT,
+			J.JOBID AS EXTENSIONATTRIBUTE7,
+			U.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+			CASE #v_LANGDATA# WHEN '1' THEN J.TITLE ELSE J.TITLE2 END AS TITLE,
+			J.TITLE as TITLE1,
+			J.TITLE2,
+			CASE #v_LANGDATA# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS DESCRIPTION,
+			D.DISPLAYNAME AS DESCRIPTION1,
+			D.DISPLAYNAME2 AS DESCRIPTION2,
+			CASE #v_LANGDATA# WHEN '1' THEN U.COMPANY ELSE U.COMPANY2 END AS COMPANY,
+			U.COMPANY AS COMPANY1,
+			U.COMPANY2
+		FROM
+			TBL_ADDJOBMASTER J
+		INNER JOIN
+			TBL_DEPTMASTER D
+		ON
+			D.CN = J.DEPTID
+		AND
+			D.TENANT_ID = J.TENANT_ID
+		JOIN
+			TBL_USERMASTER U
+		ON
+			U.CN = J.CN
+		AND
+			U.TENANT_ID = J.TENANT_ID
+		JOIN
+			TBL_USER_JOBMASTER JM
+		ON
+			J.JOBID = JM.JOBID
+		AND
+			J.TENANT_ID = JM.TENANT_ID
+		<!--2023-10-06 전인하 - 사간겸직 조회가능하도록 수정 -->
+		<!-- AND
+			U.PHYSICALDELIVERYOFFICENAME = JM.COMPANYID -->
+		WHERE
+			J.CN = #v_CN#
+		AND
+			J.TENANT_ID = #v_TENANT_ID#
+		ORDER BY
+			JM.`TYPE`, JM.SORT, (CASE #v_LANGDATA# WHEN '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END) ASC
+	</select>
 </sqlMap>

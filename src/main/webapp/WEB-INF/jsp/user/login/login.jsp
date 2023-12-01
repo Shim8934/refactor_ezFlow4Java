@@ -72,6 +72,11 @@
 				color:#fff;
 				font-weight: 600;
 			}
+			
+			/* IE 버전 input 자동 생성 CSS 삭제 */
+			input[type="text"]::-ms-clear, input[type="password"]::-ms-reveal {
+			  display: none;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -191,7 +196,7 @@
 			    		+ "\n(<spring:message code='main.t0633'/> : Internet Explorer 11)");
 			    	return false;
 				// setTFA를 호출하는 flag 형태로 사용
-			    } else if (message.includes("setflagTFA")) {
+			    } else if (message.indexOf("setflagTFA") !== -1) {
 			    	var setArr = message.split(":");
 			    	document.loginForm.message.value = "";
 			    	
@@ -210,7 +215,9 @@
 			    	$("#imgMnt7").html("<img src='/images/warning2.png'>");
 			    	$("#exDiv7").modal();
 			    } else if(message == "emptyOtp"){
-			    	setTimeout(() => {alert("<spring:message code='fail.common.login.otp.warning1'/>")}, "100");
+			    	setTimeout(function() {
+			    		alert("<spring:message code='fail.common.login.otp.warning1'/>");
+			    	}, 100);
 			    } else if (message === "loginSessionFlag") {
 					$("#imgMnt9").html("<img src='/images/warning2.png'>");
 					$("#exDiv9").modal();

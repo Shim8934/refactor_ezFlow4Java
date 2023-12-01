@@ -184,8 +184,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return addJobCnt;
 	}
 
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 권한 조회 메소드 수정
 	@Override
-	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID) throws Exception {
+	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID, String permissionBasisDeptYN) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("v_TENANT_ID", tenantID);
@@ -198,6 +199,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         map.put("v_COUNT", endRow - startRow + 1);
         map.put("searchType", searchType);
         map.put("searchValue", searchValue);
+		map.put("permissionBasisDeptYN", permissionBasisDeptYN);
 		
 		return ezOrganAdminDao.getPermissionList(map);
 	}
@@ -698,8 +700,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return ezOrganAdminDao.getRetireListCount(map);
 	}
 
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 권한 카운트 조회 메소드 수정
 	@Override
-	public int getPermissionListCount(String companyID, String type, String searchType, String searchValue, String strLang, int tenantID) throws Exception {
+	public int getPermissionListCount(String companyID, String type, String searchType, String searchValue, String strLang, int tenantID, String permissionBasisDeptYN) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
@@ -708,6 +711,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_LANGDATA", strLang);
 		map.put("searchType", searchType);
 		map.put("searchValue", searchValue);
+		map.put("permissionBasisDeptYN", permissionBasisDeptYN);
 		
 		return ezOrganAdminDao.getPermissionListCount(map);
 	}
@@ -2728,6 +2732,60 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		}
 
 		logger.debug("insertPermissionChHist ended");
+	}
+	
+	// 2023-08-24 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/부서별 권한 설정 옵션에 따른 권한 히스토리 삽입 메소드
+	@Override
+	public void insertPermissionChHistBasisDept(List<PermissionInfoVO> vo) throws Exception {
+		logger.debug("insertPermissionChHistBasisDept started");
+
+		for (PermissionInfoVO userVO : vo) {
+			ezOrganAdminDao.insertPermissionChHistBasisDept(userVO);
+		}
+
+		logger.debug("insertPermissionChHistBasisDept ended");
+	}
+	
+	// 2023-08-25 전인하 - 해당 유저가 원직인지 겸직인지 확인 메소드
+	@Override
+	public String isThisAddJob(String cn, int tenant_id, String deptId, String jobId) throws Exception {
+		logger.debug("isThisAddJob started");
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_CN", cn);
+		map.put("v_DEPTID", deptId);
+		map.put("v_TENANT_ID", tenant_id);
+		map.put("v_JOBID", jobId);
+		
+		int tempVal = ezOrganAdminDao.isThisAddJob(map);
+
+		logger.debug("isThisAddJob ended. isThisAddJob = " + tempVal);
+		return tempVal > 0 ? "Y" : "N";
+	}
+	
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/부서 별 권한 부여 옵션에 따른 권한 수정 메소드
+	@Override
+	public void updatePermissionBasisDept(List<OrganUserVO> vo) throws Exception {
+		logger.debug("updatePermissionBasisDept started");
+		for (OrganUserVO userVO : vo) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+
+			map.put("v_CN", userVO.getCn());
+			map.put("v_DEPTID", userVO.getDepartment());
+			map.put("v_TENANT_ID", userVO.getTenantId());
+			map.put("v_JOBID", userVO.getJobID());
+			map.put("v_PERMMSION", userVO.getExtensionAttribute1());
+			
+			String isThisAddJobFlag = isThisAddJob(userVO.getCn(), userVO.getTenantId(), userVO.getDepartment(), userVO.getJobID());
+			
+			if (isThisAddJobFlag.equals("N")) {
+				ezOrganAdminDao.updatePermissionIntoUserMaster(map);
+			} else {
+				ezOrganAdminDao.updatePermissionIntoAddJobMaster(map);
+			}
+		}
+		logger.debug("updatePermissionBasisDept ended");
 	}
 
 	@Override

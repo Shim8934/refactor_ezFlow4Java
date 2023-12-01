@@ -1939,13 +1939,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Override
 	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag, String primary) throws Exception {
-		logger.debug("getAttitudeAuthDeptList started.");
+		logger.debug("getAttitudeAuthDeptList_hyo started.");
 		
 		if (userAuthType == null || userAuthType.equals("")) {
-			if (rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("e=1")) {
+			if (commonUtil.isAdmin(userId, tenantId, rollInfo, "c;k;e")) {
 				// 전체, 회사, 근태관리자 -> 모든부서 관리권한
 				userAuthType = "all";
-			} else if (rollInfo.contains("g=1")) {
+			} else if (commonUtil.isAdmin(userId, tenantId, rollInfo, "g")) {
 				// 부서관리자 -> 자기부서 관리권한 + 권한테이블
 				userAuthType = "dept";
 			} else {
@@ -1973,10 +1973,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("listAuthType", listAuthType);
 		map.put("comFlag", comFlag);
 		map.put("primary", primary);
+		map.put("permissionBasisDeptYN", ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantId));
 		
 		List<AttitudeAuthorVO> list = ezAttitudeDAO.getAttitudeAuthDeptList_hyo(map);
 		
-		logger.debug("getAttitudeAuthDeptList ended.");
+		logger.debug("getAttitudeAuthDeptList_hyo ended.");
 		
 		return list;
 	}

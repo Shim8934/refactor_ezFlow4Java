@@ -393,6 +393,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
 	            + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
 		
+		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID);
+		
 	    // 2019-01-09 황윤호
 		// 조직도 관리에서 부서장 column을 id -> name으로 바꿔주기 위해 사용
 		String deptMaster = "";
@@ -431,10 +433,12 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("v_TENANT_ID", tenantID);
         		map1.put("IS_ADDJOB", obj.getIsAddjob());
         		map1.put("JOBID", obj.getJobId());
+				map1.put("permissionBasisDeptYN", permissionBasisDeptYN);
         		
         		// 사원의 상세 정보를 가져온다.
-        		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
-                sb.append(commonUtil.getQueryResult(userVO));
+				Object userVO = ezOrganDAO.getTBLUserMaster(map1);
+				sb.append(commonUtil.getQueryResult(userVO));
+				
             // 멤버가 부서인 경우
             } else {
             	map1.put("v_CN", obj.getCn());
@@ -833,17 +837,24 @@ public class EzOrganServiceImpl implements EzOrganService {
         }else{
         	type = "G";
         }
-        
-        Map<String, Object> map = new HashMap<String, Object>();
+		
+		String strSQLForAddJob = strSQL;
+		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
+			strSQLForAddJob = strSQLForAddJob.replace("extensionattribute1", "A.roll_info");
+			strSQLForAddJob = strSQLForAddJob.replace("department", "deptID");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
                 
         map.put("strSQL", strSQL + strSize);
         map.put("strSQLForMySQL", strSQL);
         map.put("strSizeForMySQL", strSizeForMySQL);
-        map.put("strGyumjikForOracle", strSQL.replace("department", "deptID"));
+        map.put("strGyumjikForOracle", strSQLForAddJob);
         map.put("type", type);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
         map.put("adminOrgan", adminOrgan);
+		map.put("strSQLForAddJobForMySQL", strSQLForAddJob);
         
         logger.debug("strSQL=" + strSQL);
         
@@ -2116,6 +2127,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         String strSQLCom = "";
         String type = ""; 
         int i = 0;
+		String strSQLForAddJob = "";
         
         if (pLimit != 0) {
             strSize = " AND ROWNUM <= " + pLimit;
@@ -2198,15 +2210,21 @@ public class EzOrganServiceImpl implements EzOrganService {
         	if (pSearchList.split("@@")[0].equals("description")){
         		strSQLAddjobCom = strSQLAddjobCom.replace("a.DEPTID", "b.PHYSICALDELIVERYOFFICENAME");
         	}
-        	
         }
+		
+		strSQLForAddJob = strSQL;
+		// 2023-08-23 전인하 - 권한 겸직/사용자 기준 설정 기능 대응, 해당 옵션 사용 시 권한 설정 컬럼을 addJobMaster의 추가컬럼에서 찾게 함
+		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
+			strSQLForAddJob = strSQLForAddJob.replace("extensionattribute1", "A.roll_info");
+			strSQLForAddJob = strSQLForAddJob.replace("department", "deptID");
+		}
 
         Map<String, Object> map = new HashMap<String, Object>();
                 
         map.put("strSQL", strSQL + strSize);
         map.put("strSQLForMySQL", strSQL);
         map.put("strSizeForMySQL", strSizeForMySQL);
-        map.put("strGyumjikForOracle", strSQL.replace("department", "deptID"));
+        map.put("strGyumjikForOracle", strSQLForAddJob);
         map.put("type", type);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
@@ -2214,6 +2232,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("strSQLAddjobCom", strSQLAddjobCom);
         map.put("noAddJob", noAddJob);
         map.put("adminOrgan", adminOrgan);
+		map.put("strSQLForAddJobForMySQL", strSQLForAddJob);
         
         logger.debug("strSQL=" + strSQL);
         logger.debug("strSQLCom=" + strSQLCom);//getSearchList
@@ -2640,4 +2659,56 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		return ezOrganDAO.getAddJobProxy(map);
 	}
+
+	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/사용자 별 권한 설정 옵션에 따른 권한 조회 메소드
+	@Override
+	public String getRollInfoBasisDept(String userID, int tenantID, String deptID, String jobID) throws Exception {
+		logger.debug("getRollInfoBasisDept started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN",userID);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_DEPTID", deptID);
+		map.put("v_JOBID", jobID);
+		
+		logger.debug("getRollInfoBasisDept ended");
+		
+		return ezOrganDAO.getRollInfoBasisDept(map);
+	}
+
+	// 2023-08-09 전인하 - 특정 유저의 모든 겸직 권한 호출하는 메소드
+	@Override
+	public List<OrganUserVO> getAllRollInfoForUserBasisDept(String userId, int tenantId, String permissionCode) throws Exception {
+		logger.debug("getAllRollInfoForUserBasisDept started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_PERMISSION_CODE", permissionCode);
+		map.put("permissionBasisDeptYN", ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantId));
+
+		List<OrganUserVO> returnVal = ezOrganDAO.getAllRollInfoForUserBasisDept(map);
+
+		logger.debug("getAllRollInfoForUserBasisDept ended");
+		
+		return returnVal;
+	}
+	
+	// 2023-08-28 전인하 - 전자결재 > 좌측 겸직 변경 드롭다운 > 리스트 생성 위한 겸직정보 조회
+	@Override
+	public List<OrganUserVO> getAddJobListForEzApprDropdown(String lang, String userId, int tenantId) throws Exception {
+		logger.debug("getAddJobListForEzApprDropdown started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN", userId);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("v_LANGDATA", lang);
+
+		List<OrganUserVO> returnVal = ezOrganDAO.getAddJobListForEzApprDropdown(map);
+
+		logger.debug("getAddJobListForEzApprDropdown ended");
+
+		return returnVal;
+	}
+	
 }
