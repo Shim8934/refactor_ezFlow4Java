@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.let.user.login.vo.FidoAuthenticationVO;
 import egovframework.let.user.login.vo.FindPwdInfoVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -213,6 +214,19 @@ public class LoginDAO extends EgovAbstractDAO {
         return (List<LoginVO>) list("loginDAO.selectAllMemberOfCompany", map);
     }
 	
+	public void setFidoSession(FidoAuthenticationVO vo) throws Exception {
+		update("loginDAO.setFidoSession", vo);
+	}
+
+	public FidoAuthenticationVO getFidoSession(String fidoSessionId) throws Exception {
+		logger.debug("getFidoSession DAO : {}", fidoSessionId);
+		return (FidoAuthenticationVO) select ("loginDAO.getFidoSession", fidoSessionId);
+	}
+
+	public void updateFidoStatus(FidoAuthenticationVO vo) throws Exception {
+		update("loginDAO.updateFidoStatus", vo);
+	}
+
 	public LoginDeviceVO getDeviceInfo (Map<String, Object> map) throws Exception {
 		return (LoginDeviceVO) select("loginDAO.getDeviceInfo", map);
 	}

@@ -1891,6 +1891,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("description","주소록 가져오기 시 기존주소록 중복체크 사용여부(default: YES)");
 			put("config_type","주소록");
 		}});
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useFidoSession"); // property_name
+            put("property_value","NO");
+            put("config_name","FIDO 인증 사용");
+            put("regdate","2023-11-23 00:00:00");
+            put("description","2중인증 FIDO 인증 사용 여부(default: NO)");
+            put("config_type","로그인");
+        }});
 		test.add(new HashMap<String, Object>(){{
 			put("confName","useJapanese");
 			put("property_value","YES");
@@ -3208,6 +3216,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addTblUserMultiLoginMobileFlagColumn() throws Exception {
 		ezCommonDAO.addTblUserMultiLoginMobileFlagColumn();
+	}
+
+	@Override
+	public void createTblFidoSession() throws Exception {
+		ezCommonDAO.createTblFidoSession();
 	}
 
 	@Override

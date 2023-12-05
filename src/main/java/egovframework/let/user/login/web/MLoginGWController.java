@@ -49,6 +49,7 @@ import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.FidoAuthenticationVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -527,7 +528,6 @@ public class MLoginGWController {
 						// diff 는 로그인 과정 3번째 순서로 미룸. 비밀번호 변경 권한을 갖기 위해서는 otp 인증까지 마쳐야하기 때문이다.
 						logger.debug("{} User Login : verifyingUser success.", uid);
 						break verifyingUser;
-
                 	} else {
                 		// 2021-12-29 이사라 : 접속로그 실패 저장
 						resultVO.setForInsertLog(ip, agent, os, browser, tenantId, "N");
@@ -979,7 +979,64 @@ public class MLoginGWController {
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			return result;
+		}
+	}
 
+	@SuppressWarnings("unchecked")
+	@GetMapping(value = "/mobile/ezUser/fidoAuthentication/fidoSession/{fidoSessionId}", produces = "application/json;charset=utf-8")
+	public JSONObject fidoAuthentication(@PathVariable String fidoSessionId, Locale locale) throws Exception {
+		logger.debug("============= Fido Authenticate : {} =============", fidoSessionId);
+		JSONObject result = new JSONObject();
+
+		try {
+			FidoAuthenticationVO vo = loginService.getFidoSession(fidoSessionId);
+
+			result.put("status", "ok");
+			result.put("ip", vo.getIp());
+			result.put("time", vo.getCreatTime());
+
+			logger.debug("ip : {}, time : {}", vo.getIp(), vo.getCreatTime());
+
+			return result;
+
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
+			result.put("status", "error");
+
+			return result;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@GetMapping("/mobile/ezUser/fidoAuthentication/status/fidoSession/{fidoSessionId}")
+	public JSONObject setfidoAuthenticationStatus(@PathVariable String fidoSessionId, @RequestParam String fidoStatus) throws Exception {
+		logger.debug("setfidoAuthenticationStatus  fidoSessionId:{}, fidoStatus:{}", fidoSessionId, fidoStatus); // fidoStatus : approved, rejected, failed
+
+		JSONObject result = new JSONObject();
+
+		try {
+			FidoAuthenticationVO resultVO = loginService.getFidoSession(fidoSessionId);
+
+			if ("requesting".equalsIgnoreCase(resultVO.getStatus())) {
+				FidoAuthenticationVO vo = new FidoAuthenticationVO();
+				vo.setFidoSessionId(fidoSessionId);
+				vo.setStatus(fidoStatus);
+
+				// fidoSessionId에 해당하는 status를 반영
+				loginService.updateFidoStatus(vo); 
+
+				result.put("status", "ok");
+				return result;
+
+			} else {
+				result.put("status", resultVO.getStatus());
+				return result;
+			}
+
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			result.put("status", "error");
 			return result;
 		}

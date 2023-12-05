@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.FidoAuthenticationVO;
 import egovframework.let.user.login.vo.FindPwdInfoVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -323,7 +324,22 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		return loginDAO.selectAllMemberOfCompany(map);		
 	}
 
-    /**
+	@Override
+	public void setFidoSession(FidoAuthenticationVO vo) throws Exception {
+		loginDAO.setFidoSession(vo);
+	}
+
+	@Override
+	public FidoAuthenticationVO getFidoSession(String fidoSessionId) throws Exception {
+		return loginDAO.getFidoSession(fidoSessionId);
+	}
+
+	@Override
+	public void updateFidoStatus(FidoAuthenticationVO vo) throws Exception {
+		loginDAO.updateFidoStatus(vo);
+	}
+
+	/**
      * Active Directory
      * - AD 암호로 그룹웨어 암호 변경
      * */

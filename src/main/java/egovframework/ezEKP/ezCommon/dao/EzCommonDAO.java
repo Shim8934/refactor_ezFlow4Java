@@ -1416,6 +1416,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addTblUserMultiLoginPrimaryKey");
 		}
 	}
+	
+	public void createTblFidoSession() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblFidoSession");
+		} catch (Exception e) {
+			logger.debug("tbl_fido_session doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblFidoSession");
+		}
+	}
 
 	public void createMailTemplateSequence() throws Exception {
 		if (dbType.equalsIgnoreCase("oracle")) {

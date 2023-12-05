@@ -48,6 +48,8 @@
             <mvc:mapping path="/admin/**"/>
             <mvc:mapping path="/ez*/**"/>
             <mvc:exclude-mapping path="/user/login/actionLogin.do"/>
+            <mvc:exclude-mapping path="/user/login/getFidoSessionStatus.do"/>
+            <mvc:exclude-mapping path="/user/login/expireFidoSession.do"/>
             <mvc:exclude-mapping path="/user/login/actionLogoutWithRedirectUri.do"/>            
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/user/login/setTFA.do"/>

@@ -216,6 +216,8 @@ public interface EzCommonService {
 
 	void addTblUserMultiLoginMobileFlagColumn() throws Exception;
 	
+	void createTblFidoSession() throws Exception;
+	
 	public void createMailTemplateSequence() throws Exception;
 
 	public void createJmochaMailboxProgress() throws Exception;

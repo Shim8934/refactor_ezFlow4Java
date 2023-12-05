@@ -159,6 +159,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	try {
 			// create table
     		ezCommonService.createTables(); // 2024-07-01 김수아 - 테이블 생성 공통함수 추가
+			ezCommonService.createTblFidoSession(); //2023-11-23 이사라 - Fido 2차인증 테이블 생성, tbl_tenant_config에 해당 옵션 추가
 	    	ezCommonService.createMailTemplateSequence();
     		ezCommonService.createJmochaMailboxProgress();
 	    	ezCommonService.createTblSession(); // 2023-11-07 이사라 - DB 기반 세션 테이블 생성
