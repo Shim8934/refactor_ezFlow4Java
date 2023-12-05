@@ -792,7 +792,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							for (int i = 0; i < arrRecipientsCC.length; i++) {
 								name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
-								addressFound = ((InternetAddress)arrRecipientsTo[i]).getAddress().contains("@");
+								addressFound = ((InternetAddress)arrRecipientsCC[i]).getAddress().contains("@");
 
 								if (name == null && !addressFound) {
 									logger.debug("no address found!");
