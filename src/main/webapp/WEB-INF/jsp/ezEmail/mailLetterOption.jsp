@@ -352,9 +352,9 @@
 		<h2 id="etcLang"><spring:message code='ezEmail.t358' /></h2>
 		<table width="100%" class="content">
 			<tr>
-				<td>
+				<td style="line-height: 29px;">
 					<spring:message code='ezEmail.t367' /> &nbsp;
-					<select id="bodyType" style="vertical-align:top;">
+					<select id="bodyType">
 			            <option value="0">HTML</option>
 			   		    <option value="1">PlainText</option>
 			        </select>
