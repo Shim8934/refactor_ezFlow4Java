@@ -100,6 +100,8 @@ public interface LoginService {
 	
 	void updateFidoStatus(FidoAuthenticationVO vo) throws Exception;
 
+	void deleteFidoSessionByTime() throws Exception;
+
 	public String chkADAndUpdatePassword(String uid, String upwd, int tenantId) throws Exception;
 	
 	public LoginDeviceVO getDeviceInfo(String devId) throws Exception;

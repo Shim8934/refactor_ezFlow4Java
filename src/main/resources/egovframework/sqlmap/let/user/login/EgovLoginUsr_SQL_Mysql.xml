@@ -752,6 +752,15 @@
 			FIDO_SESSION_ID = #fidoSessionId#
 	</update>
 
+	<delete id="loginDAO.deleteFidoSessionByTime" parameterClass="Integer">
+		<![CDATA[
+		DELETE FROM
+			TBL_FIDO_SESSION
+		WHERE
+			CREATE_TIME <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL #fidoStoragePeriod# DAY)
+		]]>
+	</delete>
+
     <select id="loginDAO.getLoginIPCountry" parameterClass="Map" resultMap="countryVO">
 		SELECT 
 			START_IP, END_IP, START_IP_NUMBER, END_IP_NUMBER, 

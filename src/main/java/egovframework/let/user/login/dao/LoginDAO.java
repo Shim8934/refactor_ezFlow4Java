@@ -227,6 +227,10 @@ public class LoginDAO extends EgovAbstractDAO {
 		update("loginDAO.updateFidoStatus", vo);
 	}
 
+	public void deleteFidoSessionByTime(int fidoStoragePeriod) throws Exception {
+		update("loginDAO.deleteFidoSessionByTime", fidoStoragePeriod);
+	}
+
 	public LoginDeviceVO getDeviceInfo (Map<String, Object> map) throws Exception {
 		return (LoginDeviceVO) select("loginDAO.getDeviceInfo", map);
 	}

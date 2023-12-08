@@ -1899,6 +1899,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("description","2중인증 FIDO 인증 사용 여부(default: NO)");
             put("config_type","로그인");
         }});
+        test.add(new HashMap<String, Object>(){{
+            put("confName","fidoStoragePeriod"); // property_name
+            put("property_value","30");
+            put("config_name","FIDO Session 보관기간");
+            put("regdate","2023-11-23 00:00:00");
+            put("description","2중인증 FIDO Session 보관기간으로 일-day 단위(default: 30)");
+            put("config_type","로그인");
+        }});
 		test.add(new HashMap<String, Object>(){{
 			put("confName","useJapanese");
 			put("property_value","YES");

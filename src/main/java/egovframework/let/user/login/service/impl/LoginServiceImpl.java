@@ -339,6 +339,12 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		loginDAO.updateFidoStatus(vo);
 	}
 
+	@Override
+	public void deleteFidoSessionByTime() throws Exception {
+		int fidoStoragePeriod = Integer.parseInt(ezCommonService.getTenantConfig("fidoStoragePeriod", 0)); // 애경은 테넌트 0번만 사용, fidoStoragePeriod는 일 기준
+		loginDAO.deleteFidoSessionByTime(fidoStoragePeriod);
+	}
+
 	/**
      * Active Directory
      * - AD 암호로 그룹웨어 암호 변경

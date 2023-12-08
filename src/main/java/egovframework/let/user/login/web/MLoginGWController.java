@@ -4,6 +4,10 @@ import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -986,18 +990,42 @@ public class MLoginGWController {
 
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/mobile/ezUser/fidoAuthentication/fidoSession/{fidoSessionId}", produces = "application/json;charset=utf-8")
-	public JSONObject fidoAuthentication(@PathVariable String fidoSessionId, Locale locale) throws Exception {
+	public JSONObject fidoAuthentication(HttpServletRequest request, @PathVariable String fidoSessionId, Locale locale) throws Exception {
 		logger.debug("============= Fido Authenticate : {} =============", fidoSessionId);
 		JSONObject result = new JSONObject();
+      	String serverName = request.getHeader("x-user-host");
+		int tenantId = loginService.getTenantId(serverName);
+		
 
 		try {
 			FidoAuthenticationVO vo = loginService.getFidoSession(fidoSessionId);
 
-			result.put("status", "ok");
-			result.put("ip", vo.getIp());
-			result.put("time", vo.getCreatTime());
+			String fidoStatus = vo.getStatus();
+			String createTime = vo.getCreatTime().split("\\.")[0];
+			String ip = vo.getIp();
+			int timeLimit = Integer.parseInt(ezCommonService.getTenantConfig("fidoTimeLimit", tenantId));
 
-			logger.debug("ip : {}, time : {}", vo.getIp(), vo.getCreatTime());
+			if ("requesting".equalsIgnoreCase(fidoStatus)) { // requesting 밖에 값이 올 수 없음
+				// 유효한 요청인지 확인
+				ZonedDateTime utcNow = ZonedDateTime.now(ZoneOffset.UTC); // 현재 UTC 시간
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				ZonedDateTime createTimePlusTimeLimit = ZonedDateTime.parse(createTime, formatter.withZone(ZoneOffset.UTC)).plus(timeLimit, ChronoUnit.MINUTES);
+
+				if (!createTimePlusTimeLimit.isAfter(utcNow)) { // 만료 됨
+					logger.debug("fidoAuthentication 만료된 시간 입니다.");
+					fidoStatus = "expired";
+				}
+
+			} else { // requesting 이외의 값이 올 수 없으나 예외 처리 함
+				ip = ""; // ip or time이 빈 값으로 넘어오면 데스트탑에서 다시 요청해달라고 toast를 띄우기 때문에 ip를 빈문자열로 처리
+			}
+
+			result.put("status", "ok");
+			result.put("ip", ip);
+			result.put("time", createTime);
+			result.put("fidoStatus", fidoStatus);
+
+			logger.debug("ip : {}, time : {}", ip, vo.getCreatTime());
 
 			return result;
 
@@ -1010,8 +1038,8 @@ public class MLoginGWController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@GetMapping("/mobile/ezUser/fidoAuthentication/status/fidoSession/{fidoSessionId}")
-	public JSONObject setfidoAuthenticationStatus(@PathVariable String fidoSessionId, @RequestParam String fidoStatus) throws Exception {
+	@GetMapping("/mobile/ezUser/fidoAuthentication/fidoSession/{fidoSessionId}/status/{fidoStatus}")
+	public JSONObject setfidoAuthenticationStatus(@PathVariable String fidoSessionId, @PathVariable String fidoStatus) throws Exception {
 		logger.debug("setfidoAuthenticationStatus  fidoSessionId:{}, fidoStatus:{}", fidoSessionId, fidoStatus); // fidoStatus : approved, rejected, failed
 
 		JSONObject result = new JSONObject();
@@ -1026,14 +1054,10 @@ public class MLoginGWController {
 
 				// fidoSessionId에 해당하는 status를 반영
 				loginService.updateFidoStatus(vo); 
-
-				result.put("status", "ok");
-				return result;
-
-			} else {
-				result.put("status", resultVO.getStatus());
-				return result;
 			}
+
+			result.put("status", resultVO.getStatus());
+			return result;
 
 		} catch (Exception e) {
 			logger.debug(e.getMessage(), e);
