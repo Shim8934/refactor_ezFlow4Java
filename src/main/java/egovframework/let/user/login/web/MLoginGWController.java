@@ -1054,6 +1054,8 @@ public class MLoginGWController {
 
 				// fidoSessionId에 해당하는 status를 반영
 				loginService.updateFidoStatus(vo); 
+				// DB에 저장된 status를 리턴해주기 위해 resultVO에 set
+				resultVO.setStatus(fidoStatus);
 			}
 
 			result.put("status", resultVO.getStatus());
