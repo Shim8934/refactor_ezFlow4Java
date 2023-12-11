@@ -2326,8 +2326,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void updatePermissionIntoAddJobMaster(HashMap<String, Object> map) throws Exception {
 		update("EzOrganAdminDAO.updatePermissionIntoAddJobMaster", map);
 	}
-//
-//	public int getUserJobCheckCount(Map<String, Object> map) throws Exception {
-//		return (int) select("EzOrganAdminDAO.getUserJobCheckCount", map);
-//	}
+
+	public int getUserJobCheckCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.getUserJobCheckCount", map);
+	}
 }
