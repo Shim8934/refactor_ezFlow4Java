@@ -394,7 +394,7 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLE2")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA8>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA9>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLECD")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLEID")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA9>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<MANUAL_FLAG>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("MANUALFLAG")[i]));
@@ -780,15 +780,28 @@
 		            var UserAddjoblistview = new ListView();
 		            UserAddjoblistview.LoadFromID("lvAddjobList");
 		        	var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID});
+					let cn = GetAttribute(p_ListOrderObject, "_data2");
+					let roleVal = document.getElementById("lvAddjobList").querySelector('tbody').children;
 		        	
 		        	if (!bFlag) { // 원부서의 직위 체크
-		        		var cn = GetAttribute(p_ListOrderObject, "_data2");
 		        		var orgDeptId = getDeptId(cn);
 						var orgJobId = getEntryInfo(cn, "extensionAttribute7");
     		            bFlag = ((dept[0] == orgDeptId) && (jobTitleID == orgJobId)) ? true : false;
 		        	}
-		        	
-		            /* var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+
+					for(var i=0; i < roleVal.length; i++){
+						if(dept[0] == roleVal[i].getAttribute("data1") && jobTitleID == roleVal[i].getAttribute("data6") && jobRoleID == roleVal[i].getAttribute("data9")){
+							alert("이미 추가한 겸직입니다.");
+							return;
+						}
+					}
+					
+					if(jobCheck(cn, dept[0], jobTitleID, jobRoleID)){
+						alert("이미 존재하는 겸직입니다.");
+						return;
+					}
+		            
+					/* var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
 		            
 		            if (!bFlag) {
     		            var cn = GetAttribute(p_ListOrderObject, "_data2");
@@ -912,7 +925,7 @@
 	                createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(Addjoblistview.GetDataRows()[i], "data6"));
 	                createNodeAndInsertText(xmlDom, objNode, "ROLE", GetAttribute(Addjoblistview.GetDataRows()[i], "data7"));
 	                createNodeAndInsertText(xmlDom, objNode, "ROLE2", GetAttribute(Addjoblistview.GetDataRows()[i], "data8"));
-	                createNodeAndInsertText(xmlDom, objNode, "ROLECD", GetAttribute(Addjoblistview.GetDataRows()[i], "data9"));
+	                createNodeAndInsertText(xmlDom, objNode, "ROLEID", GetAttribute(Addjoblistview.GetDataRows()[i], "data9"));
 	                createNodeAndInsertText(xmlDom, objNode, "MANUAL_FLAG", GetAttribute(Addjoblistview.GetDataRows()[i], "manual_flag"));
 
 	                AddjobText = AddjobText + "- " + GetAttribute(Addjoblistview.GetDataRows()[i], "data5") + " (" + GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4") + ")<BR>";
@@ -1297,6 +1310,26 @@
 		    		jobRole2 = option.getAttribute("nmval2");
 		    	}
 		    }
+			
+			function jobCheck(cn, deptId, jobId, roleId){
+				var result_data;
+				
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezOrgan/getUserJobCheck",
+					async : false,
+					data : {cn : cn ,
+							deptId : deptId,
+							jobId : jobId, 
+							roleId : roleId}, 
+					success : function(data){
+							result_data = data;
+						}	
+				});
+				
+				return result_data;
+				
+			}
 	    </script>
 	</head>
 	<body class="popup">

@@ -48,7 +48,7 @@ public class OrganUserVO {
 	
 	private String role2;
 	/** 직책코드*/
-	private String roleCd;
+	private String roleId;
 	/** */
 	private String telephoneNumber;
 	/** */
@@ -696,11 +696,11 @@ public class OrganUserVO {
 		this.role2 = role2;
 	}
 
-	public String getRoleCd() {
-		return roleCd;
+	public String getRoleId() {
+		return roleId;
 	}
 
-	public void setRoleCd(String roleCd) {
-		this.roleCd = roleCd;
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
 	}
 }

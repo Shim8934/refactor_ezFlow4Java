@@ -406,6 +406,7 @@
 		                	liElement.setAttribute("_T1", getNodeText(SelectNodes(UserAddJobList[0], "TITLE1")[Cnt]));
 		                	liElement.setAttribute("_T2", getNodeText(SelectNodes(UserAddJobList[0], "TITLE2")[Cnt]));
 		                	liElement.setAttribute("_JOBID", getNodeText(SelectNodes(UserAddJobList[0], "JOBID")[Cnt])); // 2022-07-06 이사라 - 동일부서 겸직의 경우 jobId로 구분이 필요하여 추가
+		                	liElement.setAttribute("_ROLEID", getNodeText(SelectNodes(UserAddJobList[0], "ROLEID")[Cnt])); 
 		                	liElement.onclick = function () { event_Cardlistclick(this); };
 		                	liElement.onselectstart = function () { return false; };
 		                	liElement.className = "concurrentLI";
@@ -598,6 +599,7 @@
 								createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
 								createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
 								createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_jobid"));
+								createNodeAndInsertText(xmlDom, objNode, "ROLEINFO", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_roleid")); //2023-12-07 김혜지 - 동일 부서의 겸직(직위 동일, 직책만 다른 경우) JobeId와 RoleId를 둘 다 비교하도록 적용 
 							}
 						} else {
 							for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
@@ -607,11 +609,13 @@
 									createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
 									createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
 									createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_jobid"));
+									createNodeAndInsertText(xmlDom, objNode, "ROLEINFO", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_roleid"));
 								} else {
 									createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
 									createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
 									createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t1") + ":" + GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t2"));		                        
 									createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_jobid"));
+									createNodeAndInsertText(xmlDom, objNode, "ROLEINFO", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_roleid"));
 								}
 							}
 						}
@@ -643,6 +647,7 @@
 								createNodeAndInsertText(xmlDom, objNode, "DEPTID", "");
 								createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
 								createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
+								createNodeAndInsertText(xmlDom, objNode, "ROLEINFO", "");
 							}
 						}
 					} else {

@@ -434,6 +434,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("IS_ADDJOB", obj.getIsAddjob());
         		map1.put("JOBID", obj.getJobId());
 				map1.put("permissionBasisDeptYN", permissionBasisDeptYN);
+        		map1.put("ROLEID", obj.getRoleId());
         		
         		// 사원의 상세 정보를 가져온다.
 				Object userVO = ezOrganDAO.getTBLUserMaster(map1);
@@ -514,6 +515,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("v_TENANT_ID", tenantID);
         		map1.put("IS_ADDJOB", obj.getIsAddjob());
         		map1.put("JOBID", obj.getJobId());
+        		map1.put("ROLEID", obj.getRoleId());
         		
         		// 사원의 상세 정보를 가져온다.
         		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
@@ -2522,6 +2524,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				userMap.put("v_TENANT_ID", tenantID);
 				userMap.put("IS_ADDJOB", tmpUserType);
 				userMap.put("JOBID", jobID);
+				userMap.put("ROLEID", obj.getRoleId());
 				Object userVO = ezOrganDAO.getTBLUserMaster(userMap);  
 				
 				StringBuilder userSb = new StringBuilder();

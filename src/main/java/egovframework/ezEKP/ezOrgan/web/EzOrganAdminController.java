@@ -2607,9 +2607,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String deleteTitleInfo = "";
 		String jobID = "";
 		String role = "";
-		String role2 = "";
-		String roleCd = "";
 		String roleInfo = "";
+		String deleteRoleId = "";
 		String delType = doc.getElementsByTagName("DEPTID").item(0).getTextContent().equals("") ? "ALL" : ""; // 삭제타입(ALL인경우
 																												// 전체겸직삭제)
 		String delJobId = ""; // 2022-07-06 이사라 - 한 부서에 겸직이 2개 이상 있는 경우 1개만 삭제 시 삭제하는 jobId가 필요하여 추가
@@ -2617,8 +2616,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		List<UserChangeInfoVO> userChInfoList = new ArrayList<UserChangeInfoVO>();
 		String updateType = "";
 		List<OrganUserVO> newAddJobList = new ArrayList<>();
-
-		boolean isAddRole = doc.getElementsByTagName("ROLECD").getLength() > 0 ? true : false; 
+		boolean isAddRole = doc.getElementsByTagName("ROLEID").getLength() > 0 ? true : false; 
 		
 		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
 			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
@@ -2685,12 +2683,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					if (deleteTitleInfo.equals("")) {
 						deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
 						delJobId = doc.getElementsByTagName("JOBID").item(i).getTextContent(); // 아이콘 선택삭제는 1개씩 가능하여
+						deleteRoleId = doc.getElementsByTagName("ROLEINFO").item(i).getTextContent(); // 아이콘 선택삭제는 1개씩 가능(직위 동일, 직책만 불일치한 경우 RoleId로 구분)
 					// else쪽에는 추가 안함
 					} else {
 						deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
 					}
 
-					logger.debug("deleteTitleInfo : {} ", deleteTitleInfo);
+					logger.debug("deleteTitleInfo : {} ", deleteTitleInfo + " deleteRoleId : {} " + deleteRoleId);
 				}
 			}
 			jobID += doc.getElementsByTagName("JOBID").item(i).getTextContent() + ";";	
@@ -2698,7 +2697,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (isAddRole) {
 				String orgRole2 = doc.getElementsByTagName("ROLE2").item(i).getTextContent();
 				role = doc.getElementsByTagName("ROLE").item(i).getTextContent(); 
-				roleInfo += doc.getElementsByTagName("ROLECD").item(i).getTextContent() + ":" + role + ":"
+				roleInfo += doc.getElementsByTagName("ROLEID").item(i).getTextContent() + ":" + role + ":"
 						+ (!"".equals(role) && "".equals(orgRole2) ? role : orgRole2) + ";";
 			} 
 		} // for문완료
@@ -2714,7 +2713,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 
 		if (!delType.equals("ALL")) { //전체겸직삭제가 아닌 경우
-			logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo + ",delJobId=" + delJobId + ",isAddJobMoreInOneDept=" + isAddJobMoreInOneDept);
+			logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",deleteTitleInfo=" + deleteTitleInfo + ",delJobId=" + delJobId +  ",deleteRoleId=" + deleteRoleId + ",isAddJobMoreInOneDept=" + isAddJobMoreInOneDept);
 			
 			ezOrganAdminService.updateProperty(userID, "EXTENSIONATTRIBUTE4", titleInfo, "user", tenantID); //usermaster update
 		}
@@ -2728,7 +2727,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 			for (int i = 0; i < deletInfo.length; i++) {
 				String deltDeptID[] = deletInfo[i].split(":");
-				OrganUserVO jobInfo = ezOrganAdminService.getAddJobInfo(userID, deltDeptID[0], delJobId, tenantID);
+				OrganUserVO jobInfo = ezOrganAdminService.getAddJobInfo(userID, deltDeptID[0], delJobId, deleteRoleId, tenantID);
 				userChangeInfoVO.setUserChVo(userChangeInfoVO, userID, deltDeptID[0],
 						jobInfo.getDescription() + "/" + jobInfo.getTitle(),
 						jobInfo.getDescription1() + "/" + jobInfo.getTitle1(), updateType);
@@ -5853,6 +5852,24 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("trashDept ended");
+		return result;
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/getUserJobCheck", method = RequestMethod.POST)
+	@ResponseBody
+	public int getUserJobCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getUserJobCheck started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String cn = request.getParameter("cn");
+		String deptId = request.getParameter("deptId");
+		String jobId = request.getParameter("jobId");
+		String roleId = request.getParameter("roleId");
+		
+		int result = ezOrganAdminService.userJobCheck(cn, deptId, jobId, roleId, userInfo.getTenantId());
+
+		logger.debug("getUserJobCheck ended. result = " + result);
+
 		return result;
 	}
 }

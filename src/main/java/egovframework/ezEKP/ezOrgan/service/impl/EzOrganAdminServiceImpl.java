@@ -56,7 +56,6 @@ import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-import org.stringtemplate.v4.ST;
 
 @Service("EzOrganAdminService")
 public class EzOrganAdminServiceImpl implements EzOrganAdminService {
@@ -1336,7 +1335,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             	// 직책은 없을 수 도 있으니 값을 초기화 한다 
             	String sRole1 = "";
                 String sRole2 = "";
-                String roleCd = "";
+                String roleId = "";
             	String[] userInfo = addJobinfo[i].split(":");
             	String [] userRoleInfo = addJobRoleInfo[i].split(":");
             	pDeptID = userInfo[0];
@@ -1361,7 +1360,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                 if (userRoleInfo.length > 1) {
                 	sRole1 = userRoleInfo[1];
                 	sRole2 = userRoleInfo[2];
-                	roleCd = userRoleInfo[0];
+                	roleId = userRoleInfo[0];
                 }
                 
                 // 해당 User가 겸직할 부서의 Group Email 주소에 User를 등록한다.                  
@@ -1381,7 +1380,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_TITLE2", sTitle2);
             		map.put("v_ROLE", sRole1);
             		map.put("v_ROLE2", sRole2);
-            		map.put("v_ROLECD", roleCd);
+            		map.put("v_ROLEID", roleId);
             		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
             		map.put("v_JOBID", jobIDinfo[i]);
@@ -2818,11 +2817,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, int tenantId) throws Exception {
+	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, String roleId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("CN", cn);
 		map.put("DEPTID", deptId);
 		map.put("JOBID", jobId);
+		map.put("ROLEID", roleId);
 		map.put("TENANTID", tenantId);
 		return ezOrganAdminDao.getAddJobInfo(map);
 	}
@@ -3441,4 +3441,22 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("createExcelPermissionsList end");
 		return fileName;
 	}
+
+	@Override
+	public int userJobCheck(String cn, String deptId, String jobId, String roleId, int tenantID) throws Exception {
+		logger.debug("userJobCheck started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("CN", cn);
+		map.put("DEPTID", deptId);
+		map.put("JOBID", jobId);
+		map.put("ROLEID", roleId);
+		map.put("TENANT_ID", tenantID);
+
+		logger.debug("userJobCheck ended");
+
+		return ezOrganAdminDao.getUserJobCheckCount(map);
+	}
+	
 }

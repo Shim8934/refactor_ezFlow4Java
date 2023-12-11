@@ -108,9 +108,11 @@ public class EzOrganDAO extends EgovAbstractDAO {
         
         String isAddJob = "";
         String jobId = "";
+        String roleId = "";
         jobId = (map.containsKey("JOBID")) ? (String) map.get("JOBID") : "";
+        roleId = (map.containsKey("ROLEID")) ? (String) map.get("ROLEID") : "";
         isAddJob = (map.containsKey("IS_ADDJOB") && !jobId.equals("")) ? (String)map.get("IS_ADDJOB") : "";
-        logger.debug("isAddJob=" + isAddJob + ", jobId=" + jobId);
+        logger.debug("isAddJob=" + isAddJob + ", jobId=" + jobId + ", roleId=" + roleId);
         
         OrganUserVO organUserVO = (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
         

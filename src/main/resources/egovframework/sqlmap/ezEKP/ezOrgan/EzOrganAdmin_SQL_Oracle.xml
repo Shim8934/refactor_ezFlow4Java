@@ -28,6 +28,10 @@
 		<result property="extensionAttribute1"					column="ROLLINFO"						columnIndex="14"/>
 		<result property="description1" 						column="description1" 					columnIndex="14"/>
 		<result property="description2" 						column="description2" 					columnIndex="15"/>
+		<result property="role" 								column="ROLE" 							columnIndex="16"/>
+		<result property="role1" 								column="R1" 							columnIndex="17"/>
+		<result property="role2" 								column="R2" 							columnIndex="18"/>
+		<result property="roleId" 								column="ROLEID" 						columnIndex="19"/>
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -4582,6 +4586,16 @@
                 	A.TITLE2
                 END
                 	TITLE  ,
+				CASE
+					#v_LANGDATA#
+				WHEN
+					'1'
+				THEN
+					A.ROLE
+				ELSE
+					A.ROLE2
+				END
+					ROLE  ,
              	CASE
              		#v_LANGDATA#
                 WHEN
@@ -4619,6 +4633,11 @@
              	CASE WHEN C.DEPARTMENT = A.DEPTID THEN UNISTR(C.EXTENSIONATTRIBUTE1) ELSE UNISTR(A.ROLL_INFO) END AS ROLLINFO,
              	B.DISPLAYNAME DESCRIPTION1,
              	B.DISPLAYNAME2 DESCRIPTION2
+				A.ROLE R1,
+				A.ROLE2 R2,
+             	A.JOBID,
+				A.ROLEID,
+             	A.MANUAL_FLAG
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN
@@ -4657,9 +4676,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_ADDJOBMASTER
-              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID, MANUAL_FLAG )
+              	( CN, DEPTID, TITLE, TITLE2, ROLE, ROLE2, ROLEID, TENANT_ID, ORDERBY, JOBID, MANUAL_FLAG )
            VALUES
-           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0, #v_JOBID#, #v_MANUAL_FLAG# )
+           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_ROLE#, #v_ROLE2#, #v_ROLEID#, #v_TENANT_ID#, 0, #v_JOBID#, #v_MANUAL_FLAG# )
 		]]>
 	</insert>
 	
@@ -5566,6 +5585,10 @@
             JOBID = #v_JOBID#
         AND
         </isNotNull>
+		<isNotNull property="v_ROLEID">
+			ROLEID = #v_ROLEID#
+		AND
+		</isNotNull>
             deptid = #v_DEPTID#
         AND 
             TENANT_ID = #v_TENANT_ID#
@@ -6125,6 +6148,7 @@
 				A.TELEPHONENUMBER,
 				A.TITLE,
 				A.TITLE2,
+				'ROLEID' as ROLEID,
 				A.USERTYPE
 			FROM (
 				SELECT 
@@ -6191,6 +6215,7 @@
 					    NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
 					    TBL_ADDJOBMASTER.TITLE,
 					    TBL_ADDJOBMASTER.TITLE2,
+						TBL_ADDJOBMASTER.ROLEID,
 					    'addJob' AS USERTYPE
 					FROM
 						TBL_USER_JOBMASTER
@@ -7196,7 +7221,15 @@
 		ON 
 			A.DEPTID = D.CN AND A.TENANT_ID = D.TENANT_ID
 		WHERE 
-			A.CN = #CN# AND A.DEPTID = #DEPTID# AND A.JOBID = #JOBID# AND A.TENANT_ID = #TENANTID#
+			A.CN = #CN# 
+	  	AND 
+		    A.DEPTID = #DEPTID# 
+	  	AND 
+		    A.JOBID = #JOBID#
+	  	AND
+			A.ROLEID = #ROLEID#
+	  	AND 
+			A.TENANT_ID = #TENANTID#
 	</select>
 
 	<select id="EzOrganAdminDAO.getExportAddJobList" parameterClass="Map" resultMap="exportAddJobListInfo">
@@ -7299,4 +7332,23 @@
 		AND
 			TENANT_ID = #v_TENANT_ID#
 	</update>
+
+	<select id="EzOrganAdminDAO.getUserJobCheckCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_ADDJOBMASTER
+		WHERE
+			CN = #CN#
+		  AND
+			DEPTID = #DEPTID#
+		  AND
+			JOBID = #JOBID#
+		  AND
+			ROLEID = #ROLEID#
+		  AND
+			TENANT_ID = #TENANT_ID#
+		]]>
+	</select>
 </sqlMap>

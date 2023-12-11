@@ -397,7 +397,7 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLE2")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA8>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA9>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLECD")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLEID")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "<MANUAL_FLAG>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("MANUALFLAG")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</MANUAL_FLAG>";
@@ -895,7 +895,7 @@
 					createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(Addjoblistview.GetDataRows()[i], "data6"));
 					createNodeAndInsertText(xmlDom, objNode, "ROLE", GetAttribute(Addjoblistview.GetDataRows()[i], "data7"));
 	                createNodeAndInsertText(xmlDom, objNode, "ROLE2", GetAttribute(Addjoblistview.GetDataRows()[i], "data8"));
-	                createNodeAndInsertText(xmlDom, objNode, "ROLECD", GetAttribute(Addjoblistview.GetDataRows()[i], "data9"));
+	                createNodeAndInsertText(xmlDom, objNode, "ROLEID", GetAttribute(Addjoblistview.GetDataRows()[i], "data9"));
 					createNodeAndInsertText(xmlDom, objNode, "MANUAL_FLAG", GetAttribute(Addjoblistview.GetDataRows()[i], "manual_flag"));
 					AddjobText = AddjobText + "- " + GetAttribute(Addjoblistview.GetDataRows()[i], "data5") + " (" + GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4") + ")<BR>";
 				}

@@ -184,7 +184,7 @@ public interface EzOrganAdminService {
 	
 	public OrganDeptVO getDeptDisplayNm(String cn, int tenantID) throws Exception;
 	
-	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, int tenantId) throws Exception;
+	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, String roleId, int tenantId) throws Exception;
 
 	public List<OrganUserVO> getExportAddJobList(String primary, String companyId, int tenantId) throws Exception;
 
@@ -202,4 +202,6 @@ public interface EzOrganAdminService {
 	
 	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직/부서별 권한 설정 옵션에 따른 권한 수정 메소드
 	public void updatePermissionBasisDept(List<OrganUserVO> vo) throws Exception;
+
+	int userJobCheck(String cn, String deptId, String jobId, String roleId, int tenantID) throws Exception;
 }

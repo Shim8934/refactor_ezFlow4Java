@@ -16,7 +16,8 @@
 	
 	<resultMap id="deptTreeInfoAddjob" class="OrganDeptVO" extends="deptTreeInfo">
 		<result property="isAddjob" 							column="isAddjob" 					nullValue=""/>
-		<result property="jobId" 								column="jobId" 						nullValue=""/>		
+		<result property="jobId" 								column="jobId" 						nullValue=""/>
+		<result property="roleId" 								column="roleId" 					nullValue=""/>
 	</resultMap>
 	
 	<resultMap id="deptMemberInfo" class="OrganDeptVO">
@@ -26,7 +27,8 @@
 		<result property="extensionAttribute15" 			    column="extensionAttribute15"	        columnIndex="4"/>
 		<result property="type" 								column="type" 						    columnIndex="5"/>		
 		<result property="isAddjob" 							column="isAddjob" 						columnIndex="6"	 nullValue=""/>
-		<result property="jobId" 								column="jobId" 						    columnIndex="7"  nullValue=""/>			
+		<result property="jobId" 								column="jobId" 						    columnIndex="7"  nullValue=""/>
+		<result property="roleId" 								column="roleId" 						columnIndex="8"  nullValue=""/>
 	</resultMap>
 	
 	<resultMap id="deptSubTreeInfo" class="OrganDeptVO">
@@ -79,6 +81,9 @@
 		<result property="sipUri" 								column="sipUri" 						columnIndex="41"/>
 		<result property="positionCD" 							column="positionCD" 					columnIndex="42"/>
 		<result property="userType" 							column="userType" 						columnIndex="43"/>
+		<result property="role" 						  	    column="role" 						    columnIndex="45"  nullValue=""/>
+		<result property="role1" 							    column="role1" 						    columnIndex="46"  nullValue=""/>
+		<result property="role2" 							    column="role2" 						    columnIndex="47"  nullValue=""/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
@@ -357,6 +362,7 @@
                        			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE,
                                 TO_CHAR(extensionattribute7) JOBID,
+                                'ROLEID' ROLEID,
                                 '' ISADDJOB
                        		FROM
                        			TBL_USERMASTER 
@@ -383,6 +389,7 @@
                                 SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE,
 						        b.jobid JOBID,
+						        b.roleid ROLEID,
                                 'Y' ISADDJOB  
                   			FROM
                   				TBL_ADDJOBMASTER B
@@ -417,6 +424,7 @@
                        			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE,
                                 TO_CHAR(extensionattribute7) JOBID,
+                                'ROLEID' ROLEID,
                                 '' ISADDJOB  
                        		FROM
                        			TBL_USERMASTER 
@@ -477,6 +485,7 @@
                      	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                      	'dept' TYPE,
 				        '' JOBID,
+				        '' ROLEID,
                         '' ISADDJOB  
                    FROM
                    	TBL_DEPTMASTER 
@@ -509,6 +518,7 @@
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                            			'user' TYPE,
 						        	TO_CHAR(EXTENSIONATTRIBUTE7) JOBID,
+						        	'ROLEID' ROLEID,
                                 	'' ISADDJOB  
                           		FROM
                           			TBL_USERMASTER 
@@ -537,6 +547,7 @@
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
                           			'user' TYPE,
 						        	B.JOBID JOBID,
+						        	B.ROLEID ROLEID,
                                 	'Y' ISADDJOB  
                           		FROM
                           			TBL_ADDJOBMASTER B
@@ -590,6 +601,7 @@
                                	EXTENSIONATTRIBUTE15 ,
                                	TYPE,
 								jobid,
+								roleid,
 								isaddjob 
                         	FROM (			SELECT
                         					CN ,
@@ -605,6 +617,7 @@
                                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE,
 											TO_CHAR(EXTENSIONATTRIBUTE7) jobid,
+											'ROLEID' roleid,
 											'' isaddjob  
                                			FROM
                                				TBL_USERMASTER 
@@ -632,6 +645,7 @@
                                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE,
 											b.jobid jobid,
+											b.roleid roleid,
 											'Y' isaddjob  
                                			FROM
                                				TBL_ADDJOBMASTER B
@@ -716,6 +730,7 @@
 	                                 	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
 	                                     'USER' TYPE,
 										TO_CHAR(EXTENSIONATTRIBUTE7) jobid,
+										'ROLEID' roleid,
 										'' isaddjob  
 	                       FROM
 	                            		TBL_USERMASTER 
@@ -743,6 +758,7 @@
 	                                 	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
 	                                     'USER' TYPE,
 										b.jobid jobid,
+										b.roleid roleid,
 										'Y' isaddjob  
 	                       FROM
 	                              	TBL_ADDJOBMASTER B
@@ -1395,6 +1411,18 @@
                 	TITLE  ,
              	TITLE TITLE1  ,
              	TITLE2 TITLE2  ,
+             	CASE
+             		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	'ROLE'
+                ELSE
+                	''
+                END
+                	ROLE  ,
+             	''  ROLE1 ,
+             	''  ROLE2 ,
              	TELEPHONENUMBER ,
              	HOMEPHONE ,
              	MOBILE ,
@@ -1499,6 +1527,18 @@
              	TITLE  ,
              B.TITLE TITLE1  ,
              B.TITLE2 TITLE2  ,
+              CASE
+             	#v_LANGDATA#
+             WHEN
+             	'1'
+             THEN
+             	B.ROLE
+             ELSE
+             	B.ROLE2
+             END
+             	EXTENSIONATTRIBUTE10 ,
+			 B.ROLE ROLE1 ,
+	         B.ROLE2 ROLE2 ,
              A.TELEPHONENUMBER ,
              A.HOMEPHONE ,
              A.MOBILE ,
@@ -1532,7 +1572,7 @@
              ELSE
              	A.EXTENSIONATTRIBUTE102
              END
-             	EXTENSIONATTRIBUTE10 ,
+             	ORIGIN_ROLE, ,
              A.EXTENSIONATTRIBUTE11 ,
              A.EXTENSIONATTRIBUTE12 ,
              A.EXTENSIONATTRIBUTE13 ,
@@ -1558,6 +1598,8 @@
             	B.TENANT_ID = #v_TENANT_ID#	
             AND
             	B.JOBID = #JOBID#
+			AND
+       		    B.ROLEID = #ROLEID#
 		]]>
 		</isNotEmpty>
 	</select>
@@ -1875,6 +1917,7 @@
 				'user' as type,
 				displayname as NAME,
                 TO_CHAR(extensionAttribute7) JOBID,
+				'ROLEID' ROLEID,
                 '' ISADDJOB 			
 			FROM 
 	    		TBL_USERMASTER A 
@@ -1907,6 +1950,7 @@
 		      		'user' as type,
 					displayname as NAME,
 	                A.JOBID JOBID,
+					A.ROLEID ROLEID,
 	                'Y' ISADDJOB	
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
