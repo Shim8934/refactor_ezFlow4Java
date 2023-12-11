@@ -2646,8 +2646,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				String[] title = titleValue.split(":");
 				organVo.setDepartment(doc.getElementsByTagName("DEPTID").item(i).getTextContent());
 				organVo.setJobID(doc.getElementsByTagName("JOBID").item(i).getTextContent());
-				organVo.setTitle(title[0]);
-				organVo.setTitle2(title[1]);
+				if(title.length >0) {
+					organVo.setTitle(title[0]);
+					organVo.setTitle2(title[1]);
+				}
 				newAddJobList.add(organVo);
 
 			} else { // 선택삭제, 전체겸직삭제인경우

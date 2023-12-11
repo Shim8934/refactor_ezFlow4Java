@@ -1917,7 +1917,7 @@
 				'user' as type,
 				displayname as NAME,
                 TO_CHAR(extensionAttribute7) JOBID,
-				'ROLEID' ROLEID,
+				'' ROLEID,
                 '' ISADDJOB 			
 			FROM 
 	    		TBL_USERMASTER A 
@@ -1981,6 +1981,7 @@
 					'group' as type,
 					displayname as NAME,
 	                '' JOBID,
+	                '' ROLEID,
 	                '' ISADDJOB
 				FROM
 					TBL_DEPTMASTER 
@@ -2006,6 +2007,7 @@
 	    		n'' as extensionAttribute15,
 	    		'group' as type,
                 '' JOBID,
+				'' ROLEID,
                 '' ISADDJOB
 	    	FROM
 	    		TBL_DEPTMASTER 
@@ -2029,6 +2031,7 @@
 						extensionAttribute15, 
 						type,
 						jobid,
+						roleid,
 						isaddjob 
 			          FROM 
 			          	(SELECT  
@@ -2039,6 +2042,7 @@
 			                '0' as addJobflag,
 			                'user' as type,
 			                TO_CHAR(extensionattribute7) JOBID,
+			                '' ROLEID,
 			                '' ISADDJOB 
 			             FROM  
 			             	TBL_USERMASTER A
@@ -2066,6 +2070,7 @@
 							'1' as addJobflag,
 							'user' as type,
 			                a.jobid JOBID,
+						    A.ROLEID ROLEID,
 			                'Y' ISADDJOB
 						FROM
 							TBL_USERMASTER b
@@ -2098,6 +2103,7 @@
 					'' as extensionAttribute15,
 					'user' as type,
 	                TO_CHAR(extensionAttribute7) JOBID,
+	                '' JOBID,
 	                '' ISADDJOB				
 				FROM 
 					TBL_USERMASTER A
@@ -2120,6 +2126,7 @@
 					'' as extensionAttribute15,
 					'user' as type,
 	                b.jobid JOBID,
+				    A.roleid ROLEID,
 	                '' ISADDJOB
 				FROM
 					TBL_USERMASTER B
@@ -2141,6 +2148,7 @@
 						'' as extensionAttribute15,
 						'group' as type,
 		                '' JOBID,
+					    '' ROLEID,
 		                '' ISADDJOB
 					FROM
 						TBL_DEPTMASTER $strSize$ 
@@ -2163,6 +2171,7 @@
 		    		'' as extensionAttribute15,
 		    		'group' as type,
 	                '' JOBID,
+	                '' ROLEID,
 	                '' ISADDJOB
 		    	FROM
 		    		TBL_DEPTMASTER 

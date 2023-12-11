@@ -1792,7 +1792,7 @@
 				'user' as type,
 				displayName as name,
                 extensionAttribute7 JOBID,
-				'ROLEID' ROLEID,
+				'' ROLEID,
                 '' ISADDJOB 
 			FROM 
 	    		TBL_USERMASTER A 
@@ -1856,6 +1856,7 @@
 					'group' as type,
 					displayName as name,
 	                '' JOBID,
+	                '' ROLEID,
 	                '' ISADDJOB 
 				FROM
 					TBL_DEPTMASTER 
@@ -1881,6 +1882,7 @@
 	    		'' as extensionAttribute15,
 	    		'group' as type,
                 '' JOBID,
+                '' ROLEID,
                 '' ISADDJOB 
 	    	FROM
 	    		TBL_DEPTMASTER 
@@ -1901,6 +1903,7 @@
 						extensionAttribute15, 
 						type,
 						jobid,
+						roleid,
 						isaddjob
 			          FROM 
 			          	(SELECT  
@@ -1911,6 +1914,7 @@
 			                '0' as addJobFlag,
 			                'user' as type,
 			                extensionattribute7 JOBID,
+			                '' ROLEID,
 			                '' ISADDJOB
 			             FROM  
 			             	TBL_USERMASTER A
@@ -1938,6 +1942,7 @@
 						'1' as addJobFlag,
 						'user' as type,
 		                a.jobid JOBID,
+					    A.ROLEID ROLEID,
 		                'Y' ISADDJOB
 					FROM
 						TBL_USERMASTER b
@@ -1970,6 +1975,7 @@
 				'' as extensionAttribute15,
 				'user' as type,
                 extensionAttribute7 JOBID,
+                '' JOBID,
                 '' ISADDJOB				
 			FROM 
 				TBL_USERMASTER A
@@ -1992,6 +1998,7 @@
 				'' as extensionAttribute15,
 				'user' as type,
                 b.jobid JOBID,
+                A.roleid ROLEID,
                 '' ISADDJOB	
 			FROM
 				TBL_USERMASTER B
@@ -2016,6 +2023,7 @@
 					'' as extensionAttribute15,
 					'group' as type,
 	                '' JOBID,
+	                '' ROLEID,
 	                '' ISADDJOB	
 				FROM
 					TBL_DEPTMASTER A	
@@ -2037,6 +2045,7 @@
 	    		'' as extensionAttribute15,
 	    		'group' as type,
                 '' JOBID,
+                '' ROLEID,
                 '' ISADDJOB	
 	    	FROM
 	    		TBL_DEPTMASTER A
