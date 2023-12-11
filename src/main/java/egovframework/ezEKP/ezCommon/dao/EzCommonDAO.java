@@ -2556,4 +2556,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.AddRollInfoInAddJobColumn");
 		}
 	}
+
+	public void createTblDbLog() {
+		try {
+			select("EzCommonDAO.checkTblDbLog");
+		} catch (Exception e) {
+			logger.debug("TBL_DB_LOG table doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblDbLog");
+		}
+	}
 }

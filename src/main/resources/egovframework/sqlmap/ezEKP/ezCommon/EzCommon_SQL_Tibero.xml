@@ -5167,4 +5167,24 @@
 			)
 		]]>
 	</statement>
+
+	<select id="EzCommonDAO.checkTblDbLog" resultClass="String">
+		SELECT
+		EVENT_DATE
+		FROM
+		TBL_DB_LOG
+		WHERE
+		ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblDbLog">
+		CREATE TABLE TBL_DB_LOG
+		(
+			MESSAGE    VARCHAR2(1000),
+			CATEGORY   VARCHAR2(200),
+			EVENT_DATE DATE NOT NULL,
+			THREAD     VARCHAR2(100),
+			STACK      CLOB
+		)
+	</statement>
 </sqlMap>

@@ -2960,4 +2960,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createColumnRollInfoInAddJobMaster() throws Exception {
         ezCommonDAO.createColumnRollInfoInAddJobMaster();
     }
+
+    @Override
+    public void createTblDbLog() {
+        ezCommonDAO.createTblDbLog();
+    }
 }

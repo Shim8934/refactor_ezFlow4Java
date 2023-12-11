@@ -4874,4 +4874,23 @@
 			)
 		]]>
 	</statement>
+
+	<select id="EzCommonDAO.checkTblDbLog" resultClass="String">
+			SELECT
+				EVENT_DATE
+			FROM
+				TBL_DB_LOG
+			LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblDbLog">
+		CREATE TABLE TBL_DB_LOG
+		(
+			MESSAGE    VARCHAR(1000) NULL,
+			CATEGORY   VARCHAR(200)  NULL,
+			EVENT_DATE DATETIME      NOT NULL,
+			THREAD     VARCHAR(100)  NULL,
+			STACK      MEDIUMTEXT    NULL
+		) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4
+	</statement>
 </sqlMap>
