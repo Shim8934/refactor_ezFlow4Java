@@ -726,7 +726,9 @@
 		INSERT INTO TBL_FIDO_SESSION(
 			FIDO_SESSION_ID,	LOGIN_ID,		CREATE_TIME,		ACCESS_IP,		STATUS
 		)VALUES(
-			#fidoSessionId#, 	#id#, 	utc_timestamp(), 	#ip#,		#status#
+			#fidoSessionId#,
+			(SELECT USERLOGINID FROM TBL_USERMASTER WHERE CN = #id#),
+			utc_timestamp(), 	#ip#,		#status#
 		)
 	</insert>
 
