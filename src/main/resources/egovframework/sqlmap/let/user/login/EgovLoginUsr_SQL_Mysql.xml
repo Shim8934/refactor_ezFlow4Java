@@ -5,6 +5,7 @@
 
     <typeAlias  alias="egovMap"                 type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
     <typeAlias  alias="loginVO"                 type="egovframework.let.user.login.vo.LoginVO"/>
+    <typeAlias  alias="SessionVO"               type="egovframework.let.user.login.vo.SessionVO"/>
 	<typeAlias 	alias="loginDeviceVO" 			type="egovframework.let.user.login.vo.LoginDeviceVO"/>
 	<typeAlias 	alias="CountryVO" 			type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	<typeAlias 	alias="findPwdInfo" 			type="egovframework.let.user.login.vo.FindPwdInfoVO"/>
@@ -40,6 +41,16 @@
         <result property="extensionattribute5"	column="extensionattribute5"		columnIndex="27"/>
     </resultMap>    
     
+    <resultMap id="session" class="egovframework.let.user.login.vo.SessionVO">
+        <result property="ezSessionId"           column="SESSION_ID"                columnIndex="1"/>
+        <result property="loginCookie"           column="LOGINCOOKIE"               columnIndex="2"/>
+        <result property="creationTime"          column="CREATION_TIME"             columnIndex="3"/>
+        <result property="lastAccessTime"        column="LAST_ACCESS_TIME"          columnIndex="4"/>
+        <result property="maxInactiveInterval"   column="MAX_INACTIVE_INTERVAL"     columnIndex="5"/>
+        <result property="type"   			 	 column="TYPE"     					columnIndex="6"/>
+        <result property="timeDiff"   			 column="TIME_DIFF"     			columnIndex="7"/>
+    </resultMap>
+
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
         <result property="serverName"           column="SERVER_NAME"                columnIndex="1"/>    
         <result property="tenantId"             column="TENANT_ID"                  columnIndex="2"/>
@@ -450,6 +461,51 @@
         ]]>
     </update>
     
+    <update id="loginDAO.updateDbSessionLog" parameterClass="Map">
+        <![CDATA[
+            UPDATE 	TBL_CONNECTION_INFO
+    		SET    	SESSIONCODE 	= #ezSessionId#
+    		WHERE 	SESSIONCODE 	= #sessionCode#
+    		AND		TENANT_ID 		= #tenantId#
+        ]]>
+    </update>
+    
+    <insert id="loginDAO.insertSession" parameterClass="SessionVO">
+        <![CDATA[
+            INSERT INTO TBL_SESSION(
+                SESSION_ID,        	LOGINCOOKIE,        CREATION_TIME,      LAST_ACCESS_TIME,   MAX_INACTIVE_INTERVAL
+            )
+            VALUES(
+                #ezSessionId#,      #loginCookie#,      utc_timestamp(),  	utc_timestamp(),
+                (SELECT PROPERTY_VALUE FROM TBL_TENANT_CONFIG WHERE PROPERTY_NAME = #type# AND TENANT_ID = #tenantId#)
+            )
+        ]]>
+    </insert>
+
+	<update id="loginDAO.updateSession" parameterClass="Map">
+            UPDATE
+            	TBL_SESSION
+    		SET
+    			LAST_ACCESS_TIME = utc_timestamp()
+    		<isNotEmpty prepend="," property="loginCookie">
+    			LOGINCOOKIE = #loginCookie#
+    		</isNotEmpty>
+    		WHERE
+    			SESSION_ID 	= #ezSessionId#
+    </update>
+
+   	<select id="loginDAO.getSession" parameterClass="String" resultMap="session">
+        <![CDATA[
+            SELECT
+            	SESSION_ID,        	LOGINCOOKIE,        CREATION_TIME,      LAST_ACCESS_TIME,   MAX_INACTIVE_INTERVAL,
+            	(timestampdiff(minute, LAST_ACCESS_TIME, utc_timestamp())) AS TIME_DIFF,		TYPE
+    		FROM
+    			TBL_SESSION
+    		WHERE
+    			SESSION_ID 	= #ezSessionId#
+        ]]>
+    </select>
+
     <update id="loginDAO.updateUser" parameterClass="loginVO">
         <![CDATA[
             UPDATE TBL_USERMASTER

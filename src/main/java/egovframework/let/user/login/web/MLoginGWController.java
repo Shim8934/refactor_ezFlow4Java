@@ -22,8 +22,11 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,6 +47,7 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -1190,6 +1194,8 @@ public class MLoginGWController {
 					commonUtil.setLoginUsers(tenantId, companyId, uid, multiLoginTime, Device.MOBILE);
 				}
 
+				String useDbSession = config.getProperty("config.UseDbSession");
+
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("uid", uid);
 				map.put("ip", mIp);
@@ -1207,6 +1213,7 @@ public class MLoginGWController {
 				map.put("multiLoginTime", multiLoginTime);
 				map.put("useOTP", useOTP);
 				map.put("hasOTP", hasOTP);
+				map.put("useDbSession", useDbSession);
 
 				// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
 				Map<String, Object> mapSSO = new HashMap<String, Object>();
@@ -1332,6 +1339,70 @@ public class MLoginGWController {
 
 		return TOTP.getOTP(hexKey);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@GetMapping(value = "/mobile/ezUser/dbSession/tenantId/{tenantId}")
+	public JSONObject setDbSession(@PathVariable int tenantId, @RequestHeader("mSessionId") String mSessionId,
+			@RequestHeader("mEzSessionId") String mEzSessionId, @RequestHeader("mLoginCookie") String mLoginCookie)
+			throws Exception {
+		logger.debug("mobile setDbSession : mSessionId={}, mEzSessionId={}, mLoginCookie={}, tenantId={}", mSessionId,
+				mEzSessionId, mLoginCookie, tenantId);
+
+		JSONObject result = new JSONObject();
+
+		SessionVO sessionVO = new SessionVO();
+		sessionVO.setEzSessionId(mEzSessionId);
+		sessionVO.setLoginCookie(mLoginCookie);
+		sessionVO.setTenantId(tenantId);
+		sessionVO.setType("useSessionMobile");
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("mSessionId", mSessionId);
+		map.put("mEzSessionId", mEzSessionId);
+		map.put("tenantId", tenantId);
+
+		try {
+			// insert db session
+			loginService.insertSession(sessionVO);
+
+			// mEzSessionId 으로 sessionCode update
+			loginService.updateDbSessionLog(map);
+
+			result.put("status", "ok");
+			return result;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+
+			result.put("status", "error");
+			return result;
+		}
+	}
+
+	// gson json 사용 시 유니코드 깨지는 현상이 발생되어 String으로 전달하는 코드 추가
+	@PostMapping(value = "/mobile/ezUser/login/mEzSessionId/{mEzSessionId}")
+	public String getLoginCookie(@PathVariable String mEzSessionId) throws Exception {
+		return loginService.getSession(mEzSessionId).getLoginCookie();
+	}
+
+	@SuppressWarnings("unchecked")
+	@GetMapping(value = "/mobile/ezUser/get/session/mEzSessionId/{mEzSessionId}")
+	public JSONObject getSession(@PathVariable String mEzSessionId) throws Exception {
+		logger.debug("getSession start mEzSessionId : {}", mEzSessionId);
+
+		JSONObject result = new JSONObject();
+		SessionVO vo = loginService.getSession(mEzSessionId);
+
+		result.put("maxInactiveInterval", vo.getMaxInactiveInterval());
+		result.put("timeDiff", vo.getTimeDiff());
+
+		return result;
+	}
+
+	@PostMapping(value = "/mobile/ezUser/update/session/mEzSessionId/{mEzSessionId}")
+	public void updateSession(@PathVariable String mEzSessionId, String mloginCookie) throws Exception {
+		loginService.updateSession(mEzSessionId, mloginCookie);
+	}
 
     /**
   	 * 모바일 G/W 사용자 [GET] 로그아웃
@@ -1347,6 +1418,7 @@ public class MLoginGWController {
 		int tenantId = loginService.getTenantId(serverName);
 		LoginVO loginVO = new LoginVO ();
       	
+		// mEzSession 체크 부터
       	try {
       		if (StringUtils.isBlank(mSessionId)) {
       			logger.debug("invalid mSessionId= " + mSessionId);

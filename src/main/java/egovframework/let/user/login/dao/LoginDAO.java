@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.FindPwdInfoVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -129,6 +130,38 @@ public class LoginDAO extends EgovAbstractDAO {
     public void insertLog(LoginVO vo) throws Exception {
     	insertLogForLocal(vo);       
     }
+
+	private void updateDbSessionLogForLocal(HashMap<String, Object> map) throws Exception {
+		update("loginDAO.updateDbSessionLog", map);
+	}
+
+	public void updateDbSessionLog(HashMap<String, Object> map) throws Exception {
+		updateDbSessionLogForLocal(map);
+	}
+
+	private void insertSessionForLocal(SessionVO vo) throws Exception {
+		update("loginDAO.insertSession", vo);
+	}
+
+	public void insertSession(SessionVO vo) throws Exception {
+		insertSessionForLocal(vo);
+	}
+
+	public void updateSession(Map<String, String> map) throws Exception {
+		updateSessionForLocal(map);
+	}
+
+	private void updateSessionForLocal(Map<String, String> map) throws Exception {
+		update("loginDAO.updateSession", map);
+	}
+
+	public SessionVO getSession(String ezSessionId) throws Exception {
+		return getSessionForLocal(ezSessionId);
+	}
+
+	private SessionVO getSessionForLocal(String ezSessionId) throws Exception {
+		return (SessionVO) select("loginDAO.getSession", ezSessionId);
+	}
 
     private void updateLogForLocal(LoginVO vo) throws Exception {
         update("loginDAO.updateLog", vo);

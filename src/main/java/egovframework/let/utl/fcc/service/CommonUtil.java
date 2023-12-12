@@ -139,6 +139,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.rest.Rest;
 import egovframework.let.utl.rest.Rest.Module;
 import egovframework.let.utl.rest.Result;
@@ -366,7 +367,7 @@ public class CommonUtil {
 		}
 
 		try{
-			String decData = egovFileScrty.decryptAES(loginCookie);
+			String decData = getDecryptedLoginCookie(loginCookie);
 
 			String[] decDataArray = decData.split("///");
 			String serverName = decDataArray[0];
@@ -431,7 +432,7 @@ public class CommonUtil {
 	
 	public LoginSimpleVO userInfoSimple(String loginCookie) {
 		try{
-			String decData = egovFileScrty.decryptAES(loginCookie);
+			String decData = getDecryptedLoginCookie(loginCookie);
 
 			String[] decDataArray = decData.split("///", -1);
 			
@@ -465,6 +466,28 @@ public class CommonUtil {
 		}
 	}
 	
+	public String getDecryptedLoginCookie(String loginCookie) {
+		String decData = "";
+
+		try {
+			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+
+			if (useDbSession) {
+				String ezSessionId = loginCookie;
+				SessionVO resultVO = loginService.getSession(ezSessionId);
+
+				decData = egovFileScrty.decryptAES(resultVO.getLoginCookie());
+
+			} else {
+				decData = egovFileScrty.decryptAES(loginCookie);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return decData;
+	}
+
 	public LoginVO aprUserInfo(String loginCookie) {
 		try{
 			logger.debug("aprUserInfo started");
@@ -597,7 +620,8 @@ public class CommonUtil {
 
 	public List<String> getUserIdAndPassword(String loginCookie) {
 		try{
-			String decData = egovFileScrty.decryptAES(loginCookie);
+			String decData = getDecryptedLoginCookie(loginCookie);
+
 			List<String> returnObject = new ArrayList<String>();
 			
 			String userId = decData.split("///")[1];
@@ -748,8 +772,10 @@ public class CommonUtil {
 		boolean usingAsAPI = "yes".equalsIgnoreCase(request.getHeader("Use-As-API"));
 		// request 아이피가 127.0.0.1 일 때는 세션 콘피그 무시함 (인사연동)
 		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
+		// useDbSession 체크가 이 부분에서 필수 요소는 아니나 예외처리 보강
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
-		if (!usingSession || usingAsAPI || isLoopbackRequest) {
+		if (!useDbSession && (!usingSession || usingAsAPI || isLoopbackRequest)) {
 			return validLoginCookie(request);
 		}
 
@@ -765,7 +791,7 @@ public class CommonUtil {
 
 		try {
 			String ip = ClientUtil.getClientIP(request);
-			String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+			String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
 
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
 			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
@@ -778,8 +804,9 @@ public class CommonUtil {
 
 	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
-		if (session == null) {
+		if (!useDbSession && session == null) {
 			clearAllCookies(request, response);
 
 			return false;
@@ -1954,8 +1981,10 @@ public class CommonUtil {
 				}
 				
 				if(loginCookie != null) {
-					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
-					
+					String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
+
+					String[] cookieInfo = decryptedLoginCookie.split("///");
+
 					if(cookieInfo.length <  11) {
 						return result;
 					}
@@ -2959,7 +2988,38 @@ public class CommonUtil {
 		}
 
 		if(validSessionLoginCookie(request, response)){
-			result = "0";
+			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+
+			if (useDbSession) {
+				Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+
+				if (loginCookie == null) {
+					return "2";
+				}
+
+				try {
+					String ezSessionId = loginCookie.getValue();
+					SessionVO resultVO = loginService.getSession(ezSessionId);
+
+					int maxInactiveInterval = resultVO.getMaxInactiveInterval();
+					int timediff = resultVO.getTimeDiff();
+
+					if (maxInactiveInterval > timediff || maxInactiveInterval == 0) { // DB에 저장 당시 세션 사용 안함 (maxInactiveInterval == 0)인 경우도 pass
+						loginService.updateSession(ezSessionId, "");
+						return "0";
+					} else {
+						clearAllCookies(request, response);
+						request.getSession().invalidate();
+						return "1";
+					}
+
+				} catch (Exception e) {
+					return "2";
+				}
+			} else {
+				result = "0";
+			}
+
 		}else {
 			result = "1";
 		}

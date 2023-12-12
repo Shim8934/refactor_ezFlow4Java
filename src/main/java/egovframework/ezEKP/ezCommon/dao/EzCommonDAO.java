@@ -59,6 +59,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.getContentInfo", map);
 	}
 	
+	public void createTblSession() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblSession");
+		} catch (Exception e) {
+			logger.debug("tbl_sessopm doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblSession");
+		}
+	}
+
     private String selectUserGetLangForLocal(String userID, int tenantID) throws Exception {
     	Map<String, Object> map = new HashMap<String, Object>();
     	

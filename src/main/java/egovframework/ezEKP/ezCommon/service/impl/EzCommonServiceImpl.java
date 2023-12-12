@@ -946,6 +946,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     }
 
 	@Override
+	public void createTblSession() throws Exception {
+		createTblSessionForLocal();
+	}
+
+	private void createTblSessionForLocal() throws Exception {
+		ezCommonDAO.createTblSession();
+	}
+
+	@Override
 	public String selectUserGetLang(String userID, int tenantID) throws Exception {
 		return ezCommonDAO.selectUserGetLang(userID, tenantID);
 	}
