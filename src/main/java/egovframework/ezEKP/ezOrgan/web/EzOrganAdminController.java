@@ -2737,7 +2737,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				userChInfoList.add(i, userChangeInfoVO);
 			}
 
-			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID, delJobId, isAddJobMoreInOneDept);
+			ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID, delJobId, deleteRoleId, isAddJobMoreInOneDept);
 
 		} else {
 		    if (!titleInfo.equals("")) { // 겸직 추가, 팝업 수정 일경우

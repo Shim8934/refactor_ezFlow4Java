@@ -1436,12 +1436,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	@Override
 	public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception {
-		deleteJob(userID, titleInfo, tenantID, "none", false);
+		deleteJob(userID, titleInfo, tenantID, "none", "none", false);
 	}
 
 	// 2022-07-07 이사라 - 한 부서에 2개 이상의 겸직이 있는 경우 1개만 삭제를 하기 위해 추가된 파라미터가 있어 deletJob 메소드 오버로딩 함
     @Override
-    public void deleteJob(String userID, String titleInfo, int tenantID, String delJobId, boolean isAddJobMoreInOneDept) throws Exception {
+    public void deleteJob(String userID, String titleInfo, int tenantID, String delJobId, String delRoleId, boolean isAddJobMoreInOneDept) throws Exception {
         logger.debug("deleteJob started");
         logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",tenantID=" + tenantID + ",delJobId=" + delJobId + ",isAddJobMoreInOneDept=" + isAddJobMoreInOneDept);
         
@@ -1479,6 +1479,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                     map.put("v_DEPTID", pDeptID);
 					if (hasJobId) { // 2022-07-06 이사라 - 겸직 부분 삭제
 						map.put("v_JOBID", delJobId);
+						map.put("v_ROLEID", delRoleId);
 					}
                     
                     String bizmekaResult = "ERROR";

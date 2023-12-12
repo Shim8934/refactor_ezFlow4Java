@@ -779,7 +779,7 @@
 		            listview.LoadFromID("lvUserList");
 		            var UserAddjoblistview = new ListView();
 		            UserAddjoblistview.LoadFromID("lvAddjobList");
-		        	var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID});
+		        	var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID, "data9":jobRoleID});
 					let cn = GetAttribute(p_ListOrderObject, "_data2");
 					let roleVal = document.getElementById("lvAddjobList").querySelector('tbody').children;
 		        	
@@ -788,16 +788,9 @@
 						var orgJobId = getEntryInfo(cn, "extensionAttribute7");
     		            bFlag = ((dept[0] == orgDeptId) && (jobTitleID == orgJobId)) ? true : false;
 		        	}
-
-					for(var i=0; i < roleVal.length; i++){
-						if(dept[0] == roleVal[i].getAttribute("data1") && jobTitleID == roleVal[i].getAttribute("data6") && jobRoleID == roleVal[i].getAttribute("data9")){
-							alert("이미 추가한 겸직입니다.");
-							return;
-						}
-					}
 					
 					if(jobCheck(cn, dept[0], jobTitleID, jobRoleID)){
-						alert("이미 존재하는 겸직입니다.");
+						alert(strLang25);
 						return;
 					}
 		            
@@ -809,8 +802,8 @@
     		            bFlag = dept[0] == orgDeptId ? true : false;
 		        	} */
 		        	
-		        	// 중복겸직가능
-		        	bFlag = false;
+		        	// // 중복겸직가능 //2023-12-12 동일 부서의 동일 겸직(직위 동일, 직책만 다른 경우) 가능하도록 수정되어 해당 부분 주석
+		        	// bFlag = false;
 		        	
 		            if (bFlag) {
 		                alert(strLang25);

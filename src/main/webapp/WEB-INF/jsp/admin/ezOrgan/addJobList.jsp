@@ -604,7 +604,8 @@
 						} else {
 							for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
 								if (GetAttribute(_RowObject, "_DEPTID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid") 
-										&& GetAttribute(_RowObject, "_JOBID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_jobid")) { // 2022-07-07 이사라 - 한 부서에 겸직 2개 이상인 경우 1개만 삭제 가능하도록, deptid와 jobid를 함께 비교하여 고유한 1개의 값만 적용
+										&& GetAttribute(_RowObject, "_JOBID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_jobid")      // 2022-07-07 이사라 - 한 부서에 겸직 2개 이상인 경우 1개만 삭제 가능하도록, deptid와 jobid를 함께 비교하여 고유한 1개의 값만 적용
+										&& GetAttribute(_RowObject, "_ROLEID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_roleid")) { // 2023-12-12 김혜지 - 한 부서에 동일 겸직(직위 동일, 직책은 다른경우)인 경우  deptid, jobid, roleId를 비교하도록 수정 
 									createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
 									createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
 									createNodeAndInsertText(xmlDom, objNode, "TITLE", "");

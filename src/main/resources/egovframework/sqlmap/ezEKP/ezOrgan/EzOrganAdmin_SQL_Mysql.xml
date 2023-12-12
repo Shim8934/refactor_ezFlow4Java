@@ -3857,10 +3857,8 @@
             JOBID = #v_JOBID#
         AND
         </isNotNull>
-		<isNotNull property="v_ROLEID">
 			ROLEID = #v_ROLEID#
 		AND
-		</isNotNull>
             deptid = #v_DEPTID#
         AND 
             TENANT_ID = #v_TENANT_ID#

@@ -91,7 +91,7 @@ public interface EzOrganAdminService {
 	
     public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception;	
 
-    public void deleteJob(String userID, String titleInfo, int tenantID, String delJobId, boolean isAddJobMoreInOneDept) throws Exception;
+    public void deleteJob(String userID, String titleInfo, int tenantID, String delJobId, String delRoeId, boolean isAddJobMoreInOneDept) throws Exception;
 
 	public void restoreRetireEntry(String cn, String deptID, int tenantID, String offset) throws Exception;
 

@@ -398,6 +398,7 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA8>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA9>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLEID")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA9>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<MANUAL_FLAG>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("MANUALFLAG")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</MANUAL_FLAG>";
@@ -780,7 +781,7 @@
  				listview.LoadFromID("lvUserList");
  				var UserAddjoblistview = new ListView();
  				UserAddjoblistview.LoadFromID("lvAddjobList");
- 				var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID});
+ 				var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID, "data9":jobRoleID});
 	        	
 	        	if (!bFlag) { // 원부서의 직위 체크
 					var orgJobId = getEntryInfo(cn, "extensionAttribute7");
