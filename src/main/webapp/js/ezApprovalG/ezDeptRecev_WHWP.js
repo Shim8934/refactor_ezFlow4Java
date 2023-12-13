@@ -119,12 +119,14 @@ function GetDraftAprLineInfo(ret) {
 	    OrderJobtitle[KyljeaOrder] = KyljeaJobtitle;
 	    OrderReason[KyljeaOrder] = ReasonDoNotApprov;
 	}
-     
+	
+	/* 2023-11-03 홍승비 - G버전에서는 부서합의문서 접수 시에도 기안자의 대결/전결이 가능하므로, 기안자의 결재유형 체크 변수 추가 */
+	CurAprType = OrderType[1]; // 한글양식에서는 CurAprType 변수에 결재유형의 코드가 아닌 이름을 저장하므로 주의
     
     LastSignSN = OrderType.length
-    for(i=1;i<OrderType.length;i++)
+    for (i=1;i<OrderType.length;i++)
     {
-    	if(OrderType[i] == strLangAprType1 || OrderType[i] == strLangAprType4 || OrderType[i] ==strLangAprType3 )
+    	if (OrderType[i] == strLangAprType1 || OrderType[i] == strLangAprType4 || OrderType[i] == strLangAprType3)
     	{
     		LastSignSN = i;
         }	
@@ -569,7 +571,7 @@ function SendDraftMappingSign(ret) {
 		sn = LastSignNo;
 	}
 
-	if(pDraftFlag == "SUSIN" ||  pDocState == "011") { 
+	if (pDraftFlag == "SUSIN" ||  pDocState == "011") { 
 		psigncell = pSusinSN + "sign" + sn;
 		pseumyungcell = pSusinSN + "jikwe" + sn;
 		pseumyungdatecell = pSusinSN + "seumyungdate" + sn;
@@ -586,47 +588,20 @@ function SendDraftMappingSign(ret) {
 	
 	var strimg;
 	var SingFlag = true;
+	var OpinionText = ""; // 합의문서 접수 시에도 대결/전결 문자를 표출하기 위한 변수
 	
-
-	if(ret != "NAME") {
-		if (message.FieldExist(psigncell)) {
-			message.PutFieldText(psigncell, "");	
-			message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
-			//message.InsertPicture(psigncell, document.location.protocol + "//" + "10.0.100.108" + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
-		}
-	
-	  	signInfo[signCnt] = psigncell;
-	  	SignName[signCnt] = psigncell;
-	  	SignType[signCnt] = "IMAGE";
-		SignContent[signCnt] = ret;
-	  	signCnt = signCnt + 1
-	  	SingFlag = true;
-	}
-	else {
-		if (message.FieldExist(psigncell)) {
-            message.PutFieldText(psigncell, arr_userinfo[2]);	  	
-	  		signInfo[signCnt] = psigncell;
-	  		SignName[signCnt] = psigncell;
-	  	    SignType[signCnt] = "TEXT";
-		    SignContent[signCnt] = arr_userinfo[2];
-	  		signCnt = signCnt + 1
-	  		SingFlag = false; 
-		}
-	}
-	
-    
+	// 합의일자와 합의직위가 이미지 서명보다 나중에 삽입되는 경우, 양식상에 제대로 삽입되지 않는 경우가 있어 상단으로 이동 (웹한글 비동기 관련)
 	if (message.FieldExist(pseumyungcell)) {
-		message.PutFieldText(pseumyungcell, arr_userinfo[3] + PositionText);		
+		message.PutFieldText(pseumyungcell, arr_userinfo[3] + PositionText);
 		signInfo[signCnt] = pseumyungcell;
 		SignName[signCnt] = pseumyungcell;
 	  	SignType[signCnt] = "TEXT";
 		SignContent[signCnt] = arr_userinfo[3] + PositionText;
 		signCnt = signCnt + 1
 	}
-
 	
 	if (message.FieldExist(pseumyungdatecell)) {
-		message.PutFieldText(pseumyungdatecell, s);		
+		message.PutFieldText(pseumyungdatecell, s);
 		signInfo[signCnt] = pseumyungdatecell;
 		SignName[signCnt] = pseumyungdatecell;
 	  	SignType[signCnt] = "TEXT";
@@ -634,12 +609,42 @@ function SendDraftMappingSign(ret) {
 		signCnt = signCnt + 1
 	}
 	
+	if (CurAprType == strLangAprType4) {
+		OpinionText = strLang6 + "\15";
+	} else if (CurAprType == strLangAprType16) {
+		OpinionText = strLang7 + "\15";
+	}
 	
-	if(ret == "NAME") {
+	if (ret != "NAME") {
+		if (message.FieldExist(psigncell)) {
+			message.PutFieldText(psigncell, OpinionText);	
+			message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+		}
+		
+	  	signInfo[signCnt] = psigncell;
+	  	SignName[signCnt] = psigncell;
+	  	SignType[signCnt] = "IMAGE";
+		SignContent[signCnt] = ret + "::" + OpinionText;
+	  	signCnt = signCnt + 1
+	  	SingFlag = true;
+	}
+	else {
+		if (message.FieldExist(psigncell)) {
+            message.PutFieldText(psigncell, OpinionText + arr_userinfo[2]);	  	
+	  		signInfo[signCnt] = psigncell;
+	  		SignName[signCnt] = psigncell;
+	  	    SignType[signCnt] = "TEXT";
+		    SignContent[signCnt] = OpinionText + arr_userinfo[2];
+	  		signCnt = signCnt + 1
+	  		SingFlag = false; 
+		}
+	}
+	
+	if (ret == "NAME") {
 		rtnSignInfo = signInfo;
 		GetHTML(before_saveRecevInfo);
 	}
-  }catch(e){
+  } catch(e) {
     alert("SendDraftMappingSign(ret)" + e);
   }
 }

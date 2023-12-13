@@ -127,8 +127,11 @@
 			var signImageType = "<c:out value ='${signImageType}'/>";
 			var isReDraft = 'N';
 			
+			/* 2023-11-03 홍승비 - G버전에서는 부서합의문서 접수 시에도 기안자의 대결/전결이 가능하므로, 기안자의 결재유형 체크 변수 추가 */
+			var CurAprType = "";
+			
 			window.onload = function () {
-				if(DraftFlag == 'REDRAFT') {
+				if (DraftFlag == 'REDRAFT') {
 					isReDraft = 'Y';
 				}
 			};

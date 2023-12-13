@@ -862,4 +862,7 @@ public interface EzApprovalGService {
 
     // 2023-09-25 전인하 - 전자결재G > 배부대장 미리보기 > 진행문서 열람권한 조회
     public String getAccessYNGforAPR(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
+    
+	/* 2023-11-30 홍승비 - 전자결재 > 서명 재맵핑 > TBL_SIGNINFO 테이블의 결재서명 데이터를 XML(문자열) 형식으로 가져오는 메서드 */
+	public String getAllAprSignDataXML(String docID, String companyID, int tenantID) throws Exception;
 }

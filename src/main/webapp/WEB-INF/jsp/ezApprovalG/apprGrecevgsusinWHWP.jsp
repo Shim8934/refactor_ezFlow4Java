@@ -163,13 +163,22 @@
 		                    GetAprDocFormID();
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
-		
+		                    
+		                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+		                    
+							// 현재 문서가 수신문이므로 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if (pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_WHWP(pOrgDocID, orgCompanyID);
+					        }
+							
 		                    if (pHasOpinionYN == "Y") {
-		                        if (pAprState == "006")
+		                        if (pAprState == "006") {
 		                            pInformationContent = "<spring:message code='ezApprovalG.t124'/><br> <spring:message code='ezApprovalG.t10'/>";
-		                        else
+		                        } else {
 		                            pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t10'/>";
-		
+		                        }
+		                        
 		                        OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                    }
 		
@@ -181,7 +190,15 @@
 		                    GetAprDocFormID();
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
-		
+		                    
+		                    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+		                    
+					     	// 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if (pDraftFlag == "SUSIN" && pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_WHWP(pOrgDocID, orgCompanyID);
+					        }
+					        
 		                    if (g_DraftFlag == "REDRAFT") {
 // 		                        setMenuBar("btnAssign", false);
 // 		                        setMenuBar("btnDistribute", false);
@@ -1296,7 +1313,7 @@
 	    	                    GetDraftAprLineInfo(retvalue);
 	                        }
 	    		            btnSendDraftEnable = "true";
-	    		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
+	    		            CurAprType = strAprType4; // 결재유형을 '전결' 문자가 아닌 코드(004)로 수정
 	    		            LastSignSN = "1";
 	    		            btnSendDraft_onclick();
             			} else {

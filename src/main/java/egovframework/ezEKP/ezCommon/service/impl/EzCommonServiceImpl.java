@@ -2951,4 +2951,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.insertPrvwConfig();
 	}
 	
+	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
+	@Override
+	public void insertApprSignRemapApplyTime() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVO : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantID", tenantVO.getTenantId());
+			map.put("property", "APPRSIGNREMAPAPPLYTIME"); // getTenantConfig로  체크하기 위해 대문자 컨피그명 전달
+			
+			ezCommonDAO.insertApprSignRemapApplyTime(map);
+		}
+	}
 }

@@ -1949,7 +1949,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getDate started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String fullDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() ,false);
+		String fullDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		fullDate = fullDate.substring(0, 10).replace("-", ".");
 		
 		logger.debug("getDate ended.");
@@ -10562,11 +10562,25 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
+		String result = "";
 		
-		String result = ezApprovalGService.deleteSignInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		/* 2023-12-07 홍승비 - 일괄기안된 결재문서 > 재기안 동작 등 서명 데이터 삭제 > 1안뿐만이 아니라 각 안 별로 서명 데이터를 삭제하도록 수정 */
+		List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<ApprGGroupDocInfoVO>();
+		String groupDocSN = ezApprovalGService.getGroupDocSN(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		
-		logger.debug("result=" + result);
-		logger.debug("deleteSignInfo ended");
+		if (groupDocSN != null && !groupDocSN.equals("")) {
+			// 서명 데이터를 삭제하기 위해 docID값만 사용하므로, v_MODE값은 공백으로 전달(임시저장된 문서에는 서명 데이터가 존재하지 않으므로 분기처리 하지 않음) 
+			groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "", userInfo.getTenantId(), userInfo.getCompanyID());
+			
+			for (ApprGGroupDocInfoVO tempVO : groupDocInfoList) {
+				result = ezApprovalGService.deleteSignInfo(tempVO.getDocID(), userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+		}
+		else { // 기존 단일기안문서 서명 데이터 삭제 분기
+			result = ezApprovalGService.deleteSignInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		}
+		
+		logger.debug("deleteSignInfo ended, result = " + result);
 		
 		return result;
 	}
@@ -12448,5 +12462,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		logger.debug("checkSecurityApprovalDate (Controller) ended, result = " + result);
 		return result;
+	}
+	
+	/* 2023-11-30 홍승비 - 전자결재 > 서명 재맵핑 > TBL_SIGNINFO 테이블의 결재서명 데이터를 XML(문자열) 형식으로 리턴 */
+	@RequestMapping(value = "/ezApprovalG/getAllAprSignDataXML.do", produces = "text/plain;charset=utf8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAllAprSignDataXML(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("getAllAprSignDataXML started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		int tenantID = userInfo.getTenantId();
+		
+		String resultXML = ezApprovalGService.getAllAprSignDataXML(docID, orgCompanyID, tenantID);
+		
+		logger.debug("getAllAprSignDataXML ended");
+		return resultXML;
 	}
 }

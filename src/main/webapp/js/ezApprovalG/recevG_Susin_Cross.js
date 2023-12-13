@@ -1199,12 +1199,12 @@ function SendDraftMappingSign(ret) {
                 }
                 sn = LastSignNo;
             }
-        } else {
-        	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) 
-        	{
-        		OpinionText = getSignDate() + "<br>";
-        	}
         }
+        
+        /* 2023-11-22 홍승비 - 전자결재 일반버전에서도 접수기안자의 최종결재가 가능하므로, 서명일자 관련 분기 분리 (내부기안 js와 동일 스펙) */
+    	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
+    		OpinionText = getSignDate() + "<br>";
+    	}
         
         signCnt = 0;
         if (pDraftFlag == "SUSIN" || pDocState == "011") {
@@ -1225,26 +1225,26 @@ function SendDraftMappingSign(ret) {
         var s = CurrentDate[1] + "." + CurrentDate[2];
 
         var field = message.GetListItem(fields, psigncell);
-        var signWidth = field.offsetWidth;
-        var signHeight = field.offsetHeight;
-
-        if (signWidth > signHeight) {
-            signHeight = signHeight - 15;
-            signWidth = signHeight;
-        } else {
-            signWidth = signWidth - 15;
-            sighHeight = signWidth;
-        }
+        var signWidth = 50; // 이미지 서명의 크기를 기본 50으로 고정하므로, 의미없는 사이즈 계산 코드 제거
+        var signHeight = 50;
         
         var field = message.GetListItem(fields, pseumyungdatecell);
-
+        
         if (field) {
             setNodeText(field , s);
-            signWidth = 50;
-            signHeight = 50;
-        } else {  
-	        signWidth = 50;
-	        signHeight = 28;
+            
+            /* 2023-10-06 홍승비 - 서명일자가 TBL_SIGNINFO 테이블에 저장되도록 데이터 추가 (서명일자 필드 존재 시) */
+    		signInfo[signCnt] = pseumyungdatecell;
+    		SignName[signCnt] = pseumyungdatecell;
+    		SignType[signCnt] = "TEXT";
+    		SignContent[signCnt] = s;
+    		signCnt = signCnt + 1;
+        }
+        
+        // 서명일자칸이 존재하지 않는 경우, 서명칸에 서명일자를 함께 표출하기 위해 이미지 서명의 높이를 조정 (최종결재일때만 서명칸에 서명일자를 표출)
+        // 대결/전결 메세지는 서명칸에 표출하므로 이미지 서명의 높이를 조정
+        if ((!field && LastSignSN == 1) || CurAprType == strAprType4 || CurAprType == strAprType16) {
+        	signHeight = 28;
         }
         
         // 결재칸에 부서 추가
@@ -1271,26 +1271,26 @@ function SendDraftMappingSign(ret) {
         if (CurAprType == strAprType16) {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
+            	// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+    			if (message.GetListItem(fields, pseumyungdatecell)) {
+    			    OpinionText = "<br>";
+    			}
+    			
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     
-                    if (message.GetListItem(fields, pseumyungdatecell)) {
-                    	signHeight = 28;
-                    }
-                   
                     if (signImageType == "NAME") {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
                     
-                    //대결 시 서명 데이트 입력란 없으면 날짜 표시
-					if (!message.GetListItem(fields, pseumyungdatecell)) {
-						 field.innerHTML  = strLang7 + OpinionText + strimg;
-					} else {
-						 field.innerHTML  = strLang7 + strimg;
-					}
+                    field.innerHTML = strLang7 + OpinionText + strimg;
+                    
+                    if (signImageType == "NAME") {
+            			OpinionText = OpinionText + "::" + arr_userinfo[2];
+                    }
 
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
@@ -1303,6 +1303,7 @@ function SendDraftMappingSign(ret) {
                 else {
                     strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     field.innerHTML = strLang7 + OpinionText + strimg;
+                    
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "HTML";
                     SignName[signCnt] = psigncell;
@@ -1324,8 +1325,7 @@ function SendDraftMappingSign(ret) {
             }
         }
 
-        if (DekyulFlag && NextAprType == strAprType4)
-        {
+        if (DekyulFlag && NextAprType == strAprType4) {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
                 field.innerHTML = strLangAprType4;
@@ -1342,7 +1342,11 @@ function SendDraftMappingSign(ret) {
         else {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
-                
+            	// 서명일자칸이 존재하는 경우, 서명칸에는 날짜를 표출하지 않음
+    			if (message.GetListItem(fields, pseumyungdatecell)) {
+    			    OpinionText = "<br>";
+    			}
+    			
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
@@ -1351,15 +1355,23 @@ function SendDraftMappingSign(ret) {
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
-
-                    if (message.GetListItem(fields, pseumyungdatecell))
-                        OpinionText = "";
                     
-                    if (CurAprType == strAprType4)
+                    if (CurAprType == strAprType4) { // 전결
                         OpinionText = strLangAprType4 + OpinionText;
-
-                    field.innerHTML = OpinionText + strimg;
-
+                    }
+                    
+					if (OpinionText != "<br>") { // 서명일자 또는 전결 문자가 존재
+                        field.innerHTML = OpinionText + strimg;
+                    }
+                    else { // 서명일자와 전결 문자가 없는 최종결재
+                    	OpinionText = "";
+						field.innerHTML = strimg;
+					}
+					
+					if (signImageType == "NAME") {
+						OpinionText = OpinionText + "::" + arr_userinfo[2];
+			        }
+					
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
                     SignName[signCnt] = psigncell;
@@ -1372,12 +1384,18 @@ function SendDraftMappingSign(ret) {
                     if (field) {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                         
-                        if (message.GetListItem(fields, pseumyungdatecell))
-                            OpinionText = "";
-                        
-                        if (CurAprType == strAprType4)
+                        if (CurAprType == strAprType4) {
                             OpinionText = strLangAprType4 + OpinionText;
-                        field.innerHTML = OpinionText + strimg;
+                        }
+                        
+                        if (OpinionText != "<br>") { // 서명일자 또는 전결 문자가 존재
+                        	field.innerHTML = OpinionText + strimg;
+                    	}
+                    	else { // 서명일자와 전결 문자가 없는 최종결재
+                    		OpinionText = "";
+							field.innerHTML = strimg;
+						}
+                        
                         signInfo[signCnt] = psigncell;
                         SignType[signCnt] = "HTML";
                         SignName[signCnt] = psigncell;

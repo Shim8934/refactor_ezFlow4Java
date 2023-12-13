@@ -559,6 +559,14 @@
 			    getCurApproverAprLine();
 			    pGubun = "8";
 			    
+			    /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+		        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+		        
+		        // 현재 문서가 수신문이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+		        if (pDraftFlag == "SUSIN" && pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+		        	message.startRemapAllAprSign_WHWP(pOrgDocID, orgCompanyID);
+		        }
+			    
 			    if (pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
 			        setMenuBar("btntotaldocinfo", false);
 			        setMenuBar("btnJunKyul", false);

@@ -125,6 +125,9 @@
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 			
+			/* 2023-11-03 홍승비 - G버전에서는 부서합의문서 접수 시에도 기안자의 대결/전결이 가능하므로, 기안자의 결재유형 체크 변수 추가 */
+			var CurAprType = "";
+			
 			window.onresize = function () {
 				document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 170 + "px";
 				var mHeight = document.documentElement.clientHeight - 180 - document.getElementById("messageWHWPEditor").offsetTop + "px";

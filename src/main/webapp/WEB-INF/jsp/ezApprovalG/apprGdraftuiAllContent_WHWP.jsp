@@ -26,6 +26,10 @@
 		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+    	
+    	<%-- 2023-12-07 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
+		
 	    <script language="javascript" type="text/javascript">
 	    	var HwpCtrl;
 	    	var useWebHWP = parent.useWebHWP;
@@ -181,6 +185,9 @@
 	                    // 재기안 상태이면서 addFlag가 아직 변경되지 않은 경우 (초기 로딩 상태 진행 중임)
 	                    if (pDraftFlag == "REDRAFT" && parent.addFlag == false) {
 	                    	parent.docLoadCompleteCnt ++;
+	                    	
+	                    	/* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+	    			        startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
 	                    	
 	                    	// 로딩된 문서의 전체 갯수가 재기안 시작 시 가져온 전체 안의 갯수와 일치한다면, addFlag 등을 변경시킨다.
 	                    	if (parent.docLoadCompleteCnt == (parent.pDocIDAry.length - 1)) {

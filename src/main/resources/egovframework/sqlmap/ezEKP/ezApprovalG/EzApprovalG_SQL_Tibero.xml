@@ -12441,17 +12441,20 @@
 <!-- 	<procedure id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETSUSINSN_INSIDE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+<!-- 2023-11-28 홍승비 - 수신문의 서명 필드 접근을 위해 RECEIVESN값을 가져오는 경우, 부서합의문(DOCSTATE=012)은 제외하도록 조건 수정(1habyuisign1 등 수신문 내부 합의결재 필드는 양식작성 기능에서 미지원) -->
 	<select id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String">
-		SELECT 
-			RECEIVESN 
-        FROM 
-        	TBL_APRRECEIPTPROCESSINFO 
-        WHERE  
+		SELECT
+			RECEIVESN
+        FROM
+        	TBL_APRRECEIPTPROCESSINFO
+        WHERE
         	DOCID = #v_DOCID#
         AND
         	TENANT_ID = #v_TENANTID#
         AND
-        	COMPANYID = #companyID#        	
+        	COMPANYID = #companyID#
+        AND
+        	DOCSTATE != '012'
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.returnContainerID" parameterClass="Map" resultClass="String"> -->
@@ -12657,44 +12660,50 @@
             	APRMEMBERSN DESC 
 	</select>
 	
+	<!-- 2023-11-09 홍승비 - G버전의 경우 합의문서의 최종결재유형으로 대결(016) 사용 가능, APRTYPE 조건에 추가 -->
+	<!-- 오라클(티베로)에서는 ORDER BY 정렬 후 ROWNUM으로 레코드를 가져오도록 쿼리 순서 수정 -->
 	<select id="EzApprovalG.selectHabyuiResultAprMemberInfoVO" parameterClass="Map" resultClass="ApprGAprLineVO">
 		<![CDATA[
-			SELECT 
-				DOCID, 
-				APRMEMBERSN, 
-				APRTYPE, 
-				APRSTATE, 
-				APRMEMBERID, 
-				APRMEMBERISDEPTYN, 
-				APRMEMBERNAME, 
-				APRMEMBERJOBTITLE, 
-				APRMEMBERDEPTID, 
-				APRMEMBERDEPTNAME, 
-				APRMEMBERLDAPPATH, 
-				RECEIVEDDATE, 
-				PROCESSDATE, 
-				REASONDONOTAPPROV, 
-				ISPROPOSERYN, 
-				ISBRIEFUSERYN, 
-				APRMEMBERNAME2, 
-				APRMEMBERJOBTITLE2, 
-				APRMEMBERDEPTNAME2, 
-				TENANT_ID, 
-				COMPANYID
-            FROM 
-            	TBL_APRLINEINFO 
-            WHERE
-            	TENANT_ID = #v_TENANTID#
-            AND
-            	COMPANYID = #companyID#
-            AND  
-            	DOCID = #v_DOCID#
-            AND 
-            	APRTYPE IN ( '001','004' )
-            AND
-            	ROWNUM = 1
-            ORDER BY 
-            	APRMEMBERSN DESC 
+			SELECT
+				*
+			FROM (
+				SELECT 
+					DOCID, 
+					APRMEMBERSN, 
+					APRTYPE, 
+					APRSTATE, 
+					APRMEMBERID, 
+					APRMEMBERISDEPTYN, 
+					APRMEMBERNAME, 
+					APRMEMBERJOBTITLE, 
+					APRMEMBERDEPTID, 
+					APRMEMBERDEPTNAME, 
+					APRMEMBERLDAPPATH, 
+					RECEIVEDDATE, 
+					PROCESSDATE, 
+					REASONDONOTAPPROV, 
+					ISPROPOSERYN, 
+					ISBRIEFUSERYN, 
+					APRMEMBERNAME2, 
+					APRMEMBERJOBTITLE2, 
+					APRMEMBERDEPTNAME2, 
+					TENANT_ID, 
+					COMPANYID
+	            FROM 
+	            	TBL_APRLINEINFO 
+	            WHERE
+	            	TENANT_ID = #v_TENANTID#
+	            AND
+	            	COMPANYID = #companyID#
+	            AND  
+	            	DOCID = #v_DOCID#
+	            AND 
+	            	APRTYPE IN ('001', '004', '016')
+	            ORDER BY 
+	            	APRMEMBERSN DESC
+			)
+			WHERE
+				ROWNUM = 1
 		]]>
 	</select>
 	
@@ -35712,4 +35721,59 @@
 			]]>
         </isEqual>
     </select>
+    
+    <!-- 2023-11-30 홍승비 - 결재문서의 서명 데이터를 전부 가져오는 쿼리 추가 (APRSN은 단순히 결재동작이 이루어진 순번이므로, 정렬에 사용) -->
+	<select id="EzApprovalG.getAllSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_SIGNINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
+			AND
+				DOCID = #v_DOCID#
+			ORDER BY
+				APRSN ASC
+		]]>
+	</select>
+	
+	<!-- 2023-12-05 홍승비 - 결재서명 전체를 재맵핑하기 위해, TBL_SIGNINFO에 '정상적인 서명 데이터'가 확정 삽입되는 시점 이후 기안된 문서인지 카운트 -->
+	<select id="EzApprovalG.getSignRemapApplyDocCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				SUM(CNT)
+			FROM (
+				SELECT
+					COUNT(*) AS CNT
+				FROM
+					TBL_APRDOCINFO
+				WHERE
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #v_COMPANYID#
+				AND
+					DOCID = #v_DOCID#
+				AND
+					STARTDATE >= TO_DATE(#v_apprSignRemapApplyTime#,'YYYY-MM-DD HH24:MI:SS')
+					
+				UNION ALL
+				
+				SELECT
+					COUNT(*) AS CNT
+				FROM
+					TBL_ENDAPRDOCINFO
+				WHERE
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #v_COMPANYID#
+				AND
+					DOCID = #v_DOCID#
+				AND
+					STARTDATE >= TO_DATE(#v_apprSignRemapApplyTime#,'YYYY-MM-DD HH24:MI:SS')
+			) T
+		]]>
+	</select>
 </sqlMap>

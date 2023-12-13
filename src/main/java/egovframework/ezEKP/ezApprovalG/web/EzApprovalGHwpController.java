@@ -751,7 +751,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		/* 2023-07-17 민지수 - 전자결재 > 배부대장 > 진행/완료 체크 */
 		String docAprEnd ="";
 		if ((uFlag != null && uFlag.equals("m03")) || (uFlag != null && uFlag.equals("m14"))) {
-			docAprEnd =  ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			docAprEnd = ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
@@ -1563,8 +1563,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		/* 2023-07-17 민지수 - 전자결재 > 배부대장 > 진행/완료 체크 */
 		String docAprEnd ="";
 		if ((uFlag != null && uFlag.equals("m03")) || (uFlag != null && uFlag.equals("m14"))) {
-			docAprEnd =  ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			docAprEnd = ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		}
+		
+		/* 2023-12-07 홍승비 - 전자결재 서명데이터 재맵핑에 필요한 docState 파라미터 추가 */
+		String docState = request.getParameter("docState") != null ? request.getParameter("docState") : "";
 		
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -1645,6 +1648,22 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			useAprFilePrvw = "0";
 		}
 		
+		/* 2023-12-07 홍승비 - docState값이 정상적으로 전달되지 않은 경우, 해당 값을 찾아 페이지로 전달 */
+		if (docState.equalsIgnoreCase("")) {
+			ApprGDocListVO apprGDocVO = null;
+			docAprEnd = ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			if (docAprEnd.equals("APR")) {
+				apprGDocVO = ezApprovalGService.getIngDocInfo(userInfo.getId(), docID.trim(), orgCompanyID, userInfo.getTenantId());
+			} else {
+				apprGDocVO = ezApprovalGService.getEndDocInfo(docID.trim(), orgCompanyID, userInfo.getTenantId());
+			}
+			
+			if (apprGDocVO != null && apprGDocVO.getDocState() != null) {
+				docState = apprGDocVO.getDocState();
+			}
+		}
+		
 		model.addAttribute("docID", docID);
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("listSusin", listSusin);
@@ -1675,6 +1694,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		/* 2023-07-13 민지수 - 배부대장 문서 진행/완료(APR/END) 값 전달 */
 		model.addAttribute("docAprEnd", docAprEnd);
+		
+		/* 2023-12-07 홍승비 - 전자결재 서명데이터 재맵핑에 필요한 docState 파라미터 추가 */
+		model.addAttribute("docState", docState);
 
 		logger.debug("ezViewEnd_WHWP ended");
 		
@@ -2583,6 +2605,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 							model.addAttribute("docHref", apprGIngDocVO.getHref().trim());
 							model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID
 							model.addAttribute("listType", "3"); // 진행중문서 listType
+							model.addAttribute("docState", apprGIngDocVO.getDocState());
 							
 							return "redirect:/ezApprovalG/ezviewAprAll_WHWP.do";
 						} else {
@@ -2593,6 +2616,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 								model.addAttribute("docHref", apprGEndDocVO.getHref().trim());
 								model.addAttribute("orgCompanyID", orgCompanyID); // 결재문서 기안 당시의 회사ID(문서 재사용에 필요)
 								model.addAttribute("formID", apprGEndDocVO.getFormID());
+								model.addAttribute("docState", apprGEndDocVO.getDocState());
 								
 								return "redirect:/ezApprovalG/ezViewEnd_WHWP.do";
 							} else {

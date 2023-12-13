@@ -142,6 +142,14 @@
 					        GetExchInfo();
 					        //SignCheck();
 					        hideLoadingProgress();
+					        
+					        /* 2023-12-07 홍승비 - 결재서명 재맵핑 함수 호출 (TBL_SIGNINFO 테이블에 정상적인 서명 데이터가 확정 삽입되는 시점은 테넌트 컨피그로 체크) */
+					        message.startRemapAllAprSign_WHWP(pDocID, orgCompanyID);
+					        
+					        // 현재 문서가 수신문 또는 공람문서이면서 원문서가 존재하는 경우, 원문서의 서명 데이터도 재맵핑
+					        if ((pDocState == "011" || pDocState == "015") && pOrgDocID != null && typeof(pOrgDocID) != "undefined" && pOrgDocID != "") {
+					        	message.startRemapAllAprSign_WHWP(pOrgDocID, orgCompanyID);
+					        }
 				
 					        if (pHasOpinion == "Y") {
 					            var pInformationContent = "<spring:message code='ezApprovalG.t9'/><br> <spring:message code='ezApprovalG.t170'/>";

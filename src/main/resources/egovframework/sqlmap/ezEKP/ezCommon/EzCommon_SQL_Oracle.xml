@@ -5133,4 +5133,10 @@
         VALUES (0, 'useBoardFilePrvw', '게시판 첨부파일 미리보기 기능 사용 여부', '1', '게시판 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', TO_DATE('2023-06-29 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판')
     </insert>
     
+	<!-- 2023-12-05 홍승비 - 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 -->
+	<insert id="EzCommonDAO.insertApprSignRemapApplyTime">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (#tenantID#, 'apprSignRemapApplyTime', '전자결재 서명 데이터 재맵핑 시점', TO_DATE(TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP), 'YYYY-MM-DD HH24:MI:SS')), '결재서명 데이터를 재맵핑하기 위해, TBL_SIGNINFO 테이블에 정상적인 데이터 삽입을 보장하는 시점을 정의한다. 해당 시점 이후에 기안된 문서들이 결재서명 재맵핑 대상이 된다. (UTC 시간, YYYY-MM-DD HH24:MI:SS 형식)', sysdate, '전자결재');
+	</insert>
+	
 </sqlMap>
