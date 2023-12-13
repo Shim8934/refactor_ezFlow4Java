@@ -16,7 +16,8 @@
 #chartLeft{
 	z-index: 0;
 	width: 25%;
-	height: 190px;
+	height: 100%;
+	position: relative;
 }
 #countsDiv{
 	float: left;
@@ -37,7 +38,15 @@
 	border-left: 1px solid #dbdbdb;
     padding: 10px;
 	width: 100%;
-	height: 172px;
+	height: 100%;
+}
+
+.layDIV {
+	height: 100%;
+}
+
+.portlet_list {
+	height: calc(100% - 70px);
 }
 </style>
 </head>

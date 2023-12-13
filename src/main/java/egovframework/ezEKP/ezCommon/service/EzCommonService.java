@@ -422,4 +422,6 @@ public interface EzCommonService {
 	public void insertPermissionBasisDeptYN_Config() throws Exception;
 	
 	public void createColumnRollInfoInAddJobMaster() throws Exception;
+	
+	void createTblDbLog();
 }

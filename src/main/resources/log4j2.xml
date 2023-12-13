@@ -2,8 +2,35 @@
 <Configuration>
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
+<!--            <ThresholdFilter level="OFF" onMatch="DENY" onMismatch="ACCEPT"/>-->
             <PatternLayout pattern="%d %5p [%thread] [%c] %replace{%m}{[\r\n]}{}%n" />
         </Console>
+        <!--<Rewrite name="rewrite">
+            <AppenderRef ref="console"/>
+            <SQLRewriter />
+        </Rewrite>-->
+        <!--<RollingFile name="exceptionLog" fileName="~jmocha/log/jmocha-exception.log"
+                             filePattern="~jmocha/log/jmocha-exception-%d{YYMMdd}-%i.log" append="false">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout charset="UTF-8" pattern="%d %5p [%thread] [%c] %replace{%m}{[\r\n]}{}%n" />
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingFile>-->
+        <!--<JDBC name="exceptionDB" tableName="tbl_db_log">
+            <ConnectionFactory class="egovframework.rte.fdl.logging.db.EgovConnectionFactory" method="getDatabaseConnection" />
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Column name="event_date" isEventTimestamp="true" />
+            <Column name="thread" pattern="%thread" />
+            <Column name="category" pattern="%c" />
+            <Column name="message" pattern="%replace{%m}{[\r\n]}{}" />
+            <Column name="stack" pattern="%ex{full}"/>
+        </JDBC>-->
+        <!--<CustomAppender name="CustomAppender">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+        </CustomAppender>-->
     </Appenders>
     <Loggers>
         <Logger name="java.sql" level="INFO" additivity="false">
@@ -11,6 +38,9 @@
         </Logger>
         <Logger name="egovframework" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
+<!--            <AppenderRef ref="exceptionDB" />-->
+<!--            <AppenderRef ref="CustomAppender" />-->
+<!--            <AppenderRef ref="exceptionLog" />-->
         </Logger>
         <Logger name="egovframework.rte.psl.orm.ibatis.SqlMapClientTemplate" level="INFO" additivity="false">
             <AppenderRef ref="console" />

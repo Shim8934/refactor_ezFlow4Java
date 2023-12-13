@@ -659,7 +659,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}*/
 							
 							String toHeader = message.getHeader("To")[0];
-							boolean isAscii = ezEmailUtil.isPureAscii(toHeader);						
+							boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
+							boolean addressFound = false;
 							String name = null;
 							String[] recipientHeaderArray = null;
 							
@@ -677,6 +678,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							for (int i = 0; i < arrRecipientsTo.length; i++) {
 								name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
+								addressFound = ((InternetAddress)arrRecipientsTo[i]).getAddress().contains("@");
+
+								if (name == null && !addressFound) {
+									logger.debug("no address found!");
+
+									// To: $경영전략본부{하위포함}, $금융사업본부{하위포함} 와 같이 헤더 인코딩이 되지 않은 채로 한글로 수신자명이
+									// 입력되고 메일주소가 없는 메일이 HUG(주택도시보증공사)에 수신되어 이 경우엔 header 값을 그대로 사용해 하단에서
+									// Non-Ascii 디코딩을 시도하도록 함
+									name = toHeader;
+								}
 								
 								if (name == null) {
 									name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
@@ -735,15 +746,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								} else {*/
 									if(i == 0){
 										if(arrRecipientsTo.length > 1){
-											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) +"&nbsp;"+ arrRecipientsTo.length +"&nbsp;"+ egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
+											toStr = getReceiverHTML(name, addressFound ? ((InternetAddress)arrRecipientsTo[i]).getAddress() : null , false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) +"&nbsp;"+ arrRecipientsTo.length +"&nbsp;"+ egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
 										} else {
-											toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
+											toStr = getReceiverHTML(name, addressFound ? ((InternetAddress)arrRecipientsTo[i]).getAddress() : null, false);
 										}
 									}
 									if(toHiddenStr == null){
-										toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
+										toHiddenStr = getReceiverHTML(name, addressFound ? ((InternetAddress)arrRecipientsTo[i]).getAddress() : null, false);
 									} else {
-										toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress(), false);
+										toHiddenStr += " , " + getReceiverHTML(name, addressFound ? ((InternetAddress)arrRecipientsTo[i]).getAddress() : null, false);
 									}
 								//}
 							}
@@ -762,7 +773,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}*/
 							
 							String ccHeader = message.getHeader("Cc")[0];
-							boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);												
+							boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);
+							boolean addressFound = false;
 							String name = null;
 							String[] recipientHeaderArray = null;
 							
@@ -780,7 +792,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							for (int i = 0; i < arrRecipientsCC.length; i++) {
 								name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
-								
+								addressFound = ((InternetAddress)arrRecipientsCC[i]).getAddress().contains("@");
+
+								if (name == null && !addressFound) {
+									logger.debug("no address found!");
+
+									// To: $경영전략본부{하위포함}, $금융사업본부{하위포함} 와 같이 헤더 인코딩이 되지 않은 채로 한글로 수신자명이
+									// 입력되고 메일주소가 없는 메일이 HUG(주택도시보증공사)에 수신되어 이 경우엔 header 값을 그대로 사용해 하단에서
+									// Non-Ascii 디코딩을 시도하도록 함
+									name = ccHeader;
+								}
+
 								if (name == null) {
 									name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
 								} else {
@@ -838,15 +860,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								} else { */
 									if (i == 0) {
 										if (arrRecipientsCC.length > 1) {
-											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
+											ccStr = getReceiverHTML(name, addressFound ? ((InternetAddress)arrRecipientsCC[i]).getAddress() : null, false) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
 										} else {
-											ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
+											ccStr = getReceiverHTML(name, addressFound ? ((InternetAddress)arrRecipientsCC[i]).getAddress() : null, false);
 										}
 									}
 									if (ccHiddenStr == null) {
-										ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
+										ccHiddenStr = getReceiverHTML(name, addressFound ? ((InternetAddress)arrRecipientsCC[i]).getAddress() : null, false);
 									} else {
-										ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress(), false);
+										ccHiddenStr += " , " + getReceiverHTML(name, addressFound ? ((InternetAddress)arrRecipientsCC[i]).getAddress() : null, false);
 									}
 							//	}
 							}
@@ -2460,7 +2482,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						if (arrRecipientsTo != null) {
 							InternetAddress iAddress = null;
 							String toHeader = message.getHeader("To")[0];
-							boolean isAscii = ezEmailUtil.isPureAscii(toHeader);												
+							boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
+							boolean addressFound = false;
 							String name = null;
 							String[] recipientHeaderArray = null;
 							
@@ -2479,6 +2502,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							for (int i = 0; i < arrRecipientsTo.length; i++) {
 								iAddress = ((InternetAddress)arrRecipientsTo[i]);
 								name = iAddress.getPersonal();
+								addressFound = iAddress.getAddress().contains("@");
+
+								if (name == null && !addressFound) {
+									logger.debug("no address found!");
+
+									// To: $경영전략본부{하위포함}, $금융사업본부{하위포함} 와 같이 헤더 인코딩이 되지 않은 채로 한글로 수신자명이
+									// 입력되고 메일주소가 없는 메일이 HUG(주택도시보증공사)에 수신되어 이 경우엔 header 값을 그대로 사용해 하단에서
+									// Non-Ascii 디코딩을 시도하도록 함
+									name = toHeader;
+								}
+
 								if (name == null) {
 									name = iAddress.getAddress();
 								} else {
@@ -2520,7 +2554,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									name = name.replace("\\\"", "");
 								}
 								
-								toStr += "\""+ name +"\" <" + iAddress.getAddress() + ">";
+								toStr += "\""+ name +"\" <" + (addressFound ? iAddress.getAddress() : "") + ">";
 							}
 						}
 						
@@ -2531,7 +2565,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						if (arrRecipientsCC != null) {
 							InternetAddress iAddress = null;
 							String ccHeader = message.getHeader("Cc")[0];
-							boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);																		
+							boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);
+							boolean addressFound = false;
 							String name = null;
 							String[] recipientHeaderArray = null;
 							
@@ -2550,6 +2585,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							for (int i = 0; i < arrRecipientsCC.length; i++) {
 								iAddress = ((InternetAddress)arrRecipientsCC[i]);
 								name = iAddress.getPersonal();
+								addressFound = iAddress.getAddress().contains("@");
+
+								if (name == null && !addressFound) {
+									logger.debug("no address found!");
+
+									// To: $경영전략본부{하위포함}, $금융사업본부{하위포함} 와 같이 헤더 인코딩이 되지 않은 채로 한글로 수신자명이
+									// 입력되고 메일주소가 없는 메일이 HUG(주택도시보증공사)에 수신되어 이 경우엔 header 값을 그대로 사용해 하단에서
+									// Non-Ascii 디코딩을 시도하도록 함
+									name = ccHeader;
+								}
+
 								if (name == null) {
 									name = iAddress.getAddress();
 								} else {
@@ -2591,7 +2637,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									name = name.replace("\\\"", "");
 								}
 								
-								ccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
+								ccStr += "\"" + name + "\" <" + (addressFound ? iAddress.getAddress() : "") + ">";
 							}
 						}
 						
