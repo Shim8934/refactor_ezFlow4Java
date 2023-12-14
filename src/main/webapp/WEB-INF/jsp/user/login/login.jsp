@@ -72,6 +72,11 @@
 				color:#fff;
 				font-weight: 600;
 			}
+			
+			/* IE 버전 input 자동 생성 CSS 삭제 */
+			input[type="text"]::-ms-clear, input[type="password"]::-ms-reveal {
+			  display: none;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -191,7 +196,7 @@
 			    		+ "\n(<spring:message code='main.t0633'/> : Internet Explorer 11)");
 			    	return false;
 				// setTFA를 호출하는 flag 형태로 사용
-			    } else if (message.includes("setflagTFA")) {
+			    } else if (message.indexOf("setflagTFA") !== -1) {
 			    	var setArr = message.split(":");
 			    	document.loginForm.message.value = "";
 			    	
@@ -210,7 +215,9 @@
 			    	$("#imgMnt7").html("<img src='/images/warning2.png'>");
 			    	$("#exDiv7").modal();
 			    } else if(message == "emptyOtp"){
-			    	setTimeout(() => {alert("<spring:message code='fail.common.login.otp.warning1'/>")}, "100");
+			    	setTimeout(function() {
+			    		alert("<spring:message code='fail.common.login.otp.warning1'/>");
+			    	}, 100);
 			    } else if (message === "loginSessionFlag") {
 					$("#imgMnt9").html("<img src='/images/warning2.png'>");
 					$("#exDiv9").modal();
@@ -508,7 +515,7 @@
 		                        </p>
 		                        <c:choose>
 			                        <c:when test="${useOTP}">
-										<p class="otp_txt">otp</p>
+										<p class="otp_txt">OTP</p>
 				                        <p class="otp" title="<spring:message code="info.otp.msg" />">
 											<input id="uotp" name="otp" placeholder="<spring:message code="main.login.ls001"/>" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC3').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC3').style.display = 'block';" onkeypress="if(event.keyCode==13) document.loginForm.password.focus();">
 											<span class="btnClear" id="BC3" onclick="clearInput(this)" style="display:none;"></span>

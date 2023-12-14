@@ -23,6 +23,8 @@ public class PermissionInfoVO {
 	private String authorizerIp;
 	private String countryName;
 	private int tenant_id;
+	// 2023-08-22 전인하 - 유저 권한 겸직/사용자 기준으로 설정 기능 > 겸직 별 권한 구분 위해 jobid 추가
+	private String jobId;
 
 	/** */
 	private String timezone;
@@ -195,6 +197,14 @@ public class PermissionInfoVO {
 
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
+	}
+
+	public String getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(String jobId) {
+		this.jobId = jobId;
 	}
 
 	public String getTimezone() {

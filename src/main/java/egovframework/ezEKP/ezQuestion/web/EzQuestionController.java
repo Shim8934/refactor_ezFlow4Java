@@ -196,7 +196,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String adminYN = "N";
 		String rsUserID = qstUserPollItemVO.getUserID();
 		
-		if(loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1") || loginVO.getRollInfo().contains("l=1")){ 
+		if (commonUtil.isAdmin(userID, loginVO.getTenantId(), loginVO.getRollInfo(), "c;l;k")) { 
 			adminYN = "Y";
 		}
 		
@@ -299,14 +299,14 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String adminYN = "N";
 		int responseCnt = 0;
 		
-		if (request.getParameter("brdID") != null){
+		if (request.getParameter("brdID") != null) {
 			brdID = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("brdID")));
 		}
-		if (request.getParameter("itemNo") != null){
+		if (request.getParameter("itemNo") != null) {
 			itemNo = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("itemNo")));
 		}
 		
-		if(loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1") || loginVO.getRollInfo().contains("l=1")){ 
+		if (commonUtil.isAdmin(loginVO.getId(), loginVO.getTenantId(), loginVO.getRollInfo(), "c;l;k")) { 
 			adminYN = "Y";
 		}
 		

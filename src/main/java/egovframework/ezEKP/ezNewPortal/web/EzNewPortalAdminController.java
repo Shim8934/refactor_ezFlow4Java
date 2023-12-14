@@ -190,7 +190,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		param.put("userId", userInfo.getId());
 		param.put("companyId", request.getParameter("companyId"));
 		
-		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
+		JSONObject result = commonUtil.getJsonFromRestApi("/rest/admin/ezPortal/depts", param, request, "get", null);
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
@@ -1683,5 +1683,50 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		logger.debug("json : " + json);
 		logger.debug("getGroupList Ended");
 		return json;
+	}
+
+	/**
+	 * 사원리스트
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/userList.do", method = RequestMethod.POST)
+	public String userList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
+		logger.debug("userList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		String key = request.getParameter("key");
+		param.put("key", key);
+		param.put("value", request.getParameter("value"));
+		param.put("userId", userInfo.getId());
+		param.put("companyId", request.getParameter("companyId"));
+		param.put("curPage", request.getParameter("curPage"));
+
+		logger.debug("key : " + request.getParameter("key"));
+		logger.debug("value : " + request.getParameter("value"));
+
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/admin/ezPortal/users", param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		if (status.equals("ok")) {
+			JSONArray userList = (JSONArray) resultBody.get("data");
+			model.addAttribute("listType", request.getParameter("listType"));
+			model.addAttribute("userList", userList);
+
+			String keyword = "";
+			if (key.equals("DEPARTMENT")) {
+//				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
+				keyword = request.getParameter("deptName");
+			} else{
+				keyword = egovMessageSource.getMessage("ezJournal.t170", userInfo.getLocale());
+			}
+
+			model.addAttribute("keyword",keyword);
+			model.addAttribute("key", key);
+			model.addAttribute("totalCount", resultBody.get("totalCount"));
+			model.addAttribute("totalCount2", resultBody.get("totalCount2"));
+			model.addAttribute("containLow", resultBody.get("containLow"));
+		}
+
+		logger.debug("userList ended");
+		return "admin/ezNewPortal/userList";
 	}
 }

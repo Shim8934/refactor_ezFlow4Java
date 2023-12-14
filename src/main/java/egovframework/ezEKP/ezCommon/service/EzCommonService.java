@@ -421,4 +421,10 @@ public interface EzCommonService {
 	
 	/* 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가 */
 	public void insertApprSignRemapApplyTime() throws Exception;
+	
+	public void insertPermissionBasisDeptYN_Config() throws Exception;
+	
+	public void createColumnRollInfoInAddJobMaster() throws Exception;
+	
+	void createTblDbLog();
 }

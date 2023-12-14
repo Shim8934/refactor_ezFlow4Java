@@ -22,39 +22,42 @@
 		var data4 = window.opener.testObj.dataList4;
 		var type = "<c:out value='${type}'/>";
 		var lang = "<c:out value='${lang}'/>";
+		
+		// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 > 삭제 - 겸직/부서 별 권한 설정 기능을 위한 변수 추가				
+		var permissionBasisDeptYN = "<c:out value='${permissionBasisDeptYN}' />" // 겸직/부서 별 권한 부여 옵션 사용여부 
 
-
-		window.onload = function () {
+	    window.onload = function () {
 			if(lang == "2"){
 				$('#radio1').next().text("Delete" + " <c:out value='${type}'/> " + " <spring:message code='ezOrgan.mse6' />");
 			}
 		}
-		
 		function Schedule_Confirm(id) {
-			
-			if(radio1.checked) {
+			if (radio1.checked) {
 				ReturnFunction = "MODE";
 			} else {
 				ReturnFunction = "ALL";
 			}
 			
-			var cData = "";
-			if (ReturnFunction == "ALL") {
-				cData = strLang33 + "<spring:message code='ezAddress.kje01' />" + strLang20;
-			} else {
-				cData = strLang33 + type + strLang20;
-			}
+			// 2023-07-31 전인하 - 비직관적인 변수명 (cData) 수정
+			var optionCheckText = "";
+            if (ReturnFunction == "ALL") {
+                optionCheckText = strLang33 + "<spring:message code='ezAddress.kje01' />" + strLang20;
+            } else {
+                optionCheckText = strLang33 + type + strLang20;
+            }
 			
-			var checked = (confirm(cData));
+			var checked = confirm(optionCheckText);
 			
-			if(checked == true) {
-			// 권한 전체삭제
-			try {
-				window.opener.Permissions_Del(ReturnFunction);
-			} catch (e) {}
-			end_confirm();
-		}
-	}
+			if (checked == true) {
+                try {
+                    window.opener.Permissions_Del(ReturnFunction);
+                } catch (e) {
+                    console.log(e);
+                }
+			    end_confirm();
+		    }
+	    }
+	     
 		//팝업창 닫기
 		function end_confirm() {
 			window.close();
@@ -92,6 +95,12 @@
 		      	</td>
 		  	</tr>  
 		</table>
+		<%-- 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 > 삭제 - 겸직/부서 별 권한 설정 기능 사용 시 안내문구 추가 --%>
+		<c:if test="${permissionBasisDeptYN eq 'Y'}">
+		<div class ="content" style="width:100%; margin:0px; border:none; color:red">
+           <span><spring:message code='ezOrgan.JIH001' /></span>
+		</div>
+        </c:if>
 		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" id="ContactOutButton" onClick="Schedule_Confirm()" ><span><spring:message code='ezOrgan.t142' /></span></a>
 		</div> 

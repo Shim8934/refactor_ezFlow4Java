@@ -38,6 +38,11 @@
 		}
 		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
 		.tooltip_span .tooltiptext {color: white; }
+		.tooltip_span .tooltiptext{display:inline-block; padding-left:30px; background-repeat:no-repeat; background-position:0px 3px; position:relative; text-align:left; word-break:break-all; line-height:2; margin-right:10px; min-width:100px; box-sizing:border-box; float:left;}
+		.tooltip_span .tooltiptext:before{content:""; position:absolute; width:20px; height:20px; background:#fff; border-radius:50%; left:0; top:3px; z-index:-1;}
+		.tooltip_span .tooltiptext.company{background-image:url(/images/admin/admin_company.png);}
+		.tooltip_span .tooltiptext.dept{background-image:url(/images/admin/admin_team.png);}
+		.tooltip_span .tooltiptext.jobname{background-image:url(/images/admin/admin_user.png);}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -442,20 +447,12 @@
 		                    tooltipDiv.className = "tooltip_span";
 		                    
 		                    var companySpan = document.createElement("span");
-		                    companySpan.className = "tooltiptext";
+		                    companySpan.className = "tooltiptext company";
 		                    
 		                    var deptSpan = document.createElement("span");
-		                    deptSpan.className = "tooltiptext";
+		                    deptSpan.className = "tooltiptext dept";
 		                    var jobNameSpan = document.createElement("span");
-		                    jobNameSpan.className = "tooltiptext";
-		                    
-		                    var tooltipCompImg = document.createElement("img");
-		                    var tooltipDeptImg = document.createElement("img");
-		                    var tooltipUserImg = document.createElement("img");
-		                    
-		                    tooltipCompImg.src = "/images/admin/admin_company.png";
-		                    tooltipDeptImg.src = "/images/admin/admin_team.png";
-		                    tooltipUserImg.src = "/images/admin/admin_user.png";
+		                    jobNameSpan.className = "tooltiptext jobname";
 		                    
 		                    companySpan.textContent = getNodeText(SelectNodes(UserAddJobList[0], "COMPANY")[Cnt]);
 		                    
@@ -467,11 +464,8 @@
 		                    
 		                    jobNameSpan.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")";
 
-		                    tooltipDiv.appendChild(tooltipCompImg);
 		                    tooltipDiv.appendChild(companySpan);
-		                    tooltipDiv.appendChild(tooltipDeptImg);
 		                    tooltipDiv.appendChild(deptSpan);
-		                    tooltipDiv.appendChild(tooltipUserImg);
 		                    tooltipDiv.appendChild(jobNameSpan);
 		                     
 		                    //company

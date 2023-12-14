@@ -274,7 +274,7 @@
 		    		cell : "displayname;title;description;telephonenumber",
 		    		prop : "Department;extensionAttribute4;displayname;title;description",
 					type : "user",
-					noAddJob : "Y"
+					noAddJob : "N"
 		    	},
 		    	success : function(result){	
 		    		event_displayUserList(loadXMLString(result));

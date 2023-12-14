@@ -96,6 +96,11 @@ var doughnutOptions = {
 				return value;
 			}
 		}
+	},
+	legendCallback: function(chart) {
+		alert(1);
+		console.debug(chart);
+		// Return the HTML string here.
 	}
 };
 
@@ -167,46 +172,59 @@ function getYearlyDocCount() {
     };
     request.send();
 }
-
+var myBar, myDoughnut;
 function initChart() {
 	var ctx = document.getElementById("canvas").getContext("2d");
-	var myBar = new Chart(ctx, {
+	myBar = new Chart(ctx, {
 		type: 'bar',
 		data: barData,
 		options: barOptions
 	});
 
 	var dctx = document.getElementById("canvas2").getContext("2d");
-	var myDoughnut = new Chart(dctx, {
+	myDoughnut = new Chart(dctx, {
 		type: 'doughnut',
 		data: doughnutData,
 		options: doughnutOptions
 	});
 	doughnutCountModification();
+	var canvas2 = document.getElementById('canvas2');
+	var observer = new MutationObserver(doughnutCountModification);
+	observer.observe(canvas2, {
+		attributes: true
+	});
+	canvas2.addEventListener('click', doughnutCountModification);
 }
 
 // 도넛그래프 가운데 숫자길이에 따른 폰트 지정
 function doughnutCountModification() {
-	// 0이상~10억 미만까지 범위, 각 숫자 자릿수일 경우의 폰트 사이즈 크기 배열(px) 
-	var modificationSize = new Array(30, 30, 23, 21, 18, 15, 12, 11, 10, 10);
-	var sumDataStr = sumData.toString();
+	var chartArea = myDoughnut.chart.chartArea;
+	var radius = myDoughnut.chart.innerRadius;
+	var width = chartArea.right - chartArea.left;
+	var height = chartArea.bottom - chartArea.top;
+	var size = radius * 2 - 2;
 
-	if (sumDataStr.length < 11) {
-		var fontSize = modificationSize[sumDataStr.length - 1];
-	} else {
-		var fontSize = 10;
-	}
-	
+	document.getElementById("countsDiv").style.width = size + "px";
+	document.getElementById("countsDiv").style.height = size + "px";
+	document.getElementById("countsDiv").style.left = ((width - size) / 2) + "px";
+	document.getElementById("countsDiv").style.top = ((height - size) / 2 + chartArea.top) + "px";
+
+	// 0이상~10억 미만까지 범위, 각 숫자 자릿수일 경우의 폰트 사이즈 크기 배열(px)
+	// var sumDataStr = sumData.toString();
+	var sumDataStr = myDoughnut.chart.getDatasetMeta(0).total;
 	var countSpan = document.getElementById("yearProduceCountsSpan");
 	// 총합 쉼표 처리
-	sumDataStr = sumDataStr.split(/(?=(?:...)*$)/).join(',');
-	countSpan.innerText = sumDataStr;
-	countSpan.setAttribute("style", "font-size:" + fontSize + "px;");
-	document.getElementById("countsDiv").style.width = "190px"
-	// 영어일 경우 폰트 위치 조절
-	if (typeof portletLang != "undefined" && portletLang != null && portletLang == 2) {
-		document.getElementById("countsDiv").style.width = "178px";
-	}
+	$({ val : parseInt(countSpan.innerText.replaceAll(',','')) }).animate({ val : sumDataStr }, {
+		duration: 1000,
+		step: function() {
+			countSpan.innerText = Math.floor(this.val).toString().split(/(?=(?:...)*$)/).join(',');
+			adjustFontSizeToFitWidth('yearProduceCountsSpan', size, size);
+		},
+		complete: function() {
+			countSpan.innerText = Math.floor(this.val).toString().split(/(?=(?:...)*$)/).join(',');
+			adjustFontSizeToFitWidth('yearProduceCountsSpan', size, size);
+		}
+	});
 }
 
 function randomScaling() {
@@ -307,6 +325,26 @@ function sumArray(arr) {
 
 function doughnutOn() {
 	document.querySelector("#chartLeft").style.display = "";
-	document.querySelector("#chartRight").style.width = "75%";
+	document.querySelector("#chartRight").style.width = "calc(75% - 20px)";
 	barOptions.legend.display = false;
 }
+
+// var defaultLegendClickHandler = Chart.defaults.global.legend.onClick;
+function newLegendClickHandler(e, legendItem) {
+	var index = legendItem.datasetIndex;
+	console.log(index);
+
+	if (index > 1) {
+		// Do the original logic
+		// defaultLegendClickHandler(e, legendItem);
+	} else {
+		let ci = this.chart;
+		[
+			ci.getDatasetMeta(0),
+			ci.getDatasetMeta(1)
+		].forEach(function(meta) {
+			meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+		});
+		ci.update();
+	}
+};

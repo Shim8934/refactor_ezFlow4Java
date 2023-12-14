@@ -23,7 +23,6 @@
 <typeAlias alias="OrganDeptVO" type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 <typeAlias alias="webFolderFileVO" type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
 <typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
-
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
 <result property="title" 					column="TITLE" />
@@ -177,7 +176,6 @@
 <result property="deleterId" column="DELETER_ID" />
 <result property="tenantId" column="TENANT_ID" />
 </resultMap>
-
 <!-- 공지사항 포틀릿 가져오기 -->
 <select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
 	<![CDATA[
@@ -3104,5 +3102,4 @@ ORDER BY
 			tenant_id = #v_tenantID#
 	]]>
 </select>
-
 </sqlMap>

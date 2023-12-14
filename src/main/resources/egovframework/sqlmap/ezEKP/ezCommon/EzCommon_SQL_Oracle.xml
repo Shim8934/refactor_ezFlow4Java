@@ -5139,4 +5139,60 @@
 		VALUES (#tenantID#, 'apprSignRemapApplyTime', '전자결재 서명 데이터 재맵핑 시점', TO_DATE(TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP), 'YYYY-MM-DD HH24:MI:SS')), '결재서명 데이터를 재맵핑하기 위해, TBL_SIGNINFO 테이블에 정상적인 데이터 삽입을 보장하는 시점을 정의한다. 해당 시점 이후에 기안된 문서들이 결재서명 재맵핑 대상이 된다. (UTC 시간, YYYY-MM-DD HH24:MI:SS 형식)', sysdate, '전자결재');
 	</insert>
 	
+	<select id="EzCommonDAO.checkPermissionBasisDeptYN_Config" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'permissionBasisDeptYN'
+		AND
+			TENANT_ID = 0
+	</select>
+
+	<insert id="EzCommonDAO.insertPermissionBasisDeptYN_Config">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES ('0', 'permissionBasisDeptYN', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', '조직도 권한부여 기준 설정', sysdate, '조직도')
+	</insert>
+	
+	<select id="EzCommonDAO.checkRollInfoInAddJob" resultClass="String">
+		<![CDATA[
+			SELECT
+				ROLL_INFO
+			FROM
+				TBL_ADDJOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.AddRollInfoInAddJobColumn">
+		<![CDATA[
+			ALTER TABLE
+				TBL_ADDJOBMASTER
+			ADD (
+				ROLL_INFO 	VARCHAR(200) 	DEFAULT 	'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;'
+			)
+		]]>
+	</statement>
+
+	<select id="EzCommonDAO.checkTblDbLog" resultClass="String">
+		SELECT
+			EVENT_DATE
+		FROM
+			TBL_DB_LOG
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblDbLog">
+		CREATE TABLE TBL_DB_LOG
+		(
+			MESSAGE    VARCHAR2(1000),
+			CATEGORY   VARCHAR2(200),
+			EVENT_DATE DATE NOT NULL,
+			THREAD     VARCHAR2(100),
+			STACK      CLOB
+		)
+	</statement>
 </sqlMap>

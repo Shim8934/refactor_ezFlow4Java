@@ -85,10 +85,34 @@ function save_schedule(pageFrom)
 	        }
 	        else if (selectValue == deptID) {
 	            if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
-	                alert(strLang1001);
-	                saveCheck = false;
-	                
-	                return;
+                    // 2023-08-09 전인하 - 일정관리 > 부서관리자 겸직 권한이 있을 시, 부서관리자 권한이 있는 겸직의 부서 일정 작성/수정 기능
+                    // 일정관리 > 일정작성 > 일정대상 드롭다운 조작 > 부서관리자 겸직권한이 없는 부서 선택시에만 권한이 필요하다는 알림메시지 호출
+                    var temp_ListOwnerID = document.getElementById("ListOwnerID").value.split(";;")[1];
+                    if (typeof permissionBasisDeptYN != "undefined" && permissionBasisDeptYN == "Y") {
+                        if (! adminDeptList.includes(temp_ListOwnerID)) {
+                            alert(strLang1001);
+                            $("#ListOwnerID option:eq(0)").prop("selected", true);
+                                                
+                            document.getElementById("receiverinput").disabled = false;
+                            document.getElementById("imgbutton").disabled = false;
+                            document.getElementById("imgbutton").style.display = "";
+                            document.getElementById("receiverTr1").style.display = "";
+                            document.getElementById("receiverTr2").style.display = "";
+                            
+                            return;
+                        }
+                    } else {                  
+                        alert(strLang1001);
+                        $("#ListOwnerID option:eq(0)").prop("selected", true);
+                        
+                        document.getElementById("receiverinput").disabled = false;
+                        document.getElementById("imgbutton").disabled = false;
+                        document.getElementById("imgbutton").style.display = "";
+                        document.getElementById("receiverTr1").style.display = "";
+                        document.getElementById("receiverTr2").style.display = "";
+                    
+                        return;                   
+                    }
 	            }
 	        }
     	}
@@ -1241,16 +1265,33 @@ function ListOwnerID_Change()
 	        }
 	        else if (pListOwnerID == "2") {
 	            if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
-	                alert(strLang1001);
-	                $("#ListOwnerID option:eq(0)").prop("selected", true);
-	                
-	                document.getElementById("receiverinput").disabled = false;
-	                document.getElementById("imgbutton").disabled = false;
-	        	    document.getElementById("imgbutton").style.display = "";
-	                document.getElementById("receiverTr1").style.display = "";
-	        	    document.getElementById("receiverTr2").style.display = "";
-	        	    
-	                return;
+                // 2023-08-09 전인하 - 일정관리 > 부서관리자 겸직 권한이 있을 시, 부서관리자 권한이 있는 겸직의 부서 일정 작성/수정 기능
+                // 일정관리 > 일정작성 > 일정대상 드롭다운 조작 > 부서관리자 겸직권한이 없는 부서 선택시에만 권한이 필요하다는 알림메시지 호출
+	                if (typeof permissionBasisDeptYN != "undefined" && permissionBasisDeptYN == "Y") {
+	                    if (! adminDeptList.includes(ListOwnerID)) {
+	                        alert(strLang1001);
+                            $("#ListOwnerID option:eq(0)").prop("selected", true);
+                                                
+                            document.getElementById("receiverinput").disabled = false;
+                            document.getElementById("imgbutton").disabled = false;
+                            document.getElementById("imgbutton").style.display = "";
+                            document.getElementById("receiverTr1").style.display = "";
+                            document.getElementById("receiverTr2").style.display = "";
+                            
+                            return;
+                        }
+                    } else {                  
+                        alert(strLang1001);
+                        $("#ListOwnerID option:eq(0)").prop("selected", true);
+                        
+                        document.getElementById("receiverinput").disabled = false;
+                        document.getElementById("imgbutton").disabled = false;
+                        document.getElementById("imgbutton").style.display = "";
+                        document.getElementById("receiverTr1").style.display = "";
+                        document.getElementById("receiverTr2").style.display = "";
+                    
+                        return;                   
+                    }
 	            }
 	        }
     	}

@@ -1017,13 +1017,15 @@
 	    		<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
 			</c:if>
 	        <ul>
-				<li>
-        			<select id="ListCompany" onChange="selectCompanyID()">
-			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-				    </select>
-        		</li>
+	            <c:if test="${not empty list}">
+                    <li>
+                        <select id="ListCompany" onChange="selectCompanyID()">
+                            <c:forEach var="item" items="${list}">
+                                <option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+                            </c:forEach>
+                        </select>
+                    </li>
+        		</c:if>       	
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
 	            <!-- 폐기버튼 숨김처리 -->
 	            <%-- <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li> --%>	            

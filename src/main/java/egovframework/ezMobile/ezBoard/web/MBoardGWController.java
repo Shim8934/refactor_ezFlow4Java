@@ -1142,8 +1142,8 @@ public class MBoardGWController {
 						}
 					}
 					
-					if (rollInfo != null && ((rollInfo.toLowerCase().indexOf("c=1") > -1 || boardGroupAdmin_FG_New.equals("OK")) ||
-							(isAllGroupBoard.equals("N") && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)))) {
+					if (rollInfo != null && ((commonUtil.isAdmin(info.getUserId(), info.getTenantId(), info.getRollInfo(), "c") || boardGroupAdmin_FG_New.equals("OK")) ||
+							(isAllGroupBoard.equals("N") && commonUtil.isAdmin(info.getUserId(), info.getTenantId(), info.getRollInfo(), "n;k")))) {
 						logger.debug("user has admin roll, accessCheck ended");
 						return true;
 					} else {
@@ -1635,8 +1635,8 @@ public class MBoardGWController {
 						}
 					}
 					
-					if (rollInfo != null && ((rollInfo.toLowerCase().indexOf("c=1") > -1 || boardGroupAdmin_FG_New.equals("OK")) ||
-							(isAllGroupBoard.equals("N") && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)))) {
+					if (rollInfo != null && ((commonUtil.isAdmin(userID, tenantID, rollInfo, "c") || boardGroupAdmin_FG_New.equals("OK")) ||
+							(isAllGroupBoard.equals("N") && commonUtil.isAdmin(userID, tenantID, rollInfo, "n;k")))) {
 						logger.debug("user has admin roll, accessListViewFGCheck ended");
 						return true;
 					} else {

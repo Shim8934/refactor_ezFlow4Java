@@ -126,6 +126,8 @@ public class OrganUserVO {
 	private String extensionPhone;
 	/** 회사전화 */
 	private String officeMobile;
+	/** 회사 ID */
+	private String companyId;
 
 	/** 프로필사진 날짜를 업데이트할 것 인지 flag */
 	private boolean doUpdatePhoto;
@@ -654,5 +656,11 @@ public class OrganUserVO {
 
 	public void setDoUpdatePhoto(boolean doUpdatePhoto) {
 		this.doUpdatePhoto = doUpdatePhoto;
+	}
+
+	public String getCompanyId() { return companyId; }
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 }

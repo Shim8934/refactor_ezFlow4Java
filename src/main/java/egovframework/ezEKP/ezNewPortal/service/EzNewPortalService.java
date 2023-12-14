@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezNewPortal.service;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -213,4 +215,32 @@ public interface EzNewPortalService {
 
 	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception;
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception;
+
+	/**
+	 * 조직도에 쓸 부서 리스트 가져오기
+	 * @param userId
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<DeptViewVO> getDeptViewList (String userId, String companyId, int tenantId, String lang) throws Exception;
+
+	/**
+	 * 해당부서의 사원리스트
+	 * @param tenantId
+	 * @param deptId
+	 * @return
+	 * @throws Exception
+	 */
+	public List<MenuAuthorUserVO> getDeptUserList (int tenantId, String key, String value, String companyId, String lang, String curPage) throws Exception;
+
+	/**
+	 * 해당부서의 사원수
+	 * @param tenantId
+	 * @param deptId
+	 * @return
+	 * @throws Exception
+	 */
+	public int getDeptUserListCount (int tenantId, String key, String value,String companyId, String lang) throws Exception;
+
 }

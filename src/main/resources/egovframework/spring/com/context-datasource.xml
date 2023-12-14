@@ -24,6 +24,11 @@
             </list>
         </property>
     </bean>
+
+    <!-- log4j2 에서 JDBC 사용시 필요한 bean-->
+    <bean id="egovConnectionFactory" class="egovframework.rte.fdl.logging.db.EgovConnectionFactory">
+        <property name="dataSource" ref="dataSource-${Globals.DbType}${Globals.jndi}"/>
+    </bean>
     
     <!-- datasource 설정(propertyConfigurer 활용) -->
     <alias name="dataSource-${Globals.DbType}${Globals.jndi}" alias="dataSource" />
@@ -103,5 +108,5 @@
         <property name="username" value="${Globals.UserName}"/>
         <property name="password" value="${Globals.Password}"/>        
     </bean>-->
-    
+
 </beans>

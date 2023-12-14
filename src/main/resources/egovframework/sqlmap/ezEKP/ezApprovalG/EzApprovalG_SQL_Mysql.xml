@@ -14286,6 +14286,7 @@
 <!-- 	<procedure id="EzApprovalG.receiverChk" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZSP_ReceiverCheck(#v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
+        <!-- 2023-08-08 전인하 - 겸직/부서 별 권한 설정 기능 - 수발신담당자 체크 시 겸직/부서 별 권한 설정 적용 -->
 		<select id="EzApprovalG.receiverChk" parameterClass="Map" resultClass="int">
 			SELECT 
 				SUM(CN) as count 
@@ -14294,12 +14295,12 @@
 					count(cn) as cn
 				FROM 
 					TBL_USERMASTER
-				WHERE 
-					DEPARTMENT = #v_DEPTID#
+                WHERE
+                    DEPARTMENT = #v_DEPTID#
+                AND
+                    EXTENSIONATTRIBUTE1 like '%a=1%'
 				AND 
-					EXTENSIONATTRIBUTE1 like '%a=1%'
-				AND 
-					TENANT_ID = #v_TENANTID#
+					TBL_USERMASTER.TENANT_ID = #v_TENANTID#
 				AND 
 					PHYSICALDELIVERYOFFICENAME = #companyID#
 			
@@ -14315,11 +14316,17 @@
 					a.CN = b.CN
 				AND 
 					a.TENANT_ID = b.TENANT_ID
-				AND 
-					b.DEPTID = #v_DEPTID#
-				AND 
-					a.EXTENSIONATTRIBUTE1 like '%a=1%'
-				AND 
+                AND
+                    b.DEPTID = #v_DEPTID#
+            <isEqual property="permissionBasisDeptYN" compareValue="Y">
+                AND
+                    b.ROLL_INFO like '%a=1%'
+            </isEqual>
+            <isNotEqual property="permissionBasisDeptYN" compareValue="Y">
+                AND
+                    a.EXTENSIONATTRIBUTE1 like '%a=1%'
+            </isNotEqual>
+                AND
 					a.TENANT_ID = #v_TENANTID#
 			) as Z
 		</select>

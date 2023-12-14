@@ -160,11 +160,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String parentBoardID = request.getParameter("boardType");
 		String rollInfo = userInfo.getRollInfo(); // 전체관리자 권한 확인용
-		boolean isCompanyAdmin = false;
-		
-		if (rollInfo != null && rollInfo.toLowerCase().indexOf("c=1") > -1) {
-			isCompanyAdmin = true;
-		}
+		boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "c");
 		
 		/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트(그룹) 표출 시 companyID 조건 추가 */
 		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId(), isCompanyAdmin);
@@ -197,7 +193,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String rollInfo = userInfo.getRollInfo();
 		
 		/* 2018-10-15 홍승비 - 관리자단 게시판그룹생성 진입 시 전체관리자 여부 확인 */
-		if (rollInfo != null && rollInfo.toLowerCase().indexOf("c=1") > -1) {
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "c")) {
 			model.addAttribute("isCompanyAdmin", true);
 		}
 		model.addAttribute("use_multiData", use_multiData);
@@ -371,7 +367,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String upperBoardID = request.getParameter("upperBoardID");
 		String isAdminLeft = "Y";
-		boolean isCompanyAdmin = false;
+		boolean isCompanyAdmin = commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c");
 		String lang = "";
 
 		/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
@@ -380,11 +376,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			lang = "";
 		} else {
 			lang = "2";
-		}
-
-		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
-		if (user.getRollInfo() != null && user.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
-			isCompanyAdmin = true;
 		}
 		
 		// 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가
@@ -406,11 +397,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");
 		String boardGroupID = request.getParameter("boardGroupID");
 		String isAdminLeft = "Y";
-		boolean isCompanyAdmin = false;
-		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
-		if (user.getRollInfo() != null && user.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
-			isCompanyAdmin = true;
-		}
+		boolean isCompanyAdmin = commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c");
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, user.getTenantId());
 		
@@ -1348,14 +1335,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("selectTarget started");
 
 		LoginVO user = commonUtil.userInfo(loginCookie);
-		
-		String topid = "";
-		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topid = user.getCompanyID();
-		} else {
-			topid = "Top";
-		}
+		String topid = commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c") ? "Top" : user.getCompanyID();
 		
 		/* 2018-07-26 홍승비 - 비어있는 userLang 대신 primary값이 들어가도록 수정, 사용하지 않는 strXML 제거 */
 		model.addAttribute("topid", topid);
@@ -1383,15 +1363,15 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			isAllGroupBoard = request.getParameter("isAllGroupBoard");
 		}
 		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topid = user.getCompanyID();
-			deptTreeTopId = topid;
-		} else {
+		if (commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c")) {
 			topid = "Top";
 			// 전체관리자이면서 그룹사게시판인 경우, 전체 조직도 표출
 			if (isAllGroupBoard != null && isAllGroupBoard.equals("Y")) {
 				deptTreeTopId = topid + "/organ";
 			}
+		} else {
+			topid = user.getCompanyID();
+			deptTreeTopId = topid;
 		}
 		
 		/* 2018-07-26 홍승비 - 비어있는 userLang 대신 primary값이 들어가도록 수정, 사용하지 않는 strXML 제거 */
@@ -1626,7 +1606,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			isAllGroupBoard = "N";
 		}
 		
-		if (user.getRollInfo().indexOf("c=1") == -1 || isAllGroupBoard.equals("N")) { // 전체관리자가 아니거나, 그룹사게시판이 아님(회사 소속 게시판)
+		if (!commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c") || isAllGroupBoard.equals("N")) { // 전체관리자가 아니거나, 그룹사게시판이 아님(회사 소속 게시판)
 			topid = user.getCompanyID();
 		} else { // 전체관리자이면서 그룹사게시판인 경우 (모든 회사를 조직도에서 표출)
 			topid = "Top";
@@ -1640,7 +1620,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			OrganDeptVO vo = list.get(i);
 			// 권한을 설정할 게시판이 그룹사게시판이고, 접근한 관리자가 전체관리자인 경우에만 다른 회사를 리스트에 추가
 			// 자신이 소속한 회사는 반드시 리스트에 추가
-			if ((user.getRollInfo().indexOf("c=1") > -1 && isAllGroupBoard.equals("Y")) || vo.getCn().equals(user.getCompanyID())) {
+			if ((commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c") && isAllGroupBoard.equals("Y")) || vo.getCn().equals(user.getCompanyID())) {
 				resultList.add(vo);
 			}
 		}
@@ -1739,20 +1719,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		int pSelectBy = 0;
 		String pExcludeBoardID = " ";
 		String isAdminLeft = "";
-		boolean isCompanyAdmin = false;
+		boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c");
 		
 		String boardGroupAdmin_FG = "NO";
-		int pMode = 0;
-		
-		if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
-			pMode = 0;
-		} else {
-			pMode = 1;
-		}
-		/* 2018-10-16 홍승비 - 전체관리자 플래그 추가 */
-		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1) {
-			isCompanyAdmin = true;
-		}
+		int pMode = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;n;k") ? 0 : 1;
 		
 		String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
 				commonUtil.getMultiData(userInfo.getPrimary(), userInfo.getTenantId()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
@@ -1772,14 +1742,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		while (accessBoardList.size() != 0) {
 			for (int i = 0; i < accessBoardList.size(); i++) {
 				boardGroupAdmin_FG = checkIfBoardGroupAdmin(accessBoardList.get(i), userInfo);
-				pMode = 0;
-				
-				if (userInfo.getRollInfo() != null && (boardGroupAdmin_FG.equals("OK")) || (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
-					pMode = 0;
-				} else {
-					pMode = 1;
-				}
-				
+				pMode = boardGroupAdmin_FG.equals("OK") || commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;n;k") ? 0 : 1;
 				strXML = ezBoardService.getBoardTree(accessBoardList.get(i), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
 						commonUtil.getMultiData(userInfo.getPrimary(), userInfo.getTenantId()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
 				doc = commonUtil.convertStringToDocument(strXML);

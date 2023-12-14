@@ -16,6 +16,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
+import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
+import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -2974,5 +2976,58 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("getUniqueFileName ended");
 		
 		return fileName;
+	}
+
+	@Override
+	public List<DeptViewVO> getDeptViewList(String userId, String companyId, int tenantId, String lang) throws Exception {
+		logger.debug("getDeptViewList started");
+
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("userId", userId);
+		param.put("companyId", companyId);
+		param.put("lang", lang);
+		List<DeptViewVO> deptList = ezNewPortalDAO.getDeptViewVO(param);
+		for(int i=0; i < deptList.size(); i++) {
+			deptList.get(i).setText(commonUtil.cleanValue(deptList.get(i).getText()));
+		}
+
+		logger.debug("getDeptViewList ended");
+		return deptList;
+	}
+
+	@Override
+	public List<MenuAuthorUserVO> getDeptUserList(int tenantId, String key , String value, String companyId, String lang, String curPage) throws Exception{
+		logger.debug("getDeptUserList started");
+		// 페이징 설정
+		int pageSize = 50;
+		int page = pageSize * (Integer.parseInt(curPage)-1);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("key", key);
+		param.put("value", value);
+		param.put("companyId", companyId);
+		param.put("lang", lang);
+		param.put("curPage", page);
+		param.put("pageSize", pageSize);
+		List<MenuAuthorUserVO> userList = ezNewPortalDAO.getDeptUserList(param);
+
+		logger.debug("getDeptUserList ended");
+		return userList;
+	}
+
+	public int getDeptUserListCount(int tenantId, String key ,String value, String companyId, String lang) throws Exception{
+		logger.debug("getDeptUserListCount started");
+
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("key", key);
+		param.put("value", value);
+		param.put("companyId", companyId);
+		param.put("lang", lang);
+
+		int userListCount = ezNewPortalDAO.getDeptUserListCount(param);
+
+		return userListCount;
 	}
 }

@@ -401,8 +401,8 @@ public class MBoardServiceImpl implements MBoardService {
 	    	mBoardInfoVO.setDelete_FG("true");
 		}
 	    /* 회사관리자, 게시관리자들은 '그룹사게시판이 아닌 경우에만' 고정된 관리자 권한을 갖는다. 전체관리자는 전부 관리자로 허용된다.*/
-	    else if (rollInfo != null && ((rollInfo.toLowerCase().indexOf("c=1") > -1) ||
-				(!mBoardInfoVO.getIsAllGroupBoard().equals("Y") && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)))) {
+	    else if (commonUtil.isAdmin(info.getUserId(), info.getTenantId(), rollInfo, "c") ||
+				(!mBoardInfoVO.getIsAllGroupBoard().equals("Y") && commonUtil.isAdmin(info.getUserId(), info.getTenantId(), rollInfo, "n;k"))) {
 	    	mBoardInfoVO.setAccess_("1");
 	    	mBoardInfoVO.setAccess_FG("1");
 			mBoardInfoVO.setBoardAdmin_FG("true");
@@ -1174,15 +1174,11 @@ public class MBoardServiceImpl implements MBoardService {
 			}
 		}
 		
-	    if (rollInfo != null && (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
-	    	mode = 0;
-	    } else {
-	    	mode = 1;
-	    }
+		mode = boardGroupAdmin_FG.equals("OK") || commonUtil.isAdmin(info.getUserId(), info.getTenantId(), rollInfo, "c;n;k") ? 0 : 1;
 	    /* 2019-06-11 홍승비 - 전체관리자, 회사/게시관리자 플래그 추가 */
-		if (rollInfo != null && rollInfo.toLowerCase().indexOf("c=1") > -1) {
+		if (commonUtil.isAdmin(info.getUserId(), info.getTenantId(), rollInfo, "c")) {
 			isCompanyAdmin = true;
-		} else if (rollInfo != null && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+		} else if (commonUtil.isAdmin(info.getUserId(), info.getTenantId(), rollInfo, "n;k")) {
 			isNormalAdmin = true;
 		}
 		

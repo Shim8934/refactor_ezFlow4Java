@@ -314,6 +314,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.addTblBoardItemTempNoti(); /* 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 */
 	    	ezCommonService.insertPrvwConfig(); // 2023-10-27 조수빈 - 전자결재 / 게시판 모듈 미리보기 테넌트 컨피그 2건 추가
 	    	ezCommonService.insertApprSignRemapApplyTime(); // 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가
+			ezCommonService.insertPermissionBasisDeptYN_Config(); // 2023-08-16 전인하 - PermissionBasisDeptYN 테넌트 컨피그 추가
+			ezCommonService.createColumnRollInfoInAddJobMaster(); // 2023-08-16 전인하 - tbl_addJobMaster 테이블에 Roll_INFO 컬럼 추가
+			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -3017,16 +3020,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
 		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(pageNum, 1)), 1);
         int endRow = Math.multiplyExact(pageSize, pageNum);
+
+		// 2023-07-31 전인하 - 관리자 > 조직도 > 권한 관리 - 욥션에 따른 겸직/부서 별 권한 조회 분기 추가
+		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", userInfo.getTenantId());
         
 		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		
-        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID);
+        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID, permissionBasisDeptYN);
 
         logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
                 + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow
                 + ",totalCount=" + cnt);
         
-        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, searchType, searchValue, strLang, startRow, endRow, tenantID);
+        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, searchType, searchValue, strLang, startRow, endRow, tenantID, permissionBasisDeptYN);
         
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
 		result.append("<ROWS>");
@@ -3045,6 +3051,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             result.append("<DATA3>" + commonUtil.cleanValue(vo.getDisplayName()) + "</DATA3>");
             result.append("<DATA4>" + commonUtil.cleanValue(vo.getMail()) + "</DATA4>");
             result.append("<DATA5>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA5>");
+			result.append("<DATA6>" + commonUtil.cleanValue(vo.getDepartment()) + "</DATA6>");
+			result.append("<DATA7>" + commonUtil.cleanValue(vo.getJobID()) + "</DATA7>"); // 중복겸직 대응하기 위한 JOBID 데이터 추가
             result.append("</CELL>");
             result.append("<CELL>");
             result.append("<VALUE>" + commonUtil.cleanValue(vo.getCn()) + "</VALUE>");
@@ -3081,7 +3089,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 권한관리 권한등록 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/permissionsCheck.do", method = RequestMethod.GET)	
-	public String permissionsCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String permissionsCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("permissionsCheck started.");
 	    
 		LoginVO user = commonUtil.checkAdmin(loginCookie);
@@ -3098,6 +3106,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String delType = (request.getParameter("DelType") !=null ? request.getParameter("DelType") : "");
 		String type = (request.getParameter("type") !=null ? request.getParameter("type") : "");
 		String packageType = commonUtil.getPackageType(user.getTenantId());
+		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", user.getTenantId());
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
@@ -3130,6 +3139,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useWebfolder", useWebfolder);
 		model.addAttribute("DelType", delType);
 		model.addAttribute("type", type);
+		model.addAttribute("permissionBasisDeptYN", permissionBasisDeptYN);
 		
 		logger.debug("permissionsCheck ended.");
 		
@@ -4372,14 +4382,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
 		int startRow = Math.addExact(Math.multiplyExact(pageSize, Math.subtractExact(pageNum, 1)), 1);
         int endRow = Math.multiplyExact(pageSize, pageNum);
+		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", userInfo.getTenantId());
         
         searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
                 
-        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID);
+        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID, permissionBasisDeptYN);
 
         logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang);
         
-        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, searchType, searchValue, strLang, startRow, endRow, tenantID);
+        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, searchType, searchValue, strLang, startRow, endRow, tenantID, permissionBasisDeptYN);
         
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
 		result.append("<ROWS>");
@@ -4398,8 +4409,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             result.append("<DATA2>" + commonUtil.cleanValue(vo.getExtensionAttribute1()) + "</DATA2>");
             result.append("<DATA3>" + commonUtil.cleanValue(vo.getDisplayName()) + "</DATA3>");
             result.append("<DATA4>" + commonUtil.cleanValue(vo.getMail()) + "</DATA4>");
+			result.append("<DATA5>" + commonUtil.cleanValue(vo.getDepartment()) + "</DATA5>");
+			result.append("<DATA6>" + commonUtil.cleanValue(vo.getJobID()) + "</DATA6>"); // 중복겸직 대응하기 위한 JOBID 데이터 추가
             result.append("</CELL>");
             result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE></CELL>");
+
+			if (ezOrganAdminService.isThisAddJob(vo.getCn(), tenantID, vo.getDepartment(), vo.getJobID()).equals("Y")) { ; // 관리자 > 조직도 > 권한관리 > 권한등록/수정 > 우측 권한리스트에 직위 컬럼, 겸직 정보 삽입
+				result.append("<CELL><VALUE>" + egovMessageSource.getMessage("ezOrgan.psb03", userInfo.getLocale()) + " "+ commonUtil.cleanValue(vo.getTitle()) + "</VALUE></CELL>");
+			} else {
+				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getTitle()) + "</VALUE></CELL>");
+			}
             result.append("</ROW>");
         }
         result.append("</ROWS>");
@@ -4416,7 +4435,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveUserPermissionInfo.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
-	public String saveUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String[] cn, String[] extensionAttribute1, String[] permissionChType, String mode) throws Exception{
+	public String saveUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String[] cn, String[] extensionAttribute1, String[] permissionChType, String[] dept, String[] job, String mode) throws Exception{
 		logger.debug("saveUserPermissionInfo started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -4429,6 +4448,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String id = userInfo.getId();
 		String ip = ClientUtil.getClientIP(request);
 		boolean modeCkh = "mode".equalsIgnoreCase(mode); // 권한 모두 삭제를 제외한 경우
+		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", userInfo.getTenantId());
 
 		// 권한 널체크
 		if(extensionAttribute1.length == 0) {
@@ -4449,6 +4469,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			tempVO.setExtensionAttribute1(extensionAttribute1[i]);
 			tempVO.setTenantId(tenantId);
 			tempVO.setNowDate(nowDate);
+			tempVO.setDepartment(dept[i]);
+			tempVO.setJobID(job[i]); // 중복겸직 대응하기 위한 JOBID 데이터 추가
 			vo.add(tempVO);
 		}
 
@@ -4466,6 +4488,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				tmpvo.setTenant_id(tenantId);
 				tmpvo.setAuthorizerId(id);
 				tmpvo.setAuthorizerIp(ip);
+				tmpvo.setDeptId(dept[i]);
+				tmpvo.setJobId(job[i]); // 중복겸직 대응하기 위한 JOBID 데이터 추가
 				pvo.add(tmpvo);
 			}
 		} else { // 모든권한 삭제
@@ -4491,6 +4515,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					tmpvo.setTenant_id(tenantId);
 					tmpvo.setAuthorizerId(id);
 					tmpvo.setAuthorizerIp(ip);
+					tmpvo.setDeptId(dept[i]);
+					tmpvo.setJobId(job[i]); // 중복겸직 대응하기 위한 JOBID 데이터 추가
 					pvo.add(tmpvo);
 				}
 			}
@@ -4499,8 +4525,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String result = "";		
 
 		try {
-			ezOrganAdminService.insertPermissionChHist(pvo);
-			ezOrganAdminService.updateDBData_user_new(vo);
+			// 2023-07-31 전인하 - 관리자 > 조직도 > 권한 관리 - 욥션에 따른 겸직/부서 별 권한 조작 분기 추가
+			if (permissionBasisDeptYN.equals("Y")) {
+				ezOrganAdminService.insertPermissionChHistBasisDept(pvo);
+				ezOrganAdminService.updatePermissionBasisDept(vo);
+			} else {
+				ezOrganAdminService.insertPermissionChHist(pvo);
+				ezOrganAdminService.updateDBData_user_new(vo);
+			}
 			result = "OK";
 		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 			logger.error(e.getMessage(), e);
@@ -4515,18 +4547,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveStoreUserInfo.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
-	public String saveStoreUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String parentCn, String[] cn, String[] extensionAttribute1, String[] permissionChType) throws Exception{
+	public String saveStoreUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String parentCn, String[] cn, String[] extensionAttribute1, String[] permissionChType, String[] dept, String[] job) throws Exception{
 		logger.debug("saveStoreUserPermissionInfo started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String id = userInfo.getId();
+		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", userInfo.getTenantId());
+
 		// 관리자 권한 체크
 		if (userInfo == null) {
 			return "EMAIL_ERROR";
 		}
-
-		int tenantId = userInfo.getTenantId();
-		String id = userInfo.getId();
-
+		
 		// 권한 널체크
 		if(extensionAttribute1.length == 0) {
 			extensionAttribute1 = new String[1];
@@ -4552,6 +4585,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			tempVO.setExtensionAttribute1(extensionAttribute1[i]);
 			tempVO.setTenantId(tenantId);
 			tempVO.setNowDate(nowDate);
+			tempVO.setDepartment(dept[i]);
+			tempVO.setJobID(job[i]); // 중복겸직 대응하기 위한 JOBID 데이터 추가
 			vo.add(tempVO);
 		}
 
@@ -4568,14 +4603,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			tmpvo.setTenant_id(tenantId);
 			tmpvo.setAuthorizerId(id);
 			tmpvo.setAuthorizerIp(ClientUtil.getClientIP(request));
+			tmpvo.setDeptId(dept[i]);
+			tmpvo.setJobId(job[i]); // 중복겸직 대응하기 위한 JOBID 데이터 추가
 			pvo.add(tmpvo);
 		}
 
 		String result = "";
 
 		try {
-			ezOrganAdminService.insertPermissionChHist(pvo);
-			ezOrganAdminService.updateDBData_user_new(vo);
+			// 2023-07-31 전인하 - 관리자 > 조직도 > 권한 관리 - 욥션에 따른 겸직/부서 별 권한 조작 분기 추가
+			if (permissionBasisDeptYN.equals("Y")) {
+				ezOrganAdminService.insertPermissionChHistBasisDept(pvo);
+				ezOrganAdminService.updatePermissionBasisDept(vo);
+			} else {
+				ezOrganAdminService.insertPermissionChHist(pvo);
+				ezOrganAdminService.updateDBData_user_new(vo);
+			}
 			result = "OK";
 		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 			logger.error(e.getMessage(), e);
@@ -4593,8 +4636,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		String type = (request.getParameter("type") != null ? request.getParameter("type") : "");
+		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", user.getTenantId());
 		model.addAttribute("type", type);
 		model.addAttribute("lang", user.getLang());
+		model.addAttribute("permissionBasisDeptYN", permissionBasisDeptYN);
 
 		return "admin/ezOrgan/chooseDeletege";
 	}

@@ -2964,4 +2964,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			ezCommonDAO.insertApprSignRemapApplyTime(map);
 		}
 	}
+    
+    @Override
+    public void insertPermissionBasisDeptYN_Config() throws Exception {
+        ezCommonDAO.insertPermissionBasisDeptYN_Config();
+    }
+    
+    @Override
+    public void createColumnRollInfoInAddJobMaster() throws Exception {
+        ezCommonDAO.createColumnRollInfoInAddJobMaster();
+    }
+    
+    @Override
+    public void createTblDbLog() {
+        ezCommonDAO.createTblDbLog();
+    }
 }
