@@ -163,6 +163,14 @@ public class LoginDAO extends EgovAbstractDAO {
 		return (SessionVO) select("loginDAO.getSession", ezSessionId);
 	}
 
+	public void deleteDbSessionByTime(int dbSessionStoragePeriod) throws Exception {
+		update("loginDAO.deleteFidoSessionByTime", dbSessionStoragePeriod);
+	}
+
+	public List<Integer> getTenantIdList() throws Exception {
+		return (List<Integer>) list("loginDAO.getTenantIdList");
+	}
+
     private void updateLogForLocal(LoginVO vo) throws Exception {
         update("loginDAO.updateLog", vo);
     }

@@ -3370,6 +3370,20 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
    COMMENT ON COLUMN "TBL_CONNDATA"."DOCID" IS '문서 번호';
    COMMENT ON COLUMN "TBL_CONNDATA"."UPDATEDATE" IS '날짜';
    COMMENT ON TABLE "TBL_CONNDATA"  IS '결재연동 테이블';
+
+--------------------------------------------------------
+--  DDL for Table TBL_SESSION
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_SESSION"
+   ("SESSION_ID" CHAR(36) NOT NULL,
+	"LOGINCOOKIE" VARCHAR2(700) NOT NULL,
+	"CREATION_TIME" DATE NOT NULL,
+	"LAST_ACCESS_TIME" DATE NOT NULL,
+	"MAX_INACTIVE_INTERVAL" NUMBER NOT NULL,
+	"TYPE" VARCHAR2(5) DEFAULT NULL
+   ) ;
+
 --------------------------------------------------------
 --  DDL for Table TBL_CONNECTION_INFO
 --------------------------------------------------------
@@ -9841,6 +9855,18 @@ CREATE INDEX "TBL_CABINET_DELFLAG_IDX" ON "TBL_CABINET" ("DELFLAG")
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "PK_TBL_COMM_TREECACHE" ON "TBL_COMM_TREECACHE" ("TENANT_ID", "QUERY") 
+  ;
+ --------------------------------------------------------
+--  DDL for Index PK_TBL_SESSION
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_SESSION" ON "TBL_SESSION" ("SESSION_ID") 
+  ;
+--------------------------------------------------------
+--  DDL for Index IDX_SESSION_LAST_TIME
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "IDX_SESSION_LAST_TIME" ON "TBL_SESSION" ("SESSION_ID", "LAST_ACCESS_TIME") 
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CONNECTION_INFO

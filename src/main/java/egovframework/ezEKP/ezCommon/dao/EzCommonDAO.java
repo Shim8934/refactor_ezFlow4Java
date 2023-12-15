@@ -63,7 +63,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		try {
 			select("EzCommonDAO.checkTblSession");
 		} catch (Exception e) {
-			logger.debug("tbl_sessopm doesn't exist. creating the table...");
+			logger.debug("tbl_session doesn't exist. creating the table...");
 
 			update("EzCommonDAO.createTblSession");
 		}

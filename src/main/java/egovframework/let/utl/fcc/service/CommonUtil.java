@@ -487,6 +487,15 @@ public class CommonUtil {
 
 		return decData;
 	}
+	
+	public List<Integer> getTenantIdList() {
+		try {
+			List<Integer> list = loginService.getTenantIdList();
+			return list;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	public LoginVO aprUserInfo(String loginCookie) {
 		try{
@@ -776,13 +785,13 @@ public class CommonUtil {
 		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
 		if (!useDbSession && (!usingSession || usingAsAPI || isLoopbackRequest)) {
-			return validLoginCookie(request);
+			return validLoginCookie(request, response);
 		}
 
 		return validSessionLoginCookie(request, response);
 	}
 
-	private boolean validLoginCookie(HttpServletRequest request) {
+	private boolean validLoginCookie(HttpServletRequest request,  HttpServletResponse response) {
 		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
 
 		if (loginCookie == null) {
@@ -796,6 +805,7 @@ public class CommonUtil {
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
 			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
 		} catch (Exception e) {
+			clearAllCookies(request, response); // 오류발생 시 쿠키를 삭제하도록 수정
 			logger.error(e.getMessage(), e);
 		}
 
@@ -812,7 +822,7 @@ public class CommonUtil {
 			return false;
 		}
 
-		return validLoginCookie(request);
+		return validLoginCookie(request, response);
 	}
 
 	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -2980,7 +2990,7 @@ public class CommonUtil {
 		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
 
 		if (!usingSession || usingAsAPI || isLoopbackRequest) {
-			if(validLoginCookie(request)){
+			if(validLoginCookie(request, response)){
 				return "0";
 			}else{
 				return "2";

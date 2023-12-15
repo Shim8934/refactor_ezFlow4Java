@@ -73,6 +73,10 @@ public interface LoginService {
 
 	SessionVO getSession(String ezSessionId) throws Exception;
 
+	void deleteDbSessionByTime() throws Exception;
+
+	List<Integer> getTenantIdList() throws Exception;
+
 	public void updateLog(LoginVO vo) throws Exception;
 	
 	public List<String> getUserIDList() throws Exception;

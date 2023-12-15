@@ -20,6 +20,7 @@ import egovframework.com.cmm.EgovMessageSource;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovNumberUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -74,6 +76,9 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	private EzCommonService ezCommonService;
     
     @Autowired
+	private CommonUtil commonUtil;
+
+	@Autowired
     private EzEmailUserAdminService ezEmailUserAdminService;
     
     @Autowired
@@ -230,6 +235,33 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	@Override
 	public SessionVO getSession(String ezSessionId) throws Exception {
 		return loginDAO.getSession(ezSessionId);
+	}
+
+	@Override
+	public void deleteDbSessionByTime() throws Exception {
+		List<Integer> tenantIdList = commonUtil.getTenantIdList();
+
+		if (tenantIdList != null) {
+
+			for (int tenantId : tenantIdList) {
+				try {
+					String deSessionStoragePeriodStr = ezCommonService.getTenantConfig("dbSessionStoragePeriod", tenantId);
+
+					if (StringUtils.isNotBlank(deSessionStoragePeriodStr)) {
+						int dbSessionStoragePeriod = Integer.parseInt(deSessionStoragePeriodStr);
+						loginDAO.deleteDbSessionByTime(dbSessionStoragePeriod);
+					}
+				} catch (Exception e) {
+					// 신규 사이트에서는 발생하지 않으나, 기존 사이트나 테스트 db에 연결했을 경우 NPE이 발생할 수 있다. 이 경우 다음 tenantId로 스케줄러가 돌아가도록 try-catch로 묶음
+				}
+			}
+		}
+	}
+
+	@Override
+	public List<Integer> getTenantIdList() throws Exception {
+		List<Integer> tenantIdList = loginDAO.getTenantIdList();
+		return tenantIdList;
 	}
 
 	@Override

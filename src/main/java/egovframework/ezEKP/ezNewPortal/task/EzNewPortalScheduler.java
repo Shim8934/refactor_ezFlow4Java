@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.let.user.login.service.LoginService;
 
 @Component
 public class EzNewPortalScheduler {
@@ -27,6 +28,9 @@ public class EzNewPortalScheduler {
 	@Autowired
 	private EzEmailScheduler ezEmailScheduler;
 	
+	@Autowired
+	private LoginService loginService;
+
 	@Scheduled(cron = "${config.cron.weatherUpdate}")
 	public void receiveWeatherData() {
 		if (config.getProperty("config.useInternet") == null ||config.getProperty("config.useInternet").equals("NO")) {
@@ -52,5 +56,24 @@ public class EzNewPortalScheduler {
 		}
 		
 		logger.debug("weatherUpdate ended");
+	}
+
+	@Scheduled(cron = "${config.cron.deleteDbSessionByTime}")
+	public void deleteDbSessionByTime() {
+		logger.debug("deleteDbSessionByTime started");
+
+		// choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("deleteDbSessionByTime")) {
+			logger.debug("deleteDbSessionByTime scheduler ended.");
+			return;
+		}
+
+		try {
+			loginService.deleteDbSessionByTime();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("deleteDbSessionByTime ended");
 	}
 }

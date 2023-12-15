@@ -5673,6 +5673,24 @@ CREATE TABLE `tbl_conndata` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_session`
+--
+
+DROP TABLE IF EXISTS `tbl_session`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE TBL_SESSION (
+	SESSION_ID CHAR(36) NOT NULL,
+	LOGINCOOKIE VARCHAR(700) NOT NULL,
+	CREATION_TIME DATETIME NOT NULL,
+	LAST_ACCESS_TIME DATETIME NOT NULL,
+	MAX_INACTIVE_INTERVAL INT NOT NULL,
+	TYPE VARCHAR(5) DEFAULT NULL,
+	PRIMARY KEY (`SESSION_ID`),
+	KEY `IDX_SESSION_LAST_TIME` (`SESSION_ID`,`LAST_ACCESS_TIME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
 -- Table structure for table `tbl_connection_info`
 --
 

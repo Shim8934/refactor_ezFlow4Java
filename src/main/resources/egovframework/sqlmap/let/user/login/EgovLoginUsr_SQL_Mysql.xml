@@ -506,6 +506,24 @@
         ]]>
     </select>
 
+    <delete id="loginDAO.deleteFidoSessionByTime" parameterClass="Integer">
+		<![CDATA[
+		DELETE FROM
+			TBL_SESSION
+		WHERE
+			LAST_ACCESS_TIME <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL #dbSessionStoragePeriod# DAY)
+		]]>
+	</delete>
+
+    <select id="loginDAO.getTenantIdList" resultClass="Integer">
+    	 <![CDATA[
+            SELECT
+            	TENANT_ID
+    		FROM
+    			TBL_TENANT
+        ]]>
+    </select>
+
     <update id="loginDAO.updateUser" parameterClass="loginVO">
         <![CDATA[
             UPDATE TBL_USERMASTER
