@@ -856,7 +856,7 @@
 		                pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jobTitleID) + "</DATA6>";
 		                pparsingXML = pparsingXML + "<DATA7>" + MakeXMLString(jobRole) + "</DATA7>";
 		                pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(jobRole2) + "</DATA8>";
-		                pparsingXML = pparsingXML + "<DATA9>" + MakeXMLString(jobRoleID) + "</DATA9>";
+		                pparsingXML = pparsingXML + "<DATA9>" + MakeXMLString((jobRoleID != "" ? jobRoleID : "0")) + "</DATA9>";
 		                pparsingXML = pparsingXML + "<MANUAL_FLAG>Y</MANUAL_FLAG>";
 		                pparsingXML = pparsingXML + "</CELL></ROW>";
 		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
