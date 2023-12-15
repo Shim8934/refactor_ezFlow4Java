@@ -1347,6 +1347,7 @@
              	B.ROLE2
              END
              	EXTENSIONATTRIBUTE10 ,
+             B.ROLE ROLE,
 			 B.ROLE ROLE1 ,
 	         B.ROLE2 ROLE2 ,
              A.TELEPHONENUMBER ,

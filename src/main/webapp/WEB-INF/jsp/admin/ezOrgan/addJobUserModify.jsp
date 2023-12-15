@@ -784,17 +784,11 @@
  				var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID, "data9":jobRoleID});
 	        	
 	        	if (!bFlag) { // 원부서의 직위 체크
-					var orgJobId = getEntryInfo(cn, "extensionAttribute7");
 	        		var orgDeptId = getDeptId(cn);
 					var orgJobId = getEntryInfo(cn, "extensionAttribute7");
-		            bFlag = ((dept[0] == orgDeptId) && (jobTitleID == orgJobId)) ? true : false;
+					var orgRoleId = getEntryInfo(cn, "extensionAttribute8");
+		            bFlag = ((dept[0] == orgDeptId) && (jobTitleID == orgJobId) && jobRoleID == orgRoleId) ? true : false;
 	        	}
- 				/* var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
-
- 				if (!bFlag) {
- 					var orgDeptId = getDeptId(cn);
- 					bFlag = dept[0] == orgDeptId ? true : false;
- 				} */
 
  				if (bFlag) {
 					var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent(strLang25) + "&MESSAGE=" + encodeURIComponent(strLang25) + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -1233,7 +1227,7 @@
 // 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
 // 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
 // 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
-					    		jobRoleID = "";
+					    		jobRoleID = "0";
 					    		jobRole = "";
 					    		jobRole2 = "";
 					    		flag = false;
@@ -1257,7 +1251,7 @@
 			    	rtnVal += "</select>";
 			    } else {
 			    	rtnVal = "<select id='roleSelector' style='width:100%;height:25px;'></select>";
-			    	jobRoleID = ""; jobRole = ""; jobRole2 = "";
+			    	jobRoleID = "0"; jobRole = ""; jobRole2 = "";
 			    }
 				document.getElementById("JobRoleOption").innerHTML = rtnVal;
 	    	}

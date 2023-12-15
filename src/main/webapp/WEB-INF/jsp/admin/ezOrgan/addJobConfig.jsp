@@ -786,7 +786,8 @@
 		        	if (!bFlag) { // 원부서의 직위 체크
 		        		var orgDeptId = getDeptId(cn);
 						var orgJobId = getEntryInfo(cn, "extensionAttribute7");
-    		            bFlag = ((dept[0] == orgDeptId) && (jobTitleID == orgJobId)) ? true : false;
+						var orgRoleId = getEntryInfo(cn, "extensionAttribute8");
+						bFlag = ((dept[0] == orgDeptId) && (jobTitleID == orgJobId) && jobRoleID == orgRoleId) ? true : false;
 		        	}
 					
 					if(jobCheck(cn, dept[0], jobTitleID, jobRoleID)){
@@ -1255,7 +1256,7 @@
 	// 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
 	// 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
 	// 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
-						    		jobRoleID = "";
+						    		jobRoleID = "0";
 						    		jobRole = "";
 						    		jobRole2 = "";
 						    		flag = false;
@@ -1279,7 +1280,7 @@
 				    	rtnVal += "</select>";
 				    } else {
 				    	rtnVal = "<select id='roleSelector' style='width:100%;height:25px;'></select>";
-				    	jobRoleID = ""; jobRole = ""; jobRole2 = "";
+				    	jobRoleID = "0"; jobRole = ""; jobRole2 = "";
 				    }
 					document.getElementById("JobRoleOption").innerHTML = rtnVal;
 		    	}

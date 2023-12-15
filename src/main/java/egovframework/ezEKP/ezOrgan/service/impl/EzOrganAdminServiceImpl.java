@@ -7,14 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
@@ -1358,9 +1351,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                 }
                 
                 if (userRoleInfo.length > 1) {
+                	roleId = userRoleInfo[0];
                 	sRole1 = userRoleInfo[1];
                 	sRole2 = userRoleInfo[2];
-                	roleId = userRoleInfo[0];
                 }
                 
                 // 해당 User가 겸직할 부서의 Group Email 주소에 User를 등록한다.                  
@@ -1380,10 +1373,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_TITLE2", sTitle2);
             		map.put("v_ROLE", sRole1);
             		map.put("v_ROLE2", sRole2);
-            		map.put("v_ROLEID", roleId);
             		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
             		map.put("v_JOBID", jobIDinfo[i]);
+            		map.put("v_ROLEID", roleId.length() > 0 ? roleId : "0");
             		map.put("v_MANUAL_FLAG", manualFlag);
             		
             		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -3452,7 +3445,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("CN", cn);
 		map.put("DEPTID", deptId);
 		map.put("JOBID", jobId);
-		map.put("ROLEID", roleId);
+		map.put("ROLEID",  Optional.ofNullable(roleId).filter(str -> !str.isEmpty()).orElse("0"));
 		map.put("TENANT_ID", tenantID);
 
 		logger.debug("userJobCheck ended");

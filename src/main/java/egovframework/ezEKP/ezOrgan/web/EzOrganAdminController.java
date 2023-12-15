@@ -2622,6 +2622,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
 			String manualFlag = Optional.ofNullable(doc.getElementsByTagName("MANUAL_FLAG").item(i))
 					.map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse(null);
+			String roleId = Optional.ofNullable(doc.getElementsByTagName("ROLEID").item(i))
+					.map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse("0"); 
 
 			if (!titleValue.equals("")) {
 
@@ -2646,6 +2648,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				String[] title = titleValue.split(":");
 				organVo.setDepartment(doc.getElementsByTagName("DEPTID").item(i).getTextContent());
 				organVo.setJobID(doc.getElementsByTagName("JOBID").item(i).getTextContent());
+				organVo.setRoleId(roleId);
 				if(title.length >0) {
 					organVo.setTitle(title[0]);
 					organVo.setTitle2(title[1]);
@@ -2698,8 +2701,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			// 2023-11-21 장혜연 : 직책명 추가 (primary언어만 있을 경우 role2도 동일하게) 
 			if (isAddRole) {
 				String orgRole2 = doc.getElementsByTagName("ROLE2").item(i).getTextContent();
-				role = doc.getElementsByTagName("ROLE").item(i).getTextContent(); 
-				roleInfo += doc.getElementsByTagName("ROLEID").item(i).getTextContent() + ":" + role + ":"
+				role = Optional.ofNullable(doc.getElementsByTagName("ROLE").item(i))
+						.map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse(""); 
+				roleInfo += roleId + ":" + role + ":"
 						+ (!"".equals(role) && "".equals(orgRole2) ? role : orgRole2) + ";";
 			} 
 		} // for문완료
@@ -2764,7 +2768,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				for (OrganUserVO orgAddJob : organUserVOList) {
 					boolean isContainedNewList = newAddJobList.stream()
 							.anyMatch(newAddJob -> newAddJob.getDepartment().equals(orgAddJob.getDepartment())
-									&& newAddJob.getJobID().equals(orgAddJob.getJobID()));
+									&& newAddJob.getJobID().equals(orgAddJob.getJobID())
+									&& newAddJob.getRoleId().equals(orgAddJob.getRoleId()));
 					if (!isContainedNewList) {
 						UserChangeInfoVO userChVo = new UserChangeInfoVO();
 						updateType = "clearAddJob";

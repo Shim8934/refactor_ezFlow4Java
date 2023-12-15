@@ -453,6 +453,7 @@
                                 SUBSTR('0000000000', 1, 10 - LENGTH(NVL(B.ORDERBY, '0'))) || NVL(B.ORDERBY, '0') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE,
 						        b.jobid JOBID,
+						        b.roleid ROLEID,
                                 'Y' ISADDJOB  
                   			FROM
                   				TBL_ADDJOBMASTER B
@@ -1537,6 +1538,7 @@
              	B.ROLE2
              END
              	EXTENSIONATTRIBUTE10 ,
+			 B.ROLE ROLE,
 			 B.ROLE ROLE1 ,
 	         B.ROLE2 ROLE2 ,
              A.TELEPHONENUMBER ,
@@ -1572,7 +1574,7 @@
              ELSE
              	A.EXTENSIONATTRIBUTE102
              END
-             	ORIGIN_ROLE, ,
+             	ORIGIN_ROLE, 
              A.EXTENSIONATTRIBUTE11 ,
              A.EXTENSIONATTRIBUTE12 ,
              A.EXTENSIONATTRIBUTE13 ,

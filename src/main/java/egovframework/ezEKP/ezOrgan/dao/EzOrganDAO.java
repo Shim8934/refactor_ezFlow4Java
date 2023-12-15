@@ -110,7 +110,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
         String jobId = "";
         String roleId = "";
         jobId = (map.containsKey("JOBID")) ? (String) map.get("JOBID") : "";
-        roleId = (map.containsKey("ROLEID")) ? (String) map.get("ROLEID") : "";
+        roleId = (map.containsKey("ROLEID")) ? (String) map.get("ROLEID") : "0";
         isAddJob = (map.containsKey("IS_ADDJOB") && !jobId.equals("")) ? (String)map.get("IS_ADDJOB") : "";
         logger.debug("isAddJob=" + isAddJob + ", jobId=" + jobId + ", roleId=" + roleId);
         
