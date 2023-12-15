@@ -2169,8 +2169,8 @@
 			}
 
 			function organMenuListView(obj) {
-				let spanClassName = obj.getElementsByClassName('icon_sel').item(0).className;
-				let ulClassName = obj.parentElement.getElementsByClassName('option_horizontal_list').item(0).className;
+				var spanClassName = obj.getElementsByClassName('icon_sel').item(0).className;
+				var ulClassName = obj.parentElement.getElementsByClassName('option_horizontal_list').item(0).className;
 				
 				if (obj.getAttribute('mode') == "off") {
 					// 먼저 열려있는 list를 닫아주는 부분
@@ -2185,12 +2185,13 @@
 			}
 
 			function OrganBtnListHidden(e) {
-				let list = document.getElementsByClassName('newSelectView');
-				
-				for (let btnObj of list) {
+				var list = document.getElementsByClassName('newSelectView');
+
+				for (var i = 0; i < list.length; i++) {
+					var btnObj = list[i];
 					
 					if (btnObj.getAttribute('mode') == 'on') {
-						let spanClassName = btnObj.getElementsByClassName('icon_sel').item(0).className;
+						var spanClassName = btnObj.getElementsByClassName('icon_sel').item(0).className;
 						btnObj.getElementsByClassName('icon_sel').item(0).className = spanClassName.replace('collapse_up', 'collapse_down');
 						btnObj.parentElement.getElementsByClassName('option_horizontal_list').item(0).style.display = 'none';
 						btnObj.setAttribute("mode","off");
