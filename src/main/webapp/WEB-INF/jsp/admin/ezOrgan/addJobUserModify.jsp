@@ -781,7 +781,7 @@
  				listview.LoadFromID("lvUserList");
  				var UserAddjoblistview = new ListView();
  				UserAddjoblistview.LoadFromID("lvAddjobList");
- 				var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID, "data9":jobRoleID});
+ 				var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID, "data9":(jobRoleID != "" ? jobRoleID : "0")});
 	        	
 	        	if (!bFlag) { // 원부서의 직위 체크
 	        		var orgDeptId = getDeptId(cn);
@@ -1220,7 +1220,7 @@
 				if (oRows.length > 0) {
 			    	flag = true;
 			    	rtnVal = "<select id='roleSelector' style='width:100%;height:25px;' onchange='jobChange(this)'>";
-				    		rtnVal += "<option id='' nmval='' nmval2=''>(<spring:message code='ezApprovalG.t852' />)</option>";
+				    		rtnVal += "<option id='0' nmval='' nmval2=''>(<spring:message code='ezApprovalG.t852' />)</option>";
 			    	for (i = 0; i < oRows.length; i++) {
 			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
 				    		if (flag) {
