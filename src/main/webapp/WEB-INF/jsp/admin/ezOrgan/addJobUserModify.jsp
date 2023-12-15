@@ -1227,7 +1227,7 @@
 // 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
 // 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
 // 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
-					    		jobRoleID = "0";
+					    		jobRoleID = "";
 					    		jobRole = "";
 					    		jobRole2 = "";
 					    		flag = false;
@@ -1251,7 +1251,7 @@
 			    	rtnVal += "</select>";
 			    } else {
 			    	rtnVal = "<select id='roleSelector' style='width:100%;height:25px;'></select>";
-			    	jobRoleID = "0"; jobRole = ""; jobRole2 = "";
+			    	jobRoleID = ""; jobRole = ""; jobRole2 = "";
 			    }
 				document.getElementById("JobRoleOption").innerHTML = rtnVal;
 	    	}
@@ -1265,11 +1265,11 @@
 		    	//var option = target.options[target.options.selectedIndex];
 		    	var option = selectValue.options[selectValue.options.selectedIndex];
 		    	if (selectValue.id == 'titleSelector') {
-		    		jobTitleID = option.id;
+		    		jobTitleID = option.id != "" ? option.id : "0";
 			    	jobTitle = option.getAttribute("nmval");
 			    	jobTitle2 = option.getAttribute("nmval2");
 		    	} else {
-		    		jobRoleID = option.id;
+		    		jobRoleID = option.id != "" ? option.id : "0";
 		    		jobRole = option.getAttribute("nmval");
 		    		jobRole2 = option.getAttribute("nmval2");
 		    	}

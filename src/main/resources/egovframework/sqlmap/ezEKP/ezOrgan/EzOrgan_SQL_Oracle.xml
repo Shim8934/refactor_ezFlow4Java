@@ -1417,9 +1417,9 @@
                 WHEN
                 	'1'
                 THEN
-                	'ROLE'
+                	'0'
                 ELSE
-                	''
+                	'0'
                 END
                 	ROLE  ,
              	''  ROLE1 ,
