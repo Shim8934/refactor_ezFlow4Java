@@ -851,7 +851,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-					<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; width: 100%; overflow: auto; margin-top: -1px"></iframe>
+					<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do?type=RESOURCE" style="padding: 0; width: 100%; overflow: auto; margin-top: -1px"></iframe>
 	      			
 	      			<input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
        				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
