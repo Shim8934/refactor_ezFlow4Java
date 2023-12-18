@@ -3308,6 +3308,21 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					try {
 						// 로컬 시스템에서 해당 User의 복원처리를 수행한다.
 						ezOrganAdminService.restoreRetireEntry(cn[i], deptID, tenantID, offset);
+
+						//사용자 변경 히스토리 테이블에 insert
+						UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+						userChangeInfoVO.setUserId(cn[i]);
+						userChangeInfoVO.setTenantId(tenantID);
+						userChangeInfoVO.setUpdateType("restore");
+						userChangeInfoVO.setExecutorIp(ClientUtil.getClientIP(request));
+						userChangeInfoVO.setTargetType("user");
+
+						try {
+							ezSystemAdminService.insertUserChangeHist(userChangeInfoVO, userInfo);
+						} catch (Exception e) {
+							logger.error(e.getMessage(), e);
+						}
+
 					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.retireUser(mailAddr);
@@ -3325,7 +3340,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					break;					
 				}
 			}
-			// dhlee - end			
+			// dhlee - end
 		}	
 		
 		//게시판 트리캐시 삭제

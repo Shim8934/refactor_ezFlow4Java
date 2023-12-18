@@ -436,7 +436,8 @@
 											case 'add'         : html += '<spring:message code="ezSystem.jhy03"/>'; break; 
 											case 'retire'      : html += '<spring:message code="ezSystem.jhy04"/>'; break; 
 											case 'delete'      : html += '<spring:message code="ezSystem.jhy05"/>'; break; 
-											case 'mvDept' 	   : html += '<spring:message code="ezSystem.jhy06"/>'; break; 
+											case 'restore'      : html += '<spring:message code="ezSystem.lhw01"/>'; break;
+											case 'mvDept' 	   : html += '<spring:message code="ezSystem.jhy06"/>'; break;
 											case 'grantAddJob' : html += '<spring:message code="ezSystem.jhy07"/>'; break; 
 											case 'clearAddJob' : html += '<spring:message code="ezSystem.jhy08"/>'; break; 				
 											}
@@ -469,7 +470,8 @@
 											case 'add' 		   : html += '<spring:message code="ezSystem.jhy03"/>'; break; 
 											case 'retire' 	   : html += '<spring:message code="ezSystem.jhy04"/>'; break; 
 											case 'delete'      : html += '<spring:message code="ezSystem.jhy05"/>'; break; 
-											case 'mvDept'      : html += '<spring:message code="ezSystem.jhy06"/>'; break; 
+											case 'restore'      : html += '<spring:message code="ezSystem.lhw01"/>'; break;
+											case 'mvDept'      : html += '<spring:message code="ezSystem.jhy06"/>'; break;
 											case 'grantAddJob' : html += '<spring:message code="ezSystem.jhy07"/>'; break; 
 											default : html += '<spring:message code="ezSystem.jhy08"/>'; 				
 											}
@@ -588,6 +590,7 @@
 							<option value=""><spring:message code="ezEmail.t588"></spring:message></option>			
 								<option value="add"><spring:message code="ezSystem.jhy03"></spring:message></option>
 								<option value="retire"><spring:message code="ezSystem.jhy04"></spring:message></option>
+								<option value="restore"><spring:message code="ezSystem.lhw01"></spring:message></option>
 								<option value="delete"><spring:message code="ezSystem.jhy05"></spring:message></option>
 								<option value="mvDept"><spring:message code="ezSystem.jhy06"></spring:message></option>
 								<option value="grantAddJob"><spring:message code="ezSystem.jhy07"></spring:message></option>
