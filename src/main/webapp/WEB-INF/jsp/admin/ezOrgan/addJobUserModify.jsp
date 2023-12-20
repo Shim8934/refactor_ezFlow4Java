@@ -781,7 +781,8 @@
  				listview.LoadFromID("lvUserList");
  				var UserAddjoblistview = new ListView();
  				UserAddjoblistview.LoadFromID("lvAddjobList");
- 				var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID, "data9":(jobRoleID != "" ? jobRoleID : "0")});
+				jobRoleID = jobRoleID != "" ? jobRoleID : "0";
+ 				var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID, "data9":jobRoleID});
 	        	
 	        	if (!bFlag) { // 원부서의 직위 체크
 	        		var orgDeptId = getDeptId(cn);
