@@ -4613,7 +4613,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						fis = new FileInputStream(decryptedFile);
 						message = sa.readMimeMessage(fis);
 						
-						bodyInfoList = ezEmailUtil.getBodyInfo(message, null, 0, -1, null, false, false, locale, secureKey, securePassword);
+						bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, 0, -1, null, false, false, locale, secureKey, securePassword);
 						double size = Double.parseDouble(bodyInfoList.get(2));
 						String strSize = ezEmailUtil.getSizeWithUnit(size);
 						pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
