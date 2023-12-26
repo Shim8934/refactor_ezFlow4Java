@@ -372,6 +372,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("ladderFlag", ladderFlag);
         modelMap.addAttribute("memoFlag", memoFlag);
         modelMap.addAttribute("useLeftCnt", useLeftCnt);
+        modelMap.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", tenantID));
         
 		logger.debug("boardLeft ended");
 
@@ -1731,10 +1732,12 @@ public class EzBoardController extends EgovFileMngUtil{
     	int noticeCount = 0;
     	int boardCount = 0;
     	
-    	if (mode == null || !mode.equals("temp")) { // 나의게시물 카운트 companyID 조건 추가
+    	if (mode == null || !mode.equals("temp") && !mode.equals("scrap")) { // 나의게시물 카운트 companyID 조건 추가
     		boardCount = ezBoardService.getMyBoardTotalItemCount(userInfo);
-    	} else { // 임시보관함 카운트 -> companyID 조건 추가
+    	} else if(mode.equals("temp")) { // 임시보관함 카운트 -> companyID 조건 추가
     		boardCount = ezBoardService.getMyBoardTotalItemCountTemp(userInfo);
+    	} else if(mode.equals("scrap")) {
+    		boardCount = ezBoardService.getMyBoardTotalItemCountScrap(userInfo);//나의 스크랩 item totalcount
     	}
     	
     	int startRow = 1;
@@ -1750,7 +1753,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	
     	resultXML.append("<DOCLIST>");
     	
-    	if (mode == null || !mode.equals("temp")) {
+    	if (mode == null || !mode.equals("temp") && !mode.equals("scrap")) {
     		noticeCount = ezBoardService.getMyNoticePostItemCount(userInfo);
     		
     		if (noticeCount > 0) {
@@ -1879,7 +1882,7 @@ public class EzBoardController extends EgovFileMngUtil{
     				endRow = 0;
     			}
     		}
-    	} else { // 임시저장 게시물의 경우
+    	} else if(mode.equals("temp")) { // 임시저장 게시물의 경우
     		startRow = ((personalCount * (boardVO.getPageNum() - 1)))  +  1;
     		endRow = (personalCount * boardVO.getPageNum());
     		
@@ -1906,14 +1909,64 @@ public class EzBoardController extends EgovFileMngUtil{
     		
     		resultXML.append("</HEADERS>");
     		resultXML.append("<ROWS>");
-    	}
+    	} else if(mode.equals("scrap")){ // 스크랩 게시물의 경우
+			
+			startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
+			endRow = (personalCount * boardVO.getPageNum());
+			
+			resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>"); 
+			resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>"); 
+			resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>"); 
+			resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>"); 
+			resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+			resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+			resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+			resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+			resultXML.append("<WRITEDATENUM>" + writeDateSN + "</WRITEDATENUM>");
+			resultXML.append("<TITLENUM>" + titleSN + "</TITLENUM>");
+			resultXML.append("<LISTVIEWDATA>");
+			resultXML.append("<HEADERS>");
+			
+			for (BoardListHeaderVO vo:headerList) {
+				resultXML.append("<HEADER>");
+				resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+				resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+				resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+				resultXML.append("</HEADER>");
+			}
+			
+			resultXML.append("</HEADERS>");
+			resultXML.append("<ROWS>");
+		
+		if (boardVO.getPageNum() != 1) {
+			startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
+			endRow = personalCount * boardVO.getPageNum();
+			
+			if (startRow <= 0) {
+				startRow = 1;
+			}
+			
+			if (endRow < 0) {
+				endRow = 0;
+			}
+		} else {
+			startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
+			endRow = personalCount * boardVO.getPageNum();
+			
+			if (endRow < 0) {
+				endRow = 0;
+			}
+		}
+	}
     	
     	List<HashMap<String, Object>> boardListItem = new ArrayList<HashMap<String,Object>>();
     	
-    	if (mode == null || !mode.equals("temp")) { // 나의게시물 표출 시 companyID 조건추가
+    	if (mode == null || !mode.equals("temp") && !mode.equals("scrap")) { // 나의게시물 표출 시 companyID 조건추가
     		boardListItem = ezBoardService.getMyBoardListItem(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2);
-    	} else { // 임시저장 게시물 표출 시 companyID 조건 추가
+    	} else if(mode.equals("temp")) { // 임시저장 게시물 표출 시 companyID 조건 추가
     		boardListItem = ezBoardService.getMyBoardListItemTemp(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2);
+    	} else if(mode.equals("scrap")){
+			boardListItem = ezBoardService.getMyBoardListItemScrap(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2);
     	}
     	
     	int dlength = boardListItem.size();
@@ -2536,10 +2589,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		int boardCount = 0;
 		
-		if (mode == null || !mode.equals("temp")) {
+		if (mode == null || !mode.equals("temp") && !mode.equals("scrap")) {
 			boardCount = ezBoardService.getSearchMyBoardItemCount(userInfo, boardVO);
-		} else {
+		} else if(mode.equals("temp")) {
 			boardCount = ezBoardService.getSearchMyBoardItemCountTemp(userInfo, boardVO);
+		} else if(mode.equals("scrap")) {
+			boardCount = ezBoardService.getSearchMyBoardItemCountScrap(userInfo, boardVO);
 		}
 		
 		/* 2018-10-18 홍승비 - 나의게시물 검색을 위해 companyID 추가 */
@@ -2573,10 +2628,12 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		List<HashMap<String, Object>> boardSearchList = null;
 		
-		if (mode == null || !mode.equals("temp")) {
+		if (mode == null || !mode.equals("temp") && !mode.equals("scrap")) {
 			boardSearchList = ezBoardService.getSearchMyBoardItemList(boardListVO, boardVO);
-		} else {
+		} else if(mode.equals("temp")){
 			boardSearchList = ezBoardService.getSearchMyBoardItemListTemp(boardListVO, boardVO);
+		} else if(mode.equals("scrap")){
+    		boardSearchList = ezBoardService.getSearchMyBoardItemListScrap(boardListVO, boardVO);
 		}
 		
 		int dlength = boardSearchList.size();
@@ -3941,6 +3998,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardAttrJson = gson.toJson(boardAttr);
 		String boardItemJson = gson.toJson(boardItem);
 		 		
+		/* 2023-05-03 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */
+		String isScrap = ezBoardService.getScrapItemCount(userInfo.getId(), itemID, boardID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
@@ -3968,6 +4028,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useCabinet", use_cabinet);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		model.addAttribute("useBoardFilePrvw", useBoardFilePrvw);
+		model.addAttribute("isScrap", isScrap);
+		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -4968,6 +5030,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemList = "";
 		String boardID = "";
 		String realPath = commonUtil.getRealPath(request);
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
 		
 		itemList = request.getParameter("itemList");
 		mode = request.getParameter("mode") != null ? request.getParameter("mode") : "";
@@ -4978,6 +5042,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("deleteItem mode = " + mode + " / boardID = " + boardID + " / boardName = " + boardInfo.getBoardName());
 		
 		String result = ezBoardService.deleteItem(itemList, mode, boardID, realPath, userInfo, boardInfo);
+
+		// 2023-05-03 기민혁 - 게시물 삭제시 scrap 목록 삭제
+	    ezBoardService.deleteBoardScrapItem(itemList, companyID, tenantID);
 
 		logger.debug("deleteItem ended, userID = " + userInfo.getId());
 		return result;
@@ -6028,6 +6095,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (use_cabinet.equals("YES")) {
 			use_cabinet = cabinetAdminService.checkModuleActive("board", userInfo);
 		}
+		/* 2023-05-03 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */ 
+		String isScrap = ezBoardService.getScrapItemCount(userInfo.getId(), itemID, boardID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
@@ -6045,6 +6114,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isLikeChecked", isLikeChecked);
 		model.addAttribute("useCabinet", use_cabinet);
+		model.addAttribute("isScrap", isScrap);
+		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
+
 		logger.debug("boardItemViewPhoto ended");
 		return "ezBoard/boardItemViewPhoto";
 	}
@@ -6225,6 +6297,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardViewForm", boardViewForm);
 		model.addAttribute("isMyBoard", isMyBoard);
 		model.addAttribute("endDateOption", endDateOption);
+		model.addAttribute("MyScrapContFlag", ezCommonService.getTenantConfig("MyScrapContFlag", userInfo.getTenantId()));
 
 		logger.debug("boardItemListThumbnail ended");
 		return "ezBoard/boardItemListThumbnail";
@@ -9971,6 +10044,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
 		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		
+		/* 2023-05-03 기민혁 - 해당 게시물에 대해 사용자가 스크랩을 했는지 체크 */ 
+		String isScrap = ezBoardService.getScrapItemCount(userInfo.getId(), itemID, boardID, userInfo.getCompanyID(), userInfo.getTenantId());
 		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
@@ -9986,6 +10061,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isLikeChecked", isLikeChecked);
+		model.addAttribute("isScrap", isScrap);
+		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 
 		logger.debug("boardItemViewMovie ended");
 		return "ezBoard/boardItemViewMovie";
@@ -11158,4 +11235,106 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("personalPopupUser ended");
 		return "/ezBoard/boardSelectUser";
 	}
+	
+	/**
+	 * 2023-05-03 기민혁(마이게시판 하위 스크랩 기능) - 스크랩 추가 버튼 클릭시 정보 등록
+	 */
+	@RequestMapping(value = "/ezBoard/setScrapItem.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String setScrapItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("setScrapItem started");
+			
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+			
+		String userID = userInfo.getId();
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+			
+		String result = ezBoardService.getScrapItemCount(userID,itemID,boardID,companyID,tenantID);
+			
+		if("true".equals(result)){
+			result = ezBoardService.setScrapItem(userID,itemID,boardID,companyID,tenantID);
+		}
+			
+		logger.debug("setScrapItem ended");
+		return result;
+	}
+		
+	/**
+	 * 2023-05-03 기민혁(마이게시판 하위 스크랩 기능) - 스크랩 해제 버튼 클릭시 정보 삭제
+	 */
+	@RequestMapping(value = "/ezBoard/delScrapItem.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String delScrapItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("delScrapItem started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String userID = userInfo.getId();
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+		
+		String result = ezBoardService.getScrapItemCount(userID,itemID,boardID,companyID,tenantID);
+		
+		if("false".equals(result)){
+			result = ezBoardService.delScrapItem(userID,itemID,boardID,companyID,tenantID);
+		}
+
+		logger.debug("delScrapItem ended");
+		return result;
+	}
+
+	/**
+	 * 2023-05-03 기민혁(마이게시판 하위 스크랩 기능) - 나의 스크랩 화면 표출
+	 */
+	@RequestMapping(value = "/ezBoard/boardMyScrapList.do", method = RequestMethod.GET)
+	public String boardMyScrapList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("boardMyScrapList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		int page = 1;
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+
+		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("page", page);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("use_oneLineCount", "YES");
+
+		logger.debug("boardMyScrapList ended");
+		return "ezBoard/boardMyScrapList";
+	}
+
+	/**
+	 * 2023-05-03 기민혁(마이게시판 하위 스크랩 기능) - 나의 스크랩 page에서 스크랩 게시물 다중 해제 기능
+	 */
+	@RequestMapping(value = "/ezBoard/deleteScrapItem.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String deleteScrapItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("deleteScrapItem started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		String itemList = request.getParameter("itemList");
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		String result = ezBoardService.deleteScrapItem(userID, itemList, companyID, tenantID);
+
+		logger.debug("deleteScrapItem ended");
+		return result;
+	}
+
 }

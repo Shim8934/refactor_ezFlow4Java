@@ -272,6 +272,9 @@ public interface EzBoardService {
 
 	public void deleteReservedBoardItem(String realPath) throws Exception;
 
+	/* 2023-05-03 기민혁 - 나의 스크랩 삭제 스케줄러 */
+	public void deleteItemsScrap() throws Exception;
+
 	public String moveItem(String orgItemIDList, String orgBoardIDList, String destBoardID, LoginVO userInfo, String uploadFilePath, String realPath) throws Exception;
 
 	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception;
@@ -414,4 +417,31 @@ public interface EzBoardService {
 	public boolean confirmBoardItemDeletion(String boardID, String itemID, int tenantId) throws Exception;
 	
 	public List<HashMap<String, Object>> getNoticePostItemList(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception;
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 데이터 등록 */
+	public String setScrapItem(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 확인*/
+	public String getScrapItemCount(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 목록 다중 해제 메서드*/
+	public String deleteScrapItem(String userID, String itemList, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩  해제 메서드*/
+	public String delScrapItem(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 item 리스트 호출*/
+	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 item totalcount*/
+	public int getMyBoardTotalItemCountScrap(LoginVO userInfo) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item totalcount*/
+	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO) throws Exception;
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item 리스트 호출*/
+	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+
+	/* 2023-05-03 기민혁 - 게시물 삭제시 scrap 목록 삭제*/
+	public void deleteBoardScrapItem(String itemList, String companyID, int tenantID) throws Exception;
 }

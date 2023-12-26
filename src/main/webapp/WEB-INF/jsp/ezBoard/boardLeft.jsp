@@ -960,6 +960,14 @@
 		        	window.parent.frames["right"].location.href = "/ezBoard/boardConfig.do";
 				}
 		    }
+		    function ScrapBoard() {
+		    	if (typeof window.parent.frames["right"] == "undefined") {
+					rightFrame.src = "/ezBoard/boardMyScrapList.do";
+				} else {
+		        	window.parent.frames["right"].location.href = "/ezBoard/boardMyScrapList.do";
+				}
+				liSelected();
+		    }
 		    function ReservationItem_onclick() {
 		    	if (typeof window.parent.frames["right"] == "undefined") {
 					rightFrame.src = "/ezBoard/boardReservedItemList.do";
@@ -1174,7 +1182,10 @@
 				        	<li><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
 							<li><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
 							<li><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
-				        </ul>
+							<c:if test="${MyBoardScrapFlag != 'NO'}">
+								<li><span class="list_text" onclick="ScrapBoard()"><spring:message code="ezBoard.kmh12" /></span></li>
+							</c:if>
+						</ul>
 			        </c:if>
 			        <div id='TopBoardsList'>
 			        	<script type="text/javascript">
@@ -1214,6 +1225,9 @@
                            	<li><span class="sub_iconLNB tree_board_my"></span><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
                            	<li><span class="sub_iconLNB tree_board_reservation"></span><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
                            	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
+				        	<c:if test="${MyBoardScrapFlag != 'NO'}">
+								<li><span class="sub_iconLNB tree_task_repeat"></span><span class="list_text" onclick="ScrapBoard()"><spring:message code="ezBoard.kmh12" /></span></li>
+				        	</c:if>
 				        </ul>
 				    </c:if>
 			        <ul class="lnbUL">

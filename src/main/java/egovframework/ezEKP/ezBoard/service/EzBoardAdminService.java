@@ -150,4 +150,6 @@ public interface EzBoardAdminService {
 	public String getUseFormFlag(String boardID, int tenantID) throws Exception;
 
 	List<OrganDeptVO> getListCompanyInBoard(String userID, String primary, int tenantID);
+	
+	void deleteScrapBoard(String boardID) throws Exception;
 }

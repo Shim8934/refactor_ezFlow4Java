@@ -90,6 +90,7 @@
 			var strParentWriteDate = "<c:out value='${boardItem.parentWriteDate}'/>"; // 답변게시물 판별용 부모게시물 NO(PARENTWRITEDATE)
 			var strDocNo = "<c:out value='${boardItem.docNo}'/>"; // 답변게시물 판별용 현재게시물 NO(DOCNO)
 
+			var isScrap = "<c:out value='${isScrap}'/>";
 		    // 수정 수아 재은	    
 		    var nowZoom = 100;
 	        var maxZoom = 200;
@@ -1533,6 +1534,58 @@
 				});
 	        }
 		    
+		   
+		    /* 2023-05-03 기민혁 -  스크랩 추가 클릭시 data insert */
+		    function addScrap(){
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/setScrapItem.do",
+					data : {
+						itemID : pItemID,
+						boardID : pBoardID
+					},
+					success: function(result){
+						if(result == "true"){
+							alert("<spring:message code='ezBoard.t269' />");
+							document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+						} else if(result == "false"){
+							alert("<spring:message code='ezBoard.kmh001' />");
+							document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+						} else if(result == "error"){
+							alert("<spring:message code='ezBoard.kmh17' />");
+						}
+					}
+				});
+			}
+		    
+		    /* 2023-05-03 기민혁 -  스크랩 해제 클릭시 data delete */
+		    function delScrap(){
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/delScrapItem.do",
+					data : {
+						itemID : pItemID,
+						boardID : pBoardID
+					},
+					success: function(result){
+						if(result == "true"){
+							alert("<spring:message code='ezBoard.kmh18' />");
+							document.getElementById("delScrapBtn").innerHTML ="<li id ='addScrapBtn'><span onclick='addScrap()'><spring:message code='ezBoard.kmh13'/></span></li>";
+							if(window.opener && !window.opener.closed && window.opener.location.href.indexOf("boardMyScrapList") !== -1){
+								window.close();
+								window.opener.refresh_onclick();
+							}
+						}else{
+							alert("<spring:message code='ezBoard.kmh17' />");
+						}
+					}
+				});
+			}
+
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
@@ -1627,6 +1680,16 @@
 					<%-- 2024-02-02- 홍승비 - 게시물 승인 > 승인되지 않은 게시물 팝업창에서 캐비넷등록 버튼이 표출되는 오류 수정 (apprFlag값이 'W'인 경우는 승인게시판인데도 승인자가 없는 경우임) --%>
 					<c:if test="${useCabinet == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+					</c:if>
+						<c:if test="${MyBoardScrapFlag != 'NO' && acScrap != 'SCRAP' && apprFlag != 'N'}">
+						<c:choose>
+							<c:when test="${isScrap == 'true'}">
+								<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>
+							</c:when>
+							<c:otherwise>
+								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
+							</c:otherwise>
+						</c:choose>
 					</c:if>
 		        </ul>
 		      </div>    

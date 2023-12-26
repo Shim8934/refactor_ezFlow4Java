@@ -88,6 +88,7 @@
 		        var rsa = new RSAKey();
 		        var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 				var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>"; // 2023-07-28 임정은 - 게시판 댓글 좋아요 기능 사용여부
+		        var isScrap = "<c:out value='${isScrap}'/>";
 
 				/* 2023-11-17 홍승비 - 게시물 승인 시 게시알림메일 발송을 위한 그룹사게시판 여부 파라미터 추가 */
 				var isAllGroupBoard = "<c:out value='${boardInfo.isAllGroupBoard}'/>";
@@ -750,6 +751,57 @@
 					});
 				}
 			    
+			    /* 2023-05-03 기민혁 -  스크랩 추가 클릭시 data insert */
+			    function addScrap(){
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/setScrapItem.do",
+						data : {
+							itemID : pItemID,
+							boardID : pBoardID
+						},
+						success: function(result){
+							if(result == "true"){
+								alert("<spring:message code='ezBoard.t269' />");
+								document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+							} else if(result == "false"){
+								alert("<spring:message code='ezBoard.kmh001' />");
+								document.getElementById("addScrapBtn").innerHTML = "<li id ='delScrapBtn'><span onclick='delScrap()''><spring:message code='ezBoard.kmh14'/></span></li>";
+							} else if(result == "error"){
+								alert("<spring:message code='ezBoard.kmh17' />");
+							}
+						}
+					});
+				}
+			    
+			    /* 2023-05-03 기민혁 -  스크랩 해제 클릭시 data delete */
+			    function delScrap(){
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/delScrapItem.do",
+						data : {
+							itemID : pItemID,
+							boardID : pBoardID
+						},
+						success: function(result){
+							if(result == "true"){	
+								alert("<spring:message code='ezBoard.kmh18' />");
+								document.getElementById("delScrapBtn").innerHTML ="<li id ='addScrapBtn'><span onclick='addScrap()'><spring:message code='ezBoard.kmh13'/></span></li>";
+								if(window.opener && !window.opener.closed && window.opener.location.href.indexOf("boardMyScrapList") !== -1){
+									window.close();
+									window.opener.refresh_onclick();
+								}
+							}else{
+								alert("<spring:message code='ezBoard.kmh17' />");
+							}
+						}
+					});
+				}
+
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup">
@@ -787,6 +839,16 @@
 		                    <li ID='btn_down' ><a id="movieDownload"><span><spring:message code='ezQuestion.t180'/><spring:message code='ezQuestion.t567'/></span></a></li>
 		        		</c:otherwise>
 		        	</c:choose>
+					<c:if test="${MyBoardScrapFlag != 'NO' && acScrap != 'SCRAP' && apprFlag != 'N'}">
+		        		<c:choose>
+							<c:when test="${isScrap == 'true'}">
+								<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>
+							</c:when>
+							<c:otherwise>
+								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
+							</c:otherwise>
+						</c:choose>
+					</c:if>
 		        </ul>
 		      </div>
 		      <div id="close">

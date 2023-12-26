@@ -54,6 +54,8 @@ public class BoardVO {
 	private String content;
 	/** 2019-04-04 홍승비 - 게시판 좋아요 기능 플래그 추가 */
 	private String likeFlag;
+	/** 2023-05-03 기민혁 - 게시판 스크랩 */
+	private String scrap;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -210,6 +212,12 @@ public class BoardVO {
 	}
 	public void setLikeFlag(String likeFlag) {
 		this.likeFlag = likeFlag;
+	}
+	public String getScrap() {
+		return scrap;
+	}
+	public void setScrap(String scrap) {
+		this.scrap = scrap;
 	}
 	
 }

@@ -1424,4 +1424,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			return Collections.emptyList();
 		}
 	}
+
+	@Override
+	public void deleteScrapBoard(String boardID) throws Exception {
+		ezBoardAdminDAO.deleteScrapBoard(boardID);
+	}
+	
+	
 }

@@ -17,6 +17,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
+import egovframework.ezEKP.ezBoard.vo.BoardScrapListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -650,6 +651,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void deleteReservedBoard(BoardDeleteItemVO k) throws Exception {
 		delete("EzBoardDAO.deleteReservedBoard", k);
 	}
+
+	public List<BoardDeleteItemVO> deleteItemsScrapList() throws Exception {
+		return (List<BoardDeleteItemVO>) list("EzBoardDAO.deleteItemsScrapList");
+	}
+	public void deleteItemsScrap(BoardDeleteItemVO boardDeleteItemVO) throws Exception {
+		delete("EzBoardDAO.deleteItemsScrap", boardDeleteItemVO);
+	}
 	
     //baonk added
 	public BoardPollConfigVO getPollConfig(Map<String, Object> map) throws Exception {
@@ -874,4 +882,57 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public boolean confirmBoardItemDeletion(Map<String, Object> map) throws Exception {
 		return (boolean) select("EzBoardDAO.confirmBoardItemDeletion", map);
 	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 데이터 등록 쿼리 */
+	public void setScrapItem(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.setScrapItem", map);
+	}
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 확인 쿼리 */
+	public int getScrapItemCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getScrapItemCount", map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 목록 다중 해제 쿼리 */
+	public void deleteScrapItem(BoardScrapListVO scrapList) throws Exception {
+		delete("EzBoardDAO.deleteScrapItem", scrapList);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 해제 쿼리 */
+	public void delScrapItem(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.delScrapItem", map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 item 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getMyBoardListItemScrap(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getMyBoardListItemScrap", map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 item totalcount 쿼리 */
+	public int getMyBoardTotalItemCountScrap(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getMyBoardTotalItemCountScrap", map);
+	}
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item totalcount 쿼리 */
+	public int getSearchMyBoardItemCountScrap(Map<String, Object> map) {
+		return (int) select("EzBoardDAO.getSearchMyBoardItemCountScrap", map);		
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item 리스트 호출 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getSearchMyBoardItemListScrap", map);
+	}
+
+	/* 2023-05-03 기민혁 - 게시물 삭제시 scrap 목록 삭제 쿼리 */
+	public void deleteBoardScrapItem(BoardScrapListVO scrapList) throws Exception {
+		delete("EzBoardDAO.deleteBoardScrapItem", scrapList);
+	}
+	
+	/* 2023-05-03 기민혁 - 게시물 scrap 여부 체크 쿼리*/
+	public int isScrapitemCount(BoardScrapListVO scrapList) throws Exception{
+		return (int) select("EzBoardDAO.isScrapitemCount",scrapList);
+	}
+	
 }

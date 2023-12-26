@@ -53,6 +53,8 @@ public class MBoardNewListVO {
 	private String guBun;
 	/** 앨범소개*/
 	private String mainContent;
+
+	private String newItemFlag;
 	
 	public String getBoardID() {
 		return boardID;
@@ -210,4 +212,6 @@ public class MBoardNewListVO {
 	public void setMainContent(String mainContent) {
 		this.mainContent = mainContent;
 	}
+	public String getNewItemFlag() { return newItemFlag; }
+	public void setNewItemFlag(String newItemFlag) { this.newItemFlag = newItemFlag; }
 }

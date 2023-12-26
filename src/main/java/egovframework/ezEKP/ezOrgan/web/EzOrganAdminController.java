@@ -211,6 +211,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
 	    	ezCommonService.createTblAprpreview(); //2020-11-18 정소미 - 전자결재 미리보기 설정 테이블 추가
 	    	ezCommonService.createTblSerialNoRollback(); // 2022-09-21 홍승비 - 전자결재G > 문서 기록물 레코드 중복삽입 시 에러 롤백방지 기록 테이블 추가
+			ezCommonService.insertScrapTenantConfig(); // 2023-06-14 기민혁 - 게시판 > 마이게시판 하위 나의스크랩 사용 Flag
+			ezCommonService.insertScrapTableHeader(); // 2024-06-17 기민혁 - 게시판 > 마이게시판 하위 나의스크랩 테이블 해더 추가
+			ezCommonService.createTblBoardScrap(); // 2023-06-15 기민혁 - 게시판 > 마이게시판 스크랩 테이블 생성
 	    	ezCommonService.createTblBoardReplyReact();	// 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가
 			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
 			ezCommonService.createTblDistributeinfo(); // 2024-08-07 김유진 - 배부이력정보 테이블 추가

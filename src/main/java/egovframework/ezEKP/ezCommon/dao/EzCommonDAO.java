@@ -2739,4 +2739,32 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createRsScheduleDeptIdColumn");
 		}
 	}
+	
+	public void insertScrapTenantConfig(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkScrapTenantConfig", map);
+		
+		if (propertyValue == null) {
+			logger.debug("Scrap tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertScrapTenantConfig",map);
+		}
+	}
+
+	public void insertScrapTableHeader(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.insertScrapTableHeaderCheck", map);
+
+		if (propertyValue == null) {
+			logger.debug("ScrapTableHeader doesn't exist. insert data...");
+			insert("EzCommonDAO.insertScrapTableHeader",map);
+		}
+	}
+	
+	public void createTblBoardScrap() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardScrap");
+		} catch (Exception e) {
+			logger.debug("tbl_boardscrap doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblBoardScrap");
+		}
+	}
 }

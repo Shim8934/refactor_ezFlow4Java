@@ -452,4 +452,11 @@ public interface EzCommonService {
 	public void updateThemeData() throws Exception;
 	
 	void createRsScheduleDeptIdColumn() throws Exception;
+	
+	public void insertScrapTenantConfig() throws Exception;
+	
+	public void insertScrapTableHeader() throws Exception;
+	
+	public void createTblBoardScrap() throws Exception;
+	
 }

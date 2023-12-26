@@ -9,7 +9,7 @@ var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
 var listEventCheckbox = false;
-
+var scrapBoard = "NO"
 function add_key_event() {
     remove_key_event();
 
@@ -787,14 +787,22 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
-                    
-                    /* 2018-12-27 홍승비 - 세로 중앙정렬을 위해 답글 아이콘, 새게시물 아이콘, 댓글 태그 수정 및 스타일 추가 */
-                    for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++) {
-                        titleImage = titleImage + "&nbsp;&nbsp;&nbsp;";
-                        
-                        if (k == parseInt(getNodeText(oDatas[7])) - 1)
-                            titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_rep.gif'>&nbsp;";
+
+                    if(scrapBoard != "YES"){
+                        /* 2018-12-27 홍승비 - 세로 중앙정렬을 위해 답글 아이콘, 새게시물 아이콘, 댓글 태그 수정 및 스타일 추가 */
+                        for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++) {
+                            titleImage = titleImage + "&nbsp;&nbsp;&nbsp;";
+
+                            if (k == parseInt(getNodeText(oDatas[7])) - 1)
+                                titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_rep.gif'>&nbsp;";
+                        }
+                    }else{
+                        for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++) {
+                            if (k == parseInt(getNodeText(oDatas[7])) - 1)
+                                titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_rep2.gif'>&nbsp;";
+                        }
                     }
+                   
 //                    if (getNodeText(oDatas[3]) == "1") {  // 2018-01-10 강민수92  긴급게시물일 경우 빨간 느낌표 이미지 타이틀에 안뜨게 주석
 //                        titleImage = titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
 //                    }

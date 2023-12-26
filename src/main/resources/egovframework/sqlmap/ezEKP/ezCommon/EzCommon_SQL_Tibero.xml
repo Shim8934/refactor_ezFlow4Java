@@ -6022,4 +6022,71 @@
 			TBL_RS_SCHEDULE
 			ADD DEPTID NVARCHAR2(80) DEFAULT NULL
 	</statement>
+
+	<select id="EzCommonDAO.checkScrapTenantConfig" resultClass="String" parameterClass="Map">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'MyBoardScrapFlag'
+		AND
+			tenant_id = #tenantId#
+	</select>
+
+	<insert id="EzCommonDAO.insertScrapTenantConfig" parameterClass="Map">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, SYSDATE, #configType#)
+	</insert>
+
+	<select id="EzCommonDAO.insertScrapTableHeaderCheck" resultClass="String" parameterClass="Map">
+		SELECT
+			LISTTYPE
+		FROM
+			TBL_BOARD_ITEM_LISTOPTION
+		WHERE
+			LISTTYPE = #listType#
+	  	AND
+			TENANT_ID = #tenantId#
+		AND
+			rownum = 1
+	</select>
+
+	<insert id="EzCommonDAO.insertScrapTableHeader" parameterClass="Map">
+		INSERT ALL
+			INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID) VALUES (#listType#, 0, 'CHECK', 'CHECK', 'CHECK', 'CHECK', 'ITEMID', 20, 'Y', #tenantId#)
+			INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID) VALUES (#listType#, 1, '첨부', 'Attachments', '添付', '附加', 'ATTACHMENTS', 20, 'Y', #tenantId#)
+			INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID) VALUES (#listType#, 2, '제목', 'Title', '件名', '标题', 'TITLE', 400, 'Y', #tenantId#)
+			INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID) VALUES (#listType#, 3, '부서', 'Department', '部署', '部门', 'WRITERDEPTNAME', 100, 'Y', #tenantId#)
+			INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID) VALUES (#listType#, 4, '게시자', 'Writer', '作成者', '写作者', 'WRITERNAME', 100, 'Y', #tenantId#)
+			INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID) VALUES (#listType#, 5, '게시일', 'Registered', '掲示日', '发布日期', 'WRITEDATE', 100, 'Y', #tenantId#)
+			INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4, COLNAME, WIDTH, VIEW_FG, TENANT_ID) VALUES (#listType#, 6, '조회수', 'View', 'ヒット数', '查询数', 'READCOUNT', 50, 'Y', #tenantId#)
+		SELECT * FROM dual
+	</insert>
+
+	<select id="EzCommonDAO.checkTblBoardScrap" resultClass="String">
+		<![CDATA[
+			SELECT
+				ITEMID
+			FROM
+				TBL_BOARDITEM_SCRAP
+			WHERE
+				rownum = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblBoardScrap">
+		CREATE TABLE "EZEKP2017"."TBL_BOARDITEM_SCRAP" (
+		   "USERID" VARCHAR2(100) NOT NULL ENABLE,
+		   "BOARDID" VARCHAR2(76) NOT NULL ENABLE,
+		   "ITEMID" VARCHAR2(76) NOT NULL ENABLE,
+		   "SCRAPDATE" VARCHAR2(40),
+		   "TENANT_ID" NUMBER(5,0) NOT NULL ENABLE,
+		   "COMPANYID" VARCHAR2(20) NOT NULL ENABLE,
+		   CONSTRAINT "TBL_BOARDITEM_SCRAP_PK" PRIMARY KEY ("TENANT_ID", "COMPANYID", "USERID","BOARDID","ITEMID")
+		)
+	</statement>
+
 </sqlMap>

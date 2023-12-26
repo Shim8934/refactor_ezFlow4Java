@@ -4321,4 +4321,38 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createRsScheduleDeptIdColumn() throws Exception {
         ezCommonDAO.createRsScheduleDeptIdColumn();
     } 
+	
+	@Override
+	public void insertScrapTenantConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("propertyName", "MyBoardScrapFlag");
+            map.put("propertyValue", "YES");
+            map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
+            map.put("configName", "게시판 왼쪽 메뉴 마이게시판 탭에서 나의 스크랩 사용여부");
+            map.put("configType", "기타모듈");
+            map.put("regdate", "2023-06-14 00:00:00");
+
+            ezCommonDAO.insertScrapTenantConfig(map);
+        }
+	}
+
+    @Override
+    public void insertScrapTableHeader() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantId", tenantVo.getTenantId());
+            map.put("listType", "S");
+
+            ezCommonDAO.insertScrapTableHeader(map);
+        }
+    }
+	
+	@Override
+	public void createTblBoardScrap() throws Exception {
+		ezCommonDAO.createTblBoardScrap();
+	}
 }

@@ -69,6 +69,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
+import egovframework.ezEKP.ezBoard.vo.BoardScrapListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -289,6 +290,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					map.put("v_isAllGroupBoard", "Y");
 				}
 			}
+		}
+
+		if(ezBoardVO.getMode() != null && ezBoardVO.getMode().equals("scrap")){
+			map.put("v_LISTCODE", "S");
 		}
 		
 		listHeaderListVO = ezBoardDAO.getListHeader(map);
@@ -3788,6 +3793,27 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("deleteReservedBoardItem ended");
 	}
 
+	/* 2023-05-03 기민혁 - 나의 스크랩 삭제 스케줄러 */
+	@Override
+	public void deleteItemsScrap() throws Exception {
+		logger.debug("deleteItemsScrap started");
+
+		List<BoardDeleteItemVO> scrapItemList = ezBoardDAO.deleteItemsScrapList();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		for (BoardDeleteItemVO s : scrapItemList) {
+
+			map.put("itemID", s.getItemID());
+			map.put("boardID", s.getBoardID());
+			map.put("tenantID", s.getTenantID());
+
+			ezBoardDAO.deleteItemsScrap(s);
+		}
+
+		logger.debug("deleteItemsScrap ended");
+	}
+
 	@Override
 	public String moveItem(String orgItemIDList, String orgBoardIDList, String destBoardID, LoginVO userInfo, String uploadFilePath, String realPath) throws Exception {
 		logger.debug("moveItem started");
@@ -5316,5 +5342,256 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("getNoticePostItem2 ended");
 		return ezBoardDAO.getNoticePostItem(map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 데이터 등록 */
+	@Override
+	public String setScrapItem(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception {
+		logger.debug("setScrapItem started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		String result = "true";
+
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_boardID", boardID);
+		map.put("v_companyID", companyID);
+		map.put("v_tenantID", tenantID);
+		map.put("v_nowDate", commonUtil.getTodayUTCTime(""));
+
+		try {
+			ezBoardDAO.setScrapItem(map);
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "error";
+		}
+
+		logger.debug("setScrapItem ended");
+		return result;
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 확인 */
+	@Override
+	public String getScrapItemCount(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception {
+		logger.debug("getScrapItemCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		String result;
+
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_boardID", boardID);
+		map.put("v_companyID", companyID);
+		map.put("v_tenantID", tenantID);
+
+		try {
+			int listCount = ezBoardDAO.getScrapItemCount(map); // 해당 정보들에 맞는 데이터가 이미 있는지 확인
+
+			if (listCount != 0) {
+				result = "false";
+			} else {
+				result = "true";
+			}
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "error";
+		}
+
+		logger.debug("getScrapItemCount ended");
+
+		return result;
+	}
+
+	/* 2023-05-03 기민혁 - 나의 스크랩 목록 다중 해제 메서드 */
+	@Override
+	public String deleteScrapItem(String userID, String itemList, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteScrapItem started");
+
+		BoardScrapListVO scrapList = new BoardScrapListVO();
+
+		scrapList.setUserID(userID);
+		scrapList.setCompanyID(companyID);
+		scrapList.setTenant_ID(tenantID);
+
+		String[] itemListArray = itemList.split(";");
+		String result = "true";
+
+		try {
+			for (int i = 0; i < itemListArray.length; i++) {
+				String scrapItem = itemListArray[i].split(",")[0];
+				scrapList.setItemID(scrapItem);
+				ezBoardDAO.deleteScrapItem(scrapList);
+			}
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "error";
+		}
+
+		logger.debug("deleteScrapItem ended");
+		return result;
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 해제 메서드 */
+	@Override
+	public String delScrapItem(String userID, String itemID, String boardID, String companyID, int tenantID) throws Exception {
+		logger.debug("delScrapItem started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		String result = "true";
+
+		map.put("v_userID", userID);
+		map.put("v_itemID", itemID);
+		map.put("v_boardID", boardID);
+		map.put("v_companyID", companyID);
+		map.put("v_tenantID", tenantID);
+
+		try {
+			ezBoardDAO.delScrapItem(map);
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "error";
+		}
+
+		logger.debug("delScrapItem ended");
+		return result;
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 등록 item 리스트 호출 */
+	@Override
+	public List<HashMap<String, Object>> getMyBoardListItemScrap(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception {
+		logger.debug("getMyBoardListItemScrap started");
+
+		
+		if (orderOption1.length() > 0) {
+			if (orderOption1.indexOf("WRITEDATE") > -1) {
+				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
+					orderOption1 = " A.WRITEDATE DESC ";
+				} else {
+					orderOption1 = " A.WRITEDATE ";
+				}
+			}
+		} else {
+			orderOption1 = " E.SCRAPDATE DESC ";
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("v_PSTARTROW", startRow);
+		map.put("v_PENDROW", endRow);
+		map.put("iv_PORDERBYSUB", orderOption1);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
+
+		logger.debug("getMyBoardListItemScrap ended");
+		return ezBoardDAO.getMyBoardListItemScrap(map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 item totalcount */
+	@Override
+	public int getMyBoardTotalItemCountScrap(LoginVO userInfo) throws Exception {
+		logger.debug("getMyBoardTotalItemCountScrap started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_userID", userInfo.getId());
+		map.put("v_companyID", userInfo.getCompanyID());
+		map.put("v_tenantID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getMyBoardTotalItemCountScrap ended");
+		return ezBoardDAO.getMyBoardTotalItemCountScrap(map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item totalcount */
+	@Override
+	public int getSearchMyBoardItemCountScrap(LoginVO userInfo, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchMyBoardItemCountScrap started");
+
+		if (boardVO.getSearchQuery().length() > 0) {
+			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getSearchMyBoardItemCountScrap ended");
+		return ezBoardDAO.getSearchMyBoardItemCountScrap(map);
+	}
+	
+	/* 2023-05-03 기민혁 - 나의 스크랩 검색 item 리스트 호출 */
+	@Override
+	public List<HashMap<String, Object>> getSearchMyBoardItemListScrap(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchMyBoardItemListScrap started");
+
+		if (boardListVO.getOrderBySub().length() > 0) {
+			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
+				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
+				} else {
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
+				}
+			}
+		} else {
+			boardListVO.setOrderBySub(" S.SCRAPDATE DESC ");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PORDERBYMAIN", boardListVO.getOrderByMain());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("v_COMPANYID", boardListVO.getWriterCompanyID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
+
+		logger.debug("getSearchMyBoardItemListScrap ended");
+		return ezBoardDAO.getSearchMyBoardItemListScrap(map);
+	}
+
+	/* 2023-05-03 기민혁 - 게시물 삭제시 scrap 목록 삭제 */
+	@Override
+	public void deleteBoardScrapItem(String itemList, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteBoardScrapItem started");
+
+		int isScrap;
+		BoardScrapListVO scrapList = new BoardScrapListVO();
+
+		scrapList.setCompanyID(companyID);
+		scrapList.setTenant_ID(tenantID);
+
+		String[] itemListArray = itemList.split(";");
+
+		for (int i = 0; i < itemListArray.length; i++) {
+			String scrapItem = itemListArray[i].split(",")[0];
+			scrapList.setItemID(scrapItem);
+			
+			isScrap = ezBoardDAO.isScrapitemCount(scrapList);
+			
+			if(isScrap != 0){
+				ezBoardDAO.deleteBoardScrapItem(scrapList);	
+			}
+		}
+
+		logger.debug("deleteBoardScrapItem ended");
 	}
 }

@@ -1020,6 +1020,7 @@ public class MBoardServiceImpl implements MBoardService {
 		mBoardDAO.deleteBoardItem(map);
 		mBoardDAO.deleteBoardReply(map);
 		mBoardDAO.deleteBoardItemRead2(map);
+		mBoardDAO.deleteScrapBoardItem(map);
 		
 		mBoardDAO.insertDeleteReservedItem(map);
 		
@@ -1862,5 +1863,53 @@ public class MBoardServiceImpl implements MBoardService {
 
 		logger.debug("saveOneLineReply ended");
 	}
-	
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 호출 */
+	@Override
+	public List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset,String pSearchText) throws Exception {
+		logger.debug("getScrapBoardList started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("listSize", 50);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+
+		List<MBoardNewListVO> mScrapBoardList = mBoardDAO.getScrapBoardList(map);
+
+		String nowDate = commonUtil.getTodayUTCTime("");
+		nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+		for (MBoardNewListVO vo : mScrapBoardList) {
+			if (vo.getWriteDate().toString().compareTo(nowDate) > 0) {
+				vo.setNewItemFlag("Y");
+			} else {
+				vo.setNewItemFlag("N");
+			}
+		}
+
+		logger.debug("getScrapBoardList ended");
+		return mScrapBoardList;
+	}
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 count */
+	@Override
+	public Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText) throws Exception {
+		logger.debug("getScrapBoardListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
+
+		logger.debug("getScrapBoardListCount ended");
+		return mBoardDAO.getScrapBoardListCount(map);
+	}
 }

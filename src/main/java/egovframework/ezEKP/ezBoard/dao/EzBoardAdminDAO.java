@@ -381,4 +381,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 
 		return (String)select("EzBoardAdminDAO.getUseFormFlag", map);
 	}
+	public void deleteScrapBoard(String boardID) throws Exception {
+		delete("EzBoardAdminDAO.deleteScrapBoard", boardID);
+	}
 }

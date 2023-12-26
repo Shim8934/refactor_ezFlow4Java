@@ -100,4 +100,11 @@ public interface MBoardService {
 
 	/* 2022-11-18 홍승비 - 모바일 게시판 댓글 저장 기능 추가 */
 	public void saveOneLineReply(String itemID, String replyID, String boardID, String userID, String displayName, String displayName2, int tenantID, String companyID, String content) throws Exception;
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 호출 */
+	List<MBoardNewListVO> getScrapBoardList(String userID, String deptID, String companyID, int tenantID, String offset, String pSearchText) throws Exception;
+
+	/* 2023-11-21 기민혁 - 모바일 스크랩 리스트 count */
+	Integer getScrapBoardListCount(String userID, String companyID, int tenantID, String pSearchText) throws Exception;
+
 }

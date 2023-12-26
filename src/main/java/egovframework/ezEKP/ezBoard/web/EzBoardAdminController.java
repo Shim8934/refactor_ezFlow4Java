@@ -491,6 +491,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			ezBoardAdminService.deleteNoticeBoard(userInfo.getTenantId(), userInfo.getCompanyID());
 		}
 		
+		/* 스크랩 게시물 삭제 */
+		ezBoardAdminService.deleteScrapBoard(boardID);
+
 		logger.debug("deleteBoard ended");
 	}
 
