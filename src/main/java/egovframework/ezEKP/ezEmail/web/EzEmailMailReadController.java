@@ -1688,7 +1688,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		// get user credentials
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
-		
+		String readStatus = request.getParameter("readStatus");
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
 		String userEmail = loginInfo.getId() + "@" + domainName;
@@ -1796,11 +1796,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
 						
 						String nfcFilename = commonUtil.normalizeFileName(filename);
-						
-						response.addHeader("content-disposition", "attachment; filename=\"" + nfcFilename + "\"");
-						logger.debug("content-disposition=" + "attachment; filename=\"" + nfcFilename + "\"");
-						
-						InputStream input = null;
+
+                        if ("Y".equals(readStatus)) {
+                            response.addHeader("content-disposition", "inline; filename=\"" + nfcFilename + "\"");
+                            logger.debug("content-disposition=" + "inline; filename=\"" + nfcFilename + "\"");
+                        } else {
+                            response.addHeader("content-disposition", "attachment; filename=\"" + nfcFilename + "\"");
+                            logger.debug("content-disposition=" + "attachment; filename=\"" + nfcFilename + "\"");
+                        }
+
+                        InputStream input = null;
 						OutputStream output = null;
 						
 						try {
@@ -4255,7 +4260,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			int result = ezEmailService.checkSecureMailPassword(secureId, reader, securePassword);
 			logger.debug("result=" + result);
-			
+
+			String readStatus = request.getParameter("readStatus");
+			logger.debug("readStatus=" + readStatus);
+
 			if (result == 0) {
 				MailSecureVO secureInfo = ezEmailService.getSecureMailInfo(secureId, reader);
 				String userAccount = secureInfo.getUserAccount();
@@ -4326,10 +4334,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						} else {
 							response.setContentType(part.getContentType());
 							
-							filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
-							response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
-							logger.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
-							
+							filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);
+
+							if ("Y".equals(readStatus)) {
+								response.addHeader("content-disposition", "inline; filename=\"" + filename + "\"");
+								logger.debug("content-disposition=" + "inline; filename=\"" + filename + "\"");
+							} else {
+								response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
+								logger.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
+							}
+
 							InputStream input = null;
 							OutputStream output = null;
 							
@@ -4613,7 +4627,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						fis = new FileInputStream(decryptedFile);
 						message = sa.readMimeMessage(fis);
 						
-						bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, 0, -1, null, false, false, locale, secureKey, securePassword);
+						bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false, false, locale, secureKey, securePassword);
 						double size = Double.parseDouble(bodyInfoList.get(2));
 						String strSize = ezEmailUtil.getSizeWithUnit(size);
 						pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
@@ -4626,7 +4640,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					f.close(true);
 				}
-				
+
+				MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(tenantId, userId).get(0);
+				String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
+
 				String resultString = ezEmailService.updateSecureMailReaderInfo(secureId, reader);
 				if (!resultString.equals("OK")) {
 					//TODO
@@ -4637,6 +4654,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 					model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
 					model.addAttribute("isAttach", bodyInfoList.get(4));
+					model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기
+					model.addAttribute("previewMailImage", previewMailImage);
 				}
 				
 				model.addAttribute("e1", egovMessageSource.getMessage("ezEmail.e1", locale));
