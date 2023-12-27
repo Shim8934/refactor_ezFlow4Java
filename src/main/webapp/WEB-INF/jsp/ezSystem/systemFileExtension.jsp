@@ -274,7 +274,7 @@
             <table class="popuplist" id="addpopup_list" style="width:478px;margin:10px 0px 0px 1px;">
                 <tr>
                     <th style="width:90px;height:30px"><spring:message code='ezSystem.kdh02' /></th>
-                    <td><input type="text" id="qname" name="qname" class="textarea" onkeyup="if(event.keyCode ==13) add();" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
+                    <td><input type="text" id="qname" name="qname" class="textarea" onkeyup="if(event.keyCode ==13) add();" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="10"></td>
                 </tr>
             </table>
             <div class="btnpositionLayer">
