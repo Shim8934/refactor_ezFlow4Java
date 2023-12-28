@@ -872,6 +872,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        		map1.put("v_TENANT_ID", tenantID); 
             		map1.put("IS_ADDJOB", organVO.getIsAddjob());
             		map1.put("JOBID", organVO.getJobId());
+					map1.put("ROLEID", Optional.ofNullable(organVO.getRoleId()).filter(str -> !str.isEmpty()).orElse("0"));
 	        		
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{
