@@ -111,10 +111,10 @@
 				var selectedCompany = document.getElementById("companyList").value;
 				var inputList = ["uploadLimit", "departmentLimit", "userLimit"];
 				
-				let departmentLimit = document.getElementById("departmentLimit").value;
-				let userLimit = document.getElementById("userLimit").value;
-				let uploadLimit = document.getElementById("uploadLimit").value;
-				
+				let departmentLimit = parseFloat(document.getElementById("departmentLimit").value);
+				let userLimit = parseFloat(document.getElementById("userLimit").value);
+				let uploadLimit = parseFloat(document.getElementById("uploadLimit").value);
+
 				if (selectedCompany === "*") {
 					inputList.push("companyLimit");
 				}
