@@ -65,6 +65,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -90,7 +91,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -2101,23 +2101,151 @@ public class CommonUtil {
 		return result;
 	}
 	
+	/**
+	 * 암호 정책관리 체크 : 결과값 ENUM 객체
+	 */
+	public enum PasswordCheckPolicyResult {
+		// OK
+		SUCCESS("OK", 0, "you can use it."),
+		DISABLE_PASSWORD_POLICY("OK", 1, "The password policy is empty."),
+		DISABLE_PASSWORD_POLICY_CONFIG("OK", 2, "usePasswordPatternPolicy config is 'NO'"),
+		DISABLE_PASSWORD_POLICY_PATTERN("OK", 3, "The password policy pattern is empty."),
+		// ERROR (음수)
+		ERROR("ERROR", -1, "This password is not allowed."),
+		CAPITAL_LETTERS_NOT_ALLOWED("ERROR", -2, "Capital letters not allowed. (useEngCapitalLetter)"),
+		SMALL_LETTERS_NOT_ALLOWED("ERROR", -3, "Small letters not allowed. (useEngSmallLetter)"),
+		NUMBERS_NOT_ALLOWED("ERROR", -4, "Numbers not allowed. (useNumber)"),
+		SPECIAL_CHARACTERS_NOT_ALLOWED("ERROR", -5, "Special characters not allowed. (useSpecial)"),
+		CURRENT_PATTERN_CNT_NOT_ALLOWED("ERROR", -6, "When current patterns are used not available. (NUMBER_OF_CHAR == 0 : not use)"),
+		CHARACTERS_NOT_SUFFICIENT("ERROR", -7, "Characters of the required pattern are not sufficient. (NUMBER_OF_CHAR > pwStr)"),
+		EASY_NUMBERS_NOT_ALLOWED("ERROR", -8, "NUMBERERROR"),
+		PERSONAL_INFO_NUMBERS_NOT_ALLOWED("ERROR", -9, "NUMBERERROR"),
+		USE_PREVIOUS_PASSWORD_NOT_ALLOWED("ERROR", -10, "PREVERROR");
+
+		private final String status;
+		private final int code;
+		private final String message;
+
+		PasswordCheckPolicyResult(String status, int code, String message) {
+			this.status = status;
+			this.code = code;
+			this.message = message;
+		}
+
+		public String getStatus() {
+			return status;
+		}
+
+		public int getCode() {
+			return code;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public boolean succeeded() {
+			return "OK".equalsIgnoreCase(status);
+		}
+	}
+
+	/** 암호 정책관리 체크 : defalut */
+	public PasswordCheckPolicyResult checkPwPolicy (String pwStr, String companyId, int tenantId, String userId) throws Exception {
+		return checkPwPolicy(pwStr, companyId, tenantId, userId, true, null);
+	}
+
 	// 암호 정책관리 체크
 	@SuppressWarnings("unchecked")
-	public Boolean checkPwPolicy (String pwStr, String companyId, int tenantId) throws Exception {
+	public PasswordCheckPolicyResult checkPwPolicy (String pwStr, String companyId, int tenantId, String userId, boolean checkPrevPassword, Stream<String> propParams) throws Exception {
 		logger.debug("commonUtil. checkPwPolicy Started.");
-		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId + ", pwStr=" + pwStr);
-		
-		Boolean bResult = false;
-		
+		logger.debug("pwStr={}, companyId={}, tenantId={}, userId={}", pwStr, companyId, tenantId, userId);
+
+		PasswordCheckPolicyResult eResult = PasswordCheckPolicyResult.ERROR;
+		process : {
+			// 0-1. 2021-10-26 이사라 : 새비번이 prev비번과 일치하는지 chk 추가 (ezPersonal에서 → CommonUtil로 이전함)
+			boolean useChkPrevPwd = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"));
+
+			if (checkPrevPassword && useChkPrevPwd && StringUtils.isNotBlank(userId)) {
+
+				String encryptedNewPassword = EgovFileScrty.encryptPassword(pwStr, userId);
+				String prevPassword = ezCommonService.getPrevPwd(tenantId, userId);
+
+				if (encryptedNewPassword.equals(prevPassword)) {
+					logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
+					eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
+					break process;
+				}
+			}
+
+			// 0-2. 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
+			boolean checkPasswordNumber = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("checkPasswordNumber", tenantId));
+
+			if (checkPasswordNumber) {
+				// 개인정보 가져오기
+				String[] propArr = {"TELEPHONENUMBER", "MOBILE", "HOMEPHONE", "BIRTH"};
+				Stream<String> propStream = Stream.of(propArr); // *참고 : 자바 Stream 정리 [Stream, Map, Filtering, Sorted, Collect] https://codenme.tistory.com/55
+
+				// 1) 있으면 우선함.
+				if (propParams != null) {
+					propStream = propParams;
+
+				// 2) userId가 공유사서함이라도 에러나지 않는다. 빈 값으로 반환함.
+				} else if (StringUtils.isNotBlank(userId)) {
+					String result = ezOrganService.getPropertyList(userId, String.join(";", propArr), "", tenantId);
+					Document xmlDom = convertStringToDocument(result);
+					propStream = propStream.map(prop -> xmlDom.getElementsByTagName(prop).item(0).getTextContent());
+
+				// 3) propParams, userId 없으면 스킵
+				} else {
+					propStream = Stream.empty();
+				}
+
+				// 스트림은 한번만 소비할 수 있어서 List로 변환해둠. *참고 https://yeon-kr.tistory.com/192, https://devyoseph.tistory.com/156
+				List<String> propList = propStream.map(prop -> StringUtils.defaultString(prop.replaceAll("\\D", "").trim())).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+
+				// 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
+				for (int i = 0; i < pwStr.length() - 2; i++) {
+					if (Character.isDigit(pwStr.charAt(i))
+							&& Character.isDigit(pwStr.charAt(i + 1))
+							&& Character.isDigit(pwStr.charAt(i + 2))) {
+
+						// 연속된 3자리 이상의 숫자 또는 같은 값이 발견되면 오류로 처리
+						int num1 = Character.getNumericValue(pwStr.charAt(i));
+						int num2 = Character.getNumericValue(pwStr.charAt(i + 1));
+						int num3 = Character.getNumericValue(pwStr.charAt(i + 2));
+
+						if ((num2 - num1 == 1 && num3 - num2 == 1) || (num1 == num2 && num2 == num3)) {
+							eResult = PasswordCheckPolicyResult.EASY_NUMBERS_NOT_ALLOWED;
+							break process;
+						}
+
+						// 전화번호, 생일에 포함되는 숫자가 발견되면 오류로 처리
+						String consecutiveNumbers = String.valueOf(num1) + String.valueOf(num2) + String.valueOf(num3);
+
+						if (propList.stream().anyMatch(prop -> prop.contains(consecutiveNumbers))) { // "".contains(str) = false
+							eResult = PasswordCheckPolicyResult.PERSONAL_INFO_NUMBERS_NOT_ALLOWED;
+							break process;
+						}
+					}
+				}
+			}
+
 		// 1. 암호 정책관리 사용 여부 확인
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
 		if (!usePasswordPatternPolicy.equals("YES")) {
 			logger.debug("commonUtil. checkPwPolicy ended. usePasswordPatternPolicy config is 'NO'");
-			return true;
+				eResult = PasswordCheckPolicyResult.DISABLE_PASSWORD_POLICY_CONFIG;
+				break process;
 		}
 		
 		Map<String, Object> pwMap = ezSystemAdminService.getPwPolicy(tenantId, companyId);
-		if (pwMap != null) {
+
+			// 비밀번호 정책이 사용되지 않은 경우 무조선 통과
+			if (pwMap == null) {
+				eResult = PasswordCheckPolicyResult.DISABLE_PASSWORD_POLICY;
+				break process;
+			}
+
 			logger.debug("pwMap=" + pwMap.toString());
 			
 			Boolean bEngCapitalLetter = false; // 대문자 포함시 true(대소문자 구분 안할 경우 bEngSmallLetter는 무조건 false로 하고 bEngCapitalLetter 만 사용)
@@ -2144,7 +2272,8 @@ public class CommonUtil {
 	                if (useEngCapitalLetter != null && useEngCapitalLetter.equalsIgnoreCase("N")) {
 	                    if (bEngCapitalLetter) {
 	            			logger.debug("commonUtil. checkPwPolicy ended. (useEngCapitalLetter)");
-	                        return false;
+	                        eResult = PasswordCheckPolicyResult.CAPITAL_LETTERS_NOT_ALLOWED;
+							break process;
 	                    }
 	                }
 
@@ -2153,7 +2282,8 @@ public class CommonUtil {
 	                if (useEngSmallLetter != null && useEngSmallLetter.equalsIgnoreCase("N")) {
 	                    if (bEngSmallLetter) {
 	            			logger.debug("commonUtil. checkPwPolicy ended. (useEngSmallLetter)");
-	                        return false;
+	                        eResult = PasswordCheckPolicyResult.SMALL_LETTERS_NOT_ALLOWED;
+							break process;
 	                    }
 	                }
 				} else {
@@ -2167,7 +2297,8 @@ public class CommonUtil {
             if (useNumber != null && useNumber.equalsIgnoreCase("N")) {
                 if (bNumber) {
         			logger.debug("commonUtil. checkPwPolicy ended. (useNumber)");
-                    return false;
+                    eResult = PasswordCheckPolicyResult.NUMBERS_NOT_ALLOWED;
+					break process;
                 }
             }
 
@@ -2176,7 +2307,8 @@ public class CommonUtil {
             if (useSpecial != null && useSpecial.equalsIgnoreCase("N")) {
                 if (bSpecialChar){
         			logger.debug("commonUtil. checkPwPolicy ended. (useSpecial)");
-                    return false;
+                    eResult = PasswordCheckPolicyResult.SPECIAL_CHARACTERS_NOT_ALLOWED;
+					break process;
                 }
             }
             
@@ -2189,9 +2321,14 @@ public class CommonUtil {
             if (bSpecialChar){ iPatternCnt++;} 
 			
             // 5. 패턴 사용 수, 글자수 확인
-            if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
-            	Boolean patternChk = true;
-            	
+            if (pwPolicyPattern == null || pwPolicyPattern.size() < 1) {
+				logger.debug("!!!! ");
+				eResult = PasswordCheckPolicyResult.DISABLE_PASSWORD_POLICY_PATTERN;
+				break process;
+			}
+
+            eResult = PasswordCheckPolicyResult.SUCCESS;
+
             	for (Map<String, Object> pwPattern : pwPolicyPattern) {
             		
             		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
@@ -2200,33 +2337,29 @@ public class CommonUtil {
 
             		if (patternCnt == iPatternCnt) {
             			 if (numberOfChar == 0) { // 사용불가
-            				 patternChk = false;
+							eResult = PasswordCheckPolicyResult.CURRENT_PATTERN_CNT_NOT_ALLOWED;
                          } else if (numberOfChar > pwStr.length()){
-                        	 patternChk = false;
+							eResult = PasswordCheckPolicyResult.CHARACTERS_NOT_SUFFICIENT;
                          } else {
-                        	 patternChk = true;
+							eResult = PasswordCheckPolicyResult.SUCCESS;
                          }
             		}
             	} // for end.
-            	bResult = patternChk;
-            } else {
-        		logger.debug("!!!! ");
-            	bResult = true;
-            } // if end
-		} else {
-            // 비밀번호 정책이 사용되지 않은 경우 무조선 통과
-            bResult = true;
 		}
 		
-		logger.debug("commonUtil. checkPwPolicy ended. result=" + bResult);
-		return bResult;
+		logger.debug("commonUtil. checkPwPolicy ended. result={}", eResult);
+		return eResult;
 	}
 	
-	// 암호 정책 패턴 설명 문구
+	/**
+	 * 암호 정책 패턴 설명 문구
+	 * - '패스워드 설정 시 연속숫자, 생일, 전화번호 방지' 기능 추가 되었으므로 설명 추가 고려해야함.
+	 * - '가장 최근 암호 사용 금지' 기능 추가 되었으므로 설명 추가 고려해야함.
+	 */
 	@SuppressWarnings("unchecked")
 	public String getPwPolicyExplain (String companyId, int tenantId, Locale locale) throws Exception {
 		logger.debug("commonUtil. getPwPolicyExplain Started.");
-		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId);
+		logger.debug("companyId={}, tenantId={}, locale={}", companyId, tenantId, locale);
 		
 		String sResult = "";
 		String patternContent = "";
@@ -2321,7 +2454,7 @@ public class CommonUtil {
             }
 		}
 		
-		logger.debug("commonUtil. checkPwPolicy ended. result=" + sResult);
+		logger.debug("commonUtil. getPwPolicyExplain ended. result=" + sResult);
 		return sResult;
 	}
 	

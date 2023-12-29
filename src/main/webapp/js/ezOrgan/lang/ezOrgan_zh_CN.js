@@ -37,3 +37,8 @@ var strLangLHM01 = "Restoration to the other companies is not supported.";
 var strLangKHJ01 = "사원";
 var strLangKHJ02 = "명을 복구하시겠습니까?";
 var strLangKJE01 = "你确定要删除所有并发位置？";
+
+var strLangLS06 = "You can't change it to the password you used most recently."; // ezOrgan.ls001
+var strLangLS07 = "Consecutive numbers with more than 3 digits, identical numbers, phone numbers, and birthdays are not allowed."; // ezOrgan.ls008
+var strLangKSA06 = "Error checking password policy."; // ezSystem.ksaPwPolicy34
+var strLangKSA07 = "Password policy is not met."; // ezSystem.ksaPwPolicy35

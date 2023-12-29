@@ -63,7 +63,7 @@ public interface EzPersonalService {
 	
 	public void insertResult (int pItemSeq, String pUserID, int pResult, int tenantID) throws Exception;
 	
-	public int checkPassword (String pCN, String pPassword, int tenantID, String companyID, String npPassword) throws Exception;
+	public boolean checkPassword (String pCN, String pPassword, int tenantID) throws Exception;
 	
 	public String getShareApprovalList (String userID, String lang, String offset, String companyID, int tenantID) throws Exception;
 	

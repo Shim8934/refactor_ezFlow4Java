@@ -131,13 +131,12 @@ a{
 .btnpositionLayer {
 	text-align: center;
 	margin: -9px;
-	margin-top:20px;
+	margin-top:0px;
 	padding:7px;
 	border-top: 1px solid #eee;	
 	background-color: #fcfcfc;
 }
 .btnpositionLayer a.imgbtn {
-    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1);
     border: 1px solid #c3c3c3;
     height: 24px;
 }
@@ -250,6 +249,12 @@ a{
     background-clip: padding-box;
     border: 2px solid transparent;
 }
+
+/* 비밀번호 만료팝업창*/
+.imgbtn span{padding-right: 0px;}
+.imgbtn{padding-left: 0px;}
+.btnpositionLayer a.imgbtn{height: 25px; padding: 7px 20px; border-radius: 3px;}
+.btnpositionLayer a.imgbtn span{font-weight: normal; font-size: 14px;}
 
 /* 20230906 자바업그레이드 로그인 CSS */
 
