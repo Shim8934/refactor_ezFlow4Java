@@ -52,6 +52,7 @@ import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.Offset;
+import egovframework.let.utl.fcc.service.CommonUtil.PasswordCheckPolicyResult;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 /** 
  * @Description [Controller] 모바일 - 로그인
@@ -111,15 +112,15 @@ public class MLoginGWController {
 	 */
     @SuppressWarnings("unchecked")
 	public enum MLoginResult {
-		// OK : 로그인 쿠키를 생성함. 아래 '3) 로그인 성공 절차'를 타는 경우에만 status = ok 일 수 있다.
+		// OK : 로그인 쿠키를 생성함. 아래 '4) 로그인 성공 절차'를 타는 경우에만 status = ok 일 수 있다.
 		// SUCCESS("ok", 0, "ok"),
 
 		// ERROR
 		ERROR_FAIL("error", 1, "fail"),
 		ERROR_INVALID_UID("error", 2, "invalid uid"),
 		ERROR_USER_NOTFOUND("error", 3, "user does not exist"),
-		ERROR_FIRSTLOGIN("error", 4, "isFirstLogin"),
-		ERROR_EXPIREDATE("error", 5, "isExpireDate"),
+		ERROR_GOTO_CHANGEPW_FIRSTLOGIN("error", 4, "isFirstLogin"),
+		ERROR_GOTO_CHANGEPW_EXPIREDATE("error", 5, "isExpireDate"),
 		ERROR_CANNOT_USE_MOBILE_LOGIN("error", 6, "cannot use mobile login."),
 		ERROR_CANNOT_USE_DEVICE("error", 6, "this device cannot use."),
 		ERROR_IP_NOT_ALLOWED("error", 7, "IPAddress Not Allowed"),
@@ -219,6 +220,10 @@ public class MLoginGWController {
 					logger.error(e.getMessage(), e);
 				}
 			}
+
+			// 비밀번호 '다음에 변경하기'는 이미 로그인 정보(OTP포함) 인증을 마친 상태에서 나타나기 때문에 verifyingOTP 와 verifyingPWPeriod 를 스킵함.
+			String passwordUpdateNextTime = request.getParameter("nextTime");
+			boolean nextTime = "yes".equalsIgnoreCase(passwordUpdateNextTime);
 
 			// 로그인 정보 저장을 위한 값 처리
 			// 2021-12-28 이사라 : 세션ID를 세션코드로 입력
@@ -477,27 +482,7 @@ public class MLoginGWController {
                 	
                 	// 해당 사용자의 로그인이 블록되지 않은 경우
                 	if (check != -3) {
-        				if (resultVO.getLoginCnt() == 0 && !isSLOSupport) { // SLO의 경우에는 First Login도 성공으로 처리한다.
-        					logger.debug("isFirstLogin");
-        					
-        					// 2021-12-28 이사라 : 접속로그 실패 저장
-							resultVO.setForInsertLog(ip, agent, os, browser, tenantId, "N");
-    						loginService.insertLog(resultVO);
-
-							result = MLoginResult.ERROR_FIRSTLOGIN.getResult();
-							break loginProcess;
-
-						} else if (getDiff(resultVO, tenantId, companyId) <= 0) { //0보다 작아지면 패스워드 변경기한 Expired
-        					logger.debug("isExpireDate");
-        					
-        					// 2021-12-28 이사라 : 접속로그 실패 저장
-							resultVO.setForInsertLog(ip, agent, os, browser, tenantId, "N");
-    						loginService.insertLog(resultVO);
-
-							result = MLoginResult.ERROR_EXPIREDATE.getResult();
-							break loginProcess;
-						}
-
+						// diff 는 로그인 과정 3번째 순서로 미룸. 비밀번호 변경 권한을 갖기 위해서는 otp 인증까지 마쳐야하기 때문이다.
 						logger.debug("{} User Login : verifyingUser success.", uid);
 						break verifyingUser;
 
@@ -533,7 +518,7 @@ public class MLoginGWController {
 			 * 모바일 G/W 로그인 : 2) TFA 이중 인증 : OTP
 			 */
 			boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
-			verifyingOTP : if (useOTP) {
+			verifyingOTP : if (useOTP && !nextTime) {
 				if (!loginService.searchOtpKey(loginVO)) { // OTP Key 유무 확인 : hasOTP
 					logger.debug("hasn't set OTP key.");
 					result = MLoginResult.ERROR_HASNOT_SET_OTP.getResult();
@@ -583,7 +568,39 @@ public class MLoginGWController {
 			}
 
 			/**
-			 * 모바일 G/W 로그인 : 3) 로그인 성공 절차
+			 * 모바일 G/W 로그인 : 3) 비밀번호 변경기한 체크 (diff < 0 -> mLoginChangePw.jsp)
+			 */
+			verifyingPWPeriod : if (!nextTime) {
+				if (resultVO.getLoginCnt() == 0 && !isSLOSupport) { // SLO의 경우에는 First Login도 성공으로 처리한다.
+					logger.debug("isFirstLogin");
+					result = MLoginResult.ERROR_GOTO_CHANGEPW_FIRSTLOGIN.getResult();
+					result.put("isFirstLogin", "Y");
+
+				} else if (getDiff(resultVO, tenantId, companyId) <= 0) { //0보다 작아지면 패스워드 변경기한 Expired
+					logger.debug("isExpireDate");
+					result = MLoginResult.ERROR_GOTO_CHANGEPW_EXPIREDATE.getResult();
+					result.put("isExpireDate", "Y");
+
+				} else {
+					logger.debug("{} User Login : verifyingPWPeriod success.", uid);
+					break verifyingPWPeriod;
+				}
+
+				// 2021-12-28 이사라 : 접속로그 실패 저장
+				resultVO.setForInsertLog(ip, agent, os, browser, tenantId, "N");
+				loginService.insertLog(resultVO);
+
+				String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+				result.put("pwPolicyExplain", pwPolicyExplain);
+
+				result.put("userId", uid);
+				result.put("companyId", companyId);
+//				result.put("loginId", loginId);		// 비밀번호 변경 시 보여줄 id가 uid와 다른 경우 추가할 수 있음.
+				break loginProcess;
+			}
+
+			/**
+			 * 모바일 G/W 로그인 : 4) 로그인 성공 절차
 			 */
 			/* 2019-05-08 홍승비 - LoginCookieSSO를 사용하는지 값을 확인 */
 			String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
@@ -1694,7 +1711,149 @@ public class MLoginGWController {
     	logger.debug("pinLogin ended.");
 		return result;
 	}
-	
+
+	/**
+	 * 암호 정책 패턴 설명 문구 API
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezUser/login/companies/{companyId:.+}/getPwPolicyExplain", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getPwPolicyExplain(@PathVariable String companyId, HttpServletRequest request, Locale locale) throws Exception {
+		logger.debug("MOBILE G/W ORGAN [GET /mobile/ezUser/login/companies/{}/getPwPolicyExplain] started.", companyId);
+		JSONObject resultJSON = new JSONObject();
+
+		String serverName = request.getHeader("x-user-host");
+		int tenantId = loginService.getTenantId(serverName);
+
+		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+
+		resultJSON.put("status", "ok");
+		resultJSON.put("code", 0);
+		resultJSON.put("data", pwPolicyExplain);
+
+		logger.debug("MOBILE G/W ORGAN [GET /mobile/ezUser/login/companies/{}/getPwPolicyExplain] ended.", companyId);
+		return resultJSON;
+	}
+
+	/**
+	 * 암호 정책 확인 API
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezUser/login/companies/{companyId:.+}/checkPasswordPolicy", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject checkPasswordPolicy(@PathVariable String companyId, HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
+		logger.debug("MOBILE G/W LOGIN [PUT /mobile/ezUser/login/companies/{}/checkPasswordPolicy] started.", companyId);
+		JSONObject resultJSON = new JSONObject();
+
+		process : {
+			String password = jsonObject.get("password").toString();
+			if (password == null) {
+				resultJSON.put("status", "error");
+				resultJSON.put("code", -1);
+				resultJSON.put("data", "EMPTY PASSWORDS");
+				break process;
+			}
+
+			String serverName = request.getHeader("x-user-host");
+			int tenantId = loginService.getTenantId(serverName);
+			String userId = jsonObject.get("userId").toString();
+
+			PasswordCheckPolicyResult result = commonUtil.checkPwPolicy(password, companyId, tenantId, userId);
+
+			resultJSON.put("status", result.getStatus());
+			resultJSON.put("code", result.getCode());
+			resultJSON.put("data", result.getMessage());
+		}
+
+		logger.debug("MOBILE G/W LOGIN [PUT /mobile/ezUser/login/companies/{}/checkPasswordPolicy] ended.", companyId);
+		return resultJSON;
+	}
+
+	/**
+	 * 암호 변경 API
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezUser/login/users/{userId}/changePassword", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject changePassword(@PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonObject) throws Exception {
+		logger.debug("MOBILE G/W LOGIN [PUT /mobile/ezUser/login/users/{}/changePassword] started.", userId);
+
+		JSONObject result = new JSONObject();
+		String status = "ERROR";
+		int code = -1;
+		String data = "";
+
+		process : {
+			// 유효성 체크
+			String oldPassword = jsonObject.get("oldPassword").toString();
+			String newPassword = jsonObject.get("newPassword").toString();
+
+			if ("".equals(oldPassword) || "".equals(newPassword)) {
+				data = "EMPTY PASSWORDS";
+				break process;
+			}
+
+			// 1. 주 수행 변수 oldPw, newPw
+			String prm = egovFileScrty.getPrm();
+			String pre = egovFileScrty.getPre();
+			PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+
+			String decryptedOldPassword = EgovFileScrty.decryptRsa(pk, oldPassword);
+			String decryptedNewPassword = EgovFileScrty.decryptRsa(pk, newPassword);
+
+			// 2. 사용자 정보 : 로그인 정보 확인
+			String serverName = request.getHeader("x-user-host");
+			int tenantId = loginService.getTenantId(serverName);
+			String _pwd = EgovFileScrty.encryptPassword(decryptedOldPassword, userId);
+
+			LoginVO loginVO = new LoginVO();
+
+			loginVO.setId(userId);
+			loginVO.setPassword(_pwd);
+			loginVO.setTenantId(tenantId);
+			LoginVO resultVO = loginService.selectUser(loginVO);
+
+			if (resultVO == null || resultVO.getId() == null || "".equals(resultVO.getId())) {
+				data = "LOGINERROR";
+				break process;
+			}
+
+			String companyID = resultVO.getCompanyID();
+			logger.debug("loginVO : userId={}, tenantId={}, companyID={}", userId, tenantId, companyID);
+
+			// 3. 암호 정책 확인 (프론트에서 체크했어도, API 이기 때문에 보안상 비밀번호 변경 수행 직전 한번 더 체크하여 에러낼 수 있도록 하였음.)
+			PasswordCheckPolicyResult chkResult = commonUtil.checkPwPolicy(decryptedNewPassword, companyID, tenantId, userId);
+			if (!chkResult.succeeded()) {
+				status = chkResult.getStatus();
+				code = chkResult.getCode();
+				data = chkResult.getMessage();
+				break process;
+			}
+
+			// 4. 비밀번호 변경 수행
+			data = ezOrganAdminService.changePasswordWithEmailSystem(userId, tenantId, decryptedOldPassword, decryptedNewPassword);
+
+			if (!"OK".equalsIgnoreCase(data)) {
+				break process;
+			}
+
+			// 5. IP Address,  마지막 login시간 저장
+			if (resultVO.getLoginCnt() == 0) {
+				logger.debug("{}'s LoginCnt is {}, isFirstLogin.", userId, resultVO.getLoginCnt());
+
+				String ip = (request.getHeader("ip")!= null)? request.getHeader("ip") : ClientUtil.getClientIP(request);
+				loginVO.setIp(ip);
+				loginService.updateUser(loginVO);
+			}
+
+			status = "OK";
+			code = 0;
+		}
+
+		result.put("status", status);
+		result.put("code", code);
+		result.put("data", data);
+
+		logger.debug("MOBILE G/W LOGIN [PUT /mobile/ezUser/login/users/{}/changePassword] ended. result={}", userId, result);
+		return result;
+	}
 	
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
         if (numberOfLoginFailPermit <= 0) {        	
