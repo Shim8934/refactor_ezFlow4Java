@@ -191,11 +191,16 @@
 		    	pTotalCnt = Number(SelectSingleNodeValueNew(xmlDom, "LISTVIEWDATA/TOTALCOUNT"));
 				
 				var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
+				var orgPosition = "";
 			    if (oRows.length > 0) {
 			    	xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
 			    	$(xmlRtn.getElementsByTagName("ROW")).each(function(index) {
 		            	if($(this).find("DATA5").text() == "addJob") {
-		            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+							if(Tab1_SelectID == "001") {
+		            			orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+							} else {
+								orgPosition = pJobNM;
+							}
 		            		$(this).find("CELL").eq(3).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 		            	}
 		            });
