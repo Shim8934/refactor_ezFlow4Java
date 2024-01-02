@@ -513,7 +513,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 		$.getScript(url)
 			.done(function (script, textStatus) {
 				try {
-					getYearlyDocCount();
+					initChartPortlet();
 				} catch(err) {
 					console.log(err);
 				}
