@@ -2576,4 +2576,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblDbLog");
 		}
 	}
+
+	public void createColumnRoleTblAddJobMaster() {
+		try {
+			select("EzCommonDAO.checkTblAddJobRoleColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster ROLE,ROLE2,ROLEID column doesn't exist. creating the column...");
+			update("EzCommonDAO.createColumnRoleTblAddJobMaster");
+			logger.debug("addjobMaster create column.");
+			update("EzCommonDAO.dropPrimaryTblAddJobMaster");
+			logger.debug("addjobMaster drop primary.");
+			update("EzCommonDAO.addAddjobMasterPrimary");
+			logger.debug("addjobMaster add primary.");
+
+			if (dbType.equalsIgnoreCase("oracle") || dbType.equalsIgnoreCase("tibero")) {
+				if(select("EzCommonDAO.selectIndexTblAddJobMaster").equals(0)){
+					logger.debug("addjobMaster create index");
+					update("EzCommonDAO.createIndexTblAddJobMaster");
+				};
+			}
+		}
+
+	}
 }

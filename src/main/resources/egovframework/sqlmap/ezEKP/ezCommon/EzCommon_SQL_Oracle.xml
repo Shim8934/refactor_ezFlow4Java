@@ -4425,7 +4425,7 @@
 	</statement>
 	
 	<statement id="EzCommonDAO.addAddjobMasterPrimary">
-		ALTER TABLE TBL_ADDJOBMASTER ADD PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID)
+		ALTER TABLE TBL_ADDJOBMASTER ADD PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID, ROLEID)
 	</statement>
 	
 	<select id="EzCommonDAO.checkCommMailFG_PostColumn">
@@ -5212,5 +5212,67 @@
 			THREAD     VARCHAR2(100),
 			STACK      CLOB
 		)
+	</statement>
+	
+	<statement id="EzCommonDAO.alterFileNameForWebfolderHistory">
+	<![CDATA[
+		ALTER TABLE
+			TBL_WEBFOLDER_FILE_HISTORY
+			ADD
+				FILE_NAME VARCHAR(250)
+		]]>
+    </statement>
+
+	<statement id="EzCommonDAO.checkTblAddJobRoleColumn">
+		<![CDATA[
+			SELECT
+				ROLE,
+				ROLE2,
+				ROLEID
+			FROM
+				TBL_ADDJOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+    </statement>
+
+	<statement id="EzCommonDAO.createColumnRoleTblAddJobMaster">
+	<![CDATA[
+		ALTER TABLE
+			TBL_ADDJOBMASTER
+		ADD
+			ROLE VARCHAR(200),
+			ROLE2 VARCHAR(200),
+			ROLEID VARCHAR(100)
+		]]>
+    </statement>
+
+	<statement id="EzCommonDAO.dropPrimaryTblAddJobMaster">
+		ALTER TABLE
+			TBL_ADDJOBMASTER
+		DROP
+			PRIMARY KEY
+		DROP
+			INDEX
+	</statement>
+	
+	<statement id="selectIndexTblAddJobMaster">
+		SELECT
+		    COUNT(*)
+		FROM
+		    ALL_IND_COLUMNS
+		WHERE 
+		    TABLE_NAME = 'TBL_ADDJOBMASTER'
+	  	AND 
+		    INDEX_NAME = 'TBL_ADDJOBMASTER_PK'
+		AND 
+		    COLUMN_NAME = 'ROLEID'
+	</statement>
+	
+	<statement id="EzCommonDAO.createIndexTblAddJobMaster">
+		CREATE UNIQUE INDEX 
+			"TBL_ADD_JOBMASTER_PK" 
+		ON  
+		    "TBL_ADDJOBMASTER" ("TENANT_ID", "CN", "DEPTID", "JOBID", "ROLEID")
 	</statement>
 </sqlMap>

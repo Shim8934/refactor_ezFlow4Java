@@ -2984,4 +2984,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createTblDbLog() {
         ezCommonDAO.createTblDbLog();
     }
+    
+    public void createColumnRoleTblAddJobMaster() throws Exception {
+        ezCommonDAO.createColumnRoleTblAddJobMaster();
+    }
 }

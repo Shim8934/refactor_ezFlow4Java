@@ -426,4 +426,7 @@ public interface EzCommonService {
 	public void createColumnRollInfoInAddJobMaster() throws Exception;
 	
 	void createTblDbLog();
+
+	/*2023-12-28 김혜지 - 겸직 > 직책 컬럼 추가 */
+	void createColumnRoleTblAddJobMaster() throws Exception;
 }

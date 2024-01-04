@@ -317,6 +317,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertPermissionBasisDeptYN_Config(); // 2023-08-16 전인하 - PermissionBasisDeptYN 테넌트 컨피그 추가
 			ezCommonService.createColumnRollInfoInAddJobMaster(); // 2023-08-16 전인하 - tbl_addJobMaster 테이블에 Roll_INFO 컬럼 추가
 			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
+			ezCommonService.createColumnRoleTblAddJobMaster(); // 2023-12-28 김혜지 - 관리자 > 조직도 > 겸직등록 > 직책 컬럼 추가
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

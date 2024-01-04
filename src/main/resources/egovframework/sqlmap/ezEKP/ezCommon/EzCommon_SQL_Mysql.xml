@@ -4178,7 +4178,7 @@
 	</statement>
 	
 	<statement id="EzCommonDAO.addAddjobMasterPrimary">
-		ALTER TABLE TBL_ADDJOBMASTER ADD CONSTRAINT PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID)
+		ALTER TABLE TBL_ADDJOBMASTER ADD CONSTRAINT PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID, ROLEID)
 	</statement>
 	
 	<select id="EzCommonDAO.checkCommMailFG_PostColumn">
@@ -4915,5 +4915,37 @@
 			THREAD     VARCHAR(100)  NULL,
 			STACK      MEDIUMTEXT    NULL
 		) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4
+	</statement>
+	
+	<statement id="EzCommonDAO.checkTblAddJobRoleColumn">
+		<![CDATA[
+			SELECT
+				ROLE,
+				ROLE2,
+				ROLEID
+			FROM
+				TBL_ADDJOBMASTER
+			    	LIMIT 1
+		]]>
+    </statement>
+
+	<statement id="EzCommonDAO.createColumnRoleTblAddJobMaster">
+		<![CDATA[
+			ALTER TABLE
+				TBL_ADDJOBMASTER
+			ADD
+					ROLE VARCHAR(200),
+					ROLE2 VARCHAR(200),
+					ROLEID VARCHAR(100)
+		]]>
+    </statement>
+
+	<statement id="EzCommonDAO.dropPrimaryTblAddJobMaster">
+		ALTER TABLE
+			TBL_ADDJOBMASTER
+		DROP
+			PRIMARY KEY
+		DROP
+			INDEX
 	</statement>
 </sqlMap>
