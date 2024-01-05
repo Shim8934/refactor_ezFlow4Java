@@ -1358,6 +1358,8 @@
 		            
 		            if (pPublicityYN.substring(0,1) == "N") {
 	                	tempPublic = "N";
+	                } else if (pPublicityYN.substring(0,1) == "Y") {
+	                	tempPublic = "Y";
 	                }
 		            
 		            passAprLine = ret[32]; // "N"만 들어갈듯
