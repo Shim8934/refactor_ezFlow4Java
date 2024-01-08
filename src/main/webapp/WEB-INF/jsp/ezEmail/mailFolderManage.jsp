@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component_utf8.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/mailbox_valid.js')}"></script>
 		<script type="text/javascript">
 			var lang = "${userinfo.lang}";
 			var PostTreeView = null;
@@ -93,19 +94,16 @@
                 inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
                 DivPopUpShow(330, 150, "/ezEmail/inputNameDlg.do");
             }
+
 		    function add_onclick_Complete(szName) {
-                szName = szName.replace("&", "＆");
-                szName = szName.replace("'", "＇");				
+				const jmochaSafeName = replaceMailboxNameForJmocha(szName);
 		        DivPopUpHidden();
-		        if (typeof (szName) == "undefined" || szName.trim() == "") {
-		            return;
-		        }
-		        else if (checkBadFolderName(szName)) {
+
+				if (!jmochaSafeName || checkBadFolderName(jmochaSafeName)) {
 		            return;
 		        }
 		        
-		        var szURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-		        var result = mail_make_folder("NEW", szURL, "", szName);
+				const result = mail_make_folder("NEW", PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), "", jmochaSafeName);
 		        if (result != "OK") {
 		            if (result == "ALREADY_EXISTS") {
 		                alert("<spring:message code='ezEmail.t456' />");
@@ -135,16 +133,19 @@
 		        inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
 		        DivPopUpShow(330, 150,"/ezEmail/inputNameDlg.do");
 		    }
+
 		    function modify_onclick_Complete(szName) {
+				const jmochaSafeName = replaceMailboxNameForJmocha(szName);
 		        DivPopUpHidden();
-		        if (typeof (szName) == "undefined" || szName.trim() == "" || szName == PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption")) {
+
+				if (PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption") === jmochaSafeName) {
 		            return;
 		        }
-		        if (checkBadFolderName(szName)) {
+				if (!jmochaSafeName || checkBadFolderName(jmochaSafeName)) {
 		            return;
 		        }
 
-		        var result = mail_make_folder("MODIFY", PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), "", szName);
+				const result = mail_make_folder("MODIFY", PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), "", jmochaSafeName);
 		        
 		        if (result != "OK") {
 		        	if (result == "ALREADY_EXISTS") {
@@ -158,7 +159,7 @@
 		        LoadAddressTree(PostTreeView.selectedIndex());
 		        EventCheck = true;
 		    }
-		    
+
 		    var mail_movecopy_cross_dialogArguments = new Array();
 		    function move_onclick() {
 		        if (PostTreeView.selectedIndex() == -1) {
@@ -298,45 +299,6 @@
 		            if (confirm("<spring:message code='ezEmail.t475' />")) {
 		                delete_mail(deleteURL, false, trashBoxURL);
 		            }
-		        }
-		    }
-
-			function checkBadFolderName(szName) 
-			{
-				var szBadChars = /[\<\>\~\#\%\*\"\+\|\\\.\/]/g;
-				var szChangedName = szName.replace(szBadChars, "");
-				if(szChangedName != szName)
-				{
-					alert("<spring:message code='ezEmail.t479' />< ~ # % & * ' \" + | \\ . / >)<spring:message code='ezEmail.t480' />");
-					return true;
-				}
-				return false;
-			}
-			
-			//TODO: copy일때 비동기로 처리하도록 함수 따로 만들어야함.
-		    function mail_make_folder(szCMD, szURL, destURL, szName) {
-		    	var xmlHTTP = createXMLHttpRequest();
-		        var xmlDOM = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDOM, objNode, "DATA");
-		        createNodeAndInsertText(xmlDOM, objNode, "CMD", szCMD);
-		        createNodeAndInsertText(xmlDOM, objNode, "URL", szURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
-		        createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
-		        
-				var requestUrl = "/ezEmail/mailMakeFolder.do";
-		        
-		        if (shareId != "") {
-		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
-	            }
-		        
-		        xmlHTTP.open("POST", requestUrl, false);
-		        xmlHTTP.send(xmlDOM);
-		        
-		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
-		            return xmlHTTP.responseText;
-		        } else {
-		            return "ERROR";
 		        }
 		    }
 			

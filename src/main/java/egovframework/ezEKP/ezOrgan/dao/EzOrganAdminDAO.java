@@ -37,7 +37,6 @@ import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
-import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -2326,5 +2325,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직일 경우의 권한 삽입
 	public void updatePermissionIntoAddJobMaster(HashMap<String, Object> map) throws Exception {
 		update("EzOrganAdminDAO.updatePermissionIntoAddJobMaster", map);
+	}
+
+	public int getUserJobCheckCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.getUserJobCheckCount", map);
 	}
 }

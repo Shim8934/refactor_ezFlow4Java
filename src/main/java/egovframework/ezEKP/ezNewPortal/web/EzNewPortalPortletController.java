@@ -1,7 +1,10 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
+import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -10,6 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezNewPortal.vo.ChartVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -1307,5 +1312,40 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("getTheme2NotiBoardItemList End");
 		
 		return boardList;
+	}
+
+	/**
+	 * 차트 포틀릿 - 2023/12/28 박기범
+	 * 차트 포틀릿 표출용 샘플 데이터
+	 */
+	@GetMapping(value = "/ezNewPortal/sampleChartPortlet.do")
+	@ResponseBody
+	public List<List<ChartVO>> sampleChartPortlet() throws Exception {
+		logger.debug("sampleChartPortlet Start");
+		List<List<ChartVO>> wholeList = new ArrayList<>();
+		List<ChartVO> list = new ArrayList<>();
+		SecureRandom random = SecureRandom.getInstanceStrong();
+		for (int i = 1; i <= 12; i++) {
+			ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
+					.groupTitle("대내문서")
+					.build();
+			list.add(vo);
+		}
+		for (int i = 1; i <= 12; i++) {
+			ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
+					.groupTitle("대외문서")
+					.build();
+			list.add(vo);
+		}
+		wholeList.add(list);
+
+		List<ChartVO> list2 = new ArrayList<>();
+		for (int i = 0; i <= 2; i++) {
+			list2.add(new ChartVO.ChartVOBuilder(i + "번", random.nextInt(3000)).build());
+		}
+		wholeList.add(list2);
+
+		logger.debug("sampleChartPortlet End");
+		return wholeList;
 	}
 }

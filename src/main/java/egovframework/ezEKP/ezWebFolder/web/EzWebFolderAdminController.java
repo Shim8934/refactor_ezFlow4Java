@@ -524,7 +524,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		logger.debug("companyLimit: {}, companyLimit: {},: {}, userLimit: {}, uploadLimit: {}, companyId: {}", companyLimit, departmentLimit, userLimit, uploadLimit, companyId);
 
 		if (StringUtils.isNotEmpty(uploadLimit) && StringUtils.isNotEmpty(departmentLimit) && StringUtils.isNotEmpty(userLimit)) {
-			if (uploadLimit.compareTo(departmentLimit) > 0 && uploadLimit.compareTo(userLimit) > 0) {
+
+			if (Float.compare(Float.parseFloat(uploadLimit),Float.parseFloat(departmentLimit)) > 0 && Float.compare(Float.parseFloat(uploadLimit),Float.parseFloat(userLimit)) > 0) {
 
 				resultBody  = (JSONObject) jp.parse("{\"code\":\"4\"}");
 				

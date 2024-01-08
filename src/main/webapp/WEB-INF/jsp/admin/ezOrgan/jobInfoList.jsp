@@ -21,8 +21,8 @@
 		.previewmail_info {border-bottom: 1px solid #e5e5e5; min-width: 300px;}
 		.previewmail_bar_h {position: relative; float: left; display: inline-block; width: 5px; height: 100%;}
 		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
-		.preview_header {padding: 0px; font-weight: bold; height: 11px; line-height: 11px;}
-		.preview_title {display: inline-block; margin-top: -6px; margin-left: 13px;}
+		.preview_header {padding: 0px; font-weight: bold; height:auto; line-height:normal;}
+		.preview_title {display: inline-block; max-width:calc(100% - 40px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden; float:left; margin:0 10px 0 13px;}
 		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; padding-top: 70px; border-top: 1px solid #e5e5e5;}
@@ -191,11 +191,16 @@
 		    	pTotalCnt = Number(SelectSingleNodeValueNew(xmlDom, "LISTVIEWDATA/TOTALCOUNT"));
 				
 				var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
+				var orgPosition = "";
 			    if (oRows.length > 0) {
 			    	xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
 			    	$(xmlRtn.getElementsByTagName("ROW")).each(function(index) {
 		            	if($(this).find("DATA5").text() == "addJob") {
-		            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+							if(Tab1_SelectID == "001") {
+		            			orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+							} else {
+								orgPosition = pJobNM;
+							}
 		            		$(this).find("CELL").eq(3).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 		            	}
 		            });
@@ -692,15 +697,17 @@
 			<div class="previewmail">
 				<div class="previewmail_info">
 					<div id="Preview_HeaderH">
-						<p class="preview_header">
-							<span class="preview_title" id="preview_title"></span>
-							<span class="preview_count" id="preview_count"></span>
-							<span id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px; margin-top: -9px;">
+						<div class="preview_header">
+							<span id="userSearchRayer" style="float:right; display: block; margin-right: 2px; margin-top: 4px;">
 								<select id="searchType" style="height: 26px; width: 60px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
-								<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px; margin-right: -2px;">
-								<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.png" style="width: 26px; height: 24px; margin-top:2px;" border="0" onClick="search()"></a>
+								<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px; height:26px !important; margin-right:-1px;">
+								<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
 							</span>
-						</p>
+							<div style="float:none; display:block; overflow:hidden; line-height:37px;">
+								<span class="preview_title" id="preview_title"></span>
+								<span class="preview_count" id="preview_count"></span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

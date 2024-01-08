@@ -974,6 +974,9 @@ public class MLoginGWController {
 			LoginVO resultVO = loginService.selectUser(loginVO);
 			String companyId = resultVO.getCompanyID();
 
+			// UseEmpNumberLogin이 YES인 경우 uid가 사번일 수 있어 CN으로 변경함
+			uid = resultVO.getId();
+
 			/* 2019-05-08 홍승비 - LoginCookieSSO를 사용하는지 값을 확인 */
 			String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
 			result.put("useLoginCookieSSO", useSSOCookie);

@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezOrgan.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,9 +109,11 @@ public class EzOrganDAO extends EgovAbstractDAO {
         
         String isAddJob = "";
         String jobId = "";
-        jobId = (map.containsKey("JOBID")) ? (String) map.get("JOBID") : "";
+        String roleId = "";
+        jobId = Optional.ofNullable((String)map.get("JOBID")).filter(str -> !str.isEmpty()).orElse("0");
+        roleId = Optional.ofNullable((String)map.get("ROLEID")).filter(str -> !str.isEmpty()).orElse("0");
         isAddJob = (map.containsKey("IS_ADDJOB") && !jobId.equals("")) ? (String)map.get("IS_ADDJOB") : "";
-        logger.debug("isAddJob=" + isAddJob + ", jobId=" + jobId);
+        logger.debug("isAddJob=" + isAddJob + ", jobId=" + jobId + ", roleId=" + roleId);
         
         OrganUserVO organUserVO = (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
         

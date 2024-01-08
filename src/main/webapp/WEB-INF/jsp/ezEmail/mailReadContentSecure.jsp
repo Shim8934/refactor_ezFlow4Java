@@ -8,10 +8,11 @@
         <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${e1}"></script>
         <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
+		<script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
     	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     	<script language="javascript" type="text/javascript">
 		    var objLink = document.all("BigSizeFileLink");
-		    
+
 			if (objLink != null) {
 				if (typeof(objLink.length) == "undefined" ) {
 					objLink.target = "";
@@ -21,10 +22,31 @@
 					}
 				}
 			}
-			
+
 			function window_onload() {
+
+				// 메일 본문에 absolute이거나 fixed인 position 스타일을 찾아서 지운다.
+				setTimeout(function() {
+					$("#normalScreen").find('*').each(function() {
+						var position = $(this).css('position');
+
+						if (position == 'fixed') {
+							$(this).css('position', '');
+						}
+					});
+				}, 10);
+
+				if ($(".previewmail_addImage").length > 0) {
+					$(".previewmail_addImage").css("opacity","1");
+				}
+
+				try {
+					if (ReadCountCheck=="N") {
+						parent.opener.refreshUnreadCount();
+					}
+				} catch (e) { }
 			}
-			
+
 		    function AttachDetail_view(obj) {
 		        if (obj.className == "icon_graydown") {
 		            obj.className = "icon_grayup"
@@ -35,11 +57,11 @@
 		            document.getElementById("PreviewAttachList").style.display = "none";
 		        }
 		    }
-		    
+
 		    function DownloadAttach(DownloadUrl) {
 		        AttachDownFrame.location.href = DownloadUrl;
 		    }
-		    
+
 		    var suffix = 0;
 		    function AttachAllDownload() {
 		        if (suffix < document.getElementsByName("MailAttachDownloadItems").length)
@@ -49,7 +71,7 @@
 		            return;
 		        }
 		    }
-		    
+
 		    function FileDownload(pFileUrl) {
 		        if (pFileUrl != null) {
 		            location.href = pFileUrl;
@@ -60,11 +82,11 @@
 		            return;
 		        }
 		    }
-		    
+
 	        var nowZoom = 100;
 	        var maxZoom = 200;
 	        var minZoom = 80;
-	
+
 	        var MozNowZoom = 1;
 	        var MozMaxZoom = 2;
 	        var MozMinZoom = 0.8;
@@ -96,7 +118,7 @@
 	                }
 	                document.getElementById("normalScreen").style.MozTransform = "scale(" + MozNowZoom + ")";
 	                document.getElementById("normalScreen").style.MozTransformOrigin = "0 0";
-	
+
 	            }
 	            else {
 	                if (nowZoom > minZoom) {
@@ -128,6 +150,12 @@
 		<div id="MailBigAttachRayer" class="previewmail_addfile">
 		</div>
 		<div class='margin' id="normalScreen" style="margin-top:5px; word-wrap:break-word;">${htmlBody}<!--  --></div>
-		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
+		<c:if test="${previewMailImage == 'Y' && previewImageListHtml != ''}">
+		<div class="previewmail_addImage" style="margin-bottom:10px;font-family:<spring:message code='main.t246' />; opacity:0;">
+			<p class="title"><spring:message code='ezEmail.0hun05' /></p>
+			<div class="previewIamgelist" id="PreviewAttachList">${previewImageListHtml}</p>
+			</div>
+			</c:if>
 	</body>
 </html>

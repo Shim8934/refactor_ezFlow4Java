@@ -2204,14 +2204,17 @@ CREATE TABLE `tbl_addjobmaster` (
   `DEPTID` varchar(80) NOT NULL,
   `TITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ROLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ROLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `POSITIONCD` varchar(40) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `ORDERBY` varchar(200) DEFAULT NULL,
   `JOBID` varchar(100) DEFAULT NULL,
+  `ROLEID` varchar(100) DEFAULT NULL,
   `PROXY` varchar(200) DEFAULT NULL,
   `MANUAL_FLAG` varchar(4) DEFAULT NULL,
   `ROLL_INFO` varchar(200) DEFAULT 'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;',
-  PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`,`JOBID`)
+  PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`,`JOBID`,`ROLEID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

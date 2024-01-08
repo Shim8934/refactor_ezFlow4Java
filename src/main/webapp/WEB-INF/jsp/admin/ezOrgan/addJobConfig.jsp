@@ -361,7 +361,13 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DISPLAYNAME")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "changeComTapString" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("COMPANY")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "changeDeptTapString" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + " (" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE")[i])+ ")");
+	                        LISTVIEWDATA = LISTVIEWDATA + " (" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE")[i]));
+	                        var role = MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLE")[i]));
+	                        if (null != role && "" != role){
+	                        LISTVIEWDATA = LISTVIEWDATA + " / " + role + ")";	                        	
+	                        } else {
+	                        	LISTVIEWDATA = LISTVIEWDATA + ")";
+	                        }
 	                        LISTVIEWDATA = LISTVIEWDATA + "</VALUE>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA1>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DEPARTMENT")[i]));
@@ -381,6 +387,15 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA6>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("JOBID")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA6>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA7>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLE")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA7>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA8>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLE2")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA8>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA9>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("ROLEID")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA9>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<MANUAL_FLAG>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("MANUALFLAG")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</MANUAL_FLAG>";
@@ -764,16 +779,24 @@
 		            listview.LoadFromID("lvUserList");
 		            var UserAddjoblistview = new ListView();
 		            UserAddjoblistview.LoadFromID("lvAddjobList");
-		        	var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobID});
+					jobRoleID = jobRoleID != "" ? jobRoleID : "0";
+		        	var bFlag = UserAddjoblistview.ExistRow2({"data1":dept[0], "data6":jobTitleID, "data9":jobRoleID});
+					let cn = GetAttribute(p_ListOrderObject, "_data2");
+					let roleVal = document.getElementById("lvAddjobList").querySelector('tbody').children;
 		        	
 		        	if (!bFlag) { // 원부서의 직위 체크
-		        		var cn = GetAttribute(p_ListOrderObject, "_data2");
 		        		var orgDeptId = getDeptId(cn);
 						var orgJobId = getEntryInfo(cn, "extensionAttribute7");
-    		            bFlag = ((dept[0] == orgDeptId) && (jobID == orgJobId)) ? true : false;
+						var orgRoleId = getEntryInfo(cn, "extensionAttribute8");
+						bFlag = ((dept[0] == orgDeptId) && (jobTitleID == orgJobId) && jobRoleID == orgRoleId) ? true : false;
 		        	}
-		        	
-		            /* var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+					
+					if(jobCheck(cn, dept[0], jobTitleID, jobRoleID)){
+						alert(strLang25);
+						return;
+					}
+		            
+					/* var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
 		            
 		            if (!bFlag) {
     		            var cn = GetAttribute(p_ListOrderObject, "_data2");
@@ -781,8 +804,8 @@
     		            bFlag = dept[0] == orgDeptId ? true : false;
 		        	} */
 		        	
-		        	// 중복겸직가능
-		        	bFlag = false;
+		        	// // 중복겸직가능 //2023-12-12 동일 부서의 동일 겸직(직위 동일, 직책만 다른 경우) 가능하도록 수정되어 해당 부분 주석
+		        	// bFlag = false;
 		        	
 		            if (bFlag) {
 		                alert(strLang25);
@@ -811,10 +834,17 @@
  		               	}
  		               	pparsingXML = pparsingXML + "changeComTapString" + compName[0];
  		               	pparsingXML = pparsingXML + "changeDeptTapString" + MakeXMLString(dept[1]) + " (" ;
+
  		               	if(compName[1] === "1") {
  		               		pparsingXML = pparsingXML + MakeXMLString(jobTitle);
+ 		               		if ("" != jobRole) {
+ 		               			pparsingXML = pparsingXML + " / " + MakeXMLString(jobRole);
+ 		               		}
  		               	} else {
  		               		pparsingXML = pparsingXML + MakeXMLString(jobTitle2);
+ 		               		if ("" != jobRole) {
+		               			pparsingXML = pparsingXML + " / " + MakeXMLString(jobRole2);
+		               		}	
  		               	}
  		               	pparsingXML = pparsingXML + ")</VALUE>";
 		                pparsingXML = pparsingXML + "<DATA1>" + MakeXMLString(dept[0]) + "</DATA1>";
@@ -824,7 +854,10 @@
 		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(jobTitle) + "</DATA3>";
 		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(jobTitle2) + "</DATA4>";
 		                pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(dept[1]) + "</DATA5>";
-		                pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jobID) + "</DATA6>";
+		                pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jobTitleID) + "</DATA6>";
+		                pparsingXML = pparsingXML + "<DATA7>" + MakeXMLString(jobRole) + "</DATA7>";
+		                pparsingXML = pparsingXML + "<DATA8>" + MakeXMLString(jobRole2) + "</DATA8>";
+		                pparsingXML = pparsingXML + "<DATA9>" + MakeXMLString((jobRoleID != "" ? jobRoleID : "0")) + "</DATA9>";
 		                pparsingXML = pparsingXML + "<MANUAL_FLAG>Y</MANUAL_FLAG>";
 		                pparsingXML = pparsingXML + "</CELL></ROW>";
 		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
@@ -885,6 +918,9 @@
 	                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(Addjoblistview.GetDataRows()[i], "data1"));
 	                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4"));
 	                createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(Addjoblistview.GetDataRows()[i], "data6"));
+	                createNodeAndInsertText(xmlDom, objNode, "ROLE", GetAttribute(Addjoblistview.GetDataRows()[i], "data7"));
+	                createNodeAndInsertText(xmlDom, objNode, "ROLE2", GetAttribute(Addjoblistview.GetDataRows()[i], "data8"));
+	                createNodeAndInsertText(xmlDom, objNode, "ROLEID", GetAttribute(Addjoblistview.GetDataRows()[i], "data9"));
 	                createNodeAndInsertText(xmlDom, objNode, "MANUAL_FLAG", GetAttribute(Addjoblistview.GetDataRows()[i], "manual_flag"));
 
 	                AddjobText = AddjobText + "- " + GetAttribute(Addjoblistview.GetDataRows()[i], "data5") + " (" + GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4") + ")<BR>";
@@ -1149,16 +1185,17 @@
 	        	$("#spn_deptName").css("width", deptNameWidth);
 	        }
 		    
-	        var jobTitle, jobTitle2, jobID;
+	        var jobTitle, jobTitle2, jobTitleID, jobRole, jobRole2, jobRoleID;
 		    function getTitleOption(companyID) {
-		    	var xmldom, rtnVal, flag, i;
-		    	
+		    var typeAry = ['001', '002'];
+		    var xmldom, rtnVal, flag, i;
+		    typeAry.forEach(function(type) {
 		    	$.ajax({
 					type : "POST",
 					dataType : "text",
 					url : "/admin/ezOrgan/jobTitleListView.do",
 					data : {
-						type : "001",
+						type : type,
 						companyID : companyID
 					},
 					async : false,
@@ -1170,52 +1207,124 @@
 				});
 		    	
 		    	var oRows = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
-			    if (oRows.length > 0) {
-			    	flag = true;
-			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;' onchange='jobChange()'>";
-			    	for (i = 0; i < oRows.length; i++) {
-			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
-				    		if (flag) {
-// 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
-// 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
-// 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
-					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1");
-					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
-					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
-					    		flag = false;
-				    		}
-				    		
-// 				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
-// 						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) 
-// 						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
-				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1")) 
-						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
-						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) + "'>";
+		    	if (type == '001') {
+					if (oRows.length > 0) {
+				    	flag = true;
+				    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;' onchange='jobChange(this)'>";
+				    	for (i = 0; i < oRows.length; i++) {
+				    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
+					    		if (flag) {
+	// 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+	// 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
+	// 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
+						    		jobTitleID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1");
+						    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+						    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
+						    		flag = false;
+						    		console.log("jobTitle = ",jobTitleID, jobTitle, jobTitle2);
+					    		}
 					    		
-				    		if ("${userInfo.primary}" == "1") {
-					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE"));
-				    		} else {
-					    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
+	// 				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+	// 						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) 
+	// 						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
+					    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1")) 
+							    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+							    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) + "'>";
+						    		
+					    		if ("${userInfo.primary}" == "1") {
+						    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE"));
+					    		} else {
+						    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
+					    		}
+					    		
+					    		rtnVal += "</option>";
 				    		}
-				    		
-				    		rtnVal += "</option>";
-			    		}
-			    	}
-			    	rtnVal += "</select>";
-			    } else {
-			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
-			    	jobID = ""; jobTitle = ""; jobTitle2 = "";
-			    }
+				    	}
+				    	rtnVal += "</select>";
+				    } else {
+				    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
+				    	jobTitleID = ""; jobTitle = ""; jobTitle2 = "";
+				    }
+						document.getElementById("JobTitleOption").innerHTML = rtnVal;
+		    	} else if (type == '002') {
+					if (oRows.length > 0) {
+				    	flag = true;
+				    	rtnVal = "<select id='roleSelector' style='width:100%;height:25px;' onchange='jobChange(this)'>";
+					    		rtnVal += "<option id='' nmval='' nmval2=''>(<spring:message code='ezApprovalG.t852' />)</option>";
+				    	for (i = 0; i < oRows.length; i++) {
+				    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
+					    		if (flag) {
+	// 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
+	// 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");
+	// 					    		jobTitle2 = SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE");
+						    		jobRoleID = "";
+						    		jobRole = "";
+						    		jobRole2 = "";
+						    		flag = false;
+					    		}
+	// 				    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+	// 						    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) 
+	// 						    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE")) + "'>";
+					    		rtnVal += "<option id='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"DATA1")) 
+							    		+ "' nmval='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE")) 
+							    		+ "' nmval2='" + MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE")) + "'>";
+						    		
+					    		if ("${userInfo.primary}" == "1") {
+						    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE"));
+					    		} else {
+						    		rtnVal += MakeXMLString(SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE"));
+					    		}
+					    		
+					    		rtnVal += "</option>";
+				    		}
+				    	}
+				    	rtnVal += "</select>";
+				    } else {
+				    	rtnVal = "<select id='roleSelector' style='width:100%;height:25px;'></select>";
+				    	jobRoleID = ""; jobRole = ""; jobRole2 = "";
+				    }
+					document.getElementById("JobRoleOption").innerHTML = rtnVal;
+		    	}
 			    
-		    	document.getElementById("JobTitleOption").innerHTML = rtnVal;
+				});
+		    
+		    
 		    }
-		    function jobChange() {
-		    	var target = document.getElementById("titleSelector");
-		    	var option = target.options[target.options.selectedIndex];
-		    	jobID = option.id;
-		    	jobTitle = option.getAttribute("nmval");
-		    	jobTitle2 = option.getAttribute("nmval2");
+		    
+		    function jobChange(selectValue) {
+		    	//var target = document.getElementById("titleSelector");
+		    	//var option = target.options[target.options.selectedIndex];
+		    	var option = selectValue.options[selectValue.options.selectedIndex];
+		    	if (selectValue.id == 'titleSelector') {
+		    		jobTitleID = option.id != "" ? option.id : "0";
+			    	jobTitle = option.getAttribute("nmval");
+			    	jobTitle2 = option.getAttribute("nmval2");
+		    	} else {
+		    		jobRoleID = option.id != "" ? option.id : "0";
+		    		jobRole = option.getAttribute("nmval");
+		    		jobRole2 = option.getAttribute("nmval2");
+		    	}
 		    }
+			
+			function jobCheck(cn, deptId, jobId, roleId){
+				var result_data;
+				
+				$.ajax({
+					type : "POST",
+					url : "/admin/ezOrgan/getUserJobCheck",
+					async : false,
+					data : {cn : cn ,
+							deptId : deptId,
+							jobId : jobId, 
+							roleId : roleId}, 
+					success : function(data){
+							result_data = data;
+						}	
+				});
+				
+				return result_data;
+				
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -1358,10 +1467,18 @@
 	                    </tr>
 	                    <tr>
 	                    	<th style="text-align:center">
-	                    		<spring:message code='ezOrgan.csj04' />
+	                    		<spring:message code='main.t77' />
 	                    	</th>
 	                    	<td>
 	                    		<div id="JobTitleOption" style="width:225px;"></div>
+	                    	</td>
+	                    </tr>
+	                    <tr>
+	                    	<th style="text-align:center">
+	                    		<spring:message code='ezOrgan.t1500' />
+	                    	</th>
+	                    	<td>
+	                    		<div id="JobRoleOption" style="width:225px;"></div>
 	                    	</td>
 	                    </tr>
 	                   <%--  <tr class="primary">

@@ -7,14 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
@@ -56,7 +49,6 @@ import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-import org.stringtemplate.v4.ST;
 
 @Service("EzOrganAdminService")
 public class EzOrganAdminServiceImpl implements EzOrganAdminService {
@@ -1318,23 +1310,27 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void addJob(String userID, String titleInfo, String jobID, int tenantID) throws Exception {
+	public void addJob(String userID, String titleInfo, String jobID, String roleInfo, int tenantID) throws Exception {
 	    logger.debug("addJob started");
-	    logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",jobID=" + jobID + ",tenantID=" + tenantID);
-	    
+	    logger.debug("userID={}, titleInfo={}, jobID={}, roleInfo={}, tenantID={}",userID, titleInfo, jobID, roleInfo, tenantID);
 		String sTitle1 = "";
         String sTitle2 = "";
         String pDeptID = "";
         String manualFlag = "";
-        
         if (!titleInfo.equals("")) {
             String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
             
         	String[] addJobinfo = titleInfo.split(";");
         	String[] jobIDinfo = jobID.split(";");
+        	String[] addJobRoleInfo = roleInfo.split(";");
         	
             for (int i = 0; i < addJobinfo.length; i++) {
+            	// 직책은 없을 수 도 있으니 값을 초기화 한다 
+            	String sRole1 = "";
+                String sRole2 = "";
+                String roleId = "";
             	String[] userInfo = addJobinfo[i].split(":");
+            	String [] userRoleInfo = addJobRoleInfo[i].split(":");
             	pDeptID = userInfo[0];
             	manualFlag = userInfo[userInfo.length - 1];
             	
@@ -1354,6 +1350,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                     sTitle2 = sTitle1;
                 }
                 
+                if (userRoleInfo.length > 1) {
+                	roleId = userRoleInfo[0];
+                	sRole1 = userRoleInfo[1];
+                	sRole2 = userRoleInfo[2];
+                }
+                
                 // 해당 User가 겸직할 부서의 Group Email 주소에 User를 등록한다.                  
                 String groupAddr = pDeptID + "@" + domain;
                 String mailAddr = userID + "@" + domain;
@@ -1369,9 +1371,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_DEPTID", pDeptID);
             		map.put("v_TITLE1", sTitle1);
             		map.put("v_TITLE2", sTitle2);
+            		map.put("v_ROLE", sRole1);
+            		map.put("v_ROLE2", sRole2);
             		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
             		map.put("v_JOBID", jobIDinfo[i]);
+            		map.put("v_ROLEID", roleId.length() > 0 ? roleId : "0");
             		map.put("v_MANUAL_FLAG", manualFlag);
             		
             		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1424,12 +1429,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	@Override
 	public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception {
-		deleteJob(userID, titleInfo, tenantID, "none", false);
+		deleteJob(userID, titleInfo, tenantID, "none", "none", false);
 	}
 
 	// 2022-07-07 이사라 - 한 부서에 2개 이상의 겸직이 있는 경우 1개만 삭제를 하기 위해 추가된 파라미터가 있어 deletJob 메소드 오버로딩 함
     @Override
-    public void deleteJob(String userID, String titleInfo, int tenantID, String delJobId, boolean isAddJobMoreInOneDept) throws Exception {
+    public void deleteJob(String userID, String titleInfo, int tenantID, String delJobId, String delRoleId, boolean isAddJobMoreInOneDept) throws Exception {
         logger.debug("deleteJob started");
         logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",tenantID=" + tenantID + ",delJobId=" + delJobId + ",isAddJobMoreInOneDept=" + isAddJobMoreInOneDept);
         
@@ -1467,6 +1472,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                     map.put("v_DEPTID", pDeptID);
 					if (hasJobId) { // 2022-07-06 이사라 - 겸직 부분 삭제
 						map.put("v_JOBID", delJobId);
+						map.put("v_ROLEID", delRoleId);
 					}
                     
                     String bizmekaResult = "ERROR";
@@ -2805,11 +2811,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, int tenantId) throws Exception {
+	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, String roleId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("CN", cn);
 		map.put("DEPTID", deptId);
 		map.put("JOBID", jobId);
+		map.put("ROLEID", roleId);
 		map.put("TENANTID", tenantId);
 		return ezOrganAdminDao.getAddJobInfo(map);
 	}
@@ -3428,4 +3435,22 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("createExcelPermissionsList end");
 		return fileName;
 	}
+
+	@Override
+	public int userJobCheck(String cn, String deptId, String jobId, String roleId, int tenantID) throws Exception {
+		logger.debug("userJobCheck started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("CN", cn);
+		map.put("DEPTID", deptId);
+		map.put("JOBID", jobId);
+		map.put("ROLEID",  Optional.ofNullable(roleId).filter(str -> !str.isEmpty()).orElse("0"));
+		map.put("TENANT_ID", tenantID);
+
+		logger.debug("userJobCheck ended");
+
+		return ezOrganAdminDao.getUserJobCheckCount(map);
+	}
+	
 }

@@ -1400,13 +1400,13 @@ public class EzEmailUtil {
 
 			// appendPreviewImage까지- filename의 변경이 없고, 여러번 수행되고 있으므로 변수 생성하여 사용하도록 함.
 			String filename_spclStr = this.getSpclStrCnvr2(filename); // 네 경우 모두 사용
-			
+			String aitem = "";
 			if (forPrint) {
 				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
 				pAttachListHtml += "<span><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >";
 				pAttachListHtml += filename_spclStr + " (" + strSize + ")</span></span></br>";
-			} else if (secureKey != null) {
-				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename,"UTF-8") + "&index=" + bodyPartIndex;
+ 			} else if (secureKey != null) {
+				aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename,"UTF-8") + "&index=" + bodyPartIndex;
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
 				/*	(개선) 보안메일도 가능하도록
 				if (useWebfolder) {
@@ -1415,7 +1415,7 @@ public class EzEmailUtil {
 				*/
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span></li>";
 			} else if (mobile) {
-				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
+				aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
 				if (shareId != null) {
 					aitem += "','" + URLEncoder.encode(shareId, "UTF-8");
@@ -1430,7 +1430,7 @@ public class EzEmailUtil {
 				String filename_egovSpclStr = EgovStringUtil.getSpclStrCnvr2(filename);
 				String folderPath_URLEnc = URLEncoder.encode(folderPath,"UTF-8");
 
-				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+folderPath_URLEnc+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
+				aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+folderPath_URLEnc+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
 				
 				if (shareId != null) {
 					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
@@ -1452,7 +1452,7 @@ public class EzEmailUtil {
 				}
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16' style='vertical-align: top'></span></li>";
 			}
-			
+
 			appendPreviewImage: if (part.isMimeType("image/*")) {
 				// .psd 등 웹 브라우저에서 지원하지 않는 이미지인지 검사
 				for (String unsupportedContentType : UNSUPPORTED_PREVIEW_CONTENT_TYPES) {
@@ -1461,10 +1461,9 @@ public class EzEmailUtil {
 					}
 				}
 
-				String aitem = "?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
-				previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + "/ezEmail/readAttachIamge.do" + aitem + "'>";
-				previewImageListHtml += " <img src='" + "/ezEmail/downloadAttach.do" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' style='cursor:pointer;'></a></p>";
-				previewImageListHtml += " <p onclick=\"DownloadAttach('" + "/ezEmail/downloadAttach.do" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</p></div>";
+				previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + aitem + "&readStatus=Y"+ "'>";
+				previewImageListHtml += " <img src='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' style='cursor:pointer;'></a></p>";
+				previewImageListHtml += " <p onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</p></div>";
 			}
 
 			isAttach = "OK";

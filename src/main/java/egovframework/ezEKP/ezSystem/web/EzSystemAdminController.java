@@ -3183,6 +3183,7 @@ public class EzSystemAdminController {
 						case "add" : updateType = egovMessageSource.getMessage("ezSystem.jhy03", locale); break;
 						case "retire" : updateType = egovMessageSource.getMessage("ezSystem.jhy04", locale); break;
 						case "delete" : updateType = egovMessageSource.getMessage("ezSystem.jhy05", locale); break;
+						case "restore" : updateType = egovMessageSource.getMessage("ezSystem.lhw01", locale); break;
 						case "mvDept" : updateType = egovMessageSource.getMessage("ezSystem.jhy06", locale); break;
 						case "grantAddJob" : updateType = egovMessageSource.getMessage("ezSystem.jhy07", locale); break;
 						case "clearAddJob" : updateType = egovMessageSource.getMessage("ezSystem.jhy08", locale); break;

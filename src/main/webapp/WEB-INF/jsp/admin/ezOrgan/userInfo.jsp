@@ -439,6 +439,14 @@
 					showProgress();
 				}
 				
+				if(jobTitleID == ""){
+					jobTitleID = "0";
+				}
+				
+				if(jobPositionID == "") {
+					jobPositionID = "0";
+				}
+				
 				$.ajax({
 					type : "POST",
 					dataType : "html",
@@ -675,7 +683,7 @@
 		    
 		    function titleChange() {
 		    	if ($("#titleSelector option:selected").length > 0) {
-		    		jobTitleID 		= $("#titleSelector option:selected").attr("id");
+		    		jobTitleID 		= $("#titleSelector option:selected").attr("id") != "" ? $("#titleSelector option:selected").attr("id") : "0";
 		    		jobTitleName 	= $("#titleSelector option:selected").attr("nmval");
 		    		jobTitleName2 	= $("#titleSelector option:selected").attr("nmval2");
 		    	} else {
@@ -687,7 +695,7 @@
 		    
 		    function positionChange() {
 		    	if ($("#positionSelector option:selected").length > 0) {
-		    		jobPositionID 		= $("#positionSelector option:selected").attr("id");
+		    		jobPositionID 		= $("#positionSelector option:selected").attr("id") != "" ? $("#positionSelector option:selected").attr("id") : "0";
 		    		jobPositionName 	= $("#positionSelector option:selected").attr("nmval");
 		    		jobPositionName2 	= $("#positionSelector option:selected").attr("nmval2");
 		    	} else {
