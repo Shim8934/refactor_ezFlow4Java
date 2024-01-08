@@ -3203,7 +3203,8 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
 						resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
 						resultXML.append("<DATA10></DATA10>");
-						resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
+						/* 2024-01-08 홍승비 - 일반게시판 > 공지사항 게시물 댓글 카운트 서브쿼리 제거, 각 게시물에 대해 별도로 리턴 */
+						resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(noticeList.get(k).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
 						
 						if (globals.getProperty("Globals.DbType").equals("oracle")) {
 							resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");

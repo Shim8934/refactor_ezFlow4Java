@@ -1433,14 +1433,6 @@
                 A.WRITERNAME2 ,
                 A.WRITERDEPTNAME2 ,
                 A.WRITERCOMPANYNAME2 ,
-                (SELECT 
-                	COUNT(*)  
-    				FROM 
-    					TBL_Board_OneLineReply 
-   				WHERE  
-   					TENANT_ID = A.TENANT_ID
-   				AND
-   					ITEMID = A.ITEMID) ONELINECNT  ,
                 A.UPPERITEMIDTREE ,
                 A.DOCNO ,
                 A.EXTENSIONATTRIBUTE2 NOTICE  ,
