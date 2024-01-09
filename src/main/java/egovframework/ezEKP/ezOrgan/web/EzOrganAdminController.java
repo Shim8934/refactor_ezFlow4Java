@@ -3468,7 +3468,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (aliasAddress[0].equals(primaryAddr)) {
 				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + " (Primary)</option>");
 			} else {
-				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + " </option>");
+				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + "</option>");
 			}
 		}
 		
