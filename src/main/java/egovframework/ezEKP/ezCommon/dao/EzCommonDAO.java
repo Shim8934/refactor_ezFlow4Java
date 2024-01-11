@@ -1954,4 +1954,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertTenantConfigLangQuaternary", map);
 		}
 	}
-}	
+	
+	public void insertLoadTimeForApprAllConfig() {
+		String propertyValue = (String) select("EzCommonDAO.checkLoadTimeForApprAllConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("loadTimeForApprAllConfig tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertLoadTimeForApprAllConfig");
+		}
+	}
+}

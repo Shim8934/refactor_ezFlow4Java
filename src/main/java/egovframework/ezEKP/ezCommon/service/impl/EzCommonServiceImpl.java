@@ -3487,4 +3487,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			ezCommonDAO.insertTenantConfigLangQuaternary(map);
 		}		
 	}
+	
+    @Override
+    public void insertLoadTimeForApprAllConfig() {
+    	ezCommonDAO.insertLoadTimeForApprAllConfig();
+    }
 }

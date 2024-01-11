@@ -318,4 +318,6 @@ public interface EzCommonService {
 
 	// 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
 	public void insertTenantConfigLangQuaternary() throws Exception;
+	
+	public void insertLoadTimeForApprAllConfig() throws Exception;
 }
