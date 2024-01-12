@@ -1,24 +1,24 @@
 ﻿﻿// \ ezBoardSTD \ admin \ OrganAdmin \ SelectTarget.aspx1.js
 // \ ezBoardSTD \ admin \ BoardACL.aspx1.js
 // \ ezBoardSTD \ js \ AttachItem.js
-var strLang1 = "附件文件名";
-var strLang2 = "文件大小";
+var strLang1 = "附件名称";
+var strLang2 = "文件size";
 var strLang3 = "文件大小";
-var strLang4 = "创造";
+var strLang4 = "生成";
 // var strLang5 = "参数达到节点创造ListType";
 // \ ezBoardSTD \ js \ AttachMain.js
-var strLang6 = "不可能附有空文件。";
-var strLang7 = "文件名的长度不可能超出111bytes。";
-var strLang8 = "附上文件大小不可能超出";
-var strLang9 = "MB.";
-var strLang10 = "-上装。";
-var strLang11 = "-错误生成了，当上装时。";
-var strLang12 = "附有的这个文件打开在使用中。";
-var strLang13 = "-错误生成了，当上装时。";
-var strLang14 = "您想要删除附上图象？";
-var strLang16 = "错误发生了，当删除时。";
-var strLang17 = "您想要删除附件？";
-var strLang18 = "错误发生了，当增加文件时。";
+var strLang6 = "不能附加空的文件。";
+var strLang7 = "文件名长度不能超过111bytes。";
+var strLang8 = "附件大小是";
+var strLang9 = "不能超过。";
+var strLang10 = "正在上传。";
+var strLang11 = "上传时发生错服务器端错误。";
+var strLang12 = "要附加的文件正在编辑，请关闭后附加文件。";
+var strLang13 = "上传过程中发生错误。";
+var strLang14 = "确定要删除附带的形象？";
+var strLang16 = "删除时发生错误！";
+var strLang17 = "您确定要删除此附件吗？";
+var strLang18 = "添加附件时发生错误！";
 var strLang19 = "ㆍ";
 var strLang20 = "不可能使用附件文件名与以下字符-";
 // var strLang21 = "当图像，所以可以进行修改，只有一个地方。";
@@ -37,13 +37,13 @@ var strLang41 = "总 ";
 var strLang42 = "个";
 var strLang43 = "没有布告";
 
-var strLang44 = "添加图片";
-var strLang45 = "选择你的主照片";
-var strLang46 = "上传照片完成";
-var strLang47 = "上传照片错误";
-var strLang48 = "您确定您要删除的专辑吗？";
-var strLang49 = "选择";
-var strLang50 = "完成修改";
+var strLang44 = "添加照片。";
+var strLang45 = "请选择主画面。";
+var strLang46 = "您已经完成了额外的照片。";
+var strLang47 = "添加照片时发生错误。";
+var strLang48 = "您确定要删除该相簿？";
+var strLang49 = "请选择一个。";
+var strLang50 = "照片修饰已完成。";
 var strLang51 = "修复错误";
 // var strLang52 = "没有标题";
 var strLang53 = "データがありません。";

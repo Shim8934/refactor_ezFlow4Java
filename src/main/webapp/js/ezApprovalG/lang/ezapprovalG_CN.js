@@ -1,29 +1,29 @@
 ﻿// ApprovUI\ApprovUI.js
-var strLang2 = "协议"
-var strLang3 = "协议"
-var strLang4 = "返还"
+var strLang2 = "协商";
+var strLang3 = "协助";
+var strLang4 = "返回";
 var strLang5 = "有意见)" //문서유통
-var strLang6 = "批准前"
-var strLang7 = "代理"
+var strLang6 = "预先确定";
+var strLang7 = "代决";
 var strLang8 = "代 "
 var strLang9 = "굴림체"
 var strLang10 ="确认"
 var strLang11 ="参考"
-var strLang14 ="参考(在以后认同)"
+var strLang14 = "事后共览";
 var strLang18 ="执行"
-var strLang20 ="起草"
+var strLang20 = "起案";
 var strLang21 = "检讨";
-var strLang22 ="批准"
+var strLang22 = "裁决";
 var strLang26 = "一般意见";
 var strLang27 = "对本文内容的意见如下.]";
 var strLang28 ="职位"
-var strLang29 ="姓名"
+var strLang29 = "名称";
 var strLang30 = "内容";
 var strLang31 = "区分";
 var strLang32 ="部门"
 var strLang33 = "附件";
 var strLang57 = "指定监事签字框..";
-var strLang61 ="批准类型"
+var strLang61 = "审批类型";
 var strLang62 = "部门名称";
 var strLang72 ="대기"
 var strLang74 ="결재안함"
@@ -59,8 +59,8 @@ var strLang107 = "分类"
 // docnum\Recvdocnumber.js
 // docnum\Recvdocnumber_HWP.js
 // DraftUI\draft.js
-var strLang124 = "批准状态"
-var strLang125 = "批准状态"
+var strLang124 = "审批状态 "
+var strLang125 = "审批状态"
 var strLang126 = "一般"
 var strLang128 = "起"
 var strLang131 = "错误发生. "
@@ -85,7 +85,7 @@ var strLang179 = "署名"
 var strLang180 = "符号"
 var strLang181 = "商标"
 var strLang185 = "该文件未发送."
-var strLang186 = "复垦"
+var strLang186 = "重新请求"
 var strLang188 = "上传中.\n\n请稍等..."
 var strLang189 = "接收机关["
 var strLang190 = "加密失败，因证书不存在或无效(77020,77021,77035,77037) 以文本形式发送."
@@ -96,13 +96,13 @@ var strLang193 = "文本, 电子印章, 请选择加密."
 var strLang195 = "请选择要发送的文件."
 var strLang196 = "生成发送文件时，发生错误."
 var strLang197 = "您已取消发送要求."
-var strLang198 = "笔委托的船舶。"
-var strLang199 = "发生错误。"
-var strLang200 = "发送请求失败查找可用性。"
+var strLang198 = "我已请求发送文件."
+var strLang199 = "发生了错误."
+var strLang200 = "查询是否可以发送请求失败."
 var strLang201 = "已发送或发送请求给所有收件人."
 var strLang202 = "确定要重新发送吗?"
-var strLang203 = "收件人是一个不存在的文件."
-var strLang204 = "表格不进行门组合."
+var strLang203 = "该文档没有收件人."
+var strLang204 = "它不是组合的试用版."
 var strLang205 = "本文档没有有关起案者的信息."
 var strLang206 = "不是起案人. "
 var strLang207 = "只有起案人可以要求发送."
@@ -178,7 +178,7 @@ var strLang297 = "确定添加到审批步骤里吗？"
 var strLang298 = "全决后 ，将无法登录审批步骤。"
 var strLang299 = "全决者解除后，请进行登录。"
 var strLang300 = "顺序"
-var strLang301 = "批准日"
+var strLang301 = "审批日期"
 var strLang302 = "监查"
 var strLang306 = "起案人的位置无法更改。"
 var strLang307 = "批准审批者不能变更审批步骤。"
@@ -248,8 +248,8 @@ var strLang384 = "正在读取组织图信息"
 // ezAPRLINE\SelectSubTitles.js
 // ezAPROPINION\Opinion.js
 var strLang388 = "部门帐号"
-var strLang389 = "商店 "
-var strLang390 = "修订 "
+var strLang389 = "保存"
+var strLang390 = "修正"
 var strLang391 = "写"
 var strLang397 = "关闭"
 var strLang400 = "不能修改。 "
@@ -539,38 +539,38 @@ var strLang752 = "传阅"
 // ezViewWord\ezForm.js
 var strLang779 = "属性值"
 var strLang783 = "类型"
-var strLang786 = "使 用 "
-var strLang787 = "取 消 "
+var strLang786 = "应用程序"
+var strLang787 = "取消"
 // ezViewWord\ezRecevUI.js
 // ezViewWord\ezViewApr.js
 // formContainer\getContainerInfo.js
 var strLang789 = "：审计档案文件"
-var strLang790 = "文件箱的文件：";
-var strLang791 = "查询文件 : "
+var strLang790 = "驱动文件";
+var strLang791 = "搜索文件";
 // formContainer\getFormCont.js
 // formContainer\MFgetFormCont.js
 // formContainer\selectContainer.js
 var strLang797 = "文件夹名";
 // include\ADDeptInfo.js
 // manage\DocDelete.js
-var strLang801 = "在文件列表中，请选择要废除的文件。";
+var strLang801 = "请选择文档列表中需要废弃的文档。";
 var strLang802 = "已删除的文档。"
-var strLang803 = "工作中，产生错误了。";
-var strLang804 = "在文件列表中，没有文件。";
+var strLang803 = "工作中发生错误。";
+var strLang804 = "文档列表中没有文档。";
 // manage\ezForm.js
 // manage\mdocnumui.js
 // manage\MinsContType.js
-var strLang810 = "在文件类型列表中，请选择要插入的文件类型。";
-var strLang811 = "请选择插入文件状态。";
-var strLang812 = "请选择要删除的文件类型。";
-var strLang813 = "请在列表中选择要删除的文件状态和文件类型。";
-var strLang814 = "顺利地保存。";
+var strLang810 = "请选择要在文件类型列表中插入的文档的类型。";
+var strLang811 = "请选择要插入的文件类型的稳健状态。";
+var strLang812 = "请选择您要删除的文件类型。";
+var strLang813 = "请选择列表中要删除的文档状态和文件类型。";
+var strLang814 = "保存。";
 // manage\MoveCon
 var strLang818 = "文件移动了";
 // ReceivUI\AprGongRamLine.js
 var strLang821 = "获取部门成员时发生错误。"
 var strLang822 = "已经发出供览的使用者。"
-var strLang823 = "不能删除。";
+var strLang823 = "无法删除。";
 var strLang824 = "供览者重复。"
 var strLang825 = "请指定供览者。" 
 var strLang826 = "供览无法发送。"
@@ -582,25 +582,25 @@ var strLang830 = "收件人"
 // ReceivUI\recev_end.js
 // AprDocView.js
 var strLang837 = "有意见信息。";
-var strLang838 = "您是否想要查看意见信息？";
+var strLang838 = "需要查看意见信息吗？";
 // aprmanage.js
-var strLang840 = "批准的文件 : "
-var strLang841 = "起草的文件 : "
-var strLang842 = "批准执行的文件 : "
-var strLang843 = "接收处理的文件 : "
-var strLang844 = "协议的文件 : "
-var strLang845 = "监查的文件 : "
-var strLang846 = "待批准的文件（文件箱） : "
+var strLang840 = "需要批准的文件";
+var strLang841 = "已起案的文件";
+var strLang842 = "批准进行文件";
+var strLang843 = "收到的文件";
+var strLang844 = "需要协商的文件：";
+var strLang845 = "需要审核的文件";
+var strLang846 = "已批准的文件（文件箱）";
 var strLang847 = "请求发送文件"
 var strLang848 = "委托公章的文件"
 var strLang849 = "公章对象的文件"
 var strLang850 = "发送台账文件"
-var strLang851 = "正在准备待批准文件。";
-var strLang852 = "正在准备起草的文件。";
-var strLang853 = "正在准备批准执行文件。";
-var strLang854 = "正在准备接收完的文件";
-var strLang855 = "正在准备协议文件。";
-var strLang856 = "正在准备监查的文件";
+var strLang851 = "正在准备需要批准的文件。";
+var strLang852 = "正在准备起案文件。";
+var strLang853 = "正在准备进行批准的文件。";
+var strLang854 = "正在准备接收文件。";
+var strLang855 = "正在准备协商的文件。";
+var strLang856 = "正在准备审核的文件。";
 var strLang857 = "正在准备审查文件。";
 var strLang858 = "正在准备发送请求的文件。"
 var strLang859 = "正在准备委托盖章的文件。"
@@ -634,21 +634,21 @@ var strLang904 = "职位信息"
 var strLang912 = "其他收发负责人已进行回送处理。";
 var strLang913 = "其他收发负责人已进行接收处理。";
 // ezAPRATTACH/RegRecord_Attach.aspx
-var strLang926 = " 上传过程中出现错误。\n\N文件类型（扩展名），请检查。";
+var strLang926 = "上传时发生错误。请确认\n\n文件类型（扩展名）。";
 // formContainer/ContDocView_NoDoc.aspx
-var strLang928 = "检索信息的记录失败！";
-var strLang929 = "没有权限查看此文档。<br>或请联系发起。";
+var strLang928 = "获取档案信息失败！";
+var strLang929 = "您没有权限浏览此文档 。 请咨询起案人或负责人。";
 // ApprovUI/doApprovAllSelect.aspx
-var strLang930 = "选定的文档.";
-var strLang931 = "<br>批量结算完毕.";
-var strLang931_1 = "批量结算完毕.";
-var strLang932 = "错误发生在批处理解决.<br>";
+var strLang930 = "没有被选中的文件。";
+var strLang931 = "已经成批量审批。";
+var strLang931_1 = "已完成批量审批。";
+var strLang932 = "批量审批时发生错误。";
 var strLang933 = "总 : ";
-var strLang934 = " 枪 <br>";
-var strLang934_1 = " 枪";
+var strLang934 = "件_";
+var strLang934_1 = "件";
 var strLang935 = "成功 : ";
-var strLang936 = "故障 : ";
-var strLang937 = "结果批量重新分配文件。";
+var strLang936 = "失败";
+var strLang937 = "没有需要批量审批的文件";
 var strLang938 = "排除";
 
 // ezViewHWP/ezDe
@@ -659,35 +659,35 @@ var strLang943 = "个"
 var strLang944 = "有沒有數據。";
 var strLang945 = "不能删除起案者。"
 // TreeViewCtrl.j
-var strLang1001 = "不存在的选择项目。确定只打印文件吗？";
-var strLang1002 = "外部收件人无法保存。";
-var strLang1003 = "添加到收藏夹。";
-var strLang1004 = "从您的收藏夹已被删除。";
-var strLang1005 = "不能注册。";
-var strLang1006 = "上一财年拍摄的文件夹。";
-var strLang1007 = "这不是部门的刻录文件夹";
-var strLang1008 = "分为粘结剂证实。";
-var strLang1009 = "那些已经被注册记录的​​文件夹。";
-var strLang1010 = "未指定的表单名称";
-var strLang1011 = "不指定分类码。";
-var strLang1012 = "仅指定一个身体领域。";
-var strLang1013 = "未指定身体字段";
-var strLang1014 = "请注明标题字段仅是";
-var strLang1015 = "未指定标题栏位";
-var strLang1016 = "整合过程中设置不正确。";
-var strLang1017 = "集成工艺设定字段值无效。";
-var strLang1018 = "环环相扣组重复值。";
-var strLang1022 = "您确定要退出表单 ?";
-var strLang1023 = "您确定要退出修饰形式 ?";
-var strLang1024 = "请检查表格。";
-var strLang1026 = "的文件上传限制的扩展。";
-var strLang1027 = "修正意见";
+var strLang1001 = "您选择的项目不存在。只打印文档吗 ？。？";
+var strLang1002 = "无法保存外部收件人。";
+var strLang1003 = "已经登录到收藏夹。";
+var strLang1004 = "已从您的收藏夹中删除。";
+var strLang1005 = "无法登记的档案夹。";
+var strLang1006 = "已过会计年度的档案夹。";
+var strLang1007 = "不是该部门的档案夹。";
+var strLang1008 = "确定编撰的档案夹";
+var strLang1009 = "已经登记的档案夹。";
+var strLang1010 = "样式名称没有规定。";
+var strLang1011 = "类别代码没有被指定。";
+var strLang1012 = "请指定一个字段。";
+var strLang1013 = "未指定的体，请指定字段。";
+var strLang1014 = "在doctitle指定一个字段。";
+var strLang1015 = "未指定doctitle字段，请指定。";
+var strLang1016 = "联动设置错误。";
+var strLang1017 = "联动设置字段值无效。";
+var strLang1018 = "联动设置中有重复的值。";
+var strLang1022 = "确定要终止样式填写吗？";
+var strLang1023 = "确定要终止样式修正吗？";
+var strLang1024 = "请确认样式。";
+var strLang1026 = "限制上传扩展名文件。";
+var strLang1027 = "意见已修改。";
 var strLang1028 = "年";
-var strLang1029 = "本月";
+var strLang1029 = "月";
 var strLang1030 = "日";
-var strLang1031 = "不能??件和?批文件?布到匿名/相片/?址布告板。";
+var strLang1031 = "不得在匿名公告栏、照片公告栏或URL链接公告栏上发布邮件/审批文件。。";
 var strLang1038 = "外部发送文档正文中不能包含图像和链接。";
-var strLang1039 = "所选用户不在办公室。</br>您要添加吗？";
+var strLang1039 = "所选择的用户不在。</br>确定要添加吗?";
 
 var strLang1068 = "审计部门[";
 var strLang1069 = "预算审议部门[";
@@ -695,7 +695,7 @@ var strLang1070 = "只能指定。"
 
 // DocType : 문서형태 A01
 var strDocType4 = "004";
-var strLangDocType4 = "执行";
+var strLangDocType4 = "试行文";
 var strLangDocType5 = "协议";
 
 // DocState : 문서상태A02
@@ -766,24 +766,24 @@ var strAprType40 = "040";
 var strLangAprType1 = "批准";
 var strLangAprType2 = "确认";
 var strLangAprType3 = "不批准";
-var strLangAprType4 = "批准前";
-var strLangAprType5 = "监查";
-var strLangAprType6 = "检查";
+var strLangAprType4 = "全决";
+var strLangAprType5 = "守法监视";
+var strLangAprType6 = "审查";
 var strLangAprType7 = "参考";
-var strLangAprType8 = "顺序协议(个人)";
-var strLangAprType9 = "并行的协议(个人)";
-var strLangAprType11 ="顺序协议(部门)";
-var strLangAprType12 ="并行的协议(部门)";
-var strLangAprType13 ="审计(部门)";
-var strLangAprType14 ="收据";
-var strLangAprType15 ="参考(在以后认同)";
-var strLangAprType16 ="代理";
+var strLangAprType8 = "个人顺序协议";
+var strLangAprType9 = "个人并列协议";
+var strLangAprType11 = "部门顺序协议";
+var strLangAprType12 = "部门并列协议";
+var strLangAprType13 = "监视";
+var strLangAprType14 = "收信";
+var strLangAprType15 = "事后供览";
+var strLangAprType16 = "代决";
 var strLangAprType17 ="传阅";
-var strLangAprType18 ="起草";
-var strLangAprType19 ="검토";
-var strLangAprType31 ="控制";
+var strLangAprType18 = "起案";
+var strLangAprType19 = "检讨";
+var strLangAprType31 = "管制";
 var strLangAprType32 ="预约2";
-var strLangAprType40 ="以后审查";
+var strLangAprType40 = "后决";
 
 // AprState : 결재처리상태A04
 var strAprState0 = "000";
@@ -855,7 +855,7 @@ var strLangFromFile = "/xml/ezApprovalG/ezFormInfo.xml";
 
 /* 2015-06-30 표준모듈:추가 - KSK */
 var strLang1105 = "不接收审批文件的部门。<br>无法添加。";
-var strLang1106 = "请输入您的搜索词。";
+var strLang1106 = "请输入关键词。";
 var strLang1107 = "发件人";
 var strLang1108 = "审查人员";
 var strLang1109 = "起案人";
@@ -1103,9 +1103,9 @@ var strLangBg01 = "翻译";
 var strLangBg02 = "监督";
 var strLangBg03 = "翻译/监督确认";
 
-var strLang955 = "总统";
-var strLang956 = "副总统";
-var strLang957 = "导向器";
+var strLang955 = "总长";
+var strLang956 = "副总长";
+var strLang957 = "院长";
 
 var strLangAdd00040 = "发信机构发来的正文信息错误，请重新请求发送。";
 var strLangAdd00041 = "本文信息中未包含图片信息，已删除并保存。确定要接收吗？";
