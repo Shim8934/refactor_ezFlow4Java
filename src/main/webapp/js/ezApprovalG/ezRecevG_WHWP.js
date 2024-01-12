@@ -18,7 +18,7 @@ function GetRelayDocInfo()
     		url : "/ezApprovalG/getRelayDocInfo.do",
     		data : {
     			docID : pDocID,
-    			companyID : companyID
+    			companyID : sCompanyID
     		},
     		success: function(xml){
     			result = xml;
