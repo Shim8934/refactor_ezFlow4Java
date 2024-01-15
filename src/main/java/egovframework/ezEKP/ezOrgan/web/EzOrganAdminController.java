@@ -700,12 +700,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// 제거하고자 하는 회사 혹은 부서에 속한 사원의 수를 반환한다.
 		int usercnt = ezOrganAdminService.userCountCheck(cn, tenantID);
 		
-		logger.debug("cnt=" + cnt + ",usercnt=" + usercnt);
+		// 제거하고자 하는 회사 혹은 부서에 속한 퇴직자 수를 구한다.
+		int retireUserCnt = ezOrganAdminService.retireUserCountCheck(cn,tenantID);
+		
+		logger.debug("cnt=" + cnt + ",usercnt=" + usercnt + ",retireUserCnt=" + retireUserCnt);
 		
 		if (cnt > 0) {
 			result = "HASCHILD";
 		} else if(usercnt > 0) {
 			result = "HASCHILD";
+		} else if(retireUserCnt > 0) {
+			result = "HASRETIRE";
 		} else {			
 			// skyblue0o0
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);

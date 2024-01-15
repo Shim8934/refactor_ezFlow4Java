@@ -3452,5 +3452,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 		return ezOrganAdminDao.getUserJobCheckCount(map);
 	}
-	
+
+	// 지정된 부서에 속한 퇴직자 수를 반환한다.
+	@Override
+	public int retireUserCountCheck(String cn, int tenantID) throws Exception {
+		return ezOrganAdminDao.retireUserCountCheck(cn, tenantID);
+	}
 }

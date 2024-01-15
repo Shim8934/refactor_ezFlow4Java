@@ -434,6 +434,8 @@
 		        	success : function(result){
 		        		if (result == "HASCHILD"){
 		        			alert("<spring:message code='ezOrgan.t37' />");
+						}else if (result == "HASRETIRE") {
+							alert("<spring:message code='ezOrgan.khj001' />");
 		        		}else if (result == "EMAIL_ERROR") {
 		        			alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t66' />");
 		        		}else{
@@ -526,6 +528,8 @@
 					success : function(result){
 						if (result == "HASCHILD"){
 							alert("<spring:message code='ezOrgan.t37' />");
+						}else if (result == "HASRETIRE") {
+							alert("<spring:message code='ezOrgan.khj001' />");
 						}else if (result == "EMAIL_ERROR") {
 		        			alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t36' />");
 		        		}else{

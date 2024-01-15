@@ -7354,4 +7354,17 @@
 			TENANT_ID = #TENANT_ID#
 		]]>
 	</select>
+
+	<select id="EzOrganAdminDAO.retireUserCountCheck" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(CN)
+			FROM
+				TBL_USERMASTER_RETIRE
+			WHERE
+				DEPARTMENT = #cn#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 </sqlMap>

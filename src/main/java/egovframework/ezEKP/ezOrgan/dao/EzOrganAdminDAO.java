@@ -2330,4 +2330,26 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public int getUserJobCheckCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzOrganAdminDAO.getUserJobCheckCount", map);
 	}
+
+	// 지정된 부서에 속한 퇴직자 수를 반환한다.
+	public int retireUserCountCheck(String cn, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn", cn);
+		map.put("tenantID", tenantID);
+
+		return retireUserCountCheckForLocal(map);
+	}
+
+	private int retireUserCountCheckForLocal(Map<String, Object> map) {
+		String cn = (String)map.get("cn");
+		int tenantID = (Integer)map.get("tenantID");
+
+		logger.debug("retireUserCountCheckForLocal started. cn=" + cn + ",tenantID=" + tenantID);
+
+		int userCount = (int) select("EzOrganAdminDAO.retireUserCountCheck", map);
+
+		logger.debug("retireUserCountCheckForLocal started. userCount=" + userCount);
+
+		return userCount;
+	}
 }

@@ -204,4 +204,7 @@ public interface EzOrganAdminService {
 	public void updatePermissionBasisDept(List<OrganUserVO> vo) throws Exception;
 
 	int userJobCheck(String cn, String deptId, String jobId, String roleId, int tenantID) throws Exception;
+
+	// 2024-01-15 김혜지 - 지정된 부서에 속한 퇴직자 수를 반환한다.
+	int retireUserCountCheck(String cn, int tenantID) throws Exception;
 }
