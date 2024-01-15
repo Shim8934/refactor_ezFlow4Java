@@ -76,6 +76,14 @@ function EzChartPortlet() {
     var _canvas;
     var _data = {};
     var _option = {};
+    var _defaultColor = (function () {
+        var arr = new Uint32Array(1);
+        var crypto = window.crypto || window.msCrypto;
+        crypto.getRandomValues(arr);
+        return (arr[0]%72)*5;
+    })();
+    var _defaultColorHis = [];
+
     var _stackBarOptions = {
         maintainAspectRatio: false,
         legend: {
@@ -83,7 +91,7 @@ function EzChartPortlet() {
             position: 'right'
         },
         scales: {
-            y: {
+            yAxes: [{
                 stacked: true,
                 ticks: {
                     min: 0,
@@ -95,13 +103,13 @@ function EzChartPortlet() {
                         return value;
                     }
                 }
-            },
-            x: {
+            }],
+            xAxes: [{
                 stacked: true,
                 ticks: {
                     fontSize: 14
                 }
-            }
+            }]
         },
         tooltips: {
             enabled: true,
@@ -125,9 +133,9 @@ function EzChartPortlet() {
             position: 'top'
         },
         scales: {
-            y: {
+            yAxes: [{
                 display: false,
-            }
+            }]
         },
         tooltips: {
             enabled: true,
@@ -156,24 +164,25 @@ function EzChartPortlet() {
         var dataset = {
             barPercentage: _barThick,
             label: beforeTitle,
-            backgroundColor: _json[0].color,
+            backgroundColor: !!_json[0].color ? _json[0].color: _genRotateColor(),
             data: []
         };
-        _json.forEach(function (item) {
+        for (let i = 0; i < _json.length; i++){
+            const item = _json[i];
             var title = item.groupTitle;
             if (beforeTitle !== title) {
                 datasets.push(dataset);
                 dataset = {
                     barPercentage: _barThick,
                     label: title,
-                    backgroundColor: item.color,
+                    backgroundColor: !!item.color ? item.color : _genRotateColor(),
                     data: []
                 };
                 beforeTitle = title;
             }
             barLabel.push(item.label);
             dataset.data.push(item.val);
-        });
+        }
         datasets.push(dataset);
         barLabel.length = barLabel.length / datasets.length
         _data.labels = barLabel;
@@ -189,12 +198,17 @@ function EzChartPortlet() {
         _data.datasets.push(dataset);
         dataset.data = [];
         if(!!_json[0].color) dataset.backgroundColor = [];
-        _json.forEach(function (item) {
+        for (let i = 0; i < _json.length; i++){
+            const item = _json[i];
             _data.labels.push(item.label);
             dataset.barPercentage = _doughnutThick;
             dataset.data.push(item.val);
-            if(!!item.color) dataset.backgroundColor.push(item.color);
-        });
+            if(!!item.color) {
+                dataset.backgroundColor.push(item.color);
+            } else {
+                dataset.backgroundColor.push(_genRotateColor());
+            }
+        }
         _option = _doughnutOptions;
     }
 
@@ -212,7 +226,7 @@ function EzChartPortlet() {
     // 도넛그래프 가운데 숫자 공간 만들기
     var _makeCount = function () {
         var chartArea = _chart.chartArea;
-        var radius = _chart._metasets[0].data[0].innerRadius;
+        var radius = _chart.innerRadius;
         var width = chartArea.right - chartArea.left;
         var height = chartArea.bottom - chartArea.top;
         var size = radius * 2 - 2;
@@ -239,7 +253,7 @@ function EzChartPortlet() {
         countSpan.style.fontWeight = 'bold';
 
         // 0이상~10억 미만까지 범위, 각 숫자 자릿수일 경우의 폰트 사이즈 크기 배열(px)
-        var sumDataStr = _chart._metasets[0].total;
+        var sumDataStr = _chart.getDatasetMeta(0).total;
         // 총합 쉼표 처리
         $({val: parseInt(countSpan.innerText.replaceAll(',', ''))}).animate({val: sumDataStr}, {
             duration: 1000,
@@ -255,18 +269,38 @@ function EzChartPortlet() {
     }
 
     var _initDouCount = function () {
-        var saveVal = _chart._metasets[0].total;
-        Object.defineProperty(_chart._metasets[0], 'total', {
-            get() {
+        var saveVal = _chart.getDatasetMeta(0).total;
+        Object.defineProperty(_chart.getDatasetMeta(0), 'total', {
+            get: function () {
                 return this._value;
             },
-            set(newValue) {
+            set: function (newValue) {
                 this._value = newValue;
                 _makeCount();
             },
         });
-        _chart._metasets[0].total = saveVal;
+        _chart.getDatasetMeta(0).total = saveVal;
         _makeCount();
+    }
+
+    var _genRotateColor = function () {
+        var colorSet = ",50%,50%,0.7";
+        var rotate = 120;
+        var twist = 195;
+        _defaultColor += rotate;
+        _defaultColor = _defaultColor % 360;
+
+        // 중복체크를 너무 길면 주기를 돌아 무한루프 하므로 제거.
+        if (_defaultColorHis > 70) _defaultColorHis = [];
+
+        if (_defaultColorHis.indexOf(_defaultColor) > -1) {
+            _defaultColor += twist;
+            return _genRotateColor();
+        } else {
+            _defaultColorHis.push(_defaultColor);
+            console.log(_defaultColor);
+            return "hsla(" + _defaultColor + colorSet + ")";
+        }
     }
 
 

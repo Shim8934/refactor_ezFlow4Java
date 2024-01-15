@@ -7,7 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>chartPortlet</title>
 <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/chart.umd.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/moment.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/chart.js')}"></script>
 <style>
 #chartPortletList{
 	display: flex;
@@ -69,11 +70,11 @@
 	var getDataForSampleChart = function () {
 		var request = new XMLHttpRequest();
 		request.open('GET', '/ezNewPortal/sampleChartPortlet.do', true);
-		request.responseType = 'json';
+		request.responseType = 'text';
 
 		request.onload = function () {
 			if (request.status >= 200 && request.status < 400) {
-				var jsonArr = request.response;
+				var jsonArr = JSON.parse(request.response);
 				if (frameId === "Frame3" || frameId === "Frame4" || frameId === "Frame7"){
 					document.getElementById("chartLeft").style.display = '';
 					document.getElementById("chartRight").style.width = 'calc(75% - 20px)';
