@@ -1157,7 +1157,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardInfo.setIsAllGroupBoard("");
 		
 		if (strProp != null) {
-			boardInfo.setExpireDays(commonUtil.getDateStringInUTC(strProp.getItemExpires(), userInfo.getOffset(), false));
+			boardInfo.setExpireDays(strProp.getItemExpires() != null ? strProp.getItemExpires() : "-1");
 			boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 			
 			if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
