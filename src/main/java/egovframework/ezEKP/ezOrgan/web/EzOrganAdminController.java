@@ -3124,7 +3124,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", user.getTenantId());
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topID = user.getCompanyID();
+			topID = selCompany;
 			deptTreeTopId = topID;
 		} else {
 			topID = "Top";
