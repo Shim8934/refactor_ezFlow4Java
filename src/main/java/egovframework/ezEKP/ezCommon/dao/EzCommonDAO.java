@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -472,10 +473,44 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void alter_AnyTbl_AnyColumns(Map<String, Object> map) throws Exception {
 		try {
 			select("EzCommonDAO.check_AnyTbl_AnyColumns", map);
+
 		} catch (Exception e) {
 			logger.debug("{} {} column doesn't exist. creating the column...", map.get("TBL_NAME"), map.get("COLUMN_NAME"));
 
 			update("EzCommonDAO.add_AnyTbl_AnyColumns", map);
+
+			// 1. PRIMARY 수정이 필요한 경우
+			String primary = (String) map.get("PRIMARY");
+
+			if (StringUtils.isNotBlank(primary)) {
+				update("EzCommonDAO.add_AnyTbl_AnyColumns_DropPrimary", map);
+
+				String constraint = (String) map.get("CONSTRAINT");
+				logger.debug("CONSTRAINT={} PRIMARY KEY={}", constraint, primary);
+
+				if (StringUtils.isNotBlank(constraint)) {
+					/**
+					 * ALTER TABLE $TBL_NAME$ ADD CONSTRAINT $제약조건이름$ PRIMARY KEY(...); 으로 생성한 경우를 제외하고
+					 * 혹시나
+					 * 1. CREATE UNIQUE INDEX $제약조건이름$ ON $TBL_NAME$ (...);
+					 * 2. ALTER TABLE $TBL_NAME$ ADD CONSTRAINT $제약조건이름$ PRIMARY KEY(...); 와 같이
+					 * PRIMARY KEY 와 INDEX 를 각각 생성한 경우 INDEX $제약조건이름$ 을 따로 DROP 해주는 과정이 필요하다.
+					 * 만약 같은 이름의 인덱스가 이미 있다면 drop할 것이고, 해당 이름의 인덱스가 없다면 Exception 발생하며 그냥 지나가면 된다.
+					 */
+					try { update("EzCommonDAO.add_AnyTbl_AnyColumns_DropIndex", map); } catch (Exception none) {}
+				}
+
+				update("EzCommonDAO.add_AnyTbl_AnyColumns_AddPrimary", map);
+			}
+
+			// 2. 초기 데이터 업데이트가 필요한 경우
+			String update = (String) map.get("UPDATE");
+
+			if (StringUtils.isNotBlank(update)) {
+				logger.debug("UPDATE={}", update);
+
+				update("EzCommonDAO.add_AnyTbl_AnyColumns_initData", map);
+			}
 		}
 	}
 
@@ -2598,4 +2633,152 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 
 	}
-}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 - 테넌트 아이디 SELECT */
+	public String getPortalMenuTenantList() throws Exception {
+		return (String) select("EzCommonDAO.getPortalMenuTenantList");
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 - 회사 아이디 SELECT */
+	public String getPortalMenuCompanyList(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommonDAO.getPortalMenuCompanyList", map);
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 */
+	public void insertPortalMenuChinese(Map<String, Object> map2) throws Exception {
+		try {
+			String checkMenuChinese = (String) select("EzCommonDAO.checkPortalMenuChinese", map2);
+
+			if (checkMenuChinese == null) {
+				logger.debug("TBL_PORTAL_MENU_NAME chinese version doesn't exist. insert data... ");
+
+				insert("EzCommonDAO.insertPortalMenuChinese", map2);
+			}
+		} catch (Exception e) {
+			logger.debug("insertPortalMenuChinese() ERROR...");
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 - 테넌트 아이디 SELECT */
+	public String getPortletNameTenantList() throws Exception {
+		return (String) select("EzCommonDAO.getPortletNameTenantList");
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 - 회사 아이디 SELECT */
+	public String getPortletNameCompanyList(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.getPortletNameCompanyList", map);
+	}
+
+    /* 2023-11-22 조소정 - 포탈 > ㅣ기본 포틀릿명 중국어 버전 추가 */
+	public void insertPortletNameChinese(Map<String, Object> map2) {
+		try {
+			String checkNameChinese = (String) select("EzCommonDAO.checkPortletNameChinese", map2);
+
+			if (checkNameChinese == null) {
+				logger.debug("TBL_PORTAL_PORTLET_NAME chinese version doesn't exist. insert data... ");
+
+				insert("EzCommonDAO.insertPortletNameChinese", map2);
+			}
+		} catch (Exception e) {
+			logger.debug("insertPortletNameChinese() ERROR...");
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	// 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가	
+	public void insertTenantConfigLangTertiary(Map<String, Object> map) {
+		String LangTertiary = (String) select("EzCommonDAO.checkTenantConfigLangTertiary", map);
+		if (LangTertiary == null) {
+			logger.debug("LangTertiary tenant config doesn't exist. insert data...");
+			
+			insert("EzCommonDAO.insertTenantConfigLangTertiary", map);
+		}
+	}
+
+	// 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
+	public void insertTenantConfigLangQuaternary(Map<String, Object> map) {
+		String LangQuaternary = (String) select("EzCommonDAO.checkTenantConfigLangQuaternary", map);
+		if (LangQuaternary == null) {
+			logger.debug("LangQuaternary tenant config doesn't exist. insert data...");
+			
+			insert("EzCommonDAO.insertTenantConfigLangQuaternary", map);
+		}
+	}
+	
+	// 2023-11-27 조소정 - 게시판그룹이름, 게시판이름 일본어, 중국어 버전 컬럼 추가
+	public void addBoardInfoBoardName() throws Exception {
+		try {
+			select("EzCommonDAO.checkBoardInfoBoardName3");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_BOARDINFO BoardName3 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardInfoBoardName3");
+		}
+		
+		try {
+			select("EzCommonDAO.checkBoardInfoBoardName4");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_BOARDINFO BoardName4 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardInfoBoardName4");
+		}
+	}
+
+	// 2023-11-27 조소정 - 게시판 트리 일본어, 중국어 버전 컬럼 추가
+	public void addBoardTreeCasheResult() {
+		try {
+			select("EzCommonDAO.checkBoardTreeCasheResult3");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_TREECACHE Result3 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardTreeCasheResult3");
+		}
+		
+		try {
+			select("EzCommonDAO.checkBoardTreeCasheResult4");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_TREECACHE Result4 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardTreeCasheResult4");
+		}
+	}
+
+	// 2023-11-27 조소정 - 마이게시판 트리 이름 일본어, 중국어 버전 컬럼 추가
+	public void addBoardMyTreeName() {
+		try {
+			select("EzCommonDAO.checkBoardMyTreeName3");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_MYTREE TreeName3 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardMyTreeName3");
+		}
+		
+		try {
+			select("EzCommonDAO.checkBoardMyTreeName4");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_MYTREE TreeName4 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardMyTreeName4");
+		}
+	}
+
+	// 2023-11-28 조소정 - 마이게시판 게시판이름 일본어, 중국어 버전 컬럼 추가	
+	public void addBoardMyBoardName() {
+		try {
+			select("EzCommonDAO.checkBoardMyBoardName3");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_MYBOARDS BoardName3 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardMyBoardName3");
+		}
+		
+		try {
+			select("EzCommonDAO.checkBoardMyBoardName4");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_MYBOARDS BoardName4 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addBoardMyBoardName4");
+		}
+	}	
+}	

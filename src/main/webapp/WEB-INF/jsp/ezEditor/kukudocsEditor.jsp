@@ -130,6 +130,12 @@
 		    	case "4": 
 		    		lang = "zh";
 		    		break;
+		    	case "5": 
+		    		lang = "vi";
+		    		break;
+		    	case "6": 
+		    		lang = "id";
+		    		break;
 		    	default :
 		    		lang = "en";
 		    		break;

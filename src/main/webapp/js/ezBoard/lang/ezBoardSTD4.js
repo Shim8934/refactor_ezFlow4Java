@@ -1,11 +1,11 @@
-﻿// \ ezBoardSTD \ admin \ OrganAdmin \ SelectTarget.aspx1.js
+﻿﻿// \ ezBoardSTD \ admin \ OrganAdmin \ SelectTarget.aspx1.js
 // \ ezBoardSTD \ admin \ BoardACL.aspx1.js
 // \ ezBoardSTD \ js \ AttachItem.js
 var strLang1 = "附件文件名";
 var strLang2 = "文件大小";
 var strLang3 = "文件大小";
 var strLang4 = "创造";
-var strLang5 = "参数达到节点创造ListType";
+// var strLang5 = "参数达到节点创造ListType";
 // \ ezBoardSTD \ js \ AttachMain.js
 var strLang6 = "不可能附有空文件。";
 var strLang7 = "文件名的长度不可能超出111bytes。";
@@ -16,17 +16,16 @@ var strLang11 = "-错误生成了，当上装时。";
 var strLang12 = "附有的这个文件打开在使用中。";
 var strLang13 = "-错误生成了，当上装时。";
 var strLang14 = "您想要删除附上图象？";
-var strLang15 = "分隔符(*) [_ -) 其连接结";
 var strLang16 = "错误发生了，当删除时。";
 var strLang17 = "您想要删除附件？";
 var strLang18 = "错误发生了，当增加文件时。";
 var strLang19 = "ㆍ";
 var strLang20 = "不可能使用附件文件名与以下字符-";
-var strLang21 = "当图像，所以可以进行修改，只有一个地方。";
+// var strLang21 = "当图像，所以可以进行修改，只有一个地方。";
 var strLang22 = "所有图象文件\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Bitmap Image(*.bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*.jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*.tiff; *.tiff)\0*.tiff;*.tif\0\0";
 var strLang23 = "上装立即能仅5个文件。";
 var strLang24 = "-它不是图象文件类型。";
-var strLang25 = "该文件的名称上传是正常的，当你把它。";
+// var strLang25 = "该文件的名称上传是正常的，当你把它。";
 // \ ezBoardSTD \ js \ ErrorHandler.js
 // \ ezBoardSTD \ js \ kaoni_ActiveX.js
 var strLang26 = "你不能移動在後。";
@@ -41,40 +40,41 @@ var strLang43 = "没有布告";
 var strLang44 = "添加图片";
 var strLang45 = "选择你的主照片";
 var strLang46 = "上传照片完成";
-var strLang46 = "上传照片错误";
+var strLang47 = "上传照片错误";
 var strLang48 = "您确定您要删除的专辑吗？";
 var strLang49 = "选择";
 var strLang50 = "完成修改";
 var strLang51 = "修复错误";
-var strLang52 = "没有标题";
+// var strLang52 = "没有标题";
 var strLang53 = "データがありません。";
 var strLang54 = "的文件上传限制的扩展。";
-
+var strLang55 = "Preview is not available for moved or deleted scrap.";
 
 var strLang60 = "承认";
 var strLang61 = "气氛";
 var strLang62 = "伴侣";
+var strLang63 = "There is no post.";
 
 //2016 추가
 
-var strLang171 = "리스트의 ID가 지정되지 않았습니다.";
-var strLang172 = "데이터가 지정되지 않았습니다.";
-var strLang173 = "권한이 없습니다";
-var strLang174 = "사진추가 도중 오류 발생";
-var strLang175 = "읽기 권한이 없습니다.";
-var strLang176 = "삭제 권한이 없습니다.";
-var strLang177 = "게시물을 선택해 주세요.";
-var strLang178 = "읽음 표시 하시겠습니까?";
-var strLang179 = ""; // 어순처리 빈칸
+var strLang171 = "列表中未指定的ID。";
+var strLang172 = "数据未指定";
+var strLang173 = "没有权限";
+var strLang174 = "试图添加图片时出错";
+var strLang175 = "您没有读取权限。";
+var strLang176 = "您没有权限删除";
+var strLang177 = "请选择帖子。";
+var strLang178 = "您确定要读？";
+var strLang179 = "选择的。";
 
 //2017.12.26 강민수92 추가
-var strLang180 = "댓글을 삭제하시겠습니까?";
-var strLang181 = "댓글이 없습니다.";
-var strLang182 = "내용을 입력하세요.";
-var strLang183 = "암호를 입력하세요.";
-var strLang184 = "자신이 등록한 댓글만 삭제할 수 있습니다.";
-var strLang185 = "암호가 올바르지 않습니다.";
-var strLang186 = "댓글";
+var strLang180 = "您确定要删除此评论吗？";
+var strLang181 = "没有评论。";
+var strLang182 = "请输入内容。";
+var strLang183 = "请输入您的密码。";
+var strLang184 = "您只能删除您的评论";
+var strLang185 = "密码不正确";
+var strLang186 = "评论";
 
 //2021-04-22 김정언 추가
 var strLang187 = ""; // 어순처리 빈칸

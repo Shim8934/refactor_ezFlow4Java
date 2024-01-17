@@ -28,6 +28,8 @@
 			function Save(){
 				var name1 = $.trim($("#txtNewGroupName").val());
 				var name2 = $.trim($("#txtNewGroupName2").val());
+				var name3 = $.trim($("#txtNewGroupName3").val());
+				var name4 = $.trim($("#txtNewGroupName4").val());		
 				
 				if (document.getElementById("allGroupBoard") != null) {
 					var isAllGroupBoard = document.getElementById("allGroupBoard").checked;
@@ -38,15 +40,24 @@
 				if (name1 == ""){
 					alert("<spring:message code='ezBoard.t119'/>");
 					return;
-				}				
-				if (hasSpecialCharacters(name1)){
+				}
+				
+				if (hasSpecialCharacters(name1) || hasSpecialCharacters(name2) || hasSpecialCharacters(name3) || hasSpecialCharacters(name4)){
 					alert("<spring:message code='ezBoard.t120'/>");
 					return;
 				}
-				if (hasSpecialCharacters(name2)){
-					alert("<spring:message code='ezBoard.t120'/>");
-					return;
+				
+				// 2023-11-27 조소정 - 게시판그룹이름 영어, 일본어, 중국어칸 공백 시 한국어 버전으로 삽입
+				if (name2 == "") {
+					name2 = name1;
 				}
+				if (name3 == "") {
+					name3 = name1;
+				}
+				if (name4 == "") {
+					name4 = name1;
+				}
+				
 				if (isAllGroupBoard != null && isAllGroupBoard == true) {
 					guBun = 99;
 				}
@@ -60,6 +71,8 @@
 						boardGroupID : newID,
 						boardGroupName : encodeURIComponent(name1),
 						boardGroupName2 : encodeURIComponent(name2),
+						boardGroupName3 : encodeURIComponent(name3),
+						boardGroupName4 : encodeURIComponent(name4),
 						guBun : guBun
 					},
 					success: function(result){						
@@ -84,10 +97,22 @@
 			            		<th><c:out value='${lang_primary}' /></th>
 			            		<td><input name="text" type="text" id="txtNewGroupName" style="width:100%" maxlength=20></td>
 			          		</tr>
-			          		<tr class="secondary">
+			          		<tr class="primary">
 			            		<th><c:out value='${lang_secondary}' /></th>
 			            		<td><input type="text" name="textfield" id="txtNewGroupName2" style="width:100%" maxlength=20></td>
 			          		</tr>
+			          		<c:if test="${useJapanese == 'YES'}">
+				          		<tr class="primary">
+				            		<th><c:out value='${lang_tertiary}' /></th>
+				            		<td><input type="text" name="textfield" id="txtNewGroupName3" style="width:100%" maxlength=20></td>
+				          		</tr>
+			          		</c:if>
+			          		<c:if test="${useChinese == 'YES'}">
+				          		<tr class="secondary">
+				            		<th><c:out value='${lang_quaternary}' /></th>
+				            		<td><input type="text" name="textfield" id="txtNewGroupName4" style="width:100%" maxlength=20></td>
+				          		</tr>
+				          	</c:if>
 		          		</c:if>
 		          		<c:if test="${use_multiData != 'YES'}">
 		          			<tr>

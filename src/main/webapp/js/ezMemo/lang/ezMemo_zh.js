@@ -1,0 +1,18 @@
+var memoMessages = {
+	strLangMemo4 : "Are you sure you want to delete this memo?",
+	strLangMemo5 : "Confrim",
+	strLangMemo6 : "Cancel",
+	strLangMemo7 : "No notes available.",
+	strLangMemo9 : "All",
+	strLangMemo10 : "No search criteria.",
+	strLangMemo11 : "Please specify the end date of the search term.",
+	strLangMemo12 : "Please specify the start date of the search term.",
+	strLangMemo13 : "Please specify the search start date earlier than the end date.",
+	strLangMemo14 : "Can not be used as a query.",
+	strLangMemo17 : "Please select a list.",
+	strLangMemo18 : "Do you want to delete?",
+	strLangMemo20 : "All memo",
+	strLangMemo21 : "An error has occurred",
+	strLangMemo22 : "Default notes box",
+	strLangMemo23 : "'zh'",
+}

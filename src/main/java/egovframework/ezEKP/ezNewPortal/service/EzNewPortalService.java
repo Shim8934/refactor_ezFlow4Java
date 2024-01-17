@@ -133,7 +133,7 @@ public interface EzNewPortalService {
 	/**
 	 * 관리자 메뉴상세정보 메뉴이름조회
 	 */
-	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId) throws Exception;
+	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId, String useJapanese, String useChinese, String useVietnamese, String useIndonesian) throws Exception;
 	/**
 	 * 관리자 메뉴별 권한목록조회
 	 * @param lang 
@@ -180,7 +180,7 @@ public interface EzNewPortalService {
 	 * @throws Exception
 	 */
 	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang);
-	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String usePrimaryLangOnly, String primaryLang);
+	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String lang);
 	public void setWeather() throws Exception;
 	public Map<String, Object> getWeather(String cityCode, int primary);
 	public List<WeatherVO> getCityList(int primaryLang);

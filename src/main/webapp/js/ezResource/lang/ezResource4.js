@@ -23,15 +23,15 @@ var strLang17 = "预订日不能早于现在. \n 请重新设置预定日。(必
 var strLang18 = "在我的布告或全体布告中，添加附件前 \n 请先选择告示板.(必要登入错误）"
 var strLang19 = "回复】"	
 var strLang20 = "请输入标题。"
-var strLang21 = "게시구분 중 한개 이상의 항목을 선택해주십시요.(버그등록필요)"	
-var strLang22 = "열람구분 중 한개 이상의 항목을 선택해주십시요.(버그등록필요)"	
-var strLang23 = "게시를 원하는 게시판을 선택해주십시요.(버그등록필요)"	
-var strLang24 = "예약게시일을 지정해주십시요.(버그등록필요)"	
-var strLang25 = "잘못된 만료일입니다. 다시 등록해 주십시요.(버그등록필요)"	
-var strLang26 = "잘못된 예약일입니다. 다시 등록해 주십시요.(버그등록필요)"	
-var strLang27 = "만료일이 현재보다 작을 수 없습니다.\n 만료일을 다시 설정해 주세요.(버그등록필요)"	
-var strLang28 = "만료일은 (버그등록필요)"	
-var strLang29 = "일입니다.(버그등록필요)"	
+var strLang21 = "请在发布分类中选择一个以上项目。（需要登录bug）"
+var strLang22 = "请在阅览分类中选择一个以上项目。（需要登录bug）"
+var strLang23 = "请选择想要留言的留言板。（需要登录bug）"
+var strLang24 = "请指定预约公告日期。（需要登录bug）"
+var strLang25 = "无效的过期日期。 请重新登记。（需要登录bug）"
+var strLang26 = "预约错误。 请重新登记。（需要登录bug）"
+var strLang27 = "截止日期不得小于当前 。请重新设置\n 截止日期 。（需要登录bug）"
+var strLang28 = "截止日期（必需错误注册）"
+var strLang29 = "是（需要登录bug）一个"
 // Z:\NetModule\FrontEnd\Home_myoffice_SubModule\ezResource\Admin\gwBoard_Post_RegBoardRightMain.js	
 var strLang30 = "请先选择要设置权限的使用者"
 var strLang31 = "请设置该保存的权限。"
@@ -51,8 +51,8 @@ var strLang44 = "允许"
 var strLang45 = "不可"	
 var strLang46 = "本人"	
 var strLang47 = "管理者"	
-var strLang48 = "게시판 담당자 허용(버그등록필요)"	
-var strLang49 = "게시판 담당자 불가(버그등록필요)"	
+var strLang48 = "公告栏负责人许可（需要登录bug）"
+var strLang49 = "公告栏负责人不可（需要登录bug）"
 // Z:\NetModule\FrontEnd\Home_myoffice_SubModule\ezResource\Admin\gwBrd_Step.js	
 var strLang50 = "请在布告板目录里选择变更的布告板。"	
 // Z:\NetModule\FrontEnd\Home_myoffice_SubModule\ezResource\ResSch\calendar.js	
@@ -70,13 +70,13 @@ var strLang97 = "每月"
 var strLang98 = "每年"
 var strLang100 = "请正确输入开始日期和终结日期。"	
 var strLang101 = "请正确输入约定时间。"
-var strLang102 = "시작날짜"	
-var strLang103 = "끝날짜"	
-var strLang104 = "주"	
-var strLang105 = "달의 일"	
-var strLang106 = "위치"	
-var strLang107 = "년의 달"	
-var strLang108 = "중요도"	
+var strLang102 = "开始日期"
+var strLang103 = "结束日期"
+var strLang104 = "周"
+var strLang105 = "月日"
+var strLang106 = "位置"
+var strLang107 = "一年的月份。"
+var strLang108 = "重要性"
 var strLang111 = "不会重复1次以上。"	
 var strLang112 = "请从新设置"
 var strLang113 = "请选择星期。"	
@@ -89,7 +89,7 @@ var strLang123 = "每日"
 var strLang124 = "每周"
 var strLang125 = "预约时间 : "
 var strLang126 = "一整天"	
-var strLang127 = "오"	
+var strLang127 = "哦"
 var strLang128 = "重复删除失败。"	
 var strLang129 = "重复设置失败。"
 var strLang131 = "请登录后使用。"	
@@ -185,7 +185,6 @@ var strLang305 = "日";
 var strLang306 = "一整天";
 var strLang307 = "个人时间表";
 var strLang308 = "部门时间表";
-var strLang309 = "公司时间表";
 var strLang310 = ".";
 var strLang311 = "";
 
@@ -224,7 +223,7 @@ var strLang571 = "订户";
 var strLang572 = "重复";
 var strLang573 = "时间";
 
-var strLang535 = "No Items";
+var strLang535 = "无数据。";
 
 var strLang580 = "期间 : ";
 var strLang581 = "不指定终结日"
@@ -233,60 +232,60 @@ var strLang583 = "结束时间比今天时间早。";
 
 var strLang584 = "它被批准。";
 var strLang585 = "认证已被取消。";
-var strLang586 = "1월";
-var strLang587 = "2월";
-var strLang588 = "3월";
-var strLang589 = "4월";
-var strLang590 = "5월";
-var strLang591 = "6월";
-var strLang592 = "7월";
-var strLang593 = "8월";
-var strLang594 = "9월";
-var strLang595 = "10월";
-var strLang596 = "11월";
-var strLang597 = "12월";
-var strLang598 = "오늘";
-var strLang599 = "이전달";
-var strLang600 = "다음달";
-var strLang601 = "닫기";
-var strLang602 = "ko";
-var strLang603 = "자원목록은 최대 5개까지 등록 가능합니다.";
+var strLang586 = "一月";
+var strLang587 = "二月";
+var strLang588 = "三月";
+var strLang589 = "四月";
+var strLang590 = "五月";
+var strLang591 = "六月";
+var strLang592 = "七月";
+var strLang593 = "八月";
+var strLang594 = "九月";
+var strLang595 = "十一月";
+var strLang596 = "十一月";
+var strLang597 = "十二月";
+var strLang598 = "今天";
+var strLang599 = "上月";
+var strLang600 = "下个月";
+var strLang601 = "关闭";
+var strLang602 = "zh";
+var strLang603 = "资源的列表最高可登记5个";
 //추가
 var strLangLHM01 = "default_cn";
-var strLangLHM02 = "인쇄 미리보기";
-var strLangLHM03 = "인쇄";
-var strLangLHM04 = "취소";
+var strLangLHM02 = "打印预览";
+var strLangLHM03 = "打印";
+var strLangLHM04 = "取消";
 
 //2018.2.21 강민수92 추가
-var strLangKMS1 = "100회 이하만 반복가능합니다.";
+var strLangKMS1 = "你只能重复100次以下。";
 
 //2019-01-16 김민성 - 관리자 > 자원관리 추가
-var strLangkmsr01 = "이미 추가된 이용자입니다.";
+var strLangkmsr01 = "已经添加的权威。";
 
 //2019-04-08 김민성
-var strLangkmsr02 = "자원관리자는 사용자 또는 관리자 권한이 있어야 합니다.";
+var strLangkmsr02 = "资源管理者必须有一个用户或管理员的权限。";
 
 //2019-05-14
-var strLangkmsr03 = "승인을 거부 하시겠습니까?"
-var strLang321 = "승인대기";
-var strLang322 = "승인거부";
-var strLang323 = "승인";
-var strLang324 = "대여중";
-var strLang325 = "반납";
-var strLang326 = "미반납";
-var strLang327 = "종료";
-var strLang331 = "반납 요청을 하시겠습니까?";
-var strLang332 = "반납 요청을 승인하시겠습니까?";
-var strLang333 = "반납하시겠습니까?";
-var strLang334 = "반납 요청이 완료되었습니다.";
-var strLang335 = "반납되었습니다.";
-var strLang336 = "자원이 사용안함으로 설정된 경우 예약할 수 없습니다.";
+var strLangkmsr03 = "确定要拒绝批准吗？"
+var strLang321 = "待审批";
+var strLang322 = "拒绝批准";
+var strLang323 = "批准";
+var strLang324 = "租赁";
+var strLang325 = "返回";
+var strLang326 = "未返回";
+var strLang327 = "结束";
+var strLang331 = "确定要要求返还吗？";
+var strLang332 = "您确定要接受返还请求吗？";
+var strLang333 = "确定要返还吗？";
+var strLang334 = "返还请求已经完成。";
+var strLang335 = "已返还。";
+var strLang336 = "资源设置为不使用时无法预约。";
 
 //2019-05-28
-var strLang337 = "승인거부 되었습니다."
+var strLang337 = "已拒绝批准。";
 	
 //2020-01-03
-var strLangkmsr04 = "윤 ";
+var strLangkmsr04 = "云 ";
 
 //2021-05-04
 var strLang340 = "结束时间比今天时间早。";

@@ -42,11 +42,18 @@ var strLang535 = "\"沒有數據\"";
 var strLang5351 = "名";
 
 /* 2017-11-01 장진혁 */
-var strLang84 = "파일명은 ";
-var strLangLHM01 = "자를 넘을 수 없습니다.";
+var strLang84 = "文件名";
+var strLangLHM01 = "不能超过";
 
 //2018-01-12 강민수92
-var strLang85 = "그림파일을 업로드 해야 합니다.";
+var strLang85 = "你需要上传的图像文件。"
+
+//2018-02-13 장진혁
+var strLang86 = "没有我的社区";
+var strLang87 = "请加入社区";
+var strLang88 = "没有开设的社区";
+
+var strLang89 = "Please select a file to delete.";
 
 /* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 var srtLangHSBEx01 = "Unacceptable extension.";

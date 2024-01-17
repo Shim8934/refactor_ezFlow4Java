@@ -214,6 +214,10 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	@Override
 	public String getBoardTree_Get1(String pStrLang, String pQuery, int tenantID) throws Exception {
 		logger.debug("getBoardTree_Get1 started");
+		
+		if (pStrLang.equals("1")) {
+			pStrLang = "";
+		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -348,13 +352,18 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/* 2018-10-15 홍승비 - 그룹사게시판 표출용 전체관리자 확인 플래그 isCompanyAdmin 추가 */
 	@Override
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, String companyID, int tenantID, boolean isCompanyAdmin) throws Exception {
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String lang, String companyID, int tenantID, boolean isCompanyAdmin) throws Exception {
 		logger.debug("get_Admin_TopBoardList started");
+
+		// 2023-11-27 조소정 - 게시판그룹이름, 게시판이름도 다국어 작업 처리 위해 사용자 설정 언어로 셋팅
+		if (lang.equals("1")) {
+			lang = "";
+		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("parentBoardID", parentBoardID);
-		map.put("lang", multiLang);
+		map.put("lang", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("isCompanyAdmin", isCompanyAdmin);
@@ -445,6 +454,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
 		map.put("v_BOARDGROUPNAME", boardPropertyVO.getBoardGroupName());
 		map.put("v_BOARDGROUPNAME2", boardPropertyVO.getBoardGroupName2());
+		map.put("v_BOARDGROUPNAME3", boardPropertyVO.getBoardGroupName3());
+		map.put("v_BOARDGROUPNAME4", boardPropertyVO.getBoardGroupName4());
 		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
@@ -477,6 +488,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_BOARDID", boardPropertyVO.getBoardID());
 		map.put("v_BOARDNAME", boardPropertyVO.getBoardName());
 		map.put("v_BOARDNAME2", boardPropertyVO.getBoardName2());
+		map.put("v_BOARDNAME3", boardPropertyVO.getBoardName3());
+		map.put("v_BOARDNAME4", boardPropertyVO.getBoardName4());
 		map.put("v_PARENTBOARDID", boardPropertyVO.getParentBoardID());
 		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
 		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
@@ -676,6 +689,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PDELETEAFTER", boardPropertyVO.getDeleteAfter());
 		map.put("v_PBOARDCOLOR", boardPropertyVO.getBoardColor());
 		map.put("v_PBOARDNAME2", boardPropertyVO.getBoardName2());
+		map.put("v_PBOARDNAME3", boardPropertyVO.getBoardName3());
+		map.put("v_PBOARDNAME4", boardPropertyVO.getBoardName4());		
 		map.put("v_PPORTLET", boardPropertyVO.getPortlet());
 		map.put("v_PONELINEREPLY", boardPropertyVO.getOneLineReply());
 		map.put("v_PBACKGROUND", boardPropertyVO.getBackGround());

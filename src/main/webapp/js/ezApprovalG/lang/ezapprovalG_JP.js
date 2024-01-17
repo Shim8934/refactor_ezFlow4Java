@@ -685,7 +685,12 @@ var strLang1028 = "年";
 var strLang1029 = "月";
 var strLang1030 = "日";
 var strLang1031 = "匿名掲示板、フォト掲示板、サムネイル掲示板、URLリンク掲示板は選択することができません。";
+var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "選択したユーザーは、不在です。</br>追加しますか？";
+
+var strLang1068 = "감사부서는 [";
+var strLang1069 = "예산심의부서는 [";
+var strLang1070 = "]만 지정 가능합니다.";
 
 // DocType : 문서형태 A01
 var strDocType4 = "004";

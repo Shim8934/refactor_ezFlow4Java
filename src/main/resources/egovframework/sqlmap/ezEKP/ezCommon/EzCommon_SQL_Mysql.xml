@@ -648,9 +648,34 @@
 	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns" parameterClass="Map">
 		ALTER TABLE
 			$TBL_NAME$
-		$ALTER$ 
-			$COLUMN_NAME$ $TYPE_MYSQL$ $AFTER$
+		ADD
+			$COLUMN_NAME$ $TYPE_MYSQL$ $AFTER$$AFTER_MYSQL$
 	</statement>
+	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns_DropPrimary" parameterClass="Map">
+		ALTER TABLE
+			$TBL_NAME$
+		DROP
+			PRIMARY KEY
+	</statement>
+	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns_DropIndex" parameterClass="Map">
+		ALTER TABLE
+			$TBL_NAME$
+		DROP INDEX
+			$CONSTRAINT$
+	</statement>
+	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns_AddPrimary" parameterClass="Map">
+		ALTER TABLE
+			$TBL_NAME$
+		ADD
+			<isNotEmpty property="CONSTRAINT" prepend="CONSTRAINT ">$CONSTRAINT$</isNotEmpty>
+			PRIMARY KEY $PRIMARY$
+	</statement>
+	<update id="EzCommonDAO.add_AnyTbl_AnyColumns_initData" parameterClass="Map">
+		UPDATE
+			$TBL_NAME$
+		SET
+			$COLUMN_NAME$ = $UPDATE$$UPDATE_MYSQL$
+	</update>
 
 	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
 		<![CDATA[
@@ -4948,4 +4973,322 @@
 		DROP
 			INDEX
 	</statement>
+
+	<!-- 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 -->
+    <select id="EzCommonDAO.getPortalMenuTenantList" resultClass="String">
+		<![CDATA[
+			SELECT
+				GROUP_CONCAT(DISTINCT TENANT_ID) AS TENANT_IDS 
+			FROM 
+				TBL_PORTAL_MENU_NAME
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.getPortalMenuCompanyList" resultClass="String">
+		<![CDATA[
+			SELECT
+				GROUP_CONCAT(DISTINCT COMPANY_ID) AS COMPANY_IDS
+			FROM
+				TBL_PORTAL_MENU_NAME
+			WHERE
+				TENANT_ID = #v_TENANTID#	
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkPortalMenuChinese" resultClass="String">
+		<![CDATA[
+			SELECT
+				MENU_ID, MENU_NAME
+			FROM
+				TBL_PORTAL_MENU_NAME
+			WHERE
+				MENU_LANG = '4'
+			AND
+				COMPANY_ID = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			LIMIT 1
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertPortalMenuChinese" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_NAME 
+			(menu_id, menu_lang, company_id, tenant_id, menu_name)
+		VALUES
+	    	(1, 4, #v_COMPANYID#, #v_TENANTID#, '邮件'),
+	    	(2, 4, #v_COMPANYID#, #v_TENANTID#, '日程管理'),
+	    	(3, 4, #v_COMPANYID#, #v_TENANTID#, '电子审批'),
+	    	(4, 4, #v_COMPANYID#, #v_TENANTID#, '公告栏'),
+	    	(5, 4, #v_COMPANYID#, #v_TENANTID#, '社区'),
+	    	(6, 4, #v_COMPANYID#, #v_TENANTID#, '资源管理'),
+	    	(7, 4, #v_COMPANYID#, #v_TENANTID#, '圆板'),
+	    	(8, 4, #v_COMPANYID#, #v_TENANTID#, '工作日志'),
+	    	(9, 4, #v_COMPANYID#, #v_TENANTID#, '考勤管理'),
+	    	(10, 4, #v_COMPANYID#, #v_TENANTID#, '网络文件夹'),
+	    	(11, 4, #v_COMPANYID#, #v_TENANTID#, '杂品柜'),
+	    	(12, 4, #v_COMPANYID#, #v_TENANTID#, '项目管理'),
+	    	(13, 4, #v_COMPANYID#, #v_TENANTID#, '地址簿'),
+	    	(14, 4, #v_COMPANYID#, #v_TENANTID#, '问卷调查'),
+	    	(15, 4, #v_COMPANYID#, #v_TENANTID#, '投票'),
+	    	(16, 4, #v_COMPANYID#, #v_TENANTID#, '天梯游戏'),
+	    	(17, 4, #v_COMPANYID#, #v_TENANTID#, '工作管理'),
+	    	(18, 4, #v_COMPANYID#, #v_TENANTID#, '记事本'),
+	    	(19, 4, #v_COMPANYID#, #v_TENANTID#, '电子问卷'),
+	    	(20, 4, #v_COMPANYID#, #v_TENANTID#, '自動車')
+	]]>
+	</insert>
+	
+	<!-- 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 -->
+	<select id="EzCommonDAO.getPortletNameTenantList" resultClass="String">
+		<![CDATA[
+			SELECT
+				GROUP_CONCAT(DISTINCT TENANT_ID) AS TENANT_IDS 
+			FROM 
+				TBL_PORTAL_PORTLET_NAME
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.getPortletNameCompanyList" resultClass="String">
+		<![CDATA[
+			SELECT
+				GROUP_CONCAT(DISTINCT COMPANY_ID) AS COMPANY_IDS
+			FROM
+				TBL_PORTAL_PORTLET_NAME
+			WHERE
+				TENANT_ID = #v_TENANTID#	
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkPortletNameChinese" resultClass="String">
+		<![CDATA[
+			SELECT
+				PORTLET_ID, PORTLET_NAME
+			FROM
+				TBL_PORTAL_PORTLET_NAME
+			WHERE
+				PORTLET_LANG = '4'
+			AND
+				COMPANY_ID = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			LIMIT 1
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertPortletNameChinese" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_PORTLET_NAME 
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+		VALUES
+	    	(1, 1, 4, #v_TENANTID#, #v_COMPANYID#, '收件邮件'),
+	    	(2, 4, 4, #v_TENANTID#, #v_COMPANYID#, '公告'),
+	    	(4, 15, 4, #v_TENANTID#, #v_COMPANYID#, '投票'),
+	    	(5, 0, 4, #v_TENANTID#, #v_COMPANYID#, '快速民意测验'),
+	    	(6, 2, 4, #v_TENANTID#, #v_COMPANYID#, '附表'),
+	    	(7, 3, 4, #v_TENANTID#, #v_COMPANYID#, '批准名单'),
+	    	(8, 3, 4, #v_TENANTID#, #v_COMPANYID#, '常用表格'),
+	    	(9, 4, 4, #v_TENANTID#, #v_COMPANYID#, '相片集'),
+	    	(10, 4, 4, #v_TENANTID#, #v_COMPANYID#, '宠儿委员会'),
+	    	(11, 5, 4, #v_TENANTID#, #v_COMPANYID#, '社区联络小组'),
+	    	(12, 0, 4, #v_TENANTID#, #v_COMPANYID#, '救命呀'),
+	    	(14, 0, 4, #v_TENANTID#, #v_COMPANYID#, '天気'),
+	    	(26, 0, 4, #v_TENANTID#, #v_COMPANYID#, '诞辰辰'),
+	    	(34, 0, 4, #v_TENANTID#, #v_COMPANYID#, '幻灯片图像'),
+	    	(36, 0, 4, #v_TENANTID#, #v_COMPANYID#, '用户资料'),
+	    	(47, 4, 4, #v_TENANTID#, #v_COMPANYID#, '电影展板'),
+	    	(49, 0, 4, #v_TENANTID#, #v_COMPANYID#, '数一数二'),
+	    	(51, 6, 4, #v_TENANTID#, #v_COMPANYID#, '教学资源'),
+	    	(70, 10, 4, #v_TENANTID#, #v_COMPANYID#, '个人文件夹'),
+	    	(73, 19, 4, #v_TENANTID#, #v_COMPANYID#, '电子问卷'),
+			((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'tabBoard'), 4, 4, #v_TENANTID#, #v_COMPANYID#, '标签板'),
+			((SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'chart'), 3, 4, #v_TENANTID#, #v_COMPANYID#, '图表')
+	]]>
+	</insert>	
+	
+	<!-- 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가  -->
+	<select id="EzCommonDAO.checkTenantConfigLangTertiary" resultClass="String">
+		SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'LangTertiary1'
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+    
+    <insert id="EzCommonDAO.insertTenantConfigLangTertiary">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#v_TENANTID#, 'LangTertiary1', '멀티언어1', '일본어', '시스템 언어에 따른 멀티언어 셋팅(일본어)', '2023-11-27 14:30:00', '일반'),
+			(#v_TENANTID#, 'LangTertiary2', '멀티언어2', 'Japanese', '', '2023-11-27 14:30:00', '일반'),
+			(#v_TENANTID#, 'LangTertiary3', '멀티언어3', '日本語', '', '2023-11-27 14:30:00', '일반'),
+			(#v_TENANTID#, 'LangTertiary4', '멀티언어4', '日语', '', '2023-11-27 14:30:00', '일반'),
+			(#v_TENANTID#, 'LangTertiary5', '멀티언어5', '', '', '2023-11-27 14:30:00', '일반')
+	</insert>
+
+	<!-- 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangTertiary 테넌트 컨피그  추가  -->
+	<select id="EzCommonDAO.checkTenantConfigLangQuaternary" resultClass="String">
+		SELECT
+            PROPERTY_NAME
+        FROM
+            TBL_TENANT_CONFIG
+        WHERE
+            PROPERTY_NAME = 'LangQuaternary1'
+        AND
+            TENANT_ID = #v_TENANTID#
+    </select>
+    
+    <insert id="EzCommonDAO.insertTenantConfigLangQuaternary">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#v_TENANTID#, 'LangQuaternary1', '멀티언어1', '중문', '시스템 언어에 따른 멀티언어 셋팅(중국어)', '2023-11-27 14:30:00', '일반'),
+			(#v_TENANTID#, 'LangQuaternary2', '멀티언어2', 'Chinese', '', '2023-11-27 14:30:00', '일반'),
+			(#v_TENANTID#, 'LangQuaternary3', '멀티언어3', '中文', '', '2023-11-27 14:30:00', '일반'),
+			(#v_TENANTID#, 'LangQuaternary4', '멀티언어4', '中文', '', '2023-11-27 14:30:00', '일반'),
+			(#v_TENANTID#, 'LangQuaternary5', '멀티언어5', '', '', '2023-11-27 14:30:00', '일반')
+	</insert>
+	
+	<!-- 2023-11-27 조소정 - 게시판그룹이름, 게시판이름 일본어, 중국어 버전 컬럼 추가 -->
+    <select id="EzCommonDAO.checkBoardInfoBoardName3" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		BOARDNAME3
+            FROM
+                TBL_BOARD_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardInfoBoardName3">
+        ALTER TABLE
+            TBL_BOARD_BOARDINFO
+        ADD
+            BOARDNAME3 VARCHAR(510) CHARACTER SET utf8mb4 DEFAULT NULL
+    </statement>
+
+    <select id="EzCommonDAO.checkBoardInfoBoardName4" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		BOARDNAME4
+            FROM
+                TBL_BOARD_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardInfoBoardName4">
+        ALTER TABLE
+            TBL_BOARD_BOARDINFO
+        ADD
+            BOARDNAME4 VARCHAR(510) CHARACTER SET utf8mb4 DEFAULT NULL
+    </statement>
+
+	<!-- 2023-11-27 조소정 - 게시판 트리 일본어, 중국어 버전 컬럼 추가 -->
+    <select id="EzCommonDAO.checkBoardTreeCasheResult3" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		RESULT3
+            FROM
+                TBL_BOARD_TREECACHE
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardTreeCasheResult3">
+        ALTER TABLE
+            TBL_BOARD_TREECACHE
+        ADD
+            RESULT3 longtext CHARACTER SET utf8mb4 DEFAULT NULL
+    </statement>
+
+    <select id="EzCommonDAO.checkBoardTreeCasheResult4" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		RESULT4
+            FROM
+                TBL_BOARD_TREECACHE
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardTreeCasheResult4">
+        ALTER TABLE
+            TBL_BOARD_TREECACHE
+        ADD
+            RESULT4 longtext CHARACTER SET utf8mb4 DEFAULT NULL
+    </statement>
+
+	<!-- 2023-11-27 조소정 - 마이게시판 트리 이름 일본어, 중국어 버전 컬럼 추가  -->
+    <select id="EzCommonDAO.checkBoardMyTreeName3" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		TREENAME3
+            FROM
+                TBL_BOARD_MYTREE
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardMyTreeName3">
+        ALTER TABLE
+            TBL_BOARD_MYTREE
+        ADD
+            TREENAME3 VARCHAR(510) DEFAULT NULL
+    </statement>
+
+    <select id="EzCommonDAO.checkBoardMyTreeName4" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		TREENAME4
+            FROM
+                TBL_BOARD_MYTREE
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardMyTreeName4">
+        ALTER TABLE
+            TBL_BOARD_MYTREE
+        ADD
+            TREENAME4 VARCHAR(510) DEFAULT NULL
+    </statement>
+
+	<!-- 2023-11-28 조소정 - 마이게시판 게시판이름 일본어, 중국어 버전 컬럼 추가  -->
+    <select id="EzCommonDAO.checkBoardMyBoardName3" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		BOARDNAME3
+            FROM
+                TBL_BOARD_MYBOARDS
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardMyBoardName3">
+        ALTER TABLE
+            TBL_BOARD_MYBOARDS
+        ADD
+            BOARDNAME3 varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL
+    </statement>
+
+    <select id="EzCommonDAO.checkBoardMyBoardName4" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		BOARDNAME4
+            FROM
+                TBL_BOARD_MYBOARDS
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardMyBoardName4">
+        ALTER TABLE
+            TBL_BOARD_MYBOARDS
+        ADD
+            BOARDNAME4 varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL
+    </statement>
 </sqlMap>

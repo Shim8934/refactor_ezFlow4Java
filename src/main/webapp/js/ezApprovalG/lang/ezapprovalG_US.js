@@ -685,7 +685,12 @@ var strLang1028 = "Year";
 var strLang1029 = "Month";
 var strLang1030 = "Day";
 var strLang1031 = "Can not post email / approval-document to photo board or anonymous board or url board.";
+var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "Selected user is out of office.</br>Would you like to add it?";
+
+var strLang1068 = "감사부서는 [";
+var strLang1069 = "예산심의부서는 [";
+var strLang1070 = "]만 지정 가능합니다.";
 
 // DocType : 문서형태 A01
 var strDocType4 = "004";
@@ -817,6 +822,7 @@ var strOpinionType4 = "004";
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
 var strOpinionType8 = "008";
+var strLangOpinionType0 = "추가의견";
 var strLangOpinionType1 = "General";
 var strLangOpinionType2 = "Rejection";
 var strLangOpinionType3 = "Hold opinion";

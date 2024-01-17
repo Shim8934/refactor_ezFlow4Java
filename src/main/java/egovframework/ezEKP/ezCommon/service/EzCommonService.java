@@ -429,4 +429,28 @@ public interface EzCommonService {
 
 	/*2023-12-28 김혜지 - 겸직 > 직책 컬럼 추가 */
 	void createColumnRoleTblAddJobMaster() throws Exception;
+
+	// 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
+	public void insertPortalMenuChinese() throws Exception;
+
+	// 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
+	public void insertPortletNameChinese() throws Exception;
+
+	// 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가	
+	public void insertTenantConfigLangTertiary() throws Exception;
+
+	// 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
+	public void insertTenantConfigLangQuaternary() throws Exception;
+
+	// 2023-11-27 조소정 - 게시판그룹명, 게시판이름 일본어, 중국어 버전 컬럼 추가
+	public void addBoardInfoBoardName() throws Exception;
+
+	// 2023-11-27 조소정 - 게시판 트리 일본어, 중국어 버전 컬럼 추가
+	public void addBoardTreeCasheResult() throws Exception;
+
+	// 2023-11-27 조소정 - 마이게시판 트리 이름 일본어, 중국어 버전 컬럼 추가
+	public void addBoardMyTreeName() throws Exception;
+
+	// 2023-11-28 조소정 - 마이게시판 게시판이름 일본어, 중국어 버전 컬럼 추가	
+	public void addBoardMyBoardName() throws Exception;
 }

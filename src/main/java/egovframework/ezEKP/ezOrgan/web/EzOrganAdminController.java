@@ -318,6 +318,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createColumnRollInfoInAddJobMaster(); // 2023-08-16 전인하 - tbl_addJobMaster 테이블에 Roll_INFO 컬럼 추가
 			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
 			ezCommonService.createColumnRoleTblAddJobMaster(); // 2023-12-28 김혜지 - 관리자 > 조직도 > 겸직등록 > 직책 컬럼 추가
+			ezCommonService.insertPortalMenuChinese(); // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
+			ezCommonService.insertPortletNameChinese(); // 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
+			ezCommonService.insertTenantConfigLangTertiary(); // 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가
+			ezCommonService.insertTenantConfigLangQuaternary(); // 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
+			ezCommonService.addBoardInfoBoardName(); // 2023-11-27 조소정 - 게시판그룹이름, 게시판이름 일본어, 중국어 버전 컬럼 추가
+			ezCommonService.addBoardTreeCasheResult(); // 2023-11-27 조소정 - 게시판 트리 일본어, 중국어 버전 컬럼 추가
+			ezCommonService.addBoardMyTreeName(); // 2023-11-27 조소정 - 마이게시판 트리 이름 일본어, 중국어 버전 컬럼 추가
+			ezCommonService.addBoardMyBoardName(); // 2023-11-28 조소정 - 마이게시판 게시판이름 일본어, 중국어 버전 컬럼 추가
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

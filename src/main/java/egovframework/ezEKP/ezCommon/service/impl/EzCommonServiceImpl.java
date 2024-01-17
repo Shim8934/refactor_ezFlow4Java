@@ -1780,7 +1780,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("insertTest started");
 		Map<String, Map<String, Object>> test = new HashMap<String,  Map<String, Object>>();
 		test.put("checkPasswordNumber", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","checkPasswordNumber"); // property_name
 			put("property_value","YES");
 			put("config_name","3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지");
@@ -1790,7 +1789,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","CHECKPASSWORDNUMBER"); // property_name
 		}});
 		test.put("dbSessionStoragePeriod", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","dbSessionStoragePeriod"); // property_name
 			put("property_value","1");
 			put("config_name","DB세션 보관 기간");
@@ -1800,7 +1798,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","DBSESSIONSTORAGEPERIOD"); // property_name
 		}});
 		test.put("mailConfirm", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useMailConfirm"); // property_name
 			put("property_value","NO");
 			put("config_name","메일 완료/완료취소");
@@ -1810,7 +1807,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEMAILCONFIRM"); // property_name
 		}});
 		test.put("UseAutoDeleteOfRetireUser", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","UseAutoDeleteOfRetireUser"); // property_name
 			put("property_value","NO");
 			put("config_name","퇴직자 자동삭제");
@@ -1820,7 +1816,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEAUTODELETEOFRETIREUSER"); // property_name
 		}});
 		test.put("autoDeleteOfRetireUserLimit", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","autoDeleteOfRetireUserLimit"); // property_name
 			put("property_value","0");
 			put("config_name","퇴직자 자동삭제 ");
@@ -1830,7 +1825,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","AUTODELETEOFRETIREUSERLIMIT"); // property_name
 		}});
 		test.put("useExternalMailServerAddress", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useExternalMailServerAddress"); // property_name
 			put("property_value","0.0.0.0");
 			put("config_name","외부메일 서버 주소 ");
@@ -1840,7 +1834,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEEXTERNALMAILSERVERADDRESS"); // property_name
 		}});
 		test.put("useExternalMailServerAuth", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useExternalMailServerAuth"); // property_name
 			put("property_value","NO");
 			put("config_name","외부메일 서버 인증 사용여부");
@@ -1850,7 +1843,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEEXTERNALMAILSERVERAUTH"); // property_name
 		}});
 		test.put("useExternalMailServerUserId", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useExternalMailServerUserId"); // property_name
 			put("property_value","authId");
 			put("config_name","외부메일 서버 인증 id (ex: test@test.com)");
@@ -1860,7 +1852,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEEXTERNALMAILSERVERUSERID"); // property_name
 		}});
 		test.put("useExternalMailServerUserPw", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useExternalMailServerUserPw"); // property_name
 			put("property_value","authPw");
 			put("config_name","외부메일 서버 인증 pass");
@@ -1870,7 +1861,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEEXTERNALMAILSERVERUSERPW"); // property_name
 		}});
 		test.put("useExternalMailServerPort", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useExternalMailServerPort"); // property_name
 			put("property_value","25");
 			put("config_name","외부메일 서버  smtp 포트 ");
@@ -1880,7 +1870,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEEXTERNALMAILSERVERPORT"); // property_name
 		}});
 		test.put("useDeleteMailBlob", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useDeleteMailBlob"); // property_name
 			put("property_value","YES");
 			put("config_name","메일 blob 삭제 스케줄러 사용여부");
@@ -1890,7 +1879,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEDELETEMAILBLOB"); // property_name
 		}});
 		test.put("useOrgListCheckBox", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useOrgListCheckBox"); // property_name
 			put("property_value","NO");
 			put("config_name","조직도 리스트 체크박스 표시");
@@ -1900,7 +1888,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEORGLISTCHECKBOX"); // property_name
 		}});
 		test.put("adminIpAccess", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useAdminIPAccess"); // property_name
 			put("property_value","NO");
 			put("config_name","관리자 IP 제한");
@@ -1910,7 +1897,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("property","USEADMINIPACCESS"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
 		}});
 		test.put("useAddrDupliCheck", new HashMap<String, Object>(){{
-			put("tenantID", 0);
 			put("confName","useAddrDupliCheck"); // property_name
 			put("property_value","YES");
 			put("config_name","주소록 가져오기 시 기존주소록 중복체크 사용여부");
@@ -1919,12 +1905,48 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","주소록");
 			put("property","USEADDRDUPLICHECK"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
 		}});
+		test.put("useChinese", new HashMap<String, Object>(){{ //2023-11-17 조소정 - 중국어 사용 여부 테넌트 컨피그 추가
+			put("confName","useChinese"); // property_name
+			put("property_value","NO");
+			put("config_name","중국어 사용여부");
+			put("regdate","2023-11-17 10:40:00");
+			put("description","중국어 사용여부(YES: 사용, NO: 사용안함, default: NO) 언어코드 zh : Chinese (中文 Zhōngwén), 국가코드 CN : Mainland China 중국 대륙(간체자)");
+			put("config_type","환경설정");
+			put("property","USECHINESE"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
+		}});
+		test.put("useVietnamese", new HashMap<String, Object>(){{ // 2024-01-17 김은실 - 중국어4, 베트남어5, 인도네시아어6 취합하면서 베트남어, 인도네시아어 추가
+			put("confName","useVietnamese"); // property_name
+			put("property_value","NO");
+			put("config_name","베트남어 사용여부");
+			put("regdate","2024-01-17 00:00:00");
+			put("description","베트남어 사용여부(YES: 사용, NO: 사용안함, default: NO) 언어코드 vi : Vietnamese, 국가코드 VN : Viet Nam");
+			put("config_type","환경설정");
+			put("property","USEVIETNAMESE"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
+		}});
+		test.put("useIndonesian", new HashMap<String, Object>(){{
+			put("confName","useIndonesian"); // property_name
+			put("property_value","NO");
+			put("config_name","인도네시아어 사용여부");
+			put("regdate","2024-01-17 00:00:00");
+			put("description","인도네시아어 사용여부(YES: 사용, NO: 사용안함, default: NO) 언어코드 id : Indonesian, 국가코드 ID : Indonesia");
+			put("config_type","환경설정");
+			put("property","USEINDONESIAN"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
+		}});
+
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
 		Iterator<String> keys = test.keySet().iterator();
         while( keys.hasNext() ){
+
         	try {
-				String key = keys.next();
-				ezCommonDAO.insertTblTenantConfig(test.get(key));
+				Map<String, Object> testMap = test.get(keys.next());
+
+				for (TenantVO tenantVo : tenantIdList) {
+					testMap.put("tenantID", tenantVo.getTenantId());
+
+					ezCommonDAO.insertTblTenantConfig(testMap);
+				}
+
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -1932,26 +1954,83 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
 	}
 
+	/**
+	 * - AFTER : $AFTER$ 또는 $AFTER_*$ 택하여 사용 가능. : $AFTER$ 값 없어도 에러나지 않는다.
+	 * - CONSTRAINT : PRIMARY KEY를 생성하는 데에 꼭 필요치는 않다.
+	 * - 필요시 _TIBERO 추가 요망.
+	 */
 	@SuppressWarnings("serial")
 	@Override
 	public void alter_AnyTbl_AnyColumns() throws Exception {
 		logger.debug("alter_AnyTbl_AnyColumns started");
 		List<Map<String, Object>> test = new ArrayList<Map<String, Object>>();
+
 		// JAMES_MAIL_SEARCH
-		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","JAMES_MAIL_SEARCH"); put("COLUMN_NAME", "SECURE_FLAG"); put("ALTER", "ADD");
-												 put("TYPE_MYSQL", "int(1)"); put("TYPE_ORACLE", "NUMBER"); put("TYPE_TIBERO", "NUMBER"); put("AFTER", "DEFAULT 0"); }});
+		test.add(new HashMap<String, Object>(){{
+			put("TBL_NAME","JAMES_MAIL_SEARCH"); put("COLUMN_NAME", "SECURE_FLAG");
+			put("TYPE_MYSQL", "int(1)"); put("TYPE_ORACLE", "NUMBER");
+			put("AFTER", "DEFAULT 0");
+		}});
 
 		// TBL_USERMASTER
-		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","TBL_USERMASTER"); put("COLUMN_NAME", "CREATEDT"); put("ALTER", "ADD"); 
-												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("TYPE_TIBERO", "DATE"); put("AFTER", "DEFAULT NULL"); }});
+		test.add(new HashMap<String, Object>(){{
+			put("TBL_NAME","TBL_USERMASTER"); put("COLUMN_NAME", "CREATEDT");
+			put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE");
+			put("AFTER", "DEFAULT NULL");
+		}});
 
 		// TBL_DEPTMASTER
-		test.add(new HashMap<String, Object>(){{ put("TBL_NAME","TBL_DEPTMASTER"); put("COLUMN_NAME", "CREATEDT"); put("ALTER", "ADD"); 
-												 put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE"); put("TYPE_TIBERO", "DATE"); put("AFTER", "DEFAULT NULL"); }});
+		test.add(new HashMap<String, Object>(){{
+			put("TBL_NAME","TBL_DEPTMASTER"); put("COLUMN_NAME", "CREATEDT");
+			put("TYPE_MYSQL", "DATETIME"); put("TYPE_ORACLE", "DATE");
+			put("AFTER", "DEFAULT NULL");
+		}});
+
+		// TBL_PORTAL_THEME
+		test.add(new HashMap<String, Object>(){{ //2023-11-16 조소정 - 환경설정 > 테마설정에서 테마설명 중국어 버전 추가
+			put("TBL_NAME","TBL_PORTAL_THEME"); put("COLUMN_NAME", "THEME_CONTENT4");
+			put("TYPE_MYSQL", "VARCHAR(400)"); put("TYPE_ORACLE", "VARCHAR2(400 BYTE)");
+			put("AFTER_MYSQL", "DEFAULT NULL"); put("AFTER_ORACLE", "DEFAULT 'theme content'"); // ?? 왜 DEFAULT가 다르지? (: create_tables_mysql/oracle.sql 참고함.)
+			put("UPDATE", "CASE WHEN theme_id = 1 THEN '左侧或右侧有固定区域的主题。'"
+								+ " WHEN theme_id = 2 THEN '顶部有固定区域的主题。'"
+								+ " WHEN theme_id = 3 THEN '仅由没有固定区域的 portlet 组成的主题。'"
+							+ " END");
+		}});
+		test.add(new HashMap<String, Object>(){{ // 2024-01-17 김은실 - 중국어4, 베트남어5, 인도네시아어6 취합하면서 베트남어, 인도네시아어 추가
+			put("TBL_NAME","TBL_PORTAL_THEME"); put("COLUMN_NAME", "THEME_CONTENT5");
+			put("TYPE_MYSQL", "VARCHAR(400)"); put("TYPE_ORACLE", "VARCHAR2(400 BYTE)");
+			put("AFTER_MYSQL", "DEFAULT NULL"); put("AFTER_ORACLE", "DEFAULT 'theme content'");
+			put("UPDATE", "CASE WHEN theme_id = 1 THEN 'A theme with a fixed area on the left or right.'"
+								+ " WHEN theme_id = 2 THEN 'A theme with a fixed area on the top.'"
+								+ " WHEN theme_id = 3 THEN 'A theme that consists of only portlets without fixed areas.'"
+							+ " END");
+		}});
+		test.add(new HashMap<String, Object>(){{
+			put("TBL_NAME","TBL_PORTAL_THEME"); put("COLUMN_NAME", "THEME_CONTENT6");
+			put("TYPE_MYSQL", "VARCHAR(400)"); put("TYPE_ORACLE", "VARCHAR2(400 BYTE)");
+			put("AFTER_MYSQL", "DEFAULT NULL"); put("AFTER_ORACLE", "DEFAULT 'theme content'");
+			put("UPDATE", "CASE WHEN theme_id = 1 THEN 'A theme with a fixed area on the left or right.' "
+								+ " WHEN theme_id = 2 THEN 'A theme with a fixed area on the top.'"
+								+ " WHEN theme_id = 3 THEN 'A theme that consists of only portlets without fixed areas.'"
+							+ " END");
+		}});
+
+		// TBL_PS_QUICKLINK
+		test.add(new HashMap<String, Object>(){{
+			put("TBL_NAME","TBL_PS_QUICKLINK"); put("COLUMN_NAME", "QUICKLINKNAME5");
+			put("TYPE_MYSQL", "varchar(100)"); put("TYPE_ORACLE", "NVARCHAR2(50)");
+			put("AFTER_MYSQL", "CHARACTER SET utf8mb4 NOT NULL"); put("AFTER_ORACLE", "NOT NULL ENABLE");
+		}});
+		test.add(new HashMap<String, Object>(){{
+			put("TBL_NAME","TBL_PS_QUICKLINK"); put("COLUMN_NAME", "QUICKLINKNAME6");
+			put("TYPE_MYSQL", "varchar(100)"); put("TYPE_ORACLE", "NVARCHAR2(50)");
+			put("AFTER_MYSQL", "CHARACTER SET utf8mb4 NOT NULL"); put("AFTER_ORACLE", "NOT NULL ENABLE");
+		}});
 
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alter_AnyTbl_AnyColumns(map);
         }
+
 		logger.debug("alter_AnyTbl_AnyColumns ended");
 	}
 
@@ -2988,4 +3067,114 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createColumnRoleTblAddJobMaster() throws Exception {
         ezCommonDAO.createColumnRoleTblAddJobMaster();
     }
+
+    // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
+	@Override
+	public void insertPortalMenuChinese() throws Exception {
+		String tenantIdList = ezCommonDAO.getPortalMenuTenantList();
+		String[] tenantIdArr = tenantIdList.split(",");
+		int[] tenantIds = new int[tenantIdArr.length];
+		
+		for (int i = 0; i < tenantIdArr.length; i++) {
+			tenantIds[i] = Integer.parseInt(tenantIdArr[i]);
+			
+			Map<String, Object> map = new HashMap<>();
+	        map.put("v_TENANTID", tenantIds[i]);
+			
+	        // 테넌트 아이디에 따른 회사 아이디 모두 구함
+			String companyIdList = ezCommonDAO.getPortalMenuCompanyList(map);
+			String[] companyIdArr = companyIdList.split(",");
+			String[] companyIds = new String[companyIdArr.length];
+			
+			for (int j = 0; j < companyIdArr.length; j++) {
+				companyIds[j] = companyIdArr[j];
+								
+				Map<String, Object> map2 = new HashMap<>();
+		        map2.put("v_TENANTID", tenantIds[i]);
+		        map2.put("v_COMPANYID", companyIds[j]);
+		        
+				ezCommonDAO.insertPortalMenuChinese(map2);
+			}
+		}
+	}
+
+	// 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
+	@Override
+	public void insertPortletNameChinese() throws Exception {
+		String tenantIdList = ezCommonDAO.getPortletNameTenantList();
+		String[] tenantIdArr = tenantIdList.split(",");
+		int[] tenantIds = new int[tenantIdArr.length];
+		
+		for (int i = 0; i < tenantIdArr.length; i++) {
+			tenantIds[i] = Integer.parseInt(tenantIdArr[i]);
+			
+			Map<String, Object> map = new HashMap<>();
+	        map.put("v_TENANTID", tenantIds[i]);
+			
+	        // 테넌트 아이디에 따른 회사 아이디 모두 구함
+			String companyIdList = ezCommonDAO.getPortletNameCompanyList(map);
+			String[] companyIdArr = companyIdList.split(",");
+			String[] companyIds = new String[companyIdArr.length];
+			
+			for (int j = 0; j < companyIdArr.length; j++) {
+				companyIds[j] = companyIdArr[j];
+								
+				Map<String, Object> map2 = new HashMap<>();
+		        map2.put("v_TENANTID", tenantIds[i]);
+		        map2.put("v_COMPANYID", companyIds[j]);
+		        
+				ezCommonDAO.insertPortletNameChinese(map2);
+			}
+		}
+	}
+
+	// 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가	
+	@Override
+	public void insertTenantConfigLangTertiary() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_TENANTID", tenantVo.getTenantId());
+			
+			ezCommonDAO.insertTenantConfigLangTertiary(map);
+		}		
+	}
+
+	// 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
+	@Override
+	public void insertTenantConfigLangQuaternary() throws Exception {
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVo : tenantIdList) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_TENANTID", tenantVo.getTenantId());
+			
+			ezCommonDAO.insertTenantConfigLangQuaternary(map);
+		}		
+	}
+
+	// 2023-11-27 조소정 - 게시판그룹이름, 게시판이름 일본어, 중국어 버전 컬럼 추가
+	@Override
+	public void addBoardInfoBoardName() throws Exception {
+		ezCommonDAO.addBoardInfoBoardName();
+	}
+
+	// 2023-11-27 조소정 - 게시판 트리 일본어, 중국어 버전 컬럼 추가
+	@Override
+	public void addBoardTreeCasheResult() throws Exception {
+		ezCommonDAO.addBoardTreeCasheResult();
+	}
+
+	// 2023-11-27 조소정 - 마이게시판 트리 이름 일본어, 중국어 버전 컬럼 추가
+	@Override
+	public void addBoardMyTreeName() throws Exception {
+		ezCommonDAO.addBoardMyTreeName();
+	}
+
+	// 2023-11-28 조소정 - 마이게시판 게시판이름 일본어, 중국어 버전 컬럼 추가	
+	@Override
+	public void addBoardMyBoardName() throws Exception {
+		ezCommonDAO.addBoardMyBoardName();
+	}
 }

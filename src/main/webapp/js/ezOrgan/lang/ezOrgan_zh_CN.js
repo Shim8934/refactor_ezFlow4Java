@@ -10,7 +10,6 @@ var strLang9 = "用户已复职成功。"
 var strLang10 = "复职失败。"
 var strLang11 = "为限"
 var strLang12 = "没有资料。"
-
 var strLang13 = "选择你的用户。";
 var strLang14 = "权限设置已保存。";
 var strLang15 = "无法保存权限设置。";
@@ -26,14 +25,19 @@ var strLang24 = "名";
 var strLang25 = "重复登记。";
 var strLang26 = "添加部门。额外的角色";
 var strLang27 = "除了角色注册的电子邮件";
-
-var strLang28 = "Prev";
-var strLang29 = "Next";
+var strLang28 = "之前";
+var strLang29 = "下一步";
 var strLang30 = "你确定要删除所有并发位置？";
 var strLang31 = "您不能指定一个完整的管理员权限。.";
+var strLang32 = "确定要删除所有权限？" ;
+var strLang33 = "Are you sure to delete ";
 
-var strLang535 = "No Items";
-var strLangLHM01 = "Restoration to the other companies is not supported.";
-var strLangKHJ01 = "사원";
-var strLangKHJ02 = "명을 복구하시겠습니까?";
+var strLang535 = "无数据。";
+var strLangLHM01 = "不支持恢复到其他公司。";
+var strLangLHM02 = "删除时，相关用户的数据会被删除，无法恢复。";
+var strLangLHM03 = "你确定要删除吗？";
+var strLangKHJ01 = "社员";
+var strLangKHJ02 = "确定要恢复吗？";
+var strLangKHJ03 = "你确定要恢复%s个社员吗吗？";
 var strLangKJE01 = "你确定要删除所有并发位置？";
+var strLangKSM01 = "请选择部门";

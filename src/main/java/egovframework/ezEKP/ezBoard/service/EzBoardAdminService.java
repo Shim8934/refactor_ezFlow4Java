@@ -24,7 +24,7 @@ public interface EzBoardAdminService {
 	
 	/* 2018-10-15 홍승비 - 그룹사게시판 표출용 전체관리자 확인 플래그 추가 */
 	/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트 표출 시 companyID 조건 추가 */
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, String companyID, int tenantID, boolean isCompanyAdmin) throws Exception;
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String userLang, String companyID, int tenantID, boolean isCompanyAdmin) throws Exception;
 	
 	/* 2019-06-04 홍승비 - 그룹사게시판에 권한이 설정되도록 수정했으므로, 전체관리자 외의 관리자도 그룹사게시판 권한 체크하여 트리캐시 생성하도록 수정 */
 	/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 추가 */

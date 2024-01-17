@@ -321,21 +321,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					
 					if (ctryCode != null && !ctryCode.isEmpty()) {
-						String systemCountryName = "";
-						switch (systemLang) {
-							case "1":
-								systemCountryName = "ko";
-								break;
-							case "2":
-								systemCountryName = "en";
-								break;
-							case "3":
-								systemCountryName = "ja";
-								break;
-							default:
-								systemCountryName = "kr";
-								break;
-						}
+						String systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "kr");
 						Locale localeCountry = new Locale(systemCountryName, ctryCode);
 						countryName = localeCountry.getDisplayCountry(localeCountry);
 						countryName = countryName.replaceAll(" ", "");
@@ -623,21 +609,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}
 							
 							if (ctryCode != null && ctryCode[0] != null) {
-								String systemCountryName = "";
-								switch (systemLang) {
-									case "1":
-										systemCountryName = "ko";
-										break;
-									case "2":
-										systemCountryName = "en";
-										break;
-									case "3":
-										systemCountryName = "ja";
-										break;
-									default:
-										systemCountryName = "kr";
-										break;
-								}
+								String systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "kr");
 								Locale localeCountry = new Locale(systemCountryName, ctryCode[0]);
 								countryName = localeCountry.getDisplayCountry(localeCountry);
 								countryName = countryName.replaceAll(" ", "");
@@ -2310,21 +2282,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					
 					if (ctryCode != null && !ctryCode.isEmpty()) {
-						String systemCountryName = "";
-						switch (systemLang) {
-							case "1":
-								systemCountryName = "ko";
-								break;
-							case "2":
-								systemCountryName = "en";
-								break;
-							case "3":
-								systemCountryName = "ja";
-								break;
-							default:
-								systemCountryName = "kr";
-								break;
-						}
+						String systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "kr");
 						Locale localeCountry = new Locale(systemCountryName, ctryCode);
 						countryName = localeCountry.getDisplayCountry(localeCountry);
 						countryName = countryName.replaceAll(" ", "");
@@ -2459,21 +2417,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							}
 							
 							if (ctryCode != null && ctryCode[0] != null) {
-								String systemCountryName = "";
-								switch (systemLang) {
-									case "1":
-										systemCountryName = "ko";
-										break;
-									case "2":
-										systemCountryName = "en";
-										break;
-									case "3":
-										systemCountryName = "ja";
-										break;
-									default:
-										systemCountryName = "kr";
-										break;
-								}
+								String systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "kr");
 								Locale localeCountry = new Locale(systemCountryName, ctryCode[0]);
 								countryName = localeCountry.getDisplayCountry(localeCountry);
 								countryName = countryName.replaceAll(" ", "");

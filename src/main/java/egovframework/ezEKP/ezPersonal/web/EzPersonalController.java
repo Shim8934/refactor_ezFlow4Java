@@ -28,6 +28,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -1482,10 +1483,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 		
 		model.addAttribute("strTimeZone", userInfo.getOffset());
-		model.addAttribute("strLang", userInfo.getLang());
-		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("strLang", StringUtils.isBlank(userInfo.getLang())? "1" : userInfo.getLang());
+		model.addAttribute("primaryLang", StringUtils.isBlank(primaryLang)? "1" : primaryLang);
 		model.addAttribute("usePrimaryLangOnly", usePrimaryLangOnly);
 		model.addAttribute("useJapanese", ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId()));
+		model.addAttribute("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
+		model.addAttribute("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
+		model.addAttribute("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
 
 		logger.debug("timeZone ended");
 		return "/ezPersonal/persTimeZone";
@@ -1521,14 +1525,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String result = ezCommonService.saveUserLocalInfo(userInfo.getId(), userInfo);
 		
 		if (result != null && result.equals("OK")) {
-			if (lang != null &&lang.equals("1")) {
-				returnValue = "ko";
-			} else if (lang != null && lang.equals("2")) {
-				returnValue = "en";
-			} else if (lang != null && lang.equals("3")) {
-				returnValue = "ja";
-			} else if (lang != null && lang.equals("4")) {
-				returnValue = "zh";
+			if (lang != null) {
+				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
 			}
 			
 			//CookieLocaleResolver에 lang값을 set해줌

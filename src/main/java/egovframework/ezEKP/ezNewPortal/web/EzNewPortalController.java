@@ -718,9 +718,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			String imgFolder = "kr";
 			
 			if (userLang.equals("2")) {
-				imgFolder = "en"; //나중에 en으로 바꾸기
+				imgFolder = "us";
 			} else if (userLang.equals("3")) {
 				imgFolder = "jp";
+			} else if (userLang.equals("4")) {
+				imgFolder = "cn";
+			} else if (userLang.equals("5")) {
+				imgFolder = "vn";
+			} else if (userLang.equals("6")) {
+				imgFolder = "id";
 			}
 			
 			model.addAttribute("usedTheme", usedTheme);

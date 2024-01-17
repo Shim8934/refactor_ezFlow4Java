@@ -149,7 +149,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * 관리자 포탈 메뉴관리 화면조회
 	 */
 	@RequestMapping(value = "/admin/ezNewPortal/portalMenus.do", method=RequestMethod.GET)
-	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset, HttpServletResponse response) throws Exception {
+	public String portalMenus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest requset, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("portalMenus started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -160,6 +160,12 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		} else {
 			logger.debug("portalMenus ended.");
+
+			// 2023-11-23 조소정 - 관리자 > 포탈 > 메뉴관리 > 일본어, 중국어 사용 여부에 따라 메뉴명 표출/미표출 구현
+			model.addAttribute("useJapanese", ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId()));
+			model.addAttribute("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
+			model.addAttribute("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
+			model.addAttribute("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
 
 			response.setHeader("Pragma", "no-cache"); //HTTP 1.0 
 			response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
@@ -621,10 +627,20 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 					
 			String status = resultBody.get("status").toString();
 			
+			// 2023-11-17 조소정 - 관리자 > 포탈 > 포틀릿관리 > 일본어, 중국어 사용 여부에 따라 포틀릿 추가 시 포틀릿명 표출/미표출 구현
+			String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
+			String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+			String useVietnamese = ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId());
+			String useIndonesian = ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId());
+
 			if (status.equals("ok")) {
 				model.addAttribute("companyList", resultBody.get("data"));
 				model.addAttribute("userCompany", resultBody.get("userCompany"));
 				model.addAttribute("lang", resultBody.get("lang"));
+				model.addAttribute("useJapanese", useJapanese);
+				model.addAttribute("useChinese", useChinese);
+				model.addAttribute("useVietnamese", useVietnamese);
+				model.addAttribute("useIndonesian", useIndonesian);
 			}
 			
 			logger.debug("portalPortlets ended.");
@@ -1057,9 +1073,15 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			String imgFolder = "kr";
 			
 			if (userLang.equals("2")) {
-				imgFolder = "en"; // en으로 나중에 변경 필요
+				imgFolder = "us";
 			} else if (userLang.equals("3")) {
 				imgFolder = "jp";
+			} else if (userLang.equals("4")) {
+				imgFolder = "cn";
+			} else if (userLang.equals("5")) {
+				imgFolder = "vn";
+			} else if (userLang.equals("6")) {
+				imgFolder = "id";
 			}
 			
 			model.addAttribute("themeId", request.getParameter("themeId"));

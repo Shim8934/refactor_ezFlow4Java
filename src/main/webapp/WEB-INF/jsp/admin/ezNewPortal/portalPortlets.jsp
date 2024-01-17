@@ -24,7 +24,7 @@
   	.portlet, .newPortlet {margin:0px 15px 15px 0px;display:inline-block; border-radius:0px; vertical-align : top; background-color : #ffffff; box-sizing:border-box; border:none; box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.20);position:relative;}
   	.portlet-header {padding:0px 0px 0px 15px;margin:0px;position: relative;border:none; font-size:14px; font-weight:bold; height:40px; line-height:38px; border-radius:0px; color:#393939; border:1px solid #2196f3;}
   	.portlet-toggle {top: 50%;right: 0;float:right;}
-  	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:215px;}
+  	.portlet-content {padding:5px 15px 10px 15px;clear:both; box-sizing:border-box; border-radius:0px; border:1px solid #dfe2e4; margin:-1px 0px 0px 0px; height:250px;}
   	.portlet-placeholder {border: 1px dotted black; margin: 0 1em 1em 0; height: 50px;}
 	.col, .newPortlet {padding:0px;}
 	.addPortlet:hover {cursor:pointer;}
@@ -124,6 +124,10 @@
 		var arrayLang = Number(lang) - 1;
 		var usePrimaryLangOnly = "";
 		var primary = "";
+		var useJapanese = "${useJapanese}";
+		var useChinese = "${useChinese}";
+		var useVietnamese = "${useVietnamese}";
+		var useIndonesian = "${useIndonesian}";
 		
 		$(function() {
 			getCompanies();
@@ -451,7 +455,7 @@
 						if (usePrimaryLangOnly == "YES") {
 							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[0].portletName) + "</div>";
 						} else {
-							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[arrayLang].portletName) + "</div>";
+							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + portletName + "</div>";
 						}
 						
 						if (!result[i].general) {
@@ -478,18 +482,36 @@
 						
 						for (var j = 0; j < portletNameListCnt; j++) {
 							var language = "";
+							var portletNameTrId = "";
 							
 							//언어
 							if (portletNameList[j].portletLang == 1) {
 								language = "<spring:message code='ezNewPortal.t078' />";
+								portletNameTr = "ko";
 							} else if (portletNameList[j].portletLang == 2) {
 								language = "<spring:message code='ezNewPortal.t079' />";
+								portletNameTr = "en";
 							} else if (portletNameList[j].portletLang == 3) {
 								language = "<spring:message code='ezNewPortal.t080' />";
+								portletNameTr = "ja";
+							} else if (portletNameList[j].portletLang == 4) {
+								language = "<spring:message code='ezPortal.t4094' />";
+								portletNameTr = "zh";
+							} else if (portletNameList[j].portletLang == 5) {
+								language = "<spring:message code='ezPersonal.s86' />";
+								portletNameTr = "vi";
+							} else if (portletNameList[j].portletLang == 6) {
+								language = "<spring:message code='ezPersonal.s87' />";
+								portletNameTr = "id";
 							}
 							
-							listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
-						 }
+							// 2023-12-01 조소정 - 일본어, 중국어 사용 여부에 따라 포틀릿명 표출/미표출 구현
+							if ((useJapanese == "NO" && portletNameTr == "ja") || (useChinese == "NO" && portletNameTr == "zh")) {
+								listHTML += "<tr style='display:none;'><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
+							} else {
+								listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
+							}
+						}
 						
 						if (!result[i].general) {						
 							listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t098' /> : </th><td class='portletInfoTD'>";
@@ -634,39 +656,43 @@
 					listHTML += "(<spring:message code='ezNewPortal.t079' />) </th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>";
 				} else if (primary == "3") {
 					listHTML += "(<spring:message code='ezNewPortal.t080' />) </th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>";
-				} else {
-					
+				} else if (primary =="4") {
+					listHTML += "(<spring:message code='ezPortal.t4094' />) </th><td class='portletInfoTD'><input class='portletName' data1='4' type='text' maxlength='50'></td></tr>";
+				} else if (primary =="5") {
+					listHTML += "(<spring:message code='ezPersonal.s86' />) </th><td class='portletInfoTD'><input class='portletName' data1='5' type='text' maxlength='50'></td></tr>";
+				} else if (primary =="6") {
+					listHTML += "(<spring:message code='ezPersonal.s87' />) </th><td class='portletInfoTD'><input class='portletName' data1='6' type='text' maxlength='50'></td></tr>";
 				}
 			} else {
-				var mainTitle = "<spring:message code='ezNewPortal.t078' />";
-				var subTitle1 = "<spring:message code='ezNewPortal.t079' />";
-				var subTitle2 = "<spring:message code='ezNewPortal.t080' />";
-				
-				var mainTitleId = "1";
-				var subTitle1Id = "2";
-				var subTitle2Id = "3";
-				
-				if (primary == "2") {
-					mainTitle = "<spring:message code='ezNewPortal.t079' />";
-					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
-					subTitle2 = "<spring:message code='ezNewPortal.t080' />";
-					
-					mainTitleId = "2";
-					subTitle1Id = "1";
-					subTitle2Id = "3";
-				} else if (primary == "3") {
-					mainTitle = "<spring:message code='ezNewPortal.t080' />";
-					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
-					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
-					
-					mainTitleId = "3";
-					subTitle1Id = "1";
-					subTitle2Id = "2";
+				var titleMap = new Map();
+
+				titleMap.set("1", "<spring:message code='ezNewPortal.t078' />");
+				titleMap.set("2", "<spring:message code='ezNewPortal.t079' />");
+
+				if (useJapanese == "YES") {
+					titleMap.set("3", "<spring:message code='ezNewPortal.t080' />");
 				}
-				
-				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + mainTitle + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + mainTitleId + "' type='text' maxlength='50'></td></tr>";
-				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + subTitle1 + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + subTitle1Id + "' type='text' maxlength='50'></td></tr>";
-				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + subTitle2 + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + subTitle2Id + "' type='text' maxlength='50'></td></tr>";
+				if (useChinese == "YES") {
+					titleMap.set("4", "<spring:message code='ezPortal.t4094' />");
+				}
+				if (useVietnamese == "YES") {
+					titleMap.set("5", "<spring:message code='ezPersonal.s86' />");
+				}
+				if (useIndonesian == "YES") {
+					titleMap.set("6", "<spring:message code='ezPersonal.s87' />");
+				}
+				if (!primary || !titleMap.has(primary)) {
+					primary = "1";
+				}
+
+				// main
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + titleMap.get(primary) + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + primary + "' type='text' maxlength='50'></td></tr>";
+				titleMap.delete(primary);
+
+				// sub		*맵은 입력된 순서를 기억합니다. 열거는 입력된 순서대로 이루어집니다. (https://offbyone.tistory.com/468)
+				titleMap.forEach( (message, key, map) =>
+					listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + message + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + key + "' type='text' maxlength='50'></td></tr>"
+				);
 			}
 			
 			listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t098' /> </th><td class='portletInfoTD'>";
