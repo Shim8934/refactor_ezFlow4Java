@@ -5297,10 +5297,12 @@
 	</statement>
 
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 -->
+	<!-- 오라클 19c 이상부터 DISTINCT를 사용하여 중복을 제거 가능 : LISTAGG(DISTINCT TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID) *참고 https://gent.tistory.com/328 -->
+	<!-- $ → $$ : ibatis 정규식 에러 *참고 https://suyou.tistory.com/247 -->
     <select id="EzCommonDAO.getPortalMenuTenantList" resultClass="String">
 		<![CDATA[
 			SELECT
-				GROUP_CONCAT(DISTINCT TENANT_ID) AS TENANT_IDS 
+				REGEXP_REPLACE(LISTAGG(TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID), '([^,]+)(,\1)*(,|$$)', '\1\3') AS TENANT_IDS 
 			FROM 
 				TBL_PORTAL_MENU_NAME
 		]]>
@@ -5309,7 +5311,7 @@
 	<select id="EzCommonDAO.getPortalMenuCompanyList" resultClass="String">
 		<![CDATA[
 			SELECT
-				GROUP_CONCAT(DISTINCT COMPANY_ID) AS COMPANY_IDS
+				REGEXP_REPLACE(LISTAGG(COMPANY_ID, ',') WITHIN GROUP(ORDER BY COMPANY_ID), '([^,]+)(,\1)*(,|$$)', '\1\3') AS COMPANY_IDS
 			FROM
 				TBL_PORTAL_MENU_NAME
 			WHERE
@@ -5329,7 +5331,8 @@
 				COMPANY_ID = #v_COMPANYID#
 			AND
 				TENANT_ID = #v_TENANTID#
-			ROWNUM = 1
+			AND
+				ROWNUM = 1
 		]]>
 	</select>
 
@@ -5361,7 +5364,7 @@
 			INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
 			VALUES (12, 4, #v_COMPANYID#, #v_TENANTID#, '项目管理')
 			INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
-			VALUES (13, 4, #v_COMPANYID#, #v_TENANTID#, '地址簿'),
+			VALUES (13, 4, #v_COMPANYID#, #v_TENANTID#, '地址簿')
 			INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
 			VALUES (14, 4, #v_COMPANYID#, #v_TENANTID#, '问卷调查')
 			INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name)
@@ -5382,10 +5385,12 @@
 	</insert>
 	
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 -->
+	<!-- 오라클 19c 이상부터 DISTINCT를 사용하여 중복을 제거 가능 : LISTAGG(DISTINCT TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID) *참고 https://gent.tistory.com/328 -->
+	<!-- $ → $$ : ibatis 정규식 에러 *참고 https://suyou.tistory.com/247 -->
 	<select id="EzCommonDAO.getPortletNameTenantList" resultClass="String">
 		<![CDATA[
 			SELECT
-				GROUP_CONCAT(DISTINCT TENANT_ID) AS TENANT_IDS 
+				REGEXP_REPLACE(LISTAGG(TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID), '([^,]+)(,\1)*(,|$$)', '\1\3') AS TENANT_IDS 
 			FROM 
 				TBL_PORTAL_PORTLET_NAME
 		]]>
@@ -5394,7 +5399,7 @@
 	<select id="EzCommonDAO.getPortletNameCompanyList" resultClass="String">
 		<![CDATA[
 			SELECT
-				GROUP_CONCAT(DISTINCT COMPANY_ID) AS COMPANY_IDS
+				REGEXP_REPLACE(LISTAGG(COMPANY_ID, ',') WITHIN GROUP(ORDER BY COMPANY_ID), '([^,]+)(,\1)*(,|$$)', '\1\3') AS COMPANY_IDS
 			FROM
 				TBL_PORTAL_PORTLET_NAME
 			WHERE
@@ -5414,7 +5419,8 @@
 				COMPANY_ID = #v_COMPANYID#
 			AND
 				TENANT_ID = #v_TENANTID#
-			ROWNUM = 1
+			AND
+				ROWNUM = 1
 		]]>
 	</select>
 
@@ -5485,15 +5491,15 @@
     <insert id="EzCommonDAO.insertTenantConfigLangTertiary">
 		INSERT ALL
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangTertiary1', '멀티언어1', '일본어', '시스템 언어에 따른 멀티언어 셋팅(일본어)', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangTertiary1', '멀티언어1', '일본어', '시스템 언어에 따른 멀티언어 셋팅(일본어)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangTertiary2', '멀티언어2', 'Japanese', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangTertiary2', '멀티언어2', 'Japanese', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangTertiary3', '멀티언어3', '日本語', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangTertiary3', '멀티언어3', '日本語', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangTertiary4', '멀티언어4', '日语', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangTertiary4', '멀티언어4', '日语', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangTertiary5', '멀티언어5', '', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangTertiary5', '멀티언어5', '', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 		SELECT *
 		FROM DUAL
 	</insert>
@@ -5513,15 +5519,15 @@
     <insert id="EzCommonDAO.insertTenantConfigLangQuaternary">
 		INSERT ALL
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangQuaternary1', '멀티언어1', '중문', '시스템 언어에 따른 멀티언어 셋팅(중국어)', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangQuaternary1', '멀티언어1', '중문', '시스템 언어에 따른 멀티언어 셋팅(중국어)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangQuaternary2', '멀티언어2', 'Chinese', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangQuaternary2', '멀티언어2', 'Chinese', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangQuaternary3', '멀티언어3', '中文', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangQuaternary3', '멀티언어3', '中文', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangQuaternary4', '멀티언어4', '中文', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangQuaternary4', '멀티언어4', '中文', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 			INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-			VALUES (#v_TENANTID#, 'LangQuaternary5', '멀티언어5', '', '', 'TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss')', '일반')
+			VALUES (#v_TENANTID#, 'LangQuaternary5', '멀티언어5', '', '', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '일반')
 		SELECT *
 		FROM DUAL
 	</insert>

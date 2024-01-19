@@ -2160,6 +2160,7 @@
 	        		#v_PQUERY#, #v_RESULT#, #v_TENANTID#
 	        	)
         	]]>
+		</isEqual>
 		<isEqual property="v_STRLANG" compareValue="2">
 			<![CDATA[
 				INSERT INTO TBL_Board_TreeCache ( 
