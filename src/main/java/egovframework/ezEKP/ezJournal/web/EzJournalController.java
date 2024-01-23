@@ -1925,7 +1925,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		ArrayList<InternetAddress> toArrList = new ArrayList<InternetAddress>(); 
 		if (recvIds != null && !recvIds.equals("")) {
-			String[] receiverID = recvIds.split(",");
+			String[] receiverID = recvIds.split(", ");
 			
 			for (int i = 0; i < receiverID.length; i++) {
 				String recvId = receiverID[i];
