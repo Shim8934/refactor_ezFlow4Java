@@ -191,6 +191,13 @@
 	            if ($.trim($("#txtBoardName2").val()) == "") {
 	            	$("#txtBoardName2").val($("#txtBoardName").val());
 	            }
+	            if ($.trim($("#txtBoardName3").val()) == "") {
+	            	$("#txtBoardName3").val($("#txtBoardName").val());
+	            }
+	            if ($.trim($("#txtBoardName4").val()) == "") {
+	            	$("#txtBoardName4").val($("#txtBoardName").val());
+	            }
+	            
 	            //승인게시판
 	            if (APPRFLAG == "Y") {
 	                if (ApprUserList == "") {
@@ -394,6 +401,7 @@
 	            	async : false,
 	            	data : {
 	            		boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(),
+	            		boardName3:$("#txtBoardName3").val(), boardName4:$("#txtBoardName4").val(),
 	            		boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
 	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
 	            		boardColor:brd_color, portlet:"N", backGround:background,
@@ -929,10 +937,22 @@
 		                        <th><c:out value='${lang_primary}' /></th>
 		                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName}' /></td>
 		                    </tr>
-		                    <tr class="secondary">
+		                    <tr class="primary">
 		                        <th><c:out value='${lang_secondary}' /></th>
-		                        <td><c:out value='${model.boardName2}' /></td>
+		                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName2}' /></td>
 		                    </tr>
+		                    <c:if test="${useJapanese == 'YES'}">
+			                    <tr class="primary">
+			                        <th><c:out value='${lang_tertiary}' /></th>
+			                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName3}' /></td>
+		                    	</tr>
+		                    </c:if>
+		                    <c:if test="${useChinese == 'YES'}">
+			                    <tr class="secondary">
+			                        <th><c:out value='${lang_quaternary}' /></th>
+			                        <td style="border-bottom:none;"><c:out value='${model.boardName4}' /></td>
+			                    </tr>
+		                    </c:if>
 		                </table>
 		            </c:if>
 		            <c:if test="${use_multiData != 'YES'}"><c:out value='${model.boardName}' /></c:if>
@@ -954,12 +974,28 @@
 		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
-		                    <tr class="secondary">
+		                    <tr class="primary">
 		                        <th><c:out value='${lang_secondary}' /></th>
-		                        <td>
+		                        <td style="border-bottom:1px solid #ddd;">
 		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
+			          		<c:if test="${useJapanese == 'YES'}">
+			                    <tr class="primary">
+			                        <th><c:out value='${lang_tertiary}' /></th>
+			                        <td style="border-bottom:1px solid #ddd;">
+			                            <input type="text" id="txtBoardName3" style="width: 100%" value="<c:out value='${model.boardName3}' />" maxlength="20" />
+			                        </td>
+			                    </tr>
+		                    </c:if>
+		                    <c:if test="${useChinese == 'YES'}">
+			                    <tr class="secondary">
+			                        <th><c:out value='${lang_quaternary}' /></th>
+			                        <td>
+			                            <input type="text" id="txtBoardName4" style="width: 100%" value="<c:out value='${model.boardName4}' />" maxlength="20" />
+			                        </td>
+			                    </tr>
+		                   	</c:if>
 		                </table>
 		            </c:if>    
 	          		<c:if test="${use_multiData != 'YES'}">

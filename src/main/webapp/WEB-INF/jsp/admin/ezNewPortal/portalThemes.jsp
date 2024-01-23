@@ -191,9 +191,15 @@
 						var themeImgFolder = "kr";
 						
 						if (userLang == "2") {
-							themeImgFolder = "en"; //나중에 en으로 바꿔야함! (현재 영문용 이미지가 없음)
+							themeImgFolder = "us";
 						} else if (userLang == "3") {
 							themeImgFolder = "jp";
+						} else if (userLang == "4") {
+							themeImgFolder = "cn";
+						} else if (userLang == "5") {
+							themeImgFolder = "vn";
+						} else if (userLang == "6") {
+							themeImgFolder = "id";
 						}
 						
 						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/themeImg/" + themeImgFolder + "/Theme" + item.themeId + ".png' class='themeThumbnails' alt='img02'/>";

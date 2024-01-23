@@ -126,7 +126,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
 	@Override
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception {
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID, String lang) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -135,6 +135,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_MODE", pMode);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_LANG", lang);
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = ezBoardDAO.getBoardNewBoardOrder(map);
 		
@@ -201,6 +202,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<DESCRIPTION><![CDATA[" + strProp.getBoardDescription() + "]]></DESCRIPTION>");
 		sb.append("<BOARDNAME><![CDATA[" + strProp.getBoardName() + "]]></BOARDNAME>");
 		sb.append("<BOARDNAME2><![CDATA[" + strProp.getBoardName2() + "]]></BOARDNAME2>");
+		sb.append("<BOARDNAME3><![CDATA[" + strProp.getBoardName3() + "]]></BOARDNAME3>");
+		sb.append("<BOARDNAME4><![CDATA[" + strProp.getBoardName4() + "]]></BOARDNAME4>");
 		sb.append("<ALERTPOSTITEM><![CDATA[" + strProp.getAlertPostItem() + "]]></ALERTPOSTITEM>");
 		sb.append("<REPLYNOTIFY><![CDATA[" + strProp.getReplyNotify() + "]]></REPLYNOTIFY>");
 		sb.append("<URL><![CDATA[" + strProp.getUrl() + "]]></URL>");
@@ -2913,8 +2916,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			if (pStrLang.equals("")) {
 				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
-			} else {
+			} else if (pStrLang.equals("2")) {
 				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
+			} else if (pStrLang.equals("3")) {
+				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName3()) + "</VALUE>");
+			} else if (pStrLang.equals("4")) {
+				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName4()) + "</VALUE>");
 			}
 			
 			result.append("<STYLE><![CDATA[]]></STYLE>");
@@ -2922,8 +2929,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			if (pStrLang.equals("")) {
 				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
-			} else {
+			} else if (pStrLang.equals("2")) {
 				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
+			} else if (pStrLang.equals("3")) {
+				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName3()) + "</DATA2>");
+			} else if (pStrLang.equals("4")) {
+				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName4()) + "</DATA2>");
 			}
 			
 			result.append("<DATA3>" + pRootBoardID + "</DATA3>");

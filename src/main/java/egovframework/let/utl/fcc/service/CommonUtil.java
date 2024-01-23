@@ -90,7 +90,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -1265,13 +1264,17 @@ public class CommonUtil {
 	}
 	
 	public String getTwoLetterLangFromLangNum(String langNum) {
-		String returnValue = "";
-		
 		if (langNum == null) {
 			logger.error("langNum is null.");
 			return null;
 		}
 		
+		return getTwoLetterLangFromLangNum(langNum, "");
+	}
+
+	public String getTwoLetterLangFromLangNum(String langNum, String defaultValue) {
+		String returnValue = defaultValue;
+
 		if (langNum.equals("1")) {
 			returnValue = "ko";
 		} else if (langNum.equals("2")) {
@@ -1280,6 +1283,10 @@ public class CommonUtil {
 			returnValue = "ja";
 		} else if (langNum.equals("4")) {
 			returnValue = "zh";
+		} else if (langNum.equals("5")) {
+			returnValue = "vi";
+		} else if (langNum.equals("6")) {
+			returnValue = "id";
 		} else {
 			logger.error("Invalid langNum.");
 		}
@@ -1297,15 +1304,18 @@ public class CommonUtil {
 		
 		// 2018-02-28 skyblue0o0 : 중국어(zh)는 아직 지원하지 않으므로 주석처리
 		// 첫 로그인 시 브라우저의 언어로 사용자 언어가 세팅되기 때문에 문제가 생길 수 있음.
-		// TODO: 중국어 지원 시 주석 풀기
 		if (twoLetterLang.equalsIgnoreCase("ko")) {
 			returnValue = "1";
 		} else if (twoLetterLang.equalsIgnoreCase("en")) {
 			returnValue = "2";
 		} else if (twoLetterLang.equalsIgnoreCase("ja")) {
 			returnValue = "3";
-//		} else if (twoLetterLang.equalsIgnoreCase("zh")) {
-//			returnValue = "4";
+		} else if (twoLetterLang.equalsIgnoreCase("zh")) {
+			returnValue = "4";
+		} else if (twoLetterLang.equalsIgnoreCase("vi")) {
+			returnValue = "5";
+		} else if (twoLetterLang.equalsIgnoreCase("id")) {
+			returnValue = "6";
 		} else {
 			logger.error("Invalid twoLetterLang.");
 		}
@@ -2502,6 +2512,7 @@ public class CommonUtil {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public String makeListViewData(int tatalCnt, JSONArray ja, JSONArray jaAttr, JSONArray jaProp, String value) throws Exception {
 		
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
@@ -2715,6 +2726,7 @@ public class CommonUtil {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JSONObject changePDF (String srcFile, String savePath) {
 		logger.debug("[=================== Unidocs PDF Job Start ===================]");
 		logger.debug("srcFile=" + srcFile + ",savePath=" + savePath);
@@ -2784,18 +2796,14 @@ public class CommonUtil {
  		logger.debug("attachWebFolderFile start.");
 		
  		JSONObject fileInfo = null;
-		String fileName = "";
 		String filePath = ""; 
-		int size = 0;
 		
 		List<String> fileDownPath = new ArrayList<String>();
 			
 		try {
  			for (int i=0; i <jsonArr.size(); i++){
 				fileInfo 	= (JSONObject) jsonArr.get(i);
-				fileName 	= fileInfo.get("fileName").toString() ;
 				filePath 	= fileInfo.get("filePath").toString() ;
-				size 		= Integer.parseInt(fileInfo.get("fileSize").toString());
 				String FileRealName = filePath.split("/")[filePath.split("/").length-1];
 				
 				String newFilePath = realPath + downloadDIR + FileRealName;

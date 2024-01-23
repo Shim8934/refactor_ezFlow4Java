@@ -15,8 +15,12 @@ public class BoardPropertyVO {
 	private String boardName;
 	/** 게시판이름 (임시용도)*/
 	private String boardName1;
-	/** 게시판이름(다국어)	*/
+	/** 게시판이름(영어)	*/
 	private String boardName2;
+	/** 게시판이름(일본어)	*/
+	private String boardName3;
+	/** 게시판이름(중국어)	*/
+	private String boardName4;
 	/** 게시판 트리뷰 순서	*/
 	private String treeViewOrder;
 	/** 게시판레벨(사용안함)	*/
@@ -37,6 +41,10 @@ public class BoardPropertyVO {
 	private String boardGroupName;
 	/** 게시판이 속해있는 게시판 그룹이름2 */
 	private String boardGroupName2;
+	/** 게시판이 속해있는 게시판 그룹이름3 */
+	private String boardGroupName3;
+	/** 게시판이 속해있는 게시판 그룹이름4 */
+	private String boardGroupName4;
 	/** 관리자에게 게시판 알람여부	*/
 	private String alertPostItem;
 	/** 게시판 구분(일반(0),그룹(1),익명(2))	*/
@@ -175,6 +183,18 @@ public class BoardPropertyVO {
 	}
 	public void setBoardName2(String boardName2) {
 		this.boardName2 = boardName2;
+	}
+	public String getBoardName3() {
+		return boardName3;
+	}
+	public void setBoardName3(String boardName3) {
+		this.boardName3 = boardName3;
+	}
+	public String getBoardName4() {
+		return boardName4;
+	}
+	public void setBoardName4(String boardName4) {
+		this.boardName4 = boardName4;
 	}
 	public String getTreeViewOrder() {
 		return treeViewOrder;
@@ -487,6 +507,18 @@ public class BoardPropertyVO {
 	}
 	public void setBoardGroupName2(String boardGroupName2) {
 		this.boardGroupName2 = boardGroupName2;
+	}
+	public String getBoardGroupName3() {
+		return boardGroupName3;
+	}
+	public void setBoardGroupName3(String boardGroupName3) {
+		this.boardGroupName3 = boardGroupName3;
+	}
+	public String getBoardGroupName4() {
+		return boardGroupName4;
+	}
+	public void setBoardGroupName4(String boardGroupName4) {
+		this.boardGroupName4 = boardGroupName4;
 	}
 	public String getApprUserList() {
 		return apprUserList;

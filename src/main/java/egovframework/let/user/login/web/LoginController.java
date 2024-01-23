@@ -1129,11 +1129,7 @@ public class LoginController {
 			
 	        //UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
 	        if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
-		        if (primaryLang.equals("1")) {
-		        	acceptLanguage = "ko";
-		        } else if (primaryLang.equals("3")) {
-		        	acceptLanguage = "ja";
-		        }
+				acceptLanguage = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 	        }
 	        
 		    if (acceptLanguage != null) {
@@ -1145,7 +1141,7 @@ public class LoginController {
 			
 		    lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang);
 		    
-		    //브라우저 언어가 한국어/영어/일본어가 아닐 경우 시스템 언어로 설정(중국어 추후 지원)
+		    //브라우저 언어가 한국어/영어/일본어/인도네시아어가 아닐 경우 시스템 언어로 설정
 		    if (lang.equals("")) {						
 				lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 

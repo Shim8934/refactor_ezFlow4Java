@@ -1990,13 +1990,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return vo;
 	}
 	
-	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId) throws Exception {
+	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId, String useJapanese, String useChinese, String useVietnamese, String useIndonesian) throws Exception {
 		logger.debug("getMenuNames started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("menuId", menuId);
+		map.put("useJapanese", useJapanese);
+		map.put("useChinese", useChinese);
+		map.put("useVietnamese", useVietnamese);
+		map.put("useIndonesian", useIndonesian);
 		
 		if (usePrimaryLangOnly.equals("YES")) {
 			map.put("primaryLang", primaryLang);
@@ -2428,17 +2432,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String usePrimaryLangOnly, String primaryLang) {
+	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId, String lang) {
 		logger.debug("getPortletNameList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("portletId", portletId);
-		
-		if (usePrimaryLangOnly.equals("YES")) {
-			map.put("primaryLang", primaryLang);
-		}
 		
 		List<PortletNameInfoVO> portetList = ezNewPortalDAO.getPortletNameList(map);
 		

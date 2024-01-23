@@ -320,7 +320,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2019-06-05 홍승비 - 결과가 항상 NO인 게시판그룹 관리자권한 체크 동작 제거 (boardGroupID 또는 boardID가 'top'인 게시판은 존재하지 않음) */
 		// Library 연결 부분 Method화
 		String resultXML = ezBoardService.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
-				commonUtil.getMultiData(strLang, userInfo.getTenantId()), isAdminLeft, isCompanyAdmin, "NO", pRollInfo, userInfo.getTenantId());
+				commonUtil.getLangData(strLang), isAdminLeft, isCompanyAdmin, "NO", pRollInfo, userInfo.getTenantId());
 		
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		int resultCount = doc.getElementsByTagName("NODE").getLength();
@@ -384,8 +384,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userID = userInfo.getId();
 		String result = "";
 		
+		// 2023-12-01 조소정 - 사용자 설정 언어에 따라 즐겨찾기 게시판 이름 표출되도록 수정
+		String lang = commonUtil.getLangData(userInfo.getLang());
+		
 		/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
-		List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userID, mode, userInfo.getCompanyID(), userInfo.getTenantId(), lang);
 		String parentName = parentBoardName(resultList, userInfo);
 		StringBuffer sb = new StringBuffer();
 		
@@ -764,7 +767,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	   String pRootTreeID = req.getParameter("rootTreeID");
 	   String pCountFlag = req.getParameter("countFlag");
 	   // 마이게시판 가져올때 companyID 조건 추가
-	   String resultXML = getMyBoardTreeConfig(userInfo.getId(), pRootTreeID, commonUtil.getMultiData(lang, userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId());
+	   String resultXML = getMyBoardTreeConfig(userInfo.getId(), pRootTreeID, commonUtil.getLangData(lang), userInfo.getCompanyID(), userInfo.getTenantId());
 	   resultXML = commonUtil.stripScriptTags(resultXML);
 	   
 	   if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", userInfo.getTenantId()).equals("YES") && pCountFlag != null && pCountFlag.equals("YES")) {
@@ -838,21 +841,42 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int i = 0; i < resultList.size(); i++) {
 			sb.append("<NODE>");
 			
+			// 2023-11-29 조소정 - 게시판 > 마이게시판 일본어, 중국어 TreeName 컬럼 추가
+			String treeName;
+
 			if (lang.equals("")) {
-				sb.append("<VALUE><![CDATA[" + resultList.get(i).getTreeName() + "]]></VALUE>");
+			    treeName = resultList.get(i).getTreeName();
+			} else if (lang.equals("2")) {
+			    treeName = resultList.get(i).getTreeName2();
 			} else {
-				sb.append("<VALUE><![CDATA[" + resultList.get(i).getTreeName2() + "]]></VALUE>");
+			    treeName = resultList.get(i).getTreeName();
+			    if (lang.equals("3") && resultList.get(i).getTreeName3() != null && !resultList.get(i).getTreeName3().equals("")) {
+			        treeName = resultList.get(i).getTreeName3();
+			    } else if (lang.equals("4") && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().equals("")) {
+			        treeName = resultList.get(i).getTreeName4();
+			    }
 			}
 			
+			sb.append("<VALUE><![CDATA[" + treeName + "]]></VALUE>");
 			sb.append("<STYLE><![CDATA[]]></STYLE>");
 			sb.append("<DATA1>" + resultList.get(i).getTreeId().trim() + "</DATA1>");
 			
+			String treeNameData2;
+
 			if (lang.equals("")) {
-				sb.append("<DATA2><![CDATA[" + resultList.get(i).getTreeName().trim() + "]]></DATA2>");
+				treeNameData2 = resultList.get(i).getTreeName().trim();
+			} else if (lang.equals("2")) {
+				treeNameData2 = resultList.get(i).getTreeName2().trim();
 			} else {
-				sb.append("<DATA2><![CDATA[" + resultList.get(i).getTreeName2().trim() + "]]></DATA2>");
+				treeNameData2 = resultList.get(i).getTreeName2().trim();
+				if (lang.equals("3") && resultList.get(i).getTreeName3() != null && !resultList.get(i).getTreeName3().isEmpty()) {
+					treeNameData2 = resultList.get(i).getTreeName3().trim();
+				} else if (lang.equals("4") && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().isEmpty()) {
+					treeNameData2 = resultList.get(i).getTreeName4().trim();
+				}
 			}
-			
+
+			sb.append("<DATA2><![CDATA[" + treeNameData2 + "]]></DATA2>");			
 			sb.append("<DATA3><![CDATA[" + resultList.get(i).getTreeBoardId() + "]]></DATA3>");
 			
 			if (resultList.get(i).getTreeBoardId() == null || resultList.get(i).getTreeBoardId().equals("")) {
@@ -897,13 +921,29 @@ public class EzBoardController extends EgovFileMngUtil{
 		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String use_oneLineCount = "";
 		String pBoardID = boardPropertyVO.getBoardID() != null ? boardPropertyVO.getBoardID() : "";
-		String pBoardName = boardPropertyVO.getBoardName() != null ? boardPropertyVO.getBoardName() : "";
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
 		requestURL = requestURL.substring(1, requestURL.length() - 3);
 		
 		BoardPropertyVO boardInfo = getBoardInfo(pBoardID, userInfo);
+		
+		// 2023-11-29 조소정 - 게시판 리스트 호출 시 게시판 이름 사용자 설정 언어로 표출
+		String userLang = userInfo.getLang();		
+		String pBoardName;
+
+		if (userLang.equals("1")) {
+			pBoardName = boardInfo.getBoardName();
+		} else if (userLang.equals("2")) {
+			pBoardName = boardInfo.getBoardName2();
+		} else {
+			pBoardName = boardInfo.getBoardName();
+		    if (userLang.equals("3") && boardInfo.getBoardName3() != null && !boardInfo.getBoardName3().equals("")) {
+		    	pBoardName = boardPropertyVO.getBoardName3();
+		    } else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().equals("")) {
+		    	pBoardName = boardInfo.getBoardName4();
+		    }
+		}
 		
 		if (boardPropertyVO.getAdminType() == null) {
 			boardInfo.setAdminType("");
@@ -942,9 +982,9 @@ public class EzBoardController extends EgovFileMngUtil{
 				boardInfo.setSortBy(boardPropertyVO.getSortBy());
 			}
 			
-			if (boardInfo.getBoardName() != null) {
-				pBoardName = boardInfo.getBoardName();
-			}
+//			if (boardInfo.getBoardName() != null) {
+//				pBoardName = boardInfo.getBoardName();
+//			}
 		}
 		
 		// 현재 자신의 회사에서 즐겨찾기한 게시판 + 그룹사 게시판의 즐겨찾기 여부를 체크
@@ -1157,7 +1197,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardInfo.setIsAllGroupBoard("");
 		
 		if (strProp != null) {
-			boardInfo.setExpireDays(commonUtil.getDateStringInUTC(strProp.getItemExpires(), userInfo.getOffset(), false));
+			boardInfo.setExpireDays(strProp.getItemExpires() != null ? strProp.getItemExpires() : "-1");
 			boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 			
 			if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
@@ -1169,7 +1209,15 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (strProp.getBoardName2() != null) {
 				boardInfo.setBoardName2(strProp.getBoardName2());
 			}
-			
+
+			if (strProp.getBoardName3() != null) {
+				boardInfo.setBoardName3(strProp.getBoardName3());
+			}
+
+			if (strProp.getBoardName4() != null) {
+				boardInfo.setBoardName4(strProp.getBoardName4());
+			}
+
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
 			boardInfo.setUrl(strProp.getUrl());
@@ -3398,7 +3446,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		/* 2018-10-16 홍승비 - 관리자단에서 접근했는지 판단하는 플래그를 인자로 추가 */
 		String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID,
-				commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
+				commonUtil.getLangData(userInfo.getLang()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
 		
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		NodeList nList = doc.getElementsByTagName("NODE");
@@ -5340,6 +5388,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardMyFavoriteVO.setTreeId(doc.getElementsByTagName("PTREEID").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeName(doc.getElementsByTagName("PTREENAME").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeName2(doc.getElementsByTagName("PTREENAME2").item(0).getTextContent());
+		boardMyFavoriteVO.setTreeName3(doc.getElementsByTagName("PTREENAME3").item(0).getTextContent());
+		boardMyFavoriteVO.setTreeName4(doc.getElementsByTagName("PTREENAME4").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeUpper(doc.getElementsByTagName("PUPPERID").item(0).getTextContent());
 		boardMyFavoriteVO.setMode(doc.getElementsByTagName("PMODE").item(0).getTextContent());
 		
@@ -6964,9 +7014,21 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String boardID = request.getParameter("boardID");
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		String userLang = userInfo.getLang();
 		String strXML = "<DATA>";
+				
+		String boardName = boardInfo.getBoardName();
+		if (userLang.equals("1")) {
+			boardName = commonUtil.cleanValue(boardName);
+		} else if (userLang.equals("2")) {
+			boardName = commonUtil.cleanValue(boardInfo.getBoardName2());
+		} else if (userLang.equals("3")) {
+			boardName = commonUtil.cleanValue(boardInfo.getBoardName3());
+		} else if (userLang.equals("4")) {
+			boardName = commonUtil.cleanValue(boardInfo.getBoardName4());
+		}
 		
-		strXML += "<BOARDNAME>" + commonUtil.cleanValue(boardInfo.getBoardName()) + "</BOARDNAME>";
+		strXML += "<BOARDNAME>" + boardName + "</BOARDNAME>";
 		strXML += "<ATTACHLIMIT>" + boardInfo.getAttachSizeLimit() + "</ATTACHLIMIT>";
 		strXML += "<EXPIREDAYS>" + boardInfo.getExpireDays() + "</EXPIREDAYS>";
 		strXML += "<GUBUN>" + boardInfo.getGuBun() + "</GUBUN>";

@@ -3516,6 +3516,36 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
 
+/* 검색 */
+.searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:17px;}
+.searchBtn{ position:absolute; right:-19px; top:-2px;}
+.searchinputBox{width:135px;}
+
+/* 유은정 - 메뉴명 개수 | 회사 선택 이미지 위치*/
+.title_bar {margin-left:5px;vertical-align:middle;}
+.title_bar img {vertical-align:sub;}
+
+.tree_admin_dotlist{ background-position:-234px -104px; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* tree 관리자 리스트 도트아이콘 */
+.lnb h2.on + .leftList { visibility: visible; height: auto !important;}
+.lnb .leftList { visibility: hidden; height: 0px !important; list-style-type: none; padding: 0;  margin: 0; width: 100%; overflow: hidden;}
+.lnb .leftList li { padding: 4px 20px; cursor: pointer;}
+
+/* 2019-05-17 김민성 - 자원관리 개선*/
+.mainmenuTabUL_left {  position: absolute;top: 7px;left: -10px; list-style:none; margin:0px; padding:0px; }
+.mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px;}
+.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px; cursor:default;}
+.mainmenuTabUL_left li .icon { vertical-align:middle;}
+
+.tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
+.tree_resource_unused{background-position:-338px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 미사용 아이콘 */
+
+.calendar_layer .text .td_list td.individual .resource_rental {background-image: url('/images/ezResource/state_rental.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_return {background-image: url('/images/ezResource/state_return.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_ok {background-image: url('/images/ezResource/state_approval.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_no {background-image: url('/images/ezResource/state_approvalPending.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_refuse {background-image: url('/images/ezResource/state_approvalrefuse.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_noreturn {background-image: url('/images/ezResource/state_noreturn.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+
 /* 20190709 메일분류추가 */
 .mailRule_select{-webkit-appearance: none;border:1px solid #dedede;min-height:30px;margin:0px 0px 3px 0px;padding-left: 5px;background: url(/images/next.gif) no-repeat right 1px center; background-color: #fff;}
 .mailRule_title{font-size:14px; font-weight:bold; color:#333; margin:0px 0px 5px 0px; padding:0px; display:inline-block;}
@@ -3523,6 +3553,8 @@ input[type=range]::-ms-tooltip {display: none;}
 #RuleDisplayName{ height:30px;}
 .mailRule_txt{ font-size:13px; color:#333; background:url(/images/ImgIcon/mailRule_dot.gif) no-repeat left center; padding:0px 0px 0px 10px;}
 .mailRule_selectDIV{ margin:10px 0px;}
+
+.tree_setting_gray{ background-position:-260px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 메일관리권한 환경설정 */
 
 /* 관리자 공유사서함 */
 .shared_boxesTable{width:100%; border:0px none; border-collapse:separate; border-spacing:0;}
@@ -3540,6 +3572,31 @@ input[type=range]::-ms-tooltip {display: none;}
 .shared_boxesTable.public_distribution{table-layout:fixed;}
 .shared_boxesTable.public_distribution tr td > span.shared_boxesText{display:block; height:18px; line-height:16px; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; padding-left:10px;}
 
+/* 그래프용량 */
+.graph_used{margin:0px auto;text-align: center;}
+.graph_used dl{margin:0px; padding:7px 0px; color:#333; font-size:12px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.graph_used dl dt{display:inline-block; margin:0px 3px; padding:0px;}
+.graph_used dl dt img{vertical-align:middle; margin:0px;}
+.graph_used dl dt span{display:inline-block; margin:0px 2px;}
+.graph_used dl dt span.color{color:#0470e4; font-weight:bold;}
+.graph_used dl dd{display:inline-block; margin:0px; padding:0px;}
+.graph_used dl dd.graph{width:120px; height:10px; margin:-4px 10px 0px 10px; vertical-align:middle; background:#e0e0e0; text-align:left}
+.graph_used dl dd.graph .bar{display:inline-block;  height:10px; background:#82b9f6; vertical-align:top }
+.graph_used dl dd.graph_text{color:#555; margin:0px; padding:0px;}
+.graph_used dl dd.graph_text span{display:inline-block; font-weight:bold;}
+/* mailbox_graph */
+.folderdepth_2, .folderdepth_3, .folderdepth_4, .folderdepth_5, .folderdepth_6, .folderdepth_7, .folderdepth_8, .folderdepth_9, .folderdepth_10 {width: 15px;height: 15px;display: inline-block;vertical-align: middle; margin-left: -5px; background:url(../images/folder_depth.gif);margin-right :3px; }
+.folderdepth_3 {margin-left: 10px;}
+.folderdepth_4 { margin-left: 20px; }
+.folderdepth_5 { margin-left: 30px; }
+.folderdepth_6 { margin-left: 40px; }
+.folderdepth_7 { margin-left: 50px; }
+.folderdepth_8 { margin-left: 60px; }
+.folderdepth_9 { margin-left: 70px; }
+.folderdepth_10 { margin-left: 80px; }
+/* font bold */
+.txt_bold { font-weight:bold;}
+
 /* 메일 리스트 완료/완료 취소 */
 .icon_mail_Confirm{ background:url(../images/ImgIcon/view-document-confirm.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
 .icon_mail_Cancle{ background:url(../images/ImgIcon/view-document-cancel.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
@@ -3547,7 +3604,7 @@ tr.mail_confirm > td:nth-child(7) { text-decoration: line-through; }
 /*tr.mail_confirm > td{position:relative; }
 tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute; top:51%; left:0; border-bottom:1px solid #48494B; width:100%;}
 */
-
+#ContextMenuDiv > .popuplist{ width:150px; }
 
 /* 20200608 검색필터 추가 */
 .searchForm.searchFilter{position:relative; margin-right:48px;}
@@ -3637,3 +3694,46 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 /* Search 20230208 */
 .searchBtn.nofilter{right:12px;}
 .searchForm .text{border-right:0 !important;}
+
+/* 리스트 로딩 */
+/* *, */
+/* *:before, */
+/* *:after { box-sizing: border-box; margin: 0; padding: 0; } */
+.loader { position: relative; width: 80px; height: 80px; border-radius: 50%; margin: 0px auto 0px auto; display: block; vertical-align: top; }
+/*LOADER-3 */
+.loader-3 .dot { width: 10px; height: 10px; background: #00e676; border-radius: 50%; position: absolute; top: calc(50% - 5px); }
+.loader-3 .dot.dot1 { background: #a6c947; }
+.loader-3 .dot.dot2 { background: #eb7837; }
+.loader-3 .dot.dot3 { background: #f6c02c; }
+.loader-3 .dot.dot4 { background: #02a5c6; }
+.loader-3 .dot1 { left: 0px; -webkit-animation: dot-jump 0.5s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; animation: dot-jump 0.5s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; }
+.loader-3 .dot2 { left: 20px; -webkit-animation: dot-jump 0.5s 0.2s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; animation: dot-jump 0.5s 0.2s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; }
+.loader-3 .dot3 { left: 40px; -webkit-animation: dot-jump 0.5s 0.4s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; animation: dot-jump 0.5s 0.4s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; }
+.loader-3 .dot4 { left: 60px; -webkit-animation: dot-jump 0.5s 0.4s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; animation: dot-jump 0.5s 0.6s cubic-bezier(0.77, 0.47, 0.64, 0.28) alternate infinite; }
+
+@-webkit-keyframes dot-jump {
+	0% { -webkit-transform: translateY(0); transform: translateY(0); }
+	100% { -webkit-transform: translateY(-15px); transform: translateY(-15px); }
+}
+
+@keyframes dot-jump {
+	0% { -webkit-transform: translateY(0); transform: translateY(0); }
+	100% { -webkit-transform: translateY(-15px); transform: translateY(-15px); }
+	/* box style */
+}
+.loadingBox2 { width: 80px; height: 80px; position: absolute; left: 50%; top: 40%; margin: -40px 0px 0px -40px; box-sizing: border-box; }
+
+
+.imgSelect{
+	width:110px;
+	height:25px;
+	border-color:#c8c8c8;
+	position: relative;
+    bottom: 8px;
+    position: relative; top: 5px;
+}
+#officeDiv img{
+	position: relative; top: 13px;
+}
+
+.lnbUL li .list_text2 {padding-left: 23px;text-overflow: ellipsis;overflow: hidden; white-space:pre}

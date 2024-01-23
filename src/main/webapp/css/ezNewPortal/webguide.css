@@ -12,7 +12,7 @@ header dl dd{float:right; margin:0px 24px 0px 0px; padding:0px;}
 header dl .lng {float:left; margin:0px 20px ;}
 header dl .lng span { cursor:pointer; vertical-align:bottom; display:inline-block;  margin-right:5px; width:28px; height:20px; background:#fff; text-indent:-5000px; }
 header dl .lng span.kr {background:url(../../images/ezNewPortal/help/img_kr.png ) no-repeat center; } 
-header dl .lng span.en {background:url(../../images/ezNewPortal/help/img_en.png ) no-repeat center; }
+header dl .lng span.us {background:url(../../images/ezNewPortal/help/img_us.png ) no-repeat center; }
 header dl .lng span.cn {background:url(../../images/ezNewPortal/help/img_cn.png ) no-repeat center; } 
 header dl .lng span.jp {background:url(../../images/ezNewPortal/help/img_jp.png ) no-repeat center; } 
 header dl .logo { float:right; width:139px; height:30px; margin:0px 20px 0px 0px; padding:0px; background:url(../../images/ezNewPortal/help/logo.png) no-repeat;}

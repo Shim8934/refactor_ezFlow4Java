@@ -400,6 +400,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		json.put("mode", mode);
 		json.put("lang", userInfo.getLang());
 		
+		// 2023-11-23 조소정 - 관리자 > 포탈 > 빠른링크 > 일본어, 중국어 사용 여부에 따라 링크 이름 표출/미표출 구현
+		json.put("useJapanese", ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId()));
+		json.put("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
+		json.put("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
+		json.put("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
+
 		logger.debug("addQuickLink ended");
 		return json;
 	}

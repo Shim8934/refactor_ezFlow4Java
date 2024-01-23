@@ -7,6 +7,10 @@ public class BoardTreeVO {
 	private String boardName;
 	/** 게시판이름 2	*/
 	private String boardName2;
+	/** 게시판이름 3 	*/
+	private String boardName3;
+	/** 게시판이름 4 	*/
+	private String boardName4;
 	/** 트리순서	*/
 	private String treeViewOrder;
 	/** 게시판 색	*/
@@ -49,6 +53,18 @@ public class BoardTreeVO {
 	}
 	public void setBoardName2(String boardName2) {
 		this.boardName2 = boardName2;
+	}
+	public String getBoardName3() {
+		return boardName3;
+	}
+	public void setBoardName3(String boardName3) {
+		this.boardName3 = boardName3;
+	}
+	public String getBoardName4() {
+		return boardName4;
+	}
+	public void setBoardName4(String boardName4) {
+		this.boardName4 = boardName4;
 	}
 	public String getTreeViewOrder() {
 		return treeViewOrder;
@@ -122,8 +138,8 @@ public class BoardTreeVO {
 	@Override
 	public String toString() {
 		return "BoardTreeVO [boardId=" + boardId + ", boardName=" + boardName
-				+ ", boardName2=" + boardName2 + ", treeViewOrder="
-				+ treeViewOrder + ", boardColor=" + boardColor + ", guBun="
+				+ ", boardName2=" + boardName2 + ", boardName3=" + boardName3 + ", boardName4=" + boardName4 
+				+ ", treeViewOrder=" + treeViewOrder + ", boardColor=" + boardColor + ", guBun="
 				+ guBun + ", boardGroupAcl=" + boardGroupAcl + ", expanded="
 				+ expanded + ", select=" + select + ", isLeaf=" + isLeaf
 				+ ", docNO=" + docNO + ", url=" + url + "]";

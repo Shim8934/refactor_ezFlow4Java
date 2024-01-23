@@ -1,7 +1,7 @@
-var strLang1 = "不能添加空文件。"
-var strLang2 = "附件大小不能超出2MB。"
+var strLang1 = "空的文件不能被附加。"
+var strLang2 = "附件不能超过2MB的大小。"
 var strLang3 = "-上传中。"
-var strLang4 = "-当上传时，错误发生了。"
+var strLang4 = "上传时发生错误。\n\n 服务器侧错误。"
 var strLang5 = "要添加的附件正在使用中。\n\n 请关闭后重新添加"
 var strLang6 = "-当上传时错误发生了，。"
 var strLang11 = "截断"
@@ -28,11 +28,11 @@ var strLang34 = "ㆍ"
 var strLang35 = "不可能使用以下字符为附件名。"
 var strLang37 = "所有图片格式\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Bitmap Image(*.bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*.jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*.tiff; *.tiff)\0*.tiff;*.tif\0\0"
 var strLang38 = "一次只能上传最多5个。"
-var strLang39 = "文件名的长度不可能超出111bytes。"
+var strLang39 = "文件名的长度不能超过111bytes。"
 var strLang40 = "-它不是图片文件格式。"
 var strLang42 = "请输入标题。"
 var strLang43 = "标题"
-var strLang58 = "-当上传时错误发生了。\n\n伺服器错误"
+var strLang58 = "上传时发生错误。\n\n 服务器侧错误。"
 var strLang75 = "的文件上传限制的扩展。"
 var strLang80 = "上一页"
 var strLang81 = "下一页"
@@ -42,11 +42,18 @@ var strLang535 = "\"沒有數據\"";
 var strLang5351 = "名";
 
 /* 2017-11-01 장진혁 */
-var strLang84 = "파일명은 ";
-var strLangLHM01 = "자를 넘을 수 없습니다.";
+var strLang84 = "文件名";
+var strLangLHM01 = "不能超过";
 
 //2018-01-12 강민수92
-var strLang85 = "그림파일을 업로드 해야 합니다.";
+var strLang85 = "你需要上传的图像文件。"
+
+//2018-02-13 장진혁
+var strLang86 = "没有我的社区";
+var strLang87 = "请加入社区";
+var strLang88 = "没有开设的社区";
+
+var strLang89 = "Please select a file to delete.";
 
 /* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 var srtLangHSBEx01 = "Unacceptable extension.";

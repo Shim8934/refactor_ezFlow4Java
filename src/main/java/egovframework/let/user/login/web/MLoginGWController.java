@@ -1093,11 +1093,7 @@ public class MLoginGWController {
 
 					// UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
 					if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
-						if (primaryLang.equals("1")) {
-							acceptLanguage = "ko";
-						} else if (primaryLang.equals("3")) {
-							acceptLanguage = "ja";
-						}
+						acceptLanguage = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 					}
 
 					if (acceptLanguage != null) {
@@ -1146,11 +1142,7 @@ public class MLoginGWController {
 				if (StringUtils.isEmpty(ezCommonService.selectUserGetLang(uid, tenantId))) {
 					// UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
 					if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
-						if (primaryLang.equals("1")) {
-							acceptLanguage = "ko";
-						} else if (primaryLang.equals("3")) {
-							acceptLanguage = "ja";
-						}
+						acceptLanguage = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 					}
 
 					String pcLang;
@@ -1770,11 +1762,7 @@ public class MLoginGWController {
 					
 					//UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
 					if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
-						if (primaryLang.equals("1")) {
-							acceptLanguage = "ko";
-						} else if (primaryLang.equals("3")) {
-							acceptLanguage = "ja";
-						}
+						acceptLanguage = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 					}
 					
 					if (acceptLanguage != null) {

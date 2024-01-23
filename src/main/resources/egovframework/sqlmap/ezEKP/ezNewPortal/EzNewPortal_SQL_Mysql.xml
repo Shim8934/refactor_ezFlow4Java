@@ -1118,6 +1118,12 @@ AND
 		A.theme_content3 AS theme_content,
 	]]>
 	</isEqual>
+	<isEqual property="lang" compareValue="4">
+	<![CDATA[
+		A.theme_name2 AS theme_name,
+		A.theme_content4 AS theme_content,
+	]]>
+	</isEqual>
 	<![CDATA[
 	    ifnull(D.is_default, 0) as theme_used,
 	    B.theme_default,
@@ -2209,6 +2215,12 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			B.theme_content3 AS themecontent,
 		]]>
 		</isEqual>
+		<isEqual property="lang" compareValue="4">
+		<![CDATA[
+			B.theme_name2 AS themename,
+			B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
 		<![CDATA[
 			    A.theme_used AS themeused,
 			    A.theme_default AS themedefault
@@ -2329,6 +2341,8 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				BOARDID, 
 				BOARDNAME, 
 				BOARDNAME2,
+				BOARDNAME3, 
+				BOARDNAME4,
 				TENANT_ID,
 				COMPANYID 
 			FROM
@@ -2559,8 +2573,10 @@ SELECT A.PORTLET_ID,
 		AND
 			A.portlet_id = #portletId#
 	]]>
-	<isNotEmpty property="primaryLang" prepend="AND">
-		B.portlet_lang = #primaryLang#
+	<isNotEmpty property="lang" prepend="AND">
+		<![CDATA[
+			B.portlet_lang = #lang#
+		]]>
 	</isNotEmpty>
 </select>
 
