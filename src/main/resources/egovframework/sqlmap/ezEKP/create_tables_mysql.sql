@@ -14917,9 +14917,7 @@ FROM
 			a.DEPTID AS DEPT_ID,
 			a.TITLE AS POSITION,
 			a.TITLE2 AS POSITION2,
-			MIN(IF(a.ORDERBY <> '',
-			CAST(a.ORDERBY AS unsigned),
-			0) AS ORDER_BY,
+			MIN(IF(a.ORDERBY <> '', CAST(a.ORDERBY AS unsigned),0)) AS ORDER_BY,
 			current_timestamp() AS UPDATEDT,
 			a.TENANT_ID AS TENANT_ID,
 			'ADDJOB' AS TYPE
