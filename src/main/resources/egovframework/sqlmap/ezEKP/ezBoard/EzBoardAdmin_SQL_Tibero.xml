@@ -2151,7 +2151,7 @@
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map">
-		<isEqual property="v_STRLANG" compareValue="1">
+		<isEqual property="v_STRLANG" compareValue="">
 			<![CDATA[
 				INSERT INTO TBL_Board_TreeCache ( 
 					QUERY, 		RESULT , 	TENANT_ID 
