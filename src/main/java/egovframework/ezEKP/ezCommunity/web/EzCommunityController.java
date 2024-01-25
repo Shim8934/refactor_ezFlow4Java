@@ -1257,8 +1257,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
 		
+		/* 2024-01-22 홍승비 - 커뮤니티 게시판 댓글 표출 시 게시판 구분값 분기 추가 */
+		CommunityBoardPropertyVO boardProperty = ezCommunityService.getBoardProperty(pBoardID, userInfo.getTenantId());
+		String pGubun = boardProperty != null && boardProperty.getGubun() != null ? boardProperty.getGubun() : "0";
+		
 		/* 2018-07-02 홍승비 - CompanyID 조건 추가, 댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
-		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
+		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset(), pGubun);
 		
 		String totalCommentCount = String.valueOf(oneLineReplyList.size());
 		model.addAttribute("totalCommentCount", totalCommentCount);
@@ -4786,18 +4790,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = boardItemVO.getBoardID();
 		String pItemID = boardItemVO.getItemID();
 		String gubun  = boardItemVO.getGubun();
-//		String userName = "";
 		String publicModulus = egovFileScrty.getPbm();
         String publicExponent = "10001";
-//		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
         // 댓글 작성자의 deptID를 가져온다. companyID 조건 추가.
-		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
+		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset(), gubun);
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-
-    	//logger.debug("itemID = " + pItemID);
-    	
+		
     	model.addAttribute("gubun", gubun);
     	model.addAttribute("boardInfo", boardInfo);
     	model.addAttribute("publicModulus", publicModulus);

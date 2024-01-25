@@ -3396,7 +3396,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 	/* 2018-07-17 홍승비 - 사원정보 deptID 파라미터 선택을 위해 companyID 조건 추가 */
 	@Override
-	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, String companyID, int tenantID, String offset) throws Exception {
+	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, String companyID, int tenantID, String offset, String gubun) throws Exception {
 		logger.debug("readOneLineReply started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3406,6 +3406,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
+		
+		/* 2024-01-22 홍승비 - 커뮤니티 게시판 댓글 표출 시 게시판 구분값 분기 추가 */
+		map.put("v_GUBUN", gubun);
 		
 		List<CommunityOneLineReplyVO> list = ezCommunityDAO.readOneLineReply(map);
 		
@@ -3420,6 +3423,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("saveOneLineReply started.");
 		
 		String userName = "", userName2 = "";
+		String userID = userInfo.getId();
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
 		
@@ -3438,9 +3442,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		CommunityBoardPropertyVO boardInfo = getBoardInfo(userInfo, pBoardID);
 		
 		if (boardInfo.getGubun() != null) {
+			/* 2024-01-18 홍승비 - 커뮤니티 게시판 > 익명게시판의 경우, 댓글 등록 시 사용자ID 저장하지 않도록 수정 (게시판 모듈과 동일) */
 			if (boardInfo.getGubun().equals("2")) {
 				userName = u_Name[0].trim();
 				userName2 = u_Name[1].trim();
+				userID = "";
 			} else {
 				userName = userInfo.getDisplayName1();
 				userName2 = userInfo.getDisplayName2();
@@ -3456,7 +3462,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_PITEMID", pItemID);
 		map.put("v_PREPLYID", pReplyID);
 		map.put("v_PBOARDID", pBoardID);
-		map.put("v_USERID", userInfo.getId());
+		map.put("v_USERID", userID);
 		map.put("v_USERNAME", userName);
 		map.put("v_USERNAME2", userName2);
 		map.put("v_PCONTENT", pContent);
