@@ -5299,15 +5299,21 @@
 		    "TBL_ADDJOBMASTER" ("TENANT_ID", "CN", "DEPTID", "JOBID", "ROLEID")
 	</statement>
 
+	<!-- 2024-01-25 홍승비 - 테넌트ID 중복제거를 먼저 진행하도록 쿼리 수정 -->
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 -->
 	<!-- 오라클 19c 이상부터 DISTINCT를 사용하여 중복을 제거 가능 : LISTAGG(DISTINCT TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID) *참고 https://gent.tistory.com/328 -->
 	<!-- $ → $$ : ibatis 정규식 에러 *참고 https://suyou.tistory.com/247 -->
     <select id="EzCommonDAO.getPortalMenuTenantList" resultClass="String">
 		<![CDATA[
 			SELECT
-				REGEXP_REPLACE(LISTAGG(TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID), '([^,]+)(,\1)*(,|$$)', '\1\3') AS TENANT_IDS 
-			FROM 
-				TBL_PORTAL_MENU_NAME
+				LISTAGG(TENANT_ID, ',') AS TENANT_IDS 
+			FROM (
+			    SELECT
+			        TENANT_ID
+			    FROM
+			        TBL_PORTAL_MENU_NAME
+			    GROUP BY
+			        TENANT_ID)
 		]]>
 	</select>
 	
@@ -5393,26 +5399,38 @@
 	]]>
 	</insert>
 	
+	<!-- 2024-01-25 홍승비 - 테넌트ID 중복제거를 먼저 진행하도록 쿼리 수정 -->
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 -->
 	<!-- 오라클 19c 이상부터 DISTINCT를 사용하여 중복을 제거 가능 : LISTAGG(DISTINCT TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID) *참고 https://gent.tistory.com/328 -->
 	<!-- $ → $$ : ibatis 정규식 에러 *참고 https://suyou.tistory.com/247 -->
 	<select id="EzCommonDAO.getPortletNameTenantList" resultClass="String">
 		<![CDATA[
 			SELECT
-				REGEXP_REPLACE(LISTAGG(TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID), '([^,]+)(,\1)*(,|$$)', '\1\3') AS TENANT_IDS 
-			FROM 
-				TBL_PORTAL_PORTLET_NAME
+				LISTAGG(TENANT_ID, ',') AS TENANT_IDS
+			FROM (
+			    SELECT
+			        TENANT_ID
+			    FROM
+			        TBL_PORTAL_PORTLET_NAME
+			    GROUP BY
+			        TENANT_ID)
 		]]>
 	</select>
 
+	<!-- 2024-01-25 홍승비 - 회사ID 중복제거를 먼저 진행하도록 쿼리 수정 -->
 	<select id="EzCommonDAO.getPortletNameCompanyList" resultClass="String">
 		<![CDATA[
 			SELECT
-				REGEXP_REPLACE(LISTAGG(COMPANY_ID, ',') WITHIN GROUP(ORDER BY COMPANY_ID), '([^,]+)(,\1)*(,|$$)', '\1\3') AS COMPANY_IDS
-			FROM
-				TBL_PORTAL_PORTLET_NAME
-			WHERE
-				TENANT_ID = #v_TENANTID#	
+				LISTAGG(COMPANY_ID, ',') AS COMPANY_IDS
+			FROM (
+			    SELECT
+			        COMPANY_ID
+			    FROM
+			        TBL_PORTAL_PORTLET_NAME
+			    WHERE
+			        TENANT_ID = #v_TENANTID#
+			    GROUP BY
+			        COMPANY_ID)
 		]]>
 	</select>
 
