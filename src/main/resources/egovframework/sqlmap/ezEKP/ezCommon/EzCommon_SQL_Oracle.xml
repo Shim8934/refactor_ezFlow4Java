@@ -1222,7 +1222,7 @@
 		FROM
 			TBL_MEMO_CONFIG
 		WHERE
-				ROWNUM <= 1
+			ROWNUM <= 1
 	]]>
 	</select>
 	
@@ -4778,7 +4778,7 @@
 		FROM 
 			TBL_APRPREVIEW
 		WHERE
-				ROWNUM <= 1
+			ROWNUM <= 1
 		]]>
 	</select>	
 	
@@ -5566,7 +5566,8 @@
         		BOARDNAME3
             FROM
                 TBL_BOARD_BOARDINFO
-            ROWNUM = 1
+            WHERE
+            	ROWNUM <= 1
         ]]>
     </select>
     
@@ -5583,7 +5584,8 @@
         		BOARDNAME4
             FROM
                 TBL_BOARD_BOARDINFO
-            ROWNUM = 1
+            WHERE
+            	ROWNUM <= 1
         ]]>
     </select>
     
@@ -5601,7 +5603,8 @@
         		RESULT3
             FROM
                 TBL_BOARD_TREECACHE
-            ROWNUM = 1
+            WHERE
+            	ROWNUM <= 1
         ]]>
     </select>
     
@@ -5618,7 +5621,8 @@
         		RESULT4
             FROM
                 TBL_BOARD_TREECACHE
-            ROWNUM = 1
+            WHERE
+            	ROWNUM <= 1
         ]]>
     </select>
     
@@ -5636,7 +5640,8 @@
         		TREENAME3
             FROM
                 TBL_BOARD_MYTREE
-            ROWNUM = 1
+            WHERE
+            	ROWNUM <= 1
         ]]>
     </select>
     
@@ -5653,7 +5658,8 @@
         		TREENAME4
             FROM
                 TBL_BOARD_MYTREE
-            ROWNUM = 1
+            WHERE
+            	ROWNUM <= 1
         ]]>
     </select>
     
@@ -5671,7 +5677,8 @@
         		BOARDNAME3
             FROM
                 TBL_BOARD_MYBOARDS
-            ROWNUM = 1
+            WHERE
+            	ROWNUM <= 1
         ]]>
     </select>
     
@@ -5688,7 +5695,8 @@
         		BOARDNAME4
             FROM
                 TBL_BOARD_MYBOARDS
-            ROWNUM = 1
+            WHERE
+            	ROWNUM <= 1
         ]]>
     </select>
     
