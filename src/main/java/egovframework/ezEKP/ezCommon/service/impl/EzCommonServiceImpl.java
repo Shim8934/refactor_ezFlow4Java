@@ -2019,12 +2019,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		test.add(new HashMap<String, Object>(){{
 			put("TBL_NAME","TBL_PS_QUICKLINK"); put("COLUMN_NAME", "QUICKLINKNAME5");
 			put("TYPE_MYSQL", "varchar(100)"); put("TYPE_ORACLE", "NVARCHAR2(50)");
-			put("AFTER_MYSQL", "CHARACTER SET utf8mb4 NOT NULL"); put("AFTER_ORACLE", "NOT NULL ENABLE");
+			put("AFTER_MYSQL", "CHARACTER SET utf8mb4 NOT NULL"); put("AFTER_ORACLE", "DEFAULT ' ' NOT NULL ENABLE");
 		}});
 		test.add(new HashMap<String, Object>(){{
 			put("TBL_NAME","TBL_PS_QUICKLINK"); put("COLUMN_NAME", "QUICKLINKNAME6");
 			put("TYPE_MYSQL", "varchar(100)"); put("TYPE_ORACLE", "NVARCHAR2(50)");
-			put("AFTER_MYSQL", "CHARACTER SET utf8mb4 NOT NULL"); put("AFTER_ORACLE", "NOT NULL ENABLE");
+			put("AFTER_MYSQL", "CHARACTER SET utf8mb4 NOT NULL"); put("AFTER_ORACLE", "DEFAULT ' ' NOT NULL ENABLE");
 		}});
 
 		for (Map<String, Object> map : test) {
