@@ -144,7 +144,7 @@
 			WHERE
 				tenant_id = #tenantID#
 			AND
-				UPPER(property_name) = #property#
+				property_name = #property#
 		]]>
 	</select>
 	
@@ -287,7 +287,7 @@
 			AND
 				COMPANY_ID = #companyID#
 			AND
-				UPPER(property_name) = #property#
+				property_name = #property#
 		]]>
 	</select>
 	
@@ -2010,7 +2010,7 @@
 				a.extensionattribute10 as jikchek, 
 				a.tenant_id, 
 				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode, 
-				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang, 
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND property_name = 'PrimaryLang') AS primaryLang,
 				a.loginCnt, 
 				a.extensionattribute4 as gyumJik, 
 				a.extensionattribute2 as userFileUrl, 
