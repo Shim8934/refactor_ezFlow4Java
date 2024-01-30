@@ -220,17 +220,6 @@
 		]]>
 	</select>
 	
-	<select id="EzCommonDAO.checkReformFlagColumn" resultClass="String">
-		<![CDATA[
-			SELECT
-				REFORMFLAG
-			FROM
-				TBL_FORMINFO
-			WHERE
-				ROWNUM = 1
-		]]>
-	</select>
-	
 	<statement id="EzCommonDAO.createTblCompanyConfig"> 
 	    CREATE TABLE "TBL_COMPANY_CONFIG" (
 	        "TENANT_ID" NUMBER(5,0), 
@@ -241,13 +230,6 @@
 	    )	
 	</statement>
 	
-	<statement id="EzCommonDAO.createReformFlagColumn">
-		ALTER TABLE
-			TBL_FORMINFO
-		ADD
-			REFORMFLAG CHAR(1) DEFAULT 'N'
-	</statement>
-		
 	<select id="EzCommonDAO.getCompanyConfig" parameterClass="map" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -351,60 +333,6 @@
 		)
 	</statement>
 	
-	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
-		<![CDATA[
-			SELECT 
-				MAIL
-			FROM 
-				JMOCHA_DISTRIBUTION
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addMailToJMochaDistribution"> 
-		ALTER TABLE 
-			JMOCHA_DISTRIBUTION
-		ADD 
-			MAIL VARCHAR2(100 CHAR) DEFAULT NULL
-	</statement>
-		
-	<select id="EzCommonDAO.checkAddJobMasterOrderBy" resultClass="String">
-		<![CDATA[
-			SELECT 
-				ORDERBY
-			FROM 
-				TBL_ADDJOBMASTER
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addAddJobMasterOrderBy"> 
-		ALTER TABLE 
-			TBL_ADDJOBMASTER
-		ADD 
-			ORDERBY NVARCHAR2(200) DEFAULT NULL
-	</statement>
-	
-	<select id="EzCommonDAO.checkAddAddJobMasterProxy" resultClass="String">
-		<![CDATA[
-			SELECT 
-				ORDERBY
-			FROM 
-				TBL_ADDJOBMASTER
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addAddJobMasterProxy"> 
-		ALTER TABLE 
-			TBL_ADDJOBMASTER
-		ADD 
-			PROXY NVARCHAR2(200) DEFAULT NULL
-	</statement>
-	
 	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -473,60 +401,6 @@
 	   )
 	</statement>
 
-	<select id="EzCommonDAO.checkUserMasterManualFlag" resultClass="String">
-		<![CDATA[
-			SELECT 
-				MANUAL_FLAG
-			FROM 
-				TBL_USERMASTER
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addUserMasterManualFlag"> 
-		ALTER TABLE 
-			TBL_USERMASTER
-		ADD 
-			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
-	</statement>
-	
-	<select id="EzCommonDAO.checkDeptMasterManualFlag" resultClass="String">
-		<![CDATA[
-			SELECT 
-				MANUAL_FLAG
-			FROM 
-				TBL_DEPTMASTER
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addDeptMasterManualFlag"> 
-		ALTER TABLE 
-			TBL_DEPTMASTER
-		ADD 
-			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
-	</statement>
-	
-	<select id="EzCommonDAO.checkAddJobMasterManualFlag" resultClass="String">
-		<![CDATA[
-			SELECT 
-				MANUAL_FLAG
-			FROM 
-				TBL_ADDJOBMASTER
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addAddJobMasterManualFlag"> 
-		ALTER TABLE 
-			TBL_ADDJOBMASTER
-		ADD 
-			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
-	</statement>
-	
 	<select id="EzCommonDAO.checkJMochaMailSignatureTemplate" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -584,84 +458,49 @@
 		 )
 	</statement>
 	
-	<select id="EzCommonDAO.checkUserMasterPasswordUpdateDT" resultClass="String">
-		<![CDATA[
-			SELECT 
-				PASSWORD_UPDATEDT
-			FROM 
-				TBL_USERMASTER
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addUserMasterPasswordUpdateDT"> 
-		ALTER TABLE 
-			TBL_USERMASTER
-		ADD 
-			PASSWORD_UPDATEDT DATE DEFAULT NULL
-	</statement>
-	
-	<select id="EzCommonDAO.checkUserMasterPhotoUpdateDT" resultClass="String">
-		<![CDATA[
-			SELECT 
-				PHOTO_UPDATEDT
-			FROM 
-				TBL_USERMASTER
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-
-	<statement id="EzCommonDAO.addUserMasterPhotoUpdateDT"> 
-		ALTER TABLE 
-			TBL_USERMASTER
-		ADD 
-			PHOTO_UPDATEDT DATE DEFAULT NULL
-	</statement>
-
-	<select id="EzCommonDAO.check_AnyTbl_AnyColumns" parameterClass="Map" resultClass="String">
+<!-- alterTableAddColumns start -->
+	<select id="EzCommonDAO.alterTableCheckColumn" parameterClass="Map" resultClass="String">
 	<!-- resultSet이 재사용이 안되는 건지.. 쿼리에 문제가 없는데도, 출력 값이 바뀌면 에러가 나는 현상이 있어서 select 1로 고정 result를 생성하도록 함. (flushCache 같은 속성은 알지 못한다고 에러남) --> 
 		SELECT 1 FROM DUAL 
 		WHERE EXISTS (
 			SELECT 
-				$COLUMN_NAME$
+				$COLUMN$$COLUMN_ORACLE$
 			FROM 
-				$TBL_NAME$
+				$TABLE$
 			WHERE 
 				ROWNUM = 1 
 		)
 	</select>
-
-	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns" parameterClass="Map">
+	<statement id="EzCommonDAO.alterTableAddColumn" parameterClass="Map">
 		ALTER TABLE
-			$TBL_NAME$
+			$TABLE$
 		ADD
-			$COLUMN_NAME$ $TYPE_ORACLE$ $AFTER$$AFTER_ORACLE$ <!-- 필요시 _TIBERO 로 수정 요망 -->
+			$COLUMN$$COLUMN_ORACLE$ $TYPE_ORACLE$ $AFTER$$AFTER_ORACLE$ <!-- 필요시 _TIBERO 로 수정 요망 -->
 	</statement>
-	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns_DropPrimary" parameterClass="Map">
+	<statement id="EzCommonDAO.alterTableDropPrimary" parameterClass="Map">
 		ALTER TABLE
-			$TBL_NAME$
+			$TABLE$
 		DROP
 			PRIMARY KEY
 	</statement>
-	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns_DropIndex" parameterClass="Map">
+	<statement id="EzCommonDAO.alterTableDropIndex" parameterClass="Map">
 		DROP INDEX
 			$CONSTRAINT$
 	</statement>
-	<statement id="EzCommonDAO.add_AnyTbl_AnyColumns_AddPrimary" parameterClass="Map">
+	<statement id="EzCommonDAO.alterTableAddPrimary" parameterClass="Map">
 		ALTER TABLE
-			$TBL_NAME$
+			$TABLE$
 		ADD
 			<isNotEmpty property="CONSTRAINT" prepend="CONSTRAINT ">$CONSTRAINT$</isNotEmpty>
 			PRIMARY KEY $PRIMARY$
 	</statement>
-	<update id="EzCommonDAO.add_AnyTbl_AnyColumns_initData" parameterClass="Map">
+	<update id="EzCommonDAO.alterTableInitData" parameterClass="Map">
 		UPDATE
-			$TBL_NAME$
+			$TABLE$
 		SET
-			$COLUMN_NAME$ = $UPDATE$$UPDATE_ORACLE$
+			$COLUMN$$COLUMN_ORACLE$ = $UPDATE$$UPDATE_ORACLE$
 	</update>
+<!-- alterTableAddColumns end -->
 
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
 		INSERT INTO tbl_tenant_config
@@ -669,24 +508,6 @@
 		VALUES
 		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, sysdate, #config_type#)
 	</insert>
-	
-	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
-		<![CDATA[
-			SELECT 
-				JOBID
-			FROM 
-				TBL_ADDJOBMASTER
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addAddJobMasterJobID"> 
-		ALTER TABLE 
-			TBL_ADDJOBMASTER
-		ADD 
-			JOBID VARCHAR2(100) DEFAULT NULL
-	</statement>
 	
 	<select id="EzCommonDAO.checkWebfolderToken">
 		<![CDATA[
@@ -709,60 +530,6 @@
 		  "DEVICE" varchar2(128) DEFAULT NULL,
 		  PRIMARY KEY ("USERID","TENANTID")
 		) 
-	</statement>
-	
-	<select id="EzCommonDAO.checkJmochaMailGenenalPreviewMailImage">
-		<![CDATA[
-			SELECT 
-				PREVIEW_MAIL_IMAGE
-			FROM 
-				JMOCHA_MAIL_GENERAL
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<select id="EzCommonDAO.checkUserMasterMailBoxQuota" resultClass="String">
-		<![CDATA[
-			SELECT
-				MAILBOXQUOTA, MAILBOXUSAGE
-			FROM
-				TBL_USERMASTER
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addJmochaMailGenenalPreviewMailImage"> 
-		ALTER TABLE 
-			JMOCHA_MAIL_GENERAL
-		ADD 
-			PREVIEW_MAIL_IMAGE VARCHAR(10) DEFAULT 'Y'
-	</statement>
-
-	<select id="EzCommonDAO.checkPortalThemePortletIsFixed" resultClass="String">
-		<![CDATA[
-			SELECT 
-				COUNT(IS_FIXED)
-			FROM 
-				TBL_PORTAL_THEME_PORTLET
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addPortalThemePortletIsFixed"> 
-		ALTER TABLE 
-			TBL_PORTAL_THEME_PORTLET
-		ADD 
-			IS_FIXED NUMBER(5,0) DEFAULT 0
-	</statement>
-	
-	<statement id="EzCommonDAO.addUserMasterMailBoxQuota">
-		ALTER TABLE
-			TBL_USERMASTER
-		ADD (
-			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
-			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
-			)
 	</statement>
 	
 	<select id="EzCommonDAO.checkPortalThemePortlet" resultClass="String">
@@ -790,61 +557,6 @@
 	)
 	</statement>
 	
-	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
-		<![CDATA[
-			SELECT
-				HOLIDAYFLAG
-			FROM 
-				TBL_HOLIDAYLIST
-			where 
-				ROWNUM <= 1			
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addHolidayFlag"> 
-		ALTER TABLE 
-			TBL_HOLIDAYLIST
-		ADD 
-			HOLIDAYFLAG VARCHAR2(45) DEFAULT NULL
-	</statement>
-	
-	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
-		<![CDATA[
-			SELECT
-				HOLIDAYREPEAT
-			FROM 
-				TBL_HOLIDAYLIST
-			where 
-				ROWNUM <= 1			
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addHolidayRepeat"> 
-		ALTER TABLE 
-			TBL_HOLIDAYLIST
-		ADD 
-			HOLIDAYREPEAT VARCHAR2(45) DEFAULT NULL
-	</statement>
-	
-	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
-		<![CDATA[
-			SELECT
-				form_del_flag
-			FROM
-				TBL_JOURNAL_FORM
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addJournalFormDelFlag">
-		ALTER TABLE
-			TBL_JOURNAL_FORM
-		ADD (
-			form_del_flag VARCHAR2(10) DEFAULT NULL
-			)
-	</statement>
-	
 	<select id="EzCommonDAO.checkTaskUrl" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -868,74 +580,6 @@
 		WHERE
 			menu_id = 17
 	</update>
-	
-	<select id="EzCommonDAO.checkAddPortalPortletUserPortletUsed">
-		<![CDATA[
-			SELECT
-				portlet_used
-			FROM 
-				TBL_PORTAL_PORTLET_USER
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addPortalPortletUserPortletUsed"> 
-		ALTER TABLE 
-			TBL_PORTAL_PORTLET_USER
-		ADD 
-			PORTLET_USED NUMBER(11, 0) DEFAULT 1
-	</statement>
-	
-	<select id="EzCommonDAO.checkPortalPortletUserThemeId">
-		<![CDATA[
-			SELECT
-				theme_id
-			FROM 
-				TBL_PORTAL_PORTLET_USER
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addPortalPortletUserThemeId"> 
-		ALTER TABLE 
-			TBL_PORTAL_PORTLET_USER
-		ADD 
-			THEME_ID NUMBER(11, 0) DEFAULT 1
-	</statement>
-	
-	<statement id="EzCommonDAO.deletePortalPortletUserPrimaryKey"> 
-		ALTER TABLE 
-			TBL_PORTAL_PORTLET_USER
-		DROP 
-			PRIMARY KEY
-	</statement>
-	
-	<statement id="EzCommonDAO.addPortalPortletUserPrimaryKey"> 
-		ALTER TABLE 
-			TBL_PORTAL_PORTLET_USER
-		ADD CONSTRAINT 
-			TBL_PORTAL_PORTLET_USER_PK PRIMARY KEY(user_id, tenant_id, company_id, portlet_id, theme_id)
-	</statement>
-	
-	<select id="EzCommonDAO.checkAddTblPortalThemeUserIsDefault">
-		<![CDATA[
-			SELECT
-				is_default
-			FROM 
-				TBL_PORTAL_THEME_USER
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addTblPortalThemeUserIsDefault"> 
-		ALTER TABLE 
-			TBL_PORTAL_THEME_USER
-		ADD 
-			is_default NUMBER(11, 0) DEFAULT 0
-	</statement>
 	
 	<select id="EzCommonDAO.checkJmochaMailCopyright">
 		<![CDATA[
@@ -1035,17 +679,6 @@
 		]]>
 	</select>
 	
-	<select id="EzCommonDAO.checkTblBoardInfoLikeFlag" resultClass="String">
-		<![CDATA[
-			SELECT 
-				LIKEFLAG
-			FROM 
-				TBL_BOARD_BOARDINFO
-			WHERE
-			    rownum = 1
-		]]>
-	</select>
-	
 	<statement id="EzCommonDAO.createBoardLike"> 
 		CREATE TABLE "EZEKP2017"."TBL_BOARD_LIKE" (
 		 	"ITEMID" NVARCHAR2(40) NOT NULL ENABLE, 
@@ -1054,92 +687,6 @@
 			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE, 
 			CONSTRAINT "TBL_BOARD_LIKE_PK" PRIMARY KEY ("ITEMID", "USERID", "TENANT_ID")
 		)
-	</statement>
-	
-	<statement id="EzCommonDAO.addBoardLikeFlag"> 
-		ALTER TABLE 
-			TBL_BOARD_BOARDINFO
-		ADD 
-			LIKEFLAG NCHAR(1) DEFAULT NULL
-	</statement>
-	
-	<select id="EzCommonDAO.checkQuickLinkLinkOrder">
-		<![CDATA[
-			SELECT
-				LINKORDER
-			FROM 
-				TBL_PS_QUICKLINK
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-
-	<select id="EzCommonDAO.checkMsgInMailSearch" resultClass="int" >
-		select 
-			count(*) 
-		from (
-			select 
-				column_name
-			from 
-				ALL_TAB_COLUMNS
-			where
-				COLUMN_NAME LIKE 'MESSAGE_ID' 
-			AND 
-				TABLE_NAME = 'JAMES_MAIL_SEARCH')
-	</select>
-	
-	<update id="EzCommonDAO.updateMsgInMailSearch">
-		ALTER TABLE 
-			JAMES_MAIL_SEARCH
-		ADD 
-			MESSAGE_ID VARCHAR(200)
-	</update>
-
-	<select id="EzCommonDAO.checkFormVersionColumnOfForminfo">
-		<![CDATA[
-			SELECT
-				FORMVERSION
-			FROM 
-				TBL_FORMINFO 
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addQuickLinkLinkOrder"> 
-		ALTER TABLE 
-			TBL_PS_QUICKLINK
-		ADD 
-			LINKORDER NUMBER(11,0) DEFAULT NULL
-	</statement>
-	
-	<select id="EzCommonDAO.checkComCloseCompanyId">
-		<![CDATA[
-			SELECT
-				COMPANYID
-			FROM 
-				TBL_C_COMCLOSE
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<select id="EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo">
-		<![CDATA[
-			SELECT
-				FORMVERSION
-			FROM 
-				TBL_EXPENDAPRDOCINFO 
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addComCloseCompanyId"> 
-		ALTER TABLE 
-			TBL_C_COMCLOSE
-		ADD 
-			COMPANYID NVARCHAR2(20) DEFAULT NULL
 	</statement>
 	
 	<select id="EzCommonDAO.checkWebfolderTotalLimit">
@@ -1239,51 +786,6 @@
 			)
 	</statement>
 
-	<select id="EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo">
-		<![CDATA[
-			SELECT
-				FORMVERSION
-			FROM 
-				TBL_EXPAPRDOCINFO 
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<select id="EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo">
-		<![CDATA[
-			SELECT
-				FORMVERSION
-			FROM 
-				TBL_TMPEXPAPRDOCINFO 
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.addFormVersionColumnOfForminfo">
-		ALTER TABLE 
-			TBL_FORMINFO 
-		ADD 
-			FORMVERSION NUMBER(10,0) DEFAULT 0
-	</statement>
-	<statement id="EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo">
-		ALTER TABLE 
-			TBL_EXPENDAPRDOCINFO 
-		ADD 
-			FORMVERSION NUMBER(10,0) DEFAULT 0 
-	</statement>
-	<statement id="EzCommonDAO.addFormVersionColumnOfExpaprdocinfo">
-		ALTER TABLE 
-			TBL_EXPAPRDOCINFO
-		ADD
-			FORMVERSION NUMBER(10,0) DEFAULT 0 
-	</statement>
-	<statement id="EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo">
-		ALTER TABLE 
-			TBL_TMPEXPAPRDOCINFO
-		ADD
-			FORMVERSION NUMBER(10,0) DEFAULT 0 
-	</statement>
-	
 	<select id="EzCommonDAO.checkTblAttitudeAnnual">
 		SELECT 
 			USER_ID
@@ -1426,26 +928,6 @@
 		) 
 	</statement>
 
-	<select id="EzCommonDAO.checkThemeContent2">
-	<![CDATA[
-		SELECT
-			THEME_CONTENT2
-		FROM
-			TBL_PORTAL_THEME
-		WHERE 
-			ROWNUM <= 1
-	]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addThemeContent2">
-		ALTER TABLE
-			TBL_PORTAL_THEME
-		ADD (
-			THEME_CONTENT2 VARCHAR(400) DEFAULT 'theme content',
-			THEME_NAME2 VARCHAR(100) DEFAULT 'theme2'
-			)
-	</statement>
-	
 	<select id="EzCommonDAO.checkThemeContent3">
 	<![CDATA[
 		SELECT
@@ -1456,48 +938,6 @@
 			ROWNUM <= 1
 	]]>
 	</select>
-	
-	<statement id="EzCommonDAO.addThemeContent3">
-		ALTER TABLE
-			TBL_PORTAL_THEME
-		ADD (
-			THEME_CONTENT3 VARCHAR(400) DEFAULT 'theme content',
-			THEME_NAME3 VARCHAR(100) DEFAULT 'theme3'
-			)
-	</statement>
-	
-	<update id="EzCommonDAO.insertThemeContent2">
-		UPDATE
-			TBL_PORTAL_THEME
-		SET
-			THEME_CONTENT2 = CASE 
-								WHEN theme_id = 1 THEN 'A theme with a fixed area on the left or right.'
-								WHEN theme_id = 2 THEN 'A theme with a fixed area on the top.'
-								WHEN theme_id = 3 THEN 'A theme that consists of only portlets without fixed areas.'
-							END,
-			THEME_NAME2 = CASE 
-								WHEN theme_id = 1 THEN 'Theme1'
-								WHEN theme_id = 2 THEN 'Theme2'
-								WHEN theme_id = 3 THEN 'Theme3'
-							END
-				
-	</update>
-	
-	<update id="EzCommonDAO.insertThemeContent3">
-		UPDATE
-			TBL_PORTAL_THEME
-		SET
-			THEME_CONTENT3 = CASE 
-								WHEN theme_id = 1 THEN '固定領域を画面の右または左に配置できるテーマです。'
-								WHEN theme_id = 2 THEN '固定領域が画面の上部に表示されるテーマです。'
-								WHEN theme_id = 3 THEN '固定領域がなく、すべてのポートレットを自由に配置できるテーマです。'
-							END ,
-			THEME_NAME3 = CASE 
-								WHEN theme_id = 1 THEN 'Theme1'
-								WHEN theme_id = 2 THEN 'Theme2'
-								WHEN theme_id = 3 THEN 'Theme3'
-							END
-	</update>
 	
 	<select id="EzCommonDAO.checkSurveyTenantConfig" resultClass="String">
 		select
@@ -1918,38 +1358,6 @@
         ]]>
 	</statement>
 	
-	<select id="EzCommonDAO.checkSnMenuAuth">
-		SELECT
-			sn
-		FROM
-			TBL_PORTAL_MENU_AUTH
-		WHERE 
-			ROWNUM = 1
-	</select>
-	
-	<statement id="EzCommonDAO.snMenuAuth">
-		ALTER TABLE
-			TBL_PORTAL_MENU_AUTH
-		ADD 
-			sn INT DEFAULT 0
-	</statement>
-	
-	<select id="EzCommonDAO.checkSnThemeAuth">
-		SELECT
-			sn
-		FROM
-			TBL_PORTAL_THEME_AUTH
-		WHERE 
-			ROWNUM = 1
-	</select>
-	
-	<statement id="EzCommonDAO.snThemeAuth">
-		ALTER TABLE
-			TBL_PORTAL_THEME_AUTH
-		ADD 
-			sn INT DEFAULT 0
-	</statement>
-	
 	<select id="EzCommonDAO.checkTblShareDocDir">
 		<![CDATA[
 			SELECT 
@@ -1970,38 +1378,6 @@
 			"OWNER_TYPE" NVARCHAR2(45),
 		CONSTRAINT "PK_SHARE_DOC_DIR" PRIMARY KEY ("OWNER_ID", "SHARE_ID", "TENANT_ID")
 		)
-	</statement>
-	
-	<select id="EzCommonDAO.checkSnPortletAuth">
-		SELECT
-			sn
-		FROM
-			TBL_PORTAL_PORTLET_AUTH
-		WHERE 
-			ROWNUM = 1
-	</select>
-	
-	<statement id="EzCommonDAO.snPortletAuth">
-		ALTER TABLE
-			TBL_PORTAL_PORTLET_AUTH
-		ADD 
-			sn INT DEFAULT 0
-	</statement>
-	
-	<select id="EzCommonDAO.checkBoardManageTypeColumn">
-		SELECT
-			TYPE
-		FROM
-			TBL_BOARD_BOARDMANAGE
-		WHERE 
-			ROWNUM = 1
-	</select>
-	
-	<statement id="EzCommonDAO.addBoardManageTypeColumn">
-		ALTER TABLE
-			TBL_BOARD_BOARDMANAGE
-		ADD 
-			TYPE VARCHAR2(10)
 	</statement>
 	
 	<select id="EzCommonDAO.checkTblPsPopupUser">
@@ -2090,22 +1466,6 @@
      	]]>
      </select>
      	
-	<select id="EzCommonDAO.checkSurveyMailSentFlagColumn">
-		SELECT
-			MAIL_SENT_FLAG
-		FROM
-			TBL_SURVEY
-		WHERE 
-			ROWNUM = 1
-	</select>
-	
-	<statement id="EzCommonDAO.addSurveyMailSentFlagColumn">
-		ALTER TABLE
-			TBL_SURVEY
-		ADD 
-			MAIL_SENT_FLAG NUMBER(12) DEFAULT 0
-	</statement>
-	
 	<select id="EzCommonDAO.checkAlterChamjoView" resultClass="int">
 		SELECT
 			(SELECT COUNT(*) FROM TBL_APRLINEINFO WHERE APRTYPE = '007' AND APRSTATE = '002') +
@@ -2603,40 +1963,6 @@
 	    FROM DUAL
 	</statement>
 		
-	<select id="EzCommonDAO.checkAddIsBeforeDoc">
-		<![CDATA[
-			SELECT 
-				ISBEFOREDOC 
-			FROM 
-				TBL_HISTORYDOCINFO
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.updateAddIsBeforeDoc">
-		ALTER TABLE 
-			TBL_HISTORYDOCINFO
-		ADD 
-			ISBEFOREDOC CHAR(1 CHAR)
-	</statement>
-	
-	<select id="EzCommonDAO.checkAddBeforeDocUrl">
-		<![CDATA[
-			SELECT 
-				BEFOREDOCURL 
-			FROM 
-				TBL_HISTORYDOCINFO
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.updateAddBeforeDocUrl">
-		ALTER TABLE 
-			TBL_HISTORYDOCINFO
-		ADD 
-			BEFOREDOCURL VARCHAR2(255 CHAR)
-	</statement>
-	
 	<select id="EzCommonDAO.checkPwPolicy" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -2678,118 +2004,6 @@
 		  "NUMBER_OF_CHAR" NUMBER(11) NOT NULL,
 		  CONSTRAINT "PK2_TBL_PWD_POLICY_PATTERN" PRIMARY KEY ("TENANT_ID","COMPANY_ID","USE_PATTERN_COUNT")
 		) 
-	</statement>
-	<select id="EzCommonDAO.checkAprAttachViewOrder">
-		<![CDATA[
-			SELECT 
-				VIEWORDER
-			FROM 
-				TBL_APRATTACHINFO
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.updateAprAttachViewOrder">
-		ALTER TABLE 
-			TBL_APRATTACHINFO
-		ADD 
-			VIEWORDER  NUMBER(10,0)
-	</statement>
-	
-	<select id="EzCommonDAO.checkAprEndAttachViewOrder">
-		<![CDATA[
-			SELECT 
-				VIEWORDER
-			FROM 
-				TBL_ENDATTACHINFO
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.updateAprEndAttachViewOrder">
-		ALTER TABLE 
-			TBL_ENDATTACHINFO
-		ADD 
-			VIEWORDER  NUMBER(10,0)
-	</statement>
-	
-	<select id="EzCommonDAO.checkAprTmpAttachViewOrder">
-		<![CDATA[
-			SELECT 
-				VIEWORDER
-			FROM 
-				TBL_TMPATTACHINFO
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.updateAprTmpAttachViewOrder">
-		ALTER TABLE 
-			TBL_TMPATTACHINFO
-		ADD 
-			VIEWORDER  NUMBER(10,0)
-	</statement>
-	
-	<select id="EzCommonDAO.checkDocStateIntoLastLines">
-		<![CDATA[
-			SELECT
-				DOCSTATE
-			FROM
-				TBL_LASTAPRLINE
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.updateDocStateIntoLastLines">
-		ALTER TABLE
-			TBL_LASTAPRLINE
-		ADD
-			DOCSTATE NVARCHAR2(12) DEFAULT '011' NOT NULL
-	</statement>
-	<statement id="EzCommonDAO.deleteLastAprLinePrimaryKey"> 
-		ALTER TABLE 
-			TBL_LASTAPRLINE
-		DROP 
-			PRIMARY KEY
-		DROP
-			INDEX
-	</statement>
-	<statement id="EzCommonDAO.addLastAprLinePrimaryKey"> 
-		ALTER TABLE 
-			TBL_LASTAPRLINE
-		ADD CONSTRAINT 
-			TBL_LASTAPRLINE_PK2 PRIMARY KEY(TENANT_ID, COMPANYID, USERID, FORMID, APRMEMBERSN, DOCSTATE)
-	</statement>
-	
-	<select id="EzCommonDAO.checkDocStateIntoLastDeptLines">
-		<![CDATA[
-			SELECT
-				DOCSTATE
-			FROM
-				TBL_LASTDEPTLINE
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.updateDocStateIntoLastDeptLines">
-		ALTER TABLE
-			TBL_LASTDEPTLINE
-		ADD
-			DOCSTATE NVARCHAR2(12) DEFAULT '011' NOT NULL
-	</statement>
-	<statement id="EzCommonDAO.deleteLastDeptLinePrimaryKey"> 
-		ALTER TABLE 
-			TBL_LASTDEPTLINE
-		DROP 
-			PRIMARY KEY
-		DROP
-			INDEX
-	</statement>
-	<statement id="EzCommonDAO.addLastDeptLinePrimaryKey"> 
-		ALTER TABLE 
-			TBL_LASTDEPTLINE
-		ADD CONSTRAINT 
-			TBL_LASTDEPTLINE_PK2 PRIMARY KEY(TENANT_ID, COMPANYID, USERID, FORMID, RECEIPTPOINTID, DOCSTATE)
 	</statement>
 	
 	<select id="EzCommonDAO.checkTblAdminAccessIpTable" resultClass="String">
@@ -2855,23 +2069,6 @@
 			(#code1#, #code2#, #name#, #isUse#, #descript#, #name2#, #name3#, #name4#, #tenantId#, #companyId#)
 	]]>
 	</insert>
-	
-	<select id="EzCommonDAO.checkFormAprOptionColumn">
-		<![CDATA[
-			SELECT 
-				APROPTION
-			FROM 
-				TBL_FORMINFO
-			WHERE 
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.updateFormAprOptionColumn">
-		ALTER TABLE 
-			TBL_FORMINFO
-		ADD 
-			APROPTION NVARCHAR2(300 CHAR)
-	</statement>
 	
 	<select id="EzCommonDAO.checkAnnualScheduleTenantConfig" resultClass="String">
 		SELECT
@@ -3013,45 +2210,6 @@
 		)
 	</statement>
 	
-	<select id="EzCommonDAO.checkOpenGovFlag">
-		<![CDATA[
-		SELECT
-			OPENGOVFLAG
-		FROM
-			TBL_FORMINFO
-		WHERE
-			ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addOpenGovFlag">
-		ALTER TABLE
-			TBL_FORMINFO
-		ADD (
-			OPENGOVFLAG VARCHAR(4) DEFAULT 'N'
-			)
-	</statement>
-	
-	<select id="EzCommonDAO.checkSurveyAlamColums">
-		<![CDATA[
-		SELECT
-			MAIL_FLAG
-		FROM
-			TBL_SURVEY
-		WHERE
-			ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.addSurveyAlamColums">
-		ALTER TABLE
-			TBL_SURVEY
-		ADD (
-			MAIL_FLAG NUMBER(4, 0) DEFAULT 0,
-			POPUP_FLAG NUMBER(4, 0) DEFAULT 0
-			)
-	</statement>
-	
 	<select id="EzCommonDAO.checkBeforeOutComeAttitudeTypeForCompany" resultClass="String">
 		SELECT 
 			COMPANY_ID 
@@ -3090,23 +2248,6 @@
   			LATITUDE NUMBER(20,15) DEFAULT NULL,
   			LONGITUDE NUMBER(20,15) DEFAULT NULL
 		)
-	</statement>
-	
-	<select id="EzCommonDAO.checkTblPsApprovNotiMailConf" resultClass="String">
-		<![CDATA[
-			SELECT
-				LINEPASS
-			FROM
-				TBL_PS_APPROVNOTIMAILCONF
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.alterTblPsApprovNotiMailConf">
-		ALTER TABLE
-			TBL_PS_APPROVNOTIMAILCONF
-		ADD 
-			LINEPASS NVARCHAR2(2) DEFAULT '0'
 	</statement>
 	
 	<select id="EzCommonDAO.checkTblNoticeBoard">
@@ -3151,24 +2292,6 @@
 			tenant_id = #tenantId#
 	</select>
 	
-	<select id="EzCommonDAO.checkDailyWorkAttitudeColumn" resultClass="String">
-		<![CDATA[
-			SELECT 
-				WORK_STATUS
-			FROM 
-				TBL_ATTITUDE
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.createDailyWorkAttitudeColumn">
-		ALTER TABLE 
-			TBL_ATTITUDE
-		ADD 
-			WORK_STATUS CHAR(1) DEFAULT NULL
-	</statement>
-
 	<select id="EzCommonDAO.checkTenantConfig" resultClass="String">
 		SELECT
 			property_value
@@ -3179,23 +2302,6 @@
 		AND
 			tenant_id = #tenantId#
 	</select>
-	
-	<select id="EzCommonDAO.checkFormPassAprLineFlagColumn">
-		<![CDATA[
-			SELECT 
-				PASSAPRLINEFLAG
-			FROM 
-				TBL_FORMINFO
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.updateFormPassAprLineFlagColumn">
-		ALTER TABLE 
-			TBL_FORMINFO
-		ADD 
-			PASSAPRLINEFLAG  VARCHAR2(4) DEFAULT 'N'
-	</statement>
 	
     
     <select id="EzCommonDAO.addScehdulegroup">
@@ -3220,23 +2326,6 @@
             )
     </statement>
     
-    
-    <select id="EzCommonDAO.checkFormSihangTypeColumn">
-        <![CDATA[
-        SELECT 
-            SIHANGTYPE
-        FROM 
-            TBL_FORMINFO
-        WHERE
-            ROWNUM <= 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.updateFormSihangTypeColumn">
-        ALTER TABLE 
-            TBL_FORMINFO
-        ADD 
-            SIHANGTYPE VARCHAR2(10) DEFAULT ''
-    </statement>
     
     <select id="EzCommonDAO.checkAutoSendOfferFlag" resultClass="int">
         SELECT 
@@ -3594,24 +2683,6 @@
 		)
 	</statement>
 	
-	<select id="EzCommonDAO.checkWebfolderUserSubdeptPermittedColumn">
-		<![CDATA[
-			SELECT 
-				SUBDEPT_PERMITTED
-			FROM 
-				TBL_WEBFOLDER_FOLDERUSER
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.createWebfolderUserSubdeptPermittedColumn">
-		ALTER TABLE
-			TBL_WEBFOLDER_FOLDERUSER
-		ADD 
-			SUBDEPT_PERMITTED NUMBER(11, 0) DEFAULT '0'
-	</statement>
-	
 	<select id="EzCommonDAO.selectWebfolderFileUserTable">
 		<![CDATA[
 			SELECT 
@@ -3654,24 +2725,6 @@
 		START WITH 1000
 		NOORDER  NOCYCLE  NOKEEP  GLOBAL
 		]]>
-	</statement>
-	
-	<select id="EzCommonDAO.checkWebfolderUserFolderManagerColumn">
-		<![CDATA[
-			SELECT 
-				FOLDER_MANAGER
-			FROM 
-				TBL_WEBFOLDER_FOLDERUSER
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	
-	<statement id="EzCommonDAO.createWebfolderUserFolderManagerColumn">
-		ALTER TABLE
-			TBL_WEBFOLDER_FOLDERUSER
-		ADD 
-			FOLDER_MANAGER NUMBER(11, 0) DEFAULT '0'
 	</statement>
 	
 	<select id="EzCommonDAO.getPermissionGroupIdListOfUser" parameterClass="Map" resultClass="String">
@@ -3732,23 +2785,6 @@
 			CONSTRAINT WEBFOLDER_ENCRYPTED_FILE_PK PRIMARY KEY ("FILE_ID", "VERSION", "TENANT_ID")
 		)
 	</statement>
-	<select id="EzCommonDAO.checkWebfolderFileVersionColumn" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				VERSION
-			FROM
-				TBL_WEBFOLDER_FILE
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-
-	<statement id="EzCommonDAO.createWebfolderFileVersionColumn">
-		ALTER TABLE
-			TBL_WEBFOLDER_FILE
-		ADD
-			VERSION NUMBER(7, 0) DEFAULT 1 NOT NULL
-	</statement>
 	
 	<select id="EzCommonDAO.checkWebfolderVersionTable" resultClass="Integer">
 		<![CDATA[
@@ -3778,77 +2814,6 @@
 		)
 	</statement>
 	
-	<select id="EzCommonDAO.checkWebfolderFileDepthColumn" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				DEPTH
-			FROM
-				TBL_WEBFOLDER_FILE
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.createWebfolderFileDepthColumn">
-		ALTER TABLE
-			TBL_WEBFOLDER_FILE
-		ADD
-			DEPTH NUMBER(7, 0) DEFAULT 1 NOT NULL
-	</statement>
-	
-	<select id="EzCommonDAO.checkWebfolderFileRootIdColumn" resultClass="Integer">
-		<![CDATA[
-			SELECT ROOT_ID
-			FROM TBL_WEBFOLDER_FILE
-			WHERE ROWNUM <= 1
-		]]>
-	</select>
-
-	<statement id="EzCommonDAO.createNullableWebfolderFileRootIdColumn">
-		ALTER TABLE TBL_WEBFOLDER_FILE
-		ADD ROOT_ID VARCHAR2(100)
-	</statement>
-	
-	<update id="EzCommonDAO.updateWebfolderFileRootIdColumn">
-		UPDATE TBL_WEBFOLDER_FILE
-		SET ROOT_ID = FILE_ID
-	</update>
-
-	<select id="EzCommonDAO.checkWebfolderFileParentIdColumn" resultClass="Integer">
-		<![CDATA[
-			SELECT PARENT_ID
-			FROM TBL_WEBFOLDER_FILE
-			WHERE ROWNUM <= 1
-		]]>
-	</select>
-
-	<statement id="EzCommonDAO.createNullableWebfolderFileParentIdColumn">
-		ALTER TABLE TBL_WEBFOLDER_FILE
-		ADD PARENT_ID VARCHAR2(100)
-	</statement>
-
-	<update id="EzCommonDAO.updateWebfolderFileParentIdColumn">
-		UPDATE TBL_WEBFOLDER_FILE
-		SET PARENT_ID = FILE_ID
-	</update>
-
-	<select id="EzCommonDAO.checkWebfolderFileHierarchicalPathColumn" resultClass="Integer">
-		<![CDATA[
-			SELECT HIERARCHICAL_PATH
-			FROM TBL_WEBFOLDER_FILE
-			WHERE ROWNUM <= 1
-		]]>
-	</select>
-
-	<statement id="EzCommonDAO.createNullableWebfolderFileHierarchicalPathColumn">
-		ALTER TABLE TBL_WEBFOLDER_FILE
-		ADD HIERARCHICAL_PATH VARCHAR2(300)
-	</statement>
-
-	<update id="EzCommonDAO.updateWebfolderFileHierarchicalPathColumn">
-		UPDATE TBL_WEBFOLDER_FILE
-		SET HIERARCHICAL_PATH = FILE_ID
-	</update>
-
 	<select id="EzCommonDAO.checkWebfolderFileHistoryColumn">
         <![CDATA[
             SELECT 
@@ -3893,15 +2858,6 @@
 			CONSTRAINT WEBFOLDER_NO_INHERIT_PK PRIMARY KEY ("FOLDER_ID", "TENANT_ID")
 		)
 	</statement>
-	
-	<statement id="EzCommonDAO.alterWebfolderApplyHistoryAddColumn">
-        ALTER TABLE
-            TBL_WEBFOLDER_APPLY_HISTORY
-        ADD (
-            APPROVAL_STATUS NVARCHAR2(10),
-            APPROVAL_STATUS_UPDATEDT DATE
-            )
-	 </statement>
 	 
 	<select id="EzCommonDAO.checkTblWebfolderApplyHistroy" resultClass="String">
 		<![CDATA[
@@ -4002,118 +2958,6 @@
             VALUES (#tenantID#, 'apprConvertExt', '이미지 변환솔루션 사용할 전자결재 첨부파일 확장자 모음', 'xlsx:xls:pdf:hwp:doc', '이미지 변환할 확장자 모음 (default : xlsx, xls, pdf, hwp, doc) / 구분자 : ', TO_DATE('2021-06-15 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자결재')
     </insert>
     
-	<select id="EzCommonDAO.checkBoardMailFG_PostColumn">
-        <![CDATA[
-            SELECT 
-                MAILFG_POST
-            FROM 
-                TBL_BOARD_BOARDINFO
-            WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.addBoardMailFG_PostColumn">
-        ALTER TABLE 
-        	TBL_BOARD_BOARDINFO 
-		ADD (
-			MAILFG_POST CHAR(1 CHAR) DEFAULT NULL
-		)
-    </statement>
-    <select id="EzCommonDAO.checkBoardMailFG_ModColumn">
-        <![CDATA[
-            SELECT 
-                MAILFG_MOD
-            FROM 
-                TBL_BOARD_BOARDINFO
-            WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.addBoardMailFG_ModColumn">
-        ALTER TABLE 
-        	TBL_BOARD_BOARDINFO 
-		ADD (
-			MAILFG_MOD CHAR(1 CHAR) DEFAULT NULL
-		)
-    </statement>
-    <select id="EzCommonDAO.checkBoardMailFG_CommentColumn">
-        <![CDATA[
-            SELECT 
-                MAILFG_COMMENT
-            FROM 
-                TBL_BOARD_BOARDINFO
-            WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.addBoardMailFG_CommentColumn">
-        ALTER TABLE 
-        	TBL_BOARD_BOARDINFO 
-		ADD (
-			MAILFG_COMMENT CHAR(1 CHAR) DEFAULT NULL
-		)
-    </statement>
-    
-	<select id="EzCommonDAO.checkCommNoticeUpperNoColumn">
-        <![CDATA[
-            SELECT 
-                UPPERNO
-            FROM 
-                TBL_C_BOARD
-            WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.addCommNoticeUpperNoColumn">
-        ALTER TABLE 
-        	TBL_C_BOARD 
-		ADD (
-			UPPERNO NUMBER(19, 0)
-		)
-    </statement>
-    
-    <select id="EzCommonDAO.checkTblAprReceiptProcessInfoAddColumn">
-        SELECT 
-            ROOTDOCID 
-        FROM 
-            TBL_APRRECEIPTPROCESSINFO
-    </select>
-    
-    <statement id="EzCommonDAO.alterTblAprReceiptProcessInfoAddColumn">
-        ALTER TABLE
-            TBL_APRRECEIPTPROCESSINFO
-        ADD
-            ROOTDOCID VARCHAR2(80)
-    </statement>
-    
-    <update id="EzCommonDAO.updateTblAprReceiptProcessInfoRootDocID">
-        UPDATE 
-            TBL_APRRECEIPTPROCESSINFO 
-        SET 
-            ROOTDOCID = PARENTSDOCID
-    </update>
-    
-    <select id="EzCommonDAO.checkTblDocDeliveryAddColumn">
-        SELECT 
-            EXTRECEPTYN 
-        FROM 
-            TBL_DOCDELIVERY
-    </select>
-    
-    <statement id="EzCommonDAO.alterTblDocDeliveryAddColumn">
-        ALTER TABLE
-            TBL_DOCDELIVERY
-        ADD
-            EXTRECEPTYN VARCHAR2(5) DEFAULT 'N'
-    </statement>
-    
-    <update id="EzCommonDAO.updateTblDocDeliveryExtReceptYn">
-        UPDATE 
-            TBL_DOCDELIVERY 
-        SET 
-            EXTRECEPTYN = 'N'
-    </update>
-    
     <select id="EzCommonDAO.checkTblCodelistA54002" resultClass="int">
         SELECT COUNT(*) CNT
         FROM TBL_CODELIST 
@@ -4133,20 +2977,6 @@
             AND 
                 CODE2 = '001'
     </insert>
-    
-    <select id="EzCommonDAO.checkTblAdminReceiptGroupSubExtReceptYnColumn">
-        SELECT
-            EXTRECEPTYN
-        FROM
-            TBL_ADMINRECEIPTGROUP_SUB
-    </select>
-
-    <statement id="EzCommonDAO.addTblAdminReceiptGroupSubExtReceptYnColumn">
-        ALTER TABLE
-            TBL_ADMINRECEIPTGROUP_SUB
-        ADD
-            EXTRECEPTYN VARCHAR2(5) DEFAULT 'N' 
-    </statement>
     
      <select id="EzCommonDAO.checkTblCar" resultClass="Integer">
 		SELECT 
@@ -4418,91 +3248,6 @@
 			</iterate>
 	</select>
 
-	<select id="EzCommonDAO.chkAddjobMasterJobIdIsPrimary" resultClass="String">
-		SELECT COLUMN_NAME
-		FROM USER_CONS_COLUMNS 
-		WHERE TABLE_NAME = 'TBL_ADDJOBMASTER' AND COLUMN_NAME = 'JOBID' AND CONSTRAINT_NAME = 
-		(SELECT CONSTRAINT_NAME FROM USER_CONSTRAINTS WHERE TABLE_NAME = 'TBL_ADDJOBMASTER' AND CONSTRAINT_TYPE = 'P')
-	</select>
-	
-	<statement id="EzCommonDAO.dropAddjobMasterPrimary">
-		ALTER TABLE TBL_ADDJOBMASTER DROP PRIMARY KEY
-	</statement>
-	
-	<statement id="EzCommonDAO.addAddjobMasterPrimary">
-		ALTER TABLE TBL_ADDJOBMASTER ADD PRIMARY KEY (CN, DEPTID, TENANT_ID, JOBID, ROLEID)
-	</statement>
-	
-	<select id="EzCommonDAO.checkCommMailFG_PostColumn">
-        <![CDATA[
-            SELECT 
-                MAILFG_POST
-            FROM 
-                TBL_COMM_BOARDINFO
-            WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.addCommMailFG_PostColumn">
-        ALTER TABLE 
-        	TBL_COMM_BOARDINFO 
-		ADD (
-			MAILFG_POST CHAR(1 CHAR) DEFAULT NULL
-		)
-    </statement>
-    <select id="EzCommonDAO.checkCommMailFG_ModColumn">
-        <![CDATA[
-            SELECT 
-                MAILFG_MOD
-            FROM 
-                TBL_COMM_BOARDINFO
-            WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.addCommMailFG_ModColumn">
-        ALTER TABLE 
-        	TBL_COMM_BOARDINFO 
-		ADD (
-			MAILFG_MOD CHAR(1 CHAR) DEFAULT NULL
-		)
-    </statement>
-    <select id="EzCommonDAO.checkCommMailFG_CommentColumn">
-        <![CDATA[
-            SELECT 
-                MAILFG_COMMENT
-            FROM 
-                TBL_COMM_BOARDINFO
-            WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.addCommMailFG_CommentColumn">
-        ALTER TABLE 
-        	TBL_COMM_BOARDINFO 
-		ADD (
-			MAILFG_COMMENT CHAR(1 CHAR) DEFAULT NULL
-		)
-    </statement>
-    
-    <select id="EzCommonDAO.checkSurveySubDeptYNColumn">
-        <![CDATA[
-            SELECT 
-                SUBDEPTYN
-            FROM 
-                TBL_SURVEY_PARTICIPANT
-            WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.addSurveySubDeptYNColumn">
-        ALTER TABLE 
-        	TBL_SURVEY_PARTICIPANT 
-		ADD (
-			SUBDEPTYN CHAR(1 CHAR) DEFAULT 'N'
-		)
-    </statement>
-    
     <select id="EzCommonDAO.checkTblScheduleComplete">
 		<![CDATA[
 			SELECT
@@ -4669,23 +3414,6 @@
 	}
     </statement>
 
-	<select id="EzCommonDAO.checkSusinScheduleOffsetColumn">
-        <![CDATA[
-            SELECT 
-                OFFSET
-            FROM 
-                TBL_SUSINSCHEDULE
-			WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-	<statement id="EzCommonDAO.addSusinScheduleOffsetColumn">
-        ALTER TABLE 
-        	TBL_SUSINSCHEDULE 
-		ADD
-			OFFSET CHAR(10 CHAR) DEFAULT ''
-    </statement>
-
    	<select id="EzCommonDAO.checkReceiptHistoryListoption" parameterClass="Map" resultClass="String">
 	<![CDATA[
 		SELECT
@@ -4717,23 +3445,6 @@
 	    FROM DUAL
 	]]>
    	</insert>
-
-    <select id="EzCommonDAO.checkAprDocGroupInfoTypeColumn">
-        <![CDATA[
-            SELECT 
-                TYPE
-            FROM 
-                TBL_APRDOCGROUPINFO
-			WHERE
-				ROWNUM = 1
-        ]]>
-    </select>
-    <statement id="EzCommonDAO.addAprDocGroupInfoTypeColumn">
-        ALTER TABLE 
-        	TBL_APRDOCGROUPINFO 
-		ADD
-			TYPE CHAR(10 CHAR) NOT NULL
-    </statement>
 
 	<statement id="EzCommonDAO.alterTblDevMaster">
     <![CDATA[
@@ -4844,21 +3555,6 @@
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES (0, 'HwpSecurityNum', 'Kaoni2023!', 'hwp배포용 문서 비밀번호', 'hwp배포용 문서 비밀번호', TO_DATE('2023-05-31 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
     </insert>
-
-	<select id="EzCommonDAO.checkRsResaclMemberNam2Column">
-		<![CDATA[
-			SELECT
-				MEMBER_NAM2
-			FROM
-				TBL_RS_RESACL
-		]]>
-	</select>
-	<statement id="EzCommonDAO.addRsResaclMemberNam2Column">
-		ALTER TABLE
-			TBL_RS_RESACL
-		ADD
-			MEMBER_NAM2 NVARCHAR(100)
-	</statement>
 
    	<select id="EzCommonDAO.checkFormHtml2Column" resultClass="String">
 	<![CDATA[
@@ -5000,46 +3696,6 @@
 		]]>
 	</update>
 
-    <select id="EzCommonDAO.checkScheduleGroup_TransferDateColumn" resultClass="String">
-	<![CDATA[
-		SELECT
-			TRANSFERDATE
-		FROM
-			TBL_SCHEDULEGROUP
-		WHERE
-			ROWNUM = 1
-	]]>
-	</select>
-
-    <statement id="EzCommonDAO.addScheduleTransferDateColumn">
-	<![CDATA[
-		ALTER TABLE
-			TBL_SCHEDULEGROUP
-		ADD
-			TRANSFERDATE DATE DEFAULT NULL
-	]]>
-    </statement>
-
-    <select id="EzCommonDAO.checkScheduleGroup_GroupColorColumn" resultClass="String">
-	<![CDATA[
-		SELECT
-			GROUPCOLOR
-		FROM
-			TBL_SCHEDULEGROUP
-		WHERE
-			ROWNUM = 1
-	]]>
-	</select>
-
-    <statement id="EzCommonDAO.addScheduleGroupColorColumn">
-	<![CDATA[
-		ALTER TABLE
-			TBL_SCHEDULEGROUP
-		ADD
-			GROUPCOLOR VARCHAR2(10) DEFAULT NULL
-	]]>
-    </statement>
-
 	<select id="EzCommonDAO.checkTblBoardReplyReact" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -5061,23 +3717,6 @@
 			"REACTDATE" NVARCHAR2(40),
 			CONSTRAINT "TBL_BOARD_REPLY_REACT_PK" PRIMARY KEY ("ITEMID", "REPLYID", "USERID", "TENANT_ID")
 		)
-	</statement>
-
-	<select id="EzCommonDAO.checkTblBoardInfoReactFlag" resultClass="String">
-		<![CDATA[
-			SELECT
-				REACTFLAG
-			FROM
-				TBL_BOARD_BOARDINFO
-			WHERE
-				ROWNUM = 1
-		]]>
-	</select>
-	<statement id="EzCommonDAO.addBoardReactFlag">
-		ALTER TABLE
-			TBL_BOARD_BOARDINFO
-		ADD
-			REACTFLAG NCHAR(1) DEFAULT NULL
 	</statement>
 
 	<!-- 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 -->
@@ -5194,27 +3833,6 @@
 			VALUES ('0', 'permissionBasisDeptYN', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', '조직도 권한부여 기준 설정', sysdate, '조직도')
 	</insert>
 	
-	<select id="EzCommonDAO.checkRollInfoInAddJob" resultClass="String">
-		<![CDATA[
-			SELECT
-				ROLL_INFO
-			FROM
-				TBL_ADDJOBMASTER
-			WHERE
-				ROWNUM <= 1
-		]]>
-	</select>
-
-	<statement id="EzCommonDAO.AddRollInfoInAddJobColumn">
-		<![CDATA[
-			ALTER TABLE
-				TBL_ADDJOBMASTER
-			ADD (
-				ROLL_INFO 	VARCHAR(200) 	DEFAULT 	'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;'
-			)
-		]]>
-	</statement>
-
 	<select id="EzCommonDAO.checkTblDbLog" resultClass="String">
 		SELECT
 		EVENT_DATE
@@ -5244,62 +3862,8 @@
 		]]>
     </statement>
 
-	<statement id="EzCommonDAO.checkTblAddJobRoleColumn">
-		<![CDATA[
-		SELECT
-			ROLE,
-			ROLE2,
-			ROLEID
-		FROM
-			TBL_ADDJOBMASTER
-		WHERE
-			ROWNUM <= 1
-		]]>
-    </statement>
-
-	<statement id="EzCommonDAO.createColumnRoleTblAddJobMaster">
-	<![CDATA[
-		ALTER TABLE
-			TBL_ADDJOBMASTER
-		ADD
-			ROLE VARCHAR(200),
-			ROLE2 VARCHAR(200),
-			ROLEID VARCHAR(100)
-		]]>
-    </statement>
-
-	<statement id="EzCommonDAO.dropPrimaryTblAddJobMaster">
-		ALTER TABLE
-			TBL_ADDJOBMASTER
-		DROP
-			PRIMARY KEY
-		DROP
-			INDEX
-	</statement>
-
-	<statement id="selectIndexTblAddJobMaster">
-		SELECT
-			COUNT(*)
-		FROM
-			ALL_IND_COLUMNS
-		WHERE
-			TABLE_NAME = 'TBL_ADDJOBMASTER'
-		  AND
-			INDEX_NAME = 'TBL_ADDJOBMASTER_PK'
-		  AND
-			COLUMN_NAME = 'ROLEID'
-	</statement>
-	
-	<statement id="EzCommonDAO.createIndexTblAddJobMaster">
-		CREATE UNIQUE INDEX
-			"TBL_ADD_JOBMASTER_PK"
-		ON  "TBL_ADDJOBMASTER" ("TENANT_ID", "CN", "DEPTID", "JOBID", "ROLEID")
-	</statement>
-
 	<!-- 2024-01-25 홍승비 - 테넌트ID 중복제거를 먼저 진행하도록 쿼리 수정 -->
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 -->
-	<!-- 오라클 19c 이상부터 DISTINCT를 사용하여 중복을 제거 가능 : LISTAGG(DISTINCT TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID) *참고 https://gent.tistory.com/328 -->
-	<!-- $ → $$ : ibatis 정규식 에러 *참고 https://suyou.tistory.com/247 -->
     <select id="EzCommonDAO.getPortalMenuTenantList" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -5398,8 +3962,6 @@
 	
 	<!-- 2024-01-25 홍승비 - 테넌트ID 중복제거를 먼저 진행하도록 쿼리 수정 -->
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 -->
-	<!-- 오라클 19c 이상부터 DISTINCT를 사용하여 중복을 제거 가능 : LISTAGG(DISTINCT TENANT_ID, ',') WITHIN GROUP(ORDER BY TENANT_ID) *참고 https://gent.tistory.com/328 -->
-	<!-- $ → $$ : ibatis 정규식 에러 *참고 https://suyou.tistory.com/247 -->
 	<select id="EzCommonDAO.getPortletNameTenantList" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -5555,152 +4117,4 @@
 		SELECT *
 		FROM DUAL
 	</insert>
-	
-	<!-- 2023-11-27 조소정 - 게시판그룹이름, 게시판이름 일본어, 중국어 버전 컬럼 추가 -->
-    <select id="EzCommonDAO.checkBoardInfoBoardName3" resultClass="String">
-        <![CDATA[
-        	SELECT
-        		BOARDNAME3
-            FROM
-                TBL_BOARD_BOARDINFO
-            WHERE
-            	ROWNUM <= 1
-        ]]>
-    </select>
-    
-    <statement id="EzCommonDAO.addBoardInfoBoardName3">
-        ALTER TABLE
-            TBL_BOARD_BOARDINFO
-        ADD
-            BOARDNAME3 NVARCHAR2(255)
-    </statement>
-
-    <select id="EzCommonDAO.checkBoardInfoBoardName4" resultClass="String">
-        <![CDATA[
-        	SELECT
-        		BOARDNAME4
-            FROM
-                TBL_BOARD_BOARDINFO
-            WHERE
-            	ROWNUM <= 1
-        ]]>
-    </select>
-    
-    <statement id="EzCommonDAO.addBoardInfoBoardName4">
-        ALTER TABLE
-            TBL_BOARD_BOARDINFO
-        ADD
-            BOARDNAME4 NVARCHAR2(255)
-    </statement>
-
-	<!-- 2023-11-27 조소정 - 게시판 트리 일본어, 중국어 버전 컬럼 추가 -->
-    <select id="EzCommonDAO.checkBoardTreeCasheResult3" resultClass="String">
-        <![CDATA[
-        	SELECT
-        		RESULT3
-            FROM
-                TBL_BOARD_TREECACHE
-            WHERE
-            	ROWNUM <= 1
-        ]]>
-    </select>
-    
-    <statement id="EzCommonDAO.addBoardTreeCasheResult3">
-        ALTER TABLE
-            TBL_BOARD_TREECACHE
-        ADD
-            RESULT3 longtext CHARACTER SET utf8mb4 DEFAULT NULL
-    </statement>
-
-    <select id="EzCommonDAO.checkBoardTreeCasheResult4" resultClass="String">
-        <![CDATA[
-        	SELECT
-        		RESULT4
-            FROM
-                TBL_BOARD_TREECACHE
-            WHERE
-            	ROWNUM <= 1
-        ]]>
-    </select>
-    
-    <statement id="EzCommonDAO.addBoardTreeCasheResult4">
-        ALTER TABLE
-            TBL_BOARD_TREECACHE
-        ADD
-            RESULT4 longtext CHARACTER SET utf8mb4 DEFAULT NULL
-    </statement>
-
-	<!-- 2023-11-27 조소정 - 마이게시판 트리 이름 일본어, 중국어 버전 컬럼 추가  -->
-    <select id="EzCommonDAO.checkBoardMyTreeName3" resultClass="String">
-        <![CDATA[
-        	SELECT
-        		TREENAME3
-            FROM
-                TBL_BOARD_MYTREE
-            WHERE
-            	ROWNUM <= 1
-        ]]>
-    </select>
-    
-    <statement id="EzCommonDAO.addBoardMyTreeName3">
-        ALTER TABLE
-            TBL_BOARD_MYTREE
-        ADD
-            TREENAME3 VARCHAR(510) DEFAULT NULL
-    </statement>
-
-    <select id="EzCommonDAO.checkBoardMyTreeName4" resultClass="String">
-        <![CDATA[
-        	SELECT
-        		TREENAME4
-            FROM
-                TBL_BOARD_MYTREE
-            WHERE
-            	ROWNUM <= 1
-        ]]>
-    </select>
-    
-    <statement id="EzCommonDAO.addBoardMyTreeName4">
-        ALTER TABLE
-            TBL_BOARD_MYTREE
-        ADD
-            TREENAME4 VARCHAR(510) DEFAULT NULL
-    </statement>
-
-	<!-- 2023-11-28 조소정 - 마이게시판 게시판이름 일본어, 중국어 버전 컬럼 추가  -->
-    <select id="EzCommonDAO.checkBoardMyBoardName3" resultClass="String">
-        <![CDATA[
-        	SELECT
-        		BOARDNAME3
-            FROM
-                TBL_BOARD_MYBOARDS
-            WHERE
-            	ROWNUM <= 1
-        ]]>
-    </select>
-    
-    <statement id="EzCommonDAO.addBoardMyBoardName3">
-        ALTER TABLE
-            TBL_BOARD_MYBOARDS
-        ADD
-            BOARDNAME3 NVARCHAR2(50)
-    </statement>
-
-    <select id="EzCommonDAO.checkBoardMyBoardName4" resultClass="String">
-        <![CDATA[
-        	SELECT
-        		BOARDNAME4
-            FROM
-                TBL_BOARD_MYBOARDS
-            WHERE
-            	ROWNUM <= 1
-        ]]>
-    </select>
-    
-    <statement id="EzCommonDAO.addBoardMyBoardName4">
-        ALTER TABLE
-            TBL_BOARD_MYBOARDS
-        ADD
-            BOARDNAME4 NVARCHAR2(50)
-    </statement>
 </sqlMap>
