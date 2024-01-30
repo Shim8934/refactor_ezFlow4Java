@@ -92,6 +92,8 @@
 	        /* 2022-01-20 홍승비 - 일괄기안용 변수 추가 */
 	        var draftAllFlag = "<c:out value ='${draftAllFlag}'/>"; // 일괄기안 여부 플래그 (Y/M)
 	        var anNo = "<c:out value ='${anNo}'/>"; // 일괄기안인 경우, 첨부파일을 첨부할 안의 번호
+	        
+	        var filetag;
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -245,8 +247,12 @@
 						'confirmBT' : webFolderConfirmBT, // 웹폴더첨부 확인 시 실행할 함수
 						'cancelBT' : webFolderCancelBT // 웹폴더첨부 취소 시 실행할 함수
 				};
+				
+				filetag = document.getElementById("file1");
+				filetag.addEventListener("click", function(){
+					initialize();
+				});
 			}
-			
 			
 			// 파일Size Text처리 함수
 			function ReplacText(f_size)
@@ -803,6 +809,7 @@
 		            evt.preventDefault();
 		        }
 		        if (isfileup) {
+		            hideLoadingProgress();
 		            alert(strLangjjh03);
 		            return;
 		        }
@@ -821,6 +828,7 @@
 				var checkAttachResult = checkAttachFileCntLimit(filelist.length);
 		        if (checkAttachResult == "NO") {
 		        	document.form.file1.value = "";
+		        	hideLoadingProgress();
 		        	return;
 		        }
 		        
@@ -881,6 +889,7 @@
 		        		bigFileCheck = true;
 		        	} else {
 		        		if(bigSizeApprAttachLimit == "0"){
+		        			hideLoadingProgress();
 		        			alert("일반첨부파일은 총" + apprAttachLimit + "MB까지 가능합니다.");
 		        			return false;
 						} else {
@@ -891,6 +900,7 @@
 		        	
 		        	if (bigFileCheck != true) {
 		        		addToBigAttach = "N";
+		        		hideLoadingProgress();
 		        		return;
 		        	} else {
 		        		calBigAttachSize += calNormalAttachSize; // 같이 추가되는 일반 첨부파일도 전부 대용량으로 추가되므로.
@@ -903,12 +913,14 @@
 		        if (checkBigAttachResult == "NO") {
 		        	isfileup = false;
 		        	document.form.file1.value = "";
+		        	hideLoadingProgress();
 		        	return;
 		        }
 		        
 		        // 대용량첨부파일 최대크기 초과 체크
 				if (bigAttachSize + calBigAttachSize > parseInt(bigSizeApprAttachLimit) * 1024 * 1024) {
-		        	alert(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
+					hideLoadingProgress();
+					alert(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
 		        	isfileup = false;
 		        	document.form.file1.value = "";
 		        	return;
@@ -920,7 +932,8 @@
 			        	var totMaxSize = parseInt(apprTotalAttachLimit) * 1024 * 1024;
 			        	
 			        	if (parseInt(totalSize + calTotalSize) > totMaxSize) {
-				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
+			        		hideLoadingProgress();
+			        		alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
 				        	isfileup = false;
 				        	// 용량 초과 파일 같은 파일 업로드 시 알러트 다시 뜨게 수정 2018-04-19 강민수92
 				        	document.form.file1.value = "";
@@ -938,6 +951,7 @@
 					}
 		        	
 		        	if (fnl > attachFileNameMaxLength) {
+		        		hideLoadingProgress();
 		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 		        		isfileup = false;
 		        		document.form.file1.value = "";
@@ -978,6 +992,7 @@
 		    	});
 		       	// 같은 파일 업로드 할 수 있게 수정 2018-04-19 강민수92
 		        document.form.file1.value = "";
+		       	hideLoadingProgress();
 		    }
 		    
 		    /* 2020-03-23 홍승비 - 첨부파일 위로 이동 함수 */
@@ -1256,6 +1271,31 @@
 		    	parent.pHasAttachYNAry[anNo] = flag;
 		    }
 		    
+		    // 파일 선택 다이얼로그를 제어하기 위한 함수
+		    function initialize() {
+				document.body.onfocus = checkIt;
+			}
+			
+			function checkIt() {
+			    setTimeout(function() {
+		            if (filetag.value.length) {
+		                onDrop();
+		            } else {
+		                hideLoadingProgress();
+		            }
+		            document.body.onfocus = null;
+		        }, 300);
+			};
+			
+			function isBigAttachButtonApr(flag) {
+				showLoadingProgress();
+		    	if (flag == "Y") {
+		    		isBigAttachBtnClicked = true;
+		    	} else {
+		    		isBigAttachBtnClicked = false;
+		    	}
+			}
+		    
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -1291,10 +1331,10 @@
 		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
 		    <div class="btnposition btnpositionNew">       
-		        <input id="file1" name="file1" type="file" onchange="onDrop()" multiple="multiple" style="margin-left:100px; display: none;">
-		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" onclick="isBigAttachButtonClick('N')" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
+		        <input id="file1" name="file1" type="file" multiple="multiple" style="margin-left:100px; display: none;">
+		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" onclick="isBigAttachButtonApr('N')" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <%-- 2020-11-12 홍승비 - 대용량첨부기능 추가 --%>
-		        <a class="imgbtn" id = "btn_BigAttachAddA" style="<c:if test='${isOuterForm eq true}'>display:none</c:if>"><label for="file1"><span id="btn_BigAttachAdd" onclick="isBigAttachButtonClick('Y')" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr11'/></span></label></a>
+		        <a class="imgbtn" id = "btn_BigAttachAddA" style="<c:if test='${isOuterForm eq true}'>display:none</c:if>"><label for="file1"><span id="btn_BigAttachAdd" onclick="isBigAttachButtonApr('Y')" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr11'/></span></label></a>
 		        <%-- 2020-11-17 홍승비 - 웹폴더첨부기능 추가 --%>
 				<a class="imgbtn" style="display:none;"><span id="btn_WebFolderAttachAdd" onclick="isBigAttachButtonClick('N'); filePicker();" style="cursor:pointer"><spring:message code='ezSystem.HSBAppr12'/></span></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
@@ -1318,5 +1358,8 @@
 		<div class="layerpopup"  style="z-index:2000; position:absolute; display:none; overflow:hidden;" id="iFramePanel_sub">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
 		</div>
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
+	    </div>
 	</body>
 </html>
