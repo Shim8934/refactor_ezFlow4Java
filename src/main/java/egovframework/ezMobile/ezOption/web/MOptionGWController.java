@@ -195,17 +195,17 @@ public class MOptionGWController extends EgovFileMngUtil {
 			}
 
 			String deviceId = (request.getParameter("deviceID") == null) ? "" : request.getParameter("deviceID");
-
+			String pinChange = jsonObject.get("pinChange").toString();
 			logger.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : "
 					+ jsonObject.get("lang").toString() + ", mainType : " + jsonObject.get("mainType").toString()
 					+ ", listCnt : " + jsonObject.get("listCnt").toString() + ", useSecurity : "
 					+ jsonObject.get("useSecurity").toString() + ", deviceId : " + deviceId
-					+ ", pinState : " + pinState + ", biometric : " + biometric + ", pin : " + pin);
+					+ ", pinState : " + pinState + ", biometric : " + biometric + ", pin : " + pin+ ", pinChange : " + pinChange);
 
 			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(),
 					jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(),
 					jsonObject.get("listCnt").toString(), jsonObject.get("useSecurity").toString(), 
-					tenantId, deviceId, pinState, pin, biometric);
+					tenantId, deviceId, pinState, pin, biometric,pinChange);
 
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
 

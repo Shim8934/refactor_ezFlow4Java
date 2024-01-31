@@ -127,7 +127,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	}
 
 	@Override
-	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId, String deviceId, String pinState, String pin, String biometric) throws Exception {
+	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId, String deviceId, String pinState, String pin, String biometric,String pinChange) throws Exception {
 		logger.debug("updateOption started");	
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -143,7 +143,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", tenantId);
 		if (dotNetIntegration.equalsIgnoreCase("NO")) {
-			updateDevicePinfInfo(deviceId, pinState, pin, biometric, tenantId, userId);
+			updateDevicePinfInfo(deviceId, pinState, pin, biometric, tenantId, userId,pinChange);
 		}
 		
 		logger.debug("updateOption ended");	
@@ -217,9 +217,9 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		return info;
 	}
 
-	public void updateDevicePinfInfo(String deviceId, String pinState, String pin, String biometric, int tenantId, String userId) throws Exception {
+	public void updateDevicePinfInfo(String deviceId, String pinState, String pin, String biometric, int tenantId, String userId, String pinChange) throws Exception {
 		logger.debug("updateDevicePinfInfo started.");
-		logger.debug("deviceId=" + deviceId + ", userId=" + userId + ", pinState=" + pinState + ", biometric=" + biometric);
+		logger.debug("deviceId={},userId={},pinState={},pin={},biometric={},pinchange={}",deviceId,userId,pinState,pin,biometric,pinChange);
 
 		String tenantIdParam = "tenantId=" + tenantId;
 		String deviceIdParam = "deviceId=" + URLEncoder.encode(deviceId, "UTF-8");
@@ -227,7 +227,8 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		String pinStateParam = "pinState=" + URLEncoder.encode(pinState, "UTF-8");
 		String pinParam = "pin=" + URLEncoder.encode(pin, "UTF-8");
 		String biometricParam = "biometric=" + URLEncoder.encode(biometric, "UTF-8");
-		String inputParams = tenantIdParam + "&" + deviceIdParam + "&" + pinStateParam + "&" + pinParam + "&" + biometricParam + "&" + userIdParam;
+		String pinChangeParam = "pinChange=" + URLEncoder.encode(pinChange, "UTF-8");
+		String inputParams = tenantIdParam + "&" + deviceIdParam + "&" + pinStateParam + "&" + pinParam + "&" + biometricParam + "&" + userIdParam + "&" +pinChangeParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		try {
