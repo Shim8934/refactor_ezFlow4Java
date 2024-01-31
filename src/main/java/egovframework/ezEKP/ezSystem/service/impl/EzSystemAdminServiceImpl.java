@@ -902,7 +902,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			String paramValue = list.get(i).get("value");
 			logger.debug("paramName:" + paramName + ", paramValue:" + paramValue);
 			
-			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail")) {
+			if (paramName.equals("ExpirePassPeriod") || paramName.equals("MaxAllowedCountOfLoginFail") || paramName.equals("LoginLockedDuration")) {
 				int changeInt = Integer.parseInt(paramValue);
 				paramValue = Integer.toString(changeInt);
 			}

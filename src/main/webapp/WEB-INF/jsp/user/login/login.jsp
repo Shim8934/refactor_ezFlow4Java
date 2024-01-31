@@ -236,6 +236,9 @@
 			    } else if (message === "loginSessionFlag") {
 					$("#imgMnt9").html("<img src='/images/warning2.png'>");
 					$("#exDiv9").modal();
+				} else if (message === "loginBlock") {
+					$("#imgMnt10").html("<img src='/images/warning2.png'>");
+					$("#exDiv10").modal();
 				} else if (message != "") {
 // 			        alert(message);
 					$("#layerTitle").text(message);
@@ -844,6 +847,30 @@
 					<dl>
 						<dt id="layerTitle9" class="layerTitle" style="width: 346.38px"><spring:message code="ezOrgan.hj01" /></dt>
 						<dd><spring:message code="ezOrgan.hj02" /></dd>
+					</dl>
+				</div>
+			</div>
+
+			<div id="exDiv10" style="display:none;max-width:710px;height:190px;padding-top:22px;margin-bottom:100px">
+				<div id="close">
+					<ul>
+						<li><a rel="modal:close"><span></span></a></li>
+					</ul>
+				</div>
+				<div class="warning_wrap" style="margin:10px 0px 10px 27px; width:700px;">
+					<p style="border:0px" id="imgMnt10"></p>
+					<dl style="margin:-108px 0px 0px 150px;">
+						<dt>${message1}</dt>
+						<br>
+						<dd>${message2}</dd>
+						<c:choose>
+							<c:when test="${useOTP}">
+								<dd><spring:message code='fail.common.login.otp.warning2'/></dd>
+							</c:when>
+							<c:otherwise>
+								<dd><spring:message code='fail.common.login.warning6'/></dd>
+							</c:otherwise>
+						</c:choose>
 					</dl>
 				</div>
 			</div>
