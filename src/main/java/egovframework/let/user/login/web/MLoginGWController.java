@@ -220,12 +220,18 @@ public class MLoginGWController {
 			Map<String, Object> paramMap  = new HashMap<>();
 			paramMap .put("formatedNow", formatedNow);
 			paramMap .put("loginLockedDuration", loginLockedDuration);
+			paramMap .put("loginLockedDate", loginLockedDate);
 			logger.debug("companyId : {}, maxAllowedCountOfLoginFail : {}, loginLockedDuration : {}, loginLockedDate : {}", companyId, maxAllowedCountOfLoginFail, loginLockedDuration, loginLockedDate);
 			// String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
 					
 			if (!StringUtils.isBlank(maxAllowedCountOfLoginFail)) {
 				try {
 					numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
+					// 암호 오류 최대 횟수를 기존에 사용하고 있는 경우 계정 잠금 기간 config를 추가
+					if (loginLockedDuration.equals("")){
+						ezCommonService.insertCompanyConfig(tenantId, companyId, "LoginLockedDuration", "5");
+						loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration");
+					}
 				} catch (NumberFormatException e) {
 					logger.error(e.getMessage(), e);
 				}
@@ -491,11 +497,11 @@ public class MLoginGWController {
     				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
 					boolean check1 = false;
 
-					if (loginLockedDate.length() > 0 && !loginLockedDate.equals("0")) {
+					if (!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
 						check1 = checkLockedDate(tenantId, uid, loginLockedDuration, loginLockedDate, formatedNow);
 
 						if (check == -3 && check1) {
-							check = -1;
+							check = 0;
 						}
 					}
                 	
@@ -528,11 +534,11 @@ public class MLoginGWController {
 
 					boolean check1 = false;
 
-					if (loginLockedDate.length() > 0 && !loginLockedDate.equals("0")) {
+					if (!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
 						check1 = checkLockedDate(tenantId, uid, loginLockedDuration, loginLockedDate, formatedNow);
 
 						if (check == -3 && check1) {
-							check = -1;
+							check = 0;
 						}
 					}
 					
@@ -831,15 +837,18 @@ public class MLoginGWController {
 		
 		String formatedNow = (String) map.get("formatedNow"); 
 		String loginLockedDuration = (String) map.get("loginLockedDuration"); 
+		String loginLockedDate = (String) map.get("loginLockedDate"); 
 
 		switch (check) {
 			case -3:
 				//Show block message
+				if(loginLockedDate.equals("")) {
+					ezCommonService.insertUserConfigInfo(tenantId, uid, "LoginLockedDate", formatedNow);
+				}
 				return egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
 			case -2:
 				//The first time this user login failed
 				ezCommonService.insertUserConfigInfo(tenantId,  uid, "LoginFailCount", "1");
-				ezCommonService.insertUserConfigInfo(tenantId, uid, "LoginLockedDate", "0");
 				//Show warning message
 				/* 2018-05-24 홍승비 - 로그인 실패 시 레이어팝업을 위해 플래그 추가, 메세지 리소스 분리 */
 				errorMsg1 = egovMessageSource.getMessage("fail.mobile.common.login" + (isOTP? "" : ".warning1"), locale);
@@ -857,7 +866,11 @@ public class MLoginGWController {
 
 				if (check >= numberOfLoginFailPermit - 1) {
 					//Show block message
-					ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginLockedDate", formatedNow);
+					if(loginLockedDate.equals("")) {
+						ezCommonService.insertUserConfigInfo(tenantId, uid, "LoginLockedDate", formatedNow);
+					} else {
+						ezCommonService.updateUserConfigInfo(tenantId, uid, "LoginLockedDate", formatedNow);
+					}
 					return egovMessageSource.getMessageExtend("fail.mobile.common.login.block", new Object[] {numberOfLoginFailPermit, loginLockedDuration}, locale);
 				} else {
 					//Show warning message

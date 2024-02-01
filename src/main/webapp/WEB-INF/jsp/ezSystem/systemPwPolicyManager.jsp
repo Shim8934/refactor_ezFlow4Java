@@ -57,7 +57,7 @@
 						<th><spring:message code='ezSystem.x0050' /></th>
 						<td>
 							<input type="int" id="LoginLockedDuration" style="width: 50px;" maxlength="4">
-							<spring:message code='main.fido008' />
+							<spring:message code='ezSystem.x0051' />
 						</td>
 					</tr>
 		            <tr>

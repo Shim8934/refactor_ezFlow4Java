@@ -48,7 +48,7 @@
 			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
 			#exDiv3 dl{margin-top: 20px;}
 			.warning_wrap .layerTitle{margin-bottom: 20px;}
-			.modal{max-width: 600px !important;}
+			.modal:not(#exDiv10){max-width: 600px !important;}
 			
 			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
 			/*.logo img {width:137px; height:38px;} */
@@ -851,15 +851,15 @@
 				</div>
 			</div>
 
-			<div id="exDiv10" style="display:none;max-width:710px;height:190px;padding-top:22px;margin-bottom:100px">
+			<div id="exDiv10" style="display:none;max-width:690px;height:190px;padding-top:27px;margin-bottom:100px">
 				<div id="close">
 					<ul>
 						<li><a rel="modal:close"><span></span></a></li>
 					</ul>
 				</div>
-				<div class="warning_wrap" style="margin:10px 0px 10px 27px; width:700px;">
+				<div class="warning_wrap" style="margin:10px 0px 10px 27px; width:640px;">
 					<p style="border:0px" id="imgMnt10"></p>
-					<dl style="margin:-108px 0px 0px 150px;">
+					<dl sty`le="margin:-108px 0px 0px 150px;">
 						<dt>${message1}</dt>
 						<br>
 						<dd>${message2}</dd>

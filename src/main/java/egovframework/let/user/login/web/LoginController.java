@@ -483,6 +483,11 @@ public class LoginController {
 		if (!maxAllowedCountOfLoginFail.equals("")) {
 			try {
 				numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
+				// 암호 오류 최대 횟수를 기존에 사용하고 있는 경우 계정 잠금 처리 config를 추가
+				if (loginLockedDuration.equals("")){
+					ezCommonService.insertCompanyConfig(tenantId, companyId, "LoginLockedDuration", "5");
+					loginLockedDuration = ezCommonService.getCompanyConfig(tenantId, companyId, "LoginLockedDuration");
+				}
 			} catch (NumberFormatException e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -551,11 +556,11 @@ public class LoginController {
             	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
 				boolean check1 = false;
 
-				if (!loginLockedDate.isEmpty() && !loginLockedDate.equals("0")) {
+				if (!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
 					check1 = checkLockedDate(tenantId, _uid, loginLockedDuration, loginLockedDate, formatedNow);
 
 					if (check == -3 && check1) {
-						check = -1;
+						check = 0;
 					}
 				}
             	
@@ -783,11 +788,11 @@ public class LoginController {
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
 			boolean check1 = false;
 
-			if (loginLockedDate.length() > 0 && !loginLockedDate.equals("0")) {
+			if(!loginLockedDate.equals("") && !loginLockedDate.equals("0")) {
 				check1 = checkLockedDate(tenantId, _uid, loginLockedDuration, loginLockedDate, formatedNow);
 				
 				if (check == -3 && check1) {
-					check = -1;
+					check = 0;
 				}
 			}
 			
@@ -802,6 +807,9 @@ public class LoginController {
 				case -3: 
 	    			//Show block message
 	            	//model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+					if(loginLockedDate.equals("")) {
+						ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
+					}
 					
 					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
 					model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
@@ -811,7 +819,6 @@ public class LoginController {
     			case -2:
 	        		//The first time this user login failed
 	        		ezCommonService.insertUserConfigInfo(tenantId,  _uid, "LoginFailCount", "1");
-					ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginLockedDate", "0");
 	        		//Show warning message
 	        		/* 2018-05-24 홍승비 - 로그인 실패 시 레이어팝업을 위해 플래그 추가, 메세지 리소스 분리 */
 	        		errorMsg1 = egovMessageSource.getMessage("fail.common.login", locale);
@@ -840,8 +847,13 @@ public class LoginController {
         			if (check >= numberOfLoginFailPermit - 1) {
         				//Show block message
 						// model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+						
+						if(loginLockedDate.equals("")) {
+							ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
+						} else {
+							ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
+						}
 
-						ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginLockedDate", formatedNow);
 						model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit, loginLockedDuration }, locale));
 						model.addAttribute("message2", egovMessageSource.getMessageExtend("fail.common.login.block1", new Object[] { loginLockedDuration }, locale));
 						model.addAttribute("message", "loginBlock");
