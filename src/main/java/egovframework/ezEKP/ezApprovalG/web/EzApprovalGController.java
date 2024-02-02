@@ -826,7 +826,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         int tenantID = userInfo.getTenantId(); 
         
         //2018-09-04 강민수92 비공개문서일때 결재라인 안보이게 하기 위해 추가
-        if (publicityYN != null && publicityYN.equals("N") && userInfo.getRollInfo().indexOf("c=1") == -1) {
+        if (publicityYN != null && publicityYN.equals("N") && userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
         	String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
         	String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), tenantID, approvalFlag);
         	
@@ -840,8 +840,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
         }
      
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
-		// c=1 : 전체관리자, k=1 : 회사관리자, q=1 : 문서조회관리자
-		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
+		// c=1 : 전체관리자, k=1 : 회사관리자, q=1 : 문서조회관리자, m=1 : 기록물관리책임자
+		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1") && !userInfo.getRollInfo().contains("m=1")) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
 //					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
@@ -3256,7 +3256,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("fileName : " + fileName);
 
 		//관리자는 권한 제한없도록 추가
-		if (userInfo.getRollInfo().indexOf("c=1") > -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("m=1") > -1) {
 			
 			result = "PERMISSION";
 		} else {
@@ -3908,7 +3908,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formVersion = "";
 		String sendType = request.getParameter("sendType");
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
-		
+
 		// 2023-10-16 전인하 - 전자결재G > 배부대장 > 문서 열람 시 진행문서/완료문서 여부에 관게없이 권한 체크 진행
 		/* 2023-07-17 민지수 - 전자결재 > 배부대장 > 진행/완료(APR/END) 체크 */
 		String docAprEnd ="";
@@ -3922,7 +3922,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
-		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("m=1") == -1) {
 			if (docAprEnd.equals("APR")) {
 				pass = ezApprovalGService.getAccessYNGforAPR(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 			} else {
@@ -5713,7 +5713,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
 		String webHWPUrl = ezCommonService.getTenantConfig("webHWPUrl", userInfo.getTenantId());
 		String HwpSecurityNum = "";
-		
+
 		/* 2023-05-10 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 배포용 암호 설정 테넌트 컨피그로 추가 */
 		if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G")) {
 			HwpSecurityNum = ezCommonService.getTenantConfig("HwpSecurityNum", userInfo.getTenantId());
@@ -5724,9 +5724,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
 		}
-		
+
 		String orgCompanyID = request.getParameter("orgCompanyID");
-		
+
 		model.addAttribute("pass", pass);
 		model.addAttribute("docID", docID);
 		model.addAttribute("type", type);
@@ -5790,7 +5790,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String[] hwpInfo = xmlDom.getElementsByTagName("PHWPINFO").item(0).getTextContent().split(separators);
 		String useHwpDownSecurity = ezCommonService.getTenantConfig("useHwpDownSecurity", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		
+
 		/* 2023-05-10 김우철 - 한글문서 배포(수정 및 복사 제한)를 위한 설정 테넌트 컨피그 추가 */
 		if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G")) {
 			downUrl = xmlDom.getElementsByTagName("PDOWNINFO").item(0).getTextContent().split(separators);
@@ -5823,7 +5823,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
 			zout = new ZipOutputStream(new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + zipFilePath))));
-			
+
 			for (int k = 0; k < filePaths.length; k++) {
 				BufferedInputStream bis = null;
 				
@@ -5994,9 +5994,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
             	if (!dbType.equals("mysql")) {
-            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' ,'YYYY-MM-DD HH24:MI:SS') "; 
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' ,'YYYY-MM-DD HH24:MI:SS') ";
             	} else {
-            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' , '%Y-%m-%d %H:%i:%s') "; 
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' , '%Y-%m-%d %H:%i:%s') ";
 
             	}
             }
@@ -7588,7 +7588,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		// 2023-07-13 전인하 - 전자결재 > 공유문서함 > 미리보기영역 활성화여부 플래그를 문서함 공유자의 설정값으로 가져오는 현상을 개선
 		String userIdForPreview = userInfo.getId();
-		
+
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -7661,7 +7661,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			// 2023-07-13 전인하 - 전자결재 > 공유문서함 > 미리보기영역 활성화여부 플래그를 문서함 공유자의 설정값으로 가져오는 현상을 개선
 			previewInfo = ezApprovalGService.getApprovConfig(userIdForPreview, userInfo.getTenantId()); // 미리보기 영역 사용설정 (OFF, H)
 		}
-		
+
 		model.addAttribute("useEnforceSihang", useEnforceSihang);
 		model.addAttribute("buJaeInfo", buJaeInfo);
 		model.addAttribute("endAprType", endAprType);
@@ -8567,12 +8567,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("taskManage started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		// 2024-04-05 전인하 - 전자결재G > 기록물관리 > 단위업무 리스트 총 카운트 호출 추가 
+		// 2024-04-05 전인하 - 전자결재G > 기록물관리 > 단위업무 리스트 총 카운트 호출 추가
 		int taskCount = ezApprovalGAdminService.getTaskListCount(userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
-		
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskCount", taskCount);
-		
+
 		logger.debug("taskManage ended");
 		
 		return "ezApprovalG/apprGtaskManage";

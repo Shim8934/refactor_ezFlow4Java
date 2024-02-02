@@ -1259,7 +1259,7 @@ function ViewDoc_onclick() {
         if (DocList_Flag == "RECORD" || DocList_Flag == "Delivery") {
             var securityApprovalFlag = DocList_Flag == "RECORD" ? trim_Cross(selRow.getAttribute("DATA14")) : trim_Cross(selRow.getAttribute("DATA8"));
             if (securityApprovalFlag != "null" && securityApprovalFlag != "" && securityApprovalFlag >= GetTodayDate()) {
-                if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE" || GetUserRole() == "Admin" ) {
+                if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE" || GetUserRole() != "User" ) {
                     chk_Passwd(UserID, ViewDoc_onclick_Complete);
                 } else {
                     OpenAlertUI(strLang580);
