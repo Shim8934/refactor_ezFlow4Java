@@ -1905,11 +1905,12 @@ public class MLoginGWController {
     		String pin = "pin=" + (String) jsonObj.get("pin");
     		String pinState = "pinState=" + (String) jsonObj.get("pinState");
     		String biometric = "biometric=" + (String) jsonObj.get("biometric");
+    		String appVersion = "appVersion=" + (String) jsonObj.get("appVersion");
     		
     		String inputParams = devId + "&"+ devType + "&" + subType + "&" + userId + "&" + token +
     				"&" + badge + "&" + state + "&" + pushState + "&" + isLogin + "&" + startMenu + 
     				"&" + loginLock + "&" + isPasswordChange + "&" + extension1 + "&" + extension2 + 
-    				"&" + tenantIdParmas + "&" + pin + "&" + pinState + "&" + biometric;
+    				"&" + tenantIdParmas + "&" + pin + "&" + pinState + "&" + biometric + "&" + appVersion;
     		logger.debug("inputParams=" + inputParams);
     		
     		String requestURL = "/ezTalkGate/updateLoginDeviceInfo";

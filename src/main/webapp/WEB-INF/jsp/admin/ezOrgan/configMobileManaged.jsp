@@ -123,6 +123,7 @@
 				<th width='50%'><spring:message code="ezPersonal.kyj01" /></th>
 				<th width='15%'><spring:message code="ezPersonal.t513" /></th>
 				<th width='15%'><spring:message code="ezApproval.t367" /></th>
+				<th width='15%'><spring:message code="ezPersonal.kdh15" /></th>
 				<th width='15%'><spring:message code="ezPersonal.kyj02" /></th>
 			</tr>
 			<c:if test="${deviceInfo ne null}">
@@ -130,6 +131,7 @@
 					<c:set var="notUsed" value="${list.notUsed}"></c:set>
 					<c:set var="deviceType" value="${list.devType}"></c:set>
 					<c:set var="type" value="${list.type}"></c:set>
+					<c:set var="appVersion" value="${list.appVersion}"></c:set>
 					<tr height=24px bgcolor=ffffff>
 					<td>
 						<c:choose>
@@ -150,6 +152,7 @@
 							</select>
 						</td>
 						<td>${list.regDate}</td>
+						<td>${list.appVersion}</td>
 						<td class='btnposition' style="text-align:left;">
 							<a class="imgbtn">
 								<span style='cursor:pointer;' onclick="deleteDevice('${list.devId}')"><spring:message code="ezPersonal.t99" /></span>
