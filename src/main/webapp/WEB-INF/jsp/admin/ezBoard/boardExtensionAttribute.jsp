@@ -267,6 +267,12 @@
 		                return false;
 		            }
 		        }
+		        else if (GetRadioVal("Type") == "check") {
+                	if (txtType == "") {
+                		alert("<spring:message code='ezBoard.t999049'/>");
+                		return false;
+                	}
+                }
 
 		        return true;
 		    }

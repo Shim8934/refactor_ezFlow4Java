@@ -301,7 +301,7 @@
 		    window.onresize = function () {
 				resizeMessageFrame();
 		    };
-		    
+
 		    function resizeMessageFrame () {
 		        switch (pSelectTab) {
 		            case "MailEnv_div1":
@@ -554,6 +554,22 @@
 		        }
 		        return pEndDateTime;
 		    }
+
+		    function PreventSaveItem(pMode) {
+                if (!isClicked) {
+                    // 중복 클릭 방지를 위해 클릭 상태를 true로 변경
+                    isClicked = true;
+
+                    // 함수 호출
+                    SaveItem(pMode);
+
+                    // 일정 시간이 지난 후에 다시 클릭 가능하도록 상태를 리셋
+                    setTimeout(function() {
+                    isClicked = false;
+                    }, 1000); // 예: 1초 후에 클릭 가능하도록 설정
+                }
+            }
+
 		    function SaveItem(pMode) {
 		        if (pBoardID == "") {
 		            if (!SelBoard) {
@@ -1134,7 +1150,7 @@
 						
 					}
 					
-					
+
 		            window.close();
 		        } else {
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS")
@@ -2491,14 +2507,14 @@
 			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="SaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
+			                        <li><span onclick="PreventSaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    	<c:if test="${boardInfo.guBun != '3'}">
 		                        <li><span onclick="PreviewItem();"><spring:message code='ezBoard.t431' /></span></li>
 	                    	</c:if>
 	                    	<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
-		                        <li><span onclick="SaveItem('temp');"><spring:message code='ezBoard.t10034' /></span></li>
+		                        <li><span onclick="PreventSaveItem('temp');"><spring:message code='ezBoard.t10034' /></span></li>
 	                    	</c:if>
 	                    </ul>
 	                </div>
