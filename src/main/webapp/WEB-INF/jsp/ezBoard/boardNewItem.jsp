@@ -555,6 +555,7 @@
 		        return pEndDateTime;
 		    }
 
+            var isClicked = false;
 		    function PreventSaveItem(pMode) {
                 if (!isClicked) {
                     // 중복 클릭 방지를 위해 클릭 상태를 true로 변경

@@ -267,9 +267,9 @@
 		                return false;
 		            }
 		        }
-		        else if (GetRadioVal("Type") == "check") {
+		        else if (GetRadioVal("Type") == "select") {
                 	if (txtType == "") {
-                		alert("<spring:message code='ezBoard.t999049'/>");
+                		alert("<spring:message code='ezBoard.lhr01'/>");
                 		return false;
                 	}
                 }
