@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -811,7 +812,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		BoardPropertyVO newBoardGroupProp = ezBoardService.getBoardProperty(newBoardGroupID, userInfo.getTenantId());
 		
 		// 하위게시판 아래로 이동하는 경우
-		if (newBoardGroupProp.getBoardGroupID() != null) {
+		if (StringUtils.isNoneBlank(newBoardGroupProp.getBoardGroupID())) {
 			newBoardGroupID = newBoardGroupProp.getBoardGroupID();
 			BoardPropertyVO newBoardGroupProp2 = ezBoardService.getBoardProperty(newBoardGroupID, userInfo.getTenantId());
 			
