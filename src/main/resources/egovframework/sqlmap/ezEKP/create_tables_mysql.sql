@@ -14930,7 +14930,7 @@ FROM
 			a.DEPTID AS DEPT_ID,
 			a.TITLE AS POSITION,
 			a.TITLE2 AS POSITION2,
-			IF(a.ORDERBY <> '',
+			MIN(IF(a.ORDERBY <> '',
 			CAST(a.ORDERBY AS unsigned),
 			0) AS ORDER_BY,
 			current_timestamp() AS UPDATEDT,
