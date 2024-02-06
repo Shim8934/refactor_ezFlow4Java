@@ -18744,17 +18744,7 @@ FROM
 			a.TENANT_ID AS TENANT_ID,
 			'ADDJOB' AS TYPE
 		FROM
-            ((SELECT
-                CN,
-                DEPTID,
-                TITLE,
-                TITLE2,
-                MIN(ORDERBY) AS ORDERBY,
-                TENANT_ID
-            FROM
-                TBL_ADDJOBMASTER
-            GROUP BY
-                (CN, DEPTID, TITLE, TITLE2, TENANT_ID)) a
+			(tbl_addjobmaster a
 		JOIN tbl_usermaster b ON
 			(a.CN = b.CN))) ) v
 WHERE
