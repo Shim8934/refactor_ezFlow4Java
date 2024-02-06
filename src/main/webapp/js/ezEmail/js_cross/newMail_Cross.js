@@ -3755,7 +3755,7 @@ function findAddress(emailAddress, addrList) {
 }
 
 function isEmailFormat(mailAddr) {
-	return /^[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{2,5}$/.test(mailAddr);
+	return /^[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{2,10}$/.test(mailAddr);
 }
 
 function MakeXmlNode(xmldoc, root, key, value) {
