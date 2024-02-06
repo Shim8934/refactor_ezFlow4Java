@@ -1866,6 +1866,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("TABLE","TBL_ADDJOBMASTER");
 			put("COLUMN", "ROLEID");
 			put("TYPE_MYSQL", "varchar(100)"); put("TYPE_ORACLE", "VARCHAR(100)");
+			put("AFTER", "DEFAULT '0'");
 			put("CONSTRAINT", "TBL_ADD_JOBMASTER_PK");
 			put("PRIMARY", "(CN, DEPTID, TENANT_ID, JOBID, ROLEID)");
 		}});
