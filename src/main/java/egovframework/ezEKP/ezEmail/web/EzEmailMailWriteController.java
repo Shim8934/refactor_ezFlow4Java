@@ -3221,6 +3221,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String userId = userInfo.getId();
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String https = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", userInfo.getTenantId())) ? "https://" : "http://";
+		String serverNameByTenantId = ezCommonService.getTenantConfig("serverName", userInfo.getTenantId());
 		String userAccount = userId + "@" + domainName;
 		String mailId = userId;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
@@ -3773,6 +3775,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        // 추적(외부 수신확인)
 		        if (replyReadTime.equals("2")) {
 		        	message.setHeader("X-JMocha-Ext-Receipt", "1");
+					message.setHeader("X-JMocha-Ext-ServerName", https + serverNameByTenantId);
 		        }
 		        
 		        //SentDate 설정
