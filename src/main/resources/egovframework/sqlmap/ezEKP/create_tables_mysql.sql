@@ -14939,7 +14939,12 @@ FROM
 		FROM
 			(tbl_addjobmaster a
 		JOIN tbl_usermaster b ON
-			(a.CN = b.CN))) USER) v
+			(a.CN = b.CN
+			AND a.TENANT_ID = b.TENANT_ID)) 
+		GROUP BY
+            a.CN,
+            a.DEPTID,
+            a.TITLE) USER) v
 WHERE
 	v.TYPE = 'ADDJOB';
 
