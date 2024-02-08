@@ -4967,7 +4967,7 @@ public class EzEmailUtil {
 	 * add target="_blank" to an anchor tag
 	 */	
 	private String addTargetBlank(String src) {
-		Pattern p = Pattern.compile("<a (.*?)>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern p = Pattern.compile("<a (.*?[^a-zA-Z0-9])>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(src);
 				
 		StringBuffer result = new StringBuffer();
