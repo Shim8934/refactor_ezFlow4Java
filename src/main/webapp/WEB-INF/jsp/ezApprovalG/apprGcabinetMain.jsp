@@ -783,9 +783,10 @@
 		                else
 		                    document.getElementById("tdModifyRec").style.display = "";
 		
-		                if (g_bRecAdmin || AdminYN == "TRUE") {
+		                if (g_bRecAdmin) {
 		                    document.getElementById("tdVeiwRecHist").style.display = "";
 		                    document.getElementById("tdbtnViewRecReadHist").style.display = "";
+							document.getElementById("tdbtnSetRecRole").style.display = "";
 		                    CheckBtnSetRecRole();
 		                } else {
 		                    document.getElementById("tdVeiwRecHist").style.display = "none";
@@ -797,7 +798,16 @@
 		    }
 		
 		    function CheckBtnSetRecRole() {
-		        if (g_bRecAdmin || AdminYN == "TRUE") {
+				// #125383 전자결재G > 업무담당자 > 대장등록과 열람권한 설정 가능
+				// 기록물 관리 책임자 외에 관리자, 작성자, 업무담당자등 버튼 감추라고 하여 변경함.
+
+				if (g_bRecAdmin) {
+					document.getElementById("tdbtnSetRecRole").style.display = "";
+				} else {
+					document.getElementById("tdbtnSetRecRole").style.display = "none";
+				}
+
+		        /*if (g_bRecAdmin || AdminYN == "TRUE") {
 		            if (AdminYN != "TRUE") {
 		                var tmpAuthChk = false;
 		                var tmpChkDeptID = DeptID;
@@ -833,7 +843,7 @@
 		        }
 		        else {
 		            document.getElementById("tdbtnSetRecRole").style.display = "none";
-		        }
+		        }*/
 		    }
 		    function SwapSubMenuDisplay(flag) {
 		        if (flag == "0") {

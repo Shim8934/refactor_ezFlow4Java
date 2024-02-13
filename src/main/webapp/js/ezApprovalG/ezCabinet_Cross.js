@@ -208,7 +208,9 @@ function ezCabMunuCtl(MenuType, selRow) {
             }
             
             if (typeof (tdbtnSetRecRole) != "undefined" && typeof (tdbtnSetRecRole) != "unknown") {
-            	if (g_bRecAdmin || AdminYN == "TRUE" || g_bDeptCharger) {
+                // #125383 전자결재G > 업무담당자 > 대장등록과 열람권한 설정 가능
+                // 기록물 관리 책임자 외에 관리자, 작성자, 업무담당자등 버튼 감추라고 하여 변경함.
+            	if (g_bRecAdmin) {
 	                document.getElementById("tdbtnSetRecRole").style.display = "";
             	} else {
             		document.getElementById("tdbtnSetRecRole").style.display = "none";
@@ -249,7 +251,9 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (typeof (tdbtnViewRecReadHist) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
-                    if (IsUserDeptRec() == "true" && document.getElementById("tdbtnViewRecReadHist").style.display == "") {
+                    // #125383 전자결재G > 업무담당자 > 대장등록과 열람권한 설정 가능
+                    // 기록물 관리 책임자 외에 관리자, 작성자, 업무담당자등 버튼 감추라고 하여 변경함.
+                    if (g_bRecAdmin) {
                     	document.getElementById("tdbtnViewRecReadHist").style.display = "";
                     }
                     else{
@@ -261,14 +265,13 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
 
-            if (typeof (tdbtnCardSend) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
-
+            if (typeof (tdbtnCardSend) != "undefined" && typeof (tdbtnCardSend) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
                     if (selRow.getAttribute("DATA12") == "7") {
                         if (IsUserDeptRec() == "true")
-                            document.getElementById("tdbtnViewRecReadHist").style.display = "";
+                            document.getElementById("tdbtnCardSend").style.display = "";
                         else
-                            document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                            document.getElementById("tdbtnCardSend").style.display = "none";
                     }
                     else {
                         document.getElementById("tdbtnCardSend").style.display = "none";
@@ -354,25 +357,20 @@ function IsUserDeptRec() {
     }
 }
 function GetCabChargerRight() {
-    if (AdminYN == "TRUE") {
-        return "true";
+    if (g_ItemDeptID == DeptID)
+    {
+        if (g_bRecAdmin)
+        {
+            return "true";
+        }
+        else
+        {
+            return g_bCabCharger.toString();
+        }
     }
-    else {
-        if (g_ItemDeptID == DeptID)
-        {
-            if (g_bRecAdmin)
-            {
-                return "true";
-            }
-            else			
-            {
-                return g_bCabCharger.toString();
-            }
-        }
-        else	
-        {
-            return "false";
-        }
+    else
+    {
+        return "false";
     }
 }
 
@@ -921,7 +919,7 @@ function InsertToRecListView(Resultxml) {
         DocList.SetSecurityIdx(13);
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");
-        
+
         if (typeof (cabinetAttachPage) != "undefined" && cabinetAttachPage) {
         	// 분리첨부 검색 페이지에서 의견 아이콘 삭제
         	$(".OpIcon").remove();
