@@ -933,6 +933,9 @@
 
 		        for (var i = 0; i < file.length; i++) {
 					var fnl = file[i].name.length;
+					if (file[i].name.lastIndexOf('.') != -1) { // 2024-02-13 확장자 제외 파일명 길이를 체크
+						fnl = file[i].name.lastIndexOf('.');
+					}
 		        	
 		        	if (fnl > attachFileNameMaxLength) {
 		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
@@ -1196,7 +1199,10 @@
 		        
 		        var webFolderFileStr = "";
 		        for (var i = 0; i < webFolderFileListCnt; i++) {
-					var fnl = webFolderFileList[i].fileName.length;
+					var fnl = file[i].name.length;
+					if (file[i].name.lastIndexOf('.') != -1) { // 2024-02-13 확장자 제외 파일명 길이를 체크
+						fnl = file[i].name.lastIndexOf('.');
+					}
 		        	
 		        	if (fnl > attachFileNameMaxLength) {
 		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
