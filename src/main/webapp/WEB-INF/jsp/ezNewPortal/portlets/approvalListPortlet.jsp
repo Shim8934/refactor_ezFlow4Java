@@ -562,6 +562,7 @@
 					url : "/ezPersonal/clearAbsence.do",
 					success: function(result) {
 						if (result === "true") {
+							BString = "";
 							var onTab = document.querySelector('#doingTab.on,#rejectTab.on,#draftTab.on').id;
 							if (!!onTab) {
 								onTab = onTab.replace("Tab", "");

@@ -405,7 +405,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		model.addAttribute("userInfo", userInfo);
 //		model.addAttribute("approvalGFlag", ezCommonService.getTenantConfig("approvalGFlag", userInfo.getTenantId()));
 		model.addAttribute("buJaeInfo", buJaeInfo);
-		model.addAttribute("now", commonUtil.getTodayUTCTime(""));
+		model.addAttribute("now", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false));
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("favoriteFormsPortlet ended.");
