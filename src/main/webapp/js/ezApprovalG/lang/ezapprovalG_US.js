@@ -1151,6 +1151,11 @@ var strLangCSJBDA04 = "An error occurred during the batch circulation.<br>";
 //2023-06-27 조수빈 - 전자결재 첨부문서 미리보기 메세지 추가
 var strLangJSBAP01 = "Preview";
 
+/* 2023-06-16 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 관련 메시지 추가 */
+var strLangJIH01 = "You cannot preview a security document.";
+var strLangJIH02 = "/blank_us.htm"
+var strLangJIH03 = "Preview is possible after the first reading of the document."
+
 /* 2023-07-27 민지수 - 수신처 그룹적용 > 즐겨찾기 추가 시 오류 메세지 추가 */
 var strLangMJSSFA = "Destination groups cannot be added to favorites.";
 
@@ -1159,8 +1164,3 @@ var strLang974 = "Please select a receiving group.";
 
 /* 2023-08-11 민지수 - 전자결재 > 양식버전 다를 시 오류 메세지 추가 */
 var strLang975 = "The form version is different and cannot be reused.";
-
-/* 2023-06-16 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 관련 메시지 추가 */
-var strLangJIH01 = "You cannot preview a security document.";
-var strLangJIH02 = "/blank_us.htm"
-var strLangJIH03 = "In External. Receipt Folder, preview is not available."
