@@ -123,6 +123,7 @@
 			    var useAprPreview = "<c:out value = '${useAprPreview}'/>";
 			    var approvalFlag = "<c:out value = '${approvalFlag}'/>";
 		    	var share = "";
+				var selectYear = "ALL";
 
 		        document.onselectstart = function () { return false; };
 		
@@ -261,6 +262,23 @@
 					curpage = 1;
 		            SelYearFlag = true;
 
+					switch (DocList_Flag) {
+						case "CABINET" :
+							selectYear = GetSelectVal("cab_year");
+							break;
+						case "RECORD" :
+							selectYear = GetSelectVal("rec_year");
+							break;
+						default :
+							selectYear = GetSelectVal("del_year");
+							break;
+					}
+
+					if (document.getElementById("txt_keyword").value != "") {
+						search();
+						return;
+					}
+
 					var tempDeptID = DeptID;
 					if (checkRecordAll()) {
 						tempDeptID = "ALL";
@@ -272,15 +290,15 @@
 		                //showProgress();
 		
 		                if (DocList_Flag == "CABINET") {
-		                    g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + GetSelectVal("cab_year") + "</SPRODUCEY><EPRODUCEY>" + GetSelectVal("cab_year") + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + selectYear + "</SPRODUCEY><EPRODUCEY>" + selectYear + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 		                    GetCaninetList();
 		                }
 		                else if (DocList_Flag == "RECORD") {
-		                    g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + GetSelectVal("rec_year") + "-01-01 00:00:00</SREGDATE><EREGDATE>" + GetSelectVal("rec_year") + "-12-31 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		                    GetRecordList();
 		                }
 		                else {
-		                    g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + GetSelectVal("del_year") + "-01-01 00:00:00</SREGDATE><EREGDATE>" + GetSelectVal("del_year") + "-12-31 23:59:59</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
+							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + selectYear + "-01-01 00:00:00</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
 		                    GetDocDeliveryList(g_DeliverySearchParamXml);
 		                }
 		            }
@@ -288,6 +306,7 @@
 		                g_RecSearchParamXml = "";
 		                g_CabSearchParamXml = "";
 		                g_DeliverySearchParamXml = "";
+						selectYear = "ALL";
 		
 		                var nowyear = new Date().getFullYear();
 		                var nowmonth = new Date().getMonth() + 1;
@@ -1725,6 +1744,16 @@
 		    }
 		
 		    function search() {
+				var nowyear = new Date().getFullYear();
+				var nowmonth = new Date().getMonth() + 1;
+				var nowday = new Date().getDate();
+
+				if (nowmonth < 10)
+					nowmonth = "0" + nowmonth;
+
+				if (nowday < 10)
+					nowday = "0" + nowday;
+
 		        if (document.getElementById("txt_keyword").value != "") {
 					// 2021-09-27 기록물대장 검색시 페이지 변경되지 않는 버그 수정
 		            curpage = 1;
@@ -1743,9 +1772,17 @@
 					}
 		            
 		            if (radiosearch.value == "rad_Subject") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+						if (selectYear == "ALL") {
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+						} else {
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+						}
 		            } else if (radiosearch.value == "rad_Writer") {
-		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+						if (selectYear == "ALL") {
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+						} else {
+							g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
+						}
 		            }
 		            
 		            switch (ListTypeFlag) {
@@ -1769,10 +1806,18 @@
 		            var radiosearch = document.getElementById('selectType');
 		
 		            if (radiosearch.value == "rad_Subject") {
-		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+						if (selectYear == "ALL") {
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SPRODUCEY><EPRODUCEY>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+						} else {
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + selectYear + "</SPRODUCEY><EPRODUCEY>" + selectYear + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+						}
 		            }
 		            else if (radiosearch.value == "rad_Writer") {
-		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+						if (selectYear == "ALL") {
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SPRODUCEY><EPRODUCEY>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+						} else {
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + selectYear + "</SPRODUCEY><EPRODUCEY>" + selectYear + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+						}
 		            }
 		
 		            switch (ListTypeFlag) {
@@ -1796,17 +1841,25 @@
 		            var radiosearch = document.getElementById('selectType');
 		
 		            if (radiosearch.value == "rad_Subject") {
-		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
+						if (selectYear == "ALL") {
+							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
+						} else {
+							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
+						}
 		            }
 		            else if (radiosearch.value == "rad_Writer") {
-		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DEBENTURER></SEARCHPARAM>";
+						if (selectYear == "ALL") {
+							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><DEBENTURER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DEBENTURER></SEARCHPARAM>";
+						} else {
+							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><DEBENTURER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DEBENTURER></SEARCHPARAM>";
+						}
 		            }
 		
 		            GetDocDeliveryList(g_DeliverySearchParamXml);
 		        }
 		
 		
-		        $('#sel_year').val("ALL");
+		        $('#sel_year').val(selectYear);
 		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 		    

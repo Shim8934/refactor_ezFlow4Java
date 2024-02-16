@@ -141,6 +141,8 @@
             var isGroupDoc = "";
         	var groupDocListCnt = 0;
         	var groupDocDelCnt = 0;
+
+			var selectYearVal = "ALL";
         	
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -618,17 +620,38 @@
 		    var SelYearFlag = false;
 		    function onSelect_Year() {
 		        SelYearFlag = true;
-		        if (GetSelectVal("sel_year") != "ALL") {
-		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + GetSelectVal("sel_year") + "-01-01</APRSTARTDATE><APRENDDATE>" + GetSelectVal("sel_year") + "-12-31</APRENDDATE></DATA></ROOT>";
-		        } else { // 최근 1년인 경우, 월과 일의 형식 오류 수정
-		            var nowyear = nowDate.substring(0,4);
-		            var nowmonth = nowDate.substring(5,7);
-		            var nowday = nowDate.substring(8,10);
-		
-		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";		            
+				selectYearVal = document.getElementById("sel_year").value;
 
-		        }
-		        
+				var nowyear = nowDate.substring(0,4);
+				var nowmonth = nowDate.substring(5,7);
+				var nowday = nowDate.substring(8,10);
+
+				if (approvalFlag == "G") {
+					if (selectYearVal != "ALL") {
+						SearchCond[3] = selectYearVal;
+						SearchCond[4] = "01";
+						SearchCond[5] = "01";
+						SearchCond[6] = selectYearVal;
+						SearchCond[7] = "12";
+						SearchCond[8] = "31";
+					} else { // 최근 1년
+						SearchCond[3] = nowyear - 1;
+						SearchCond[4] = nowmonth;
+						SearchCond[5] = nowday;
+						SearchCond[6] = nowyear;
+						SearchCond[7] = nowmonth;
+						SearchCond[8] = nowday;
+					}
+				} else {
+					if (selectYearVal != "ALL") {
+						condition[3] = selectYearVal + "-01-01";
+						condition[4] = selectYearVal + "-12-31";
+					} else { // 최근 1년
+						condition[3] = (nowyear - 1) + "-" + nowmonth + "-" + nowday;
+						condition[4] = nowyear + "-" + nowmonth + "-" + nowday;
+					}
+				}
+				MakeSubCondition();
 		        listLoading(true); // 20201211 조진호 - 리스트 출력 시 시간이 오래 걸릴 수 있어 로딩바 추가
 		        
 		        if (pListTypeValue == "1") {
@@ -2024,19 +2047,19 @@
 		        var TYPE = "";
 		        var DATA = "";
 				if (approvalFlag =='G') {
-			        if (SearchCond[0] != "")		// DocNumber
+			        if (SearchCond[0] != "" && SearchCond[0] !== undefined)		// DocNumber
 			        {
 			            TYPE += "DOCNO;";
 			            DATA += "<DOCNO>" + SearchCond[0] + "</DOCNO>";
 			        }
 			
-			        if (SearchCond[1] != "")		// DocTitle
+			        if (SearchCond[1] != "" && SearchCond[1] !== undefined)		// DocTitle
 			        {
 			            TYPE += "DOCTITLE;";
 			            DATA += "<DOCTITLE>" + SearchCond[1] + "</DOCTITLE>";
 			        }
 			
-			        if (SearchCond[2] != "")		// DrafterName
+			        if (SearchCond[2] != "" && SearchCond[2] !== undefined)		// DrafterName
 			        {
 			            TYPE += "WRITERNAME;";
 			            DATA += "<WRITERNAME>" + SearchCond[2] + "</WRITERNAME>";
@@ -2093,42 +2116,42 @@
 					SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 			        
 				} else {
-					if (condition[0] != "") {
+					if (condition[0] != "" && condition[0] !== undefined) {
 				        TYPE += "DOCNO;"
 				        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
 				    }
 
-				    if (condition[1] != "") {
+				    if (condition[1] != "" && condition[1] !== undefined) {
 				        TYPE += "DOCTITLE;"
 				        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
 				    }
 
-				    if (condition[2] != "") {
+				    if (condition[2] != "" && condition[2] !== undefined) {
 				        TYPE += "WRITERNAME;"
 				        DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
 				    }
 
-				    if (condition[3] != "null" && condition[3].trim() != "") {
+				    if (condition[3] != "" && condition[3] !== undefined) {
 				        TYPE += "APRSTARTDATE;"
 				        DATA += "<APRSTARTDATE>" + condition[3] + "</APRSTARTDATE>";
 				    }
 
-				    if (condition[4] != "null" && condition[4].trim() != "") {
+				    if (condition[4] != "" && condition[4] !== undefined) {
 				        TYPE += "APRENDDATE;"
 				        DATA += "<APRENDDATE>" + condition[4] + "</APRENDDATE>";
 				    }
 
-				    if (condition[5] != "null" && condition[5].trim() != "") {
+				    if (condition[5] != "" && condition[5] !== undefined) {
 				        TYPE += "APRSTARTDATE;"
 				        DATA += "<APRSTARTDATE>" + condition[5] + "</APRSTARTDATE>";
 				    }
 
-				    if (condition[6] != "null" && condition[6].trim() != "") {
+				    if (condition[6] != "" && condition[6] !== undefined) {
 				        TYPE += "APRENDDATE;"
 				        DATA += "<APRENDDATE>" + condition[6] + "</APRENDDATE>";
 				    }
 
-				    if (condition[9] != "") {
+				    if (condition[9] != "" && condition[9] !== undefined) {
 				        TYPE += "FORMNAME;"
 				        DATA += "<FORMNAME>" + condition[9] + "</FORMNAME>";
 				    }
@@ -2223,7 +2246,7 @@
 		        if (document.getElementById("txt_keyword").value != "") {
 		            var selectSearch = document.getElementById('selectType');
 		            /* 2022-11-07 강동주 - 우측 상단 간단검색 시 "최근 1년" 셀렉트박스 값이 적용되지 않는 오류 수정 */
-		            var selectYearVal = document.getElementById('sel_year').value;
+		            // var selectYearVal = document.getElementById('sel_year').value;
 					
 		            if (approvalFlag == "G") {
 			            for (var i = 0; i < 25; i++) {
@@ -2281,6 +2304,7 @@
 		        }
 		        pageNum = 1;
 		        MakeSubCondition();
+				listLoading(true);
 		        if (pListTypeValue == "1") {
 		            getDocList();
 		        }
@@ -2321,7 +2345,7 @@
 		            getDocList();
 		        }
 		
-		        $('#sel_year').val("ALL");
+		        $('#sel_year').val(selectYearVal);
 		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 		    

@@ -117,6 +117,9 @@
 		    var previewInfo = "<c:out value = '${previewInfo}'/>";
 		    var useAprPreview = "<c:out value = '${useAprPreview}'/>";
 			var selRowChangeFlag = false;
+			var selectYear = "ALL";
+		    
+		    var containerState = "<c:out value = '${containerState}'/>";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -477,11 +480,12 @@
 	        function onSelect_Year() {
 	            SelYearFlag = true;
 	            if(approvalFlag == 'G') {
-		            if (GetSelectVal("sel_year") != "ALL") {
-		                condition[9] = GetSelectVal("sel_year");
+					selectYear = GetSelectVal("sel_year");
+		            if (selectYear != "ALL") {
+		                condition[9] = selectYear;
 		                condition[10] = "01";
 		                condition[11] = "01";
-		                condition[12] = GetSelectVal("sel_year");
+		                condition[12] = selectYear;
 		                condition[13] = "12";
 		                condition[14] = "31";
 		                condition[24] = "";
@@ -505,17 +509,20 @@
 	            } else {
 	            	if (GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") {
 	                    if (GetSelectVal("sel_year") != "ALL") {
-	                        condition[5] = GetSelectVal("sel_year") + "-01-01 00:00:01";
-	                        condition[6] = GetSelectVal("sel_year") + "-12-31 23:59:59";
-	                        SQLPARADATA = "<ROOT><TYPE>ENDDATEAF;ENDDATEBF;</TYPE><DATA><ENDDATEAF>" + GetSelectVal("sel_year") + "-01-01 00:00:01</ENDDATEAF><ENDDATEBF>" + GetSelectVal("sel_year") + "-12-31 23:59:59</ENDDATEBF></DATA></ROOT>";
+							selectYear = GetSelectVal("sel_year");
+	                        condition[5] = selectYear + "-01-01 00:00:01";
+	                        condition[6] = selectYear + "-12-31 23:59:59";
+	                        // SQLPARADATA = "<ROOT><TYPE>ENDDATEAF;ENDDATEBF;</TYPE><DATA><ENDDATEAF>" + selectYear + "-01-01 00:00:01</ENDDATEAF><ENDDATEBF>" + selectYear + "-12-31 23:59:59</ENDDATEBF></DATA></ROOT>";
 	                    }
 	                    else {
-	                        condition[5] = GetSelectVal("who_year") + "-01-01 00:00:01";
-	                        condition[6] = GetSelectVal("who_year") + "-12-31 23:59:59";
-	                        SQLPARADATA = "<ROOT><TYPE>ENDDATEAF;ENDDATEBF;</TYPE><DATA><ENDDATEAF>" + GetSelectVal("who_year") + "-01-01 00:00:01</ENDDATEAF><ENDDATEBF>" + GetSelectVal("who_year") + "-12-31 23:59:59</ENDDATEBF></DATA></ROOT>";
+							selectYear = GetSelectVal("who_year");
+	                        condition[5] = selectYear + "-01-01 00:00:01";
+	                        condition[6] = selectYear + "-12-31 23:59:59";
+	                        // SQLPARADATA = "<ROOT><TYPE>ENDDATEAF;ENDDATEBF;</TYPE><DATA><ENDDATEAF>" + selectYear + "-01-01 00:00:01</ENDDATEAF><ENDDATEBF>" + selectYear + "-12-31 23:59:59</ENDDATEBF></DATA></ROOT>";
 	                    }
 	                }
 	                else {
+						selectYear = "ALL";
 	                	var nowyear = nowDate.substring(0,4);
 			            var nowmonth = nowDate.substring(5,7);
 			            var nowday = nowDate.substring(8,10);       
@@ -525,9 +532,9 @@
 
 	                    condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
 	                    condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
-	                    SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
+	                    // SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
 	                }
-
+					MakeSubCondition();
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
 	                    GetUserContList();
@@ -1685,22 +1692,26 @@
 		        if (document.getElementById("txt_keyword").value != "") {
 		        	isSearch = true;
 		            var selectSearch = document.getElementById('selectType');
-		
+
+					/*
 		            for (var i = 0; i < 25; i++) {
 		                condition[i] = "";
-		            }
+		            } */
 		
 		            if (selectSearch.item(0).selected) {
 		                condition[1] = replaceCond(document.getElementById("txt_keyword").value);
+						condition[2] = "";
 		            }
 		            else if (selectSearch.item(1).selected) {
+						condition[1] = "";
 		                condition[2] = replaceCond(document.getElementById("txt_keyword").value);
 		            }
-		            
+
+					/*
 		            var nowyear = nowDate.substring(0,4);
 		            var nowmonth = nowDate.substring(5,7);
 		            var nowday = nowDate.substring(8,10);
-		            
+
 		            if (approvalFlag == "G") {
 		            	condition[9] = (nowyear-1);
 		            	condition[10] = nowmonth;
@@ -1711,7 +1722,7 @@
 		            } else {
 		            	condition[5] = (nowyear-1) + "-" + nowmonth + "-" + nowday + " 00:00:01";
 		            	condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
-		            }
+		            } */
 		        }
 		        else {
 		            alert("<spring:message code='ezApprovalG.t1160'/>");
@@ -1727,7 +1738,7 @@
 		       		GetDocSearch();
 		        }
 		
-		        $('#sel_year').val("ALL");
+		        $('#sel_year').val(selectYear);
 		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 	    
