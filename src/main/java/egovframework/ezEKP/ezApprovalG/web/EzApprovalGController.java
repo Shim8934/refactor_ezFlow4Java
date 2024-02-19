@@ -3029,6 +3029,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		model.addAttribute("approvalFlag", approvalFlag);
+
+		// 첨부파일명 최대길이
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+
 		logger.debug("aprAttachName ended");
 		return "ezApprovalG/apprGaprAttachName";
 	}
