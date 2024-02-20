@@ -293,9 +293,9 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 
 /* rolling_info */
 .rolling_info{ height:605px;}
-.rolling_info .info{ margin:0px; padding:0 20px; box-sizing: border-box; position:relative; width:320px; height:54px; color:#333; background:rgba(0, 0, 0, 0.0); z-index:1000;} /* 장진혁 */
+.rolling_info .info{ margin:0px; padding:0 20px; box-sizing: border-box; position:relative; width:320px; height:65px; color:#333; background:rgba(0, 0, 0, 0.0); z-index:1000;} /* 장진혁 */
 .rolling_info .info .infoImg{ margin:0; padding:0px; float:left; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-.rolling_info .info .infoImg img{ border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; width: 46px !important; height: 46px !important; }
+.rolling_info .info .infoImg img{ border-radius:15px; -webkit-border-radius:15px; -moz-border-radius:15px; width: 46px !important; height: 46px !important; padding-top:10px;}
 .rolling_info .info dd{font-size:15px; overflow:hidden;}
 .rolling_info .info .infoName{font-weight:bold; padding:0px 0px 3px 15px; margin:0px;}
 .rolling_info .info .infoName span{font-weight: 400; font-size:13px; color:#444;}
