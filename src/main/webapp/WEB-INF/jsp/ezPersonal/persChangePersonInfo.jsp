@@ -356,7 +356,9 @@
 			    		url : "/ezPersonal/saveUserInfo.do",
 			    		async : false,
 			    		data : {
-			    			cn : cn,
+			    			// 2024.02.13 한슬기 : cn, displayName 파라미터 변조하여 수정 불가능한 정보를 수정할 수 있는 문제. cn, displayName 제거
+			    			//cn : cn,
+			    			//displayName : "${labelDisplayName }",
 			    			telephoneNumber : document.getElementById("txtTelePhone").value,
 			    			mobile : document.getElementById("txtMobilePhone").value,
 			    			homePhone : document.getElementById("txtHomePhone").value,
@@ -366,7 +368,6 @@
 			    			birth : document.getElementById("txtBirth").value,
 			    			birthType : birthType,
 			    			info : document.getElementById("txtInfo").value,
-			    			displayName : "${labelDisplayName }",
 			    			extensionPhone : document.getElementById("txtExtensionPhone").value,
 			    			officeMobile : document.getElementById("txtOfficeMobile").value
 			    		},

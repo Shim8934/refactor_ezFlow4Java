@@ -1378,6 +1378,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		// displayname2가 null로 넘어오는데, 이럴 경우 displayname2은 displayname으로 대체되는 문제가 생겨서 추가
 		vo.setDisplayName2(userInfo.getDisplayName2());
 		
+		// 2024.02.13 한슬기 : cn, displayName 파라미터 변조하여 수정 불가능한 정보를 수정할 수 있는 문제. 파라미터로 cn과 displayName을 전달받지 않고 백단에서 처리
+		vo.setCn(userInfo.getId());
+		
 		logger.debug("<<<1. : " + vo.getCn());
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
