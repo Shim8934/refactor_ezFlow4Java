@@ -688,6 +688,9 @@
 							ExcuteInfo("HESONG_FAIL", "");
 						}
 		        	}
+		        } else {
+		            var pAlertContent = "<spring:message code='ezApprovalG.cancelHesong.JIH01'/>";
+                    OpenAlertUI(pAlertContent);
 		        }
 		    }
 		    
