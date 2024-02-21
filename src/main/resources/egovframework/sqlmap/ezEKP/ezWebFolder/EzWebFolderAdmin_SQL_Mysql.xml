@@ -1123,36 +1123,29 @@
 				TENANT_ID = #tenantId#
 	</delete>
 	
-	<select id="EzWebFolderAdminDAO.getSubFolderIdList" resultClass="String">
-		SELECT 
-			SEQ_ID 
-		FROM 
-			TBL_WEBFOLDER_FOLDER F INNER JOIN TBL_WEBFOLDER_FOLDERUSER FU 
-		ON 
-			F.FOLDER_ID = FU.FOLDER_ID
-		WHERE 
-			F.FOLDER_PATH LIKE #folderPath#
-		AND 
-			USE_STATUS = 'Y' 
-		AND 
-			USER_ID IN 
-		<iterate property="idList" open="(" close=")" conjunction=",">
-			#idList[]#
-		</iterate>
-		<isNotEqual property="type" compareValue="">
-			AND 
-				FOLDER_MANAGER = #type#
-		</isNotEqual>
-	</select>
-	
 	<delete id="EzWebFolderAdminDAO.deleteSelectedFolderUser" parameterClass="Map">
 			DELETE FROM
 				TBL_WEBFOLDER_FOLDERUSER
 			WHERE
-				SEQ_ID IN 
-					<iterate property="seqIdList" open="(" close=")" conjunction=",">
-						#seqIdList[]#
+				SEQ_ID IN  (
+					SELECT 
+						SEQ_ID 
+					FROM 
+						TBL_WEBFOLDER_FOLDER F INNER JOIN TBL_WEBFOLDER_FOLDERUSER FU 
+					ON 
+						F.FOLDER_ID = FU.FOLDER_ID
+					WHERE 
+						F.FOLDER_PATH LIKE #folderPath#
+					AND 
+						USE_STATUS = 'Y' 
+					AND 
+						USER_ID IN 
+					<iterate property="idList" open="(" close=")" conjunction=",">
+						#idList[]#
 					</iterate>
+					AND 
+						FOLDER_MANAGER = #folderManger#
+				)
 			AND 
 				TENANT_ID = #tenantId#
 			AND 
