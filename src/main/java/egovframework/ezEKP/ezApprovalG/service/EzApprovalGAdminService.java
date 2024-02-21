@@ -180,17 +180,17 @@ public interface EzApprovalGAdminService {
 	
 	public String getParentContName(String formID, String companyID, int tenantID, String langType) throws Exception;
 	
-	public int getContDocListCountjson(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception;
+	public int getContDocListCountjson(String containerID, String userID, String userSecurityCode, boolean publicFlag, String companyID, int tenantID, Map<String,Object> queryMap) throws Exception;
 	
-	public int getDeleteDocListCountjson(String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception;
+	public int getDeleteDocListCountjson(String userID, String userSecurityCode, boolean publicFlag, String companyID, int tenantID, Map<String,Object> queryMap) throws Exception;
 	
-	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, int startRow, int pageSize, String pageNum, String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset, Locale locale) throws Exception;
+	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, int startRow, int pageSize, String pageNum, String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset, Locale locale, Map<String,Object> queryMap) throws Exception;
 
 	public String getIsUse(String code1, String code2, String companyID, String userLang, int tenantID) throws Exception;
 	
 	public String deleteDocListjson(String[] DocDelIDArr, String[] DocDelNoArr, String[] DocDelTitleArr, String[] DocDelWriterNameArr, String[] DocDelDeptNameArr,String deleteDay, String DeluserId, String offset, String companyID, int tenantID) throws Exception;
 
-	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception;
+	public List<ApprGDocListVO> getDeleteDocList_json(String userID, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale, Map<String,Object> queryMap) throws Exception;
 	
 	public String getExAttribute(String buJaeId, int tenantID) throws Exception;
 	
@@ -219,7 +219,7 @@ public interface EzApprovalGAdminService {
 
 	String deleteShareDocDir(String ownerId, int tenantId) throws Exception;
 	
-	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, String searchQuery) throws Exception;
+	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, String searchQuery, Map<String,Object> queryMap) throws Exception;
 
 	public String getAdminSearchDocList(
 			String formID,

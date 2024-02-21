@@ -62,11 +62,12 @@ function Add_ContType1(Name, ID) {
 }
 
 function getDocList() {
-    if (CrossYN())
+    if (CrossYN()) {
         document.getElementById("PageNum").innerHTML = "";
-    else
+    } else {
         setNodeText(document.getElementById("PageNum"),"");
-
+    }
+    
     document.getElementById('lvSDoc').innerHTML = "";
     document.getElementById('lvTDoc').innerHTML = "";
 
@@ -98,15 +99,17 @@ function getDocList() {
     var deptName = "";
     var result = "";
     
-    if (SearchCond[7] == null)
+    if (SearchCond[7] == null) {
         formID = "";
-    else
+    } else {
         formID = SearchCond[7];
-
-    if (SearchCond[9] == null)
+    }
+    
+    if (SearchCond[9] == null) {
         deptName = "";
-    else
+    } else {
         deptName = SearchCond[9];
+    }
     
 	$.ajax({
 		type : "POST",

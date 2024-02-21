@@ -93,7 +93,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", userIDS);
+		map.put("userIds", userIDS.replace(" ", "").replace("\'", "").split(","));
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffSet()));
@@ -130,7 +130,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", userIDS);
+		map.put("userIds", userIDS.replace(" ", "").replace("\'", "").split(","));
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		map.put("searchText", searchText);
@@ -439,7 +439,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", userIDS);
+		map.put("userIds", userIDS.replace(" ", "").replace("\'", "").split(","));
 		map.put("userId", userId);
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());

@@ -3363,7 +3363,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 전체문서조회(완료문서) 문서목록 호출 함수
+	 * 전자결재G관리 전체문서조회(완료문서) 문서목록 호출 함수 (2024-03-14 분석 결과 실제 호출이 없는 코드로 확인, /admin/ezApprovalG/getStatSearchEndDocList.do 호출만 사용됨)
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getStatSearchDocList.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
@@ -3571,7 +3571,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재g 관리자 문서이동 문서함 문서 표출
+	 * 전자결재g 관리자 문서이동 문서함 문서 표출 (2024-03-07 기준 해당 URL은 실제로 호출되지 않는 것을 확인함, /admin/ezApprovalG/getDocListjson.do URL로 개선됨)
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
@@ -3586,62 +3586,45 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pageSize = request.getParameter("pageSize");
 		String companyID = request.getParameter("companyID");
 		
-		StringBuilder subQuery = new StringBuilder();
+		/* 2024-03-07 홍승비 - SQL Injection 제거 > 검색 쿼리를 문자열이 아닌 맵으로 전달 */
+		Map<String, Object> searchQueryMap = new HashMap<String, Object>();
 		
 		if (request.getParameter("docNO") != null && !request.getParameter("docNO").equals("")) {
-			subQuery.append(" TBL_ENDAPRDOCINFO.docNO LIKE '%" + request.getParameter("docNO") + "%' ");
+			searchQueryMap.put("col_where_DOCNO", request.getParameter("docNO"));
 		}
 		
 		if (request.getParameter("docTitle") != null && !request.getParameter("docTitle").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" TBL_ENDAPRDOCINFO.docTitle LIKE '%" + request.getParameter("docTitle") + "%' ");
+			searchQueryMap.put("col_where_DOCTITLE", request.getParameter("docTitle"));
 		}
 		
 		if (request.getParameter("drafter") != null && !request.getParameter("drafter").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" (TBL_ENDAPRDOCINFO.writerName LIKE '%" + request.getParameter("drafter") + "%' OR TBL_ENDAPRDOCINFO.writerName2 LIKE '%" + request.getParameter("drafter") + "%')");
+			searchQueryMap.put("col_where_WRITERNAME", request.getParameter("drafter")); // 다국어 처리 쿼리단으로 이동
 		}
 		
 		if (request.getParameter("draftFrom") != null && !request.getParameter("draftFrom").equals("") && request.getParameter("draftTo") != null && !request.getParameter("draftTo").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" (TBL_ENDAPRDOCINFO.StartDate >= '" + commonUtil.getDateStringInUTC(request.getParameter("draftFrom"), userInfo.getOffset(), true) + "' AND TBL_ENDAPRDOCINFO.StartDate <= '" + commonUtil.getDateStringInUTC(request.getParameter("draftTo"), userInfo.getOffset(), true) + "')");
+			searchQueryMap.put("col_where_STARTDATE_START", commonUtil.getDateStringInUTC(request.getParameter("draftFrom"), userInfo.getOffset(), true));
+			searchQueryMap.put("col_where_STARTDATE_END", commonUtil.getDateStringInUTC(request.getParameter("draftTo"), userInfo.getOffset(), true));
 		}
 		
 		if (request.getParameter("aprFrom") != null && !request.getParameter("aprFrom").equals("") && request.getParameter("aprTo") != null && !request.getParameter("aprTo").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" (TBL_ENDAPRDOCINFO.EndDate >= '" + commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), true) + "' AND TBL_ENDAPRDOCINFO.EndDate <= '" + commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), true) + "')");
+			searchQueryMap.put("col_where_ENDDATE_START", commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), true));
+			searchQueryMap.put("col_where_ENDDATE_END", commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), true));
 		}
 		
 		if (request.getParameter("deptName") != null && !request.getParameter("deptName").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" (TBL_ENDAPRDOCINFO.writerDeptName LIKE '%" + request.getParameter("deptName") + "%' OR TBL_ENDAPRDOCINFO.writerDeptName2 LIKE '%" + request.getParameter("deptName") + "%')");
+			searchQueryMap.put("col_where_WRITERDEPTNAME", request.getParameter("deptName"));
 		}
 		
 		if (request.getParameter("formID") != null && !request.getParameter("formID").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" TBL_ENDAPRDOCINFO.formId ='" + request.getParameter("formID") + "'");
+			searchQueryMap.put("col_where_FORMID", request.getParameter("formID"));
 		}
 		
 		if (request.getParameter("period") != null && !request.getParameter("period").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" TBL_EXPENDAPRDOCINFO.StoragePeriod ='" + request.getParameter("period") + "' ");
+			searchQueryMap.put("col_where_STORAGEPERIOD", request.getParameter("period"));
 		}
-							
-		String result = ezApprovalGService.getContDocList(contID, "", subQuery.toString(), pageSize, pageNum, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		// 기존 searchQuery 문자열 대신 searchQueryMap을 사용하여 검색 조건 전달
+		String result = ezApprovalGService.getContDocList(contID, "", searchQueryMap, pageSize, pageNum, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 	
 		logger.debug("getDocList ended");
 		
@@ -3661,13 +3644,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pageNum = request.getParameter("pageNum");
 		String companyID = request.getParameter("companyID");
 		String pSelectTab = request.getParameter("pSelectTab");
-		StringBuilder subQuery = new StringBuilder();
+//		StringBuilder subQuery = new StringBuilder();
 		boolean publicFlag = false;
 		boolean securityFlag = false;
 		String userSecurityCode = "";
 		// String startDate = "";
 		// String endDate = "";
 		List<ApprGDocListVO> list = null;
+		Map<String, Object> queryMap = new HashMap<>();
 		
 		if (pageNum == null || pageNum.equals("")) {
 			pageNum = "1";
@@ -3676,10 +3660,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		int maxItemPerPage = 15; 
 		int currentPage = Integer.parseInt(pageNum);
 		int startRow = Math.multiplyExact(Math.subtractExact(currentPage, 1), maxItemPerPage);
+		
 		if (pageNum.equals("-1")) {
 			startRow = -1;
 		}
-		logger.debug("companyID :: "+companyID);
+		
 		if (ezApprovalGAdminService.getIsUse("A22", "001", companyID, userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			securityFlag = true;
 		}
@@ -3696,53 +3681,67 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			userSecurityCode = "0";
 		}
 		
+		String qOptionDocNo = "";
+		String qOptionDocTitle = "";
+		String qOptionWriterName = "";
+		String qOptionEndDate1 = "";
+		String qOptionEndDate2 = "";
+		String qOptionDeleteTime1 = "";
+		String qOptionDeleteTime2 = "";
+		String qOptionWriterDeptId = "";
+		String qOptionFormId = "";
+		
 		if (request.getParameter("docNO") != null && !request.getParameter("docNO").equals("")) {
-			subQuery.append(" TBL_ENDAPRDOCINFO.docNO LIKE '%" + request.getParameter("docNO") + "%' ");
+//			subQuery.append(" TBL_ENDAPRDOCINFO.docNO LIKE '%" + request.getParameter("docNO") + "%' ");
+			qOptionDocNo = request.getParameter("docNO");
 		}
 		
 		if (request.getParameter("docTitle") != null && !request.getParameter("docTitle").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" TBL_ENDAPRDOCINFO.docTitle LIKE '%" + request.getParameter("docTitle") + "%' ");
+//			subQuery.append(" TBL_ENDAPRDOCINFO.docTitle LIKE '%" + request.getParameter("docTitle") + "%' ");
+			qOptionDocTitle = request.getParameter("docTitle");
 		}
 		
 		if (request.getParameter("drafter") != null && !request.getParameter("drafter").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" (TBL_ENDAPRDOCINFO.writerName LIKE '%" + request.getParameter("drafter") + "%' OR TBL_ENDAPRDOCINFO.writerName2 LIKE '%" + request.getParameter("drafter") + "%')");
+//			subQuery.append(" (TBL_ENDAPRDOCINFO.writerName LIKE '%" + request.getParameter("drafter") + "%' OR TBL_ENDAPRDOCINFO.writerName2 LIKE '%" + request.getParameter("drafter") + "%')");
+			qOptionWriterName = request.getParameter("drafter");
 		}
 		
 		if (request.getParameter("aprFrom") != null && !request.getParameter("aprFrom").equals("") && request.getParameter("aprTo") != null && !request.getParameter("aprTo").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}
 			if (pSelectTab.equals("completedoclist")) {
-				subQuery.append(" (TBL_ENDAPRDOCINFO.EndDate >= '" + commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), false) + " 00:00:00' AND TBL_ENDAPRDOCINFO.EndDate <= '" + commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), false) + " 23:59:59')");
+//				subQuery.append(" (TBL_ENDAPRDOCINFO.EndDate >= '" + commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), false) + " 00:00:00' AND TBL_ENDAPRDOCINFO.EndDate <= '" + commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), false) + " 23:59:59')");
+				qOptionEndDate1 = commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), false) + " 00:00:00";
+				qOptionEndDate2 = commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), false) + " 23:59:59";
 			} else {
-				subQuery.append(" (TBL_DOCDELETEHISTORY.deletetime >= '" + commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), false) + " 00:00:00' AND TBL_DOCDELETEHISTORY.deletetime <= '" + commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), false) + " 23:59:59')");
+//				subQuery.append(" (TBL_DOCDELETEHISTORY.deletetime >= '" + commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), false) + " 00:00:00' AND TBL_DOCDELETEHISTORY.deletetime <= '" + commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), false) + " 23:59:59')");
+				qOptionDeleteTime1 = commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), false) + " 00:00:00";
+				qOptionDeleteTime2 = commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), false) + " 23:59:59";
 			}
 		}
 		
 		if (request.getParameter("drafterdept") != null && !request.getParameter("drafterdept").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" (TBL_ENDAPRDOCINFO.WRITERDEPTID = '" + request.getParameter("drafterdept")+"')");
+//			subQuery.append(" (TBL_ENDAPRDOCINFO.WRITERDEPTID = '" + request.getParameter("drafterdept")+"')");
+			qOptionWriterDeptId = request.getParameter("drafterdept");
 		}
 		
 		if (request.getParameter("formID") != null && !request.getParameter("formID").equals("")) {
-			if (!subQuery.toString().equals("")) {
-				subQuery.append(" AND ");
-			}			
-			subQuery.append(" TBL_ENDAPRDOCINFO.formId ='" + request.getParameter("formID") + "'");
+//			subQuery.append(" TBL_ENDAPRDOCINFO.formId ='" + request.getParameter("formID") + "'");
+			qOptionFormId = request.getParameter("formID");
 		}
-
+		
+		queryMap.put("qOptionDocNo", qOptionDocNo);
+		queryMap.put("qOptionDocTitle", qOptionDocTitle);
+		queryMap.put("qOptionWriterName", qOptionWriterName);
+		queryMap.put("qOptionEndDate1", qOptionEndDate1);
+		queryMap.put("qOptionEndDate2", qOptionEndDate2);
+		queryMap.put("qOptionDeleteTime1", qOptionDeleteTime1);
+		queryMap.put("qOptionDeleteTime2", qOptionDeleteTime2);
+		queryMap.put("qOptionWriterDeptId", qOptionWriterDeptId);
+		queryMap.put("qOptionFormId", qOptionFormId);
+		
 		if (pSelectTab.equals("completedoclist")) {
-			totalcnt = ezApprovalGAdminService.getContDocListCountjson(contID, "", userSecurityCode, publicFlag, subQuery.toString(), companyID, userInfo.getTenantId());
+			totalcnt = ezApprovalGAdminService.getContDocListCountjson(contID, "", userSecurityCode, publicFlag, companyID, userInfo.getTenantId(), queryMap);
 		} else {
-			totalcnt = ezApprovalGAdminService.getDeleteDocListCountjson("", userSecurityCode, publicFlag, subQuery.toString(), companyID, userInfo.getTenantId());
+			totalcnt = ezApprovalGAdminService.getDeleteDocListCountjson("", userSecurityCode, publicFlag, companyID, userInfo.getTenantId(), queryMap);
 		}
 		
 		int totalPage = totalcnt / maxItemPerPage ;
@@ -3757,23 +3756,18 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		currentPage = Math.min(currentPage, totalPage);	
 		
-		if (pSelectTab.equals("completedoclist")) { 
-			
-			list = ezApprovalGAdminService.getContDocList_json(contID, "", userSecurityCode, publicFlag, subQuery.toString(), startRow, maxItemPerPage, pageNum, "", "", totalcnt, companyID, userInfo.getLang(), userInfo.getTenantId(), commonUtil.getMinuteUTC(userInfo.getOffset()), userInfo.getLocale());
-			
+		if (pSelectTab.equals("completedoclist")) {
+			list = ezApprovalGAdminService.getContDocList_json(contID, "", userSecurityCode, publicFlag, startRow, maxItemPerPage, pageNum, "", "", totalcnt, companyID, userInfo.getLang(), userInfo.getTenantId(), commonUtil.getMinuteUTC(userInfo.getOffset()), userInfo.getLocale(), queryMap);
 		} else {
-			
-			list = ezApprovalGAdminService.getDeleteDocList_json("", subQuery.toString(), startRow, maxItemPerPage, pageNum, totalcnt, companyID, userInfo.getTenantId(),commonUtil.getMinuteUTC(userInfo.getOffset()), userInfo.getLang(), userInfo.getLocale());
-			
+			list = ezApprovalGAdminService.getDeleteDocList_json("", startRow, maxItemPerPage, pageNum, totalcnt, companyID, userInfo.getTenantId(),commonUtil.getMinuteUTC(userInfo.getOffset()), userInfo.getLang(), userInfo.getLocale(), queryMap);
 		}
+		
 		model.addAttribute("DocDeleteHistList", list);
 		model.addAttribute("totalcnt",totalcnt);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("currPage", currentPage);
 		model.addAttribute("pSelectTab", pSelectTab);
 		
-		
-		logger.debug("subQuery  :: "+subQuery);
 		logger.debug("getDocListjson ended");
 		
 		return "json";
@@ -4893,55 +4887,64 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		String userLang = userInfo.getLang();
 		Document domSub = null;
+		Map<String, Object> queryMap = new HashMap<>();
+		queryMap.put("userLang", userLang);
 		
 		//2018-09-28 김보미 - 검색 추가
 		if (searchQuery != null && searchQuery.length() > 10) {
 			String tempQuery = "";
-			String returnQuery = "(1 = 1) ";
+			String returnQuery = "(1 = 1) "; // 오라클쪽 수정완료 후 주석처리 예정
 			
 			domSub = commonUtil.convertStringToDocument(searchQuery);
 			tempQuery = domSub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
 			
+			String qOptionDocNo = "";
+			String qOptionDocTitle = "";
+			String qOptionWriterName = "";
+			String qOptionWriterDeptName = "";
+			
 			if (tempQuery.indexOf("DOCNO;") != -1) {
-				returnQuery += " AND DOCNO LIKE '%" + domSub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
+//				returnQuery += " AND DOCNO LIKE '%" + domSub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
+				qOptionDocNo = domSub.getElementsByTagName("DOCNO").item(0).getTextContent();
 			}
 			
 			if (tempQuery.indexOf("DOCTITLE;") != -1) {
-                returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
+//                returnQuery += " AND DocTitle LIKE '%" + domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
+				qOptionDocTitle = domSub.getElementsByTagName("DOCTITLE").item(0).getTextContent();
             }
 
-            if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
-                if (tempQuery.indexOf("WRITERNAME;") != -1) {
-                    returnQuery += " AND WRITERNAME" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
-                }
-            } else {
-                if (tempQuery.indexOf("WRITERNAME;") != -1) {
-                    returnQuery += " AND WRITERNAME LIKE '%" + domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
-                }
-            }
-
-            if (commonUtil.getPrimaryData(userLang, userInfo.getTenantId()).equals("2")) {
-                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                    returnQuery += " AND WriterDeptName" + userLang + " LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
-                }
-            } else {
-                if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                    returnQuery += " AND WriterDeptName LIKE '%" + domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
-                }
-            }
+			if (tempQuery.indexOf("WRITERNAME;") != -1) { // 다국어 처리 쿼리단으로 이동
+				qOptionWriterName = domSub.getElementsByTagName("WRITERNAME").item(0).getTextContent();
+			}
+			
+			if (tempQuery.indexOf("WRITERDEPTNAME;") != -1) { // 다국어 처리 쿼리단으로 이동
+				qOptionWriterDeptName = domSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent();
+			}
+			
+			queryMap.put("qOptionDocNo", qOptionDocNo);
+			queryMap.put("qOptionDocTitle", qOptionDocTitle);
+			queryMap.put("qOptionWriterName", qOptionWriterName);
+			queryMap.put("qOptionWriterDeptName", qOptionWriterDeptName);
+			
+			String qOptionStartDate1 = "";
+			String qOptionStartDate2 = "";
+			String qOptionReceivedDate1 = "";
+			String qOptionReceivedDate2 = "";
 
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
                 if (listType.equals("10")) {
                 	if (!dbType.equals("mysql")) {
                     	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
                 	} else {
-                    	returnQuery += " AND RECEIVEDDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+//                    	returnQuery += " AND RECEIVEDDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+						qOptionReceivedDate1 = commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true );
                 	}
                 } else {
                 	if (!dbType.equals("mysql")) {
                 		returnQuery += " AND STARTDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
                 	} else {
-                		returnQuery += " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+//                		returnQuery += " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+						qOptionStartDate1 = commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), true );
 
                 	}
                 }
@@ -4952,49 +4955,75 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
                 	if (!dbType.equals("mysql")) {
                 		returnQuery += " AND RECEIVEDDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
                 	} else {
-                		returnQuery += " AND RECEIVEDDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+//                		returnQuery += " AND RECEIVEDDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+						qOptionReceivedDate2 = commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true );
                 	}
                 } else {
                 	if (!dbType.equals("mysql")) {
                 		returnQuery += " AND STARTDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','YYYY-MM-DD HH24:MI:SS') ";
                 	} else {
-                		returnQuery += " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+//                		returnQuery += " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true ) + " ','%Y-%m-%d %H:%i:%s') ";
+						qOptionStartDate2 = commonUtil.getDateStringInUTC(domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true );
                 	}
                 }
             }
             
+			queryMap.put("qOptionStartDate1", qOptionStartDate1);
+			queryMap.put("qOptionStartDate2", qOptionStartDate2);
+			queryMap.put("qOptionReceivedDate1", qOptionReceivedDate1);
+			queryMap.put("qOptionReceivedDate2", qOptionReceivedDate2);
+			
+			String qOptionSearchStatus = "";
+			String qOptionFormId = "";
+			String qOptionKeyword = "";
+			String qOptionItemCode = "";
+			String qOptionUrgentApproval = "";
+            
             if (searchStatus != null && !searchStatus.equals("") && !searchStatus.equals("ALL")) {
             	returnQuery += " AND tbl_endreceiptpointinfo.processyn = '" + searchStatus + "' ";
+				qOptionSearchStatus = searchStatus;
             }
             
             if (tempQuery.indexOf("FORMID;") != -1) {
-                returnQuery += " AND FormID = '" + domSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+//                returnQuery += " AND FormID = '" + domSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+				qOptionFormId = domSub.getElementsByTagName("FORMID").item(0).getTextContent();
             }
             
             if (tempQuery.indexOf("KAPR;") != -1) {
-                returnQuery += " AND keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+//                returnQuery += " AND keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+				qOptionKeyword = domSub.getElementsByTagName("KEYWORD").item(0).getTextContent();
             }
             
             if (tempQuery.indexOf("KEND;") != -1) {
-                returnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+//                returnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%' ";
+				qOptionKeyword = domSub.getElementsByTagName("KEYWORD").item(0).getTextContent();
             }
             
             if (tempQuery.indexOf("CAPR;") != -1) {
-                returnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+//                returnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+				qOptionItemCode = domSub.getElementsByTagName("itemCODE").item(0).getTextContent();
             }
             
             if (tempQuery.indexOf("CEND;") != -1) {
-                returnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+//                returnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + domSub.getElementsByTagName("itemCODE").item(0).getTextContent() + "' ";
+				qOptionItemCode = domSub.getElementsByTagName("itemCODE").item(0).getTextContent();
             }
             
             if (tempQuery.indexOf("URGENTAPPROVAL;") != -1) {
-                returnQuery += " AND URGENTAPPROVAL = '" + domSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
+//                returnQuery += " AND URGENTAPPROVAL = '" + domSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
+				qOptionUrgentApproval = domSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent();
             }
             
+			queryMap.put("qOptionSearchStatus", qOptionSearchStatus);
+			queryMap.put("qOptionFormId", qOptionFormId);
+			queryMap.put("qOptionKeyword", qOptionKeyword);
+			queryMap.put("qOptionItemCode", qOptionItemCode);
+			queryMap.put("qOptionUrgentApproval", qOptionUrgentApproval);
+			
             searchQuery = returnQuery;
 		}
 		
-		String result = ezApprovalGAdminService.getSendOutDocList(userID, deptID, susinManagerFlag, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), searchQuery);
+		String result = ezApprovalGAdminService.getSendOutDocList(userID, deptID, susinManagerFlag, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), searchQuery, queryMap);
 		
 		logger.debug("getSendOutDocList ended");
 		

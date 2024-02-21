@@ -2036,6 +2036,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</HEADERS>");
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
+		
+		if (!subQuery.equals("")) {
+			if (subQuery.indexOf("keyword") != -1) {
+				map1.put("v_KEYWORDYN", "Y");
+				String keyword = subQuery.substring(16, subQuery.length() - 3);
+				map1.put("v_KEYWORD", keyword);
+			}
+		}
+		
 		map1.put("v_SUBQUERY", subQuery);
 		map1.put("v_DOCNUMBER", docNumber);
 		map1.put("v_DOCTITLE", docTitle);
@@ -3555,21 +3564,22 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("targetContID", targetContID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-		
+
 		if (chkAll.toLowerCase().equals("true")) {
 			ezApprovalGAdminDAO.moveAllDocListF(map);
 			ezApprovalGAdminDAO.moveAllDocListS(map);
 		} else {
-			String subQuery = "";
-			String info[] = strMoveListIDInfo.split(";");
-			for (int k = 0; k < info.length; k++) {
+			/* 이유정 - [웹취약점] EzApprovalGAdminDAO.moveDocListF/moveDocListS 관련 IN 조건 문자열 수정 */
+			/* String subQuery = ""; */
+			String[] info = strMoveListIDInfo.split(";");
+			/* for (int k = 0; k < info.length; k++) {
 				subQuery += "'"+info[k]+"'";
 				if(k < info.length-1) {
 					subQuery += ",";
 				}
-			}
+			} */
 			
-			map.put("subQuery", subQuery);
+			map.put("docIDList", info);
 			
 			ezApprovalGAdminDAO.moveDocListF(map);
 			ezApprovalGAdminDAO.moveDocListS(map);
@@ -3616,8 +3626,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					subQuery += ", '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
 				}
 			}
-			
-			map.put("subQuery", subQuery);
+			/* 이유정 - [웹취약점] EzApprovalGAdminDAO.deleteDocList 관련 IN 조건 문자열 수정 */
+			String[] docIDs = subQuery.replace(" ", "").replace("\'", "").split(",");
+
+			map.put("docIDList", docIDs);
 			
 			ezApprovalGAdminDAO.deleteDocList(map);
 		}
@@ -4154,8 +4166,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, int startRow, int pageSize, String pageNum, 
-			String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset, Locale locale) throws Exception {
+	public List<ApprGDocListVO> getContDocList_json(String containerID, String userID, String userSecurityCode, boolean publicFlag, int startRow, int pageSize, String pageNum,
+			String orderCell, String orderOption, int totalcnt, String companyID, String lang, int tenantID, String offset, Locale locale, Map<String,Object> queryMap) throws Exception {
 //		StringBuilder resultXML = new StringBuilder();
 				
 		int querySize = pageSize * Integer.parseInt(pageNum);
@@ -4167,13 +4179,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_USERSECCODE", userSecurityCode);
+		map.put("q_Map", queryMap);
 		
 		if (publicFlag) {
 			map.put("v_PUBFLAG", "Y");
 		} else {
 			map.put("v_PUBFLAG", "N");
 		}
-		map.put("v_SUBQUERY", subQuery);
+//		map.put("v_SUBQUERY", subQuery);
 		map.put("v_PAGESIZE", querySize);
 		map.put("v_PAGESIZE2", pageSize);
 		map.put("v_PAGESIZE3", startRow);
@@ -4191,13 +4204,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public int getContDocListCountjson(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception{
+	public int getContDocListCountjson(String containerID, String userID, String userSecurityCode, boolean publicFlag, String companyID, int tenantID, Map<String,Object> queryMap) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CONTID", containerID);
 		map.put("companyID", companyID);
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_USERSECCODE", userSecurityCode);
+		map.put("q_Map", queryMap);
 		
 		if (publicFlag) {
 			map.put("v_PUBFLAG", "Y");
@@ -4205,7 +4219,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_PUBFLAG", "N"); 
 		}
 		
-		map.put("v_SUBQUERY", subQuery);
+//		map.put("v_SUBQUERY", subQuery);
 		
 		int totalCount = ezApprovalGAdminDAO.getContDocListCountjson(map);
 		
@@ -4213,12 +4227,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public int getDeleteDocListCountjson(String userID, String userSecurityCode, boolean publicFlag, String subQuery, String companyID, int tenantID) throws Exception{
+	public int getDeleteDocListCountjson(String userID, String userSecurityCode, boolean publicFlag, String companyID, int tenantID, Map<String,Object> queryMap) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_USERSECCODE", userSecurityCode);
+		map.put("q_Map", queryMap);
 		
 		if (publicFlag) {
 			map.put("v_PUBFLAG", "Y");
@@ -4226,7 +4241,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_PUBFLAG", "N"); 
 		}
 		
-		map.put("v_SUBQUERY", subQuery);
+//		map.put("v_SUBQUERY", subQuery);
 		
 		int totalCount = ezApprovalGAdminDAO.getDeleteDocListCountjson(map);
 		
@@ -4234,7 +4249,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception{
+	public List<ApprGDocListVO> getDeleteDocList_json(String userID, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale, Map<String,Object> queryMap) throws Exception{
 		int querySize = pageSize * Integer.parseInt(pageNum);
 //		int querySize2 = totalcnt - pageSize * (Integer.parseInt(pageNum) - 1);
 		
@@ -4242,12 +4257,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantID);
-		map.put("v_SUBQUERY", subQuery);
+//		map.put("v_SUBQUERY", subQuery);
 		map.put("v_PAGESIZE", querySize);
 		map.put("v_PAGESIZE2", pageSize);
 		map.put("v_PAGESIZE3", startRow);
 		map.put("v_OFFSET",offset);
 		map.put("v_PSTRLANG", lang);
+		map.put("q_Map", queryMap);
 		
 //		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
 //		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
@@ -4530,7 +4546,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, String searchQuery) throws Exception {
+	public String getSendOutDocList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang, int tenantID, String offset, String searchQuery, Map<String,Object> queryMap) throws Exception {
 		logger.debug("getSendOutDocList started");
 
 		StringBuilder resultXML = new StringBuilder();
@@ -4644,7 +4660,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
-		int totalCount = getSendOutDocListCount(mode, companyID, tenantID, searchQuery);///////////////////////////////searchQuery넣을것!
+		int totalCount = getSendOutDocListCount(mode, companyID, tenantID, searchQuery, queryMap);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
 		
@@ -4677,7 +4693,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		resultXML.append("</HEADERS>");
 		
 //		String docList = getSendOutDocList(mode, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, companyID, tenantID);
-		String docList = getSendOutDocList(mode, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, companyID, tenantID, searchQuery);
+		String docList = getSendOutDocList(mode, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, companyID, tenantID, searchQuery, queryMap);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -4771,11 +4787,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return rtnValue;
 	}
 	
-	private String getSendOutDocList(String mode, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder, String basicOrderReverse, String companyID, int tenantID, String subQuery) throws Exception {
+	private String getSendOutDocList(String mode, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder, String basicOrderReverse, String companyID, int tenantID, String subQuery, Map<String,Object> queryMap) throws Exception {
 		logger.debug("getSendOutDocList started");
 
 		List<ApprGDocListVO> apprGDocListVOList = new ArrayList<ApprGDocListVO>();
 		Map<String, Object> map = new HashMap<String, Object>();
+		String orderCol = ""; // 정렬할 컬럼값
 		
 		map.put("companyID", companyID);
 		map.put("v_MODE", mode);
@@ -4784,8 +4801,23 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_ORDEROPTION", orderOption1);
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
 		
-		if(orderOption1.length() > 0) {
-			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,orderOption1.trim().length()).toLowerCase());
+		if (orderOption1.length() > 0) {
+//			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,orderOption1.trim().length()).toLowerCase());
+			String[] tmpStr = orderOption1.substring(0,orderOption1.trim().length()).toLowerCase().split(" ");
+			orderCol = tmpStr[0];
+			map.put("v_ORDERCOL", orderCol);
+			if (orderCol.equals("enddate")) {
+				map.put("v_ENDCHECK", "true");
+			} else {
+				map.put("v_ENDCHECK", "false");
+			}
+			if (tmpStr.length != 1) {
+				if (tmpStr[1].equals("desc")) {
+					map.put("v_ORDERSORT", "desc");
+				}
+			} else {
+				map.put("v_ORDERSORT", "asc");
+			}
 		}
 		
 		map.put("v_ORDEROPTION2", orderOption2);
@@ -4803,6 +4835,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		//2018-09-28 김보미 - 검색 추가
 		map.put("v_SPSUBQUERY", subQuery.trim());
 		map.put("v_SPSUBQUERYLENGTH", subQuery.trim().length());
+		map.put("q_Map", queryMap);
 		
 		map.put("V_DATABASE", "jmocha");
 		map.put("V_TABLE", "tbl_sendoutinfo");
@@ -4829,7 +4862,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return sb.toString();
 	}
 
-	private int getSendOutDocListCount(String mode, String companyID, int tenantID, String subQuery) throws Exception {
+	private int getSendOutDocListCount(String mode, String companyID, int tenantID, String subQuery, Map<String,Object> queryMap) throws Exception {
 		logger.debug("getSendOutDocListCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -4841,6 +4874,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		map.put("v_SPSUBQUERY", subQuery.trim());
 		map.put("v_SPSUBQUERYLENGTH", subQuery.trim().length());
+		map.put("q_Map", queryMap);
 		
 		int totalCount = 0; 
 		

@@ -188,7 +188,8 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 			String lang, 
 			String offSet, 
 			String approvalFlag,
-			String subQuery,
+			String keyword,
+			String itemcode,
 			Locale locale
 			) throws Exception {
 		
@@ -216,8 +217,8 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCNUMBER", docNumber);
 		map.put("v_DOCTITLE", docTitle);
-		map.put("v_DRAFTER", drafter);
-		map.put("v_DEPTNAME", draftDeptName);
+		map.put("v_DRAFTER" + strMultiData, drafter);
+		map.put("v_DEPTNAME" + strMultiData, draftDeptName);
 		map.put("v_FORMID", formID);
 		map.put("v_FORMNAME", formName);
 		map.put("v_STARTDATE1", draftfrom );
@@ -227,11 +228,15 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 		map.put("v_APPROVUSER", approvUser);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
-		subQuery = subQuery.replaceAll("\\\\", "");
-		map.put("v_SUBQUERY", subQuery);
+		
+		/* 2024-03-20 홍승비 - SQL Injection 제거 > 검색 쿼리를 subQuery 문자열이 아닌 개별 파라미터로 전달 */
+		map.put("v_KEYWORD", keyword);
+		map.put("v_ITEMCODE", itemcode);
 
 		map.put("approvalFlag", approvalFlag);		
 		
+		/* 2024-03-20 기준, 해당 메서드의 호출 시 orderCell과 orderOption은 반드시 공백으로 전달됨. 차후 정렬 적용되도록 수정할 가능성이 있어 코드는 유지함. */
+		/*
 		map.put("v_ORDEROPTION", OrderOption1);
 		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
 		
@@ -245,6 +250,7 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 		if (OrderOption2.length() > 0 ) {
 			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,OrderOption2.trim().length()).toLowerCase());
 		}
+		*/
 		
 		int totalCount = ezApprovalGAdminDao.getSearchDocListCount(map);
 		
@@ -253,7 +259,7 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 		int hlength = listVO.size();
 		
 		for (int k = 0; k < hlength; k++) {
-			//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 헤더만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
+			// 2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 헤더만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
 			if (docAttachFlag) {
 				String tmpStr = listVO.get(k).getColName();
 				if (tmpStr.equals("FORMNAME") || tmpStr.equals("EDMSYN") || tmpStr.equals("DOCSTATENAME") || tmpStr.equals("SENDFLAG") || tmpStr.equals("HASATTACHYN") || tmpStr.equals("ISPUBLIC")) {
@@ -281,6 +287,7 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 			
 		}
 		
+		/*
 		map.put("v_ORDEROPTION", OrderOption1);
 		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
 		
@@ -293,8 +300,8 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 		if (OrderOption2.length() > 0 ) {
 			map.put("v_ORDEROPTIONVALUE2", OrderOptionValue.toLowerCase());
 		}
+		*/
 		
-		map.put("v_MULTIDATALANG", strMultiData);
 		map.put("v_PAGESIZE2", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
 		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
 		map.put("v_PAGESIZE3", Integer.parseInt(pageSize) * Integer.parseInt(pageNum) - Integer.parseInt(pageSize));
@@ -319,23 +326,21 @@ public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApp
 		
 		int dlength = searchDocListMap.size();
 		
-		for(int k = dlength-1; k >=0; k-- ) {
+		for (int k = dlength-1; k >=0; k-- ) {
 				
 			List<Map<String, Object>> dataCellList = new ArrayList<>();
 			
-			for(int i=0; i<hlength; i++) {
+			for (int i=0; i<hlength; i++) {
 				
 				Map<String, Object> dataRowMap = new HashMap<String, Object>();
 				
 				FieldName = listVO.get(i).getColName().toUpperCase();
-				//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 데이터만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
+				// 2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 데이터만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
 				if (docAttachFlag) {
 					if (FieldName.equals("FORMNAME") || FieldName.equals("EDMSYN") || FieldName.equals("DOCSTATENAME") || FieldName.equals("SENDFLAG") || FieldName.equals("HASATTACHYN") || FieldName.equals("ISPUBLIC")) {
 						continue;
 					}
 				}
-				
-				
 				
         		FieldValue = (String) searchDocListMap.get(k).get(FieldName);
  				

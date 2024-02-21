@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.vo;
 
+import java.util.Map;
+
 public class ApprGCabinetListVO {
 	/** */
 	private int tenantID;
@@ -71,6 +73,14 @@ public class ApprGCabinetListVO {
 	private String isDocPrint;
 	/** */
 	private String accountYear;
+	/** SQL Injection 수정 작업으로 파라미터 추가 */
+	private String[] taskCodeAry;
+	private String[] chargerAry;
+	private String orderField;
+	private String orderSort;
+	private String limitCheck = "0";
+	private Map<String, String> extraColMap;
+	private String transferFlag;
 	
 	public int getTenantID() {
 		return tenantID;
@@ -282,5 +292,48 @@ public class ApprGCabinetListVO {
 	public void setNowYear(String nowYear) {
 		this.nowYear = nowYear;
 	}
-
+	public String[] getTaskCodeAry() {
+		return taskCodeAry;
+	}
+	public void setTaskCodeAry(String taskCode) {
+		taskCode = taskCode.replace("'","");
+		this.taskCodeAry = taskCode.split(",");
+	}
+	public String[] getChargerAry() {
+		return chargerAry;
+	}
+	public void setChargerAry(String charger) {
+		charger = charger.replace("'","");
+		this.chargerAry = charger.split(",");
+	}
+	public String getOrderField() {
+		return orderField;
+	}
+	public void setOrderField(String orderField) {
+		this.orderField = orderField;
+	}
+	public String getOrderSort() {
+		return orderSort;
+	}
+	public void setOrderSort(String orderSort) {
+		this.orderSort = orderSort;
+	}
+	public String getLimitCheck() {
+		return limitCheck;
+	}
+	public void setLimitCheck(String limitCheck) {
+		this.limitCheck = limitCheck;
+	}
+	public Map<String, String> getExtraColMap() {
+		return extraColMap;
+	}
+	public void setExtraColMap(Map<String, String> extraColMap) {
+		this.extraColMap = extraColMap;
+	}
+	public String getTransferFlag() {
+		return transferFlag;
+	}
+	public void setTransferFlag(String transferFlag) {
+		this.transferFlag = transferFlag;
+	}
 }

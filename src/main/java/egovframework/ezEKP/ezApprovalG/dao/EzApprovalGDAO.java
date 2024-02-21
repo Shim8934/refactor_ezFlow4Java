@@ -56,31 +56,31 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGDocListVO> getAprDocList(Map<Object, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprDocList", map);
 	}
-	
-	@SuppressWarnings("unchecked")
+	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
+	/*@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletDocList(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletDocList", map);
-	}
-	
-	@SuppressWarnings("unchecked")
+	}*/
+	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
+	/*@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletList_progress(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_progress", map);
-	}
-
-	@SuppressWarnings("unchecked")
+	}*/
+	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
+	/*@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletList_reject(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_reject", map);
-	}
-	
-	@SuppressWarnings("unchecked")
+	}*/
+	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
+	/*@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletList_draft(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_draft", map);
-	}	
-	
-	@SuppressWarnings("unchecked")
+	}*/
+	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
+	/*@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletList_progressDtl(Map<String, Object> map) throws Exception {
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_progressDtl", map);
-	}
+	}*/
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGAprLineVO> getAprLineInfo(Map<String, Object> map) throws Exception{
@@ -1064,10 +1064,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int)select("EzApprovalG.getReceiptTempletSN", map);
 	}
 	
-	public int getRecordListCount(ApprGRecordListVO recordListVO) throws Exception{
-		return (int)select("EzApprovalG.getRecordListCount", recordListVO);
+//	public int getRecordListCount(ApprGRecordListVO recordListVO) throws Exception{
+//		return (int)select("EzApprovalG.getRecordListCount", recordListVO);
+//	}
+
+	public int getRecordListCount(Map<String, Object> map) throws Exception{
+		return (int)select("EzApprovalG.getRecordListCount", map);
 	}
-	
+
 	public int updateHistoryForAttach_M(Map<String, Object> map) throws Exception{
 		return (int)select("EzApprovalG.updateHistoryForAttach_M", map);
 	}
@@ -1178,9 +1182,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int)select("EzApprovalG.getSendOutDocListCount", map);
 	}
 	
-	public int getAprPortletDocCount(Map<String, Object> map) throws Exception{
+	/*public int getAprPortletDocCount(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.getAprPortletDocCount", map);
-	}
+	}*/
 	
 	public int getDeliveryListCount(Map<String, Object> map) throws Exception{
 		return (int)select("EzApprovalG.getDeliveryListCount", map);
@@ -1320,10 +1324,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public int getUserContDocListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getUserContDocListCount", map);
-	}
-	
-	public int getSearchDocListCountS(Map<String, Object> map) throws Exception {
-		return (int) select("EzApprovalG.getSearchDocListCountS", map);
 	}
 	
 	public int gongRamActivateCount2(Map<String, Object> map) throws Exception {
@@ -3069,11 +3069,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public int getCountDoingDocInfo(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getCountDoingDocInfo", map);
 	}
-	
-	@SuppressWarnings("unchecked")
+	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
+	/*@SuppressWarnings("unchecked")
 	public Map<String, Object> getPortletApprGapTime(Map<String, Object> map) throws Exception {
 		return (Map<String, Object>) select("EzApprovalG.getPortletApprGapTime", map);
-	}
+	}*/
 	
 	public String getDocExt(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDocExt", map);

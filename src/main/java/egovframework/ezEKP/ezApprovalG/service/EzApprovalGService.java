@@ -32,7 +32,7 @@ public interface EzApprovalGService {
 
     public String getOptionInfo(String code1, String code2, LoginVO userInfo, String mode) throws Exception;
 
-    public String aprDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID, String offSet) throws Exception;
+    public String aprDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID, String offSet, Map<String, Object> searchMap) throws Exception;
 
     public String getProxyUser(String id, String lang, int tenantID, String offset) throws Exception;
 
@@ -223,8 +223,9 @@ public interface EzApprovalGService {
 
     public String getTotalDownload(String docID, String mode, String companyID, int tenantID) throws Exception;
 
+    /* 2024-02-23 홍승비 - SQL Injection 제거 > 검색 쿼리를 문자열이 아닌 맵으로 전달, 사용하지 않는 Document xmlDomSub 파라미터 제거 */
     public String getReceiveDocList(String userID, String deptID, String receiveDocMode, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang,
-                                    String searchQuery, Document xmlDomSub, int tenantID, String offset) throws Exception;
+    								Map<String, Object> searchQueryMap, int tenantID, String offset) throws Exception;
 
     public String gongRamDocInfo(String docID, String companyID, int tenantID) throws Exception;
 
@@ -276,7 +277,8 @@ public interface EzApprovalGService {
 
     public String makeTaskFullListXml(Document docXML, String companyID, String pageSize, String pageNO, String langType, int tenantID) throws Exception;
 
-    public String getContDocList(String containerID, String userID, String subQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset) throws Exception;
+    /* 2024-03-07 홍승비 - SQL Injection 제거 > 검색 쿼리를 문자열이 아닌 맵으로 전달 */
+    public String getContDocList(String containerID, String userID, Map<String, Object> searchQueryMap, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 
     public String getGamSaSearchDocList(String containerID, String userID, String deptID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR,
                                         String draftFromMONTH, String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR,
@@ -302,7 +304,7 @@ public interface EzApprovalGService {
 
     public String confirmClassify(String deptID, String companyID, int tenantID) throws Exception;
 
-    public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset, String searchQuery) throws Exception;
+    public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset, String searchQuery, Map<String, Object> queryMap) throws Exception;
 
     public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 
@@ -350,11 +352,11 @@ public interface EzApprovalGService {
 
     public String getRecordClassInfo(Document xmlDom, int tenantID) throws Exception;
 
-    public String getAprDocList(String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang, int tenantID, String offset) throws Exception;
+    /*public String getAprDocList(String pListType, String userID, String userDeptID, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String pSubQuery, String strLang, int tenantID, String offset, Map<String, Object> searchMap) throws Exception;*/
 
-    public Map<String, Object> getPortletAprList(Map<String, Object> param, String offset) throws Exception;
+    /*public Map<String, Object> getPortletAprList(Map<String, Object> param, String offset) throws Exception;*/
 
-    public Map<String, Object> getPortletApprGapTime(Map<String, Object> param) throws Exception;
+    /*public Map<String, Object> getPortletApprGapTime(Map<String, Object> param) throws Exception;*/
 
     public String getRecordHistory(Document xmlDom, LoginVO userInfo) throws Exception;
 
@@ -438,9 +440,9 @@ public interface EzApprovalGService {
 
     public String findTaskS(String deptCode, String title, String code, String companyID, int tenantId, String approvalFlag) throws Exception;
 
-    public String getUserContList(String pContID, String pSubQuery, String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet, String userID) throws Exception;
+    public String getUserContList(String pContID, String pSubQuery, String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet, String userID, Map<String,Object> queryMap) throws Exception;
 
-    public String getUserContListAll(String pContID, String pSubQuery, String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet) throws Exception;
+    public String getUserContListAll(String pContID, String pSubQuery, String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet, Map<String,Object> queryMap) throws Exception;
 
     public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
 
@@ -459,7 +461,7 @@ public interface EzApprovalGService {
 
     public String doHabyuiHesong(Document doc, String dirPath, String companyID, String lang, int tenantId, LoginVO userInfo, String curDocNum) throws Exception;
 
-    public List<String> getAddress(String userIDs, int tenantID) throws Exception;
+    public List<String> getAddress(String[] userIDArray, int tenantID) throws Exception;
 
     public String deleteSignInfo(String docID, String companyID, int tenantID) throws Exception;
 
@@ -467,7 +469,7 @@ public interface EzApprovalGService {
 
     public String getDocHref(String docID, String docStatus, String type, String docAttachSN, String companyID, int tenantId) throws Exception;
 
-    public String getDocInfoS(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
+    public String getDocInfoS(String docID, String mode, LoginVO userInfo, String companyID, int tenantID) throws Exception;
 
     public String getIsUse(String code1, String code2, String companyID, String userLang, int tenantID) throws Exception;
 
