@@ -503,7 +503,7 @@
 		                	<input type="hidden" name="nextTime"/>
 		                	
 		                    <fieldset>
-		                    	<p class="logo"><img src="<c:out value='${logoUrl }'/>"></p>
+		                    	<p class="logo" ><img style ="width: 229px; height: 81px;" src="<c:out value='${logoUrl }'/>"></p>
 		                        <p class="id_txt"><spring:message code="main.login.design01"/></p>
 		                        <p class="id">
 		                        	<input id="uid" name="id" placeholder="<spring:message code="main.login.design02"/>" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC').style.display = 'block';" onKeyPress="if(event.keyCode==13) document.loginForm.password.focus();" />
