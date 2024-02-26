@@ -3896,7 +3896,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        }
 	        /* 2019-12-13 홍승비 - 게시물 이동 시 조회수, 조회자정보 유지 */
 	        sb.append("<READCOUNT>" + boardListVO.getReadCount() + "</READCOUNT>");
-	        
+			
+			/* 2024-02-19 민지수 - 게시물 이동 시 공지사항 등록기간 유지 */
+			sb.append("<NTSTARTDATE>" + boardListVO.getNotiStart() + "</NTSTARTDATE>");
+			sb.append("<NTENDDATE>" + boardListVO.getNotiEnd() + "</NTENDDATE>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -4115,11 +4118,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		/* 2023-11-16 홍승비 - 게시물 복사 및 이동 시 공지사항 기간설정값을 가져오지 않는 오류 null 체크 부분 수정 (쿼리단 미수정, 차후 수정 필요) */
 		/* 2023-09-25 민지수 - 게시판 > 공지사항 > 공지 시작, 종료일 추가 */
 		if (doc.getElementsByTagName("NTSTARTDATE").item(0) != null && doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent().equals("")) {
-			boardListVO.setNotiStart(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			if (pMode.equals("copy") || pMode.equals("move")) {
+				boardListVO.setNotiStart(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent());
+			} else {
+				boardListVO.setNotiStart(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			}
 		}
 
 		if (doc.getElementsByTagName("NTENDDATE").item(0) != null && doc.getElementsByTagName("NTENDDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("NTENDDATE").item(0).getTextContent().equals("")) {
-			boardListVO.setNotiEnd(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			if (pMode.equals("copy") || pMode.equals("move")) {
+				boardListVO.setNotiEnd(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent());
+			} else {
+				boardListVO.setNotiEnd(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			}
 		}
 		
 		if (pMode.equals("modify")) {
@@ -4286,7 +4297,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        
 	        /* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라  조회수, 조회자정보 유지 */
 	        sb.append("<READCOUNT>" + boardLisitVO.getReadCount() + "</READCOUNT>");
-	        
+			/* 2024-02-19 민지수 - 게시물 복사 시 공지사항 등록기간 유지 */
+			sb.append("<NTSTARTDATE>" + boardLisitVO.getNotiStart() + "</NTSTARTDATE>");
+			sb.append("<NTENDDATE>" + boardLisitVO.getNotiEnd() + "</NTENDDATE>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
