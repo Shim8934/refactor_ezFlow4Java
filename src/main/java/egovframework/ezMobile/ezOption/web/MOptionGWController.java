@@ -172,16 +172,23 @@ public class MOptionGWController extends EgovFileMngUtil {
 		JSONObject result = new JSONObject();
 
 		try {
+			// 1. 변수
+			// 환경설정
+			String timeZone = jsonObject.get("timeZone").toString();
+			String lang = jsonObject.get("lang").toString();
+			String mainType = jsonObject.get("mainType").toString();
+			String listCnt = jsonObject.get("listCnt").toString();
+			String useSecurity = jsonObject.get("useSecurity").toString();
 
+			// 사용자 정보
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-
 			int tenantId = info.getTenantId();
 
-			
+			// pin, 생체 암호
 			String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", tenantId);
 			String pin = "", pinState = "", biometric = "";
-			if (dotNetIntegration.equalsIgnoreCase("NO")) {
+			if ("NO".equalsIgnoreCase(dotNetIntegration)) {
 				pin = jsonObject.get("pin").toString();
 				pinState = jsonObject.get("pinState").toString();
 				biometric = jsonObject.get("biometric").toString();
@@ -196,16 +203,15 @@ public class MOptionGWController extends EgovFileMngUtil {
 
 			String deviceId = (request.getParameter("deviceID") == null) ? "" : request.getParameter("deviceID");
 			String pinChange = jsonObject.get("pinChange").toString();
-			logger.debug("timeZone : " + jsonObject.get("timeZone").toString() + ", lang : "
-					+ jsonObject.get("lang").toString() + ", mainType : " + jsonObject.get("mainType").toString()
-					+ ", listCnt : " + jsonObject.get("listCnt").toString() + ", useSecurity : "
-					+ jsonObject.get("useSecurity").toString() + ", deviceId : " + deviceId
-					+ ", pinState : " + pinState + ", biometric : " + biometric + ", pin : " + pin+ ", pinChange : " + pinChange);
 
-			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(),
-					jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(),
-					jsonObject.get("listCnt").toString(), jsonObject.get("useSecurity").toString(), 
-					tenantId, deviceId, pinState, pin, biometric,pinChange);
+			logger.debug("userId : {}, timeZone : {}, lang : {}, mainType : {}, listCnt : {}, useSecurity : {}, tenantId : {}"
+					+ ", deviceId : {}, pinState : {}, pin : {}, biometric : {}, pinChange : {}"
+					, userId, timeZone, lang, mainType, listCnt, useSecurity, tenantId
+					, deviceId, pinState, pin, biometric, pinChange);
+
+			// 2. 수행
+			mOptionService.updateOption(userId, timeZone, lang, mainType, listCnt, useSecurity, tenantId
+					, deviceId, pinState, pin, biometric, pinChange);
 
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
 

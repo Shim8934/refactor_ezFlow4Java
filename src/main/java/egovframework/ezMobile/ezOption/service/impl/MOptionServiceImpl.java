@@ -126,6 +126,10 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		logger.debug("insertOption ended");				
 	}
 
+	/**
+	 * 현재 MOptionGWController.optionUpdate() 에서만 사용 중인데,
+	 * "NO".equalsIgnoreCase(dotNetIntegration) 일 때 : pinState의 값이 empty가 아니다.
+	 */
 	@Override
 	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId, String deviceId, String pinState, String pin, String biometric,String pinChange) throws Exception {
 		logger.debug("updateOption started");	
@@ -141,9 +145,8 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		
 		mOptionDAO.updateOption(map);
 		
-		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", tenantId);
-		if (dotNetIntegration.equalsIgnoreCase("NO")) {
-			updateDevicePinfInfo(deviceId, pinState, pin, biometric, tenantId, userId,pinChange);
+		if (!pinState.isEmpty()) {
+			updateDevicePinfInfo(deviceId, pinState, pin, biometric, tenantId, userId, pinChange);
 		}
 		
 		logger.debug("updateOption ended");	

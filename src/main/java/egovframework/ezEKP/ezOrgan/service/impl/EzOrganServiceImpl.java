@@ -14,6 +14,7 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1479,7 +1480,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    logger.debug("getPropertyList started");
 	    logger.debug("id=" + id + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
 	    
-		String propValue = "";
 		StringBuilder propInfo = new StringBuilder("<DATA>");
 		
 		String dataType = "user";
@@ -1507,19 +1507,23 @@ public class EzOrganServiceImpl implements EzOrganService {
 		}
 		
 		pPropList = convertAddandConvert(dataType, pPropList);
-        String[] propList = pPropList.split(";");
+        String[] propList = pPropList.toUpperCase().split(";");
 		
         for (String propname : propList) {
-        	if (checkDBColum(propname.toUpperCase()) == false) {
-                propValue = getPropertyValue(id, propname, tenantID);
-                propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propValue) + "</" + propname.toUpperCase() + ">");
-            } else if (!propname.toUpperCase().equals("")) {            	
-                if (xmldom != null && xmldom.getElementsByTagName(propname.toUpperCase()).getLength() > 0) {
-                    propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(xmldom.getElementsByTagName(propname.toUpperCase()).item(0).getTextContent()) + "</" + propname.toUpperCase() + ">");
-                } else {
-                    propInfo.append("<" + propname.toUpperCase() + "></" + propname.toUpperCase() + ">");
+			if (StringUtils.isBlank(propname)) continue;
+
+			String propValue = null; // null 이면 cleanValue 에서 "" 빈 값 리턴한다.
+
+			if (checkDBColum(propname)) {
+                if (xmldom != null && xmldom.getElementsByTagName(propname).getLength() > 0) {
+                    propValue = xmldom.getElementsByTagName(propname).item(0).getTextContent();
                 }
+
+            } else {
+                propValue = getPropertyValue(id, propname, tenantID); // getPropertyValue 에서 propname 는 대문자로 사용된다.
             }
+
+			propInfo.append("<" + propname + ">" + commonUtil.cleanValue(propValue) + "</" + propname + ">");
         }
         
         propInfo.append("</DATA>");

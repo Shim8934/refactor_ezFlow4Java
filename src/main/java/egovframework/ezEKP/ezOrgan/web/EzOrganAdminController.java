@@ -1270,20 +1270,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		int tenantId = userInfo.getTenantId();
 		
 		String companyId = request.getParameter("companyId");
-		String type = request.getParameter("type");
-		type = type == null ? "" : type;
-		logger.debug("companyId="+ companyId + ", type=" + type);
+		String userId = request.getParameter("userId");
+		logger.debug("companyId={}, userId={}", companyId, userId);
 		
-		String pwPolicyExplain = "";
-		
-		if (type.equals("shared")) {
-			pwPolicyExplain = "▒ " + egovMessageSource.getMessage("main.jjh04", locale);
-		} else {
-			pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
-		}
+		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
 		
 		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
-		model.addAttribute("type", type);
+		model.addAttribute("userId", userId);
 		return "admin/ezOrgan/inputPassword";
 	}
 	

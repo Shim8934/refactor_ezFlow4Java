@@ -7,6 +7,7 @@
 		<title><spring:message code="ezOrgan.t228" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -14,7 +15,6 @@
 			var ReturnFunction;
 			var confirmStr;
 			var companyID;
-			var type = "<c:out value='${type}'/>";
 
 			$(document).ready(function(){
 				try {
@@ -36,16 +36,13 @@
 					return;
 				}
 				
-				var checkPw = type == "shared" ? sharedMailCheckPassword(NewPassword.value) : 
-					(CheckPassword(NewPassword.value, companyID) == "OK") ? true : false;
+				var checkPw = checkPasswordPolicy({
+					"pw" : NewPassword.value,
+					"chkCompanyId" : companyID,
+					"userId" : "<c:out value='${userId}'/>"
+				});
 				
 		        if (!checkPw){
-		        	if (checkPw == "ERROR") {
-		        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
-		        	} else {
-		        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>"); 
-		        	}
-		        	
 		        	document.getElementById('NewPassword').focus();
 		        	return;
 		        }

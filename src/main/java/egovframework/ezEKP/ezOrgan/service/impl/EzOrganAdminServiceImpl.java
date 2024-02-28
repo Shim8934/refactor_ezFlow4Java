@@ -585,6 +585,41 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
+	public String changePasswordWithEmailSystem(String cn, int tenantId, String decryptedOldPassword, String decryptedNewPassword) throws Exception {
+		logger.debug("changePasswordWithEmailSystem started");
+		String result = "";
+
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String mailAddr = cn + "@" + domain;
+
+		logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantId);
+
+		// 이메일 계정의 암호를 새 암호로 설정한다.
+		int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedOldPassword, decryptedNewPassword);
+
+		// checkAndUpdateUserPassword 성공
+		if (rc == 0) {
+
+			// 로컬 시스템에서 해당 User의 암호를 변경한다.
+			try {
+				setPassword(cn, decryptedNewPassword, tenantId);
+				result = "OK";
+			// Exception이 발생하면 취소 처리를 한다.
+			} catch (Exception e) {
+				ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedNewPassword, decryptedOldPassword);
+				result = "UPDATEERROR";
+				logger.debug("UPDATEERROR : setting the user '{}' password failed.", cn);
+			}
+		} else {
+			result = "MAILERROR";
+			logger.debug("MAILERROR : setting the user '{}' password failed.", mailAddr);
+		}
+
+		logger.debug("changePasswordWithEmailSystem ended");
+		return result;
+	}
+
+	@Override
 	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception {
 	    logger.debug("retireEntry started");
 	    logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID + ",offset=" + offset);

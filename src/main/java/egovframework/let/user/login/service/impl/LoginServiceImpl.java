@@ -193,9 +193,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 
 	@Override
 	public boolean searchOtpKey(LoginVO vo) throws Exception {
-		boolean result = loginDAO.searchOtpKey(vo) > 0 ? true : false;
-
-		return result;
+		return loginDAO.searchOtpKey(vo) > 0;
 	}
 
 	@Override
