@@ -6048,10 +6048,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
             searchQuery = returnQuery;
 		}
 		
-		// test code
-		logger.debug("searchQuery   ::   " + searchQuery);
-		
-		
 		String result = ezApprovalGService.getReceiveDocList(userID, deptID, receiveDocMode, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userLang, searchQuery, xmlDomSub, userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("getReceivedDocList ended.");
