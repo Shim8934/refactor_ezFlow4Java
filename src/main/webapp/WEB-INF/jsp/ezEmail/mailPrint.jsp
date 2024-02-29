@@ -159,6 +159,14 @@
 	            </td>
 	        </tr>
 	        </c:if>
+			<c:if test="${pReciverBcc != null and pReciverBcc != ''}">
+			<tr>
+				<th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f8f8f8; border:1px solid #ddd;"><spring:message code='ezEmail.t562' /></th>
+				<td colspan="3" style="font-size:12px; color:#393939; border:1px solid #ddd; vertical-align:middle; padding:7px 7px 7px 7px;">
+					${pReciverBcc}
+				</td>
+			</tr>
+			</c:if>
 	        <tr>
 	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f8f8f8; border:1px solid #ddd;"><spring:message code='ezEmail.t556' /></th>
 	            <td colspan="3" style="font-size:12px; color:#393939; border:1px solid #ddd; vertical-align:middle; padding:7px 7px 7px 7px;">
