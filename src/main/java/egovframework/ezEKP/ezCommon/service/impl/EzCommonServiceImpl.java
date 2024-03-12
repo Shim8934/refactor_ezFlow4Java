@@ -1735,6 +1735,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("description","주소록 가져오기 시 기존주소록 중복체크 사용여부(default: YES)");
 			put("config_type","주소록");
 		}});
+		test.add(new HashMap<String, Object>(){{
+			put("confName","useJapanese");
+			put("property_value","YES");
+			put("config_name","일본어 사용여부");
+			put("regdate","2023-11-17 10:40:00");
+			put("description","일본어 사용여부(YES: 사용, NO: 사용안함, default: YES) 언어코드 ja : Japanese, 국가코드 JP : Japan");
+			put("config_type","환경설정");
+		}});
 		test.add(new HashMap<String, Object>(){{ //2023-11-17 조소정 - 중국어 사용 여부 테넌트 컨피그 추가
 			put("confName","useChinese");
 			put("property_value","NO");
