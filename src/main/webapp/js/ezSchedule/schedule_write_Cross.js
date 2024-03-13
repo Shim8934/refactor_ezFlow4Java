@@ -754,6 +754,7 @@ function allday_change()
 	{
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
+        timeSelect = false;
         if ((!timeSelect && datetype == "1") || datetype == "" || datetype == "2") { //하루종일 일정일 때 시간
         	//2018-08-28 김보미 - 현재시간으로 설정
         	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
