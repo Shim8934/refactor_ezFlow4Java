@@ -432,7 +432,7 @@
 							if (orgItemCount != resultCount) {
 								var newNodeName = "";
 								if (resultCount > 0) {
-									newNodeName = orgBoardTitle + " " + resultCount;
+									newNodeName = orgBoardTitle + " " + "(" + resultCount + ")";
 								} else {
 									newNodeName = orgBoardTitle;
 								}
