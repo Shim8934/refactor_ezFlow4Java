@@ -106,7 +106,9 @@
 		     	// 2023-06-15 황인경 - 디자인 개선 > 업무관리 > 좌측메뉴 > 메뉴선택 클래스 제어
 				$(".node_selected").attr("class", "list_text");
 				
-				if (event.target.tagName == "LI") {
+		     	if (event.target.classList.contains('tree_leftconfig')) { // 환경설정 클릭시엔 제외
+		     		return;
+		     	} else if (event.target.tagName == "LI") {
 					var liChangeSpan = event.target.querySelector(".list_text");
 					liChangeSpan.setAttribute("class", "list_text node_selected");
 				} else {
