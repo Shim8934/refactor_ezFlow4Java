@@ -55,6 +55,7 @@
 
             // checkbox 내부에 span 추가
             var spanElement = document.createElement("span");
+            spanElement.setAttribute("title", item);
             spanElement.textContent = item;
 
             // a 태그 생성
