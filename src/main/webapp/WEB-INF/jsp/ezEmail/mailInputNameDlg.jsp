@@ -25,15 +25,17 @@
 	                InputValue = parent.inputNameDlg_cross_dialogArguments[0];
 	                ReturnFunction = parent.inputNameDlg_cross_dialogArguments[1];
 	                CancelFunction = parent.inputNameDlg_cross_dialogArguments[2];
-	            } catch (e) { }
+	            } catch (e) {
+	                console.log(e);
+	            }
 	            if (InputValue != "") {
 	                txt_FolderName.value = InputValue;
 	            }
 	            try {
 	                txt_FolderName.focus();
+	            } catch (e) {
+	                console.log(e);
 	            }
-	            catch (e)
-	            { }
 	        }
 	        function btn_ok_onclick() {
 	            var szInput;

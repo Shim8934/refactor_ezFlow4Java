@@ -161,7 +161,7 @@
 		                opener.refreshUnreadCount();
 		            }
 		        } 
-			    catch (e) { }
+			    catch (e) {console.log(e);}
 			    
 			    if (mailWritePreview == "true") {
 			    	$("#menu > ul:first-child").css("display","none");
@@ -266,7 +266,7 @@
 			{
 			    var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert_Cross.aspx?Mode=new&Flag=email&url=" + encodeURIComponent(g_paramURL);
 			    var OpenWin = window.open(url, "mail_foldermanage_Cross", GetOpenWindowfeature(800, 780));
-			    try { OpenWin.focus(); } catch (e) { }
+			    try { OpenWin.focus(); } catch (e) {console.log(e);}
 			}
 			
 			function OnBtnClose()
@@ -300,7 +300,7 @@
 		        {                 	 
 		            window.open("/myoffice/ezPortal/SSO/SSO_Link.aspx?TYPE=ITSMAPPDOC&DOCTITLE=" + encodeURIComponent(g_itsmtitle) + "&EMAIL=" + encodeURIComponent(ITSMEmail) + "&NAME=" + encodeURIComponent(ITSMName) + "&DEPT=", '', '');
 		        } 
-		        catch(e) {}
+		        catch(e) {console.log(e);}
 			}
 			
 			function SecurityFG()
@@ -440,7 +440,7 @@
 			            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		            }
 		            
-		            try { OpenWin.focus(); } catch (e) { }
+		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        }
 		        else {
 		            var wWeight = "355";
@@ -605,7 +605,7 @@
 				writeCommboardselect_modal_dialogArguments[1] = NewItemCommu_onclick_Complete; // 커뮤니티 게시판 선택 완료 시의 동작
 	           
 				var OpenWin = window.open("/ezCommunity/communityBoardSelectForMail.do", "communityBoardSelectForMail", GetOpenWindowfeature(355, 600));
-				try { OpenWin.focus(); } catch (e) { }
+				try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    
 		    function NewItemCommu_onclick_Complete(ret) {

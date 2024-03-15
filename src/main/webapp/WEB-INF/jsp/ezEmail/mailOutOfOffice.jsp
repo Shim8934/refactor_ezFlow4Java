@@ -156,7 +156,7 @@
 		                 $("#Etimepicker").on("focus", function(){
 							$(this).trigger("blur");
 						});
-		            } catch (e) { }
+		            } catch (e) {console.log(e);}
 		          
 		            if (g_oofstate == "disabled") {
 		                document.getElementById("SetRadio0").defaultChecked = true;
@@ -187,15 +187,15 @@
 		        	if (tbContentElement1.editorLoadFlag) {
 			            tbContentElement1.SetEditorContent(document.getElementById("BujaeBody1").innerHTML);
 		        	}
-		        } catch (e) { }
+		        } catch (e) {console.log(e);}
 		        
 		        try {
 		        	if (tbContentElement2.editorLoadFlag) {
 			            tbContentElement2.SetEditorContent(document.getElementById("BujaeBody2").innerHTML);
 		        	}
-		        } catch (e) { }
+		        } catch (e) {console.log(e);}
 		        
-		        try {document.body.scrollTop = 0;} catch (e) {}
+		        try {document.body.scrollTop = 0;} catch (e) {console.log(e);}
 		    }
 		    function SetToggle(param) {
 		        document.getElementById("Stimepicker").disabled = true;

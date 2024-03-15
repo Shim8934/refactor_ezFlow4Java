@@ -21,7 +21,7 @@
 		            try {
 		                Arguments = opener.mail_select_sharedMailboxMember_cross_dialogArguments[0];
 		                CancelFunction = opener.mail_select_sharedMailboxMember_cross_dialogArguments[1];
-		            } catch (e) { }
+		            } catch (e) {console.log(e);}
 		        }
 		    }
 		    

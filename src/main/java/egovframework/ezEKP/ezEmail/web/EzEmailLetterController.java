@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,6 +93,9 @@ public class EzEmailLetterController {
 
 		try {
 			returnJsonArr = ezEmailAdminLetterService.searchLetter(search, companyId, tenantId, userLang);
+		} catch (UnsupportedEncodingException e) {
+			// logger.error(e.getMessage(), e);
+			logger.debug("no data");
 		} catch (Exception e) {
 			// logger.error(e.getMessage(), e);
 			logger.debug("no data");
@@ -144,6 +148,8 @@ public class EzEmailLetterController {
 
 		try {
 			json = ezEmailAdminLetterService.selectLetterBoxName(letterBoxNo, userLang);
+		} catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -152,9 +158,10 @@ public class EzEmailLetterController {
 
 		if (json != null) {
 			return json;
+		}else{
+			return new JSONObject();
 		}
 
-		return null;
 	}
 
 }

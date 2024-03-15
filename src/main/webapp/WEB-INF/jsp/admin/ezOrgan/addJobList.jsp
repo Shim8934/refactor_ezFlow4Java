@@ -813,7 +813,7 @@
 	            addjob_config_dialogArguments[0] = Params;
 	            addjob_config_dialogArguments[1] = AddJob_Add_Complete;
 	            var OpenWin = window.open("/admin/ezOrgan/addJobConfig.do?companyID=" + document.getElementById("ListCompany").value, "AddJob_Config", GetOpenWindowfeature(970, 600));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        /* } else {
 		            window.showModalDialog("AddJob_Config.aspx?companyid=" + document.getElementById("ListCompany").value, Params, "dialogHeight:600px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 600));
 		            window.location.reload(false);
@@ -844,7 +844,7 @@
 	            addjob_config_dialogArguments = new Array();
 	            addjob_config_dialogArguments[1] = AddJob_Add_Complete;		            
 	            var OpenWin = window.open("/admin/ezOrgan/addJobUserModify.do?userID=" + encodeURI(id) + "&userName=" + encodeURI(name) + "&companyID=" + document.getElementById("ListCompany").value, "AddJob_Config", GetOpenWindowfeature(350, 570));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    
 		    function email_onclick() {

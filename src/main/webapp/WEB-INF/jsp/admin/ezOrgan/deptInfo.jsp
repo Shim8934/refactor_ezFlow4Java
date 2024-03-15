@@ -25,7 +25,7 @@
 			    	try {
 			        	ReturnFunction = opener.deptinfo_dialogArguments[1];
 			            RetValue = opener.deptinfo_dialogArguments[0];
-			        }catch(e){}
+			        }catch(e){console.log(e);}
 			    }else{
 			    	RetValue = window.dialogArguments;
 			    }
@@ -261,7 +261,7 @@
 	            selectperson_cross_dialogArguments[1] = selectDeptMasterComplete;
 	            
 	            var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "selDeptMaster", GetOpenWindowfeature(860, 535));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	
 	        function selectDeptMasterComplete(rtnValue) {

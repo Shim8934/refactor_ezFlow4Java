@@ -570,7 +570,7 @@ function show_progress(fileinfo) {
 function status_change(fileinfo) {
     try {
         g_progresswin.document.Script.fileinfo_change(fileinfo);
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 
 function attach_Delete() {
@@ -650,7 +650,7 @@ function restore_button() {
     try {
         g_progresswin.close();
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function NotifyResult(filename, attachMode, path) {
@@ -738,7 +738,7 @@ function Send_onClick_Complete(ReturnValue) {
             
             try {
             	individualmailuserNum = Number(individualmailuser);
-            } catch (e) {}
+            } catch (e) {console.log(e);}
             
             if ((MsgToGot.childNodes.length + MsgCCGot.childNodes.length + MsgBCCGot.childNodes.length) > individualmailuserNum && iseachMail == "true") {
                 if (confirm(strLangKMS04 + individualmailuserNum + strLangKMS05)) {
@@ -767,6 +767,7 @@ function Send_onClick_Complete(ReturnValue) {
             
         }
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -1032,6 +1033,7 @@ function Save_onClick_Complete(ReturnValue) {
             }
         }
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -1076,6 +1078,7 @@ function event_SaveonClick() {
                 pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
             }
         } catch (e) {
+            console.log(e);
         }
         
         //메일 발송인 경우
@@ -1115,9 +1118,9 @@ function event_SaveonClick() {
                 	    gInvalidAddressArr = invalidAddressArr;
                 	    
                 		for (var i=0; i<invalidAddressArr.length; i++) {
-                			try { deleteMailUser(invalidAddressArr[i],"0"); } catch (e) {}
-                			try { deleteMailUser(invalidAddressArr[i],"1"); } catch (e) {}
-                			try { deleteMailUser(invalidAddressArr[i],"2"); } catch (e) {}
+                			try { deleteMailUser(invalidAddressArr[i],"0"); } catch (e) {console.log(e);}
+                			try { deleteMailUser(invalidAddressArr[i],"1"); } catch (e) {console.log(e);}
+                			try { deleteMailUser(invalidAddressArr[i],"2"); } catch (e) {console.log(e);}
                 		}
                 		
                 		setTimeout(Send_onClick(), 100);
@@ -1194,7 +1197,7 @@ function event_SaveonClick() {
                 	} else {
                 		window.opener.MailListRefreshByTimeout();
                 	}
-                } catch (e) { }
+                } catch (e) {console.log(e);}
                 
                 window.close();
         	}
@@ -1284,7 +1287,7 @@ function event_SaveonClick() {
                 
                 try {
                 	window.opener.MailListRefreshByTimeout();
-                } catch (e) { }
+                } catch (e) {console.log(e);}
         	}
         	
     		/*if (!isAutoSave) {
@@ -2504,7 +2507,7 @@ function GetEncodeTextNew(pUrl, pMode) {
         XmlHttp.send(xmlDom);
         return XmlHttp.responseText;
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function GetEncodeTextNew_LinkedSystem(pUrl) {
@@ -2518,7 +2521,7 @@ function GetEncodeTextNew_LinkedSystem(pUrl) {
         XmlHttp.send(xmlDom);
         return XmlHttp.responseText;
     }
-    catch (e) { }
+    catch (e) {console.log(e);}
 }
 
 function ConvertEmbedImagToXml(xmlDoc, rootNode) {
@@ -2652,8 +2655,10 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         }        
     }
 
+    var TempText = "";
+
     if (isBigFile) {
-        var TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;margin-bottom:10px;'>" +
+        TempText = "<div id='_BigAttachListHtml' style='width:100%;'><table width='100%' border='0' cellspacing='0' cellpadding='0' style='font-size:x-small;margin-bottom:10px;'>" +
                         "<tr>" +
                         "<td colspan='2' style='color:#333;font-weight:bold; padding:0px; margin:0px 0px 1px 0px; height:20px;border-bottom:1px solid #dadada;font-size:12px;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_addfile.gif' width='7' height='12' style='margin-right:5px;'>" + strLang245 + "</td>" +
                         "</tr>";
@@ -2674,6 +2679,9 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     var strTarget = "target=''";
                     var FileName = getNodeText(GetChildNodes(nodes[i])[2]);
                     FileName = replaceAll(FileName, "&", "&amp;");
+                    FileName = replaceAll(FileName, "<", "&lt;");
+                    FileName = replaceAll(FileName, ">", "&gt;");
+                    FileName = replaceAll(FileName, '"', "&quot;");
                     var fileSize = getNodeText(GetChildNodes(nodes[i])[3]);
                     var fileLocation = getNodeText(GetChildNodes(nodes[i])[4]);
                     var fileDate = fileLocation.split("|!|")[0];
@@ -2728,8 +2736,6 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         
         TempText += "</div></td></tr></table></div>";
 
-        tempDiv.innerHTML = TempText + tempDiv.innerHTML;
-        
         setBigAttachCountInfo(bigAttachFileArr);
     }
 
@@ -2801,120 +2807,17 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                 }
             }
         }
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 
-    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div " + defaultFontAndSize + ">" + tempDiv.innerHTML + "</div>";
+    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div " + defaultFontAndSize + ">" + TempText + tempDiv.innerHTML + "</div>";
     
     try {
         // 본문에 <![CDATA[]]> 부분이 있으면 XML 파싱 에러가 발생하여 제거 코드 추가함.
         BodyHTMLContent = ReplaceText(BodyHTMLContent, "<!\\[CDATA\\[", "");
         BodyHTMLContent = ReplaceText(BodyHTMLContent, "\\]\\]>", "");
-    } catch (e) { }
+    } catch (e) {console.log(e);}
     
     bigMakeXmlNode(xmlDoc, rootNode, "HTMLBODY", BodyHTMLContent.replace(regex, " "));
-
-    // 사용되지 않는 부분으로 판단되어 제거함.
-    /*
-    try {
-        tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "<BR>", "<P>");
-        tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "</DIV>", "</DIV><P>");
-        tempDiv.innerHTML = ReplaceText(tempDiv.innerHTML, "<P>", ";crlf;");
-    } catch (e) { }
-
-    bigMakeXmlNode(xmlDoc, rootNode, "eContentText", tempDiv.innerHTML.replace(regex, " "));
-    */
-}
-
-function ConvertEmbedPath_https(xmlDoc, rootNode) {
-    var tempDiv = "";
-
-    tempDiv = tbContentElement.GetBodyHTML();
-
-    if (BigSizeAttach) {
-        var TempText = "<br><br><br><br><br><FIELDSET style=\"LEFT: 0px; TOP: 1px; width:90%; padding:10px\">";
-        TempText += "<LEGEND><img height=12 hspace=5 src='" + document.location.protocol + "//" + g_servername + "/images/email/mail_004.gif' width=13 vspace=5 align=\"absmiddle\" embedding=\"1\">";
-        TempText += "<span style=\"color:#cc6600; font-size:10pt; font-weight:bold\">" + strLang122 + BigSizeMailAttachDelDay + " " + strLang123 + "</span></LEGEND>";
-
-
-        var tmpattachedfileDIV = attachedfileDIV.all.tags("a");
-        var tmpattacheinput = attachedfileDIV.all.tags("input");
-
-        for (var i = 0 ; i < tmpattachedfileDIV.length ; i++) {
-            if (tmpattacheinput(i).fileBigSizeYN == "Y") {
-                var EmailHref = tmpattacheinput(i).RealHref;
-
-                TempText += "<br><a id='BigSizeFileLink' href='" + EmailHref + "'>" + tmpattachedfileDIV(i).innerText + "</a>";
-            }
-        }
-
-
-        TempText += "</FIELDSET>";
-
-        tempDiv = tempDiv + TempText;
-    }
-
-    var idx = 0; var start = 0; var temp = ""; var end = 0;
-    var oldstart = 0; oldend = 0;
-
-    var tempText = "";
-
-    if (tempDiv.toUpperCase().indexOf("<IMG", start) < 0) {
-        tempText = tempDiv;
-        tempDiv = "";
-    }
-    var splitter = "";
-    while (tempDiv.toUpperCase().indexOf("<IMG", start) >= 0) {
-        start = tempDiv.toUpperCase().indexOf("<IMG", start);
-        end = tempDiv.indexOf(">", start + 4) + 1
-        text = tempDiv.substring(start, end);
-        var srcstart = text.toLowerCase().indexOf("src=", 0);
-        splitter = text.substr(srcstart + 4, 1);
-        var srcend = text.indexOf(splitter, srcstart + 5);
-        var txtsrc = text.substr(srcstart + 5, srcend - (srcstart + 5));
-        if (text.toLowerCase().indexOf("srcorg=") >= 0 && txtsrc.toLowerCase().indexOf(document.location.protocol) == 0) {
-        }
-        else if (text.toLowerCase().indexOf("srcorgembedimage=") >= 0 && text.toLowerCase().indexOf("src=" + splitter + document.location.protocol) >= 0) {
-
-            var embedstart = text.toLowerCase().indexOf("srcorgembedimage=");
-            splitter = text.substr(embedstart + 17, 1);
-            var embedend = text.indexOf(splitter, embedstart + 18);
-
-
-            text = text.substr(0, srcstart + 5) + ReplaceText(text.substr(embedstart + 18, embedend - (embedstart + 18)), "%25", "")
-	        + text.substr(embedend);
-
-        }
-        else if (text.toLowerCase().indexOf("src=" + splitter + "file://") >= 0 || (text.toLowerCase().indexOf("embedding=") >= 0 && text.toLowerCase().indexOf("src=" + splitter + document.location.protocol) >= 0)) {
-
-            if (text.toLowerCase().indexOf("srcorg=") > -1) {
-                var srcorgstart = text.toLowerCase().indexOf("srcorg=", 0);
-                splitter = text.substr(srcorgstart + 7, 1);
-                var srcorgend = text.toLowerCase().indexOf(splitter, srcorgstart + 8);
-                text = text.substring(0, srcorgstart) + text.substring(srcorgend + 1);
-            }
-            var srcstart = text.toLowerCase().indexOf("src=", 0);
-            splitter = text.substr(srcstart + 4, 1);
-            var srcend = text.toLowerCase().indexOf(splitter, srcstart + 5);
-            var textEx = text.substr(srcstart, srcend - srcstart);
-            text = text.substr(0, srcstart + 5) + ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(textEx.substr(textEx.lastIndexOf("/") + 1), "%25", ""), "\\\[", "%5B"), "\\\]", "%5D"), "&", "%26"), "{", "%7B"), "}", "%7D") + text.substr(srcend);
-        }
-        tempText = tempText + tempDiv.substr(oldend, start - oldend) + text;
-        oldstart = start;
-        oldend = end;
-        start = end + 1;
-    }
-
-    if (tempDiv.length > start) {
-        tempText = tempText + tempDiv.substr(start - 1);
-    }
-    MakeXmlNode(xmlDoc, rootNode, "HTMLBODY", tempText);
-    try {
-        tempDiv.innerHTML = ReplaceText(tempDiv, "<BR>", "<P>");
-        tempDiv.innerHTML = ReplaceText(tempDiv, "</DIV>", "</DIV><P>");
-        tempDiv.innerHTML = ReplaceText(tempDiv, "<P>", ";crlf;");
-    } catch (e) { }
-
-    MakeXmlNode(xmlDoc, rootNode, "eContentText", tempText);
 }
 
 function EmbedImageIntoXML(xmlDoc, rootNode) {
@@ -3246,7 +3149,7 @@ function SelectReceiver_Complete(ReturnValue) {
     mail_newreceiverchoose_dialogArguments[0] = receiverData;
     mail_newreceiverchoose_dialogArguments[1] = SelectReceiver_onClick_Complete;
     var OpenWin = window.open("/ezEmail/mailNewReceiverChoose.do?defaultwin=" + SelectReceiver_Complete.szDefaultWind, "mail_foldermanage_Cross", GetOpenWindowfeature(1120, 700));
-    try { OpenWin.focus(); } catch (e) { }
+    try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
     try {
@@ -3270,7 +3173,7 @@ function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListVi
         addReceiverOneListView(0, pListViewMsgTo);
         addReceiverOneListView(1, pListViewMsgCC);
         addReceiverOneListView(2, pListViewMsgBCC);
-    } catch (e) { }
+    } catch (e) {console.log(e);}
 }
 function getReceiverChooseFormat() {
     var retVal = new Array();

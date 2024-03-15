@@ -8,6 +8,15 @@ import java.io.FileOutputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TimeZone;
+import java.util.UUID;
+import java.util.regex.PatternSyntaxException;
 
 import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
@@ -1857,6 +1866,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
 			
 			rtnVal = "TRUE";
+		} catch (PatternSyntaxException e) {
+			logger.error(e.getMessage(), e);
+			rtnVal = "FALSE";
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			rtnVal = "FALSE";

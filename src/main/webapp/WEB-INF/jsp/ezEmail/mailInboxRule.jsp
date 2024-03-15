@@ -518,7 +518,7 @@
 		        	pHeight = 584;
 		        }
 		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, pHeight));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    function New_InboxRule_Complete(newWin) {
 		        try {
@@ -528,7 +528,7 @@
 		                Rule_Reload();
 		            }
 		        } catch (e) {
-		
+		            console.log(e);
 		        }
 		    }
 		    function MakeXmlNode(xmldoc, root, key, value) {
@@ -571,7 +571,7 @@
 		        	pHeight = 584;
 		        }
 		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(605, pHeight));
-		        try { OpenWin.focus(); } catch (e) { }
+		        try { OpenWin.focus(); } catch (e) {console.log(e);}
 		    }
 		    function Detail_InboxRule_Complete(newWin) {
 		        try {
@@ -580,7 +580,7 @@
 		                document.getElementById("ContentDescription").innerHTML = "";
 		                Rule_Reload();
 		            }
-		        } catch (e) {}
+		        } catch (e) {console.log(e);}
 		    }
 		    var XmlhttpDelete;
 		    function event_DeleteRule() {

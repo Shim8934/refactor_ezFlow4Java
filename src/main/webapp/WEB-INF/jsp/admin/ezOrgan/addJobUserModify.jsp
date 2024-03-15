@@ -60,7 +60,7 @@
 		    $(document).ready(function(){
 		    	try {
 	                ReturnFunction = opener.addjob_config_dialogArguments[1];
-	            } catch (e) {}
+	            } catch (e) {console.log(e);}
 	            
 	        	try {
 	            	var ua = navigator.userAgent;
@@ -74,7 +74,7 @@
 		                    }
 		                }
 		            }
-		        } catch (e) { }
+		        } catch (e) {console.log(e);}
 		        
 		        document.getElementById('keyword').value = cn;	
 		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
@@ -746,6 +746,7 @@
 		        	
 		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/" + propStr.toUpperCase());
 		        } catch (e) {
+		            console.log(e);
 		        } 
 		        
 		        return ReceiveDocument;
@@ -861,7 +862,7 @@
 					if (MaxCntNum != 0) {
 						MaxCntNum = MaxCntNum + 1;
 					}
-					SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+					SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
 					listview.AddDataRow(objTr, Resultxml);
 
 					var _tdlength = document.getElementById("lvAddjobList").getElementsByTagName("TD").length;
@@ -974,7 +975,7 @@
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;		                
 		                var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(598, 340));
-		                try { OpenWin.focus(); } catch (e) { }
+		                try { OpenWin.focus(); } catch (e) {console.log(e);}
 		            }else{
 		                var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
 		                feature = feature + GetShowModalPosition(600, 320);
@@ -1012,7 +1013,7 @@
 		                        } else {
 		                            window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
 		                        }
-		                    } catch (e) { }
+		                    } catch (e) {console.log(e);}
 		                }
 
 		                var treeXML = loadXMLFile("/xml/common/organtree_config3.xml");

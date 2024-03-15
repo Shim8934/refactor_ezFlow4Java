@@ -38,7 +38,7 @@ window.onload = function(){
          try {
              CancelFunction = opener.importOption_cross_dialogArguments[2];
              rgParams = RetValue;
-         } catch (e) {  }
+         } catch (e) {console.log(e);}
      }
 }
 
@@ -120,7 +120,7 @@ function DivPopUpHiddenForOption() {
         parent.document.getElementById("mailPanel").style.display = "none";
         parent.document.getElementById("iFramePanel").style.display = "none";
         parent.document.getElementById("iFrameLayer").src = "/blank.htm";
-    } catch (e) {}
+    } catch (e) {console.log(e);}
 }
 
 </script>
@@ -138,7 +138,7 @@ function DivPopUpHiddenForOption() {
 		<table style="width:100%;" class="content">
 			<tr>
 		    	<th><spring:message code="ezEmail.lhm64" /></th> 
-		    	<td><input type="password" id="securePassword" style="width:98%;margin-left:3px" maxlength="50" onkeypress="keycheck(event)"/></td>
+		    	<td><input type="password" id="securePassword" style="width:98%;margin-left:3px" maxlength="50" onkeypress="keycheck(event)" autocomplete="off" /></td>
 		  	</tr>
 		</table>		
 		<div class="btnposition btnpositionNew">

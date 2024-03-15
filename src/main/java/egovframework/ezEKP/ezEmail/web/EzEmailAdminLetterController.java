@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -160,6 +162,8 @@ public class EzEmailAdminLetterController {
 
 		try {
 			returnJsonArr = ezEmailAdminLetterService.selectAllLetterBox(companyId, tenantId);
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -199,6 +203,8 @@ public class EzEmailAdminLetterController {
 
 		try {
 			ezEmailAdminLetterService.insertLetterBox(parentLetterboxNo, displayname, displayname2, companyId, tenantId);
+		} catch (UnsupportedEncodingException e) {
+			returnStr = "ERROR";
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
@@ -228,6 +234,8 @@ public class EzEmailAdminLetterController {
 
 		try {
 			json = ezEmailAdminLetterService.selectOneLetterBox(letterBoxNo);
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -235,9 +243,9 @@ public class EzEmailAdminLetterController {
 		logger.debug("readLetterBox ended.");
 		if (json != null) {
 			return json;
+		}else{
+			return new JSONObject();
 		}
-
-		return null;
 
 	}
 
@@ -273,6 +281,8 @@ public class EzEmailAdminLetterController {
 
 		try {
 			ezEmailAdminLetterService.updateLetterBox(letterBoxNo, parent_letterbox_no, displayname, displayname2, companyId, tenantId);
+		} catch (RuntimeException e) {
+			returnStr = "ERROR";
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
@@ -304,6 +314,8 @@ public class EzEmailAdminLetterController {
 
 		try {
 			ezEmailAdminLetterService.deleteLetterBox(letterboxNum);
+		} catch (UnsupportedEncodingException e) {
+			returnStr = "ERROR";
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
@@ -328,6 +340,8 @@ public class EzEmailAdminLetterController {
 
 		try {
 			ezEmailAdminLetterService.updateLetterOrder(letterOrder, letterNo);
+		} catch (RuntimeException e) {
+			returnStr = "ERROR";
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
@@ -400,6 +414,8 @@ public class EzEmailAdminLetterController {
 			} else {
 				logger.debug("FAIL");
 			}
+		} catch (RuntimeException e) {
+			returnStr = "ERROR";
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
@@ -580,7 +596,9 @@ public class EzEmailAdminLetterController {
 			} else {
 				throw new Exception();
 			}
-
+			
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnStr = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -652,6 +670,8 @@ public class EzEmailAdminLetterController {
 			}
 
 			ezEmailAdminLetterService.updateDisplayNameLetter(displayname, displayname2, letterNo);
+		} catch (RuntimeException e) {
+			returnStr = "ERROR";
 		} catch (Exception e) {
 			returnStr = "ERROR";
 			// logger.error(e.getMessage(), e);
@@ -692,6 +712,8 @@ public class EzEmailAdminLetterController {
 					
 			deleteDirectory(new File(realPath + filePath));
 
+		} catch (RuntimeException e) {
+			returnStr = "ERROR";
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
@@ -752,12 +774,13 @@ public class EzEmailAdminLetterController {
 			} else {
 				return null;
 			}
-
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
+			return null;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			return null;
 		}
-
 	}
 
 	// html파일의 img src 경로 바꿔주는 함수 (재은)
@@ -792,6 +815,9 @@ public class EzEmailAdminLetterController {
 				writer.write(replaceResult);
 				writer.flush();
 			}
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			resultReturn = "ERROR";
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			resultReturn = "ERROR";
@@ -853,6 +879,8 @@ public class EzEmailAdminLetterController {
 				}
 				file.delete();
 			}
+		} catch (RuntimeException e) {
+			returnStr = "ERROR";
 		} catch (Exception e) {
 			returnStr = "ERROR";
 			// logger.error(e.getMessage(), e);
@@ -879,6 +907,8 @@ public class EzEmailAdminLetterController {
 		try {
 			returnJsonArr = ezEmailAdminLetterService.selectAllLeter(letterBoxNo);
 			logger.debug("jsonArr=" + returnJsonArr);
+		} catch (RuntimeException e) {
+			logger.debug("e.message=" + e.getMessage());
 		} catch (Exception e) {
 			logger.debug("e.message=" + e.getMessage());
 		}
@@ -936,6 +966,8 @@ public class EzEmailAdminLetterController {
 			logger.debug("letter=" + letter);
 
 			returnJson.put("filePath", letter);
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

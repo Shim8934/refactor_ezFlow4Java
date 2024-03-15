@@ -131,7 +131,7 @@
 	            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 	            mail_add_distributionlist_cross_dialogArguments[1] = getDLList;
 	            var OpenWin = window.open(popUrl + param, "", GetOpenWindowfeature(popSizeW, popSizeH));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        else {
 	            var rtnValue = window.showModalDialog(popUrl + param, companyId, feature);
@@ -164,7 +164,7 @@
 	            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 	            mail_add_distributionlist_cross_dialogArguments[1] = getDLList;
 	            var OpenWin = window.open(popUrl + param, "", GetOpenWindowfeature(popSizeW, popSizeH));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        else {
 	            var rtnValue = window.showModalDialog(popUrl + param, companyId, feature);

@@ -339,7 +339,7 @@
 	        function address_foldermanage() {
 	            address_foldermanage_dialogArguments[1] = address_foldermanage_Complete;
 	            var OpenWin = window.open("/ezAddress/addressFolderManage.do", "address_foldermanage", GetOpenWindowfeature(500, 500));
-	            try { OpenWin.focus(); } catch (e) { }
+	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function address_foldermanage_Complete(ret) {
 	            if (ret != undefined) {

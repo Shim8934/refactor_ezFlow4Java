@@ -765,7 +765,7 @@ function MakeListInfoHTML_SUB(ConentObject) {
             GetListInfo_ContentObject.innerHTML = "";
             if (XmlRows.length == 0) {
                 document.getElementById("contentlist").scrollTop = "0";
-                try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) { }
+                try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) {console.log(e);}
                 MailListRefresh();
                 return;
             }
@@ -1102,7 +1102,7 @@ function GetListIevent_ongetxmlcomplete() {
                 try {
                     if (document.getElementById("HeaderAllCheckBox") != null)
                         document.getElementById("HeaderAllCheckBox").checked = false;
-                } catch (e) { }
+                } catch (e) {console.log(e);}
             } else {
             	parent.frames["left"].reloadRetryCount--;
             	
@@ -1167,7 +1167,7 @@ function GetListIevent_ongetxmlcomplete_SUB() {
             if (!importExportMode) {
             	HiddenMailProgress();
             }
-            try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) { }
+            try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) {console.log(e);}
             GetList_HTTP_SUB = null;
         }
     }
@@ -2133,7 +2133,7 @@ function event_GrouplistDBClick(obj) {
         	var SubGroupListTarget = document.getElementById(pGroupListClickObject.getAttribute("id") + "sub")
             SubGroupListTarget.style.display = "none";
             SubGroupListTarget.childNodes.item(0).innerHTML = ""
-        } catch (e) { }
+        } catch (e) {console.log(e);}
     }
     pGroupListClickObject = obj;
     var NewDIV = document.createElement("DIV");

@@ -79,7 +79,7 @@ function Get_AddressList() {
     ShowMailProgress();
 }
 function Get_SearchAddressList() {
-    try { HiddenMailProgress(); } catch (e) {}
+    try { HiddenMailProgress(); } catch (e) {console.log(e);}
     ListXML = null;
     listContentArry = new Array();
     if (document.getElementById("ListViewType").value == "list") {
@@ -107,7 +107,7 @@ function Get_SearchAddressList() {
     xmlHTTPAddressList.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
     xmlHTTPAddressList.onreadystatechange = Complete_Get_AddressList;
     xmlHTTPAddressList.send(xmlDom);
-    try { ShowMailProgress(); } catch (e) {}
+    try { ShowMailProgress(); } catch (e) {console.log(e);}
     
     document.getElementById("HeaderAllCheckBox").checked = false;
 }

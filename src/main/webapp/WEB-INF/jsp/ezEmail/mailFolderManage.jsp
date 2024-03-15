@@ -46,7 +46,7 @@
 			    CurrenWidth = document.body.clientWidth;
 			    try {
 			        ReturnFunction = opener.mail_foldermanage_Cross_dialogArguments[1];
-			    } catch (e) { }
+			    } catch (e) {console.log(e);}
                 PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
                 PostTreeView.attachEvent('requestdata', requestdata);
                 PostTreeView.attachEvent('nodedblclick', function () { PostTreeView.toggle(PostTreeView.selectedIndex()) });

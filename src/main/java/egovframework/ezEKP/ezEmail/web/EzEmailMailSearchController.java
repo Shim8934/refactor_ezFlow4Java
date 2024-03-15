@@ -10,13 +10,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.regex.PatternSyntaxException;
 
 import javax.annotation.Resource;
-import javax.mail.Address;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.UIDFolder;
+import javax.mail.*;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -156,19 +153,24 @@ public class EzEmailMailSearchController {
 			
 			String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", userInfo.getTenantId());
 			boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
-			
-			List<Folder> topLevelFolders = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);		
-			
-			topLevelFolderNames = new ArrayList<String>();
-			int maxFolderCount = Math.min(5, topLevelFolders.size());
-			
-			for (int i = 0; i < maxFolderCount; i++) {
-				Folder folder = topLevelFolders.get(i);
-				
-				topLevelFolderNames.add(folder.getName());
+
+			if (ia != null){
+				List<Folder> topLevelFolders = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);
+				if (topLevelFolders == null){
+					throw new Exception("TopLevelFolders is null");
+				}
+				topLevelFolderNames = new ArrayList<String>();
+				int maxFolderCount = Math.min(5, topLevelFolders.size());
+
+				for (int i = 0; i < maxFolderCount; i++) {
+					Folder folder = topLevelFolders.get(i);
+
+					topLevelFolderNames.add(folder.getName());
+				}
+
+				logger.debug("topLevelFolderNames=" + topLevelFolderNames);
 			}
-			
-			logger.debug("topLevelFolderNames=" + topLevelFolderNames);
+
 
 			// 2022-12-19 이사라 : 검색기간의 디폴트 기간을 메일 환경설정에서 설정한 값으로 세팅하기 위해 추가
 			MailGeneralVO mailGeneral = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
@@ -176,6 +178,8 @@ public class EzEmailMailSearchController {
 
 			logger.debug("mailSearchPeriod=" + mailSearchPeriod);
 			
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		} finally {
@@ -243,7 +247,7 @@ public class EzEmailMailSearchController {
 		
 		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 		
-		Document doc = commonUtil.convertStringToDocument(bodyData);
+		Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 		
 		String mailFolder = doc.getElementsByTagName("MAILFOLDER").item(0).getTextContent();
 
@@ -422,8 +426,11 @@ public class EzEmailMailSearchController {
 				Folder folder = null;
 				Message[] messages = null;
 				
-				if (!mailFolder.equals("ALL")) {
-					folder = ia.getFolder(mailFolder);
+				if (ia != null && !mailFolder.equals("ALL")) {
+					folder = ia.getFolder(mailFolder != null ? mailFolder : "");
+					if (folder == null){
+						throw new Exception("folder is null");
+					}
 					folder.open(Folder.READ_ONLY);
 				}
 				
@@ -528,6 +535,9 @@ public class EzEmailMailSearchController {
 			
 			returnData = sb.toString();
 		
+		} catch (PatternSyntaxException e) {
+			returnData = "<DATA>ERROR</DATA>";
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnData = "<DATA>ERROR</DATA>";
 			logger.error(e.getMessage(), e);
@@ -584,7 +594,7 @@ public class EzEmailMailSearchController {
 		
 		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 		
-		Document doc = commonUtil.convertStringToDocument(bodyData);
+		Document doc = commonUtil.convertStringToDocument(bodyData != null ? bodyData : "");
 		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();	
 		
 		String folderId = null;
@@ -598,52 +608,62 @@ public class EzEmailMailSearchController {
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			
-			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
-				String folderAndMsgId = folderAndMsgIdArray[i];
-				folderId = folderAndMsgId.split("/")[0];
-				String msgId = folderAndMsgId.split("/")[1];
-				long uid = Long.parseLong(msgId);
-				
-				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-				sourceFolder.open(Folder.READ_WRITE);		
-				
-				Message deleteMsg = sourceFolder.getMessageByUID(uid);	
-				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));
-		        
-				if (deleteMsg != null && !folderId.equals(deletedFolder.toString())) {
-					Message[] deleteMsgs = {deleteMsg};
-					
-					// 2018-10-09 메일 영구 삭제 시 메일 제목, 받은 날짜 로그 추가
-					if (!cmd.equalsIgnoreCase("BMOVE")) {
-						String subject = ezEmailUtil.getSubject(deleteMsg);								
-						subject = (subject != null) ? subject : "";
-						String from = ezEmailUtil.getFullFromAddressOfMessage(deleteMsg);
-						String receivedDate = (deleteMsg.getReceivedDate() != null) ? deleteMsg.getReceivedDate().toString() : "";
-						
-						logger.debug("subject=" + subject + ",from=" + from + ",receivedDate=" + receivedDate);
+
+			if (ia != null){
+				for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+					String folderAndMsgId = folderAndMsgIdArray[i];
+					folderId = folderAndMsgId.split("/")[0];
+					String msgId = folderAndMsgId.split("/")[1];
+					long uid = Long.parseLong(msgId);
+
+					IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
+					if (sourceFolder == null){
+						throw new Exception("SourceFolder is null");
 					}
-					
-					String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
-					if (useImapMoveCommand.equals("YES")) {
-						if (cmd.equalsIgnoreCase("BMOVE")) {
-							sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
-						} else {			
+					sourceFolder.open(Folder.READ_WRITE);
+
+					Message deleteMsg = sourceFolder.getMessageByUID(uid);
+					IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(ezEmailUtil.getTrashFolderId(locale));
+
+					if (deleteMsg != null && !folderId.equals(deletedFolder.toString())) {
+						Message[] deleteMsgs = {deleteMsg};
+
+						// 2018-10-09 메일 영구 삭제 시 메일 제목, 받은 날짜 로그 추가
+						if (!cmd.equalsIgnoreCase("BMOVE")) {
+							String subject = ezEmailUtil.getSubject(deleteMsg);
+							subject = (subject != null) ? subject : "";
+							String from = ezEmailUtil.getFullFromAddressOfMessage(deleteMsg);
+							String receivedDate = (deleteMsg.getReceivedDate() != null) ? deleteMsg.getReceivedDate().toString() : "";
+
+							logger.debug("subject=" + subject + ",from=" + from + ",receivedDate=" + receivedDate);
+						}
+
+						String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+						if (useImapMoveCommand.equals("YES")) {
+							if (cmd.equalsIgnoreCase("BMOVE")) {
+								sourceFolder.moveUIDMessages(deleteMsgs, deletedFolder);
+							} else {
+								sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
+							}
+						} else {
+							if (cmd.equalsIgnoreCase("BMOVE")) {
+								sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
+							}
+
 							sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
 						}
-					} else {
-						if (cmd.equalsIgnoreCase("BMOVE")) {
-							sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
-						}
-						
-						sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);				
+					} else if (deleteMsg != null) {
+						deleteMsg.setFlag(Flags.Flag.DELETED, true);
 					}
-				} else if (deleteMsg != null) {
-					deleteMsg.setFlag(Flags.Flag.DELETED, true);
+
+					sourceFolder.close(true);
 				}
+			}
+
 				
-				sourceFolder.close(true);
-			}	
+		} catch (MessagingException e) {
+			returnData = "ERROR";
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
 			returnData = "ERROR";
 			logger.error(e.getMessage(), e);
@@ -695,60 +715,71 @@ public class EzEmailMailSearchController {
 		}
 		
 		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
-		
-		Document doc = commonUtil.convertStringToDocument(bodyData);
-		String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
-		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
-		String mfolderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
-		
-		String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
-		
-		IMAPAccess ia = null;
-		
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			
-			String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
-						
-			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
-				String folderAndMsgId = folderAndMsgIdArray[i];
-				String folderId = folderAndMsgId.split("/")[0];	
-				String msgId = folderAndMsgId.split("/")[1];
-				long uid = Long.parseLong(msgId);
-				
-				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-				sourceFolder.open(Folder.READ_WRITE);
-				
-				Message message = sourceFolder.getMessageByUID(uid);
-				
-				if (message != null) {
-					IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);		
-					
-					if (useImapMoveCommand.equals("YES")) {
-						if (cmd.equalsIgnoreCase("MOVE")) {
-							sourceFolder.moveUIDMessages(new Message[]{message}, movefolder);
-						} else {
-							sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
+
+		if (bodyData != null){
+			Document doc = commonUtil.convertStringToDocument(bodyData);
+			String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();
+			String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
+			String mfolderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
+
+			String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
+
+			IMAPAccess ia = null;
+
+			try {
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+				String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+
+				if (ia != null){
+					for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+						String folderAndMsgId = folderAndMsgIdArray[i];
+						String folderId = folderAndMsgId.split("/")[0];
+						String msgId = folderAndMsgId.split("/")[1];
+						long uid = Long.parseLong(msgId);
+
+						IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);
+						if (sourceFolder == null){
+							throw new Exception("SourceFolder is null");
 						}
-					} else {					
-						sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
-						
-						if (cmd.equalsIgnoreCase("MOVE")) {
-							message.setFlag(Flags.Flag.DELETED, true);
+						sourceFolder.open(Folder.READ_WRITE);
+
+						Message message = sourceFolder.getMessageByUID(uid);
+
+						if (message != null) {
+							IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);
+
+							if (useImapMoveCommand.equals("YES")) {
+								if (cmd.equalsIgnoreCase("MOVE")) {
+									sourceFolder.moveUIDMessages(new Message[]{message}, movefolder);
+								} else {
+									sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
+								}
+							} else {
+								sourceFolder.copyUIDMessages(new Message[]{message}, movefolder);
+
+								if (cmd.equalsIgnoreCase("MOVE")) {
+									message.setFlag(Flags.Flag.DELETED, true);
+								}
+							}
 						}
+
+						sourceFolder.close(true);
 					}
 				}
-				
-				sourceFolder.close(true);
-			}
-		
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			returnValue = "ERROR : " + e.getMessage();
-		} finally {
-			if (ia != null) {
-				ia.close();
+
+
+			} catch (MessagingException e) {
+				logger.error(e.getMessage(), e);
+				returnValue = "ERROR : " + e.getMessage();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+				returnValue = "ERROR : " + e.getMessage();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
 			}
 		}
 		

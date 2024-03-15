@@ -28,7 +28,7 @@
                 try{
                     ReturnFunction = parent.address_zip_select_dialogArguments[1];
                 }
-                catch (e) { }
+                catch (e) {console.log(e);}
             }
             
 			var url = location.href;
