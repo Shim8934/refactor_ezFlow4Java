@@ -921,6 +921,12 @@ function InsertToRecListView(Resultxml) {
         DocList.SetSecurityIdx(13);
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");
+        
+        if (typeof (cabinetAttachPage) != "undefined" && cabinetAttachPage) {
+        	// 분리첨부 검색 페이지에서 의견 아이콘 삭제
+        	$(".OpIcon").remove();
+            $("#DocList_TH_OP").remove();
+        }
 
         if (selRowChangeFlag && preSelectedRow.length > 0) {
             // 탭 이동 시 전 탭에서 선택된 row 선택되지 않도록 flag값 변경
