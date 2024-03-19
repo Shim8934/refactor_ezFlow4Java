@@ -10,7 +10,7 @@
 <style>iframe { margin-top: 10px; width: 100%; border: none; }</style>
 <title></title>
 </head>
-<body class="mainbody">
+<body class="mainbody" style="height:80vh">
 	<h1><spring:message code='ezPersonal.noti.title' /></h1>
 	<div class="portlet_tabpart01" style="margin-top: 3px; text-align: right">
 		<div class="portlet_tabpart01_top">
@@ -18,8 +18,8 @@
 			<p><span data-target="#preferences_content"><spring:message code='ezPersonal.noti.tab.preference' /></span></p>
 		</div>
 	</div>
-	<div id="item_content">
-		<iframe style="height:350px;" src="notificationItemTab.do"></iframe>
+	<div id="item_content"style="height:100%;">
+		<iframe src="notificationItemTab.do" style="height:100%;"></iframe>
 	</div>
 	<div id="preferences_content" style="display: none;">
 		<iframe style="height:200px;" src="notificationPreferenceTab.do"></iframe>

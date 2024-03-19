@@ -83,7 +83,7 @@ public interface EzPersonalService {
 
 	boolean hasNotiDiableItem(String userId, NotiType type, NotiPlatform platform, int tenantId);
 
-	void setNotiDisableItems(String userId, int tenantId, List<PersonalNotiDisableItemVO> items);
+	void setNotiDisableItems(String userId, int tenantId, List<PersonalNotiDisableItemVO> items) throws Exception;
 
 	PersonalNotiPreferencesVO getNotiPreferences(String userId, int tenantId);
 
