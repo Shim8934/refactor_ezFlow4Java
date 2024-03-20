@@ -731,13 +731,31 @@ function ListView() {
 
             //DATA1, DATA2, DATA3... 등의 값 세팅
             var oDatas = GetDataElements(oCells[0]);
+            var titleStr = "";
             for (var j = 0; j < oDatas.length; j++) {
                 var strData = oDatas[j].tagName;
                 var strValue = "";
                 if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null) {
                     strValue = oDatas[j].firstChild.nodeValue;
+
+	                // 2024-03-20 조수빈 mouseover 시 일반 게시판은 요약 내용이 나타나야 함.
+	                // tr의 title 속성은 mouseover 시 나타나는 내용이나, 일반 게시판은 요약 내용이 나타나야 함.
+	                // DATA6 => 요약 내용
+	                if (strData == "DATA6") {
+						titleStr = strValue;
+	                }
+
+	                if (strData != "TITLE" && strData != "DATA6") {
+						objTr.setAttribute(strData, strValue);
+	                } else {
+
+						if (titleStr) {
+							objTr.setAttribute(strData, unEscapeHtml(titleStr));
+						} else {
+							objTr.setAttribute(strData, unEscapeHtml(strValue));
+						}
+	                }
                 }
-                objTr.setAttribute(strData, strValue);
             }
             
             //2018-08-10 김보미 - null일경우 처리          
