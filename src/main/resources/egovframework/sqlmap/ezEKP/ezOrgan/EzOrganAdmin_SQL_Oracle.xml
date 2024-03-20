@@ -344,7 +344,8 @@
 	<select id="EzOrganAdminDAO.moveDBData_S1" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
 			SELECT
-				DEPT_CD_PATH
+				DEPT_CD_PATH,
+				DEPTLEVEL
       		FROM
       			TBL_DEPTMASTER 
       		WHERE
@@ -381,7 +382,8 @@
       			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, #v_DEPT_CD_PATH# || ',' || #v_CN#),
                 EXTENSIONATTRIBUTE2 = #v_EXTENSIONATTRIBUTE2#,
                 EXTENSIONATTRIBUTE3 = #v_EXTENSIONATTRIBUTE3#,
-                COMPNM2 = #v_COMPNM2#         
+                COMPNM2 = #v_COMPNM2#,
+                DEPTLEVEL = DEPTLEVEL + #v_DEPTLEVEL_CHANGE#          
       		WHERE
       			DEPT_CD_PATH LIKE #v_DEPT_CD_PATH_OLD# || ',%'
             AND
