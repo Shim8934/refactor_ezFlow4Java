@@ -3814,10 +3814,10 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 	border-color:#c8c8c8;
 	position: relative;
     bottom: 8px;
-    position: relative; top: 5px;"
+    position: relative; top: 5px;
 }
 #officeDiv img{
-	position: relative; top: 13px;"
+	position: relative; top: 13px;
 }
 
 

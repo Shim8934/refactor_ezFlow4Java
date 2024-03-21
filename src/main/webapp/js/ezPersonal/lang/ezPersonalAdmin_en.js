@@ -47,3 +47,6 @@ var strLangkhj31 = "Error occurred while deleting.";
 
 /* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 var srtLangHSBEx01 = "Unacceptable extension.";
+
+/* 2022-11-22 조소정 - 관리자 > 포탈 > 빠른링크 > 중국어 버전 추가 */
+var strLangCSJQL01 = "Chinese";

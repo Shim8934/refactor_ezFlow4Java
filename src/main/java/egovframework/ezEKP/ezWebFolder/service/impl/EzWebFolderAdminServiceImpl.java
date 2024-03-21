@@ -649,13 +649,11 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		// 2020-12-09 김은실 - (카이스트)회사 폴더별 관리자 지원 기능
 		if (deleteUserManager.size() > 0){
-			List<String> seqIdList = getSubFolderIdList(folder.getFolderPath(), tenantId, deleteUserManager, "1");
-			deleteSelectedFolderUser(seqIdList, tenantId, 1);
+			deleteSelectedFolderUser(folder.getFolderPath(), deleteUserManager, tenantId, 1);
 		}
 		
 		if (deleteUser.size() > 0){
-			List<String> seqIdList = getSubFolderIdList(folder.getFolderPath(), tenantId, deleteUser, "0");
-			deleteSelectedFolderUser(seqIdList, tenantId, 0);
+			deleteSelectedFolderUser(folder.getFolderPath(), deleteUser, tenantId, 0);
 			JSONObject param = new JSONObject();
 			param.put("folderId", folderId);
 			param.put("tenantId", tenantId);
@@ -687,20 +685,10 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 
 	@Override
-	public List<String> getSubFolderIdList(String folderPath, int tenantId, List<String> userIdList, String type) throws Exception{
+	public void deleteSelectedFolderUser(String folderPath, List<String> userIdList, int tenantId, int folderManger) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderPath", folderPath + "%");
-		map.put("tenantId", tenantId);
 		map.put("idList", userIdList);
-		map.put("type", type != null ? type : "");
-		List<String> seqList = ezWebFolderAdminDAO.getSubFolderIdList(map);
-		return seqList;
-	}
-	
-	@Override
-	public void deleteSelectedFolderUser(List<String> seqIdList, int tenantId, int folderManger) throws Exception{
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("seqIdList", seqIdList);
 		map.put("tenantId", tenantId);
 		map.put("folderManger", folderManger);
 		ezWebFolderAdminDAO.deleteSelectedFolderUser(map);

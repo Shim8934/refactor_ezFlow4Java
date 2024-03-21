@@ -97,6 +97,8 @@
 	</article>
 		<script type="text/javascript">
 			// 즐겨찾기 양식목록 조회
+			var BString = "${buJaeInfo}";
+			
 			var getFavoriteForms = function() {
 				var request = new XMLHttpRequest();
 				request.open('GET', '/ezNewPortal/getFavoriteForms.do', true);
@@ -324,22 +326,23 @@
 			
 		    // 부재자 설정 체크 로직
 			var checkBujaeInfo = function (type, formURL, formDocType) {
-				var BString = "${buJaeInfo}";
 				
 		        if (BString != "") {
 		            var BDim = new Array("");
 		            BDim = BString.split(":");
 		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
 		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
+		            var now = "${now}";
+		            now = now.substring(0, 16);
 		
 		            tmpStartDate = tmpStartDate.replace("/", ":");
 		            tmpEndDate = tmpEndDate.replace("/", ":");
-		            if (tmpEndDate < "${now}") {
+		            if (tmpEndDate < now) {
 		                setBujaeOff();
 		                checkBujaeInfo_Complete(true, type, formURL, formDocType);
 		                return true;
 
-		            } else if (tmpStartDate > "${now}") {
+		            } else if (tmpStartDate > now) {
 		            	checkBujaeInfo_Complete(true);
 		                return true;
 		            }
@@ -364,6 +367,7 @@
 		    var checkBujaeInfo_Complete = function (Rtnval, type, formURL, formDocType) {
 	            if (Rtnval == true) {
 	                setBujaeOff();
+	                clearAbsence(true);
 	                
 		            if (type == "form") {
 		            	openForm();
@@ -387,6 +391,7 @@
 		    				},
 		    		success: function(xml) {
 // 		    			arr_userinfo[7] = "";
+		    			BString = "";
 		    		}
 		    	});
 		    }

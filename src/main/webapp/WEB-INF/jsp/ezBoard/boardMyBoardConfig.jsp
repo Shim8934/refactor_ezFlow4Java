@@ -134,6 +134,8 @@
 	                createNodeAndInsertText(xmlpara, objNode, "PTREEID", newID);
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME", TreeName);
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", TreeName);
+	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", TreeName);
+	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", TreeName);
 	                if (type == "U")
 	                    createNodeAndInsertText(xmlpara, objNode, "PUPPERID", "0");
 	                else if (type == "C")
@@ -172,6 +174,8 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PTREEID", newID);
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME", TreeName);
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", TreeName);
+	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", TreeName);
+	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", TreeName);
 	            if (typeArg == "U")
 	                createNodeAndInsertText(xmlpara, objNode, "PUPPERID", "0");
 	            else if (typeArg == "C")
@@ -227,6 +231,8 @@
 	                createNodeAndInsertText(xmlpara, objNode, "PTREEID", "");
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME", TreeName);
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", TreeName);
+	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", TreeName);
+	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", TreeName);
 	                createNodeAndInsertText(xmlpara, objNode, "PUPPERID", SelectedBoardID);
 	                createNodeAndInsertText(xmlpara, objNode, "PMODE", "MOD");
 	                createNodeAndInsertText(xmlpara, objNode, "PBOARDID", "");
@@ -260,6 +266,8 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PTREEID", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME", TreeName);
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", TreeName);
+	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", TreeName);
+	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", TreeName);
 	            createNodeAndInsertText(xmlpara, objNode, "PUPPERID", SelectedBoardID);
 	            createNodeAndInsertText(xmlpara, objNode, "PMODE", "MOD");
 	            createNodeAndInsertText(xmlpara, objNode, "PBOARDID", "");
@@ -300,6 +308,8 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PTREEID", SelectedBoardID);
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", "");
+	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", "");
+	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PUPPERID", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PMODE", "DEL");
 	            createNodeAndInsertText(xmlpara, objNode, "PBOARDID", "");
@@ -350,11 +360,25 @@
 	
 	                createNodeAndInsertText(xmlpara, objNode, "PTREEID", newID);
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME", "${boardInfo.boardName}");
+	                
 	                if ("${boardInfo.boardName2}" != null && "${boardInfo.boardName2}" != "") {
 		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", "${boardInfo.boardName2}");
 	                } else {
 		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", "${boardInfo.boardName}");
 	                }
+	                
+	                if ("${boardInfo.boardName3}" != null && "${boardInfo.boardName3}" != "") {
+		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", "${boardInfo.boardName3}");
+	                } else {
+		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", "${boardInfo.boardName}");
+	                }
+	                
+	                if ("${boardInfo.boardName4}" != null && "${boardInfo.boardName4}" != "") {
+		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", "${boardInfo.boardName4}");
+	                } else {
+		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", "${boardInfo.boardName}");
+	                }
+	                
 	                createNodeAndInsertText(xmlpara, objNode, "PUPPERID", SelectedBoardID);
 	                createNodeAndInsertText(xmlpara, objNode, "PMODE", "NEW");
 	                createNodeAndInsertText(xmlpara, objNode, "PBOARDID", pBoardID);

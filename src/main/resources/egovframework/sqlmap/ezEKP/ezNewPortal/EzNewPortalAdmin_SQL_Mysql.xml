@@ -69,6 +69,24 @@
 				B.theme_content3 AS themecontent,
 		]]>
 		</isEqual>
+		<isEqual property="lang" compareValue="4">
+		<![CDATA[
+				B.theme_name2 AS themename,
+				B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="5">
+		<![CDATA[
+				B.theme_name2 AS themename,
+				B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="6">
+		<![CDATA[
+				B.theme_name2 AS themename,
+				B.theme_content4 AS themecontent,
+		]]>
+		</isEqual>
 		<![CDATA[
 			    A.theme_used AS themeused,
 			    A.theme_default AS themedefault
@@ -219,6 +237,18 @@
 			<isNotEmpty property="primaryLang" prepend="AND">
 				A.menu_lang = #primaryLang#
 			</isNotEmpty>
+			<isEqual property="useJapanese" compareValue="NO">
+				AND A.menu_lang != 3
+			</isEqual>
+			<isEqual property="useChinese" compareValue="NO">
+				AND A.menu_lang != 4
+			</isEqual>
+			<isEqual property="useVietnamese" compareValue="NO">
+				AND A.menu_lang != 5
+			</isEqual>
+			<isEqual property="useIndonesian" compareValue="NO">
+				AND A.menu_lang != 6
+			</isEqual>
 		<![CDATA[
 			ORDER BY
 				CASE A.menu_lang WHEN B.company_lang

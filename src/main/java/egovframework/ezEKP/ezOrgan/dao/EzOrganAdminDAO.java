@@ -37,7 +37,6 @@ import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
-import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -2326,5 +2325,31 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	// 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 겸직일 경우의 권한 삽입
 	public void updatePermissionIntoAddJobMaster(HashMap<String, Object> map) throws Exception {
 		update("EzOrganAdminDAO.updatePermissionIntoAddJobMaster", map);
+	}
+
+	public int getUserJobCheckCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.getUserJobCheckCount", map);
+	}
+
+	// 지정된 부서에 속한 퇴직자 수를 반환한다.
+	public int retireUserCountCheck(String cn, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn", cn);
+		map.put("tenantID", tenantID);
+
+		return retireUserCountCheckForLocal(map);
+	}
+
+	private int retireUserCountCheckForLocal(Map<String, Object> map) {
+		String cn = (String)map.get("cn");
+		int tenantID = (Integer)map.get("tenantID");
+
+		logger.debug("retireUserCountCheckForLocal started. cn=" + cn + ",tenantID=" + tenantID);
+
+		int userCount = (int) select("EzOrganAdminDAO.retireUserCountCheck", map);
+
+		logger.debug("retireUserCountCheckForLocal started. userCount=" + userCount);
+
+		return userCount;
 	}
 }

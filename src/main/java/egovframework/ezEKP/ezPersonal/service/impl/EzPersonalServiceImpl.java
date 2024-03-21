@@ -636,79 +636,16 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		return days;
 	}
 	
-	/* 2021-10-26 이사라 : 새비번이 prev비번과 일치하는지 chk 추가 */
+	/** 비밀번호 검증 : 현비번 comparing with db현비번 */
 	@Override
-	public int checkPassword (String pCN, String decryptPassword, int tenantID, String companyID, String newDecryptPassword) throws Exception {
-		logger.debug("checkPassword started");
-
-		String pPassword = EgovFileScrty.encryptPassword(decryptPassword, pCN);
-		String npPassword = EgovFileScrty.encryptPassword(newDecryptPassword, pCN); // 새비번 추가
-		
-		int pResult = 0;
-		boolean useCkhPrevPwd = false;
-		boolean checkPasswordNumber = false;
-		
-		if ("YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantID, companyID, "useChkPrevPwd"))) {
-			useCkhPrevPwd = true;
+	public boolean checkPassword (String pCN, String decryptPassword, int tenantID) throws Exception {
+		String encryptedOldPassword = EgovFileScrty.encryptPassword(decryptPassword, pCN);
+		String currentPassword = ezPersonalDAO.getPassword(pCN, tenantID);
+		boolean result = encryptedOldPassword.equals(currentPassword);
+		if (!result) {
+			logger.debug("checkPassword error - not crrect. : decryptPassword={}, currentPassword={}", decryptPassword, currentPassword);
 		}
-
-		if ("YES".equalsIgnoreCase(ezCommonService.getTenantConfig("checkPasswordNumber", tenantID))) {
-			checkPasswordNumber = true;
-		}
-
-		String propList = "homePhone;telephoneNumber;mobile;birth";
-		String result = ezOrganService.getPropertyList(pCN, propList, "", tenantID);
-		Document xmlDom = commonUtil.convertStringToDocument(result);
-
-		String telephone = xmlDom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();
-		String mobile = xmlDom.getElementsByTagName("MOBILE").item(0).getTextContent();
-		String homephone = xmlDom.getElementsByTagName("HOMEPHONE").item(0).getTextContent();
-		String birth = xmlDom.getElementsByTagName("BIRTH").item(0).getTextContent();
-
-		telephone = StringUtils.defaultString(telephone.replaceAll("\\D", "").trim(), "");
-		homephone = StringUtils.defaultString(homephone.replaceAll("\\D", "").trim(), "");
-		mobile = StringUtils.defaultString(mobile.replaceAll("\\D", "").trim(), "");
-		birth = StringUtils.defaultString(birth.replaceAll("\\D", "").trim(), "");
-
-		if (ezPersonalDAO.getPassword(pCN, tenantID).equals(pPassword)) { // 현비번 comparing with db현비번
-			pResult = 1;
-			
-			// 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
-			if (checkPasswordNumber) {
-				for (int i = 0; i < newDecryptPassword.length() - 2; i++) {
-					if (Character.isDigit(newDecryptPassword.charAt(i))
-							&& Character.isDigit(newDecryptPassword.charAt(i + 1))
-							&& Character.isDigit(newDecryptPassword.charAt(i + 2))) {
-						int num1 = Character.getNumericValue(newDecryptPassword.charAt(i));
-						int num2 = Character.getNumericValue(newDecryptPassword.charAt(i + 1));
-						int num3 = Character.getNumericValue(newDecryptPassword.charAt(i + 2));
-
-						if ((num2 - num1 == 1 && num3 - num2 == 1) || (num1 == num2 && num2 == num3)) {
-							return 3; // 연속된 3자리 이상의 숫자 또는 같은 값이 발견되면 오류로 처리
-						}
-
-						String consecutiveNumbers = String.valueOf(num1) + String.valueOf(num2) + String.valueOf(num3);
-
-						if (telephone.contains(consecutiveNumbers) || homephone.contains(consecutiveNumbers)
-								|| mobile.contains(consecutiveNumbers) || birth.contains(consecutiveNumbers)) {
-							return 3; // 전화번호, 생일에 포함되는 숫자가 발견되면 오류로 처리
-						}
-					}
-				}
-			}
-
-			// 새비번이 prev비번과 일치하는지 chk 추가
-			if (useCkhPrevPwd) {
-				if (npPassword.equals(ezCommonService.getPrevPwd(tenantID, pCN))) { // 새비번 comparing with prev비번
-					pResult = 2; 
-				}
-	    	}	
-		} else {
-			pResult = 0;
-		}
-
-		logger.debug("checkPassword ended");
-		return pResult;
+		return result;
 	}
 	
 	@Override
@@ -856,12 +793,30 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 
 	@Override
-	public void setNotiDisableItems(String userId, int tenantId, List<PersonalNotiDisableItemVO> items) {
+	public void setNotiDisableItems(String userId, int tenantId, List<PersonalNotiDisableItemVO> items) throws Exception {
 		logger.debug("setNotiDisabledItems started. userId={}, tenantId={}, items={}", userId, tenantId, items);
 		ezPersonalDAO.clearNotiDisableItems(userId, tenantId);
+		
+		// 2023-07-28 조수빈 - 일정 관리인 경우  일정관리알람테이블(TBL_SCHEDULECONFIG)에도 추가하는 로직.
+		// 일정관리 알림 항목은 4가지이기 때문에 배열 길이 고정
+		String[] scheduleConfigArr = {"Y", "Y", "Y", "Y"};
+		String scheduleConfigStr;
+		
 		if (!items.isEmpty()) {
 			ezPersonalDAO.insertNotiDisableItems(userId, tenantId, items);
+			
+			for (PersonalNotiDisableItemVO vo : items) {
+				// 일정관리인 경우 해당 항목을 N으로 변경한다.
+				if (vo.getMainType() == 4) {
+					scheduleConfigArr[vo.getSubType() - 1] = "N";
+				}
+			}
 		}
+		
+		scheduleConfigStr = String.join(";", scheduleConfigArr);
+		// 일정관리에 대해서만 수행
+		ezScheduleService.setScheduleMailNotiConfig(scheduleConfigStr, userId, tenantId);
+		
 		logger.debug("setNotiDisabledItems ended.");
 	}
 

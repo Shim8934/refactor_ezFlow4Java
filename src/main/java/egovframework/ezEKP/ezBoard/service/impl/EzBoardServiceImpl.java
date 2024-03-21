@@ -126,7 +126,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
 	@Override
-	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception {
+	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID, String lang) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -135,6 +135,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_MODE", pMode);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_LANG", lang);
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = ezBoardDAO.getBoardNewBoardOrder(map);
 		
@@ -201,6 +202,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<DESCRIPTION><![CDATA[" + strProp.getBoardDescription() + "]]></DESCRIPTION>");
 		sb.append("<BOARDNAME><![CDATA[" + strProp.getBoardName() + "]]></BOARDNAME>");
 		sb.append("<BOARDNAME2><![CDATA[" + strProp.getBoardName2() + "]]></BOARDNAME2>");
+		sb.append("<BOARDNAME3><![CDATA[" + strProp.getBoardName3() + "]]></BOARDNAME3>");
+		sb.append("<BOARDNAME4><![CDATA[" + strProp.getBoardName4() + "]]></BOARDNAME4>");
 		sb.append("<ALERTPOSTITEM><![CDATA[" + strProp.getAlertPostItem() + "]]></ALERTPOSTITEM>");
 		sb.append("<REPLYNOTIFY><![CDATA[" + strProp.getReplyNotify() + "]]></REPLYNOTIFY>");
 		sb.append("<URL><![CDATA[" + strProp.getUrl() + "]]></URL>");
@@ -2913,8 +2916,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			if (pStrLang.equals("")) {
 				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
-			} else {
+			} else if (pStrLang.equals("2")) {
 				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
+			} else if (pStrLang.equals("3")) {
+				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName3()) + "</VALUE>");
+			} else if (pStrLang.equals("4")) {
+				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName4()) + "</VALUE>");
 			}
 			
 			result.append("<STYLE><![CDATA[]]></STYLE>");
@@ -2922,8 +2929,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			if (pStrLang.equals("")) {
 				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
-			} else {
+			} else if (pStrLang.equals("2")) {
 				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
+			} else if (pStrLang.equals("3")) {
+				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName3()) + "</DATA2>");
+			} else if (pStrLang.equals("4")) {
+				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName4()) + "</DATA2>");
 			}
 			
 			result.append("<DATA3>" + pRootBoardID + "</DATA3>");
@@ -3885,7 +3896,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        }
 	        /* 2019-12-13 홍승비 - 게시물 이동 시 조회수, 조회자정보 유지 */
 	        sb.append("<READCOUNT>" + boardListVO.getReadCount() + "</READCOUNT>");
-	        
+			
+			/* 2024-02-19 민지수 - 게시물 이동 시 공지사항 등록기간 유지 */
+			sb.append("<NTSTARTDATE>" + boardListVO.getNotiStart() + "</NTSTARTDATE>");
+			sb.append("<NTENDDATE>" + boardListVO.getNotiEnd() + "</NTENDDATE>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -4104,11 +4118,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		/* 2023-11-16 홍승비 - 게시물 복사 및 이동 시 공지사항 기간설정값을 가져오지 않는 오류 null 체크 부분 수정 (쿼리단 미수정, 차후 수정 필요) */
 		/* 2023-09-25 민지수 - 게시판 > 공지사항 > 공지 시작, 종료일 추가 */
 		if (doc.getElementsByTagName("NTSTARTDATE").item(0) != null && doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent().equals("")) {
-			boardListVO.setNotiStart(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			if (pMode.equals("copy") || pMode.equals("move")) {
+				boardListVO.setNotiStart(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent());
+			} else {
+				boardListVO.setNotiStart(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTSTARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			}
 		}
 
 		if (doc.getElementsByTagName("NTENDDATE").item(0) != null && doc.getElementsByTagName("NTENDDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("NTENDDATE").item(0).getTextContent().equals("")) {
-			boardListVO.setNotiEnd(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			if (pMode.equals("copy") || pMode.equals("move")) {
+				boardListVO.setNotiEnd(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent());
+			} else {
+				boardListVO.setNotiEnd(commonUtil.getDateStringInUTC(doc.getElementsByTagName("NTENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			}
 		}
 		
 		if (pMode.equals("modify")) {
@@ -4275,7 +4297,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        
 	        /* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라  조회수, 조회자정보 유지 */
 	        sb.append("<READCOUNT>" + boardLisitVO.getReadCount() + "</READCOUNT>");
-	        
+			/* 2024-02-19 민지수 - 게시물 복사 시 공지사항 등록기간 유지 */
+			sb.append("<NTSTARTDATE>" + boardLisitVO.getNotiStart() + "</NTSTARTDATE>");
+			sb.append("<NTENDDATE>" + boardLisitVO.getNotiEnd() + "</NTENDDATE>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 

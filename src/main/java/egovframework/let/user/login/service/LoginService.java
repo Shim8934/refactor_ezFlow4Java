@@ -1,5 +1,6 @@
 package egovframework.let.user.login.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 
 
 /**
@@ -62,6 +64,18 @@ public interface LoginService {
 	void updateUserForReduceLoginCnt(LoginVO vo) throws Exception;
 
 	public void insertLog(LoginVO vo) throws Exception;
+
+	void updateDbSessionLog(HashMap<String, Object> map) throws Exception;
+
+	void insertSession(SessionVO vo) throws Exception;
+
+	void updateSession(String ezSessionId, String loginCookie) throws Exception;
+
+	SessionVO getSession(String ezSessionId) throws Exception;
+
+	void deleteDbSessionByTime() throws Exception;
+
+	List<Integer> getTenantIdList() throws Exception;
 
 	public void updateLog(LoginVO vo) throws Exception;
 	

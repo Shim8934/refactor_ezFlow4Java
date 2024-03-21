@@ -29,6 +29,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var companyId = "${userCompany}";
+			var userComId = "${userCompany}";
 			var searchFlag = false;
 			var selectList_ChangeFlag = false;
 			var selectTR_Data1;
@@ -287,10 +288,12 @@
 		            alert("<spring:message code='ezEmail.sharedMailbox20' />");
 		            return;
 		        }
-		        
+
+				userComId = document.getElementById("ListCompany").value;
+
 		        inputpassword_dialogArguments[0] = strLangSharedMailbox02;
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?type=shared", "InputPassword", GetOpenWindowfeature(467, 185));	
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 185));
 		        try { OpenWin.focus(); } catch (e) { }
 			}
 			

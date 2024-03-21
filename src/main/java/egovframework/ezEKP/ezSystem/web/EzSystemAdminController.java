@@ -441,21 +441,7 @@ public class EzSystemAdminController {
 				ip = "127.0.0.1";
 			}
 			
-			switch (systemLang){
-				case "1" :
-					systemCountryName = "ko";
-					break;
-				case "2" :
-					systemCountryName = "en";
-					break;
-				case "3" :
-					systemCountryName = "ja";
-					break;
-				default:
-					systemCountryName = "ko";
-					break;
-					
-			}
+			systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 			
 			if (ip != null && !ip.equals("")) {
 				if (commonUtil.checkLocalIP(ip)) {
@@ -607,21 +593,7 @@ public class EzSystemAdminController {
 				ip = "127.0.0.1";
 			}
 			
-			switch (systemLang){
-			case "1" :
-				systemCountryName = "ko";
-				break;
-			case "2" :
-				systemCountryName = "en";
-				break;
-			case "3" :
-				systemCountryName = "ja";
-				break;
-			default:
-				systemCountryName = "ko";
-				break;
-				
-			}
+			systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 			
 			if (ip != null && !ip.equals("")) {
 				if (commonUtil.checkLocalIP(ip)) {
@@ -801,21 +773,7 @@ public class EzSystemAdminController {
 					ip = "127.0.0.1";
 				}
 				
-				switch (systemLang){
-				case "1" :
-					systemCountryName = "ko";
-					break;
-				case "2" :
-					systemCountryName = "en";
-					break;
-				case "3" :
-					systemCountryName = "ja";
-					break;
-				default:
-					systemCountryName = "ko";
-					break;
-					
-				}
+				systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 				
 				if (ip != null && !ip.equals("")) {
 					if (commonUtil.checkLocalIP(ip)) {
@@ -1953,16 +1911,7 @@ public class EzSystemAdminController {
 		String countryQuestionIcon = countryIconFolder + "qm.png";
 		String lang = "";
 		
-		switch (userLang) {
-			case "1":
-				lang = "ko";
-				break;
-			case "3":
-				lang = "ja";
-				break;
-			default:
-				break;
-		}
+		lang = commonUtil.getTwoLetterLangFromLangNum(userLang);
 		
 		String[] countries = Locale.getISOCountries();
 		if (countryCodeList != null && countryCodeList.length != 0) {
@@ -2124,20 +2073,7 @@ public class EzSystemAdminController {
 				ip = "127.0.0.1";
 			}
 			
-			switch (systemLang){
-				case "1" :
-					systemCountryName = "ko";
-					break;
-				case "2" :
-					systemCountryName = "en";
-					break;
-				case "3" :
-					systemCountryName = "ja";
-					break;
-				default:
-					systemCountryName = "ko";
-					break;
-			}
+			systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 			
 			if (ip != null && !ip.equals("")) {
 				if (commonUtil.checkLocalIP(ip)) {
@@ -2302,21 +2238,7 @@ public class EzSystemAdminController {
 					ip = "127.0.0.1";
 				}
 				
-				switch (systemLang){
-				case "1" :
-					systemCountryName = "ko";
-					break;
-				case "2" :
-					systemCountryName = "en";
-					break;
-				case "3" :
-					systemCountryName = "ja";
-					break;
-				default:
-					systemCountryName = "ko";
-					break;
-					
-				}
+				systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 				
 				if (ip != null && !ip.equals("")) {
 					if (commonUtil.checkLocalIP(ip)) {
@@ -2508,20 +2430,7 @@ public class EzSystemAdminController {
 				ip = "127.0.0.1";
 			}
 
-			switch (systemLang) {
-			case "1":
-				systemCountryName = "ko";
-				break;
-			case "2":
-				systemCountryName = "en";
-				break;
-			case "3":
-				systemCountryName = "ja";
-				break;
-			default:
-				systemCountryName = "ko";
-				break;
-			}
+			systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 
 			if (StringUtils.isNotBlank(ip)) {
 				if (commonUtil.checkLocalIP(ip)) {
@@ -2681,20 +2590,7 @@ public class EzSystemAdminController {
 				ip = "127.0.0.1";
 			}
 
-			switch (systemLang) {
-			case "1":
-				systemCountryName = "ko";
-				break;
-			case "2":
-				systemCountryName = "en";
-				break;
-			case "3":
-				systemCountryName = "ja";
-				break;
-			default:
-				systemCountryName = "ko";
-				break;
-			}
+			systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 
 			if (StringUtils.isNotBlank(ip)) {
 				if (commonUtil.checkLocalIP(ip)) {
@@ -2951,20 +2847,7 @@ public class EzSystemAdminController {
 					ip = "127.0.0.1";
 				}
 	
-				switch (systemLang) {
-				case "1":
-					systemCountryName = "ko";
-					break;
-				case "2":
-					systemCountryName = "en";
-					break;
-				case "3":
-					systemCountryName = "ja";
-					break;
-				default:
-					systemCountryName = "ko";
-					break;
-				}
+				systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 	
 				if (StringUtils.isNotBlank(ip)) {
 					if (commonUtil.checkLocalIP(ip)) {
@@ -3133,20 +3016,7 @@ public class EzSystemAdminController {
 					ip = "127.0.0.1";
 				}
 	
-				switch (systemLang) {
-				case "1":
-					systemCountryName = "ko";
-					break;
-				case "2":
-					systemCountryName = "en";
-					break;
-				case "3":
-					systemCountryName = "ja";
-					break;
-				default:
-					systemCountryName = "ko";
-					break;
-				}
+				systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 	
 				if (StringUtils.isNotBlank(ip)) {
 					if (commonUtil.checkLocalIP(ip)) {
@@ -3183,6 +3053,7 @@ public class EzSystemAdminController {
 						case "add" : updateType = egovMessageSource.getMessage("ezSystem.jhy03", locale); break;
 						case "retire" : updateType = egovMessageSource.getMessage("ezSystem.jhy04", locale); break;
 						case "delete" : updateType = egovMessageSource.getMessage("ezSystem.jhy05", locale); break;
+						case "restore" : updateType = egovMessageSource.getMessage("ezSystem.lhw01", locale); break;
 						case "mvDept" : updateType = egovMessageSource.getMessage("ezSystem.jhy06", locale); break;
 						case "grantAddJob" : updateType = egovMessageSource.getMessage("ezSystem.jhy07", locale); break;
 						case "clearAddJob" : updateType = egovMessageSource.getMessage("ezSystem.jhy08", locale); break;

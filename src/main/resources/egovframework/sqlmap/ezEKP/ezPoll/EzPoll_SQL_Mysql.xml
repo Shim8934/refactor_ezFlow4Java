@@ -1367,7 +1367,7 @@
 						a.extensionattribute10 as jikchek,
 						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND property_name = 'PrimaryLang') AS primaryLang,
 						a.extensionattribute4 as gyumJik,
 						a.extensionattribute2 as userFileUrl,
 						a.extensionattribute14 as sabun
@@ -1406,7 +1406,7 @@
 						a.extensionattribute10 as jikchek,
 						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND property_name = 'PrimaryLang') AS primaryLang,
 						a.extensionattribute4 as gyumJik,
 						a.extensionattribute2 as userFileUrl,
 						a.extensionattribute14 as sabun
@@ -1443,7 +1443,7 @@
 						a.extensionattribute10 as jikchek,
 						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND property_name = 'PrimaryLang') AS primaryLang,
 						a.extensionattribute4 as gyumJik,
 						a.extensionattribute2 as userFileUrl,
 						a.extensionattribute14 as sabun
@@ -1503,7 +1503,7 @@
 				a.extensionattribute10 as jikchek,
 				a.tenant_id,
 				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND property_name = 'PrimaryLang') AS primaryLang,
 				a.extensionattribute4 as gyumJik,
 				a.extensionattribute2 as userFileUrl,
 				a.extensionattribute14 as sabun
@@ -1529,7 +1529,7 @@
 						a.extensionattribute10 as jikchek,
 						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND property_name = 'PrimaryLang') AS primaryLang,
 						a.extensionattribute4 as gyumJik,
 						a.extensionattribute2 as userFileUrl,
 						a.extensionattribute14 as sabun
@@ -1560,7 +1560,7 @@
 						a.extensionattribute10 as jikchek,
 						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND property_name = 'PrimaryLang') AS primaryLang,
 						a.extensionattribute4 as gyumJik,
 						a.extensionattribute2 as userFileUrl,
 						a.extensionattribute14 as sabun
@@ -1589,7 +1589,7 @@
 						a.extensionattribute10 as jikchek,
 						a.tenant_id,
 						(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+						(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND property_name = 'PrimaryLang') AS primaryLang,
 						a.extensionattribute4 as gyumJik,
 						a.extensionattribute2 as userFileUrl,
 						a.extensionattribute14 as sabun
@@ -1676,7 +1676,7 @@
 				a.extensionattribute10 as jikchek,
 				a.tenant_id,
 				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND property_name = 'PrimaryLang') AS primaryLang,
 				a.extensionattribute4 as gyumJik,
 				a.extensionattribute2 as userFileUrl,
 				a.extensionattribute14 as sabun
@@ -1730,7 +1730,7 @@
 				a.extensionattribute10 as jikchek,
 				a.tenant_id,
 				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
-				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND property_name = 'PrimaryLang') AS primaryLang,
 				a.extensionattribute4 as gyumJik,
 				a.extensionattribute2 as userFileUrl,
 				a.extensionattribute14 as sabun

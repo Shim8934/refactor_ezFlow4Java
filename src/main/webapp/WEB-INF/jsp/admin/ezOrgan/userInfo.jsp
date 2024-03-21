@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
+	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>   
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -354,14 +355,18 @@
 		            alert("<spring:message code='ezOrgan.t257' />");
 		            return;
 		        }
-		        var checkPw = CheckPassword(document.getElementById('Password').value, companyID);
-		        if (RetValue[2] == "" && checkPw != "OK"){
-		        	if (checkPw == "ERROR") {
-		        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
-		        	} else {
-		        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>");
-		        	}
-		        	
+		        var checkPw = checkPasswordPolicy({
+					"pw" : document.getElementById('Password').value,
+					"chkCompanyId" : companyID,
+					"userId" : document.getElementById("UserID").value,
+					"usePropParams" : true,
+					"TELEPHONENUMBER" : PhoneNumber.value,
+					"MOBILE" : Mobile.value,
+					"HOMEPHONE" : HomePhone.value,
+					"BIRTH" : document.getElementById("txtBirth").value
+				});
+
+		        if (RetValue[2] == "" && !checkPw){
 		        	document.getElementById('Password').focus();
 		        	return;
 		        }
@@ -437,6 +442,14 @@
 
 				if (useBizmekaSpambox == "YES") {
 					showProgress();
+				}
+				
+				if(jobTitleID == ""){
+					jobTitleID = "0";
+				}
+				
+				if(jobPositionID == "") {
+					jobPositionID = "0";
 				}
 				
 				$.ajax({
@@ -675,7 +688,7 @@
 		    
 		    function titleChange() {
 		    	if ($("#titleSelector option:selected").length > 0) {
-		    		jobTitleID 		= $("#titleSelector option:selected").attr("id");
+		    		jobTitleID 		= $("#titleSelector option:selected").attr("id") != "" ? $("#titleSelector option:selected").attr("id") : "0";
 		    		jobTitleName 	= $("#titleSelector option:selected").attr("nmval");
 		    		jobTitleName2 	= $("#titleSelector option:selected").attr("nmval2");
 		    	} else {
@@ -687,7 +700,7 @@
 		    
 		    function positionChange() {
 		    	if ($("#positionSelector option:selected").length > 0) {
-		    		jobPositionID 		= $("#positionSelector option:selected").attr("id");
+		    		jobPositionID 		= $("#positionSelector option:selected").attr("id") != "" ? $("#positionSelector option:selected").attr("id") : "0";
 		    		jobPositionName 	= $("#positionSelector option:selected").attr("nmval");
 		    		jobPositionName2 	= $("#positionSelector option:selected").attr("nmval2");
 		    	} else {

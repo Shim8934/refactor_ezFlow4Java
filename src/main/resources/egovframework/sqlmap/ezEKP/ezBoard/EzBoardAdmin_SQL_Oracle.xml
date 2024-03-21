@@ -23,11 +23,13 @@
 		<result property="boardId" 					column="BOARDID" 					columnIndex="1"/>
 		<result property="boardName" 				column="BOARDNAME" 					columnIndex="2"/>
 		<result property="boardName2" 				column="BOARDNAME2"					columnIndex="3"/>
-		<result property="treeViewOrder" 			column="TREEVIEWORDER" 				columnIndex="4"/>
-		<result property="boardColor" 				column="BOARDCOLOR" 				columnIndex="5"/>
-		<result property="guBun" 					column="GUBUN" 						columnIndex="6"/>
-		<result property="url" 					    column="URL" 						columnIndex="7"/>
-		<result property="boardGroupAcl" 			column="BOARDGROUPACL" 				columnIndex="8"/>
+		<result property="boardName3" 				column="BOARDNAME3" 				columnIndex="4"/>
+		<result property="boardName4" 				column="BOARDNAME4"					columnIndex="5"/>
+		<result property="treeViewOrder" 			column="TREEVIEWORDER" 				columnIndex="6"/>
+		<result property="boardColor" 				column="BOARDCOLOR" 				columnIndex="7"/>
+		<result property="guBun" 					column="GUBUN" 						columnIndex="8"/>
+		<result property="url" 					    column="URL" 						columnIndex="9"/>
+		<result property="boardGroupAcl" 			column="BOARDGROUPACL" 				columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap id="getMyBoardTree_get3" class="MyFavoriteVO">
@@ -35,11 +37,13 @@
 		<result property="userId" 					column="USERID" 					columnIndex="2"/>
 		<result property="treeName" 				column="TREENAME" 					columnIndex="3"/>
 		<result property="treeName2" 				column="TREENAME2" 					columnIndex="4"/>
-		<result property="treeLevel" 				column="TREELEVEL" 					columnIndex="5"/>
-		<result property="treeStep" 				column="TREESTEP" 					columnIndex="6"/>
-		<result property="treeUpper" 				column="TREEUPPER" 					columnIndex="7"/>
-		<result property="childCnt" 				column="CHILDCNT" 					columnIndex="8"/>
-		<result property="treeBoardId" 				column="TREEBOARDID" 				columnIndex="9"/>
+		<result property="treeName3" 				column="TREENAME3" 					columnIndex="5"/>
+		<result property="treeName4" 				column="TREENAME4" 					columnIndex="6"/>
+		<result property="treeLevel" 				column="TREELEVEL" 					columnIndex="7"/>
+		<result property="treeStep" 				column="TREESTEP" 					columnIndex="8"/>
+		<result property="treeUpper" 				column="TREEUPPER" 					columnIndex="9"/>
+		<result property="childCnt" 				column="CHILDCNT" 					columnIndex="10"/>
+		<result property="treeBoardId" 				column="TREEBOARDID" 				columnIndex="11"/>
 	</resultMap>
 	
 	<resultMap id="backGroundImage" class="BoardBackgroundVO">
@@ -253,6 +257,8 @@
              	USERID ,
              	TREENAME ,
              	TREENAME2 ,
+             	TREENAME3 ,
+             	TREENAME4 ,
              	TREELEVEL ,
              	TREESTEP ,
              	TREEUPPER ,
@@ -329,6 +335,16 @@
 							THEN A.boardname
 							ELSE A.boardname2
 						END BoardName2,
+	                    CASE
+							WHEN (A.boardname3 = '' OR A.boardname3 IS NULL)
+							THEN A.boardname
+							ELSE A.boardname3
+						END BoardName3,
+	                    CASE
+							WHEN (A.boardname4 = '' OR A.boardname4 IS NULL)
+							THEN A.boardname
+							ELSE A.boardname4
+						END BoardName4,
 	                    A.treevieworder TreeViewOrder,
 	                    A.boardcolor BoardColor,
 	                    A.gubun,
@@ -392,6 +408,16 @@
 								THEN A.Boardname
 								ELSE A.Boardname2
 							END BoardName2,
+		                    CASE
+								WHEN (A.boardname3 = '' OR A.boardname3 IS NULL)
+								THEN A.boardname
+								ELSE A.boardname3
+							END BoardName3,
+		                    CASE
+								WHEN (A.boardname4 = '' OR A.boardname4 IS NULL)
+								THEN A.boardname
+								ELSE A.boardname4
+							END BoardName4,
 		                    A.TreeViewOrder ,
 		                    A.BoardColor BoardColor,
 		                    A.Gubun ,
@@ -422,6 +448,16 @@
 								THEN A.boardname
 								ELSE A.boardname2
 							END BoardName2,
+		                    CASE
+								WHEN (A.boardname3 = '' OR A.boardname3 IS NULL)
+								THEN A.boardname
+								ELSE A.boardname3
+							END BoardName3,
+		                    CASE
+								WHEN (A.boardname4 = '' OR A.boardname4 IS NULL)
+								THEN A.boardname
+								ELSE A.boardname4
+							END BoardName4,
 		                    A.TreeViewOrder TreeViewOrder  ,
 		                    A.BoardColor BoardColor  ,
 		                    A.Gubun ,
@@ -486,6 +522,16 @@
 								THEN A.boardname
 								ELSE A.boardname2
 							END BoardName2,
+		                    CASE
+								WHEN (A.boardname3 = '' OR A.boardname3 IS NULL)
+								THEN A.boardname
+								ELSE A.boardname3
+							END BoardName3,
+		                    CASE
+								WHEN (A.boardname4 = '' OR A.boardname4 IS NULL)
+								THEN A.boardname
+								ELSE A.boardname4
+							END BoardName4,
 		                    A.TreeViewOrder TreeViewOrder  ,
 		                    A.BoardColor BoardColor  ,
 		                    A.Gubun ,
@@ -577,6 +623,16 @@
 							THEN A.Boardname
 							ELSE A.Boardname2
 						END BoardName2,
+	                    CASE
+							WHEN (A.Boardname3 = '' OR A.Boardname3 IS NULL)
+							THEN A.Boardname
+							ELSE A.Boardname3
+						END BoardName3,
+	                    CASE
+							WHEN (A.Boardname4 = '' OR A.Boardname4 IS NULL)
+							THEN A.Boardname
+							ELSE A.Boardname4
+						END BoardName4,
 	                    A.TreeViewOrder ,
 	                    A.BoardColor BoardColor,
 	                    A.Gubun ,
@@ -608,6 +664,16 @@
 							THEN A.Boardname
 							ELSE A.Boardname2
 						END BoardName2,
+	                    CASE
+							WHEN (A.Boardname3 = '' OR A.Boardname3 IS NULL)
+							THEN A.Boardname
+							ELSE A.Boardname3
+						END BoardName3,
+	                    CASE
+							WHEN (A.Boardname4 = '' OR A.Boardname4 IS NULL)
+							THEN A.Boardname
+							ELSE A.Boardname4
+						END BoardName4,
 	                    A.TreeViewOrder ,
 	                    A.BoardColor BoardColor,
 	                    A.Gubun ,
@@ -637,6 +703,16 @@
 							THEN A.Boardname
 							ELSE A.Boardname2
 						END BoardName2,
+	                    CASE
+							WHEN (A.Boardname3 = '' OR A.Boardname3 IS NULL)
+							THEN A.Boardname
+							ELSE A.Boardname3
+						END BoardName3,
+	                    CASE
+							WHEN (A.Boardname4 = '' OR A.Boardname4 IS NULL)
+							THEN A.Boardname
+							ELSE A.Boardname4
+						END BoardName4,
 	                    A.TreeViewOrder ,
 	                    A.BoardColor BoardColor,
 	                    A.Gubun ,
@@ -722,6 +798,16 @@
 								THEN AG.Boardname
 								ELSE AG.Boardname2
 							END BoardName2,
+		                    CASE
+								WHEN (AG.Boardname3 = '' OR AG.Boardname3 IS NULL)
+								THEN AG.Boardname
+								ELSE AG.Boardname3
+							END BoardName3,
+		                    CASE
+								WHEN (AG.Boardname4 = '' OR AG.Boardname4 IS NULL)
+								THEN AG.Boardname
+								ELSE AG.Boardname4
+							END BoardName4,
 		                    AG.TreeViewOrder ,
 		                    AG.BoardColor BoardColor,
 		                    AG.Gubun ,
@@ -1961,10 +2047,10 @@
 	<insert id="EzBoardAdminDAO.setMyBoardTreeConfig_N" parameterClass="MyFavoriteVO">
 		<![CDATA[
 			INSERT INTO TBL_Board_MyTree ( 
-				TREEID, USERID, TREENAME, TREENAME2, TREESTEP, TREEUPPER, TREEBOARDID, TENANT_ID, COMPANYID
+				TREEID, USERID, TREENAME, TREENAME2, TREENAME3, TREENAME4, TREESTEP, TREEUPPER, TREEBOARDID, TENANT_ID, COMPANYID
 			)
             VALUES ( 
-            	#treeId#, #userId#, #treeName#, #treeName2#, ( SELECT CASE WHEN MAX(TREESTEP) IS NULL THEN 1 ELSE MAX(TREESTEP) + 1 END FROM TBL_Board_MyTree WHERE TENANT_ID = #tenantID# AND TREEUPPER = #treeUpper# ), #treeUpper#, #boardId#, #tenantID#, #companyID#  
+            	#treeId#, #userId#, #treeName#, #treeName2#, #treeName3#, #treeName4#, ( SELECT CASE WHEN MAX(TREESTEP) IS NULL THEN 1 ELSE MAX(TREESTEP) + 1 END FROM TBL_Board_MyTree WHERE TENANT_ID = #tenantID# AND TREEUPPER = #treeUpper# ), #treeUpper#, #boardId#, #tenantID#, #companyID#  
             )
 		]]>
 	</insert>
@@ -1973,13 +2059,15 @@
 		<isEqual  property="v_isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 				INSERT INTO TBL_Board_MyBoards ( 
-					USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+					USERID, BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
 				)
 	         	( SELECT 
 	         		#v_PUSERID# USERID ,
 	              	BOARDID ,
 	                BOARDNAME ,
 	                BOARDNAME2 ,
+	                BOARDNAME3 ,
+	                BOARDNAME4 ,
 	                ( SELECT 
 	                	COUNT(BOARDID) + 1
 	     			  FROM 
@@ -2017,13 +2105,15 @@
 		<isNotEqual  property="v_isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 				INSERT INTO TBL_Board_MyBoards ( 
-					USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+					USERID, BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
 				)
 	         	( SELECT 
 	         		#v_PUSERID# USERID ,
 	              	BOARDID ,
 	                BOARDNAME ,
 	                BOARDNAME2 ,
+	                BOARDNAME3 ,
+	                BOARDNAME4 ,
 	                ( SELECT 
 	                	COUNT(BOARDID) + 1
 	     			  FROM 
@@ -2061,6 +2151,16 @@
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map">
+		<isEqual property="v_STRLANG" compareValue="">
+			<![CDATA[
+				INSERT INTO TBL_Board_TreeCache ( 
+					QUERY, 		RESULT , 	TENANT_ID 
+				)
+	        	VALUES ( 
+	        		#v_PQUERY#, #v_RESULT#, #v_TENANTID#
+	        	)
+        	]]>
+		</isEqual>
 		<isEqual property="v_STRLANG" compareValue="2">
 			<![CDATA[
 				INSERT INTO TBL_Board_TreeCache ( 
@@ -2071,36 +2171,46 @@
 	        	)
         	]]>
 		</isEqual>
-		<isNotEqual property="v_STRLANG" compareValue="2">
+		<isEqual property="v_STRLANG" compareValue="3">
 			<![CDATA[
 				INSERT INTO TBL_Board_TreeCache ( 
-					QUERY, 		RESULT, 	TENANT_ID 
+					QUERY, 		RESULT3 , 	TENANT_ID 
 				)
-	        	VALUES (
-	        		#v_PQUERY#, #v_RESULT#, #v_TENANTID# 
+	        	VALUES ( 
+	        		#v_PQUERY#, #v_RESULT#, #v_TENANTID#
 	        	)
-	        ]]>
-		</isNotEqual>
+        	]]>
+		</isEqual>
+		<isEqual property="v_STRLANG" compareValue="4">
+			<![CDATA[
+				INSERT INTO TBL_Board_TreeCache ( 
+					QUERY, 		RESULT4 , 	TENANT_ID 
+				)
+	        	VALUES ( 
+	        		#v_PQUERY#, #v_RESULT#, #v_TENANTID#
+	        	)
+        	]]>
+		</isEqual>
 	</insert>
 		
 	<insert id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" >
 		<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 				INSERT INTO TBL_Board_BoardInfo ( 
-					BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, GUBUN, BOARDNO, TENANT_ID
+					BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, PARENTBOARDID, GUBUN, BOARDNO, TENANT_ID
 				)
 	     		VALUES ( 
-	     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', 99, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID#
+	     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, #v_BOARDGROUPNAME3#, #v_BOARDGROUPNAME4#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', 99, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID#
 	     		)
 			]]>
 		</isEqual>
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardInfo ( 
-				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDNO, TENANT_ID, COMPANYID 
+				BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, PARENTBOARDID, BOARDNO, TENANT_ID, COMPANYID 
 			)
      		VALUES ( 
-     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID#, #v_COMPANYID#
+     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, #v_BOARDGROUPNAME3#, #v_BOARDGROUPNAME4#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID#, #v_COMPANYID#
      		)
 		]]>
 		</isNotEqual>
@@ -2141,20 +2251,20 @@
 	<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 				INSERT INTO TBL_Board_BoardInfo ( 
-					BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY
+					BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY
 				)
 		   		VALUES ( 
-		   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0 
+		   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_BOARDNAME3#, #v_BOARDNAME4#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0 
 		   		)
 			]]>
 		</isEqual>
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardInfo ( 
-				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY, COMPANYID
+				BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY, COMPANYID
 			)
 	   		VALUES ( 
-	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0, #v_COMPANYID#  
+	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_BOARDNAME3#, #v_BOARDNAME4#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0, #v_COMPANYID#  
 	   		)
 		]]>
 		</isNotEqual>
@@ -2192,7 +2302,9 @@
 			UPDATE TBL_Board_MyTree
 		    SET 
 		    	TREENAME = #treeName#,
-		    	TREENAME2 = #treeName2#
+		    	TREENAME2 = #treeName2#,
+		    	TREENAME3 = #treeName3#,
+		    	TREENAME4 = #treeName4#
             WHERE
             	TENANT_ID = #tenantID#
             AND  
@@ -2298,7 +2410,9 @@
 				UPDATE TBL_Board_BoardInfo
 	      		SET 
 		          	BOARDNAME = #v_PBOARDNAME#,
-		          	BOARDNAME2 = #v_PBOARDNAME2#
+		          	BOARDNAME2 = #v_PBOARDNAME2#,
+		          	BOARDNAME3 = #v_PBOARDNAME3#,
+		          	BOARDNAME4 = #v_PBOARDNAME4#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  
@@ -2319,6 +2433,8 @@
 		          	DELETEAFTER = TO_NUMBER(#v_PDELETEAFTER#) ,
 		          	BOARDCOLOR = #v_PBOARDCOLOR#,
 		          	BOARDNAME2 = #v_PBOARDNAME2#,
+		          	BOARDNAME3 = #v_PBOARDNAME3#,
+		          	BOARDNAME4 = #v_PBOARDNAME4#,
 		          	PORTLET = #v_PPORTLET#,
 		          	ONELINEREPLY = #v_PONELINEREPLY#,
 		          	BACKGROUND = #v_PBACKGROUND#,
@@ -2343,7 +2459,9 @@
 			UPDATE TBL_Board_MyBoards
       		SET 
       			BOARDNAME = #v_PBOARDNAME#,
-          		BOARDNAME2 = #v_PBOARDNAME2#
+          		BOARDNAME2 = #v_PBOARDNAME2#,
+      			BOARDNAME3 = #v_PBOARDNAME3#,
+          		BOARDNAME4 = #v_PBOARDNAME4#
     		WHERE
     			TENANT_ID = #v_TENANTID#
     		AND  
@@ -2356,7 +2474,9 @@
 			UPDATE TBL_Board_MyTree
       		SET 
       			TREENAME = #v_PBOARDNAME#,
-          		TREENAME2 = #v_PBOARDNAME2#
+          		TREENAME2 = #v_PBOARDNAME2#,
+      			TREENAME3 = #v_PBOARDNAME3#,
+          		TREENAME4 = #v_PBOARDNAME4#
     		WHERE
     			TENANT_ID = #v_TENANTID#
     		AND  

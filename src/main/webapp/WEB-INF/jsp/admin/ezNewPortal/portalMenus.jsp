@@ -83,6 +83,10 @@
 		var menuAuths = [];
 		var usePrimaryLangOnly = "";
 		var primary = "";
+		var useJapanese = "${useJapanese}";
+		var useChinese = "${useChinese}";
+		var useVietnamese = "${useVietnamese}";
+		var useIndonesian = "${useIndonesian}";
 		
 		$(function(){
 			getCompanies();
@@ -301,6 +305,8 @@
 							country = "<spring:message code='ezNewPortal.t079' />";
 						} else if (item.menuLang == 3) {
 							country = "<spring:message code='ezNewPortal.t080' />";
+						} else if (item.menuLang == 4) {
+							country = "<spring:message code='ezPortal.t4094' />";
 						}
 						
 						menusHTML += country + ")</td>";
@@ -566,44 +572,94 @@
 					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
 					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
 					menusHTML += "</tr>";	
+				} else if (primary == "4") {
+					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
+					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+					menusHTML += "</tr>";	
 				}
 			} else {
 				var mainTitle = "<spring:message code='ezNewPortal.t078' />";
 				var subTitle1 = "<spring:message code='ezNewPortal.t079' />";
 				var subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+				var subTitle3 = "<spring:message code='ezPortal.t4094' />";
 				
 				var mainTitleId = "menu1";
 				var subTitle1Id = "menu2";
 				var subTitle2Id = "menu3";
+				var subTitle3Id = "menu4";
+				
+				var subTitleTr1Id = "en";
+				var subTitleTr2Id = "ja";
+				var subTitleTr3Id = "zh";
 				
 				if (primary == "2") {
 					mainTitle = "<spring:message code='ezNewPortal.t079' />";
 					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
 					subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+					subTitle3 = "<spring:message code='ezPortal.t4094' />";
 					
 					mainTitleId = "menu2";
 					subTitle1Id = "menu1";
 					subTitle2Id = "menu3";
+					subTitle3Id = "menu4";
+					
+					subTitleTr1Id = "ko";
+					subTitleTr2Id = "ja";
+					subTitleTr3Id = "zh";
 				} else if (primary == "3") {
 					mainTitle = "<spring:message code='ezNewPortal.t080' />";
 					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
 					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
+					subTitle3 = "<spring:message code='ezPortal.t4094' />";
 					
 					mainTitleId = "menu3";
 					subTitle1Id = "menu1";
 					subTitle2Id = "menu2";
-				}
+					subTitle3Id = "menu4";
 					
+					subTitleTr1Id = "ko";
+					subTitleTr2Id = "en";
+					subTitleTr3Id = "zh";
+				} else if (primary == "4") {
+					mainTitle = "<spring:message code='ezPortal.t4094' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
+					subTitle3 = "<spring:message code='ezNewPortal.t080' />";
+					
+					mainTitleId = "menu4";
+					subTitle1Id = "menu1";
+					subTitle2Id = "menu2";
+					subTitle3Id = "menu3";
+					
+					subTitleTr1Id = "ko";
+					subTitleTr2Id = "en";
+					subTitleTr3Id = "ja";
+				}
 				
-				menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
+				// 2023-11-23 조소정 - 일본어, 중국어 사용 여부에 따라 메뉴명 rowspan 및 height 조정
+				var menuLength = 0;
+				if (useJapanese === "YES" && useChinese === "YES") {
+					  menuLength = 4;
+				} else if (useJapanese === "YES" && useChinese === "NO") {
+				  menuLength = 3;
+				} else if (useJapanese === "NO" && useChinese === "YES") {
+				  menuLength = 3;
+				} else {
+				  menuLength = 2;
+				}
+
+				menusHTML += "<tr><th rowspan=" + menuLength + " class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
 				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + mainTitle + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + mainTitleId + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle1 + ")</td>";
+				menusHTML += "<tr id='" + subTitleTr1Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle1 + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle1Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle2 + ")</td>";
+				menusHTML += "<tr id='" + subTitleTr2Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle2 + ")</td>";
 				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle2Id + "' type='text' maxlength='50'></td>";
+				menusHTML += "</tr>";
+				menusHTML += "<tr id='" + subTitleTr3Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle3 + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle3Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
 			}
 			menusHTML += "</table>";
@@ -653,7 +709,15 @@
 			$(".addMenuBtn").on("click", insertMenu);
 			
 			//메뉴 추가 iconTable01 height 지정
-			$(".iconTable01, .iconTable02").css("height", (usePrimaryLangOnly == "YES" ? 106 : 172) + "px");
+			$(".iconTable01, .iconTable02").css("height", (usePrimaryLangOnly == "YES" ? 106 : (106 + 33 * (menuLength -1))) + "px");
+			
+			if (useJapanese == "NO") {
+				document.getElementById("ja").style.display = "none";
+			}
+			
+			if (useChinese == "NO") {
+				document.getElementById("zh").style.display = "none";
+			}
 		}
 		
 		var insertMenu = function() {

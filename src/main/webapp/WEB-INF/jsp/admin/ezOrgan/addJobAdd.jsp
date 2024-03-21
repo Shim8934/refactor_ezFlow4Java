@@ -89,6 +89,7 @@
 		        nodeIdx = treeView.GetSelectNode();
 		        
 		        selectedCompanyID = nodeIdx.GetNodeData("extensionattribute2");
+		        console.log("selectedCompanyID = ", selectedCompanyID);
 		        parent.getTitleOption(selectedCompanyID);
 		    }
 		    

@@ -12,32 +12,21 @@
 <style>
 #chartPortletList{
 	display: flex;
+	align-items: center;
+	width: 100%;
 }
+
 #chartLeft{
 	z-index: 0;
 	width: 25%;
 	height: 100%;
 	position: relative;
 }
-#countsDiv{
-	float: left;
-    position: absolute;
-	bottom: 0;
-    text-align: center;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-#yearProduceCountsSpan{
-    color: rgb(63 76 95);
-    font-size: 15px;
-    font-weight: bold;
-	height: auto;
-}
+
 #chartRight{
 	border-left: 1px solid #dbdbdb;
     padding: 10px;
-	width: 100%;
+	width: calc(100% - 20px);
 	height: 100%;
 }
 
@@ -60,9 +49,6 @@
 			<div class="portlet_list" id="chartPortletList">
 	           <div id="chartLeft" style="display: none">
 	           		<canvas id="canvas2"></canvas>
-	           		<div id="countsDiv">
-	           			<span id="yearProduceCountsSpan"></span>
-	           		</div>
 	           </div>
 	           <div id="chartRight">
 		           	<canvas id="canvas"></canvas>
@@ -71,4 +57,46 @@
     	</div>
     </article>
 </body>
+<script>
+	var initFail = function() {
+		var failSpace = document.getElementById("chartPortletList");
+		failSpace.innerHTML =
+				"<dl class='nodata'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>"
+				+ messages.strLang1
+				+ "</dd></dl>";
+		if (!!failSpace.firstChild) failSpace.firstChild.style.margin = "0 auto";
+	}
+
+	var getDataForSampleChart = function () {
+		var request = new XMLHttpRequest();
+		request.open('GET', '/ezNewPortal/sampleChartPortlet.do', true);
+		request.responseType = 'text';
+
+		request.onload = function () {
+			if (request.status >= 200 && request.status < 400) {
+				var jsonArr = JSON.parse(request.response);
+				if (frameId === "Frame3" || frameId === "Frame4" || frameId === "Frame7"){
+					document.getElementById("chartLeft").style.display = '';
+					document.getElementById("chartRight").style.width = 'calc(75% - 20px)';
+					var canvas2 =  document.getElementById("canvas2");
+					var douChart = new EzChartPortlet();
+					douChart.draw(canvas2).initDou(jsonArr[1]).count();
+				}
+				var canvas = document.getElementById("canvas");
+				var stackChart = new EzChartPortlet();
+				stackChart.draw(canvas).initStackBar(jsonArr[0]);
+			} else {
+				initFail();
+			}
+		}
+		request.onerror = function () {
+			initFail();
+		};
+		request.send();
+	}
+
+	var initChartPortlet = function () {
+		getDataForSampleChart();
+	}
+</script>
 </html>

@@ -174,6 +174,7 @@
 		        selKeepPlace.selectedIndex = 0;
 		        g_SelChargerID = "";
 		        txtCharger.value = "";
+				chkTransExp.checked = false;
 		    }
 		    function btnSearch_onclick() {
 		        var oParamXml = GetCabSearchParamXml();

@@ -1320,9 +1320,9 @@
 	<insert id="EzScheduleDAO.insertScheduleConfig" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULECONFIG(
-				USERID, 		DEFAULTVIEW, 		STARTDAY, 		STARTTIME, 			ENDTIME, 			AUTODELETE,			tenant_id		
+				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			InvitationMail, CancellationMail, AttendanceMail, RejectedMail, autodelete,			tenant_id
 			) VALUES (
-				#v_USERID#,		#v_DEFAULTVIEW#,	#v_STARTDAY#,	#v_STARTTIME#,		#v_ENDTIME#,		#v_AUTODELETE#,		#v_TENANTID#
+				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_INVITATIONMAIL#, #v_CANCELLATIONMAIL#, #v_ATTENDANCEMAIL#, #v_REJECTEDMAIL#, #v_AUTODELETE#,		#v_TENANTID#
 			)
    		]]>
 	</insert>
@@ -1429,6 +1429,39 @@
 		]]>	
 	</update>
 	
+	<update id="EzScheduleDAO.modifyScheduleConfig" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_scheduleconfig
+			set
+				defaultview = #v_DEFAULTVIEW#,
+				startday = #v_STARTDAY#,
+				starttime = #v_STARTTIME#,
+				endtime = #v_ENDTIME#,
+				autodelete = #v_AUTODELETE#
+			where
+				userid = #v_USERID#
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+	</update>
+
+	<update id="EzScheduleDAO.setScheduleMailNotiConfig" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_scheduleconfig
+			set
+				InvitationMail = #v_INVITATIONMAIL#,
+				CancellationMail = #v_CANCELLATIONMAIL#,
+				AttendanceMail = #v_ATTENDANCEMAIL#,
+				RejectedMail = #v_REJECTEDMAIL#
+			where
+				userid = #v_USERID#
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+	</update>
+
 	<delete id="EzScheduleDAO.deleteScheduleGroup" parameterClass="map">
 		<![CDATA[
 			DELETE FROM

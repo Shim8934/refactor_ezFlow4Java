@@ -669,8 +669,7 @@ function unEscapeHtml(text) {
     return text.replace(/&amp;|&lt;|&gt;|&quot;|&#034;|&#039;/g, function(m) { return map[m]; });
 }
 
-function adjustFontSizeToFitWidth(nodeId, desiredWidth, desiredHeight) {
-    var node = document.getElementById(nodeId);
+function adjustFontSizeToFitWidth(node, desiredWidth, desiredHeight) {
     var fontSize = 1;
     node.style.fontSize = fontSize + 'px';
     desiredHeight = desiredHeight || 9999999999;

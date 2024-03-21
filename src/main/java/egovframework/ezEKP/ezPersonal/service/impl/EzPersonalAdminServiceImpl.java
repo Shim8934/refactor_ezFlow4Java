@@ -270,13 +270,17 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String pQuickLinkName = doc.getElementsByTagName("pQuickLinkName").item(0).getTextContent();
 		String pQuickLinkName2 = doc.getElementsByTagName("pQuickLinkName2").item(0).getTextContent();
 		String pQuickLinkName3 = doc.getElementsByTagName("pQuickLinkName3").item(0).getTextContent();
+		String pQuickLinkName4 = doc.getElementsByTagName("pQuickLinkName4").item(0).getTextContent();
+		String pQuickLinkName5 = doc.getElementsByTagName("pQuickLinkName5").item(0).getTextContent();
+		String pQuickLinkName6 = doc.getElementsByTagName("pQuickLinkName6").item(0).getTextContent();
+
 		String pLinkType= doc.getElementsByTagName("pLinkType").item(0).getTextContent();
 		String pLinkTypeURL = doc.getElementsByTagName("pLinkTypeURL").item(0).getTextContent();
 		String pMode = doc.getElementsByTagName("pMode").item(0).getTextContent();
 		String pUrl= doc.getElementsByTagName("pURL").item(0).getTextContent();
 		String pSize= doc.getElementsByTagName("pSize").item(0).getTextContent();
 		
-		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pQuickLinkName4, pQuickLinkName5, pQuickLinkName6, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (doc.getElementsByTagName("node").getLength() == 0) {
 			setQuickLinkACL(pQuickLinkID, "", "", "", "", "DEL", userInfo.getTenantId()); 
@@ -798,7 +802,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("delQuickLink ended");
 	}
 
-	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String linkType, String linkTypeURL, String mode, String url, String size, String userID, String companyID, int tenantID) throws Exception {
+	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String quickLinkName4, String quickLinkName5, String quickLinkName6, String linkType, String linkTypeURL, String mode, String url, String size, String userID, String companyID, int tenantID) throws Exception {
 		logger.debug("setQuickLinkListXML started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -808,6 +812,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_QUICKLINKNAME", quickLinkName);
 		map.put("v_QUICKLINKNAME2", quickLinkName2);
 		map.put("v_QUICKLINKNAME3", quickLinkName3);
+		map.put("v_QUICKLINKNAME4", quickLinkName4);
+		map.put("v_QUICKLINKNAME5", quickLinkName5);
+		map.put("v_QUICKLINKNAME6", quickLinkName6);
 		map.put("v_LINKTYPE", linkType);
 		map.put("v_LINKTYPEURL", linkTypeURL);
 		map.put("v_URL", url);

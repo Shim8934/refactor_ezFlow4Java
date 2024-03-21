@@ -2195,7 +2195,7 @@
 						jobID : jobId,
 						pageNum : CurPage,
 						cell : "company;description;displayName;title;telephoneNumber", 
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
 						searchType : "",
 						searchValue : "",
 						comID : comId

@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,7 +164,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "c");
 		
 		/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트(그룹) 표출 시 companyID 조건 추가 */
-		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId(), isCompanyAdmin);
+		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getLangData(userInfo.getLang()), userInfo.getCompanyID(), userInfo.getTenantId(), isCompanyAdmin);
 		
 		for (int i = 0; i < list.size(); i++) {
 			BoardTreeVO vo = list.get(i);
@@ -191,6 +192,12 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + lang, userInfo.getTenantId());
 		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + lang, userInfo.getTenantId());
 		String rollInfo = userInfo.getRollInfo();
+
+		// 2023-11-27 조소정 - 관리자 > 게시판 > 그룹생성 > 일본어, 중국어 사용 여부에 따라 게시판 그룹이름 표출/미표출 구현
+		String lang_tertiary = ezCommonService.getTenantConfig("LangTertiary" + lang, userInfo.getTenantId());
+		String lang_quaternary = ezCommonService.getTenantConfig("LangQuaternary" + lang, userInfo.getTenantId());
+		String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
+		String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
 		
 		/* 2018-10-15 홍승비 - 관리자단 게시판그룹생성 진입 시 전체관리자 여부 확인 */
 		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "c")) {
@@ -199,6 +206,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_multiData", use_multiData);
 		model.addAttribute("lang_primary", lang_primary);
 		model.addAttribute("lang_secondary", lang_secondary);
+		model.addAttribute("lang_tertiary", lang_tertiary);
+		model.addAttribute("lang_quaternary", lang_quaternary);
+		model.addAttribute("useJapanese", useJapanese);
+		model.addAttribute("useChinese", useChinese);
 
 		logger.debug("boardGroupCreate ended");
 		return "admin/ezBoard/boardGroupCreate";
@@ -216,6 +227,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String groupName1 = URLDecoder.decode(boardPropertyVO.getBoardGroupName(), "utf-8");
 		String groupName2 = URLDecoder.decode(boardPropertyVO.getBoardGroupName2(), "utf-8");
+		String groupName3 = URLDecoder.decode(boardPropertyVO.getBoardGroupName3(), "utf-8");
+		String groupName4 = URLDecoder.decode(boardPropertyVO.getBoardGroupName4(), "utf-8");
 		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1()	+ ", " + user.getDeptName1() + ")";
 		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2()	+ ", " + user.getDeptName2() + ")";
 		String uID = user.getId();
@@ -223,6 +236,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		boardPropertyVO.setBoardGroupName(groupName1);
 		boardPropertyVO.setBoardGroupName2(groupName2);
+		boardPropertyVO.setBoardGroupName3(groupName3);
+		boardPropertyVO.setBoardGroupName4(groupName4);
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
@@ -253,6 +268,12 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardGroupID = request.getParameter("boardGroupID");
 		String parentBoardName = "";
 		
+		// 2023-11-27 조소정 - 관리자 > 게시판 > 게시판등록 > 일본어, 중국어 사용 여부에 따라 게시판이름 표출/미표출 구현
+		String lang_tertiary = ezCommonService.getTenantConfig("LangTertiary" + lang, userInfo.getTenantId());
+		String lang_quaternary = ezCommonService.getTenantConfig("LangQuaternary" + lang, userInfo.getTenantId());
+		String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
+		String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(parentBoardID, userInfo.getTenantId());
 		
 		if (lang.equals("2") && !boardPropertyVO.getBoardName2().equals("")) {
@@ -267,6 +288,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("use_multiData", use_multiData);
 		model.addAttribute("lang_primary", lang_primary);
 		model.addAttribute("lang_secondary", lang_secondary);
+		model.addAttribute("lang_tertiary", lang_tertiary);
+		model.addAttribute("lang_quaternary", lang_quaternary);
+		model.addAttribute("useJapanese", useJapanese);
+		model.addAttribute("useChinese", useChinese);
 
 		logger.debug("boardCreate ended");
 		return "admin/ezBoard/boardCreate";
@@ -284,6 +309,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String boardName1 = URLDecoder.decode(boardPropertyVO.getBoardName(), "utf-8");
 		String boardName2 = URLDecoder.decode(boardPropertyVO.getBoardName2(), "utf-8");
+		String boardName3 = URLDecoder.decode(boardPropertyVO.getBoardName3(), "utf-8");
+		String boardName4 = URLDecoder.decode(boardPropertyVO.getBoardName4(), "utf-8");
 		String boardGroupID = boardPropertyVO.getBoardGroupID();
 		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1()	+ ", " + user.getDeptName1() + ")";
 		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2()	+ ", " + user.getDeptName2() + ")";
@@ -300,6 +327,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		boardPropertyVO.setBoardName(boardName1);
 		boardPropertyVO.setBoardName2(boardName2);
+		boardPropertyVO.setBoardName3(boardName3);
+		boardPropertyVO.setBoardName4(boardName4);
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
@@ -368,15 +397,18 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String upperBoardID = request.getParameter("upperBoardID");
 		String isAdminLeft = "Y";
 		boolean isCompanyAdmin = commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c");
-		String lang = "";
+		
+		// 2023-11-28 조소정 - 게시판명 사용자 설정 언어로 표출하도록 수정
+		String lang = commonUtil.getLangData(user.getLang());
 
-		/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 */
+		/* 2023-08-07 이주원 - 게시판명에 다국어 기본언어, 멀티언어 적용 
 		String multiBoardName = "";
 		if (commonUtil.getPrimaryData(user.getLang(), user.getTenantId()).equals("1")) {
 			lang = "";
 		} else {
 			lang = "2";
 		}
+		*/
 		
 		// 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가
 		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", lang, isAdminLeft, isCompanyAdmin, "", user.getRollInfo(), user.getTenantId());
@@ -780,7 +812,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		BoardPropertyVO newBoardGroupProp = ezBoardService.getBoardProperty(newBoardGroupID, userInfo.getTenantId());
 		
 		// 하위게시판 아래로 이동하는 경우
-		if (newBoardGroupProp.getBoardGroupID() != null) {
+		if (StringUtils.isNoneBlank(newBoardGroupProp.getBoardGroupID())) {
 			newBoardGroupID = newBoardGroupProp.getBoardGroupID();
 			BoardPropertyVO newBoardGroupProp2 = ezBoardService.getBoardProperty(newBoardGroupID, userInfo.getTenantId());
 			
@@ -846,13 +878,27 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String style = "";
 		String style2 = "";
 		String isAllGroupBoard = "";
-		
+
+		// 2023-11-27 조소정 - 관리자 > 게시판 > 그룹 선택 후 일반설정 > 일본어, 중국어 사용 여부에 따라 게시판 그룹이름 표출/미표출 구현
+		String lang_tertiary = ezCommonService.getTenantConfig("LangTertiary" + lang, userInfo.getTenantId());
+		String lang_quaternary = ezCommonService.getTenantConfig("LangQuaternary" + lang, userInfo.getTenantId());
+		String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
+		String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
 		if (boardPropertyVO.getBoardName2() == null	|| boardPropertyVO.getBoardName2().equals("")) {
-			boardPropertyVO.setBoardName2(boardPropertyVO.getBoardName1());
+			boardPropertyVO.setBoardName2(boardPropertyVO.getBoardName());
 		}
-		
+
+		if (boardPropertyVO.getBoardName3() == null	|| boardPropertyVO.getBoardName3().equals("")) {
+			boardPropertyVO.setBoardName3(boardPropertyVO.getBoardName());
+		}
+
+		if (boardPropertyVO.getBoardName4() == null	|| boardPropertyVO.getBoardName4().equals("")) {
+			boardPropertyVO.setBoardName4(boardPropertyVO.getBoardName());
+		}
+
 		if (boardPropertyVO.getDeleteAfter() == null || boardPropertyVO.getDeleteAfter().equals("")) {
 			boardPropertyVO.setDeleteAfter("-1");
 		}
@@ -913,6 +959,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("adminType", adminType);
 		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 		model.addAttribute("noticeBoardID", noticeBoardID);
+		model.addAttribute("lang_tertiary", lang_tertiary);
+		model.addAttribute("lang_quaternary", lang_quaternary);
+		model.addAttribute("useJapanese", useJapanese);
+		model.addAttribute("useChinese", useChinese);
 
 		logger.debug("boardProperty ended");
 		return "admin/ezBoard/boardProperty";
@@ -1132,10 +1182,25 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			}
 		}
 
-		String boardName = boardProperty.getBoardName();
-
-		if (primary.equals("2")) {
-			boardName = boardProperty.getBoardName2();
+		// 2023-12-04 조소정 - 사용자 설정 언어로 게시판명 표출되도록 수정
+		String userLang = userInfo.getLang();
+		String boardName = "";
+		
+		switch (userLang) {
+	    case "1":
+	        boardName = boardProperty.getBoardName();
+	        break;
+	    case "2":
+	        boardName = boardProperty.getBoardName2();
+	        break;
+	    case "3":
+	        boardName = boardProperty.getBoardName3();
+	        break;
+	    case "4":
+	        boardName = boardProperty.getBoardName4();
+	        break;
+	    default:
+	    	boardName = boardProperty.getBoardName();
 		}
 
 		/* 게시판 권한설정 시 companyID 조건 추가, 겸직한 사원의 경우 해당 겸직정보를 표출함 + 다국어 대응하도록 정보 가져옴 */

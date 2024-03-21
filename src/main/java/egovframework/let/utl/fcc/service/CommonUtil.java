@@ -65,6 +65,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -90,7 +91,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -139,6 +139,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.rest.Rest;
 import egovframework.let.utl.rest.Rest.Module;
 import egovframework.let.utl.rest.Result;
@@ -366,7 +367,7 @@ public class CommonUtil {
 		}
 
 		try{
-			String decData = egovFileScrty.decryptAES(loginCookie);
+			String decData = getDecryptedLoginCookie(loginCookie);
 
 			String[] decDataArray = decData.split("///");
 			String serverName = decDataArray[0];
@@ -431,7 +432,7 @@ public class CommonUtil {
 	
 	public LoginSimpleVO userInfoSimple(String loginCookie) {
 		try{
-			String decData = egovFileScrty.decryptAES(loginCookie);
+			String decData = getDecryptedLoginCookie(loginCookie);
 
 			String[] decDataArray = decData.split("///", -1);
 			
@@ -465,6 +466,37 @@ public class CommonUtil {
 		}
 	}
 	
+	public String getDecryptedLoginCookie(String loginCookie) {
+		String decData = "";
+
+		try {
+			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+
+			if (useDbSession) {
+				String ezSessionId = loginCookie;
+				SessionVO resultVO = loginService.getSession(ezSessionId);
+
+				decData = egovFileScrty.decryptAES(resultVO.getLoginCookie());
+
+			} else {
+				decData = egovFileScrty.decryptAES(loginCookie);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return decData;
+	}
+	
+	public List<Integer> getTenantIdList() {
+		try {
+			List<Integer> list = loginService.getTenantIdList();
+			return list;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	public LoginVO aprUserInfo(String loginCookie) {
 		try{
 			logger.debug("aprUserInfo started");
@@ -597,7 +629,8 @@ public class CommonUtil {
 
 	public List<String> getUserIdAndPassword(String loginCookie) {
 		try{
-			String decData = egovFileScrty.decryptAES(loginCookie);
+			String decData = getDecryptedLoginCookie(loginCookie);
+
 			List<String> returnObject = new ArrayList<String>();
 			
 			String userId = decData.split("///")[1];
@@ -748,15 +781,17 @@ public class CommonUtil {
 		boolean usingAsAPI = "yes".equalsIgnoreCase(request.getHeader("Use-As-API"));
 		// request 아이피가 127.0.0.1 일 때는 세션 콘피그 무시함 (인사연동)
 		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
+		// useDbSession 체크가 이 부분에서 필수 요소는 아니나 예외처리 보강
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
-		if (!usingSession || usingAsAPI || isLoopbackRequest) {
-			return validLoginCookie(request);
+		if (!useDbSession && (!usingSession || usingAsAPI || isLoopbackRequest)) {
+			return validLoginCookie(request, response);
 		}
 
 		return validSessionLoginCookie(request, response);
 	}
 
-	private boolean validLoginCookie(HttpServletRequest request) {
+	private boolean validLoginCookie(HttpServletRequest request,  HttpServletResponse response) {
 		Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
 
 		if (loginCookie == null) {
@@ -765,11 +800,12 @@ public class CommonUtil {
 
 		try {
 			String ip = ClientUtil.getClientIP(request);
-			String decryptedLoginCookie = egovFileScrty.decryptAES(loginCookie.getValue());
+			String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
 
 			// 복호화된 로그인 쿠키는 "///" 구분자로 여러 정보가 담겨있으며 그 중 4번째가 클라이언트의 IP이다.
 			return decryptedLoginCookie.split("///")[3].equals(ip) && checkDeptId(decryptedLoginCookie);
 		} catch (Exception e) {
+			clearAllCookies(request, response); // 오류발생 시 쿠키를 삭제하도록 수정
 			logger.error(e.getMessage(), e);
 		}
 
@@ -778,14 +814,15 @@ public class CommonUtil {
 
 	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
-		if (session == null) {
+		if (!useDbSession && session == null) {
 			clearAllCookies(request, response);
 
 			return false;
 		}
 
-		return validLoginCookie(request);
+		return validLoginCookie(request, response);
 	}
 
 	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -1228,13 +1265,17 @@ public class CommonUtil {
 	}
 	
 	public String getTwoLetterLangFromLangNum(String langNum) {
-		String returnValue = "";
-		
 		if (langNum == null) {
 			logger.error("langNum is null.");
 			return null;
 		}
 		
+		return getTwoLetterLangFromLangNum(langNum, "");
+	}
+
+	public String getTwoLetterLangFromLangNum(String langNum, String defaultValue) {
+		String returnValue = defaultValue;
+
 		if (langNum.equals("1")) {
 			returnValue = "ko";
 		} else if (langNum.equals("2")) {
@@ -1243,6 +1284,10 @@ public class CommonUtil {
 			returnValue = "ja";
 		} else if (langNum.equals("4")) {
 			returnValue = "zh";
+		} else if (langNum.equals("5")) {
+			returnValue = "vi";
+		} else if (langNum.equals("6")) {
+			returnValue = "id";
 		} else {
 			logger.error("Invalid langNum.");
 		}
@@ -1260,15 +1305,18 @@ public class CommonUtil {
 		
 		// 2018-02-28 skyblue0o0 : 중국어(zh)는 아직 지원하지 않으므로 주석처리
 		// 첫 로그인 시 브라우저의 언어로 사용자 언어가 세팅되기 때문에 문제가 생길 수 있음.
-		// TODO: 중국어 지원 시 주석 풀기
 		if (twoLetterLang.equalsIgnoreCase("ko")) {
 			returnValue = "1";
 		} else if (twoLetterLang.equalsIgnoreCase("en")) {
 			returnValue = "2";
 		} else if (twoLetterLang.equalsIgnoreCase("ja")) {
 			returnValue = "3";
-//		} else if (twoLetterLang.equalsIgnoreCase("zh")) {
-//			returnValue = "4";
+		} else if (twoLetterLang.equalsIgnoreCase("zh")) {
+			returnValue = "4";
+		} else if (twoLetterLang.equalsIgnoreCase("vi")) {
+			returnValue = "5";
+		} else if (twoLetterLang.equalsIgnoreCase("id")) {
+			returnValue = "6";
 		} else {
 			logger.error("Invalid twoLetterLang.");
 		}
@@ -1343,7 +1391,7 @@ public class CommonUtil {
 	
 	// yy tenantID로 db에 있는것만 복호화하는게 아니고 요청된 licenseKey를 복호화하는 기능
 	public String licenseKeyDEC(String licenseKey) throws Exception {
-		String packageType = "";
+		String packageType = "standard";
 		
 		if (!licenseKey.equals("")) {
 			try {
@@ -1954,8 +2002,10 @@ public class CommonUtil {
 				}
 				
 				if(loginCookie != null) {
-					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
-					
+					String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());
+
+					String[] cookieInfo = decryptedLoginCookie.split("///");
+
 					if(cookieInfo.length <  11) {
 						return result;
 					}
@@ -2062,23 +2112,151 @@ public class CommonUtil {
 		return result;
 	}
 	
+	/**
+	 * 암호 정책관리 체크 : 결과값 ENUM 객체
+	 */
+	public enum PasswordCheckPolicyResult {
+		// OK
+		SUCCESS("OK", 0, "you can use it."),
+		DISABLE_PASSWORD_POLICY("OK", 1, "The password policy is empty."),
+		DISABLE_PASSWORD_POLICY_CONFIG("OK", 2, "usePasswordPatternPolicy config is 'NO'"),
+		DISABLE_PASSWORD_POLICY_PATTERN("OK", 3, "The password policy pattern is empty."),
+		// ERROR (음수)
+		ERROR("ERROR", -1, "This password is not allowed."),
+		CAPITAL_LETTERS_NOT_ALLOWED("ERROR", -2, "Capital letters not allowed. (useEngCapitalLetter)"),
+		SMALL_LETTERS_NOT_ALLOWED("ERROR", -3, "Small letters not allowed. (useEngSmallLetter)"),
+		NUMBERS_NOT_ALLOWED("ERROR", -4, "Numbers not allowed. (useNumber)"),
+		SPECIAL_CHARACTERS_NOT_ALLOWED("ERROR", -5, "Special characters not allowed. (useSpecial)"),
+		CURRENT_PATTERN_CNT_NOT_ALLOWED("ERROR", -6, "When current patterns are used not available. (NUMBER_OF_CHAR == 0 : not use)"),
+		CHARACTERS_NOT_SUFFICIENT("ERROR", -7, "Characters of the required pattern are not sufficient. (NUMBER_OF_CHAR > pwStr)"),
+		EASY_NUMBERS_NOT_ALLOWED("ERROR", -8, "NUMBERERROR"),
+		PERSONAL_INFO_NUMBERS_NOT_ALLOWED("ERROR", -9, "NUMBERERROR"),
+		USE_PREVIOUS_PASSWORD_NOT_ALLOWED("ERROR", -10, "PREVERROR");
+
+		private final String status;
+		private final int code;
+		private final String message;
+
+		PasswordCheckPolicyResult(String status, int code, String message) {
+			this.status = status;
+			this.code = code;
+			this.message = message;
+		}
+
+		public String getStatus() {
+			return status;
+		}
+
+		public int getCode() {
+			return code;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public boolean succeeded() {
+			return "OK".equalsIgnoreCase(status);
+		}
+	}
+
+	/** 암호 정책관리 체크 : defalut */
+	public PasswordCheckPolicyResult checkPwPolicy (String pwStr, String companyId, int tenantId, String userId) throws Exception {
+		return checkPwPolicy(pwStr, companyId, tenantId, userId, true, null);
+	}
+
 	// 암호 정책관리 체크
 	@SuppressWarnings("unchecked")
-	public Boolean checkPwPolicy (String pwStr, String companyId, int tenantId) throws Exception {
+	public PasswordCheckPolicyResult checkPwPolicy (String pwStr, String companyId, int tenantId, String userId, boolean checkPrevPassword, Stream<String> propParams) throws Exception {
 		logger.debug("commonUtil. checkPwPolicy Started.");
-		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId + ", pwStr=" + pwStr);
-		
-		Boolean bResult = false;
-		
+		logger.debug("pwStr={}, companyId={}, tenantId={}, userId={}", pwStr, companyId, tenantId, userId);
+
+		PasswordCheckPolicyResult eResult = PasswordCheckPolicyResult.ERROR;
+		process : {
+			// 0-1. 2021-10-26 이사라 : 새비번이 prev비번과 일치하는지 chk 추가 (ezPersonal에서 → CommonUtil로 이전함)
+			boolean useChkPrevPwd = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useChkPrevPwd"));
+
+			if (checkPrevPassword && useChkPrevPwd && StringUtils.isNotBlank(userId)) {
+
+				String encryptedNewPassword = EgovFileScrty.encryptPassword(pwStr, userId);
+				String prevPassword = ezCommonService.getPrevPwd(tenantId, userId);
+
+				if (encryptedNewPassword.equals(prevPassword)) {
+					logger.debug("checkPrevPassword error - equals. : newDecryptPassword={}, prevPassword={}", pwStr, prevPassword);
+					eResult = PasswordCheckPolicyResult.USE_PREVIOUS_PASSWORD_NOT_ALLOWED;
+					break process;
+				}
+			}
+
+			// 0-2. 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
+			boolean checkPasswordNumber = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("checkPasswordNumber", tenantId));
+
+			if (checkPasswordNumber) {
+				// 개인정보 가져오기
+				String[] propArr = {"TELEPHONENUMBER", "MOBILE", "HOMEPHONE", "BIRTH"};
+				Stream<String> propStream = Stream.of(propArr); // *참고 : 자바 Stream 정리 [Stream, Map, Filtering, Sorted, Collect] https://codenme.tistory.com/55
+
+				// 1) 있으면 우선함.
+				if (propParams != null) {
+					propStream = propParams;
+
+				// 2) userId가 공유사서함이라도 에러나지 않는다. 빈 값으로 반환함.
+				} else if (StringUtils.isNotBlank(userId)) {
+					String result = ezOrganService.getPropertyList(userId, String.join(";", propArr), "", tenantId);
+					Document xmlDom = convertStringToDocument(result);
+					propStream = propStream.map(prop -> xmlDom.getElementsByTagName(prop).item(0).getTextContent());
+
+				// 3) propParams, userId 없으면 스킵
+				} else {
+					propStream = Stream.empty();
+				}
+
+				// 스트림은 한번만 소비할 수 있어서 List로 변환해둠. *참고 https://yeon-kr.tistory.com/192, https://devyoseph.tistory.com/156
+				List<String> propList = propStream.map(prop -> StringUtils.defaultString(prop.replaceAll("\\D", "").trim())).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+
+				// 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
+				for (int i = 0; i < pwStr.length() - 2; i++) {
+					if (Character.isDigit(pwStr.charAt(i))
+							&& Character.isDigit(pwStr.charAt(i + 1))
+							&& Character.isDigit(pwStr.charAt(i + 2))) {
+
+						// 연속된 3자리 이상의 숫자 또는 같은 값이 발견되면 오류로 처리
+						int num1 = Character.getNumericValue(pwStr.charAt(i));
+						int num2 = Character.getNumericValue(pwStr.charAt(i + 1));
+						int num3 = Character.getNumericValue(pwStr.charAt(i + 2));
+
+						if ((num2 - num1 == 1 && num3 - num2 == 1) || (num1 == num2 && num2 == num3)) {
+							eResult = PasswordCheckPolicyResult.EASY_NUMBERS_NOT_ALLOWED;
+							break process;
+						}
+
+						// 전화번호, 생일에 포함되는 숫자가 발견되면 오류로 처리
+						String consecutiveNumbers = String.valueOf(num1) + String.valueOf(num2) + String.valueOf(num3);
+
+						if (propList.stream().anyMatch(prop -> prop.contains(consecutiveNumbers))) { // "".contains(str) = false
+							eResult = PasswordCheckPolicyResult.PERSONAL_INFO_NUMBERS_NOT_ALLOWED;
+							break process;
+						}
+					}
+				}
+			}
+
 		// 1. 암호 정책관리 사용 여부 확인
 		String usePasswordPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
 		if (!usePasswordPatternPolicy.equals("YES")) {
 			logger.debug("commonUtil. checkPwPolicy ended. usePasswordPatternPolicy config is 'NO'");
-			return true;
+				eResult = PasswordCheckPolicyResult.DISABLE_PASSWORD_POLICY_CONFIG;
+				break process;
 		}
 		
 		Map<String, Object> pwMap = ezSystemAdminService.getPwPolicy(tenantId, companyId);
-		if (pwMap != null) {
+
+			// 비밀번호 정책이 사용되지 않은 경우 무조선 통과
+			if (pwMap == null) {
+				eResult = PasswordCheckPolicyResult.DISABLE_PASSWORD_POLICY;
+				break process;
+			}
+
 			logger.debug("pwMap=" + pwMap.toString());
 			
 			Boolean bEngCapitalLetter = false; // 대문자 포함시 true(대소문자 구분 안할 경우 bEngSmallLetter는 무조건 false로 하고 bEngCapitalLetter 만 사용)
@@ -2105,7 +2283,8 @@ public class CommonUtil {
 	                if (useEngCapitalLetter != null && useEngCapitalLetter.equalsIgnoreCase("N")) {
 	                    if (bEngCapitalLetter) {
 	            			logger.debug("commonUtil. checkPwPolicy ended. (useEngCapitalLetter)");
-	                        return false;
+	                        eResult = PasswordCheckPolicyResult.CAPITAL_LETTERS_NOT_ALLOWED;
+							break process;
 	                    }
 	                }
 
@@ -2114,7 +2293,8 @@ public class CommonUtil {
 	                if (useEngSmallLetter != null && useEngSmallLetter.equalsIgnoreCase("N")) {
 	                    if (bEngSmallLetter) {
 	            			logger.debug("commonUtil. checkPwPolicy ended. (useEngSmallLetter)");
-	                        return false;
+	                        eResult = PasswordCheckPolicyResult.SMALL_LETTERS_NOT_ALLOWED;
+							break process;
 	                    }
 	                }
 				} else {
@@ -2128,7 +2308,8 @@ public class CommonUtil {
             if (useNumber != null && useNumber.equalsIgnoreCase("N")) {
                 if (bNumber) {
         			logger.debug("commonUtil. checkPwPolicy ended. (useNumber)");
-                    return false;
+                    eResult = PasswordCheckPolicyResult.NUMBERS_NOT_ALLOWED;
+					break process;
                 }
             }
 
@@ -2137,7 +2318,8 @@ public class CommonUtil {
             if (useSpecial != null && useSpecial.equalsIgnoreCase("N")) {
                 if (bSpecialChar){
         			logger.debug("commonUtil. checkPwPolicy ended. (useSpecial)");
-                    return false;
+                    eResult = PasswordCheckPolicyResult.SPECIAL_CHARACTERS_NOT_ALLOWED;
+					break process;
                 }
             }
             
@@ -2150,9 +2332,14 @@ public class CommonUtil {
             if (bSpecialChar){ iPatternCnt++;} 
 			
             // 5. 패턴 사용 수, 글자수 확인
-            if (pwPolicyPattern != null && pwPolicyPattern.size() > 0) {
-            	Boolean patternChk = true;
-            	
+            if (pwPolicyPattern == null || pwPolicyPattern.size() < 1) {
+				logger.debug("!!!! ");
+				eResult = PasswordCheckPolicyResult.DISABLE_PASSWORD_POLICY_PATTERN;
+				break process;
+			}
+
+            eResult = PasswordCheckPolicyResult.SUCCESS;
+
             	for (Map<String, Object> pwPattern : pwPolicyPattern) {
             		
             		int patternCnt = Integer.parseInt(String.valueOf(pwPattern.get("USE_PATTERN_COUNT")));
@@ -2161,33 +2348,29 @@ public class CommonUtil {
 
             		if (patternCnt == iPatternCnt) {
             			 if (numberOfChar == 0) { // 사용불가
-            				 patternChk = false;
+							eResult = PasswordCheckPolicyResult.CURRENT_PATTERN_CNT_NOT_ALLOWED;
                          } else if (numberOfChar > pwStr.length()){
-                        	 patternChk = false;
+							eResult = PasswordCheckPolicyResult.CHARACTERS_NOT_SUFFICIENT;
                          } else {
-                        	 patternChk = true;
+							eResult = PasswordCheckPolicyResult.SUCCESS;
                          }
             		}
             	} // for end.
-            	bResult = patternChk;
-            } else {
-        		logger.debug("!!!! ");
-            	bResult = true;
-            } // if end
-		} else {
-            // 비밀번호 정책이 사용되지 않은 경우 무조선 통과
-            bResult = true;
 		}
 		
-		logger.debug("commonUtil. checkPwPolicy ended. result=" + bResult);
-		return bResult;
+		logger.debug("commonUtil. checkPwPolicy ended. result={}", eResult);
+		return eResult;
 	}
 	
-	// 암호 정책 패턴 설명 문구
+	/**
+	 * 암호 정책 패턴 설명 문구
+	 * - '패스워드 설정 시 연속숫자, 생일, 전화번호 방지' 기능 추가 되었으므로 설명 추가 고려해야함.
+	 * - '가장 최근 암호 사용 금지' 기능 추가 되었으므로 설명 추가 고려해야함.
+	 */
 	@SuppressWarnings("unchecked")
 	public String getPwPolicyExplain (String companyId, int tenantId, Locale locale) throws Exception {
 		logger.debug("commonUtil. getPwPolicyExplain Started.");
-		logger.debug("companyId=" + companyId + ", tenantId=" + tenantId);
+		logger.debug("companyId={}, tenantId={}, locale={}", companyId, tenantId, locale);
 		
 		String sResult = "";
 		String patternContent = "";
@@ -2282,7 +2465,7 @@ public class CommonUtil {
             }
 		}
 		
-		logger.debug("commonUtil. checkPwPolicy ended. result=" + sResult);
+		logger.debug("commonUtil. getPwPolicyExplain ended. result=" + sResult);
 		return sResult;
 	}
 	
@@ -2463,6 +2646,7 @@ public class CommonUtil {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public String makeListViewData(int tatalCnt, JSONArray ja, JSONArray jaAttr, JSONArray jaProp, String value) throws Exception {
 		
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
@@ -2676,6 +2860,7 @@ public class CommonUtil {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public JSONObject changePDF (String srcFile, String savePath) {
 		logger.debug("[=================== Unidocs PDF Job Start ===================]");
 		logger.debug("srcFile=" + srcFile + ",savePath=" + savePath);
@@ -2745,18 +2930,14 @@ public class CommonUtil {
  		logger.debug("attachWebFolderFile start.");
 		
  		JSONObject fileInfo = null;
-		String fileName = "";
 		String filePath = ""; 
-		int size = 0;
 		
 		List<String> fileDownPath = new ArrayList<String>();
 			
 		try {
  			for (int i=0; i <jsonArr.size(); i++){
 				fileInfo 	= (JSONObject) jsonArr.get(i);
-				fileName 	= fileInfo.get("fileName").toString() ;
 				filePath 	= fileInfo.get("filePath").toString() ;
-				size 		= Integer.parseInt(fileInfo.get("fileSize").toString());
 				String FileRealName = filePath.split("/")[filePath.split("/").length-1];
 				
 				String newFilePath = realPath + downloadDIR + FileRealName;
@@ -2951,7 +3132,7 @@ public class CommonUtil {
 		boolean isLoopbackRequest = request.getRemoteAddr().equals("127.0.0.1");
 
 		if (!usingSession || usingAsAPI || isLoopbackRequest) {
-			if(validLoginCookie(request)){
+			if(validLoginCookie(request, response)){
 				return "0";
 			}else{
 				return "2";
@@ -2959,7 +3140,38 @@ public class CommonUtil {
 		}
 
 		if(validSessionLoginCookie(request, response)){
-			result = "0";
+			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+
+			if (useDbSession) {
+				Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+
+				if (loginCookie == null) {
+					return "2";
+				}
+
+				try {
+					String ezSessionId = loginCookie.getValue();
+					SessionVO resultVO = loginService.getSession(ezSessionId);
+
+					int maxInactiveInterval = resultVO.getMaxInactiveInterval();
+					int timediff = resultVO.getTimeDiff();
+
+					if (maxInactiveInterval > timediff || maxInactiveInterval == 0) { // DB에 저장 당시 세션 사용 안함 (maxInactiveInterval == 0)인 경우도 pass
+						loginService.updateSession(ezSessionId, "");
+						return "0";
+					} else {
+						clearAllCookies(request, response);
+						request.getSession().invalidate();
+						return "1";
+					}
+
+				} catch (Exception e) {
+					return "2";
+				}
+			} else {
+				result = "0";
+			}
+
 		}else {
 			result = "1";
 		}

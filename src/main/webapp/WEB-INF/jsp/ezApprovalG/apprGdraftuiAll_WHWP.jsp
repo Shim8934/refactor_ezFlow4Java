@@ -353,12 +353,8 @@
 	        		
 	        		reDraftFlag = true;
 	        		
-	        		/* 2023-04-20 홍승비 - 각 안별 탭 생성 및 웹에디터 로딩 이전, 순차실행이 보장되도록 결재문서 데이터를 가져와 각 안이 사용할 수 있게 분리 */
-	        		if (ListType == "21") { // 임시저장된 문서
-	        			getLineModeAll(DocSNAry[1]); // 결재진행중/완료여부 체크
-	        			getDocInfoAll(DocSNAry); // 결재문서 기본 정보
-	        			getAttachInfoAll(DocSNAry); // 첨부파일 정보
-	        		} else { // 반송된 문서 재기안
+	        		/* 2024-02-05 김우철 - 임시저장을 위해 결재문서 데이터를 가져오는 방식 수정 */
+	        		if (ListType != "21") {
 	        			getLineModeAll(pDocIDAry[1]);
 	        			getDocInfoAll(pDocIDAry);
 	        			getAttachInfoAll(pDocIDAry);
@@ -1358,6 +1354,8 @@
 		            
 		            if (pPublicityYN.substring(0,1) == "N") {
 	                	tempPublic = "N";
+	                } else if (pPublicityYN.substring(0,1) == "Y") {
+	                	tempPublic = "Y";
 	                }
 		            
 		            passAprLine = ret[32]; // "N"만 들어갈듯
@@ -2037,6 +2035,11 @@
 	            else if (ListType == "21" && pDocIDAry.length > 1) {   // 임시저장된 문서 기안 (0번배열 제외하므로 1개 초과하는지 체크)
 	                ShowMailProgress();
 	                var viewTabCnt = pDocIDAry.length - 1; // 임시저장된 문서 갯수만큼 탭을 만들어줄 예정이므로, 변수는 미리 설정해뒀음 (안 갯수는 0번배열 제외하기 위해 -1처리)
+	             	
+	                // 임시저장 문서를 위한 새로운 임시저장문서 정보를 생성(카피)
+	                for (var i = 1; i <= viewTabCnt; i++) {
+	                	pDocIDAry[i] = MakeTmp2Ing(pDocIDAry[i]);
+	                }
 	                
 	                for (var i = 1; i <= viewTabCnt; i++) {
 	                    var viewNewTabCnt = Number(i); // 1안부터 시작
@@ -2045,9 +2048,6 @@
 	                    // 탭의 요소 길이 자체는 0부터 시작하게 되며, 루프를 진행하면서 1, 2... 로 증가한다.
 	                    viewTabNum = $("dl.tab_menu dt").length;
 	                    var viewTabIdx = Number(viewTabNum) + 1; // 최초 루프 시 0 -> 1로 현재 탭 인덱스 증가
-	                    
-	                   // 임시저장 문서를 위한 새로운 임시저장문서 정보를 생성(카피)
-                        pDocIDAry[i] = MakeTmp2Ing(pDocIDAry[i]);
 	                    
 						var addString = "";
  						if (newTabIdx == 1) { // 1안인 경우, 선택된 상태로 스타일 처리

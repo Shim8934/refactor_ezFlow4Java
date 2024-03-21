@@ -2459,8 +2459,14 @@ public class EzNewPortalGWController {
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			String menuLang = userInfo.getLang();
 			
+			// 2023-11-22 조소정 - 관리자 > 포탈 > 메뉴관리 > 일본어, 중국어 사용 여부에 따라 메뉴명 표출/미표출 구현
+			String useJapanese = ezCommonService.getTenantConfig("useJapanese", tenantId);
+			String useChinese = ezCommonService.getTenantConfig("useChinese", tenantId);
+			String useVietnamese = ezCommonService.getTenantConfig("useVietnamese", tenantId);
+			String useIndonesian = ezCommonService.getTenantConfig("useIndonesian", tenantId);
+			
 			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(menuId, companyId, tenantId, menuLang);
-			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, usePrimaryLangOnly, primaryLang, companyId, tenantId);
+			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, usePrimaryLangOnly, primaryLang, companyId, tenantId, useJapanese, useChinese, useVietnamese, useIndonesian);
 			
 			int menuNamesCount = menuNames.size();
 			JSONObject data = new JSONObject();
@@ -2468,30 +2474,60 @@ public class EzNewPortalGWController {
 			
 			if (menuNamesCount > 2) {
 				List<MenuNameVO> menuNamesWithOrder = new ArrayList<MenuNameVO>();
-				int[] langOrder = new int[3];
 				
-				if (primaryLang.equals("2")) {
-					langOrder[0] = 2;
-					langOrder[1] = 1;
-					langOrder[2] = 3;
-				} else if (primaryLang.equals("3")){
-					langOrder[0] = 3;
-					langOrder[1] = 1;
-					langOrder[2] = 2;
-				} else {
-					langOrder[0] = 1;
-					langOrder[1] = 2;
-					langOrder[2] = 3;
-				}
-				
-				for (int i = 0; i < langOrder.length; i++) {
-					int langIndex = langOrder[i] - 1;
+				if (menuNamesCount > 3 && menuNamesCount < 5) {
+					int[] langOrder = new int[4];
 					
-					menuNamesWithOrder.add(menuNames.get(langIndex));
+					if (primaryLang.equals("2")) {
+						langOrder[0] = 2;
+						langOrder[1] = 1;
+						langOrder[2] = 3;
+						langOrder[3] = 4;
+					} else if (primaryLang.equals("3")){
+						langOrder[0] = 3;
+						langOrder[1] = 1;
+						langOrder[2] = 2;
+						langOrder[3] = 4;
+					} else {
+						langOrder[0] = 1;
+						langOrder[1] = 2;
+						langOrder[2] = 3;
+						langOrder[3] = 4;
+					}
+					
+					for (int i = 0; i < langOrder.length; i++) {
+						int langIndex = langOrder[i] - 1;
+						
+						menuNamesWithOrder.add(menuNames.get(langIndex));
+					}
+					
+					data.put("menuNames", menuNamesWithOrder);
+				} else if (menuNamesCount > 2 && menuNamesCount < 4) {
+					int[] langOrder = new int[3];
+					
+					if (primaryLang.equals("2")) {
+						langOrder[0] = 2;
+						langOrder[1] = 1;
+						langOrder[2] = 3;
+					} else if (primaryLang.equals("3")){
+						langOrder[0] = 3;
+						langOrder[1] = 1;
+						langOrder[2] = 2;
+					} else {
+						langOrder[0] = 1;
+						langOrder[1] = 2;
+						langOrder[2] = 3;
+					}
+					
+					for (int i = 0; i < langOrder.length; i++) {
+						int langIndex = langOrder[i] - 1;
+						
+						menuNamesWithOrder.add(menuNames.get(langIndex));
+					}
+					data.put("menuNames", menuNamesWithOrder);
 				}
-				
-				data.put("menuNames", menuNamesWithOrder);
-			} else {
+			}
+			else {
 				data.put("menuNames", menuNames);
 			}
 			
@@ -2716,7 +2752,6 @@ public class EzNewPortalGWController {
 			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 			String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
 			
-			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 
 			if (useAttitude == null || useAttitude.equals("")) {
@@ -2865,35 +2900,65 @@ public class EzNewPortalGWController {
 			}
 			
 			for (PortletInfoVO pvo : portletList) {
-				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId(), usePrimaryLangOnly, primaryLang);
+				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId(), lang);
 				
 				int menuNamesCount = portletNameList.size();
 				
 				if (menuNamesCount > 2) {
 					List<PortletNameInfoVO> portletNamesWithOrder = new ArrayList<PortletNameInfoVO>();
-					int[] langOrder = new int[3];
 					
-					if (primaryLang.equals("2")) {
-						langOrder[0] = 2;
-						langOrder[1] = 1;
-						langOrder[2] = 3;
-					} else if (primaryLang.equals("3")){
-						langOrder[0] = 3;
-						langOrder[1] = 1;
-						langOrder[2] = 2;
-					} else {
-						langOrder[0] = 1;
-						langOrder[1] = 2;
-						langOrder[2] = 3;
-					}
-					
-					for (int i = 0; i < langOrder.length; i++) {
-						int langIndex = langOrder[i] - 1;
+					if (menuNamesCount > 3 && menuNamesCount < 5) {
+						int[] langOrder = new int[4];
 						
-						portletNamesWithOrder.add(portletNameList.get(langIndex));
+						if (primaryLang.equals("2")) {
+							langOrder[0] = 2;
+							langOrder[1] = 1;
+							langOrder[2] = 3;
+							langOrder[3] = 4;
+						} else if (primaryLang.equals("3")){
+							langOrder[0] = 3;
+							langOrder[1] = 1;
+							langOrder[2] = 2;
+							langOrder[3] = 4;
+						} else {
+							langOrder[0] = 1;
+							langOrder[1] = 2;
+							langOrder[2] = 3;
+							langOrder[3] = 4;
+						}
+						
+						for (int i = 0; i < langOrder.length; i++) {
+							int langIndex = langOrder[i] - 1;
+							
+							portletNamesWithOrder.add(portletNameList.get(langIndex));
+						}
+					}
+					else if (menuNamesCount > 2 && menuNamesCount < 4) {
+						int[] langOrder = new int[3];
+						
+						if (primaryLang.equals("2")) {
+							langOrder[0] = 2;
+							langOrder[1] = 1;
+							langOrder[2] = 3;
+						} else if (primaryLang.equals("3")){
+							langOrder[0] = 3;
+							langOrder[1] = 1;
+							langOrder[2] = 2;
+						} else {
+							langOrder[0] = 1;
+							langOrder[1] = 2;
+							langOrder[2] = 3;
+						}
+						
+						for (int i = 0; i < langOrder.length; i++) {
+							int langIndex = langOrder[i] - 1;
+							
+							portletNamesWithOrder.add(portletNameList.get(langIndex));
+						}
 					}
 					pvo.setPortletNameList(portletNamesWithOrder);
-				} else {
+				} 
+				else {
 					pvo.setPortletNameList(portletNameList);
 				}
 			}
@@ -3364,15 +3429,13 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
-			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
+			// 2023-12-01 조소정 - 사용자 설정 언어에 따라 포틀릿 탭리스트 표출되도록 수정
+			String lang = commonUtil.getLangData(info.getLang());
+			
+			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId, lang);
 
 			for (BoardMyFavoriteVO fvo : resultList) {
-				if (!lang.equals("")) {
-					fvo.setBoardName(fvo.getBoardName2());
-				}
-				
 				logger.debug("resultList : " + fvo.getBoardId());
 			}
 
@@ -5621,7 +5684,27 @@ public class EzNewPortalGWController {
 
 				for (HashMap<String, Object> hashMap : tabBoardIdList) {
 					String tabBoardId = hashMap.get("BOARDID").toString();
-					String tabBoardName = portletLang.equals("1") ? hashMap.get("BOARDNAME").toString() : hashMap.get("BOARDNAME2").toString();
+					
+					// 2023-12-01 조소정 - 포탈 > 포틀릿 > 탭게시판 이름 사용자 설정 언어로 표출되도록 수정
+					String tabBoardName;
+					
+					switch (portletLang) {
+				    case "1":
+				        tabBoardName = hashMap.get("BOARDNAME").toString();
+				        break;
+				    case "2":
+				        tabBoardName = hashMap.get("BOARDNAME2").toString();
+				        break;
+				    case "3":
+				        tabBoardName = hashMap.get("BOARDNAME3").toString();
+				        break;
+				    case "4":
+				        tabBoardName = hashMap.get("BOARDNAME4").toString();
+				        break;
+				    default:
+				    	tabBoardName = hashMap.get("BOARDNAME").toString();
+					}
+					
 					// 탭게시판 권한 체크
 					boolean accessCheckSub = boardAuthCheck(tabBoardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
 					

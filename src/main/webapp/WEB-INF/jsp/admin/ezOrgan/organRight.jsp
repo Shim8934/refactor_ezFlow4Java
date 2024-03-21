@@ -434,6 +434,8 @@
 		        	success : function(result){
 		        		if (result == "HASCHILD"){
 		        			alert("<spring:message code='ezOrgan.t37' />");
+						}else if (result == "HASRETIRE") {
+							alert("<spring:message code='ezOrgan.khj001' />");
 		        		}else if (result == "EMAIL_ERROR") {
 		        			alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t66' />");
 		        		}else{
@@ -526,6 +528,8 @@
 					success : function(result){
 						if (result == "HASCHILD"){
 							alert("<spring:message code='ezOrgan.t37' />");
+						}else if (result == "HASRETIRE") {
+							alert("<spring:message code='ezOrgan.khj001' />");
 						}else if (result == "EMAIL_ERROR") {
 		        			alert("'" + treeNode.GetNodeData("VALUE") + "'<spring:message code='ezOrgan.t36' />");
 		        		}else{
@@ -1569,10 +1573,10 @@
 				//크롬일때 alert창 크기때문에 크롬일때 구별
 				var agent = navigator.userAgent.toLowerCase();
 				if (agent.indexOf("chrome") != -1) {
-					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 192));
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId + "&userId=" + userID, "InputPassword", GetOpenWindowfeature(467, 192));
 				} else {
 					//var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 200));
-					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId, "InputPassword", GetOpenWindowfeature(467, 192));
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do?companyId=" + userComId + "&userId=" + userID, "InputPassword", GetOpenWindowfeature(467, 192));
 				}
 			}
 
@@ -2169,8 +2173,8 @@
 			}
 
 			function organMenuListView(obj) {
-				let spanClassName = obj.getElementsByClassName('icon_sel').item(0).className;
-				let ulClassName = obj.parentElement.getElementsByClassName('option_horizontal_list').item(0).className;
+				var spanClassName = obj.getElementsByClassName('icon_sel').item(0).className;
+				var ulClassName = obj.parentElement.getElementsByClassName('option_horizontal_list').item(0).className;
 				
 				if (obj.getAttribute('mode') == "off") {
 					// 먼저 열려있는 list를 닫아주는 부분
@@ -2185,12 +2189,13 @@
 			}
 
 			function OrganBtnListHidden(e) {
-				let list = document.getElementsByClassName('newSelectView');
-				
-				for (let btnObj of list) {
+				var list = document.getElementsByClassName('newSelectView');
+
+				for (var i = 0; i < list.length; i++) {
+					var btnObj = list[i];
 					
 					if (btnObj.getAttribute('mode') == 'on') {
-						let spanClassName = btnObj.getElementsByClassName('icon_sel').item(0).className;
+						var spanClassName = btnObj.getElementsByClassName('icon_sel').item(0).className;
 						btnObj.getElementsByClassName('icon_sel').item(0).className = spanClassName.replace('collapse_up', 'collapse_down');
 						btnObj.parentElement.getElementsByClassName('option_horizontal_list').item(0).style.display = 'none';
 						btnObj.setAttribute("mode","off");

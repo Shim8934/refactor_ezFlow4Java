@@ -2204,14 +2204,17 @@ CREATE TABLE `tbl_addjobmaster` (
   `DEPTID` varchar(80) NOT NULL,
   `TITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ROLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ROLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `POSITIONCD` varchar(40) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `ORDERBY` varchar(200) DEFAULT NULL,
   `JOBID` varchar(100) DEFAULT NULL,
+  `ROLEID` varchar(100) DEFAULT NULL,
   `PROXY` varchar(200) DEFAULT NULL,
   `MANUAL_FLAG` varchar(4) DEFAULT NULL,
   `ROLL_INFO` varchar(200) DEFAULT 'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;',
-  PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`,`JOBID`)
+  PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`,`JOBID`,`ROLEID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3598,6 +3601,8 @@ CREATE TABLE `tbl_board_boardinfo` (
   `BOARDID` varchar(510) NOT NULL,
   `BOARDNAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME2` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `BOARDNAME3` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `BOARDNAME4` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREEVIEWORDER` int(11) DEFAULT NULL,
   `BOARDLEVEL` int(11) DEFAULT NULL,
   `PARENTBOARDID` varchar(510) DEFAULT NULL,
@@ -4042,6 +4047,8 @@ CREATE TABLE `tbl_board_myboards` (
   `BOARDID` varchar(76) NOT NULL,
   `BOARDNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `BOARDNAME3` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `BOARDNAME4` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREEVIEWNUM` double(126,0) DEFAULT NULL,
   `TABUSED` varchar(4) DEFAULT 'Y',
   `VIEWORDER` double(126,0) DEFAULT NULL,
@@ -4063,6 +4070,8 @@ CREATE TABLE `tbl_board_mytree` (
   `USERID` varchar(40) NOT NULL,
   `TREENAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREENAME2` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TREENAME3` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TREENAME4` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREELEVEL` bigint(10) DEFAULT NULL,
   `TREESTEP` bigint(10) NOT NULL,
   `TREEUPPER` varchar(76) DEFAULT NULL,
@@ -4204,6 +4213,8 @@ CREATE TABLE `tbl_board_treecache` (
   `QUERY` varchar(3600) NOT NULL,
   `RESULT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
   `RESULT2` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `RESULT3` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `RESULT4` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`QUERY`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5673,6 +5684,24 @@ CREATE TABLE `tbl_conndata` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_session`
+--
+
+DROP TABLE IF EXISTS `tbl_session`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE TBL_SESSION (
+	SESSION_ID CHAR(36) NOT NULL,
+	LOGINCOOKIE VARCHAR(700) NOT NULL,
+	CREATION_TIME DATETIME NOT NULL,
+	LAST_ACCESS_TIME DATETIME NOT NULL,
+	MAX_INACTIVE_INTERVAL INT NOT NULL,
+	TYPE VARCHAR(5) DEFAULT NULL,
+	PRIMARY KEY (`SESSION_ID`),
+	KEY `IDX_SESSION_LAST_TIME` (`SESSION_ID`,`LAST_ACCESS_TIME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
 -- Table structure for table `tbl_connection_info`
 --
 
@@ -6212,6 +6241,7 @@ CREATE TABLE `tbl_dev_master` (
   `PIN` varchar(100) DEFAULT NULL,
   `PINSTATE` char(1) DEFAULT 'N',
   `BIOMETRIC` char(1) DEFAULT 'N',
+  "APPVERSION" VARCHAR2(20 BYTE) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`DEVSEQ`),
   UNIQUE KEY `DEVID_UNIQUE` (`DEVID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -9165,6 +9195,9 @@ CREATE TABLE `tbl_portal_theme` (
   `theme_content` varchar(400) DEFAULT NULL COMMENT '테마 설명(내용)',
   `theme_content2` varchar(400) DEFAULT NULL,
   `theme_content3` varchar(400) DEFAULT NULL,
+  `theme_content4` varchar(400) DEFAULT NULL,
+  `theme_content5` varchar(400) DEFAULT NULL,
+  `theme_content6` varchar(400) DEFAULT NULL,
   `THEME_NAME2` varchar(100) DEFAULT 'theme2',
   `THEME_NAME3` varchar(100) DEFAULT 'theme3',
   PRIMARY KEY (`theme_id`)
@@ -9561,6 +9594,8 @@ CREATE TABLE `tbl_ps_quicklink` (
   `QUICKLINKNAME2` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `QUICKLINKNAME3` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `QUICKLINKNAME4` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `QUICKLINKNAME5` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
+  `QUICKLINKNAME6` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `LINKTYPE` varchar(4) NOT NULL,
   `LINKTYPEURL` varchar(1024) CHARACTER SET utf8mb4 DEFAULT NULL,
   `URL` varchar(1024) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -14896,16 +14931,19 @@ FROM
 			a.DEPTID AS DEPT_ID,
 			a.TITLE AS POSITION,
 			a.TITLE2 AS POSITION2,
-			IF(a.ORDERBY <> '',
-			CAST(a.ORDERBY AS unsigned),
-			0) AS ORDER_BY,
+			MIN(IF(a.ORDERBY <> '', CAST(a.ORDERBY AS unsigned),0)) AS ORDER_BY,
 			current_timestamp() AS UPDATEDT,
 			a.TENANT_ID AS TENANT_ID,
 			'ADDJOB' AS TYPE
 		FROM
 			(tbl_addjobmaster a
 		JOIN tbl_usermaster b ON
-			(a.CN = b.CN))) USER) v
+			(a.CN = b.CN
+			AND a.TENANT_ID = b.TENANT_ID)) 
+		GROUP BY
+            a.CN,
+            a.DEPTID,
+            a.TITLE) USER) v
 WHERE
 	v.TYPE = 'ADDJOB';
 

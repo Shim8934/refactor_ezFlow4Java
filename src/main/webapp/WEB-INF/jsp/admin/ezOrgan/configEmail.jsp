@@ -219,13 +219,16 @@
 					/* 2023-10-06 장혜연 : 표시한 Primary를 제거 */
 				    if (CrossYN()) {
 				        if (document.getElementById("ListEmail").options[i].textContent.indexOf("SMTP") == 0) {
-				            primarymail = document.getElementById("ListEmail").options[i].textContent.substr(5).slice(0, -10);
+				            primarymail = document.getElementById("ListEmail").options[i].textContent.substr(5).slice(0, -9);
 				        }
 				        if (document.getElementById("ListEmail").options[i].getAttribute("type") === "0") {
 							if (document.getElementById("ListEmail").options[i].textContent.includes("(Primary)")) {
-								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent.slice(0, -10));
+								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent.slice(0, -9));
 							} else {
-								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent);
+								//2024-01-09 김대현 : node를 만들기 전에 메일에 맨뒤에 빈값이 들어가면 지워주는 작업을 한다
+								var mailValue = document.getElementById("ListEmail").options[i].textContent
+								mailValue = mailValue.replace(/\s*$/,'');
+								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", mailValue);
 							}
 				        }
 				    }

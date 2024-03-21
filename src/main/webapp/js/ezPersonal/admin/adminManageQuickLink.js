@@ -218,37 +218,70 @@ function deleteSuccess(itemId) {
 }
 
 function openLinkDetail(item, itemId) {
-	userLang = item.strUserLang;
+	userLang = item.lang;
 	mode = item.mode;
 	
 	var mainTitle;
 	var subTitle1;
 	var subTitle2;
+	var subTitle3;
+	
+	var subTitleTr1Id = "en";
+	var subTitleTr2Id = "ja";
+	var subTitleTr3Id = "zh";
 	
 	if (item.primary == 1) {
 		mainTitle = strLangkhj9;
 		subTitle1 = strLangkhj10;
 		subTitle2 = strLangkhj11;
+		subTitle3 = strLangCSJQL01;
 		
 		mainTitleId = "Title1";
 		subTitle1Id = "Title2";
 		subTitle2Id = "Title3";
+		subTitle3Id = "Title4";
 	} else if (item.primary == 2) {
 		mainTitle = strLangkhj10;
 		subTitle1 = strLangkhj9;
 		subTitle2 = strLangkhj11;
+		subTitle3 = strLangCSJQL01;
 		
 		mainTitleId = "Title2";
 		subTitle1Id = "Title1";
 		subTitle2Id = "Title3";
-	} else {
+		subTitle3Id = "Title4";
+		
+		subTitleTr1Id = "ko";
+		subTitleTr2Id = "ja";
+		subTitleTr3Id = "zh";
+	} else if (item.primary == 3) {
 		mainTitle = strLangkhj11;
 		subTitle1 = strLangkhj9;
 		subTitle2 = strLangkhj10;
+		subTitle3 = strLangCSJQL01;
 		
 		mainTitleId = "Title3";
 		subTitle1Id = "Title1";
 		subTitle2Id = "Title2";
+		subTitle3Id = "Title4";
+
+		subTitleTr1Id = "ko";
+		subTitleTr2Id = "en";
+		subTitleTr3Id = "zh";
+	} else if (item.primary == 4) {
+		mainTitle = strLangCSJQL01;
+		subTitle1 = strLangkhj9;
+		subTitle2 = strLangkhj10;
+		subTitle3 = strLangkhj11;
+		
+		mainTitleId = "Title4";
+		subTitle1Id = "Title1";
+		subTitle2Id = "Title2";
+		subTitle3Id = "Title3";
+
+		subTitleTr1Id = "ko";
+		subTitleTr2Id = "en";
+		subTitleTr3Id = "ja";
 	}
 	
 	var linksHTML = "<li class='linkDetails' id='linkLiNew' style='display:none'>";
@@ -259,13 +292,17 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "<th class='quickLinkTH'>" + strLangkhj12 + "(" + mainTitle + ") <span class='Ared'>*</span></th>";
 	linksHTML += "<td class='menuInput'><input type='text' name='Input' id='"+ mainTitleId +"' class='admin_input' maxlength='50'></td>";
 	linksHTML += "</tr>";
-	linksHTML += "<tr>";
+	linksHTML += "<tr id='" + subTitleTr1Id + "'>";
 	linksHTML += "<th class='quickLinkTH'>" + strLangkhj12 + "(" + subTitle1 + ")</th>";
 	linksHTML += "<td class='menuInput'><input type='text' id='"+ subTitle1Id +"' class='admin_input' maxlength='50'></td>";
 	linksHTML += "</tr>";
-	linksHTML += "<tr>";
+	linksHTML += "<tr id='" + subTitleTr2Id + "'>";
 	linksHTML += "<th class='quickLinkTH'>" + strLangkhj12 + "(" + subTitle2 + ")</th>";
 	linksHTML += "<td class='menuInput'><input type='text' id='"+ subTitle2Id +"' class='admin_input' maxlength='50'></td>";
+	linksHTML += "</tr>";
+	linksHTML += "<tr id='" + subTitleTr3Id + "'>";
+	linksHTML += "<th class='quickLinkTH'>" + strLangkhj12 + "(" + subTitle3 + ")</th>";
+	linksHTML += "<td class='menuInput'><input type='text' id='"+ subTitle3Id +"' class='admin_input' maxlength='50'></td>";
 	linksHTML += "</tr>";
 	linksHTML += "<tr>";
 	linksHTML += "<th class='quickLinkTH'>URL <span class='Ared'>*</span></th>";
@@ -369,6 +406,14 @@ function openLinkDetail(item, itemId) {
 			$(".linkDetails").attr("class", "linkDetails hideDetails");
 		});
 	});
+	
+	if (item.useJapanese == "NO") {
+		document.getElementById("ja").style.display = "none";
+	}
+	
+	if (item.useChinese == "NO") {
+		document.getElementById("zh").style.display = "none";
+	}
 }
 
 function popChange() {
@@ -583,7 +628,8 @@ function radioClick(obj, type) {
 }
 
 function btn_ok(itemId) {
-	if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) ||  specialChk(document.getElementById("Title3").value)) {
+	if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) ||  
+			specialChk(document.getElementById("Title3").value) || specialChk(document.getElementById("Title4").value)) {
 		alert(strLangkhj19);
 		return;
 	}
@@ -608,6 +654,10 @@ function btn_ok(itemId) {
 		document.getElementById(subTitle2Id).value = document.getElementById(mainTitleId).value;
 	}
 	
+	if (document.getElementById(subTitle3Id).value.trim() == "") {
+		document.getElementById(subTitle3Id).value = document.getElementById(mainTitleId).value;
+	}
+
 	SaveQuickLink(itemId);
 }
 
@@ -636,6 +686,9 @@ function SaveQuickLink(itemId) {
 	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName", document.getElementById(mainTitleId).value);
 	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName2", document.getElementById(subTitle1Id).value);
 	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName3", document.getElementById(subTitle2Id).value);
+	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName4", document.getElementById(subTitle3Id).value);
+	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName5", "");
+	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName6", "");
 	createNodeAndInsertText(xmlpara, objNode, "pLinkType", linkType);
 	createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", linkURL);
 	createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
@@ -707,6 +760,7 @@ function event_GetQuickLink(result) {
 	document.getElementById("Title1").value = result["quickLinkName"];
 	document.getElementById("Title2").value = result["quickLinkName2"];
 	document.getElementById("Title3").value = result["quickLinkName3"];
+	document.getElementById("Title4").value = result["quickLinkName4"];
 	document.getElementById("txtURL").value = result["url"];
 	
 	var size = result["size_"];

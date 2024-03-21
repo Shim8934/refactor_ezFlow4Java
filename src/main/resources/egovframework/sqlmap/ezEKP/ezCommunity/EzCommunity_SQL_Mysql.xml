@@ -1219,18 +1219,20 @@
 <!-- 	<procedure id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO"> -->
 <!-- 		{CALL EZSP_READONELINEREPLY(#v_USERINFO_LANG#, #v_PBOARDID#, #v_PITEMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+<!-- 2024-01-18 홍승비 - 커뮤니티 익명게시판에 댓글 작성 시 userID 정보 제거, 사용자 테이블 조인 시 LEFT OUTER JOIN으로 변경 (퇴사자 및 익명게시판 대응) -->
 	<select id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO" remapResults="true">
+		<isNotEqual property="v_GUBUN" compareValue="2">
 		<![CDATA[
 			SELECT
-				A.replyid,
-				CASE WHEN #primary# = '1' THEN A.username ELSE A.username2 END AS username,
-				A.userid,
-				A.content,
-				DATE_FORMAT(DATE_ADD(writedate, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS writedate,
-				DEPTID
+				A.REPLYID,
+				CASE WHEN #primary# = '1' THEN A.USERNAME ELSE A.USERNAME2 END AS USERNAME,
+				A.USERID,
+				A.CONTENT,
+				DATE_FORMAT(DATE_ADD(WRITEDATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS WRITEDATE,
+				CASE WHEN (A.USERID = '' OR A.USERID IS NULL) THEN NULL ELSE DEPTID END AS DEPTID
 			FROM
 				TBL_COMM_ONELINEREPLY A
-			INNER JOIN
+			LEFT OUTER JOIN
 			   ((SELECT
 					D.CN, D.DEPARTMENT as DEPTID,
 					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
@@ -1245,7 +1247,7 @@
 				UNION ALL
 				
 				(SELECT
-					B.cn, A2.DEPTID,
+					B.CN, A2.DEPTID,
 					C.EXTENSIONATTRIBUTE2 as COMPANYID,
 					A2.TENANT_ID
 				FROM
@@ -1267,22 +1269,44 @@
 				WHERE
                		B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T
 			ON
-				A.USERID = T.CN
+				(A.USERID = T.CN OR A.USERID = '' OR A.USERID IS NULL)
 			AND
 				A.TENANT_ID = T.TENANT_ID
 			WHERE
-				A.boardid = #v_pBoardID#
+				A.BOARDID = #v_pBoardID#
 			AND
-				A.itemid = #v_pItemID#
+				A.ITEMID = #v_pItemID#
 			AND
-				A.tenant_id = #tenantID#
+				A.TENANT_ID = #tenantID#
 			AND
-				T.COMPANYID = #companyID#
+				(T.COMPANYID = #companyID# OR T.COMPANYID IS NULL)
 			GROUP BY
 				A.USERID, A.REPLYID
 			ORDER BY 
-				writedate ASC
+				WRITEDATE ASC
 		]]>
+		</isNotEqual>
+		<!-- 2024-01-22 홍승비 - 커뮤니티 팝업홈 게시판 > 익명댓글 표출 분기 추가 (COMPANTID는 PRI KEY가 아니므로 WHERE 조건 제외) -->
+		<isEqual property="v_GUBUN" compareValue="2">
+		<![CDATA[
+			SELECT
+				REPLYID,
+				CASE WHEN #primary# = '1' THEN USERNAME ELSE USERNAME2 END AS USERNAME,
+				USERID,
+				CONTENT,
+				DATE_FORMAT(DATE_ADD(WRITEDATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS WRITEDATE
+			FROM
+				TBL_COMM_ONELINEREPLY
+			WHERE
+				BOARDID = #v_pBoardID#
+			AND
+				ITEMID = #v_pItemID#
+			AND
+				TENANT_ID = #tenantID#
+			ORDER BY 
+				WRITEDATE ASC
+		]]>
+		</isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.getReaderList"				parameterClass="Map"		resultClass="CommunityBoardItemReadVO"> -->
@@ -3936,43 +3960,43 @@
 <!-- 	<procedure id="EzCommunityDAO.deleteOneLineReply"			parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZSP_DELETEONELINEREPLY(#v_USERINFO_USERID#, #v_REPLYID#, #v_GUBUN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
+<!-- 2024-01-22 홍승비 - 커뮤니티 게시판 구분값에 따른 쿼리가 반대로 기재되었던 오류 수정, 구분값을 항상 null값으로 전달했던 기존 오류 수정, 댓글 작성자ID가 공백인 경우 대응 (익명 -> 일반게시판 변경 시) -->
 	<select id="EzCommunityDAO.deleteOneLineReplySelect"		parameterClass="Map"		resultClass="Integer">
-		<isEqual property="v_GUBUN" compareValue="2">
-			<![CDATA[
-				SELECT
-					IFNULL(COUNT(replyid), 0)
-				FROM
-					TBL_COMM_ONELINEREPLY
-				WHERE
-					RTRIM(replyid) = #v_REPLYID#
-				AND
-					userid = #v_USERINFO_USERID#
-				AND
-					tenant_id = #tenantID#
-			]]>
-			
-		</isEqual>
 		<isNotEqual property="v_GUBUN" compareValue="2">
 			<![CDATA[
 				SELECT
-					IFNULL(COUNT(replyid), 0)
+					IFNULL(COUNT(REPLYID), 0)
 				FROM
 					TBL_COMM_ONELINEREPLY
 				WHERE
-					RTRIM(replyid) = #v_REPLYID#
+					RTRIM(REPLYID) = #v_REPLYID#
 				AND
-					tenant_id = #tenantID#
+					(USERID = #v_USERINFO_USERID# OR USERID = '' OR USERID IS NULL)
+				AND
+					TENANT_ID = #tenantID#
 			]]>
 		</isNotEqual>
+		<isEqual property="v_GUBUN" compareValue="2">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(REPLYID), 0)
+				FROM
+					TBL_COMM_ONELINEREPLY
+				WHERE
+					RTRIM(REPLYID) = #v_REPLYID#
+				AND
+					TENANT_ID = #tenantID#
+			]]>
+		</isEqual>
 	</select>
 	<delete id="EzCommunityDAO.deleteOneLineReplyDelete"		parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
 				TBL_COMM_ONELINEREPLY
 			WHERE
-				RTRIM(replyid) = #v_REPLYID#
+				RTRIM(REPLYID) = #v_REPLYID#
 			AND
-				tenant_id = #tenantID#
+				TENANT_ID = #tenantID#
 		]]>
 	</delete>
 	

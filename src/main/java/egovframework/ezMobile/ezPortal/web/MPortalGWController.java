@@ -186,11 +186,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 				Locale locale = new Locale(ld);
 				
 				MOptionVO opt = mOptionService.optionInfo(userId, info.getTenantId());
-				if ( opt.getLang().equals("1") ) {
-					locale = new Locale("ko");	
-				} else if ( opt.getLang().equals("3") ) {
-					locale = new Locale("ja");
-				}
+				locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(opt.getLang()));
 				
 				if (useExternalMailServer.equalsIgnoreCase("NO")) {
 					JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);

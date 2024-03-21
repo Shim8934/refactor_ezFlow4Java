@@ -1445,6 +1445,8 @@
 		            tempSecurityDate = ret[14];
 		            if (ret[21].substring(0,1) == "N") {
 	                	tempPublic = "N";
+	                } else if (ret[21].substring(0,1) == "Y") {
+	                	tempPublic = "Y";
 	                }
 		            setPublicFlag();
 		            SummaryFlag = true;

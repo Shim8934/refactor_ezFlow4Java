@@ -47,7 +47,7 @@
                 	<dt>
                 		<%-- 2023-06-15 황인경 - 디자인 개선 > 테마2 > 상단 사용자 정보 > 부서 추가 --%>
                 		<span class="info_team">${deptName}</span>
-                		<span class="info_name">${userName}</span>
+                		<span class="info_name">${userName} ${userTitle}</span>
                 		<span class="info_icon">
 							<span class="info_set" id="main_personalEnv"><img src="/images/admin/infoSetting.png" alt=""></span>
 							<span id="main_portletEnv"><img src="/images/admin/frameSetting.png"></span>

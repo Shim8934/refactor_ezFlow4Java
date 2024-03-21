@@ -51,7 +51,7 @@
             <mvc:exclude-mapping path="/user/login/actionLogoutWithRedirectUri.do"/>            
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/user/login/setTFA.do"/>
-            <mvc:exclude-mapping path="/user/login/changeExPassword.do"/>
+            <mvc:exclude-mapping path="/user/login/changePassword.do"/>
             <mvc:exclude-mapping path="/user/login/sendFindPwd.do"/>  
             <mvc:exclude-mapping path="/user/login/checkCertification.do"/>  
             <mvc:exclude-mapping path="/user/login/changePasswordByCertification.do"/>  

@@ -30,16 +30,25 @@
 	    	function Save(){
 	    		var name1 = $.trim($("#txtNewName").val());
 				var name2 = $.trim($("#txtNewName2").val());
-
+	    		var name3 = $.trim($("#txtNewName3").val());
+				var name4 = $.trim($("#txtNewName4").val());
+				
 				if (name1 == "") {
 					alert("<spring:message code='ezBoard.t107' />");
 					return;
 				}
 
+				// 2023-11-27 조소정 - 게시판이름 영어, 일본어, 중국어칸 공백 시 한국어 버전으로 삽입
 				if (name2 == "") {
 					name2 = name1;
 				}
-
+				if (name3 == "") {
+					name3 = name1;
+				}
+				if (name4 == "") {
+					name4 = name1;
+				}
+				
 			    var newID = "{" + GetGUID() + "}";
 
 			    $.ajax({
@@ -49,6 +58,8 @@
 						boardID : newID,
 						boardName : encodeURIComponent(name1),
 						boardName2 : encodeURIComponent(name2),
+						boardName3 : encodeURIComponent(name3),
+						boardName4 : encodeURIComponent(name4),
 						parentBoardID : ParentBoardID,
 						boardGroupID : BoardGroupID
 					},
@@ -94,10 +105,22 @@
 				        		<th><c:out value='${lang_primary}'/></th>
 				          		<td><input name="text" type="text" id="txtNewName" style="WIDTH:100%" maxlength="30"></td>
 				        	</tr>
-				        	<tr class="secondary">
+				        	<tr class="primary">
 				          		<th><c:out value='${lang_secondary}'/></th>
 				          		<td><input name="text" type="text" id="txtNewName2" style="WIDTH:100%" maxlength="30"></td>
 				        	</tr>
+			          		<c:if test="${useJapanese == 'YES'}">
+					        	<tr class="primary">
+					        		<th><c:out value='${lang_tertiary}'/></th>
+					          		<td><input name="text" type="text" id="txtNewName3" style="WIDTH:100%" maxlength="30"></td>
+					        	</tr>
+				        	</c:if>
+		                    <c:if test="${useChinese == 'YES'}">
+					        	<tr class="secondary">
+					          		<th><c:out value='${lang_quaternary}'/></th>
+					          		<td><input name="text" type="text" id="txtNewName4" style="WIDTH:100%" maxlength="30"></td>
+					        	</tr>
+					        </c:if>
 				      	</table>
 				 	</c:if>
 				 	<c:if test="${use_multiData != 'YES'}">

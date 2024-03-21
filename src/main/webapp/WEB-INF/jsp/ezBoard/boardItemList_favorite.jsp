@@ -30,6 +30,7 @@
 	    </style>
 	    <script type="text/javascript">
 	        var userLang = "${userInfo.primary}";
+	        var lang = "${userInfo.lang}";
 	        var xmlhttp = createXMLHttpRequest();
 	        var timer = null;
 	        
@@ -128,6 +129,8 @@
 	                    for (var i = 0; i < xmlnode.length; i++) {
 	                        var BoardName = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME")));
 	                        var BoardName2 = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2")));
+	                        var BoardName3 = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME3")));
+	                        var BoardName4 = MakeXMLString(getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME4")));
 	                        var BoardId = getNodeText(SelectSingleNode(xmlnode[i], "BOARDID"));
 	                        var BoardType = getNodeText(SelectSingleNode(xmlnode[i], "GUBUN"));
 	                        var _p = document.createElement("P");
@@ -144,13 +147,8 @@
 								_span.setAttribute("DATA2", "<spring:message code='ezBoard.t480'/>");
 								_span.innerHTML = "<spring:message code='ezBoard.t480'/>";
                         	} else {
-		                        if (userLang == "1") { // primary값에 따라 다국어 설정
-									_span.setAttribute("DATA2", BoardName);
-									_span.innerHTML = BoardName;
-		                        } else {
-		                            _span.setAttribute("DATA2", BoardName2);
-		                            _span.innerHTML = BoardName2;
-								}
+								_span.setAttribute("DATA2", BoardName);
+								_span.innerHTML = BoardName;
                         	}
 	                        _span.setAttribute("DATA5", BoardType);
 	                        
