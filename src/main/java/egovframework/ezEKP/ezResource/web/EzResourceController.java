@@ -1713,7 +1713,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				cTime = cDate.split(" ")[1].substring(0, 2);
 				cTime2 = cDate.split(" ")[1].substring(3, 5);
 				
-				if (req.getParameter("startDate") != null) {
+				if (req.getParameter("startDate") != null && !req.getParameter("startDate").equals("")) {
 					cDate = req.getParameter("startDate");
 				}
 				cDate = cDate.substring(0, 10);
