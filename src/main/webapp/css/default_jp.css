@@ -3177,7 +3177,7 @@ h2, #menu span {font-size: 12px;}
 /**** survey information table start ****/
 .survey-nminfo {margin:0px 0px 10px 0px;}
 .surveyTitle{width:100%; margin:0px; padding:0px; line-height: 20px;}
-.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
+.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px !important; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
 .info-input-ttl {font-size:16px; font-weight:bold; color:#333;}
 .info-input-pp {font-size:14px;}
 .textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border: 1px solid #388CE5; outline: none;}
