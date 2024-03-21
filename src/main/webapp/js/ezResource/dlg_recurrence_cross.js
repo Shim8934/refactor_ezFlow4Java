@@ -569,7 +569,7 @@ function event_btnOk_onclick()
 	switch (pRepetitionFlag) {
 	case 0://매일
 		if (document.getElementById("id0D1").checked) {
-			if (NumCheck(document.getElementById("txt_De").value) == false) {
+			if (NumCheck(document.getElementById("txt_De").value) == false || document.getElementById("txt_De").value == 0) {
 		        alert(g_Error);
 		        document.getElementById("txt_De").value = "1";
 			    return;
@@ -577,7 +577,7 @@ function event_btnOk_onclick()
 		}
 		break;
 	case 1://매주
-		if (NumCheck(document.getElementById("txt_We").value) == false) {
+		if (NumCheck(document.getElementById("txt_We").value) == false || document.getElementById("txt_We").value == 0) {
 	        alert(g_Error);
 	        document.getElementById("txt_We").value = "1";
 		    return;
@@ -585,18 +585,18 @@ function event_btnOk_onclick()
 		break;
 	case 2://매월
 		if (document.getElementById("idOM1").checked) {
-			if (NumCheck(document.getElementById("list_MonthInterval").value) == false) {
+			if (NumCheck(document.getElementById("list_MonthInterval").value) == false || document.getElementById("list_MonthInterval").value == 0) {
 		        alert(g_Error);
 		        document.getElementById("list_MonthInterval").value = "1";
 			    return;
 		    }
-		    if (NumCheck(document.getElementById("list_MonthlyDays").value) == false) {
+		    if (NumCheck(document.getElementById("list_MonthlyDays").value) == false || document.getElementById("list_MonthlyDays").value == 0) {
 		        alert(g_Error);
 		        //document.getElementById("list_MonthlyDays").value = idDatepickers.startDate();
 			    return;
 		    }
 		} else {
-			if (NumCheck(document.getElementById("list_MonthInterval2").value) == false) {
+			if (NumCheck(document.getElementById("list_MonthInterval2").value) == false || document.getElementById("list_MonthInterval2").value == 0) {
 		        alert(g_Error);
 		        document.getElementById("list_MonthInterval2").value = "1";
 			    return;
@@ -605,7 +605,7 @@ function event_btnOk_onclick()
 		break;
 	case 3://매년
 		if (document.getElementById("optY1").checked) {
-			if (NumCheck(document.getElementById("list_YearlyDays").value) == false) {
+			if (NumCheck(document.getElementById("list_YearlyDays").value) == false || document.getElementById("list_YearlyDays").value == 0) {
 		        alert(g_Error);
 		        //document.getElementById("list_YearlyDays").value = idDatepickers.startDate();
 			    return;
