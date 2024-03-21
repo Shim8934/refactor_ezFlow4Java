@@ -618,8 +618,9 @@ function event_btnOk_onclick()
 		break;
 	}
 	
-	if (document.getElementById("Instances").checked == true && NumCheck(document.getElementById("list_ReCount").value) == false) {
+	if (document.getElementById("Instances").checked == true && (NumCheck(document.getElementById("list_ReCount").value) == false || document.getElementById("list_ReCount").value == "0")) {
         alert(g_Error);
+        document.getElementById("list_ReCount").focus();
         document.getElementById("list_ReCount").value = "10";
 	    return;
     }
