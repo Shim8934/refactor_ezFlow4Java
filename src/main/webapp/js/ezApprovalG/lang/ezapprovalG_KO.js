@@ -148,7 +148,7 @@ var strLang254 = "입력하신 필드의 내용은 "
 var strLang255 = "까지만 입력이 가능합니다. (한글 "
 var strLang256 = "자)"
 // ezAPRDOCATTACH
-var strLang257 = "문서리스트에서 이동할 문서를 선택해주십시요."
+var strLang257 = "문서리스트에서 추가할 문서를 선택해주세요."
 var strLang258 = "이미 등록되어 있는 문서입니다."
 // ezAPRDOCATTACH\aprDocAttach.js
 // ezAPRDOCATTACH\getDocAttach.js

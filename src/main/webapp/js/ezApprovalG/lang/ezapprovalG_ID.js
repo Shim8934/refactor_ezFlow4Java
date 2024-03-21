@@ -148,7 +148,7 @@ var strLang254 = "Entered the field's contents"
 var strLang255 = "Only can be entered. (Korean"
 var strLang256 = "Letters)"
 // ezAPRDOCATTACH
-var strLang257 = "Please select from the list of documents to move."
+var strLang257 = "Please select the documents you want to add from the document list."
 var strLang258 = "The document is already registered."
 // ezAPRDOCATTACH\aprDocAttach.js
 // ezAPRDOCATTACH\getDocAttach.js
