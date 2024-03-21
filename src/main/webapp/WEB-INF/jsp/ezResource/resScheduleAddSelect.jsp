@@ -240,6 +240,14 @@
 
       var nodeIdx;
       function InsertReceiver() {
+    	  
+    	  // 2024-03-21 조수빈 - voc #121550 자원관리>자원예약>자원선택 알러트 수정 필요
+    	  // 선택한 노드는 class가 node_selected이므로 해당 클래스를 가진 요소가 없다면 return
+    	  console.log(document.getElementsByClassName("node_selected"));
+    	  if (document.getElementsByClassName("node_selected").length < 1) {
+    		  alert(strLang253);
+    		  return;
+    	  }
           nodeIdx = TreeView.selectedIndex();
           var p_BrdID = TreeView.getvalue(nodeIdx, "DATA1");
           var brdGubun = TreeView.getvalue(nodeIdx, "DATA7");
@@ -340,6 +348,12 @@
 
       function DeleteReceiver() {
           var curRowidx = pListView.getMultiRowIndex();
+          
+          // 2024-03-21 조수빈 - voc #121550 자원관리>자원예약>자원선택 알러트 수정 필요
+          if (curRowidx.length < 1) {
+        	  alert(strLang253);
+    		  return;
+          }
 
           if (m_Arguments != undefined && m_Arguments.length == 2) {
               if (pListView.getvalue2(curRowidx[0], "CN") == m_Arguments[0][0] && curRowidx.length == 1) {
@@ -549,7 +563,7 @@
       <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
          <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
       </div>
-       <h1><spring:message code="ezResource.t375" /></h1>
+       <h1><spring:message code="ezResource.t171" /></h1>
        <div id="close">
             <ul>
                 <li><span onclick="btn_close()"></span></li>
