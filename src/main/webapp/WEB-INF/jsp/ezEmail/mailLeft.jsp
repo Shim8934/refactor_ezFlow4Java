@@ -556,7 +556,7 @@
 	            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
 	            }
 	            
-	            var OpenWin = window.open(requestUrl, "mail_foldermanage_Cross", GetOpenWindowfeature(555, 500));
+	            var OpenWin = window.open(requestUrl, "mail_foldermanage_Cross", GetOpenWindowfeature(575, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function folder_manager_after(RtnVal) {
