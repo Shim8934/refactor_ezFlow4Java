@@ -1505,7 +1505,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("sampleChartPortlet Start");
 		List<List<ChartVO>> wholeList = new ArrayList<>();
 		List<ChartVO> list = new ArrayList<>();
-		SecureRandom random = SecureRandom.getInstanceStrong();
+		SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
 		for (int i = 1; i <= 12; i++) {
 			ChartVO vo = new ChartVO.ChartVOBuilder(i + "월", random.nextInt(50000))
 					.groupTitle("대내문서")
