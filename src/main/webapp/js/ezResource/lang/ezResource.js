@@ -53,7 +53,7 @@ var strLang91 = "삭제할 권한이 없습니다."
 var strLang92 = "자원예약 삭제에 실패하였습니다."
 var strLang93 = "삭제할 자원예약을 선택해 주십시오."
 var strLang94 = "자신이 입력한 자료만 삭제하실 수 있습니다."
-var strLang95 = "반복회수를 정확히 입력해 주십시오."
+var strLang95 = "반복횟수를 정확히 입력해 주십시오."
 var strLang97 = "매월"
 var strLang98 = "매년"
 var strLang100 = "시작날짜와 끝날짜를 정확하게 입력해주십시오."
@@ -261,3 +261,6 @@ var strLang340 = "일정종료일을 오늘 이전으로 등록할 수 없습니
 // 2021-09-07 홍승비 -  자원예약 및 수정동작 완료 시 알러트 메세지 표출 (타 모듈과 동일하게) 
 var strLangHSB01 = "자원예약을 저장하였습니다.";
 var strLangHTH01 = "날짜는 1~31의 정수로 입력해주세요.";
+var strLangHTH02 = "반복 주기일수를 정확히 입력해주세요.";
+var strLangHTH03 = "반복 주기를 정확히 입력해주세요.";
+var strLangHTH04 = "월 간격은 0보다 큰 정수로 입력해주세요.";

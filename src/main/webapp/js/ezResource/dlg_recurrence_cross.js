@@ -570,24 +570,27 @@ function event_btnOk_onclick()
 	case 0://매일
 		if (document.getElementById("id0D1").checked) {
 			if (NumCheck(document.getElementById("txt_De").value) == false || document.getElementById("txt_De").value == 0) {
-		        alert(g_Error);
+		        alert(strLangHTH02);
 		        document.getElementById("txt_De").value = "1";
+		        document.getElementById("txt_De").focus();
 			    return;
 		    }
 		}
 		break;
 	case 1://매주
 		if (NumCheck(document.getElementById("txt_We").value) == false || document.getElementById("txt_We").value == 0) {
-	        alert(g_Error);
+	        alert(strLangHTH03);
 	        document.getElementById("txt_We").value = "1";
+	        document.getElementById("txt_We").focus();
 		    return;
 	    }
 		break;
 	case 2://매월
 		if (document.getElementById("idOM1").checked) {
 			if (NumCheck(document.getElementById("list_MonthInterval").value) == false || document.getElementById("list_MonthInterval").value == 0) {
-		        alert(g_Error);
+		        alert(strLangHTH04);
 		        document.getElementById("list_MonthInterval").value = "1";
+		        document.getElementById("list_MonthInterval").focus();
 			    return;
 		    }
 		    if (NumCheck(document.getElementById("list_MonthlyDays").value) == false) {
@@ -598,8 +601,9 @@ function event_btnOk_onclick()
 		    }
 		} else {
 			if (NumCheck(document.getElementById("list_MonthInterval2").value) == false || document.getElementById("list_MonthInterval2").value == 0) {
-		        alert(g_Error);
+		        alert(strLangHTH04);
 		        document.getElementById("list_MonthInterval2").value = "1";
+		        document.getElementById("list_MonthInterval2").focus();
 			    return;
 		    }
 		}

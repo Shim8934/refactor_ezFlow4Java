@@ -293,3 +293,6 @@ var strLang340 = "结束时间比今天时间早。";
 // 2021-09-07 홍승비 -  자원예약 및 수정동작 완료 시 알러트 메세지 표출 (타 모듈과 동일하게) 
 var strLangHSB01 = "Resource Reservation Successfully saved.";
 var strLangHTH01 = "请输入 1 到 31 之间的整数日期。";
+var strLangHTH02 = "请准确输入重复周期天数。";
+var strLangHTH03 = "请准确输入重复周期。";
+var strLangHTH04 = "请输入大于 0 的整数每月间隔。";
