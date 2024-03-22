@@ -932,6 +932,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		vo.setCn(cn);
 		vo.setDisplayName(displayName);
 		vo.setDisplayName2(displayName2);
+		// 2024.03.22 한슬기 : UpdateDT컬럼에 들어갈 값 추가 
+		vo.setNowDate(nowDate);
 		
 		ezOrganAdminDao.updateUserDeptDisplayName(vo);
 		
