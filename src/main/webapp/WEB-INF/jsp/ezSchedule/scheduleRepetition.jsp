@@ -1129,7 +1129,7 @@
 					</div>
 					<div style="margin-top:3px">						
 						<input id="id0M2" type="radio" name='optMonthly' />
-						<label for="id0M2" accesskey="E"><spring:message code='ezSchedule.t91' /><u>E</u>)&nbsp;</label>
+						<label for="id0M2" accesskey="S"><spring:message code='ezSchedule.t91' /><u>S</u>)&nbsp;</label>
 		            	<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3" />
 						&nbsp;<spring:message code='ezSchedule.t89' />
 		            	<select name="select" id="list_MonthlyEach" onFocus='window.document.all["optMonthly"][1].checked=true;'>
@@ -1156,7 +1156,7 @@
 	    		<td style="padding:10px;height:85px">
 	    			<div>
 		    			<input id="optY1" type="radio" name="optYearly" value="radiobutton" checked />
-		            	<label for="optY1" accesskey="A"></label>
+		            	<label for="optY1"></label>
 		            	<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
 							<option value="1"><spring:message code='ezSchedule.t382' /></option>
 							<option value="2"><spring:message code='ezSchedule.t383' /></option>
@@ -1176,7 +1176,7 @@
 					</div>
 		            <div style="margin-top:3px">	
 						<input id="optY2" type="radio" name="optYearly" value="radiobutton" />
-						<label for="optY2" accesskey="E"></label>
+						<label for="optY2"></label>
 		            	<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>
 							<option value="1"><spring:message code='ezSchedule.t382' /></option>
 							<option value="2"><spring:message code='ezSchedule.t383' /></option>
