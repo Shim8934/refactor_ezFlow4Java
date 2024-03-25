@@ -31,8 +31,17 @@
 					document.getElementById("preview2").style.width = "200px";
 					document.getElementById("preview2").style.height = "200px";
 				}
+				adjustTextareaHeight();
+                window.addEventListener('resize', adjustTextareaHeight);
 			}
-			
+			function adjustTextareaHeight() {
+                var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+                var windowHeight = window.innerHeight;
+                var newHeight = windowHeight < 599 ? 183 : windowHeight - document.querySelector('tbody tr:first-child').offsetHeight - 25;
+                secondRowFirstTD.style.height = newHeight + 'px';
+
+            }
+
 			function btnClose_Click(){
 				window.close();
 			}
@@ -132,7 +141,9 @@
       			</td>
   			</tr>
   			<tr>
-    			<td style="padding-bottom:1px; height: 190px; padding-right:12px"><textarea name="Brd_Explain" style="width:100%; height: 100%; resize:none" readonly><c:out value='${brdExplain}' /></textarea></td>
+    			<td id="secondRowFirstTd" style="padding-bottom:1px; height: 190px; padding-right:12px">
+    			    <textarea name="Brd_Explain" style="width:100%; height: 100%; resize:none" readonly><c:out value='${brdExplain}' /></textarea>
+    			</td>
   			</tr>
 		</table>
 	</body>
