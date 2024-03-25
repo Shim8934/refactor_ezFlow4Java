@@ -417,14 +417,27 @@
 			function newAddress() {
 				var wWeight = "600";
                 var wHeight = "500";
-
-                var heigth = window.screen.availHeight;
-                var width = window.screen.availWidth;
-
-                var left = (width - wWeight) / 2;
-                var top = (heigth - wHeight) / 2;
+				
+                
+                var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - wHeight) / 2;
+		        var pLeft = (pwidth - wWeight) / 2;
+		
+		       	var dualScreenTop = window.screenY;
+		        var dualScreenLeft = window.screenX;
+		        	
+		       	pTop += dualScreenTop;
+		       	pLeft += dualScreenLeft;
+		       				
+				if (/MSIE|Trident/.test(window.navigator.userAgent)) {
+		       		if (window.screenLeft > window.screen.width) {
+		       			pTop -= 223;
+		       			pLeft -= 375;
+		       		}
+		       	}
                 window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent("${userInfo.id}") + "&folderid=&foldertype=", "",
-                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + pTop + ",left = " + pLeft);
 			}
 			
 			
