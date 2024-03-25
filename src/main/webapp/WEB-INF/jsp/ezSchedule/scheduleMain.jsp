@@ -631,10 +631,25 @@
 		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
 		        }
 
+		        var popupHeight = 830;
+		        var popupWidth = 790;
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 760) / 2;
-		        var pLeft = (pwidth - 790) / 2;
+		        var pTop = (pheight - popupHeight) / 2;
+		        var pLeft = (pwidth - popupWidth) / 2;
+		
+		       	var dualScreenTop = window.screenY;
+		        var dualScreenLeft = window.screenX;
+		        	
+		       	pTop += dualScreenTop;
+		       	pLeft += dualScreenLeft;
+		       				
+				if (/MSIE|Trident/.test(window.navigator.userAgent)) {
+		       		if (window.screenLeft > window.screen.width) {
+		       			pTop -= 223;
+		       			pLeft -= 375;
+		       		}
+		       	}
 		        
 		        if (otherid == "") {
 		            /* var index = idSelect.selectedIndex;
@@ -643,8 +658,7 @@
 
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
-						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "", "height = 830px, width = 790px,top=" + pTop + ", left=" + pLeft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
 		                    window.open("schedule_write.aspx?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
