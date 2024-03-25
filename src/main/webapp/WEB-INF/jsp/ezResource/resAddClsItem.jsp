@@ -48,7 +48,7 @@
 			function adjustTextareaHeight() {
                 var secondRowFirstTD = document.getElementById('secondRowFirstTd');
                 var windowHeight = window.innerHeight;
-                var newHeight = windowHeight < 599 ? 183 : windowHeight - document.querySelector('tbody tr:first-child').offsetHeight - 25;
+                var newHeight = windowHeight < 599 ? 98 : windowHeight - document.querySelector('tbody tr:first-child').offsetHeight - 25;
                 secondRowFirstTD.style.height = newHeight + 'px';
             }
 
