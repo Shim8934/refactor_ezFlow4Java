@@ -394,9 +394,20 @@
 
         return getXmlString(rtnXml);
     }
+
     function btnReset_onclick() {
+        // 2024-02-20 양지혜 - 재입력 시 선택/수정 내용을 초기화
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][name^="special"], input[type="checkbox"][name^="selSecLevel"]');
+        checkboxes.forEach(function(checkbox) {
+          checkbox.checked = false;
+        });
+
+        g_ArrPageInitFlag[1] = false;
+        InitRecordInfo();
+
         document.getElementById("txtChangeReason").value = "";
     }
+
     function btnOK_onclick() {
         if (g_ModifyFlag == "0")
         {
