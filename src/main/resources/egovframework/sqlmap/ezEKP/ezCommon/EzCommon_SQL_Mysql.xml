@@ -3861,7 +3861,7 @@
 			LIMIT 1
 		]]>
 	</select>
-	
+
 	<statement id="EzCommonDAO.createTblDeptChangeInfo">
 		CREATE TABLE `tbl_dept_change_info` (
 		`SEQ` int(10) NOT NULL AUTO_INCREMENT,
@@ -3887,4 +3887,20 @@
 		PRIMARY KEY (`SEQ`)
 		)
 	</statement>
+
+	<select id="EzCommonDAO.checkSurveyPostingMaxPeriodConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'SurveyPostingMaxPeriod'
+		  AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertSurveyPostingMaxPeriodConfig">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'SurveyPostingMaxPeriod', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '전자설문 종료 후 게시기간 설정', '2024-03-26 00:00:00', '전자설문')
+	</insert>
 </sqlMap>

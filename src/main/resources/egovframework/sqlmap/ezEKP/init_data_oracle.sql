@@ -301,6 +301,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 -- 전자결재 재기안 시 반송의견 유지여부 컨피그 추가 (관련 기능은 2020년 4월에 추가됨)
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useRedraftOpinionKeep', '전자결재 반송의견 재기안 시 유지 여부', 'NO', '전자결재 반송문서 재기안 시 반송의견을 유지하는 기능을 사용한다. YES:사용 NO:사용안함 (default: NO)', TO_DATE('2024-03-27 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
+-- 전자설문 종료 후 게시기간 설정 컨피그 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'SurveyPostingMaxPeriod', '전자설문 종료 후 게시기간 설정', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', TO_DATE('2024-03-26 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자설문');
 
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'ExpirePassPeriod', '0');

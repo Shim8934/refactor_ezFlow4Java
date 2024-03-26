@@ -1973,4 +1973,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblDeptChangeInfo");
 		}
 	}
+
+	public void insertSurveyPostingMaxPeriodConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkSurveyPostingMaxPeriodConfig", map);
+
+		if (propertyValue == null) {
+			logger.debug("SurveyPostingMaxPeriodConfig tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyPostingMaxPeriodConfig", map);
+		}
+	}
 }
