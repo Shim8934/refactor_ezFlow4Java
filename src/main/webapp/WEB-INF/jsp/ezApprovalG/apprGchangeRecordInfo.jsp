@@ -449,6 +449,14 @@
             OpenAlertUI("<spring:message code='ezApprovalG.t975'/>", ChangeCabinetInfo_Complete);
             //window.close();
         }
+        /* 2024-03-26 양지혜 - 공개가 아닌경우 공개등급 선택 필수 */
+        if (document.querySelector('input[name="rdoSecType"]:checked').value != '1') {
+            var checkboxes = document.querySelectorAll('input[name^="selSecLevel"]:checked');
+            if (checkboxes.length === 0) {
+                OpenAlertUI("<spring:message code='ezApprovalG.yjh01'/>");
+                return;
+            }
+        }
     }
     function ChangeCabinetInfo() {
         var oXmlhttp = createXMLHttpRequest();
