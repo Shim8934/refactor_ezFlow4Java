@@ -3241,7 +3241,7 @@ INSERT INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID,
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useChkPrevPwd', 'NO');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-VALUES (0, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 메일 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재');
+VALUES (0, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
 VALUES (0, 'BigSizeApprAttachLimit', '전자결재 대용량 첨부파일 최대 크기', '800', 'MB 단위로 대용량 첨부파일의 최대 크기를 지정한다.0: 대용량 첨부파일 사용안함 (default: 800)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)

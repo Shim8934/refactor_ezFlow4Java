@@ -2453,7 +2453,7 @@
 
 	<insert id="EzCommonDAO.insertApprAttachLimit">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-    		VALUES (#v_TENANTID#, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 메일 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+    		VALUES (#v_TENANTID#, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
 	</insert>
 	<insert id="EzCommonDAO.insertBigSizeApprAttachLimit">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)

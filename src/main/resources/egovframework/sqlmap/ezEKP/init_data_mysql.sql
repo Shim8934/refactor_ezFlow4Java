@@ -3191,7 +3191,7 @@ VALUES
 
 -- 2023.08.17 한슬기 전자결재 첨부파일 관련 config추가(해당 데이터는 ezFlow의 init 메서드에서 tenant_id = 0으로 넣어주고있으나, 멀티테넌트 사용을 위해 스크립트에 추가)
 INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
-VALUES(@tenant_id_value, 'ApprAttachLimit', '10', 'MB 단위로 메일 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', '전자결재 일반 첨부파일 최대 크기', '2023-03-07 14:33:29.000', '전자결재');
+VALUES(@tenant_id_value, 'ApprAttachLimit', '10', 'MB 단위로 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', '전자결재 일반 첨부파일 최대 크기', '2023-03-07 14:33:29.000', '전자결재');
 INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'ApprBigSizeAttachDownloadLimitCount', '0', '대용량첨부 다운로드 횟수 제한, 0일 경우 무제한 (default: 0)', '전자결재 대용량첨부 다운로드 횟수 제한', '2023-03-07 14:33:29.000', '전자결재');
 INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
