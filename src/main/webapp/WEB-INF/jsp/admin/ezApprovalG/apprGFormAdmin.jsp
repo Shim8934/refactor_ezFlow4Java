@@ -228,9 +228,9 @@
 		    	if (retVal[0] == "TRUE") {
 	                var tmpDisplayFormName = "";
 	                if (g_multiDataNum == "1") {
-	                    tmpDisplayFormName = retVal[1];
+	                    tmpDisplayFormName = retVal[1].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("</", "&lt;/");
 	                } else {
-	                    tmpDisplayFormName = retVal[5];
+	                    tmpDisplayFormName = retVal[5].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("</", "&lt;/");
 	                }
 
 	                nodeIdx.SetNodeName(tmpDisplayFormName);
