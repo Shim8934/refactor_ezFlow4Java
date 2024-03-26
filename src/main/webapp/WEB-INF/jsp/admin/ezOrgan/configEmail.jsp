@@ -220,6 +220,7 @@
 				    if (CrossYN()) {
 				        if (document.getElementById("ListEmail").options[i].textContent.indexOf("SMTP") == 0) {
 				            primarymail = document.getElementById("ListEmail").options[i].textContent.substr(5).slice(0, -9);
+							primarymail = primarymail.replace(/\s*$/,'');
 				        }
 				        if (document.getElementById("ListEmail").options[i].getAttribute("type") === "0") {
 							if (document.getElementById("ListEmail").options[i].textContent.includes("(Primary)")) {
