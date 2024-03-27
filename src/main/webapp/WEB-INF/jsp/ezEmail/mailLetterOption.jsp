@@ -27,6 +27,7 @@
 			var offsetMin = "${offsetMin}";
 			var individualMailUser = parseInt("${individualMailUser}");
 			var shareId = '<c:out value="${shareId}"/>';
+			var useSecureMail = '${useSecureMail}';
 			
 		    var RetValue;
 		    var ReturnFunction;
@@ -301,7 +302,7 @@
 	            //    return;
 	            // }
 	            
-	            if (document.querySelector("#chkSecureMail").checked) {
+	            if (useSecureMail === 'YES' && document.querySelector("#chkSecureMail").checked) {
 	                RetValue["secureMail"] = "Security";
 	            } else {
 	                RetValue["secureMail"] = "Normal";
