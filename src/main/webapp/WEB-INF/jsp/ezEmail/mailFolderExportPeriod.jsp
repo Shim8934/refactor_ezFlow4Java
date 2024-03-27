@@ -112,9 +112,14 @@
 			    	if(range == "direct"){
 			    		var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
 				        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
-				        
-				        location.DivPopUpHidden();
-				        location.mailbox_export("${folderName}", "${folderNameSql}", "${folderMailCnt}" , true, startDate, endDate);
+
+						if (startDate > endDate) {
+							alert("<spring:message code='ezAttitude.t132'/>");
+							location.DivPopUpHidden();
+						} else {
+							location.DivPopUpHidden();
+							location.mailbox_export("${folderName}", "${folderNameSql}", "${folderMailCnt}" , true, startDate, endDate);
+						}
 			    		
 			    	} else if(range == "all"){
 			    		location.DivPopUpHidden();
