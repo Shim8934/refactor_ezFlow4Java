@@ -665,7 +665,9 @@
 	            try {
 	                var url;
 	                
-	                url = "https://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
+	             	// 2024.03.26 한슬기 : 스팸메시지함 호출 url변경
+	                //url = "https://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
+	                url = "https://gwspam.ktbizoffice.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
 	                window.open(url, "right");
 	            } catch (e) {	                
 	            }	            
