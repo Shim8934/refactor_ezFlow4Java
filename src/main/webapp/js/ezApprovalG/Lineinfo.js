@@ -209,8 +209,10 @@ function OnSelChange_onclick() {
     			else if (p_IsDept == "N") {
     				var child = GetChildNodes(Reporter.parentElement);
     				for (var i = 0; i < child.length; i++) {
-    					if (child[i].nodeType == 1)
-    						child[i].style.display = "";
+    					if (child[i].nodeType == 1 && child[i].name != undefined) {
+							child[i].style.display = "";
+						}
+    						
     				}
     				if (pReDraftFlag != "HAPYUI" || pReDraftFlag != "HABYUI") {
     					if (GetAttribute(pAPRLINE.GetSelectedRows(0)[0], "DATA9") == "Y") {
