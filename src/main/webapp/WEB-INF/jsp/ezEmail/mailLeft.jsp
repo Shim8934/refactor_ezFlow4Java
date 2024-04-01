@@ -667,8 +667,9 @@
 	                
 	             	// 2024.03.26 한슬기 : 스팸메시지함 호출 url변경
 	                //url = "https://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
+	                //window.open(url, "right");
 	                url = "https://gwspam.ktbizoffice.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
-	                window.open(url, "right");
+	                window.open(url, "_blank", "width=870, height=500");
 	            } catch (e) {	                
 	            }	            
 	        }
