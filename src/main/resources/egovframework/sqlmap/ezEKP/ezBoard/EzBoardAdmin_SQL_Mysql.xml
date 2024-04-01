@@ -91,7 +91,8 @@
 		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>
 		<result property="type" 				column="TYPE" 				columnIndex="22"/>	
 	</resultMap>
-	
+
+<!-- 2024-04-01 SQL Injection 작업 영역 분배 - 1번 -->
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
          SELECT 
             result$v_STRLANG$
@@ -1730,7 +1731,8 @@
 	       		sn
 		]]>
 	</select>
-		
+
+<!-- 2024-04-01 SQL Injection 작업 영역 분배 - 2번 -->
 	<select id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer">
 		SELECT 
 			COUNT(BOARDID) CNT 

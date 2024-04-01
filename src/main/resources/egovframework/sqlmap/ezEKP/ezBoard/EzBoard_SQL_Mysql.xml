@@ -137,7 +137,8 @@
 		<result property="tenantId" 				column="TENANT_ID" 				columnIndex="6"/>
 	</resultMap> 
 	<!-- end -->
-	
+
+<!-- 2024-04-01 SQL Injection 작업 영역 분배 - 1번 -->
 	<select id="EzBoardDAO.getLeft_BoardSTD" parameterClass="Map" resultMap="getLeft_boardSTD">
 		<![CDATA[
 			SELECT 
@@ -1086,7 +1087,8 @@
 			]]>
 		</isEmpty>
 	</select>
-	
+
+<!-- 2024-04-01 SQL Injection 작업 영역 분배 - 2번 -->
 	<select id="EzBoardDAO.getNewItemList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			  	SELECT
@@ -2064,7 +2066,8 @@
 	   		  	#limit#, #rowCount#   
 		]]>
 	</select>
-	
+
+<!-- 2024-04-01 SQL Injection 작업 영역 분배 - 3번 -->
 	<select id="EzBoardDAO.getNoticePostItemAll" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
 			SELECT 
@@ -2811,7 +2814,8 @@
 			</isEqual>
 		</isEqual>
 	</select>
-	
+
+<!-- 2024-04-01 SQL Injection 작업 영역 분배 - 4번 -->
 	<select id="EzBoardDAO.checkForm" parameterClass="Map" resultClass="Integer">
 		<isEqual property="v_PMODE" compareValue="Y">
 			<![CDATA[
