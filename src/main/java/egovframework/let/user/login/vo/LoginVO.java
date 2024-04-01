@@ -156,6 +156,26 @@ public class LoginVO implements Serializable {
 	/** 직위 ID */
 	private String jobId;
     
+	// 생성자 대신 활용도 높게 setter로 정의함.
+	public void setForSelectUser(String id, String dn, int tenantId) {
+		this.id = id;
+		this.dn = dn;
+		this.tenantId = tenantId;
+	}
+	public void setForInsertLog(String ip, String agent, String os, String browser, int tenantId, String status) {
+		if (ip != null) this.ip = ip;
+		this.agent = agent;
+		this.os = os;
+		this.browser = browser;
+		this.tenantId = tenantId;
+		this.status = status;
+		if (title2 == null) this.title2 = "";
+	}
+	// 오버로딩 시에는 파라메터가 적은 쪽에서 → 많은 쪽을 호출하도록 한다. 코드가 더러워지지 않고, 확장성과 활용도를 위함.
+	public void setForInsertLog(String agent, String os, String browser, int tenantId, String status) {
+		setForInsertLog(null, agent, os, browser, tenantId, status);
+	}
+
 	public String getOtp() {
 		return otp;
 	}

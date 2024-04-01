@@ -1164,4 +1164,4 @@ var strLang975 = "格式版本不同，不能重复使用.";
 /* 2023-06-16 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 관련 메시지 추가 */
 var strLangJIH01 = "无法预览安全文档。";
 var strLangJIH02 = "/blank_cn.htm";
-var strLangJIH03 = "在外交接受中，无法进行预览。"
+var strLangJIH03 = "对外收信箱可以首次阅览文件后进行预览。"

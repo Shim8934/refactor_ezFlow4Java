@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -3043,6 +3044,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String pReciveDT = "";
 		String pReciverTo = "";
 		String pReciverCc = "";
+		String pReciverBcc = "";
 		String pSubject = "";
 		String isAttach = "NO";
 		String pAttachListHtml = "";
@@ -3139,7 +3141,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					Address[] toAddresses = message.getRecipients(RecipientType.TO);
 					Address[] ccAddresses = message.getRecipients(RecipientType.CC);
-					
+					Address[] bccAddresses = message.getRecipients(RecipientType.BCC);
+
 					if (toAddresses != null) {
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
@@ -3187,7 +3190,31 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						}
 					}
 					logger.debug("CC=" + pReciverCc);
-					
+
+					if (bccAddresses != null) {
+						String bccHeader = message.getHeader("Bcc")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(bccHeader);
+
+						for (Address address : bccAddresses) {
+							String personName = ((InternetAddress) address).getPersonal();
+							personName = personName != null ? personName : "";
+
+							if (!isAscii) {
+								byte[] rawBytes = personName.getBytes(StandardCharsets.ISO_8859_1);
+
+								personName = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
+							}
+
+							if (propertyValue.equals("YES") || propertyValue.equals("")) {
+								pReciverBcc += personName;
+								pReciverBcc += ((InternetAddress) address).getAddress() == null ? "\t" : "(" + ((InternetAddress) address).getAddress() + ")\t";
+							} else {
+								pReciverBcc += personName + "\t";
+							}
+						}
+					}
+					logger.debug("BCC=" + pReciverBcc);
+
 					// received date
 					if (message.getReceivedDate() != null) {
 						SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -3237,6 +3264,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("pReciveDT", pReciveDT);
 		model.addAttribute("pReciverTo", pReciverTo);
 		model.addAttribute("pReciverCc", pReciverCc);
+		model.addAttribute("pReciverBcc", pReciverBcc);
 		model.addAttribute("pSubject", pSubject);
 		model.addAttribute("isAttach", isAttach);
 		model.addAttribute("isSentItems", isSentItems);

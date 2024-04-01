@@ -639,7 +639,7 @@
 		</script>
 	</head>
 	<body class="mainbody">		
-	    <h1><spring:message code='ezSchedule.t252' /></h1><br />
+	    <h1><spring:message code='ezSchedule.shb12' /></h1><br />
 	    <div class="txt">▒ <spring:message code='ezSchedule.shb15' /></div>
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00006' /></div>
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00007' /></div>

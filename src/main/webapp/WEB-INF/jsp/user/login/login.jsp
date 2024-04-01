@@ -17,7 +17,7 @@
 				text-align: center;
 			}
 			.modal p {
-				background:none;
+				background:none; padding: 7px 0px;
 			}			
 			.warning_wrap{ overflow:hidden; width:600px; margin:auto}
 			.warning_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; text-align:center; float:left;}
@@ -36,17 +36,18 @@
 			.otp_qr dd{text-align: center; color:#797979; font-size:15px; padding:0px 0px 5px 0px; margin:0px;letter-spacing:-1px;}
 			
 			.password_reset{ margin:0 auto; padding:0px; width:405px;}
-			.password_reset .passwordTitle{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; font-size:17px; color:#000; text-align:center; line-height:25px;}
+			.password_reset .passwordTitle{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; font-size:17px; color:#000; text-align:center; line-height:25px; border-bottom: none;}
 			.password_reset .passwordTitle span{ display:inline-block; color:#006be4; font-family:Malgun Gothic, Meiryo UI; font-size:17px;}
-			.password_reset .passwordForm{ margin:15px 0px; padding:8px 5px; list-style:none; border-top:1px solid #000; border-bottom:1px solid #000;}
-			.password_reset .passwordForm li{ margin:0px 0px 15px 0px; padding:5px 15px 0px; font-size:13px; clear:both; overflow:hidden;}
-			.password_reset .passwordForm li .formText{ display:inline-block; line-height:35px; font-size:13px;}
+			.password_reset .passwordForm{ margin:15px 0px 0px; padding:8px 5px; list-style:none;}
+			.password_reset .passwordForm li{ margin:0px 0px 14px 0px; padding:0px 15px 0px; font-size:13px; clear:both; overflow:hidden;}
+			.password_reset .passwordForm li .formText{ display:inline-block; line-height:35px; font-size:13px; font-weight: bold;}
 			.password_reset .passwordForm li .formID{ display:inline-block; font-weight:bold;font-size:13px; float:right; width:199px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; text-align:center; box-sizing:border-box;}
 			.password_reset .passwordForm li .formInput{ display:inline-block; float:right; font-size:13px;}
 			.password_reset .passwordForm li .formInput input{font-size:13px; width:199px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; padding:0px 0px 0px 5px;}
 			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
 			#exDiv3 dl{margin-top: 20px;}
 			.warning_wrap .layerTitle{margin-bottom: 20px;}
+			.modal{max-width: 600px !important;}
 			
 			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
 			/*.logo img {width:137px; height:38px;} */
@@ -78,6 +79,7 @@
 			  display: none;
 			}
 		</style>
+	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
@@ -259,14 +261,13 @@
 			    }
 				
 				var companyID = "${companyId}";
-				var checkPw = loginCheckPassword(document.getElementById('txtNewPassword').value, companyID);
-		        if (checkPw != "OK"){
-		        	if (checkPw == "ERROR") {
-		        		alert("<spring:message code='ezSystem.ksaPwPolicy34'/>");
-		        	} else {
-		        		alert("<spring:message code='ezSystem.ksaPwPolicy35'/>");
-		        	}
-		        	
+				var checkPw = loginCheckPasswordPolicy({
+					"pw" : document.getElementById('txtNewPassword').value,
+					"chkCompanyId" : companyID,
+					"userId" : document.getElementById("chooseId").getAttribute("data-userId")
+				});
+
+		        if (!checkPw){
 		        	document.getElementById('txtNewPassword').focus();
 		        	return;
 		        }				
@@ -296,7 +297,7 @@
 		    			NEWPASSWORD : rsa.encrypt(document.getElementById('txtNewPassword').value),
 		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value)
 		    		},
-		    		url : "/user/login/changeExPassword.do",
+		    		url : "/user/login/changePassword.do",
 		    		success: function(text){
 		    			if (text == 'OK') {
 		    				//alert("<spring:message code='ezPersonal.t197'/>");
@@ -557,22 +558,20 @@
 			</span>
 			<p><span>[<strong class="yellow_txt">Caps Lock</strong>]?pCapsLockMsg?></span></p>
 		</div>
-		<div id="exDiv" style="display:none;margin-bottom:100px;padding:15px">
+		<div id="exDiv" style="display:none;margin-bottom:100px;padding:67px 20px 32px">
 			<div id="close">
 	            <ul>
 	                <li><a rel="modal:close"><span></span></a></li>
 	            </ul>
 	        </div>			
 			<div class="password_reset">
-				<p class="passwordTitle" style="border-bottom:0px">
+				<p class="passwordTitle" style="margin: 0 auto; text-align: center; ">
 					<c:if test="${isFirstLogin == 'Y'}">
-						<spring:message code='main.jjh07'/>
+						<img src="/images/kr/login/firstLogin_txt.svg" style="height: 52px;">
 					</c:if>
 					<c:if test="${isFirstLogin != 'Y'}">
-						<spring:message code='fail.user.passwordExpired'/>
+						<img src="/images/kr/login/expireDate_txt.svg" style="height: 52px;">
 					</c:if>
-					<br/>
-					<span><spring:message code='main.jjh03'/></span>
 				</p>
 				<ul class="passwordForm">
 					<li style="padding-top:10px;">
@@ -587,7 +586,7 @@
 				</ul>
 			</div>
 			<div class="btnpositionLayer" style="background-color: white;border:0px">
-			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
+			    <a class="imgbtn" onClick="javascript:PassWordChange()" style="background: #3F8EE8; border: 1px solid #3F8EE8;"><span style="color: #fff;"><spring:message code='ezSchedule.t4' /></span></a>
 			    <c:if test="${isFirstLogin != 'Y'}">
 		    		<a class="imgbtn" onClick="passwordUpdateNextTime()" ><span><spring:message code='main.hdp01'/></span></a>
 			    </c:if>

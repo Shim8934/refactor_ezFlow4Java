@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezOrgan.web;
 
 import java.net.URLDecoder;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.CommonUtil.PasswordCheckPolicyResult;
 
 /** 
  * @Description [Controller] 조직도 및 부서
@@ -562,10 +565,20 @@ public class EzOrganController {
  		String chkPwPolicy = "";
  		
  		String pwStr = request.getParameter("pw");
- 		String chkCompanyId = request.getParameter("chkCompanyId");
- 		
- 		Boolean test = commonUtil.checkPwPolicy(pwStr, chkCompanyId, tenantId);
- 		chkPwPolicy = test ? "OK" : chkPwPolicy;
+
+		boolean useLoginCookie = StringUtils.isNotBlank(request.getParameter("useLoginCookie"));
+		String companyId = useLoginCookie? userInfo.getCompanyID() : request.getParameter("chkCompanyId");
+		String userId = useLoginCookie? userInfo.getId() : request.getParameter("userId"); // 개인정보 관련 숫자 검증용
+
+		// 사원 추가 시 지원
+		Stream<String> propParams = null;
+		if (StringUtils.isNotBlank(request.getParameter("usePropParams"))) {
+			propParams = Stream.of("TELEPHONENUMBER", "MOBILE", "HOMEPHONE", "BIRTH");
+			propParams = propParams.filter(prop -> StringUtils.isNotBlank(request.getParameter(prop))).map(prop -> request.getParameter(prop));
+		}
+
+		PasswordCheckPolicyResult result = commonUtil.checkPwPolicy(pwStr, companyId, tenantId, userId, useLoginCookie, propParams);
+		chkPwPolicy = result.succeeded() ? "OK" : result.getMessage();
  		
  		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
  		return chkPwPolicy;

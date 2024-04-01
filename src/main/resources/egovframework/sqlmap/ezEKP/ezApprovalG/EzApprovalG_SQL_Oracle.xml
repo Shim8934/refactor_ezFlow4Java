@@ -21820,14 +21820,12 @@
 	  	  		)
 	  </isEqual>
 	  <isNotEqual property="listFlag" compareValue="9">
-	  	  AND 
-	  	  		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
-	  	  				AND 
-	  	  			 ConfirmFlag = '0')	
-	 	    <isNotEmpty property="deptCode">
-	 	      AND 
-	 	      		TRIM(TBL_CABINETCLASS.OwnerDeptID) = #deptCode# 
-	 	    </isNotEmpty>
+	  	  AND
+                TBL_CABINET.CabinetTransferFlag != '2'
+        <isNotEmpty property="deptCode">
+          AND
+                TRIM(TBL_CABINETCLASS.OwnerDeptID) = #deptCode#
+        </isNotEmpty>
 	  </isNotEqual>
 	  <isNotEmpty property="title">
 	  	  AND 

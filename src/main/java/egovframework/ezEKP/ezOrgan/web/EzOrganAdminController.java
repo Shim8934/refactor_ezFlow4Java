@@ -262,6 +262,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
 			ezCommonService.insertPortalMenuChinese(); // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
 			ezCommonService.insertPortletNameChinese(); // 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
+			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -1270,20 +1271,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		int tenantId = userInfo.getTenantId();
 		
 		String companyId = request.getParameter("companyId");
-		String type = request.getParameter("type");
-		type = type == null ? "" : type;
-		logger.debug("companyId="+ companyId + ", type=" + type);
+		String userId = request.getParameter("userId");
+		logger.debug("companyId={}, userId={}", companyId, userId);
 		
-		String pwPolicyExplain = "";
-		
-		if (type.equals("shared")) {
-			pwPolicyExplain = "▒ " + egovMessageSource.getMessage("main.jjh04", locale);
-		} else {
-			pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
-		}
+		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
 		
 		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
-		model.addAttribute("type", type);
+		model.addAttribute("userId", userId);
 		return "admin/ezOrgan/inputPassword";
 	}
 	

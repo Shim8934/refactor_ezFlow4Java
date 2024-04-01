@@ -56,6 +56,8 @@
 			// 일괄기안 관련 변수 추가
 			var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
 			var anNo = "<c:out value ='${anNo}'/>";
+			var selRowChangeFlag = false;
+			var cabinetAttachPage = true; // 문서 첨부 검색 페이지에서 의견 아이콘 삭제하기 위해 추가
 	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;

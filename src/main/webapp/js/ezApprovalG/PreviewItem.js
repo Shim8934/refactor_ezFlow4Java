@@ -31,18 +31,21 @@ function PreviewRayerChange(pGubun, pPage) {
                 var checkAprLineFlag = "";
                 var ifrmviewEmptyTextValue = "";
                 
-                checkAprLineFlag = CheckAprLine(selobj.getAttribute("DATA1"));
                 if (pPage == "Cabinet") {
                     secureApprovalDate = (g_sFlag == "m03" || g_sFlag == "m14") ? trim_Cross(selobj.getAttribute("DATA8")) : trim_Cross(selobj.getAttribute("DATA14"));
+                    checkAprLineFlag = CheckAprLine(selobj.getAttribute("DATA1"));
                 } else if ( pPage == "Container") {
                     secureApprovalDate = trim_Cross(selobj.getAttribute("DATA10"));
+                    checkAprLineFlag = CheckAprLine(selobj.getAttribute("DATA1"));
                 }
                 
                 // 2023-09-08 전인하 - 프레임 생성 시에만 텍스트 삽입함으로서 에러 방지, 불필요한 조건분기 제거
                 // 문서 비공개 사유 문자열 생성
-                if (checkAprLineFlag != "TRUE" && GetUserRole() != "Admin") {
+                if (pPage == "Manage" && pListTypeValue == '5' && selobj.getAttribute("DATA3") == '') { // 대외수신함에서, 문서 최초열람 하지 않아 문서 저장경로가 없을 경우
+                   ifrmviewEmptyTextValue = strLangJIH03;
+                } else if (checkAprLineFlag != "TRUE" && GetUserRole() == "User") { // 열람권한이 없을 경우
                     ifrmviewEmptyTextValue = strLang929;
-                } else if (typeof secureApprovalDate != "undefined" && secureApprovalDate != "" && secureApprovalDate >= GetTodayDate()) {
+                } else if (typeof secureApprovalDate != "undefined" && secureApprovalDate != "" && secureApprovalDate >= GetTodayDate()) {  // 보안결재 문서일 경우
                     ifrmviewEmptyTextValue = strLangJIH01;
                 } 
                 if ($("#ifrmviewEmptyText") != null) {
@@ -310,16 +313,24 @@ function ItemPreviewRead(obj, page) {
 			pre_openViewDocInfo();
 		} else {
 			var para = new Array();
-			var tempURL = pURL;
+			var pDocID = selobj.getAttribute("DATA1");
+			var pURL = selobj.getAttribute("DATA3");
 			
 			para[0] = pDocID;
 			para[1] = pURL;
+			
+			// 대외수신함에서, 문서 최초열람 하지 않아 문서 저장경로가 없을 경우 - 유통문서의 docHref는 문서 최초열람 시 작성됨
+			// url이 없어 문서를 열 수 없으므로 빈 페이지를 삽입함
+			if (para[0] != '' && para[1] == '') {
+			    document.getElementById("ifrmPreViewH").src = strLangJIH02;
+			    return;
+			}
 
-			if (tempURL.substr(tempURL.length - 4, tempURL.length).toLowerCase() == ".ezd") {
-				tempURL = tempURL.substr(0, tempURL.length - 4);
+			if (pURL.substr(pURL.length - 4, pURL.length).toLowerCase() == ".ezd") {
+				pURL = pURL.substr(0, pURL.length - 4);
 			}
 			
-			if (tempURL.substr(tempURL.length - 3, tempURL.length).toLowerCase() == "hwp") {
+			if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
 				if(useWebHWP == "NO") {
 					if (isIE()) {
 						openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
@@ -334,8 +345,8 @@ function ItemPreviewRead(obj, page) {
 				}
 			} else {
 				openLocation = "/ezApprovalG/contDocView.do";
-				openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
-			}
+			} 
+			openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
 			/* 2022-06-23 홍승비 - 전자결재 문서보기 페이지가 미리보기로 열린 경우, 기존 버튼 영역을 로딩 시점부터 표출하지 않도록 하기 위한 플래그 추가 */
 			openLocation +=  "&isPreview=Y";
 			

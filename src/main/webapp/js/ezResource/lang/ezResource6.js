@@ -260,3 +260,7 @@ var strLang340 = "End time is earlier than today.";
 
 // 2021-09-07 홍승비 -  자원예약 및 수정동작 완료 시 알러트 메세지 표출 (타 모듈과 동일하게) 
 var strLangHSB01 = "Resource Reservation Successfully saved.";
+var strLangHTH01 = "Enter date between 1 and 31 as integer.";
+var strLangHTH02 = "Please enter the number of repeat cycle days accurately.";
+var strLangHTH03 = "Please enter the repeat cycle accurately.";
+var strLangHTH04 = "Please enter the monthly interval as an integer greater than 0.";

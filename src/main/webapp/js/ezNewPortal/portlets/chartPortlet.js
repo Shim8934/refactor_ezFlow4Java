@@ -232,6 +232,14 @@ function EzChartPortlet() {
         var size = radius * 2 - 2;
         if (size === 0) return;
 
+        var beforeSpan = document.querySelector('.span-counts');
+        var beforeCount = 0;
+        try {
+            beforeCount = parseInt(beforeSpan.innerText.replaceAll(',', ''));
+        } catch (e) {
+            console.log('beforeCount e:' + e.stack);
+        }
+
         const countDiv = document.createElement('div');
         countDiv.className = 'div-counts';
         const countSpan = document.createElement('span');
@@ -255,7 +263,7 @@ function EzChartPortlet() {
         // 0이상~10억 미만까지 범위, 각 숫자 자릿수일 경우의 폰트 사이즈 크기 배열(px)
         var sumDataStr = _chart.getDatasetMeta(0).total;
         // 총합 쉼표 처리
-        $({val: parseInt(countSpan.innerText.replaceAll(',', ''))}).animate({val: sumDataStr}, {
+        $({val: beforeSpan}).animate({val: sumDataStr}, {
             duration: 1000,
             step: function () {
                 countSpan.innerText = Math.floor(this.val).toString().split(/(?=(?:...)*$)/).join(',');

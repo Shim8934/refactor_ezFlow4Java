@@ -3835,4 +3835,20 @@
 			(#v_TENANTID#, 'LangQuaternary4', '멀티언어4', '中文', '', '2023-11-27 14:30:00', '일반'),
 			(#v_TENANTID#, 'LangQuaternary5', '멀티언어5', '', '', '2023-11-27 14:30:00', '일반')
 	</insert>
+	
+	<select id="EzCommonDAO.checkLoadTimeForApprAllConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'loadTimeForApprAll'
+		AND
+			TENANT_ID = 0
+	</select>
+	
+	<insert id="EzCommonDAO.insertLoadTimeForApprAllConfig">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES ('0', 'loadTimeForApprAll', '200', '다안기안 문서 표출 시 글꼴,스크롤 오류를 해결하기 위한 setTimeout 시간. 네트워크 환경에 따라 적절한 시간 조절을 위해 사용(default:200)', '다안기안 문서 로딩시간', '2024-01-11 00:00:00', '전자결재G')
+    </insert>
 </sqlMap>

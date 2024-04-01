@@ -161,6 +161,9 @@
     		
     		// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "${useAprFilePrvw}";
+			
+			// 2024-01-11 김우철 - 다안기안문서 전체 탭 호출 후 selTab(1)을 위한 setTimeout 시간
+			var loadTime = "${loadTimeForApprAll}";
     		
 			function btnOpinion_onclick() {
 				openOpinionUI_New("Show");
@@ -822,7 +825,7 @@
 					}
                     else {
                         $("dl.tab_menu").append("<dt id=\"dt" + viewTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + viewTabIdx + "')\"  id=\"sp" + viewTabIdx + "\">" + viewTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
-                        addString = "<div class=\"tab_content\" id=\"tab" + viewTabIdx + "\" style=\"display:none;\">";
+                        addString = "<div class=\"tab_content\" id=\"tab" + viewTabIdx + "\" style=\"display:black;\">";
                     }
 
 					// formID는 자식 프레임에서 process_AfterOpen() > getApprovInfo() 등으로 알아서 가져오게 된다. 안 넘겨줘도 됨

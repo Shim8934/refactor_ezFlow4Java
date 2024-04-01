@@ -857,6 +857,13 @@ function Save_onClick(savemode) {
         return;
     }
     
+    // 2024-03-06 이사라 - 임시보관함으로 메일을 저장하는 경우도 제목을 필수로 입력하도록 수정
+    if (eSubject.value.trim() == "") {
+        alert(strLang92);
+        eSubject.focus();
+        return;
+    }
+
 	if (window.dadiframe && dadiframe.isfileup) {
 		alert(strLang86);
 		return;
@@ -872,8 +879,9 @@ function Save_onClick_Complete(ReturnValue) {
     try {
         if (ReturnValue) {
             var Subject = eSubject.value;
+            /* 2024-03-06 이사라 - 임시보관함으로 메일을 저장하는 경우도 제목을 필수로 입력하도록 수정하여 불필요한 부분 주석
             if (TrimText(Subject) == "" && !previewChk)
-                Subject = strLang97;
+                Subject = strLang97;*/
 
             if (isSecureMail == "true")
                 pSecurity = "3";

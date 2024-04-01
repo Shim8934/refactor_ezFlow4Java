@@ -1378,6 +1378,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		// displayname2가 null로 넘어오는데, 이럴 경우 displayname2은 displayname으로 대체되는 문제가 생겨서 추가
 		vo.setDisplayName2(userInfo.getDisplayName2());
 		
+		// 2024.02.13 한슬기 : cn, displayName 파라미터 변조하여 수정 불가능한 정보를 수정할 수 있는 문제. 파라미터로 cn과 displayName을 전달받지 않고 백단에서 처리
+		vo.setCn(userInfo.getId());
+		
 		logger.debug("<<<1. : " + vo.getCn());
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1408,13 +1411,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 	@ResponseBody
 	public String changePassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale, OrganUserVO vo, @RequestBody String xmlStr) throws Exception {
 		logger.debug("changePassword started");
+		String result = "ERROR";
 
-		userInfo = commonUtil.userInfo(loginCookie);
-		int tenantID = userInfo.getTenantId();
-		String companyID = userInfo.getCompanyID();
-		
-		logger.debug("tenantID=" + tenantID);       
-		
+		process : {
+
+		// 1. 주 수행 변수 oldPw, newPw
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String prm = egovFileScrty.getPrm();
@@ -1427,45 +1428,26 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String decryptedOldPassword = EgovFileScrty.decryptRsa(pk, oldPassword);
 		String decryptedNewPassword = EgovFileScrty.decryptRsa(pk, newPassword);
 		
-		// 2021-10-26 이사라 : prev비번과 새비번 비교 추가
-		// 2023-06-09 이사라 : 패스워드 설정 시 연속숫자, 생일, 전화번호 방지 기능
-		int checkResult = ezPersonalService.checkPassword(userInfo.getId(), decryptedOldPassword, tenantID, companyID, decryptedNewPassword);
-		
-		if (checkResult == 0) { // 0 : 현암호와 db암호가 일치하지 않음(실패), 1 : 일치 (성공)
-			return "CHKERROR";
-		}
-		
-		if (checkResult == 2) { // 2 : 가장최근 prev암호가 새암호와 일치 (실패)
-			return "PREVERROR";
-		} 
-		
-		if (checkResult == 3) { // 3 : 새암호에 연속숫자, 생일, 전화번호 포함 (실패)
-			return "NUMBERERROR";
+		// 2. 사용자 정보 : loginCookie
+		userInfo = commonUtil.userInfo(loginCookie);
+		String cn = userInfo.getId();
+		String companyID = userInfo.getCompanyID();
+		int tenantID = userInfo.getTenantId();
+
+		logger.debug("userInfo : cn={}, companyID={}, tenantID={}", cn, companyID, tenantID);
+
+		// 3. 비밀번호 검증
+		if (!ezPersonalService.checkPassword(cn, decryptedOldPassword, tenantID)) {	// 현암호와 db암호가 일치하지 않음(실패)
+			result = "CHKERROR";
+			break process;
 		}
 
-		// dhlee
-		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String mailAddr = userInfo.getId() + "@" + domain;
-		
-		// 이메일 계정의 암호를 새 암호로 설정한다.
-		int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedOldPassword, decryptedNewPassword);
-		
-		if (rc == 0) { // checkAndUpdateUserPassword 성공                                                 
-			try {
-				// 로컬 시스템에서 해당 User의 암호를 변경한다.
-				ezOrganAdminService.setPassword(userInfo.getId(), EgovFileScrty.decryptRsa(pk, newPassword), tenantID);
-			} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-				ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, decryptedNewPassword, decryptedOldPassword);
-				
-				throw e;
-			}                                       
-		} else {
-			throw new Exception("setting the user '" + mailAddr + "' password failed.");
-		}        
-		// dhlee - end
+		// 4. 비밀번호 변경 수행
+		result = ezOrganAdminService.changePasswordWithEmailSystem(cn, tenantID, decryptedOldPassword, decryptedNewPassword);
+		}
 
-		logger.debug("changePassword ended");
-		return "OK";
+		logger.debug("changePassword ended. result ={}", result);
+		return result;
 	}
 	
 	/**

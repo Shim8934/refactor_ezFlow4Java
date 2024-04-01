@@ -16,7 +16,17 @@ public enum NotiType {
 	// 수신문서 회송될 때
 	APPROVAL_RECEIPT_REJECT(2, 5),
 	// 문서 통과시
-	APPROVAL_PASS(2, 6);
+	APPROVAL_PASS(2, 6),
+	// 게시판 신규 게시글 등록 시
+	BOARD_NEW(3, 1),
+	// 게시판 게시글 수정 시
+	BOARD_MODIFY(3, 2),
+	// 게시판 게시글 댓글 등록 시
+	BOARD_COMMENT(3, 3),
+	// 게시판 게시글 답변 등록 시
+	BOARD_REPLY(3, 4)
+	;
+;
 
 	private final int mainType;
 	private final int subType;

@@ -90,6 +90,7 @@
             		<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/ezNewPortal/info_pic_none.png"  width="36px" height="36px" style="width:36px;height:36px;" /></c:if><c:if test='${userPhoto != ""}'><img id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></dt>
                		<dd class="infoName">${userName} ${userTitle}</dd>
                 	<dd class="infoTeam">${deptName}</dd>
+                	<dd class = "infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd>
                 	<%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
                 	<%--<dd class="infoSet" id="personalEnv"><img src="/images/kr/main/info_set.png"></dd>
                 	<dd class="infoSet" id="portletEnv" style="color:white;right : 30px;"><img src="/images/admin/frameSetting.png" /></dd> --%>

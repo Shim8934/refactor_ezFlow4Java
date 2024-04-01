@@ -1163,4 +1163,4 @@ var strLang975 = "The form version is different and cannot be reused.";
 /* 2023-06-16 전인하 - 전자결재G > 기록물대장 미리보기 - 미리보기 관련 메시지 추가 */
 var strLangJIH01 = "You cannot preview a security document.";
 var strLangJIH02 = "/blank_id.htm"
-var strLangJIH03 = "In External. Receipt Folder, preview is not available."
+var strLangJIH03 = "Preview is possible after the first reading of the document."

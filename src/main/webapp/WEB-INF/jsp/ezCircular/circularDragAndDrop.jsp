@@ -21,6 +21,7 @@
 		    var isfileup = false;
 		    var mode = "<c:out value='${mode}'/>";
 		    var circularID = "<c:out value='${circularID}'/>";
+            var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 
 		    function onDragEnter(evt) {
 		        evt.dataTransfer.dropEffect = "copy";
@@ -287,7 +288,19 @@
 		        var url = "";
 
 		        for (var i = 0; i < file.length; i++) {
-		            fd.append("fileToUpload", file[i]);
+                    var fnl = file[i].name.length;
+                    if (file[i].name.lastIndexOf('.') != -1) { // 2024-02-13 확장자 제외 파일명 길이를 체크
+                        fnl = file[i].name.lastIndexOf('.');
+                    }
+
+                    if (fnl > attachFileNameMaxLength) {
+                        alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+                        isfileup = false;
+
+                        return;
+                    } else {
+                        fd.append("fileToUpload", file[i]);
+                    }
 		        }
 		        
 // 		        fd.append("boardID", window.parent.pBoardID);
@@ -299,7 +312,7 @@
 		        xhr.addEventListener("load", uploadComplete, false);
 		        xhr.addEventListener("error", uploadFailed, false);
 		        xhr.addEventListener("abort", uploadCanceled, false);
- 		        
+
  		        url = "/ezCircular/uploadItemAttach.do?mode=" + mode + "&circularID=" + circularID;
 
 		        xhr.open("POST", url);

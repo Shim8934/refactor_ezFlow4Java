@@ -4020,7 +4020,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"PIN" VARCHAR2(100 BYTE),
 	"PINSTATE" VARCHAR2(4 BYTE) DEFAULT 'N',
 	"BIOMETRIC" VARCHAR2(4 BYTE) DEFAULT 'N',
-	"NOTUSED" NUMBER DEFAULT 0
+	"NOTUSED" NUMBER DEFAULT 0,
+	"APPVERSION" VARCHAR2(20 BYTE)
    ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_DOCDELETEHISTORY

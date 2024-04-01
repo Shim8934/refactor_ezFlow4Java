@@ -78,6 +78,8 @@ public interface EzOrganAdminService {
 	public void setPasswordExceptAD(String cn, String password, int tenantID) throws Exception;
 
 	public void setPasswordWithEmailSystem(String cn, String domain, String password, int tenantID) throws Exception;
+
+	public String changePasswordWithEmailSystem(String cn, int tenantId, String decryptedOldPassword, String decryptedNewPassword) throws Exception;
 	
 	public void retireEntry(String cn, String domain, String adminPassword, int tenantID, String offset) throws Exception;
 

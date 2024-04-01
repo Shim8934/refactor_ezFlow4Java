@@ -130,6 +130,69 @@ tr[data-target='.approval'], tr.approval { display: none; }
 			<td><%=makeCheckbox(disableItemFinder, 2, 6, 2)%></td>
 			<td><%=makeCheckbox(disableItemFinder, 2, 6, 3)%></td>
 		</tr>
+		<%-- 2023-08-03 조수빈 - 게시판 알림 설정 --%>
+		<tr class="collapsible" data-target=".board">
+	        <th><spring:message code='ezBoard.t0006' /></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 1, 4)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 2, 4)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 3, 4)%></th>
+		</tr>
+		<tr class="collapse board">
+	        <td><spring:message code='ezBoard.HSBMail01' /></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 1, 1)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 1, 2)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 1, 3)%></td>
+		</tr>
+		<tr class="collapse board">
+	        <td><spring:message code='ezBoard.HSBMail02' /></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 2, 1)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 2, 2)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 2, 3)%></td>
+		</tr>
+		<tr class="collapse board">
+	        <td><spring:message code='ezBoard.HSBMail03' /></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 3, 1)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 3, 2)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 3, 3)%></td>
+		</tr>
+		<tr class="collapse board">
+	        <td><spring:message code='ezBoard.HSBMail04' /></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 4, 1)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 4, 2)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 3, 4, 3)%></td>
+		</tr>
+		<%-- 2023-08-03 조수빈 - 일정관리 알림 설정 --%>
+		<tr class="collapsible" data-target=".schedule">
+	        <th><spring:message code='ezSchedule.t1010'/></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 1, 4)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 2, 4)%></th>
+	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 3, 4)%></th>
+		</tr>
+		<tr class="collapse schedule">
+	        <td><spring:message code='ezSchedule.kmss09'/></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 1, 1)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 1, 2)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 1, 3)%></td>
+		</tr>
+		<tr class="collapse schedule">
+	        <td><spring:message code='ezSchedule.kmss10'/></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 2, 1)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 2, 2)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 2, 3)%></td>
+		</tr>
+		<tr class="collapse schedule">
+	        <td><spring:message code='ezSchedule.kmss11'/></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 3, 1)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 3, 2)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 3, 3)%></td>
+		</tr>
+		<tr class="collapse schedule">
+	        <td><spring:message code='ezSchedule.kmss12'/></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 4, 1)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 4, 2)%></td>
+	        <td><%=makeCheckbox(disableItemFinder, 4, 4, 3)%></td>
+		</tr>
+		
 	</table>
 	<div class="btnpositionJsp">
 		<a class="imgbtn" id="save"><span><spring:message code='ezPersonal.t34' /></span></a>
@@ -142,15 +205,39 @@ tr[data-target='.approval'], tr.approval { display: none; }
 		// 마스터 체크박스 indeterminate 속성 초기화
 		document.querySelectorAll("[indeterminate]").forEach(function(el) { el.indeterminate = true; el.removeAttribute("indeterminate"); });
 
+		// 2023-08-03 조수빈 - 이전의 선택한 요소들을 저장하기 위한 변수
+		var beforeTarget;
+		var beforeThis;
 		// 하위 항목 숨기기/보이기 처리
 		document.querySelectorAll(".collapsible").forEach(function(el) {
 			var clickableElement = el.querySelector(":first-child");
 			var collapseElements = document.querySelectorAll(el.getAttribute("data-target"));
 			clickableElement.innerHTML += "<span class='spanUp'></span>";
 			clickableElement.addEventListener("click", function() {
-				collapseElements.forEach(function(el) { el.classList.toggle("show"); });
+				
+				// 2023-08-03 조수빈 - 기존 열려있는 구분 탭을 닫고 선택한 구분 탭을 열기
+				if (beforeTarget !== event.currentTarget.parentNode.getAttribute("data-target")) {
+					var beforeTrs = document.querySelectorAll('.show');
+					
+					if (beforeTrs.length > 0) {
+						
+						beforeTrs.forEach(function(before) {
+					    	before.classList.toggle("show");
+					    });
+						
+					    beforeThis.firstElementChild.classList.toggle("spanUp");
+					    beforeThis.firstElementChild.classList.toggle("spanDown");
+					}
+				}
+					
+				collapseElements.forEach(function(el) {
+				    el.classList.toggle("show");
+				});
+				
 				this.firstElementChild.classList.toggle("spanUp");
 				this.firstElementChild.classList.toggle("spanDown");
+				beforeTarget = event.currentTarget.parentNode.getAttribute("data-target");
+				beforeThis = this;
 			});
 		});
 

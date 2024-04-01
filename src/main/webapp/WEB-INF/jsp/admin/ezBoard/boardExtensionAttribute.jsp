@@ -267,6 +267,12 @@
 		                return false;
 		            }
 		        }
+		        else if (GetRadioVal("Type") == "select") {
+                	if (txtType == "") {
+                		alert("<spring:message code='ezBoard.lhr01'/>");
+                		return false;
+                	}
+                }
 
 		        return true;
 		    }

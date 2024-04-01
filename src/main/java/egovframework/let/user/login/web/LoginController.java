@@ -65,6 +65,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.SessionVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.CommonUtil.PasswordCheckPolicyResult;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 /**
@@ -1439,74 +1440,66 @@ public class LoginController {
     	}
     }
         
-    @RequestMapping(value = "/user/login/changeExPassword.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
+    @RequestMapping(value = "/user/login/changePassword.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
 	@ResponseBody
     public String changeExPassword(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
     	logger.debug("=========================================== changePassword ============================================");
     	
+		// 1. 주 수행 변수 oldPw, newPw
     	String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
-    	String encUserId = request.getParameter("USERID");
-    	String encPass = request.getParameter("OLDPASSWORD");
-    	String encNewPass = request.getParameter("NEWPASSWORD");
-    	
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 
+		String encUserId = request.getParameter("USERID");
 		String _uid = EgovFileScrty.decryptRsa(pk, encUserId);
 		
-		if (_uid == null || _uid.equals("")) {
+		if (StringUtils.isBlank(_uid)) {
 		    logger.debug("invalid _uid=" + _uid);
 		    
 		    return "DECRYPTERROR";
 		}
-		
-        String serverName = request.getServerName();        
-        int tenantId = loginService.getTenantId(serverName);
-		
+
+		String encPass = request.getParameter("OLDPASSWORD");
+		String encNewPass = request.getParameter("NEWPASSWORD");
+
 		String rpwd = EgovFileScrty.decryptRsa(pk, encPass);
+		String epwd = EgovFileScrty.decryptRsa(pk, encNewPass);
+
+		// 2. 사용자 정보 : 로그인 정보 확인
+        String serverName = request.getServerName();
+        int tenantId = loginService.getTenantId(serverName);
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 		
 		loginVO.setId(_uid);
 		loginVO.setPassword(_pwd);
 		loginVO.setTenantId(tenantId);
-		
-    	//로그인 정보 확인
         LoginVO resultVO = loginService.selectUser(loginVO);
         
-        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
+        if (resultVO == null || StringUtils.isBlank(resultVO.getId())) {
+			return "LOGINERROR";
+        }
+
+		String companyID = resultVO.getCompanyID();
+		logger.debug("loginVO : _uid={}, tenantId={}, companyID={}", _uid, tenantId, companyID);
+
 			// 2023-03-27 이사라 : [TFA] 2-factor 인증 사용 여부 체크하여, otp설정 레이어팝업 표출 여부 결정
 			boolean useOTP = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useOTP", tenantId));
 			model.addAttribute("useOTP", useOTP);
-       	
-        	String epwd = EgovFileScrty.decryptRsa(pk, encNewPass);
 
-        	//e-mail 연동
-			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-			String mailAddr = _uid + "@" + domain;
-			//이메일 계정의 암호를 새 암호로 설정한다.
-			int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, rpwd, epwd);
-			//checkAndUpdateUserPassword 성공
-			if (rc == 0) {                                                  
-			    try {
-			        //로컬 시스템에서 해당 User의 암호를 변경한다.
-			        ezOrganAdminService.setPassword(_uid, epwd, tenantId);
-			        
-			        String ip = ClientUtil.getClientIP(request);		
-					loginVO.setIp(ip);
-			        //IP Address,  마지막 login시간 저장
-					loginService.updateUser(loginVO);
-			        return "OK";
-			    } catch (Exception e) {
-			    	//Exception이 발생하면 취소 처리를 한다.
-			        ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, epwd, rpwd);			        
-			        return "UPDATEERROR";
-			    }                                       
-			} else {
-				return "MAILERROR";
-			}        	
-        } else {
-        	return "LOGINERROR";
-        }    	
+		// 3. 비밀번호 변경 수행
+		String result = ezOrganAdminService.changePasswordWithEmailSystem(_uid, tenantId, rpwd, epwd);
+
+		if (!"OK".equalsIgnoreCase(result)) {
+			return result;
+		}
+
+		// 4. IP Address,  마지막 login시간 저장
+		String ip = ClientUtil.getClientIP(request);
+		loginVO.setIp(ip);
+		loginService.updateUser(loginVO);
+
+		logger.debug("=========================================== changePassword ended ============================================");
+		return "OK";
     }
     
 	@RequestMapping(value = "/user/login/email.do", produces = "text/html; charset=utf-8", method = RequestMethod.GET)
@@ -1534,10 +1527,11 @@ public class LoginController {
  		String chkPwPolicy = "";
  		
  		String pwStr = request.getParameter("pw");
- 		String chkCompanyId = request.getParameter("chkCompanyId");
- 		
- 		Boolean test = commonUtil.checkPwPolicy(pwStr, chkCompanyId, tenantId);
- 		chkPwPolicy = test ? "OK" : chkPwPolicy;
+ 		String companyId = request.getParameter("chkCompanyId");
+		String userId = request.getParameter("userId");
+
+		PasswordCheckPolicyResult result = commonUtil.checkPwPolicy(pwStr, companyId, tenantId, userId);
+		chkPwPolicy = result.succeeded() ? "OK" : result.getMessage();
  		
  		logger.debug("checkPasswordPolicy ended. chkPwPolicy=" + chkPwPolicy);
  		return chkPwPolicy;
@@ -1737,17 +1731,18 @@ public class LoginController {
     		result = "fail|비밀번호를 입력해주십시오";
     	} else{
     		String companyId = resultVO.getCompanyID();
-    		String usePwPatternPolicy = ezCommonService.getCompanyConfig(tenantId, companyId, "UsePasswordPatternPolicy");
-    		boolean chkPw = usePwPatternPolicy.equalsIgnoreCase("yes") ? commonUtil.checkPwPolicy(pwd, companyId, tenantId) : true;
-    		 if(chkPw) {
+			String userId = resultVO.getId();
+
+			int chkPwCode = commonUtil.checkPwPolicy(pwd, companyId, tenantId, userId, false, null).getCode();
+    		 if(chkPwCode > -1) {
     			 if(!pwd.equals(pwdRe)){
     				 result = "fail|변경할 비밀번호/비밀번호 확인이 일치하지 않습니다.";
     			 } else {
     				 result = loginService.setPasswordByCertification(resultVO.getSabun(), certificationNum, pwd, resultVO);
     			 }
     		 } else {
-    			 String errMsg = egovMessageSource.getMessage("ezSystem.ksaPwPolicy35", locale);
-    			 result = "fail|" + errMsg;
+    			 String errMsg = (chkPwCode == -8 || chkPwCode == -9)? "ezOrgan.ls008" : "ezSystem.ksaPwPolicy35";
+    			 result = "fail|" + egovMessageSource.getMessage(errMsg, locale);
     		 }
     	}
     	

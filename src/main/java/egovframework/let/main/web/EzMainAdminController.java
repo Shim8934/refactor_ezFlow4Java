@@ -75,9 +75,14 @@ public class EzMainAdminController {
 			adminVO.setAccessbrowser(ClientUtil.getClientInfo(request, "browser"));
 
 			mainService.insertAdminLog(adminVO);
+
+			return "admin/adminMain";
+			
+		} else {
+			// 2024.02.14 한슬기 : 회사관리자/전체관리자가 아닌 경우 관리자 페이지에 접근 불가
+			return "redirect:/ezNewPortal/newPortalMain.do";
 		}
 		
-		return "admin/adminMain";
 	}
 	
 	@RequestMapping(value="/admin/top.do")

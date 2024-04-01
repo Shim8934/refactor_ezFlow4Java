@@ -93,6 +93,9 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
+import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
+import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -155,6 +158,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Resource(name = "EzMemoService")
 	private EzMemoService ezMemoService;
 	
+	@Resource(name = "EzPersonalService")
+	private EzPersonalService ezPersonalService;
+
 	@Autowired
 	private KlibUtil klibUtil;
 
@@ -8022,7 +8028,10 @@ public class EzBoardController extends EgovFileMngUtil{
         	to.setPersonal(vo.getWriterName(), "UTF-8");
         	to.setAddress(vo.getMail());
         	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	if (!ezPersonalService.hasNotiDiableItem(vo.getWriterID(), NotiType.BOARD_REPLY, NotiPlatform.MAIL, userInfo.getTenantId())) {
+        		ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	}
+        	
         }
         
 		logger.debug("sendReplyNoticeMail ended");
@@ -10072,6 +10081,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemID = request.getParameter("itemID");
 		String pIsAllGroupBoard = request.getParameter("isAllGroupBoard");
 		String pMode = request.getParameter("mode");
+		// 2023-08-03 조수빈 - 개인이 게시판 알람을 설정한 항목인지에 대한 여부
+		boolean disableMail = false;
 		
 		// 게시판 옵션에서 메일알림을 사용하는 경우에만 발송한다.
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
@@ -10093,13 +10104,25 @@ public class EzBoardController extends EgovFileMngUtil{
 				String userCompanyID = possibleUserInfo.get(i).get("COMPANYID");
 				String deptPathCode = userID + "," + possibleUserInfo.get(i).get("DEPT_CD_PATH");
 				String rollInfo = possibleUserInfo.get(i).get("ROLLINFO");
+				int tenantId = Integer.parseInt(possibleUserInfo.get(i).get("TENANT_ID"));
 				String value = userName + ";;" + mail;
 				
+				// 2023-08-03 조수빈 - 해당 항목에 대한 사용자의 알림 수신 여부를 반환
+				switch (pMode) {
+					case "new":
+						disableMail = ezPersonalService.hasNotiDiableItem(userID, NotiType.BOARD_NEW, NotiPlatform.MAIL, tenantId);
+				        break;
+					
+					case "modify":
+						disableMail = ezPersonalService.hasNotiDiableItem(userID, NotiType.BOARD_MODIFY, NotiPlatform.MAIL, tenantId);
+				        break;
+				}
+
 				// userID가 메일발송 대상에 없는 경우 권한체크 진행
 				if (!recipientIDs.containsKey(userID)) {
 					boolean canAccess = accessListViewFGCheck(boardID, boardProperty.getGuBun(), userID, deptID, deptPathCode, rollInfo, pIsAllGroupBoard, userCompanyID, userInfo.getTenantId());
 					
-					if (canAccess) {
+					if (canAccess && !disableMail) {
 						recipientIDs.put(userID, value);
 					}
 				}
@@ -10113,9 +10136,14 @@ public class EzBoardController extends EgovFileMngUtil{
 				String writerID = possibleUserInfo.get(i).get("WRITERID");
 				String writerName = possibleUserInfo.get(i).get("WRITERNAME");
 				String mail = possibleUserInfo.get(i).get("MAIL");
+				int tenantId = Integer.parseInt(possibleUserInfo.get(i).get("TENANT_ID"));
 				String value = writerName + ";;" + mail;
+				disableMail = ezPersonalService.hasNotiDiableItem(writerID, NotiType.BOARD_COMMENT, NotiPlatform.MAIL, tenantId);
 				
-				recipientIDs.put(writerID, value);
+				if (!disableMail) {
+				        recipientIDs.put(writerID, value);
+				}
+
 			}
 		}
 		// 메일발송 하지 않는 경우, 바로 리턴

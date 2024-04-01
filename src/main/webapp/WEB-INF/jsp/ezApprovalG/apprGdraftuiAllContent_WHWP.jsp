@@ -84,6 +84,13 @@
 	            
                 parent.ShowMailProgress(); // 문서 로딩중 이미지 표출
                 
+                // 임시저장된 문서의 결재정보는 새로운 docId를 생성 후에 가져오는 방식으로 수정
+                if (frameNum == "1" && parent.ListType == "21") {
+                	parent.getLineModeAll(parent.pDocIDAry[1]); // 결재진행중/완료여부 체크
+                	parent.getDocInfoAll(parent.pDocIDAry); // 결재문서 기본 정보
+                	parent.getAttachInfoAll(parent.pDocIDAry); // 첨부파일 정보
+                }
+                
                 HwpCtrl = BuildWebHwpCtrl("hwpContent", "${webHWPUrl}", function () {Editor_Complete();});
                 window.onresize();
 			});

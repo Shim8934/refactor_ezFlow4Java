@@ -126,8 +126,9 @@
        		<div class="portlet_tabpart01_top" id="tab1">
        			<c:choose>
        				<c:when test="${flag eq 'schedule'}">
-       					<p><span id="1tab1" divname="scheduleTab"><spring:message code='ezPersonal.yej01' /></span></p>		
-						<p><span id="1tab4" divname="scheduleMailNotiTab"><spring:message code='ezPersonal.t402' /></span></p>
+       					<p><span id="1tab1" divname="scheduleTab"><spring:message code='ezPersonal.yej01' /></span></p>
+						<%-- 2023-08-01 조수빈 - 환경설정 > 개인설정 > 알림환경설정으로 통합, 일정관리 모듈의 알림메일설정 탭 제거 --%>
+						<%-- <p><span id="1tab4" divname="scheduleMailNotiTab"><spring:message code='ezPersonal.t402' /></span></p> --%>
        				</c:when>
        				<c:otherwise>
        					<p><span id="1tab3" divname="taskTab"><spring:message code='ezPersonal.yej01' /></span></p>	

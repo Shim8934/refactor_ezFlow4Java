@@ -1004,6 +1004,8 @@
 		            	}
                 	}
 		            openApprovUI(tempFlag);
+		        } else {
+		            OpenInformationUI(strLang930 + "<br>" + strLang336);
 		        }
 		    }
 		    function btnUserInfo_onclick() {        
@@ -1013,10 +1015,17 @@
 		            OpenReceiptHistory();
 		    }
 		    function btnViewDoc_onclick() {
-		        if (pListTypeValue != "5") {
-		            var DocList = new ListView();
-		            DocList.LoadFromID("DocList");
-		            var oArrRows = DocList.GetSelectedRows();
+                var DocList = new ListView();
+                DocList.LoadFromID("DocList");
+                var oArrRows = DocList.GetSelectedRows();
+                
+                // 2024-02-19 전인하 - 문서보기 버튼 - 선택된 문서가 없을 시 알림 추가
+                if (oArrRows.length == 0) {
+                    OpenInformationUI(strLang930 + "<br>" + strLang336);
+                    return;
+                }
+                
+		        if (pListTypeValue != "5") {   
 		            var pCurSelRow = oArrRows[0];
 			        orgCompanyID = pCurSelRow.getAttribute("ORGCOMPANYID");
 		            if (oArrRows.length > 0)
@@ -1891,8 +1900,7 @@
 		        
 		        var tr = DocList.GetSelectedRows();
 		        if (tr.length == 0) {
-					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-					alert(pAlertContent);
+					OpenInformationUI(strLang930 + "<br>" + strLang336);
 		            return;
 		        }
 		        

@@ -63,7 +63,7 @@ public interface EzPersonalService {
 	
 	public void insertResult (int pItemSeq, String pUserID, int pResult, int tenantID) throws Exception;
 	
-	public int checkPassword (String pCN, String pPassword, int tenantID, String companyID, String npPassword) throws Exception;
+	public boolean checkPassword (String pCN, String pPassword, int tenantID) throws Exception;
 	
 	public String getShareApprovalList (String userID, String lang, String offset, String companyID, int tenantID) throws Exception;
 	
@@ -83,7 +83,7 @@ public interface EzPersonalService {
 
 	boolean hasNotiDiableItem(String userId, NotiType type, NotiPlatform platform, int tenantId);
 
-	void setNotiDisableItems(String userId, int tenantId, List<PersonalNotiDisableItemVO> items);
+	void setNotiDisableItems(String userId, int tenantId, List<PersonalNotiDisableItemVO> items) throws Exception;
 
 	PersonalNotiPreferencesVO getNotiPreferences(String userId, int tenantId);
 

@@ -2702,6 +2702,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		model.addAttribute("loadTimeForApprAll", ezCommonService.getTenantConfig("loadTimeForApprAll", userInfo.getTenantId()));
 		
 		logger.debug("approvuiAll_WHWP ended");
 		
@@ -2885,6 +2886,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		model.addAttribute("loadTimeForApprAll", ezCommonService.getTenantConfig("loadTimeForApprAll", userInfo.getTenantId()));
 		
 		logger.debug("ezviewAprAll_WHWP ended");
 		

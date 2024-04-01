@@ -36,11 +36,21 @@
 				$("body").on("dragenter dragover drop", function(e) {
 					e.preventDefault();
 				});
+
+				adjustTextareaHeight();
+                window.addEventListener('resize', adjustTextareaHeight);
 			}
 			
 			window.onbeforeunload = function () {
 				btnClose_Click();
 	    	} 
+
+			function adjustTextareaHeight() {
+                var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+                var windowHeight = window.innerHeight;
+                var newHeight = windowHeight < 599 ? 98 : windowHeight - document.querySelector('tbody tr:first-child').offsetHeight - 25;
+                secondRowFirstTD.style.height = newHeight + 'px';
+            }
 
 			function btnSave_Click() {
 				
@@ -591,7 +601,9 @@
 				</td>
   			</tr>
   			<tr>
-    			<td style="padding-bottom:1px; padding-right:12px; height:100px;"><textarea name="Brd_Explain"  id="Brd_Explain" style="margin-top:7px;width: 100%; height: 100%;resize:none;" maxlength="2000"></textarea></td>
+    			<td id="secondRowFirstTd" style="padding-bottom:1px; padding-right:12px; height:100px;">
+    			    <textarea name="Brd_Explain"  id="Brd_Explain" style="margin-top:7px;width: 100%; height: 100%;resize:none;" maxlength="2000"></textarea>
+                </td>
   			</tr>
 		</table>
 	</body>

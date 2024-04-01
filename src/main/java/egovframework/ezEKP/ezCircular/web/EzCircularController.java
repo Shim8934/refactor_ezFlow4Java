@@ -1235,11 +1235,18 @@ public class EzCircularController extends EgovFileMngUtil {
 		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
 			circularID = request.getParameter("circularID");
 		}
-		
+
+		// 첨부파일명 최대길이 제한
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
 		
 		model.addAttribute("userInfo",userInfo);
 		model.addAttribute("mode", mode);
 		model.addAttribute("circularID", circularID);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "/ezCircular/circularDragAndDrop";
 	}
