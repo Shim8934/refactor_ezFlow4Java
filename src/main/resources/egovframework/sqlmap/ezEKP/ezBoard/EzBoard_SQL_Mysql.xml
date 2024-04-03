@@ -144,7 +144,7 @@
 			SELECT 
 				BOARDGROUPID 
         	FROM 
-        		TBL_Board_BoardInfo 
+        		TBL_Board_BoardInfo
        		WHERE
        			TENANT_ID = #v_TENANTID#  
        		AND
@@ -195,10 +195,17 @@
 
 	<select id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="BoardMyFavoriteVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="ALL">
-			<![CDATA[
 				(SELECT 
 					BOARDID ,
-					CASE WHEN (BOARDNAME$v_LANG$ = '' OR BOARDNAME$v_LANG$ IS NULL) THEN BOARDNAME ELSE BOARDNAME$v_LANG$ END BOARDNAME,	                
+					<isEqual property="lang" compareValue="2">
+						CASE
+							WHEN (BOARDNAME2 = '' OR BOARDNAME2 IS NULL) THEN BOARDNAME
+							ELSE BOARDNAME2
+						END BOARDNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						BOARDNAME,
+					</isNotEqual>
 					TABUSED,
 	                VIEWORDER
 	            FROM 
@@ -214,7 +221,15 @@
 	            
 	            (SELECT 
 					A.BOARDID ,
-					CASE WHEN (A.BOARDNAME$v_LANG$ = '' OR A.BOARDNAME$v_LANG$ IS NULL) THEN A.BOARDNAME ELSE A.BOARDNAME$v_LANG$ END BOARDNAME,	                
+					<isEqual property="lang" compareValue="2">
+						CASE
+							WHEN (A.BOARDNAME2 = '' OR A.BOARDNAME2 IS NULL) THEN A.BOARDNAME
+							ELSE A.BOARDNAME2
+						END BOARDNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						A.BOARDNAME,
+					</isNotEqual>
 	                B.TABUSED,
 	                B.VIEWORDER
 	            FROM
@@ -241,13 +256,19 @@
 	            	
 	            ORDER BY 
 	            	VIEWORDER ASC
-			]]>
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="USE">
-			<![CDATA[
 				(SELECT 
 					A.BOARDID ,
-					CASE WHEN (A.BOARDNAME$v_LANG$ = '' OR A.BOARDNAME$v_LANG$ IS NULL) THEN A.BOARDNAME ELSE A.BOARDNAME$v_LANG$ END BOARDNAME,	                
+					<isEqual property="lang" compareValue="2">
+						CASE
+							WHEN (A.BOARDNAME2 = '' OR A.BOARDNAME2 IS NULL) THEN A.BOARDNAME
+							ELSE A.BOARDNAME2
+						END BOARDNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						A.BOARDNAME,
+					</isNotEqual>
                     TABUSED ,
                     B.GUBUN ,
                     A.VIEWORDER
@@ -272,7 +293,15 @@
                 	
                 (SELECT 
 					A.BOARDID ,
-					CASE WHEN (A.BOARDNAME$v_LANG$ = '' OR A.BOARDNAME$v_LANG$ IS NULL) THEN A.BOARDNAME ELSE A.BOARDNAME$v_LANG$ END BOARDNAME,	                
+					<isEqual property="lang" compareValue="2">
+						CASE
+						WHEN (A.BOARDNAME2 = '' OR A.BOARDNAME2 IS NULL) THEN A.BOARDNAME
+						ELSE A.BOARDNAME2
+						END BOARDNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						A.BOARDNAME,
+					</isNotEqual>
                     C.TABUSED ,
                     B.GUBUN ,
                     C.VIEWORDER
@@ -310,7 +339,6 @@
                 	
                 ORDER BY 
                 	VIEWORDER ASC
-			]]>
 		</isEqual>
 	</select>
 
@@ -422,17 +450,21 @@
 				]]>
 			</isEqual>
 			<isNotEqual property="v_PSTRLANG" compareValue="A">
-				<![CDATA[
-					SELECT 
-						NAME$v_PSTRLANG$ AS NAME, 
+					SELECT
+						CASE
+							WHEN #v_PSTRLANG# = '1' THEN NAME1
+							WHEN #v_PSTRLANG# = '2' THEN NAME2
+							WHEN #v_PSTRLANG# = '3' THEN NAME3
+							WHEN #v_PSTRLANG# = '4' THEN NAME4
+							ELSE NAME1
+						END AS NAME,
 						WIDTH, 
 						COLNAME 
 					FROM 
 						TBL_Board_Item_ListOption 
                     WHERE
                     	TENANT_ID = #v_TENANTID#
-                    AND 
-				]]>
+                    AND
                 <isEqual property="v_isAllGroupBoard" compareValue="Y">
 	                <![CDATA[
 	                	LISTTYPE = '1'
@@ -508,9 +540,14 @@
 				]]>
 			</isEqual>
 			<isNotEqual property="v_PSTRLANG" compareValue="A">
-				<![CDATA[
 					SELECT 
-						NAME$v_PSTRLANG$ AS NAME, 
+						CASE
+							WHEN #v_PSTRLANG# = '1' THEN NAME1
+							WHEN #v_PSTRLANG# = '2' THEN NAME2
+							WHEN #v_PSTRLANG# = '3' THEN NAME3
+							WHEN #v_PSTRLANG# = '4' THEN NAME4
+							ELSE NAME1
+						END AS NAME,
 						WIDTH, 
 						COLNAME 
 					FROM 
@@ -523,7 +560,6 @@
 						VIEW_FG = 'Y' 
 					ORDER BY 
 						SN
-				]]>
 			</isNotEqual>
 		</isNotEmpty>
 	</select>
@@ -611,7 +647,6 @@
 	
 	<select id="EzBoardDAO.getReservedItemList" parameterClass="Map" resultClass="BoardListVO">
 		<isEmpty property="v_PSORTBY">
-			<![CDATA[
            			   SELECT 
            					A.ITEMID ,
                          	A.STARTDATE ,
@@ -620,7 +655,15 @@
                          	A.ATTACHMENTS ,
                          	A.IMPORTANCE ,
                          	B.BOARDID ,
-                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+                         	<isEqual property="lang" compareValue="2">
+								CASE
+									WHEN (B.BOARDNAME2 = '' OR B.BOARDNAME2 IS NULL) THEN B.BOARDNAME
+									ELSE B.BOARDNAME2
+								END BOARDNAME,
+							</isEqual>
+							<isNotEqual property="lang" compareValue="2">
+								B.BOARDNAME,
+							</isNotEqual>
                          	A.ABSTRACT ,
                          	A.DOCNO 
            			   FROM 
@@ -652,10 +695,8 @@
 		           			A.ParentWriteDate ASC 
            			   LIMIT
            			   		#limit#, #rowCount#
-			]]>
 		</isEmpty>
 		<isNotEmpty property="v_PSORTBY">
-			<![CDATA[
 				SELECT 
 					A.ITEMID,
 	      			A.STARTDATE,
@@ -664,7 +705,15 @@
 	      			A.ATTACHMENTS,
 	      			A.IMPORTANCE,
 	      			B.BOARDID,
-	      			CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+	      			<isEqual property="lang" compareValue="2">
+						CASE
+							WHEN (B.BOARDNAME2 = '' OR B.BOARDNAME2 IS NULL) THEN B.BOARDNAME
+							ELSE B.BOARDNAME2
+						END BOARDNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						B.BOARDNAME,
+					</isNotEqual>
 	      			A.ABSTRACT,
 	      			A.DocNo
 	      		FROM 
@@ -691,12 +740,20 @@
 	      		AND 
 	      			A.WRITERID = #v_PUSERID# 
 	      		AND 
-	      			A.STARTDATE > #nowDate# 
-	      		ORDER BY 
-	      			$v_PSORTBY$
+	      			A.STARTDATE > #nowDate#
+				<isNotEmpty property="v_ORDERCOL">
+				ORDER BY
+					<isEqual property="v_ORDERCOL" compareValue="A.Attachments">A.Attachments</isEqual>
+					<isEqual property="v_ORDERCOL" compareValue="A.Title">A.Title</isEqual>
+					<isEqual property="v_ORDERCOL" compareValue="B.BoardName">B.BoardName</isEqual>
+					<isEqual property="v_ORDERCOL" compareValue="A.StartDate">A.StartDate</isEqual>
+					<isEqual property="v_ORDERCOL" compareValue="A.EndDate">A.EndDate</isEqual>
+					<isNotEmpty property="v_ORDERSORT">
+						DESC
+					</isNotEmpty>
+				</isNotEmpty>
 	      		LIMIT
 	      			#limit#, #rowCount#
-			]]>
 		</isNotEmpty>
 	</select>
 	
@@ -808,8 +865,35 @@
 						A.TITLE TITLE ,
 	                    B.GUBUN ,
 	                    A.BOARDID BOARDID  ,
-	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
-	                    A.WRITERNAME$lang$ WRITERNAME,
+	                    CASE
+							WHEN (
+							    <isEuqal property = "lang" compareValue = "1">
+								    B.BOARDNAME = ''
+								OR
+							    	B.BOARDNAME IS NULL
+							    </isEqual>
+							    <isNotEqual property = "lang" compareValue = "1">
+									B.BOARDNAME2 = ''
+							    OR
+							    	B.BOARDNAME2 IS NULL
+							    </isNotEqual>
+							) THEN
+							    B.BOARDNAME
+							ELSE
+							    <isEqual property = "lang" compareValue = "1">
+									B.BOARDNAME
+							    </isEqual>
+							    <isNotEqual property = "lang" compareValue = "1">
+									B.BOARDNAME2
+							    </isNotEqual>
+						END
+							BOARDNAME,
+					    <isEqual property = "lang" compareValue = "1">
+							B.WRITERNAME,
+					    </isEqual>
+					    <isNotEqual property = "lang" compareValue = "1">
+					    	B.WRITERNAME2,
+					    </isNotEqual>
 	                    A.CONTENTLOCATION,
 	                    C.MAIL,
 	                    A.ITEMID
@@ -856,8 +940,36 @@
 						A.TITLE TITLE ,
 	                    B.GUBUN ,
 	                    A.BOARDID BOARDID  ,
-	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
-	                    A.WRITERNAME$lang$ WRITERNAME,
+	                    CASE
+	                        WHEN (
+	                            <isEqual property = "lang" compareValue = "1">
+									B.BOARDNAME = ''
+	                            OR
+	                            	B.BOARDNAME IS NULL
+	                            </isEqual>
+	                            <isNotEqual property = "lang" compareValue = "1">
+									B.BOARADNAME2 = ''
+	                            OR
+	                            	B.BOARDNAME2 IS NULL
+	                            </isNotEqual>
+							)
+							THEN
+								B.BOARDNAME
+							ELSE
+							    <isEqual property = "lang" compareValue = "1">
+									B.BOARDNAME
+							    </isEqual>
+							    <isNotEqual property = "lang" compareValue = "1">
+							    	B.BOARDNAME2
+							    </isNotEqual>
+						END
+							BOARDNAME,
+					    <isEqual property = "lang" compareValue = "1">
+							A.WRITERNAME WRITERNAME,
+					    </isEqual>
+					    <isNotEqual property = "lang" compareValue = "1">
+							A.WRITERNAME2 WRITERNAME,
+					    </isNotEqual>
 	                    A.CONTENTLOCATION,
 	                    A.ITEMID
 	                FROM 
@@ -896,10 +1008,18 @@
 		<![CDATA[
 			SELECT
 				USERID,
-				USERNAME$lang$ AS USERNAME,
-				USERDEPTNAME$lang$ AS USERDEPTNAME,
-				USERCOMPANYNAME$lang$ AS USERCOMPANYNAME,
-				IFNULL(USERTITLE$lang$, '') AS USERTITLE,
+				<isEqual property = "lang" compareValue = "1">
+			    	USERNAME AS USERNAME,
+			    	USERDEPTNAME AS USERDEPTNAME,
+			    	USERCOMPANYNAME AS USERCOMPANYNAME,
+			    	IFNULL(USERTITLE, '') AS USERTITLE,
+			    </isEqual>
+			    <isNotEqual property = "lang" compareValue = "1">
+					USERNAME2 AS USERNAME,
+					USERDEPTNAME2 AS USERDEPTNAME,
+					USERCOMPANYNAME2 AS USERCOMPANYNAME,
+					IFNULL(USERTITLE2, '') AS USERTITLE,
+			    </isNotEqual>
 				DATE_FORMAT(READDATE ,'%Y-%m-%d %H:%i:%s') AS READDATE,
 				DEPTID
 		   	FROM

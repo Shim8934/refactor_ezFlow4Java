@@ -2280,6 +2280,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", endRow - (startRow - 1));
 		map.put("limit", startRow - 1);
+
+		/* 2024-04-02 양지혜 - SQL injection 처리 */
+		String orderCol = "";
+		String orderSort = "";
+		if (sortBy.contains("desc")) {
+			String[] tempAry = sortBy.split(" ");
+			orderCol = tempAry[0];
+			orderSort = tempAry[1];
+		} else {
+			orderCol = sortBy;
+		}
+		map.put("v_ORDERCOL", orderCol);
+		map.put("v_ORDERSORT", orderSort);
 		
 		List<BoardListVO> boardListVOs = ezBoardDAO.getReservedItemList(map);
 		
