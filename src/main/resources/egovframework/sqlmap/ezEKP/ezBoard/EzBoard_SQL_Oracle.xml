@@ -899,8 +899,35 @@
 						A.TITLE TITLE ,
                 	    B.GUBUN ,
                	  		A.BOARDID BOARDID  ,
-                  	    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
-              	        A.WRITERNAME$lang$ WRITERNAME,
+						CASE
+							WHEN (
+							    <isEuqal property = "lang" compareValue = "1">
+								    B.BOARDNAME = ''
+								OR
+							    	B.BOARDNAME IS NULL
+							    </isEqual>
+							    <isNotEqual property = "lang" compareValue = "1">
+									B.BOARDNAME2 = ''
+							    OR
+							    	B.BOARDNAME2 IS NULL
+							    </isNotEqual>
+							) THEN
+							    B.BOARDNAME
+							ELSE
+							    <isEqual property = "lang" compareValue = "1">
+									B.BOARDNAME
+							    </isEqual>
+							    <isNotEqual property = "lang" compareValue = "1">
+									B.BOARDNAME2
+							    </isNotEqual>
+						END
+							BOARDNAME,
+					    <isEqual property = "lang" compareValue = "1">
+							B.WRITERNAME,
+					    </isEqual>
+					    <isNotEqual property = "lang" compareValue = "1">
+					    	B.WRITERNAME2,
+					    </isNotEqual>
                     	A.CONTENTLOCATION,
                     	C.MAIL,
                     	A.ITEMID
@@ -992,11 +1019,19 @@
 					A.*, ROWNUM as RNUM
 				FROM (
 						SELECT  
-							USERID, 
-							USERNAME$lang$ AS USERNAME, 
-							USERDEPTNAME$lang$ AS USERDEPTNAME, 
-							USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
-							NVL(USERTITLE$lang$, '') AS USERTITLE, 
+							USERID,
+							<isEqual property = "lang" compareValue = "1">
+								USERNAME AS USERNAME,
+								USERDEPTNAME AS USERDEPTNAME,
+								USERCOMPANYNAME AS USERCOMPANYNAME,
+								IFNULL(USERTITLE, '') AS USERTITLE,
+							</isEqual>
+							<isNotEqual property = "lang" compareValue = "1">
+								USERNAME2 AS USERNAME,
+								USERDEPTNAME2 AS USERDEPTNAME,
+								USERCOMPANYNAME2 AS USERCOMPANYNAME,
+								IFNULL(USERTITLE2, '') AS USERTITLE,
+							</isNotEqual>
 							TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS') as READDATE,
 							TRIM(MIN(DEPTID)) AS DEPTID
 					   	FROM 
