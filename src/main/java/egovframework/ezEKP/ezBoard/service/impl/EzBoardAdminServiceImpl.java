@@ -940,8 +940,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String upperBoardList = getBoardTreePath(map);
 			// 상위 게시판이 존재할 경우.
 			if(upperBoardList != null) {
-				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
-				map.put("v_upperBoadList", upperBoardList);
+				/* 이유정 - [웹취약점] EzBoardAdminDAO.saveACLIncludeUppderBoard 관련 파라미터 수정 */
+//				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
+				map.put("v_upperBoadList", upperBoardList.split(","));
 				// 상위 게시판에 접근 권한만 주기.
 				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
 			}
@@ -960,8 +961,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String upperBoardList = getBoardTreePath(map);
 			// 상위 게시판이 존재할 경우.
 			if(upperBoardList != null) {
-				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
-				map.put("v_upperBoadList", upperBoardList);
+//				upperBoardList = "'" + upperBoardList.replaceAll(",", "','") + "'";
+				map.put("v_upperBoadList", upperBoardList.split(","));
 				// 상위 게시판에 접근 권한만 주기.
 				ezBoardAdminDAO.saveACLIncludeUppderBoard(map);
 			}			
@@ -1084,14 +1085,15 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String copyList = doc.getElementsByTagName("COPYLIST").item(0).getTextContent();
 			String[] copyListArray = copyList.split(",");
 			int copyListSize = copyListArray.length;
-			StringBuilder  buf = new StringBuilder ();
-			
-			for (String k : copyListArray) {
-				buf.append("'" + k + "',");
-			}
-			
-			String tempCopyList = buf.toString();
-			tempCopyList = tempCopyList.substring(0, tempCopyList.length() - 1);
+			/* 이유정 - [웹취약점] EzBoardAdminDAO.copyBoardAcl 관련 파라미터 수정 */
+//			StringBuilder  buf = new StringBuilder ();
+//
+//			for (String k : copyListArray) {
+//				buf.append("'" + k + "',");
+//			}
+//
+//			String tempCopyList = buf.toString();
+//			tempCopyList = tempCopyList.substring(0, tempCopyList.length() - 1);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			
@@ -1110,7 +1112,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				map.put("v_pBoardID", boardID);
 				map.put("v_PDEFAULTBOARDID", defaultBoardID);
 				map.put("v_PPARENTBOARDID", parentBoardID);
-				map.put("tempCopyList", tempCopyList);
+				map.put("copyListArray", copyListArray);
+//				map.put("tempCopyList", tempCopyList);
 				
 				// 기존 TBL_Board_BoardManage 테이블에 존재하는 권한 레코드(테넌트+게시판ID 조건)를 삭제한다.
 				ezBoardAdminDAO.deleteBoardManage(map);

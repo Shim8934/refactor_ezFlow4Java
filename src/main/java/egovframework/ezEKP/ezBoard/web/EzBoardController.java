@@ -2406,42 +2406,51 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setSubFlag("A");
 		}
 		//혜정 끝
-		
+
+		//20240219 : 김진홍 : CSAP 인증 처리 : 기존 SearchQuery 내용 제거 후 별도의 SearchMap 부여
+		Map<String, String> searchMap = new HashMap<String, String>();
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
 			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
-			returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' ";
+			searchMap.put("v_SEARCH_TITLE", boardVO.getTitle());
+			// returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("CONTENT;") != -1) {
-				boardVO.setContent(searchQueryDoc.getElementsByTagName("CONTENT").item(0).getTextContent());
-				returnQuery += " AND CONTENT like '%" + boardVO.getContent() + "%' ";
+			boardVO.setContent(searchQueryDoc.getElementsByTagName("CONTENT").item(0).getTextContent());
+			searchMap.put("v_SEARCH_CONTENT", boardVO.getContent());
+			// returnQuery += " AND CONTENT like '%" + boardVO.getContent() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("WRITERNAME;") != -1) {
 			boardVO.setWriterName(searchQueryDoc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
-			returnQuery += " AND ( A.WRITERNAME like '%" + boardVO.getWriterName() + "%' ";
-			returnQuery += " OR A.WRITERNAME2 like '%" + boardVO.getWriterName() + "%' ) ";
+			searchMap.put("v_SEARCH_WRITERNAME", boardVO.getWriterName());
+			// returnQuery += " AND ( A.WRITERNAME like '%" + boardVO.getWriterName() + "%' ";
+			// returnQuery += " OR A.WRITERNAME2 like '%" + boardVO.getWriterName() + "%' ) ";
 		}
 		
 		/* 2018-06-22 홍승비 - 썸네일게시판 쿼리 Writedate 중복 문제 수정(TBL_BOARD_ITEM as A) */
 		if (boardVO.getSearchQuery().indexOf("STARTDATE;") != -1) {
-			returnQuery += " AND A.WRITEDATE > '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00", userInfo.getOffset(), true) + "' ";
+			searchMap.put("v_SEARCH_STARTDATE", commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00", userInfo.getOffset(), true));
+			// returnQuery += " AND A.WRITEDATE > '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00", userInfo.getOffset(), true) + "' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("ENDDATE;") != -1) {
-			returnQuery += " AND A.WRITEDATE <  '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' ";
+			searchMap.put("v_SEARCH_ENDDATE", commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true));
+			// returnQuery += " AND A.WRITEDATE <  '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("ABSTRACT;") != -1) {
 			boardVO.setABSTRACT(searchQueryDoc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
-			returnQuery += " AND ABSTRACT like '%" + boardVO.getABSTRACT() + "%' ";
+			searchMap.put("v_SEARCH_ABSTRACT", boardVO.getABSTRACT());
+			// returnQuery += " AND ABSTRACT like '%" + boardVO.getABSTRACT() + "%' ";
 		}
 		
 		if (boardVO.getBoardType().equals("5") && boardInfo.getBoardAdmin_FG().equals("false")) {
-			returnQuery += " AND TOPWRITERID = '" + userInfo.getId() + "' ";
+			searchMap.put("v_SEARCH_TOPWRITERID", userInfo.getId());
+			// returnQuery += " AND TOPWRITERID = '" + userInfo.getId() + "' ";
 		}
 		
-		boardVO.setSearchQuery(returnQuery);
+		// boardVO.setSearchQuery(returnQuery);
 		String boardXML = "";
 		
 		if (boardVO.getBoardType().equals("4") || boardVO.getBoardType().equals("7")) {
@@ -2453,7 +2462,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			//혜정  추가
 			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
-				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO);
+				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO, searchMap);
 			} else {
 				boardXML = getSearchBoardListItemXML(userInfo, boardVO);
 			}
@@ -8634,7 +8643,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 검색 리스트 Method
 	 */
-	public String getSearchAllBoardListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public String getSearchAllBoardListItemXML(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchAllBoardListItemXML started");
 
 		String orderOption1 = "";
@@ -8689,7 +8698,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (pMode == 1 && listviewTrueList.size() == 0 && qnaItemList.size() == 0) {
 			boardCount = 0;
 		} else {
-			boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, listviewTrueList, qnaItemList, pMode);
+			boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, listviewTrueList, qnaItemList, pMode, searchMap);
 		}
 		
 		BoardListVO boardListVO = new BoardListVO();

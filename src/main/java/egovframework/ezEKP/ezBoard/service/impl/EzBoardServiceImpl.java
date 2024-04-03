@@ -4465,7 +4465,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2018-07-06 홍승비 - 게시물 전체검색 시 comapanyID 조건 추가 */
 	@Override
-	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception {
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchAllBoardItemCount started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -4485,14 +4485,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_MODE", pMode); 
 		map.put("v_listviewList", listviewTrueList);
 		map.put("v_qnaItemList", qnaItemList);
-		
-		if (boardVO.getSubFlag().equals("A")) { 
-			map.put("v_PWHEREBOARD", " (1=1) ");
-		} else if (boardVO.getSubFlag().equals("G")) {
-			map.put("v_PWHEREBOARD", " A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "')");
-		} else if (boardVO.getSubFlag().equals("YY")) {
-			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
+
+		//20240216 : 김진홍 : CSAP 인증 처리 : searchQuery 를 파라미터로 변경
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
 		}
+
+//		if (boardVO.getSubFlag().equals("A")) {
+//			map.put("v_PWHEREBOARD", " (1=1) ");
+//		} else if (boardVO.getSubFlag().equals("G")) {
+//			map.put("v_PWHEREBOARD", " A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "')");
+//		} else if (boardVO.getSubFlag().equals("YY")) {
+//			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
+//		}
 		
 		logger.debug("getSearchAllBoardItemCount ended");
 		return ezBoardDAO.getSearchAllBoardItemCount(map);
@@ -4983,7 +4988,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_ITEMID", itemID);
 		map.put("v_BOARDID", boardID);
 		map.put("v_TENANTID", tenantID);
-		
+
 		logger.debug("getCommentNoticeMail ended");
 		return ezBoardDAO.getCommentNoticeMail(map);
 	}

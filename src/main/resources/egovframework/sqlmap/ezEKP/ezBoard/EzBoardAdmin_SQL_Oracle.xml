@@ -1804,7 +1804,8 @@
               	BOARDID = #v_PDEFAULTBOARDID# )
 		]]>
 	</insert>
-	
+
+	<!-- 이유정 - SQL Injection 제거 : IN 조건 문자열 수정 -->
 	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
@@ -1838,8 +1839,14 @@
           	  	COMPANYID = #v_COMPANYID#
           	  AND
           	  	BOARDID = #v_PDEFAULTBOARDID#
-          	  AND
-          	  	ACCESSID IN ($tempCopyList$) 
+        ]]>
+			<isNotEmpty property="copyListArray">
+				AND ACCESSID IN
+				<iterate property="copyListArray" open="(" close=")" conjunction=",">
+					#copyListArray[]#
+				</iterate>
+			</isNotEmpty>
+		<![CDATA[
           	)
 		]]>
 	</insert>
@@ -1961,14 +1968,22 @@
 			AND TENANT_ID = #v_TENANTID#
 			AND ACCESSID = #v_pAccessID#
 		]]>	
-	</update>	
-	
+	</update>
+
+	<!-- 이유정 - SQL Injection 제거 : IN 조건 문자열 수정 -->
 	<insert id="EzBoardAdminDAO.saveACLIncludeUppderBoard" parameterClass="Map">
 		MERGE INTO tbl_board_boardmanage tb1 
 		USING (SELECT * 
 		    FROM tbl_board_boardinfo 
-		    WHERE BOARDID in ( $v_upperBoadList$ ) 
-		    AND	TENANT_ID = #v_TENANTID#
+		    WHERE
+			<isNotEmpty property="v_upperBoadList">
+				BOARDID in
+				<iterate property="v_upperBoadList" open="(" close=")" conjunction=",">
+					#v_upperBoadList[]#
+				</iterate>
+				AND
+			</isNotEmpty>
+		    TENANT_ID = #v_TENANTID#
 		    ) tb2
 		ON (tb1.BOARDID = tb2.BOARDID AND tb1.accessID = #v_pAccessID# )
 		WHEN MATCHED THEN
@@ -2701,8 +2716,9 @@
 			AND TENANT_ID = #v_TENANTID#
 			AND ACCESSID = #v_pAccessID#
 		]]>	
-	</delete>	
-		
+	</delete>
+
+	<!-- 이유정 - SQL Injection 제거 : IN 조건 문자열 수정 -->
 	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
 		<![CDATA[
 			DELETE FROM TBL_Board_BoardManage
@@ -2711,8 +2727,11 @@
       		AND  
       			BoardID = #v_pBoardID#
 		]]>
-		<isNotEmpty property="tempCopyList" prepend="AND">
-			ACCESSID IN ($tempCopyList$)
+		<isNotEmpty property="copyListArray">
+			AND ACCESSID IN
+			<iterate property="copyListArray" open="(" close=")" conjunction=",">
+				#copyListArray[]#
+			</iterate>
 		</isNotEmpty>
 	</delete>
 	

@@ -5413,7 +5413,17 @@
 			AND
 				A.BOARDID = I.BOARDID
 			WHERE
-				$v_PWHEREBOARD$ 
+		]]>
+			<isEqual property="v_PSUBFLAG" compareValue="A">
+				(1=1)
+			</isEqual>
+			<isEqual property="v_PSUBFLAG" compareValue="G">
+				A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND BOARDGROUPID = #v_PBOARDID#)
+			</isEqual>
+			<isEqual property="v_PSUBFLAG" compareValue="YY">
+				(A.BOARDID = #v_PBOARDID# OR I.BOARDTREEPATH LIKE CONCAT('%', #v_PBOARDID#, '%'))
+			</isEqual>
+		<![CDATA[
 			AND
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -5462,8 +5472,29 @@
 							OR
 						A.APPRFLAG IS NULL
 					)
-				$v_PSUBQUERY$
 			]]>
+		<!--20240215 : 김진홍 : CSAP 인증 처리 Mapper 수정 : v_PSUBQUERY 대체 쿼리 제작 -->
+		<isNotEmpty property="v_SEARCH_TITLE">
+			AND TITLE like CONCAT('%', #v_SEARCH_TITLE#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_CONTENT">
+			AND CONTENT like CONCAT('%', #v_SEARCH_CONTENT#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_WRITERNAME">
+			AND (A.WRITERNAME like CONCAT('%', #v_SEARCH_WRITERNAME#, '%') OR A.WRITERNAME2 like CONCAT('%', #v_SEARCH_WRITERNAME#, '%'))
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_STARTDATE">
+			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ENDDATE">
+			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ABSTRACT">
+			AND ABSTRACT like CONCAT('%', #v_SEARCH_ABSTRACT#, '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_TOPWRITERID">
+			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+		</isNotEmpty>
 	</select>
 	
 	<update id="EzBoardDAO.modUpdateDate" parameterClass="Map">
@@ -6100,8 +6131,11 @@
 	<select id="EzBoardDAO.getCommentNoticeMail" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			SELECT 
-				DISTINCT WRITERID, 
-				WRITERNAME$lang$ AS WRITERNAME, 
+				DISTINCT WRITERID,
+				CASE WHEN #lang# = '1' THEN WRITERNAME
+				     WHEN #lang# = '2' THEN WRITERNAME2
+				     ELSE WRITERNAME
+				END AS WRITERNAME,
 				TUM.MAIL,
 				CAST(TUM.TENANT_ID AS CHAR(1)) AS TENANT_ID
 			FROM 
