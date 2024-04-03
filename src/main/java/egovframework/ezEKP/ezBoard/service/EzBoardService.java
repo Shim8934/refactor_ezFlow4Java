@@ -165,7 +165,7 @@ public interface EzBoardService {
 	
 	public int getCheckApprUserList(String id, String itemID, int tenantID) throws Exception;
 	
-	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
+	public int getSearchBoardItemCount(BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 	
 	public int checkApprUserList(String userID, String itemID, int tenantID) throws Exception;
 	
@@ -175,9 +175,9 @@ public interface EzBoardService {
 	
 	public int getMyNoticePostItemCount(LoginVO userInfo) throws Exception;
 	
-	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 
-	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 	
 	public int getItemViewNew(String boardID, String itemID, int tenantID) throws Exception;
 	
@@ -295,7 +295,7 @@ public interface EzBoardService {
 	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
 
 	//2018-06-07 김혜정
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 
 	//2018-06-08 김혜정
 	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap) throws Exception;
@@ -304,7 +304,7 @@ public interface EzBoardService {
 	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
 	
 	//2018-06-28 홍승비 - 승인게시물 검색용 메서드 추가
-	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 	

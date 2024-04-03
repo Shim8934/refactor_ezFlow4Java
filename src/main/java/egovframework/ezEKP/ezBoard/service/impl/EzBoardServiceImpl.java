@@ -1703,7 +1703,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception {
+	public int getSearchBoardItemCount(BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchBoardItemCount started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -1712,16 +1712,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_pBoardID", boardVO.getBoardId());
+		map.put("v_PBOARDID", boardVO.getBoardId());
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
-		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+//		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
-		if (boardVO.getSubFlag().equals("Y")) {
-			map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
-		} else {
-			map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
+
+//		if (boardVO.getSubFlag().equals("Y")) {
+//			map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
+//		} else {
+//			map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
+//		}
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
 		}
 
 		logger.debug("getSearchBoardItemCount ended");
@@ -1789,7 +1792,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchMyBoardItemCount started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -1800,17 +1803,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
-		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+//		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		
+
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
+		}
 		logger.debug("getSearchMyBoardItemCount ended");
 		return ezBoardDAO.getSearchMyBoardItemCount(map);
 	}
 
 	@Override
-	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchMyBoardItemCountTemp started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -1821,10 +1827,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
-		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+//		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
-		
+
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
+		}
 		logger.debug("getSearchMyBoardItemCountTemp ended");
 		return ezBoardDAO.getSearchMyBoardItemCountTemp(map);
 	}
@@ -4410,25 +4419,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception{
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception{
 		logger.debug("getSearchAllBoardItemList started");
 
-		if (boardListVO.getOrderBySub().length() > 0) {
-			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
-				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
-					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
-				} else {
-					boardListVO.setOrderBySub(" A.WRITEDATE ");
-				}
-			}
-		} else {
-			if (globals.getProperty("Globals.DbType").equals("oracle")) {
-				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
-			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
-				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
-			} else {
-				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
-			}
+		String orderByCol2 = "";
+		String orderByCol2Desc = "N";
+		if (orderByMap.get("orderByCol") == null || "".equals(orderByMap.get("orderByCol"))) {
+			orderByMap.put("orderByCol", "PARENTWRITEDATE");
+			orderByMap.put("orderByColDesc", "Y");
+			orderByCol2 = "UPPERITEMIDTREE";
+//			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+//				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
+//			} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+//				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) ");
+//			} else {
+//				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
+//			}
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -4440,9 +4446,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
 		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
-		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+//		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		if (orderByMap.get("orderByCol") != null) {
+			map.put("iv_PORDERBYCOL1", orderByMap.get("orderByCol"));
+			if (orderByMap.get("orderByColDesc") != null) {
+				map.put("iv_PORDERBYCOL1DESC", orderByMap.get("orderByColDesc"));
+			}
+		}
+		map.put("iv_PORDERBYCOL2", orderByCol2);
+		map.put("iv_PORDERBYCOL2DESC", orderByCol2Desc);
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
-		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+//		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TITLE", boardVO.getTitle());
 		map.put("v_WRITERNAME", boardVO.getWriterName());
 		map.put("v_ABSTRACT", boardVO.getABSTRACT());
@@ -4455,14 +4469,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_MODE", pMode); 
 		map.put("v_listviewList", listviewTrueList);
 		map.put("v_qnaItemList", qnaItemList);
-		
-		if (boardVO.getSubFlag().equals("A")) { 
-			map.put("v_PWHEREBOARD", " (1=1) ");
-		} else if (boardVO.getSubFlag().equals("G")) {
-			map.put("v_PWHEREBOARD", " A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "')");
-		} else if (boardVO.getSubFlag().equals("YY")) {
-			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
+
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
 		}
+		
+//		if (boardVO.getSubFlag().equals("A")) {
+//			map.put("v_PWHEREBOARD", " (1=1) ");
+//		} else if (boardVO.getSubFlag().equals("G")) {
+//			map.put("v_PWHEREBOARD", " A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "')");
+//		} else if (boardVO.getSubFlag().equals("YY")) {
+//			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
+//		}
 		
 		logger.debug("getSearchAllBoardItemList ended");
 		return ezBoardDAO.getSearchAllBoardItemList(map);
@@ -4526,7 +4544,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	/* 2018-06-28 홍승비 - 승인게시물 검색 카운트 추가 */
 	@Override
-	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchApprBoardItemCount started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -4536,11 +4554,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PUSERID", userInfo.getId());
-		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+//		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
+		for (String key : searchMap.keySet()) {
+			map.put(key, searchMap.get(key));
+		}
 		logger.debug("getSearchApprBoardItemCount ended");
 		return ezBoardDAO.getSearchApprBoardItemCount(map);
 	}

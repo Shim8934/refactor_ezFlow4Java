@@ -2472,15 +2472,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getBoardType().equals("4") || boardVO.getBoardType().equals("7")) {
 			boardXML = getSearchThumbListXML(userInfo, boardVO, searchMap);
 		} else if (boardVO.getBoardType().equals("M")) {
-			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode);
+			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode, searchMap);
 		} else if (boardVO.getBoardType().equals("A")) {
-			boardXML = getSearchApprListItemXML(userInfo, boardVO);
+			boardXML = getSearchApprListItemXML(userInfo, boardVO, searchMap);
 		} else {
 			//혜정  추가
 			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
 				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO, searchMap);
 			} else {
-				boardXML = getSearchBoardListItemXML(userInfo, boardVO);
+				boardXML = getSearchBoardListItemXML(userInfo, boardVO, searchMap);
 			}
 		}
 		
@@ -2491,7 +2491,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 나의게시판검색리스트 표출 Method
 	 */
-	public String getSearchMyBoardListItemXML(LoginVO userInfo, BoardVO boardVO, String mode) throws Exception {
+	public String getSearchMyBoardListItemXML(LoginVO userInfo, BoardVO boardVO, String mode, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchMyBoardListItemXML started");
 
 		String orderOption1 = "";
@@ -2522,9 +2522,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		int boardCount = 0;
 		
 		if (mode == null || !mode.equals("temp")) {
-			boardCount = ezBoardService.getSearchMyBoardItemCount(userInfo, boardVO);
+			boardCount = ezBoardService.getSearchMyBoardItemCount(userInfo, boardVO, searchMap);
 		} else {
-			boardCount = ezBoardService.getSearchMyBoardItemCountTemp(userInfo, boardVO);
+			boardCount = ezBoardService.getSearchMyBoardItemCountTemp(userInfo, boardVO, searchMap);
 		}
 		
 		/* 2018-10-18 홍승비 - 나의게시물 검색을 위해 companyID 추가 */
@@ -2700,7 +2700,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		
-		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
+		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO, searchMap);
 		
 		BoardListVO boardListVO = new BoardListVO();
 		
@@ -2833,7 +2833,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 게시판리스트검색 표출 Method
 	 */
-	public String getSearchBoardListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public String getSearchBoardListItemXML(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchBoardListItemXML started");
 
 		String orderOption1 = "";
@@ -2862,7 +2862,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		
-		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
+		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO, searchMap);
 		
 		BoardListVO boardListVO = new BoardListVO();
 		boardListVO.setPageCount(boardCount);
@@ -8111,16 +8111,16 @@ public class EzBoardController extends EgovFileMngUtil{
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</a>");
-        
+
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-        
+
         String subject;
         if (userInfo.getLang().equals("1") ) {
         	subject = "[" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + boardInfo.getBoardName() + "]" + title;
         } else {
         	subject = "[" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + "]" + title;
         }
-        
+
         List<LoginVO> loginVOs = ezBoardService.getSendApprMailList(boardID, userInfo.getLang(), userInfo.getTenantId());
         
         for (LoginVO vo : loginVOs) {
@@ -8686,13 +8686,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		// 헤더 정보를 세팅한다.
 		int i = 0;
 		int hlength = headerList.size();
-		
+
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-				if (boardVO.getOrderOption().equals("")) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName());
+				if ("".equals(boardVO.getOrderOption())) {
+					orderByMap.put("orderByColDesc", "N");
 					orderOption1 = headerList.get(i).getColName() + " ";
 					orderOption2 = headerList.get(i).getColName() + " DESC ";
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					orderOption1 = headerList.get(i).getColName() + " DESC ";
 					orderOption2 = headerList.get(i).getColName() + " ";
 				}
@@ -8763,7 +8767,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardSearchList = null;
 			dlength = 0;
 		} else {
-			boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, listviewTrueList, qnaItemList, pMode);
+			boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, listviewTrueList, qnaItemList, pMode, searchMap, orderByMap);
 			dlength = boardSearchList.size();
 		}
 		
@@ -8876,7 +8880,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/** 2018-06-28 홍승비 - 승인게시판 검색기능 추가 */
-	public String getSearchApprListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public String getSearchApprListItemXML(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchApprListItemXML started");
 
 		String orderOption1 = "";
@@ -8906,7 +8910,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 승인게시물 검색 결과 카운트에 companyID 조건 추가
 		int boardCount = 0;
-		boardCount = ezBoardService.getSearchApprBoardItemCount(userInfo, boardVO);
+		boardCount = ezBoardService.getSearchApprBoardItemCount(userInfo, boardVO, searchMap);
 		
 		BoardListVO boardListVO = new BoardListVO();	
 		boardListVO.setPageCount(boardCount);
