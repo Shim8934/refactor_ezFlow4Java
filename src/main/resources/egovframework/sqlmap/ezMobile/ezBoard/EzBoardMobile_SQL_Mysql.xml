@@ -772,13 +772,19 @@
   </select>
   
   <select id="MBoardDAO.getBrdItemInfo" parameterClass="Map" resultClass="MBoardItemVO">
-    <![CDATA[
           SELECT
               ITEMID ,
               WRITERID ,
-              WRITERNAME$lang$ WRITERNAME,
-              WRITERDEPTNAME$lang$ WRITERDEPTNAME,
-              WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
+			  <isEqual property="lang" compareValue="2">
+				  WRITERNAME2 AS WRITERNAME,
+				  WRITERDEPTNAME2 AS WRITERDEPTNAME,
+				  WRITERCOMPANYNAME2 AS WRITERCOMPANYNAME,
+              </isEqual>
+			  <isNotEqual property="lang" compareValue="2">
+				  WRITERNAME,
+				  WRITERDEPTNAME,
+				  WRITERCOMPANYNAME,
+			  </isNotEqual>
               WRITEDATE ,
               PARENTWRITEDATE ,
               IMPORTANCE ,
@@ -793,7 +799,12 @@
               COPIEDITEM ,
               EXTENSIONATTRIBUTE1 ,
               EXTENSIONATTRIBUTE2 ,
-              EXTENSIONATTRIBUTE3$lang$ EXTENSIONATTRIBUTE3,
+			  <isEqual property="lang" compareValue="2">
+				  EXTENSIONATTRIBUTE32 AS EXTENSIONATTRIBUTE3,
+			  </isEqual>
+			  <isNotEqual property="lang" compareValue="2">
+				  EXTENSIONATTRIBUTE3,
+			  </isNotEqual>
               EXTENSIONATTRIBUTE4 ,
               EXTENSIONATTRIBUTE5 ,
               MAINCONTENT ,
@@ -820,7 +831,6 @@
               A.TENANT_ID = #tenantID#
           AND  
               ItemID = #itemID#
-    ]]>
   </select>
   
   <select id="MBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
