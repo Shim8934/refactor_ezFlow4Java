@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 
@@ -63,27 +64,27 @@ public interface EzBoardService {
 	
 	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception;
 	
-	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
+	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO, Map<String, String> orderByMap) throws Exception;
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
 
-	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception;
+	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID) throws Exception;
 	
-	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, String adminType, int tenantID) throws Exception;
+	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, String adminType, int tenantID) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 	
-	public List<HashMap<String, Object>> getThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	public List<HashMap<String, Object>> getThumbnailList(BoardListVO boardListVO, BoardVO boardVO, Map<String, String> orderByMap) throws Exception;
 	
-	public List<HashMap<String, Object>> getSearchThumbnailList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	public List<HashMap<String, Object>> getSearchThumbnailList(BoardListVO boardListVO, BoardVO boardVO, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 	
 	public List<HashMap<String, Object>> getMyNoticePostItem(LoginVO userInfo, String type, int start, int end) throws Exception;
 	
-	public List<HashMap<String, Object>> getMyBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+	public List<HashMap<String, Object>> getMyBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap) throws Exception;
 
-	public List<HashMap<String, Object>> getMyBoardListItemTemp(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+	public List<HashMap<String, Object>> getMyBoardListItemTemp(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap) throws Exception;
 	
-	public List<HashMap<String, Object>> getApprBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2) throws Exception;
+	public List<HashMap<String, Object>> getApprBoardListItem(LoginVO userInfo, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchMyBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 
@@ -164,7 +165,7 @@ public interface EzBoardService {
 	
 	public int getCheckApprUserList(String id, String itemID, int tenantID) throws Exception;
 	
-	public int getSearchBoardItemCount(BoardVO boardVO) throws Exception;
+	public int getSearchBoardItemCount(BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 	
 	public int checkApprUserList(String userID, String itemID, int tenantID) throws Exception;
 	
@@ -174,9 +175,9 @@ public interface EzBoardService {
 	
 	public int getMyNoticePostItemCount(LoginVO userInfo) throws Exception;
 	
-	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	public int getSearchMyBoardItemCount(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 
-	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	public int getSearchMyBoardItemCountTemp(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 	
 	public int getItemViewNew(String boardID, String itemID, int tenantID) throws Exception;
 	
@@ -294,16 +295,16 @@ public interface EzBoardService {
 	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
 
 	//2018-06-07 김혜정
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap, Map<String, String> orderByMap) throws Exception;
 
 	//2018-06-08 김혜정
-	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode, Map<String, String> searchMap) throws Exception;
 	
 	//2018-06-11 홍승비
 	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
 	
 	//2018-06-28 홍승비 - 승인게시물 검색용 메서드 추가
-	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 	

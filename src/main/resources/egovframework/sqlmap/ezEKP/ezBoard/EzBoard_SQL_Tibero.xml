@@ -194,10 +194,17 @@
 
 	<select id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="BoardMyFavoriteVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="ALL">
-			<![CDATA[
 				(SELECT 
 					BOARDID ,
-					CASE WHEN (BOARDNAME$v_LANG$ = '' OR BOARDNAME$v_LANG$ IS NULL) THEN BOARDNAME ELSE BOARDNAME$v_LANG$ END BOARDNAME,	                
+					<isEqual property="lang" compareValue="2">
+						CASE
+							WHEN (BOARDNAME2 = '' OR BOARDNAME2 IS NULL) THEN BOARDNAME
+							ELSE BOARDNAME2
+						END BOARDNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						BOARDNAME,
+					</isNotEqual>
 	                TABUSED,
 	                VIEWORDER
 	            FROM 
@@ -216,7 +223,15 @@
 	            FROM
 		            (SELECT 
 						A.BOARDID ,
-						CASE WHEN (A.BOARDNAME$v_LANG$ = '' OR A.BOARDNAME$v_LANG$ IS NULL) THEN A.BOARDNAME ELSE A.BOARDNAME$v_LANG$ END BOARDNAME,	                
+						<isEqual property="lang" compareValue="2">
+							CASE
+							WHEN (A.BOARDNAME2 = '' OR A.BOARDNAME2 IS NULL) THEN A.BOARDNAME
+							ELSE A.BOARDNAME2
+							END BOARDNAME,
+						</isEqual>
+						<isNotEqual property="lang" compareValue="2">
+							A.BOARDNAME,
+						</isNotEqual>
 		                B.TABUSED,
 		                B.VIEWORDER
 		            FROM
@@ -244,13 +259,19 @@
 					
 	            ORDER BY 
 	            	VIEWORDER ASC
-			]]>
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="USE">
-			<![CDATA[
 				(SELECT 
 					A.BOARDID ,
-					CASE WHEN (A.BOARDNAME$v_LANG$ = '' OR A.BOARDNAME$v_LANG$ IS NULL) THEN A.BOARDNAME ELSE A.BOARDNAME$v_LANG$ END BOARDNAME,	                
+					<isEqual property="lang" compareValue="2">
+						CASE
+							WHEN (A.BOARDNAME2 = '' OR A.BOARDNAME2 IS NULL) THEN A.BOARDNAME
+							ELSE A.BOARDNAME2
+						END BOARDNAME,
+					</isEqual>
+					<isNotEqual property="lang" compareValue="2">
+						A.BOARDNAME,
+					</isNotEqual>
                     TABUSED ,
                     B.GUBUN ,
                     A.VIEWORDER
@@ -278,7 +299,15 @@
 	            FROM	
 	                (SELECT 
 						A.BOARDID ,
-						CASE WHEN (A.BOARDNAME$v_LANG$ = '' OR A.BOARDNAME$v_LANG$ IS NULL) THEN A.BOARDNAME ELSE A.BOARDNAME$v_LANG$ END BOARDNAME,	                
+						<isEqual property="lang" compareValue="2">
+							CASE
+							WHEN (A.BOARDNAME2 = '' OR A.BOARDNAME2 IS NULL) THEN A.BOARDNAME
+							ELSE A.BOARDNAME2
+							END BOARDNAME,
+						</isEqual>
+						<isNotEqual property="lang" compareValue="2">
+							A.BOARDNAME,
+						</isNotEqual>
 	                    C.TABUSED ,
 	                    B.GUBUN ,
 	                    C.VIEWORDER
@@ -317,7 +346,6 @@
 				                	
                 ORDER BY 
                 	VIEWORDER ASC
-			]]>
 		</isEqual>
 	</select>
 
@@ -429,17 +457,21 @@
 				]]>
 			</isEqual>
 			<isNotEqual property="v_PSTRLANG" compareValue="A">
-				<![CDATA[
 					SELECT 
-						NAME$v_PSTRLANG$ AS NAME, 
+						CASE
+							WHEN #v_PSTRLANG# = '1' THEN NAME1
+							WHEN #v_PSTRLANG# = '2' THEN NAME2
+							WHEN #v_PSTRLANG# = '3' THEN NAME3
+							WHEN #v_PSTRLANG# = '4' THEN NAME4
+							ELSE NAME1
+						END AS NAME,
 						WIDTH, 
 						COLNAME 
 					FROM 
 						TBL_Board_Item_ListOption 
                     WHERE
                     	TENANT_ID = #v_TENANTID#
-                    AND 
-				]]>
+                    AND
                 <isEqual property="v_isAllGroupBoard" compareValue="Y">
 	                <![CDATA[
 	                	LISTTYPE = '1'
@@ -515,9 +547,14 @@
 				]]>
 			</isEqual>
 			<isNotEqual property="v_PSTRLANG" compareValue="A">
-				<![CDATA[
 					SELECT 
-						NAME$v_PSTRLANG$ AS NAME, 
+						CASE
+							WHEN #v_PSTRLANG# = '1' THEN NAME1
+							WHEN #v_PSTRLANG# = '2' THEN NAME2
+							WHEN #v_PSTRLANG# = '3' THEN NAME3
+							WHEN #v_PSTRLANG# = '4' THEN NAME4
+							ELSE NAME1
+						END AS NAME,
 						WIDTH, 
 						COLNAME 
 					FROM 
@@ -530,7 +567,6 @@
 						VIEW_FG = 'Y' 
 					ORDER BY 
 						SN
-				]]>
 			</isNotEqual>
 		</isNotEmpty>
 	</select>
@@ -628,7 +664,6 @@
 	
 	<select id="EzBoardDAO.getReservedItemList" parameterClass="Map" resultClass="BoardListVO">
 		<isEmpty property="v_PSORTBY">
-			<![CDATA[
 				SELECT
 					*
 				FROM
@@ -643,7 +678,15 @@
 	                         	A.ATTACHMENTS ,
 	                         	A.IMPORTANCE ,
 	                         	B.BOARDID ,
-	                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+								<isEqual property="lang" compareValue="2">
+									CASE
+										WHEN (B.BOARDNAME2 = '' OR B.BOARDNAME2 IS NULL) THEN B.BOARDNAME
+										ELSE B.BOARDNAME2
+									END BOARDNAME,
+								</isEqual>
+								<isNotEqual property="lang" compareValue="2">
+									B.BOARDNAME,
+								</isNotEqual>
 	                         	A.ABSTRACT ,
 	                         	A.DOCNO 
 	           			   FROM 
@@ -669,6 +712,7 @@
 								(A.WritercompanyID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 			          	   AND  
 			          			A.WriterID = #v_PUSERID#
+			<![CDATA[
 			               AND 
 			                	A.StartDate > #nowDate#) T1
 	           		WHERE 
@@ -678,14 +722,25 @@
 			]]>
 		</isEmpty>
 		<isNotEmpty property="v_PSORTBY">
-			<![CDATA[
 				SELECT
 					*
 				FROM
 					(SELECT 
 						* 
 	           		FROM ( SELECT
-	           					Row_Number() OVER (ORDER BY $v_PSORTBY$) AS RNUM,
+	           					Row_Number() OVER (
+								<isNotEmpty property="v_ORDERCOL">
+									ORDER BY
+									<isEqual property="v_ORDERCOL" compareValue="A.Attachments">A.Attachments</isEqual>
+									<isEqual property="v_ORDERCOL" compareValue="A.Title">A.Title</isEqual>
+									<isEqual property="v_ORDERCOL" compareValue="B.BoardName">B.BoardName</isEqual>
+									<isEqual property="v_ORDERCOL" compareValue="A.StartDate">A.StartDate</isEqual>
+									<isEqual property="v_ORDERCOL" compareValue="A.EndDate">A.EndDate</isEqual>
+									<isNotEmpty property="v_ORDERSORT">
+										DESC
+									</isNotEmpty>
+								</isNotEmpty>
+								) AS RNUM,
 	           					A.ITEMID ,
 	                         	A.STARTDATE ,
 	                         	A.ENDDATE ,
@@ -693,7 +748,15 @@
 	                         	A.ATTACHMENTS ,
 	                         	A.IMPORTANCE ,
 	                         	B.BOARDID ,
-	                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+								<isEqual property="lang" compareValue="2">
+									CASE
+										WHEN (B.BOARDNAME2 = '' OR B.BOARDNAME2 IS NULL) THEN B.BOARDNAME
+										ELSE B.BOARDNAME2
+									END BOARDNAME,
+								</isEqual>
+								<isNotEqual property="lang" compareValue="2">
+									B.BOARDNAME,
+								</isNotEqual>
 	                         	A.ABSTRACT ,
 	                         	A.DocNo 
 	           			   FROM 
@@ -719,6 +782,7 @@
 			        			(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 			          	   AND  
 			          			A.WRITERID = #v_PUSERID#
+			<![CDATA[
 			               AND 
 			                	A.STARTDATE > #nowDate#) T1
 	           		WHERE 
@@ -3557,7 +3621,14 @@
    			FROM 
    				TBL_BOARD_ITEM A 
    			WHERE    				
-   				$v_PWHEREBOARD$ 
+   		]]>
+		<isEqual property="v_PSUBFLAG" compareValue="Y">
+			(A.BOARDID = #v_PBOARDID# OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PBOARDID#))
+		</isEqual>
+		<isNotEqual property="v_PSUBFLAG" compareValue="Y">
+			A.BOARDID = #v_PBOARDID#
+		</isNotEqual>
+		<![CDATA[
    			AND
    				TENANT_ID = #v_TENANTID#
    			AND (
@@ -3571,8 +3642,28 @@
    				STARTDATE < #nowDate# 
    			AND 
    				ENDDATE > #nowDate# 
-   			$v_PSUBQUERY$
-		]]>
+   		]]>
+		<isNotEmpty property="v_SEARCH_TITLE">
+			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_CONTENT">
+			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_WRITERNAME">
+			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_STARTDATE">
+			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ENDDATE">
+			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ABSTRACT">
+			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_TOPWRITERID">
+			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+		</isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getMyNoticePostItemCount" parameterClass="Map" resultClass="Integer">
@@ -3635,8 +3726,28 @@
    				STARTDATE < #nowDate# 
    			AND 
    				ENDDATE > #nowDate# 
-   			$v_PSUBQUERY$
-		]]>
+   		]]>
+		<isNotEmpty property="v_SEARCH_TITLE">
+			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_CONTENT">
+			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_WRITERNAME">
+			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_STARTDATE">
+			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ENDDATE">
+			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ABSTRACT">
+			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_TOPWRITERID">
+			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+		</isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemCountTemp" parameterClass="Map" resultClass="Integer">
@@ -3657,8 +3768,28 @@
 				(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
    			AND
    				WRITERID = #v_PUSERID#  
-   			$v_PSUBQUERY$
-		]]>
+   		]]>
+		<isNotEmpty property="v_SEARCH_TITLE">
+			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_CONTENT">
+			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_WRITERNAME">
+			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_STARTDATE">
+			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ENDDATE">
+			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ABSTRACT">
+			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_TOPWRITERID">
+			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+		</isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
@@ -4038,7 +4169,14 @@
 			<![CDATA[
 				SELECT
 					A.REPLYID,
-					A.$v_UserName$ AS USERNAME,
+			]]>
+				<isEqual property="v_UserName" compareValue="USERNAME2">
+					A.USERNAME2 AS USERNAME,
+				</isEqual>
+				<isNotEqual property="v_UserName" compareValue="USERNAME2">
+					A.USERNAME AS USERNAME,
+				</isNotEqual>
+			<![CDATA[
 					A.USERID,
 					A.CONTENT,
 					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') AS WRITEDATE,
@@ -4115,7 +4253,16 @@
 				AND 
 					A.ITEMID = #v_ItemID#
 		    	GROUP BY
-					A.REPLYID, $v_UserName$, A.USERID, A.CONTENT, WRITEDATE, DEPTID
+					A.REPLYID,
+			]]>
+				<isEqual property="v_UserName" compareValue="USERNAME2">
+					A.USERNAME2,
+				</isEqual>
+				<isNotEqual property="v_UserName" compareValue="USERNAME2">
+					A.USERNAME,
+				</isNotEqual>
+			<![CDATA[
+					A.USERID, A.CONTENT, WRITEDATE, DEPTID
 				ORDER BY 
 					writedate ASC
 			]]>
@@ -4124,7 +4271,14 @@
 			<![CDATA[
 				SELECT 
 					A.REPLYID,
-					$v_UserName$ AS USERNAME,
+			]]>
+				<isEqual property="v_UserName" compareValue="USERNAME2">
+					A.USERNAME2 AS USERNAME,
+				</isEqual>
+				<isNotEqual property="v_UserName" compareValue="USERNAME2">
+					A.USERNAME AS USERNAME,
+				</isNotEqual>
+			<![CDATA[
 					A.USERID,
 					A.CONTENT,
 					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE,
@@ -4147,7 +4301,16 @@
 				AND 
 					A.itemid = #v_ItemID#
 		        GROUP BY
-					A.REPLYID, $v_UserName$, A.USERID, A.CONTENT, A.WRITEDATE
+					A.REPLYID,
+			]]>
+				<isEqual property="v_UserName" compareValue="USERNAME2">
+					A.USERNAME2,
+				</isEqual>
+				<isNotEqual property="v_UserName" compareValue="USERNAME2">
+					A.USERNAME,
+				</isNotEqual>
+			<![CDATA[
+					A.USERID, A.CONTENT, A.WRITEDATE
 				ORDER BY 
 					writedate ASC
 			]]>
@@ -4317,15 +4480,35 @@
 	        	A.startdate <= #nowDate#
 	        AND	
    				A.enddate > #nowDate#
-   				$v_PSUBQUERY$
-		]]>
+   		]]>
+		<isNotEmpty property="v_SEARCH_TITLE">
+			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_CONTENT">
+			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_WRITERNAME">
+			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_STARTDATE">
+			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ENDDATE">
+			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ABSTRACT">
+			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_TOPWRITERID">
+			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+		</isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getReplyNoticeMail" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
 			SELECT 
-				DISTINCT WRITERID, 
-				WRITERNAME$lang$ AS WRITERNAME, 
+				DISTINCT WRITERID,
+				CASE WHEN #lang# = '1' THEN WRITERNAME WHEN #lang# = '2' THEN WRITERNAME2 ELSE WRITERNAME END AS WRITERNAME,
 				TUM.MAIL 
 			FROM 
 				TBL_Board_Item TBI
@@ -4348,8 +4531,8 @@
 		<![CDATA[
 			SELECT 
 				A.APPRUSERID AS ID, 
-				B.MAIL AS EMAIL, 
-				B.DisplayName$lang$ AS DISPLAYNAME
+				B.MAIL AS EMAIL,
+				CASE WHEN #lang# = '1' THEN B.DisplayName WHEN #lang# = '2' THEN B.DisplayName2 ELSE B.DisplayName END AS DISPLAYNAME
    			FROM 
    				TBL_BOARD_APPRLIST A 
    			INNER JOIN 
@@ -5560,7 +5743,55 @@
 					*
 				  FROM
 					( SELECT 
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
+						Row_Number() OVER (
+					]]>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID">
+						  ORDER BY A.ITEMID <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME">
+						  ORDER BY A.WRITERNAME <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME">
+						  ORDER BY A.WRITERDEPTNAME <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="WRITERCOMPANYNAME">
+						  ORDER BY A.WRITERCOMPANYNAME <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="STARTDATE">
+						  ORDER BY A.STARTDATE <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE">
+						  ORDER BY A.WRITEDATE <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="TITLE">
+						  ORDER BY A.TITLE <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT">
+						  ORDER BY A.READCOUNT <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS">
+						  ORDER BY A.ATTACHMENTS <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="DOCNO">
+						  ORDER BY A.DOCNO <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="BOARDNAME">
+						  ORDER BY
+						  CASE WHEN (
+						  (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) = '' OR
+						  (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) IS NULL
+						  ) THEN I.BOARDNAME
+						  ELSE (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END)
+						  END <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL1" compareValue="PARENTWRITEDATE">
+						  ORDER BY TO_NUMBER(A.PARENTWRITEDATE) <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+					  <isEqual property="iv_PORDERBYCOL2" compareValue="UPPERITEMIDTREE">
+						  , to_char(A.UPPERITEMIDTREE) <isEqual property="iv_PORDERBYCOL2DESC" compareValue="Y">DESC</isEqual>
+					  </isEqual>
+	  				<![CDATA[
+						) AS ROWNUM_,
 						A.BOARDID,
 						A.ITEMID,
 						A.WRITERID,
@@ -5597,7 +5828,11 @@
 						A.EXTENSIONATTRIBUTE8,
 						A.EXTENSIONATTRIBUTE9,
 						A.EXTENSIONATTRIBUTE10,
-						CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
+						CASE WHEN (
+							(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) = '' OR
+							(CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) IS NULL
+						) THEN I.BOARDNAME
+						ELSE (CASE WHEN #lang# = '1' THEN I.BOARDNAME WHEN #lang# = '2' THEN I.BOARDNAME2 WHEN #lang# = '3' THEN I.BOARDNAME3 WHEN #lang# = '4' THEN I.BOARDNAME4 ELSE I.BOARDNAME END) END BOARDNAME,
 						I.GUBUN
 					FROM
 						TBL_BOARD_ITEM A
@@ -5628,7 +5863,17 @@
 					AND
 						A.BOARDID = I.BOARDID
 					WHERE 
-						$v_PWHEREBOARD$
+				]]>
+				  <isEqual property="v_PSUBFLAG" compareValue="A">
+					  (1=1)
+				  </isEqual>
+				  <isEqual property="v_PSUBFLAG" compareValue="G">
+					  A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND BOARDGROUPID = #v_PBOARDID#)
+				  </isEqual>
+				  <isEqual property="v_PSUBFLAG" compareValue="YY">
+					  (A.BOARDID = #v_PBOARDID# OR I.BOARDTREEPATH LIKE '%' || #v_PBOARDID# || '%')
+				  </isEqual>
+	  			<![CDATA[
 					AND
 						A.TENANT_ID = #v_TENANTID#
 					AND
@@ -5678,7 +5923,30 @@
 							OR 
 						A.APPRFLAG IS NULL
 					)
-					$v_PSUBQUERY$ ) T1 
+			]]>
+			  <isNotEmpty property="v_SEARCH_TITLE">
+				  AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			  </isNotEmpty>
+			  <isNotEmpty property="v_SEARCH_CONTENT">
+				  AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+			  </isNotEmpty>
+			  <isNotEmpty property="v_SEARCH_WRITERNAME">
+				  AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			  </isNotEmpty>
+			  <isNotEmpty property="v_SEARCH_STARTDATE">
+				  <![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
+			  </isNotEmpty>
+			  <isNotEmpty property="v_SEARCH_ENDDATE">
+				  <![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
+			  </isNotEmpty>
+			  <isNotEmpty property="v_SEARCH_ABSTRACT">
+				  AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+			  </isNotEmpty>
+			  <isNotEmpty property="v_SEARCH_TOPWRITERID">
+				  AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+			  </isNotEmpty>
+	  		<![CDATA[
+				) T1
 				WHERE
 					ROWNUM_ <= #v_PENDROW# ) T2
 			WHERE 
@@ -5699,7 +5967,17 @@
 			AND
 				A.BOARDID = I.BOARDID
 			WHERE
-				$v_PWHEREBOARD$ 
+		]]>
+			<isEqual property="v_PSUBFLAG" compareValue="A">
+				(1=1)
+			</isEqual>
+			<isEqual property="v_PSUBFLAG" compareValue="G">
+				A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND BOARDGROUPID = #v_PBOARDID#)
+			</isEqual>
+			<isEqual property="v_PSUBFLAG" compareValue="YY">
+				(A.BOARDID = #v_PBOARDID# OR I.BOARDTREEPATH LIKE '%' || #v_PBOARDID# || '%')
+			</isEqual>
+		<![CDATA[
 			AND
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -5748,8 +6026,29 @@
 							OR
 						A.APPRFLAG IS NULL
 					)
-				$v_PSUBQUERY$
 			]]>
+		<!--20240215 : 김진홍 : CSAP 인증 처리 Mapper 수정 : v_PSUBQUERY 대체 쿼리 제작 -->
+		<isNotEmpty property="v_SEARCH_TITLE">
+			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_CONTENT">
+			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_WRITERNAME">
+			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_STARTDATE">
+			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ENDDATE">
+			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_ABSTRACT">
+			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+		</isNotEmpty>
+		<isNotEmpty property="v_SEARCH_TOPWRITERID">
+			AND TOPWRITERID = #v_SEARCH_TOPWRITERID#
+		</isNotEmpty>
 	</select>
 	
 	<update id="EzBoardDAO.modUpdateDate" parameterClass="Map">
@@ -6395,8 +6694,11 @@
 	<select id="EzBoardDAO.getCommentNoticeMail" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
 			SELECT 
-				DISTINCT WRITERID, 
-				WRITERNAME$lang$ AS WRITERNAME, 
+				DISTINCT WRITERID,
+				CASE WHEN #lang# = '1' THEN WRITERNAME
+					 WHEN #lang# = '2' THEN WRITERNAME2
+					 ELSE WRITERNAME
+				END AS WRITERNAME,
 				TUM.MAIL,
 				CAST(TUM.TENANT_ID AS CHAR(1)) AS TENANT_ID
 			FROM 

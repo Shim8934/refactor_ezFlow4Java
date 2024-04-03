@@ -1375,17 +1375,21 @@ public class EzBoardController extends EgovFileMngUtil{
     	int writeDateSN = 0;
     	int titleSN = 0;
     	
-    	for (i = 0; i < hlength; i++) {
-    		if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-    			if (boardVO.getOrderOption().equals("")) {
-    				orderOption1 = headerList.get(i).getColName() + " ";
-    				orderOption2 = headerList.get(i).getColName() + " DESC ";
-    			} else {
-    				orderOption1 = headerList.get(i).getColName() + " DESC ";
-    				orderOption2 = headerList.get(i).getColName() + " ";
-    			}
-    		}
-    	}
+    	Map<String, String> orderByMap = new HashMap<String, String>();
+		for (i = 0; i < hlength; i++) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
+				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
+					orderOption1 = headerList.get(i).getColName() + " ";
+					orderOption2 = headerList.get(i).getColName() + " DESC ";
+				} else {
+					orderByMap.put("orderByColDesc", "Y");
+					orderOption1 = headerList.get(i).getColName() + " DESC ";
+					orderOption2 = headerList.get(i).getColName() + " ";
+				}
+			}
+		}
     	
     	int noticeCount = 0;
     	int boardCount = 0;
@@ -1574,9 +1578,9 @@ public class EzBoardController extends EgovFileMngUtil{
     	List<HashMap<String, Object>> boardListItem = new ArrayList<HashMap<String,Object>>();
     	
     	if (mode == null || !mode.equals("temp")) { // 승인게시물 가져올때 companyID 조건 추가
-    		boardListItem = ezBoardService.getApprBoardListItem(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2);
+    		boardListItem = ezBoardService.getApprBoardListItem(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap);
     	} else { // 임시보관함 게시물
-    		boardListItem = ezBoardService.getMyBoardListItemTemp(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2);
+    		boardListItem = ezBoardService.getMyBoardListItemTemp(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap);
     	}
     	
     	int dlength = boardListItem.size();
@@ -1665,27 +1669,31 @@ public class EzBoardController extends EgovFileMngUtil{
     	int writeDateSN = 0;
     	int titleSN = 0;
     	
-    	for (i = 0; i < hlength; i++) {
-    		if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-    			if (boardVO.getOrderOption().equals("")) {
-    				if (headerList.get(i).getColName().equals("BOARDNAME")) {
-    					orderOption1 = "B." + headerList.get(i).getColName() + " ";
-    					orderOption2 = "B." + headerList.get(i).getColName() + " DESC ";
-    				} else {
-    					orderOption1 = "A." + headerList.get(i).getColName() + " ";
-    					orderOption2 = "A." + headerList.get(i).getColName() + " DESC ";
-    				}
-    			} else {
-    				if (headerList.get(i).getColName().equals("BOARDNAME")) {
-    					orderOption1 = "B." + headerList.get(i).getColName() + " DESC ";
-    					orderOption2 = "B." + headerList.get(i).getColName() + " ";
-    				} else {
-    					orderOption1 = "A." + headerList.get(i).getColName() + " DESC ";
-    					orderOption2 = "A." + headerList.get(i).getColName() + " ";
-    				}
-    			}
-    		}
-    	}
+    	Map<String, String> orderByMap = new HashMap<String, String>();
+		for (i = 0; i < hlength; i++) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
+				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
+					if (headerList.get(i).getColName().equals("BOARDNAME")) {
+						orderOption1 = "B." + headerList.get(i).getColName() + " ";
+						orderOption2 = "B." + headerList.get(i).getColName() + " DESC ";
+					} else {
+						orderOption1 = "A." + headerList.get(i).getColName() + " ";
+						orderOption2 = "A." + headerList.get(i).getColName() + " DESC ";
+					}
+				} else {
+					orderByMap.put("orderByColDesc", "Y");
+					if (headerList.get(i).getColName().equals("BOARDNAME")) {
+						orderOption1 = "B." + headerList.get(i).getColName() + " DESC ";
+						orderOption2 = "B." + headerList.get(i).getColName() + " ";
+					} else {
+						orderOption1 = "A." + headerList.get(i).getColName() + " DESC ";
+						orderOption2 = "A." + headerList.get(i).getColName() + " ";
+					}
+				}
+			}
+		}
     	
     	int noticeCount = 0;
     	int boardCount = 0;
@@ -1870,9 +1878,9 @@ public class EzBoardController extends EgovFileMngUtil{
     	List<HashMap<String, Object>> boardListItem = new ArrayList<HashMap<String,Object>>();
     	
     	if (mode == null || !mode.equals("temp")) { // 나의게시물 표출 시 companyID 조건추가
-    		boardListItem = ezBoardService.getMyBoardListItem(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2);
+    		boardListItem = ezBoardService.getMyBoardListItem(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap);
     	} else { // 임시저장 게시물 표출 시 companyID 조건 추가
-    		boardListItem = ezBoardService.getMyBoardListItemTemp(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2);
+    		boardListItem = ezBoardService.getMyBoardListItemTemp(userInfo, startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap);
     	}
     	
     	int dlength = boardListItem.size();
@@ -1951,21 +1959,25 @@ public class EzBoardController extends EgovFileMngUtil{
 		int writeDateSN = 0;    //작성일 순번
 		int titleSN = 0;            //제목 순번
 		
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
 				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
 					orderOption1 = headerList.get(i).getColName() + " ";
 					orderOption2 = headerList.get(i).getColName() + " DESC ";
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					orderOption1 = headerList.get(i).getColName() + " DESC ";
 					orderOption2 = headerList.get(i).getColName() + " ";
 				}
 			}
-			
-			if (headerList.get(i).getColName().toUpperCase().equals("WRITEDATE")) {
+
+			if ("WRITEDATE".equals(headerList.get(i).getColName().toUpperCase())) {
 				writeDateSN = i;
 			}
-			if (headerList.get(i).getColName().toUpperCase().equals("TITLE")) {
+			if ("TITLE".equals(headerList.get(i).getColName().toUpperCase())) {
 				titleSN = i;
 			}
 		}
@@ -2127,7 +2139,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
 		}
 		
-		List<HashMap<String, Object>> boardListItem = ezBoardService.getQnABoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, type, adminType, userInfo.getTenantId());
+		List<HashMap<String, Object>> boardListItem = ezBoardService.getQnABoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap, type, adminType, userInfo.getTenantId());
 		
 		int dlength = boardListItem.size();
 		
@@ -2208,13 +2220,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		int i = 0;
 		int hlength = headerList.size();
 		
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
 			if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
 				continue;
 			}
-			
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
 				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
 					if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
 						orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " ";
 					} else if (headerList.get(i).getColName().indexOf("WRITERNAME") > -1) {
@@ -2223,6 +2238,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						orderOption1 = headerList.get(i).getColName()+ " ";
 					}
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
 						orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " DESC";
 					} else if (headerList.get(i).getColName().indexOf("WRITERNAME") > -1) {
@@ -2271,7 +2287,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setWriterName("");
 		}
 		
-		List<HashMap<String, Object>> boardThumbnailList = ezBoardService.getThumbnailList(boardListVO, boardVO);
+		List<HashMap<String, Object>> boardThumbnailList = ezBoardService.getThumbnailList(boardListVO, boardVO, orderByMap);
 		
 		int dlength = boardThumbnailList.size();
 		StringBuffer resultXML = new StringBuffer();
@@ -2406,56 +2422,65 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setSubFlag("A");
 		}
 		//혜정 끝
-		
+
+		//20240219 : 김진홍 : CSAP 인증 처리 : 기존 SearchQuery 내용 제거 후 별도의 SearchMap 부여
+		Map<String, String> searchMap = new HashMap<String, String>();
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
 			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
-			returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' ";
+			searchMap.put("v_SEARCH_TITLE", boardVO.getTitle());
+			// returnQuery += " AND TITLE like '%" + boardVO.getTitle() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("CONTENT;") != -1) {
-				boardVO.setContent(searchQueryDoc.getElementsByTagName("CONTENT").item(0).getTextContent());
-				returnQuery += " AND CONTENT like '%" + boardVO.getContent() + "%' ";
+			boardVO.setContent(searchQueryDoc.getElementsByTagName("CONTENT").item(0).getTextContent());
+			searchMap.put("v_SEARCH_CONTENT", boardVO.getContent());
+			// returnQuery += " AND CONTENT like '%" + boardVO.getContent() + "%' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("WRITERNAME;") != -1) {
 			boardVO.setWriterName(searchQueryDoc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
-			returnQuery += " AND ( A.WRITERNAME like '%" + boardVO.getWriterName() + "%' ";
-			returnQuery += " OR A.WRITERNAME2 like '%" + boardVO.getWriterName() + "%' ) ";
+			searchMap.put("v_SEARCH_WRITERNAME", boardVO.getWriterName());
+			// returnQuery += " AND ( A.WRITERNAME like '%" + boardVO.getWriterName() + "%' ";
+			// returnQuery += " OR A.WRITERNAME2 like '%" + boardVO.getWriterName() + "%' ) ";
 		}
 		
 		/* 2018-06-22 홍승비 - 썸네일게시판 쿼리 Writedate 중복 문제 수정(TBL_BOARD_ITEM as A) */
 		if (boardVO.getSearchQuery().indexOf("STARTDATE;") != -1) {
-			returnQuery += " AND A.WRITEDATE > '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00", userInfo.getOffset(), true) + "' ";
+			searchMap.put("v_SEARCH_STARTDATE", commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00", userInfo.getOffset(), true));
+			// returnQuery += " AND A.WRITEDATE > '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("STARTDATE").item(0).getTextContent() + " 00:00:00", userInfo.getOffset(), true) + "' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("ENDDATE;") != -1) {
-			returnQuery += " AND A.WRITEDATE <  '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' ";
+			searchMap.put("v_SEARCH_ENDDATE", commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true));
+			// returnQuery += " AND A.WRITEDATE <  '" + commonUtil.getDateStringInUTC(searchQueryDoc.getElementsByTagName("ENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), true) + "' ";
 		}
 		
 		if (boardVO.getSearchQuery().indexOf("ABSTRACT;") != -1) {
 			boardVO.setABSTRACT(searchQueryDoc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
-			returnQuery += " AND ABSTRACT like '%" + boardVO.getABSTRACT() + "%' ";
+			searchMap.put("v_SEARCH_ABSTRACT", boardVO.getABSTRACT());
+			// returnQuery += " AND ABSTRACT like '%" + boardVO.getABSTRACT() + "%' ";
 		}
 		
 		if (boardVO.getBoardType().equals("5") && boardInfo.getBoardAdmin_FG().equals("false")) {
-			returnQuery += " AND TOPWRITERID = '" + userInfo.getId() + "' ";
+			searchMap.put("v_SEARCH_TOPWRITERID", userInfo.getId());
+			// returnQuery += " AND TOPWRITERID = '" + userInfo.getId() + "' ";
 		}
 		
-		boardVO.setSearchQuery(returnQuery);
+		// boardVO.setSearchQuery(returnQuery);
 		String boardXML = "";
 		
 		if (boardVO.getBoardType().equals("4") || boardVO.getBoardType().equals("7")) {
-			boardXML = getSearchThumbListXML(userInfo, boardVO);
+			boardXML = getSearchThumbListXML(userInfo, boardVO, searchMap);
 		} else if (boardVO.getBoardType().equals("M")) {
-			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode);
+			boardXML = getSearchMyBoardListItemXML(userInfo, boardVO, mode, searchMap);
 		} else if (boardVO.getBoardType().equals("A")) {
-			boardXML = getSearchApprListItemXML(userInfo, boardVO);
+			boardXML = getSearchApprListItemXML(userInfo, boardVO, searchMap);
 		} else {
 			//혜정  추가
 			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
-				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO);
+				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO, searchMap);
 			} else {
-				boardXML = getSearchBoardListItemXML(userInfo, boardVO);
+				boardXML = getSearchBoardListItemXML(userInfo, boardVO, searchMap);
 			}
 		}
 		
@@ -2466,7 +2491,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 나의게시판검색리스트 표출 Method
 	 */
-	public String getSearchMyBoardListItemXML(LoginVO userInfo, BoardVO boardVO, String mode) throws Exception {
+	public String getSearchMyBoardListItemXML(LoginVO userInfo, BoardVO boardVO, String mode, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchMyBoardListItemXML started");
 
 		String orderOption1 = "";
@@ -2497,9 +2522,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		int boardCount = 0;
 		
 		if (mode == null || !mode.equals("temp")) {
-			boardCount = ezBoardService.getSearchMyBoardItemCount(userInfo, boardVO);
+			boardCount = ezBoardService.getSearchMyBoardItemCount(userInfo, boardVO, searchMap);
 		} else {
-			boardCount = ezBoardService.getSearchMyBoardItemCountTemp(userInfo, boardVO);
+			boardCount = ezBoardService.getSearchMyBoardItemCountTemp(userInfo, boardVO, searchMap);
 		}
 		
 		/* 2018-10-18 홍승비 - 나의게시물 검색을 위해 companyID 추가 */
@@ -2628,7 +2653,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 섬네일게시판검색리스트 표출 Method
 	 */
-	public String getSearchThumbListXML(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public String getSearchThumbListXML(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchThumbListXML started");
 
 		String orderOption1 = "";
@@ -2643,13 +2668,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		int i = 0;
 		int hlength = headerList.size();
 		
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
 			if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
 				continue;
 			}
-			
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
 				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
 					if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
 						orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " ";
 					} else if (headerList.get(i).getColName().indexOf("WRITERNAME") > -1) {
@@ -2658,6 +2686,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						orderOption1 = headerList.get(i).getColName()+ " ";
 					}
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
 						orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " DESC";
 					} else if (headerList.get(i).getColName().indexOf("WRITERNAME") > -1) {
@@ -2671,7 +2700,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		
-		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
+		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO, searchMap);
 		
 		BoardListVO boardListVO = new BoardListVO();
 		
@@ -2700,7 +2729,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setWriterName("");
 		}
 		
-		List<HashMap<String, Object>> boardThumbnailList = ezBoardService.getSearchThumbnailList(boardListVO, boardVO);
+		List<HashMap<String, Object>> boardThumbnailList = ezBoardService.getSearchThumbnailList(boardListVO, boardVO, searchMap, orderByMap);
 		
 		int dlength = boardThumbnailList.size();
 		
@@ -2804,7 +2833,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 게시판리스트검색 표출 Method
 	 */
-	public String getSearchBoardListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public String getSearchBoardListItemXML(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchBoardListItemXML started");
 
 		String orderOption1 = "";
@@ -2833,7 +2862,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		
-		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO);
+		int boardCount = ezBoardService.getSearchBoardItemCount(boardVO, searchMap);
 		
 		BoardListVO boardListVO = new BoardListVO();
 		boardListVO.setPageCount(boardCount);
@@ -2976,15 +3005,20 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		int i = 0;
 		int hlength = headerList.size();
+		
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-				if (boardVO.getOrderOption().equals("")) {                            
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
+				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
 					if (headerList.get(i).getName().indexOf("BOARDNAME") > -1) {
 						orderOption1 = headerList.get(i).getColName().replace("BOARDNAME", "B.BOARDNAME") + " ";
 					} else {
 						orderOption1 = headerList.get(i).getColName() + " ";
 					}
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					if (headerList.get(i).getColName().indexOf("BOARDNAME") > -1) {
 						orderOption1 = headerList.get(i).getColName().replace("BOARDNAME", "B.BOARDNAME") + " DESC ";
 					} else {
@@ -3021,7 +3055,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardListVO.setOrderByMain(orderOption2);
 		
 		// 새게시물 표출 시 companyID 조건 추가
-		List<HashMap<String, Object>> boardList = ezBoardService.getNewItemList(boardListVO);
+		List<HashMap<String, Object>> boardList = ezBoardService.getNewItemList(boardListVO, orderByMap);
 		
 		int dlength = boardList.size();
 		StringBuffer resultXML = new StringBuffer();
@@ -3133,20 +3167,24 @@ public class EzBoardController extends EgovFileMngUtil{
 		int writeDateSN = 0;    //작성일 순번
 		int titleSN = 0;            //제목 순번
 		
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
 				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
 					orderOption1 = headerList.get(i).getColName() + " ";
 					orderOption2 = headerList.get(i).getColName() + " DESC ";
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					orderOption1 = headerList.get(i).getColName() + " DESC ";
 					orderOption2 = headerList.get(i).getColName() + " ";
 				}
 			}
-			if (headerList.get(i).getColName().toUpperCase().equals("WRITEDATE")) {
+			if ("WRITEDATE".equals(headerList.get(i).getColName().toUpperCase())) {
 				writeDateSN = i;
 			}
-			if (headerList.get(i).getColName().toUpperCase().equals("TITLE")) {
+			if ("TITLE".equals(headerList.get(i).getColName().toUpperCase())) {
 				titleSN = i;
 			}
 		}
@@ -3324,7 +3362,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
-		List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, type, userInfo.getTenantId());
+		List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, orderByMap, type, userInfo.getTenantId());
 		
 		int dlength = boardListItem.size();
 		
@@ -8073,16 +8111,16 @@ public class EzBoardController extends EgovFileMngUtil{
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</a>");
-        
+
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-        
+
         String subject;
         if (userInfo.getLang().equals("1") ) {
         	subject = "[" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + boardInfo.getBoardName() + "]" + title;
         } else {
         	subject = "[" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + "]" + title;
         }
-        
+
         List<LoginVO> loginVOs = ezBoardService.getSendApprMailList(boardID, userInfo.getLang(), userInfo.getTenantId());
         
         for (LoginVO vo : loginVOs) {
@@ -8634,7 +8672,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 검색 리스트 Method
 	 */
-	public String getSearchAllBoardListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public String getSearchAllBoardListItemXML(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchAllBoardListItemXML started");
 
 		String orderOption1 = "";
@@ -8648,13 +8686,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		// 헤더 정보를 세팅한다.
 		int i = 0;
 		int hlength = headerList.size();
-		
+
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-				if (boardVO.getOrderOption().equals("")) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName());
+				if ("".equals(boardVO.getOrderOption())) {
+					orderByMap.put("orderByColDesc", "N");
 					orderOption1 = headerList.get(i).getColName() + " ";
 					orderOption2 = headerList.get(i).getColName() + " DESC ";
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					orderOption1 = headerList.get(i).getColName() + " DESC ";
 					orderOption2 = headerList.get(i).getColName() + " ";
 				}
@@ -8689,7 +8731,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (pMode == 1 && listviewTrueList.size() == 0 && qnaItemList.size() == 0) {
 			boardCount = 0;
 		} else {
-			boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, listviewTrueList, qnaItemList, pMode);
+			boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, listviewTrueList, qnaItemList, pMode, searchMap);
 		}
 		
 		BoardListVO boardListVO = new BoardListVO();
@@ -8725,7 +8767,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardSearchList = null;
 			dlength = 0;
 		} else {
-			boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, listviewTrueList, qnaItemList, pMode);
+			boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, listviewTrueList, qnaItemList, pMode, searchMap, orderByMap);
 			dlength = boardSearchList.size();
 		}
 		
@@ -8838,7 +8880,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/** 2018-06-28 홍승비 - 승인게시판 검색기능 추가 */
-	public String getSearchApprListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception {
+	public String getSearchApprListItemXML(LoginVO userInfo, BoardVO boardVO, Map<String, String> searchMap) throws Exception {
 		logger.debug("getSearchApprListItemXML started");
 
 		String orderOption1 = "";
@@ -8868,7 +8910,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 승인게시물 검색 결과 카운트에 companyID 조건 추가
 		int boardCount = 0;
-		boardCount = ezBoardService.getSearchApprBoardItemCount(userInfo, boardVO);
+		boardCount = ezBoardService.getSearchApprBoardItemCount(userInfo, boardVO, searchMap);
 		
 		BoardListVO boardListVO = new BoardListVO();	
 		boardListVO.setPageCount(boardCount);
@@ -10393,7 +10435,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String guBun = boardInfo.getGuBun();
 		
 		// 공지사항을 무시하고 가장 최신 게시물 하나의 정보를 가져온다. 기본적으로 관리자단 리스트 표출 순서와 동일함
-		List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardID, userInfo.getId(), 1, 1, 1, "", "", "1", userInfo.getTenantId());
+		List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardID, userInfo.getId(), 1, 1, 1, "", "", new HashMap<String, String>(), "1", userInfo.getTenantId());
 		
 		if (boardListItem.size() > 0) {
 			itemID = (String) boardListItem.get(0).get("ITEMID");

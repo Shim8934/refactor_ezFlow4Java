@@ -94,8 +94,13 @@
 
 <!-- 2024-04-01 SQL Injection 작업 영역 분배 - 1번 -->
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
-         SELECT 
-            result$v_STRLANG$
+         SELECT
+			<isEqual property="v_STRLANG" compareValue="2">
+				RESULT2
+			</isEqual>
+			<isNotEqual property="v_STRLANG" compareValue="2">
+				RESULT
+			</isNotEqual>
          FROM 
             TBL_Board_TreeCache 
          WHERE 
@@ -1608,10 +1613,17 @@
 	</select>
 	
 	<select id="EzBoardAdminDAO.get_Admin_TopBoardList" resultClass="BoardTreeVO" parameterClass="Map">
-		<![CDATA[
 			SELECT 
 				boardid,
-				CASE WHEN (boardname$lang$ = '' OR boardname$lang$ IS NULL) THEN boardname ELSE boardname$lang$ END boardname,
+				<isEqual property="lang" compareValue="2">
+					CASE
+					WHEN (BOARDNAME2 = '' OR BOARDNAME2 IS NULL) THEN BOARDNAME
+					ELSE BOARDNAME2
+					END BOARDNAME,
+				</isEqual>
+				<isNotEqual property="lang" compareValue="2">
+					BOARDNAME,
+				</isNotEqual>
 				treevieworder,
 				'' as boardcolor,
 				'' as gubun,
@@ -1622,7 +1634,6 @@
 				tenant_id = #tenantID#
 			AND
 				(companyID = #companyID#
-		]]>
 		<isEqual property="isCompanyAdmin" compareValue="true">
 			<![CDATA[
 				OR	TRIM(companyID) = ''	OR	companyID IS NULL
@@ -1635,7 +1646,7 @@
 			ORDER BY 
 				treevieworder
 		]]>
-	</select>	
+	</select>
 	
 	<!-- 	권한가져오기 -->
 	<select id="EzBoardAdminDAO.getACL"  parameterClass="java.util.Map" resultClass="BoardPropertyVO">
@@ -1814,7 +1825,8 @@
               	BOARDID = #v_PDEFAULTBOARDID# )
 		]]>
 	</insert>
-	
+
+	<!-- 이유정 - SQL Injection 제거 : IN 조건 문자열 수정 -->
 	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
@@ -1848,9 +1860,15 @@
           	  	COMPANYID = #v_COMPANYID#
           	  AND
           	  	BOARDID = #v_PDEFAULTBOARDID#
-          	  AND
-          	  	ACCESSID IN ($tempCopyList$) 
-          	)
+        ]]>
+			  <isNotEmpty property="copyListArray">
+					AND ACCESSID IN
+					<iterate property="copyListArray" open="(" close=")" conjunction=",">
+						#copyListArray[]#
+					</iterate>
+			  </isNotEmpty>
+        <![CDATA[
+			)
 		]]>
 	</insert>
 	
@@ -1971,8 +1989,9 @@
 			AND TENANT_ID = #v_TENANTID#
 			AND ACCESSID = #v_pAccessID#
 		]]>	
-	</update>	
-	
+	</update>
+
+	<!-- 이유정 - SQL Injection 제거 : IN 조건 문자열 수정 -->
 	<insert id="EzBoardAdminDAO.saveACLIncludeUppderBoard" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO tbl_board_boardmanage (
@@ -2016,8 +2035,16 @@
 		    #v_pType#
 		FROM tbl_board_boardinfo
 		WHERE
-			BOARDID in ( $v_upperBoadList$ )
-		AND	TENANT_ID = #v_TENANTID#
+	]]>
+		<isNotEmpty property="v_upperBoadList">
+			BOARDID in
+			<iterate property="v_upperBoadList" open="(" close=")" conjunction=",">
+				#v_upperBoadList[]#
+			</iterate>
+			AND
+		</isNotEmpty>
+	<![CDATA[
+		TENANT_ID = #v_TENANTID#
 		ON DUPLICATE KEY UPDATE 
 	]]>
 		<isEqual property="type" compareValue="access">
@@ -2714,7 +2741,8 @@
 			AND ACCESSID = #v_pAccessID#
 		]]>	
 	</delete>
-		
+
+	<!-- 이유정 - SQL Injection 제거 : IN 조건 문자열 수정 -->
 	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
 		<![CDATA[
 			DELETE FROM TBL_Board_BoardManage
@@ -2723,8 +2751,11 @@
       		AND  
       			BoardID = #v_pBoardID#
 		]]>
-		<isNotEmpty property="tempCopyList" prepend="AND">
-			ACCESSID IN ($tempCopyList$)
+		<isNotEmpty property="copyListArray">
+			AND ACCESSID IN
+			    <iterate property="copyListArray" open="(" close=")" conjunction=",">
+			    	#copyListArray[]#
+			    </iterate>
 		</isNotEmpty>
 	</delete>
 	
