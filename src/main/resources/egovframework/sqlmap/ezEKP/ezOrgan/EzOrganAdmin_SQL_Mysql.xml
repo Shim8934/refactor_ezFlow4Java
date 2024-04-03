@@ -5496,6 +5496,13 @@
 		AND TENANT_ID = #tenantId#
 	</select>
 
+	<select id="EzOrganAdminDAO.getDeptParentCn" parameterClass="OrganDeptVO" resultClass="String">
+		SELECT EXTENSIONATTRIBUTE1
+		FROM TBL_DEPTMASTER
+		WHERE CN = #cn#
+		AND TENANT_ID = #tenantId#
+	</select>
+
 	<select id="EzOrganAdminDAO.getAddJobInfo" parameterClass="map" resultClass="OrganUserVO">
 		SELECT 
 			A.TITLE, 

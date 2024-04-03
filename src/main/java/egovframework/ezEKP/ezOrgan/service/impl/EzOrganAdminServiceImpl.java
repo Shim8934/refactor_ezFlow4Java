@@ -2859,6 +2859,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
+	public String getDeptParentCn(String cn, int tenantID) throws Exception {
+		OrganDeptVO deptVO = new OrganDeptVO();
+		deptVO.setCn(cn);
+		deptVO.setTenantId(tenantID);
+		return ezOrganAdminDao.getDeptParentCn(deptVO);
+	}
+
+	@Override
 	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, String roleId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("CN", cn);

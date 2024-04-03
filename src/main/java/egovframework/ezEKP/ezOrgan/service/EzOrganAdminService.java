@@ -185,7 +185,9 @@ public interface EzOrganAdminService {
 	public OrganUserVO getUserDeptInfo(String cn, int tenantID) throws Exception;
 	
 	public OrganDeptVO getDeptDisplayNm(String cn, int tenantID) throws Exception;
-	
+
+	public String getDeptParentCn(String cn, int tenantID) throws Exception;
+
 	public OrganUserVO getAddJobInfo(String cn, String deptId, String jobId, String roleId, int tenantId) throws Exception;
 
 	public List<OrganUserVO> getExportAddJobList(String primary, String companyId, int tenantId) throws Exception;

@@ -1963,4 +1963,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertLoadTimeForApprAllConfig");
 		}
 	}
+
+	public void createTblDeptChangeInfo() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblDeptChangeInfo");
+		} catch (Exception e) {
+			logger.debug("tbl_dept_dept_info doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblDeptChangeInfo");
+		}
+	}
 }

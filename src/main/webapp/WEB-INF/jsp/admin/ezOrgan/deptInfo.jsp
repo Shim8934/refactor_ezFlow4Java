@@ -164,13 +164,16 @@
 				}
 				
 				var parentCn;
+				var histParentCn;
 				var extensionattribute8 = "0";
 				/* 2017-12-29 장진혁 - 조직도에서 기본적으로 해당 부서를 수신처로 등록할 수 있게 수정 */
 				var extensionattribute11 = "";
 				
 				if (OldDeptName == ""){
 					parentCn = ParentID.value;
-			    }				
+			    } else {
+			    	histParentCn = ParentID.value;
+			    }
 				
 				if(approvalFlag == 'G') {
 					if (InsDept.checked){
@@ -192,7 +195,7 @@
 					data : {parentCn: parentCn, cn: DeptID.value, displayName: DeptName.value.trim(), displayName2: DeptName2.value.trim(), extensionAttribute10: SusinSymbol.value, 
 						    extensionAttribute15: SortNum.value, extensionAttribute9: Manager.value, extensionAttribute5: BalsinPerson.value, extensionAttribute6: SimpleName.value, 
 						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11, manualFlag: "Y",
-						    selectDomain: selectDomain},
+						    selectDomain: selectDomain, histParentCn: histParentCn},
 					success : function(result){						
 						if (result == "PRE"){
 							OpenAlertUI("<spring:message code='ezOrgan.t119'/>");
