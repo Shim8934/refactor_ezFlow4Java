@@ -5223,7 +5223,7 @@ public class EzEmailUtil {
 				mailboxQuotaStr = mailboxQuotaStr.substring(0, mailboxQuotaStr.indexOf(".")) + "G";
 			}
 		} else if (mailboxQuota >= 1024) {
-			mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+			mailboxQuotaStr = String.format("%.1fM", mailboxQuota/1024);
 		} else {
 			mailboxQuotaStr = (int)mailboxQuota + "K";
 		}
