@@ -2086,6 +2086,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				menuName = commonUtil.detectPathTraversal(menuName);
 				menuName = specialCharacterToEmptyString(menuName);
 				
+			    menuName = menuName.replaceAll("& #40;", "(");
+			    menuName = menuName.replaceAll("& #41;", ")");
+			    
 				map.put("menuLang", menuLang);
 				map.put("menuName", menuName);
 				
@@ -2214,6 +2217,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				String menuName = commonUtil.stripScriptTags(map.get("menuName").toString());
 				menuName = commonUtil.detectPathTraversal(menuName);
 				menuName = specialCharacterToEmptyString(menuName);
+				
+			    menuName = menuName.replaceAll("& #40;", "(");
+			    menuName = menuName.replaceAll("& #41;", ")");
 				
 				map.put("menuLang", menuLang);
 				map.put("menuName", menuName);
