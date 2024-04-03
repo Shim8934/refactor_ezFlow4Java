@@ -2658,7 +2658,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardVO.setBoardId(pBoardID);
 		boardVO.setTenantID(userInfo.getTenantId());
 		
-		List<HashMap<String, Object>> boardList = getThumbnailList(boardListVO, boardVO);
+		List<HashMap<String, Object>> boardList = getThumbnailList(boardListVO, boardVO, new HashMap<String, String>());
 		
 		int dLength = boardList.size();
 		
