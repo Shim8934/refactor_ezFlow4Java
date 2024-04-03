@@ -948,8 +948,7 @@
 	
 	<!-- 2021-01-18 겸직일 경우 mysql과 groupby가 달라서 생기는 문제 fix, 겸직일경우 본 부서가 우선적으로 출력되도록 수정 -->
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
-		<![CDATA[
-			SELECT 
+			SELECT
 				* FROM
 				(SELECT 
 					A.*, ROWNUM as RNUM
@@ -1023,7 +1022,10 @@
 					   	AND
 					   		A.ItemID = #itemID# 
 					   	AND
-					   		UserID <> ( SELECT 
+					   	    <![CDATA[
+					   		UserID <>
+					   		]]>
+					   		( SELECT
 					   							WRITERID 
 					   						FROM 
 					   							TBL_BOARD_ITEM 
@@ -1032,16 +1034,30 @@
 					   						AND
 					   							ITEMID = #itemID# )
 					GROUP BY
-						USERID, USERNAME$lang$, USERDEPTNAME$lang$, USERCOMPANYNAME$lang$, NVL(USERTITLE$lang$, ''),	READDATE
+						USERID,
+					    <isEqual property = "lang" compareValue = "1">
+					    	USERNAME,
+					    	USERDEPTNAME,
+					    	USERCOMPANYNAME,
+					    	NVL(USERTITLE, ''),
+					    </isEqual>
+					    <isNotEqual property = "lang" compareValue = "1">
+					    	USERNAME2,
+					  		USERDEPTNAME2,
+					    	USERCOMPANYNAME2,
+					    	NVL(USERTITLE2, ''),
+					    </isNotEqual>
+						READDATE
 				   	ORDER BY
 				   		ReadDate DESC
 				)A
 				WHERE
+				<![CDATA
 			   		ROWNUM <= #start# + #perCount#
 			   	)
 			   	WHERE
-			   		RNUM >= #start# + 1 
-		]]>
+			   		RNUM >= #start# + 1
+				]]>
 	</select>
 	
 	<select id="EzBoardDAO.getCopyItem" parameterClass="Map" resultClass="BoardListVO">

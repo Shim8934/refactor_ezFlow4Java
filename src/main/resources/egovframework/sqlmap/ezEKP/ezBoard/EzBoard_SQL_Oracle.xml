@@ -948,8 +948,7 @@
 	
 	<!-- 2021-01-18 겸직일 경우 mysql과 groupby가 달라서 생기는 문제 fix, 겸직일경우 본 부서가 우선적으로 출력되도록 수정 -->
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
-		<![CDATA[
-			SELECT 
+			SELECT
 				* FROM
 				(SELECT 
 					A.*, ROWNUM as RNUM
@@ -960,13 +959,13 @@
 								USERNAME AS USERNAME,
 								USERDEPTNAME AS USERDEPTNAME,
 								USERCOMPANYNAME AS USERCOMPANYNAME,
-								IFNULL(USERTITLE, '') AS USERTITLE,
+								NVL(USERTITLE, '') AS USERTITLE,
 							</isEqual>
 							<isNotEqual property = "lang" compareValue = "1">
 								USERNAME2 AS USERNAME,
 								USERDEPTNAME2 AS USERDEPTNAME,
 								USERCOMPANYNAME2 AS USERCOMPANYNAME,
-								IFNULL(USERTITLE2, '') AS USERTITLE,
+								NVL(USERTITLE2, '') AS USERTITLE,
 							</isNotEqual>
 							TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS') as READDATE,
 							TRIM(MIN(DEPTID)) AS DEPTID
@@ -1021,27 +1020,43 @@
 					   	AND
 					   		A.BoardID = #boardID#
 					   	AND
-					   		A.ItemID = #itemID# 
+					   		A.ItemID = #itemID#
 					   	AND
-					   		UserID <> ( SELECT 
-					   							WRITERID 
-					   						FROM 
-					   							TBL_BOARD_ITEM 
-					   						WHERE 
+							<![CDATA[
+					   		UserID <> ( SELECT
+							]]>
+					   							WRITERID
+					   						FROM
+					   							TBL_BOARD_ITEM
+					   						WHERE
 					   							TENANT_ID = #tenantID#
 					   						AND
 					   							ITEMID = #itemID# )
 					GROUP BY
-						USERID, USERNAME$lang$, USERDEPTNAME$lang$, USERCOMPANYNAME$lang$, NVL(USERTITLE$lang$, ''),	READDATE
+						USERID,
+					    <isEqual property = "lang" compareValue = "1">
+					    	USERNAME,
+					    	USERDEPTNAME,
+					    	USERCOMPANYNAME,
+					    	NVL(USERTITLE, ''),
+					    </isEqual>
+					    <isNotEqual property = "lang" compareValue = "1">
+					    	USERNAME2,
+					  		USERDEPTNAME2,
+					    	USERCOMPANYNAME2,
+					    	NVL(USERTITLE2, ''),
+					    </isNotEqual>
+						READDATE
 				   	ORDER BY
 				   		ReadDate DESC
 				)A
 				WHERE
+				<![CDATA[
 			   		ROWNUM <= #start# + #perCount#
 			   	)
 			   	WHERE
-			   		RNUM >= #start# + 1 
-		]]>
+			   		RNUM >= #start# + 1
+				]]>
 	</select>
 	
 	<select id="EzBoardDAO.getCopyItem" parameterClass="Map" resultClass="BoardListVO">

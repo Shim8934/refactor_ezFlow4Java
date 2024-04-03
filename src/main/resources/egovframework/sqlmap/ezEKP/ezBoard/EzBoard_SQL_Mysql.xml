@@ -803,14 +803,13 @@
 	<select id="EzBoardDAO.getItemInfo" parameterClass="Map" resultClass="BoardListVO" remapResults="true">
 		<isEmpty property="mode">
 			<isNotEmpty property="tempString">
-				<![CDATA[
-					SELECT 
+					SELECT
 						A.TITLE TITLE ,
 	                    B.GUBUN ,
 	                    A.BOARDID BOARDID  ,
 	                    CASE
 							WHEN (
-							    <isEuqal property = "lang" compareValue = "1">
+							    <isEqual property = "lang" compareValue = "1">
 								    B.BOARDNAME = ''
 								OR
 							    	B.BOARDNAME IS NULL
@@ -858,7 +857,6 @@
 	                	A.tenant_id = #tenantID#
 	                AND  
 	                	A.ItemID = #itemID#
-				]]>
 			</isNotEmpty>
 			<isEmpty property="tempString">
 				<![CDATA[
@@ -878,8 +876,7 @@
 		</isEmpty>
 		<isNotEmpty property="mode">
 			<isNotEmpty property="tempString">
-				<![CDATA[
-					SELECT 
+					SELECT
 						A.TITLE TITLE ,
 	                    B.GUBUN ,
 	                    A.BOARDID BOARDID  ,
@@ -927,7 +924,6 @@
 	                	A.tenant_id = #tenantID#
 	                AND  
 	                	A.ItemID = #itemID#
-				]]>
 			</isNotEmpty>
 			<isEmpty property="tempString">
 				<![CDATA[
@@ -948,7 +944,6 @@
 	</select>
 	<!-- 2018-02-02 김보미 - 50명 제한 삭제(LIMIT 50), limit부분 수정. -->
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
-		<![CDATA[
 			SELECT
 				USERID,
 				<isEqual property = "lang" compareValue = "1">
@@ -977,9 +972,9 @@
 				WHERE
 					D.TENANT_ID = #tenantID#
 				)
-				
+
 				UNION ALL
-				
+
 				(SELECT
 					B.cn, A2.DEPTID,
 					C.EXTENSIONATTRIBUTE2 as COMPANYID,
@@ -1013,7 +1008,10 @@
 	   	AND
 	   		A.ItemID = #itemID#
 	   	AND
-	   		A.UserID <> ( SELECT
+		<![CDATA[
+	   		A.UserID <>
+		]]>
+	   		( SELECT
 	   							WRITERID
 	   						FROM
 	   							TBL_BOARD_ITEM
@@ -1027,7 +1025,6 @@
 			ReadDate DESC
 		LIMIT
      		#start#, #perCount#
-		]]>
 	</select>
 	
 	<select id="EzBoardDAO.getCopyItem" parameterClass="Map" resultClass="BoardListVO">
