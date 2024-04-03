@@ -1236,6 +1236,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				String portletName = commonUtil.stripScriptTags(map.get("portletName").toString());
 				portletName = commonUtil.detectPathTraversal(portletName);
 				portletName = specialCharacterToEmptyString(portletName);
+				
+				portletName = portletName.replaceAll("& #40;", "(");
+				portletName = portletName.replaceAll("& #41;", ")");
 
 				String portletLang = commonUtil.stripScriptTags(map.get("portletLang").toString());
 				portletLang = commonUtil.detectPathTraversal(portletLang);
@@ -1320,7 +1323,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				String portletName = commonUtil.stripScriptTags(map.get("portletName").toString());
 				portletName = commonUtil.detectPathTraversal(portletName);
 				portletName = specialCharacterToEmptyString(portletName);
-
+				
+				portletName = portletName.replaceAll("& #40;", "(");
+				portletName = portletName.replaceAll("& #41;", ")");
+				
 				String portletLang = commonUtil.stripScriptTags(map.get("portletLang").toString());
 				portletLang = commonUtil.detectPathTraversal(portletLang);
 				portletLang = specialCharacterToEmptyString(portletLang);
