@@ -2506,13 +2506,18 @@ public class EzBoardController extends EgovFileMngUtil{
 		// 헤더 정보를 세팅한다.
 		int i = 0;
 		int hlength = headerList.size();
-		
+
+		//20240215 : 김진홍 : CSAP 인증 처리
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol",headerList.get(i).getColName().toUpperCase());
 				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
 					orderOption1 = headerList.get(i).getColName() + " ";
 					orderOption2 = headerList.get(i).getColName() + " DESC ";
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					orderOption1 = headerList.get(i).getColName() + " DESC ";
 					orderOption2 = headerList.get(i).getColName() + " ";
 				}
@@ -2559,9 +2564,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		List<HashMap<String, Object>> boardSearchList = null;
 		
 		if (mode == null || !mode.equals("temp")) {
-			boardSearchList = ezBoardService.getSearchMyBoardItemList(boardListVO, boardVO);
+			boardSearchList = ezBoardService.getSearchMyBoardItemList(boardListVO, boardVO, searchMap, orderByMap);
 		} else {
-			boardSearchList = ezBoardService.getSearchMyBoardItemListTemp(boardListVO, boardVO);
+			boardSearchList = ezBoardService.getSearchMyBoardItemListTemp(boardListVO, boardVO, searchMap, orderByMap);
 		}
 		
 		int dlength = boardSearchList.size();
@@ -2847,13 +2852,18 @@ public class EzBoardController extends EgovFileMngUtil{
 		// 헤더 정보를 세팅한다.
 		int i = 0;
 		int hlength = headerList.size();
-		
+
+		//20240215 : 김진홍 : CSAP 인증 처리
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
 				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
 					orderOption1 = headerList.get(i).getColName() + " ";
 					orderOption2 = headerList.get(i).getColName() + " DESC ";
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					orderOption1 = headerList.get(i).getColName() + " DESC ";
 					orderOption2 = headerList.get(i).getColName() + " ";
 				}
@@ -2890,7 +2900,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setWriterName("");
 		}
 		
-		List<HashMap<String, Object>> boardSearchList = ezBoardService.getSearchBoardItemList(boardListVO, boardVO);
+		List<HashMap<String, Object>> boardSearchList = ezBoardService.getSearchBoardItemList(boardListVO, boardVO, searchMap, orderByMap);
 		
 		int dlength = boardSearchList.size();
 		
@@ -8895,13 +8905,18 @@ public class EzBoardController extends EgovFileMngUtil{
 		// 헤더 정보를 세팅한다.
 		int i = 0;
 		int hlength = headerList.size();
-		
+
+		//20240215 : 김진홍 : CSAP 인증 처리
+		Map<String, String> orderByMap = new HashMap<String, String>();
 		for (i = 0; i < hlength; i++) {
-			if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-				if (boardVO.getOrderOption().equals("")) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
+				if ("".equals(boardVO.getOrderOption())) {
+					orderByMap.put("orderByColDesc", "N");
 					orderOption1 = headerList.get(i).getColName() + " ";
 					orderOption2 = headerList.get(i).getColName() + " DESC ";
 				} else {
+					orderByMap.put("orderByColDesc", "Y");
 					orderOption1 = headerList.get(i).getColName() + " DESC ";
 					orderOption2 = headerList.get(i).getColName() + " ";
 				}
@@ -8941,7 +8956,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 승인게시물 검색 결과 리스트에 companyID 조건 추가
 		List<HashMap<String, Object>> boardSearchList = null;
-		boardSearchList = ezBoardService.getSearchApprBoardItemList(boardListVO, boardVO);
+		boardSearchList = ezBoardService.getSearchApprBoardItemList(boardListVO, boardVO, searchMap, orderByMap);
 
 		int dlength = boardSearchList.size();
 		
