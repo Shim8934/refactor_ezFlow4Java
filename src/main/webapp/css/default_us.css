@@ -3539,6 +3539,8 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
+.upage-ul li .srvyInfo05{display:inline-block; width:16px; height:16px; background-position:-66px -110px !important; margin:6px 8px 0px 0px;}
+.upage-ul li .srvyInfo06{display:inline-block; width:16px; height:16px; background-position:-82px -110px !important; margin:6px 8px 0px 0px;}
 
 /* 검색 */
 .searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:0px;}
