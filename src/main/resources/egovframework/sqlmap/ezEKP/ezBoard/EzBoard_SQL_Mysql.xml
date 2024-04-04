@@ -1476,6 +1476,9 @@
 			<isEqual property="iv_PORDERBYCOL1" compareValue="PARENTWRITEDATE">
 				ORDER BY A.PARENTWRITEDATE <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
 			</isEqual>
+			<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT">
+				ORDER BY A.READCOUNT <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+			</isEqual>
 			<isEqual property="iv_PORDERBYCOL2" compareValue="UPPERITEMIDTREE">
 				, A.UPPERITEMIDTREE <isEqual property="iv_PORDERBYCOL2DESC" compareValue="Y">DESC</isEqual>
 			</isEqual>
@@ -1616,6 +1619,9 @@
 			</isEqual>
 			<isEqual property="iv_PORDERBYCOL1" compareValue="PARENTWRITEDATE">
 				ORDER BY A.PARENTWRITEDATE <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
+			</isEqual>
+			<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT">
+				ORDER BY A.READCOUNT <isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y">DESC</isEqual>
 			</isEqual>
 			<isEqual property="iv_PORDERBYCOL2" compareValue="UPPERITEMIDTREE">
 				, A.UPPERITEMIDTREE <isEqual property="iv_PORDERBYCOL2DESC" compareValue="Y">DESC</isEqual>
