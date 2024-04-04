@@ -2040,7 +2040,7 @@ function btnSearchDelivery_onclick(opnOption) {
 
     var url = "/ezApprovalG/searchDelivery.do";
 
-    var OpenWin = window.open(url, "SearchDelivery_Cross", GetOpenWindowfeature(460, 370));
+    var OpenWin = window.open(url, "SearchDelivery_Cross", GetOpenWindowfeature(460, 470));
     try { OpenWin.focus(); } catch (e) { }
 }
 
