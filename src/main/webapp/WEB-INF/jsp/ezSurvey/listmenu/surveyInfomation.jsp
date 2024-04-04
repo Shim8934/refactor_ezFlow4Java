@@ -19,7 +19,7 @@
 					<th class="left-Th"><spring:message code="ezSurvey.t101"/></th> <%-- open public result days setting --%>
 					<td class="right-Td">
 						<span class='period-span'><spring:message code="ezSurvey.t44"/></span>
-						<input type="number" class="date-input" value="0" tabindex="1" min="0" max=${maxPeriod}>
+						<input type="text" class="date-input" value="0" tabindex="1">
 						<span><spring:message code="ezSurvey.t45"/></span>
 					</td>
 				</tr>

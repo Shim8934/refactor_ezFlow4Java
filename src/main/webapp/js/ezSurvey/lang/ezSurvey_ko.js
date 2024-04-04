@@ -165,8 +165,5 @@ var SurveyMessages = {
 	
 	/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "허용하지 않는 확장자입니다.",
-	srtLangHSBEx02 : "업로드 제한 확장자 파일이 있습니다.",
-	/* 2024-03-26 양지혜 - 게시기간 메시지 추가 */
-	strLangYJH01 : "게시는 최대 ",
-	strLangYJH02 : " 일까지 가능합니다."
+	srtLangHSBEx02 : "업로드 제한 확장자 파일이 있습니다."
 }

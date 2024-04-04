@@ -1599,15 +1599,5 @@
 		ORDER BY
 			update_date DESC, survey_id DESC
 	</select>
-
-	<select id="EzSurveyDAO.checkTenantConfig" parameterClass="Map" resultClass="String">
-		SELECT
-			PROPERTY_VALUE
-		FROM
-			TBL_TENANT_CONFIG
-		WHERE
-			PROPERTY_NAME = #propertyName#
-		  AND
-			TENANT_ID = #tenantID#
-	</select>
+	
 </sqlMap>

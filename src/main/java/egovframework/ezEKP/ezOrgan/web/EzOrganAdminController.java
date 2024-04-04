@@ -265,7 +265,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertPortletNameChinese(); // 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
 			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
 			ezCommonService.createTblDeptChangeInfo(); // 2024-02-20 장혜연 - tbl_dept_change_info 테이블 추가
-			ezCommonService.insertSurveyPostingMaxPeriodConfig(); // 2024-03-26 - 전자설문 종료 후 게시기간 설정 추가
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

@@ -1716,16 +1716,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return result;
 	}
-
-	@Override
-	public String checkTenantConfig(String propertyName, int tenantID) throws Exception {
-		logger.debug("getIsUse started.");
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("propertyName", propertyName);
-		map.put("tenantID", tenantID);
-
-		return ezSurveyDAO.checkTenantConfig(map);
-	}
+	
 	
 }

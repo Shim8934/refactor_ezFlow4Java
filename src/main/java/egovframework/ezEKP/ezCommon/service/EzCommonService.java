@@ -322,6 +322,4 @@ public interface EzCommonService {
 	public void insertLoadTimeForApprAllConfig() throws Exception;
 
 	public void createTblDeptChangeInfo() throws Exception;
-
-	public void insertSurveyPostingMaxPeriodConfig() throws Exception;
 }

@@ -4048,13 +4048,3 @@ function addChangeEvent(obLow, obUnit, obCnt, obMax, slideMain, output) {
         output.val(this.value);
     });
 }
-
-/* 2024-03-26 양지혜 - 숫자 외 입력금지 및 게시기간 제한 */
-$(".date-input").keyup(function(){
-	var inputVal = $(this).val();
-	$(this).val(inputVal.replace(/[^0-9.]/g,""));
-	if(inputVal > maxPeriod) {
-		alert(SurveyMessages.strLangYJH01 + maxPeriod + SurveyMessages.strLangYJH02);
-		$(this).val("");
-	}
-});

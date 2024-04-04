@@ -308,8 +308,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useBoardFilePrvw', '게시판 첨부파일 미리보기 기능 사용 여부', '1', '게시판 첨부파일 미리보기 기능 사용 여부 0: 사용 안함, 1: 사용', '2023-06-29 00:00:00', '게시판');
 -- 권한을 겸직/사용자 기준으로 설정 옵션 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'permissionBasisDeptYN', '조직도 권한부여 기준 설정', 'N', '조직도 > 권한 설정 시 Y: 사용자/겸직부서를 기준으로 권한을 부여한다 // N: 사용자만을 기준으로 권한을 부여한다.(Default: N)', '2023-08-16 00:00:00', '조직도');
--- 전자설문 종료 후 게시기간 설정 컨피그 추가
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'SurveyPostingMaxPeriod', '전자설문 종료 후 게시기간 설정', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '2024-03-26 00:00:00', '전자설문');
+
 -- 전자결재 재기안 시 반송의견 유지여부 컨피그 추가 (관련 기능은 2020년 4월에 추가됨)
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useRedraftOpinionKeep', '전자결재 반송의견 재기안 시 유지 여부', 'NO', '전자결재 반송문서 재기안 시 반송의견을 유지하는 기능을 사용한다. YES:사용 NO:사용안함 (default: NO)', '2024-03-27 00:00:00', '전자결재');
 

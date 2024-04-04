@@ -13,7 +13,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -60,10 +59,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzSurveyRestService surveyRestService;
-
-	@Autowired
-	private EzSurveyService ezSurveyService;
-
+	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
@@ -156,17 +152,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/createSurvey.do", method = RequestMethod.GET)
 	public String jspGetCreateSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCreateSurveyPage started");
-
-		/* 2024-03-26 양지혜 - 설문종료 후 게시기간 제한 */
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String maxPeriod = ezSurveyService.checkTenantConfig("SurveyPostingMaxPeriod", user.getTenantId());
-		if (maxPeriod == null || maxPeriod.equals("")) {
-			maxPeriod = "999";
-		}
-		model.addAttribute("maxPeriod", maxPeriod);
-
 		logger.debug("jspGetCreateSurveyPage ended");
-
 		return "ezSurvey/listmenu/surveyCreate";
 	}
 	
@@ -202,14 +188,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("reasonMessage", messageCode);
 			return "ezSurvey/surveyAccessDenied";
 		}
-
-		/* 2024-03-26 양지혜 - 설문종료 후 게시기간 제한 */
-		String maxPeriod = ezSurveyService.checkTenantConfig("SurveyPostingMaxPeriod", user.getTenantId());
-		if (maxPeriod == null || maxPeriod.equals("")) {
-			maxPeriod = "999";
-		}
-		model.addAttribute("maxPeriod", maxPeriod);
-
+		
 		logger.debug("jspGetReuseSurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
 	}

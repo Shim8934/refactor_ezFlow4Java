@@ -165,8 +165,5 @@ var SurveyMessages = {
 	
 	/* 2021-12-10 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "Unacceptable extension.",
-	srtLangHSBEx02 : "Limited extension upload files.",
-	/* 2024-03-26 양지혜 - 게시기간 메시지 추가 */
-	strLangYJH01 : "Posting can be done for up to ",
-	strLangYJH02 : " days."
+	srtLangHSBEx02 : "Limited extension upload files."
 }
