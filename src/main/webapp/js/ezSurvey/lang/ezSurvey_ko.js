@@ -79,7 +79,7 @@ var SurveyMessages = {
 	strSlider7   : "간격",
 	strSlider8   : "최소값",
 	strSlider9   : "최대값",
-	strSlider10  : "'(최대값-최소값)÷간격'의 값을 200 이하의 자연수로 설정해 주세요.",
+	strSlider10  : "개수를 200 이하의 자연수로 설정해 주세요.",
 	strOptErr    : "최소 2개의 보기가 필요합니다.",
 	strMaxtrix1  : "최소 1개의 행이 필요합니다.",
 	strMaxtrix2  : "최소 1개의 열이 필요합니다.",

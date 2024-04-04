@@ -79,7 +79,7 @@ var SurveyMessages = {
 	strSlider7   : "Interval",
 	strSlider8   : "Minimum",
 	strSlider9   : "Maximum",
-	strSlider10  : "'The value of (maximum-minimum)÷interval' should be less than or equal to 200.",
+	strSlider10  : "Set the count to a natural number of 200 or less.",
 	strOptErr    : "At least two views are required.",
 	strMaxtrix1  : "At least one row is required.",
 	strMaxtrix2  : "At least one column is required.",
