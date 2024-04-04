@@ -314,7 +314,11 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		
 		if (useBizmekaSpambox.equals("YES")) {
-			String credentialForBizmekaSpambox = ezEmailUtil.getCredentialForBizmekaSpambox(userEmail);
+			String authString = userEmail + ".." + (System.currentTimeMillis()/1000 - 100*60);
+			
+			logger.debug("authString={}", authString);
+			
+			String credentialForBizmekaSpambox = ezEmailUtil.getCredentialForBizmekaSpambox(authString);
 			
 			model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 			model.addAttribute("credentialForBizmekaSpambox", credentialForBizmekaSpambox);

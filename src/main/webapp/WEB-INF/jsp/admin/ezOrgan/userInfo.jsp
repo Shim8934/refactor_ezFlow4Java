@@ -608,6 +608,7 @@
 						}else{
 							alert("<spring:message code='ezOrgan.t271' />");
 							UserPhotoDiv.innerHTML = "<B><spring:message code='ezOrgan.t272' /></B>";
+							location.href = location.href;
 						}
 					},
 					error : function(){

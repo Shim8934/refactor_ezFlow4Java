@@ -644,6 +644,40 @@
 		                SelectDeptNM.setAttribute("countinfo", "1")
 		            }
 		        }
+		        
+		        var listCount =  SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length;
+		        if (listCount <= 0) {
+		        	var M_TR = document.createElement("TR");
+	                M_TR.setAttribute("id", "MailUserlist_NoData");
+	                var M_TR_TD = document.createElement("TD");
+	                
+	                M_TR_TD.textContent = "<spring:message code='main.t00026'/>";
+	                M_TR_TD.style.textAlign = "center";
+	                M_TR.appendChild(M_TR_TD);
+		        	
+		        	if (!pSeach) {
+		        		if (pListType == "IMG") {
+		        			var nodataSpan = document.createElement("span");
+		        			nodataSpan.textContent = "<spring:message code='main.t00026'/>";
+				        	document.getElementById("DeptUserImgList").appendChild(nodataSpan);
+				                
+		        		} else {
+		        			M_TR_TD.setAttribute('colspan', '3')
+		        			document.querySelector("#txtlist_table tbody").appendChild(M_TR);
+		        		}
+		        	} else {
+		        		if (pListType == "IMG") {
+		        			var nodataSpan = document.createElement("span");
+		        			nodataSpan.textContent = "<spring:message code='main.t00026'/>";
+				        	document.getElementById("DeptUserImgList").appendChild(nodataSpan);
+		        		} else {
+		        			M_TR_TD.setAttribute('colspan', '4')
+		                	document.querySelector("#Search_txtlist_table tbody").appendChild(M_TR);
+		        		}
+		        	}
+		        	
+		        	return;
+		        }
 
 		        for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
 		            if (pListType == "IMG") {

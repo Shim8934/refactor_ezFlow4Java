@@ -4318,7 +4318,22 @@ public class EzEmailUtil {
 	    	
 	    	credential = toHexString(encrypted);
 			*/
-			credential = "";
+    		
+    		String keyStr = "!@#$%jiran123456!@#$%jiran123456";
+    		String ivStr = "!@#$%jiraniv1234";
+
+    		byte[] keyBytes = keyStr.getBytes("UTF-8");
+	    	byte[] ivBytes = ivStr.getBytes("UTF-8");
+	    	byte[] input = emailAddress.getBytes("UTF-8");
+    		
+	    	SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
+	    	IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+	    	Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	    	
+	    	cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
+	    	byte[] encrypted = cipher.doFinal(input);
+	    	
+	    	credential = toHexString(encrypted);
     	}
     	
     	return credential;
@@ -5208,7 +5223,7 @@ public class EzEmailUtil {
 				mailboxQuotaStr = mailboxQuotaStr.substring(0, mailboxQuotaStr.indexOf(".")) + "G";
 			}
 		} else if (mailboxQuota >= 1024) {
-			mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+			mailboxQuotaStr = String.format("%.1fM", mailboxQuota/1024);
 		} else {
 			mailboxQuotaStr = (int)mailboxQuota + "K";
 		}

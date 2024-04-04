@@ -3492,4 +3492,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void insertLoadTimeForApprAllConfig() {
     	ezCommonDAO.insertLoadTimeForApprAllConfig();
     }
+
+	@Override
+	public void createTblDeptChangeInfo() throws Exception {
+		ezCommonDAO.createTblDeptChangeInfo();
+	}
 }

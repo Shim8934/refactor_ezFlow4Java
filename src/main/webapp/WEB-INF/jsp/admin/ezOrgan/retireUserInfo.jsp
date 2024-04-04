@@ -39,8 +39,46 @@
 	    				DeptName.innerText = ifNull(info.description1);
 	    				DeptName2.innerText = ifNull(info.description2);
 	    				SocialNum.innerText = ifNull(info.extensionAttribute14);
-	    			 
-	    				SecurityLevel.value = ifNull(info.extensionAttribute6);
+	    			 	// 2024.03.22 한슬기 : 보안등급이 나오지 않는 문제 수정
+	    				SecurityLevel.innerText = ifNull(info.extensionAttribute6);
+	    				
+	    			 	// 2024.03.22 한슬기 : 업무관련 권한이 표시되도록 추가
+	    			 	var adminAuthority = info.extensionAttribute1;
+	    				
+	    				if (adminAuthority.indexOf("c=1;") != -1) {
+	    					document.getElementById("Check1").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("a=1;") != -1) {
+	    					document.getElementById("Check2").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("k=1;") != -1) {
+	    					document.getElementById("Check3").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("i=1;") != -1) {
+	    					document.getElementById("Check4").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("g=1;") != -1) {
+	    					document.getElementById("Check5").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("l=1;") != -1) {
+	    					document.getElementById("Check6").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("n=1;") != -1) {
+	    					document.getElementById("Check7").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("m=1;") != -1) {
+	    					document.getElementById("Check8").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("w=1;") != -1) {
+	    					document.getElementById("Check9").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("t=1;") != -1) {
+	    					document.getElementById("Check10").checked = true;
+	    				} 	    				
+	    				if (adminAuthority.indexOf("x=1;") != -1) {
+	    					document.getElementById("Check11").checked = true;
+	    				}
+	    				// 	    				
 	    				
 	    				if (ifNull(info.extensionAttribute2) != "") {	    					
 	    					document.getElementById("UserPhotoDiv").innerHTML = "<IMG style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ifNull(info.extensionAttribute2) + "'>";

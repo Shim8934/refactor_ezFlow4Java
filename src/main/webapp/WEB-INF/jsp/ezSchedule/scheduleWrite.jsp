@@ -705,7 +705,7 @@
                                         <tr id="HolderEdit2">
                                             <th><spring:message code='ezSchedule.t163'/></th>
                                             <td colspan="2">
-                                            	<div style="overflow-y: auto; height: 14px; padding-top: 2px" id="LabelAttendant">                                                
+                                            	<div style="overflow-y: auto; height: 20px;" id="LabelAttendant">                                                
 													<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
 			                                	 		<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
 			                                	 			<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
@@ -730,7 +730,7 @@
                                         </tr>
                                         <tr id="receiverTr2">
                                             <td colspan="2">
-                                                <div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
+                                                <div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 20px"></div>
                                             </td>
                                         </tr>
 	                                </table>

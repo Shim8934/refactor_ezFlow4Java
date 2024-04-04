@@ -802,11 +802,11 @@
 					}
 	        	}
 	        	 
-	        	var frm = document.getElementById('form'); 
+		        SearchOptionHidden();
+	        	var frm = document.getElementById('form');
 		        var actionURL = (actURL !== undefined && actURL != "") ? actURL : "${useAddrDupliCheck.equals('YES') ? '/ezAddress/excelImportDuplicationCheck.do' : '/ezAddress/excelImport.do'}";
 		        frm.action = actionURL + "?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID) + "&format=" + encodeURIComponent(format);
 		        frm.submit();
-		        SearchOptionHidden();
 	        }	 
 	        
 	        function UploadComplete(result) {
@@ -918,6 +918,11 @@
         			btn_AttachAdd_onclick("/ezAddress/excelImport.do");    	            
         		} else {
         			document.form.file1.value = "";
+        			var duplicateTable = document.querySelector('.dupliPopUpTableBody tbody');
+        			
+					while (duplicateTable.firstChild) {
+						duplicateTable.removeChild(duplicateTable.firstChild);
+					}        			
         			SearchOptionHidden();
         		}
         	}

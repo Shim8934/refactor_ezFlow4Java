@@ -24,7 +24,7 @@
 .ExtensionUL_BOX > li > input[type="checkbox"] {margin-right: 10px; display:none;}
 .ExtensionUL_BOX > li > input[type="checkbox"] + label{display:block; border: 1px solid #333333;border-radius: 5px;list-style: none;padding: 10px;}
 .ExtensionUL_BOX > li > input[type="checkbox"]:checked + label {color: rgb(4, 112, 227);border-color: rgb(4, 112, 227);background: #f1f8ff;}
-.ExtensionUL_BOX > li > label > span {font-weight: bold;font-size: larger;}
+.ExtensionUL_BOX > li > label > span {font-weight: bold;font-size: larger;display: inline-block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 80px;}
 .ExtensionUL_BOX > li > label > a {vertical-align: top;margin-left: 5px;float: right;}
 .imgbtn01 .icon16_delete{margin-top:1px;}
 #mainmenu ul .leftViewTypeUL{margin-bottom:0px !important;}
