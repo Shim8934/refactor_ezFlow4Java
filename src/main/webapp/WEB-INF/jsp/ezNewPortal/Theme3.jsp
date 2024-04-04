@@ -525,7 +525,6 @@
 				$(".info_left").css("margin-right", "5px");
 				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
 				$(".info_right").css("width", "calc(100%)");
-				$(".info_right").css("background", "#ffffff");
 			} else if (media1686.matches) {
 				$(".portlet").addClass("two_column");
 				$(".info_left").css("display", "inline-block");
@@ -534,7 +533,6 @@
 				$(".info_left").css("margin-right", "5px");
 				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
 				$(".info_right").css("width", "calc(100%)");
-				$(".info_right").css("background", "#ffffff");
 			} else if (media1685.matches) {
 				$(".portlet").addClass("two_column");
 				$(".info_left").css("display", "inline-block");
@@ -543,7 +541,6 @@
 				$(".info_left").css("margin-right", "5px");
 				$(".info_left").css("background", "url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat");
 				$(".info_right").css("width", "calc(100%)");
-				$(".info_right").css("background", "#ffffff");
 			} else if (media1589.matches) {
 				$(".portlet").removeClass("two_column");
 			} else if (media1279.matches) {

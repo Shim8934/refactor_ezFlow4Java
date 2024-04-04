@@ -3,7 +3,7 @@
 /* CSS Document */
 
 /* base */
-html { height:100%; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; }
+html { height:100%; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; }
 body { height:100%; margin:0;background-color: #E9ECEF}
 input,button { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1em; }
 textarea { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1.25em; }
@@ -1355,7 +1355,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .resources_portlet .portlet_title .portletText{ width:34%;}
 .resources_portlet .resources_calendal{ margin:0px; padding:10px 10px 0px 10px; float:right; overflow:hidden; height:45px;}
 .resources_portlet .resources_calendal .DatePicker_class{ height:30px; margin:0px 0px 0px 0px; width:110px; text-align:center; vertical-align:top;}
-.resources_portlet input {box-sizing: border-box; border: 1px solid #dedede; font-size: 12px; color: #393939; text-decoration: none; outline: none;}
+.resources_portlet input {box-sizing: border-box; border: 1px solid #dedede; font-size: 13px; color: #393939; text-decoration: none; outline: none;}
 .resources_portlet .resources_calendal img{position:absolute; right:86px; top:17px; margin:0px 0px 0px 0px; padding:0px 0px 0px 0px; cursor:pointer;}
 .resources_portlet .resources_setting{ margin:0px; padding:17px 5px; float:right; cursor:pointer;}
 
@@ -1600,7 +1600,6 @@ div.orbit img{border-radius: 5px;}
 #theme3Body .portlet_list li.mail_open{color: #333;}
 #theme3Body .portlet_list li .txt{color: #333;}
 .noti_portlet_list .notiLI .noti_text{color: #333;}
-#ApprList{padding: 0px;}
 #theme3Body .first_approval .approval_content{padding: 8px 0px 0px 0px;}
 #theme3Body .presentTime .timeTxt{background: url(/images/ezNewPortal/theme3Img/present_time_icon.png) no-repeat 191px 0px; margin: 20px 0px;}
 #theme3Body .portlet_tab{box-shadow: 0px 3px 7px 0px rgb(0 0 0 / 7%);}
@@ -1630,4 +1629,19 @@ div.orbit img{border-radius: 5px;}
 .first_approval .approval_content .apprDL .apprText_green span,
 .first_approval .approval_content .apprDL .apprText_orange span{padding: 1px 7px;}
 
+#theme3Body .box_shadow{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.10);}
+#theme3Body .portlet_title .portletText{padding: 2px 0px 0px 20px;}
+#theme3Body .portlet_list{padding: 5px 0px;}
+.rolling_info .info .infoName{color: #333;}
+.portlet_title .portletText{color: #222;}
+.info .infoTime, .info .infoName{color: #333;}
+#theme3Body .portlet_list li.first_approval{height: 103px !important;}
+.portlet_tab dt{color: #222;}
+#theme2Body .scalendar_mini_title .calendar_mini_day{color: #222;}
+#theme2Body .maintab01 p{font-weight: normal;}
+#theme2Body .maintab01 .left_on{font-weight: bold;}
+#theme2Body .maintab01 .right_on{font-weight: bold; color: #1D1D1D;}
+#theme2Body .section1 .sec1Layout_middle .portlet_list li .txt span{color: #2D2D2D;}
+.first_approval .approval_content{padding: 9px 0px 3px 0px;}
+.portlet_list li.first_approval{height: 103px;}
 /* //20231101 디자인 css 추가 */

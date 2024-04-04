@@ -201,7 +201,7 @@
       		</select>
 	    </h1>
 	  	<h2 style="font-weight: normal;font-size:12px;margin-top:30px"><spring:message code="ezAttitude.t312"/></h2>
-		<table class="content" style="width:550px;margin-top:5px">
+		<table class="content" style="width:580px;margin-top:5px">
 			<tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
 					<spring:message code='ezAttitude.t12' />

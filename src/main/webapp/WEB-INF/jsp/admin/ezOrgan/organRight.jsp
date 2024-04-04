@@ -2394,7 +2394,7 @@
 		</div>
 		--%>
 		<div>
-			<div style="border: 1px solid #ddd; height: 530px; width: 25%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
+			<div style="border: 1px solid #ddd; height: 530px; width: 25%;  overflow: auto; background-color: #FFFFFF; float:left; padding: 10px; box-sizing: border-box;" id="TreeView"></div>
 			<div id="organListDIv" style="width: 74%; float:right;">
 				<div style="width:100%; float:left; box-sizing: border-box;">
 					<div class="organHeader">

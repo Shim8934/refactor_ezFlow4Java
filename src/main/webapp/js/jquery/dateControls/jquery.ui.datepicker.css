@@ -81,7 +81,8 @@
 	margin: 0 0 .4em;
 }
 .ui-datepicker th {
-	padding: .7em .3em;
+	/* padding: .7em .3em; */
+	padding: 10px 0px;
 	text-align: center;
 	font-weight: normal;
 	border: 0;

@@ -915,7 +915,7 @@
 				    		},
 				    		success: function (result) { // Y, N
 				    			if (result == "Y" && $("#" + spanImgNodeID).length < 1) { // 게시판명 span 영역에 아이콘 추가 또는 제거
-				    				$("#" + spanNodeID).append(" <img id='" + spanImgNodeID + "' src='/images/kr/community/communityPortlet_iconnew.gif' style='vertical-align:bottom;'>");
+				    				$("#" + spanNodeID).append(" <img id='" + spanImgNodeID + "' src='/images/kr/community/communityPortlet_iconnew.gif' style='vertical-align:top; margin-top: 6px'>");
 				    			} else if (result != "Y" && $("#" + spanImgNodeID).length > 0) {
 				    				$("#" + spanImgNodeID).remove();
 				    			}
@@ -992,9 +992,9 @@
     		<div class="cmhome_right">
         		<div id="copmaindesc" class="introduce">
             		<span class="bgimg"></span>
-            		<p id="copdesc" style="white-space:pre;"></p>
+            		<p id="copdesc"></p>
 		        </div>
-        		<div id="mainboard" style="height:560px; overflow:auto; display:none;"></div>
+        		<div id="mainboard" style="overflow:auto; display:none;"></div>
         		<iframe id="rightfrm" style="width:100%; height:560px; border:0; display:none" frameborder="0"></iframe>
         		<div class="makeguide" id="makeguide" style="display: none;">
             		<p><img src="<spring:message code='ezCommunity.i5' />"></p>

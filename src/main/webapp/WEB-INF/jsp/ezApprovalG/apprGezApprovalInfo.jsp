@@ -2972,7 +2972,7 @@
                                 </tr>
 	                            <tr>
 	                                <td height="36px;" style="background-color: transparent; padding-top: 10px;vertical-align: top">
-	                                 	<input id="textUser2" style="width: 135px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
+	                                 	<input id="textUser2" style="width: 111px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
                                         <a class="imgbtn imgbck2"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
                                         <a class="imgbtn imgbck2" style="vertical-align: middle; margin: auto; <c:if test="${isOuterForm}">display: none;</c:if>"><span onclick="return btnReceiptSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                                	<a class="imgbtn imgbck2" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
