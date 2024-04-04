@@ -99,8 +99,9 @@
 		            alert("<spring:message code = 'ezApprovalG.t654' />");
 		            window.close();
 		        } else {
+					var applyDateValue = SelectSingleNodeValueNew(TaskXml, "ROW/APPLYDATE");
 		            document.getElementById("tdCreateDate").innerHTML = SelectSingleNodeValueNew(TaskXml, "ROW/CREATEDATE").substring(0, 10);
-		            document.getElementById("tdApplyDate").innerHTML = SelectSingleNodeValueNew(TaskXml, "ROW/APPLYDATE");
+		            document.getElementById("tdApplyDate").innerHTML = applyDateValue.substring(0, 4) + '-' + applyDateValue.substring(4, 6) + '-' + applyDateValue.substring(6, 8);
 		            document.getElementById("tdTitle").innerHTML = SelectSingleNodeValueNew(TaskXml, "ROW/TASKNAME");
 		            document.getElementById("tdTitle2").innerHTML = SelectSingleNodeValueNew(TaskXml, "ROW/TASKNAME2");
 		            document.getElementById("tdDesc").innerHTML = SelectSingleNodeValueNew(TaskXml, "ROW/DESCRIPTION");
