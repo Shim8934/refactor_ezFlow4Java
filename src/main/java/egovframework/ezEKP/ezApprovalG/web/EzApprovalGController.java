@@ -1807,6 +1807,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		model.addAttribute("type", request.getParameter("type")== null? "" : request.getParameter("type"));
+		model.addAttribute("mode", request.getParameter("mode")== null? "" : request.getParameter("mode"));
 		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("aprLineTempletName ended.");

@@ -76,7 +76,7 @@ var SurveyMessages = {
     strSlider7: "Khoảng thời gian",
     strSlider8: "Tối thiểu",
     strSlider9: "Tối đa",
-    strSlider10: "'Giá trị của (tối đa tối đa) ÷lival' phải nhỏ hơn hoặc bằng 200.",
+    strSlider10: "Đặt số đếm thành số tự nhiên từ 200 trở xuống.",
     strOptErr: "Cần ít nhất hai chế độ xem.",
     strMaxtrix1: "Cần ít nhất một hàng.",
     strMaxtrix2: "Cần ít nhất một cột.",

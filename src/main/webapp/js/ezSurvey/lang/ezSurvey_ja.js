@@ -79,7 +79,7 @@ var SurveyMessages = {
 	strSlider7   : "間隔",
 	strSlider8   : "最小値",
 	strSlider9   : "最大値",
-	strSlider10  : "'（最大値－最小値）÷間隔'の値を200以下の自然数で設定してください。",
+	strSlider10  : "カウントを200以下の自然数に設定する。",
 	strOptErr    : "選択肢を2つ以上入力してください。",
 	strMaxtrix1  : "行を1つ以上入力してください。",
 	strMaxtrix2  : "列を1つ以上入力してください。",

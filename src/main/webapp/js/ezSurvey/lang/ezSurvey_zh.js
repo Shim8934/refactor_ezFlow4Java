@@ -79,7 +79,7 @@ var SurveyMessages = {
 	strSlider7 :  "间隔",
 	strSlider8 :  "最低",
 	strSlider9 :  "最大",
-	strSlider10 : "'(最大值-最小值)÷间隔'设定为一个自然数小于200。",
+	strSlider10 : "将计数设置为 200 或以下的自然数。",
 	strOptErr : "至少需要两个意见。",
 	strMaxtrix1 : "至少需要一行。",
 	strMaxtrix2 : "至少需要一列。",
