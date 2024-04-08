@@ -3,7 +3,7 @@
 }
 
 input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
-	font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	font-size:12px;
 	color: #393939;
 	text-decoration: none;
@@ -11,7 +11,7 @@ input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, 
 }
 
 p, strong, h3, div {
-	font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 }
 
 input {
@@ -32,7 +32,7 @@ input[type=text] {
 }
 
 a{	
-	font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	color: #393939;
 	text-decoration: none;
 	ime-mode:active;
@@ -40,7 +40,7 @@ a{
 }
 span {
 	font-size:13px;
-	font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	text-decoration: none;}
 	
 /*ul, li, h1, h2, h3, h4, h5, h6, body { margin:0 }*/
@@ -73,7 +73,7 @@ table, th, td {
 	empty-cells: show;
 	padding:0;margin:0;
 	font-size:13px;
-	font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 }
 th{
 	white-space: nowrap;
@@ -137,7 +137,7 @@ form{display:inline;margin:0}
 	background-color:white;
 	border:1px solid #777;
 	border-radius: 4px;
-	font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	/* border-left:1px solid #c4d0dc;
 	border-top:1px solid #c4d0dc;
 	border-right:1px solid #7792ad;
@@ -315,7 +315,7 @@ form{display:inline;margin:0}
 	border:none;
 }
 
-.left_pims span, .left_board span, .left_appr span, .left_resource span, .left_cop span, .left_webfolder span, .left_env span, .left_circular span{ text-align:center; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
+.left_pims span, .left_board span, .left_appr span, .left_resource span, .left_cop span, .left_webfolder span, .left_env span, .left_circular span{ text-align:center; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:20px;}
 
 .left_myoffice{background: url(/images/left/left_myoffice.jpg) repeat ;height: 40px;}
 .left_pims{height:55px; background:#FFF;}
@@ -436,7 +436,7 @@ form{display:inline;margin:0}
 	float: left;
 	padding: 0px 9px;
 	font-size:13px;
-	font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	line-height:30px;
 	box-sizing:border-box;
 }
@@ -865,7 +865,7 @@ form{display:inline;margin:0}
 .left_admin{
     font-size:20px;
 	font-weight:bold;
-	font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	color:#333;
 	text-align:left;
 	padding-top:12px;
@@ -1070,7 +1070,7 @@ form{display:inline;margin:0}
 .pl8{padding-left:8px;}
 .pl9{padding-left:9px;}
 .pl10{padding-left:10px;}
-.tstyle1, .tstyle3{	font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.tstyle1, .tstyle3{	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .tstyle1 {border:1px  solid #ddd; width:100%; font-size:12px; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .tstyle1 th {
 	padding:5px;
@@ -1135,7 +1135,7 @@ form{display:inline;margin:0}
 .tstyle2 td table td {border-bottom:0px solid #ffffff; border-right:0px solid #ffffff;padding:1px;}
 
 
-.tstyle3 {table-layout:fixed;border:1px solid #ddd;font-size:12px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;} 
+.tstyle3 {table-layout:fixed;border:1px solid #ddd;font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;} 
 .tstyle3 th {
 	padding: 5px;
 	border-left: 0px;
@@ -1223,7 +1223,7 @@ form{display:inline;margin:0}
 	border:1px solid #e0e0e2;	
 }
 
-.mainlist{table-layout:fixed; border:0 none !important;font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist{table-layout:fixed; border:0 none !important;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 
 .mainlist tr{height:40px}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:13px; padding:5px 4px; border-top:1px solid #E5E5E5;border-bottom:1px solid #E5E5E5; background-color: #F8F9FB; height:21px}
@@ -1233,7 +1233,7 @@ form{display:inline;margin:0}
 .mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
 
 
-.mainlist_free{table-layout:fixed; border:0 none !important;font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist_free{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 /* fomace */
 .mainlist_free tr td{height:23px}
 .mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; font-weight:normal; background-color: #f1f3f5;}
@@ -1243,7 +1243,7 @@ form{display:inline;margin:0}
 .mainlist_free tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
-.mainlist_depth{table-layout:fixed; border:0 none !important;font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px;}
+.mainlist_depth{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px;}
 .mainlist_depth tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
 .mainlist_depth tr th.title{width:100%; text-align:left;}
 .mainlist_depth tr th.left {border-left:1px solid #ddd;}
@@ -1400,7 +1400,7 @@ form{display:inline;margin:0}
 /* pagenavi */
 #tblPageRayer {width:100% !important}
 .popup_pagenavi {border-top:1px solid #c8c8c8;}
-.pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .pagenavi span {display: inline-block; height: 27px; line-height: 26px; margin: 0px 2px; padding: 0px 9px 0px 9px; border: 1px solid #c8c8c8; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; box-sizing:border-box; font-size: 12px; text-align: center; font-weight: bold; color: #333; cursor: pointer;}
 .pagenavi span:hover {color: #ffffff;}
 .pagenavi span.on {color: #ffffff;}
@@ -1490,7 +1490,7 @@ form{display:inline;margin:0}
 	background-color:white;
 	border:1px solid #BABEC7;
 	border-radius: 3px;
-	font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	cursor:pointer;
 	color:#333;
 	border-radius: 3px;
@@ -1637,7 +1637,7 @@ form{display:inline;margin:0}
 .organwrap_list  .organinfo .name { height:18px; padding-top:5px!important;}
 
 /* organliststyle2 */
-.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#393939; font-size:12px; line-height:19px; padding:3px 4px 1px; border-top:1px solid #e8e8e8; border-bottom:1px solid #e8e8e8; background-color: #f8f8fa;}
 .popup_mainlist tr th.title{width:100%; text-align:left;}
 
@@ -1798,7 +1798,7 @@ form{display:inline;margin:0}
 
 
 .contents_todayCommunity{overflow:hidden;}
-.todayComm{font-size: 19px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-weight: bold; color: #333; display: inline-block; height: 40px; letter-spacing: -1px;}
+.todayComm{font-size: 19px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-weight: bold; color: #333; display: inline-block; height: 40px; letter-spacing: -1px;}
 .contents_todayCommunity h1{}
 .contents_todayCommunity .todayCommunity{position:relative;}
 .contents_todayCommunity .todayCommunity .todayCommunityLayout{padding:14px 15px 14px 13px; border:1px solid #d2d2d2; overflow:hidden;}
@@ -1809,7 +1809,7 @@ form{display:inline;margin:0}
 .contents_todayCommunity .bg_todayCommunity .bg_todayCommunityBL{display:none; position:absolute; left:0px; bottom:0px; width:5px; height:5px; background:url(../images/kr/community/bg_todayCommunity_BL.gif) no-repeat;}
 .contents_todayCommunity .bg_todayCommunity .bg_todayCommunityBR{display:none; position:absolute; right:0px; bottom:0px; width:5px; height:5px; background:url(../images/kr/community/bg_todayCommunity_BR.gif) no-repeat; z-index:1;}
 .contents_todayCommunity .todayCommunity_img{float:left; width:198px; height:140px; border:1px solid white; margin:0px 19px 0px 0px; padding:0; overflow:hidden;}
-.contents_todayCommunity .todayCommunity_list{float:none; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
+.contents_todayCommunity .todayCommunity_list{float:none; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_list dt{font-size:13px; font-weight:bold; color:#666; margin:0; padding:0; line-height:2; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_list dd{font-size:12px; color:#666; margin:0; padding:0; line-height:2;}
 .contents_todayCommunity .todayCommunity_list dd span{font-size:11px;}
@@ -1886,7 +1886,7 @@ form{display:inline;margin:0}
 .right_tabpartList dd{float:none; line-height:20px; height:20px; color:#666; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .right_tabpartList dd strong{color:#666;}
 
-.right_tabpartList01{font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
+.right_tabpartList01{font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
 .right_tabpartList01 dt{float:right; font-size:12px; color:#666; margin:0; padding:0; line-height:28px;}
 .right_tabpartList01 dt .icon_community01{display:inline-block; padding:0px 8px 0px 24px; background:url(../images/kr/community/icon_Community01.png) no-repeat left 3px; font-weight:bold;}
 .right_tabpartList01 dt .icon_community02{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community02.png) no-repeat left 3px; font-weight:bold;}
@@ -1903,7 +1903,7 @@ form{display:inline;margin:0}
 .receiver_tltype02 span {font-size:14px; font-weight:bold; color:#388CE5; height:28px;display:inline-block;padding:0px 25px 0px 0px; min-width:49px;}
 .receiver_borderbox { border:1px solid #D1D1D1; }
 
-.receiver_list{border:0 none !important;font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px; border-spacing:0; border-collapse:collapse;}
+.receiver_list{border:0 none !important;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px; border-spacing:0; border-collapse:collapse;}
 .receiver_list th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:8px 4px; border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; background-color: #f6f6f6;}
 .receiver_list td{ border:0px; font-weight:normal; font-size:13px; color:#333; padding:5px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
 
@@ -1919,7 +1919,7 @@ form{display:inline;margin:0}
 .address_boxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_boxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_boxlist ul .company { color:#393939; margin-bottom: 10px;}
-.address_boxlist .point_txt { color:steelblue; margin-left:3px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.address_boxlist .point_txt { color:steelblue; margin-left:3px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
@@ -1929,7 +1929,7 @@ form{display:inline;margin:0}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_onboxlist ul .company { color:#393939; margin-bottom: 10px;}
-.address_onboxlist .point_txt { color:steelblue; margin-left:3px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.address_onboxlist .point_txt { color:steelblue; margin-left:3px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 
 .sublist{table-layout:fixed; border:0 none !important; font-size:12px; border-spacing:0; border-collapse:collapse;}
 .sublist tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:13px; padding:3px 4px 4px; border-bottom:1px solid #ddd; font-weight:normal;}
@@ -1955,7 +1955,7 @@ form{display:inline;margin:0}
 .onimg { position:absolute; top:0px; left:0px; z-index:5; width:175px; height:140px; background:url(../images/sub/theme_overimg_kr.png) no-repeat; }
 
 
-.themelist_box { table-layout:fixed; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;border:1px solid #dddada; width:100%;}
+.themelist_box { table-layout:fixed; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;border:1px solid #dddada; width:100%;}
 .themelist_box th { text-align:left; border:1px solid #dddada; background:#fafafa;padding:15px 10px; margin:0px ; font-size:12px;}
 .themelist_box td {border:0px solid #dddada !important; border-bottom:1px solid #dddada !important; padding:10px; vertical-align:middle; text-align:center;}
 
@@ -2016,9 +2016,9 @@ form{display:inline;margin:0}
 .System03Table{table-layout:fixed; border:1px solid #d8d8d8; border-collapse:collapse;}
 .System03Table th{background:#f6f6f6; height:30px; border-bottom:1px solid #d8d8d8; border-collapse:collapse; font-size:12px; color:#777; font-weight:normal;}
 .System03Table td{border-collapse:collapse; padding:10px 0px 5px 0px;}
-.System03DL{clear:both; margin:0; padding:10px 0px 5px 21px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.System03DL{clear:both; margin:0; padding:10px 0px 5px 21px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .System03DL dt{float:left; margin:0px 9px 0px 0px; padding:0;}
-.System03DL dt span{display:inline-block; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; padding:0; overflow:hidden;}
+.System03DL dt span{display:inline-block; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; padding:0; overflow:hidden;}
 .System03DL dt .point{color:#bbbbbb; font-weight:normal;}
 .System03DL dd{float:none;  margin:0; padding:0;  overflow:hidden;}
 .System03DL dd span{display:inline-block; overflow:hidden;}
@@ -2111,7 +2111,7 @@ form{display:inline;margin:0}
 .content_property table{border-collapse:collapse; border-spacing:0;}
 .content_property table tr{border-collapse:collapse; border-spacing:0;}
 .content_property table td{border-collapse:collapse; border-spacing:0;}
-.content_property .tabTitle{height:30px; background:rgb(242,242,242); border:1px solid #d2d7e1; text-align:center; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#444; cursor:pointer;}
+.content_property .tabTitle{height:30px; background:rgb(242,242,242); border:1px solid #d2d7e1; text-align:center; font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#444; cursor:pointer;}
 .content_property .tabList{border-right:1px solid #d2d7e1; border-left:1px solid #d2d7e1;}
 .content_property .tabList table{}
 .content_property .tabList table td{height:25px; border-bottom:1px solid #cfcfcf; cursor:pointer; padding:0px 5px 0px 5px;}
@@ -2190,11 +2190,11 @@ form{display:inline;margin:0}
 .conf_btnPosi input{margin:0px; padding:0px 20px; height:30px; background:#004896; border:none; border-radius:5px;}
 
 .wrap_progress{width:100%; height:100%; border:1px solid #dedede; overflow:hidden;}
-.wrap_progress h4{height:40px; background:#f8f8fa; font-size:15px; color:#666; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:38px; border-left:5px solid #185bcf; padding:0px 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+.wrap_progress h4{height:40px; background:#f8f8fa; font-size:15px; color:#666; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:38px; border-left:5px solid #185bcf; padding:0px 10px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
 .progress_graph{width:135px; height:135px; margin:12px 74px; float:left;}
 .progress_graph p{width:135px; text-align:center; padding:28px 0px;}
-.progress_graph p .graph_txt01{font-size:24px; color:#0dc699; font-weight:bold; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-.progress_graph p .graph_txt02{font-size:15px; font-style:italic; color:#707070; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.progress_graph p .graph_txt01{font-size:24px; color:#0dc699; font-weight:bold; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.progress_graph p .graph_txt02{font-size:15px; font-style:italic; color:#707070; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 /* .progress_txt{height:105px; float:left; margin:27px 0px 27px 62px;} */
 .progress_txt{height:105px; float:left;}
 .progress_txt ul{list-style:none; font-size:12px; margin:0px; padding:0px;}
@@ -2219,7 +2219,7 @@ form{display:inline;margin:0}
 /* .opinion_ul li:nth-child(even){background:#eaf0f4;} */
 .opinion_ul li:nth-child(even){background:#fafafa;}
 
-div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:12px;font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:12px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 div#txtContent table {margin:auto;}
 
 .blockLeft {position : absolute;
@@ -2239,9 +2239,9 @@ div#txtContent table {margin:auto;}
 	background: rgba(0,0,0,0.5);
 }
 
-.calResTitleSpan {font-size:13px;color:#2f2f2f;text-align:center;font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.calResTitleSpan {font-size:13px;color:#2f2f2f;text-align:center;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 
-.layerHeader {border-color: rgb(4, 112, 227); color: white; background-color: rgb(4, 112, 227); text-align: left; height:30px !important;font-size:14px; font-weight: bold !important; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.layerHeader {border-color: rgb(4, 112, 227); color: white; background-color: rgb(4, 112, 227); text-align: left; height:30px !important;font-size:14px; font-weight: bold !important; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 
 .IDcontainer {
     display: block;
@@ -2273,7 +2273,7 @@ div#txtContent table {margin:auto;}
 .volume_num{ margin:0px; padding:0px;}
 .volume_graph{ margin:5px 0px 10px 0px; padding:0px; width:100%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#e9e9e9;}
 .volume_graph span{ display:inline-block; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-.volumeDL{ margin:0px; padding:0px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px; font-weight:bold;}
+.volumeDL{ margin:0px; padding:0px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px; font-weight:bold;}
 .volumeDL dt{margin:0px; padding:0px 0px 0px 0px; float:left; color:#333;}
 .volumeDL dt span{ display:inline-block; color:#959595;}
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}
@@ -2324,7 +2324,7 @@ div#txtContent table {margin:auto;}
 	vertical-align: middle;	
 }
 
-.question { font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; }
+.question { font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; }
 
 /* 20180731_운영자에게 메일 보내기 기능 추가 */
 #left h4{width:155px; margin:0px auto; border:1px solid #e0e0e0; padding:8px 15px; text-align:left; font-weight:normal; background:url('/images/kr/left/icon_adminMail.gif') no-repeat 12px 10px; cursor:pointer;}
@@ -2394,11 +2394,11 @@ div#txtContent table {margin:auto;}
 .lnbUL li {position:relative; padding: 0px 6px 0px 8px; margin:0px 10px; cursor: pointer; box-sizing: border-box; }
 .lnbUL li .sub_iconLNB { float: left; }
 .lnbUL li .sub_iconLNB.tree_manage { float: right; position:relative;}
-.lnbUL li .list_text { display: block; float: none; font-size: 14px; height: 30px; line-height: 30px; padding: 0px 0px 0px 5px;font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; box-sizing: border-box; }
+.lnbUL li .list_text { display: block; float: none; font-size: 14px; height: 30px; line-height: 30px; padding: 0px 0px 0px 5px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; box-sizing: border-box; }
 /* .lnbUL li:hover .list_text { color: #0470E4; font-weight: bold; } */
 
 /* left LNB tree list */
-.tree { padding: 0px 10px 0px 7px;font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; overflow: auto; }
+.tree { padding: 0px 10px 0px 7px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; overflow: auto; }
 .lnbUL > .tree { padding-bottom:15px; margin-bottom:9px;}
 
 /* left LNB tree 만 있을경우/하위 list 없음 */
@@ -2526,7 +2526,7 @@ div#txtContent table {margin:auto;}
 
 
 /* left LNB tree text */
-.lnb h2 .h2Title, .h2_text, .h2_text .tRed, .confirmation{font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.lnb h2 .h2Title, .h2_text, .h2_text .tRed, .confirmation{font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .lnb h2 .h2Title{font-size:14px; font-weight:bold; color:#393939; padding:0px 0px 0px 0px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; box-sizing:border-box;}
 .h2_text{ font-size:13px; height:30px; line-height:30px; color:#393939; display:inline-block; padding:0px 0px 0px 5px; cursor:pointer;white-space:nowrap; text-overflow:ellipsis; overflow: hidden; box-sizing:border-box;}
 .h2_text .tRed{ font-weight:bold; color:#ff0000; padding:0px 0px 0px 2px;}
@@ -2536,7 +2536,7 @@ div#txtContent table {margin:auto;}
 
 /* left mail 용량 */
 .mail_space{height:34px; line-height:33px; background:#bbbfc3; position:absolute; bottom:25px; width:190px; border-radius: 5px; left: 13px;}
-.mail_space .mail_spaceText{font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:14px; color:#333; display:inline-block; margin:0px; padding:0px 0px 0px 8px; position:absolute; bottom: 38px;}
+.mail_space .mail_spaceText{font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:14px; color:#333; display:inline-block; margin:0px; padding:0px 0px 0px 8px; position:absolute; bottom: 38px;}
 .mail_space .mailBar{ display:inline-block; width:0%; height:34px; background:#82b9f6; margin:0px; padding:0px; border-radius: 5px; line-height: 36px;}
 .mail_space .mailBar.warning{background:#ffb600;}
 .mail_space .mailBar.danger{background:#ff4040;}
@@ -2551,7 +2551,7 @@ div#txtContent table {margin:auto;}
 .tree {overflow-x:hidden;}
 /*.confirmation {line-height:normal !important;} style 제거 */
 .node_div .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;}
-.admin_left_title { position:relative; height:52px; background:#fff;font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:52px; font-size:20px; font-weight:bold; color:#333; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
+.admin_left_title { position:relative; height:52px; background:#fff;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:52px; font-size:20px; font-weight:bold; color:#333; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
 .companySelect {margin-left:10px; height:26px; /* float:right; */ border:1px solid #bbb;}
 
 /* icon16 */
@@ -2600,7 +2600,7 @@ div#txtContent table {margin:auto;}
 /* previewmail */
 .previewmail_bar_h{ border:1px solid #e5e5e5 !important; border-top:0px !important;}
 
-.previewmail{margin:0px; padding:0px;font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; overflow:hidden; }
+.previewmail{margin:0px; padding:0px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; overflow:hidden; }
 .previewmail .previewmail_info{background:#F8F9FB; margin:0px; padding:0px; overflow:hidden; border-top:1px solid #e5e5e5;}
 .previewmailDL{ margin:15px 20px; padding:0px; overflow:hidden;}
 .previewmailDL dt.prepic{ margin:0px; padding:0px; border-radius:30px; float:left;}
@@ -2641,7 +2641,7 @@ div#txtContent table {margin:auto;}
 #mainmenuLayout { position: relative; }
 .mainmenuLayout_calendar { position: relative; }
 .calendar_pagenav { position: absolute; left: 50%; top:50px; width: 269px; margin-left: -134px; }
-.calendar_pagenav .spanText { display: block !important; text-align: center; font-size:18px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; letter-spacing:-1px;}
+.calendar_pagenav .spanText { display: block !important; text-align: center; font-size:17px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; letter-spacing:-1px;}
 .mainmenuTab {position:relative;margin: -9px 15px 11px 15px;}
 .mainmenuTab .mainmenuTabUL { text-align: center; padding: 0px 0px 0px 1px; margin: 0px; }
 .mainmenuTab .mainmenuTabUL li { display: inline-block; }
@@ -2653,7 +2653,7 @@ div#txtContent table {margin:auto;}
 /* admin */
 
 /* admin menu */
-.admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:287px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:287px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .admin_menuDL{ margin:0px; padding:0px; height:44px; line-height:42px; background:#edf7ff; border:1px solid #2196f3; box-sizing:border-box;}
 .admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; float:left;}
 .admin_menuDL .admin_menuX{ margin:0px; padding:0px;}
@@ -2673,7 +2673,7 @@ div#txtContent table {margin:auto;}
 .bottomBtn .btnA:hover{border:1px solid #388CE5; color:#0470E4; background:#f1f8ff;}
 
 /* admin thema */
-.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:1020px; height:398px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:1020px; height:398px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .admin_thema .menuIconTH{ margin:0px; padding:0px; width:161px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
 .admin_thema .menuIconTD{ margin:0px; padding:0px 5px 0px 5px; border:1px solid #dfdfdf; color:#393939; letter-spacing:-1px;}
 .admin_thema .menuIconTD_img{margin:0px; padding:20px 5px 20px 5px; border:1px solid #dfdfdf; color:#393939; text-align:center;}
@@ -2706,13 +2706,13 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_bannerCommunity .banner_txt span img{position: absolute; left:-60px; top:15px;}
 
 .community_section02{height:242px; margin:0px 0px 20px 0px; padding:0px;}
-.contents_noticeCommunity{float:left; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:  ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
-.contents_boardCommunity{float:right; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
+.contents_noticeCommunity{float:left; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
+.contents_boardCommunity{float:right; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
 .contents_tabCommunity{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; background-color: #F8F9FB;}
 .contents_tabCommunity dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
 .contents_tabCommunity dd{float:right; height:44px; margin:0px; padding:0px;}
 .contents_tabCommunity dd.btn_more{width:42px; background:url(../images/kr/community/communityPortlet_btnmore.png) center no-repeat; cursor:pointer;}
-.contents_listCommunity{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.contents_listCommunity{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .contents_listCommunity li{overflow:hidden; margin:0px; padding:0px; line-height:34px; color:#555555; font-size:13px; cursor:pointer;}
 .contents_listCommunity li span{display:inline-block; margin:0px; padding:0px 0px 0px 0px;}
 .contents_listCommunity li span.icon_new{float:left;}
@@ -2721,8 +2721,8 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_listCommunity li span.txt{float:left; width:70%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .contents_listCommunity li span.date{float:right;}
 
-.contents_newCommunity{width:100%; height:280px; margin:0px 0px 20px 0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
-.contents_popularCommunity{width:100%; height:280px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
+.contents_newCommunity{width:100%; height:280px; margin:0px 0px 20px 0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
+.contents_popularCommunity{width:100%; height:280px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
 .contents_rightCommunity{margin:0px; padding:0px;}
 .contents_rightCommunity dt{width:196px; height:138px; margin:20px auto 15px; padding:0px; text-align:center; border:1px solid #e7e7e7; background:url(../images/ezCommunity/logo/default_logo_empty.png) center no-repeat; border-radius: 5px;}
 .contents_rightCommunity dd{margin:0px; padding:0px 20px; line-height:24px; color:#555555; font-size:13px;}
@@ -2732,10 +2732,10 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 
 .community_section03{height:442px; margin:0px 0px 20px 0px; padding:0px;}
 .contents_category{width:100%; height:440px; background:#ffffff; border:1px solid #e7e7e7; border-radius: 5px;}
-.contents_categoryTab{float:left; width:199px; height:440px; border-right:1px solid #e7e7e7; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.contents_categoryTab{float:left; width:199px; height:440px; border-right:1px solid #e7e7e7; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .contents_tabCategory{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; border-bottom:1px solid #e7e7e7; background: #F8F9FB;}
 .contents_tabCategory dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
-.contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:0; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:0; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .contents_listCategory li{margin:0px; padding: 6px 0 6px 15px; line-height:26px; color:#555555; font-size:13px; cursor:pointer; border-bottom: 1px solid #E5E5E5;}
 .contents_listCategory li span{display:inline-block; margin:0px; padding:0px;}
 .contents_listCategory li span.icon img{vertical-align:middle; margin:-3px 6px 0px 0px;}
@@ -2744,7 +2744,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 
 /* .contents_listCategory li #totalCnt{color:#388CE5; font-weight: bold;} */
 
-.contents_categoryView{float:left; width:calc(100% - 200px); height:440px; background:#fff; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
+.contents_categoryView{float:left; width:calc(100% - 200px); height:440px; background:#fff; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
 .contents_searchCategory{overflow:hidden; margin:20px; padding:0px;}
 .contents_searchCategory dl{margin:0px; padding:0px;}
 .contents_searchCategory dl dt{float:left; margin:0px 10px 0px 0px; padding:0px; border:1px solid #e2e3e6; border-radius: 5px;}
@@ -2755,14 +2755,14 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_searchCategory dl dd{float:left; height:35px; margin:0px; padding:0px 26px; line-height:32px; background:#3d8fea; color:#ffffff; font-size:16px; font-weight:bold; cursor:pointer; border-radius: 5px;}
 
 .contents_categoryViewList{overflow-y:auto; width:calc(100% - 30px); margin:15px 15px; padding:0px; height:351px;}
-.categoryBox{float:left; width:calc(20% - 42px); height:68px; margin:0px 5px 10px 5px; padding:20px 15px; background:#ffffff; border-radius: 10px; cursor:pointer; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
+.categoryBox{float:left; width:calc(20% - 42px); height:68px; margin:0px 5px 10px 5px; padding:20px 15px; background:#ffffff; border-radius: 10px; cursor:pointer; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
 .categoryBox.health{background: #FFEDE6 !important;}
 .categoryBox.sports{background: #F4EDFF !important;}
 .categoryBox.computer{background: #FCE6E9 !important;}
 
 .categoryPic{float:left; width:91px; height:64px; margin:0px 20px 0px 0px; padding:0px; border:1px solid #e2e3e6; border-radius: 10px;}
 .categoryPic img{border-radius: 10px;}
-.categoryInfo{float:left; width:calc(100% - 113px); margin:0px; padding:0px; color:#333333; font-size:12px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
+.categoryInfo{float:left; width:calc(100% - 113px); margin:0px; padding:0px; color:#333333; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
 .categoryInfo dt{margin:0px; padding:0px;}
 .categoryInfo dt.sort{height:18px; margin:0px 0px 5px 0px; padding:0px 8px; line-height:18px; text-align:center; background:#999; color:#ffffff; font-size:12px; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; display:inline-block;}
 .categoryInfo dt.sortBlue{background:#0dbeff;}
@@ -2874,7 +2874,7 @@ h2, #menu span {font-size: 12px;}
 .receiver_tltype01 >span {min-width: 45px;}
 .infor-tbl tr th {width: 50px;}
 .infor-tbl tr td {padding-left: 10px;}
-.infor-tbl {width: 100%; border: 0 none !important; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
+.infor-tbl {width: 100%; border: 0 none !important; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
 .infor-tbl tr td, .infor-tbl tr th {border: 1px solid #ddd;}
 .infor-tbl {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
 .infor-searchPanel {background-color: #f8f8fa; margin-top: 15px; border: 1px solid #eaeaea; margin: 10px 0px 0px 0px; padding: 0px; clear: both; overflow: hidden; z-index: 1;}
@@ -2895,7 +2895,7 @@ h2, #menu span {font-size: 12px;}
 .imgCabDivMain >div:first-child {height: 99px; width: 99px; display: flex; align-items: center; min-width: 99px; justify-content: center;}
 .imgCabDivMain >div:last-child  {display: flex; align-items: center;}
 .cabColor {color: #017BEC !important;}
-.organ-deptTbl {table-layout: fixed; width: 100%;  border: 0 none !important; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0; border-collapse: collapse;}
+.organ-deptTbl {table-layout: fixed; width: 100%;  border: 0 none !important; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0; border-collapse: collapse;}
 .organ-deptTbl tr th{text-align: left; border: 0px; text-decoration: none; color: #777; font-size: 12px; line-height: 19px; padding: 4px 4px 0px; white-space: normal; background-color: white; border-top: 1px solid #ddd; border-bottom: 1px solid #eaeaea;}
 .organ-deptTbl tr th >span:nth-child(1) {font-weight: normal; margin-top: 2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;}
 .organ-deptTbl tr th >span:nth-child(1) >img {vertical-align: middle; margin-right: 3px;}
@@ -3024,7 +3024,7 @@ h2, #menu span {font-size: 12px;}
 .srchDate {width: 100px !important; text-align: center; padding: 0px 5px;}
 
 /* survey draft button */
-.draft-survey {cursor: pointer; display:block; float:right; padding: 0px 9px; line-height:28px; font-size:12px; color:#388CE5; border:1px solid #388CE5; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; box-sizing:border-box; border-radius: 3px;}
+.draft-survey {cursor: pointer; display:block; float:right; padding: 0px 9px; line-height:28px; font-size:12px; color:#388CE5; border:1px solid #388CE5; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; box-sizing:border-box; border-radius: 3px;}
 .draft-survey:hover{background: #f7fbff;}
 /*** survey statistic part start ***/
 .statBody {background-color: rgb(244, 245, 245); padding: 10px;}
@@ -3043,7 +3043,7 @@ h2, #menu span {font-size: 12px;}
 .usersTr .mainTd {width: 50%;}
 .usersTr .respDate {width: 120px; min-width: 120px; white-space: nowrap; padding-right: 8px;}
 .usersTr td:first-child {width: 40px;}
-.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .response-header >div:first-child {flex: 1;}
 .response-header >div:last-child {margin-left: 10px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
 .response-users {padding: 10px; border-right: 1px solid #ddd; border-left: 1px solid #ddd;}
@@ -3124,7 +3124,7 @@ h2, #menu span {font-size: 12px;}
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
 .hiddenBttn, .hidden-tab, .searchPanel.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
-.surveydetail-header {padding-left: 10px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.surveydetail-header {padding-left: 10px; font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .surveydetail-header ul {padding: 0px; margin: 0px; list-style: none;}
 .surveydetail-header ul li {display: block; float: left; margin: 0 3px 0 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
 .surveydetail-header span {display: inline-block; background: white; border: 1px solid #CECECE; height: 25px; padding: 0px 10px 2px 10px; line-height: 25px; font-size: 13px; color: #393939; border-radius: 3px;}
@@ -3245,7 +3245,7 @@ input::-ms-clear {display: none;}
 .attDivFile .attFileInf >span:last-child {padding: 2px 4px 4px 0px;}
 .attDivFile .attFileInf2 {font-size: 14px; align-items: center; display: flex; flex: 1; overflow: hidden; padding-left: 10px; padding-top: 0px; justify-content: left;}
 .ulFiles .attDivFile .attFileInf2, .user-pageul .attDivFile .attFileInf2 {padding-left: 0px !important;}
-.uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size: 12px; color: rgb(51, 51, 51);}
+.uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size: 12px; color: rgb(51, 51, 51);}
 .attach-bttn-div {display:block; overflow:hidden; white-space:nowrap; margin:5px 0px;}
 .period-span {margin-left: 3px;}
 /**** survey attach part end ****/
@@ -3257,7 +3257,7 @@ input::-ms-clear {display: none;}
 .survey-purpose p, .survey-purpose div, .survey-purpose td, .survey-purpose ul, .survey-purpose ol, .survey-purpose li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px;}
 .survey-purpose table td  {text-indent: 0px }
 .survey-purpose blockquote {margin-top: 0px; margin-bottom: 0px;}
-.survey-infrow, .survey-infrow-pv {display: flex; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin: 5px 0px; align-items: center;}
+.survey-infrow, .survey-infrow-pv {display: flex; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin: 5px 0px; align-items: center;}
 .survey-infrow select {outline: none;}
 .survey-infrow >span, .survey-infrow-pv >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
 .survey-infrow >span:first-child, .survey-infrow-pv >span:first-child {margin-left: 0px !important; min-width: 80px;}
@@ -3369,7 +3369,7 @@ input::-ms-clear {display: none;}
 .survey_atchBtn li.cancelSkip{margin:7px 0px 0px 0px !important;}
 .survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:22px; margin:10px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
 .survey_atchBtn li, .survey_atchBtn li.off span{margin-left:6px; margin-right:6px; line-height:22px;}
-.survey_atchBtn li span .survey_atchBtn li span.off{display: block; float: left; padding: 0px 4px; font-size:12px; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:28px; box-sizing:border-box;}
+.survey_atchBtn li span .survey_atchBtn li span.off{display: block; float: left; padding: 0px 4px; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:28px; box-sizing:border-box;}
 .survey_atchBtn li span.survey_icon{margin-left:3px; margin-right:3px;}
 .survey_text{padding:0px 4px; line-height:38px; font-size:12px; color:#333;}
 .survey_icon{background:url(/images/ezSurvey/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
@@ -3407,7 +3407,7 @@ input::-ms-clear {display: none;}
 /* question header panel */
 .question-panel{background:#f1f6fb; padding: 0px;}
 .question-header {display:flex; line-height:40px; padding:0px 0px;}
-.question-header .question-content {padding:0px 20px; cursor: default; font-size:14px; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.question-header .question-content {padding:0px 20px; cursor: default; font-size:14px; font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .question-header .tooltip-bttns {padding: 0px 10px; width: 120px !important;}
 
 .question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px;}
@@ -3460,7 +3460,7 @@ input[type=range]::-ms-thumb {border: none; width:26px; height:26px; border-radi
 input[type=range]:focus::-ms-fill-lower {background:#f3f3f3;}
 input[type=range]:focus::-ms-fill-upper {background:#f3f3f3;}
 input[type=range]::-ms-tooltip {display: none;}
-.slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 1.5em; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; color: rgba(132, 206, 66, 1);}
+.slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 1.5em; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; color: rgba(132, 206, 66, 1);}
 .slider-span {padding-right: 10px;}
 .silder-unit {text-align: center;}
 
@@ -3488,7 +3488,7 @@ input[type=range]::-ms-tooltip {display: none;}
 /* survey information, questions and logic confirm part */
 .prevQsWrapper{margin:10px 0px 0px 0px; border:1px solid #ddd; position: relative;}
 .prevQsContent{background:#f1f6fb;}
-.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; display: flex;}
+.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; display: flex;}
 .prevQsWrapper .question-header .imptt {line-height: 40px;}
 .srvyLogicbtn{display:inline-flex; margin:0px 0px 0px 10px;}
 .logicSkip{background-position:0px -94px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:pointer;}
@@ -3549,7 +3549,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .title_bar img {vertical-align:sub;}
 
 /* 20190207 조진호 - error page 추가*/
-.error_wrap p, .error_wrap dl{font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.error_wrap p, .error_wrap dl{font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
 .error_wrap p{ margin:0px; padding:0px; text-align:center;}
 .error_wrap dl{ margin:20px 0px 0px 40px;; padding:0px; line-height:40px; text-align:center;}
@@ -3580,7 +3580,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .calendar_layer .text .td_list td.individual .resource_noreturn {background-image: url('/images/ezResource/state_noreturn.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
 
 /* 2019-07-02 김민성 자원관리 warning 관련 수정*/
-.warningbox{font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.warningbox{font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 
 /* 20190709 메일분류추가 */
 .mailRule_select{-webkit-appearance: none;border:1px solid #dedede;min-height:30px;margin:0px 0px 3px 0px;padding-left: 5px;background: url(/images/next.gif) no-repeat right 1px center; background-color: #fff;}
@@ -3611,7 +3611,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* 그래프용량 */
 .graph_used{margin:0px auto;text-align: center;}
-.graph_used dl{margin:0px; padding:7px 0px; color:#333; font-size:12px; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.graph_used dl{margin:0px; padding:7px 0px; color:#333; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .graph_used dl dt{display:inline-block; margin:0px 3px; padding:0px;}
 .graph_used dl dt img{vertical-align:middle; margin:0px;}
 .graph_used dl dt span{display:inline-block; margin:0px 2px;}
@@ -3895,7 +3895,7 @@ select{min-height: 24px !important;}
 #left .project_admin{background:none;padding: 8px 0 0 22px;}
 #left .project_admin span{font-size: 16px;}
 
-.portletInfoTD input[type='text']{font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-weight:normal;}
+.portletInfoTD input[type='text']{font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-weight:normal;}
 
 .cabTable .cabName, .cabTable2 .cabName{font-size:13px;}
 

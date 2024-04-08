@@ -994,7 +994,7 @@
 		            </ul>
 		        </div>
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="width:478px; margin:10px 0px 0px 1px;">
+			    <table class="popuplist" id="addpopup_list" style="width:510px; margin:10px 0px 0px 1px;">
 					<tr>
 			  			<th style="width:90px;height:26px"><spring:message code='ezAttitude.t10'/></th>
 						<td><input type="text" id="searchUserName" name="searchUserName" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>

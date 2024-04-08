@@ -3,7 +3,7 @@
 /* CSS Document */
 
 /* base */
-html { height:100%; font-family: ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; }
+html { height:100%; font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; }
 body { height:100%; margin:0;background-color: #E9ECEF}
 input,button { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1em; }
 textarea { margin:0; outline:none; color:#4f5964; font-size:1em; line-height:1.25em; }
@@ -1370,7 +1370,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .resource_listBoxUL .resource_listBoxDL dt .resource_list_text {float:none; font-size:14px; color:#444; padding:8px 0px 0px 8px; box-sizing: border-box; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; vertical-align: middle; position: relative; top: 3px; font-weight: normal;}
 .resource_listBoxUL .resource_listBoxDL dt:hover .resource_list_text {font-weight:bold;}
 .resource_listBoxUL .resource_listBoxDL dd {position:relative; float: none; margin: 0px; height: 22px; padding: 0px 0px 0px 0px; white-space:nowrap;}
-.resource_listBoxUL .resource_listBoxDL dd > .resource_list_item { position: relative; display: inline-block; width: 90px; height: 22px; line-height: 18px; margin: 2px -4px 0px 10px; padding: 1px 9px; border-radius: 3px; background-color:#E6EFFA; border: 1px solid #E6EFFA; color: #444; text-align: center; box-sizing: border-box; cursor: pointer; font-size:13px;}
+.resource_listBoxUL .resource_listBoxDL dd > .resource_list_item { position: relative; display: inline-block; width: 90px; height: 22px; line-height: 18px; margin: 2px -4px 0px 10px; padding: 1px 9px; border-radius: 3px; background-color:#E6EFFA; border: 1px solid #E6EFFA; color: #444; text-align: center; box-sizing: border-box; cursor: pointer; font-size:11px;}
 .resource_listBoxUL .resource_listBoxDL dd > .resource_list_item:hover { background-color: #0470e4; border: 1px solid #0470e4; color: #fff; }
 .resource_listBoxUL .resource_listBoxDL dd .resource_list_add { display: inline-block; width: 90px; height: 22px; margin: 2px -4px 0px 10px; padding: 1px 9px; border: 1px solid #EFECEC; border-radius: 3px; text-align:center; box-sizing: border-box; cursor:pointer;}
 .resource_listBoxUL .resource_listBoxDL dd .resource_list_add:hover {background: #F3F9FF; }

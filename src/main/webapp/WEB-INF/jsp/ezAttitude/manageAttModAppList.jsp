@@ -41,6 +41,10 @@
 		.mainlist tr:hover{
 				background: rgb(244,245,245);
 		}
+		#usepostdate {
+			border: 0 !important;
+			height: 11px !important;
+		}
 		</style>
 		<script type="text/javascript">
 		var pCompanyId = ""; //현재 선택된 회사의 아이디
@@ -1107,7 +1111,7 @@
 		                <li><a rel="modal:close"><span onclick="popup_close()"></span></a></li>
 		            </ul>
 		        </div>
-				<table style="display:block; width:478px; margin:10px 0px 0px 1px;"  class="popuplist">
+				<table style="display:block; width:510px; margin:10px 0px 0px 1px;"  class="popuplist">
 					<tr>
 						<th nowrap><spring:message code='ezAttitude.t103'/></th>
 						<td style="width:100%;"> 
