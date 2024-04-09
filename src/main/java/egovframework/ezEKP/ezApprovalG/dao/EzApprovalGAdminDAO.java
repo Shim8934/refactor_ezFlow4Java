@@ -83,6 +83,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<ApprGTaskVO> getTaskFullList(Map<String, Object> map) throws Exception {
 		return (List<ApprGTaskVO>) list("EzApprovalGAdmin.getTaskFullList", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public int getTaskListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalGAdmin.getTaskListCount", map);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGSealInfoVO> getSealList(Map<String, Object> map) throws Exception {

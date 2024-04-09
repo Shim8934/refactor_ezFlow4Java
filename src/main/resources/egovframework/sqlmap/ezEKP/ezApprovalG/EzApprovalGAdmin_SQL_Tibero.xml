@@ -384,8 +384,10 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskFullList" parameterClass="Map"
-		resultClass="ApprGTaskVO">
+			resultClass="ApprGTaskVO">
 		<![CDATA[
+		SELECT *
+		FROM (
 			SELECT
 				processdeptcode,
 				processdeptname,
@@ -411,7 +413,8 @@
 				sc1,
 				sc2,
 				sc3,
-				tempflag
+				tempflag,
+				rownum num
 			FROM
 				VTASKCLASS
 			WHERE
@@ -434,7 +437,33 @@
 		<![CDATA[
 			ORDER BY
 				taskcode ASC
+		)
+		WHERE
+			num BETWEEN #startRowForOracle# AND #endRowForOracle#
 		]]>
+	</select>
+
+	<select id="EzApprovalGAdmin.getTaskListCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				VTASKCLASS
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+		]]>
+		<isNotEqual property="v_DEPTCODE" compareValue="">
+			<![CDATA[
+			AND
+				(TRIM(processdeptcode) = #v_DEPTCODE#
+				OR
+					taskcode LIKE 'ZZ%'
+				OR
+					taskcode = '99999999')
+		]]>
+		</isNotEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDeptInfo" -->

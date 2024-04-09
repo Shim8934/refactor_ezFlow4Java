@@ -40,9 +40,9 @@
 		    var OrganID;
 		    var szRoleInfo="<c:out value = '${userInfo.rollInfo}' />";
 		    var UserID = "<c:out value = '${userInfo.id}' />";
-		    var DeptID = "";
 		    var deptName = "<c:out value = '${userInfo.deptName1}' />";
 		    var CompanyID = "<c:out value = '${userInfo.companyID}' />";
+		    var DeptID = CompanyID;
 		    var bTreeInit = false;
 		    var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen;
 		    
@@ -65,15 +65,16 @@
 		    var userLang = "<c:out value = '${userInfo.lang} '/>";
 		    var UserLang = "<c:out value = '${userInfo.lang} '/>";
 		    var ext = "";
+		    var taskCount = "<c:out value='${taskCount}'/>"; // 단위업무 전체 갯수
+		    var pageAdminFlag = 'admin';
+		    
 		    $(document).ready(function(){
 		        document.getElementById("ListCompany").value = CompanyID;
-		        OrganID = CompanyID;
-		        PageSize = -1;
+		        PageSize = 20;
 		        Block_Size = 10;
 		        curpage = 1;
 		        nowblock = 0;
-		        totalPage = 0;
-		        DeptID = OrganID;
+		        totalPage = Math.ceil(taskCount/PageSize);
 		        
 		        if (!bTreeInit) {
 		            Tree_setconfig();
@@ -155,9 +156,10 @@
 		        	CompanyID = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
 		        }
 		        
-		        var deptID = treeNode.GetNodeData("CN");
-		        var deptName = treeNode.GetNodeData("VALUE");
-		        GetTaskList(deptID, deptName);
+		        DeptID = treeNode.GetNodeData("CN");
+		        deptName = treeNode.GetNodeData("VALUE");
+		        curpage = 1;
+		        makePagenationBar();
 		    }
 		    
 		    function TreeViewNodeDbClick() {
@@ -170,7 +172,6 @@
 		    function GetTaskFullList_Admin() {
 		        curpage = 1;
 		        nowblock = 0;
-		        totalPage = 0;
 	
 		        var ListName;
 		        
@@ -187,11 +188,11 @@
 		        }
 
 		        if (getNodeText(Resultxml) != "") {
-		            if (getNodeText(SelectSingleNodeValue(Resultxml, "RESULT"))) {
+		            if (getNodeText(SelectSingleNodeValue(Resultxml, "RESULT")) == "FALSE") {
 		                alert("<spring:message code = 'ezApprovalG.lhj02' />");
 		            } else {
 		                DisplayTaskList_Admin(Resultxml);
-		                listcount.innerHTML = "<b>" + deptName + "</b><spring:message code = 'ezApprovalG.t363' />" + ListName + " : <span class='point'>" + NodeListLen + "</span> <spring:message code = 'ezApprovalG.t1003' />";
+		                listcount.innerHTML = "<b>" + deptName + "</b><spring:message code = 'ezApprovalG.t363' />" + ListName + " : <span class='point'>" + taskCount + "</span> <spring:message code = 'ezApprovalG.t1003' />";
 		            }
 		        }
 		    }
@@ -231,11 +232,13 @@
 		
 		<table>
   			<tr> 
-				<td><div class="box" id="TreeView" style="border:1px solid #ddd; height:550px;width:250px; overflow-x:auto;overflow-y:auto"></div></td>
+				<td style="vertical-align:top"><div class="box" id="TreeView" style="border:1px solid #ddd; height:550px;width:250px; overflow-x:auto;overflow-y:auto"></div></td>
 				<td style="padding-left:5px" >
         			<div class="listview">
             			<div id="lvtDoclist" style="OVERFLOW-Y:auto; overflow-x:auto;border:0;HEIGHT: 550px; WIDTH: 100%; min-width:1200px" onClick ="" onselchanged="lvtDoclist_onselchanged()" onrowdblclick="">
             			</div>
+        			</div>
+        			<div id='tblPageRayer'>
         			</div>
 				</td>
   			</tr>

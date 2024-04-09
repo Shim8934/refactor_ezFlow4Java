@@ -1,9 +1,7 @@
 var Headers;
 
 function GetTaskFullList() {
-    curpage = 1;
     nowblock = 0;
-    totalPage = 0;
 
     var ListName;
 
@@ -11,6 +9,7 @@ function GetTaskFullList() {
     switch (g_ListFlag) {
         case "1":
             Resultxml = GetTaskFullListXml();
+            taskCount = getTaskCount();
             ListName = strLang440;
             break;
 
@@ -32,9 +31,12 @@ function GetTaskFullList() {
             	{
             		NodeListLen = 0;
             	}
-            document.getElementById("listcount").innerHTML =  "<b>"+arr_userinfo[15]+"</b>&nbsp;"+strLang444+"&nbsp;" + strLang440 + " : <span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>" + strLang943;
             
-
+            if (pageAdminFlag == 'admin') {
+                document.getElementById("listcount").innerHTML = "<b>" + deptName + "</b>의 단위업무 : <span style='color:#017BEC;font-weight:bold;'>" + taskCount + "</span> 개";
+            } else {
+                document.getElementById("listcount").innerHTML = taskCount;
+            }
         }
     }
 }
@@ -181,11 +183,7 @@ function DisplayTaskList(Resultxml) {
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
-    }
-    else if (NodeListLen > PageSize) {
-        paging_Task(curpage, nowblock);
-    }
-    else {
+    } else {
         if (CrossYN()) {
             var xmlLIST = createXmlDom();
             var nodeToImport = xmlLIST.importNode(ListViewData, true);
@@ -210,162 +208,9 @@ function DisplayTaskList(Resultxml) {
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
-
-        pagingCount_Task(curpage, nowblock);
     }
 
     listLoading(false); // 20201215 강승구 로딩바 display:none
-}
-
-
-function paging_Task(p_page, p_nowblock) {
-    var count = NodeList.item(0).childNodes.length;
-
-    var s_page = PageSize * (p_page - 1) + 1;
-    var e_page = PageSize * p_page;
-
-    if (totalPage == p_page) {
-        if (NodeListLen % PageSize != 0) {
-            e_page = s_page + (NodeListLen % PageSize) - 1;
-        }
-    }
-
-    var xmlpara = createXmlDom();
-
-    var objRoot = xmlpara.createNode(1, "LISTVIEWDATA", "");
-    xmlpara.appendChild(objRoot);
-    objRoot.appendChild(Headers.cloneNode(true));
-
-    var x_ROWS = xmlpara.createNode(1, "ROWS", "");
-    objRoot.appendChild(x_ROWS);
-
-    var i;
-    for (i = s_page; i <= e_page; i++) {
-        x_ROWS.appendChild(NodeList[i - 1].cloneNode(true));
-    }
-
-    if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
-    var DocList = new ListView();                           
-    DocList.SetID("DocList");                               
-    DocList.SetMulSelectable(true);                        
-                              
-    DocList.SetRowOnClick("lvtDoclist_onselchanged");           
-    DocList.SetRowOnDblClick("btnViewTaskInfo_onclick");      
-    DocList.SetTitleIdx(0);                                  
-
-    DocList.DataSource(xmlpara);                             
-    DocList.DataBind("lvtDoclist");                          
-    DocList = null;
-
-    pagingCount_Task(p_page, p_nowblock);
-}
-
-function pagingCount_Task(p_page, p_nowblock) {
-    var td;
-    PageNum.innerText = "";
-    curpage = p_page;
-    nowblock = p_nowblock;
-    var Gopage;
-    var comNoPerPage = PageSize;
-    var nextPage, mychoice, prevPage, total_block;
-    totalPage = parseInt(NodeListLen / comNoPerPage);
-    var strtext = "";
-    if (((totalPage * comNoPerPage) != NodeListLen) && ((NodeListLen % comNoPerPage) != 0)) {
-        totalPage = totalPage + 1;
-    }
-
-    if (curpage < totalPage)
-        nextPage = parseInt(curpage) + 1;
-    else
-        nextPage = totalPage;
-
-
-    if (curpage > 1)
-        prevPage = parseInt(curpage) - 1;
-    else
-        prevPage = 1;
-
-    mychoice = PageSize;
-
-    total_block = parseInt(totalPage / mychoice);
-
-    if (totalPage % mychoice == 0)
-        total_block = total_block - 1;
-
-
-    if (totalPage > 1) {
-        if (nowblock > 0) {
-            strtext = "<a onclick= 'return paging_Task(" + ((nowblock - 1) * mychoice + 1) + "," + (nowblock - 1) + ")' style='cursor:pointer'>";
-            strtext = strtext + "<img src='/images/page_previous.gif' border='0' align='absmiddle'>&nbsp;</a>";
-            td_Create_Task(strtext);
-        }
-
-        if (curpage != 1 && NodeListLen != 0) {
-            if (((curpage - 1) % mychoice) == 0) {
-                block = nowblock - 1;
-                strtext = "<a onclick= 'return paging_Task(" + prevPage + "," + block + ")' style='cursor:pointer'>&nbsp";
-            }
-            else {
-                block = nowblock;
-                strtext = "<a onclick= 'return paging_Task(" + prevPage + "," + block + ")' style='cursor:pointer'>&nbsp";
-            }
-
-            strtext = strtext + "<img src='/images/page_previous.gif' border='0' align='absmiddle'></a>&nbsp;";
-            td_Create_Task(strtext);
-        }
-
-        if (total_block != nowblock) {
-            for (Gopage = 1; Gopage <= mychoice; Gopage++) {
-
-                if (curpage != nowblock * mychoice + Gopage) {
-                    strtext = "<a onclick='return paging_Task(" + ((nowblock * mychoice) + Gopage) + "," + nowblock + ")' style='cursor:pointer'>";
-                    strtext = strtext + "" + "<span style = font-size:'10pt'>" + ((nowblock * mychoice) + Gopage) + "</span></a>&nbsp;";
-                    td_Create_Task(strtext);
-                }
-                else
-                {
-                    strtext = "<b><span style = font-size:'10pt'>" + ((nowblock * mychoice) + Gopage) + "</span></b>&nbsp;";
-                    td_Create_Task(strtext);
-
-                }
-            }
-        }
-        else {
-            for (Gopage = 1; Gopage <= totalPage - mychoice * nowblock; Gopage++) {
-                if (curpage != nowblock * mychoice + Gopage) {
-                    strtext = "<a onclick='return paging_Task(" + ((nowblock * mychoice) + Gopage) + "," + nowblock + ")' style='cursor:pointer'>";
-                    strtext = strtext + "" + "<span style = font-size:'10pt'>" + ((nowblock * mychoice) + Gopage) + "</span></a>&nbsp;";
-                    td_Create_Task(strtext);
-                }
-                else
-                {
-                    strtext = "<b><span style = font-size:'10pt';>" + ((nowblock * mychoice) + Gopage) + "</span></b>&nbsp;";
-                    td_Create_Task(strtext);
-                }
-            }
-        }
-
-        if ((curpage != totalPage) && (NodeListLen != 0)) {
-            if ((curpage % mychoice) == 0) {
-                block = (nowblock + 1);
-                strtext = "&nbsp<a onclick='return paging_Task(" + nextPage + "," + block + ")' style='cursor:pointer' >";
-            }
-            else {
-                block = nowblock;
-                strtext = "&nbsp<a onclick='return paging_Task(" + nextPage + "," + block + ")' style='cursor:pointer' >";
-            }
-
-            strtext = strtext + "<img src='/images/page_next.gif' border='0' align='absmiddle'></a>&nbsp;";
-            td_Create_Task(strtext);
-
-        }
-
-        if ((total_block > 0) && (nowblock < total_block)) {
-            strtext = "<a onclick='return paging_Task(" + ((nowblock + 1) * mychoice + 1) + "," + (nowblock + 1) + ")' style='cursor:pointer'>";
-            strtext = strtext + "<img src='/images/page_next.gif' border='0' align='absmiddle'></a>";
-            td_Create_Task(strtext);
-        }
-    }
 }
 
 function td_Create_Task(strtext) {
@@ -529,15 +374,34 @@ function btnUpdateTaskReq_onclick() {
 function GetTaskFullListXml() {
 	var tempRet;
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		url : "/admin/ezApprovalG/getTaskFullList.do",
 		async : false,
 		data : {deptCode : DeptID, companyID : CompanyID, pageSize : PageSize, pageNo : curpage, langType : UserLang},
 		success : function (result) {
 			tempRet = loadXMLString(result);
 		},
-		error : function() {
+		error : function(error) {
+		    console.log(error);
 			tempRet = loadXMLString("<RESULT>FALSE</RESULT>");
+		}
+	});
+	return tempRet;
+}
+
+function getTaskCount() {
+    var tempRet;
+    $.ajax({
+		type : "GET",
+		dataType: 'json',
+		url : "/admin/ezApprovalG/getTaskCount.do",
+		async : false,
+		data : {deptCode : DeptID, companyID : CompanyID},
+		success : function(result) {
+			tempRet = result.taskCount;
+		},
+		error : function(error) {
+			console.log(error);
 		}
 	});
 	return tempRet;
@@ -653,11 +517,7 @@ function DisplayTaskList_Admin(Resultxml) {
         DocList.DataSource(xmlDoc);
         DocList.DataBind("lvtDoclist");
         DocList = null;
-    }
-    else if (NodeListLen > PageSize) {
-        paging_Task(curpage, nowblock);
-    }
-    else {
+    } else {
         if (CrossYN()) {
             var xmlLIST = createXmlDom();
             var nodeToImport = xmlLIST.importNode(ListViewData, true);
@@ -682,8 +542,99 @@ function DisplayTaskList_Admin(Resultxml) {
         DocList.DataSource(xmlDoc);
         DocList.DataBind("lvtDoclist");
         DocList = null;
-
-        pagingCount_Task(curpage, nowblock);
     }
     
+}
+
+function removeAllChildNode(element) {
+    if (element != null) {
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+    }
+}
+
+function makePagenationBar() {
+    var pageNavBox = $("<div class='pagenavi'>");
+    pageNum = curpage;
+    
+    var getFirstBtn = $('<span class="btnimg">');
+    var getPrevBlockBtn = $('<span class="btnimg">');
+    var getNextBlockBtn = $('<span class="btnimg">');
+    var getLastBtn = $('<span class="btnimg">');
+    
+    if (curpage != 1) {
+        $(getFirstBtn).on("click", getFirstPage);
+        $(getFirstBtn).append("<img src='/images/kr/cm/btn_p_prev.gif'>");
+    } else {
+        $(getFirstBtn).append("<img src='/images/kr/cm/btn_p_prev01.gif'>");
+    } 
+    if (curpage != totalPage) {
+        $(getLastBtn).on("click", getLastPage);
+        $(getLastBtn).append('<img src="/images/kr/cm/btn_n_next.gif">');
+    } else {
+        $(getLastBtn).append('<img src="/images/kr/cm/btn_n_next01.gif">');
+    }
+             
+    if (Math.ceil(curpage/10) < Math.ceil(totalPage/10)) {
+        $(getNextBlockBtn).on("click", getNextBlockPage);
+        $(getNextBlockBtn).append('<img src="/images/kr/cm/btn_next.gif">')
+    } else {
+        $(getNextBlockBtn).append('<img src="/images/kr/cm/btn_next01.gif">')
+    }
+    
+    if (Math.ceil(curpage/10) > 1) {
+        $(getPrevBlockBtn).on("click", getPrevBlockPage);
+        $(getPrevBlockBtn).append('<img src="/images/kr/cm/btn_prev.gif">')
+    } else {
+        $(getPrevBlockBtn).append('<img src="/images/kr/cm/btn_prev01.gif">')
+    }
+
+    removeAllChildNode($('#tblPageRayer')[0]); // 기존 네비 삭제
+    
+    $(pageNavBox).append(getFirstBtn); 
+    $(pageNavBox).append(getPrevBlockBtn);
+    for (let i = 1 ; i < 11 ; i++) {
+        var btnPageNum = Math.floor(curpage/10)*10 + i;
+        var pageBtn = $('<span>');
+        if (btnPageNum > totalPage) {
+            break;
+        }
+        if (btnPageNum == curpage) {
+             $(pageBtn).addClass('on');
+        } else {
+            $(pageBtn).on("click", goToPageByNumTask);
+        }
+        $(pageBtn).text(btnPageNum);
+        $(pageNavBox).append(pageBtn);
+    }
+    $(pageNavBox).append(getNextBlockBtn);
+    $(pageNavBox).append(getLastBtn);
+    $('#tblPageRayer').append(pageNavBox);
+    GetTaskFullList();
+}
+
+function getFirstPage() {
+    curpage = 1;
+    makePagenationBar();
+}
+
+function getLastPage() {
+    curpage = totalPage;
+    makePagenationBar();
+}
+
+function getPrevBlockPage() {
+    curpage = (Math.ceil(curpage/10) - 2)*10 + 1;
+    makePagenationBar();
+}
+
+function getNextBlockPage() {
+    curpage = (Math.ceil(curpage/10))*10 + 1;
+    makePagenationBar();
+}
+
+function goToPageByNumTask() {
+    curpage = $(event.target).text();
+    makePagenationBar();
 }

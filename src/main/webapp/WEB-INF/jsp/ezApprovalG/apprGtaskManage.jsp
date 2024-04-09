@@ -14,19 +14,18 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TaskManage_Cross.js')}"></script>
-    	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabCategoryInfo_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var OrderCell = "";
 		    var xmlhttp = createXMLHttpRequest();	
 		    var xmldoc = createXmlDom();		
 		    var NodeList, nowblock,totalPage,block,p_page,p_nowblock,Init_Flag,DocList_Flag,DocTitle;
 		    var DeptAdminYN,AdminYN; 
-		    var OrganID;
 		    var PageFlag="0";
 		    var g_ListFlag="1";
 		    var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen;
@@ -52,6 +51,10 @@
 		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";			
 		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";			
 		    var UserLang = "<c:out value='${userInfo.lang}'/>";
+		    var taskCount = "<c:out value='${taskCount}'/>"; // 단위업무 전체 갯수
+		    var pageAdminFlag = 'user'
+		    var deptID = "<c:out value='${userInfo.deptID}'/>";  
+		    
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -61,21 +64,19 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        PageSize = -1; // 2018-08-25 강민수92 단위업무관리는 페이징이아닌 스크롤로 사용됨으로 페이지사이즈 -1로 바꿔줌
-		        Block_Size = 10;
-		        curpage = 1;
+		        PageSize = 20; // 한 페이지에서 표출하는 항목 갯수
+		        curpage = 1; // 현재 페이지
 		        nowblock = 0;
-		        totalPage = 0;
-		        OrganID = CompanyID;
-		        GetTaskFullList();
+		        totalPage = Math.ceil(taskCount/PageSize); // 총 페이지 수
+		        makePagenationBar();
 		        DocList_Resizer();
 		    };
 		    window.onresize = function () {
 		    	DocList_Resizer();
 		    };
 		    function DocList_Resizer() {
-		    	var CurrentHeight = document.documentElement.clientHeight;
-		    	document.getElementById("divList").style.height = (CurrentHeight - 105) + "px";
+		    	var currentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+                document.getElementById("divList").style.height = (currentHeight - 69) + "px";
 		    }
 		    function lvtDoclist_onselchanged() {
 		        var DocList = new ListView();
@@ -132,16 +133,22 @@
 		    
 		 	// 2020-11-23 더블클릭 이벤트 추가 - 박기범
 		    function btnViewTask_onclick() {
-		        var tempDeptID = DeptID;
-		        DeptID = "";
+		        var tempDeptID = deptID;
+		        deptID = "";
 		        btnViewTaskInfo_onclick();
-		        DeptID = tempDeptID;
+		        deptID = tempDeptID;
 		    }
+		    
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezApprovalG.t717'/></h1>
-		<div class="page"><span id="listcount"></span><span id="PageNum"></span></div>  
+		<h1>
+		    <spring:message code='ezApprovalG.t717'/>
+		    <span id='TitleInfo' style='color: #666; font-weight:normal;'>
+		     &nbsp;
+		     <span id='listcount' style='color:#017BEC; font-weight:bold;'></span>
+		    </span>
+		</h1>
 		<div id="mainmenu">
 		<ul>
 			<li id=btnAddTempTask style="display:none"><span onClick="return btnCreateTask_onclick()" ><spring:message code='ezApprovalG.t809'/></span></li>
@@ -156,9 +163,12 @@
 			<li id=istat2 ><span class="icon16 icon16_search" onClick="return btnFindTaskFullList_onclick()"></span></li>
 		</ul>
 		</div>
-		<div class="div_scroll"  style="width:100%;HEIGHT:100%; overflow:AUTO" id="divList">
-		    <div ID="lvtDoclist"></div>
-		</div>    
+		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+            <div id="divList" class="div_scroll" style="width: 100%; height: 641x; overflow: AUTO; margin-bottom:10px;">
+                <div ID="lvtDoclist"></div>
+            </div>
+            <div id="tblPageRayer"></div>
+        </span>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
