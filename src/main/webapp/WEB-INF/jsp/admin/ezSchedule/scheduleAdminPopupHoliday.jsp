@@ -56,10 +56,17 @@
 		                document.getElementById("rest").checked = true;
 		        }
 	            if (holidayType == "s") {
-	            	document.getElementById("repeat").checked = true;
-	            	//$('#repeat').attr('disabled', true);
-	            	document.getElementById("rest").checked = true;
-	            	//$('#rest').attr('disabled', true);
+	                if (issolar != "1")
+                        document.getElementById("date2").checked = true;
+
+                    if (isrepeat == "1")
+                        document.getElementById("repeat").checked = true;
+	            	    //$('#repeat').attr('disabled', true);
+
+                    if (isrest == "1")
+                        document.getElementById("rest").checked = true;
+	            	    //$('#rest').attr('disabled', true);
+
 	            }
 		        //음력 양력 숨기기
 		        if (lang != "1")
