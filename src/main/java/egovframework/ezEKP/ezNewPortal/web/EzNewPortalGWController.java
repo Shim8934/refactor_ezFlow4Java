@@ -4500,25 +4500,27 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
-			
-			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
+			int tenantID = info.getTenantId();
+
+			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
+			int userLocalLang = Integer.parseInt(ezCommonService.selectUserGetLang(userId, tenantID));	// 유저 사용 언어 설정값
 			int primLang = Integer.parseInt(primaryLang);
 			
 			String cityCode = request.getParameter("cityCode");
 			
 			if (cityCode == null || cityCode.equals("")) {
-				cityCode = ezNewPortalService.getUserCityCode(info.getId(), info.getTenantId());
+				cityCode = ezNewPortalService.getUserCityCode(info.getId(), tenantID);
 				if (cityCode == null || cityCode.equals("")) {
 					cityCode = "none";
 				}
 			} else {
-				ezNewPortalService.setUserCityCode(info.getId(), info.getTenantId(), cityCode);
+				ezNewPortalService.setUserCityCode(info.getId(), tenantID, cityCode);
 			}
 			
 			JSONObject data = new JSONObject();
 			
 			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primLang);
-			List<WeatherVO> cityList = ezNewPortalService.getCityList(primLang);
+			List<WeatherVO> cityList = ezNewPortalService.getCityList(userLocalLang);
 			data.put("lang", info.getLang());
 			data.put("cityList", cityList);
 			

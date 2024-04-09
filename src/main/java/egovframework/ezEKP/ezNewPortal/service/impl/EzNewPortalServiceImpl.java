@@ -3012,10 +3012,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<WeatherVO> getCityList(int primaryLang) {
+	public List<WeatherVO> getCityList(int userLocalLang) {
 		logger.debug("getCityList started.");
-
-		List<WeatherVO> result = ezNewPortalDAO.getCityList(primaryLang);
+		
+		List<WeatherVO> result = ezNewPortalDAO.getCityList(userLocalLang);
 		
 		logger.debug("getCityList ended.");
 

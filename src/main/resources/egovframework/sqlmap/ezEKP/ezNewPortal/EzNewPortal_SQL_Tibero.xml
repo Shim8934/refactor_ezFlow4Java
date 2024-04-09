@@ -3567,21 +3567,25 @@ WHERE
 
 <select id="ezNewPortal.getCityList" parameterClass="Integer" resultMap="WeatherVO">
 <![CDATA[
-SELECT
-	SN,
-	CITYCODE,
-	CITYNAME,
-	DISPLAYCITYNAME,
-	PRIMARYLANG,
-	CURRENTWEATHER,
-	TODAYWEATHER
-FROM
-	TBL_WEATHER
-WHERE
-	PRIMARYLANG = #primaryLang#
-ORDER BY
-	TO_NUMBER(SN) asc
-]]>
+	SELECT
+		A.SN,
+		A.CITYCODE,
+		A.CITYNAME,
+		B.DISPLAYCITYNAME,
+		A.PRIMARYLANG,
+		A.CURRENTWEATHER,
+		A.TODAYWEATHER
+	FROM
+		TBL_WEATHER A
+	JOIN
+		TBL_WEATHER_CITY B
+	ON
+		A.CITYCODE = B.CITYCODE
+	WHERE
+		B.USERLOCALLANG = #userLocalLang#
+	ORDER BY
+		TO_NUMBER(SN) asc
+	]]>
 </select>
 
 <select id="ezNewPortal.getUserCityCode" parameterClass="Map" resultClass="String">

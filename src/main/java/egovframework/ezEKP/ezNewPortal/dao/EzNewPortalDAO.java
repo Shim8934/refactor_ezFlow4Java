@@ -623,8 +623,8 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<WeatherVO> getCityList(int primaryLang) {
-		return (List<WeatherVO>) list("ezNewPortal.getCityList", primaryLang);
+	public List<WeatherVO> getCityList(int userLocalLang) {
+		return (List<WeatherVO>) list("ezNewPortal.getCityList", userLocalLang);
 	}
 
 	public String getUserCityCode(Map<String, Object> map) {
