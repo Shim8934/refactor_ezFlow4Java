@@ -228,10 +228,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (sendOutDept.toUpperCase().indexOf(userInfo.getDeptID().toUpperCase()) > -1) {
 			userSendOut = "YES";
 		}
-		
+
 		String infoXML = ezOrganService.getPropertyValue(userInfo.getDeptID(), "extensionAttribute4", userInfo.getTenantId());
 		String relayShowFlag = "N";
-		if (infoXML != null && infoXML.equals(config.getProperty("config.companyNum", ""))) {
+		// 개인의 심사자 권한도 체크하도록 추가해줌.
+		if (infoXML != null && infoXML.equals(config.getProperty("config.companyNum", "")) && userInfo.getRollInfo().contains("i=1")) {
 		    relayShowFlag = "Y";
 		}
 		
