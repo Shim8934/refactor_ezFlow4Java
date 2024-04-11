@@ -952,7 +952,7 @@
 		            chk_Passwd();
 		        }
 		        else {
-		            if (IsSkipDrafter == "FALSE") {
+		            if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
 		                var ret;
 		                var parameter = new Array();
 		
@@ -978,7 +978,7 @@
 		            return;
 		        }
 		
-		        if (IsSkipDrafter == "FALSE") {
+		        if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
 		            var ret;
 		            var parameter = new Array();
 		
