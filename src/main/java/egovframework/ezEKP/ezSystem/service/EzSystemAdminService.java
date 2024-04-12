@@ -7,6 +7,7 @@ import java.util.Map;
 
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
@@ -71,4 +72,8 @@ public interface EzSystemAdminService {
 	public void insertUserChangeHist(UserChangeInfoVO userChangeInfoVO , LoginVO userInfo) throws Exception;	
 	List<UserChangeInfoVO> getUserChHistList(int tenantID, String offset, int startPage, int maxItemPerPage, String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
 	public int getUserChHistListCount(int tenantID, String offset, String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
+
+	List<DeptChangeInfoVO> getDeptChHistList(int tenantID, String offset, int startPage, int maxItemPerPage, String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
+	public int getDeptChHistListCount(int tenantID, String offset, String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
+	public void insertDeptChangeHist(DeptChangeInfoVO deptChangeInfoVO, LoginVO userInfo) throws Exception;
 }

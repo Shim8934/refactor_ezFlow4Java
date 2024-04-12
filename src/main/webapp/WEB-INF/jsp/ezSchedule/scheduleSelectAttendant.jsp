@@ -856,7 +856,7 @@
 	                    M_TR.style.cursor = "pointer";
 	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.onmousedown = function () { event_listclick(this); };
 	                    M_TR.ondblclick = function () { event_listDBclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
@@ -951,7 +951,7 @@
 	                    M_TR.style.cursor = "pointer";
  	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.onmousedown = function () { event_listclick(this); };
 	                    M_TR.ondblclick = function () { event_listDBclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };

@@ -1899,7 +1899,7 @@ function scroll() {
 			
 				var lastTh = $("#res_HEAD tr th").last();
 				lastTh.attr("id", "forScroll");
-				lastTh.css("width", "16px");
+				lastTh.css("width", "11px");
 				//lastTh.css("border-bottom-width", "0px");
 		}
 	}

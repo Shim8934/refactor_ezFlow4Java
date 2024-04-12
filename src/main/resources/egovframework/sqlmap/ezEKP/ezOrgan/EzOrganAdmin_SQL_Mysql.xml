@@ -336,7 +336,8 @@
 	<select id="EzOrganAdminDAO.moveDBData_S1" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
 			SELECT
-				DEPT_CD_PATH
+				DEPT_CD_PATH,
+				DEPTLEVEL
       		FROM
       			TBL_DEPTMASTER 
       		WHERE
@@ -373,7 +374,8 @@
       			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, CONCAT(#v_DEPT_CD_PATH#, ',', #v_CN#)),
                 EXTENSIONATTRIBUTE2 = #v_EXTENSIONATTRIBUTE2#,
                 EXTENSIONATTRIBUTE3 = #v_EXTENSIONATTRIBUTE3#,
-                COMPNM2 = #v_COMPNM2#
+                COMPNM2 = #v_COMPNM2#,
+                DEPTLEVEL = DEPTLEVEL + #v_DEPTLEVEL_CHANGE#
       		WHERE
       			DEPT_CD_PATH LIKE CONCAT(#v_DEPT_CD_PATH_OLD#, ',%')
             AND
@@ -5489,6 +5491,13 @@
 	
 	<select id="EzOrganAdminDAO.getDeptDisplayNm" parameterClass="OrganDeptVO" resultClass="OrganDeptVO">
 		SELECT DISPLAYNAME, DISPLAYNAME2
+		FROM TBL_DEPTMASTER
+		WHERE CN = #cn#
+		AND TENANT_ID = #tenantId#
+	</select>
+
+	<select id="EzOrganAdminDAO.getDeptParentCn" parameterClass="OrganDeptVO" resultClass="String">
+		SELECT EXTENSIONATTRIBUTE1
 		FROM TBL_DEPTMASTER
 		WHERE CN = #cn#
 		AND TENANT_ID = #tenantId#

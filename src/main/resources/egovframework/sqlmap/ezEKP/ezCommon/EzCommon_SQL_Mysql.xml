@@ -3851,4 +3851,56 @@
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES ('0', 'loadTimeForApprAll', '200', '다안기안 문서 표출 시 글꼴,스크롤 오류를 해결하기 위한 setTimeout 시간. 네트워크 환경에 따라 적절한 시간 조절을 위해 사용(default:200)', '다안기안 문서 로딩시간', '2024-01-11 00:00:00', '전자결재G')
     </insert>
+
+	<select id="EzCommonDAO.checkTblDeptChangeInfo" resultClass="String">
+		<![CDATA[
+			SELECT
+				SEQ
+			FROM
+				TBL_DEPT_CHANGE_INFO
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblDeptChangeInfo">
+		CREATE TABLE `tbl_dept_change_info` (
+		`SEQ` int(10) NOT NULL AUTO_INCREMENT,
+		`DEPTID` varchar(80) NOT NULL,
+		`DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`PARENT_DEPTID` varchar(80) DEFAULT NULL,
+		`PARENT_DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`PARENT_DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`COMPANYID` varchar(120) DEFAULT NULL,
+		`COMPANYNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`COMPANYNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`UPDATEDT` datetime DEFAULT NULL,
+		`TARGET_DEPTID` varchar(80) DEFAULT NULL,
+		`TARGET_DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`TARGET_DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`UPDATE_TYPE` varchar(200) DEFAULT NULL,
+		`EXECUTORID` varchar(80) DEFAULT NULL,
+		`EXECUTORNM` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`EXECUTORNM2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`EXECUTORIP` varchar(20) DEFAULT NULL,
+		`TENANTID` mediumint(5) NOT NULL,
+		PRIMARY KEY (`SEQ`)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkSurveyPostingMaxPeriodConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'SurveyPostingMaxPeriod'
+		  AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertSurveyPostingMaxPeriodConfig">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'SurveyPostingMaxPeriod', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '전자설문 종료 후 게시기간 설정', '2024-03-26 00:00:00', '전자설문')
+	</insert>
 </sqlMap>

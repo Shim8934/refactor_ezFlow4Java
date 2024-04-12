@@ -320,4 +320,8 @@ public interface EzCommonService {
 	public void insertTenantConfigLangQuaternary() throws Exception;
 	
 	public void insertLoadTimeForApprAllConfig() throws Exception;
+
+	public void createTblDeptChangeInfo() throws Exception;
+
+	public void insertSurveyPostingMaxPeriodConfig() throws Exception;
 }

@@ -547,7 +547,7 @@ function func_addaddr_Complete(ret) {
     	// duplicateList 동일한 메일주소
     	
     	if (duplicateList.length > 0) {
-    		var alertMsg = strLang136 + "\n" + strLangKSA01;
+    		var alertMsg = strLangKSA01;
     		var dupliNameTxt = [];
     		
     		$.each(duplicateList, function(i, e) {

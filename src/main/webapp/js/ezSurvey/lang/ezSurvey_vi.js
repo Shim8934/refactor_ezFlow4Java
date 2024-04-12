@@ -76,7 +76,7 @@ var SurveyMessages = {
     strSlider7: "Khoảng thời gian",
     strSlider8: "Tối thiểu",
     strSlider9: "Tối đa",
-    strSlider10: "'Giá trị của (tối đa tối đa) ÷lival' phải nhỏ hơn hoặc bằng 200.",
+    strSlider10: "Đặt số đếm thành số tự nhiên từ 200 trở xuống.",
     strOptErr: "Cần ít nhất hai chế độ xem.",
     strMaxtrix1: "Cần ít nhất một hàng.",
     strMaxtrix2: "Cần ít nhất một cột.",
@@ -160,5 +160,8 @@ var SurveyMessages = {
 
 	/* 2021-12-10 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "Unacceptable extension.",
-	srtLangHSBEx02 : "Limited extension upload files."
+	srtLangHSBEx02 : "Limited extension upload files.",
+    /* 2024-03-26 양지혜 - 게시기간 메시지 추가 */
+    strLangYJH01 : "Có thể đăng tối đa ",
+    strLangYJH02 : " ngày."
 }

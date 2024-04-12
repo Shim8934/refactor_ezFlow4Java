@@ -24,7 +24,7 @@
 						<span class='period-span'><spring:message code="ezSurvey.t44"/></span>
 						<c:choose>
 							<c:when test="${survey.resultPublicFlag == 0}"><input class="date-input" value="" tabindex="1" disabled></c:when>
-							<c:otherwise><input class="date-input" value="${survey.openDays}" tabindex="1"></c:otherwise>
+							<c:otherwise><input type ="number" class="date-input" value="${survey.openDays}" tabindex="1" min="0" max=${maxPeriod}></c:otherwise>
 						</c:choose>
 						<span><spring:message code="ezSurvey.t45"/></span>
 					</td>

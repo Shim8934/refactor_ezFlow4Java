@@ -185,14 +185,15 @@
 			var portletNameListCount = portletNameList.length;
 			var nameList = [];
 			var portletNameEmptyNum = 0;
-			//특수문자  체크
-			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			
+			//특수문자  체크 (앤드&, 소괄호(), 슬래쉬/만 허용함)
+			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\-_+<>@\#$%\\\=\'\"]/g;
 			const regex = new RegExp(special_pattern);
 			
 			for (var i = 0; i < portletNameListCount; i++) {
 				
 				if (regex.test($.trim(portletNameList[i].value))) {
-					alert("<spring:message code='ezNewPortal.ljw01' />");
+					alert("<spring:message code='ezNewPortal.csj01' />");
 				    return;
 				}
 				
@@ -330,14 +331,15 @@
 			var portletNameListCount = portletNameList.length;
 			var nameList = [];
 			var portletNameEmptyNum = 0;
-			// 특수문자 체크
-			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			
+			//특수문자 체크 (앤드&, 소괄호(), 슬래쉬/만 허용함)
+			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\-_+<>@\#$%\\\=\'\"]/g;
 			const regex = new RegExp(special_pattern);
 			
 			for (var i = 0; i < portletNameListCount; i++) {
 
 				if (regex.test($.trim(portletNameList[i].value))){
-					alert("<spring:message code='ezNewPortal.ljw01' />");
+					alert("<spring:message code='ezNewPortal.csj01' />");
 				    return;
 				}
 				

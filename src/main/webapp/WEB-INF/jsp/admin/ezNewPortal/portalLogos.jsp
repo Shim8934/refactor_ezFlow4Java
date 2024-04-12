@@ -11,14 +11,14 @@
 		<style type="text/css">
 			.logoTitle {padding:0px;font-size: 14px !important;font-weight:bold;margin: 0px 0px 5px 0px;}
 	         .logoIconInfo {display:inline-block;vertical-align:top;margin:10px 10px 20px 0px;}
-	         .logoIcon {width:250px;height:135px;border:1px solid #d9d9d9;margin-bottom:10px;text-align:center;vertical-align:middle;}
-	         .logoIcon span, .logoIcon img {margin:48px;}
+	         .logoIcon {width:250px;height:135px;border:1px solid #d9d9d9;margin-bottom:10px;text-align:center;vertical-align:middle;display: flex; justify-content: center; align-items: center;}
+	         .logoIcon span, .logoIcon img {/* margin:48px; */}
 	         .logoContent {display:inline-block; }
 	         .btnpositionJsp {display : inline-block;}
 	         .logoContent ul {margin-top:5px;padding-left:7px;}
 	         .logoContent ul li {font-size: 12px;display:block;padding: 2px 0px;}
 	         .deleteLogoBtn {display : none;}
-	         .loginLogo .logoIcon img {width:137px; height:38px;}
+	         .loginLogo .logoIcon img {width:229px; height:81px;}
 	         .portalLogo .logoIcon img {width:106px; height:42px;}
 		</style>
 	</head>
@@ -275,7 +275,7 @@
 						if (logoType == "L") {
 							document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
 							document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
-							logoUrl = "/images/kr/login/logo.gif";
+							logoUrl = "/images/kr/login/logo.svg";
 							document.getElementsByClassName("loginLogo")[0].querySelector(".logoIcon").querySelector("img").src = logoUrl;
 							
 						} else if (logoType == "P") {

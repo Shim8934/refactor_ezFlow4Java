@@ -97,7 +97,11 @@
 		    		
 		    		var optionHtml = "";
 	                for (var i = 0; i < yearLength; i++) {
-	                	optionHtml += "<option value='" + tempyear + "' ";
+						if (i == 0) {
+							optionHtml += "<option selected value='" + tempyear + "' ";
+						} else {
+							optionHtml += "<option value='" + tempyear + "' ";
+						}
 	                	if (annualGnrtStd == 1) {
 	                		if(initialDate.substring(5, 7) < todayMonth || (initialDate.substring(5, 7) == todayMonth && initialDate.substring(8, 10) < todayDate)) {
 	                			startDate = tempyear + "-" + initialDate.substring(5, 10);
@@ -132,11 +136,16 @@
                 
 	    	function useAnnualHistory() {
 	    		var startDate = $("#searchYear option:selected").attr("startDate");
+				console.log(startDate);
 	    		var endDate = $("#searchYear option:selected").attr("endDate");
+				var startYear = "";
+				var joinYear = "";
 	    		var secondYear = "N";
-	    		
-	    		var startYear = startDate.substring(0, 4);
-    			var joinYear = joinDate.substring(0, 4);
+				
+				if (startDate != null) {
+					startYear = startDate.substring(0, 4);
+					joinYear = joinDate.substring(0, 4);
+				}
     			
     			var startDate2 = new Date(startDate);
     			var endDate2 = new Date(endDate);

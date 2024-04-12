@@ -5566,6 +5566,8 @@
 			                TENANT_ID = #tenantID# 
 			            AND 
 			            	COMPANYID = #companyID#
+			            AND
+			                DELFLAG = '0'
 			            GROUP BY 
 			            	CABINETCLASSNO,TENANT_ID,COMPANYID) TBMAXVOL
 			                INNER JOIN

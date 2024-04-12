@@ -20,6 +20,9 @@
 		    var ret = new Array();
 		    //2018-08-24 배현상, 확장자 변경 문제
 		    var storeExp;
+			// 2024-02-19 양지혜 - 첨부파일명 최대 길이
+			var attachFileNameMaxLength = Number("<c:out value ='${attachFileNameMaxLength}'/>");
+
 		    function btn_SaveAprDeptTempletName_onclick() {
 		        var p_AprDeptTempletName = txtPageNum.value;
 		        var p_DisplayName = txtDisplayName.value;
@@ -57,6 +60,14 @@
 		            txtDisplayName.focus();
 		            return;
 		        }
+
+				if (p_DisplayName.length > attachFileNameMaxLength) {
+					var pAlertContent = "<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />";
+					OpenAlertUI(pAlertContent);
+					txtPageNum.focus();
+					return;
+				}
+
 
 		        ret[0] = "OK";
 		        ret[1] = p_AprDeptTempletName;

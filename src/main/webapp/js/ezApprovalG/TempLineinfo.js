@@ -292,7 +292,7 @@ function btn_ModifyToAprLine_onclick() {
         return;
     }
     else {
-        var windowName = "/ezApprovalG/aprLineTempletName.do";
+        var windowName = "/ezApprovalG/aprLineTempletName.do?mode=modify";
         var dialogValue = new Array();
         dialogValue[0] = pUserID;
         dialogValue[1] = pFormID;

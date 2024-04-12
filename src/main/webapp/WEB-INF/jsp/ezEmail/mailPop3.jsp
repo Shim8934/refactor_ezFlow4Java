@@ -458,12 +458,17 @@
 		    }
 		</script>
 	</head>
-	<c:if test="${userLang == '3'}">
-	<c:set var="tableWidth" value="750" />
-	</c:if>
-	<c:if test="${userLang != '3'}">
-	<c:set var="tableWidth" value="720" />
-	</c:if>
+	<c:choose>
+		<c:when test="${userLang == '3'}">
+		<c:set var="tableWidth" value="750" />
+		</c:when>
+		<c:when test="${userLang == '2'}">
+		<c:set var="tableWidth" value="770" />
+		</c:when>
+		<c:otherwise>
+		<c:set var="tableWidth" value="720" />
+		</c:otherwise>
+		</c:choose>
 	<body onload="javascript:window_onload()" style="margin-left:10px;margin-right:10px;">
 		<br>
 		<div class="txt" style="margin-bottom:25px">
