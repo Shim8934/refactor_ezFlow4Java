@@ -1430,3 +1430,13 @@ function onEnterPreviewTagInput() {
 		}
 	});
 }
+
+function download_Single_mail() {
+
+    var parameters = "url=" + encodeURIComponent(g_paramURL);
+    var fullpath = "/ezEmail/mailExport.do?" + parameters;
+
+    AttachDownFrame.location.href = fullpath;
+    AttachDownFrame.target = "_blank";
+
+}

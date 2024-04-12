@@ -671,6 +671,7 @@
 		                    <li><span class="icon16 popup_icon16_star" id="btnBookmark" onClick="toggle_flag()"></span></li>
 		                    <li><span class="icon16 popup_icon16_delete" id="btnDelete" onClick="delete_mail()"></span></li>
 		                    <li><span class="icon16 popup_icon16_print" id="btnPrint" onClick="btnPrint_onClick()"></span></li>
+							<li id="btnExport" onclick="download_Single_mail()"><spring:message code="ezEmail.t378" /></li>
 		                    <c:if test="${pnFlag=='Y'}">
 			                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
 			                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>
@@ -803,6 +804,8 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			window_onresize();
 		</script>
+		<%-- 메일 다운로드 iframe--%>
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display:none"></iframe>
 		<form name="form1" action="mailReadContent.do" method="post" target="message" >
 			<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
 		    <input  type="hidden" id="iptURL"  name="iptURL" value="">
