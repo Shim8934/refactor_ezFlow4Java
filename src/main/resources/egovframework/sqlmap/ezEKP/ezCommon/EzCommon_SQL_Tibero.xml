@@ -4182,6 +4182,6 @@
 
 	<insert id="EzCommonDAO.insertSurveyPostingMaxPeriodConfig">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
-		VALUES (#v_TENANTID#, 'SurveyPostingMaxPeriod', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '전자설문 종료 후 게시기간 설정', '2024-03-26 00:00:00', '전자설문')
+		VALUES (#v_TENANTID#, 'SurveyPostingMaxPeriod', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '전자설문 종료 후 게시기간 설정', TO_DATE('2024-03-26 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자설문')
 	</insert>
 </sqlMap>
