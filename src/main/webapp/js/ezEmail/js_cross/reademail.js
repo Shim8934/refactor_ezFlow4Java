@@ -1448,3 +1448,18 @@ function download_Single_mail() {
     AttachDownFrame.target = "_blank";
 
 }
+
+var mail_originalEML_cross_dialogArguments = new Array();
+
+function view_OriginalEML() {
+    mail_originalEML_cross_dialogArguments[1] = DivPopUpHiddenReadMail;
+
+    var parameters = "url=" + encodeURIComponent(g_paramURL);
+    var requestUrl = "/ezEmail/getOriginalEML.do?" + parameters;
+
+    if (typeof(shareId) != "undefined" && shareId != "") {
+        requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    }
+
+    DivPopUpShow(620, 600, requestUrl);
+}

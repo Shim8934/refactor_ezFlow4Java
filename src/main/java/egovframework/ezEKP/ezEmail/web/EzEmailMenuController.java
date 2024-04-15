@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -38,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -2461,5 +2463,101 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("getUserKey ended.");
 		return userkey;
 	}
+
+	@RequestMapping(value = "/ezEmail/getOriginalEML.do", method = RequestMethod.GET)
+	public String getEmlText(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model ,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getOriginText started.");
+
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if ("YES".equals(useSharedMailbox)) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailExport ended.");
+
+					return "";
+				}
+
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+
+		String url = request.getParameter("url");
+		logger.debug("url=" + url);
+
+		long uid = 0;
+		String folderPath = null;
+
+		if (url != null) {
+			int index = url.lastIndexOf("/");
+
+			// separate the passed-in url into a folder path and a message uid
+			if (index != -1) {
+				folderPath = url.substring(0, index);
+				uid = Long.parseLong(url.substring(index + 1));
+			}
+		}
+
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+			Folder folder = ia.getFolder(folderPath);
+
+			String mimetype = "application/octet-stream";
+			response.setContentType(mimetype);
+
+			if (folder == null || !folder.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				folder.open(Folder.READ_ONLY);
+				Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+
+				if (message == null) {
+					logger.error("Message not found. uid=" + uid);
+				} else {
+
+					try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+						message.writeTo(outputStream);
+						String emlText = outputStream.toString();
+
+						//escape 처리
+						emlText	= StringEscapeUtils.escapeHtml3(emlText);
+
+						model.addAttribute("emlText", emlText);
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+
+				folder.close(true);
+			}
+
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+
+
+		logger.debug("getOriginText ended.");
+		return "ezEmail/mailOriginalEMLViewer";
+	}
+	
 	 
 }
