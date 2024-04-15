@@ -21,39 +21,19 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var OrderCell = "";
+			var OrderCell;
 		    var xmlhttp = createXMLHttpRequest();	
 		    var xmldoc = createXmlDom();		
-		    var NodeList, nowblock,totalPage,block,p_page,p_nowblock,Init_Flag,DocList_Flag,DocTitle;
+		    var NodeList, totalPage, p_page, Init_Flag, DocList_Flag, DocTitle;
 		    var DeptAdminYN,AdminYN; 
-		    var PageFlag="0";
-		    var g_ListFlag="1";
-		    var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen;
+		    var PageSize, curpage, ListView, NodeList2, NodeListLen;
 		    var UserID = "<c:out value='${userInfo.id}'/>";
 		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
 		    var DeptID = "<c:out value='${userInfo.deptID}'/>";
 		    var deptName = "<c:out value='${userInfo.deptName}'/>";
-		    var arr_userinfo = new Array();
-		    arr_userinfo[0]  = "user";								
-		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";              
-		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";         
-		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";               
-		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";              
-		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";            
-		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";                         
-		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";               
-		    arr_userinfo[9]  = CompanyID;
-		    arr_userinfo[10] = "";
-		    arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";		
-		    arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";		
-		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";				
-		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";				
-		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";			
-		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";			
 		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var taskCount = "<c:out value='${taskCount}'/>"; // 단위업무 전체 갯수
 		    var pageAdminFlag = 'user'
-		    var deptID = "<c:out value='${userInfo.deptID}'/>";  
 		    
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -66,7 +46,6 @@
 		        }
 		        PageSize = 20; // 한 페이지에서 표출하는 항목 갯수
 		        curpage = 1; // 현재 페이지
-		        nowblock = 0;
 		        totalPage = Math.ceil(taskCount/PageSize); // 총 페이지 수
 		        makePagenationBar();
 		        DocList_Resizer();
@@ -133,10 +112,10 @@
 		    
 		 	// 2020-11-23 더블클릭 이벤트 추가 - 박기범
 		    function btnViewTask_onclick() {
-		        var tempDeptID = deptID;
-		        deptID = "";
+		        var tempDeptID = DeptID;
+		        DeptID = "";
 		        btnViewTaskInfo_onclick();
-		        deptID = tempDeptID;
+		        DeptID = tempDeptID;
 		    }
 		    
 		</script>
@@ -151,16 +130,9 @@
 		</h1>
 		<div id="mainmenu">
 		<ul>
-			<li id=btnAddTempTask style="display:none"><span onClick="return btnCreateTask_onclick()" ><spring:message code='ezApprovalG.t809'/></span></li>
-			<li id=btnUpdateTempReq  style="display:none" ><span onClick="return btnUpdateTempReq_onclick()" ><spring:message code='ezApprovalG.t810'/></span></li>
-			<li id=btnNewTaskReq  style="display:none"><span onClick="return btnNewTaskReq_onclick()"><spring:message code='ezApprovalG.t811'/></span></li>
-			<li id=btnChDeptCodeReq  style="display:none"><span  onClick="return btnChDeptCodeReq_onclick()" ><spring:message code='ezApprovalG.t812'/></span></li>
-			<li id=btnChOwnerDeptReq  style="display:none"><span onClick="return btnChOwnerDeptReq_onclick()" ><spring:message code='ezApprovalG.t813'/></span></li>
-			<li id=btnDisuseTaskReq style="display:none"><span onClick="return btnDisuseTaskReq_onclick()" ><spring:message code='ezApprovalG.t814'/></span></li>
-			<li id=btnUpdateTaskReq style="display:none"><span onClick="return btnUpdateTaskReq_onclick()" ><spring:message code='ezApprovalG.t815'/></span></li>
-			<li id=istat ><span onClick="return btnViewTaskInfo_onclick()" ><spring:message code='ezApprovalG.t527'/></span></li>
-			<li id=iViewHist ><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
-			<li id=istat2 ><span class="icon16 icon16_search" onClick="return btnFindTaskFullList_onclick()"></span></li>
+			<li id="istat" ><span onClick="return btnViewTaskInfo_onclick()" ><spring:message code='ezApprovalG.t527'/></span></li>
+			<li id="iViewHist" ><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
+			<li id="istat2" ><span class="icon16 icon16_search" onClick="return btnFindTaskFullList_onclick()"></span></li>
 		</ul>
 		</div>
 		<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
