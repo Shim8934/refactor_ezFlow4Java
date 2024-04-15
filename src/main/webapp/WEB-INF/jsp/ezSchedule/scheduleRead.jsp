@@ -190,29 +190,68 @@
 			}
 	        
 			function attach_Download() {
-			    checks = document.getElementById('attachedfileDIV').getElementsByTagName("input");
-			    downloadAll(checks)
+			    checks = document.getElementById('attachedfileDIV');
+// 			    downloadAll(checks);
+			    AttachAllDownload(checks);
 			}
 
 			var suffix = 0;
+			
 			function downloadAll(checks) {
-			    if (checks.item(suffix)) {
-			        if (checks.item(suffix).checked) {
-			            if (GetAttribute(checks.item(suffix), "attachid") != "" && GetAttribute(checks.item(suffix), "attachid") != null) {
-			                location.href = GetAttribute(checks.item(suffix++), "filepath");
-			            } else {		            	
-			                location.href = "/ezSchedule/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
-			            }
-			            setTimeout(function () { downloadAll(checks) }, 1000);
-			        } else {
-			            suffix++;
-			            downloadAll(checks);
-			        }
-			    } else
-			        suffix = 0;
-			}	
+		        if (checks.getElementsByTagName("input").item(suffix)) {
+		            if (checks.getElementsByTagName("input").item(suffix).checked) {
+		                location.href = GetAttribute(checks.getElementsByTagName("a").item(suffix++), "href");
+		                setTimeout(function () { downloadAll(checks) }, 1000);
+		            }
+		            else {
+		                suffix++;
+		                downloadAll(checks);
+		            }
+		        }
+		        else
+		            suffix = 0;
+		    }
 
-	        function manage_attendant() {	
+			/* 2020-01-30 홍승비 - 체크한 파일이 1개 이상인 경우, zip 파일로 다운받는 함수 */
+	        function AttachAllDownload(checks) {
+	            var checkedFiles = $("#attachedfileDIV").find("input:checkbox[name='fileSelect']:checked");
+	            var checkedFilesLength = checkedFiles.length;
+	            var filePath = ""; // 전체파일경로
+	            var filePathTemp = "";
+				var fileNames = ""; // 파일이름
+				var fileNamesUID = ""; // 파일이름(UID 포함)
+				
+				if (checkedFilesLength == 1) { // 하나만 저장
+					downloadAll(checks);
+				}
+				else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
+					filePath = decodeURIComponent(GetAttribute(checkedFiles.get(0), "filepath"));
+					filePath = filePath.substr(0, filePath.lastIndexOf("/") + 1);
+					
+					for (var i = 0; i < checkedFilesLength; i++) {
+						filePathTemp = decodeURIComponent(GetAttribute(checkedFiles.get(i), "filepath")); // 각 파일의 풀경로
+						fileNames += MakeXMLString(checkedFiles.get(i).value) + ":"; // 각 파일의 이름을 :로 이어붙인 것
+						fileNamesUID += MakeXMLString(filePathTemp.substr(filePathTemp.lastIndexOf("/"), filePathTemp.length)) + ":"; // 각 파일의 이름+UID를 :로 이어붙인 것
+					}
+					
+					var $frm = $("<form></form>");
+			    	$frm.attr('action', "/ezSchedule/downloadAttachAll.do");
+			    	$frm.attr('method', 'post');
+			    	$frm.appendTo('body');
+			
+			    	param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
+			    	param2 = $("<input type='hidden' value='" + fileNames + "' name='fileNames' />");
+			    	param3 = $("<input type='hidden' value='" + fileNamesUID + "' name='fileNamesUID' />");
+			    	
+			    	$frm.append(param1).append(param2).append(param3);
+			    	$frm.submit();
+				}
+				else { // 체크된 파일 없음
+					return;
+				}
+	        }
+			
+			function manage_attendant() {	
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 355) / 2;
@@ -859,7 +898,7 @@
 	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
 	                                    	<div style="margin-top:3px;height:auto;">
 	                                    		<c:set var="imagePath" value="/images/file.gif" />
-	                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+	                                    		<input type="checkbox" name="fileSelect" filename="${item.fileEncodeName}" filepath="${item.filePath}" value="${item.fileName}">
 	                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
 	                                    			<c:set var="imagePath" value="/images/image.png" />
 	                                    		</c:if>
