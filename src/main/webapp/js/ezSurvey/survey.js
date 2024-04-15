@@ -3936,7 +3936,7 @@ var SurveyCreate     = function() {
 	function saveLinkAttach(elmt, ulClass) {
 		var attachName = document.getElementById("attfileName");
 		var attachUrl  = document.getElementById("attfileUrl");
-		
+
 		if (!replaceAll(attachName.value, " ", "")) {alert(SurveyMessages.strURL1); attachName.focus(); return;}
 		if (!replaceAll(attachUrl.value, " ", ""))  {alert(SurveyMessages.strURL2); attachUrl.focus() ; return;}
 		if (!checkUrl(attachUrl.value))             {alert(SurveyMessages.strURL3); attachUrl.focus() ; return;}
@@ -3966,6 +3966,18 @@ var SurveyCreate     = function() {
 		liElmt.setAttribute("fname", attachName.value);
 		liElmt.setAttribute("furl", attachUrl.value);
 		mainUlElmt.appendChild(liElmt);
+        // 이유정 - URL 추가시, 파일 추가와 마찬가지로 "divInform" div 제거 후 파일추가창이 안뜨도록 함.
+		var fileDivElmt         = document.getElementById("fileDiv");
+		var divfileListElmt     = fileDivElmt.firstElementChild;
+		var divInform = document.querySelector(".divInform");
+		if (divInform) {
+			divfileListElmt.className = "fileList";
+			var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
+			var helpDivElmt           = document.getElementById("helpTxt");
+			if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
+			if (helpDivElmt)   {helpDivElmt.className = "uploadHelp";}
+			fileDivElmt.onclick = null;
+		}
 		toggleUrlPanel();
 	}
 	// URL 첨부 삭제
