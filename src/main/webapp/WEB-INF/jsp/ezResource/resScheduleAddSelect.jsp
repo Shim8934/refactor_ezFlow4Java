@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <title><spring:message code="ezResource.t375" /></title>
+      <title><spring:message code="ezResource.t171" /></title>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
       <link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
       <link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
