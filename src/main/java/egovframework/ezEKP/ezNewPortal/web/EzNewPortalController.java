@@ -546,6 +546,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				model.addAttribute("mailCapacityInfo", mailCapacityInfo);
 				model.addAttribute("webFolderPersonalFolderId", webFolderPersonalFolderId);
 			}
+
+			// 2023-11-15 박기범 - 포틀릿 사이즈 조절 옵션 추가
+			String usePortletSize = ezCommonService.getTenantConfig("usePortletSize", userInfo.getTenantId());
+			model.addAttribute("usePortletSize", usePortletSize);
 			
 			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);

@@ -364,4 +364,6 @@ public interface EzCommonService {
 	public void insertNonUseDocAttachYN() throws Exception;
 
 	public void insertReadingRecordHeader() throws Exception;
+
+    void insertPortalPortletSizeTables();
 }

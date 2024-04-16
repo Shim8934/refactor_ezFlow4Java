@@ -1,11 +1,14 @@
 package egovframework.ezEKP.ezNewPortal.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
+import com.google.gson.JsonArray;
+import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
@@ -39,7 +42,7 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzNewPortalDAO")
 public class EzNewPortalDAO extends EgovAbstractDAO {
-		
+
 	// 공지사항 리스트
 	@SuppressWarnings("unchecked")
 	public List<BoardListVO> getNoticePortletList (Map<String, Object> map) throws Exception {
@@ -119,7 +122,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void insertUserUsedPortlet(Map<String, Object> map) throws Exception {
 		insert("ezNewPortal.insertUserUsedPortlet", map);
 	}
-	
+
 	/**
 	 * 유은정
 	 */
@@ -190,7 +193,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<ThemeInfoVO> getCompThemeList(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getCompThemeList", map);
 	}
-	
+
 	public MenuInfoVO getUserStartPage(Map<String, Object> map) throws Exception {
 		return (MenuInfoVO) select("ezNewPortal.getUserStartPage", map);
 	}
@@ -253,7 +256,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void updateThemePortlet(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateThemePortlet", map);
 	}
-	
+
 	public void updatePortletOrderUser(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updatePortletOrderUser", map);
 	}
@@ -353,7 +356,7 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public int getThemeId(Map<String, Object> map) throws Exception {
 		return (int) select("ezNewPortal.getThemeId", map);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<ThemeInfoVO> getCompanyThemes(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getCompanyThemes", map);
@@ -711,5 +714,34 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	public int getDeptUserListCount(Map<String, Object> map) {
 		return (int) select("ezNewPortal.getDeptUserListCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getAllAvailablePortletSize() {
+		return (List<String>) list("ezNewPortal.getAllAvailablePortletSize");
+	}
+
+	// 사용 설정된 포틀릿 사이즈 리스트
+	@SuppressWarnings("unchecked")
+	public List<PortletInfoVO> getAvailablePortletSize(Map<String, Object> map) {
+		return (List<PortletInfoVO>) list("ezNewPortal.getAvailablePortletSize", map);
+	}
+
+	// 회사 포틀릿 사이즈 삭제
+	public void clearPortletSize(Map<String, Object> map) {
+		delete("ezNewPortal.clearPortletSize", map);
+	}
+
+	public void insertPortletSizeCompany(List<Map<String, Object>> list) {
+		insert("ezNewPortal.insertPortletSizeCompany", list);
+	}
+
+	// 사용자 포틀릿 사이즈 삭제
+	public void clearPortletSizeUser(Map<String, Object> map) {
+		delete("ezNewPortal.clearPortletSizeUser", map);
+	}
+
+	public void insertPortletSizeUser(List<Map<String, Object>> list) {
+		insert("ezNewPortal.insertPortletSizeUser", list);
 	}
 }

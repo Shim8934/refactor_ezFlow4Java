@@ -11,18 +11,26 @@
 	<input type="hidden" value="<c:out value='${usedTheme }'/>" id="usedTheme">
 	<article class="box_shadow">
 		<div class="layDIV" id="tabBoard">
-			<div class="sortablePortlet">
-				<dl class="portlet_tab">
-				<dt class="portletText" id="tabBoardPortletName"><span><c:out value='${portletName }'/></span></dt>
-				<dt id="tabBoardList1Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
-				<dt id="tabBoardList2Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
-				<dt id="tabBoardList3Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
-				<%--  2023-06-23 황인경 - 디자인 개선 > 탭게시판 포틀릿 > '+' 더보기 태그 위치 변경 --%>
-				<%--			<dd class="portletPlus" id="tabBoardPlus" onclick="tabBoardPlus()">
-				<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
-				</dd> --%>
-				</dl>
-			</div>
+			<c:choose>
+				<c:when test="${usedTheme eq 3 }">
+					<div class="sortablePortlet">
+						<dl class="portlet_tab">
+							<dt class="portletText" id="tabBoardPortletName"><span><c:out value='${portletName }'/></span></dt>
+							<dt id="tabBoardList1Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList2Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList3Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
+						</dl>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<dl class="sortablePortlet portlet_tab">
+							<dt class="portletText" id="tabBoardPortletName"><span><c:out value='${portletName }'/></span></dt>
+							<dt id="tabBoardList1Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList2Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList3Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
+					</dl>
+				</c:otherwise>
+			</c:choose>
 			<dl class="portlet_tab_plus">
 				<dd class="portletPlus" id="tabBoardPlus" onclick="tabBoardPlus()">
 					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">

@@ -3930,7 +3930,7 @@
 			TBL_TOTAL_HISTORY
 		LIMIT 1
 	</select>
-	
+
 	<statement id="EzCommonDAO.createTblTotalHistory">
 		CREATE TABLE `tbl_total_history` (
 		  `DOCID` varchar(80) NOT NULL,
@@ -4349,4 +4349,60 @@
 		  AND
 			COMPANYID = #companyId#
 	</delete>
+
+    <select id="EzCommonDAO.checkTblPortalPortletSize" resultClass="Integer">
+        SELECT SIZE_ID FROM TBL_PORTAL_PORTLET_SIZE LIMIT 1
+    </select>
+
+    <statement id="EzCommonDAO.createPortalPortletSize">
+        create table tbl_portal_portlet_size
+        (
+            SIZE_ID    int          not null comment '사용가능한 포틀릿 사이즈 ID'
+                primary key,
+            CLASS_SIZE varchar(100) not null comment '사이즈 클래스 명'
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '포틀릿 사이즈 클래스명 정의 테이블'
+    </statement>
+
+    <statement id="EzCommonDAO.createPortalPortletCompanySize">
+        create table tbl_portal_portlet_company_size
+        (
+            TENANT_ID    mediumint(5)    default 0  not null comment '테넌트 아이디',
+            COMPANY_ID   varchar(100) default '' not null comment '회사 아이디',
+            PORTLET_ID   int          default 0  not null comment '포틀릿 아이디',
+            THEME_ID     int          default 1  not null,
+            SIZE_ID      int                     not null comment '사용가능한 포틀릿 사이즈 ID',
+            DEFAULT_FLAG tinyint(1)   default 0  not null comment '기본 사이즈 설정 여부',
+            primary key (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID),
+            constraint FK_tbl_portal_portlet_company_size_SIZE_ID
+                foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '포틀릿 사이즈 클래스명 정의 테이블'
+    </statement>
+
+    <statement id="EzCommonDAO.createPortalPortletUserSize">
+        create table tbl_portal_portlet_user_size
+        (
+            USER_ID    varchar(100)            not null comment '사용자 아이디',
+            TENANT_ID  mediumint    default 0  not null comment '테넌트 아이디',
+            COMPANY_ID varchar(100) default '' not null comment '회사 아이디',
+            PORTLET_ID int          default 0  not null comment '포틀릿 아이디',
+            THEME_ID   int          default 1  not null,
+            SIZE_ID    int                     not null,
+            primary key (USER_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID),
+            constraint FK_tbl_portal_portlet_user_size_tbl_portal_portlet_size_SIZE_ID
+                foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '사용자 별 포틀릿 사이즈 설정 테이블'
+    </statement>
+
+    <insert id="EzCommonDAO.insertUsePortletSize">
+        INSERT INTO tbl_tenant_config (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (0, 'usePortletSize', 'Y', 'Y: 사용 N: 사용안함 (default: N)', '포탈 포틀릿 커스텀 사이즈 사용 여부', '2023-11-20 00:00:00', '포탈')
+    </insert>
+
+    <insert id="EzCommonDAO.insertPortalPortletSizeDefault">
+        INSERT INTO JMOCHA.TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE)
+        VALUES (0, 'one_by_one'),
+               (1, 'two_by_one'),
+               (2, 'one_by_two'),
+               (3, 'two_by_two')
+    </insert>
 </sqlMap>

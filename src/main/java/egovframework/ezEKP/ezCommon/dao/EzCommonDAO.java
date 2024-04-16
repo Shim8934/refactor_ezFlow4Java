@@ -2162,4 +2162,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertReadingRecordHeader", map);
 		}
 	}
+
+	public void insertPortalPortletSizeTables() {
+		try {
+			select("EzCommonDAO.checkTblPortalPortletSize");
+		} catch (Exception e) {
+			update("EzCommonDAO.createPortalPortletSize");
+			update("EzCommonDAO.createPortalPortletCompanySize");
+			update("EzCommonDAO.createPortalPortletUserSize");
+			insert("EzCommonDAO.insertUsePortletSize");
+			insert("EzCommonDAO.insertPortalPortletSizeDefault");
+		}
+	}
 }

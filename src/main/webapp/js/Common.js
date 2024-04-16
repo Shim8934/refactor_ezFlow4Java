@@ -680,3 +680,147 @@ function adjustFontSizeToFitWidth(node, desiredWidth, desiredHeight) {
     }
     node.style.fontSize = (fontSize - 1) + 'px';
 }
+
+/*
+    IE에서 지원하지 않는 메소드
+    polyfill 추가
+ */
+if (!Element.prototype.matches) {
+    Element.prototype.matches =
+        Element.prototype.msMatchesSelector ||
+        Element.prototype.webkitMatchesSelector;
+}
+
+if (!Element.prototype.closest) {
+    Element.prototype.closest = function(s) {
+        var el = this;
+        do {
+            if (el.matches(s)) return el;
+            el = el.parentElement || el.parentNode;
+        } while (!!el && el.nodeType === 1);
+        return null;
+    };
+}
+
+if (!Element.prototype.remove) {
+    Element.prototype.remove = function() {
+        if (this.parentNode) {
+            this.parentNode.removeChild(this);
+        }
+    };
+}
+
+if (!Node.prototype.append) {
+    Node.prototype.append = function() {
+        var docFrag = document.createDocumentFragment();
+
+        Array.prototype.forEach.call(arguments, function(arg) {
+            var child = arg instanceof Node ? arg : document.createTextNode(String(arg));
+            docFrag.appendChild(child);
+        });
+
+        this.appendChild(docFrag);
+    };
+}
+
+// classList 관련 polyfill. IIFE 풀지 말 것.
+!(function() {
+    'use strict';
+
+    var c1 = 'c1';
+    var c2 = 'c2';
+    var testElement = document.createElement('_');
+
+    // Polyfill for IE 10/11 and Firefox <26, where classList.add and
+    // classList.remove exist but support only one argument at a time.
+    testElement.classList.add(c1, c2);
+    if (!testElement.classList.contains(c2)) {
+        var createMethod = function(method) {
+            var _method = DOMTokenList.prototype[method];
+
+            DOMTokenList.prototype[method] = function(token) {
+                for (var i = -1, len = arguments.length; ++i < len;) {
+                    token = arguments[i];
+                    _method.call(this, token);
+                }
+            };
+        };
+        createMethod('add');
+        createMethod('remove');
+    }
+    testElement.className = "";
+
+    // Polyfill for IE 10 and Firefox <24, where classList.toggle does not
+    // support the second argument.
+    testElement.classList.toggle(c1, false);
+    if (!!testElement.classList.contains(c1)) {
+        var _toggle = DOMTokenList.prototype.toggle;
+
+        DOMTokenList.prototype.toggle = function(token, force) {
+            if (1 in arguments && !this.contains(token) === !force) {
+                return force;
+            }
+            return _toggle.call(this, token);
+        };
+    }
+    testElement.className = "";
+
+    // Polyfill for classList.replace
+    testElement.classList.add(c1);
+    try {
+        testElement.classList.replace(c1, c2);
+    } catch (e) {
+        console.error(e);
+    }
+
+    if (!testElement.classList.contains(c2)) {
+        DOMTokenList.prototype.replace = function(oldToken, newToken) {
+            if (this.contains(oldToken)) {
+                this.remove(oldToken);
+                this.add(newToken);
+                return true;
+            }
+            return false;
+        };
+    }
+    testElement = null;
+}());
+// polyfill end
+
+
+// 쓰로틀링 함수 - 어떤 함수가 자주 발생하더라도 일정 시간('limit' ms)에 한번만 실행되도록 제한하는 함수
+// 사용 예시
+// function example() {console.log('함수 실행!');}
+// var examLogFunction = throttle(example, 100); // 0.1 초에 한번만 실행되도록 제한
+// var examLogFunction = throttle(example, 3000, true); // 3초에 한번만 실행되도록 제한.한번 호출하면 3초후 다시 호출 하기 전까지 실행x
+// 제한시간에 실행되지 않은 경우 마지막 딜레이가 끝날때 실행
+// ex) 처음호출시:실행 -> 1.5초뒤 호출:실행x -> 2초뒤 호출:실행x -> 3초뒤 호출하지 않아도 딜레이 되어 있던 작업이 자동으로 실행
+function throttle(fn, limit, last) {
+    var lastFunc;
+    var lastRan;
+    var lastExec = last || false;
+
+    return function() {
+        const context = this;
+        const args = arguments;
+
+        if (!lastRan) {
+            fn.apply(context, args);
+            lastRan = Date.now();
+        } else {
+            if (lastExec) {
+                clearTimeout(lastFunc);
+                lastFunc = setTimeout(function () {
+                    if ((Date.now() - lastRan) >= limit) {
+                        fn.apply(context, args);
+                        lastRan = Date.now();
+                    }
+                }, limit - (Date.now() - lastRan));
+            } else if ((Date.now() - lastRan) >= limit) {
+                fn.apply(context, args);
+                lastRan = Date.now();
+            }
+        }
+    };
+}
+

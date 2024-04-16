@@ -4195,6 +4195,7 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES (#v_TENANTID#, 'SurveyPostingMaxPeriod', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '전자설문 종료 후 게시기간 설정', TO_DATE('2024-03-26 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자설문')
 	</insert>
+
 	<select id="EzCommonDAO.chkTblTotalHistory" resultClass="String">
 		<![CDATA[
 		SELECT
@@ -4224,7 +4225,7 @@
 		  CONSTRAINT "PK_TBL_TOTAL_HISTORY" PRIMARY KEY ("DOCID", "USERID", "REGDATE", "TENANT_ID", "COMPANYID")
 		)
 	</statement>
-    
+
 	<!-- 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 -->
 	<select id="EzCommonDAO.checkDelAttachByOthersConfing" resultClass="String">
 	<![CDATA[
@@ -4641,4 +4642,64 @@
 		  AND
 			COMPANYID = #companyId#
 	</delete>
+
+	<select id="EzCommonDAO.checkTblPortalPortletSize" resultClass="Integer">
+		SELECT SIZE_ID FROM TBL_PORTAL_PORTLET_SIZE WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createPortalPortletSize">
+		CREATE TABLE TBL_PORTAL_PORTLET_SIZE
+		(
+			SIZE_ID    NUMBER NOT NULL
+				CONSTRAINT PK_TBL_PORTAL_PORTLET_SIZE
+					PRIMARY KEY,
+			CLASS_SIZE VARCHAR2(100)
+		)
+	</statement>
+
+	<statement id="EzCommonDAO.createPortalPortletCompanySize">
+		CREATE TABLE TBL_PORTAL_PORTLET_COMPANY_SIZE
+		(
+			TENANT_ID    NUMBER        NOT NULL,
+			COMPANY_ID   NVARCHAR2(100) NOT NULL,
+			PORTLET_ID   NUMBER        NOT NULL,
+			THEME_ID     NUMBER        NOT NULL,
+			SIZE_ID      NUMBER        NOT NULL
+				CONSTRAINT FK_TBL_PORTAL_PORTLET_COMPANY_SIZE
+					REFERENCES TBL_PORTAL_PORTLET_SIZE,
+			DEFAULT_FLAG NUMBER,
+			CONSTRAINT PK_TBL_PORTAL_PORTLET_COMPANY_SIZE
+				PRIMARY KEY (TENANT_ID, COMPANY_ID, THEME_ID, PORTLET_ID, SIZE_ID)
+		)
+	</statement>
+
+	<statement id="EzCommonDAO.createPortalPortletUserSize">
+		CREATE TABLE TBL_PORTAL_PORTLET_USER_SIZE
+		(
+			USER_ID    NVARCHAR2(100) NOT NULL,
+			TENANT_ID  NUMBER        NOT NULL,
+			COMPANY_ID NVARCHAR2(100) NOT NULL,
+			PORTLET_ID NUMBER        NOT NULL,
+			THEME_ID   NUMBER        NOT NULL,
+			SIZE_ID    NUMBER
+				CONSTRAINT FK_TBL_PORTAL_PORTLET_USER_SIZE_TBL_PORTAL_PORTLET_SIZE_SIZE_ID
+					REFERENCES TBL_PORTAL_PORTLET_SIZE,
+			CONSTRAINT PK_TBL_PORTAL_PORTLET_USER_SIZE
+				PRIMARY KEY (TENANT_ID, COMPANY_ID, THEME_ID, PORTLET_ID, USER_ID)
+		)
+	</statement>
+
+	<insert id="EzCommonDAO.insertUsePortletSize">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (0, 'usePortletSize', 'Y', 'Y: 사용 N: 사용안함 (default: N)', '포탈 포틀릿 커스텀 사이즈 사용 여부', TO_DATE('2023-11-20 00:00:00','yyyy-mm-dd hh24:mi:ss'), '포탈')
+	</insert>
+
+	<insert id="EzCommonDAO.insertPortalPortletSizeDefault">
+		INSERT ALL
+			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (0, 'one_by_one')
+			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (1, 'two_by_one')
+			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (2, 'one_by_two')
+			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (3, 'two_by_two')
+		SELECT * FROM DUAL
+	</insert>
 </sqlMap>

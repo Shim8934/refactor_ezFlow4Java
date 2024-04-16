@@ -15090,3 +15090,63 @@ WHERE
         `tbl_task_deptinfo`.`DELFLAG` = '0'
    OR `tbl_task_deptinfo`.`DELFLAG` IS NULL
    OR `tbl_task_deptinfo`.`DELFLAG` = '2';
+
+create table tbl_portal_portlet_size
+(
+    SIZE_ID    int          not null comment '사용가능한 포틀릿 사이즈 ID'
+        primary key,
+    CLASS_SIZE varchar(100) not null comment '사이즈 클래스 명'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '포틀릿 사이즈 클래스명 정의 테이블';
+
+
+create table tbl_portal_portlet_company_size
+(
+    TENANT_ID    mediumint    default 0  not null comment '테넌트 아이디',
+    COMPANY_ID   varchar(100) default '' not null comment '회사 아이디',
+    PORTLET_ID   int          default 0  not null comment '포틀릿 아이디',
+    THEME_ID     int          default 1  not null,
+    SIZE_ID      int                     not null comment '사용가능한 포틀릿 사이즈 ID',
+    DEFAULT_FLAG tinyint(1)   default 0  not null comment '기본 사이즈 설정 여부',
+    primary key (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID),
+    constraint FK_tbl_portal_portlet_company_size_SIZE_ID
+        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '회사별 포틀릿 사이즈 설정 테이블';
+
+create index IDX_TBL_PORTAL_PORTLET_COMPANY_SIZE_ID
+    on jmocha.tbl_portal_portlet_company_size (SIZE_ID);
+
+create index tbl_portal_portlet_company_size_COMPANY_ID_index
+    on jmocha.tbl_portal_portlet_company_size (COMPANY_ID);
+
+create index tbl_portal_portlet_company_size_TENANT_ID_index
+    on jmocha.tbl_portal_portlet_company_size (TENANT_ID);
+
+create index tbl_portal_portlet_company_size_THEME_ID_index
+    on jmocha.tbl_portal_portlet_company_size (THEME_ID);
+
+
+
+create table tbl_portal_portlet_user_size
+(
+    USER_ID    varchar(100)            not null comment '사용자 아이디',
+    TENANT_ID  mediumint    default 0  not null comment '테넌트 아이디',
+    COMPANY_ID varchar(100) default '' not null comment '회사 아이디',
+    PORTLET_ID int          default 0  not null comment '포틀릿 아이디',
+    THEME_ID   int          default 1  not null,
+    SIZE_ID    int                     not null,
+    primary key (USER_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID),
+    constraint FK_tbl_portal_portlet_user_size_tbl_portal_portlet_size_SIZE_ID
+        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '사용자 별 포틀릿 사이즈 설정 테이블';
+
+create index IDX_TBL_PORTAL_PORTLET_USER_COMPANY
+    on jmocha.tbl_portal_portlet_user_size (COMPANY_ID);
+
+create index IDX_TBL_PORTAL_PORTLET_USER_ID
+    on jmocha.tbl_portal_portlet_user_size (USER_ID);
+
+create index IDX_TBL_PORTAL_PORTLET_USER_PORTLET
+    on jmocha.tbl_portal_portlet_user_size (PORTLET_ID);
+
+create index IDX_TBL_PORTAL_PORTLET_USER_TENANT
+    on jmocha.tbl_portal_portlet_user_size (TENANT_ID);

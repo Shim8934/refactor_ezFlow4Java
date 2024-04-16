@@ -91,7 +91,7 @@
 <script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
 <!-- 일정관리 -->
 <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/schedulePortlet.js')}"></script>		
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/schedulePortlet.js')}"></script>
 <c:choose>
 	<c:when test="${checkBrowser == true}">
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/sCalendarMini_IEEIP.js')}"></script>
@@ -101,6 +101,11 @@
 	</c:otherwise>
 </c:choose>
 <!-- 일정관리 끝 -->
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/web-animations.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/muuri.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/portlet-util.js')}"></script>
+<link rel="stylesheet" href="${util.addVer('/css/ezPortlet/portlet.css')}" type="text/css" />
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
@@ -123,6 +128,7 @@
     var workspaceContextRootUrl = "${workspaceContextRootUrl}";
     var userLang = "<c:out value='${userLang}'/>";
     var userLang2 = "<c:out value='${userLang2}'/>";
+	var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
  	
  	var quickLinkPage = {
  		current: 1,
@@ -270,15 +276,26 @@
 		$("#featured").orbit();
 		
 		var portletCount = portletOrder.length;
-		var portletHTML = "";
-		
+		var portletArea = document.getElementsByClassName("portlet_area")[0];
+
 		for (var i = 0; i < portletCount; i++) {
-			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
+			var element = document.createElement("div");
+			element.id = portletOrder[i].portletId + "Portlet";
+			element.classList.add("portlet");
+			element.classList.add(portletOrder[i].classSize);
+			element.dataset.size = portletOrder[i].classSize;
+			portletArea.appendChild(element);
+
+			var article = document.createElement('article');
+			article.classList.add('box_shadow');
+			element.appendChild(article);
 		}
-		
-		$(".portlet_area").html(portletHTML);
+
  		frameSetting(frameId);
-		
+		if (usePortletSize) {
+			initGridConstruct();
+		}
+
 		for (var i = 0; i < portletCount; i++) {
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
@@ -295,22 +312,27 @@
 						tryCount : 0,
 						retryLimit : 3,
 						success : function(result) {
-							$("#" + portletId + "Portlet").append(result);
-							
-							/* 2023-06-08 홍승비 - 디자인 개선을 위해 테마3의 모든 포틀릿 background 스타일 제거  */
-							//if (portletId != "34") {
-							$("#" + portletId + "Portlet").css("background", "");
-							//}
-							
-							eventSetting(portletId, usedTheme, portletCode, false);
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
+							try {
+								$("#" + portletId + "Portlet").empty().append(result);
+								if (usePortletSize) {
+									makeGridChangeEvent(portletId);
+								}
+
+								/* 2023-06-08 홍승비 - 디자인 개선을 위해 테마3의 모든 포틀릿 background 스타일 제거  */
+								//if (portletId != "34") {
+								$("#" + portletId + "Portlet").css("background", "");
+								//}
+
+								eventSetting(portletId, usedTheme, portletCode, false);
+
+								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+									sortableEvent();
+								}
+							} catch (e) {
+								// 포틀릿 내부 에러시에 포탈 전체 스크립트 에러가 나서 try catch 처리함
+								console.log(e);
 							}
-						},
-						error : function() {
-							var nonePage = "<article class='box_shadow'></article>"
-							$("#" + portletId + "Portlet").append(nonePage);
+
 						},
 						error : function() {
 							this.url = "/ezNewPortal/errorPortlet.do";
@@ -325,7 +347,11 @@
 							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
 								sortableEvent();
 							}
-							
+
+							if (usePortletSize) {
+								makeGridChangeEvent(portletId);
+							}
+
 							return;
 						}
 					});
@@ -477,7 +503,7 @@
 	var tryCount = 0;
 	
 	var sortableEvent = function () {
-		
+		if (usePortletSize) return false;
 		//포틀릿 드래그 앤 드롭
 		try {
 			$(".portlet_area").sortable({

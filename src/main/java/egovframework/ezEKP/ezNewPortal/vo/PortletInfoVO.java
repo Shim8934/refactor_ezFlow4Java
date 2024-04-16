@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezNewPortal.vo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PortletInfoVO {
@@ -28,7 +31,9 @@ public class PortletInfoVO {
 	//2019.07.15 유은정 : 포틀릿 및 메뉴 코드 개선 작업
 	private String portletCode;
 	private String menuCode;
-	
+	private String classSize = "one_by_one";	// 포틀릿 사이즈
+	private List<String> listPortletSize = new ArrayList<>(Collections.singletonList("one_by_one"));
+
 	public String getPortletCode() {
 		return portletCode;
 	}
@@ -162,17 +167,29 @@ public class PortletInfoVO {
 	public void setFixed(boolean isFixed) {
 		this.isFixed = isFixed;
 	}
-	
+
+	public String getClassSize() {
+		return classSize;
+	}
+
+	public void setClassSize(String classSize) {
+		this.classSize = classSize != null ? classSize : "one_by_one";
+	}
+
+	public List<String> getListPortletSize() {
+		return listPortletSize;
+	}
+
+	public void setListPortletSize(List<String> listPortletSize) {
+		this.listPortletSize = listPortletSize;
+	}
+
+	public void addListPortletSize(String size) {
+		this.listPortletSize.add(size);
+	}
+
 	@Override
 	public String toString() {
-		/*return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName="
-				+ portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral=" + isGeneral
-				+ ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl="
-				+ connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId=" + portletBoardId
-				+ ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2
-				+ ", menuName=" + menuName + ", userAuth=" + userAuth + ", deptAuth=" + deptAuth + ", comAuth="
-				+ comAuth + ", accessYN=" + accessYN + ", isFixed=" + isFixed + ", portletCode=" + portletCode
-				+ ", menuCode=" + menuCode + "]";*/
 		return "[portletId=" + portletId + " portletName=" + portletName + "]"; // 로그정리
 	}
 }

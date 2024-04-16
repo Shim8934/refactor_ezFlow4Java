@@ -46,7 +46,7 @@
 		<result property="userImg" 					column="user_img" />
 		<result property="extensionAttribute15" 	column="extensionAttribute15" />
 	</resultMap>
-	
+
 	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
 			SELECT
@@ -1527,4 +1527,30 @@
 		</isEqual>
 		) AA
 	</select>
+
+	<select id="ezNewPortal.getAllAvailablePortletSize" resultClass="String">
+		SELECT CLASS_SIZE FROM TBL_PORTAL_PORTLET_SIZE
+	</select>
+
+	<update id="ezNewPortal.clearPortletSize" parameterClass="Map">
+		DELETE
+		FROM TBL_PORTAL_PORTLET_COMPANY_SIZE
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND THEME_ID = #themeId#
+	</update>
+
+	<insert id="ezNewPortal.insertPortletSizeCompany" parameterClass="list">
+		INSERT ALL
+		<iterate>
+			INTO TBL_PORTAL_PORTLET_COMPANY_SIZE (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID, DEFAULT_FLAG)
+			VALUES ( #[].tenantId#, #[].companyId#, #[].portletId#,
+			#[].themeId#, (SELECT SIZE_ID
+			FROM TBL_PORTAL_PORTLET_SIZE
+			WHERE CLASS_SIZE = #[].portletSize# AND ROWNUM = 1)
+			, #[].default# )
+		</iterate>
+		SELECT *
+		FROM DUAL
+	</insert>
 </sqlMap>

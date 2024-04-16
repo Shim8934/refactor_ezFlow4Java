@@ -13,12 +13,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
@@ -27,6 +29,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -80,6 +83,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Resource(name = "EzNewPortalDAO")
 	private EzNewPortalDAO ezNewPortalDAO;
+
+	@Autowired
+	private EzCommonService ezCommonService;
 
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -847,6 +853,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		//List<Integer> portletIdList = new ArrayList<Integer>();
+		List<Map<String, Object>> sizeList = new ArrayList<Map<String, Object>>();
 
 		//포틀릿 순서 업데이트 (없으면 insert)
 		for (Object item : portletOrder) {
@@ -861,11 +868,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("themeId", themeId);
 				map.put("portletUsed", 1);
 				ezNewPortalDAO.updatePortletOrderUser(map);
-
+				
 				/*int portletId = Integer.parseInt(portlet.get("portletId").toString());
 				portletIdList.add(portletId);*/
+
+				sizeList.add(new HashMap<>(map));
 			}
 		}
+
+		boolean usePortletSize = "Y".equals(ezCommonService.getTenantConfig("usePortletSize", tenantId));
+
+		if (usePortletSize) {
+			ezNewPortalDAO.clearPortletSizeUser(map);
+			ezNewPortalDAO.insertPortletSizeUser(sizeList);
+		}
+
 
 		//tbl_portal_portlet_user에는 있는데 포틀릿 순서에 없었던 목록 가져오기
 		/*map.put("portletIdList", portletIdList);
@@ -3319,5 +3336,44 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		Cookie cookie = new Cookie("loginCookie", cookieStr);
 		cookie.setPath("/");
 		response.addCookie(cookie);
+	}
+
+	@Override
+	public List<String> getAllAvailablePortletSize() {
+		return ezNewPortalDAO.getAllAvailablePortletSize();
+	}
+
+	@Override
+	public Map<Integer, List<String>> getAvailablePortletSize(int themeId, String companyId, int tenantId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("themeId", themeId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		List<PortletInfoVO> infoVOList = ezNewPortalDAO.getAvailablePortletSize(map);
+		return infoVOList.stream()
+				.collect(Collectors.groupingBy(PortletInfoVO::getPortletId,
+						Collectors.mapping(PortletInfoVO::getClassSize, Collectors.toList())));
+	}
+
+	@Override
+	public void updateThemePortletSize(int themeId, int tenantId, String companyId, JSONArray sizeList) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("themeId", themeId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		try {
+			ezNewPortalDAO.clearPortletSize(map);
+
+			ArrayList<Map<String, Object>> arrayList = new Gson().fromJson(sizeList.toJSONString(), new ArrayList<Map<String, Object>>().getClass());
+			for (Map<String, Object> sizeMap : arrayList) {
+				sizeMap.put("tenantId", tenantId);
+				sizeMap.put("themeId", themeId);
+				sizeMap.put("companyId", companyId);
+			}
+
+			ezNewPortalDAO.insertPortletSizeCompany(arrayList);
+		} catch (Exception e) {
+			logger.error("updateThemePortletSize error : " + e.getMessage(), e);
+		}
 	}
 }

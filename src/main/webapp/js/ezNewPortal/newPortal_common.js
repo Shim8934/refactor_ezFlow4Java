@@ -1280,10 +1280,12 @@ function viewQuick() {
 		if(leftSide) {
 			$(".linkBtn_close").animate({left: openPx}, function(){
 				$(".linkBtn_close").attr("class", "linkBtn_open");
+				viewQuickResizePortlet();
 			});			
 		} else {
 			$(".linkBtn_close").animate({right: openPx}, function(){
 				$(".linkBtn_close").attr("class", "linkBtn_open");
+				viewQuickResizePortlet();
 			});			
 		}
 	} else {
@@ -1291,12 +1293,20 @@ function viewQuick() {
 		if(leftSide) {
 			$(".linkBtn_open").animate({left: closePx}, function(){
 				$(".linkBtn_open").attr("class", "linkBtn_close");
+				viewQuickResizePortlet();
 			});					
 		} else {
 			$(".linkBtn_open").animate({right: closePx}, function(){
 				$(".linkBtn_open").attr("class", "linkBtn_close");
+				viewQuickResizePortlet();
 			});	
 		}
+	}
+}
+
+function viewQuickResizePortlet() {
+	if (typeof usePortletSize != 'undefined' && usePortletSize && typeof resizePortlet != 'undefined') {
+		resizePortlet();
 	}
 }
 

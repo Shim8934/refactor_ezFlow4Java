@@ -248,4 +248,10 @@ public interface EzNewPortalService {
 	 */
 	public int getDeptUserListCount (int tenantId, String key, String value,String companyId, String lang) throws Exception;
 
+
+	List<String> getAllAvailablePortletSize();
+
+	Map<Integer, List<String>> getAvailablePortletSize(int themeId, String companyId, int tenantId);
+
+	void updateThemePortletSize(int themeId, int tenantId, String companyId, JSONArray sizeList);
 }

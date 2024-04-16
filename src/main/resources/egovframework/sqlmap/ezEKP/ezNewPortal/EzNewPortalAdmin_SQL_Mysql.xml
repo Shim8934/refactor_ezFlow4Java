@@ -1000,7 +1000,8 @@
 			C.portlet_name as portletname,
 			A.is_fixed as isFixed,
 			PORTLET.portletcode,
-			MENU.menucode
+			MENU.menucode,
+			PCS.CLASS_SIZE AS classSize
 		FROM
 			TBL_PORTAL_THEME_PORTLET A
 		JOIN
@@ -1031,6 +1032,15 @@
 			A.tenant_id = C.tenant_id
 		AND
 			C.portlet_lang = #lang#
+		LEFT JOIN (SELECT CS.*, PS.CLASS_SIZE
+                    FROM TBL_PORTAL_PORTLET_COMPANY_SIZE CS
+                             JOIN TBL_PORTAL_PORTLET_SIZE PS
+                                  ON CS.SIZE_ID = PS.SIZE_ID
+                    WHERE DEFAULT_FLAG = TRUE) PCS
+                   ON PCS.TENANT_ID = A.TENANT_ID
+                       AND PCS.COMPANY_ID = A.COMPANY_ID
+                       AND PCS.THEME_ID = A.THEME_ID
+                       AND PCS.PORTLET_ID = A.PORTLET_ID
 		WHERE
 			A.theme_id = #themeId#
 		AND
@@ -1440,4 +1450,28 @@
 		</isEqual>
 		) AA
 	</select>
+
+	<select id="ezNewPortal.getAllAvailablePortletSize" resultClass="String">
+		SELECT CLASS_SIZE FROM TBL_PORTAL_PORTLET_SIZE
+	</select>
+
+	<update id="ezNewPortal.clearPortletSize" parameterClass="Map">
+		DELETE
+		FROM TBL_PORTAL_PORTLET_COMPANY_SIZE
+		WHERE TENANT_ID = #tenantId#
+		  AND COMPANY_ID = #companyId#
+		  AND THEME_ID = #themeId#
+	</update>
+
+	<insert id="ezNewPortal.insertPortletSizeCompany" parameterClass="list">
+		INSERT INTO TBL_PORTAL_PORTLET_COMPANY_SIZE (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID, DEFAULT_FLAG)
+		VALUES
+		<iterate conjunction=",">
+			( #[].tenantId#, #[].companyId#, #[].portletId#,
+			#[].themeId#, (SELECT SIZE_ID
+			FROM TBL_PORTAL_PORTLET_SIZE
+			WHERE CLASS_SIZE = #[].portletSize# LIMIT 1)
+			, #[].default# )
+		</iterate>
+	</insert>
 </sqlMap>

@@ -217,7 +217,9 @@ public class EzNewPortalGWController {
 			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
 			String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
-			
+
+			boolean usePortletSize = "Y".equals(ezCommonService.getTenantConfig("usePortletSize", tenantId));
+
 			logger.debug("[config] useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useMemo : " + useMemo + ", useCabinet : " + useCabinet
 						+ ", useVote : " + useVote + ", useJournal : " + useJournal + ", useCircular : " + useCircular + ", useAttitue : " + useAttitude
 						+ ", useWebfolder : " + useWebfolder + ", useEzPMS : " + useEzPMS + ", useCommunity : " + useCommunity + ", useEzWorkspace : " + useEzWorkspace
@@ -373,10 +375,22 @@ public class EzNewPortalGWController {
 			if (useEzWorkspace.equals("NO")) {
 				portletOrder.removeIf(vo -> vo.getPortletUrl().contains("ezWorkspace"));
 			}
-			
+
 			if (useExternalMailServer.equalsIgnoreCase("YES")) {
 				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
 				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
+			}
+
+			if (!usePortletSize) {
+				portletOrder.replaceAll(vo -> {
+					vo.setClassSize("one_by_one");
+					return vo;
+				});
+			} else {
+				Map<Integer, List<String>> avMap = ezNewPortalService.getAvailablePortletSize(userThemeSetting.getUsedTheme(), companyId, tenantId);
+				for (PortletInfoVO vo : portletOrder) {
+					vo.setListPortletSize(avMap.getOrDefault(vo.getPortletId(), Collections.singletonList("one_by_one")));
+				}
 			}
 
 			JSONObject data = new JSONObject();
@@ -5308,10 +5322,17 @@ public class EzNewPortalGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
+			boolean usePortletSize = "Y".equals(ezCommonService.getTenantConfig("usePortletSize", tenantId));
 
 			JSONArray themePortletList = (JSONArray)jsonParam.get("themePortletList");
-			
+			JSONArray sizeList = (JSONArray)jsonParam.get("sizeList");
+
 			ezNewPortalService.updateThemePortletUsed(themeId, tenantId, companyId, themePortletList);
+
+			if (usePortletSize) {
+				ezNewPortalService.updateThemePortletSize(themeId, tenantId, companyId, sizeList);
+			}
+
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {

@@ -337,6 +337,11 @@
 	</c:otherwise>
 </c:choose>
 <!-- 일정관리 끝 -->
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/web-animations.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/muuri.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPortlet/portlet-util.js')}"></script>
+<link rel="stylesheet" href="${util.addVer('/css/ezPortlet/portlet.css')}" type="text/css" />
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
@@ -359,7 +364,8 @@
     var workspaceContextRootUrl = "${workspaceContextRootUrl}";
     var userLang = "<c:out value='${userLang}'/>";
     var userLang2 = "<c:out value='${userLang2}'/>";
- 	
+	var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
+
  	var quickLinkPage = {
  		current: 1,
  		total: 1,
@@ -519,23 +525,33 @@
 		$("#featured").orbit();
 		if (portletOrder != null && portletOrder.length != 0) {
 			var portletCount = portletOrder.length;
-			var portletHTML = "";
-			
+			var portletArea = document.getElementsByClassName("portlet_area")[0];
+
 			for (var i = 0; i < portletCount; i++) {
-				portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
+				var element = document.createElement("div");
+				element.id = portletOrder[i].portletId + "Portlet";
+				element.classList.add("portlet");
+				element.classList.add(portletOrder[i].classSize);
+				element.dataset.size = portletOrder[i].classSize;
+				portletArea.appendChild(element);
+
+				var article = document.createElement('article');
+				article.classList.add('box_shadow');
+				element.appendChild(article);
 			}
-			
-			//$(".portlet_area").html(portletHTML);
-			document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
 	 		frameSetting(frameId);
-			
+
+			if (usePortletSize) {
+				initGridConstruct();
+			}
+
 	 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
 			for (var i = 0; i < portletCount; i++) {
 				var portletId = portletOrder[i].portletId;
 				var portletUrl = portletOrder[i].portletUrl;
 				var portletName = portletOrder[i].portletName;
 				var portletCode = portletOrder[i].portletCode;
-				
+
 				/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
 			  		(function (portletId, portletUrl, portletName, portletCode) {
 						$.ajax({
@@ -546,17 +562,26 @@
 							tryCount : 0,
 							retryLimit : 3,
 							success : function(result) {
-								$("#" + portletId + "Portlet").append(result);
-								
-								if (portletId == 6) {
-									document.getElementById(portletId + "Portlet").style.background = "none";
+								try {
+									$("#" + portletId + "Portlet").empty().append(result);
+									if (usePortletSize) {
+										makeGridChangeEvent(portletId);
+									}
+
+									if (portletId == 6) {
+										document.getElementById(portletId + "Portlet").style.background = "none";
+									}
+
+									eventSetting(portletId, usedTheme, portletCode, false);
+
+									if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+										sortableEvent();
+									}
+								} catch (e) {
+									// 포틀릿 내부 에러시에 포탈 전체 스크립트 에러가 나서 try catch 처리함
+									console.log(e);
 								}
-								
-								eventSetting(portletId, usedTheme, portletCode, false);
-								
-								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-									sortableEvent();
-								}
+
 							},
 							error : function() {
 								this.url = "/ezNewPortal/errorPortlet.do";
@@ -571,7 +596,11 @@
 								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
 									sortableEvent();
 								}
-								
+
+								if (usePortletSize) {
+									makeGridChangeEvent(portletId);
+								}
+
 								return;
 							}
 						});
@@ -820,7 +849,7 @@
 	var tryCount = 0;
 	
 	var sortableEvent = function () {
-		
+		if (usePortletSize) return false;
 		//포틀릿 드래그 앤 드롭
 		try {
 			$("#portletArea").sortable({
@@ -868,7 +897,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1750");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1750";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -888,7 +918,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1593");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1593";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -909,7 +940,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1468");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1468";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -930,7 +962,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1369");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1369";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -948,7 +981,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1327");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1327";
 				});
 				
 				infoLeft.forEach(function(item, index) {
@@ -965,7 +999,8 @@
 				var infoRight = document.getElementsByClassName("info_right");
 				
 				portletList.forEach(function(item, index) {
-					portletList[index].setAttribute("class", "portlet two_column1326");
+					portletList[index].className = portletList[index].className.replace(/two_column\d+/, "");
+					portletList[index].className += " two_column1326";
 				});
 				
 				infoLeft.forEach(function(item, index) {

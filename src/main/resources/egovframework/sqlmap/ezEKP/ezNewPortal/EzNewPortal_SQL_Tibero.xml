@@ -3703,4 +3703,37 @@ ORDER BY
 			tenant_id = #v_tenantID#
 	]]>
 </select>
+
+<select id="ezNewPortal.getAvailablePortletSize" parameterClass="Map" resultClass="PortletInfoVO" remapResults="true">
+	SELECT CS.PORTLET_ID AS portletId, PS.CLASS_SIZE AS classSize
+	FROM TBL_PORTAL_PORTLET_COMPANY_SIZE CS
+			 JOIN TBL_PORTAL_PORTLET_SIZE PS ON CS.SIZE_ID = PS.SIZE_ID
+	WHERE CS.TENANT_ID = #tenantId#
+	  AND CS.COMPANY_ID = #companyId#
+	  AND CS.THEME_ID = #themeId#
+	ORDER BY PORTLET_ID, CLASS_SIZE
+</select>
+
+<update id="ezNewPortal.clearPortletSizeUser" parameterClass="Map">
+	DELETE
+	FROM TBL_PORTAL_PORTLET_USER_SIZE
+	WHERE TENANT_ID = #tenantId#
+	  AND COMPANY_ID = #companyId#
+	  AND THEME_ID = #themeId#
+	  AND USER_ID = #userId#
+</update>
+
+<insert id="ezNewPortal.insertPortletSizeUser" parameterClass="list">
+	INSERT ALL
+	<iterate >
+		INTO TBL_PORTAL_PORTLET_USER_SIZE (USER_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID)
+		VALUES ( #[].userId#, #[].tenantId#, #[].companyId#, #[].portletId#, #[].themeId#,
+		(SELECT SIZE_ID
+		FROM TBL_PORTAL_PORTLET_SIZE
+		WHERE CLASS_SIZE = #[].classSize# AND WHERE ROWNUM = 1)
+		)
+	</iterate>
+	SELECT *
+	FROM DUAL
+</insert>
 </sqlMap>

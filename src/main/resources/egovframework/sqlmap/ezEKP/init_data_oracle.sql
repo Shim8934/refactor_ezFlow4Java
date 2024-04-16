@@ -326,7 +326,7 @@ INSERT INTO tbl_usermaster (TENANT_ID,CN,DISPLAYNAME,DISPLAYNAME2,MAIL,MAILNICKN
 -- 전자결재 > 지정반송 사용여부 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'ReturnByDesignationUsed', '지정반송 사용여부', 'NO', '지정반송 사용여부 (default:NO)', TO_DATE('2024-06-18 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재');
 
---Board insert 
+--Board insert
 
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 'Top', 0);
 --INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 'Top', 0);
@@ -3301,3 +3301,10 @@ VALUES(0, 'useWorkspaceSchedule', '협업 일정 연동 여부', 'NO', 'YES: 사
 
 INSERT INTO tbl_tenant_config (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(0, 'delAttachByOthers', '0', '결재에서 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값(0 : 불가 1 : 허용), (default:0) ', '결재에서 첨부파일을 다른사람이 지울수있는 여부', TO_DATE('2021-03-05 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES (0, 'usePortletSize', 'N', 'Y: 사용 N: 사용안함 (default: N)', '포탈 포틀릿 커스텀 사이즈 사용 여부', TO_DATE('2023-11-20 00:00:00','yyyy-mm-dd hh24:mi:ss'), '포탈');
+
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (0, 'one_by_one');
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (1, 'two_by_one');
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (2, 'one_by_two');
+INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (3, 'two_by_two');
