@@ -3759,4 +3759,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.insertPortalPortletSizeTables();
     }
 
+    @Override
+    public void insertTblPortalTopUser() {
+        ezCommonDAO.insertTblPortalTopUser();
+    }
 }

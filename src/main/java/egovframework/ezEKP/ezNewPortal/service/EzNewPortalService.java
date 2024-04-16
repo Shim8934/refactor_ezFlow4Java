@@ -2,10 +2,13 @@ package egovframework.ezEKP.ezNewPortal.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.MenuAuthorUserVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -248,10 +251,15 @@ public interface EzNewPortalService {
 	 */
 	public int getDeptUserListCount (int tenantId, String key, String value,String companyId, String lang) throws Exception;
 
-
 	List<String> getAllAvailablePortletSize();
 
 	Map<Integer, List<String>> getAvailablePortletSize(int themeId, String companyId, int tenantId);
 
 	void updateThemePortletSize(int themeId, int tenantId, String companyId, JSONArray sizeList);
+
+	void insertPortalTopFrameInfo(String userID, String companyID, int tenantID);
+
+	void insertPortalTopFrameInfo(String userID, String companyID, int tenantID, TopFrameType type);
+
+	Optional<TopFrameType> getPortalTopFrameInfo(String userID, String companyID, int tenantID);
 }

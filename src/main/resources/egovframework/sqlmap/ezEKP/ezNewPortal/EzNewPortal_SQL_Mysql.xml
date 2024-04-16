@@ -23,6 +23,8 @@
 <typeAlias alias="OrganDeptVO" type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 <typeAlias alias="webFolderFileVO" type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
 <typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
+<typeAlias alias="PortalTopVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalTopVO"/>
+
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
 <result property="title" 					column="TITLE" />
@@ -3402,4 +3404,22 @@ ORDER BY
 		)
 	</iterate>
 </insert>
+
+	<insert id="ezNewPortal.insertPortalTopFrameInfo" parameterClass="PortalTopVO">
+		INSERT INTO tbl_portal_top_user (user_id, tenant_id, company_id, type)
+		VALUES (#userID#, #tenantID#, #companyID#, #type#)
+		ON DUPLICATE KEY UPDATE user_id = #userID#, tenant_id = #tenantID#, company_id = #companyID#
+	</insert>
+
+	<select id="ezNewPortal.getPortalTopFrameInfo" parameterClass="PortalTopVO" resultClass="PortalTopVO">
+		SELECT
+			user_id as userID,
+			tenant_id as tenantID,
+			company_id as companyID,
+			type as type
+		FROM tbl_portal_top_user
+		WHERE tenant_id = #tenantID#
+		  AND company_id = #companyID#
+		  AND user_id = #userID#
+	</select>
 </sqlMap>

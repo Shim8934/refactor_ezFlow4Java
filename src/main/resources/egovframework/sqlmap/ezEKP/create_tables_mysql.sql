@@ -15150,3 +15150,21 @@ create index IDX_TBL_PORTAL_PORTLET_USER_PORTLET
 
 create index IDX_TBL_PORTAL_PORTLET_USER_TENANT
     on jmocha.tbl_portal_portlet_user_size (TENANT_ID);
+
+--
+-- Table structure for table `TBL_PORTAL_TOP_USER`
+--
+
+DROP TABLE IF EXISTS `TBL_PORTAL_TOP_USER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_PORTAL_TOP_USER`
+(
+    USER_ID    VARCHAR(100)            NOT NULL COMMENT '사용자 아이디',
+    TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
+    COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
+    TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입',
+    PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
+)   ENGINE=InnoDB DEFAULT CHARSET=utf8
+    COMMENT '개인별 탑 메뉴 프레임 타입';
+/*!40101 SET character_set_client = @saved_cs_client */;

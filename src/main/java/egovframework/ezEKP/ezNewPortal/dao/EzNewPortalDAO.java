@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
 import com.google.gson.JsonArray;
 import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
@@ -743,5 +744,13 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	public void insertPortletSizeUser(List<Map<String, Object>> list) {
 		insert("ezNewPortal.insertPortletSizeUser", list);
+	}
+
+	public void updatePortalTopFrameInfo(PortalTopVO vo) {
+		insert("ezNewPortal.insertPortalTopFrameInfo", vo);
+	}
+
+	public PortalTopVO getPortalTopFrameInfo(PortalTopVO vo) {
+		return (PortalTopVO) select("ezNewPortal.getPortalTopFrameInfo", vo);
 	}
 }

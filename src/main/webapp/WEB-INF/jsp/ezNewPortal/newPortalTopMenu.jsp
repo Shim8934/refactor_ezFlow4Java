@@ -37,6 +37,7 @@
 			<iframe id="if_Progress" src="/admin/ezApprovalG/progressAdmin.do?" style="display: none;"></iframe>
 		</c:if>
 
+		<input type="hidden" value="<c:out value='${topFrame}' />"/>
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 		<script type="text/javascript">
 		

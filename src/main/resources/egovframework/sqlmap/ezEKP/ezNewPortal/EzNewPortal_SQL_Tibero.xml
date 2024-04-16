@@ -3736,4 +3736,28 @@ ORDER BY
 	SELECT *
 	FROM DUAL
 </insert>
+
+	<insert id="ezNewPortal.insertPortalTopFrameInfo" parameterClass="PortalTopVO">
+		MERGE INTO TBL_PORTAL_TOP_USER
+		USING DUAL
+		ON (USER_ID = #userID# AND TENANT_ID = #tenantID# AND COMPANY_ID = #companyID#)
+		WHEN MATCHED THEN
+			UPDATE
+			SET TYPE = #type#
+		WHEN NOT MATCHED THEN
+			INSERT (USER_ID, TENANT_ID, COMPANY_ID, TYPE)
+			VALUES (#userID#, #tenantID#, #companyID#, #type#)
+	</insert>
+
+	<select id="ezNewPortal.getPortalTopFrameInfo" parameterClass="PortalTopVO" resultClass="PortalTopVO">
+		SELECT
+			USER_ID AS USERID,
+			TENANT_ID AS TENANTID,
+			COMPANY_ID AS COMPANYID,
+			TYPE AS TYPE
+		FROM tbl_portal_top_user
+		WHERE TENANT_ID = #tenantID#
+		  AND COMPANY_ID = #companyID#
+		  AND USER_ID = #userID#
+	</select>
 </sqlMap>

@@ -286,6 +286,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertReturnByDesignationUsedConfig(); // 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그 추가
 			ezCommonService.insertReadingRecordHeader(); // 2024-06-21 김우철 - 전자결재G > 열람문서함 헤더 추가
             ezCommonService.insertPortalPortletSizeTables(); // 2023-11-20 박기범 - 포탈 포틀릿 사이즈 관련 테이블 추가
+			ezCommonService.insertTblPortalTopUser(); // 2024-04-11  TBL_PORTAL_TOP_USER 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

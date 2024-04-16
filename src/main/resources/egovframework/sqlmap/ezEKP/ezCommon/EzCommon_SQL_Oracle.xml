@@ -4693,4 +4693,20 @@
 			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (3, 'two_by_two')
 		SELECT * FROM DUAL
 	</insert>
+
+	<select id="EzCommonDAO.checkTblPortalTopUser" resultClass="String">
+		SELECT 1 FROM TBL_PORTAL_TOP_USER WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createTblPortalTopUser">
+		CREATE TABLE TBL_PORTAL_TOP_USER
+		(
+			USER_ID    VARCHAR2(100)       NOT NULL,
+			TENANT_ID  NUMBER(5) DEFAULT 0 NOT NULL,
+			COMPANY_ID VARCHAR2(100)       NOT NULL,
+			TYPE       NUMBER(5) DEFAULT 0 NOT NULL,
+			CONSTRAINT TBL_PORTAL_TOP_USER
+				PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
+		)
+	</statement>
 </sqlMap>

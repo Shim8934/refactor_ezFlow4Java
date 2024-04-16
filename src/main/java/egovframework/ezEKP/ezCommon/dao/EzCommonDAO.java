@@ -2174,4 +2174,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertPortalPortletSizeDefault");
 		}
 	}
+
+	public void insertTblPortalTopUser() {
+		try {
+			select("EzCommonDAO.checkTblPortalTopUser");
+		} catch (Exception e) {
+			logger.debug("TBL_PORTAL_TOP_USER doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblPortalTopUser");
+		}
+	}
 }

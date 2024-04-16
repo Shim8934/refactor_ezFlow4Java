@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -30,6 +31,8 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -3375,5 +3378,38 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		} catch (Exception e) {
 			logger.error("updateThemePortletSize error : " + e.getMessage(), e);
 		}
+	}
+
+	@Override
+	public void insertPortalTopFrameInfo(String userID, String companyID, int tenantID) {
+		PortalTopVO vo = new PortalTopVO();
+		vo.setTenantID(tenantID);
+		vo.setCompanyID(companyID);
+		vo.setUserID(userID);
+
+		ezNewPortalDAO.updatePortalTopFrameInfo(vo);
+	}
+
+	@Override
+	public void insertPortalTopFrameInfo(String userID, String companyID, int tenantID, TopFrameType type) {
+		PortalTopVO vo = new PortalTopVO();
+		vo.setTenantID(tenantID);
+		vo.setCompanyID(companyID);
+		vo.setUserID(userID);
+		vo.setType(type.getCode());
+
+		ezNewPortalDAO.updatePortalTopFrameInfo(vo);
+	}
+
+	@Override
+	public Optional<TopFrameType> getPortalTopFrameInfo(String userID, String companyID, int tenantID) {
+		PortalTopVO vo = new PortalTopVO();
+		vo.setTenantID(tenantID);
+		vo.setCompanyID(companyID);
+		vo.setUserID(userID);
+
+		PortalTopVO info = Optional.ofNullable(ezNewPortalDAO.getPortalTopFrameInfo(vo)).orElse(new PortalTopVO());
+
+		return Optional.ofNullable(info.getTypeEnum());
 	}
 }

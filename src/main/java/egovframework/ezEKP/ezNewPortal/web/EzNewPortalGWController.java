@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -21,6 +22,8 @@ import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezNewPortal.vo.DeptViewVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -806,11 +809,11 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String companyId = request.getParameter("companyID") != null ? request.getParameter("companyID") : info.getCompanyId();
 			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			String langType = info.getLang();
 			String logoType = "P";
-			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
 			String jobId = request.getParameter("jobId");
 			JSONObject data = new JSONObject();
@@ -1059,8 +1062,14 @@ public class EzNewPortalGWController {
 			}
 			
 			data.put("useActiveX", useActiveX);
+
+			/**
+			 * 5) 탑메뉴 유저 설정
+			 * 디폴트는 TOP. 디폴트 설정을 넣을경우 여기 변경
+			 */
+			Optional<TopFrameType> topFrameInfo = ezNewPortalService.getPortalTopFrameInfo(userId, companyId, tenantId);
+			data.put("topFrame", topFrameInfo.orElse(TopFrameType.TOP).getCode());
 			//end
-			
 
 			//logger.debug("TopMenu Data : " + data.toJSONString()); // 로그정리 : EzNewPortalController 에서 중복으로 로깅
 			result.put("status", "ok");

@@ -366,4 +366,6 @@ public interface EzCommonService {
 	public void insertReadingRecordHeader() throws Exception;
 
     void insertPortalPortletSizeTables();
+
+	void insertTblPortalTopUser();
 }
