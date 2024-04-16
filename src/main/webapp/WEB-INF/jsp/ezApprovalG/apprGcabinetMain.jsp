@@ -2011,6 +2011,7 @@
 		    				} else {
 		    					var URL = result;
 		    					AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(URL);
+		    					DivPopUpHidden();
 		    				}
 		    			}, error: function() {
 		    				OpenAlertUI("<spring:message code='ezApprovalG.t00017'/>");
