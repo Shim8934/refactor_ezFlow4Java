@@ -692,7 +692,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					messageJson.put("subject", subject);
 					
 					// received date
-					SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");					
+					SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					
 					Date receivedDate = sdf2.parse(mailInfo.get("MAIL_DATE"));
 					
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
