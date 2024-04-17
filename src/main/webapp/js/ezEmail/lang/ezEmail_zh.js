@@ -1,4 +1,4 @@
-﻿﻿var strLang1 = "此视图中没有显示的项目。";
+﻿var strLang1 = "此视图中没有显示的项目。";
 var strLang2 = "无法显示文件夹 。 服务器内部发生错误。";
 var strLang3 = "具有视图类型的变量。";
 var strLang4 = "清空收件箱";
@@ -68,7 +68,7 @@ var strLang86 = "试图添加附件。";
 var strLang89 = "无法上传文件。";
 var strLang90 = "选择要删除的附件。"
 var strLang91 = "删除附加的文件。" ;
-var strLang92 = "主题行是空的。";
+var strLang92 = "标题栏是空的，不会暂时保存。";
 var strLang93 = "没有指定的收信人。";
 var strLang95 = "标题必须少于120个字符。";
 var strLang96 = "邮件总大小或收件人次超过服务器限制的限度，需经过\n管理者批准才能真正发送。您确定要发送吗 \n?";
