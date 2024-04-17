@@ -32,11 +32,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 
 @Controller
 public class EzApprovalGConnController {
     private static final Logger logger = LoggerFactory.getLogger(EzApprovalGConnController.class);
     
+    @Autowired
+	private Properties config;
+
     @Autowired
     CommonUtil commonUtil;
     
@@ -119,9 +123,14 @@ public class EzApprovalGConnController {
         
         // 로그인쿠키 생성
         Cookie[] cookies = request.getCookies();
+        boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
+				if (useDbSession || cookie.getName().equalsIgnoreCase("loginCookie")) {
+					loginService.deleteSession(cookie.getValue());
+				}
+
                 if (!"JSESSIONID".equalsIgnoreCase(cookie.getName())) { // JSESSIONID는 지우지 않음 (이중화 시 JSESSIONID 쿠키를 사용)
                     cookie.setMaxAge(0);
                     cookie.setPath("/");

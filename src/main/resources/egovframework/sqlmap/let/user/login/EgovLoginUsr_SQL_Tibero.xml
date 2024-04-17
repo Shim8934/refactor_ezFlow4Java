@@ -327,6 +327,15 @@
     			SESSION_ID 	= #ezSessionId#
     </update>
 
+   	<delete id="loginDAO.deleteSession" parameterClass="String">
+   		<![CDATA[
+			DELETE FROM
+				TBL_SESSION
+			WHERE
+				SESSION_ID 	= #ezSessionId#
+		]]>
+    </delete>
+
    	<select id="loginDAO.getSession" parameterClass="String" resultMap="session">
         <![CDATA[
             SELECT

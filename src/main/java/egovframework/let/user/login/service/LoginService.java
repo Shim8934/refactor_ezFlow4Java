@@ -71,6 +71,8 @@ public interface LoginService {
 
 	void updateSession(String ezSessionId, String loginCookie) throws Exception;
 
+	void deleteSession(String ezSessionId) throws Exception;
+
 	SessionVO getSession(String ezSessionId) throws Exception;
 
 	void deleteDbSessionByTime() throws Exception;

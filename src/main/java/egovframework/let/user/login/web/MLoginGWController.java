@@ -945,6 +945,16 @@ public class MLoginGWController {
 		loginService.updateSession(mEzSessionId, mloginCookie);
 	}
 
+	@PostMapping(value = "/mobile/ezUser/delete/session/mEzSessionId/{mEzSessionId}")
+	public void deleteSession(@PathVariable String mEzSessionId) throws Exception {
+		loginService.deleteSession(mEzSessionId);
+	}
+
+	@PostMapping(value = "/mobile/ezUser/check/session")
+	public String checkDBSession() throws Exception {
+		return config.getProperty("config.UseDbSession");
+	}
+
     /**
   	 * 모바일 G/W 사용자 [GET] 로그아웃
   	 * 2021-12-27 이사라  

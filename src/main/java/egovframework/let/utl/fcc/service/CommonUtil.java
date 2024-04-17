@@ -827,12 +827,21 @@ public class CommonUtil {
 
 	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
 		Cookie[] cookies = request.getCookies();
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
 		if (cookies == null) {
 			return;
 		}
 
 		for (Cookie cookie : cookies) {
+			try {
+				if (useDbSession || cookie.getName().equalsIgnoreCase("loginCookie")) {
+					loginService.deleteSession(cookie.getValue());
+				}
+			} catch (Exception e) {
+				// 본 오류에 상관없이 쿠키 제거 진행을 위해 try-catch로 묶음
+			}
+
 			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")) {
 				cookie.setMaxAge(0);
 				cookie.setPath("/");

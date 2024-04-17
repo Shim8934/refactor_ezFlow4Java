@@ -231,6 +231,11 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	}
 
 	@Override
+	public void deleteSession(String ezSessionId) throws Exception {
+		loginDAO.deleteSession(ezSessionId);
+	}
+
+	@Override
 	public SessionVO getSession(String ezSessionId) throws Exception {
 		return loginDAO.getSession(ezSessionId);
 	}
