@@ -1047,7 +1047,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 			try {
 				in = new BufferedInputStream(new FileInputStream(file));
-				String mimetype = "application/octet-stream";
+				Path path = Paths.get(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
+				String mimetype = Files.probeContentType(path);
+				//String mimetype = "application/octet-stream";
 
 				response.setBufferSize(BUFF_SIZE);
 				response.setContentType(mimetype);
