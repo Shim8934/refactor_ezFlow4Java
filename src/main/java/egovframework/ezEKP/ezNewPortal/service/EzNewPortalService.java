@@ -189,7 +189,7 @@ public interface EzNewPortalService {
 	
 	/**
 	 * 김보미
-	 * @param companyID
+	 * @param companyId
 	 * @param tenantId
 	 * @return
 	 */
@@ -228,7 +228,6 @@ public interface EzNewPortalService {
 	/**
 	 * 해당부서의 사원리스트
 	 * @param tenantId
-	 * @param deptId
 	 * @return
 	 * @throws Exception
 	 */
@@ -237,7 +236,6 @@ public interface EzNewPortalService {
 	/**
 	 * 해당부서의 사원수
 	 * @param tenantId
-	 * @param deptId
 	 * @return
 	 * @throws Exception
 	 */
