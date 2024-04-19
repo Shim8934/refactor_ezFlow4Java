@@ -484,6 +484,14 @@
 			                        setClearSusinCellInfo();
 			                    }
 			                    pDocID = createNewDoc();
+			                    
+			                    // 2024-04-19 조소정 - G버전 whwp문서 재사용 시 첨부파일 재사용 및 첨부파일이력 추가
+			                    if (isUsed == "reuse") {
+			                    	if (apprReuseConfig != '1') {
+			                    		getDocInfo();
+										setAttachInfo(pDocID, "APR", lstAttachLink);
+			                    	}
+								}
 			                }
 			            }
 					}
