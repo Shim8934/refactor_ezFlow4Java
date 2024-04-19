@@ -296,7 +296,7 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvtDoclist" style="border: 0; width: 680px; height: 360px; overflow-x: auto; overflow-y:hidden;"></div>
+	                    <div id="lvtDoclist" style="border: 0; width: 680px; height: 385px; overflow-x: auto; overflow-y:hidden;"></div>
 					</div>
 					<div id="tblPageRayer"></div>
 	            </td>
@@ -304,7 +304,7 @@
 	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" style="cursor: pointer"></td>
 	            <td>
 	                <div class="listview" style="margin-bottom:45px">
-	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 360px; overflow: auto"></div>
+	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 385px; overflow: auto"></div>
 	                </div>
 	            </td>
 	        </tr>
