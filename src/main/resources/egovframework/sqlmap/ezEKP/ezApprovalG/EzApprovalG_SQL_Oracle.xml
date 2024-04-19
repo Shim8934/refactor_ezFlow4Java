@@ -4890,22 +4890,25 @@
 <!-- 		{CALL EZSP_GETRECEIPTTEMPLETDETAILIF(#v_FORMID#, #v_USERID#, #v_APRDEPTSN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getReceiptTempletDetailInfo" parameterClass="Map" resultClass="ApprGDeptTempletVO">
-			 SELECT 
-			 	* 
-		     FROM 
-		     		TBL_DEPTTEMPLETDETAIL 
+			 SELECT
+                 A.*, D.DEPT_CD_PATH
+             FROM 
+		     		TBL_DEPTTEMPLETDETAIL A
+             INNER JOIN TBL_DEPTMASTER D
+               ON A.APRMEMBERDEPTID = D.CN
+               AND A.APRMEMBERDEPTNAME = D.DISPLAYNAME
 		     WHERE  
-		     		TRIM(FORMID) = #v_FORMID#
+		     		TRIM(A.FORMID) = #v_FORMID#
 		     AND 
-		     		USERID = #v_USERID#
-		     AND 
-		     		APRDEPTSN = #v_APRDEPTSN#
+		     		A.USERID = #v_USERID#
 		     AND
-		     		TENANT_ID =#v_TENANTID#
+                    A.APRDEPTSN = #v_APRDEPTSN#
+		     AND
+                    A.TENANT_ID =#v_TENANTID#
 	     	 AND
-       				COMPANYID = #companyID#		     		
-		     ORDER BY 
-		     		APRDEPTMEMBERSN DESC
+                    A.COMPANYID = #companyID#		     		
+		     ORDER BY
+                    A.APRDEPTMEMBERSN DESC
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTempListDB" parameterClass="Map" resultClass="ApprGAdminReceiveVO" remapResults="true"> -->
@@ -5005,19 +5008,24 @@
 		            APRMEMBERNAME2 RECEIPTMEMBERNAME2  ,
 		            APRMEMBERJOBTITLE RECEIPTMEMBERJOBTITLE  ,
 		            APRMEMBERJOBTITLE2 RECEIPTMEMBERJOBTITLE2  ,
-		            NULL PROCESSDATE  
+		            NULL PROCESSDATE,
+                    D.DEPT_CD_PATH  
 		     FROM
-		      		TBL_DEPTTEMPLETDETAIL 
-		     WHERE  
-		     		USERID = #v_USERID#
-		     AND 
-		     		FORMID = #v_FORMID#
-		     AND 
-		     		APRDEPTSN = #v_APRDEPTSN#
+                 TBL_DEPTTEMPLETDETAIL A
+             INNER JOIN TBL_DEPTMASTER D
+             ON A.APRMEMBERDEPTID = D.CN
+             AND A.APRMEMBERDEPTNAME = D.DISPLAYNAME
+		     WHERE
+                    A.USERID = #v_USERID#
 		     AND
-		     		TENANT_ID = #v_TENANTID#
+                    A.FORMID = #v_FORMID#
 		     AND
-		     		COMPANYID = #companyID#		     		
+                    A.APRDEPTSN = #v_APRDEPTSN#
+		     AND
+                    A.TENANT_ID = #v_TENANTID#
+		     AND
+                    A.COMPANYID = #companyID#
+             AND D.DEPT_CD_PATH NOT LIKE '%trash_dept_%'
 		     ORDER BY 
 		     		APRDEPTMEMBERSN DESC
 	</select>
