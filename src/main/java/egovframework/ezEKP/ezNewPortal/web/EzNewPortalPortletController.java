@@ -213,6 +213,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("portletId", req.getParameter("portletId"));
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("deptId", userInfo.getDeptID());
+		param.put("rollInfo", userInfo.getRollInfo());
 		String url = "/rest/ezPortal/portlets/vote";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -246,6 +247,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
 		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("rollInfo", userInfo.getRollInfo());
 		String url = "/rest/ezPortal/portlets/vote";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);

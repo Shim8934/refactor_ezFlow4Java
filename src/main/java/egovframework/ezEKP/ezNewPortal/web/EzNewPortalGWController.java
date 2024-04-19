@@ -3920,19 +3920,21 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
+			String rollInfo = request.getParameter("rollInfo");
+			String userType = rollInfo.indexOf("c=1") > -1 || rollInfo.indexOf("k=1") > -1 ? "admin" : "user";
 
 			// deptpath 구하기
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 
 			// 진행중인 투표 중 내가 참여하고 있는 투표의 개수
-			int voteCount = ezNewPortalService.getVotePortletCount(userId, companyId, deptPath, tenantId);
+			int voteCount = ezNewPortalService.getVotePortletCount(userId, companyId, deptPath, tenantId, userType);
 
 			JSONObject data = new JSONObject();
 			data.put("voteCount", voteCount);
 
 			if (voteCount != 0) {
 				// 투표 정보 가져오기
-				PollQuestionVO pollQuestion = ezNewPortalService.getVotePortletInfo(userId, companyId, deptPath, tenantId);
+				PollQuestionVO pollQuestion = ezNewPortalService.getVotePortletInfo(userId, companyId, deptPath, tenantId, userType);
 				int qstId = pollQuestion.getQstId();
 
 				logger.debug("qstId : " + qstId);

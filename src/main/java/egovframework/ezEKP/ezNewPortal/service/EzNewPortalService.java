@@ -66,8 +66,8 @@ public interface EzNewPortalService {
 	/**
 	 * 유은정
 	 */
-	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) throws Exception;
-	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) throws Exception;
+	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId, String userType) throws Exception;
+	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId, String userType) throws Exception;
 	public List<PollAnswerVO> getVotePortletAnswer(int qstId, int tenantId) throws Exception;
 	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount, String offset) throws Exception;
 	public int getPhotoBoardPortletTotalCnt(int tenantId, String boardId, String offset) throws Exception;

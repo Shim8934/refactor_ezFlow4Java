@@ -715,7 +715,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) throws Exception {
+	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId, String userType) throws Exception {
 		logger.debug("[Serivce] getVotePortletCount Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] deptArr = deptPath.split(",");
@@ -724,13 +724,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
 		map.put("deptArr", deptArr);
+		map.put("userType", userType);
 		
 		logger.debug("[Serivce] getVotePortletCount Ended");
 		return ezNewPortalDAO.getVotePortletCount(map);
 	}
 
 	@Override
-	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) throws Exception {
+	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId, String userType) throws Exception {
 		logger.debug("[Serivce] getVotePortletInfo Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String[] deptArr = deptPath.split(",");
@@ -739,6 +740,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("deptPath", deptPath);
 		map.put("tenantId", tenantId);
 		map.put("deptArr", deptArr);
+		map.put("userType", userType);
 		
 		logger.debug("[Serivce] getVotePortletInfo Ended");
 		return ezNewPortalDAO.getVotePortletInfo(map);
