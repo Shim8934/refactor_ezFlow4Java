@@ -4046,7 +4046,6 @@ ORDER BY
 
 	<select id="ezNewPortal.getNewBoardPortletInfo" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
-		<![CDATA[
 		SELECT 
 				INFO.*, ROWNUM
 		FROM
@@ -4136,7 +4135,6 @@ ORDER BY
 			) INFO
 		WHERE
 		     ROWNUM <= #limit# + #rowCount#
-		]]>
 		]]>
 	</select>
 	
