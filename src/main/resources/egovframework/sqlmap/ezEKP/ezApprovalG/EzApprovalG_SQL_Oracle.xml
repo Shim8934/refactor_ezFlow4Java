@@ -22673,11 +22673,12 @@
              ORGDOCNUMCODE ,
              SEPERATEATTACHXML ,
              SUMMARY ,
-             SECURITYAPPROVAL 
+             SECURITYAPPROVAL ,
+             PUBLICITYYN
         FROM 
         	 TBL_EXPENDAPRDOCINFO 
         WHERE  
-         	 DOCID = #v_DOCID#
+         	 DOCID = #v_orgDocID#
         AND
         	 TENANT_ID = #v_TENANTID#
         AND
