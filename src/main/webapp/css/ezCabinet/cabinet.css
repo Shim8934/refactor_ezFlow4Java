@@ -368,7 +368,7 @@
 .ptdownloadwrap input[type='checkbox'] {vertical-align: top; position: absolute; z-index: 1; left: 2px; top: 2px; margin: 0px;}
 .ptdownloadwrap img {cursor:pointer; width: 100px; height: 100px;}
 
-.addRelatedConfig {height: 42px;}
+.addRelatedConfig {height: 55px;}
 .cabMgRelTree {position: relative; margin: 10px 5px; padding: 10px; border: 1px solid #ddd; overflow: auto; flex: 1; background-color: #fff;}
 .cabMgRelTree.hid {overflow: hidden !important;}
 .cabMgRelTree .mdlRelTree {height: 100%; z-index: 1; white-space: nowrap;}
