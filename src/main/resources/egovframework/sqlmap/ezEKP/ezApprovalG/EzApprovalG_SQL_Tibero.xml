@@ -29885,6 +29885,8 @@
       		COMPANYID = #companyID#
       	AND
       		DOCID = #v_DOCID#
+        AND
+            APRMEMBERID = #v_USERID#
       	AND
       		APRTYPE = '040'
       	AND
