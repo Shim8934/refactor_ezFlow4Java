@@ -698,7 +698,8 @@
 							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
 				    </c:choose>	
-					<c:if test="${useMailTag and flag ne 'address'}">
+					<%--24.04.22 김대현 공유사서함 경우 tag탭 사라지게 처리--%>
+					<c:if test="${useMailTag and flag ne 'address' and shareId == null}">
 						<p><span divname="tag" id="1tab12"><spring:message code='ezEmail.tag.config' /></span></p>
 					</c:if>
 	            </div>
