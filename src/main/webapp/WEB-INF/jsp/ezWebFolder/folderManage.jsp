@@ -28,6 +28,7 @@
     	}
     	.list_text {
     		font-size: 14px !important;
+			cursor : pointer;
     	}
     </style>
     <script>
