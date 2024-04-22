@@ -324,7 +324,7 @@ function GetUserContListSave(AllFG) {
         OrderOption = "";
         OrderCell = "";
     }
-    document.getElementById("tbtnRemoveDoc").style.display = "";
+    // document.getElementById("tbtnRemoveDoc").style.display = "";
 
     var xmlpara = createXmlDom();
     var objNode;
