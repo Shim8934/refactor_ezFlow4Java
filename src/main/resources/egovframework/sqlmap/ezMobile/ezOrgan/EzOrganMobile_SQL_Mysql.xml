@@ -354,7 +354,7 @@
 				ON
 					A.CN = B.CN
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					B.TENANT_ID = D.TENANT_ID
 				AND
 					A.DEPTID = D.CN
 				WHERE
@@ -362,7 +362,7 @@
 					OR
 					D.DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%'))	
 				AND
-					A.TENANT_ID = #tenantID#
+					B.TENANT_ID = #tenantID#
 		    	AND 
 		    		B.PHYSICALDELIVERYOFFICENAME = #companyId# 
 		    	AND 
@@ -455,13 +455,13 @@
 				ON
 					A.CN = B.CN
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					B.TENANT_ID = D.TENANT_ID
 				AND
 					A.DEPTID = D.CN
 				WHERE
 					A.DEPTID = #deptID#
 				AND
-					A.TENANT_ID = #tenantID#) 
+					B.TENANT_ID = #tenantID#) 
 				ORDER BY 
 					EXTENSIONATTRIBUTE15,
 				    userName
