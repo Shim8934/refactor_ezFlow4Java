@@ -7801,7 +7801,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
 						lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
-					}
+					} else {
+                        lastCnt = "";
+                    }
 
 					// 참조
 					if (refResult > 0) {
