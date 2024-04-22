@@ -22,6 +22,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -942,7 +943,15 @@ public class MLoginGWController {
 
 	@PostMapping(value = "/mobile/ezUser/update/session/mEzSessionId/{mEzSessionId}")
 	public void updateSession(@PathVariable String mEzSessionId, String mloginCookie) throws Exception {
-		loginService.updateSession(mEzSessionId, mloginCookie);
+		// MariaDB 클러스터 환경에서 Deadlock Exception이 발생할 수 있어
+		// 업데이트 도중 오류가 발생해도 무조건 성공으로 처리한다.
+		try {
+			loginService.updateSession(mEzSessionId, mloginCookie);
+		} catch (DataAccessException e) {
+			logger.error("updateSession mEzSessionId : {}", mEzSessionId);
+		} catch (Exception e) {
+			logger.error("updateSession mEzSessionId : {}", mEzSessionId);
+		}
 	}
 
 	@PostMapping(value = "/mobile/ezUser/delete/session/mEzSessionId/{mEzSessionId}")
