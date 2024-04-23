@@ -43,7 +43,7 @@ public class EzCabinetController_h {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetController_h.class);
 	
-	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetCabinetFileDetail started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
@@ -155,7 +155,7 @@ public class EzCabinetController_h {
 		return "ezCabinet/share/cabinetAncestorShare";
 	}
 	
-	@RequestMapping(value="/ezCabinet/getDeptMembers.do", method=RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getDeptMembers.do", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String jsonGetDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetDeptMembers started");
@@ -180,7 +180,7 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getShareUserList.do", method=RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getShareUserList.do", method=RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String jsonGetShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetShareUserList started");
@@ -300,7 +300,7 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getFileDetail.do", method=RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getFileDetail.do", method=RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonGetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetFileDetail started");

@@ -273,7 +273,7 @@ public class EzCabinetController {
 		logger.debug("responeDownloadFile finishes!");
 	}
 	
-	@RequestMapping(value="/ezCabinet/getCompanyTree.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getCompanyTree.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -602,7 +602,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getCabinetItems.do", method = RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getCabinetItems.do", method = RequestMethod.POST, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonGetCabinetItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetCabinetItems start");
