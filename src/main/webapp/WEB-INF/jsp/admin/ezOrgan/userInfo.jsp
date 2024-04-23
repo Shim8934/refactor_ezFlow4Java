@@ -370,18 +370,17 @@
 		        	document.getElementById('Password').focus();
 		        	return;
 		        }
-		        if (UserName.value.indexOf("(") > -1 || UserName.value.indexOf(")") > -1 || UserName.value.indexOf("&") > -1
-		        		 || UserName.value.indexOf("<") > -1 || UserName.value.indexOf(">") > -1 
-		        		 || UserName.value.indexOf("\"") > -1 || UserName.value.indexOf("'") > -1) {
-		            alert("<spring:message code='ezOrgan.t259' /> (,),&,<,>,\",' <spring:message code='ezOrgan.t260' />");
-		            return;
-		        }
-		        if (UserName2.value.indexOf("(") > -1 || UserName2.value.indexOf(")") > -1 || UserName2.value.indexOf("&") > -1
-		        		 || UserName2.value.indexOf("<") > -1 || UserName2.value.indexOf(">") > -1 
-		        		 || UserName2.value.indexOf("\"") > -1 || UserName2.value.indexOf("'") > -1) {
-		            alert("<spring:message code='ezOrgan.t259' /> (,),&,<,>,\",' <spring:message code='ezOrgan.t260' />");
-		            return;
-		        }
+				var regexForName = /[()&<>\\']/;
+
+				if (regexForName.test(UserName.value)) {
+					alert("<spring:message code='ezOrgan.t259' /> (,),&,<,>,\\,' <spring:message code='ezOrgan.t260' />");
+					return;
+				}
+
+				if (regexForName.test(UserName2.value)) {
+					alert("<spring:message code='ezOrgan.t259' /> (,),&,<,>,\\,' <spring:message code='ezOrgan.t260' />");
+					return;
+				}
 		        
 // 		        if (JobTitle.value.indexOf("&") != -1 || JobTitle.value.indexOf("<") != -1 || JobTitle.value.indexOf(">") != -1) {
 // 		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
