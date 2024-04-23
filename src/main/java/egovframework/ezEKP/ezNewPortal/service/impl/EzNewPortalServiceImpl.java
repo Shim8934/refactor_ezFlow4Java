@@ -1532,7 +1532,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				connectionUrl = specialCharacterToEmptyString(connectionUrl);
 			}
 			
-			map.put("connectionUrl", URLEncoder.encode(connectionUrl, "UTF-8"));
+			map.put("connectionUrl", connectionUrl);
 		}
 		
 		map.put("menuId", Integer.parseInt(map.get("menuId").toString()));
@@ -1701,6 +1701,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Override
 	public List<BoardListVO> getBoardPortletInfo (String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal) throws Exception {
+		return getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, offset, isQnANormal, 0);
+		
+	}
+
+	@Override
+	public List<BoardListVO> getBoardPortletInfo(String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, int startRow) throws Exception {
 		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
@@ -1711,12 +1717,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("nowDate", nowDate);
 		map.put("userId", userId);
 		map.put("isQnANormal", isQnANormal ? "Y" : "N");
+		map.put("startRow", startRow);
 
 		logger.debug("getBoardPortletInfo ended.");
 		return ezNewPortalDAO.getBoardPortletInfo(map);
-		
 	}
-	
+
 	@Override
 	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception {
 		logger.debug("getThemePortletList started.");

@@ -1018,6 +1018,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
 		String type = Optional.ofNullable(req.getParameter("type")).orElse("");
+		String fileName = Optional.ofNullable(req.getParameter("fileName")).orElse("");
 		HashMap<String, Object> param = new HashMap<>();
 		param.put("userId", userInfo.getId());
 		param.put("companyId", userInfo.getCompanyID());
@@ -1025,6 +1026,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("startRow", 0);
 		param.put("photoCount", 5);
 		param.put("portletId", portletId);
+		param.put("fileName", fileName);
 		String url = "/rest/ezPortal/portlets/board";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
@@ -1044,6 +1046,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		model.addAttribute("portletId", portletId);
 		model.addAttribute("type", type);
+		model.addAttribute("fileName", fileName);
 		logger.debug("portalBoardPortlet End");
 		
 		return "/ezNewPortal/portlets/boardPortlet";
@@ -1056,14 +1059,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
+		String fileName = Optional.ofNullable(req.getParameter("fileName")).orElse("");
+		Integer startRow = Optional.ofNullable(req.getParameter("startRow")).map(Integer::parseInt).orElse(0);
+		Integer photoCount = Optional.ofNullable(req.getParameter("count")).map(Integer::parseInt).orElse(5);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("companyId", userInfo.getCompanyID());
-		param.put("deptId", userInfo.getDeptID());
 		param.put("deptId", userInfo.getDeptPathCode());
-		param.put("startRow", 0);
-		param.put("photoCount", 5);
+		param.put("startRow", startRow);
+		param.put("photoCount", photoCount);
 		param.put("portletId", portletId);
+		param.put("fileName", fileName);
 		String url = "/rest/ezPortal/portlets/board";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);

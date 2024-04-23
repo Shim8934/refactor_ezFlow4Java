@@ -37,7 +37,6 @@
 	#nodata_NewBirth {display:none;}
 	#featured {background : none;}
 	.box_shadow {width:100%; margin:0px;}
-	.portlet {height:250px; margin:20px 0px 0px 20px; background-color:#ffffff; border-radius:5px;}
 	.infoImg img {width:60px; height:60px;}
 	.attitudePtl {border:none;}
 	.orbit-wrapper .timer {display:none;}
@@ -52,7 +51,7 @@
 </style>
 </head>
 <body class="mainbg" id="theme1Body">
-	<div id="center">
+	<div id="center" style="display: none">
 	<c:if test="${usedFrame eq 'Frame2'  || usedFrame eq 'Frame4'}">
 		<section class="section_left right_float" style="height:1130px;">
 	</c:if>

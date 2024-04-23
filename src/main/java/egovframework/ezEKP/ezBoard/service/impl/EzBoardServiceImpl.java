@@ -5239,7 +5239,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		List<BoardAttachVO> voList = ezBoardDAO.brdGetItemAttachmentInfo(map);
 		for (BoardAttachVO vo : voList) {
 			// 파일이름이 비어있거나 이미지 파일의 확장자가 아닌경우 스킵
-			if (StringUtils.isBlank(vo.getFileName()) || commonUtil.checkImgExtension(FilenameUtils.getExtension(vo.getFileName()))) {
+			if (StringUtils.isBlank(vo.getFileName()) || !commonUtil.checkImgExtension(FilenameUtils.getExtension(vo.getFileName()))) {
 				continue;
 			}
 

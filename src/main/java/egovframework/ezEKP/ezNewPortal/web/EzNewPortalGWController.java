@@ -4957,16 +4957,16 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
-			String attachImage = request.getParameter("attach");
+			String fileName = request.getParameter("fileName");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
 			String rollInfo = info.getRollInfo();
-			String defaultImg = "/images/kr/login/login_img1.png";	// gbp-todo : 추후 추가 될 fix board 디폴트 이미지.
 			int tenantId = info.getTenantId();
 			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
 		
 			int itemCount = Integer.parseInt(request.getParameter("photoCount"));
+			int startRow = Optional.ofNullable(request.getParameter("startRow")).map(Integer::parseInt).orElse(0);
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone," + deptPath + "," + userId;
@@ -4994,7 +4994,7 @@ public class EzNewPortalGWController {
 				}
 
 				// 권한이 true이면 boardList불러오기
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow);
 
 				// 리스트 개수로 utc time 적용시키기
 				int boardListCount = boardList.size();
@@ -5003,9 +5003,9 @@ public class EzNewPortalGWController {
 					String writeDate = boardListVO.getStartDate();
 					
 					boardListVO.setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
-					if (StringUtils.isNotBlank(attachImage) && "1".equals(boardListVO.getAttachments())) {
-						Optional<BoardAttachVO> boardAttach = ezBoardService.getBoardAttachByName(boardListVO.getItemID(), attachImage, tenantId);
-						boardListVO.setThumbnail(boardAttach.map(BoardAttachVO::getFilePath).orElse(defaultImg));
+					if (StringUtils.isNotBlank(boardListVO.getAttachments()) && "1".equals(boardListVO.getAttachments())) {
+						Optional<BoardAttachVO> boardAttach = ezBoardService.getBoardAttachByName(boardListVO.getItemID(), fileName, tenantId);
+						boardListVO.setThumbnail(boardAttach.map(BoardAttachVO::getFilePath).orElse(""));
 					}
 				}
 

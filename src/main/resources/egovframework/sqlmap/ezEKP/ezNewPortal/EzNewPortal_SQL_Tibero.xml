@@ -1770,6 +1770,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			WRITERDEPTNAME2,
 			startdate,
 			ATTACHMENTS,
+			CONTENT,
 			GUBUN
 		FROM (
 			SELECT 
@@ -1787,6 +1788,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 						A.WRITERDEPTNAME2,
 						A.startdate,
 						A.ATTACHMENTS,
+						A.CONTENT,
 						C.GUBUN
 					FROM
 						TBL_BOARD_ITEM A
@@ -1814,9 +1816,9 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				) INFO
 			) P
 		WHERE
-			P.RNUM >= 0
+			P.RNUM > #startRow#
 		AND
-			P.RNUM <= #itemCount#
+			P.RNUM <= #startRow# + #itemCount#
 	]]>
 </select>
 

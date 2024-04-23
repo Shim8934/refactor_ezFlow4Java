@@ -152,6 +152,11 @@ function changePortletSize(pot, size) {
     resizePortlet(pot);
     if (typeof usedTheme == 'undefined' || !usedTheme) usedTheme = document.querySelector('.portletList').getAttribute('data-themeid');
     userPortletUpdateWithSize(usedTheme);
+
+    // 게시판 포틀릿 사이즈 변경시 게시판 뷰 카운트 변경
+    if (typeof changeBoardViewCount == 'function') {
+        changeBoardViewCount(pot.id.replace('Portlet',''));
+    }
 }
 
 // 포틀릿 사이즈 변경 팝업 만들기
@@ -269,6 +274,10 @@ function reloadPortlet(portletId){
     loadPortlet(portletId);
 }
 
+function getPortletSize(portletId) {
+    return $("#" + portletId + "Portlet")[0].getAttribute("data-size");
+}
+
 function loadPortlet(portletId) {
     var portletUrl;
     var portletName;
@@ -344,4 +353,87 @@ function getAvailSize(id) {
     for(var i = 0; i < portletCount; i++) {
         if (id == portletOrder[i].portletId) return portletOrder[i].listPortletSize;
     }
+}
+
+function Paging() {
+    var _countPerPage;
+    var _start;
+    var _page;
+    var _total = -1;
+    var _option = {
+        maintain:true, // 페이지 숫자 변환시 현제 페이지 유지 여부
+        pageStart:0, // getPage()시 시작 페이지
+    }
+
+    var _resetPage = function (count) {
+        _page = _option.pageStart;
+        _countPerPage = count;
+        _start = 0;
+    }
+
+    var _changeCount = function (count) {
+        _start -= _start % count;
+        _countPerPage = count;
+        _page = _start / count + _option.pageStart;
+    }
+
+    return {
+        init: function (count) {
+            _resetPage(count);
+            return {
+                getPage: function () {
+                    return _page;
+                },
+                getStartPage: function () {
+                    return _option.pageStart;
+                },
+                getCountPerPage: function () {
+                    return _countPerPage;
+                },
+                getStart: function () {
+                    return _start;
+                },
+                next: function () {
+                    _start += _countPerPage;
+                    _page++;
+                    return this;
+                },
+                previous: function () {
+                    _start -= _countPerPage;
+                    _start = _start < 0 ? 0 : _start;
+                    _page--;
+                    return this;
+                },
+                changeCount(count) {
+                    if (_option.maintain) {
+                        _changeCount(count);
+                    } else {
+                        _resetPage(count);
+                    }
+                    return this;
+                },
+                first: function () {
+                    _start = 0;
+                    return this;
+                },
+                setTotal: function (total) {
+                    if (total < _start) {
+                        console.error("The total must be less than the start.");
+                        return this;
+                    }
+                    _total = total;
+                    return this;
+                },
+                getTotal: function () {
+                    return _total;
+                },
+                last: function () {
+                    if (_total === -1) return this;
+                    _start = _total - _total % _countPerPage;
+                    _page = _start / _countPerPage + _option.pageStart;
+                    return this;
+                },
+            }
+        }
+    };
 }

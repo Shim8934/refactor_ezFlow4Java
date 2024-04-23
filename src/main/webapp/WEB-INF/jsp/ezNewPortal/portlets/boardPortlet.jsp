@@ -8,12 +8,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Board Portlet</title>
-<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/boardPortlet.js')}"/>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/boardPortlet.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 <script type="text/javascript">
 $(function() {
 	var boardPortlet = "<c:out value='${portletId}'/>";
-	$(".customBoard").find(".portletPlus").on("click", customBoardBtnClick);
-	getBoardPortletInfo(boardPortlet);
+	$("#portletPlus" + boardPortlet).on("click", customBoardBtnClick);
+	var type = "<c:out value='${type}'/>";
+	var fileName = "<c:out value='${fileName}'/>";
+	initBoardPortletInfo(boardPortlet, type, fileName);
 });
 </script>
 </head>
@@ -24,13 +27,19 @@ $(function() {
 				<dt class="portletText">
 					<c:out value="${portletName }"/>
 				</dt>
-				<dd class="portletPlus" data1="<c:out value='${boardId }'/>">
+				<dd id="<c:out value='portletPlus${portletId}'/>" class="portletPlus" data1="<c:out value='${boardId }'/>">
 					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
+				</dd>
+				<dd class="portletPlus nextBtn" onclick="<c:out value='nextPageBoardPortlet(${portletId})'/>">
+					<img src="/images/ezNewPortal/photo_next.png">
+				</dd>
+				<dd class="portletPlus preBtn" onclick="<c:out value='prePageBoardPortlet(${portletId})'/>">
+					<img src="/images/ezNewPortal/photo_pre.png">
 				</dd>
 			</dl>
 			<c:choose>
 			<c:when test="${not empty boardList}">
-			<ul id="customBoardList<c:out value='${portletId }'/>" class="portlet_list">
+			<ul id="customBoardList<c:out value='${portletId }'/>" class="portlet_list two_line">
 			</ul>
 			</c:when>
 			<c:when test="${access eq false }">
