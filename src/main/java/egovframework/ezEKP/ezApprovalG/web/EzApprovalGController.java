@@ -4058,7 +4058,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		logger.debug("contDocView ended.");
 		
-		return "ezApprovalG/apprGcontDocView";
+		// 2024-04-23 전인하 - 전자결재G > 완료문서 열람 권한 관련 URL 조작 웹취약점 - 권한 체크 후 권한 없을 시 warning 페이지로 이동하게 함
+		if (pass.equals("<RESULT>TRUE</RESULT>")) {
+			return "ezApprovalG/apprGcontDocView";
+		} else {
+			return "main/warning";
+		}
 	}
 	
 	public String makeXMLString(String orgString) throws Exception{

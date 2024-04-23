@@ -202,7 +202,6 @@
                 } else {
                     alert(strLang1139);
                     btnClose_onclick();
-                    window.close();
 		        }
 		    }
 		    function CheckOpinionInfo() {
@@ -281,8 +280,9 @@
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "END");
 		    }
-		    function btnClose_onclick() {
-		        window.close();
+		    function btnClose_onclick() {	    
+                window.close();
+                window.open('/blank.htm', "_self");
 		    }
 		    var ezapropinion_cross_dialogArguments = new Array();
 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
