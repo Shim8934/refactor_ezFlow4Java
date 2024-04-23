@@ -1637,6 +1637,8 @@
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
 		            message.DocumentBodySetAttribute("SepAttachLVXml", g_SepAttachLVXml);
+		            //김우철
+		            SaveFile();
 		        }
 		    }
 		    function GetSepAttParamXml(g_SepAttachLVXml) {
