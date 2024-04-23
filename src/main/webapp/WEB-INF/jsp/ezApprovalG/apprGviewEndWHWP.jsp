@@ -290,7 +290,7 @@
 				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + ingFlag;
 			    //var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    //var RtnVal = window.showModalDialog(url, "", feature);
-				DivPopUpShow(420, 520, url);
+				DivPopUpShow(430, 530, url);
 			}
 			
 			function btnDocInfo_onclick_Complete() {
