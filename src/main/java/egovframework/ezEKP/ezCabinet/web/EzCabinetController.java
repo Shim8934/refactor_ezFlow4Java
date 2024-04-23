@@ -505,7 +505,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSubCabinetNodes.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getSubCabinetNodes.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonGetSubCabinetNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetSubCabinetNodes start");

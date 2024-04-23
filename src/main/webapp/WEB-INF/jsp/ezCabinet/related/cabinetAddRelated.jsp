@@ -239,7 +239,7 @@
 					
 					if (saveMode == 1) {
 						var cabinetTree  = document.getElementById("cabinetMgTree");
-						var selectedNode = cabinetTree.querySelector("span[class='selectedNode']");
+						var selectedNode = cabinetTree.querySelector("span.selectedNode");
 						
 						if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 						
