@@ -606,7 +606,8 @@ public class EzEmailAdminController {
 				// 화면에 보여줄 값들을 정렬하기 위해 distributionSortList에 데이터를 담아주는 반복문
 				for (int i = 0; i < resultArray.size(); i++) {
 					JSONObject address = (JSONObject) resultArray.get(i);
-					String pCn = (String) address.get("cn"); // 공용배포그룹 주소
+					String pCn = (String) address.get("cn"); // 메일 주소
+					String primaryMail = (String) address.get("primaryMail"); // primary 메일주소
 					String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
 					String pClass = (String) address.get("class");
 					String displayName = (String) address.get("displayName");
@@ -639,7 +640,7 @@ public class EzEmailAdminController {
 						} else {	// 공용배포그룹일 때
 							map.put("CLASS", "distribution");
 							map.put("DISPLAYNAME", commonUtil.cleanValue(displayName));
-							map.put("MAIL", commonUtil.cleanValue(pCn));
+							map.put("MAIL", commonUtil.cleanValue(primaryMail));
 							map.put("COMPANY", "");
 							map.put("DEPT", egovMessageSource.getMessage("ezEmail.t57", locale));
 							map.put("TITLE", "");
@@ -1072,87 +1073,92 @@ public class EzEmailAdminController {
 		List<Map<String, String>> mailDistributionList = new ArrayList<>();
 
 		for(int i=0; i<dvGroupList.length; i++) {
-				String dlCn = dvGroupList[i];
-				JSONArray resultArray = ezEmailService.getDistributionMemberList(domain, dlCn);
+			String mail = null;
+			String dlName = null;
+			String dlCn = dvGroupList[i];
+			JSONArray resultArray = null;
+			JSONObject responseObj = ezEmailService.getDistributionMemberList(domain, dlCn);
+			List<Map<String, String>> mailDistributionSortList = new ArrayList<>();
 
-				for(int j=0; j<resultArray.size(); j++){
-					JSONObject info = (JSONObject) resultArray.get(j);
-					String dlMail = (String) info.get("dlMail"); 
-					String dlName = (String) info.get("dlName"); 
-					String pCn = (String) info.get("cn"); // primary 메일주소
-					String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
-					String pClass = (String) info.get("class");
-					String displayName = (String) info.get("displayName");
+			if (responseObj != null) {
+				String resultCode = (String) responseObj.get("resultCode");
 
-					if (domain.equals(pCnDomain)) {
-						pCn = pCn.substring(0, pCn.indexOf("@"));
-					} else {
-						pClass = "distributionSub";
+				if (resultCode.equalsIgnoreCase("OK")) {
+					resultArray = (JSONArray) responseObj.get("result");
+					mail = (String) responseObj.get("mail");
+					dlName = (String) responseObj.get("dlName");
+				}
+			}
+
+			for (int j = 0; j < resultArray.size(); j++) {
+				JSONObject info = (JSONObject) resultArray.get(j);
+				String pCn = (String) info.get("cn"); // 메일주소
+				String primaryMail = (String) info.get("primaryMail"); // primary 메일주소
+				String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
+				String pClass = (String) info.get("class");
+				String displayName = (String) info.get("displayName");
+
+				if (domain.equals(pCnDomain)) {
+					pCn = pCn.substring(0, pCn.indexOf("@"));
+				} else {
+					pClass = "distributionSub";
+				}
+
+				Map<String, String> map = new HashMap<>();
+				map.put("DLCN", commonUtil.cleanValue(dlCn)); // 공용배포그룹 ID
+				map.put("DLNM", commonUtil.cleanValue(dlName)); // 공용배포그룹 이름
+				map.put("DLMAIL", commonUtil.cleanValue(mail)); // 공용배포그룹 Mail
+
+				if ("group".equals(pClass)) { // 부서, 공용배포그룹
+					map.put("CN", commonUtil.cleanValue(pCn));
+					map.put("MAIL", commonUtil.cleanValue(primaryMail));
+					map.put("DISPLAYNAME", commonUtil.cleanValue(displayName));
+					mailDistributionSortList.add(map);
+
+				} else if ("user".equals(pClass)) { // user or jobmst
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, primaryLang, tenantId);
+
+					if (user != null) {    // 사원
+						map.put("CN", commonUtil.cleanValue(pCn));
+						map.put("DISPLAYNAME", commonUtil.cleanValue(user.getDisplayName()));
+						map.put("MAIL", commonUtil.cleanValue(user.getMail()));
+						mailDistributionSortList.add(map);
+					} else {    // 직위, 직책
+						String jobId = pCn.split("__")[1]; // 직위,직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
+						OrganJobVO jobVO = ezOrganAdminService.getTitleByJobID(jobId, userLang, tenantId);
+
+						String jobType = jobVO.getType(); // 001직위, 002직책
+						String jobMail = pCn + "@" + pCnDomain;
+						String jobTitle = jobType.equals("001") ? "main.t77" : "ezPersonal.t175";
+
+						if (jobVO != null && !"".equals(jobVO.getJobID())) {    // 겸직
+							map.put("CN", commonUtil.cleanValue(jobVO.getJobID()));
+							map.put("DISPLAYNAME", commonUtil.cleanValue(jobVO.getDisplayName()));
+							map.put("MAIL", commonUtil.cleanValue(jobMail));
+							mailDistributionSortList.add(map);
+						}
 					}
 
-					Map<String, String> map = new HashMap<>();
-					map.put("DLCN", commonUtil.cleanValue(dlCn)); // 공용배포그룹 ID
-					map.put("DLNM", commonUtil.cleanValue(dlName)); // 공용배포그룹 이름
-					map.put("DLMAIL", commonUtil.cleanValue(dlMail)); // 공용배포그룹 Mail
+				} else {    // 주소록, 직접입력(distribution_sub에서 가져오기)
+					MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(dlCn, pCn, companyId, userInfo.getTenantId());
 
-					if ("group".equals(pClass)) {
-						OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, primaryLang, tenantId);
-
+					if (distributionSubVO != null) {
 						map.put("CN", commonUtil.cleanValue(pCn));
-
-						if (dept != null) {	// 부서일때
-							map.put("DISPLAYNAME", commonUtil.cleanValue(dept.getDisplayName()));
-							map.put("MAIL", commonUtil.cleanValue(dept.getMail()));
-
-							mailDistributionList.add(map);
-						} else { // 공용배포그룹일 때
-							MailDistributionVO distributionVo = ezEmailService.getDistributionInfo(dlCn, tenantId);
-
-							map.put("DISPLAYNAME", commonUtil.cleanValue(displayName));
-							map.put("MAIL", commonUtil.cleanValue(distributionVo.getMail()));
-
-							mailDistributionList.add(map);
-						}
-
-					} else if ("user".equals(pClass)) { // user or jobmst
-						OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, primaryLang, tenantId);
-
-						if (user != null) {	// 사원
-							map.put("CN", commonUtil.cleanValue(pCn));
-							map.put("DISPLAYNAME", commonUtil.cleanValue(user.getDisplayName()));
-							map.put("MAIL", commonUtil.cleanValue(user.getMail()));
-
-							mailDistributionList.add(map);
-						} else {	// 직위, 직책
-							String jobId = pCn.split("__")[1]; // 직위,직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
-							OrganJobVO jobVO = ezOrganAdminService.getTitleByJobID(jobId, userLang, tenantId);
-
-							String jobType = jobVO.getType(); // 001직위, 002직책
-							String jobMail = pCn + "@" + pCnDomain;
-							String jobTitle = jobType.equals("001") ? "main.t77" : "ezPersonal.t175";
-
-							if (jobVO != null && !"".equals(jobVO.getJobID())) {	// 겸직
-								map.put("CN", commonUtil.cleanValue(jobVO.getJobID()));
-								map.put("DISPLAYNAME", commonUtil.cleanValue(jobVO.getDisplayName()));
-								map.put("MAIL", commonUtil.cleanValue(jobMail));
-
-								mailDistributionList.add(map);
-							}
-						}
-
-					} else {	// 주소록, 직접입력(distribution_sub에서 가져오기)
-						MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(dlCn, pCn, companyId, userInfo.getTenantId());
-
-						if (distributionSubVO != null) {
-							map.put("CN", commonUtil.cleanValue(pCn));
-							map.put("DISPLAYNAME", commonUtil.cleanValue(distributionSubVO.getName()));
-							map.put("MAIL", commonUtil.cleanValue(distributionSubVO.getMail()));
-
-							mailDistributionList.add(map);
-						}
+						map.put("DISPLAYNAME", commonUtil.cleanValue(distributionSubVO.getName()));
+						map.put("MAIL", commonUtil.cleanValue(distributionSubVO.getMail()));
+						mailDistributionSortList.add(map);
 					}
 				}
-			} 
+			}
+
+			mailDistributionSortList.sort(Comparator.comparing((Map<String, String> map) -> map.get("DISPLAYNAME")));
+		
+			for (Map<String, String> map : mailDistributionSortList) {
+				Map<String, String> newMap = new HashMap<>(map);
+				mailDistributionList.add(newMap);
+			}
+			
+		}
 
 		/* 엑셀 생성 */
 		try (SXSSFWorkbook workbook = new SXSSFWorkbook()) {

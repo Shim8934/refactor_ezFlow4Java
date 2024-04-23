@@ -4913,12 +4913,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return result;
 	}
 	
-	public JSONArray getDistributionMemberList(String domain, String cn) throws Exception {
+	public JSONObject getDistributionMemberList(String domain, String cn) throws Exception {
 		logger.debug("getDistributionMemberList started.");
 		logger.debug("domain=" + domain + ", cn=" + cn);
 
 		String resultCode = "";
-		JSONArray resultArray = null;
+		JSONObject resultObject = null;
 
 		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + URLEncoder.encode(domain, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
@@ -4929,16 +4929,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
-
-			resultCode = (String) responseObj.get("resultCode");
-
-			if (resultCode.equalsIgnoreCase("OK") && ((Long) responseObj.get("reasonCode")).intValue() == 0) {
-				resultArray = (JSONArray) responseObj.get("result");
-			}
+			resultObject = (JSONObject) jsonParser.parse(response);
 		}
 
 		logger.debug("getDistributionMemberList ended. resultCode=" + resultCode);
-		return resultArray;
+		return resultObject;
 	}
 }

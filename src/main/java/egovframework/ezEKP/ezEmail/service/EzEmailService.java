@@ -197,5 +197,5 @@ public interface EzEmailService {
 	 */
 	public String checkInnerDomain(String forwardAddress, int tenantId) throws Exception;
 
-	public JSONArray getDistributionMemberList(String domain, String cn) throws Exception;
+	public JSONObject getDistributionMemberList(String domain, String cn) throws Exception;
 }
