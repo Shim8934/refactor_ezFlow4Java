@@ -24216,8 +24216,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (xmlDom.getElementsByTagName("TASKCODE").item(0) != null && xmlDom.getElementsByTagName("TASKCODE").item(0).getTextContent().length() > 0) {
 			cabinetListVO.setTaskCode(xmlDom.getElementsByTagName("TASKCODE").item(0).getTextContent());
 		}
-		
-		if (xmlDom.getElementsByTagName("SPRODUCEY").item(0) != null && xmlDom.getElementsByTagName("SPRODUCEY").item(0).getTextContent().length() > 0) {
+
+        /* 2024-04-23 양지혜 - (voc #112313) 종료연기승인 리스트는 년도를 구분하지 않아, 생산년도 조건을 제외 함 */
+		if (xmlDom.getElementsByTagName("SPRODUCEY").item(0) != null && xmlDom.getElementsByTagName("SPRODUCEY").item(0).getTextContent().length() > 0 && !cabinetListVO.getListFlag().equals("11")) {
 			cabinetListVO.setsProduceYear(xmlDom.getElementsByTagName("SPRODUCEY").item(0).getTextContent().substring(0, 4));
 		}
 		
