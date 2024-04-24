@@ -283,7 +283,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSubNodes.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getSubNodes.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String jsonGetSubNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("jsonGetSubNodes started");
@@ -683,7 +683,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getCabinetFiles.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getCabinetFiles.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonGetCabinetFiles(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetCabinetFiles start");
@@ -707,7 +707,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getFilesBySearching.do", method = RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getFilesBySearching.do", method = RequestMethod.POST, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonGetFilesBySearching(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetFilesBySearching start");
