@@ -517,7 +517,7 @@
 		</script>
 	</c:when>
 	<c:when test="${editor eq 'KUKUDOCS'}">
-		<link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/style.css')}" />
+		<link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/kk_webEditor_min.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/javascripts/build/Editor.bundle.js')}"></script>
@@ -581,7 +581,7 @@
 		</script>
 	</c:when>
 	<c:when test="${editor eq 'CK'}">
-		<link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/style.css')}" />
+		<link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/kk_webEditor_min.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/ckEditor/ckeditor.js')}"></script>
