@@ -680,10 +680,10 @@
 		                <li><a rel="modal:close"><span></span></a></li>
 		            </ul>
 		        </div>
-	        	<table id="resourceDataTable" style="width:680px; /* margin-top:10px; */">
+	        	<table id="resourceDataTable" style="width:680px; display: table-cell;/* margin-top:10px; */">
 					<tr>
-						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-						<td colspan="2"><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
+						<th style="width: 100px; height:30px; background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
+						<td style="width: 500px;" colspan="2"><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
 					</tr>
 					<%-- <tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.rkms01'/></th>
