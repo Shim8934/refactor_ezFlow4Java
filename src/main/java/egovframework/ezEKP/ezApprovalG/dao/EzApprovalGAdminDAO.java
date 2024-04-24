@@ -452,7 +452,9 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void deleteAutoRuleLine(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdminDAO.deleteAutoRuleLine", map);
 	}
-
+	
+	/* 2024-04-19 홍승비 - 특수문서함 관련 기능 > 호출되지 않는 URL로 확인, 관련 메서드와 쿼리 전체 주석처리 */
+	/*
 	@SuppressWarnings("unchecked")
 	public List<ApprGContInfoVO> getSpecialContList(Map<String, Object> map) throws Exception {
 		return (List<ApprGContInfoVO>) list("EzApprovalGAdminDAO.getSpecialContList", map);
@@ -490,7 +492,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void changeSpecialContSN3(ApprGContInfoVO vo) throws Exception {
 		update("EzApprovalGAdminDAO.changeSpecialContSN3", vo);
 	}
-
+	*/
+	
 	public int checkContainer(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalGAdminDAO.checkContainer", map);
 	}

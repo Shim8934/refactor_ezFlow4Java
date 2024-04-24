@@ -512,10 +512,13 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGCabCodeVO>) list("EzApprovalG.getDocType", map);
 	}
 	
+	/* 2024-04-15 홍승비 - 호출되지 않는 구버전 쿼리 주석처리 */
+	/*
 	@SuppressWarnings("unchecked")
 	public List<String> getLeftDocCount(Map<String, Object> map) throws Exception{
 		return (List<String>) list("EzApprovalG.getLeftDocCount", map);
 	}
+	*/
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> doBanSongAprType(Map<String, Object> map) throws Exception{

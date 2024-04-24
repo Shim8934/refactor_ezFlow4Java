@@ -14,7 +14,6 @@
 	<typeAlias alias="KEDSharedUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo"/>
 	<typeAlias  alias="ApprGDocListVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO"/>
 
-<!-- 2024-03-07 SQL Injection 작업 영역 분배 - 양지혜 시작 -->
 	<!-- <procedure id="EzApprovalGAdmin.getContainerInfoManage" parameterClass="Map" 
 		resultClass="ApprGLeftVO"> -->
 	<!-- <![CDATA[ -->
@@ -781,20 +780,22 @@
 
 		<isNotEqual property="v_DRAFTER" compareValue="" prepend="AND">
 			<isEqual property="v_LANGTYPE" compareValue="2">
-				WRITERNAME2 LIKE CONCAT(CONCAT('%', #v_DRAFTER#), '%')
+				WRITERNAME2
 			</isEqual>
 			<isNotEqual property="v_LANGTYPE" compareValue="2">
-				WRITERNAME LIKE CONCAT(CONCAT('%', #v_DRAFTER#), '%')
+				WRITERNAME
 			</isNotEqual>
+			LIKE CONCAT(CONCAT('%', #v_DRAFTER#), '%')
 		</isNotEqual>
 
 		<isNotEqual property="v_DEPTNAME" compareValue="" prepend="AND">
 			<isEqual property="v_LANGTYPE" compareValue="2">
-				WRITERDEPTNAME2 LIKE CONCAT(CONCAT('%', #v_DEPTNAME#), '%')
+				WRITERDEPTNAME2
 			</isEqual>
 			<isNotEqual property="v_LANGTYPE" compareValue="2">
-				WRITERDEPTNAME LIKE CONCAT(CONCAT('%', #v_DEPTNAME#), '%')
+				WRITERDEPTNAME
 			</isNotEqual>
+			LIKE CONCAT(CONCAT('%', #v_DEPTNAME#), '%')
 		</isNotEqual>
 
 		<isNotEqual property="v_FORMID" compareValue="">
@@ -844,7 +845,7 @@
 			]]>
 		</isNotEqual>
 
-		<!-- v_SUBQUERY 에 넘어오는 값 없음 삭제 -->
+		<!-- v_SUBQUERY 에 넘어오는 값 없으므로 삭제 -->
 
 		<isNotEqual property="v_ORDEROPTION" compareValue="">
 			<isEqual property="v_ORDEROPTION" compareValue="StartDate">
@@ -1267,7 +1268,6 @@
 
 	</select>
 
-<!-- 2024-03-07 SQL Injection 작업 영역 분배 - 김우철 시작 -->
 	<!-- <procedure id="EzApprovalGAdmin.getTaskHistory" remapResults="true" -->
 	<!-- parameterClass="Map" resultClass="ApprGTaskCodeHistoryVO"> -->
 	<!-- <![CDATA[ -->
@@ -1580,7 +1580,7 @@
 	   					WHEN #v_LANG# = '2' THEN C.NAME2
 	   					WHEN #v_LANG# = '3' THEN C.NAME3
 	   					WHEN #v_LANG# = '4' THEN C.NAME4
-	   					END AS APRTYPENAME, 
+	   					END AS APRTYPENAME,
 	   				COUNT(APRMEMBERID) AS APRCOUNT
 	   			FROM 
 	   				TBL_ENDAPRLINEINFO E
@@ -1623,6 +1623,7 @@
 	   					WHEN #v_LANG# = '2' THEN C.NAME2
 	   					WHEN #v_LANG# = '3' THEN C.NAME3
 	   					WHEN #v_LANG# = '4' THEN C.NAME4
+	   				END
 			]]>
 			<isEqual property="userFlag" compareValue="1">
 				ORDER BY
@@ -1924,7 +1925,7 @@
 																WHEN #lang# = '2' THEN NAME2
 																WHEN #lang# = '3' THEN NAME3
 																WHEN #lang# = '4' THEN NAME4
-																END, ';', 2), ';', -1) AS NAME
+															END, ';', 2), ';', -1) AS NAME
 						FROM 
 							TBL_CODELIST 
 						WHERE 
@@ -1939,7 +1940,7 @@
 												WHEN #lang# = '2' THEN NAME2
 												WHEN #lang# = '3' THEN NAME3
 												WHEN #lang# = '4' THEN NAME4
-												END, ';', -1) = #v_KEEPINGPERIOD#),
+											END, ';', -1) = #v_KEEPINGPERIOD#),
 			KEEPPERIODCODE = #v_KEEPINGPERIOD#,
 			SECURITYLEVEL = #itemSecurity#,
 			ISPUBLIC = #isPublic#
@@ -2405,7 +2406,7 @@
 				CASE
 					WHEN #v_LANGTYPE# is null OR #v_LANGTYPE# = '' OR #v_LANGTYPE# = '1' THEN writername
 					WHEN #v_LANGTYPE# = '2' THEN writername2
-					END
+				END
 				LIKE CONCAT('%', #v_DRAFTER#, '%')
 			]]>
 		</isNotEqual>
@@ -2415,7 +2416,7 @@
 				CASE
 					WHEN #v_LANGTYPE# is null OR #v_LANGTYPE# = '' OR #v_LANGTYPE# = '1' THEN writerdeptname
 					WHEN #v_LANGTYPE# = '2' THEN writerdeptname2
-					END
+				END
 				LIKE CONCAT('%', #v_DEPTNAME#, '%')
 			]]>
 		</isNotEqual>
@@ -2498,7 +2499,7 @@
 					WHEN #lang# = '2' THEN NAME2
 					WHEN #lang# = '3' THEN NAME3
 					WHEN #lang# = '4' THEN NAME4
-					END AS NAME  
+				END AS NAME
 			FROM 
 				TBL_CODELIST 
 			WHERE 
@@ -2578,8 +2579,7 @@
                 aprmembersn DESC
 		]]>
 	</select>
-
-<!-- 2024-03-07 SQL Injection 작업 영역 분배 - 이혜림 시작 -->
+	
 	<select id="EzApprovalGAdminDAO.getSpecialContList" parameterClass="Map" resultClass="ApprGContInfoVO">
 		<![CDATA[
 			SELECT 
@@ -2605,9 +2605,10 @@
 	<select id="EzApprovalGAdminDAO.getSpecialContInfoContTypeName" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				CASE #lang# WHEN '' THEN containertypename
-							WHEN '2' THEN containertypename2
-				 END AS containerTypeName
+				CASE #lang#
+					WHEN '' THEN containertypename
+					WHEN '2' THEN containertypename2
+				END AS containerTypeName
 			FROM
 				TBL_CONTAINERTYPE
 			WHERE
@@ -3817,8 +3818,7 @@
 				taskcode = #taskCode#
 	    ]]>
 	</insert>
-
-<!-- 2024-03-07 SQL Injection 작업 영역 분배 - 이유정 시작 -->
+	
 	<insert id="EzApprovalGAdmin.insertFormContainer"
 		parameterClass="Map">
 		<![CDATA[
@@ -4539,14 +4539,14 @@
 									</isNotEmpty>
 									<isNotEmpty property="q_Map.qOptionEndDate1" prepend="AND">
 										<![CDATA[
-											TBL_ENDAPRDOCINFO.EndDate >= STR_TO_DATE(#q_Map.qOptionEndDate1# ,'%Y-%m-%d %H:%i:%s')
-											AND TBL_ENDAPRDOCINFO.EndDate <= STR_TO_DATE(#q_Map.qOptionEndDate2# ,'%Y-%m-%d %H:%i:%s')
+											TBL_ENDAPRDOCINFO.EndDate >= STR_TO_DATE(#q_Map.qOptionEndDate1#, '%Y-%m-%d %H:%i:%s')
+											AND TBL_ENDAPRDOCINFO.EndDate <= STR_TO_DATE(#q_Map.qOptionEndDate2#, '%Y-%m-%d %H:%i:%s')
 										]]>
 									</isNotEmpty>
 									<isNotEmpty property="q_Map.qOptionDeleteTime1" prepend="AND">
 										<![CDATA[
-											TBL_DOCDELETEHISTORY.deletetime >= STR_TO_DATE(#q_Map.qOptionDeleteTime1# ,'%Y-%m-%d %H:%i:%s')
-											AND TBL_DOCDELETEHISTORY.deletetime <= STR_TO_DATE(#q_Map.qOptionDeleteTime2# ,'%Y-%m-%d %H:%i:%s')
+											TBL_DOCDELETEHISTORY.deletetime >= STR_TO_DATE(#q_Map.qOptionDeleteTime1#, '%Y-%m-%d %H:%i:%s')
+											AND TBL_DOCDELETEHISTORY.deletetime <= STR_TO_DATE(#q_Map.qOptionDeleteTime2#, '%Y-%m-%d %H:%i:%s')
 										]]>
 									</isNotEmpty>
 									<isNotEmpty property="q_Map.qOptionWriterDeptId" prepend="AND">
@@ -4649,14 +4649,14 @@
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionEndDate1" prepend="AND">
 				<![CDATA[
-					TBL_ENDAPRDOCINFO.EndDate >= STR_TO_DATE(#q_Map.qOptionEndDate1# ,'%Y-%m-%d %H:%i:%s')
-					AND TBL_ENDAPRDOCINFO.EndDate <= STR_TO_DATE(#q_Map.qOptionEndDate2# ,'%Y-%m-%d %H:%i:%s')
+					TBL_ENDAPRDOCINFO.EndDate >= STR_TO_DATE(#q_Map.qOptionEndDate1#, '%Y-%m-%d %H:%i:%s')
+					AND TBL_ENDAPRDOCINFO.EndDate <= STR_TO_DATE(#q_Map.qOptionEndDate2#, '%Y-%m-%d %H:%i:%s')
 				]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionDeleteTime1" prepend="AND">
 				<![CDATA[
-					TBL_DOCDELETEHISTORY.deletetime >= STR_TO_DATE(#q_Map.qOptionDeleteTime1# ,'%Y-%m-%d %H:%i:%s')
-					AND TBL_DOCDELETEHISTORY.deletetime <= STR_TO_DATE(#q_Map.qOptionDeleteTime2# ,'%Y-%m-%d %H:%i:%s')
+					TBL_DOCDELETEHISTORY.deletetime >= STR_TO_DATE(#q_Map.qOptionDeleteTime1#, '%Y-%m-%d %H:%i:%s')
+					AND TBL_DOCDELETEHISTORY.deletetime <= STR_TO_DATE(#q_Map.qOptionDeleteTime2#, '%Y-%m-%d %H:%i:%s')
 				]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionWriterDeptId" prepend="AND">
@@ -4726,14 +4726,14 @@
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionEndDate1" prepend="AND">
 			<![CDATA[
-				TBL_ENDAPRDOCINFO.EndDate >= STR_TO_DATE(#q_Map.qOptionEndDate1# ,'%Y-%m-%d %H:%i:%s')
-				AND TBL_ENDAPRDOCINFO.EndDate <= STR_TO_DATE(#q_Map.qOptionEndDate2# ,'%Y-%m-%d %H:%i:%s')
+				TBL_ENDAPRDOCINFO.EndDate >= STR_TO_DATE(#q_Map.qOptionEndDate1#, '%Y-%m-%d %H:%i:%s')
+				AND TBL_ENDAPRDOCINFO.EndDate <= STR_TO_DATE(#q_Map.qOptionEndDate2#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionDeleteTime1" prepend="AND">
 			<![CDATA[
-				TBL_DOCDELETEHISTORY.deletetime >= STR_TO_DATE(#q_Map.qOptionDeleteTime1# ,'%Y-%m-%d %H:%i:%s')
-				AND TBL_DOCDELETEHISTORY.deletetime <= STR_TO_DATE(#q_Map.qOptionDeleteTime2# ,'%Y-%m-%d %H:%i:%s')
+				TBL_DOCDELETEHISTORY.deletetime >= STR_TO_DATE(#q_Map.qOptionDeleteTime1#, '%Y-%m-%d %H:%i:%s')
+				AND TBL_DOCDELETEHISTORY.deletetime <= STR_TO_DATE(#q_Map.qOptionDeleteTime2#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionWriterDeptId" prepend="AND">
@@ -4773,14 +4773,14 @@
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionEndDate1" prepend="AND">
 			<![CDATA[
-				TBL_ENDAPRDOCINFO.EndDate >= STR_TO_DATE(#q_Map.qOptionEndDate1# ,'%Y-%m-%d %H:%i:%s')
-				AND TBL_ENDAPRDOCINFO.EndDate <= STR_TO_DATE(#q_Map.qOptionEndDate2# ,'%Y-%m-%d %H:%i:%s')
+				TBL_ENDAPRDOCINFO.EndDate >= STR_TO_DATE(#q_Map.qOptionEndDate1#, '%Y-%m-%d %H:%i:%s')
+				AND TBL_ENDAPRDOCINFO.EndDate <= STR_TO_DATE(#q_Map.qOptionEndDate2#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionDeleteTime1" prepend="AND">
 			<![CDATA[
-				TBL_DOCDELETEHISTORY.deletetime >= STR_TO_DATE(#q_Map.qOptionDeleteTime1# ,'%Y-%m-%d %H:%i:%s')
-				AND TBL_DOCDELETEHISTORY.deletetime <= STR_TO_DATE(#q_Map.qOptionDeleteTime2# ,'%Y-%m-%d %H:%i:%s')
+				TBL_DOCDELETEHISTORY.deletetime >= STR_TO_DATE(#q_Map.qOptionDeleteTime1#, '%Y-%m-%d %H:%i:%s')
+				AND TBL_DOCDELETEHISTORY.deletetime <= STR_TO_DATE(#q_Map.qOptionDeleteTime2#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionWriterDeptId" prepend="AND">
@@ -5131,8 +5131,7 @@
 					) A WHERE A.FILENAME <![CDATA[<>]]> '' ORDER BY A.DOCID DESC , A.TYPE DESC
 					
 	</select>
-
-<!-- 2024-03-07 SQL Injection 작업 영역 분배 - 홍승비 시작 -->
+	
 	<update id="EzApprovalGAdminDAO.resendOpenGov" parameterClass="Map">
 		UPDATE
 			TBL_GOVSENDDOCHISTORY
@@ -5302,16 +5301,16 @@
 			</isNotEqual>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionReceivedDate1" prepend="AND">
-			<![CDATA[RECEIVEDDATE >= STR_TO_DATE(#q_Map.qOptionReceivedDate1# ,'%Y-%m-%d %H:%i:%s')]]>
+			<![CDATA[RECEIVEDDATE >= STR_TO_DATE(#q_Map.qOptionReceivedDate1#, '%Y-%m-%d %H:%i:%s')]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionStartDate1" prepend="AND">
-			<![CDATA[STARTDATE >= STR_TO_DATE(#q_Map.qOptionStartDate1# ,'%Y-%m-%d %H:%i:%s')]]>
+			<![CDATA[STARTDATE >= STR_TO_DATE(#q_Map.qOptionStartDate1#, '%Y-%m-%d %H:%i:%s')]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionReceivedDate2" prepend="AND">
-			<![CDATA[RECEIVEDDATE <= STR_TO_DATE(#q_Map.qOptionReceivedDate2# ,'%Y-%m-%d %H:%i:%s')]]>
+			<![CDATA[RECEIVEDDATE <= STR_TO_DATE(#q_Map.qOptionReceivedDate2#, '%Y-%m-%d %H:%i:%s')]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionStartDate2" prepend="AND">
-			<![CDATA[STARTDATE <= STR_TO_DATE(#q_Map.qOptionStartDate2# ,'%Y-%m-%d %H:%i:%s')]]>
+			<![CDATA[STARTDATE <= STR_TO_DATE(#q_Map.qOptionStartDate2#, '%Y-%m-%d %H:%i:%s')]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionSearchStatus" prepend="AND">
 			TBL_ENDRECEIPTPOINTINFO.PROCESSYN = #q_Map.qOptionSearchStatus#
@@ -5439,16 +5438,16 @@
 				</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionReceivedDate1" prepend="AND">
-				<![CDATA[RECEIVEDDATE >= STR_TO_DATE(#q_Map.qOptionReceivedDate1# ,'%Y-%m-%d %H:%i:%s')]]>
+				<![CDATA[RECEIVEDDATE >= STR_TO_DATE(#q_Map.qOptionReceivedDate1#, '%Y-%m-%d %H:%i:%s')]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionStartDate1" prepend="AND">
-				<![CDATA[STARTDATE >= STR_TO_DATE(#q_Map.qOptionStartDate1# ,'%Y-%m-%d %H:%i:%s')]]>
+				<![CDATA[STARTDATE >= STR_TO_DATE(#q_Map.qOptionStartDate1#, '%Y-%m-%d %H:%i:%s')]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionReceivedDate2" prepend="AND">
-				<![CDATA[RECEIVEDDATE <= STR_TO_DATE(#q_Map.qOptionReceivedDate2# ,'%Y-%m-%d %H:%i:%s')]]>
+				<![CDATA[RECEIVEDDATE <= STR_TO_DATE(#q_Map.qOptionReceivedDate2#, '%Y-%m-%d %H:%i:%s')]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionStartDate2" prepend="AND">
-				<![CDATA[STARTDATE <= STR_TO_DATE(#q_Map.qOptionStartDate2# ,'%Y-%m-%d %H:%i:%s')]]>
+				<![CDATA[STARTDATE <= STR_TO_DATE(#q_Map.qOptionStartDate2#, '%Y-%m-%d %H:%i:%s')]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionSearchStatus" prepend="AND">
 				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = #q_Map.qOptionSearchStatus#
@@ -5654,16 +5653,16 @@
 			</isNotEqual>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionReceivedDate1" prepend="AND">
-			<![CDATA[RECEIVEDDATE >= STR_TO_DATE(#q_Map.qOptionReceivedDate1# ,'%Y-%m-%d %H:%i:%s')]]>
+			<![CDATA[RECEIVEDDATE >= STR_TO_DATE(#q_Map.qOptionReceivedDate1#, '%Y-%m-%d %H:%i:%s')]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionStartDate1" prepend="AND">
-			<![CDATA[STARTDATE >= STR_TO_DATE(#q_Map.qOptionStartDate1# ,'%Y-%m-%d %H:%i:%s')]]>
+			<![CDATA[STARTDATE >= STR_TO_DATE(#q_Map.qOptionStartDate1#, '%Y-%m-%d %H:%i:%s')]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionReceivedDate2" prepend="AND">
-			<![CDATA[RECEIVEDDATE <= STR_TO_DATE(#q_Map.qOptionReceivedDate2# ,'%Y-%m-%d %H:%i:%s')]]>
+			<![CDATA[RECEIVEDDATE <= STR_TO_DATE(#q_Map.qOptionReceivedDate2#, '%Y-%m-%d %H:%i:%s')]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionStartDate2" prepend="AND">
-			<![CDATA[STARTDATE <= STR_TO_DATE(#q_Map.qOptionStartDate2# ,'%Y-%m-%d %H:%i:%s')]]>
+			<![CDATA[STARTDATE <= STR_TO_DATE(#q_Map.qOptionStartDate2#, '%Y-%m-%d %H:%i:%s')]]>
 		</isNotEmpty>
 		<isNotEmpty property="q_Map.qOptionSearchStatus" prepend="AND">
 			TBL_ENDRECEIPTPOINTINFO.PROCESSYN = #q_Map.qOptionSearchStatus#
@@ -5799,16 +5798,16 @@
 				</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionReceivedDate1" prepend="AND">
-				<![CDATA[RECEIVEDDATE >= STR_TO_DATE(#q_Map.qOptionReceivedDate1# ,'%Y-%m-%d %H:%i:%s')]]>
+				<![CDATA[RECEIVEDDATE >= STR_TO_DATE(#q_Map.qOptionReceivedDate1#, '%Y-%m-%d %H:%i:%s')]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionStartDate1" prepend="AND">
-				<![CDATA[STARTDATE >= STR_TO_DATE(#q_Map.qOptionStartDate1# ,'%Y-%m-%d %H:%i:%s')]]>
+				<![CDATA[STARTDATE >= STR_TO_DATE(#q_Map.qOptionStartDate1#, '%Y-%m-%d %H:%i:%s')]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionReceivedDate2" prepend="AND">
-				<![CDATA[RECEIVEDDATE <= STR_TO_DATE(#q_Map.qOptionReceivedDate2# ,'%Y-%m-%d %H:%i:%s')]]>
+				<![CDATA[RECEIVEDDATE <= STR_TO_DATE(#q_Map.qOptionReceivedDate2#, '%Y-%m-%d %H:%i:%s')]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionStartDate2" prepend="AND">
-				<![CDATA[STARTDATE <= STR_TO_DATE(#q_Map.qOptionStartDate2# ,'%Y-%m-%d %H:%i:%s')]]>
+				<![CDATA[STARTDATE <= STR_TO_DATE(#q_Map.qOptionStartDate2#, '%Y-%m-%d %H:%i:%s')]]>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionSearchStatus" prepend="AND">
 				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = #q_Map.qOptionSearchStatus#

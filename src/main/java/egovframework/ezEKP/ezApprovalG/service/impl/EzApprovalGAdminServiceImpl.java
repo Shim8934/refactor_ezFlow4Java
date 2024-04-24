@@ -3814,7 +3814,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return sb.toString();
 	}
-
+	
+	/* 2024-04-19 홍승비 - 특수문서함 관련 기능 > 호출되지 않는 URL로 확인, 관련 메서드와 쿼리 주석처리 */
+	/*
 	@Override
 	public String getSpecialContList(String deptID, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getSpecialContList started");
@@ -3890,7 +3892,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return sb.toString();
 	}
-
+	
 	@Override
 	public String getSpecialContCode(String contType, String companyID, String primary, int tenantID) throws Exception {
 		logger.debug("getSpecialContCode started.");
@@ -3996,7 +3998,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 		return sb.toString();
 	}
-
+	
 	@Override
 	public String addSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception {
 		logger.debug("addSpecialCont started");
@@ -4031,7 +4033,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return rtnValue;
 	}
-
+	
 	@Override
 	public String delSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception {
 		logger.debug("delSpecialCont started");
@@ -4044,7 +4046,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return "TRUE";
 	}
-
+	
 	@Override
 	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception {
 		logger.debug("changeSpecialContSN started");
@@ -4067,7 +4069,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return "TRUE";
 	}
-
+	 */
 	@Override
 	public List<ApprGFormConnInfoVO> getFormConnInfo() throws Exception {
 		logger.debug("getFormConnInfo started.");

@@ -158,6 +158,8 @@ public interface EzApprovalGAdminService {
 
 	public String getFormAprRuleLine(String formID, String companyID, int tenantID) throws Exception;
 
+	/* 2024-04-19 홍승비 - 특수문서함 관련 기능 > 호출되지 않는 URL로 확인, 관련 메서드와 쿼리 전체 주석처리 */
+	/*
 	public String getSpecialContList(String deptID, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 
 	public String getSpecialContCode(String contType, String companyID, String lang, int tenantID) throws Exception;
@@ -169,7 +171,8 @@ public interface EzApprovalGAdminService {
 	public String delSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception;
 	
 	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception;
-
+	*/
+	
 	public List<ApprGFormConnInfoVO> getFormConnInfo() throws Exception;
 	
 	public String editApprovalDoc(String docID, String companyID, String formMHT, String formHTML, String realPath, LoginVO userInfo, String filePath, String htmlData) throws Exception;

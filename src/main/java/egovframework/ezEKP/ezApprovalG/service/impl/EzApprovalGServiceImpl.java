@@ -21830,6 +21830,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return sb.toString();
 	}
 
+	/* 2024-04-15 홍승비 - 호출되지 않는 구버전 메서드 주석처리 */
+	/*
 	public String getLeftDocCount(String userID, String deptID, String userIDs, String deptIDs, String userFlag, String companyID , int tenantID, List<ApprGProxyVO> list) throws Exception {
 		logger.debug("getLeftDocCount started");
 
@@ -21870,7 +21872,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
 		return sb.toString();
 	}
-
+	*/
+	
 	public int getWebPartListCount(String listType, String userID, String deptID, String userIDs, String deptIDs, String userFlag, String companyID, int tenantID, List<ApprGProxyVO> list) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LISTTYPE", listType);
@@ -32745,6 +32748,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_APPROVUSER", approvUser.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
         map.put("v_KEYWORD", keyword);
+        map.put("v_MULTIDATALANG", commonUtil.getMultiData(langType, tenantID));
 		
 		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
 		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
@@ -32824,13 +32828,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PROCESSDATE1", tmpProcessDate1);
 		map.put("v_PROCESSDATE2", tmpProcessDate2);
 		map.put("approvalFlag", approvalFlag);
-		if(tmpProcessDate1.length() > 0) {
+		if (tmpProcessDate1.length() > 0) {
 			aprFlag = "INMYAPPRSEARCH";
 		}
-		if(tmpProcessDate2.length() > 0) {
+		if (tmpProcessDate2.length() > 0) {
 			aprFlag = "INMYAPPRSEARCH";
 		}
-		if(containerID.length() == 0) {
+		if (containerID.length() == 0) {
 			aprFlag = "";
 		}
 		map.put("v_APRFLAG", aprFlag.toUpperCase());
@@ -32838,6 +32842,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_LANGTYPE", langType);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_APPROVUSER", approvUser.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_MULTIDATALANG", commonUtil.getMultiData(langType, tenantID));
 		
 		int resultCnt = ezApprovalGDAO.getSearchDocListCountForOpenGov(map);
 
@@ -34223,6 +34228,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    map.put("v_TENANTID", userInfo.getTenantId());
 	    map.put("companyID", userInfo.getCompanyID());
 	    map.put("v_LANG", commonUtil.getLangData(userInfo.getLang()));
+	    map.put("v_MULTIDATALANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 	    
 	    if (receiptId.startsWith(susinGroupIcon)) {
 	        map.put("v_TYPE", "group");

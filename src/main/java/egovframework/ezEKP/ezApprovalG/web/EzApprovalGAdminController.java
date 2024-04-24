@@ -1457,9 +1457,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/* 2024-04-19 홍승비 - 특수문서함 관련 기능 > 호출되지 않는 URL로 확인, 관련 메서드와 쿼리 전체 주석처리 */
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 호출
 	 */
+	/*
 	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialCont.do", method = RequestMethod.GET)
 	public String manageSpecialCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("manageSpecialCont started");
@@ -1479,10 +1481,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return "admin/ezApprovalG/apprGManageSpecialCont";
 	}
-	
+	*/
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 목록 호출
 	 */
+	/*
 	@RequestMapping(value = "/admin/ezApprovalG/specialContListInfo.do", method = RequestMethod.POST)
 	public String specialContListInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("specialContListInfo started.");
@@ -1500,10 +1503,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 		return "json";
 	}
-	
+	*/
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 추가,수정화면 호출
 	 */
+	/*
 	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialContInfo.do", method = RequestMethod.GET)
 	public String manageSpecialContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("manageSpecialContInfo started.");
@@ -1532,10 +1536,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return "admin/ezApprovalG/apprGManageSpecialContInfo";
 	}
-	
+	*/
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 추가/수정 실행함수
 	 */
+	/*
 	@RequestMapping(value = "/admin/ezApprovalG/specialContAdd.do", method = RequestMethod.POST)
 	public String specialContAdd(@CookieValue("loginCookie") String loginCookie, ApprGContInfoVO apprGContInfoVO, Model model) throws Exception {
 		logger.debug("specialContAdd started.");
@@ -1550,10 +1555,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return "json";
 	}
-	
+	*/
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 삭제 실행함수
 	 */
+	/*
 	@RequestMapping(value = "/admin/ezApprovalG/specialContDelete.do", method = RequestMethod.POST)
 	public String specialContDelete(@CookieValue("loginCookie") String loginCookie, ApprGContInfoVO vo, Model model) throws Exception {
 		logger.debug("specialContDelete started");
@@ -1568,10 +1574,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return "json";
 	}
-	
+	*/
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 순서변경 실행함수
 	 */
+	/*
 	@RequestMapping(value = "/admin/ezApprovalG/specialContChangeSN.do", method = RequestMethod.POST)
 	public String specialContChangeSN(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("specialContChangeSN started");
@@ -1592,6 +1599,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return "json";
 	}
+	*/
 	/**
 	 * 전자결재G관리 수신처 그룹지정 메뉴 호출함수
 	 * 전자결재관리 수신처 그룹지정 메뉴 호출함수
