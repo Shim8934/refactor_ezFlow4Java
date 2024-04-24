@@ -68,7 +68,7 @@ var dataAssemblerTabBoard = function(object) {
 	
 	var str = "";
 	str += "<li onclick='openDoc_section3_Type(\"" + object.itemID + "\", \"" + object.guBun + "\", \"" + object.boardID + "\")'>";
-    str += "<span class='txt'>" + object.title + "</span>";
+    str += "<span class='txt'>" + MakeXMLString(object.title) + "</span>";
 
 	str += "<span class='date'>" + object.startDate.substring(5, 16) + "</span>";
 
