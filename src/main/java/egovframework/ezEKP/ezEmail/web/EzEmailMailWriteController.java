@@ -3095,56 +3095,69 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					
 					// 일반첨부파일의 경우
 					if (hasAttachFile && bigBool.equals("N")) {
-					    // 첨부파일을 삽입할 Part를 생성한다.
+						// 첨부파일을 삽입할 Part를 생성한다.
 						BodyPart messageBodyPart = new MimeBodyPart();
-						
-				        File f = new File(pDirTempPath + commonUtil.separator + path);
-				        
-				        // 2018.07.05 - ezd 파일은 복호화하여 넣는다. (KLIB)
-				        if (f.toString().endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-				        	byte[] fileBytes = commonUtil.readBytesFromFile(f.toPath());
-				        	byte[] decryptedBytes = klibUtil.decrypt(fileBytes);
-				        	
-				        	messageBodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(decryptedBytes, "application/octet-stream")));
-				        } else {
-					        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
-					        messageBodyPart.setDataHandler(new DataHandler(source));
-				        }
-				        
-				        String nfcFilename = commonUtil.normalizeFileName(fileName);
-				        		
-				        // MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
-				        // otherwise, a wrong encoding may be used on some systems(linux, etc)
-				        // nonghyup.com 메일 서버의 경우 QP로 인코딩된 경우 connection close(EOF)를 발생시켜
-				        // 무조건 BASE64로 인코딩하도록 변경함
-				        String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", "B");
-				        
+
+						File f = new File(pDirTempPath + commonUtil.separator + path);
+
+						// 2018.07.05 - ezd 파일은 복호화하여 넣는다. (KLIB)
+						if (f.toString().endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							byte[] fileBytes = commonUtil.readBytesFromFile(f.toPath());
+							byte[] decryptedBytes = klibUtil.decrypt(fileBytes);
+
+							messageBodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(decryptedBytes, "application/octet-stream")));
+						} else {
+							FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
+							messageBodyPart.setDataHandler(new DataHandler(source));
+						}
+
+						String nfcFilename = commonUtil.normalizeFileName(fileName);
+
+						// MimeUtility.encodeText is needed to encode a file name in UTF-8 explicitly, 
+						// otherwise, a wrong encoding may be used on some systems(linux, etc)
+						// nonghyup.com 메일 서버의 경우 QP로 인코딩된 경우 connection close(EOF)를 발생시켜
+						// 무조건 BASE64로 인코딩하도록 변경함
+						String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", "B");
+
 						// folding a filename is done manually since BodyPart.setFileName method encodes it based on RFC 2231.
 						// and some mailers (Daum, etc) may not understand it.			        
-				        encodedFileName = MimeUtility.fold(0, encodedFileName);
-				        messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n filename=\"" + encodedFileName + "\"");
-				        
-				        // 첨부파일 Content-Type의 디폴트는 application/octet-stream로 설정한다.
-				        String contentType = "application/octet-stream";
-				        
-				        // 첨부파일의 Content-Type을 구한다.
-				        if (Files.probeContentType(f.toPath()) != null) {
-				        	contentType = Files.probeContentType(f.toPath());
-				        } else {
-				        	
-				        	if (path.lastIndexOf(".") > 0 && path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
-				        		contentType = "message/rfc822";
-				        	}
-				        }
-				        
-				        messageBodyPart.setHeader("Content-Type", contentType);
-				        
-				        // Multipart에 첨부파일 Part를 삽입한다.
-				        multipart.addBodyPart(messageBodyPart);
-						
-				        //TODO: fileName parameter를 attachCount로 바꿔야 할것같음. 또는 (filename, attachCount).
-				        //메일에서 첨부파일 삭제할 때 attachCount 필요함.
-				        childNodes.item(4).setTextContent(fileName);				        
+						encodedFileName = MimeUtility.fold(0, encodedFileName);
+						messageBodyPart.setHeader("Content-Disposition", "attachment;\r\n filename=\"" + encodedFileName + "\"");
+
+						// 첨부파일 Content-Type의 디폴트는 application/octet-stream로 설정한다.
+						String contentType = "application/octet-stream";
+
+						// 첨부파일의 Content-Type을 구한다.
+						BufferedInputStream stream = null;
+						try {
+							stream = new BufferedInputStream(new FileInputStream(f));
+							contentType = URLConnection.guessContentTypeFromStream(stream);
+						} catch (Exception e) {
+							
+							logger.error(e.getMessage(),e);
+							
+						} finally {
+							if (stream != null) {
+								stream.close();
+							}
+						}
+
+						if (contentType == null) {
+							contentType = Files.probeContentType(f.toPath());
+						} else {
+							if (path.lastIndexOf(".") > 0 && path.substring(path.lastIndexOf(".")).equalsIgnoreCase(".eml")) {
+								contentType = "message/rfc822";
+							}
+						}
+
+						messageBodyPart.setHeader("Content-Type", contentType);
+
+						// Multipart에 첨부파일 Part를 삽입한다.
+						multipart.addBodyPart(messageBodyPart);
+
+						//TODO: fileName parameter를 attachCount로 바꿔야 할것같음. 또는 (filename, attachCount).
+						//메일에서 첨부파일 삭제할 때 attachCount 필요함.
+						childNodes.item(4).setTextContent(fileName);
 					} else {						
 						if (!path.equals("")) {
 							String[] newPath = path.split("\\|!\\|");
