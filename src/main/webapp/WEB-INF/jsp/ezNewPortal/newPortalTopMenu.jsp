@@ -134,6 +134,7 @@
 					event.target.classList.add("on");
 					subMenuClickEvent('off', item.menuUrl);
 					notice_all_close();
+					closeNoti();
 				});
 				
 				mainMenuElem.appendChild(menuLi);
@@ -296,11 +297,14 @@
 			element.addEventListener('click', function () {
 			    if (id == 'util_logout') {
 			        subMenuClickEvent('off');
+			        closeNoti(); // 통합알림창 닫기
 			        self.top.location.href = url;
 			    } else if (id != 'util_employee_search' && id != 'util_admin') {
 					subMenuClickEvent('off', url);
+					closeNoti(); // 통합알림창 닫기
 				} else {
 					subMenuClickEvent('off');
+					closeNoti(); // 통합알림창 닫기
 					window.open(url, location, option);
 				}				
 			});				
@@ -318,6 +322,8 @@
 				str += '<li><span class="icon_topmenu util_alarm" id="" title="' + '통합알림' + '"><span></span></span></li>';
 				//통합검색
 				if ('${useTotalSearch}' === 'YES') str += "<li><div class='top_totalSearch'><input id='input_totalSearch' class='input_text' type='text' onkeyup='totalSearch_key_event()' onfocus=\"this.placeholder=' '\"/><input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' id='topsearch_btn' class=\"topsearch_btn\" ></div></li>";
+				
+				str += '<li id="util_noti" class="icon_alarm_46px" title=' + '<spring:message code="ezPortal.notification.hth01" />' + ' onclick="toggleNoti()"><span id="notiin"></span></li>'
 				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
 				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
@@ -447,6 +453,7 @@
 			} else if (type === 'off') {
 				toggleAllMenu(type);
 				toggleQuickMenu(type);
+				closeNoti(); // 통합알림 팝업창 닫기
 				if ($("#nav_count").html() != "") {
 					$("#nav_count").attr("class", "hidden_nav_count");
 				}
@@ -1363,6 +1370,9 @@
 			setExpandMenuListEvent();// 확장메뉴 이벤트 설정			
 			getMenuListWidth();      // 메인메뉴 li별 사이즈 측정
 			getNotiPopup();          // 팝업공지 불러오기
+			if (parseInt(${pollingInterval}) > 0) {
+				startPolling(${pollingInterval});
+			}
 		}
  		
  		var showProgress = function(position) {
@@ -1591,6 +1601,66 @@
                 }
 			}
 		}
+		
+		var lastNotiPollTime = "${lastNotiPollTime}";
+		
+		function pollNewNoti() {
+		    $.ajax({
+		        url: '/ezNotification/getNewNotiCnt.do', 
+		        method: 'GET',
+		        dataType : 'JSON',
+		        data: {
+		        	lastNotiPollTime: lastNotiPollTime
+				},
+		        success: function(response) {
+		        	var newNotiCnt = response.newNotiCnt;
+		        	if (parseInt(newNotiCnt) > 0) {
+		        		parent.document.getElementById("iframeNoti").src = "/ezNotification/notificationMain.do";
+		        	}
+		        	lastNotiPollTime = response.lastNotiPollTime;
+		        },
+		        error: function(xhr, status, error) {
+		            console.log(error);
+		        }
+		    });
+		}
+
+		// 일정한 간격으로 pollUnreadData 함수를 실행하는 함수
+		function startPolling(interval) {
+		    setInterval(function() {
+		    	pollNewNoti();
+		    }, interval);
+		}
+		
+		function toggleNoti() {
+			//subMenuClickEvent('off');
+			
+			if (parent.document.getElementById("iframeShawdowLayer").style.display == "block") {
+				closeNoti();
+			} else {
+				openNoti();
+			}
+		}
+
+		function openNoti() {
+			pollNewNoti();
+			subMenuClickEvent('off');
+			var screenHeight = screen.height;
+			var topFrame = parent.document.getElementById('iframeShawdowLayer');
+			topFrame.style.minHeight = screenHeight+"px";
+			topFrame.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+			topFrame.style.display = "block";
+			topFrame.style.zIndex = "9999";
+			topFrame.style.width = screen.width + "px";
+			topFrame.style.top = "56px";
+			topFrame.style.position = "absolute";
+			//parent.document.getElementById('topFrame').style.position = 'relative';
+		}
+
+		function closeNoti() {
+			parent.document.getElementById("iframeShawdowLayer").style.display = "none";
+		}
+		
 		</script>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>	
 	</body>
