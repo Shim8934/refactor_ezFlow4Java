@@ -8387,9 +8387,11 @@
 		      				TBL_EXPAPRDOCINFO.FORMNAME, 
 		      				TBL_EXPAPRDOCINFO.FORMNAME2, 
 		      				TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
+ 						    TBL_EXPAPRDOCINFO.SEPERATEATTACHXML,
 		      				TBL_APRDOCINFO.COMPANYID,
 	      					TBL_APRDOCINFO.WRITERNAME,
-	      					TBL_APRDOCINFO.WRITERNAME2
+	      					TBL_APRDOCINFO.WRITERNAME2,
+	      					TBL_APRDOCINFO.FORMID
 		      		FROM 
 		      				TBL_APRRECEIPTPROCESSINFO 
 		      		INNER JOIN 
@@ -8458,9 +8460,17 @@
 	      			TBL_EXPAPRDOCINFO.FORMNAME, 
 	      			TBL_EXPAPRDOCINFO.FORMNAME2, 
 	      			TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
+	      			CASE
+	      				WHEN	TBL_EXPAPRDOCINFO.SEPERATEATTACHXML	IS NULL	THEN	'N'
+	      				WHEN	TO_CHAR(TBL_EXPAPRDOCINFO.SEPERATEATTACHXML)	= ''	THEN	'N'
+	      				WHEN	TO_CHAR(TBL_EXPAPRDOCINFO.SEPERATEATTACHXML)	= ' '	THEN	'N'
+	      				ELSE	'Y'
+	      			END	AS	SEPERATEATTACHXML,
 	      			TBL_APRDOCINFO.COMPANYID,
+	      			TBL_APRDOCINFO.WRITERID,
 	      			TBL_APRDOCINFO.WRITERNAME,
-	      			TBL_APRDOCINFO.WRITERNAME2
+	      			TBL_APRDOCINFO.WRITERNAME2,
+	      			TBL_APRDOCINFO.FORMID
 	      		FROM 
 	      			TBL_APRRECEIPTPROCESSINFO 
 	      		INNER JOIN 
@@ -25469,7 +25479,12 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		SET 
    			ProcessYN = #v_PROCESSFLAG# , 
+   		<isEmpty property="v_SYSDATE">
+   			ProcessDate = NULL
+   		</isEmpty>
+   		<isNotEmpty property="v_SYSDATE">
    			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
+   		</isNotEmpty>
 		WHERE 
 			DocID = #v_ORGDOCID# 
 		AND 
@@ -25785,8 +25800,13 @@
    <update id="EzApprovalG.updateJubsuAprReceiptProcessInfo" parameterClass="Map">
    		Update 
    			TBL_APRRECEIPTPROCESSINFO 
-   		SET
-   			ProcessDocID = #v_DOCID# ,
+   		SET 
+ 		<isNotEmpty property="ProcessDocID">
+   			ProcessDocID = #ProcessDocID# , 
+   		</isNotEmpty>
+   		<isEmpty property="ProcessDocID">
+   			ProcessDocID = #v_DOCID# , 
+   		</isEmpty>
    			AprState = #v_APRSTATE# 
    		Where 
    			DocID = #v_DOCID# 
@@ -27023,9 +27043,11 @@
    	<insert id="EzApprovalG.insertDoSendExpAprDocInfo" parameterClass="Map">
    	     INSERT INTO 
    	     		TBL_EXPAPRDOCINFO 
-   	     (      DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION)
+   	     (      DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION, ITEMNAME2)
+
          (SELECT 
-         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION
+         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION, ITEMNAME2
+
           FROM 
           		TBL_EXPAPRDOCINFO 
           WHERE 
@@ -27039,9 +27061,11 @@
    	<insert id="EzApprovalG.insertDoSendExpAprDocInfo2" parameterClass="Map">
    	     INSERT INTO 
    	     		TBL_EXPAPRDOCINFO 
-   	     (      DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION)
+   	     (      DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION, ITEMNAME2)
+
          (SELECT 
-         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION
+         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, FORMVERSION, ITEMNAME2
+         		
           FROM 
           	TBL_EXPENDAPRDOCINFO A 
           WHERE 
@@ -36941,4 +36965,14 @@
 				APRMEMBERSN = #v_AprMemberSN#
 		]]>
    </update>
+   
+    <update id="EzApprovalG.updateCreateDateOfOpenGovDocInfo" parameterClass="Map">
+	<![CDATA[
+   		UPDATE	TBL_OPENGOVDOCINFO
+		SET		CREATEDATE = SYSDATE
+		WHERE	DOCID = #DOCID#
+		AND		TENANT_ID = #TENANT_ID#
+		AND		COMPANYID = #COMPANYID#
+	]]>
+  </update>
 </sqlMap>

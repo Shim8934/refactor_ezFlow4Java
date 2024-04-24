@@ -96,6 +96,9 @@ public class ApprGDocInfoWebSrvVO {
 	private String pUserName2;
 	/** */
 	private String itemName2;
+	/** 공개여부 */
+	private String publicityYn;
+	
 	
 	public String getDocID() {
 		return docID;
@@ -384,6 +387,12 @@ public class ApprGDocInfoWebSrvVO {
 	}
 	public void setItemName2(String itemName2) {
 		this.itemName2 = itemName2;
+	}
+	public String getPublicityYn() {
+		return publicityYn;
+	}
+	public void setPublicityYn(String publicityYn) {
+		this.publicityYn = publicityYn;
 	}
 	
 }
