@@ -92,7 +92,7 @@
 	    		}
 	    		
 	    		if (securityCode != "") {
-	    			var securityText = "<spring:message code='ezApprovalG.t991'/> " + securityCode.substring(0, 1);
+	    			var securityText = securityCode.substring(0, 1) + " <spring:message code='ezApprovalG.t991'/> ";
 	    			
 	    	        $("#securityCode_span").text(securityText);
 	    		}
@@ -153,7 +153,7 @@
 	    			$("#taskCode_span").text(taskCode + "(" + replaceEntityCodeToStr(itemName) + ")");
 	    		}
 	    		if (securityCode != "") {
-	    			var	securityText = "<spring:message code='ezApprovalG.t991'/> " + securityCode.substring(0, 1);
+	    			var	securityText = securityCode.substring(0, 1) + " <spring:message code='ezApprovalG.t991'/>";
 	    			
 	    	        $("#securityCode_span").text(securityText);
 	    		}
