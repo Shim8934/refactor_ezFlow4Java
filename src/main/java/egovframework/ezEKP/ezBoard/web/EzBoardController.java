@@ -225,6 +225,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String boardLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
 		logger.debug("boardLeft started");
 
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String redirectBoardID = "";
         String redirectBoardGroupID = "";
         String qstId = "";
@@ -233,8 +235,6 @@ public class EzBoardController extends EgovFileMngUtil{
         String applyFlag = "";
         String isAdminLeft = "";
         boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c");
-        
-        userInfo = commonUtil.userInfo(loginCookie);        
         
         String strLang = userInfo.getLang();
 		String pUserID = userInfo.getId();
