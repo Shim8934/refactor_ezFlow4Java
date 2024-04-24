@@ -352,7 +352,7 @@
 			}
 
 			function excelExport() {
-				var companyID = companyId = document.all("ListCompany") == null ? companyId : document.getElementById("ListCompany").dataset.value;
+				companyId = document.all("ListCompany") == null ? companyId : document.getElementById("ListCompany").value;
 				var dvGroupListObj = $("[id^='lvUserList_TR_']").get();
 				var dvGroupList = new Array();
 
@@ -362,7 +362,7 @@
 					});
 				}
 
-				var params = {'companyID' : companyID, 'dvGroupList' : dvGroupList};
+				var params = {'companyID' : companyId, 'dvGroupList' : dvGroupList};
 				var paramsString = Object.entries(params).map(item => item.join('=').replace(/,/g, '&'+item[0]+'=')).join('&');
 				var pURL = "/admin/ezEmail/mailExcelExportDistributionList.do" + "?" + paramsString;
 				saveExcel.location.href = pURL;
