@@ -246,9 +246,9 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 
 		if (tenantIdList != null) {
 
-			for (int tenantId : tenantIdList) {
+			//for (int tenantId : tenantIdList) { // 세션은 tenant 구분이 없어서 for을 돌릴 수 없어 주석처리 함
 				try {
-					String deSessionStoragePeriodStr = ezCommonService.getTenantConfig("dbSessionStoragePeriod", tenantId);
+					String deSessionStoragePeriodStr = ezCommonService.getTenantConfig("dbSessionStoragePeriod", 0); // DB에서 컨트롤 하기 위해 tenant 컨피그를 사용하며, 0번을 default로 사용 함
 
 					if (StringUtils.isNotBlank(deSessionStoragePeriodStr)) {
 						int dbSessionStoragePeriod = Integer.parseInt(deSessionStoragePeriodStr);
@@ -257,7 +257,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 				} catch (Exception e) {
 					// 신규 사이트에서는 발생하지 않으나, 기존 사이트나 테스트 db에 연결했을 경우 NPE이 발생할 수 있다. 이 경우 다음 tenantId로 스케줄러가 돌아가도록 try-catch로 묶음
 				}
-			}
+			//}
 		}
 	}
 
