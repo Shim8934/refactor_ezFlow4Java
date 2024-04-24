@@ -1305,6 +1305,8 @@
 				a.TENANT_ID = #tenantId#
 			AND
 				a.CN <> a.EXTENSIONATTRIBUTE2
+			AND
+				a.CN NOT LIKE '%trash_dept_%'
 			ORDER BY
 				lpad(ifnull(a.EXTENSIONATTRIBUTE15, 0),6,0), a.DISPLAYNAME
 		]]>
