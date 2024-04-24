@@ -476,3 +476,5 @@
 /* 20230703 자바 디자인 수정 */
 .cbTree div span.list_text{cursor: pointer;}
 .cabRlSearch input[type='text']{height: 25px; margin-top: 1px;}
+
+.list_text[level]{cursor:pointer;}
