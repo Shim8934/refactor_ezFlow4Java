@@ -717,7 +717,7 @@
 			AND
 				company_id = #companyId#
 			AND
-				portlet_id = #poortletId#
+				portlet_id = #portletId#
 		]]>
 	</delete>
 	
@@ -1138,8 +1138,8 @@
 			INSERT (
 				theme_id, tenant_id, company_id, portlet_id, portlet_used, portlet_order, menu_id, is_fixed
 			) VALUES (
-				#themeId#, #tenantId#, #companyId#, #portletId#, #portletUsed#, 
-				(SELECT portlet_order FROM TBL_PORTAL_PORTLET_COMP WHERE company_id = #companyId# AND tenant_id = #tenantId# AND portlet_id = #portletId#),
+				#themeId#, #tenantId#, #companyId#, #portletId#, #portletUsed#,
+				(SELECT DEFAULT_ORDER FROM TBL_PORTAL_PORTLET WHERE portlet_id = #portletId#),
 				#menuId#, #isFixed#
 			) 
 	]]>

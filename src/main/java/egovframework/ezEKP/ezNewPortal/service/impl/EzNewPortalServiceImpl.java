@@ -873,7 +873,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("themeId", themeId);
 				map.put("portletUsed", 1);
 				ezNewPortalDAO.updatePortletOrderUser(map);
-				
+
 				/*int portletId = Integer.parseInt(portlet.get("portletId").toString());
 				portletIdList.add(portletId);*/
 
@@ -1635,6 +1635,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		ezNewPortalDAO.deleteThemePortlet(map);
 
+		// 2024-04-25 기범 : 포틀릿 삭제시 테마 포틀릿 데이터는 삭제 되지 않던 버그 수정 및 포틀릿 삭제시 권한도 지우도록 추가
+		ezNewPortalDAO.deletePortletAuth(map);
 		
 		logger.debug("deletePortlet ended.");
 	}
