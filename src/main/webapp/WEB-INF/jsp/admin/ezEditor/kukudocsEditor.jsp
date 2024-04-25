@@ -323,13 +323,7 @@
 		    		lang = "ja";
 		    		break;
 		    	case "4": 
-		    		lang = "zh";
-		    		break;
-		    	case "5": 
-		    		lang = "vi";
-		    		break;
-		    	case "6": 
-		    		lang = "id";
+		    		lang = "cn";
 		    		break;
 		    	default :
 		    		lang = "en";
