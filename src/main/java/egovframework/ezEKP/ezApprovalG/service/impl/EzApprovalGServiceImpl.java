@@ -20941,7 +20941,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean publicFlag = false;
 		boolean securityFlag = false;
 		String userSecurityCode = "";
-		
+		String documentState = "";// 회송 플래그값
+		docTitle  = commonUtil.cleanValueUnescape(docTitle);
+
 		if (getIsUse("A22", "001", companyID, lang, tenantID).equals("1")) {
 			securityFlag = true;
 		}
@@ -26815,6 +26817,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		 // 수정(2007.06.18) : multidata 기능추가 
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
+		
+		docTitle = commonUtil.cleanValueUnescape(docTitle);
 		
 		String listString = "";
 		
