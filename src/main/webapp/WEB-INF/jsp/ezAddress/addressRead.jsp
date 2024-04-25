@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var creatorid = "<c:out value='${addressInfo.creatorId}'/>";
 			var modifierid = "<c:out value='${addressInfo.modifierId}'/>";
@@ -169,6 +170,25 @@
 						  .replace(/&#34;/g, '\"')
 						  .replace(/&amp;/g, "&");
 			}
+			
+			function pagePrint() {
+				var initBody = $('body').html();
+				
+				// window.print()이전 이벤트 발생
+				window.onbeforeprint = function () {
+					document.body.innerHTML = $('#printContent').html();
+					//메모가 길 경우 스크롤바가 생기는데 프린트를 하면 스크롤 아래 내역은 출력이 안되어 auto로 변경해주는 작업
+					document.getElementById('memoDiv').style.height = 'auto';
+				}
+
+				// window.print()이후 이벤트 발생
+				window.onafterprint = function () {
+					// window.onbeforeprint 에서 변경한 화면단을 다시 원래로 돌리는 작업
+					document.body.innerHTML = initBody;
+				}
+				
+				window.print();
+			}
 		</script>
 	</head>
 	<body class="popup" >
@@ -177,7 +197,7 @@
 		    <div id="menu" style="margin-top:7px;margin-bottom:19px;">
 		      <ul style="margin:0;">
 		        <li><span onClick="modify_address()"><spring:message code='ezAddress.t174' /></span></li>
-				<li><span class="icon16 popup_icon16_print" onClick="window.print()"></span></li>
+				<li><span class="icon16 popup_icon16_print" onClick="pagePrint()"></span></li>
 		        <li><span class="icon16 popup_icon16_mail_gray" onClick="send_email()"></span></li>
 		      	<c:if test="${useCabinet == 'YES'}">
 					<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
@@ -193,7 +213,8 @@
 		    <script type="text/javascript">
 			    selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		    </script>
-		    <table class="popuplist" style="width:100%; table-layout: fixed; ">
+			<div id="printContent">
+		    	<table class="popuplist" style="width:100%; table-layout: fixed; ">
 		          <tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
 		            <th style="width: 71px;"><spring:message code='main.ksa01' /></th>
 		            <td colspan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextFurigana" title="${addressInfo.sFurigana}"> <c:out value='${addressInfo.sFurigana}' /></span></td>
@@ -257,9 +278,10 @@
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t91' /></th>
-		            <td colSpan="3" style="height:50px;overflow:auto;"><div style="height:85px;overflow:auto"><span id="TextMemo" style="width:100%;height:60px" TextMode="MultiLine"></span></div></td>
+		            <td colSpan="3" style="height:50px;overflow:auto;"><div id="memoDiv" style="height:85px;overflow:auto"><span id="TextMemo" style="width:100%;height:60px" TextMode="MultiLine"></span></div></td>
 		          </tr>
 		        </table>
+			</div>
 		  </div>
 		  <div id="printScreen" style="DISPLAY:none">
 		    <table class="content">
