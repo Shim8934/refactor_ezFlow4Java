@@ -104,6 +104,20 @@
         cursor: pointer;
         display: inline-block;
 	}
+
+	.cardTR td {
+		display: flex;
+		padding: 5px 0;
+	}
+
+	.cardTR select {
+		font-size: 12px;
+		font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';
+		padding: 0px 0px 0px 5px;
+		flex: 1;
+	}
+
+	.cardTR a {margin-left: 10px;}
 	</style>
 </head>
 	
@@ -861,13 +875,13 @@
 			var portletUrl = URLParamsUtils(portletURL);
 			var viewType = portletUrl.get('type');
 
-			var resultStr = "<tr id='rowViewType" + portletId + "' class='notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.board.pgb04' /> :</th><td class='portletInfoTD typeTD'>";
+			var resultStr = "<tr id='rowViewType" + portletId + "' class='cardTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.board.pgb04' /> :</th><td class='portletInfoTD typeTD'>";
 			resultStr += "<select id='portletViewType" + portletId + "' name='portletViewType" + portletId + "' style='font-size:12px;' onchange='updateViewTypeOfBoard(this.value,\"" + portletId + "\");'>";
 			resultStr += "<option value='" + BoardViewType.DEFAULT + "' " + (viewType === BoardViewType.DEFAULT ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb01' /></option>";
 			resultStr += "<option value='" + BoardViewType.CARD_A + "' " + (viewType === BoardViewType.CARD_A ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb02' /></option>";
 			resultStr += "<option value='" + BoardViewType.CARD_B + "' " + (viewType === BoardViewType.CARD_B ? "selected" : "") + "><spring:message code='ezNewPortal.board.pgb03' /></option>";
 			resultStr += "</select>   ";
-			resultStr += "<a class='imgbtn wordSelect " + (viewType === BoardViewType.CARD_A || viewType === BoardViewType.CARD_B ? "" : CLASS_DISPLAY_NONE) + "' id='wordSelect" + portletId + "' onclick='selectWord(\"" + portletId + "\");'>";
+			resultStr += "<a class='imgbtn wordSelect " + (isWordSelectDisplay(viewType) ? "" : CLASS_DISPLAY_NONE) + "' id='wordSelect" + portletId + "' onclick='selectWord(\"" + portletId + "\");'>";
 			resultStr += "<span style='font-size:11px;'><spring:message code='ezNewPortal.board.pgb05' /></span></a>";
 
 			return resultStr;
@@ -931,10 +945,10 @@
 
 		function updateViewTypeOfBoard(type, portletId) {
 			var anchor = document.getElementById('wordSelect' + portletId);
-			if (type === BoardViewType.DEFAULT) {
-				anchor.classList.add(CLASS_DISPLAY_NONE);
-			} else {
+			if (isWordSelectDisplay(type)) {
 				anchor.classList.remove(CLASS_DISPLAY_NONE);
+			} else {
+				anchor.classList.add(CLASS_DISPLAY_NONE);
 			}
 
 			var domId = !!portletId ? "portlet" + portletId : "newPortlet";
@@ -946,6 +960,11 @@
 		function isFixBoardPortlet(code) {
 			if (!code) return false;
 			return code === 'fixLeft' || code === 'fixRight';
+		}
+
+		// 단어설정 버튼 표출 조건
+		function isWordSelectDisplay(viewType) {
+			return viewType === BoardViewType.CARD_A;
 		}
 	</script>
 </body>

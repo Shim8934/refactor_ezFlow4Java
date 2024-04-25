@@ -1751,3 +1751,4 @@ div.orbit img{border-radius: 5px;}
 
 #fixBoardArea {height: 300px;}
 .disable { pointer-events: none; opacity: 0.4;}
+.portlet.col, .portlet.addPortlet {height: 289px;}

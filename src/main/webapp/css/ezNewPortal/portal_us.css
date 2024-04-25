@@ -1464,14 +1464,14 @@ ul, li { margin-top:0; margin-bottom:0px; }
 .popup_noticeLayout .popup_noticeList .popuplist tr td:not(:first-child){text-align: center;}
 
 /* 2023-10-18 디자인 개선 건으로 인한 css 삭제 */
-/* /* 다국어 수정 */ */
+/* 다국어 수정 */
 
-/* /* 테마1 */ */
+/* 테마1 */
 /* .rolling_info .info .infoName{max-width:calc(100% - 110px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} */
 /* .rolling_info .info .infoTeam{max-width:calc(100% - 110px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} */
 /* .info .infoMail{margin:15px 0 0 0;} */
 
-/* /* 테마2 */ */
+/* 테마2 */
 /* #theme2Body .personal .info{height:auto; padding: 20px 0px 10px;} */
 /* #theme2Body .personal .info:after{content:""; display:block; clear:both;} */
 /* #theme2Body .info_txt dt{max-width:calc(100% - 40px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} */
@@ -1484,7 +1484,7 @@ ul, li { margin-top:0; margin-bottom:0px; }
 /* #theme2Body .birthList li .birthListDL{padding-right:10px;} */
 /* .writebannerIcon .iconText{padding:0 5px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} */
 
-/* /* 테마3 */ */
+/* 테마3  */
 /* #theme3Body .info .infoMail{margin:15px 0 0 0;} */
 /* #theme3Body .birthList{box-sizing:border-box;} */
 /* 2023-10-18 디자인 개선 건으로 인한 css 삭제 */
