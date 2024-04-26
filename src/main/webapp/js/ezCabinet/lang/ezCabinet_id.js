@@ -104,5 +104,8 @@ var CabinetMessages = {
 	
 	/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "Unacceptable extension.",
-	srtLangHSBEx02 : "Limited extension upload files."
+	srtLangHSBEx02 : "Limited extension upload files.",
+
+	/* 이유정 - 캐비넷 공유관련 메세지 추가 */
+	strLangLYJEx01 : "Please select a department first."
 }
