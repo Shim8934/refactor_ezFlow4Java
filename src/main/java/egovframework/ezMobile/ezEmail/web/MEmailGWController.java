@@ -3229,10 +3229,14 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					
-					if (e.getMessage().indexOf("OVERQUOTA") > -1 && e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
+					if (e.getMessage().indexOf("OVERQUOTA") > -1 || e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
 						logger.error("mailInterSend : " + e.getMessage());
 						
 						pResult = e.getMessage();
+						
+						result.put("status", "error");
+		    			result.put("code", 1);			
+		    			result.put("data", pResult);
 					} else if (e.getMessage().indexOf("Invalid Addresses") > -1) {
 						pResult = e.getMessage();
 						String cause = e.getCause().toString();
@@ -3334,12 +3338,18 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		    }
 				    		    
 			logger.debug("mailInterSend ended. pResult=" + pResult);
-			
-			if (!invalidAddressesError){
+
+			logger.debug("invalidAddressesError={}", invalidAddressesError);
+			if (result != null && !"error".equalsIgnoreCase((String) result.get("status")) ) {
+				result.put("status", "ok");
+				result.put("code", 0);			
+				result.put("data", "");
+			}
+			/*if (!invalidAddressesError){
 				result.put("status", "ok");
 				result.put("code", 0);			
 				result.put("data", "");		
-			}
+			}*/
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			
