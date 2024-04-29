@@ -3859,7 +3859,24 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
 			String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
-			
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", info.getTenantId());
+
+			if (useSharedMailbox.equals("YES")) {
+				String shareId = request.getParameter("shareId");
+
+				logger.debug("shareId=" + shareId + ", userId=" + userId + ", info.getUserId=" + info.getUserId());
+
+				if (shareId != null && !shareId.equals("")) {
+					if (!ezEmailService.checkUserShareId(userId, shareId, 0, info.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+
+						return "";
+					}
+
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+
 			logger.debug("userEmail=" + userEmail);
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
