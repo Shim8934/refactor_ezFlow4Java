@@ -521,8 +521,14 @@
 	        
 	        if (retVal == "0") {
 	            isClosedSave = true;
-	            Save_onClick("tempsave");
-	            window.close();
+	           	var tempSaveVal = Save_onClick("tempsave");
+	            
+	            // 2024.04.29 한슬기 : 제목이 입력되지 않았을 경우 화면이 닫히지 않도록 변경
+	            if (tempSaveVal === "noSubject"){
+	            	retVal = "2";
+	            } else {
+		            window.close();
+	            }
 	        }
 	        
 	        g_bDirty = false;

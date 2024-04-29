@@ -861,7 +861,7 @@ function Save_onClick(savemode) {
     if (eSubject.value.trim() == "") {
         alert(strLang92);
         eSubject.focus();
-        return;
+        return "noSubject"; // 2024.04.29 한슬기 : 제목이 없는 경우 noSubject를 리턴하도록 변경
     }
 
 	if (window.dadiframe && dadiframe.isfileup) {
