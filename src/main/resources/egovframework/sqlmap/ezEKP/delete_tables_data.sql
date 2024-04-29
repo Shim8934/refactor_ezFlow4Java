@@ -1,7 +1,7 @@
 -- 2024.04.01 장혜연  테넌트 삭제 스크립트
 -- tenantId, tenantDomainName 변수 선언
 SET @tenant_id_value = 0;
-SET @tenant_domain_value = 'jtest.kaoni.com
+SET @tenant_domain_value = 'jtest.kaoni.com';
 -- tenant domain이 full 주소로 있을 경우 %@ -- 로 삭제 
 SET @tenant_domain_full_value = CONCAT('%@','jtest.kaoni.com');
 
@@ -20,6 +20,10 @@ ON JRR.TARGET_ADDRESS = JA.TARGET_ADDRESS WHERE JA.TARGET_ADDRESS LIKE @tenant_d
 DELETE FROM JAMES_RECIPIENT_REWRITE WHERE DOMAIN_NAME IN
 (SELECT DISTINCT JRR.DOMAIN_NAME FROM JAMES_RECIPIENT_REWRITE AS JRR JOIN JMOCHA_ALIAS AS JA
 ON JRR.TARGET_ADDRESS = JA.TARGET_ADDRESS WHERE JA.TARGET_ADDRESS LIKE @tenant_domain_full_value);
+
+DELETE FROM JAMES_DOMAIN WHERE DOMAIN_NAME = @tenant_domain_value;
+
+DELETE FROM JAMES_RECIPIENT_REWRITE WHERE DOMAIN_NAME = @tenant_domain_value;
 
 DELETE FROM JMOCHA_MAIL_TAG_CONFIG WHERE USER_NAME LIKE @tenant_domain_full_value;
 
