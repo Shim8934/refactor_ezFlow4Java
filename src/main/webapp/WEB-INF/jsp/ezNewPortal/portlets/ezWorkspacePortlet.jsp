@@ -17,10 +17,10 @@
 			</ul>
 			<div class="collaborate_list">
 			    <dl class="collaborate_listTab">
-			        <dt onClick="workspaceChangeTab('newsTab')" id="newsTab" class="on">뉴스피드</dt>
-			        <dt onClick="workspaceChangeTab('taskTab')" id="taskTab">할일</dt>
-			        <dt onClick="workspaceChangeTab('documentTab')" id="documentTab">문서</dt>
-			        <dt onClick="workspaceChangeTab('issueTab')" id="issueTab">이슈</dt>
+			        <dt onClick="workspaceChangeTab('newsTab')" id="newsTab" class="on"><spring:message code='ezWorkSpace.mjs01'/></dt>
+			        <dt onClick="workspaceChangeTab('taskTab')" id="taskTab"><spring:message code='ezWorkSpace.mjs02'/></dt>
+			        <dt onClick="workspaceChangeTab('documentTab')" id="documentTab"><spring:message code='ezWorkSpace.mjs03'/></dt>
+			        <dt onClick="workspaceChangeTab('issueTab')" id="issueTab"><spring:message code='ezWorkSpace.mjs04'/></dt>
 			    </dl>            
 				<ul class="listtype_txt" id="divNewsfeedResults">
 			    </ul>            	
