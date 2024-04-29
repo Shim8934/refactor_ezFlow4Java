@@ -346,6 +346,9 @@ var strLangNJK02 = "are included.";
 var strLangHSG01 = "Laporan spam tidak dapat dilakukan karena alamat email tidak ditemukan.";
 var strLangHSG02 = "Laporan spam tidak diproses dengan berhasil.";
 
+// 2024.04.29 한슬기 : 메일 관련 메시지
+var strLangHSG03 = "Kolom subjek kosong.";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";
