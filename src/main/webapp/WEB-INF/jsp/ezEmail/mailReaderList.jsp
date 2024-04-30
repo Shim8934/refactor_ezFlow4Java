@@ -12,6 +12,16 @@
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<style>
+			@media print {
+				#TabDiv{ display: none; }
+				.imgbtn{ display: none; }
+				.btnposition { display: none; }
+				input[type=checkbox] {display: none;}
+				
+			}
+			
+		</style>
 	    <script>
 	        var _url = decodeURIComponent("<c:out value='${url}'/>");
 	        var isReadDelete = "${isReadDelete}";
