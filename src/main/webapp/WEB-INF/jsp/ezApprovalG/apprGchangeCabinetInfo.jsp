@@ -190,6 +190,9 @@
         return getXmlString(rtnXml);
     }
     function btnReset_onclick() {
+        // 2024-02-20 양지혜 - 재입력 시 선택/수정 내용을 초기화
+        g_ArrPageInitFlag[1] = false;
+        InitCabinetInfo();
         document.getElementById("txtChangeReason").value = "";
     }
     function btnOK_onclick() {
