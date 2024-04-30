@@ -404,7 +404,7 @@ function Paging() {
                     _page--;
                     return this;
                 },
-                changeCount(count) {
+                changeCount: function (count) {
                     if (_option.maintain) {
                         _changeCount(count);
                     } else {

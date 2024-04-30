@@ -130,6 +130,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 @RestController
 public class EzNewPortalGWController {
@@ -425,6 +426,11 @@ public class EzNewPortalGWController {
 				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
 			}
 
+			List<PortletInfoVO> fixedPortletList = portletOrder.stream()
+					.filter(PortletInfoVO::isFixBoard)
+					.collect(Collectors.toList());
+			portletOrder.removeAll(fixedPortletList);
+
 			if (!usePortletSize) {
 				portletOrder.replaceAll(vo -> {
 					vo.setClassSize("one_by_one");
@@ -438,6 +444,7 @@ public class EzNewPortalGWController {
 			}
 
 			JSONObject data = new JSONObject();
+			data.put("fixedPortletList", fixedPortletList);
 			data.put("portletOrder", portletOrder);
 
 			// 회사의 슬라이더 이미지 가져오기
@@ -4963,8 +4970,7 @@ public class EzNewPortalGWController {
 			String deptId = request.getParameter("deptId");
 			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
-			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의
-		
+			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			int itemCount = Integer.parseInt(request.getParameter("photoCount"));
 			int startRow = Optional.ofNullable(request.getParameter("startRow")).map(Integer::parseInt).orElse(0);
 			String portletLang = info.getLang();

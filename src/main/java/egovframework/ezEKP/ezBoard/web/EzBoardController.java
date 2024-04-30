@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -32,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -55,6 +57,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -63,6 +66,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -226,7 +230,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("boardLeft started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		
+
 		String redirectBoardID = "";
         String redirectBoardGroupID = "";
         String qstId = "";
@@ -235,7 +239,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String applyFlag = "";
         String isAdminLeft = "";
         boolean isCompanyAdmin = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c");
-        
+
         String strLang = userInfo.getLang();
 		String pUserID = userInfo.getId();
 		String pDeptID = userInfo.getDeptID();
@@ -1001,7 +1005,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
-		
+
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName).replace("\\", "&#92;"));
 		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
@@ -1012,7 +1016,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		model.addAttribute("isMyBoard", isMyBoard);
 		model.addAttribute("endDateOption", endDateOption);
-		
+
 		logger.debug("boardItemList ended");
 		//logger.debug("requestURL : " + requestURL);
         return requestURL;
@@ -2397,7 +2401,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBBOARD;") != -1) {
 			boardVO.setSubFlag("Y");
 		}
-		
+
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBSUBBOARD;") != -1) {
 			boardVO.setSubFlag("YY");
 		}
@@ -6120,7 +6124,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			isMyBoard = "YES";
 		}
 		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
-		
+
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
 		model.addAttribute("useOCS", useOCS);
@@ -9234,7 +9238,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 
 		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
-		
+
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
 		model.addAttribute("useOCS", useOCS);
@@ -10653,7 +10657,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("getUserReplyReact ended.");
 		return getUserReplyReactList;
 	}
-	
+
 	// 2024-05-29 전인하 - 게시판 > 게시물 리스트 > 만료된 게시물 리스트 표출 가능여부 메소드
 	public String checkEndDateConfig(BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception {
 		String endDateOptionConfig = ezCommonService.getTenantConfig("endDateOptionConfig", userInfo.getTenantId());
@@ -10666,5 +10670,34 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		return endDateOption;
+	}
+
+	@GetMapping("/ezBoard/boardView.do")
+	public String openBoardView(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		// 현재 기존 소스에서 모두 비어있는 값임. 추후 수정 가능성 있음.
+		String showAdjacent = Optional.ofNullable(request.getParameter("showAdjacent")).orElse("");
+
+		BoardPropertyVO vo = ezBoardService.getBoardProperty(boardID, commonUtil.userInfo(loginCookie).getTenantId());
+		UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
+
+		switch(vo.getGuBun()) {
+			case "3":
+			case "4":
+				builder.uri(URI.create("/ezBoard/boardItemViewPhoto.do"));
+				break;
+			case "7":
+				builder.uri(URI.create("/ezBoard/boardItemViewMovie.do"));
+				break;
+			default:
+				builder.uri(URI.create("/ezBoard/boardItemView.do"));
+				break;
+		}
+		builder.queryParam("boardID", boardID);
+		builder.queryParam("itemID", itemID);
+		builder.queryParam("showAdjacent", showAdjacent);
+
+		return "redirect:" + builder.build().encode().toUriString();
 	}
 }

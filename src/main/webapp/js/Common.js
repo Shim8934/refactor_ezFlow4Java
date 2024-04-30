@@ -770,10 +770,7 @@ if (!Node.prototype.append) {
     try {
         testElement.classList.replace(c1, c2);
     } catch (e) {
-        console.error(e);
-    }
-
-    if (!testElement.classList.contains(c2)) {
+        console.log('make classList.replace polyfill');
         DOMTokenList.prototype.replace = function(oldToken, newToken) {
             if (this.contains(oldToken)) {
                 this.remove(oldToken);
@@ -783,6 +780,7 @@ if (!Node.prototype.append) {
             return false;
         };
     }
+
     testElement = null;
 }());
 
@@ -938,6 +936,23 @@ URLParamsUtilsProto = {
         this.url = this.base;
         this.url += !!this.queryString || this._hasQ ? '?' + this.queryString : '';
         return this.url;
+    },
+    getFullUrl : function () {
+        var fullUrl = this.base;
+
+        if (this.queryString) {
+            var params = this.queryString.split('&');
+            var encodedParams = params.map(function(param) {
+                var parts = param.split('=');
+                if (parts.length === 2) {
+                    return encodeURIComponent(parts[0]) + '=' + encodeURIComponent(parts[1]);
+                }
+                return encodeURIComponent(parts[0]);
+            });
+            fullUrl += '?' + encodedParams.join('&');
+        }
+
+        return fullUrl;
     }
 }
 

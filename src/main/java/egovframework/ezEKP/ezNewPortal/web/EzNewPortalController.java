@@ -497,6 +497,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			String usedTheme = data.get("usedTheme").toString();
 			
 			model.addAttribute("portletOrder", data.get("portletOrder"));
+			model.addAttribute("fixedPortletList", data.get("fixedPortletList"));
 			model.addAttribute("usedTheme", data.get("usedTheme"));
 			model.addAttribute("usedFrame", data.get("usedFrame"));
 			model.addAttribute("sliderList", data.get("sliderList"));

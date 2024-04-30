@@ -161,7 +161,6 @@ function getBoardListBType(data, portletId) {
 		var guBun = item.guBun;
 		var boardID = item.boardID;
 		var SPLIT_DATE = ".";
-		var DEFAULT_THUMBNAIL = '/images/portal/photo_sample.png';
 
 		var listEle = document.createElement('li');
 		listEle.className = 'notiLI';
