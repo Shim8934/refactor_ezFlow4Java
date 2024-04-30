@@ -65,8 +65,9 @@ public class EzMainAdminController {
 
 		boolean rollC = resultVO.getRollInfo().contains("c=1");
 		boolean rollK = resultVO.getRollInfo().contains("k=1");
+		boolean rollF = resultVO.getRollInfo().contains("f=1");
 
-		if (rollC || rollK) {
+		if (rollC || rollK || rollF) {
 			adminVO.setUserid(uid);
 			adminVO.setTenant_id(tenantId);
 			adminVO.setAccessip(ClientUtil.getClientIP(request));
