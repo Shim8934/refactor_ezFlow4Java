@@ -73,7 +73,9 @@ public class OrganDeptVO {
 	private String jobId;
 
 	private String roleId;
-	
+
+	private String histParentCn;
+
 	public String getCn() {
 		return cn;
 	}
@@ -285,5 +287,11 @@ public class OrganDeptVO {
 
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
+	}
+	public String getHistParentCn() {
+		return histParentCn;
+	}
+	public void setHistParentCn(String histParentCn) {
+		this.histParentCn = histParentCn;
 	}
 }

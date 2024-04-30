@@ -104,6 +104,7 @@ import org.json.XML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -827,12 +828,21 @@ public class CommonUtil {
 
 	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
 		Cookie[] cookies = request.getCookies();
+		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
 		if (cookies == null) {
 			return;
 		}
 
 		for (Cookie cookie : cookies) {
+			try {
+				if (useDbSession || cookie.getName().equalsIgnoreCase("loginCookie")) {
+					loginService.deleteSession(cookie.getValue());
+				}
+			} catch (Exception e) {
+				// 본 오류에 상관없이 쿠키 제거 진행을 위해 try-catch로 묶음
+			}
+
 			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")) {
 				cookie.setMaxAge(0);
 				cookie.setPath("/");
@@ -3157,8 +3167,19 @@ public class CommonUtil {
 					int timediff = resultVO.getTimeDiff();
 
 					if (maxInactiveInterval > timediff || maxInactiveInterval == 0) { // DB에 저장 당시 세션 사용 안함 (maxInactiveInterval == 0)인 경우도 pass
-						loginService.updateSession(ezSessionId, "");
-						return "0";
+						String returnCode = "0";
+
+						// MariaDB 클러스터 환경에서 Deadlock Exception이 발생할 수 있어
+						// 업데이트 도중 오류가 발생해도 무조건 성공으로 처리한다.
+						try {
+							loginService.updateSession(ezSessionId, "");
+						} catch (DataAccessException e) {
+							returnCode = "0";
+						} catch (Exception e) {
+							returnCode = "0";
+						}
+
+						return returnCode;
 					} else {
 						clearAllCookies(request, response);
 						request.getSession().invalidate();

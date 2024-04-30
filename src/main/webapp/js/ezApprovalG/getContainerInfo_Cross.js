@@ -229,7 +229,9 @@ function GetDocSearch() {
         
         createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
         createNodeAndInsertText(xmlpara, objNode, "shareDeptId", shareDeptId);
-        
+
+        listLoading(true);
+
 	    if (GamSaFlag){
 	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
 	    } else {
@@ -267,7 +269,9 @@ function GetDocSearch() {
 
 	    createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
 	    createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
-	    
+
+        listLoading(true);
+
 	    if (GamSaFlag){
 	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
 	    } else {
@@ -1321,52 +1325,52 @@ function check_presence2() {
     function MakeSubCondition() {
         var TYPE = "";
         var DATA = "";
-        if (condition[0] != "") {
+        if (condition[0] != "" && condition[0] !== undefined) {
             TYPE += "DOCNO;"
             DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
         }
 
-        if (condition[1] != "") {
+        if (condition[1] != "" && condition[0] !== undefined) {
             TYPE += "DOCTITLE;"
             DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
         }
 
-        if (condition[2] != "") {
+        if (condition[2] != "" && condition[0] !== undefined) {
             TYPE += "WRITERNAME;"
             DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
         }
 
-        if (condition[3] != "null" && condition[3].trim() != "") {
+        if (condition[3] != ""  && condition[0] !== undefined) {
             TYPE += "STARTDATEAF;"
             DATA += "<STARTDATEAF>" + condition[3] + "</STARTDATEAF>";
         }
 
-        if (condition[4] != "null" && condition[4].trim() != "") {
+        if (condition[4] != ""  && condition[0] !== undefined) {
             TYPE += "STARTDATEBF;"
             DATA += "<STARTDATEBF>" + condition[4] + "</STARTDATEBF>";
         }
 
-        if (condition[5] != "null" && condition[5].trim() != "") {
+        if (condition[5] != ""  && condition[0] !== undefined) {
             TYPE += "ENDDATEAF;"
             DATA += "<ENDDATEAF>" + condition[5] + "</ENDDATEAF>";
         }
 
-        if (condition[6] != "null" && condition[6].trim() != "") {
+        if (condition[6] != ""  && condition[0] !== undefined) {
             TYPE += "ENDDATEBF;"
             DATA += "<ENDDATEBF>" + condition[6] + "</ENDDATEBF>";
         }
 
-        if (condition[9] != "") {
+        if (condition[9] != ""  && condition[0] !== undefined) {
             TYPE += "FORMID;"
             DATA += "<FORMID>" + condition[9] + "</FORMID>";
         }
 
-        if (condition[11] != "") {
+        if (condition[11] != ""  && condition[0] !== undefined) {
             TYPE += "WRITERDEPTNAME;"
             DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
         }
 
-        if (condition[12] != "") {
+        if (condition[12] != ""  && condition[0] !== undefined) {
             TYPE += condition[12];
             DATA += condition[13];
         }

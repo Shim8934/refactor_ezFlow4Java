@@ -120,11 +120,12 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 		
-		    function search() {		    	
-		    	if (specialChk(document.getElementById("keyword").value)) {
-		    		alert("<spring:message code='ezResource.special' />");
-		    		return;
-		    	}
+		    function search() {
+		        /* 특수문자 유효성검사 */
+		    	//if (specialChk(document.getElementById("keyword").value)) {
+		    	//	alert("<spring:message code='ezResource.special' />");
+		    	//	return;
+		    	//}
 		    	
 		        if (document.getElementById("keyword").value.trim() == "" && document.getElementById("usedate").checked == false) {
 		            alert("<spring:message code='ezSchedule.t346'/>");

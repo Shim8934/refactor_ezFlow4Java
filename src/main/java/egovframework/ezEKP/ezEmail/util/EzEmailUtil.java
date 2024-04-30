@@ -3369,7 +3369,7 @@ public class EzEmailUtil {
 					if (((MimePart)p).getContentID() != null
 							|| (includeAttachment 
 									&& ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) 
-											|| (p.isMimeType("application/*") && ((MimePart)p).getContentID() == null)))) {
+											|| (p.isMimeType("application/*"))))) {
 						dest.addBodyPart(p);	
 						isAdded = true;
 					}
@@ -3400,9 +3400,10 @@ public class EzEmailUtil {
 		// 첨부파일을 추가하기 위해 다음 코드를 추가함
 		// related 파트안에 mixed 파트가 있고 첨부파일이 있는 메일.eml 참고
 		} else if (src instanceof BodyPart) {
-			if (src.getDisposition() != null && src.getDisposition().equalsIgnoreCase(Part.ATTACHMENT) 
-					|| ((MimePart)src).getContentID() != null // dhlee : 20221125 - multipart/mixed 안에 인라인 이미지 파트가 있는 메일이 있어 추가함.
-					|| src.isMimeType("application/*")) {
+			if (((MimePart)src).getContentID() != null // dhlee : 20221125 - multipart/mixed 안에 인라인 이미지 파트가 있는 메일이 있어 추가함.
+					|| (includeAttachment
+							&& (src.getDisposition() != null && src.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
+									|| src.isMimeType("application/*")))) {
 				dest.addBodyPart((BodyPart)src);	
 			}			
 		}
@@ -4318,7 +4319,22 @@ public class EzEmailUtil {
 	    	
 	    	credential = toHexString(encrypted);
 			*/
-			credential = "";
+    		
+    		String keyStr = "!@#$%jiran123456!@#$%jiran123456";
+    		String ivStr = "!@#$%jiraniv1234";
+
+    		byte[] keyBytes = keyStr.getBytes("UTF-8");
+	    	byte[] ivBytes = ivStr.getBytes("UTF-8");
+	    	byte[] input = emailAddress.getBytes("UTF-8");
+    		
+	    	SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
+	    	IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+	    	Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	    	
+	    	cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
+	    	byte[] encrypted = cipher.doFinal(input);
+	    	
+	    	credential = toHexString(encrypted);
     	}
     	
     	return credential;
@@ -5208,7 +5224,7 @@ public class EzEmailUtil {
 				mailboxQuotaStr = mailboxQuotaStr.substring(0, mailboxQuotaStr.indexOf(".")) + "G";
 			}
 		} else if (mailboxQuota >= 1024) {
-			mailboxQuotaStr = String.format("%.1fG", mailboxQuota/(1024*1024));
+			mailboxQuotaStr = String.format("%.1fM", mailboxQuota/1024);
 		} else {
 			mailboxQuotaStr = (int)mailboxQuota + "K";
 		}

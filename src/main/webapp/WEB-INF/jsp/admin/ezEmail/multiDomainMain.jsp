@@ -132,7 +132,7 @@
 	        var pLeft = (pwidth - 420) / 2;
 			var url = "/admin/ezEmail/addMultiDomainPopUp.do?";
 			
-	        var popup = window.open(url, "popup", "height=134px,width=460px, top=" + pTop.toString() + ", left=" + pLeft.toString());
+	        var popup = window.open(url, "popup", "height=150px,width=500px, top=" + pTop.toString() + ", left=" + pLeft.toString());
 		}
 		
 		function btnDel() {

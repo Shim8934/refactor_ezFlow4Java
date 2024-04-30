@@ -79,7 +79,7 @@ var SurveyMessages = {
 	strSlider7   : "Interval",
 	strSlider8   : "Minimum",
 	strSlider9   : "Maximum",
-	strSlider10  : "'The value of (maximum-minimum)÷interval' should be less than or equal to 200.",
+	strSlider10  : "Tetapkan hitungan ke angka alami 200 atau kurang.",
 	strOptErr    : "At least two views are required.",
 	strMaxtrix1  : "At least one row is required.",
 	strMaxtrix2  : "At least one column is required.",
@@ -165,5 +165,8 @@ var SurveyMessages = {
 	
 	/* 2021-12-10 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "Unacceptable extension.",
-	srtLangHSBEx02 : "Limited extension upload files."
+	srtLangHSBEx02 : "Limited extension upload files.",
+	/* 2024-03-26 양지혜 - 게시기간 메시지 추가 */
+	strLangYJH01 : "Pengumuman dapat dilakukan hingga ",
+	strLangYJH02 : " hari."
 }

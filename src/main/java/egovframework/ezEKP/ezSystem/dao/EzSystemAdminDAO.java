@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
 import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
@@ -239,4 +240,18 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public int getUserChHistListCount(Map<String, Object> map) throws Exception{
 		return (int) select("EzSystemAdminDAO.getUserChHistListCount", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<DeptChangeInfoVO> getDeptChHistList(Map<String, Object> map) throws Exception {
+		return (List<DeptChangeInfoVO>) list("EzSystemAdminDAO.getDeptChHistList", map);
+	}
+
+	public int getDeptChHistListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getDeptChHistListCount", map);
+	}
+
+	public void insertDeptChangeHist(DeptChangeInfoVO deptChangeInfoVO) throws Exception {
+		insert("EzSystemAdminDAO.insertDeptChangeHist", deptChangeInfoVO);
+	}
+
 }

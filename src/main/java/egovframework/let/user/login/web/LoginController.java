@@ -1324,6 +1324,7 @@ public class LoginController {
 		LoginVO loginVO = new LoginVO();
         
     	Cookie[] cookies = request.getCookies();
+    	boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
@@ -1333,6 +1334,10 @@ public class LoginController {
     				cookie.setDomain(ssoDomain);
     			}
     			
+				if (useDbSession && cookie.getName().equalsIgnoreCase("loginCookie")) {
+					loginService.deleteSession(cookie.getValue());
+				}
+
     			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*")) {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
@@ -1394,9 +1399,15 @@ public class LoginController {
         logger.debug("Login sessionCode = " + sessionCode);
 		
     	Cookie[] cookies = request.getCookies();
+    	boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
+
+				if (useDbSession || cookie.getName().equalsIgnoreCase("loginCookie")) {
+					loginService.deleteSession(cookie.getValue());
+				}
+
     			if (!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().matches("SURV_POPUP_.*") && !cookie.getName().equals("multiLoginCookie")) {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");

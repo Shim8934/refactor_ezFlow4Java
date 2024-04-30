@@ -40,6 +40,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/cytoscape-dagre.js')}   "></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/cytoscape-qtip.js')}    "></script>
 		<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}              "></script>
+		<script type="text/javascript">
+			var maxPeriod = Number("${maxPeriod}");
+		</script>
 	</head>
 	
 	<body class="mainbody srvey">

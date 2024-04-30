@@ -1963,4 +1963,33 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertLoadTimeForApprAllConfig");
 		}
 	}
+
+	public void createTblDeptChangeInfo() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblDeptChangeInfo");
+		} catch (Exception e) {
+			logger.debug("tbl_dept_dept_info doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblDeptChangeInfo");
+		}
+	}
+
+	public void insertSurveyPostingMaxPeriodConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkSurveyPostingMaxPeriodConfig", map);
+
+		if (propertyValue == null) {
+			logger.debug("SurveyPostingMaxPeriodConfig tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyPostingMaxPeriodConfig", map);
+		}
+	}
+
+	public void alterFileNameForWebfolderHistory() {
+		try {
+			select(("EzCommonDAO.checkFileNameColumnForHistory"));
+		} catch (Exception e) {
+			logger.debug("TBL_WEBFOLDER_FOLDER_HISTORY FILE_NAME column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterFileNameForWebfolderHistory");
+		}
+	}
 }

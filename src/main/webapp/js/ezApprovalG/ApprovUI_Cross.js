@@ -1538,6 +1538,10 @@ function getCurApproverAprLine(type) {
     }
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType2)
         setMenuBar("btnJunKyul", false);
+    /* 2024-04-22 - 보류된 문서여도 결재유형이 개인병렬협조(009), 결재상태가 진행(002)일 경우, 보류버튼 활성화 */
+    if (pCurrentAprState == strAprState2 && pAprLineType == strAprType9 ) {
+        setMenuBar("btnStay", true);
+    }
 }
 /**
  * xmlpara에 결재관련 정보 저장

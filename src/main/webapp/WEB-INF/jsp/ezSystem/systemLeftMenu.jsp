@@ -59,7 +59,10 @@
 	    		break;
 	    	case "USERCHANGEHIST":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemUserChangeHist.do";
-	    		break;	
+				break;
+			case "DEPTCHANGEHIST":
+				parent.frames[1].location.href = "/admin/ezSystem/systemDeptChangeHist.do";
+				break;
 			case "PERMISSIONCHHIST":
 				parent.frames[1].location.href = "/admin/ezSystem/permissionChangeHist.do";
 				break;
@@ -142,6 +145,7 @@
 	            <span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
 	            <h2><span id="ADMINACCESSHIST" style="display:inline-block;width:100%;" onClick="menu_change('ADMINACCESSHIST')" ><spring:message code='ezSystem.ls07' /></span></h2>
 				<h2><span id="USERCHANGEHIST" style="display:inline-block;width:100%;" onClick="menu_change('USERCHANGEHIST')" ><spring:message code='ezSystem.jhy01' /></span></h2>
+				<h2><span id="DEPTCHANGEHIST" style="display:inline-block;width:100%;" onClick="menu_change('DEPTCHANGEHIST')" ><spring:message code='ezSystem.jhy10' /></span></h2>
 				<h2><span id="PERMISSIONCHHIST" style="display:inline-block;width:100%;" onClick="menu_change('PERMISSIONCHHIST')" ><spring:message code='ezOrgan.ls06' /></span></h2>
 	            <c:if test="${cChk == '1' }">
 	            <h2><span id="ADMINIPMANAGER" style="display:inline-block;width:100%;" onClick="menu_change('ADMINIPMANAGER')" ><spring:message code='ezSystem.ksa08'/></span></h2>

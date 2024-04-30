@@ -85,7 +85,7 @@
 	<table class="content" style="width: 650px;margin-top:5px; border: none;">
 		<tr>
 			<td style="min-width: 350px;">
-				<div id="deptList" style="height: 350px; width: 100%; overflow: auto;">
+				<div id="deptList" style="height: 350px; width: 350px; overflow: auto; white-space: nowrap">
 				</div>
 			</td>
 			<td style="min-width: 60px; border-top: none; border-bottom: none;">

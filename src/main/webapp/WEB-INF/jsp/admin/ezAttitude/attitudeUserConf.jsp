@@ -282,7 +282,7 @@
 	    	function editUserConf(selectedUserIdList) {
     			var url = "/admin/ezAttitude/editAttitudeUserConf.do?selectedUserIdList=" + selectedUserIdList + "&companyId=" + pCompanyId;
 	    		
-    			window.open(url, "", GetOpenWindowfeature(340, 180));
+    			window.open(url, "", GetOpenWindowfeature(450, 180));
     			
 // 	    		if (CrossYN()) {
 // 	    			OpenWin = GetOpenWindow2(url, "", "340", "180");

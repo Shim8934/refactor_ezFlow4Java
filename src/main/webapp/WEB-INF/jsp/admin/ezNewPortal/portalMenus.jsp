@@ -460,8 +460,8 @@
 			var menuNamesCount = menuNames.length;
 			var menuType = event.data.menuType;
 			var menuNameEmptyNum = 0;
-			//특수문자  체크
-			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			//특수문자  체크 (앤드&, 소괄호(), 슬래쉬/만 허용함)
+			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\-_+<>@\#$%\\\=\'\"]/g;
 			const regex = new RegExp(special_pattern);
 			
 			//메뉴 사용 유무
@@ -498,7 +498,7 @@
 				menuLang = menuLang.substring(4);
 				
 				if (regex.test($.trim(menuName.value))) {
-					alert("<spring:message code='ezNewPortal.ljw01' />");
+					alert("<spring:message code='ezNewPortal.csj01' />");
 				    return;
 				}
 				
@@ -725,8 +725,8 @@
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
 			var menuNameEmptyNum = 0;
-			// 특수문자 체크
-			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			// 특수문자 체크 (앤드&, 소괄호(), 슬래쉬/만 허용함)
+			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\-_+<>@\#$%\\\=\'\"]/g;
 			const regex = new RegExp(special_pattern);
 			
 			//메뉴 사용 유무
@@ -757,7 +757,7 @@
 				menuLang = menuLang.substring(4);
 				
 				if (regex.test($.trim(menuName.value))) {
-					alert("<spring:message code='ezNewPortal.ljw01' />");
+					alert("<spring:message code='ezNewPortal.csj01' />");
 				    return;
 				}
 				

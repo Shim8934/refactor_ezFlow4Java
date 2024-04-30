@@ -10,16 +10,27 @@
 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
-	
+
 	<tx:advice id="txAdvice" transaction-manager="txManager">
 		<tx:attributes>
 			<tx:method name="*" rollback-for="Exception" />
 		</tx:attributes>
 	</tx:advice>
+
+	<!-- REQUIRES_NEW 트랜잭션 어드바이스 설정 -->
+	<tx:advice id="txAdviceRequiresNew" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRES_NEW" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
     
 	<aop:config>
 		<aop:pointcut id="requiredTx" expression="execution(* egovframework.let..impl.*Impl.*(..)) or execution(* egovframework.com..*Impl.*(..)) or execution(* egovframework.ezEKP..*Impl.*(..)) or execution(* egovframework.ezEKP..*Impl_y.*(..)) or execution(* egovframework.ezEKP..*impl_m.*(..))"/>
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="requiredTx" />
-	</aop:config>
+		<!-- REQUIRES_NEW 전파를 적용할 포인트컷 -->
+		<aop:pointcut id="requiresNewOperation" expression="execution(* egovframework.ezEKP..*TxNew.*(..))"/>
 
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="requiredTx" />
+		<!-- REQUIRES_NEW 전파를 적용할 advisor -->
+		<aop:advisor advice-ref="txAdviceRequiresNew" pointcut-ref="requiresNewOperation" />
+	</aop:config>
 </beans>

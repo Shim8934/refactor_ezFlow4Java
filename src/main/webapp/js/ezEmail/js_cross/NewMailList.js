@@ -227,7 +227,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Attach = SelectSingleNodeValue(XmlRows[Cnt], "attach");
                 var p_Sender = SelectSingleNodeValue(XmlRows[Cnt], "sender");
                 var p_Msgto = SelectSingleNodeValue(XmlRows[Cnt], "msgto");
-                var p_Subject = SelectSingleNodeValue(XmlRows[Cnt], "subject").replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
+                var p_Subject = SelectSingleNodeValue(XmlRows[Cnt], "subject");
                 var p_ReceiveDT = SelectSingleNodeValue(XmlRows[Cnt], "receivedt");
                 var p_Size = SelectSingleNodeValue(XmlRows[Cnt], "size");
                 var p_Read = SelectSingleNodeValue(XmlRows[Cnt], "read");
@@ -374,7 +374,7 @@ function MakeListInfoHTML(ConentObject) {
                             }
                             
                             _TDColum.innerHTML = p_Subject;
-                            _TDColum.title = p_Subject;
+                            _TDColum.title = p_Subject.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function (event) {
                                 event_listclick(this, event);

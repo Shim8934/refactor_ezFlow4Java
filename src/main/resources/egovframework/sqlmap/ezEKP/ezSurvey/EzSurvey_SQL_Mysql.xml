@@ -1578,5 +1578,15 @@
 			S.start_date <= #today# and S.end_date >= #today#
 		]]>
 	</select>
-	
+
+	<select id="EzSurveyDAO.checkTenantConfig" parameterClass="Map" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = #propertyName#
+		  AND
+			TENANT_ID = #tenantID#
+	</select>
 </sqlMap>

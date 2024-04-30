@@ -89,6 +89,34 @@
 				
 				window.open("/ezPersonal/sms/sms_main.do?num="+pMobile, "", "height=560px,width=570px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			}
+			
+			// 2024-03-21 조수빈 - 현재 창 프린트 시 팝업 창의 크기가 작아 미리보기가 잘 보이지 않는 문제 
+			
+			// 프린트 이후 원래 창의 크기로 돌리기 위해 변수로 저장
+			var originalWidth = window.outerWidth;
+			var originalHeight = window.outerHeight;
+			
+			window.onbeforeprint = function() {
+				// 미리보기에서 잘 보일 수 있도록 현재 창을 최대화
+				window.resizeTo(screen.availWidth, screen.availHeight);
+			}
+			
+			window.onafterprint = function() {
+				// 원래의 팝업 사이즈로 변경
+				window.resizeTo(originalWidth, originalHeight);
+				
+				var screenWidth = screen.availWidth;
+				var screenHeight = screen.availHeight;
+				
+				var leftPosition = (screenWidth - originalWidth) / 2;
+				var topPosition = (screenHeight - originalHeight) / 2;
+				
+				// 화면의 중앙으로 위치 변경
+				window.moveTo(leftPosition, topPosition);
+			}
+			
+			
+			
 		</script>
 	</head>
 	

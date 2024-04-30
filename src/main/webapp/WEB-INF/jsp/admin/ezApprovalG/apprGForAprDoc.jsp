@@ -40,6 +40,7 @@
 	        var nowDate = "<c:out value = '${nowDateUTC}'/>";
 			var pOpenYear = "<c:out value = '${openYear}'/>";
 			var useWebHWP = "<c:out value ='${useWebHWP}'/>";
+			var selectYear = "ALL";
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -877,10 +878,11 @@
 			    
 			    if (document.getElementById("txt_keyword").value != "") {
 			        var selectSearch = document.getElementById('selectType');
-			
+
+					/*
 			        for (var i = 0; i < 20; i++) {
 			            SearchCond[i] = "";
-			        }
+			        } */
 			
 			        if (selectSearch.item(0).selected) {
 			            SearchCond[1] = document.getElementById("txt_keyword").value;
@@ -898,7 +900,7 @@
 			    pageNum = 1;
 			    GetDocList();
 			    
-			    $('#sel_year').val("ALL");
+			    $('#sel_year').val(selectYear);
 			}
 			
 			var Tab1_SelectID = "";
@@ -975,12 +977,13 @@
 		    function onSelect_Year() {
 	            pChackYN = "SEARCH";
 	            pageNum = 1;
+				selectYear = GetSelectVal("sel_year");
 	            
-	            if (GetSelectVal("sel_year") != "ALL") {
-	            	SearchCond[3] = GetSelectVal("sel_year");
+	            if (selectYear != "ALL") {
+	            	SearchCond[3] = selectYear;
 	            	SearchCond[4] = "01";
 	            	SearchCond[5] = "01";
-	            	SearchCond[6] = GetSelectVal("sel_year");
+	            	SearchCond[6] = selectYear;
 	            	SearchCond[7] = "12";
 	                SearchCond[8] = "31";
 	            }

@@ -137,7 +137,7 @@ form{display:inline;margin:0}
 	background-color:white;
 	border:1px solid #777;
 	border-radius: 4px;
-	font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	/* border-left:1px solid #c4d0dc;
 	border-top:1px solid #c4d0dc;
 	border-right:1px solid #7792ad;
@@ -1071,7 +1071,7 @@ form{display:inline;margin:0}
 .pl9{padding-left:9px;}
 .pl10{padding-left:10px;}
 .tstyle1, .tstyle3{	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-.tstyle1 {border:1px  solid #ddd; width:100%; font-size:12px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.tstyle1 {border:1px  solid #ddd; width:100%; font-size:12px; font-family:ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .tstyle1 th {
 	padding:5px;
 	border-left: 0px;
@@ -1223,7 +1223,7 @@ form{display:inline;margin:0}
 	border:1px solid #e0e0e2;	
 }
 
-.mainlist{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist{table-layout:fixed; border:0 none !important;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 
 .mainlist tr{height:40px}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:13px; padding:5px 4px; border-top:1px solid #E5E5E5;border-bottom:1px solid #E5E5E5; background-color: #F8F9FB; height:21px}
@@ -1342,7 +1342,7 @@ form{display:inline;margin:0}
 	line-height:16px;
 	vertical-align:top;
 	color:#666;
-	text-align:left;
+	text-align:right;
 }
 .btnimg { cursor:pointer;}
 
@@ -1490,7 +1490,7 @@ form{display:inline;margin:0}
 	background-color:white;
 	border:1px solid #BABEC7;
 	border-radius: 3px;
-	font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+	font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 	cursor:pointer;
 	color:#333;
 	border-radius: 3px;
@@ -1637,7 +1637,7 @@ form{display:inline;margin:0}
 .organwrap_list  .organinfo .name { height:18px; padding-top:5px!important;}
 
 /* organliststyle2 */
-.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#393939; font-size:12px; line-height:19px; padding:3px 4px 1px; border-top:1px solid #e8e8e8; border-bottom:1px solid #e8e8e8; background-color: #f8f8fa;}
 .popup_mainlist tr th.title{width:100%; text-align:left;}
 
@@ -1809,7 +1809,7 @@ form{display:inline;margin:0}
 .contents_todayCommunity .bg_todayCommunity .bg_todayCommunityBL{display:none; position:absolute; left:0px; bottom:0px; width:5px; height:5px; background:url(../images/kr/community/bg_todayCommunity_BL.gif) no-repeat;}
 .contents_todayCommunity .bg_todayCommunity .bg_todayCommunityBR{display:none; position:absolute; right:0px; bottom:0px; width:5px; height:5px; background:url(../images/kr/community/bg_todayCommunity_BR.gif) no-repeat; z-index:1;}
 .contents_todayCommunity .todayCommunity_img{float:left; width:198px; height:140px; border:1px solid white; margin:0px 19px 0px 0px; padding:0; overflow:hidden;}
-.contents_todayCommunity .todayCommunity_list{float:none; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
+.contents_todayCommunity .todayCommunity_list{float:none; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_list dt{font-size:13px; font-weight:bold; color:#666; margin:0; padding:0; line-height:2; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_list dd{font-size:12px; color:#666; margin:0; padding:0; line-height:2;}
 .contents_todayCommunity .todayCommunity_list dd span{font-size:11px;}
@@ -1886,7 +1886,7 @@ form{display:inline;margin:0}
 .right_tabpartList dd{float:none; line-height:20px; height:20px; color:#666; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .right_tabpartList dd strong{color:#666;}
 
-.right_tabpartList01{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
+.right_tabpartList01{font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
 .right_tabpartList01 dt{float:right; font-size:12px; color:#666; margin:0; padding:0; line-height:28px;}
 .right_tabpartList01 dt .icon_community01{display:inline-block; padding:0px 8px 0px 24px; background:url(../images/kr/community/icon_Community01.png) no-repeat left 3px; font-weight:bold;}
 .right_tabpartList01 dt .icon_community02{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community02.png) no-repeat left 3px; font-weight:bold;}
@@ -1903,7 +1903,7 @@ form{display:inline;margin:0}
 .receiver_tltype02 span {font-size:14px; font-weight:bold; color:#388CE5; height:28px;display:inline-block;padding:0px 25px 0px 0px; min-width:49px;}
 .receiver_borderbox { border:1px solid #D1D1D1; }
 
-.receiver_list{border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px; border-spacing:0; border-collapse:collapse;}
+.receiver_list{border:0 none !important;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px; border-spacing:0; border-collapse:collapse;}
 .receiver_list th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:8px 4px; border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; background-color: #f6f6f6;}
 .receiver_list td{ border:0px; font-weight:normal; font-size:13px; color:#333; padding:5px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
 
@@ -1955,7 +1955,7 @@ form{display:inline;margin:0}
 .onimg { position:absolute; top:0px; left:0px; z-index:5; width:175px; height:140px; background:url(../images/sub/theme_overimg_kr.png) no-repeat; }
 
 
-.themelist_box { table-layout:fixed; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;border:1px solid #dddada; width:100%;}
+.themelist_box { table-layout:fixed; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;border:1px solid #dddada; width:100%;}
 .themelist_box th { text-align:left; border:1px solid #dddada; background:#fafafa;padding:15px 10px; margin:0px ; font-size:12px;}
 .themelist_box td {border:0px solid #dddada !important; border-bottom:1px solid #dddada !important; padding:10px; vertical-align:middle; text-align:center;}
 
@@ -2016,9 +2016,9 @@ form{display:inline;margin:0}
 .System03Table{table-layout:fixed; border:1px solid #d8d8d8; border-collapse:collapse;}
 .System03Table th{background:#f6f6f6; height:30px; border-bottom:1px solid #d8d8d8; border-collapse:collapse; font-size:12px; color:#777; font-weight:normal;}
 .System03Table td{border-collapse:collapse; padding:10px 0px 5px 0px;}
-.System03DL{clear:both; margin:0; padding:10px 0px 5px 21px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.System03DL{clear:both; margin:0; padding:10px 0px 5px 21px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .System03DL dt{float:left; margin:0px 9px 0px 0px; padding:0;}
-.System03DL dt span{display:inline-block; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; padding:0; overflow:hidden;}
+.System03DL dt span{display:inline-block; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; padding:0; overflow:hidden;}
 .System03DL dt .point{color:#bbbbbb; font-weight:normal;}
 .System03DL dd{float:none;  margin:0; padding:0;  overflow:hidden;}
 .System03DL dd span{display:inline-block; overflow:hidden;}
@@ -2111,7 +2111,7 @@ form{display:inline;margin:0}
 .content_property table{border-collapse:collapse; border-spacing:0;}
 .content_property table tr{border-collapse:collapse; border-spacing:0;}
 .content_property table td{border-collapse:collapse; border-spacing:0;}
-.content_property .tabTitle{height:30px; background:rgb(242,242,242); border:1px solid #d2d7e1; text-align:center; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#444; cursor:pointer;}
+.content_property .tabTitle{height:30px; background:rgb(242,242,242); border:1px solid #d2d7e1; text-align:center; font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#444; cursor:pointer;}
 .content_property .tabList{border-right:1px solid #d2d7e1; border-left:1px solid #d2d7e1;}
 .content_property .tabList table{}
 .content_property .tabList table td{height:25px; border-bottom:1px solid #cfcfcf; cursor:pointer; padding:0px 5px 0px 5px;}
@@ -2258,7 +2258,7 @@ div#txtContent table {margin:auto;}
 
 .btnbtn { margin-top:10px; text-align: center; }
 
-#Preview_HeaderH, #Preview_HeaderW { background-color: #F8F9FB; }
+/* #Preview_HeaderH, #Preview_HeaderW { background-color: #F8F9FB; } */
 #subject { vertical-align: top;}
 .extraMenu {
 	position: absolute;
@@ -2273,7 +2273,7 @@ div#txtContent table {margin:auto;}
 .volume_num{ margin:0px; padding:0px;}
 .volume_graph{ margin:5px 0px 10px 0px; padding:0px; width:100%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#e9e9e9;}
 .volume_graph span{ display:inline-block; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-.volumeDL{ margin:0px; padding:0px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px; font-weight:bold;}
+.volumeDL{ margin:0px; padding:0px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px; font-weight:bold;}
 .volumeDL dt{margin:0px; padding:0px 0px 0px 0px; float:left; color:#333;}
 .volumeDL dt span{ display:inline-block; color:#959595;}
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}
@@ -2536,7 +2536,7 @@ div#txtContent table {margin:auto;}
 
 /* left mail 용량 */
 .mail_space{height:34px; line-height:33px; background:#bbbfc3; position:absolute; bottom:25px; width:190px; border-radius: 5px; left: 13px;}
-.mail_space .mail_spaceText{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:14px; color:#333; display:inline-block; margin:0px; padding:0px 0px 0px 8px; position:absolute; bottom: 38px;}
+.mail_space .mail_spaceText{font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:14px; color:#333; display:inline-block; margin:0px; padding:0px 0px 0px 8px; position:absolute; bottom: 38px;}
 .mail_space .mailBar{ display:inline-block; width:0%; height:34px; background:#82b9f6; margin:0px; padding:0px; border-radius: 5px; line-height: 36px;}
 .mail_space .mailBar.warning{background:#ffb600;}
 .mail_space .mailBar.danger{background:#ff4040;}
@@ -2600,7 +2600,7 @@ div#txtContent table {margin:auto;}
 /* previewmail */
 .previewmail_bar_h{ border:1px solid #e5e5e5 !important; border-top:0px !important;}
 
-.previewmail{margin:0px; padding:0px;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; overflow:hidden; }
+.previewmail{margin:0px; padding:0px;font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; overflow:hidden; }
 .previewmail .previewmail_info{background:#F8F9FB; margin:0px; padding:0px; overflow:hidden; border-top:1px solid #e5e5e5;}
 .previewmailDL{ margin:15px 20px; padding:0px; overflow:hidden;}
 .previewmailDL dt.prepic{ margin:0px; padding:0px; border-radius:30px; float:left;}
@@ -2641,7 +2641,7 @@ div#txtContent table {margin:auto;}
 #mainmenuLayout { position: relative; }
 .mainmenuLayout_calendar { position: relative; }
 .calendar_pagenav { position: absolute; left: 50%; top:50px; width: 269px; margin-left: -134px; }
-.calendar_pagenav .spanText { display: block !important; text-align: center; font-size:18px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; letter-spacing:-1px;}
+.calendar_pagenav .spanText { display: block !important; text-align: center; font-size:17px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; letter-spacing:-1px;}
 .mainmenuTab {position:relative;margin: -9px 15px 11px 15px;}
 .mainmenuTab .mainmenuTabUL { text-align: center; padding: 0px 0px 0px 1px; margin: 0px; }
 .mainmenuTab .mainmenuTabUL li { display: inline-block; }
@@ -2653,7 +2653,7 @@ div#txtContent table {margin:auto;}
 /* admin */
 
 /* admin menu */
-.admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:287px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:287px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .admin_menuDL{ margin:0px; padding:0px; height:44px; line-height:42px; background:#edf7ff; border:1px solid #2196f3; box-sizing:border-box;}
 .admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; float:left;}
 .admin_menuDL .admin_menuX{ margin:0px; padding:0px;}
@@ -2673,7 +2673,7 @@ div#txtContent table {margin:auto;}
 .bottomBtn .btnA:hover{border:1px solid #388CE5; color:#0470E4; background:#f1f8ff;}
 
 /* admin thema */
-.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:1020px; height:398px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:1020px; height:398px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .admin_thema .menuIconTH{ margin:0px; padding:0px; width:161px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
 .admin_thema .menuIconTD{ margin:0px; padding:0px 5px 0px 5px; border:1px solid #dfdfdf; color:#393939; letter-spacing:-1px;}
 .admin_thema .menuIconTD_img{margin:0px; padding:20px 5px 20px 5px; border:1px solid #dfdfdf; color:#393939; text-align:center;}
@@ -2712,7 +2712,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_tabCommunity dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
 .contents_tabCommunity dd{float:right; height:44px; margin:0px; padding:0px;}
 .contents_tabCommunity dd.btn_more{width:42px; background:url(../images/kr/community/communityPortlet_btnmore.png) center no-repeat; cursor:pointer;}
-.contents_listCommunity{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.contents_listCommunity{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .contents_listCommunity li{overflow:hidden; margin:0px; padding:0px; line-height:34px; color:#555555; font-size:13px; cursor:pointer;}
 .contents_listCommunity li span{display:inline-block; margin:0px; padding:0px 0px 0px 0px;}
 .contents_listCommunity li span.icon_new{float:left;}
@@ -2721,8 +2721,8 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_listCommunity li span.txt{float:left; width:70%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .contents_listCommunity li span.date{float:right;}
 
-.contents_newCommunity{width:100%; height:280px; margin:0px 0px 20px 0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
-.contents_popularCommunity{width:100%; height:280px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
+.contents_newCommunity{width:100%; height:280px; margin:0px 0px 20px 0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
+.contents_popularCommunity{width:100%; height:280px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; border-radius: 5px;}
 .contents_rightCommunity{margin:0px; padding:0px;}
 .contents_rightCommunity dt{width:196px; height:138px; margin:20px auto 15px; padding:0px; text-align:center; border:1px solid #e7e7e7; background:url(../images/ezCommunity/logo/default_logo_empty.png) center no-repeat; border-radius: 5px;}
 .contents_rightCommunity dd{margin:0px; padding:0px 20px; line-height:24px; color:#555555; font-size:13px;}
@@ -2732,10 +2732,10 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 
 .community_section03{height:442px; margin:0px 0px 20px 0px; padding:0px;}
 .contents_category{width:100%; height:440px; background:#ffffff; border:1px solid #e7e7e7; border-radius: 5px;}
-.contents_categoryTab{float:left; width:199px; height:440px; border-right:1px solid #e7e7e7; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.contents_categoryTab{float:left; width:199px; height:440px; border-right:1px solid #e7e7e7; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .contents_tabCategory{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; border-bottom:1px solid #e7e7e7; background: #F8F9FB;}
 .contents_tabCategory dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
-.contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:0; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:0; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .contents_listCategory li{margin:0px; padding: 6px 0 6px 15px; line-height:26px; color:#555555; font-size:13px; cursor:pointer; border-bottom: 1px solid #E5E5E5;}
 .contents_listCategory li span{display:inline-block; margin:0px; padding:0px;}
 .contents_listCategory li span.icon img{vertical-align:middle; margin:-3px 6px 0px 0px;}
@@ -2744,7 +2744,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 
 /* .contents_listCategory li #totalCnt{color:#388CE5; font-weight: bold;} */
 
-.contents_categoryView{float:left; width:calc(100% - 200px); height:440px; background:#fff; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
+.contents_categoryView{float:left; width:calc(100% - 200px); height:440px; background:#fff; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
 .contents_searchCategory{overflow:hidden; margin:20px; padding:0px;}
 .contents_searchCategory dl{margin:0px; padding:0px;}
 .contents_searchCategory dl dt{float:left; margin:0px 10px 0px 0px; padding:0px; border:1px solid #e2e3e6; border-radius: 5px;}
@@ -2755,14 +2755,14 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_searchCategory dl dd{float:left; height:35px; margin:0px; padding:0px 26px; line-height:32px; background:#3d8fea; color:#ffffff; font-size:16px; font-weight:bold; cursor:pointer; border-radius: 5px;}
 
 .contents_categoryViewList{overflow-y:auto; width:calc(100% - 30px); margin:15px 15px; padding:0px; height:351px;}
-.categoryBox{float:left; width:calc(20% - 42px); height:68px; margin:0px 5px 10px 5px; padding:20px 15px; background:#ffffff; border-radius: 10px; cursor:pointer; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
+.categoryBox{float:left; width:calc(20% - 42px); height:68px; margin:0px 5px 10px 5px; padding:20px 15px; background:#ffffff; border-radius: 10px; cursor:pointer; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
 .categoryBox.health{background: #FFEDE6 !important;}
 .categoryBox.sports{background: #F4EDFF !important;}
 .categoryBox.computer{background: #FCE6E9 !important;}
 
 .categoryPic{float:left; width:91px; height:64px; margin:0px 20px 0px 0px; padding:0px; border:1px solid #e2e3e6; border-radius: 10px;}
 .categoryPic img{border-radius: 10px;}
-.categoryInfo{float:left; width:calc(100% - 113px); margin:0px; padding:0px; color:#333333; font-size:12px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
+.categoryInfo{float:left; width:calc(100% - 113px); margin:0px; padding:0px; color:#333333; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif}
 .categoryInfo dt{margin:0px; padding:0px;}
 .categoryInfo dt.sort{height:18px; margin:0px 0px 5px 0px; padding:0px 8px; line-height:18px; text-align:center; background:#999; color:#ffffff; font-size:12px; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; display:inline-block;}
 .categoryInfo dt.sortBlue{background:#0dbeff;}
@@ -3043,7 +3043,7 @@ h2, #menu span {font-size: 12px;}
 .usersTr .mainTd {width: 50%;}
 .usersTr .respDate {width: 120px; min-width: 120px; white-space: nowrap; padding-right: 8px;}
 .usersTr td:first-child {width: 40px;}
-.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .response-header >div:first-child {flex: 1;}
 .response-header >div:last-child {margin-left: 10px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
 .response-users {padding: 10px; border-right: 1px solid #ddd; border-left: 1px solid #ddd;}
@@ -3124,7 +3124,7 @@ h2, #menu span {font-size: 12px;}
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
 .hiddenBttn, .hidden-tab, .searchPanel.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
-.surveydetail-header {padding-left: 10px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.surveydetail-header {padding-left: 10px; font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .surveydetail-header ul {padding: 0px; margin: 0px; list-style: none;}
 .surveydetail-header ul li {display: block; float: left; margin: 0 3px 0 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
 .surveydetail-header span {display: inline-block; background: white; border: 1px solid #CECECE; height: 25px; padding: 0px 10px 2px 10px; line-height: 25px; font-size: 13px; color: #393939; border-radius: 3px;}
@@ -3177,7 +3177,7 @@ h2, #menu span {font-size: 12px;}
 /**** survey information table start ****/
 .survey-nminfo {margin:0px 0px 10px 0px;}
 .surveyTitle{width:100%; margin:0px; padding:0px; line-height: 20px;}
-.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
+.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px !important; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
 .info-input-ttl {font-size:16px; font-weight:bold; color:#333;}
 .info-input-pp {font-size:14px;}
 .textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border: 1px solid #388CE5; outline: none;}
@@ -3369,7 +3369,7 @@ input::-ms-clear {display: none;}
 .survey_atchBtn li.cancelSkip{margin:7px 0px 0px 0px !important;}
 .survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:22px; margin:10px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
 .survey_atchBtn li, .survey_atchBtn li.off span{margin-left:6px; margin-right:6px; line-height:22px;}
-.survey_atchBtn li span .survey_atchBtn li span.off{display: block; float: left; padding: 0px 4px; font-size:12px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:28px; box-sizing:border-box;}
+.survey_atchBtn li span .survey_atchBtn li span.off{display: block; float: left; padding: 0px 4px; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; line-height:28px; box-sizing:border-box;}
 .survey_atchBtn li span.survey_icon{margin-left:3px; margin-right:3px;}
 .survey_text{padding:0px 4px; line-height:38px; font-size:12px; color:#333;}
 .survey_icon{background:url(/images/ezSurvey/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
@@ -3407,7 +3407,7 @@ input::-ms-clear {display: none;}
 /* question header panel */
 .question-panel{background:#f1f6fb; padding: 0px;}
 .question-header {display:flex; line-height:40px; padding:0px 0px;}
-.question-header .question-content {padding:0px 20px; cursor: default; font-size:14px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.question-header .question-content {padding:0px 20px; cursor: default; font-size:14px; font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .question-header .tooltip-bttns {padding: 0px 10px; width: 120px !important;}
 
 .question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px;}
@@ -3443,7 +3443,7 @@ input::-ms-clear {display: none;}
 /* slider part */
 .silder-wrap {display:flex; padding:10px 0px; align-items:center;}
 .silder-wrap span{width:28px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
-.slider-lw, .slider-up, .slider-input {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
+.slider-lw, .slider-up, .slider-input .slider-cnt {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
 .slider-lwExp {float: left; padding-left: 8px;}
 .slider-upExp {float: right; padding-right: 6px;}
 .slider-main, .slider-range {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor:pointer; margin: 0px 10px; padding: 0px;}
@@ -3460,7 +3460,7 @@ input[type=range]::-ms-thumb {border: none; width:26px; height:26px; border-radi
 input[type=range]:focus::-ms-fill-lower {background:#f3f3f3;}
 input[type=range]:focus::-ms-fill-upper {background:#f3f3f3;}
 input[type=range]::-ms-tooltip {display: none;}
-.slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 1.5em; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; color: rgba(132, 206, 66, 1);}
+.slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 1.5em; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; color: rgba(132, 206, 66, 1);}
 .slider-span {padding-right: 10px;}
 .silder-unit {text-align: center;}
 
@@ -3488,7 +3488,7 @@ input[type=range]::-ms-tooltip {display: none;}
 /* survey information, questions and logic confirm part */
 .prevQsWrapper{margin:10px 0px 0px 0px; border:1px solid #ddd; position: relative;}
 .prevQsContent{background:#f1f6fb;}
-.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; display: flex;}
+.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; display: flex;}
 .prevQsWrapper .question-header .imptt {line-height: 40px;}
 .srvyLogicbtn{display:inline-flex; margin:0px 0px 0px 10px;}
 .logicSkip{background-position:0px -94px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:pointer;}
@@ -3536,6 +3536,8 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
+.upage-ul li .srvyInfo05{display:inline-block; width:16px; height:16px; background-position:-66px -110px !important; margin:6px 8px 0px 0px;}
+.upage-ul li .srvyInfo06{display:inline-block; width:16px; height:16px; background-position:-82px -110px !important; margin:6px 8px 0px 0px;}
 
 /* 검색 */
 .searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:0px;}
@@ -3547,7 +3549,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .title_bar img {vertical-align:sub;}
 
 /* 20190207 조진호 - error page 추가*/
-.error_wrap p, .error_wrap dl{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.error_wrap p, .error_wrap dl{font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
 .error_wrap p{ margin:0px; padding:0px; text-align:center;}
 .error_wrap dl{ margin:20px 0px 0px 40px;; padding:0px; line-height:40px; text-align:center;}
@@ -3578,7 +3580,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .calendar_layer .text .td_list td.individual .resource_noreturn {background-image: url('/images/ezResource/state_noreturn.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
 
 /* 2019-07-02 김민성 자원관리 warning 관련 수정*/
-.warningbox{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.warningbox{font-family:  Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 
 /* 20190709 메일분류추가 */
 .mailRule_select{-webkit-appearance: none;border:1px solid #dedede;min-height:30px;margin:0px 0px 3px 0px;padding-left: 5px;background: url(/images/next.gif) no-repeat right 1px center; background-color: #fff;}
@@ -3609,7 +3611,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* 그래프용량 */
 .graph_used{margin:0px auto;text-align: center;}
-.graph_used dl{margin:0px; padding:7px 0px; color:#333; font-size:12px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+.graph_used dl{margin:0px; padding:7px 0px; color:#333; font-size:12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .graph_used dl dt{display:inline-block; margin:0px 3px; padding:0px;}
 .graph_used dl dt img{vertical-align:middle; margin:0px;}
 .graph_used dl dt span{display:inline-block; margin:0px 2px;}
@@ -3864,7 +3866,7 @@ input[type=text]{height: 26px;}
 input{height: 24px !important;}
 select{min-height: 24px !important;}
 .imgbtn{height: 23px; line-height: 23px; margin-bottom: 0px;}
-.lnbUL div:hover .list_text { color: #0470E4; font-weight: bold; }
+/*.lnbUL div:hover .list_text { color: #0470E4; font-weight: bold; }*/
 
 /* //20230519 자바 서브페이지 디자인수정*/
 
@@ -3893,7 +3895,7 @@ select{min-height: 24px !important;}
 #left .project_admin{background:none;padding: 8px 0 0 22px;}
 #left .project_admin span{font-size: 16px;}
 
-.portletInfoTD input[type='text']{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-weight:normal;}
+.portletInfoTD input[type='text']{font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-weight:normal;}
 
 .cabTable .cabName, .cabTable2 .cabName{font-size:13px;}
 
@@ -3915,7 +3917,6 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 #left .adminListBox h2.on, #left .adminListBox h2:hover{background:#F8F9FB !important;}
 
 .portlet_tabnew01_top p span {line-height: 26px !important;}
-.contents_categoryView{overflow: auto;}
 .content input{margin-top: 0px;}
 
 .popup #divList{overflow: auto;}/*게시 팝업 조회자 스크롤*/
@@ -3937,3 +3938,31 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .content input{margin-top: 0px;}
 .searchinputBox{height: 27px !important;}
 #lstAttachLink{height: 112px !important;}
+
+
+.community_section01{height: 101px;}
+.contents_bannerCommunity{height: 103px; padding-top: 25px;}
+.contents_bannerCommunity p img{height: 49px;}
+.contents_categoryViewList{height: 351px;}
+.contents_listCommunity li{color: #333;}
+.contents_searchCategory dl dt.searchinput input{height: 34px !important;}
+
+/* 스크롤바 */
+*::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #dedede;
+    border-radius: 8px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}

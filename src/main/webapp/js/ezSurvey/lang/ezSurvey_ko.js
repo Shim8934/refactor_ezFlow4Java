@@ -79,7 +79,7 @@ var SurveyMessages = {
 	strSlider7   : "간격",
 	strSlider8   : "최소값",
 	strSlider9   : "최대값",
-	strSlider10  : "'(최대값-최소값)÷간격'의 값을 200 이하의 자연수로 설정해 주세요.",
+	strSlider10  : "개수를 200 이하의 자연수로 설정해 주세요.",
 	strOptErr    : "최소 2개의 보기가 필요합니다.",
 	strMaxtrix1  : "최소 1개의 행이 필요합니다.",
 	strMaxtrix2  : "최소 1개의 열이 필요합니다.",
@@ -165,5 +165,8 @@ var SurveyMessages = {
 	
 	/* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
 	srtLangHSBEx01 : "허용하지 않는 확장자입니다.",
-	srtLangHSBEx02 : "업로드 제한 확장자 파일이 있습니다."
+	srtLangHSBEx02 : "업로드 제한 확장자 파일이 있습니다.",
+	/* 2024-03-26 양지혜 - 게시기간 메시지 추가 */
+	strLangYJH01 : "게시는 최대 ",
+	strLangYJH02 : " 일까지 가능합니다."
 }

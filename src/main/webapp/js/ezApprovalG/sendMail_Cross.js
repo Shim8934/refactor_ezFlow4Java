@@ -177,7 +177,13 @@ function attachOpinion(){
 	var divs = document.createElement('div');
 	divs.innerHTML = bodycontents.trim();
 	divs.id="opinionBox";
-	document.getElementById("message").contentWindow.document.getElementById("BodyContent").appendChild(divs);
+    var body = document.getElementById("message").contentWindow.document.getElementById("BodyContent");
+    if (body != null) {
+        body.appendChild(divs);
+    } else {
+        var lastTag = document.getElementById("message").contentWindow.document.getElementById("div_Content");
+        lastTag.appendChild(divs);
+    }
 } 
 
 //메일에 전자결재 doc을 첨부

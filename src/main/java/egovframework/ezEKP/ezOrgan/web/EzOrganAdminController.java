@@ -80,6 +80,7 @@ import egovframework.ezEKP.ezSystem.vo.PermissionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -263,6 +264,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertPortalMenuChinese(); // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
 			ezCommonService.insertPortletNameChinese(); // 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
 			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
+			ezCommonService.createTblDeptChangeInfo(); // 2024-02-20 장혜연 - tbl_dept_change_info 테이블 추가
+			ezCommonService.insertSurveyPostingMaxPeriodConfig(); // 2024-03-26 - 전자설문 종료 후 게시기간 설정 추가
+			ezCommonService.alterFileNameForWebfolderHistory(); // 2023-10-18 남진구 - 웹폴더 > 버전관리 > 파일 복원시 파일명 복원을 위한 FILE_NAME 칼럼 추가
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
@@ -636,9 +640,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String cn = request.getParameter("cn");
 		String pClass = "group";
 		String result = "";
-		
+
 		logger.debug("cn=" + cn);
-		
+
+		// 24.03.18 장혜연 : 부서 변경 히스토리 기록을 위해 삭제 하기 전 부서 명을 조회한다.
+		OrganDeptVO deptNm = ezOrganAdminService.getDeptDisplayNm(cn, tenantID);
+
+		// 24.03.18 장혜연 : 부서 변경 히스토리 기록을 위해 삭제 하기 전 상위 부서 cn을 조회한다.
+		String parentCn = ezOrganAdminService.getDeptParentCn(cn, tenantID);
+
 		// 제거하고자 하는 회사 혹은 부서 바로 아래에 위치한 자식 부서의 수를 구한다.
 		int cnt = ezOrganAdminService.companyChildCheck(cn, tenantID);
 		
@@ -700,8 +710,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				    	
     					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
     					removeEmailAddressBasedOnCompanyDomainName(cn, dept.getExtensionAttribute2(), userInfo);
-    					
-    					result = "OK";
+
+						result = "OK";
+						// 24.03.18 장혜연 : 부서 삭제 시 부서 변경 히스토리에 기록한다
+						if ("OK".equals(result)) {
+							DeptChangeInfoVO deptChangeInfo = new DeptChangeInfoVO();
+							deptChangeInfo.setDeptChVo(cn, deptNm.getDisplayName(), deptNm.getDisplayName2(), parentCn,
+									"", "", "", "delete", ClientUtil.getClientIP(request));
+							ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
+						}
     				// 예외가 발생하면 그룹 주소를 다시 등록한다.
 				    } catch (Exception e) {
 				    	logger.error(e.getMessage(), e);
@@ -806,7 +823,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String saveDeptInfo(@CookieValue("loginCookie") String loginCookie, OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("saveDeptInfo started");
-	    
+
+		DeptChangeInfoVO deptChangeInfo = new DeptChangeInfoVO();
+
         LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
         
         if (userInfo == null) {
@@ -828,13 +847,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         date.setTimeZone(TimeZone.getTimeZone("GMT"));
         String nowDate = date.format(new Date()); 
         vo.setNowDate(nowDate);
+        String cn = vo.getCn();
+
+        // 업데이트 전 부서의 기존 이름을 조회한다
+        OrganDeptVO orgDeptNm = ezOrganAdminService.getDeptDisplayNm(cn, tenantID);
         
         // 부서정보를 수정하는 경우
 		if (vo.getParentCn() == null || vo.getParentCn().isEmpty()) {
+
 			ezOrganAdminService.updateDBData_dept(vo);
+
+			// 2024-03-20 장혜연 : 부서명 수정 할 경우 부서변경 히스토리에 기록한다.
+			if (!vo.getDisplayName().equals(orgDeptNm.getDisplayName())) {
+				deptChangeInfo.setDeptChVo(cn, orgDeptNm.getDisplayName(), orgDeptNm.getDisplayName2(),
+						vo.getHistParentCn(), vo.getCn(), vo.getDisplayName(), vo.getDisplayName2(), "nameChange",
+						ClientUtil.getClientIP(request));
+				ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
+			}
+
 		// 새로운 부서를 생성하는 경우
 		} else {
-			String cn = vo.getCn();
 			
 			// 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
 			// 공용배포그룹ID, 메일ID(alias 메일ID 포함)로 이미 사용중인지도 체크한다.
@@ -899,7 +931,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							ezEmailUserAdminService.removeGroup(mailAddr);							
 							result = "EMAIL_ERROR";
 						}
-									
+						// 2024-03-20 장혜연 : 부서 추가 시 부서변경히스토리에 기록한다.
+						if (result.equals("OK")) {
+							deptChangeInfo.setDeptChVo(vo.getCn(), vo.getDisplayName(), vo.getDisplayName2(),
+									vo.getParentCn(), "", "", "", "add", ClientUtil.getClientIP(request));
+							ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
+						}
 					}
 					else {
 						ezEmailUserAdminService.removeGroup(mailAddr);
@@ -1069,8 +1106,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         String result = "OK";
 		String bizmekaResult = "ERROR";
-		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);		
-        
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+        String orgParentCn = ezOrganAdminService.getDeptParentCn(cn, tenantID);
 		if (useBizmekaSpambox.equals("YES")) {
 			String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
 			String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
@@ -1095,9 +1132,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	        result = ezOrganAdminService.moveEntry(parentCn, cn, "group", userInfo.getOffset(), tenantID);
 	        	        
 	        logger.debug("moveEntry result=" + result);
+	        //2024-03-20 장혜연 : 부서 이동 시 부서변경히스토리에 기록한다.
+			if ("OK".equals(result)) {
+				DeptChangeInfoVO deptChangeInfo = new DeptChangeInfoVO();
+				OrganDeptVO deptNm = ezOrganAdminService.getDeptDisplayNm(cn, tenantID); // 이동 할 부서 명
+				OrganDeptVO parentNm = ezOrganAdminService.getDeptDisplayNm(parentCn, tenantID); // 이동 후 상위부서 명
+
+			deptChangeInfo.setDeptChVo(cn, deptNm.getDisplayName(), deptNm.getDisplayName2(), orgParentCn, parentCn,
+					parentNm.getDisplayName(), parentNm.getDisplayName2(), "move", ClientUtil.getClientIP(request));
+			ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
 		}
 		
 		
+	}
+
 		//게시판 트리캐시 삭제
 		ezBoardAdminService.trunkBoard(tenantID);
         
@@ -5744,6 +5792,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String result = "EMAIL_ERROR";
 		
+		OrganDeptVO deptNm = ezOrganAdminService.getDeptDisplayNm(cn, tenantId);
+
+		String parentCn = ezOrganAdminService.getDeptParentCn(cn, tenantId);
+
 		try {
 			// 제거하고자 하는 회사 혹은 부서 바로 아래에 위치한 자식 부서의 수를 구한다.
 			int cnt = ezOrganAdminService.companyChildCheck(cn, tenantId);
@@ -5796,8 +5848,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				logger.debug("cn={}, parentCN={}", cn, trashDeptId);
 				
 				result = ezOrganAdminService.moveEntry(trashDeptId,cn,"group",userInfo.getOffset(),tenantId);
+				// 2024-03-20 장혜연 : 부서 폐지 시 부서변경히스토리에 기록한다.
+				if ("OK".equals(result)) {
+					DeptChangeInfoVO deptChangeInfo = new DeptChangeInfoVO();
+					deptChangeInfo.setDeptChVo(cn, deptNm.getDisplayName(), deptNm.getDisplayName2(), parentCn, "", "",
+							"", "abolition", ClientUtil.getClientIP(request));
+					ezSystemAdminService.insertDeptChangeHist(deptChangeInfo, userInfo);
+				}
 			}
-			
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

@@ -3502,7 +3502,34 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"EXECUTORIP" 		VARCHAR2(50 CHAR),
 	"TENANTID" 			NUMBER DEFAULT 0
 	);
-	
+
+--------------------------------------------------------
+--  DDL for Table TBL_DEPT_CHANGE_INFO
+--------------------------------------------------------
+
+	CREATE table "TBL_DEPT_CHANGE_INFO"
+	("SEQ"		 		NUMBER(19,0),
+	"DEPTID" 			NVARCHAR2(80),
+	"DEPTNM" 			NVARCHAR2(100),
+	"DEPTNM2" 			NVARCHAR2(100),
+	"PARENT_DEPTID" 	NVARCHAR2(80),
+	"PARENT_DEPTNM" 	NVARCHAR2(100),
+	"PARENT_DEPTNM2" 	NVARCHAR2(100),
+	"COMPANYID" 		NVARCHAR2(80),
+	"COMPANYNM" 		NVARCHAR2(100),
+	"COMPANYNM2" 		NVARCHAR2(100),
+	"UPDATEDT" 			DATE,
+	"TARGET_DEPTID" 	NVARCHAR2(80),
+	"TARGET_DEPTNM" 	NVARCHAR2(100),
+	"TARGET_DEPTNM2" 	NVARCHAR2(100),
+	"UPDATE_TYPE" 		NVARCHAR2(50),
+	"EXECUTORID" 		NVARCHAR2(50),
+	"EXECUTORNM" 		NVARCHAR2(100),
+	"EXECUTORNM2" 		NVARCHAR2(100),
+	"EXECUTORIP" 		VARCHAR2(50 CHAR),
+	"TENANTID" 			NUMBER DEFAULT 0
+	);
+
 --------------------------------------------------------
 --  DDL for Table TBL_CONTAINER
 --------------------------------------------------------
@@ -8152,8 +8179,9 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
   CREATE TABLE "TBL_WEBFOLDER_FILE_HISTORY" 
-   (	"FILE_ID" NUMBER(11,0), 
-	"VERSION" NUMBER(7,0) DEFAULT 1, 
+   (	"FILE_ID" NUMBER(11,0),
+    "FILE_NAME" VARCHAR2(250 BYTE),
+	"VERSION" NUMBER(7,0) DEFAULT 1,
 	"FILE_PATH" VARCHAR2(250 BYTE), 
 	"FILE_SIZE" NUMBER, 
 	"USE_STATUS" VARCHAR2(250 BYTE) DEFAULT 'Y', 
@@ -8527,6 +8555,11 @@ CREATE TABLE "TBL_CAR_FORM" (
 --------------------------------------------------------
 
    CREATE SEQUENCE  "SEQ_TBL_USER_CHANGE_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_USER_CHANGE_INFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_TBL_DEPT_CHANGE_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
    --------------------------------------------------------
 --  DDL for Sequence SEQ_TBL_C_BOARD
 --------------------------------------------------------
@@ -9917,6 +9950,12 @@ CREATE INDEX "TBL_CABINET_DELFLAG_IDX" ON "TBL_CABINET" ("DELFLAG")
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "PK_TBL_USER_CHANGE_INFO" ON "TBL_USER_CHANGE_INFO" ("SEQ")
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_TBL_DEPT_CHANGE_INFO
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_DEPT_CHANGE_INFO" ON "TBL_DEPT_CHANGE_INFO" ("SEQ")
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_BOARD
@@ -15018,6 +15057,15 @@ END;
   ALTER TABLE "TBL_USER_CHANGE_INFO" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "TBL_USER_CHANGE_INFO" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "TBL_USER_CHANGE_INFO" MODIFY ("SEQ" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_DEPT_CHANGE_INFO
+--------------------------------------------------------
+
+  ALTER TABLE "TBL_DEPT_CHANGE_INFO" ADD CONSTRAINT "PK_TBL_DEPT_CHANGE_INFO" PRIMARY KEY ("SEQ")
+  USING INDEX;
+  ALTER TABLE "TBL_DEPT_CHANGE_INFO" MODIFY ("TENANTID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_DEPT_CHANGE_INFO" MODIFY ("DEPTID" NOT NULL ENABLE);
+  ALTER TABLE "TBL_DEPT_CHANGE_INFO" MODIFY ("SEQ" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_CONTAINER
 --------------------------------------------------------

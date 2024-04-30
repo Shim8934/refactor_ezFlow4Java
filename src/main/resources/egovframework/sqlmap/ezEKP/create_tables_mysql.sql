@@ -5833,6 +5833,38 @@ CREATE TABLE `tbl_user_change_info` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_dept_change_info`
+--
+
+DROP TABLE IF EXISTS `tbl_dept_change_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_dept_change_info` (
+  `SEQ` 				int(10) NOT NULL AUTO_INCREMENT,
+  `DEPTID` 				varchar(80) NOT NULL,
+  `DEPTNM` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DEPTNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARENT_DEPTID` 		varchar(80) DEFAULT NULL,
+  `PARENT_DEPTNM` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARENT_DEPTNM2` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYID` 			varchar(120) DEFAULT NULL,
+  `COMPANYNM` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COMPANYNM2` 			varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `UPDATEDT` 		datetime 	 DEFAULT NULL,
+  `TARGET_DEPTID` 		varchar(80) DEFAULT NULL,
+  `TARGET_DEPTNM` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TARGET_DEPTNM2` 		varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `UPDATE_TYPE` 		varchar(200) DEFAULT NULL,
+  `EXECUTORID` 			varchar(80) DEFAULT NULL,
+  `EXECUTORNM` 			varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXECUTORNM2` 		varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `EXECUTORIP` 			varchar(20) DEFAULT NULL,
+  `TENANTID` 			mediumint(5) NOT NULL,
+  PRIMARY KEY (`SEQ`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_container`
 --
 
@@ -13635,6 +13667,7 @@ CREATE TABLE `tbl_webfolder_file_history` (
   `UPDATE_NAME2` varchar(120) DEFAULT NULL,
   `DELETER_ID` varchar(100) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `FILE_NAME` varchar(250) NOT NULL COMMENT '파일 이름',
   PRIMARY KEY (`FILE_ID`,`VERSION`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
