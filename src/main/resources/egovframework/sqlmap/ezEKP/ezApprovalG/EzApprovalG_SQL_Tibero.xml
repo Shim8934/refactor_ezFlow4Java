@@ -934,6 +934,10 @@
 							* 
 						FROM 
 							(
+								SELECT
+                                    *
+                                FROM
+                                    (
 								SELECT  
 									A.SN, 
 									A.OWNERID || '@'|| CAST(A.SN AS VARCHAR(10)) AS DOCID ,
@@ -989,9 +993,10 @@
 		                     	A.COMPANYID = #companyID#
 		                     AND
 								NVL(GRP.TABSN, 1) = 1
+		                ) E
                  ]]>
 		                 <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
-			      		 	AND 
+                             WHERE
 			      		 		$v_SPSUBQUERY$
 			      		</isGreaterThan>
 			      		<isNotEmpty property="v_ORDEROPTION"> 
