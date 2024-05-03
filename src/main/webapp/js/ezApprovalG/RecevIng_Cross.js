@@ -374,8 +374,6 @@ function getDocInfo() {
 
     if (objNodes) {
         pOrgDocID = getNodeText(objNodes[2]);
-        pPublicityYN = getNodeText(objNodes[41]);
-        
         if (getNodeText(objNodes[10]) == "Y" || getNodeText(objNodes[10]) == "O")
             pHasOpinionYN = "Y";
     }

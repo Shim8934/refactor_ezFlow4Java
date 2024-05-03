@@ -580,15 +580,15 @@
                 		},
                 		success : function(result){
 	               			 if (result == "TRUE") {
-	       		                var pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
+	       		                var pAlertContent = "<spring:message code='ezApprovalG.t1693'/>";
 	       		                OpenAlertUI(pAlertContent, OpenAlertUI_Close);
 	        		         } else {
-	       		                var pAlertContent = "<spring:message code='ezApprovalG.t1495'/>";
+	       		                var pAlertContent = "<spring:message code='ezApprovalG.t1694'/>";
 	       		                OpenAlertUI(pAlertContent);
 	        		         }
                 		}, 
                 		error : function () {
-                			var pAlertContent = "<spring:message code='ezApprovalG.t1495'/>";
+                			var pAlertContent = "<spring:message code='ezApprovalG.t1694'/>";
        		                OpenAlertUI(pAlertContent);
                 		}
                 	});

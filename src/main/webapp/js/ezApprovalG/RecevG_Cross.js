@@ -2831,16 +2831,16 @@ function delOpinionInfoAll3() {
 	});
 }
 
-var selectcabinet_cross_dialogArguments = new Array();
+var selectcabinet_dialogArguments = new Array();
 function btnSetTaskCode_onclick() {
     try {
         var para = new Array();
         para[0] = cabinetID;
 
-        selectcabinet_cross_dialogArguments[0] = para;
-        selectcabinet_cross_dialogArguments[1] = btnSetTaskCode_onclick_Complete;
+        selectcabinet_dialogArguments[0] = para;
+        selectcabinet_dialogArguments[1] = btnSetTaskCode_onclick_Complete;
 
-        DivPopUpShow(1000, 625, "/ezApprovalG/selectCabinet.do?initFlag=1");
+        DivPopUpShow(850, 455, "/myoffice/ezApprovalG/ezCabinet/SelectCabinet.aspx?initFlag=1");
     } catch (e) {
         alert("btnSetTaskCode_onclick : " + e.description);
     }
