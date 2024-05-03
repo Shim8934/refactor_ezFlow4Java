@@ -4510,7 +4510,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				tmpvo.setAuthorizerId(id);
 				tmpvo.setAuthorizerIp(ip);
 				tmpvo.setDeptId(dept[i]);
-				tmpvo.setJobId(job[i]); // 중복겸직 대응하기 위한 JOBID 데이터 추가
+				if (!job[i].equals("empty")) {
+					tmpvo.setJobId(job[i]); // 중복겸직 대응하기 위한 JOBID 데이터 추가
+				}
 				pvo.add(tmpvo);
 			}
 		} else { // 모든권한 삭제

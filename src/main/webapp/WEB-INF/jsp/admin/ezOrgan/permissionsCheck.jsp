@@ -1178,12 +1178,16 @@
 			        data2.push(totalArry[i].data2);
 			        data3.push(totalArry[i].data3);
 					data4.push(totalArry[i].data4);
-					data5.push(totalArry[i].data5);
+					if (totalArry[i].data5 == '') { // jobId가 없음 - 원직일 경우
+					    data5.push('empty');
+					} else {
+					    data5.push(totalArry[i].data5);
+					}
 		        }
 
 				if(data1.length == 0 || data2.length == 0) {
 					if(document.getElementById('lvPermissionList').children[1].childElementCount == 0) {
-						alert("등록할 사원을 선택해주세요.");
+						alert("<spring:message code='ezAttitude.t52' />");
 						return;
 					}
 					alert(strLang14);

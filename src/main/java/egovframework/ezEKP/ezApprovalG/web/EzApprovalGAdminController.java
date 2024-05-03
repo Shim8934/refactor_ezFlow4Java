@@ -2362,9 +2362,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		int taskCount = ezApprovalGAdminService.getTaskListCount(userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("list", resultList);
+		model.addAttribute("taskCount", taskCount);
 		
 		logger.debug("taskAdminDept ended.");
 
@@ -2374,7 +2377,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 부서별 단위업무 목록 호출 함수(분류기준표 정보를 가져온다.)
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getTaskFullList.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskFullList.do", produces = "text/html;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String getTaskFullList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getTaskFullList started.");
@@ -5385,5 +5388,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
-	
+
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskCount.do", method = RequestMethod.GET)
+	public String taskAdminDept(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskAdminDept started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String deptCode = request.getParameter("deptCode");
+		String companyID = request.getParameter("companyID");
+		try {
+			int taskCount = ezApprovalGAdminService.getTaskListCount(deptCode, companyID, userInfo.getTenantId());
+			model.addAttribute("status", "OK");
+			model.addAttribute("taskCount", taskCount);
+		} catch (Exception e) {
+			model.addAttribute("status", "error");
+			logger.error(e.getMessage(), e);
+		}
+		return "json";
+	}
 }

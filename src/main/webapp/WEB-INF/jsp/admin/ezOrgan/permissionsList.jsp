@@ -561,7 +561,11 @@
 					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
 					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
 					dataList6.push(this.parentElement.parentElement.getAttribute("DATA6"));
-					dataList7.push(this.parentElement.parentElement.getAttribute("DATA7"));
+					if (this.parentElement.parentElement.getAttribute("DATA7") == '') { // jobId가 없음 - 원직일 경우
+					    dataList7.push('empty');
+					} else {
+					    dataList7.push(this.parentElement.parentElement.getAttribute("DATA7"));
+					}
 				}); 
 				
 				

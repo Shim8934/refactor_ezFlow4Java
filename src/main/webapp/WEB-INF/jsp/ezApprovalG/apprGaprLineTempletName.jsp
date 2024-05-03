@@ -33,7 +33,7 @@
 		        if (p_AprLineTempletName.trim() == "") {
 		        	var pAlertContent;
 		        	if (type == "") {
-	                    alert("<spring:message code='ezApprovalG.t387'/>");
+	                    alert("<spring:message code='ezApprovalG.t2107'/>");
 		        	} else {
 		        		if (approvalFlag == "G") {
 			        		alert("<spring:message code='ezApprovalG.t6003'/>");

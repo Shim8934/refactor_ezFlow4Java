@@ -589,7 +589,7 @@
 	</head>
 	<!-- 2018-06-13 구해안 우측 여백수정 -->
 	<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
-	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px;" id="BodyTop">
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px; ovverflow-x: scroll; min-width: 950px;" id="BodyTop">
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="${brdNm}"><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -611,7 +611,7 @@
     			</c:if>
             </ul>
 		</div>
-		<div class="calendar_pagenav">
+		<div class="calendar_pagenav" style='left: max(50%, 550px);'>
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"></li>
 	            <li class="contentlayout_right" id="preN"></li>
