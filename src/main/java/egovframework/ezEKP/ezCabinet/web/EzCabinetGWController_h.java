@@ -432,7 +432,7 @@ public class EzCabinetGWController_h {
 			String offset            = commonUtil.getMinuteUTC(userInfo.getOffset());
 			CabinetItemVO fileDetail = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
 			
-			if(fileDetail.getItemType() != 0) {
+			if(fileDetail.getItemType() != 0 && fileDetail.getItemType() != 2) {
 				//Get more information
 				getColumnInformation(result, Integer.parseInt(itemId), fileDetail.getItemType(), primary, tenantId);
 			}
@@ -478,7 +478,7 @@ public class EzCabinetGWController_h {
 			String offset            = commonUtil.getMinuteUTC(userInfo.getOffset());
 			CabinetItemVO fileDetail = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
 			
-			if(fileDetail.getItemType() != 0) {
+			if(fileDetail.getItemType() != 0 && fileDetail.getItemType() != 2) {
 				//Get more columns information
 				getColumnInformation(result, Integer.parseInt(itemId), fileDetail.getItemType(), primary, tenantId);
 			}

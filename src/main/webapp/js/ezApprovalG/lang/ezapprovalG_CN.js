@@ -148,7 +148,7 @@ var strLang254 = "输入的字段内容 "
 var strLang255 = "只能输入到. (韩字 "
 var strLang256 = "人)"
 // ezAPRDOCATTACH
-var strLang257 = "请选择要从文档列表中移动的文档."
+var strLang257 = 请从文档列表中选择要添加的文档。"
 var strLang258 = "该文件已被登录"
 // ezAPRDOCATTACH\aprDocAttach.js
 // ezAPRDOCATTACH\getDocAttach.js

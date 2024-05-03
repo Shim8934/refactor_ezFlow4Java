@@ -1480,9 +1480,9 @@ public class MBoardGWController {
 		        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", locale) + commonUtil.cleanValue(boardInfo.getBoardName()));
 		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", locale) + strDate);
 		        if (primary.equals("1")) {
-		        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", locale) + info.getUserName() + "(" + (info.getTitle() == null || "null".equals(info.getTitle()) ? "" : info.getTitle()) + ", " + info.getDeptName() + ", " + info.getCompanyName() + ")");
+		        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", locale) + info.getUserName() + "(" + (info.getTitle() == null || "null".equals(info.getTitle()) ? "" : info.getTitle()+ ", ")  + info.getDeptName() + ", " + info.getCompanyName() + ")");
 		        } else {
-		        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", locale) + info.getUserName2() + "(" + (info.getTitle2() == null || "null".equals(info.getTitle2()) ? "" : info.getTitle2()) + ", " + info.getDeptName2() + ", " + info.getCompanyName2() + ")");
+		        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", locale) + info.getUserName2() + "(" + (info.getTitle2() == null || "null".equals(info.getTitle2()) ? "" : info.getTitle2()+ ", ") + info.getDeptName2() + ", " + info.getCompanyName2() + ")");
 		        }
 		        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", locale) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
 		        

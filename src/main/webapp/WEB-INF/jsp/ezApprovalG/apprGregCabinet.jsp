@@ -292,7 +292,7 @@
 								<table width="100%">
 									<tr>
 										<td id="tdSpecialFlag">&nbsp;</td>
-										<td width="70">
+										<td width="70" style="vertical-align:middle;">
 											<a class="imgbtn" name="btnAddSC" id="btnAddSC" style="display:none;"><span onClick="return btnAddSpecialCatalog_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
 										</td>
 									</tr>
@@ -306,7 +306,7 @@
 									<tr>
 										<td id="tdDisplayFlag">&nbsp;</td>
 										<td width="70" id="btnDisplayInfo" style="vertical-align:middle;">
-											<a class="imgbtn imgbck" style="margin:auto;"><span style="padding-top:1.2px;" onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a>
+											<a class="imgbtn imgbck" style="margin-left: 10px !important;"><span onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a>
 										</td>
 									</tr>
 								</table>
