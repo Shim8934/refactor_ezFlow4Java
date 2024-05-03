@@ -210,14 +210,16 @@ function new_mail_onclick(fromE) {
 		pUrl += "&shareId=" + encodeURIComponent(shareId);
 	}
 	
-	var pheight = window.screen.availHeight;
+	var pheight = window.outerHeight;
     var conHeight = Math.max(pheight * 0.8, 840);
-    var pwidth = window.screen.availWidth;
+    var pwidth = window.outerWidth;
     var conWidth = pwidth * 0.8;
     if (conWidth > minimumWidth)
         conWidth = minimumWidth;
-    var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - minimumWidth) / 2;
+    // var pTop = (pheight - conHeight) / 2;
+    // var pLeft = (pwidth - minimumWidth) / 2;
+    var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+    var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var newwin = window.open(pUrl, "", feature);
@@ -282,14 +284,14 @@ function reply_mail_onclick() {
         } else {
         	pSelectItem = currentFixingId;
         }
-        var pheight = window.screen.availHeight;
+        var pheight = window.outerHeight;
         var conHeight = Math.max(pheight * 0.8, 840);
-        var pwidth = window.screen.availWidth;
+        var pwidth = window.outerWidth;
         var conWidth = pwidth * 0.8;
         if (conWidth > minimumWidth)
             conWidth = minimumWidth;
-        var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - minimumWidth) / 2;
+        var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+        var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
         
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLY&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
@@ -326,14 +328,14 @@ function all_reply_mail_onclick() {
         } else {
         	pSelectItem = currentFixingId;
         }
-        var pheight = window.screen.availHeight;
+        var pheight = window.outerHeight;
         var conHeight = Math.max(pheight * 0.8, 840);
-        var pwidth = window.screen.availWidth;
+        var pwidth = window.outerWidth;
         var conWidth = pwidth * 0.8;
         if (conWidth > minimumWidth)
             conWidth = minimumWidth;
-        var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - minimumWidth) / 2;
+        var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+        var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
         var pURI = "/ezEmail/mailWrite.do?cmd=REPLYALL&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
         if (typeof(shareId) != "undefined" && shareId != "") {
@@ -394,14 +396,16 @@ function transmission_mail_onclick() {
         } else {
         	pSelectItem = currentFixingId;
         }
-        var pheight = window.screen.availHeight;
+        var pheight = window.outerHeight;
         var conHeight = Math.max(pheight * 0.8, 840);
-        var pwidth = window.screen.availWidth;
+        var pwidth = window.outerWidth;
         var conWidth = pwidth * 0.8;
         if (conWidth > minimumWidth)
             conWidth = minimumWidth;
-        var pTop = (pheight - conHeight) / 2;
-        var pLeft = (pwidth - minimumWidth) / 2;
+        
+        var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+        var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
+        
         var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
         
         if (typeof(shareId) != "undefined" && shareId != "") {
@@ -1575,14 +1579,16 @@ function callMsgDlg(szContentClass, Href) {
                 feature);
         return;
     }
-    var pheight = window.screen.availHeight;
+    // var pheight = window.outerHeight;
     var conHeight = 720;
-    var pwidth = window.screen.availWidth;
+    var pwidth = window.outerWidth;
     var conWidth = pwidth * 0.8;
     if (conWidth > minimumWidth)
         conWidth = minimumWidth;
-    var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - minimumWidth) / 2;
+    // var pTop = (pheight - conHeight) / 2;
+    // var pLeft = (pwidth - minimumWidth) / 2;
+    var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
+    var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1";
     if (!g_bdraft) {
         var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=" + encodeURIComponent(szContentClass);

@@ -950,14 +950,16 @@ function GetOpenWindowfeature(popUpW, popUpH, resizable) {
 	var resiableAttr = !!resizable ? ',resizable=yes' : ',resizable=no';
 	var heigth = window.screen.availHeight;
 	var width = window.screen.availWidth;
-	var left = 0;
-	var top = 0;
+	// var left = 0;
+	// var top = 0;
 	var pleftpos;
 	pleftpos = parseInt(width) - popUpW;
 	heigth = parseInt(heigth) - popUpH;
 	width = parseInt(width) - pleftpos;
-	left = pleftpos / 2;
-	top = heigth / 2;
+	// left = pleftpos / 2;
+	// top = heigth / 2;
+    var left = window.outerWidth / 2 + window.screenX - (popUpW / 2);
+    var top = window.outerHeight / 2 + window.screenY - (popUpH / 2);
 	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, scrollbars=yes" + resiableAttr;
 	return feature;
 }
@@ -973,8 +975,8 @@ function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {
     //var left = ((width / 2) - (popUpW / 2)) + dualScreenLeft;
     //var top = ((height / 2) - (popUpH / 2)) + dualScreenTop;
 
-    var left = (screen.width / 2) - (popUpW / 2);
-    var top = (screen.height / 2) - (popUpH / 2);
+    var left = window.outerWidth / 2 + window.screenX - (popUpW / 2);
+    var top = window.outerHeight / 2 + window.screenY - (popUpH / 2);
 
     if (resizeFlag == undefined || resizeFlag.toUpperCase() == "NO")
         resize = "resizable=no";
