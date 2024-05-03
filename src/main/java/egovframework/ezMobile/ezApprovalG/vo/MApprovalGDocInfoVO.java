@@ -47,8 +47,6 @@ public class MApprovalGDocInfoVO {
 	private String mode;
 	/** 회사아이디*/
 	private String companyID;
-	/** 보안결재 정보 */
-	private String securityApproval;
 	
 	public String getCompanyID() {
 		return companyID;
@@ -188,12 +186,5 @@ public class MApprovalGDocInfoVO {
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
-
-	public String getSecurityApproval() {
-		return securityApproval;
-	}
-
-	public void setSecurityApproval(String securityApproval) {
-		this.securityApproval = securityApproval;
-	}
+	
 }
