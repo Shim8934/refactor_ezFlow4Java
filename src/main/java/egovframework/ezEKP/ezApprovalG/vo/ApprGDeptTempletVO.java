@@ -38,7 +38,6 @@ public class ApprGDeptTempletVO {
 	private String aprMemberJobTitle2;
 	
 	private String companyID;
-	private String DEPT_CD_PATH;
 
 	public String getUserID() {
 		return userID;
@@ -148,10 +147,5 @@ public class ApprGDeptTempletVO {
     public void setCompanyID(String companyID) {
         this.companyID = companyID;
     }
-	public String getDEPT_CD_PATH() {
-		return DEPT_CD_PATH;
-	}
-	public void setDEPT_CD_PATH(String DEPT_CD_PATH) {
-		this.DEPT_CD_PATH = DEPT_CD_PATH;
-	}
+	
 }
