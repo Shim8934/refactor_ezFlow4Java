@@ -5,7 +5,6 @@ function GetTaskFullList() {
 
     listLoading(true);  // 20201215 강승구 로딩바 display:none
     Resultxml = GetTaskFullListXml();
-    taskCount = getTaskCount();
     ListName = strLang440;
 
     if (Resultxml != null) {
@@ -218,6 +217,8 @@ function removeAllChildNode(element) {
 function makePagenationBar() {
     var pageNavBox = $("<div class='pagenavi'>");
     pageNum = curpage;
+    taskCount = getTaskCount();
+    totalPage = Math.ceil(taskCount/PageSize);
     
     var getFirstBtn = $('<span class="btnimg">');
     var getPrevBlockBtn = $('<span class="btnimg">');
