@@ -3169,9 +3169,9 @@ public class EzNewPortalGWController {
 				PortalBoardTreeVO boardInfo= boardTree.get(i);
 				
 				if (lang.equals("")) {
-					boardInfo.setText(boardInfo.getBoardName1());
+					boardInfo.setText(boardInfo.getBoardName1().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
 				} else {
-					boardInfo.setText(boardInfo.getBoardName2());
+					boardInfo.setText(boardInfo.getBoardName2().replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("</", "&lt;/"));
 				}
 				
 				if (!boardInfo.getParent().equals("top")) {
