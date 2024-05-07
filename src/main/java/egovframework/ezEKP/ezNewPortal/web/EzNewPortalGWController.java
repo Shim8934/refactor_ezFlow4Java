@@ -4518,7 +4518,7 @@ public class EzNewPortalGWController {
 					cityCode = "none";
 				}
 			} else {
-				ezNewPortalService.setUserCityCode(info.getId(), tenantID, cityCode);
+				ezNewPortalService.setUserCityCode(info.getId(), tenantID, cityCode, countryCode);
 
 				if (cityCode.equals("none")) {
 					cityCode = ezNewPortalService.getFirstCityCode(countryCode);
