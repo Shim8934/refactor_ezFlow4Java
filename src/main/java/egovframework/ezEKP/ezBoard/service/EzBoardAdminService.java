@@ -145,4 +145,6 @@ public interface EzBoardAdminService {
 
 	/* 2020-12-03 박기범 - 탭게시판 레코드 갱신 */
 	public void updateTabBoard(int tabId, String boardID, int tenantId, String companyID, String boardName, String boardName2) throws Exception;
+
+	public String getUseFormFlag(String boardID, int tenantID) throws Exception;
 }
