@@ -147,7 +147,7 @@ header {height:60px; background-color:#ffffff; box-sizing:border-box; box-shadow
 .contentlayout > .contentlayout_none { float: none; overflow: hidden; }
 
 .util { list-style: none; margin: 0px; padding: 0px; }
-.util li { float: left; height: 54px; padding:0px 10px; position:relative;}
+.util li { float: left; height: 60px; padding:0px 10px; position:relative;}
 .util li:hover .util_admin { background-position: -158px -31px; }/* 관리자 */
 .util li:hover .util_employee_search { background-position: -0px -31px; }/* 직원검색 */
 .util li:hover .util_help { background-position: -61px -31px; }/* 도움말 */
@@ -159,7 +159,7 @@ header {height:60px; background-color:#ffffff; box-sizing:border-box; box-shadow
 .util li span.util_alarm span{position:absolute; width:6px; height:6px; border:1px solid #fff; border-radius:50%; background:#FF9100; margin:0; right:0; top:0;}
 .util li span.util_set{background-image:url(/images/ezNewPortal/util_set.svg);}
 .util li span.util_logout{background-image:url(/images/ezNewPortal/util_logout.svg);}
-.util li span.util_quick_menu{background-image:url(/images/ezNewPortal/util_quick_menu.svg); margin-right:40px;}
+.util li span.util_quick_menu{background-image:url(/images/ezNewPortal/util_quick_menu.svg);}
 
 .employee_search{width:300px; height:40px; background:#F6F6F6; border:1px solid rgba(185,184,187,0.38); border-radius:3px; overflow:hidden; box-sizing:border-box; margin-top:10px;}
 .employee_search input{float:left; width:calc(100% - 50px); padding-left:15px; border:none; height:100%; background:transparent; font-size:14px;}
@@ -171,11 +171,11 @@ header {height:60px; background-color:#ffffff; box-sizing:border-box; box-shadow
 .topmenu .contentlayout_right div.on .full_menu { background-position: -159px -0px; width: 25px; height: 24px; }
 
 nav {position:relative; margin:0px; padding:0px; overflow:hidden; background:#fff; z-index:1000;}
-nav .navUL {float:none; height:54px; list-style: none; margin: 0px; padding: 0px; overflow:hidden;}
-/*line-height이 51로 되어있어서 다른게 클릭되는 문제로 navUL높이(54px)와 똑같이 지정해줌*/
-nav .navUL li { float: left; line-height:54px; padding:0px 15px; font-size:18px; font-weight:500; color:#333; cursor:pointer; letter-spacing: -2px}
-nav .navUL li:hover { line-height: 54px; color:#0287db;}
-nav .navUL li.on {line-height:54px; color:#0287db;}
+nav .navUL {float:none; height:60px; list-style: none; margin: 0px; padding: 0px; overflow:hidden;}
+/*line-height이 51로 되어있어서 다른게 클릭되는 문제로 navUL높이(60px)와 똑같이 지정해줌*/
+nav .navUL li { float: left; line-height:60px; padding:0px 15px; font-size:18px; font-weight:500; color:#333; cursor:pointer; letter-spacing: -2px}
+nav .navUL li:hover { line-height: 60px; color:#0287db;}
+nav .navUL li.on {line-height:60px; color:#0287db;}
 
 nav > .full_nav {float:left; width: 56px; height: 54px; margin-right:10px; padding: 15px 0px; text-align: center; box-sizing: border-box; cursor: pointer; }
 nav > .full_nav.on { border: 0px none; background: #0287db; }
@@ -199,7 +199,8 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .full_menu_toggleDL > dd { display: table-cell; width:98px; height:56px; margin: 0px; padding: 0px 5px; text-align:center; vertical-align:middle; font-size:15px; font-weight:500; color:#000; letter-spacing:-1px;}
 
 .full_menu_toggleUL_edit {list-style:none; margin:0px; padding:0px;}
-.full_menu_toggleUL_edit > li {float: left;width: 100px;height: 100px;background:#fff;border-right: 1px dashed #898989;border-bottom: 1px dashed #898989;box-sizing: border-box;cursor:pointer;} 
+.full_menu_toggleUL_edit > li {float: left;width: 100px;height: 100px;background:#fff;border-right: 1px dashed #898989;border-bottom: 1px dashed #898989; box-sizing: border-box;cursor:pointer;}
+.full_menu_toggleUL_edit > li:nth-child(6n+1) {border-top: 1px dashed #898989;}
 
 /* ---------ㅡmain css ---------ㅡ */ 
 /* layout */
@@ -1766,11 +1767,11 @@ div.orbit img{border-radius: 5px;}
 .noti_list li i.icon_community{background-image:url(/images/lnb/lnb_community_on.svg);}
 .noti_list li i.icon_workdiary{background-image:url(/images/lnb/lnb_workdiary_on.svg);}
 .noti_list li i.icon_laddergame{background-image:url(/images/lnb/lnb_laddergame_on.svg);}
-.noti_list li i.icon_voting{background-image:url(/images/lnb/lnb_voting_on.svg);}
+.noti_list li i.icon_poll{background-image:url(/images/lnb/lnb_voting_on.svg);}
 .noti_list li i.icon_attendance{background-image:url(/images/lnb/lnb_approval_on.svg);}
 .noti_list li i.icon_webfolder{background-image:url(/images/lnb/lnb_webfolder_on.svg);}
-.noti_list li i.icon_management{background-image:url(/images/lnb/lnb_management_on.svg);}
-.noti_list li i.icon_addressbook{background-image:url(/images/lnb/lnb_addressbook_on.svg);}
+.noti_list li i.icon_task{background-image:url(/images/lnb/lnb_management_on.svg);}
+.noti_list li i.icon_address{background-image:url(/images/lnb/lnb_addressbook_on.svg);}
 
 .noti_list li .list_del{width:14px; height:14px; background:url(/images/ezNewPortal/list_del.svg) no-repeat center; position:absolute; top:50%; right:20px; transform:translateY(-50%); cursor:pointer;}
 
@@ -1784,7 +1785,7 @@ div.orbit img{border-radius: 5px;}
 
 /* lnb */
 .lnb{height:calc(100% - 60px); float:left; position:relative;}
-.lnb ul{list-style:none; margin:0; box-sizing:border-box;}
+.lnb ul{list-style:none; margin:0; box-sizing:border-box; padding-left:0px;}
 .lnb_list{padding:40px 0 0; width:81px; height:100%; background:#fff; border-right:1px solid #ddd; overflow:auto;}
 .lnb ul li{cursor:pointer; text-align:center; margin-bottom:22px;}
 .lnb ul li:before{content:""; display:block; width:40px; height:40px; margin:0 auto; background-color:#F2F3F5; border-radius:8px; background-position:center; background-repeat:no-repeat;}
@@ -1799,13 +1800,13 @@ div.orbit img{border-radius: 5px;}
 .lnb ul li.lnb_survey:before{background-image:url(/images/lnb/lnb_survey.svg);}
 .lnb ul li.lnb_circular:before{background-image:url(/images/lnb/lnb_circular.svg);}
 .lnb ul li.lnb_community:before{background-image:url(/images/lnb/lnb_community.svg);}
-.lnb ul li.lnb_workdiary:before{background-image:url(/images/lnb/lnb_workdiary.svg);}
-.lnb ul li.lnb_laddergame:before{background-image:url(/images/lnb/lnb_laddergame.svg);}
-.lnb ul li.lnb_voting:before{background-image:url(/images/lnb/lnb_voting.svg);}
-.lnb ul li.lnb_attendance:before{background-image:url(/images/lnb/lnb_approval.svg);}
+.lnb ul li.lnb_journal:before{background-image:url(/images/lnb/lnb_workdiary.svg);}
+.lnb ul li.lnb_ladder:before{background-image:url(/images/lnb/lnb_laddergame.svg);}
+.lnb ul li.lnb_vote:before{background-image:url(/images/lnb/lnb_voting.svg);}
+.lnb ul li.lnb_attitude:before{background-image:url(/images/lnb/lnb_approval.svg);}
 .lnb ul li.lnb_webfolder:before{background-image:url(/images/lnb/lnb_webfolder.svg);}
-.lnb ul li.lnb_management:before{background-image:url(/images/lnb/lnb_management.svg);}
-.lnb ul li.lnb_addressbook:before{background-image:url(/images/lnb/lnb_addressbook.svg);}
+.lnb ul li.lnb_task:before{background-image:url(/images/lnb/lnb_management.svg);}
+.lnb ul li.lnb_address:before{background-image:url(/images/lnb/lnb_addressbook.svg);}
 
 .lnb ul li:hover:before, .lnb_list li.on:before{background-color:#388CE5; box-shadow:4px 6px 5px rgba(0,0,0,0.13);}
 .lnb ul li.lnb_mail:hover:before, .lnb_list li.on.lnb_mail:before{background-image:url(/images/lnb/lnb_mail_on.svg);}
@@ -1819,18 +1820,18 @@ div.orbit img{border-radius: 5px;}
 .lnb ul li.lnb_survey:hover:before, .lnb_list li.on.lnb_survey:before{background-image:url(/images/lnb/lnb_survey_on.svg);}
 .lnb ul li.lnb_circular:hover:before, .lnb_list li.on.lnb_circular:before{background-image:url(/images/lnb/lnb_circular_on.svg);}
 .lnb ul li.lnb_community:hover:before, .lnb_list li.on.lnb_community:before{background-image:url(/images/lnb/lnb_community_on.svg);}
-.lnb ul li.lnb_workdiary:hover:before, .lnb_list li.on.lnb_workdiary:before{background-image:url(/images/lnb/lnb_workdiary_on.svg);}
-.lnb ul li.lnb_laddergame:hover:before, .lnb_list li.on.lnb_laddergame:before{background-image:url(/images/lnb/lnb_laddergame_on.svg);}
-.lnb ul li.lnb_voting:hover:before, .lnb_list li.on.lnb_voting:before{background-image:url(/images/lnb/lnb_voting_on.svg);}
-.lnb ul li.lnb_attendance:hover:before, .lnb_list li.on.lnb_attendance:before{background-image:url(/images/lnb/lnb_approval_on.svg);}
+.lnb ul li.lnb_journal:hover:before, .lnb_list li.on.lnb_journal:before{background-image:url(/images/lnb/lnb_workdiary_on.svg);}
+.lnb ul li.lnb_ladder:hover:before, .lnb_list li.on.lnb_laddergame:before{background-image:url(/images/lnb/lnb_laddergame_on.svg);}
+.lnb ul li.lnb_vote:hover:before, .lnb_list li.on.lnb_vote:before{background-image:url(/images/lnb/lnb_voting_on.svg);}
+.lnb ul li.lnb_attitude:hover:before, .lnb_list li.on.lnb_attendance:before{background-image:url(/images/lnb/lnb_approval_on.svg);}
 .lnb ul li.lnb_webfolder:hover:before, .lnb_list li.on.lnb_webfolder:before{background-image:url(/images/lnb/lnb_webfolder_on.svg);}
-.lnb ul li.lnb_management:hover:before, .lnb_list li.on.lnb_management:before{background-image:url(/images/lnb/lnb_management_on.svg);}
-.lnb ul li.lnb_addressbook:hover:before, .lnb_list li.on.lnb_addressbook:before{background-image:url(/images/lnb/lnb_addressbook_on.svg);}
+.lnb ul li.lnb_task:hover:before, .lnb_list li.on.lnb_task:before{background-image:url(/images/lnb/lnb_management_on.svg);}
+.lnb ul li.lnb_address:hover:before, .lnb_list li.on.lnb_address:before{background-image:url(/images/lnb/lnb_addressbook_on.svg);}
 
 .lnb ul li span{display:block; padding:0 5px; font-size:14px; font-weight:500; color:#000; margin-top:8px;}
 
 
-.lnb_menu_all{width:260px; height:100%; position:absolute; left:-260px; top:0; background:#fff; overflow:auto;}
+.lnb_menu_all{height:100%; position:absolute; top:0; background:#fff; overflow:auto;}
 .lnb_menu_setting{height:54px; line-height:54px;}
 .lnb_menu_setting .menu_set{padding-left:34px;}
 .lnb_menu_setting .menu_set span{display:inline-block; padding-left:16px; background:url(/images/lnb/set_icon.svg) no-repeat 0 center; color:#2B2B2B; font-size:12px; cursor:pointer; vertical-align:top;}
@@ -1845,10 +1846,8 @@ div.orbit img{border-radius: 5px;}
 
 .lnb_menu_all ul.active li:nth-child(1),.lnb_menu_all ul.active li:nth-child(2),
 .lnb_menu_all ul.active li:nth-child(3),.lnb_menu_all ul.active li:nth-child(4),
-.lnb_menu_all ul.active li:nth-child(5){background:#F8FAFC; border:1px dashed #A6BAE0; border-bottom:none; padding-top:11px;}
-.lnb_menu_all ul.active li:nth-child(5){border-bottom:1px dashed #A6BAE0;}
-
-
+.lnb_menu_all ul.active li:nth-child(5),.lnb_menu_all ul.active li:nth-child(6){background:#F8FAFC; border:1px dashed #A6BAE0; border-bottom:none; padding-top:11px;}
+.lnb_menu_all ul.active li:nth-child(6){border-bottom:1px dashed #A6BAE0}
 
 /* 컨텐츠 상단 영역 */
 .top_info_area{box-sizing:border-box; display:flex; padding-left:20px; margin-bottom:20px;}

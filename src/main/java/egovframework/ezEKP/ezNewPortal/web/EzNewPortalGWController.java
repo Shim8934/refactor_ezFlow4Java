@@ -1116,7 +1116,7 @@ public class EzNewPortalGWController {
 			 * 디폴트는 TOP. 디폴트 설정을 넣을경우 여기 변경
 			 */
 			Optional<TopFrameType> topFrameInfo = ezNewPortalService.getPortalTopFrameInfo(userId, companyId, tenantId);
-			data.put("topFrame", topFrameInfo.orElse(TopFrameType.TOP).getCode());
+			data.put("menuDisplayMode", topFrameInfo.orElse(TopFrameType.TOP).getCode());
 			//end
 
 			//logger.debug("TopMenu Data : " + data.toJSONString()); // 로그정리 : EzNewPortalController 에서 중복으로 로깅
@@ -1170,6 +1170,7 @@ public class EzNewPortalGWController {
 			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
 			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티),useCar(차량관리)
 			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
 			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
 			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
@@ -1181,6 +1182,11 @@ public class EzNewPortalGWController {
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
+			String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+			String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+			
 
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
@@ -1276,6 +1282,26 @@ public class EzNewPortalGWController {
 			
 			if (useCar.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("car")));
+			}
+			
+			if (useSurvey == null || useSurvey.equals("")) {
+				useSurvey = "YES";
+			}
+
+			if (useSchedule == null || useSchedule.equals("")) {
+				useSchedule = "YES";
+			}
+			
+			if (useResource == null || useResource.equals("")) {
+				useResource = "YES";
+			}
+
+			if (useBoard.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("board")));
+			}
+			
+			if (useToDo.equals("NO")) {
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("task")));
 			}
 			
 			data.put("menuList", menuList);

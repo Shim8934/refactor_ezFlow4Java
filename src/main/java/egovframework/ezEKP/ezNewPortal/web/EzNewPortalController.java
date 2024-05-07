@@ -282,7 +282,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			//2019-10-04 통합검색 추가
 			model.addAttribute("useTotalSearch", data.get("useTotalSearch"));
 			model.addAttribute("switchUserCompany", switchUserCompany);
-			model.addAttribute("topFrame", data.get("topFrame"));
+			model.addAttribute("menuDisplayMode", data.get("menuDisplayMode"));
 		}
 		
 		logger.debug("portalTopMenu End");
