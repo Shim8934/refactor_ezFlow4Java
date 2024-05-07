@@ -3492,12 +3492,10 @@ SELECT c_id,
 </select>
 
 <select id="ezNewPortal.getPrimaryLangList" resultClass="String">
-<![CDATA[
-SELECT distinct PROPERTY_VALUE  
-  FROM tbl_tenant_config 
- WHERE PROPERTY_NAME = 'PrimaryLang' 
-   AND PROPERTY_VALUE IS NOT NULL
-]]>
+	SELECT
+		DISTINCT PRIMARYLANG
+	FROM
+		TBL_WEATHER
 </select>
 
 <select id="ezNewPortal.getWeatherKeyList" parameterClass="Integer" resultClass="String">
@@ -3518,12 +3516,17 @@ WHERE
 ]]>
 </select>
 
-<select id="ezNewPortal.getCityCodeList" parameterClass="String" resultClass="String">
-<![CDATA[
-SELECT CITYCODE
-  FROM TBL_WEATHER
- WHERE PRIMARYLANG = #primaryLang#
-]]>
+<select id="ezNewPortal.getCityCodeList" parameterClass="list" resultClass="String">
+	SELECT
+		CITYCODE
+	FROM
+		TBL_WEATHER
+	WHERE
+		PRIMARYLANG IN(
+		<iterate conjunction = ",">
+			#[]#
+		</iterate>
+		)
 </select>
 
 <update id="ezNewPortal.setCurrentWeather" parameterClass="Map">
@@ -3549,24 +3552,6 @@ WHERE
 </update>
 
 <select id="ezNewPortal.getWeather" parameterClass="Map" resultClass="HashMap" remapResults="true">
-SELECT
-	* 
-FROM
-	TBL_WEATHER
-WHERE
-	PRIMARYLANG = #primaryLang#
-<isEqual property="cityCode" compareValue="none">
-	AND
-		SN = '1'
-</isEqual>
-<isNotEqual property="cityCode" compareValue="none">
-	AND 
-		CITYCODE = #cityCode#
-</isNotEqual>	
-</select>
-
-<select id="ezNewPortal.getCityList" parameterClass="Integer" resultMap="WeatherVO">
-<![CDATA[
 	SELECT
 		A.SN,
 		A.CITYCODE,
@@ -3582,10 +3567,39 @@ WHERE
 	ON
 		A.CITYCODE = B.CITYCODE
 	WHERE
-		B.USERLOCALLANG = #userLocalLang#
+		A.PRIMARYLANG = #countryCode#
+	AND
+		B.USERLOCALLANG = #primaryLang#
+	AND
+	<isEqual property = "cityCode" compareValue = "none">
+		A.SN = '1'
+	</isEqual>
+	<isNotEqual property = "cityCode" compareValue = "none">
+		A.CITYCODE = #cityCode#
+	</isNotEqual>
+</select>
+
+<select id="ezNewPortal.getCityList" parameterClass="map" resultMap="WeatherVO">
+	SELECT
+		A.SN,
+		A.CITYCODE,
+		A.CITYNAME,
+		B.DISPLAYCITYNAME,
+		A.PRIMARYLANG,
+		A.CURRENTWEATHER,
+		A.TODAYWEATHER
+	FROM
+		TBL_WEATHER A
+	JOIN
+		TBL_WEATHER_CITY B
+	ON
+		A.CITYCODE = B.CITYCODE
+	WHERE
+	    A.PRIMARYLANG = #countryCode#
+	AND
+		B.USERLOCALLANG = #primaryLang#
 	ORDER BY
 		TO_NUMBER(SN) asc
-	]]>
 </select>
 
 <select id="ezNewPortal.getUserCityCode" parameterClass="Map" resultClass="String">
@@ -3600,7 +3614,6 @@ AND
 </select>
 
 <update id="ezNewPortal.setUserCityCode" parameterClass="Map">
-	<![CDATA[
 		MERGE INTO tbl_weather_user A
 		USING DUAL
 		ON (
@@ -3610,14 +3623,14 @@ AND
 			)
 		WHEN MATCHED THEN
 			UPDATE SET
-				CITYCODE = #cityCode#
+				CITYCODE = #cityCode#,
+			    COUNTRYCODE = #countryCode#
 		WHEN NOT MATCHED THEN
 			INSERT (
-				USERID, TENANT_ID, CITYCODE
+				USERID, TENANT_ID, CITYCODE, COUNTRYCODE
 			) VALUES (
-				#userId#, #tenantId#, #cityCode#
+				#userId#, #tenantId#, #cityCode#, #countryCode#
 			)
-	]]>
 </update>
 
 <select id="ezNewPortal.getCheckUserAuth" parameterClass="Map" resultClass="MenuAuthVO">
@@ -4379,4 +4392,36 @@ ORDER BY
 		WHERE PORTLETCODE = 'resource'
 	</select>
 	
+	<select id = "ezNewPortal.getCountryCode" parameterClass = "map" resultClass = "String">
+		SELECT
+			COUNTRYCODE
+		FROM
+			TBL_WEATHER_USER
+		WHERE
+			USERID = #userID#
+	  	AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<select id = "ezNewPortal.getUserLocalLang" parameterClass = "map" resultClass = "String">
+		SELECT
+			LANG
+		FROM
+			TBL_USERLOCALINFO
+		WHERE
+			USERID = #userID#
+	  	AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<select id = "ezNewPortal.getFirstCityCode" parameterClass = "String" resultClass = "String">
+		SELECT
+			CITYCODE
+		FROM
+			TBL_WEATHER
+		WHERE
+			SN = 1
+	  	AND
+			PRIMARYLANG = #countryCode#
+	</select>
 </sqlMap>

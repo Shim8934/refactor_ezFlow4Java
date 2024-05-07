@@ -2904,40 +2904,53 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public void setWeather() throws Exception {
 		//weather가 current일 때 현재 날씨 today일 때 시간당 날씨
 		logger.debug("setWeather started");
-		List<String> cityCodeList;
 		List<String> primaryLangList = ezNewPortalDAO.getPrimaryLangList();
 		List<String> weatherKeyList = ezNewPortalDAO.getWeatherKeyList(primaryLangList.size());
-		String cityCode = "";
+		List<String> cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLangList);
 		URL url;
 		URL todayUrl;
 		InputStreamReader isr;
-
 		JSONObject jsonTemp;
 
-		for (int i = 0; i < weatherKeyList.size(); i++) {
-			if (primaryLangList.get(i) == null) {
-				logger.debug("not enough weatherKey!!");
-				break;
+		String cityCode = "";
+
+		if (primaryLangList.isEmpty()) {
+			throw new Exception("There is no weather API Key");
+		}
+
+//		for (int i = 0; i < weatherKeyList.size(); i++) {
+		int cityCodeListSize = cityCodeList.size();
+		int limit = cityCodeListSize / 20 + 1;
+		int idx = 0;
+
+		/* codeList list must be in range from 1 to 20 */
+		for (int cnt = 0; cnt < limit; cnt++) {
+			List<String> weatherUpdateTarget = new ArrayList<>();
+			StringBuilder weatherQueryList = new StringBuilder();
+
+			while (cityCodeListSize > idx) {
+				String tmp = cityCodeList.get(idx);
+				weatherUpdateTarget.add(tmp);
+
+				if ((idx + 1) % 20 == 0) {
+					weatherQueryList.append(tmp);
+					idx++;
+
+					break;
+				}
+
+				weatherQueryList.append(
+					tmp
+				).append(
+					","
+				);
+				idx++;
 			}
-			String primaryLang = primaryLangList.get(i);
-			logger.debug("primaryLang = " + primaryLang);
-			cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLang);
 
-			StringBuffer buffer = new StringBuffer();
-
-			for (String str : cityCodeList) {
-				buffer.append(str + ",");
-			}
-
-			cityCode = buffer.toString();
-			cityCode = cityCode.substring(0, cityCode.length() - 1);
-
-			url = new URL("http://api.openweathermap.org/data/2.5/group?" + "id=" + cityCode + "&units=metric" + "&appid=" + weatherKeyList.get(i));
-
+			url = new URL("http://api.openweathermap.org/data/2.5/group?" + "id=" + weatherQueryList + "&units=metric" + "&appid=" + weatherKeyList.get(0));
 			isr = new InputStreamReader(url.openConnection().getInputStream(),"UTF-8");
 			
 			JSONObject items = (JSONObject) JSONValue.parseWithException(isr); 
-
 			JSONArray jsonCurrentWeatherArr = (JSONArray)items.get("list");
 			
 			for (int j = 0; j < jsonCurrentWeatherArr.size(); j++) {
@@ -2957,17 +2970,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				currentWeather += jsonTemp.get("speed").toString();
 				
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("cityCode", cityCodeList.get(j));
+				map.put("cityCode", weatherUpdateTarget.get(j));
 				map.put("currentWeather", currentWeather);
+
 				ezNewPortalDAO.setCurrentWeather(map);
 			}
 			
 			//3시간당 오늘의 날씨
 			String todayWeather;
 			
-			for (String tempCityCode : cityCodeList) {
+			for (String tempCityCode : weatherUpdateTarget) {
 				todayWeather = "";
-				todayUrl = new URL("http://api.openweathermap.org/data/2.5/forecast?" + "id=" + tempCityCode + "&cnt=5&units=metric" + "&appid=" + weatherKeyList.get(i));
+				todayUrl = new URL("http://api.openweathermap.org/data/2.5/forecast?" + "id=" + tempCityCode + "&cnt=5&units=metric" + "&appid=" + weatherKeyList.get(0));
 				
 				isr = new InputStreamReader(todayUrl.openConnection().getInputStream(),"UTF-8");
 				items = (JSONObject) JSONValue.parseWithException(isr);
@@ -2993,16 +3007,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				ezNewPortalDAO.setTodayWeather(map);
 			}
 		}
+
 		logger.debug("setWeather ended");
 	}
 	
 	@Override
-	public Map<String, Object> getWeather(String cityCode, int primary) {
+	public Map<String, Object> getWeather(String cityCode, int primary, String countryCode) {
 		logger.debug("getWeather started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cityCode", cityCode);
 		map.put("primaryLang", primary);
+		map.put("countryCode", countryCode);
 		
 		Map<String, Object> result = ezNewPortalDAO.getWeather(map);
 		
@@ -3012,13 +3028,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<WeatherVO> getCityList(int userLocalLang) {
+	public List<WeatherVO> getCityList(int primaryLang, String countryCode) {
 		logger.debug("getCityList started.");
-		
-		List<WeatherVO> result = ezNewPortalDAO.getCityList(userLocalLang);
+
+		List<WeatherVO> result = ezNewPortalDAO.getCityList(primaryLang, countryCode);
 		
 		logger.debug("getCityList ended.");
-
 		return result;
 	}
 	
@@ -3035,12 +3050,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 	}
 	@Override
-	public void setUserCityCode(String id, int tenantId, String cityCode) {
+	public void setUserCityCode(String id, int tenantId, String cityCode, String countryCode) {
 		logger.debug("setUserCityCode started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", id);
 		map.put("tenantId", tenantId);
 		map.put("cityCode", cityCode);
+		map.put("countryCode", countryCode);
 		
 		ezNewPortalDAO.setUserCityCode(map);
 		logger.debug("setUserCityCode started.");
@@ -4175,5 +4191,19 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public int getResportletId() throws Exception {
 		return ezNewPortalDAO.getResportletId();
 	}
-	
+
+	@Override
+	public String getCountryCode(String userID, int tenantID) throws Exception {
+		return ezNewPortalDAO.getCountryCode(userID, tenantID);
+	}
+
+	@Override
+	public String getUserLocalLang(String userID, int tenantID) throws Exception {
+		return ezNewPortalDAO.getUserLocalLang(userID, tenantID);
+	}
+
+	@Override
+	public String getFirstCityCode(String countryCode) throws Exception {
+		return ezNewPortalDAO.getFirstCityCode(countryCode);
+	}
 }

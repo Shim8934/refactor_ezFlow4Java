@@ -4501,26 +4501,36 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 			int tenantID = info.getTenantId();
-
-			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
-			int userLocalLang = Integer.parseInt(ezCommonService.selectUserGetLang(userId, tenantID));	// 유저 사용 언어 설정값
-			int primLang = Integer.parseInt(primaryLang);
-			
+			int userLocalLang = Integer.parseInt(ezNewPortalService.getUserLocalLang(userId, tenantID));
+			String countryCode = request.getParameter("countryCode") == null ?
+								 (
+									 ezNewPortalService.getCountryCode(userId, tenantID) == null ?
+									 String.valueOf(userLocalLang) :
+									 ezNewPortalService.getCountryCode(userId, tenantID)
+								 ) :
+								 request.getParameter("countryCode");
 			String cityCode = request.getParameter("cityCode");
 			
 			if (cityCode == null || cityCode.equals("")) {
 				cityCode = ezNewPortalService.getUserCityCode(info.getId(), tenantID);
+
 				if (cityCode == null || cityCode.equals("")) {
 					cityCode = "none";
 				}
 			} else {
 				ezNewPortalService.setUserCityCode(info.getId(), tenantID, cityCode);
+
+				if (cityCode.equals("none")) {
+					cityCode = ezNewPortalService.getFirstCityCode(countryCode);
+				}
+				
+				ezNewPortalService.setUserCityCode(info.getId(), tenantID, cityCode, countryCode);
 			}
 			
 			JSONObject data = new JSONObject();
-			
-			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primLang);
-			List<WeatherVO> cityList = ezNewPortalService.getCityList(userLocalLang);
+			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, userLocalLang, countryCode);
+			List<WeatherVO> cityList = ezNewPortalService.getCityList(userLocalLang, countryCode);
+
 			data.put("lang", info.getLang());
 			data.put("cityList", cityList);
 			
@@ -4533,7 +4543,8 @@ public class EzNewPortalGWController {
 			data.put("currentWeather", resultMap.get("CURRENTWEATHER"));
 			data.put("todayWeather", resultMap.get("TODAYWEATHER"));
 			data.put("cityCode", resultMap.get("CITYCODE"));
-			
+			data.put("countryCode", ezNewPortalService.getCountryCode(info.getId(), tenantID));
+
 			String[] todayArr = resultMap.get("TODAYWEATHER").toString().split("!");
 			
 			String todayHours = "";
