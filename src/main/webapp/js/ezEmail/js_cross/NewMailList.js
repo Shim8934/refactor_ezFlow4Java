@@ -2073,6 +2073,12 @@ function event_senderNameClick(thisParent, event){
 	if (!mailWriteSenderChk) { 
 		return; 
 	} else {
+        var p_Msgto = $(thisParent).attr("data-msgto");
+
+        if (p_Msgto.includes("&")) {
+            $(thisParent).attr("data-msgto", encodeURIComponent(p_Msgto));
+        }
+
 		setTimeout(function(){
 			var msgToLen = $(thisParent).attr("data-msgtoLen");
 			
