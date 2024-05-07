@@ -204,7 +204,7 @@
                     btnClose_onclick();
 		        }
 		    }
-			/* 2022-06-28 홍승비 - 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
+			/* 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
 			function getAprOrEndStr() {
 				var result = "";
 
