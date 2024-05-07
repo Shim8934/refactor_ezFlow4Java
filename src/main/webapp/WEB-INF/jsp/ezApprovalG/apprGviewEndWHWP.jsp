@@ -69,6 +69,9 @@
 			// 배부대장 문서 진행/완료 여부 플래그 (APR/END)
 			var docAprEnd = "<c:out value ='${docAprEnd}'/>";
 
+			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
+			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
+
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
 	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
@@ -630,7 +633,7 @@
 
 			window.onbeforeunload = function () {
 				try {
-					if ((window.opener.g_sFlag == undefined) || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01")) {
+					if ((window.opener.g_sFlag == undefined && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01")) {
 						// 전자결재 > 완료문서, 기록물등록대장에만 적용 되도록 조건 추가
 						window.opener.openergetDocInfo();
 					} else {

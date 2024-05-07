@@ -3907,6 +3907,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formVersion = "";
 		String sendType = request.getParameter("sendType");
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
+		String docAttachParent = request.getParameter("docAttachParent") != null ? request.getParameter("docAttachParent") : "";
+		boolean isDocAttach =  StringUtils.isNotBlank(docAttachParent);
 
 		// 2023-10-16 전인하 - 전자결재G > 배부대장 > 문서 열람 시 진행문서/완료문서 여부에 관게없이 권한 체크 진행
 		/* 2023-07-17 민지수 - 전자결재 > 배부대장 > 진행/완료(APR/END) 체크 */
@@ -4054,6 +4056,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		/* 2023-07-13 민지수 - 배부대장 문서 진행/완료(APR/END) 값 전달 */
 		model.addAttribute("docAprEnd", docAprEnd);
+
+		/* 이유정 - 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag) */
+		model.addAttribute("isDocAttach", isDocAttach);
 
 		logger.debug("contDocView ended.");
 		
