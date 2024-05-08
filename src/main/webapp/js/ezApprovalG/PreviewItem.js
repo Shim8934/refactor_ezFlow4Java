@@ -349,6 +349,9 @@ function ItemPreviewRead(obj, page) {
 			openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
 			/* 2022-06-23 홍승비 - 전자결재 문서보기 페이지가 미리보기로 열린 경우, 기존 버튼 영역을 로딩 시점부터 표출하지 않도록 하기 위한 플래그 추가 */
 			openLocation +=  "&isPreview=Y";
+			if (g_sFlag != null) {
+			    openLocation +=  "&sFlag=" + g_sFlag;
+			}
 			
 			document.getElementById("ifrmPreViewH").src = openLocation;
 		}	
@@ -1216,7 +1219,7 @@ function pre_chk_Passwd_Complete(Rtn)
         }
         openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&orgCompanyID=" + encodeURI(orgCompanyID);
         if (typeof g_sFlag != 'undefined' && ["m03", "m14"].includes(g_sFlag)) { // 2023-09-25 전인하 - 미리보기에서 문서 열람 시 메뉴 플래그 전달
-            openLocation += "uFlag=" + g_sFlag;
+            openLocation += "&uFlag=" + g_sFlag;
         }
         if (share && share == 'share') {
         	openLocation += "&share=Y";

@@ -34825,7 +34825,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         }
         
         logger.debug("getAccessYNGforAPR ended.");
-        return rtnVal ? "<RESULT>TRUE</RESULT>" : "<RESULT>TRUE</RESULT>";
+        return rtnVal ? "<RESULT>TRUE</RESULT>" : "<RESULT>FALSE</RESULT>";
     } 
 	
 	/* 2023-03-22 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 통합 PC 저장시 문서 하나의 완료 의견 정보 가져오는 메소드 */
