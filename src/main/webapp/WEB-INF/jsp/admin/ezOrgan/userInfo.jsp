@@ -161,7 +161,7 @@
 						dataType : "text",
 						url : "/admin/ezOrgan/getEntryInfo.do",
 						async : false,
-						data : {cn : document.getElementById("UserID").value, prop : "description;extensionAttribute10;extensionAttribute14;displayName;title;extensionAttribute15;telephoneNumber;homePhone;facsimileTelephoneNumber;mobile;postalCode;streetAddress;mail;extensionAttribute1;extensionAttribute2;extensionAttribute6;birth;birthType;extensionAttribute7;extensionAttribute8;furigana;extensionPhone;officeMobile", pMode : "user" },
+						data : {cn : document.getElementById("UserID").value, prop : "description;extensionAttribute10;extensionAttribute14;displayName;title;company;extensionAttribute15;telephoneNumber;homePhone;facsimileTelephoneNumber;mobile;postalCode;streetAddress;mail;extensionAttribute1;extensionAttribute2;extensionAttribute6;birth;birthType;extensionAttribute7;extensionAttribute8;furigana;extensionPhone;officeMobile", pMode : "user" },
 						success : function(result){
 							xmlDom = loadXMLString(result);
 							document.getElementById("UserName").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME1").trim();
@@ -181,6 +181,7 @@
 			                document.getElementById("DeptName").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION1").trim();
 			                document.getElementById("DeptName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION2").trim();
 			                document.getElementById("SocialNum").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE14").trim();
+			                document.getElementById("CompanyName").value = SelectSingleNodeValueNew(xmlDom, "DATA/COMPANY").trim();
 			                document.getElementById("txtBirth").value = SelectSingleNodeValueNew(xmlDom, "DATA/BIRTH").trim();
 			                document.getElementById("userPhotoYN").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2").trim();
 			                document.getElementById("furigana").value = SelectSingleNodeValueNew(xmlDom, "DATA/FURIGANA").trim();
@@ -852,7 +853,16 @@
 	            <td style="width: 240px;">
 	                <input id="SortNum" style="width: 100%" maxlength="10" />
 	            </td>
-	        </tr>         
+	        </tr>
+			<tr>
+				<th style="width: 71px; text-align:center"><spring:message code='ezOrgan.khj002' /></th>
+				<td style="width: 240px;">
+					<input id="CompanyName" style="width: 100%" readonly="readonly" maxlength="50"/>
+				</td>
+				<th style="width: 71px; text-align:center"></th>
+				<td style="width: 240px;">
+				</td>
+			</tr>
 	    </table>
 	    <br />
 	    <table id="Tbl_Contract" class="content" style="width:800px;">
