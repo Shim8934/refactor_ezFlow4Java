@@ -700,7 +700,12 @@ function ConvertMHTtoHTML(pURL) {
 			rtnVal = result;
 		}        			
 	});
-    return rtnVal;
+    /* 2024-05-08 양지혜 - 공개문서에서 파라미터 조작으로 접근 취약점 보완. 권한 없을 시 권한없음 페이지 노출 */
+    if (rtnVal == "NoAccess") {
+        window.parent.location.replace('/ezApprovalG/accessWarning.do');
+    } else {
+        return rtnVal;
+    }
 }
 
 function ConvertHTMLtoMHT(pContent) {
