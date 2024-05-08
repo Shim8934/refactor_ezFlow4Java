@@ -174,6 +174,10 @@
 						$("#chkOneLineBottom").prop("disabled", true);
 						$("#chkOneLineLayer").prop("disabled", true);
 						$("#chkOneLineNone").prop("disabled", true);
+						/* 2024-05-08 양지혜 - URL 게시판인 경우, 탭 게시판 disabled */
+						$("#chktabBoard1").prop("disabled", true);
+						$("#chktabBoard2").prop("disabled", true);
+						$("#chktabBoard3").prop("disabled", true);
 	                }
 	                
 	                if (!$("#chkURLBoard").is(":checked")) {
@@ -581,6 +585,10 @@
 					$("#chkOneLineBottom").prop("disabled", true);
 					$("#chkOneLineLayer").prop("disabled", true);
 					$("#chkOneLineNone").prop("disabled", true);
+					/* 2024-05-08 양지혜 - URL 게시판인 경우, 탭 게시판 disabled */
+					$("#chktabBoard1").prop("disabled", true);
+					$("#chktabBoard2").prop("disabled", true);
+					$("#chktabBoard3").prop("disabled", true);
 					
                     document.getElementById("chkApprBoard").checked = false;
                     checkApprBoard();                   
@@ -629,6 +637,10 @@
 					$("#chkOneLineBottom").prop("disabled", false);
 					$("#chkOneLineLayer").prop("disabled", false);
 					$("#chkOneLineNone").prop("disabled", false);
+					/* 2024-05-08 양지혜 - URL 게시판인 경우, 탭 게시판 disabled 해제 */
+					$("#chktabBoard1").prop("disabled", false);
+					$("#chktabBoard2").prop("disabled", false);
+					$("#chktabBoard3").prop("disabled", false);
 	            }
 
 	            /* 2019-04-29 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 disabled 처리 */
