@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -263,4 +264,7 @@ public interface EzNewPortalService {
 	void insertPortalTopFrameInfo(String userID, String companyID, int tenantID, TopFrameType type);
 
 	Optional<TopFrameType> getPortalTopFrameInfo(String userID, String companyID, int tenantID);
+	
+    public List<BoardListVO> getNewBoardPortletInfo(LoginVO userInfo, String userType, int startRow, int itemCount) throws Exception;
+	
 }

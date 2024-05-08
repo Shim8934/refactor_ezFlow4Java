@@ -47,6 +47,7 @@ import org.springframework.stereotype.Service;
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.ChineseCalendar;
 
+import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
@@ -103,6 +104,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 	@Resource(name  ="EzOrganAdminDAO")
 	private EzOrganAdminDAO ezOrganAdminDAO;
+	
+	@Resource(name = "EzBoardDAO")
+	private EzBoardDAO ezBoardDAO;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -3423,4 +3427,24 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		return Optional.ofNullable(info.getTypeEnum());
 	}
+
+	@Override
+	public List<BoardListVO> getNewBoardPortletInfo(LoginVO userInfo, String userType, int startRow, int itemCount) throws Exception {
+		logger.debug("getNewBoardPortletInfo started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("iv_PORDERBYSUB", " A.WRITEDATE DESC ");
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", itemCount);
+		map.put("limit", startRow);
+		map.put("userType",userType);
+		
+		logger.debug("getNewBoardPortletInfo ended");
+		return ezNewPortalDAO.getNewBoardPortletInfo(map);
+	}
+	
 }

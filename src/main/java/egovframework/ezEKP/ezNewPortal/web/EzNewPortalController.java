@@ -15,7 +15,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -23,7 +26,9 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -37,6 +42,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.web.EzEmailConfigController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -72,7 +79,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 	@Autowired
 	private EzNewPortalService ezNewPortalService;
-	
+
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
 	
@@ -108,6 +117,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
+
+	@Resource(name = "jspw")
+	private String jspw;
+	
 	/**
 	 * 유은정
 	 */
@@ -1089,5 +1102,147 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		ezNewPortalService.switchAllUserInfo(request, response, loginCookie,
 				vo.getCompanyId(), vo.getDeptId(), vo.getJobId(), vo.getJobType());
 		return "true";
+	}
+    
+    @GetMapping(value = "/ezNewPortal/boardItemListToTopMenu.do")
+    @ResponseBody
+    public JSONObject boardItemListToTopMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) {
+    	logger.debug("started boardItemListToTopMenu");
+    	
+    	JSONObject json = new JSONObject();
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	String boardId = request.getParameter("boardId") != null ? request.getParameter("boardId") : "";
+    	int startRow = 0;
+    	int itemCount = 10;
+    	try {
+    		if("".equals(boardId)) {
+    			throw new Exception();
+    		}
+			BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, userInfo.getTenantId());
+			String guBun = boardPropertyVO.getGuBun();
+			// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
+			boolean isQnANormal = "5".equals(guBun);
+			if (isQnANormal) {
+				// 관리자가 아니면 Q&A 게시판 로직으로 변경
+				isQnANormal = !ezBoardService.isBoardAdmin(boardId, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getRollInfo());
+			}
+	
+			List<BoardListVO> boardList = null;
+			// 권한이 true이면 boardList불러오기
+			if(boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새 게시물일 때
+				boolean isAdmin = ezBoardService.isBoardAdmin(boardId, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getRollInfo());
+				String boardUserType = isAdmin ? "admin" : "user";
+				boardList = ezNewPortalService.getNewBoardPortletInfo(userInfo, boardUserType, startRow, itemCount);
+			}else {
+				boardList = ezNewPortalService.getBoardPortletInfo(userInfo.getId(), userInfo.getTenantId(), boardId, itemCount, userInfo.getCompanyID(), userInfo.getOffset(), isQnANormal);
+			}
+			json.put("status", "ok");
+			json.put("message", "success");
+			json.put("boardList", boardList);
+    	} catch (Exception e) {
+    		logger.debug("error in boardItemListToTopMenu >> " + e.getMessage());
+    		json.put("status", "fail");
+    		json.put("message", "fail to get boardItem");
+    	}
+    	
+    	logger.debug("ended boardItemListToTopMenu");
+    	return json;
+    }
+
+	@ResponseBody
+	@GetMapping(value = "/ezNewPortal/allCount.do")
+	public ResponseEntity<String> getPortalAllCount(@CookieValue String loginCookie, HttpServletRequest request, Locale locale) {
+
+		logger.debug("allCount started");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			int tenantID = userInfo.getTenantId();
+			String userID = userInfo.getId();
+			String companyID = userInfo.getCompanyID();
+			String lang = userInfo.getLang();
+			String deptID = userInfo.getDeptID();
+			userInfo = commonUtil.userInfo(loginCookie);
+			
+			// 메뉴 권한
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyID, tenantID, lang, userID, deptID);
+			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantID);
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantID);
+			String useApproval = "";
+			String useMail = "";
+			String userEmail = userID + "@" + ezCommonService.getTenantConfig("DomainName", tenantID);
+			String password = jspw;
+
+			int newBoardCnt = 0;
+			int approvalCount = 0;
+			int unreadMailCount = 0;
+			
+			// 결재 사용여부
+			for (MenuInfoVO mVO : menuList) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("approval")) {
+					useApproval = "YES";
+				}
+			}
+			
+			// 게시판 사용여부
+			if (useBoard == null || useBoard.equals("")) {
+				useBoard = "YES";
+			}
+			
+			// 메일 사용여부
+			if(useExternalMailServer.equalsIgnoreCase("YES")) {
+				useMail = "NO";
+			} else {
+				useMail = "YES";
+			}
+			
+			// 갹 메뉴별 권한에 따른 카운트
+			if (useBoard.equals("YES")) {
+				String boardId = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
+				boolean isAdmin = ezBoardService.isBoardAdmin(boardId, userID, deptID,companyID, tenantID, userInfo.getRollInfo());
+				String boardUserType = isAdmin ? "admin" : "user";
+				newBoardCnt = ezBoardService.getNewItemListCount(userInfo);
+			}
+
+			if (useApproval.equals("YES")){
+				String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+				approvalCount = ezNewPortalService.getApprovalDoingListCount(userID, companyID, tenantID, userInfo.getOffset(), approvalFlag, lang);
+			}
+
+			if (useMail.equals("YES")) {
+				IMAPAccess ia = null;
+				String folderName = "INBOX";
+
+				try {
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
+					unreadMailCount = ia.getUnreadCount(folderName);
+				} catch (Exception e) {
+					logger.debug("e.message=" + e.getMessage());
+				} finally {
+					if (ia != null) {
+						ia.close();
+					}
+				}
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("newBoardCnt", newBoardCnt);
+			result.put("approvalCnt", approvalCount);
+			result.put("unreadMailCount", unreadMailCount);
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("message", "unread mail count failed");
+		}
+		
+		logger.debug("allCount End");
+
+		return new ResponseEntity<>(result.toString(), HttpStatus.OK);
 	}
 }

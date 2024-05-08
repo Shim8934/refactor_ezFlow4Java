@@ -39,23 +39,12 @@
             </div>
             <ul>
                 <li>
-                    <div class="noti">
-                        <div class="swiper mySwiper swiper-container">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <div class="swiper_txt">AK아이에스,”금융투자업 등록시스템 구축정보 안내드립니다.</div>
-                                </div>
-                                <div class="swiper-slide">
-                                    <div class="swiper_txt">AK아이에스,”금융투자업 등록시스템 구축정보 안내드립니다.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="noti" id="noti"></div>
                 </li>
                 <li>
-                    <span class="mail"><span>안읽은메일</span><em>999</em></span>
-                    <span class="appr"><span>결제할문서</span><em>999</em></span>
-                    <span class="board"><span>새게시물</span><em>999</em></span>
+                    <span class="mail" onclick="openPageOfPortal(this.className)"><span>안읽은메일</span><em id="unReadMailCount"></em></span>
+                    <span class="appr" onclick="openPageOfPortal(this.className)"><span>결제할문서</span><em id="approvalCnt"></em></span>
+                    <span class="board" onclick="openPageOfPortal(this.className)"><span>새게시물</span><em id="newBoardCnt"></em></span>
                 </li>
             </ul>
         </div>
@@ -665,6 +654,173 @@
 			}
 		}
 	}
+    
+    window.onload = function() {
+        setPortalCount();		// 포탈 카운트 세팅
+        setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+        makeSwiperByTopMenu();
+    }
+
+    function setPortalCount(){
+        var reqURL = "/ezNewPortal/allCount.do";
+        $.ajax({
+            method : "GET",
+            url : reqURL,
+            dataType : "text",
+            success : function(retData){
+                var jsonData = JSON.parse(retData);
+                if(jsonData.status != "ok")	{
+                    console.log(jsonData.message);
+                    return;
+                }
+                
+                var newBoardCnt = jsonData.newBoardCnt;
+                var unReadMailCount = jsonData.unreadMailCount;
+                var approvalCnt = jsonData.approvalCnt;
+
+                if(typeof newBoardCnt == "undefined") newBoardCnt = 0;
+                if(typeof unReadMailCount == "undefined") unReadMailCount = 0;
+                if(typeof approvalCnt == "undefined") approvalCnt = 0;
+
+                document.getElementById("newBoardCnt").innerText = newBoardCnt;
+                document.getElementById("unReadMailCount").innerText = unReadMailCount;
+                document.getElementById("approvalCnt").innerText = approvalCnt;
+            },
+            error : function(e){
+                console.log(e);
+            }
+        });
+    }
+
+    function openPageOfPortal(className){
+        if(className === null || typeof className == "undefined" || !className) return;
+
+        var target = "main";
+
+        switch(className){
+            case "mail":
+                document.getElementById("unReadMailCount").addEventListener('click', function(){quickMenuOpen('NewMail');});
+                break;
+            case "appr":
+                document.getElementById("approvalCnt").addEventListener('click', function(){quickMenuOpen('ApprG');});
+                break;
+            case "board":
+                var mainHref = "";
+                var mainBoardHref = "";
+                try {
+                    mainHref = window.parent.main.location.href;
+                } catch (e) {
+                    window.open('/ezBoard/boardMainRedirect.do?boardID="' + encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+                    break;
+                }
+                try {
+                    mainBoardHref = window.parent.mainBoard.location.href;
+                } catch (e) {
+                    window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+                    break;
+                }
+
+                var portalURL = "/ezNewPortal/newPortalPortalPage";
+
+                if (mainHref.indexOf(portalURL) > -1 && mainHref != 'about:blank'){ // 메인영역이 포탈로 활성화되어 있고 메인보드 영역이 비어있을때
+                    target = "main";
+                } else if(mainHref == 'about:blank' && mainBoardHref != 'about:blank'){ // 메인영역이 비어 있고 메인보드 영역이 비어있지 않을때
+                    target = "mainBoard";
+                }
+                window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', target, "");
+                break;
+
+            default: break;
+        }
+    }
+
+    function setBoardItemListToTopMenu(boardId) {
+        if(!boardId) {
+            return;
+        }
+
+        $.ajax({
+            url : "/ezNewPortal/boardItemListToTopMenu.do",
+            method : "GET",
+            data : {"boardId" : boardId},
+            contentType : "text",
+            success : function(obj){
+                if(obj.status == "ok"){
+                    var len = obj.boardList.length;
+                    if(len > 0){
+                        var target = document.getElementById("noti");
+                        target.innerHTML = "";
+
+                        var swDiv = document.createElement("div");
+                        swDiv.classList.add('swiper');
+                        swDiv.classList.add('mySwiper');
+                        swDiv.classList.add('swiper-container');
+                        swDiv.classList.add('swiper-container-initialized');
+                        swDiv.classList.add('swiper-container-horizontal');
+                        
+                        var swWrap = document.createElement("div");
+                        swWrap.classList.add('swiper-wrapper');
+                        swWrap.style.cssText = 'transform : translate3d(0px, 0px, 0px)';
+                        swDiv.append(swWrap);
+                        target.append(swDiv);
+                        makeSlideByTopMenu(obj.boardList);
+                    }else{
+                        var target = document.getElementById("noti");
+                        target.innerHTML = "";
+                        var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+                        var div = document.createElement("div");
+                        div.id = "noItemArea";
+                        div.innerText = noItemText;
+                        target.append(noItemText);
+                    }
+                }
+            },
+            error : function(e){
+                console.log(e)
+            }
+        });
+    }
+
+    var makeSlideByTopMenu = function (bList) {
+        var noidDiv = document.getElementById('noti');
+        var wrapper = noidDiv.querySelector(".swiper-wrapper");
+
+        var max = bList.length;
+        for (var i = 0; i < max; i++) {
+            const board = bList[i];
+            const slide = document.createElement('div');
+            slide.classList.add('swiper-slide');
+            if (i===0) {
+                slide.classList.add('swiper-slide-active');
+            } else {
+                slide.classList.add('swiper-slide-next');
+            }
+            wrapper.appendChild(slide);
+            const divText = document.createElement('div');
+            divText.classList.add('swiper_txt');
+            slide.appendChild(divText);
+            var textNode = document.createTextNode(board.title);
+            divText.appendChild(textNode);
+
+            slide.addEventListener("click", function (event) {
+                openBoard(board.itemID, board.guBun, board.boardID);
+            });
+        }
+        makeSwiperByTopMenu();
+    }
+
+    var makeSwiperByTopMenu = function () {
+        var swiper = new Swiper(".mySwiper", {
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            }
+        });
+    }
 
 </script>
 <!-- 협업 시작-->

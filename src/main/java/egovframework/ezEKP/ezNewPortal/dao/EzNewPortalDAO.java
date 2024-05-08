@@ -753,4 +753,9 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public PortalTopVO getPortalTopFrameInfo(PortalTopVO vo) {
 		return (PortalTopVO) select("ezNewPortal.getPortalTopFrameInfo", vo);
 	}
+
+	public List<BoardListVO> getNewBoardPortletInfo(Map<String, Object> map) throws Exception {
+		return (List<BoardListVO>) list("ezNewPortal.getNewBoardPortletInfo", map);
+	}
+	
 }
