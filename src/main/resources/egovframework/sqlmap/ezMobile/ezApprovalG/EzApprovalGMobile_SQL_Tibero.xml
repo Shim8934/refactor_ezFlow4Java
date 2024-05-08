@@ -1651,7 +1651,25 @@
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
-	   			TBL_ENDAPRLINEINFO B
+			(
+				SELECT
+					*
+				FROM
+					tbl_endaprlineinfo exa
+				JOIN (
+					SELECT
+						MAX(exb.APRMEMBERSN) as MAX_APRMEMBERSN,
+						exb.DOCID as MAX_DOCID
+					FROM
+						tbl_endaprlineinfo exb
+					GROUP BY
+						DOCID
+				) exc
+				ON
+					exa.APRMEMBERSN = exc.MAX_APRMEMBERSN
+				AND
+					exa.DOCID = exc.MAX_DOCID
+			) B
 		   	ON
 	   			A.DOCID = B.DOCID
 		   	AND
