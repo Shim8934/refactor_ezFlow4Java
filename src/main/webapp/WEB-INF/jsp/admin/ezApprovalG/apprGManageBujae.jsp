@@ -339,13 +339,23 @@
 	    					proxyuserid = result.proxyUserID;
 	    					proxydeptid = result.proxyDeptID;
     					} */
-    					
-						if (approvalFlag == "G") {
-							if(!result.bReasonFlag){
+
+						/* 이유정 - 부재자 설정 정보 불러올때 발생하는 스타일 오류 수정 */
+						var proxyFlag = false;
+						if (result.textName != "" && result.textName != null) {
+							proxyFlag = true;
+						}
+
+						if (!result.bReasonFlag && !proxyFlag) {
+							document.getElementById("TR_Appoint").style.display = "";
+							document.getElementById("TR_Absentreason").style.display = "";
+							document.getElementById("absentreason").value = "";
+						} else {
+							if (!result.bReasonFlag && proxyFlag) {
 								document.getElementById("TR_Absentreason").style.display = "none";
 								document.getElementById("TR_Appoint").style.display = "";
-							}else{
-								document.getElementById("absentreason").style.display = "";
+							} else if (result.bReasonFlag && !proxyFlag) {
+								document.getElementById("TR_Absentreason").style.display = "";
 								document.getElementById("absentreason").value = result.bReason;
 								document.getElementById("TR_Appoint").style.display = "none";
 							}
@@ -409,17 +419,17 @@
 		
 		        if (gIsAppoint != '2') {
 		        	/* document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>"*/
-		        	if (approvalFlag == "G") {
+		        	/* if (approvalFlag == "G") { */
 			            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
 			                alert("<spring:message code='ezPersonal.t36'/>");
 			                return;
 			            }
-		        	} else {
+		        	/* } else {
 			            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
 			                alert("<spring:message code='ezPersonal.t36'/>");
 			                return;
 			            }
-		        	}
+		        	} */
 		        }
 				var pProxy = "";
 				var pBujae = "";
@@ -517,14 +527,20 @@
 		    	});
 		    }
 		
-		    function Sel_Change()
-		    {
-		        if (document.getElementById("absentreason").value == "<spring:message code='ezPersonal.t35'/>" || document.getElementById("absentreason").value == "") {
-		            document.getElementById("TR_Appoint").style.display = "";
-		        }
-		        else {
+		    function Sel_Change() {
+				/* 이유정 - 부재자 설정 정보 불러올때 발생하는 스타일 오류 수정 */
+				if (document.getElementById("absentreason").value == "<spring:message code='ezPersonal.t35'/>" || document.getElementById("absentreason").value == "") {
+					if (document.getElementById("TextName").value == "") {
+						document.getElementById("TR_Appoint").style.display = "";
+						document.getElementById("TR_Absentreason").style.display = "";
+					} else {
+						document.getElementById("TR_Absentreason").style.display = "none";
+						document.getElementById("TR_Appoint").style.display = "";
+					}
+		        } else {
 		            document.getElementById("TR_Appoint").style.display = "none";
 		            document.getElementById("TextName").value = "";
+					document.getElementById("TR_Absentreason").style.display = "";
 		        }
 		    }
 		    
@@ -680,15 +696,15 @@
 		<form id="ManageBujae" method="post">
 			<br/>
 			<div class="txt">
-				<c:if test="${approvalFlag =='G'}">
+				<%-- <c:if test="${approvalFlag =='G'}"> --%>
 					<div>▒&nbsp;<spring:message code='ezPersonal.t55'/></div>
 					<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t56'/></div>
 					<div style="margin-top:3px"> &nbsp; &nbsp; <spring:message code='ezPersonal.t57'/></div>
-				    <div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t58'/></div>
-			    </c:if>
-			    <c:if test="${approvalFlag !='G'}">
-			    	<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.pjj3'/></div>
-			    </c:if>
+					<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t58'/></div>
+				<%-- </c:if>
+				<c:if test="${approvalFlag !='G'}">
+					<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.pjj3'/></div>
+				</c:if> --%>
 			</div>
 			<table class="content" style="width:520px;margin-top:20px">
 				<tr id="TR_Appoint1">
@@ -760,7 +776,7 @@
 					</tr>
 				</c:if>
 				<c:if test="${approvalFlag eq 'S'}">
-					<tr id="TR_Absentreason" style="display: none;">
+					<tr id="TR_Absentreason">
 						<th><spring:message code='ezPersonal.t42'/></th>
 						<td>
 							<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
