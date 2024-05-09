@@ -342,18 +342,34 @@ function btn_AprDeptTempletAdd_onclick()
     var pAPRTemplist = new ListView();   
     pAPRTemplist.LoadFromID("lvRecSaveList");
     var ListViewLen = pAPRTemplist.GetSelectedRows();
+
+    /* 2024-04-18 민지수 - 전자결재 > 결재정보 > 수신처 즐겨찾기에 폐지부서 있는지 확인 */
+    var CheckAprTrashDept;
+    var TrashList = [];
+    var Templist = new ListView();
+    Templist.LoadFromID("lvRecSaveDetail");
+    var TempListLen = Templist.GetDataRows();
    
     if(ListViewLen.length < 1)
 	{
 		return;
 	}
-	
+    
     p_CheckAprDeptTempletSN = ListViewLen[0].getAttribute("DATA1");
     if (p_CheckAprDeptTempletSN == "") {
         var pAlertContent = linealt14;
         OpenAlertUI(pAlertContent);
     }
     else {
+        for (var i = 0; i < TempListLen.length; i ++) {
+            CheckAprTrashDept = TempListLen[i].getAttribute("TRASHDEPT");
+            if (CheckAprTrashDept == "Y") {
+                TrashList.push(TempListLen[i].getAttribute("DATA10"));                
+            }
+        }
+        if (TrashList.length > 0){
+            alert("[" + TrashList.join(",") + "]" + " 부서는 폐지되었습니다. 즐겨찾기 적용에서 제외됩니다.");
+        }        
         AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN);
         pAprDeptTempletUseFlag = false;
         //시행문

@@ -4072,6 +4072,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("APRDEPTMEMBERSN").item(k).getTextContent()) + "</DATA5>");
 						resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA10>");
 						resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA11>");
+                        /* 2024-04-17 민지수 - 전자결재 > 수신자 > 즐겨찾기 탭 > 부서 폐지여부 추가 (Y:폐지) */ 
+                        String TrashDept = (docXML.getElementsByTagName("DEPT_CD_PATH").item(k).getTextContent().contains("trash_dept")) ? "Y" : "N";
+                        resultXML.append("<TRASHDEPT>" + TrashDept + "</TRASHDEPT>");
 					}
 					
 					resultXML.append("</CELL>");
@@ -4366,6 +4369,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		for (int i = 0; i < apprGReceiptVOList.size(); i++) {
 			sb.append(commonUtil.getQueryResult(apprGReceiptVOList.get(i)));
+            
+            if (Integer.parseInt(apprGReceiptVOList.get(i).getDeptMemberSN()) >= apprGReceiptVOList.size()){
+                apprGReceiptVOList.get(i).setDeptMemberSN(String.valueOf(apprGReceiptVOList.size()-i));
+            }            
 		}
 		
 		sb.append("</DATA>");
