@@ -20,31 +20,26 @@
         <!-- 상단 고정부분 html start -->
         <div class="top_info_area">
             <div class="my_info_wrap">
-                <div class="my_info">
-                    <span class="name">홍길동 사원</span>
-                    <span class="team">UIUX팀</span>
-                    <select>
-                        <option selected hidden>겸직</option>
-                        <option>부서1</option>
-                        <option>부서2</option>
-                    </select>
+                <div class="my_info" id="myInfo">
+                    <span class="name">${userName} ${userTitle}</span>
+                    <span class="team">${deptName}</span>
                 </div>
 
                 <div class="portal_setting">
                     <input type="checkbox" id="portal_set">
-                    <label for="portal_set"><span></span>포탈설정</label>
+                    <label for="portal_set" onclick="viewPortletEnv()"><span></span><spring:message code = 'ezNewPortal.HSBPT01' /></label>
                 </div>
 
-                <div class="info_logout">로그아웃</div>
+                <div class="info_logout" onclick="infoLogoutClick()"><spring:message code = 'ezNewPortal.t008' /></div>
             </div>
             <ul>
                 <li>
                     <div class="noti" id="noti"></div>
                 </li>
                 <li>
-                    <span class="mail" onclick="openPageOfPortal(this.className)"><span>안읽은메일</span><em id="unReadMailCount"></em></span>
-                    <span class="appr" onclick="openPageOfPortal(this.className)"><span>결제할문서</span><em id="approvalCnt"></em></span>
-                    <span class="board" onclick="openPageOfPortal(this.className)"><span>새게시물</span><em id="newBoardCnt"></em></span>
+                    <span class="mail" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.topMenu.unReadMail' /></span><em id="unReadMailCount"></em></span>
+                    <span class="appr" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.gu2' /></span><em id="approvalCnt"></em></span>
+                    <span class="board" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezBoard.t480' /></span><em id="newBoardCnt"></em></span>
                 </li>
             </ul>
         </div>
@@ -659,6 +654,7 @@
         setPortalCount();		// 포탈 카운트 세팅
         setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
         makeSwiperByTopMenu();
+        callAllUserTab();
     }
 
     function setPortalCount(){
@@ -822,6 +818,83 @@
         });
     }
 
+    // 겸직
+    function callAllUserTab() {
+        $.ajax({
+            type: "GET",
+            url: "/ezNewPortal/allUserTab.do",
+            dataType: "JSON",
+            success : function(data) {
+                makeAllUserTab(data);
+            }
+        });
+    }
+    
+    function getCookie(Name) {
+        var search = Name + "="
+        if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
+            offset = document.cookie.indexOf(search)
+
+            if (offset != -1) { // 쿠키가 존재하면
+                offset += search.length
+                // set index of beginning of value
+                end = document.cookie.indexOf(";", offset);
+                // 쿠키 값의 마지막 위치 인덱스 번호 설정
+                if (end == -1)
+                    end = document.cookie.length
+                return unescape(document.cookie.substring(offset, end))
+            }
+        }
+    }
+    
+    function makeAllUserTab(json) {
+        var switchUserCompany = "<c:out value='${switchUserCompany}' />"
+
+        if (switchUserCompany !== "Y") return;
+
+        var myInfo = document.getElementById("myInfo");
+        var select = document.createElement("select");
+        select.id = "switchUser";
+        select.style.maxWidth = "80px"; // 길이 임시조치
+        // select.style.padding = "0 6px";
+        // list.append(select);
+        myInfo.append(select);
+
+        for (var i = 0; i < json.length; i++) {
+            var option = document.createElement("option");
+            option.setAttribute("data-dept", json[i].deptId);
+            option.setAttribute("data-company", json[i].companyId);
+            option.setAttribute("data-job", json[i].jobId);
+            option.value = json[i].companyId;
+            option.text = json[i].companyName + " (" + json[i].deptName + " " + json[i].title + ")";
+            select.appendChild(option);
+            option.selected = json[i].curr;
+        }
+        
+        select.addEventListener("change", function() {
+            switchAllUserInfo();
+        });
+
+        function switchAllUserInfo() {
+            var select = document.getElementById("switchUser").selectedOptions[0];
+            var json = {};
+            json['companyId'] = select.getAttribute("data-company");
+            json['deptId'] = select.getAttribute("data-dept");
+            json['jobId'] = select.getAttribute("data-job");
+
+            $.ajax({
+                type: "POST",
+                url: "/ezNewPortal/switchAllUserInfo.do",
+                contentType: "application/json; charset=UTF-8",
+                data: JSON.stringify(json),
+                success : function(text) {
+                    if (text === "true") {
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    }
 </script>
 <!-- 협업 시작-->
 <c:if test="${useEzWorkspace}">

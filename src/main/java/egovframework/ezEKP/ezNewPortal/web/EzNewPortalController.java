@@ -569,6 +569,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);
 		}
+
+		String  switchUserCompany = "";
+		if (ezCommonService.getTenantConfig("switchUserCompany", userInfo.getTenantId()) != null){
+			switchUserCompany = ezCommonService.getTenantConfig("switchUserCompany", userInfo.getTenantId());
+			model.addAttribute("switchUserCompany", switchUserCompany);
+		}
 		
 		//김보미 추가 - calenderMini는 ie와 크롬일 때랑 파일이 틀려서 구분값 필요함.
 		boolean checkBrowser;

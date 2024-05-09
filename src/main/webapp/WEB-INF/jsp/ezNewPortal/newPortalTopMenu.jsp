@@ -1342,7 +1342,7 @@
 			document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + expireDate.toGMTString() + ";";
 		}
 
-		function getCookie(Name) {
+		<%--function getCookie(Name) {
 			var search = Name + "="
 			if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
 				offset = document.cookie.indexOf(search)
@@ -1357,7 +1357,7 @@
 					return unescape(document.cookie.substring(offset, end))
 				}
 			}
-		}
+		} --%>
 		
 		var officeBugPatch = function() {
 		}
@@ -1437,7 +1437,7 @@
       		}
       	});
 
-		function callAllUserTab() {
+		<%-- function callAllUserTab() {
 			$.ajax({
 				type: "GET",
 				url: "/ezNewPortal/allUserTab.do",
@@ -1496,7 +1496,7 @@
 					if (text === "true") parent.location.reload();
 				}
 			});
-		}
+		} --%>
  		
  		// 시작지점
 		newPortalTopMenuFunc();	
@@ -1507,7 +1507,7 @@
 		
 		window.onload = function() {
 			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
-			callAllUserTab();
+			// callAllUserTab();
 		}
 		
 		function removeAllChildernElem(element){
