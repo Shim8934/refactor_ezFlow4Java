@@ -585,7 +585,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             } else {
                 try {
-                    in = new FileInputStream(realPath + "/" + imgSrc);
+                    String fisPath = new File(realPath + imgSrc).exists() ? realPath + imgSrc : realPath + "/" + imgSrc;
+                    in = new FileInputStream(fisPath);
+
                     logger.debug(realPath + imgSrc + " is exist.");
                 } catch (Exception e) {
                     try {
