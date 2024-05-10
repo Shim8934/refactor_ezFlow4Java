@@ -346,6 +346,7 @@ function btn_AprDeptTempletAdd_onclick()
     /* 2024-04-18 민지수 - 전자결재 > 결재정보 > 수신처 즐겨찾기에 폐지부서 있는지 확인 */
     var CheckAprTrashDept;
     var TrashList = [];
+    var RetireList = [];
     var Templist = new ListView();
     Templist.LoadFromID("lvRecSaveDetail");
     var TempListLen = Templist.GetDataRows();
@@ -366,10 +367,18 @@ function btn_AprDeptTempletAdd_onclick()
             if (CheckAprTrashDept == "Y") {
                 TrashList.push(TempListLen[i].getAttribute("DATA10"));                
             }
+            /* 2024-05-10 양지혜 - 전자결재 > 결재정보 > 퇴직자 포함된 즐겨찾기 적용 시 제외 */
+            if (TempListLen[i].getAttribute("RETIRECHK") == "Y") {
+                RetireList.push(TempListLen[i].querySelector("td:nth-child(2)").textContent);
+            }
         }
         if (TrashList.length > 0){
             alert("[" + TrashList.join(",") + "]" + " 부서는 폐지되었습니다. 즐겨찾기 적용에서 제외됩니다.");
-        }        
+        }
+        if (RetireList.length > 0) {
+            alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+        }
+
         AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN);
         pAprDeptTempletUseFlag = false;
         //시행문

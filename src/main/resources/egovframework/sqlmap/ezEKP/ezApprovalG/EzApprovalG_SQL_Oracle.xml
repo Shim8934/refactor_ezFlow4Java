@@ -4781,22 +4781,32 @@
 <!-- 		{CALL EZSP_GETLINETEMPLETDETAILINFO(#v_FORMID#, #v_USERID#, #v_APRLINESN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getLineTempletDetailInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
-			SELECT 
-				* 
-		    FROM 
-		    		TBL_LINTEMPLETDETAIL 
+			SELECT
+                A.*,
+                CASE
+                    WHEN B.CN IS NULL THEN 'N'
+                    ELSE 'Y'
+                END AS RETIRECHK
+		    FROM
+                TBL_LINTEMPLETDETAIL A
+            LEFT OUTER JOIN
+                TBL_USERMASTER_RETIRE B
+            ON
+                A.APRMEMBERID = B.CN
+            AND
+                A.TENANT_ID = B.TENANT_ID
 		    WHERE  
-		    		TRIM(FORMID) = #v_FORMID#
+		    	TRIM(A.FORMID) = #v_FORMID#
 		    AND 
-		    		USERID = #v_USERID#
+		    	A.USERID = #v_USERID#
 		    AND 
-		    		APRLINESN = #v_APRLINESN#
+		    	A.APRLINESN = #v_APRLINESN#
 		   	AND
-		   			TENANT_ID = #v_TENANTID#
+		   		A.TENANT_ID = #v_TENANTID#
 			AND
-		  			COMPANYID = #companyID#		   			
+		  		A.COMPANYID = #companyID#
 		    ORDER BY 
-		    		APRMEMBERSN DESC 
+		    	A.APRMEMBERSN
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormInfoDetail" parameterClass="Map" resultClass="ApprGFormVO"> -->
@@ -4903,21 +4913,30 @@
 		             NULL PROCESSDATE  ,
 		             NULL REASONDONOTAPPROV  ,
 		             'N' ISPROPOSERYN  ,
-		             'N' ISBRIEFUSERYN  
+		             'N' ISBRIEFUSERYN,
+                     B.CN
 		        FROM 
-		        	  TBL_LINTEMPLETDETAIL 
+		        	 TBL_LINTEMPLETDETAIL A
+                LEFT OUTER JOIN
+                     TBL_USERMASTER_RETIRE B
+                ON
+                     A.APRMEMBERID = B.CN
+                AND
+                     A.TENANT_ID = B.TENANT_ID
 		        WHERE  
-		        	  USERID = #v_USERID#
+		        	 USERID = #v_USERID#
 		        AND 
-		        	  TRIM(FORMID) = #v_FORMID#
+		        	 TRIM(FORMID) = #v_FORMID#
 		        AND 
-		        	  APRLINESN = #v_APRLINESN#
+		        	 APRLINESN = #v_APRLINESN#
 		        AND 
-		        	  TENANT_ID = #v_TENANTID#
+		        	 A.TENANT_ID = #v_TENANTID#
 	        	AND
-        		 	  COMPANYID = #companyID#		        	  
+        		 	 COMPANYID = #companyID#
+		        AND
+                     B.CN IS NULL
 		        ORDER BY 
-		        	  APRMEMBERSN DESC 
+		        	 APRMEMBERSN DESC
 	</select>
 <!-- 	<procedure id="EzApprovalG.getReceiptTempletInfo" parameterClass="Map" resultClass="ApprGDeptTempletVO"> -->
 <!-- 		{CALL EZSP_GETRECEIPTTEMPLETINFO(#v_FORMID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -4958,24 +4977,40 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getReceiptTempletDetailInfo" parameterClass="Map" resultClass="ApprGDeptTempletVO">
 			 SELECT
-                 A.*, D.DEPT_CD_PATH
+                 A.*,
+                 D.DEPT_CD_PATH,
+                 CASE
+                     WHEN B.CN IS NULL THEN 'N'
+                     ELSE 'Y'
+                 END AS RETIRECHK
              FROM 
-		     		TBL_DEPTTEMPLETDETAIL A
-             INNER JOIN TBL_DEPTMASTER D
-               ON A.APRMEMBERDEPTID = D.CN
-               AND A.APRMEMBERDEPTNAME = D.DISPLAYNAME
+		         TBL_DEPTTEMPLETDETAIL A
+             INNER JOIN
+		         TBL_DEPTMASTER D
+             ON
+                 A.APRMEMBERDEPTID = D.CN
+             AND
+                 A.APRMEMBERDEPTNAME = D.DISPLAYNAME
+             AND
+                 A.TENANT_ID = D.TENANT_ID
+             LEFT OUTER JOIN
+                 TBL_USERMASTER_RETIRE B
+             ON
+                 A.APRMEMBERID = B.CN
+             AND
+                 A.TENANT_ID = B.TENANT_ID
 		     WHERE  
-		     		TRIM(A.FORMID) = #v_FORMID#
+		     	 TRIM(A.FORMID) = #v_FORMID#
 		     AND 
-		     		A.USERID = #v_USERID#
+		     	 A.USERID = #v_USERID#
 		     AND
-                    A.APRDEPTSN = #v_APRDEPTSN#
+                 A.APRDEPTSN = #v_APRDEPTSN#
 		     AND
-                    A.TENANT_ID =#v_TENANTID#
+                 A.TENANT_ID =#v_TENANTID#
 	     	 AND
-                    A.COMPANYID = #companyID#		     		
+                 A.COMPANYID = #companyID#
 		     ORDER BY
-                    A.APRDEPTMEMBERSN DESC
+                 A.APRDEPTMEMBERSN
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTempListDB" parameterClass="Map" resultClass="ApprGAdminReceiveVO" remapResults="true"> -->
@@ -5076,25 +5111,40 @@
 		            APRMEMBERJOBTITLE RECEIPTMEMBERJOBTITLE  ,
 		            APRMEMBERJOBTITLE2 RECEIPTMEMBERJOBTITLE2  ,
 		            NULL PROCESSDATE,
-                    D.DEPT_CD_PATH  
+                    D.DEPT_CD_PATH,
+                    B.CN
 		     FROM
                  TBL_DEPTTEMPLETDETAIL A
-             INNER JOIN TBL_DEPTMASTER D
-             ON A.APRMEMBERDEPTID = D.CN
-             AND A.APRMEMBERDEPTNAME = D.DISPLAYNAME
+             INNER JOIN
+                 TBL_DEPTMASTER D
+             ON
+                 A.APRMEMBERDEPTID = D.CN
+             AND
+                 A.APRMEMBERDEPTNAME = D.DISPLAYNAME
+             AND
+                 A.TENANT_ID = D.TENANT_ID
+             LEFT OUTER JOIN
+                 TBL_USERMASTER_RETIRE B
+             ON
+                 A.APRMEMBERID = B.CN
+             AND
+                 A.TENANT_ID = B.TENANT_ID
 		     WHERE
-                    A.USERID = #v_USERID#
+                 A.USERID = #v_USERID#
 		     AND
-                    A.FORMID = #v_FORMID#
+                 A.FORMID = #v_FORMID#
 		     AND
-                    A.APRDEPTSN = #v_APRDEPTSN#
+                 A.APRDEPTSN = #v_APRDEPTSN#
 		     AND
-                    A.TENANT_ID = #v_TENANTID#
+                 A.TENANT_ID = #v_TENANTID#
 		     AND
-                    A.COMPANYID = #companyID#
-             AND D.DEPT_CD_PATH NOT LIKE '%trash_dept_%'
+                 A.COMPANYID = #companyID#
+             AND
+		         D.DEPT_CD_PATH NOT LIKE '%trash_dept_%'
+		     AND
+                 B.CN IS NULL
 		     ORDER BY 
-		     		APRDEPTMEMBERSN DESC
+		     	 APRDEPTMEMBERSN DESC
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->

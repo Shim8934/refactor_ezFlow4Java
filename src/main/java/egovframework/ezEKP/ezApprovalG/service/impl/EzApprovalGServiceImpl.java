@@ -3455,6 +3455,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             } else {
                 resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("MEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA9>");
             }
+            /* 2024-05-10 양지혜 - 전자결재 > 결재정보 > 즐겨찾기 > 퇴직자여부(Y:퇴직자) 추가 */
+            resultXML.append("<RETIRECHK>" + makeListField(docXML.getElementsByTagName("RETIRECHK").item(k).getTextContent()) + "</RETIRECHK>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			
@@ -4075,6 +4077,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                         /* 2024-04-17 민지수 - 전자결재 > 수신자 > 즐겨찾기 탭 > 부서 폐지여부 추가 (Y:폐지) */ 
                         String TrashDept = (docXML.getElementsByTagName("DEPT_CD_PATH").item(k).getTextContent().contains("trash_dept")) ? "Y" : "N";
                         resultXML.append("<TRASHDEPT>" + TrashDept + "</TRASHDEPT>");
+                        /* 2024-05-10 양지혜 - 전자결재 > 결재정보 > 즐겨찾기 > 퇴직자여부(Y:퇴직자) 추가 */
+                        resultXML.append("<RETIRECHK>" + makeListField(docXML.getElementsByTagName("RETIRECHK").item(k).getTextContent()) + "</RETIRECHK>");
 					}
 					
 					resultXML.append("</CELL>");
