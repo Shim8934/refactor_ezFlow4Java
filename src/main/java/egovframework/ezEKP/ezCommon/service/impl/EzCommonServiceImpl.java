@@ -347,18 +347,66 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
         List<String> imgSrcs = new ArrayList<String>();
 
-        Elements elements = document.getElementsByTag("img");
-        if (!elements.isEmpty()) {
-            for (Element element : elements) {
-                imgSrcs.add(element.attr("src"));
-            }
-        }
-
-        imgSrcs = imgSrcs.stream().distinct().collect(Collectors.toList());
+        getImgfilePath(imgSrcs, document);
 
         logger.debug("extractImageSource ended.");
 
         return imgSrcs;
+    }
+
+    private void getImgfilePath(List<String> imgSrcs, Document document) throws Exception {
+        logger.info("getImgfilePath started");
+
+        Elements elements = null;
+        Element element = null;
+        int imgTagCnt = document.getElementsByTag("img").size();
+        String extractProcessType;
+
+        if (imgTagCnt != 0) {
+            extractProcessType = "0";
+
+            elements = document.getElementsByTag("img");
+        } else {
+            extractProcessType = "1";
+
+            element = document.getElementById("imagediv");
+        }
+
+        try {
+            switch (extractProcessType) {
+                case "0" : {
+                    for (Element e : elements) {
+                        imgSrcs.add(element.attr("src"));
+                    }
+
+                    break;
+                }
+
+                case "1" : {
+                    String attrList[] = element.attr("style").split(";");
+                    String imgPath;
+
+                    for (String s : attrList) {
+                        if (!s.contains("background-image")) {
+                            continue;
+                        }
+
+                        imgPath = "/" + s.substring(s.indexOf("url(\'") + 5, s.indexOf("\')"));
+                        imgSrcs.add(imgPath);
+                    }
+
+                    break;
+                }
+            }
+
+            imgSrcs = imgSrcs.stream().distinct().collect(Collectors.toList());
+        } catch (IndexOutOfBoundsException iobe) {
+            logger.error(iobe.getMessage(), iobe);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+
+        logger.info("getImgfilePath ended");
     }
 
 	/**
@@ -465,7 +513,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
 
             logger.debug("imgSrc = " + imgSrc);
+            /*
+                imgSrc compile 중 boardID의 {}로 에러가 발생, 임시로 !!Q, !!W로 치환 
+            */
+            imgSrc = imgSrc.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W").substring(1);
+            tempHtml = tempHtml.replaceAll("\\{", "!!Q").replaceAll("\\}", "!!W");
             tempHtml = Pattern.compile(imgSrc).matcher(tempHtml).replaceAll("file:///C:/IMAGE" + (imgSrcs.indexOf(imgSrc) + 1) + extension);
+
+            imgSrc = imgSrc.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
+            tempHtml = tempHtml.replaceAll("!!Q", "\\{").replaceAll("!!W", "\\}");
 
             imagesBuilder.append(commonUtil.CRLF + "Content-Type: " + contentType + commonUtil.CRLF);
             imagesBuilder.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
@@ -529,7 +585,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             } else {
                 try {
-                    in = new FileInputStream(realPath + imgSrc);
+                    in = new FileInputStream(realPath + "/" + imgSrc);
                     logger.debug(realPath + imgSrc + " is exist.");
                 } catch (Exception e) {
                     try {
