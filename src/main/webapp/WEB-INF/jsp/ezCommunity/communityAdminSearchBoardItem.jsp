@@ -46,7 +46,7 @@
 	        var xmlhttp = createXMLHttpRequest();
 			var code = "${code}";
 	        var iMenuNum = 7;
-	        var gubun = "${gubun}";
+	        var gubun = "${boardInfo.gubun}";
 	        //2018-07-09 김보미
 	        var ListInfo = "";
 	        

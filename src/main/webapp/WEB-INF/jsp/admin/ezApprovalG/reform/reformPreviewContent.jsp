@@ -19,7 +19,7 @@
 <!-- time picker-->
 <link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/jquery.timepicker.css')}" />
 <style>
-	body {margin: 0px;}
+	body {margin: 0px; overflow:hidden;}
 </style>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.timepicker.js')}"></script>
 <script language="javascript" type="text/javascript">
@@ -265,7 +265,7 @@
 							document.getElementById("body").innerHTML = "";
 						}
 					}
-					Conent_contentEditable(document.getElementById('div_Content'));
+					//Conent_contentEditable(document.getElementById('div_Content'));
 					/* reform
 					var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 					for (var i = 0; i < SelectRows.length; i++) {

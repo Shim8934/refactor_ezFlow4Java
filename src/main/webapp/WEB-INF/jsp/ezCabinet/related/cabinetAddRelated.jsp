@@ -23,11 +23,11 @@
 			<c:if test="${activeFlag == '1'}">
 				<div class="addRelatedConfig" id="addRelated">
 					<a class="cabRadio">
-						<input type="radio" name="checkCabinet" id="auto" checked="checked"/>
+						<input type="radio" name="checkCabinet" id="auto" checked="checked" style="vertical-align:middle;"/>
 						<label for="auto"><span><spring:message code="ezCabinet.t126"/></span></label><br>
 					</a>
 					<a class="cabRadio">
-						<input type="radio" name="checkCabinet" id="manual"/>
+						<input type="radio" name="checkCabinet" id="manual" style="vertical-align:middle;"/>
 						<label for="manual"><span><spring:message code="ezCabinet.t127"/></span></label>
 					</a>
 				</div>

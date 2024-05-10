@@ -3844,6 +3844,17 @@
 		)
 	</statement>
 	
+	<select id="EzCommonDAO.checkFileNameColumnForHistory" resultClass="String">
+	<![CDATA[
+		SELECT
+			FILE_NAME
+		FROM
+			TBL_WEBFOLDER_FILE_HISTORY
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
 	<statement id="EzCommonDAO.alterFileNameForWebfolderHistory">
 	<![CDATA[
 		ALTER TABLE
@@ -3852,6 +3863,7 @@
 				FILE_NAME VARCHAR(250)
 		]]>
     </statement>
+
 
 	<!-- 2024-01-25 홍승비 - 테넌트ID 중복제거를 먼저 진행하도록 쿼리 수정 -->
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 -->

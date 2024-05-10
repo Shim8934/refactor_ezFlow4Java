@@ -2150,7 +2150,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		} else {
 			//handleMessage(jsonStr, session);
-			downFile(request, response, filePath, userEmail + "_" + folderName + ".zip");
+			downFile(request, response, filePath, userEmail + folderName + ".zip");
 		}
 		
 		File zipFile = new File(filePath);

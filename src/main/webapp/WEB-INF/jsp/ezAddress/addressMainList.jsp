@@ -159,8 +159,7 @@
 	            var conWidth = 600;
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - conWidth) / 2;
-	            window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "",
-	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 510px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+	            window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "", GetOpenWindowfeature(600, 510, 0));
 	        }
 	        function new_group() {
 	        	if (useAnyoneEdit != "YES") {
@@ -174,14 +173,7 @@
 		            }
 	        	}
 	        	
-	            var pheight = window.screen.availHeight;
-	            var pwidth = window.screen.availWidth;
-	            var conHeight = 646;
-	            var conWidth = 968;
-	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - conWidth) / 2;
-	            window.open("/ezAddress/addressWriteGroup.do?ownerid=" + encodeURIComponent(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "",
-	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height=646, width=968, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+	            window.open("/ezAddress/addressWriteGroup.do?ownerid=" + encodeURIComponent(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "", GetOpenWindowfeature(968,646, 0));
 	        }
 	        function write_letter() {
 	            if (listContentArry.length == 0) {

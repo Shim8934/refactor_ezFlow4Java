@@ -1982,4 +1982,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyPostingMaxPeriodConfig", map);
 		}
 	}
+
+	public void alterFileNameForWebfolderHistory() {
+		try {
+			select(("EzCommonDAO.checkFileNameColumnForHistory"));
+		} catch (Exception e) {
+			logger.debug("TBL_WEBFOLDER_FOLDER_HISTORY FILE_NAME column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterFileNameForWebfolderHistory");
+		}
+	}
 }

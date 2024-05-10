@@ -962,10 +962,25 @@
 		            changecabinetinfo_cross_dialogArguments[0] = para;
 		            changecabinetinfo_cross_dialogArguments[1] = btnChangeCabinetInfo_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "ChangeCabinetInfo_Cross", GetOpenWindowfeature(405, 390));
-		            try { OpenWin.focus(); } catch (e) { }
-		
-		           
+		            var popupHeight = 390;
+		            var popupWidth = 405;
+		            
+		            var pheight = window.screen.availHeight;
+		            var pwidth = window.screen.availWidth;
+		            
+		            var pTop = (pheight - popupHeight) / 2;
+		            var pLeft = (pwidth - popupWidth) / 2;
+		            
+		            var dualScreenTop = window.screenY;
+		            var dualScreenLeft = window.screenX;
+
+		            pTop += dualScreenTop;
+		            pLeft += dualScreenLeft;
+		            
+		            var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + popupHeight + ",width=" + popupWidth + ",top=" + pTop + ",left=" + pLeft;
+
+		            var OpenWin = window.open(url, "ChangeCabinetInfo_Cross", feature, "");
+		            try { OpenWin.focus(); } catch (e) { }		           
 		        }
 		        else {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t513'/>");

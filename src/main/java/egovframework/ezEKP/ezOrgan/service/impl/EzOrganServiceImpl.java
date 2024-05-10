@@ -312,7 +312,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 				                    + "</" + propname.toUpperCase() + ">");
 			}
 		}
-		
+
+		if (vo.getCn() != null && vo.getExtensionAttribute2() != null && vo.getCn().toLowerCase().equals(vo.getExtensionAttribute2().toLowerCase())) {
+			isOrgan= "true";
+		}
 		// 부서의 자식 부서의 갯수를 구한다.
 		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId(), isOrgan);
 		

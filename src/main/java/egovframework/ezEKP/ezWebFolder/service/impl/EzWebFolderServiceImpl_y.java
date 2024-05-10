@@ -1355,6 +1355,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			map.put("tenantId", tenantId);
 			map.put("timeUTC",timeUTC);
 			map.put("fileSize", fileSize[i] );
+			map.put("fileName", filevo.getFileName());
 			
 			// 새로운 filePath로 경로 생성 및 db 업데이트
 			@SuppressWarnings("unused")

@@ -19981,7 +19981,7 @@
 
 	<delete id="EzApprovalG.jiJungDeleteReceiptProInfo2" parameterClass="Map">
 		 DELETE 
-		 	TBL_EXPAPRLINE
+		 	TBL_APRLINEINFO
          WHERE 
          	TENANT_ID = #v_TENANTID#
          AND
@@ -29886,6 +29886,8 @@
       		COMPANYID = #companyID#
       	AND
       		DOCID = #v_DOCID#
+        AND
+            APRMEMBERID = #v_USERID#
       	AND
       		APRTYPE = '040'
       	AND

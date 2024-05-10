@@ -5025,17 +5025,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int dlength = docXML != null ? docXML.getElementsByTagName("ROW").getLength() : 0;
 		int startNum = 0;
-		int endNum = dlength;
+		int endNum = Integer.parseInt(pageSize);
 		String primaryData = commonUtil.getPrimaryData(langType, tenantID);
-		
-		if (Integer.parseInt(pageSize) > 0) {
-			startNum = Integer.parseInt(pageSize) * (Integer.parseInt(pageNO) - 1);
-			endNum = Integer.parseInt(pageSize) * Integer.parseInt(pageNO);
-			
-			if (endNum > dlength) {
-				endNum = dlength;
-			}
-		}
+        // 2024-04-05 전인하 - 전자결재G > 기록물관리 > 단위업무관리 > 페이징 동작 추가에 따른 페이지넘버 계산 로직 단순화
+        if (endNum > dlength) {
+            endNum = dlength;
+        }
 		
 		resultXML.append("<ROWS>");
 		
@@ -12373,14 +12368,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.jiJungDeleteReceiptProInfo(map);
 		}
 		
-		//수신문 반송시 지정하면 결재라인 및 의견을 지워주기 위해 추가
-		map.put("v_DocID", docID);
-		
+		// 2024-05-10 기준 확인 결과 지정 시 기존 의견을 유지하도록 수정되었음 (2022-09-02 커밋)
+		// 수신문 반송시 지정하면 결재라인 및 의견을 지워주기 위한 코드
 		/*ezApprovalGDAO.deleteOpinionInfo(map);
 		ezApprovalGDAO.updateOpinionInfo(map);
 		
 		ezApprovalGDAO.aprDeleteDocInfo(map);
 		ezApprovalGDAO.aprDeleteDocInfo2(map);*/
+		
+		/* 2024-05-10 홍승비 - 기존 결재선 TBL_APRLINEINFO 테이블 레코드 삭제 누락된 부분 추가, jiJungDeleteReceiptProInfo2 쿼리의 용도 변경 */
+		ezApprovalGDAO.jiJungDeleteReceiptProInfo2(map);
 		
 		/* 2023-02-02 홍승비 - 부서수신함 > 접수 > 수신문 지정 시, 완료된 원문서의 수신자 정보를 갱신 (동일 부서에 대하여 새롭게 지정된 수신자 "개인"의 정보로 갱신 / 승인상태는 "대기"로 유지) */
 		map.put("docID", docID);

@@ -13667,6 +13667,7 @@ CREATE TABLE `tbl_webfolder_file_history` (
   `UPDATE_NAME2` varchar(120) DEFAULT NULL,
   `DELETER_ID` varchar(100) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `FILE_NAME` varchar(250) NOT NULL COMMENT '파일 이름',
   PRIMARY KEY (`FILE_ID`,`VERSION`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -315,12 +315,12 @@
 				AND
 					TENANT_ID = #tenantID#
 				AND 
-					DEPARTMENT IN (SELECT 
+					DEPARTMENT NOT IN (SELECT 
 										CN 
 									FROM 
 										TBL_DEPTMASTER 
 									WHERE 
-										DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+										DEPT_CD_PATH LIKE '%trash\_dept%' escape '\' AND TENANT_ID = #tenantID#
 				]]>
 									<isEqual property="useShowAllCompanies" compareValue="false" prepend="and">
 										EXTENSIONATTRIBUTE2 = #companyId#
@@ -348,12 +348,12 @@
 					TBL_ADDJOBMASTER A
 				JOIN
 					TBL_USERMASTER B
+				JOIN
+					TBL_DEPTMASTER D
 				ON
 					A.CN = B.CN
 				AND
-					A.TENANT_ID = B.TENANT_ID
-				JOIN
-					TBL_DEPTMASTER D
+					B.TENANT_ID = D.TENANT_ID
 				ON
 					A.DEPTID = D.CN
 				WHERE
@@ -361,7 +361,7 @@
 				OR
 					D.DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\')
 				AND
-					A.TENANT_ID = #tenantID#)
+					B.TENANT_ID = #tenantID#)
 			<![CDATA[		
 				ORDER BY 
 					EXTENSIONATTRIBUTE15 NULLS FIRST,
@@ -424,7 +424,7 @@
 								WHERE
 									TENANT_ID = #tenantID#)
 				AND
-					DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' escape '\')
+					DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' escape '\' AND TENANT_ID = #tenantID#)
 				AND
 					TENANT_ID = #tenantID#)
 			]]>    
@@ -447,18 +447,18 @@
 					TBL_ADDJOBMASTER A
 				JOIN
 					TBL_USERMASTER B
+				JOIN
+					TBL_DEPTMASTER D
 				ON
 					A.CN = B.CN
 				AND
-					A.TENANT_ID = B.TENANT_ID
-				JOIN
-					TBL_DEPTMASTER D
+					B.TENANT_ID = D.TENANT_ID
 				ON
 					A.DEPTID = D.CN
 				WHERE
 					A.DEPTID = #deptID#
 				AND
-					A.TENANT_ID = #tenantID#)
+					B.TENANT_ID = #tenantID#)
 			<![CDATA[		
 				ORDER BY 
 					EXTENSIONATTRIBUTE15 NULLS FIRST,

@@ -312,7 +312,11 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					TRIM(TBL_TASK_DEPTINFO.processdeptcode) = #v_DEPTCODE#
+					(TRIM(TBL_TASK_DEPTINFO.processdeptcode) = #v_DEPTCODE#					
+				OR
+					#v_TASKCODE# LIKE 'ZZ%'
+				OR
+					#v_TASKCODE# = '99999999')
 			]]>
 		</isNotEqual>
 	</select>
@@ -386,6 +390,8 @@
 	<select id="EzApprovalGAdmin.getTaskFullList" parameterClass="Map"
 		resultClass="ApprGTaskVO">
 		<![CDATA[
+		SELECT *
+		FROM (
 			SELECT
 				processdeptcode,
 				processdeptname,
@@ -411,7 +417,8 @@
 				sc1,
 				sc2,
 				sc3,
-				tempflag
+				tempflag,
+				rownum num
 			FROM
 				VTASKCLASS
 			WHERE
@@ -434,7 +441,33 @@
 		<![CDATA[
 			ORDER BY
 				taskcode ASC
+		)
+		WHERE
+			NUM BETWEEN #startRowForOracle# AND #endRowForOracle#
 		]]>
+	</select>
+
+	<select id="EzApprovalGAdmin.getTaskListCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				VTASKCLASS
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+		]]>
+		<isNotEqual property="v_DEPTCODE" compareValue="">
+			<![CDATA[
+			AND
+				(TRIM(processdeptcode) = #v_DEPTCODE#
+				OR
+					taskcode LIKE 'ZZ%'
+				OR
+					taskcode = '99999999')
+		]]>
+		</isNotEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDeptInfo" -->

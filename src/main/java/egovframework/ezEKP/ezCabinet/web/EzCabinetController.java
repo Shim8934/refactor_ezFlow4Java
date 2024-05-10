@@ -273,7 +273,7 @@ public class EzCabinetController {
 		logger.debug("responeDownloadFile finishes!");
 	}
 	
-	@RequestMapping(value="/ezCabinet/getCompanyTree.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getCompanyTree.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -426,19 +426,19 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getMyCabinetTree.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getMyCabinetTree.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonMyCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonMyCabinetTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
 		JSONObject resultObj = cabinetRestService.getMyCabinetTree(request, currentNode, user.getId());
-		
+
 		logger.debug("jsonMyCabinetTree end");
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getAllCabinetTree.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getAllCabinetTree.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonAllCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonAllCabinetTree start");
@@ -450,7 +450,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getRelatedCabinetTree.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getRelatedCabinetTree.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonRelatedCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonRelatedCabinetTree start");
@@ -462,7 +462,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSharedCabinetTree.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getSharedCabinetTree.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonSharedCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSharedCabinetTree start");
@@ -473,7 +473,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getMyShareCabinetTree.do", method = RequestMethod.GET)
+	@RequestMapping(value="/ezCabinet/getMyShareCabinetTree.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonMyShareCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonMyShareCabinetTree start");
@@ -602,7 +602,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getCabinetItems.do", method = RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getCabinetItems.do", method = RequestMethod.POST, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonGetCabinetItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetCabinetItems start");

@@ -70,7 +70,6 @@ function TreeNode() {
 
             treeDiv.setAttribute(strDataName, strDataValue);
         }
-        treeDiv.style.height = "18px";
 
         var bExpanded = false;
 
@@ -503,9 +502,6 @@ function TreeView() {
                     if (strWidth == "")
                         strWidth = "18px";
 
-                    if (strHeight == "")
-                        strHeight = "18px";
-
                     TreeIconSizes["width"] = strWidth;
                     TreeIconSizes["height"] = strHeight;
                     continue;
@@ -545,7 +541,6 @@ function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
             objNodeIcon.src = TreeIcons["node_minus"];
         }
         else if (objNodeIcon.src.indexOf(TreeIcons["node_minus"]) > 0) {
-            document.getElementById(pNodeID).style.height = "18px";
             objNodeIcon.src = TreeIcons["node_plus"];
         }
     }

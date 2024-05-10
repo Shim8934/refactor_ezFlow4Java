@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezWebFolder.vo;
 
 public class FileHistoryVO {
 	private String fileId;
+	private String fileName;
 	private String filePath;
 	private String modifiedDate;
 	private String modifiedAuthorName;
@@ -65,9 +66,17 @@ public class FileHistoryVO {
 		this.version = version;
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	@Override
 	public String toString() {
-		return "FileHistoryVO [fileId=" + fileId + ", filePath=" + filePath + ", modifiedDate=" + modifiedDate + ", modifiedAuthorName=" + modifiedAuthorName + ", modifiedAuthorName2="
+		return "FileHistoryVO [fileId=" + fileId + ", fileName=" + fileName + ", filePath=" + filePath + ", modifiedDate=" + modifiedDate + ", modifiedAuthorName=" + modifiedAuthorName + ", modifiedAuthorName2="
 				+ modifiedAuthorName2 + ", fileSize=" + fileSize + ", version=" + version + "]";
 	}
 }
