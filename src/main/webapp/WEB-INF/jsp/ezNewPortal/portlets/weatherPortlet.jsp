@@ -266,7 +266,7 @@
 		<article class="weather box_shadow">
 			<div class="layDiv">
 				<dl class="portlet_title sortablePortlet">
-		        	<dt class="portletText" style = "width : 60% !important;"><c:out value='${portletName }'/></dt>
+		        	<dt class="portletText" style = "width : 53% !important;"><c:out value='${portletName }'/></dt>
 					<select id = "countryList" class = "selectCountry setWeatherEventHandler">
 						<!-- 한국 -->
 						<option value = '1'><spring:message code = 'weather.nation1' /></option>
