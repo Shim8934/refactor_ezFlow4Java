@@ -20198,7 +20198,7 @@
 	
 	<delete id="EzApprovalG.jiJungDeleteReceiptProInfo2" parameterClass="Map">
 		 DELETE FROM 
-		 	TBL_EXPAPRLINE
+		 	TBL_APRLINEINFO
          WHERE 
          	TENANT_ID = #v_TENANTID#
          AND
