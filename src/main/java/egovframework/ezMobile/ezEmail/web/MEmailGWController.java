@@ -3880,7 +3880,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					if (!ezEmailService.checkUserShareId(userId, shareId, 0, info.getTenantId())) {
 						logger.debug("the user cannot access the shareId.");
 
-						return "";
+						result.put("status", "error");
+						result.put("code", 1);
+						result.put("data", "");
 					}
 
 					userEmail = shareId + "@" + domainName;
