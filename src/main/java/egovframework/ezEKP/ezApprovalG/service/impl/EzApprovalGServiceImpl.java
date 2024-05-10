@@ -14768,7 +14768,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //								}
 							} else {
 								sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
-								k += 1;
+//								k += 1;
+								whileFlag = true;
+							    break;
 							}
 						} else {
 							if (docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
