@@ -58,8 +58,6 @@ function TreeViewRequestData(pNodeID,pTreeID)
     treeNode.LoadFromID(TreeIdx);
 
     var deptID = treeNode.GetNodeData("CN");
-    //alert("리퀘pTreeID"+ pTreeID);
-    //alert("리퀘ID"+ deptID);
     //alert("treeidx" + TreeIdx);
     GetDeptSubTreeInfo(deptID, TreeIdx);	
 }

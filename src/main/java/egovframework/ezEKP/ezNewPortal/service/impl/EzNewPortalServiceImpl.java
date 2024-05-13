@@ -1287,7 +1287,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("updateUserThemeSetting ended.");
 	}
 	
-	//관리자부분!! ------ boardtree가져오기
+	//관리자부분 ------ boardtree가져오기
 	@Override
 	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception {
 		logger.debug("getBoardTree started.");

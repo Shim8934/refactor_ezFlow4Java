@@ -81,7 +81,6 @@
     TEXT-ALIGN: right;
     TOP: 30%;
     WIDTH: 55%;
-    /*Z-INDEX: -1 // 숨어버려서 문제*/
 }
 .dailyAMPMContainer
 {
@@ -120,7 +119,6 @@
     OVERFLOW: hidden;
     POSITION: relative;
     WIDTH: 100%;
-    / *Z-INDEX: -1 // 숨어버려서 문제 * /
     */
 }
 .dailyRow

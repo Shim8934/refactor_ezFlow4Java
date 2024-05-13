@@ -335,6 +335,7 @@
 				success : function(data) {
 					var code = data.code;
 					
+					// 리펙토링 권고 start
 					if (code == 0 || code == 8) {
 						if (data.folderErrorArray) {
 							alert("<spring:message code='ezWebFolder.t245' />");
@@ -345,6 +346,8 @@
 							}
 						}
 					}
+
+					// 리펙토링 권고 end
 					
 					switch(code) {
 						case 0: 
@@ -460,8 +463,8 @@
 							}
 						}
 					}
+
 					// 차후 코드 리팩토링 필요 파트 end
-					
 					switch(code) {
 						case 0: 
 							alert("<spring:message code='ezWebFolder.t247'/>");

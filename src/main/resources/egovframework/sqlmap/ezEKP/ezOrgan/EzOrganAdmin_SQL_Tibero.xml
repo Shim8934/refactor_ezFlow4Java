@@ -150,7 +150,7 @@
 		</isNotEmpty>
 	</sql>
 	
-	<!-- 2021-07-12 김은실 - 선택지가 3개 밖에 없어서.. 최대한 쿼리줄이고자 이렇게 짠건데, 더 추가된다면 아예 걍 바꿔주세요.ㅎㅎㅎ  여기서 변형하기에는 여간 복잡한게 아닐거에여ㅠ -->
+	<!-- 2021-07-12 김은실 - 필요시 변경하여 사용 -->
 	<sql id="EzOrganAdminDAO.searchForQuery">
 		<isNotEqual property="searchForAll" compareValue="true" open="and (" close=")">
 			CN <isEqual property="retired" compareValue="false"> NOT </isEqual> IN 
