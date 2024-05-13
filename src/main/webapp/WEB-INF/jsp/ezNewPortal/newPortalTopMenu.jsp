@@ -318,12 +318,11 @@
 				if ('${packageType}' === 'mail' && '${lastLogin}' != '') {	// 20200326 조진호 - 패키지 타입이 메일 일 때 최종 접속 로그인 시간과 ip를 탑메뉴 상단에 표시
 					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-right: 10px;margin-top: 20px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
 				}
-				// 통합알림
-				str += '<li><span class="icon_topmenu util_alarm" id="" title="' + '통합알림' + '"><span></span></span></li>';
+				
 				//통합검색
 				if ('${useTotalSearch}' === 'YES') str += "<li><div class='top_totalSearch'><input id='input_totalSearch' class='input_text' type='text' onkeyup='totalSearch_key_event()' onfocus=\"this.placeholder=' '\"/><input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' id='topsearch_btn' class=\"topsearch_btn\" ></div></li>";
-				
-				str += '<li id="util_noti" class="icon_alarm_46px" title=' + '<spring:message code="ezPortal.notification.hth01" />' + ' onclick="toggleNoti()"><span id="notiin"></span></li>'
+				// 통합알림
+				str += '<li id="util_noti"><span class="icon_topmenu util_alarm" title="' + '<spring:message code="ezPortal.notification.hth01" />"' + ' onclick="toggleNoti()"><span id="notiin"></span></span></li>';
 				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
 				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';

@@ -148,6 +148,7 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 
 .util { list-style: none; margin: 0px; padding: 0px; }
 .util li { float: left; height: 60px; padding:0px 6px; cursor: pointer; }
+.util li#util_noti {padding-right:0px; padding-left:0px;}
 .util li:hover .util_admin { background-position: -158px -31px; }/* 관리자 */
 .util li:hover .util_employee_search { background-position: -0px -31px; }/* 직원검색 */
 .util li:hover .util_set { background-position: -31px -31px; }/* 환경설정 */
@@ -1735,6 +1736,7 @@ div.orbit img{border-radius: 5px;}
 
 .noti_list_wrap{height:390px; overflow-y:auto; background:#F6F6F6; border-radius:7px; margin-top:10px;}
 .noti_list{list-style:none; padding:0;}
+.noti_list .notiZero {text-align: center;}
 .noti_list li{padding:10px 20px; display:flex; flex-wrap:wrap; cursor:pointer; position:relative;}
 .noti_list li i{width:40px; height:40px; border-radius:40px; background-position:center; background-repeat:no-repeat; background-color:#388CE5; margin-right:15px;}
 .noti_list li .list_info{flex:1; padding-right:20px;}

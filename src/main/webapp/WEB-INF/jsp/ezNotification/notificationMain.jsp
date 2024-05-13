@@ -206,9 +206,9 @@
 	            var topFrame = window.parent.frames["topFrame"];
 	            if (!topFrame) return;
 	            if (navigator.userAgent.indexOf("MSIE") !== -1 || navigator.userAgent.indexOf("Trident") !== -1) {
-					notiElem = topFrame.document.querySelector('#util_noti > #notiin');
+					notiElem = topFrame.document.querySelector('#util_noti > span #notiin');
 				} else {
-					notiElem = topFrame.contentWindow.document.querySelector('#util_noti > #notiin');
+					notiElem = topFrame.contentWindow.document.querySelector('#util_noti > span #notiin');
 				}
 				
 				if (parseInt(result.notReadTotalListCnt) >= 100) {
