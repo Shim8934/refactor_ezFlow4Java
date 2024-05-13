@@ -1472,8 +1472,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		// 받는 사람 알림환경설정 체크
-		if (!ezPersonalService.canReceiveNotification(targetUserId, userInfo.getTenantId())
-				|| ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.valueOf(2, subType), NotiPlatform.MAIL, userInfo.getTenantId())) {
+		if (ezPersonalService.hasNotiDiableItem(targetUserId, NotiType.valueOf(2, subType), NotiPlatform.MAIL, userInfo.getTenantId())) {
 			logger.debug("mail_intersend ended");
 			return;
 		}
