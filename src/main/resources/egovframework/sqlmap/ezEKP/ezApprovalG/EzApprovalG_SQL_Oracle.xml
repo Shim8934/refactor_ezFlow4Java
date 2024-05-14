@@ -9953,15 +9953,15 @@
 								      	]]>
 									</isNotEmpty>
 									</isEqual>
-									<isNotEmpty property="v_SUBQUERY">
+<!--									<isNotEmpty property="v_SUBQUERY">
 										AND 
 											$v_SUBQUERY$
-									</isNotEmpty>	
+									</isNotEmpty>	-->
 										AND
 											TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 										AND
 											TBL_ENDAPRDOCINFO.COMPANYID = #companyID#											
-									<isNotEmpty property="v_ORDEROPTION">
+<!--									<isNotEmpty property="v_ORDEROPTION">
 									<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 									<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
 										ORDER BY 
@@ -9977,44 +9977,80 @@
 											$v_ORDEROPTION$, ENDDATE DESC
 									</isLessThan>
 									</isNotEmpty>
-									<isEmpty property="v_ORDEROPTION">
+									<isEmpty property="v_ORDEROPTION">-->
 										ORDER BY 
 											ENDDATE DESC
-									</isEmpty>
+<!--									</isEmpty>-->
 									 <![CDATA[
 									  ) WHERE 
 									  		ROWNUM <= #v_PAGESIZE#) A ) X 
 									  WHERE X.rnum >= #v_PAGESIZE3#+1
 									  ]]>
-						<isNotEmpty property="v_ORDEROPTION2">
+<!--						<isNotEmpty property="v_ORDEROPTION2">
 						<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
 						<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
 						<![CDATA[
-							ORDER BY 
+							ORDER BY
 								$v_ORDEROPTION2$
 						]]>
 						</isEqual>
 						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
 						<![CDATA[
-							ORDER BY 
+							ORDER BY
 								$v_ORDEROPTION2$, ENDDATE
 						]]>
 						</isNotEqual>
 						</isGreaterEqual>
 						<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="7">
-						<![CDATA[	
-							ORDER BY 
+						<![CDATA[
+							ORDER BY
 								$v_ORDEROPTION2$, ENDDATE
 						]]>
 						</isLessThan>
 						</isNotEmpty>
 						<isEmpty property="v_ORDEROPTION2">
-						<![CDATA[	
-							ORDER BY 
-								ENDDATE 
+						<![CDATA[
+							ORDER BY
+								ENDDATE
 						]]>
-						</isEmpty>
-		   			
+						</isEmpty>-->
+        ORDER BY
+        <isNotEmpty property = "sortHeader">
+            <isEqual property = "sortHeader" compareValue = "DOCTITLE">
+                DOCTITLE
+            </isEqual>
+            <isEqual property = "sortHeader" compareValue = "DOCNO">
+                DOCNO
+            </isEqual>
+            <isEqual property = "sortHeader" compareValue = "WRITERNAME">
+                WRITERNAME
+            </isEqual>
+            <isEqual property = "sortHeader" compareValue = "COMPANYNAME">
+                COMPANYNAME
+            </isEqual>
+            <isEqual property = "sortHeader" compareValue = "WRITERDEPTNAME">
+                WRITERDEPTNAME
+            </isEqual>
+            <isEqual property = "sortHeader" compareValue = "ENDDATE">
+                ENDDATE
+            </isEqual>
+
+            <isNotEmpty property = "sortType">
+                <isEqual property = "sortType" compareValue = "asc">
+                    ASC
+                </isEqual>
+                <isNotEqual property = "sortType" compareValue = "asc">
+                    DESC
+                </isNotEqual>
+            </isNotEmpty>
+
+            <isNotEqual property = "sortHeader" compareValue = "ENDDATE">
+                , ENDDATE
+            </isNotEqual>
+        </isNotEmpty>
+        <isEmpty property = "sortHeader">
+            ENDDATE
+        </isEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true"> -->
