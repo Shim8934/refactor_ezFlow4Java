@@ -594,10 +594,16 @@ function GetRecordList() {
             nowday = "0" + nowday;
 
         var tempDeptID = DeptID;
+
         if (underDeptFlag === "TRUE" && GetSelectVal("rec_underDept") != "default") {
             tempDeptID = GetSelectVal("rec_underDept");
         }
-        
+
+        // if (checkRecordAll()) {
+        //  checkRecordAll : 기존 소스를 찾을 수 없어 임시 주석처리
+        //     tempDeptID = "ALL";
+        // }
+
         /* 2022-07-20 홍승비 - 기록물철등록부 > 기록물철 선택 후 기록물보기로 진입한 경우, 선택한 기록물철의 생산 년도를 기준으로 표출 (검색조건 없을 시의 기본 표출) */
         if (typeof(isCabinetToRecordFirst) != "undefined" && isCabinetToRecordFirst == true && typeof(g_sFlag) != "undefined" && g_sFlag == "m02") { // 기록물철등록부의 g_sFlag는 'm02'
         	// 생산년도의 01월 01일부터 12월 31일까지를 검색 범위로 설정

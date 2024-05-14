@@ -10116,7 +10116,8 @@
 				   							  	   ELSE TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
 				   							  END)  AS SECURITYAPPROVAL,
 				   							  (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = TBL_ENDAPRDOCINFO.COMPANYID AND TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID) AS COMPANYNAME,
-				   							  (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = TBL_ENDAPRDOCINFO.COMPANYID AND TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID) AS COMPANYNAME2
+				   							  (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = TBL_ENDAPRDOCINFO.COMPANYID AND TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID) AS COMPANYNAME2,
+				   							  '' SN
 				   						FROM 
 				   							  TBL_ENDAPRDOCINFO 
 				   						LEFT OUTER JOIN 
@@ -10164,14 +10165,15 @@
 									      	]]>
 										</isNotEmpty>
 									</isEqual>
-									<isNotEmpty property="v_SUBQUERY">
-										AND 
+									<!--<isNotEmpty property="v_SUBQUERY">
+										AND
 											$v_SUBQUERY$
-									</isNotEmpty>	
+									</isNotEmpty>-->
 										AND
 											TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 										AND
 											TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+<!--
 									<isNotEmpty property="v_ORDEROPTION">
 										<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 											<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
@@ -10189,16 +10191,17 @@
 										</isLessThan>
 									</isNotEmpty>
 									<isEmpty property="v_ORDEROPTION">
-										ORDER BY 
+-->
+										ORDER BY
 											ENDDATE DESC
-									</isEmpty>
+									<!--</isEmpty>-->
 									 <![CDATA[
 									 LIMIT #v_PAGESIZE#
 							   	 ) B 
 							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) A
 									  ]]>
-						<isNotEmpty property="v_ORDEROPTION2">
+<!--						<isNotEmpty property="v_ORDEROPTION2">
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
 								<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
 								<![CDATA[
@@ -10219,14 +10222,44 @@
 										$v_ORDEROPTION2$, ENDDATE 
 								]]>
 							</isLessThan>
-						</isNotEmpty>
-						<isEmpty property="v_ORDEROPTION2">
-							<![CDATA[	
-								ORDER BY 
-									ENDDATE 
-							]]>
-						</isEmpty>
-		   			
+						</isNotEmpty>-->
+                        ORDER BY
+                        <isNotEmpty property = "sortHeader">
+                            <isEqual property = "sortHeader" compareValue = "DOCTITLE">
+                                DOCTITLE
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "DOCNO">
+                                DOCNO
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "WRITERNAME">
+                                WRITERNAME
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "COMPANYNAME">
+                                COMPANYNAME
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "WRITERDEPTNAME">
+                                WRITERDEPTNAME
+                            </isEqual>
+                            <isEqual property = "sortHeader" compareValue = "ENDDATE">
+                                ENDDATE
+                            </isEqual>
+
+                            <isNotEmpty property = "sortType">
+                                <isEqual property = "sortType" compareValue = "asc">
+                                    ASC
+                                </isEqual>
+                                <isNotEqual property = "sortType" compareValue = "asc">
+                                    DESC
+                                </isNotEqual>
+                            </isNotEmpty>
+
+                            <isNotEqual property = "sortHeader" compareValue = "ENDDATE">
+                                , ENDDATE
+                            </isNotEqual>
+                        </isNotEmpty>
+                        <isEmpty property = "sortHeader">
+                            ENDDATE
+                        </isEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.aprAttachMail" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true"> -->

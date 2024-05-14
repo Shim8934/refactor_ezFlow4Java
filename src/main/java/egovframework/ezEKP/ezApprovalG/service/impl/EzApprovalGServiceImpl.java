@@ -26506,48 +26506,48 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() + "</WIDTH>");
 			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "</COLNAME>");
 			
-			if (!SortHeader.equals("") && SortHeader.equals(listXML.getElementsByTagName("NAME").item(i).getTextContent())) {
-				if(SortHeader.equals("")) {
-					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
-					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
-				} else {
-					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
-					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
-				}
-			}
+//			if (!SortHeader.equals("") && SortHeader.equals(tmpStr.toUpperCase())) {
+//				if(orderOption.equals("asc")) {
+//					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
+//					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
+//				} else {
+//					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
+//					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
+//				}
+//			}
 			resultXML.append("</HEADER>");
 		}
 		resultXML.append("</HEADERS>");
-		if (OrderOption1.indexOf("SENDFLAG") > -1) {
-			OrderOption1 = "";
-		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
-			OrderOption2 = "";
-		}
+//		if (OrderOption1.indexOf("SENDFLAG") > -1) {
+//			OrderOption1 = "";
+//		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
+//			OrderOption2 = "";
+//		}
 		
-		if (OrderOption1.indexOf("DOCSTATENAME") > -1) {
-			OrderOption1.replace("DOCSTATENAME", "DOCSTATE");
-		} else if (OrderOption2.indexOf("DOCSTATENAME") > -1) {
-			OrderOption2.replace("DOCSTATENAME", "DOCSTATE");
-		}
+//		if (OrderOption1.indexOf("DOCSTATENAME") > -1) {
+//			OrderOption1.replace("DOCSTATENAME", "DOCSTATE");
+//		} else if (OrderOption2.indexOf("DOCSTATENAME") > -1) {
+//			OrderOption2.replace("DOCSTATENAME", "DOCSTATE");
+//		}
 		
-		if (OrderOption1.indexOf("SENDFLAG") > -1) {
-			OrderOption1 = "";
-		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
-			OrderOption2 = "";
-		}
+//		if (OrderOption1.indexOf("SENDFLAG") > -1) {
+//			OrderOption1 = "";
+//		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
+//			OrderOption2 = "";
+//		}
 		
-		map.put("v_ORDEROPTION", OrderOption1);
-		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
-		
-		if (OrderOption1.length() > 0 ) {
-			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,7).toLowerCase());
-		}
-		map.put("v_ORDEROPTION2", OrderOption2);
-		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
-		
-		if (OrderOption2.length() > 0 ) {
-			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,7).toLowerCase());
-		}
+//		map.put("v_ORDEROPTION", OrderOption1);
+//		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
+//
+//		if (OrderOption1.length() > 0 ) {
+//			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,7).toLowerCase());
+//		}
+//		map.put("v_ORDEROPTION2", OrderOption2);
+//		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
+//
+//		if (OrderOption2.length() > 0 ) {
+//			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,7).toLowerCase());
+//		}
 		
 		if (contID == null || contID.equals("")) {
 			map.put("v_CONTFLAG", "0");
@@ -26567,6 +26567,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PAGESIZE2", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
 		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
 		map.put("v_PAGESIZE3", Integer.parseInt(pageSize) * Integer.parseInt(pageNum) - Integer.parseInt(pageSize));
+        map.put("sortHeader", SortHeader);
+        map.put("sortType", orderOption);
 
 		List <ApprGDocListVO> conDocList = ezApprovalGDAO.getContDocList(map);
 		
@@ -26612,7 +26614,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 	if (FieldName.equals("DOCSTATENAME")) {
                 		FieldValue = docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent();
                 	} else {
-				    FieldValue = docXML.getElementsByTagName(FieldName.toUpperCase()).item(k).getTextContent();
+				        FieldValue = docXML.getElementsByTagName(FieldName.toUpperCase()).item(k).getTextContent();
                 	}
                 }
 				resultXML.append("<CELL>");

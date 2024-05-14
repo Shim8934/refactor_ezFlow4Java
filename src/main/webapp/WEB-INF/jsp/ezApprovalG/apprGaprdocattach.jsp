@@ -52,9 +52,9 @@
 			/* Header sorting variable */
 			var SortHeader;
 			var sortType = "asc";
-			
+
 			var orgResultxml;
-	        
+
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 	            window.onblur = function () {
 	                window.focus();
@@ -296,11 +296,11 @@
 				let curIdx;
 
 				if (selectedRowCnt == 0) {
-					OpenAlertUI("<spring:message code = 'ezApprovalG.docAttach.msg1' />");
+					alert("<spring:message code = 'ezApprovalG.docAttach.msg1' />");
 
 					return;
 				} else if (selectedRowCnt >= 2) {
-					OpenAlertUI("<spring:message code = 'ezApprovalG.docAttach.msg2' />");
+					alert("<spring:message code = 'ezApprovalG.docAttach.msg2' />");
 
 					return;
 				}
@@ -406,7 +406,19 @@
 	                </table>
 	            </td>
 	            <td>&nbsp;</td>
-	            <td>&nbsp;</td>
+	            <td>
+					<a class = "imgBtn" onclick = "moveDataRow('up')" style="height:22px; margin : 0 5px 0 0;">
+						<span>
+							<img src="/images/ImgIcon/prev.gif" alt="" style="width : 20px; margin-top: 4px;">
+						</span>
+					</a>
+
+					<a onclick = "moveDataRow('down')">
+						<span>
+							<img src="/images/ImgIcon/next.gif" alt="" style="width : 20px; margin-top: 4px;">
+						</span>
+					</a>
+				</td>
 	        </tr>
 	        <tr>
 	            <td colspan="2" style="vertical-align: top;">
