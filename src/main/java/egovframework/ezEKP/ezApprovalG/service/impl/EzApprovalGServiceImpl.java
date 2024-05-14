@@ -5023,6 +5023,44 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<HEADER>");
 			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
 			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+            /* 단위업무관리 정렬기능*/
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("PROCESSDEPTNAME")) {
+                resultXML.append("<COLNAME>PROCESSDEPTNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TASKNAME")) {
+                resultXML.append("<COLNAME>TASKNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TASKCODE")) {
+                resultXML.append("<COLNAME>TASKCODE</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TEMPFLAG")) {
+                resultXML.append("<COLNAME>TEMPFLAG</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("CNAME")) {
+                resultXML.append("<COLNAME>CNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("MCNAME")) {
+                resultXML.append("<COLNAME>MCNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("SCNAME")) {
+                resultXML.append("<COLNAME>SCNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("KEEPINGPERIOD")) {
+                resultXML.append("<COLNAME>KEEPINGPERIOD</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("KEEPINGMETHOD")) {
+                resultXML.append("<COLNAME>KEEPINGMETHOD</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("KEEPINGPLACE")) {
+                resultXML.append("<COLNAME>KEEPINGPLACE</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("DISPLAYRECFLAG")) {
+                resultXML.append("<COLNAME>DISPLAYRECFLAG</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("SPECIALCATALOGFLAG")) {
+                resultXML.append("<COLNAME>SPECIALCATALOGFLAG</COLNAME>");
+            }
+
 			resultXML.append("</HEADER>");
 		}
 		resultXML.append("</HEADERS>");
@@ -24326,7 +24364,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("TITLE")) {
 				 resultXML.append("<COLNAME>TITLE</COLNAME>");
 			 }
-			 
+
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("RECTYPECODE")) {
+                 resultXML.append("<COLNAME>RECTYPECODE</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("DELAYENDYFLAG")) {
+                 resultXML.append("<COLNAME>DELAYENDYFLAG</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("DISPLAYRECFLAG")) {
+                 resultXML.append("<COLNAME>DISPLAYRECFLAG</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("KEEPINGPERIOD")) {
+                 resultXML.append("<COLNAME>KEEPINGPERIOD</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("KEEPINGMETHOD")) {
+                 resultXML.append("<COLNAME>KEEPINGMETHOD</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("KEEPINGPLACE")) {
+                 resultXML.append("<COLNAME>KEEPINGPLACE</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("CREATEDATE")) {
+                 resultXML.append("<COLNAME>CREATEDATE</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("ENDYEAR")) {
+                 resultXML.append("<COLNAME>ENDYEAR</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("TRANSFERFLAG")) {
+                 resultXML.append("<COLNAME>TRANSFERFLAG</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("DELAYFLAG")) {
+                 resultXML.append("<COLNAME>DELAYFLAG</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("TERMINATEFLAG")) {
+                 resultXML.append("<COLNAME>TERMINATEFLAG</COLNAME>");
+             }
+
 			 resultXML.append("</HEADER>");
 		 }
 		
