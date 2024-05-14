@@ -713,7 +713,7 @@
 						
 					}
 					if (responseResult == 'fail') {
-						break;
+						return;
 					}
 				}
 			}
@@ -878,7 +878,7 @@
 				}
 			}
 			
-			if (answer.length > 0) {
+			if (answer.length > 0 && result !== "fail") {
 				answerObj['answers']       = answer;
 				answerObj['type']          = type;
 				answerObj['questionLevel'] = id;
