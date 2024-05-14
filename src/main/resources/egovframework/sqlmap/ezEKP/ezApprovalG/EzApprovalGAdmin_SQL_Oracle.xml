@@ -2124,42 +2124,66 @@
 			</isEqual>
 		</isEqual>
 		<isEqual property="approvalFlag" compareValue="S">
-			<isEqual property="v_CATETYPE" compareValue="1">
-				<![CDATA[
-					SELECT
-						NVL(COUNT(mcategorycode), 0)
-					FROM
-						TBL_TASKMIDDLECATEGORY
-					WHERE
-						tenant_id = #tenantID#
-					AND
-						companyid = #companyID#   
-					AND
-						categorycode = #v_CATECODE#
-					AND
-						mcategorycode != #v_CATECODE#
-					AND
-						oldflag IS NULL
-				]]>
-			</isEqual>
-			<isEqual property="v_CATETYPE" compareValue="2">
-				<![CDATA[
-					SELECT
-						NVL(COUNT(subcategorycode), 0)
-					FROM
-						TBL_TASKSUBCATEGORY
-					WHERE
-						tenant_id = #tenantID#
-					AND
-						companyid = #companyID#
-					AND
-						mcategorycode = #v_CATECODE#
-					AND
-						subcategorycode != #v_CATECODE#
-					AND
-						oldflag IS NULL
-				]]>
-			</isEqual>
+			<!-- 2024-05-14 양지혜 - S버전 > TBL_TASKCODE에서 단위업무 존재여부 확인 추가 -->
+			<isNotEqual property="v_CATETYPE" compareValue="3">
+				SELECT
+					CASE
+						WHEN (SELECT
+								COUNT(1)
+						FROM
+							TBL_TASKCODE
+						WHERE
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						AND
+							subcategorycode = #v_CATECODE#
+						<![CDATA[
+			            AND
+						    delflag = 0) > 0
+			            ]]>
+					THEN 1
+					ELSE (
+						<isEqual property="v_CATETYPE" compareValue="1">
+							<![CDATA[
+								SELECT
+									NVL(COUNT(mcategorycode), 0)
+								FROM
+									TBL_TASKMIDDLECATEGORY
+								WHERE
+									tenant_id = #tenantID#
+								AND
+									companyid = #companyID#
+								AND
+									categorycode = #v_CATECODE#
+								AND
+									mcategorycode != #v_CATECODE#
+								AND
+									oldflag IS NULL
+							]]>
+						</isEqual>
+						<isEqual property="v_CATETYPE" compareValue="2">
+							<![CDATA[
+								SELECT
+									NVL(COUNT(subcategorycode), 0)
+								FROM
+									TBL_TASKSUBCATEGORY
+								WHERE
+									tenant_id = #tenantID#
+								AND
+									companyid = #companyID#
+								AND
+									mcategorycode = #v_CATECODE#
+								AND
+									subcategorycode != #v_CATECODE#
+								AND
+									oldflag IS NULL
+							]]>
+						</isEqual>
+						)
+					END
+				FROM DUAL
+			</isNotEqual>
 			<isEqual property="v_CATETYPE" compareValue="3">
 				<![CDATA[
 					SELECT
