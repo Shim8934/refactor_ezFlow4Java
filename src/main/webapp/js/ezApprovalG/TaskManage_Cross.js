@@ -5,6 +5,7 @@ function GetTaskFullList() {
 
     listLoading(true);  // 20201215 강승구 로딩바 display:none
     Resultxml = GetTaskFullListXml();
+    taskCount = getTaskCount();
     ListName = strLang440;
 
     if (Resultxml != null) {
@@ -15,7 +16,7 @@ function GetTaskFullList() {
             if (NodeListLen == null) {
             		NodeListLen = 0;
             }
-            
+
             if (pageAdminFlag == 'admin') {
                 document.getElementById("listcount").innerHTML = "<b>" + deptName + "</b>의 단위업무 : <span style='color:#017BEC;font-weight:bold;'>" + taskCount + "</span> 개";
             } else {
@@ -106,10 +107,14 @@ function DisplayTaskList(Resultxml) {
         var DocList = new ListView();                           
         DocList.SetID("DocList");                               
         DocList.SetMulSelectable(true);                        
-                                  
-        DocList.SetRowOnClick("lvtDoclist_onselchanged");           
-        DocList.SetRowOnDblClick("btnViewTask_onclick");      
-        DocList.SetTitleIdx(0);                                  
+
+        if (pageAdminFlag == undefined || pageAdminFlag == null || pageAdminFlag !== 'admin') {
+            DocList.SetHeaderOnClick("lvtDoclist_HeaderClick");
+        }
+        DocList.SetRowOnClick("lvtDoclist_onselchanged");
+        DocList.SetRowOnDblClick("btnViewTask_onclick");
+        DocList.SetOrderbyCol("COLNAME");
+        DocList.SetTitleIdx(0);
 
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");                          
@@ -133,8 +138,12 @@ function DisplayTaskList(Resultxml) {
         DocList.SetID("DocList");                               
         DocList.SetMulSelectable(true);                        
                                   
-        DocList.SetRowOnClick("lvtDoclist_onselchanged");           
-        DocList.SetRowOnDblClick("btnViewTaskInfo_onclick");      
+        if (pageAdminFlag == undefined || pageAdminFlag == null || pageAdminFlag !== 'admin') {
+            DocList.SetHeaderOnClick("lvtDoclist_HeaderClick");
+        }
+        DocList.SetRowOnClick("lvtDoclist_onselchanged");
+        DocList.SetRowOnDblClick("btnViewTaskInfo_onclick");
+        DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                  
 
         DocList.DataSource(xmlDoc);                             
@@ -150,7 +159,7 @@ function GetTaskFullListXml() {
 		type : "GET",
 		url : "/admin/ezApprovalG/getTaskFullList.do",
 		async : false,
-		data : {deptCode : DeptID, companyID : CompanyID, pageSize : PageSize, pageNo : curpage, langType : UserLang},
+		data : {deptCode : DeptID, companyID : CompanyID, pageSize : PageSize, pageNo : curpage, langType : UserLang, orderOption1: g_SortField, orderOption2 : g_SortType},
 		success : function (result) {
 			tempRet = loadXMLString(result);
 		},
@@ -219,32 +228,32 @@ function makePagenationBar() {
     pageNum = curpage;
     taskCount = getTaskCount();
     totalPage = Math.ceil(taskCount/PageSize);
-    
+
     var getFirstBtn = $('<span class="btnimg">');
     var getPrevBlockBtn = $('<span class="btnimg">');
     var getNextBlockBtn = $('<span class="btnimg">');
     var getLastBtn = $('<span class="btnimg">');
-    
+
     if (curpage != 1) {
         $(getFirstBtn).on("click", getFirstPage);
         $(getFirstBtn).append("<img src='/images/kr/cm/btn_p_prev.gif'>");
     } else {
         $(getFirstBtn).append("<img src='/images/kr/cm/btn_p_prev01.gif'>");
-    } 
+    }
     if (curpage != totalPage) {
         $(getLastBtn).on("click", getLastPage);
         $(getLastBtn).append('<img src="/images/kr/cm/btn_n_next.gif">');
     } else {
         $(getLastBtn).append('<img src="/images/kr/cm/btn_n_next01.gif">');
     }
-             
+
     if (Math.ceil(curpage/10) < Math.ceil(totalPage/10)) {
         $(getNextBlockBtn).on("click", getNextBlockPage);
         $(getNextBlockBtn).append('<img src="/images/kr/cm/btn_next.gif">')
     } else {
         $(getNextBlockBtn).append('<img src="/images/kr/cm/btn_next01.gif">')
     }
-    
+
     if (Math.ceil(curpage/10) > 1) {
         $(getPrevBlockBtn).on("click", getPrevBlockPage);
         $(getPrevBlockBtn).append('<img src="/images/kr/cm/btn_prev.gif">')
@@ -253,8 +262,8 @@ function makePagenationBar() {
     }
 
     removeAllChildNode($('#tblPageRayer')[0]); // 기존 네비 삭제
-    
-    $(pageNavBox).append(getFirstBtn); 
+
+    $(pageNavBox).append(getFirstBtn);
     $(pageNavBox).append(getPrevBlockBtn);
     for (let i = 1 ; i < 11 ; i++) {
         var btnPageNum = Math.floor(curpage/10)*10 + i;

@@ -79,6 +79,32 @@
      			   }
 		        }
 		    }
+		    function lvtDoclist_HeaderClick(pHeader) {
+                if (OrderCell == pHeader) {
+                    if (OrderOption == "")
+                        OrderOption = "DESC";
+                    else
+                        OrderOption = "";
+                }
+                else {
+                    OrderCell = pHeader;
+                    OrderOption = "";
+                }
+                    SortList(pHeader);
+            }
+
+            function SortList(szField) {
+                if (g_SortField == szField)
+                {
+                    g_SortType = GetToggledSotrType();
+                }
+                else {
+                    g_SortType = "ASC";
+                }
+                g_SortField = szField;
+
+                GetTaskFullList();
+            }
 		    function btnClose_onclick() {
 		        window.close();
 		    }
