@@ -34,7 +34,9 @@ public interface EzOrganService {
 	
 	public String getPropertyList(String id, String proplist, String primary, int tenantID) throws Exception;
 
-	public String getUserAddjobInfo(String id, String pDeptID, String primary, int tenantID) throws Exception;	
+	public String getUserAddjobInfo(String id, String pDeptID, String primary, int tenantID) throws Exception;
+
+	public String getUserAddjobInfoWithJobId(String id, String pDeptID, String primary, String jobID, int tenantID) throws Exception;
 	
 	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception;
 	
@@ -53,7 +55,9 @@ public interface EzOrganService {
 	public String getLastLogin(String userID, int tenantID) throws Exception;
 	
 	public String getLoginIP(String userID, int tenantID) throws Exception;
-	
+
+	public OrganUserVO getAddJobInfo(String userID, String deptID, String jobID, int tenantID) throws Exception;
+
 	public boolean checkDBColum(String pProvValue) throws Exception;
 	
 	public boolean checkSearchField(String pFieldName) throws Exception;
