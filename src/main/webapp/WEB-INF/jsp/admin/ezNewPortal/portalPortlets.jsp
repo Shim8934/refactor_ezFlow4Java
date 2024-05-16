@@ -389,10 +389,7 @@
 			//var portletMenuId = document.getElementById("portlet" + portletId);
 			var menuId = document.getElementById("portlet" + portletId).getAttribute("data2");
 			var portletCode = document.getElementById("portlet" + portletId).getAttribute("data3");
-			
-			// 즐겨찾기 포틀릿 응급처치만 해놓음
-			var favoriteBoardUrl = document.getElementById("portlet" + portletId).dataset.url; 
-			// 2020-12-08 박기범 - 탭게시판일경우 boardid null검사 패스 추가.
+			var favoriteBoardUrl = document.getElementById("portlet" + portletId).dataset.url;
 			if ((menuId == 4 && favoriteBoardUrl != '/ezNewPortal/favoriteBoardPortlet.do') && boardId == null && portletCode != "tabBoard") {
 				alert("<spring:message code='ezNewPortal.t050' />");
 				return;
@@ -891,7 +888,7 @@
 			var portletUrl = URLParamsUtils(portletURL);
 			var viewType = portletUrl.get('type');
 
-			var resultStr = "<tr id='rowViewType" + portletId + "' class='notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.board.pgb08' /> :</th><td class='portletInfoTD typeTD'>";
+			var resultStr = "<tr id='rowFixKeyword" + portletId + "' class=''><th class='portletInfoTH'><spring:message code='ezNewPortal.board.pgb08' /> :</th><td class='portletInfoTD typeTD'>";
 			resultStr += "<a class='imgbtn wordSelect' id='wordSelect" + portletId + "' onclick='selectWord(\"" + portletId + "\");'>";
 			resultStr += "<span style='font-size:11px;'><spring:message code='ezNewPortal.board.pgb05' /></span></a>";
 
@@ -901,7 +898,9 @@
 		function resetBoardUrl(id) {
 			var portlet = !!id ? 'portlet' + id : 'newPortlet';
 			var conUrl = document.getElementById(portlet).querySelector('.connectionUrl');
-			if (!!conUrl) conUrl.value = "/ezNewPortal/boardPortlet.do";
+			console.log('conUrl : ' + conUrl);
+			// url의 파라미터 제거
+			if (!!conUrl) conUrl.value = URLParamsUtils(conUrl.value).base;
 		}
 
 		function switchBoardViewTypeRow(portletId, turnOn) {
@@ -915,7 +914,7 @@
 			} else {
 				row.classList.add(CLASS_DISPLAY_NONE);
 				anchor.classList.add(CLASS_DISPLAY_NONE);
-				select.value = '';
+				if (!!select) select.value = '';
 			}
 		}
 
