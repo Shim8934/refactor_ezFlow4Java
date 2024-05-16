@@ -79,7 +79,6 @@
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
-		        // 컨텍스트 메뉴 관련
 		        //contextMenuRePosition();
 		    }
 
@@ -130,7 +129,7 @@
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
-		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc()" style="display: none;">
+		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc()" style="display: none; width:calc(100vw - 81px); right:0;">
 			<div id="myNotificationUL" style="padding: 0px; margin: 0px;  width: 390px; height: 603px; right: 50px; z-index:20; position:absolute;">
 				<iframe id="iframeNoti" style="width:100%; height:603px;" frameborder="0" scrolling="NO" src="/ezNotification/notificationMain.do">
 				</iframe>
@@ -147,11 +146,11 @@
 		<div id="popupArea"><div id="noticePopupLayer"></div></div>
 		<div id="noticePopupArea"></div>
   		<div id="contextMenuBlock" class="contextMenuBlock" <c:if test="${useContextmenu eq 'NO'}">style="display:none" </c:if>>
-			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;visibility:hidden;">
+			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;">
 				<div class="contextMenu"></div>
 				
 			</div>
-			<div id="popupMenuBtn" class="popupMenuBtn" style="display: block;visibility:hidden;">
+			<div id="popupMenuBtn" class="popupMenuBtn" style="display: block;">
 				<div id="quickMenuBtn" class="quickMenuBtn">
 					<span class="quickMenuTop_memo"><img src="/images/ezNewPortal/quick01.png"></span>
 					<span class="quickMenuMiddle_memo"><img src="/images/ezNewPortal/quick02.png"><img src="/images/ezNewPortal/quick03.png"></span>
@@ -221,7 +220,7 @@
 	 		
 	 		clearTimeout(window.resizedFinished);
 		    window.resizedFinished = setTimeout(function(){
-		        setContextMenuGadgetPosition();
+		        //setContextMenuGadgetPosition();
 		    }, 750);	 		
 		    
 	 	});	

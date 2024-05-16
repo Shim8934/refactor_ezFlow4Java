@@ -174,7 +174,7 @@
 					}
 					str += noti.notiContent + '</p>';
 					
-					str += '<p class=\"desc\"><span>' + noti.senderName + '</span><span class=\"date\">' + noti.regDate.substring(0, 19) + '</span></p></div>';
+					str += '<p class=\"desc\"><span>' + noti.senderName + '&nbsp;</span><span class=\"date\">' + noti.regDate.substring(0, 19) + '</span></p></div>';
 					str += '<span class=\"list_del blind\" onclick="updateNoti(\'delete\')"></span></li>';
 					
 					/*var noti = notiList[i];
@@ -210,7 +210,7 @@
 				} else {
 					notiElem = topFrame.contentWindow.document.querySelector('#util_noti > span #notiin');
 				}
-				
+	            
 				if (parseInt(result.notReadTotalListCnt) >= 100) {
 					result.notReadTotalListCnt = "99+";
 				}

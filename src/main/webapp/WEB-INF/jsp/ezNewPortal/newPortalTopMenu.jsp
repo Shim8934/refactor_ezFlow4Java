@@ -23,7 +23,7 @@
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
 			#logoUrl {height:42px;}
 			/*-- top_totalSearch --*/
-			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:9px 30px 0px 0px; padding:0px; width:243px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
+			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:12px 10px 0px 0px; padding:0px; width:245px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
 		</style>
 	</head>
 	<body>
@@ -526,7 +526,23 @@
 				$("#menuListAll .sortable-item").draggable({
 				    revert: "invalid",
 				    containment: "parent",
-				    zIndex: 100
+				    zIndex: 100,
+				    start: function (event, ui) {
+				    	var dragElem = $(this);
+				    	dragElem.css({
+				    		"cursor": "move",
+				    		"opacity": "0.6"
+				    	});
+				    },
+				    snap:'#menuListAll li',
+				    stop : function(event, ui) {
+				    	var dragElem = $(this);
+				    	dragElem.css({
+				    		"cursor": "pointer",
+				    		"opacity": ""
+				    	});
+				    },
+				    helper : "clone"
 				});
 				  
 				$("#menuListAll .sortable-item").droppable({
@@ -1633,7 +1649,6 @@
 		
 		function toggleNoti() {
 			//subMenuClickEvent('off');
-			
 			if (parent.document.getElementById("iframeShawdowLayer").style.display == "block") {
 				closeNoti();
 			} else {
@@ -1650,8 +1665,7 @@
 			topFrame.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 			topFrame.style.display = "block";
 			topFrame.style.zIndex = "9999";
-			topFrame.style.width = screen.width + "px";
-			topFrame.style.top = "56px";
+			topFrame.style.top = "60px";
 			topFrame.style.position = "absolute";
 			//parent.document.getElementById('topFrame').style.position = 'relative';
 		}

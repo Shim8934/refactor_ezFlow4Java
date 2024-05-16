@@ -157,7 +157,16 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .util li:hover .util_systemlink { background-position: -84px -21px; }/* 시스템링크 */
 .util li:hover .util_frame{background-position: -186px -124px; }/* 프레임아이콘 */
 .util li:hover .util_messenger { background-position: -186px -155px; }/* 메신저다운로드 */
-.util li span {margin-top:17px;}
+.util li span {margin-top:17px;display:inline-block; width:24px; height:24px; background-position:center; background-repeat:no-repeat; cursor:pointer; position:relative;}
+.util li span.util_alarm{background-image:url(/images/ezNewPortal/util_alarm.svg);width: 58px;height: 50px;margin-top: 3px;}
+.util li span.util_alarm span{position:absolute; width: auto; height:20px; line-height:20px; text-align:center; border:1px solid #fff; background:#FF9100; margin:0; right:0; top:0; color:#fff; padding: 0 5px; border-radius: 10px;}
+.util li span.util_set{background-image:url(/images/ezNewPortal/util_set.svg);}
+.util li span.util_logout{background-image:url(/images/ezNewPortal/util_logout.svg);}
+.util li span.util_quick_menu{background-image:url(/images/ezNewPortal/util_quick_menu.svg);}
+
+.employee_search{width:300px; height:40px; background:#F6F6F6; border:1px solid rgba(185,184,187,0.38); border-radius:3px; overflow:hidden; box-sizing:border-box; margin-top:10px;}
+.employee_search input{float:left; width:calc(100% - 50px); padding-left:15px; border:none; height:100%; background:transparent; font-size:14px;}
+.employee_search span{float:right; width:30px; height:30px; background:url(/images/ezNewPortal/employee_search.svg) no-repeat center; cursor:pointer; margin:4px 10px;}
 
 .topmenulayout { min-width: 1280px; }
 
