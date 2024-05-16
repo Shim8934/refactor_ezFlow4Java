@@ -737,7 +737,7 @@
 
         $.ajax({
             url : "/ezNewPortal/boardItemListToTopMenu.do",
-            method : "GET",
+            method : "POST",
             data : {"boardId" : boardId},
             contentType : "text",
             success : function(obj){
@@ -769,9 +769,24 @@
                         div.innerText = noItemText;
                         target.append(noItemText);
                     }
+                } else {
+                    var target = document.getElementById("noti");
+                    target.innerHTML = "";
+                    var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+                    var div = document.createElement("div");
+                    div.id = "noItemArea";
+                    div.innerText = noItemText;
+                    target.append(noItemText);
                 }
             },
             error : function(e){
+                var target = document.getElementById("noti");
+                target.innerHTML = "";
+                var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+                var div = document.createElement("div");
+                div.id = "noItemArea";
+                div.innerText = noItemText;
+                target.append(noItemText);
                 console.log(e)
             }
         });
