@@ -24,5 +24,5 @@ public interface MOrganService {
 
 	public MOrganListVO getOneDeptInfo(String deptID, String lang, int tenantId) throws Exception;
 
-	public MPersonListVO getUserAddjobInfo(String userID, String deptID, String lang, int tenantId) throws Exception;
+	public MPersonListVO getUserAddjobInfo(String userID, String deptID, String lang, int tenantId, String jobID) throws Exception;
 }

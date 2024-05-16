@@ -266,7 +266,8 @@
 					    TENANT_ID,
 					    'dept' as TYPE,
 						'' as mobile,
-						'' as telephoneNumber
+						'' as telephoneNumber,
+						'' as jobId
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -298,7 +299,8 @@
 				    TENANT_ID,
 					'user' as TYPE,
 					mobile,
-					telephoneNumber
+					telephoneNumber,
+					'' as jobId
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -344,7 +346,8 @@
 				    B.TENANT_ID,
 					'addJobUser' as TYPE,
 					B.mobile,
-					B.telephoneNumber
+					B.telephoneNumber,
+					A.JOBID as jobId
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -387,7 +390,8 @@
 					    TENANT_ID,
 					    'dept' as TYPE,
 						'' as mobile,
-						'' as telephoneNumber
+						'' as telephoneNumber,
+						'' as jobId
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -413,7 +417,8 @@
 				    TENANT_ID,
 					'user' as TYPE,
 					mobile,
-					telephoneNumber
+					telephoneNumber,
+					'' as jobId
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -445,7 +450,8 @@
 				    B.TENANT_ID,
 					'addJobUser' as TYPE,
 					B.mobile,
-					B.telephoneNumber
+					B.telephoneNumber,
+					A.JOBID as jobId
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -838,7 +844,12 @@
                 WHEN '1'
                 THEN EXTENSIONATTRIBUTE3
                 ELSE COMPNM2
-                END COMPANY 
+                END COMPANY,
+                CASE $lang$
+                WHEN '1'
+                THEN ROLE
+                ELSE ROLE2
+                END ROLE
         	FROM
         		TBL_ADDJOBMASTER A
         	JOIN
@@ -847,6 +858,8 @@
         		A.CN = #userID#
         	AND
         		A.DEPTID = #deptID#
+			AND
+				A.JOBID = #jobID#
         	AND
         		A.TENANT_ID = #tenantID#	
 		]]>

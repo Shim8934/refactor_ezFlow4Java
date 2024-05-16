@@ -276,7 +276,7 @@ public class MOrganServiceImpl implements MOrganService {
 	}
 
 	@Override
-	public MPersonListVO getUserAddjobInfo(String userID, String deptID, String lang, int tenantId) throws Exception {
+	public MPersonListVO getUserAddjobInfo(String userID, String deptID, String lang, int tenantId, String jobID) throws Exception {
 		logger.debug("getUserAddjobInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -284,6 +284,7 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("lang", lang);
 		map.put("tenantID", tenantId);
 		map.put("userID", userID);
+		map.put("jobID", jobID);
 		
 		MPersonListVO resultDeptVo = mOrganDAO.getUserAddjobInfo(map);
 		logger.debug("getUserAddjobInfo ended");

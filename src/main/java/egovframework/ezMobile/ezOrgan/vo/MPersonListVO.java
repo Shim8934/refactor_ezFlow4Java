@@ -107,13 +107,34 @@ public class MPersonListVO {
 	private String birthType;
 	/** 현재 시간*/
 	private String nowDate;
-	
+
 	private String rowNum;
 	
 	private String furigana;
-	
+
+	private String role;
+
+	private String role2;
+
     /** 사용자가 속한 Tenant의 고유 ID */
     private int tenantId = -1;
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getRole2() {
+		return role2;
+	}
+
+	public void setRole2(String role2) {
+		this.role2 = role2;
+	}
+
 	public String getParentCn() {
 		return parentCn;
 	}

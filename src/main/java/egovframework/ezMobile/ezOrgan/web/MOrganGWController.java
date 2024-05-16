@@ -116,13 +116,16 @@ public class MOrganGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			String filePath = commonUtil.getUploadPath("upload_personal.PHOTO", info.getTenantId()) + commonUtil.separator;
 			String imgSrc = "";
+			String jobID = request.getParameter("jobID");
 			
 			MPersonListVO personInfo = mOrganService.getPersonInfo(userID, info.getTenantId(), primaryLang);
 			
 			if (type.equalsIgnoreCase("addJobUser")) {
-				MPersonListVO addJobDept = mOrganService.getUserAddjobInfo(userID, deptID, primaryLang, info.getTenantId());
+				MPersonListVO addJobDept = mOrganService.getUserAddjobInfo(userID, deptID, primaryLang, info.getTenantId(), jobID);
 				personInfo.setCompany(addJobDept.getCompany());
 				personInfo.setDescription(addJobDept.getDescription());
+				personInfo.setTitle(addJobDept.getTitle());
+				personInfo.setExtensionAttribute10(addJobDept.getRole());
 			} 
 			
 			if (personInfo.getExtensionAttribute2() != null && !personInfo.getExtensionAttribute2().equals("")) {
