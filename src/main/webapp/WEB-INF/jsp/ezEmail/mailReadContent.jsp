@@ -432,7 +432,9 @@
 		        }
 		     	
 		     	function AttachFile_Preview(mailPath, mailUid, fileIndex, fileName) {
-						
+					// voc #131788 메일 > 메일읽기 > 첨부 미리보기 시 : 띄어쓰기 있는 메일박스(Personal+folder) 미리보기 되지 않는 오류
+					mailPath = mailPath.replace("+"," ");
+					
 		     		//window.open('http://jmocha.kaoni.com:8080/uFOCS3.0/viewer/document/docviewer.do?filepath=http://10.0.120.213:8080' + encodeURIComponent(downloadURL) + '&filename=' + fileName + '&fileext=txt&viewerselect=image');
 		    		  $.ajax({
 		    			  type : 'get',
