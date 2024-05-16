@@ -737,7 +737,7 @@
 
         $.ajax({
             url : "/ezNewPortal/boardItemListToTopMenu.do",
-            method : "POST",
+            method : "GET",
             data : {"boardId" : boardId},
             contentType : "text",
             success : function(obj){
