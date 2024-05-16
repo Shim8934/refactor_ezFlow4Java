@@ -21732,9 +21732,16 @@
 			  		  AND 
 			  		  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
 		  		  	  WHERE
-		  		  	  		TBL_CABINET.DelFlag = '0'
-		  		  	  AND
-		  		  	  		TBL_CABINETCLASS.DelFlag = '0'
+                        <isEqual property = "listFlag" compareValue = "15">
+                            TBL_CABINET.DelFlag = '1'
+                        AND
+                            TBL_CABINETCLASS.DelFlag = '0'
+                        </isEqual>
+                        <isNotEqual property = "listFlag" compareValue = "15">
+                            TBL_CABINET.DelFlag = '0'
+                        AND
+                            TBL_CABINETCLASS.DelFlag = '0'
+                        </isNotEqual>
 		  		  <isEqual property="listFlag" compareValue="9">
 		  		  	  AND 
 		  		  	  		TBL_CABINET.CabinetTransferFlag = '2'
@@ -22052,9 +22059,16 @@
 	  AND 
 	  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
   	  WHERE
-  	  		TBL_CABINET.DelFlag = '0'
-  	  AND
-  	  		TBL_CABINETCLASS.DelFlag = '0'
+        <isEqual property = "listFlag" compareValue = "15">
+            TBL_CABINET.DelFlag = '1'
+        AND
+            TBL_CABINETCLASS.DelFlag = '0'
+        </isEqual>
+        <isNotEqual property = "listFlag" compareValue = "15">
+            TBL_CABINET.DelFlag = '0'
+        AND
+            TBL_CABINETCLASS.DelFlag = '0'
+        </isNotEqual>
 	  <isEqual property="listFlag" compareValue="9">
 	  	  AND 
 	  	  		TBL_CABINET.CabinetTransferFlag = '2'

@@ -19919,6 +19919,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "CABINET":
 			switch (listType.toUpperCase()) {
 			case "0":	// 기록물철 대장
+            case "15" : // 철삭제이력
 				typeCode = "002";
 				break;
 				
@@ -24193,6 +24194,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		switch (cabinetListVO.getListFlag()) {
 		case "0" :	// 기록물철 대장 (기록물철등록부)
+        case "15" :
 			cabinetListVO.setListType("002");
 			break;
 		case "1" :	// 편철확정대상 기록물철

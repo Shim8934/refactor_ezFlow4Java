@@ -230,6 +230,7 @@
 		                    RecordList_onclick();
 		                    break;
 		                case "m02": // 기록물철등록부
+						case "m15" :
 		                	PageSize = 20;
 		                    isPeriodYear = false;
 		                    CabinetList_onclick();
@@ -964,12 +965,15 @@
 		        GetCaninetList();
 		    }
 		    function CabinetList_onclick() {
-		        document.getElementById("imgTitle").innerHTML = "<spring:message code='ezApprovalG.t912'/>";
+				var listType = g_sFlag === "m02" ? "0" : "15";
+				var imgTitle = g_sFlag === "m02" ? "<spring:message code = "ezApprovalG.t912" />" : "<spring:message code = "ezApprovalG.listOfDeletedIron" />";
+
+		        document.getElementById("imgTitle").innerHTML = imgTitle;
 		        document.getElementById("imgTitle").style.display = "";
 		
 		        SwapSubMenuDisplay("1");
 		
-		        InitGlobals("CABINET", "0", "0");
+		        InitGlobals("CABINET", listType, "0");
 		
 		        GetCaninetList();
 			}
