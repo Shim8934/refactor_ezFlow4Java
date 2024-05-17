@@ -24,6 +24,7 @@ function  FixBoardUtil() {
                             CLASS_PREV: 'swiper-button-prev',
                             CLASS_NEXT: 'swiper-button-next',
                             CLASS_PAGINATION: 'swiper-pagination',
+        CLASS_HIDE: 'display_none'
     });
 
     var _makeWrap = function () {
@@ -214,6 +215,10 @@ function  FixBoardUtil() {
         },
         getSwiper : function () {
             return _swiper;
+        },
+        hide : function () {
+            _thisDom.classList.add(_enum.CLASS_HIDE);
+            return this;
         }
     };
 }

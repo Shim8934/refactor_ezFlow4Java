@@ -288,7 +288,11 @@
                     },
                     url : fixUrl,
                     success : function (result) {
-                        fixBoardArr[fixPortletCode].start(result);
+                        if (result.length > 0) {
+                            fixBoardArr[fixPortletCode].start(result);
+                        } else {
+                            fixBoardArr[fixPortletCode].hide();
+                        }
                     },
                     error : function(error) {
                         alert(error);

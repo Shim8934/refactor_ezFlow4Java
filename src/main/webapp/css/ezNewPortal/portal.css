@@ -1944,9 +1944,8 @@ div.orbit img{border-radius: 5px;}
 .img_slide .fix-portlet .swiper-button-next{background-image:url(/images/ezNewPortal/btn_next_swiper.png);}
 .img_slide .fix-portlet .swiper:hover .swiper-button-prev, .img_slide .fix-portlet .swiper:hover .swiper-button-next{display:block;}
 
-.img_slide #fixLeft {width:calc(60% - 40px);}
-.img_slide #fixRight{width:40%;}
-
+.img_slide #fixLeft {width:calc(60% - 40px); flex:1}
+.img_slide #fixRight{width:40%; flex:1}
 
 /* 근태 */
 .attitudePtl{position:relative; height:100%;}
