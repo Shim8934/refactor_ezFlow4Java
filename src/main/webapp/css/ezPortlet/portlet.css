@@ -209,3 +209,13 @@
 .admin_theme_portlet .portlet_area .portlet.one_by_two.frame_size2 {width:calc(100% / 2 * 2 - 10px);}
 .admin_theme_portlet .portlet_area .portlet.two_by_two.frame_size2 {height: calc(100px * 2 + 10px); width:calc(100% / 2 * 2 - 10px);}
 
+#theme1Body #fixBoardArea {
+    max-height: 300px; /* 적절한 값으로 변경해주세요 */
+    transition: max-height 0.5s ease-in-out;
+    overflow: hidden;
+}
+
+#theme1Body #fixBoardArea.hidden {
+    max-height: 0;
+    margin-bottom : 0;
+}

@@ -917,9 +917,9 @@
         var fixArea = document.getElementById("fixBoardArea");
         
         if (onOff == false) {
-            fixArea.style.display = "none";
+            fixArea.classList.add("hidden");
         } else {
-            fixArea.style.display = "";
+            fixArea.classList.remove("hidden");
         }
     }
 </script>
