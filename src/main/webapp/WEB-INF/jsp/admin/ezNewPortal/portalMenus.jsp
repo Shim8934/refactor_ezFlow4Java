@@ -69,7 +69,7 @@
 				<br>
 				<table class="content" style="width: 450px; margin-top:10px;">
 				    <tbody><tr>
-				        <th><spring:message code="ezNewPortal.topMenu.hth04"/></span></th>
+				        <th><spring:message code="ezNewPortal.topMenu.hth01"/></span></th>
 				        <td>
 				            <input style="margin-top: 0px;" type="radio" id="topDisplayMode" name="topMenuDisplayMode" value="0"><label for="topDisplayMode" style="cursor: pointer; vertical-align: middle">상단</label>
 				            <input style="margin-top: 0px;" type="radio" id="leftDisplayMode" name="topMenuDisplayMode" value="1"><label for="leftDisplayMode" style="cursor: pointer; vertical-align: middle">왼쪽</label>
