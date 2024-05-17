@@ -28,20 +28,6 @@
 		    else if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1) {
 		        window.resizeTo(348, 240);
 		    }
-/*
-		    function btn_OpinionOK_onclick() {
-		        if (ReturnFunction != null) {
-		            ReturnFunction();
-		            
-		            if (winFlag) {
-		            	window.close();
-		            }
-	            } else {
-		        	window.returnValue = true;
-		            window.close();
-	            }
-		    }
-*/
 
 		    window.onload = function () {
 		        try {
@@ -78,7 +64,6 @@
 				)();
 
 				execBtnArray.push(d.msg);
-				// execFuncArray.push(tmp);
 				makeBtnEvent(d, tmp, i);
 			}
 
@@ -92,7 +77,6 @@
 
 				document.getElementById(ei).addEventListener("click", fn);
 			}
-// 		    window.resizeTo(330+ (window.outerWidth - window.innerWidth), 205+ (window.outerHeight - window.innerHeight));
 		</script>
 	</head>
 	<body style="overflow:hidden;">
@@ -110,9 +94,7 @@
 	 	    </div>
 	    </div>
 	    <div class="popup_noti_btnarea"> 
-	   	    <div id = "btnArea" class="btnposition">
-<%--			   <input type="submit"  value="<spring:message code='ezApprovalG.t20'/>" id="Submit1" name="btn_OpinionOK" onClick="return btn_OpinionOK_onclick()" >--%>
-		    </div>
+	   	    <div id = "btnArea" class="btnposition"></div>
 	        <span class="bl"> </span> <span class="br"></span>
 	    </div>
 	    </div>

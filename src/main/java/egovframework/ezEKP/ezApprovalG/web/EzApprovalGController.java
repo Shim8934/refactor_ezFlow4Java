@@ -42,6 +42,14 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
@@ -1112,6 +1120,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String ezAPRALERT() throws Exception{
 		return "ezApprovalG/apprGezAPRALERT";
 	}
+
+	@RequestMapping(value = "/ezApprovalG/ezAprSelectAlert")
+	public String ezAprSelectAlert(HttpServletRequest request, Model model) throws Exception {
+		return "ezApprovalG/apprGezAprSelectAlert";
+	}
 	
 	/**
 	 * 전자결재G 기안하기 호출 Method
@@ -1142,6 +1155,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// FormBuilder
 		// String reformflag = request.getParameter("reformflag");
 		String isPreview = request.getParameter("isPreview") != null ? request.getParameter("isPreview") : ""; // 미리보기 영역에서 열렸는지 여부 플래그
+		String attachedDocList = request.getParameter("attachedDocList") == "" ? null : request.getParameter("attachedDocList");
 		
 		if (nonElecRec == null) {
 			nonElecRec = "";
@@ -1360,6 +1374,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		model.addAttribute("attachedDocList", attachedDocList);
 		
 		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
 		
@@ -12875,5 +12890,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("checkSecurityApprovalDate (Controller) ended, result = " + result);
 		return result;
 	}
-	
+
+	@RequestMapping(value = "/ezApprovalG/accessWarning.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	public String noAccessWarning(Model model) throws Exception {
+		model.addAttribute("chk", "NoAccess");
+		return "main/warning";
+	}
+
+	@PostMapping("/ezApprovalG/attachRecordDoc")
+	@ResponseBody
+	public String attachRecordDoc(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request) throws Exception {
+		logger.info("attachRecordDoc started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String newDocID = request.getParameter("newDocID");
+		String attachedDocList = request.getParameter("attachedDocList");
+		String result;
+
+		result = ezApprovalGService.attachRecordDoc(userInfo, newDocID, attachedDocList);
+
+		logger.info("attachRecordDoc ended");
+		return result.toString();
+	}
 }

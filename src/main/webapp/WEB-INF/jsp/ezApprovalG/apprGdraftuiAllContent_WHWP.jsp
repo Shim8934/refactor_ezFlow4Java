@@ -61,6 +61,8 @@
 
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = '${useAprFilePrvw}';
+
+			var attachedDocList;
 			
 	    	$(document).ready(function() {
 	    		// 1안 추가 시에 최초로 동작하는 부모창의 draftFlag 등 부여 함수
@@ -323,6 +325,11 @@
 			                    	}
 	                 			});
 				            }
+
+							if (frameNum == 1 && attachedDocList != "") {
+								attachRecordDoc();
+								setAttachInfo(pDocID, "APR", document.getElementById("lstAttachLink"));
+							}
 			            }
 					}
 				} catch (e) {

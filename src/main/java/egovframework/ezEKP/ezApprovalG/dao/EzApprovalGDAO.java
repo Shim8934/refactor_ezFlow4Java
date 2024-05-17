@@ -3904,4 +3904,17 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public List<OrganDeptVO> getUnderDeptList(Map<String, Object> map) {
 		return (List<OrganDeptVO>) list("EzApprovalGDAO.getUnderDeptList", map);
     }
+
+	public void attachRecordDoc(LoginVO userInfo, String newDocID, String docID, int idx) throws Exception {
+		HashMap<String, String> map = new HashMap() {{
+			put("attachSN", String.valueOf(idx));
+			put("newDocID", newDocID);
+			put("docID", docID);
+			put("userID", userInfo.getId());
+			put("companyID", userInfo.getCompanyID());
+			put("tenantID", String.valueOf(userInfo.getTenantId()));
+		}};
+
+		insert("EzApprovalG.attachRecordDoc", map);
+	}
 }

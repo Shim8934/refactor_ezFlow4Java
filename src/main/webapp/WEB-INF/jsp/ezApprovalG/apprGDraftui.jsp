@@ -202,6 +202,8 @@
 	        
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+
+			var attachedDocList = "${ attachedDocList }";
 			
 			// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
 			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
@@ -241,9 +243,23 @@
 		        
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
-		    };
-		    
-		    function dragNdrapNo()
+			};
+
+			function attachRecordDoc() {
+				$.ajax({
+					type : "POST",
+					dataType : "text/html",
+					url : "/ezApprovalG/attachRecordDoc",
+					async : false,
+					data : {
+						newDocID : pDocID,
+						attachedDocList : attachedDocList
+					},
+					success : () => {}
+				});
+			}
+
+			function dragNdrapNo()
 		    {
 		        try{
 		            var div = document.getElementById('lstAttachLink');
@@ -542,7 +558,13 @@
 		                            setClearSusinCellInfo();
 		                        }
 		                        pDocID = createNewDoc();
-		                        
+
+								// 기록물등록대장 첨부기안
+								if (attachedDocList != "") {
+									attachRecordDoc();
+									setAttachInfo(pDocID, "APR", document.getElementById("lstAttachLink"));
+								}
+
 		                     	if (isUsed == "reuse") {
 									 // 재사용이고 문서의 모든정보를 재사용 할시
 									ClearDocCellInfo();

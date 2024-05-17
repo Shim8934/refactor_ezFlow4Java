@@ -106,13 +106,13 @@ function ezCabMunuCtl(MenuType, selRow) {
                 document.getElementById("tdNewVol").style.display = "none"; // 권호수 안보이게
             }
 
-            if (typeof (tdModifyCab) != "undefined" && typeof (tdModifyCab) != "unknown") {
+            if (typeof (tdModifyCab) != "undefined" && typeof (tdModifyCab) != "unknown" && ListTypeFlag !== "15") {
 
                 document.getElementById("tdModifyCab").style.display = pMenuFlag;
             }
 
             // 20200824 김보혜 기록물철 관련 버튼들 전체적으로 수정 (한사대) 
-            if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
+            if ((g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") && ListTypeFlag !== "15") {
                 document.getElementById("tdBtnCabDel").style.display = "";    
             }
 
@@ -162,7 +162,7 @@ function ezCabMunuCtl(MenuType, selRow) {
 
 
             if (typeof (tdSetCharger) != "undefined" && typeof (tdSetCharger) != "unknown") {
-                if (GetCabChargerRight() == "true")
+                if (GetCabChargerRight() == "true" && ListTypeFlag !== "15")
                     document.getElementById("tdSetCharger").style.display = "";
                 else
                     document.getElementById("tdSetCharger").style.display = "none";

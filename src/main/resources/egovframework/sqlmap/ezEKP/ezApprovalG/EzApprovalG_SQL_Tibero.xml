@@ -36300,4 +36300,57 @@
         AND
             DEPT_CD_PATH LIKE CONCAT(CONCAT('%', #deptID#), '%')
     </select>
+
+    <insert id = "EzApprovalG.attachRecordDoc" parameterClass = "map">
+        INSERT INTO
+            TBL_APRDOCATTACHINFO (
+            DocID,
+            AttachSN,
+            AttachDocName,
+            AttachDocURL,
+            SubAttachYN,
+            AttachUserID,
+            TENANT_ID,
+            COMPANYID,
+            AttachUserName,
+            AttachUserName2,
+            AttachUserJobTitle,
+            AttachUserJobTitle2,
+            AttachUserDeptID,
+            AttachUserDeptName,
+            AttachUserDeptName2
+        )
+        (
+            SELECT
+                #newDocID#,
+                #attachSN#,
+                DOCTITLE,
+                HREF,
+                'N',
+                #userID#,
+                #tenantID#,
+                #companyID#,
+                DISPLAYNAME,
+                DISPLAYNAME2,
+                TITLE,
+                TITLE2,
+                DEPARTMENT,
+                DESCRIPTION,
+                DESCRIPTION2
+            FROM
+                TBL_ENDAPRDOCINFO A
+                    JOIN
+                TBL_USERMASTER B
+                ON
+                    B.CN = #userID#
+            WHERE
+                DOCID = #docID#
+              AND
+                A.TENANT_ID = #tenantID#
+              AND
+                B.TENANT_ID = #tenantID#
+              AND
+                A.COMPANYID = #companyID#
+        )
+    </insert>
 </sqlMap>

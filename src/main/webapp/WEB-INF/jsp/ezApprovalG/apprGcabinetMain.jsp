@@ -137,6 +137,9 @@
 				var underDeptList = JSON.parse('${underDeptList}'); // 2024-06-03 전인하 - 하위부서 리스트
 				var underDeptFlag = "<c:out value='${underDeptFlag}'/>" // 2024-06-03 전인하 - 하위부서문서함 표출 여부 플래그 (TRUE/FALSE)
 		        
+				var useDraftAll = "${ useDraftAll }";
+				var attachedDocList;
+
 		        document.onselectstart = function () { return false; };
 		
 		        window.onload = function () {
@@ -754,6 +757,7 @@
 		        else
 		            document.getElementById("tdichange_Rec").style.display = "none";
 		        switch (MenuType) {
+					case "15" :
 		            case "0":
 		                document.getElementById("trCabSubMenu").style.display = "";
 		                document.getElementById("trRecSubMenu").style.display = "none";
@@ -828,6 +832,14 @@
 		                    document.getElementById("tdReqDelayEndY").style.display = "none";
 		                    document.getElementById("CancelDelayEndY").style.display = "none";
 		                }
+
+						if (ListTypeFlag === "15") {
+							document.getElementById("tdModifyCab").style.display = "none";		// 수정 버튼
+							document.getElementById("tdSetCharger").style.display = "none";		// 업무담당자지정 버튼
+							document.getElementById("tdBtnCabDel").style.display = "none";		// 삭제 버튼
+							document.getElementById("tdbtnViewRecList").style.display = "none";	// 기록물보기 버튼
+						}
+
 		                break;
 		
 		            case "1":
@@ -966,14 +978,15 @@
 		    }
 		    function CabinetList_onclick() {
 				var listType = g_sFlag === "m02" ? "0" : "15";
+				var menuType = listType;
 				var imgTitle = g_sFlag === "m02" ? "<spring:message code = "ezApprovalG.t912" />" : "<spring:message code = "ezApprovalG.listOfDeletedIron" />";
 
 		        document.getElementById("imgTitle").innerHTML = imgTitle;
 		        document.getElementById("imgTitle").style.display = "";
 		
 		        SwapSubMenuDisplay("1");
-		
-		        InitGlobals("CABINET", listType, "0");
+
+				InitGlobals("CABINET", listType, menuType);
 		
 		        GetCaninetList();
 			}
@@ -2484,8 +2497,78 @@
             function btn_newpopup() {
                 lvtDoclist_onSel_DBclick();
             }
-		    
-	    </script>
+
+			/* 첨부기안 */
+			function attachedDraft() {
+				let lv = new ListView();
+				lv.LoadFromID("DocList");
+
+				if (!checkIsValidReq(lv)) {
+					return;
+				}
+
+				extractDocID(lv);
+
+				if (typeof parent != "undefined") {
+					parent.left.attachedDocList = attachedDocList;
+				}
+
+				if (useDraftAll) {
+					let draftInfo = [
+						{
+							"msg" : "단건기안",
+							"rtnF" : "attachedDraft_single",
+							"fl" : "parent",
+							"css" : "margin : 0 3px 0 3px;"
+						},
+						{
+							"msg" : "일괄기안",
+							"rtnF" : "attachedDraft_all",
+							"fl" : "parent",
+							"css" : "margin : 0 3px 0 3px;"
+						}
+					];
+
+					OpenAlertUI("<spring:message code = 'ezApprovalG.record.attachedDraftMsg1' />", draftInfo, null, true);
+				} else {
+					attachedDraft_single();
+				}
+			}
+
+			function checkIsValidReq(lv) {
+				let selectedDocList = lv.GetSelectedRows();
+
+				if (selectedDocList.length < 1) {
+					alert("<spring:message code = 'ezApprovalG.t113' />");
+
+					return false;
+				}
+
+				return true;
+			}
+
+			function extractDocID(lv) {
+				attachedDocList = [];
+				let selectedDocList = lv.GetSelectedRows();
+				let docListCnt = selectedDocList.length;
+
+				for (var cnt = 0; cnt < docListCnt; cnt++) {
+					attachedDocList.push(selectedDocList[cnt].getAttribute("data1"));
+				}
+			}
+
+			function attachedDraft_single() {
+				parent.left.btnDraft_onclick();
+
+				DivPopUpHidden();
+			}
+
+			function attachedDraft_all() {
+				parent.left.btnDraftAll_onclick();
+
+				DivPopUpHidden();
+			}
+		</script>
 	</head>
 	<%-- 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 프리뷰 리사이징바 영역 동작 추가 --%>
 	<body class="mainbody" style="margin-top:0px; overflow:auto;" marginwidth="0" marginheight="0" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -2563,6 +2646,12 @@
 <%-- 	            <c:if test=""> 원문정보공개 사용하면 보이게 해줘야함 --%>
 <%-- 		            <li id="tdModifyOpenGov" style="<c:if test="${useOpenGov != 'YES'}">display:none;</c:if>"><span id="ModifyOpenGov" onclick="return btnChangeOpenGovInfo_onclick()">원문공개수정</span></li> --%>
 <%-- 	            </c:if> --%>
+				<%-- 첨부기안 --%>
+				<li id = "tdAttachedDraft">
+					<span id = "attachedDraft" onclick = "attachedDraft()">
+						<spring:message code = "ezApprovalG.record.attachedDraft" />
+					</span>
+				</li>
 	            <li id="tdSearchRec"><span class="icon16 icon16_search" id="SearchRec" onclick="return btnSearchRec_onclick(0,'OPEN')"></span></li>
 	            <%-- 2022-03-18 홍승비 - 미처리문서함 > 내부시행문의 반송 시 문서삭제 기능 추가 --%>
 	            <li id="tbtnRemoveDoc" style="display:none;"><span class="icon16 icon16_delete" id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"></span></li>

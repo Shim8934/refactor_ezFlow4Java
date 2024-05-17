@@ -91,6 +91,7 @@
 		    var useWebHWP = "<c:out value = '${useWebHWP}'/>";
 		    var userTitle = "<c:out value = '${userInfo.title}'/>";
 		    var useDraftAll = "<c:out value = '${useDraftAll}'/>";
+            var attachedDocList;
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -577,6 +578,7 @@
 		    	var parameter = new Array();
 		        parameter[0] = "sol2";
 		        parameter[1] = "A01000";
+                parameter[2] = attachedDocList;
 
 		        if ("YES" == ("YES")) {
 		            url = "/ezApprovalG/getFormCont.do";
@@ -605,6 +607,9 @@
 		    /* 2022-01-11 홍승비 - 전자결재G 일괄기안 기능 추가 (웹한글) */
 		    function btnDraftAll_onclick() {
 		    	var parameter = new Array();
+
+				parameter.push(attachedDocList);
+
 	            getformcont_cross_dialogArguments[0] = parameter; // 일괄기안창으로 전달할 파라미터 있다면 배열에 추가
 	            getformcont_cross_dialogArguments[1] = draftAll_Complete;
 	            
@@ -618,6 +623,7 @@
 		    function openForm_Complete(ret) {
 		        formURL = ret[0];
 		        formDocType = ret[1];
+                attachedDocList = ret[5];
 		        var officeFlag = "";
 
 		        if(ret[4] !== null) {
@@ -669,7 +675,7 @@
 	            
                 openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
                 openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&officeFlag=" + encodeURI(p_officeFlag) + "&attachedDocList=" + (typeof attachedDocList == "undefined" ? "" : attachedDocList);
                 
 	            openwindow(openLocation, "", 1150, 950);
 	        }

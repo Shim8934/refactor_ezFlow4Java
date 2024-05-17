@@ -885,6 +885,8 @@ public interface EzApprovalGService {
 	/* 2023-04-12 한태훈 - 전자결재G  > 기록물등록대장, 완료문서조회 > 통합PC저장 시 의견 파일을 .zip 파일에 넣어주는 메소드 */
 	public void downloadOpinionFileInZip(String realPath, String tempOpinionFilePath, String opinionTxtFileName, StringBuilder sb, String saveFolderName, ZipOutputStream zout) throws Exception;
 
-    // 2024-06-07 전인하 - 기록물대장 > 하위부서 리스트 조회 
+    // 2024-06-07 전인하 - 기록물대장 > 하위부서 리스트 조회
     public List<OrganDeptVO> getUnderDeptList(LoginVO userInfo) throws Exception;
+
+    public String attachRecordDoc(LoginVO userInfo, String newDocID, String attachedDocList) throws Exception;
 }

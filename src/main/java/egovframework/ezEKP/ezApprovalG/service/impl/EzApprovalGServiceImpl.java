@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path; 
 import java.nio.file.Paths; 
 import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime; 
 import java.time.ZoneId;
@@ -43,6 +44,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -35409,5 +35411,40 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         map.put("primary", userInfo.getPrimary());
         
         return ezApprovalGDAO.getUnderDeptList(map);
+    }
+
+    @Override
+    public String attachRecordDoc(LoginVO userInfo, String newDocID, String attachedDocList) throws Exception {
+        logger.info("attachRecordDoc started");
+
+        List<String> attachDocList = Arrays.asList(attachedDocList.split(","));
+
+        AtomicReference<String> result = new AtomicReference<>("true");
+
+        attachDocList.forEach(d -> {
+            try {
+                ezApprovalGDAO.attachRecordDoc(userInfo, newDocID, d, (attachDocList.indexOf(d)) + 1);
+
+                HashMap<String, Object> map = new HashMap() {{
+                    put("FLAG", "Y");
+                    put("v_DOCID", d);
+                    put("v_TENANTID", userInfo.getTenantId());
+                    put("companyID", userInfo.getCompanyID());
+                }};
+
+                ezApprovalGDAO.updateAttachFileInfo(map);
+            } catch (SQLException se) {
+                logger.error(se.getMessage(), se);
+
+                result.set("false");
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                
+                result.set("false");
+            }
+        });
+
+        logger.info("attachRecordDoc ended");
+        return result.get();
     }
 }
