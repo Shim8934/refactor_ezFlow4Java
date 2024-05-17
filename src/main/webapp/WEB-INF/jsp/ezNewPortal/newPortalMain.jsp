@@ -129,7 +129,7 @@
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
-		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc()" style="display: none; width:calc(100vw - 81px); right:0;">
+		<div id="iframeShawdowLayer" class="iframeShawdowLayer" onclick = "hidefunc()" style="display: none; width:100vw; right:0;">
 			<div id="myNotificationUL" style="padding: 0px; margin: 0px;  width: 390px; height: 603px; right: 50px; z-index:20; position:absolute;">
 				<iframe id="iframeNoti" style="width:100%; height:603px;" frameborder="0" scrolling="NO" src="/ezNotification/notificationMain.do">
 				</iframe>

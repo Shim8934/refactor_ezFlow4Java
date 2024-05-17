@@ -36052,8 +36052,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 
 		boolean useTotalNoti = false;
-		if (ezPersonalService.canReceiveNotification(recipientId, tenantID)
-				&& !ezPersonalService.hasNotiDiableItem(recipientId, notiType, NotiPlatform.TOTAL_NOTI, tenantID)) {
+		if (!ezPersonalService.hasNotiDiableItem(recipientId, notiType, NotiPlatform.TOTAL_NOTI, tenantID)) {
 			useTotalNoti = true;
 		}
 

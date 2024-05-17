@@ -1667,6 +1667,12 @@
 			topFrame.style.zIndex = "9999";
 			topFrame.style.top = "60px";
 			topFrame.style.position = "absolute";
+			
+			if (menuDisplayMode == '1') {
+				topFrame.style.width = "calc(100vw - 81px)";
+			} else {
+				topFrame.style.width = "100vw - 81px";
+			}
 			//parent.document.getElementById('topFrame').style.position = 'relative';
 		}
 
