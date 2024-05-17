@@ -353,6 +353,8 @@
 							exb.DOCID as MAX_DOCID
 						FROM
 							tbl_endaprlineinfo exb
+						WHERE
+							exb.APRMEMBERID = #userId#
 						GROUP BY
 							DOCID
 						) exc
@@ -1014,6 +1016,8 @@
 							exb.DOCID as MAX_DOCID
 						FROM
 							tbl_endaprlineinfo exb
+						WHERE
+							exb.APRMEMBERID = #userId#
 						GROUP BY
 							DOCID
 					) exc

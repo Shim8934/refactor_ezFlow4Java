@@ -378,7 +378,7 @@ function resultView(xmlDoc) {
     var tempText;
     var webserver;
 
-    var fromemail, datereceived, parentname, subject, importance, fromname, hasattachment, read, href, displayto, ItemClass, Size, Flag;
+    var fromemail, datereceived, parentname, subject, importance, fromname, hasattachment, read, href, displayto, ItemClass, Size, Flag, msgto;
 
     var ChildCnt = 0;
     
@@ -453,7 +453,7 @@ function resultView(xmlDoc) {
     var XmlRows = SelectNodes(xmlDoc, "DATA/ROWS/ROW");
     var loopCount = XmlRows.length;
     recordCount = totalCount;
-    
+
     for (i = 0; i < loopCount; i++) {
         fromemail = SelectSingleNodeValue(XmlRows[i], "FROMEMAIL");
         datereceived = SelectSingleNodeValue(XmlRows[i], "DATERECEIVED");
@@ -466,6 +466,7 @@ function resultView(xmlDoc) {
         securemail = SelectSingleNodeValue(XmlRows[i], "SECUREMAIL");
         id = SelectSingleNodeValue(XmlRows[i], "ITEMID");
         displayto = SelectSingleNodeValue(XmlRows[i], "DISPLAYTO");
+        msgto = SelectSingleNodeValue(XmlRows[i], "MSGTO");
         ItemClass = SelectSingleNodeValue(XmlRows[i], "CONTENTCLASS");
         Size = SelectSingleNodeValue(XmlRows[i], "SIZE");
         Flag = SelectSingleNodeValue(XmlRows[i], "FLAG");
@@ -531,7 +532,7 @@ function resultView(xmlDoc) {
         preparedTD(tr, "26px", "center", "middle", tempText, "", "", true);
 
         if (tofromname.innerText == strLang160) {
-            preparedTD(tr, "100px", "left", "middle", fromname, fromname, 1, false, readStyle);
+            preparedTD(tr, "100px", "left", "middle", fromname, msgto, 1, false, readStyle);
             tr.recvFrom = fromname;
         } else {
             preparedTD(tr, "100px", "left", "middle", displayto, displayto, 1, false);

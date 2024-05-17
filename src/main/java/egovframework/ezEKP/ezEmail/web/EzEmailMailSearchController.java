@@ -348,9 +348,11 @@ public class EzEmailMailSearchController {
 					sb.append(String.format("<FROMNAME><![CDATA[%s]]></FROMNAME>", name));
 					
 					String displayTo = "";
+					String msgto = "";
 					// To, Cc, Bcc를 모두 포함한다.
 					String recipientsStr = mailInfo.get("RECIPIENT");
-					
+					msgto = String.format("%s <%s>", name, email);
+
 					if (!recipientsStr.isEmpty()) {
 						// To, Cc, Bcc를 분리한다.(||로 구분됨.)
 						String[] recipientsArr = recipientsStr.split("\\|\\|", 3);		
@@ -367,14 +369,15 @@ public class EzEmailMailSearchController {
 								msgtoBuilder.append(toName);
 								msgtoBuilder.append("; ");								
 							}
-							
+
 							displayTo = msgtoBuilder.toString();
 							displayTo = displayTo.substring(0, displayTo.length() - 2);								
 						}
 					}
 					
 					sb.append(String.format("<DISPLAYTO><![CDATA[%s]]></DISPLAYTO>", displayTo));
-								
+					sb.append(String.format("<MSGTO><![CDATA[%s]]></MSGTO>", msgto));
+
 					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");				
 					Date receivedDate = df.parse(mailInfo.get("MAIL_DATE"));
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
