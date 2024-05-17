@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -1232,8 +1233,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
-	public int checkPortletCodeString(Map<String, Object> map) {
-		return (int) select("EzCommonDAO.checkPortletCodeString", map);
+	public int checkPortletCodeString(String code) {
+		return (int) select("EzCommonDAO.checkPortletCodeString", code);
 	}
 
 	public void insertTabBoardPortletInfo(Map<String, Object> map) {
@@ -1381,7 +1382,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 		if (companyId == null) {
 			try {
-				logger.debug("insert portlet data");
+				logger.debug("insert portlet data:" + Optional.ofNullable(map.get("portletName1")).orElse(""));
 				insert("EzCommonDAO.insertPortletComp",map);
 				insert("EzCommonDAO.insertPortletName",map);
 				insert("EzCommonDAO.insertPortalThemePortlet",map);
@@ -2212,4 +2213,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.addNotiPollingIntervalConfig", map);
 		}
 	}
+
+    public void insertFixPortlet() {
+        try {
+            select("EzCommonDAO.checkFixPortlet");
+        } catch (Exception e) {
+            logger.debug("TBL_PORTAL_TOP_USER doesn't exist. creating the table...");
+
+            update("EzCommonDAO.createTblPortalTopUser");
+        }
+    }
 }

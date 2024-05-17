@@ -2536,7 +2536,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		return result;
 	}
 
-	// gbp-todo 다른 개발자가 부재중 설정 관련 개발중이라 기존의 로직을 그대로 쓰는 것으로 임시 처리.
 	@PostMapping("/ezPersonal/clearAbsence.do")
 	@ResponseBody
 	public String clearAbsence(@CookieValue("loginCookie") String loginCookie) {

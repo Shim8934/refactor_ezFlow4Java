@@ -2591,6 +2591,12 @@
 			VALUES (#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Chart')
 			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
 			VALUES (#portletId#, #menuId#, 3, #tenantId#, #companyId#, '図表')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 4, #tenantId#, #companyId#, '図表')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 5, #tenantId#, #companyId#, 'Chart')
+			INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME)
+			VALUES (#portletId#, #menuId#, 6, #tenantId#, #companyId#, 'Chart')
 		SELECT *
 		FROM DUAL
 	</insert>
@@ -4699,7 +4705,6 @@
 			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (0, 'one_by_one')
 			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (1, 'two_by_one')
 			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (2, 'one_by_two')
-			INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (3, 'two_by_two')
 		SELECT * FROM DUAL
 	</insert>
 

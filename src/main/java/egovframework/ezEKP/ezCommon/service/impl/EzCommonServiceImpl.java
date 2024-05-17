@@ -1,12 +1,5 @@
 package egovframework.ezEKP.ezCommon.service.impl;
 
-import egovframework.ezMobile.ezOption.dao.MOptionDAO;
-import egovframework.ezMobile.ezOption.vo.MOptionVO;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -19,12 +12,21 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.ezMobile.ezOption.dao.MOptionDAO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
-
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
@@ -38,19 +40,44 @@ import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO.FixBoardCode;
 
 @Service("EzCommonService")
 public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonService {
@@ -2934,19 +2961,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	@Override
 	public void insertTabBoardPortlet() throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("portletCode", "tabBoard");
-		
-		if ( ezCommonDAO.checkPortletCodeString(map) > 0) {
+        String tapBoardCode = "tabBoard";
+        if ( ezCommonDAO.checkPortletCodeString(tapBoardCode) > 0) {
 			return;
 		}
 		
 		logger.debug("insertTabBoardPortlet started");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("portletCode", tapBoardCode);
 		
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
 		map.put("portletId", ezCommonDAO.getNewPortletId());
 		map.put("portletName1", "탭게시판");
-		map.put("portletName2", "tabBoard");
+		map.put("portletName2", "tab board");
 		map.put("portletName3", "タブボード");
 		map.put("menuId", 4);
 		map.put("portletUrl", "/ezNewPortal/tabBoardPortlet.do");
@@ -3035,6 +3062,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         map.put("portletName1", "전자문서 차트");
         map.put("portletName2", "chart");
         map.put("portletName3", "図表");
+        map.put("portletName4", "图表");
+        map.put("portletName5", "chart");
+        map.put("portletName6", "chart");
         map.put("menuId", 3);
         map.put("portletUrl", "/ezNewPortal/chartPortlet.do");
         map.put("portletType", "G");
@@ -3763,18 +3793,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void insertTblPortalTopUser() {
         ezCommonDAO.insertTblPortalTopUser();
     }
-	
+
     // 2024-03-28 한태훈 > 통합알림 테이블 생성하는 메소드
 	@Override
 	public void createTblRealTimeNotification() throws Exception {
-		ezCommonDAO.createTblRealTimeNotification();		
+		ezCommonDAO.createTblRealTimeNotification();
 	}
-	
+
 	// 2024-03-28 한태훈 > 통합알림 보관기간 tenant config 생성하는 메소드
 	@Override
 	public void addNotiStoragePeriodConfig() throws Exception {
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("propertyName", "notiStoragePeriod");
 		map.put("propertyValue", "10");
@@ -3782,18 +3812,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("configName", "통합알림 데이터 보관 기간");
 		map.put("regdate", "2024-04-25 00:00:00");
 		map.put("configType", "통합알림");
-		
+
 		for (TenantVO tenantVo : tenantIdList) {
 			map.put("tenantId", tenantVo.getTenantId());
 			ezCommonDAO.addNotiStoragePeriodConfig(map);
 		}
 	}
-	
+
 	// 2024-03-28 한태훈 > 통합알림 polling 방식 이용시 알림 데이터 새로고침 주기 설정
 	@Override
 	public void addNotiPollingIntervalConfig() throws Exception {
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("propertyName", "notiPollingInterval");
 		map.put("propertyValue", "60000"); // 1분이 기본값. 단위는 밀리초
@@ -3801,11 +3831,52 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("configName", "통합알림 데이터 새로고침 주기");
 		map.put("regdate", "2024-04-25 00:00:00");
 		map.put("configType", "통합알림");
-		
+
 		for (TenantVO tenantVo : tenantIdList) {
 			map.put("tenantId", tenantVo.getTenantId());
 			ezCommonDAO.addNotiPollingIntervalConfig(map);
 		}
-		
+
 	}
+
+    @Override
+    public void insertFixPortlet() {
+        int cnt = ezCommonDAO.checkPortletCodeString(FixBoardCode.FIX_LEFT.getCode());
+        if (cnt > 0) return;
+        int portletID = ezCommonDAO.getNewPortletId();
+        List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+        FixBoardCode[] codes = FixBoardCode.values();
+        int order = codes.length * -1;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("portletName1", "고정 포틀릿");
+        map.put("portletName2", "fixed portlet");
+        map.put("portletName3", "固定ポートレット");
+        map.put("portletName4", "固定门户组件");
+        map.put("portletName5", "portlet cố định");
+        map.put("portletName6", "portlet tetap");
+        map.put("menuId", 4);
+        map.put("portletUrl", "/ezNewPortal/getCustomBoardInfo.do");
+        map.put("portletType", "G");
+
+        for(FixBoardCode code : codes) {
+            map.put("portletId", portletID);
+            map.put("defaultOrder", order);
+            map.put("portletUsed", 1);
+            map.put("portletOrder", order);
+            map.put("boardId", null);
+            map.put("portletCode", code);
+            ezCommonDAO.insertPortletWithCode(map);
+
+            for (CompanyInfoVO company : companyList) {
+                if (company.getCompanyId() != null) {
+                    map.put("companyId", company.getCompanyId());
+                    map.put("tenantId", company.getTenantId());
+                    ezCommonDAO.insertPortletInfoData(map); // 회사별 있는지 확인후 insert
+                }
+            }
+            portletID++;
+            order++;
+        }
+    }
 }

@@ -290,6 +290,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createTblRealTimeNotification(); // 2024-03-28 한태훈 - 통합알림 테이블 추가
 			ezCommonService.addNotiStoragePeriodConfig(); // 2024-03-28 한태훈 - 통합알림 보관기간 tenantConfig 추가
 			ezCommonService.addNotiPollingIntervalConfig(); // 2024-03-28 한태훈 - 통합알림 데이터 새로고침 간격 tenantConfig 추가
+			ezCommonService.insertFixPortlet(); // 2024-05-17 박기범 - 고정포틀릿 추가
 			
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);

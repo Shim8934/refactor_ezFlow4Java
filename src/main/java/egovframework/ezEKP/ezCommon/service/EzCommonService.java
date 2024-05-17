@@ -377,5 +377,6 @@ public interface EzCommonService {
 	
 	// 2024-03-28 한태훈 > 통합알림 polling 방식 이용시 알림 데이터 새로고침 주기 설정
 	public void addNotiPollingIntervalConfig() throws Exception;
-	
+
+	void insertFixPortlet();
 }
