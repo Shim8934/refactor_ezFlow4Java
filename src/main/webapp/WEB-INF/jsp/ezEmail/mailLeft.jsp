@@ -728,7 +728,10 @@
 		    	}
 		    	
 			    document.getElementById("mailbox_delete").style.display = "";
-				document.getElementById("tagtitle").style.display="";
+				
+				if (document.getElementById("tagtitle") != null) {
+					document.getElementById("tagtitle").style.display="";
+				}
 				
 	        	detailView();
 	        	window[treeviewStr].select(1);
@@ -1140,7 +1143,9 @@
 				    document.getElementById("mailbox_import").style.display = "none";
 				    document.getElementById("mailbox_delete").style.display = "none";
 			    }
-			    document.getElementById("tagtitle").style.display="none";
+				if (document.getElementById("tagtitle") != null) {
+			    	document.getElementById("tagtitle").style.display="none";
+				}
 			    detailView(shareId);
 			    openFolder();
 			}
