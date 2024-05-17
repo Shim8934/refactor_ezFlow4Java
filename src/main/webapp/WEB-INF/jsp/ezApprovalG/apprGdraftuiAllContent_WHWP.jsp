@@ -161,7 +161,14 @@
 	                    process_AfterOpen();
 	                    // 현재 안 탭의 정보를 부모페이지에도 저장
 	                    parent.setTabInfo(frameNum);
-	                    
+
+						if (frameNum == 1 && attachedDocList != "" && pDraftFlag == "DRAFT" && ListType != "21") {
+							var pd = parent.document;
+
+							attachRecordDoc();
+							pd.getElementById("ifrm" + frameNum).contentWindow.setAttachInfo(pDocID, "APR", pd.getElementById("lstAttachLink"));
+						}
+
 	                    // 반송문서가 아닌 임시저장 문서의 경우, 안 추가 시 초기 고정수신처 세팅 진행
 	                    if (pDraftFlag != "REDRAFT" || (ListType == "21" && parent.addFlag == true)) {
 	                        setFirstDrafter(); // 기본 결재선 설정 및 고정수신처 설정 등을 진행 (ezDraftAll_WHWP.js > GetDraftAprLineInfo)
@@ -325,11 +332,6 @@
 			                    	}
 	                 			});
 				            }
-
-							if (frameNum == 1 && attachedDocList != "") {
-								attachRecordDoc();
-								setAttachInfo(pDocID, "APR", document.getElementById("lstAttachLink"));
-							}
 			            }
 					}
 				} catch (e) {

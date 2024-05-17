@@ -12905,10 +12905,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		String newDocID = request.getParameter("newDocID");
-		String attachedDocList = request.getParameter("attachedDocList");
-		String result;
+		String attachedDocList1 = null;
+		String attachedDocList2[] = null;
 
-		result = ezApprovalGService.attachRecordDoc(userInfo, newDocID, attachedDocList);
+		if (request.getParameter("attachedDocList") == null) {
+			attachedDocList2 = request.getParameterValues("attachedDocList[]");
+		} else {
+			attachedDocList1 = request.getParameter("attachedDocList");
+		}
+
+		String result;
+		
+		if (attachedDocList1 == null && attachedDocList2 == null) {
+			return "There is no attached document list";
+		}
+
+		result = ezApprovalGService.attachRecordDoc(userInfo, newDocID, attachedDocList1 == null ? attachedDocList2 : attachedDocList1);
 
 		logger.info("attachRecordDoc ended");
 		return result.toString();

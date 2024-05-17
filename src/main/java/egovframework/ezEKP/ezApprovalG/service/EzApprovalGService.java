@@ -888,5 +888,5 @@ public interface EzApprovalGService {
     // 2024-06-07 전인하 - 기록물대장 > 하위부서 리스트 조회
     public List<OrganDeptVO> getUnderDeptList(LoginVO userInfo) throws Exception;
 
-    public String attachRecordDoc(LoginVO userInfo, String newDocID, String attachedDocList) throws Exception;
+    public String attachRecordDoc(LoginVO userInfo, String newDocID, Object attachedDocList) throws Exception;
 }

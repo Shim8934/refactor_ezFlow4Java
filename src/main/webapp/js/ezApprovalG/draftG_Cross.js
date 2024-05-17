@@ -277,3 +277,17 @@ function btnReturn_onclick() {
 		window.close();
 	}
 }
+
+function attachRecordDoc() {
+	$.ajax({
+		type : "POST",
+		dataType : "text/html",
+		url : "/ezApprovalG/attachRecordDoc",
+		async : false,
+		data : {
+			newDocID : pDocID,
+			attachedDocList : attachedDocList
+		},
+		success : () => {}
+	});
+}

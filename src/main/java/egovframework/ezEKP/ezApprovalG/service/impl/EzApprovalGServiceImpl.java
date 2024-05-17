@@ -35414,10 +35414,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     }
 
     @Override
-    public String attachRecordDoc(LoginVO userInfo, String newDocID, String attachedDocList) throws Exception {
+    public String attachRecordDoc(LoginVO userInfo, String newDocID, Object attachedDocList) throws Exception {
         logger.info("attachRecordDoc started");
 
-        List<String> attachDocList = Arrays.asList(attachedDocList.split(","));
+        List<String> attachDocList = attachedDocList instanceof String ?
+                                     Arrays.asList(((String)attachedDocList).split(",")) :
+                                     Arrays.asList((String[])attachedDocList);
 
         AtomicReference<String> result = new AtomicReference<>("true");
 
