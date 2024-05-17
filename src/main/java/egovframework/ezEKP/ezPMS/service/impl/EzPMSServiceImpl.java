@@ -567,7 +567,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public int getMemberCount(Long projectId, int roleId, int tenantId) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -589,7 +588,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<String> getProjectNameList(String userId, int tenantId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -879,7 +877,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectMemberScheduleVO> getMemberScheduleList(Long projectId, String startDate, String endDate) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -1302,7 +1299,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public String getUserRole(String userId, Long projectId, int tenantId) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -1659,7 +1655,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 							holidayList.add(lunarDay);
 						}
 					} catch (ParseException e) {
-						// TODO Auto-generated catch block
 						logger.error(e.getMessage(), e);
 					}
 				}
@@ -1724,7 +1719,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public List<ProjectMemberVO> getProjectMember(Long projectId, int roleId, String lang) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -3509,12 +3503,6 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			}
 		}
 		return dateList;
-	}
-
-	@Override
-	public void updateMemberSchedules(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

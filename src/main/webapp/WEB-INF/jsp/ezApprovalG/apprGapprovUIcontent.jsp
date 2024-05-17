@@ -445,10 +445,6 @@
 							</c:choose>
 	                    	 
 	                         BODYTag.innerHTML = HtmlContent;
-	                         // 기존 편집모드에 있던게 줄어들거나 하여 삭제
-	                         // 그리고 패딩을 고정으로 박는 방법은 좀 아닌거같음
-	                         //document.getElementById("body").style.paddingLeft = "10px";
-	                         //document.getElementById("body").style.paddingRight = "15px";
 	                         document.getElementById("body").innerHTML = BODYTag.innerHTML;
 	                     }
 	                     BodyTagsDisabled(document.getElementById('div_Content'));

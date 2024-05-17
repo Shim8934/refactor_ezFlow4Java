@@ -472,7 +472,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<LISTVIEWDATA>");
 		resultXML.append("<HEADERS>");
 		resultXML.append("<HEADER>");
-		//임시로 해놓음 코드박자
 		resultXML.append("<NAME>" + messageSource.getMessage("ezApprovalG.t114", userInfo.getLocale()) + "</NAME>");
 		resultXML.append("<WIDTH>105</WIDTH>");
 		resultXML.append("<COLNAME>GROUPNAME</COLNAME>");
@@ -2216,7 +2215,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDocNumCode = "";
 		String docNumCode = "";
 		String extFileName = "";
-		String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈
+		String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); // 문서채번 자릿수 맞추기 위한 목적으로 구현함
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -2238,7 +2237,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				docNumCode = deptID + getNDigitNum(sn, 6);
 				
 				docNo = commonUtil.htmlUnescape(deptName) + "-" + sn;
-				//docNo = commonUtil.cleanValue(deptName) + "-" + createDocNO(sn , docNumZeroCnt); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈
+				//docNo = commonUtil.cleanValue(deptName) + "-" + createDocNO(sn , docNumZeroCnt); // 문서채번 자릿수 맞추기 위한 목적으로 구현함
 				
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
 //					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
@@ -5844,7 +5843,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
-		int totalCount = getSendOutDocListCount(mode, companyID, tenantID, searchQuery);///////////////////////////////searchQuery넣을것!
+		int totalCount = getSendOutDocListCount(mode, companyID, tenantID, searchQuery);	// searchQuery 넣어야 함
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
 		
@@ -5979,9 +5978,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String docType = getDocInfo(docID, "APR", "FUNCTIONTYPE", userInfo, companyID, userInfo.getTenantId(), "", "");
-		// 여기 비교 되지도 않네 
-		// docType -> <DATA><FUNCTIONTYPE>002</FUNCTIONTYPE></DATA>
-		// docState 004(심사), 015(공람)
+
 		if (docType.equals("004") || docType.equals("015")) {
 			return messageSource.getMessage("ezApprovalG.t2104", userInfo.getLocale());
 		}
@@ -6224,7 +6221,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.insertRejectAprReceiptProcessInfo(map);
 			
-			//여기다 발송의뢰반송시 수신처에 발송의뢰반송표시하게 해주면 되나
 			Map<String, Object> map2 = new HashMap<String, Object>();
 			map2.put("v_DOCID", signList.getOrgDocID());
 			map2.put("v_PROCESSYN", "B");
@@ -6849,7 +6845,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						setHwpText(hwpFile, habSign, signAry);
 						setHwpText(habSem, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
-					} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
+					} else if (aprType.equals("004")) {
 						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + tmps;
 						String tempSignDate = signAdd + "seumyungdate" + tmps;
@@ -6911,7 +6907,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					Document docXML = commonUtil.convertStringToDocument(ret);
 					cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
-					//0박아주는거 하면된다
+
 					if (!ret.equals("")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							if (!excuteInfoHwp("DOCNUM_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
@@ -6951,7 +6947,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					Document docXML = commonUtil.convertStringToDocument(ret);
 					cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
-					//0박아주는거 하면된다
+
 					if (!ret.equals("")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							if (!excuteInfoHwp("DOCNUM_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
@@ -7678,7 +7674,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (aprType.equals("001")) {
 					if (refResult > 0) {
-						//분석해야함
 						int tmps = signCnt - refResult;
 						if (totalLineSN == tmps) {
                             strSign = signAdd + "sign" + lastSignNum;
@@ -7741,7 +7736,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if(doc.getElementById(habSem) != null) {
 					    doc.getElementById(habSem).html(lastCnt);
 					}
-				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
+				} else if (aprType.equals("004")) {
 					String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 					
 					if (junGyulFlag.equals("1")) {
@@ -7851,7 +7846,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if(doc.getElementById(habSem) != null) {
 						doc.getElementById(habSem).html(lastCnt);
 					}
-				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
+				} else if (aprType.equals("004")) {
 					int tmps = signCnt - refResult;
 					String tempSign = signAdd + "sign" + tmps;
 					
@@ -7910,7 +7905,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				Document docXML = commonUtil.convertStringToDocument(ret);
 				cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
-				//0박아주는거 하면된다
+
 				if (!ret.equals("") && doc.getElementById("docnumber") != null) {
 					docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
 					doc.getElementById("docnumber").text(docNO);
@@ -11270,7 +11265,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (rtnVal) {
 					logger.debug("doapprov makeTmpDocInfo started. userID = " + userID + " || docID = " + docID + " || proxyUserID = " + proxyUserID + " || companyID = " + companyID + " || tenantID = " + userInfo.getTenantId());
 					
-					//여기서 디비랑 비교하자
 					String listType = "";
 					if (strXML.getElementsByTagName("LISTTYPE").getLength() > 0) {
 						listType = strXML.getElementsByTagName("LISTTYPE").item(0).getTextContent();
@@ -11291,7 +11285,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						docSN = strXML.getElementsByTagName("DOCSN").item(0).getTextContent();
 					}
 					
-					//따로 삭제하지말고 한번에 삭제하고 생성하자
 					if (!FormHref.equals("") && listType.equals("21") && draftFlag.equals("REDRAFT") && !oldDocID.equals("") && !beforeDocID.equals("")) {
 						if (!compareTmpDocID(FormHref, docSN, companyID, userInfo.getTenantId())) {
 							return "<RESULT>FALSE</RESULT>";
@@ -13104,8 +13097,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.insertBebuExpAprDocInfo(map);
 				ezApprovalGDAO.insertBebuAprAttachInfo(map);
 				ezApprovalGDAO.insertBebuAprDocAttachInfo(map);
-				//배부할때 의견까지 복사안하는게 맞을거같음. 초기접수부서의 의견이나 원문서의 의견은 들어갈필요가없음. 원문서의 의견은 본문에 들어갈거고 초기접수부서는 처리부서가 아닌데 의견이 있을필요가 없음.
-//				ezApprovalGDAO.insertBebuAprOpinionInfo(map);
+				// 배부 시 초기 접수부서의 의견 또는 원문서의 의견은 불필요하므로 복사하지 않도록 함.
+				//ezApprovalGDAO.insertBebuAprOpinionInfo(map);
 				
 				map.put("v_DEPTNAME", deptName.trim());
 				map.put("v_DEPTNAME2", deptName2.trim());
@@ -14158,8 +14151,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
         boolean resultStr = false;
-		//TODO agreeReturnType GGGGGG
-		if (approvalFlag.equals("G")) {
+
+        if (approvalFlag.equals("G")) {
 			map.put("companyID", companyID);
 			map.put("v_DOCID", orgDocID);
             map.put("v_STAASJINHANG", staASJinHang);
@@ -15769,7 +15762,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			
 			logger.debug("updateCirculation docID : " + docID + "updateCirculation gongRamDocID : " + gongRamDocID);
-			//기존꺼 지우고 새롭게 출발하려고 
+
 			ezApprovalGDAO.delCirculation(map);
 			
 			ezApprovalGDAO.insertGongRamAprDocInfo(map);
@@ -15961,7 +15954,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				isGamsaDoc = true;
 			}
 			
-			//사인이 이미지일 경우는 나중에 작업해야할듯.
+			// 사인이 이미지인 경우 작업 필요
 //			if (signType.equals("IMAGE")) {
 //				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 //				
@@ -16246,7 +16239,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 			
-			//사인이 이미지일 경우는 나중에 작업해야할듯.
+			// 사인이 이미지인 경우 작업 필요
 //			if (signType.equals("IMAGE")) {
 //				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 //				
@@ -16698,7 +16691,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
 					docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(), 
 					commonUtil.getTodayUTCTime("").substring(0, 10),
-					receiptName, // 여기랑 밑에
+					receiptName, 
 					receiptName, "", "1", 
 					docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
@@ -17034,10 +17027,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 			}
-			// 특수목록 저장은 개발해야하나 ?
+
+			// 특수목록 정보 저장
 			/*NodeList nodeSL = nonElecRecParam.getDocumentElement().getElementsByTagName("SPECIALCATALOGINFO");
 			
-			// 특수목록 정보 저장
 			if (specialCatalogFlag != null && nodeSL != null && specialCatalogFlag.equals("2")) {
 				subSQL = saveSpecialInfoRec(recordID, cabID, objParam, tenantID, companyID);
 				
@@ -24108,7 +24101,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "3" :	// 목록이관 대상
 			cabinetListVO.setListType("006");
 			break;
-		case "4" :	// ?뚯씪?닿? ???
+		case "4" :	// 파일이관 대상
 			cabinetListVO.setListType("006");
 			break;
 		case "5" :	// 이관목록
@@ -27707,7 +27700,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  		    // SPAN태그는 제거한다.(font-weight:bold > <B>, font-style:italic > <i>, text-decoration:underline > <u>)
 			org.jsoup.nodes.Document doc = Jsoup.parse(content);
 			
-			// class 제거 왜 클래스있는태그 사이즈를 이상하게 가져오지
 			int tagsWithClasses = doc.getElementsByAttribute("class").size();
 			for (int i = 0; i < tagsWithClasses; i++) {
 				doc.getElementsByAttribute("class").get(0).removeAttr("class");
@@ -27783,8 +27775,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
                 	if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") 
                     		&& doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).text().equals("")) {
-                    	//여기가 동작을 안하네
-//                        if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
+                    	// 동작하지 않는 조건문 주석처리 함.
+                        // if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
                         if (doc.getElementsByTag("span").get(i).parent().nodeName().equals("p")) {
                         	if (spanStyle.indexOf("font-family") > -1) {
                         		if (parentStyle.indexOf("font-family") > -1) {
@@ -28157,8 +28149,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
-			//왜 &nbsp;를 두개 해놓은거지?
-			//strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
 
 			//정주환
 			sp1 = strRtnHtml.split("<");
@@ -28207,7 +28197,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  		    // SPAN태그는 제거한다.(font-weight:bold > <B>, font-style:italic > <i>, text-decoration:underline > <u>)
 			org.jsoup.nodes.Document doc = Jsoup.parse(content);
 			
-			// class 제거 왜 클래스있는태그 사이즈를 이상하게 가져오지
 			int tagsWithClasses = doc.getElementsByAttribute("class").size();
 			for (int i = 0; i < tagsWithClasses; i++) {
 				doc.getElementsByAttribute("class").get(0).removeAttr("class");
@@ -28289,8 +28278,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
                 	if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") 
                     		&& doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).text().equals("")) {
-                    	//여기가 동작을 안하네
-//                        if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
+                		// 동작하지 않는 조건문 주석처리 함.
+                		// if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
                         if (doc.getElementsByTag("span").get(i).parent().nodeName().equals("p")) {
                         	if (spanStyle.indexOf("font-family") > -1) {
                         		if (!(parentSpanStyle.indexOf("font-family") > -1)) {
@@ -28671,8 +28660,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
-			//왜 &nbsp;를 두개 해놓은거지?
-			//strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
 			
 			String strRtnContent = "<DATA>" +
 		                "<RESULT>OK</RESULT>" +
@@ -29190,9 +29177,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
                         strPath = strAttachPath.replace("/Upload_ApprovalG", mapPath).replace("/", commonUtil.separator) + commonUtil.separator + strAttachFile;
                         
-                        //메일 보내는건가? 찾아봐야함
-//                        CDO.IBodyPart attach = objMsg.AddAttachment(strPath, null, null);
-//                        xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
+                        // 메일 발송 여부 확인 필요
+                        //CDO.IBodyPart attach = objMsg.AddAttachment(strPath, null, null);
+                        //xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
 
 						byte[] bytes;
 						File file = new File(commonUtil.detectPathTraversal(mapPath + strPath));
@@ -30127,13 +30114,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	   tempCompanyID = userInfo.getCompanyID();
            }
            
-			map.put("companyID", tempCompanyID);
+    		map.put("companyID", tempCompanyID);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-        //외부수신 가져오면 원래 결재선을 지우네
-           ezApprovalGDAO.deleteRelayAprLineInfo(map);
+
+		   ezApprovalGDAO.deleteRelayAprLineInfo(map);
            ezApprovalGDAO.deleteRelayExpAprLineInfo(map);
          
-       //지우고 다시 넣네?
            ezApprovalGDAO.insertRelayAprLineInfo(map);
            ezApprovalGDAO.insertRelayExpAprLineInfo(map);
            
@@ -32446,7 +32432,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         ezApprovalGDAO.insertModifyOpenGovHistory(map);
 
         logger.debug("updateOpenGovInfo ended");
-        //TODO 이거 대체 왜
+
         return null;
     }
 

@@ -2577,7 +2577,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			recevGroupXML = formRecevGroup;
 		}
 		
-		// 안 쓰고 있음 혹시 모르니 유지
+		// 현재 사용하지 않는 것으로 추정되나 일단 유지함
 		@SuppressWarnings("unused")
 		boolean isUpdate = false;
 		String saveFileFolder = "";

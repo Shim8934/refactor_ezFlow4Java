@@ -1498,9 +1498,7 @@ function GetDraftAprLineInfo(ret) {
             var suggester = getNodeText(Cell[13]);
             var reporter = getNodeText(Cell[14]);
             
-            if (junGyulFlag == "1") {
-    			//아무것도 안함
-    		} else if (junGyulFlag == "4") {
+            if (junGyulFlag == "4") {
     			if (KyljeaType == "003") {
     				continue;
     			}

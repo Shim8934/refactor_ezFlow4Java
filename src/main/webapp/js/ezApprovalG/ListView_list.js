@@ -1,6 +1,4 @@
-﻿// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
-
-//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
+﻿//컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
@@ -66,10 +64,6 @@ function disable_browser_selection() {
 
     document.body.style.cursor = "default";
 }
-
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 끝
-//###########################################################################################
-
 
 //###########################################################################################
 // ListView 클래스 시작
@@ -444,7 +438,6 @@ function ListView() {
                 objElm.ondrop = new Function(_rowDrop + "(event)");
                 objElm.ondragover = new Function("allowDrop(event)");
             }
-            //            
 
             if (_debugMode) yjTest("oTable", objElm.innerHTML);
 

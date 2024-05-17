@@ -702,7 +702,6 @@
 	    	}
 	        
 	        
-	        ////////
 	        function attDetail(obj) {
 				var pAttitudeId = obj.getAttribute("attitudeId"); 
 				var pTypeId = obj.getAttribute("typeId")

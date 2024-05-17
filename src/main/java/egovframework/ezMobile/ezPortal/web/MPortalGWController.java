@@ -199,7 +199,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 						mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 
 						// 메일 중요도 색깔 구하기
-						// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
+						// jgw 요청은 비용이 높으므로 먼저 중요도 높음 메일이 있는지 체크함
 						if (mailList.stream().anyMatch(mail -> ((JSONObject) mail).get("importance").equals(2))) {
 							String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
 									.map(MailColorVO::getImportanceColor).orElse("#ff0000");
@@ -276,7 +276,6 @@ public class MPortalGWController extends EgovFileMngUtil {
 		
 				long startTime = System.currentTimeMillis();				
 				
-				//한번에 가져오긴 힘들고 귀찮다.
 				List<MPortalTimeLineVO> mPortalTimeLineVOs = mOptionService.getTimeLineList(info, utcSessionDate, listCnt, approvalAccess, boardAccess);
 				
 				logger.debug("## 전자결재/게시판 소요시간(초.0f) : " + (System.currentTimeMillis() - startTime)/1000.0f + "초");
@@ -306,7 +305,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					}
 					
 					// 메일 중요도 색상
-					// jgw 요청은 비싸니깐 먼저 중요도 높음 메일이 있는지 체크
+					// jgw 요청은 비용이 높으므로 먼저 중요도 높음 메일이 있는지 체크함
 					if (hasHighImportance) {
 						String importanceColor = Optional.ofNullable(ezEmailService.getMailColor(info.getTenantId()))
 								.map(MailColorVO::getImportanceColor).orElse("#ff0000");

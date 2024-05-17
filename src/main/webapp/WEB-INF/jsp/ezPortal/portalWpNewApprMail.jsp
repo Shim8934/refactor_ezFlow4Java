@@ -262,7 +262,6 @@
 	
 		    var xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
 		    
-////// 작업 중인 function 모아두기 start
 		    function getApprFavo() {
 		    	$.ajax({
 		    		type: "post",
@@ -441,8 +440,6 @@
                	
                	return str;
 			}
-
-////// 작업 중인 function 모아두기 end
 
 	 	    // 이 함수 살리면 기존으로 돌아감.
 /*    	 	    function getApprGraph() {

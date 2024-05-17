@@ -80,10 +80,6 @@ function OpenAlertUI(NewWinContent, NewWinCallFunction, NewWinName) {
     }
 }
 
-function OpenAlertUI_Complete() {
-    //Source Code...
-}
-
 var getCommunityList = function() {
 	var request = new XMLHttpRequest();
 	request.open('GET', '/ezNewPortal/getCommunityList.do', false);

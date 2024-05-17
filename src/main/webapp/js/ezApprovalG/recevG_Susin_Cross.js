@@ -875,9 +875,7 @@ function SGetDraftAprLineInfo(ret) {
                 }
                 var j, chkflag
                 
-                if (junGyulFlag == "1") {
-        			//아무것도 안함
-        		} else if (junGyulFlag == "4") {
+        		if (junGyulFlag == "4") {
         			if (OrderType[i] == "003") {
         				continue;
         			}
@@ -3108,7 +3106,7 @@ function SignCheck() {
         return;
 
     SignXML = result;
-    //필요없을것 같아서 추가
+
     return;
     var rtnVal = putSignXML(SignXML);
 

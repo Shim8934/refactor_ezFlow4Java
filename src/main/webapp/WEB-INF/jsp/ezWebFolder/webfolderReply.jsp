@@ -74,7 +74,6 @@
 						return;
 					}
 
-					// IE는 이렇게 해야됨 어이없네
 					files = filelist;
 				} else {
 					var length = evt.dataTransfer.items.length;

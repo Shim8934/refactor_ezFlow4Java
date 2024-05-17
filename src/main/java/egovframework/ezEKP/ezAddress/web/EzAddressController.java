@@ -322,7 +322,7 @@ public class EzAddressController{
 			String pFolderID = xmldom.getElementsByTagName("FOLDERID").item(0).getTextContent();
 			String pOwnerID = xmldom.getElementsByTagName("OWNERID").item(0).getTextContent();
 			// String pFolderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
-			String pFolderName = ""; //TODO: folderName setting 안해도 되나?
+			String pFolderName = "";
 			
 			String addressType = xmldom.getElementsByTagName("ADDRTYPE").item(0) != null ? 
 					StringUtils.defaultIfBlank(xmldom.getElementsByTagName("ADDRTYPE").item(0).getTextContent(), "ALL") : "ALL"; // ALL||GROUP||PERSONAL

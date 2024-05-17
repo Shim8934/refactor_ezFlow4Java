@@ -675,7 +675,7 @@ public class EzEditorController extends EgovFileMngUtil {
 			// 메일 부재중설정 또는 커뮤니티 포토게시판일 경우 이미지 업로드되지 않도록 한다.
 			if (type.equals("MAILOUTOFOFFICE") || type.equals("COMMUNITYPHOTO")) {
 				logger.debug("Cannot upload image. type=" + type);
-				result = "fail_image"; // TODO: 적절한 result가 필요함..
+				result = "fail_image";
 			} else {
 				LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -686,18 +686,13 @@ public class EzEditorController extends EgovFileMngUtil {
 				long maxSize = 10485760;
 				logger.debug("fileType=" + fileType + ",fileSize=" + fileSize);
 
-				if (!(fileType.equals("gif") || fileType.equals("jpeg") || fileType.equals("jpg") || fileType.equals("png") || fileType.equals("bmp"))) { // 이미지
-																																							// 파일이
-																																							// 아닐
-																																							// 경우
+				if (!(fileType.equals("gif") || fileType.equals("jpeg") || fileType.equals("jpg") || fileType.equals("png") || fileType.equals("bmp"))) { // 이미지 파일이 아닐 경우
 					logger.debug("fileType is not image.");
 					result = "invalid_image";
-
 				} else if (fileSize > maxSize) {
 					logger.debug("file size over. fileSize=" + fileSize);
 					resultArray.add(maxSize);
 					result = "invalid_size";
-
 				} else {
 					String filePath = "";
 					if (type.equals("MAILSIGNATURE")) { // 메일 서명 저장경로로 이미지 저장

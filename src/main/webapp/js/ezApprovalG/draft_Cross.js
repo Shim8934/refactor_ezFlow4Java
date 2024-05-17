@@ -1320,9 +1320,7 @@ function SGetDraftAprLineInfo(ret) {
                     idx = LastSignNo;
                 }
                 
-                if (junGyulFlag == "1") {
-        			//아무것도 안함
-        		} else if (junGyulFlag == "4") {
+ 				if (junGyulFlag == "4") {
         			if (OrderType[i] == "003") {
         				continue;
         			}
@@ -2647,7 +2645,7 @@ function SetAutoPropertyValue() {
             	//가변결재선 양식으로 수신문을 사용하는경우, 양식내에 수신처란이 없어도 수신문으로 인식되도록
             	if ($("#message").contents().find("#autoLine").length > 0 && DocType == "003") {
             		pSuSinFlag = "Y";
-            		setMenuBar("btnSetReceivLine", true); //사용하지도 않는 버튼 왜 살려두는지..
+            		setMenuBar("btnSetReceivLine", true);
             		CheckGubun = "1";
             	} else {
             		pSuSinFlag = "N";
@@ -2967,7 +2965,6 @@ function SaveDraftDocInfo_ilban(pState) {
         else
             startdate = "DRAFT";
         
-        //여기서 다국어 안되고있는데 원래 스펙이라 일단 봐줌
         createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startdate);
         createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
         createNodeAndInsertText(xmlpara, objNode, "WRITERID", arr_userinfo[1]);

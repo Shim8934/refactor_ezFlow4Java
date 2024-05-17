@@ -3086,7 +3086,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 //		logger.debug("minStartDate : " + minStartDate);
 //		logger.debug("maxEndDate : " + maxEndDate);
 		
-		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
 		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, strPnum, companyID, tenantID);
 		logger.debug("repScheduledList.size=" + repScheduledList.size());
 		
@@ -3169,7 +3168,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		}
 		
-		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
 		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, strPnum, companyID, tenantID);
 		
 		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {

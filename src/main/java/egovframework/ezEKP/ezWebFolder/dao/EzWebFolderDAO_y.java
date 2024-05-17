@@ -208,7 +208,6 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return  (ArrayList<Map<String, Object>>) list("EzWebFolderDAO_y.selectWebfolderFiletoAnother", map);
 	}
 	
-	// 
 	public List<String> getWebFolderUserGroupList(Map<String, Object> map) {
 		return (List<String>) list("EzWebFolderDAO_y.getWebFolderUserGroupList", map);
 	}
@@ -221,7 +220,6 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 		return (FileVO) select("EzWebFolderDAO_y.selectFileDetail", map);
 	}
 
-	// 안 쓰이는 건가..? 'EzWebFolderDAO_y.getFolderUser' - 0 matches in 'sqlmap'
 	public List<Map<String,String>> getFolderUser (Map<String, Object> map) {
 		return (List<Map<String, String>>) list("EzWebFolderDAO_y.getFolderUser", map);
 	}

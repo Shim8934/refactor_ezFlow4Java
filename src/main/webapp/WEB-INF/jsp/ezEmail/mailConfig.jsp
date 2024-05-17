@@ -176,7 +176,6 @@
             	this.selectFolderNameSpl = selectFolderNameSpl;
 				console.log('folderTotalCount=' + folderTotalCount);
 				if (folderTotalCount === null || typeof folderTotalCount === "undefined") {
-					// 이 경우가 나오면 안되요.
 					console.log('folderTotalCount is null or undefined');
 					return;
 				} else if (folderTotalCount < 1) {

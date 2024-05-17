@@ -471,7 +471,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	mailSignSel = "0";
         }
         
-        //TODO: setting
   		String useMultiLangMail = "1";
   		String pSecurity = "1";
   		String charsetCheck = "1";
@@ -803,7 +802,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		                unread = orgMessage.isSet(Flags.Flag.SEEN) ? "1" : "0";
 		                
-		                //TODO: Sensitivity?
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 		        		
 		                //메일 재전송할 때에는 서명사용안함이 default.
