@@ -722,6 +722,15 @@
 		        var keywordFromList = "";
 		        searchCArray = [];
 		    	searchKArray = [];
+
+                // default 검색기간 지원 start
+                startDate = $("#SdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+                endDate = $("#EdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+
+                var sDate = new Date(startDate.split(' ')[0].split('-')[0], startDate.split(' ')[0].split('-')[1], startDate.split(' ')[0].split('-')[2]);
+                var eDate = new Date(endDate.split(' ')[0].split('-')[0], endDate.split(' ')[0].split('-')[1], endDate.split(' ')[0].split('-')[2]);
+                // default 검색기간 지원 end
+
 		        if (isSentItems == "true") {
 		    		var receiver = currentFixingId.cells[5].getAttribute('data-name');
 		    		
@@ -772,6 +781,14 @@
 		    
 		    function searchAllBoxByName() {
 		        var keywordFromList = "";
+
+                // default 검색기간 지원 start
+		        startDate = $("#SdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+                endDate = $("#EdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+
+                var sDate = new Date(startDate.split(' ')[0].split('-')[0], startDate.split(' ')[0].split('-')[1], startDate.split(' ')[0].split('-')[2]);
+                var eDate = new Date(endDate.split(' ')[0].split('-')[0], endDate.split(' ')[0].split('-')[1], endDate.split(' ')[0].split('-')[2]);
+                // default 검색기간 지원 end
 		        
 		        if (isSentItems == "true") {
 		    		var receiver = currentFixingId.cells[5].getAttribute('data-name');
