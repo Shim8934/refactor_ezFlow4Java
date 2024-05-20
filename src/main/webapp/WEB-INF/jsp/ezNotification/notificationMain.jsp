@@ -29,44 +29,39 @@
             <span id="notFillterPopBtn" class="noti_filter" onclick="popUpNotFillter()"></span>
         </div>
         
-        <div id="notFillterPop" onclick="stopPropa()" class="fillter-pop" style="display:none;">
-	        <div class="inner outlook_tree_wrap">
-	            <div class="scroll-wrapper scrollbar-inner" style="position: relative;"><div class="scrollbar-inner scroll-content">
-	            	   <span style="display:block; font-size: 20px; font-weight: 900; margin-bottom:10px;" ><spring:message code="ezNotification.hth03"/></span>
-	                <strong><spring:message code="ezNotification.hth04"/></strong>
-	                <ul class="check-list">
-	                    <li>
-	                        <div class="checks">
-	                            <input id="filter_read" onchange="searchNoti('search')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
-	                            <label for="filter_read"><spring:message code="ezNotification.hth05"/></label>
-	                        </div>
-	                    </li>
-	                    <li>
-	                        <div class="checks">
-	                            <input id="filter_unread" onchange="searchNoti('search')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
-	                            <label for="filter_unread"><spring:message code="ezNotification.hth06"/></label>
-	                        </div>
-	                    </li>
-	                </ul>
-	                
-	                <strong><spring:message code="ezNotification.hth07"/></strong>
-	                <ul class="check-list" id="notiType">
-	                    <li>
-	                        <div class="checks">
-	                            <input id="filter_totalcheck" type="checkbox" name="notitypefilter" maintype="y" value="total" checked="checked" onchange="totalfilterCheck()">
-	                            <label for="filter_totalcheck" style="font-weight: bold; font-size: larger"><spring:message code="ezNotification.hth08"/></label>
-	                        </div>
-	                    </li>
-	                    
-	                </ul>
-	            </div>
-	            </div>
-	        </div>
-	        <div class="btn-group">
-	            <p class="reset" onclick="filterAllSelect_onclick()"><spring:message code="ezNotification.hth09"/></p>
-	        </div>
+        <div class="filter_pop" id="notFillterPop" onclick="stopPropa()" style="display: none;">
+            <div class="check_list">
+                <h2><spring:message code="ezNotification.hth03"/></h2>
+                <div class="check_scroll">
+                    <h3><spring:message code="ezNotification.hth04"/></h3>
+                    <ul class="check_ul">
+                        <li>
+                            <div class="input_check">
+                                <input type="checkbox" id="filter_read" onchange="searchNoti('search')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
+                                <label for="filter_read"><spring:message code="ezNotification.hth05"/></label>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input_check">
+                                <input type="checkbox" id="filter_unread" onchange="searchNoti('search')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
+                                <label for="filter_unread"><spring:message code="ezNotification.hth06"/></label>
+                            </div>
+                        </li>
+                    </ul>
+                    <h3><spring:message code="ezNotification.hth07"/></h3>
+                    <ul class="check_ul" id="notiType">
+                        <li>
+                            <div class="input_check">
+                                <input type="checkbox" id="filter_totalcheck" name="notitypefilter" maintype="y" value="total" checked="checked" onchange="totalfilterCheck()">
+                                <label for="filter_totalcheck"><spring:message code="ezNotification.hth08"/></label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="reset"><span onclick="filterAllSelect_onclick()"><spring:message code="ezNotification.hth09"/></span></div>
         </div>
-
+        
         <div class="noti_info">
             <div class="noti_view">
                 <span><spring:message code="ezNotification.hth08"/><em id="notiTotalCount"></em></span>
@@ -112,7 +107,7 @@
 	function makeMainTypeList() {
 		var str = '';
 		for (key in mainType) {
-			str += '<li><div class="checks"><input id="filter_';
+			str += '<li><div class="input_check"><input id="filter_';
 			str += key + '" type="checkbox" name="notitypefilter" maintype="y" value=';
 			str += '"' + key + '" checked="checked" onchange="totalfilterCheck()"><label for="filter_';
 			str += key + '">'; 

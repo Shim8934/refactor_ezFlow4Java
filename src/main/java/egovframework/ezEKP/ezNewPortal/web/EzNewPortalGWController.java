@@ -3863,6 +3863,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -3920,6 +3921,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -4099,6 +4101,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
