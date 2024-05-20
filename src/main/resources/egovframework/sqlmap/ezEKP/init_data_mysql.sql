@@ -163,7 +163,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'BigSizeMailAttachLimit', '메일 대용량 첨부파일로의 자동전환 크기', '10', 'MB 단위로 메일의 일반 첨부파일이 대용량 첨부파일로 변경되는 크기를 지정한다.MailAttachLimit 과 함께 변경 (default: 10)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'BigSizeMailAttachDelDay', '메일 대용량 첨부파일 보존기간', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 메일 대용량 첨부파일을 삭제한다. (default: 14)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'attachFileNameMaxLength', '첨부파일명 최대 길이', '100', '글자 단위로 확장자 포함한 최대 길이를 지정한다. (default: 100)', '2017-01-06 00:00:00', '메일');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'ApprTotalAttachLimit', '전자결재 첨부파일 최대 크기', '50', 'MB 단위로 전자결재 첨부파일의 최대 크기를 지정한다.0: 무제한 (default: 50)', '2017-01-06 00:00:00', '전자결재');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'ApprTotalAttachLimit', '전자결재 (일반 + 대용량) 첨부파일 총합의 최대 크기', '50', 'MB 단위로 전자결재 (일반 + 대용량) 첨부파일 총합의 최대 크기를 지정한다. 0: 무제한 (default: 50)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'APPROVLEFTCOUNT', '전자결재 왼쪽 메뉴 총 개수 표시', 'YES', '전자결재 왼쪽 결재문서 메뉴에서 총 문서 개수를 표시한다.YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'approvalForDoc', '전체문서 조회 사용여부', 'N', '전체, 회사, 결재조회 관리자가 전체문서 조회 할 수 있는 기능을 사용한다.Y: 사용N: 사용안함 (default: N)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'ApprovalFlag', '전자결재 타입', 'S', 'G: 전자결재 공공S: 전자결재 일반 (default: S)', '2017-01-06 00:00:00', '전자결재');
@@ -3194,7 +3194,7 @@ VALUES
 
 -- 2023.08.17 한슬기 전자결재 첨부파일 관련 config추가(해당 데이터는 ezFlow의 init 메서드에서 tenant_id = 0으로 넣어주고있으나, 멀티테넌트 사용을 위해 스크립트에 추가)
 INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
-VALUES(@tenant_id_value, 'ApprAttachLimit', '10', 'MB 단위로 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', '전자결재 일반 첨부파일 최대 크기', '2023-03-07 14:33:29.000', '전자결재');
+VALUES(@tenant_id_value, 'ApprAttachLimit', '10', 'MB 단위로 전자결재 일반 첨부파일 총합의 최대 크기를 지정한다. (default: 10)', '전자결재 일반 첨부파일 총합의 최대 크기', '2023-03-07 14:33:29.000', '전자결재');
 INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'ApprBigSizeAttachDownloadLimitCount', '0', '대용량첨부 다운로드 횟수 제한, 0일 경우 무제한 (default: 0)', '전자결재 대용량첨부 다운로드 횟수 제한', '2023-03-07 14:33:29.000', '전자결재');
 INSERT INTO tbl_tenant_config(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
