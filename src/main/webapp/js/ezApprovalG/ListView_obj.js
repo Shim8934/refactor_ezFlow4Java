@@ -1,5 +1,3 @@
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
-
 //컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;

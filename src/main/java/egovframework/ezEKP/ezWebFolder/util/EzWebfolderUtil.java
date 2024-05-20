@@ -108,7 +108,7 @@ public class EzWebfolderUtil {
 	public List<FileUploadVO> convertFileUploadVOFromRequest(List<MultipartFile> multiPartFileLists
 					, String[] mailAttachArray, String userId, int tenantId, Locale locale) throws Exception {
 				  /*, String[] MailAttachLargeArray) throws Exception {*/
-		// log4j2에서 %M하면 메소드명 안 적어도 되서→ input,output값만 출력해도 될 듯?	*스프링 AOP: 매 메소드마다 표준적으로 로그를 찍을 수가 있음. (*만약 collection 과 같은 큰 데이터는 size만 찍으면 어떨까?)
+		// log4j2에서 %M하면 메소드명 안 적어도 되므로 input,output값만 출력해도 됨	 *스프링 AOP: 매 메소드마다 표준적으로 로그를 찍을 수가 있음.
 		logger.debug("convertFileUploadVOFromRequest started. multiPartFileLists={}, mailAttachArray={}, userId={}, tenantId={}, locale={}",
 															multiPartFileLists.toString(), mailAttachArray.toString(), userId, tenantId, locale);
 		List<FileUploadVO> list = new ArrayList<>();
@@ -177,7 +177,7 @@ public class EzWebfolderUtil {
 						int index = Integer.parseInt(fileInfo.get("index").toString());
 
 						MimeBodyPart mime = (MimeBodyPart)ezEmailUtil.getAttachPart(
-								ezEmailUtil.getMailMessage(f, uid, folderPath, null, locale, extraMap)	//괜히 Message객체 import시키기 싫어서.. : 변수로 저장안하고 그냥 parameter로 넣음.
+								ezEmailUtil.getMailMessage(f, uid, folderPath, null, locale, extraMap)	// Message 객체 import 하지 않기 위해 변수로 저장하지 않고 parameter 사용함
 								, index);
 						InputStream stream = mime.getInputStream();
 

@@ -1084,7 +1084,6 @@ function SetAutoPropFinal()
 	for (i = 0; i < Fields.length; i ++) {
 		if (pDraftFlag == "DRAFT") {
 			switch (Fields[i]) {
-			// 발신일자의 필드명은 sentdate가 아니라 senddate이다. 다르게 사용하는 부분이 있는건가?
 	  			case "sentdate" :        
 	  				PutFieldText(Fields[i], CurrentDate);
 	  		  		break;

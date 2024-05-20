@@ -1287,7 +1287,6 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		        		
 		                unread = orgMessage.isSet(Flags.Flag.SEEN) ? "1" : "0";
 		                
-		                //TODO: Sensitivity?
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 			        // in case of replying		        		
 		        	} else if (cmd.equals("REPLY") || cmd.equals("REPLYALL") || cmd.equals("FORWARD")) {

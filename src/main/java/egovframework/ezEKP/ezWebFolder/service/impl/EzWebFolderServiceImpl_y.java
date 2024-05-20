@@ -401,7 +401,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("searchFileName", searchFileName);
 		map.put("searchCreateName", searchCreateName);
 		map.put("searchFileType", searchFileType);
-		map.put("pStart", pStart); //여기
+		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
 		map.put("primary", primary);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -1178,7 +1178,6 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 				String folderType = folderVO.getFolderType();
 
-				// TODO checkCompanyFilePermission을 공통 함수로 쓸 수 있도록 해야할듯
 				if ("C".equalsIgnoreCase(folderType)) {
 					if (ezWebFolderDAO_y.checkCompanyFilePermission(map) > 0) {
 						status = "ok";

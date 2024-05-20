@@ -1826,7 +1826,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							
 							while (true) {
 								if (scheduleCalendar.compareTo(eDate_cal) > 0) {
-									//TODO boolean 리턴함수
 									calculatedScheduleEndDateCalendar.setTime(eDate_cal.getTime());
 									calculatedScheduleEndDateCalendar.add(Calendar.DATE, (Integer.parseInt(info[3])) * 7);
 									if(scheduleCalendar.compareTo(calculatedScheduleEndDateCalendar) > 0) {

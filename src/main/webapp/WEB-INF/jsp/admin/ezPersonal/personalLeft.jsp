@@ -18,10 +18,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		
 		<script type="text/javascript">
-// 		어디서 쓰는지
-// 			function btnModify_click() {
-// 				rtnValue = window.showModalDialog("link/CompanyLink_Modify.asp", "", "dialogHeight:460px;dialogwidth:390px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
-// 			}
 	
 			function goPage(idx) {
 				var url = "";

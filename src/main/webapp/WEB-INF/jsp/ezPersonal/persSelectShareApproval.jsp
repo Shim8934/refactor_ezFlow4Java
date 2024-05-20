@@ -333,7 +333,6 @@
 		        }
 		        
 		        if (length > 1) {
-		        	//한명만 지정해달라고 근데 나는 여러명 지정하는게 맞을 듯 한뎅..
 		            alert("<spring:message code='ezApprovalG.bhs21'/>");
 		            return;
 		        }
@@ -344,7 +343,6 @@
 					return;
 		        }
 		        
-		        //ajax태워서 공유결재자로 이미 지정되 있는지 체크하고 가자
 				if (checkDuplShareUser(selRow.getAttribute("DATA2"))) {
 					alert("<spring:message code='ezApprovalG.bhs18'/>");
 					return;

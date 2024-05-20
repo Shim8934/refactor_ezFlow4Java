@@ -1038,7 +1038,6 @@ public class EzSystemAdminController {
 		return jObj.toString();
 	}
 	
-	// 이하 재은 수정중
 	@RequestMapping(value="/admin/ezSystem/systemIPManager.do", method=RequestMethod.GET)
 	public String systemIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemIPManager started");

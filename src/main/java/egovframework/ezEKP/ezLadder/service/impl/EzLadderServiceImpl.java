@@ -258,7 +258,6 @@ public class EzLadderServiceImpl implements EzLadderService {
 		return list;
 	}
 
-	/** boh */
 	@Override
 	public List<LadderLineVO> selectSearchUser(String [] searchUserName, LadderVO ladVO)  throws Exception {
 		String primaryLang = commonUtil.getMultiData(ladVO.getLang(), ladVO.getTenant_id());
@@ -537,8 +536,6 @@ public class EzLadderServiceImpl implements EzLadderService {
 		}
 	}
 
-	/** hyh */
-	
 	@Override
 	public LadderVO getLadderGame(LadderVO ladVO) throws Exception {	// 사다리 한개의 정보
 		logger.debug("getLadderGame started.");

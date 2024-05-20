@@ -2437,7 +2437,6 @@ function AprDeptListXML() {
 
     var AprDeptInfo = AprDeptListxml;
 
-    //일단 크로스 위주로 했으니깐 나중에 고치자 도르야
 //    if (CrossYN()) {
 //        var xmlRtn = AprDeptPara.documentElement;
 //        var Node = AprDeptInfo.importNode(xmlRtn, true);

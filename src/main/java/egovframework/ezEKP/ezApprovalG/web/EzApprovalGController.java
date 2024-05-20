@@ -546,8 +546,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String listType = request.getParameter("listType");
 		String userID = request.getParameter("userID");
-//		쓰는곳 없어서 내가 씀
-//		String deptID = request.getParameter("deptID");
 		String deptID = request.getParameter("deptID");
 		String pageSize = request.getParameter("pageSize");
 		String pageNum = request.getParameter("pageNum");
@@ -5631,7 +5629,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/sendAckforExch.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String sendAckforExch() throws Exception{
-		//TODO: aspx 파일 존재안함
 		return "";
 	}
 	
@@ -9798,7 +9795,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String strImgCount = "";
-		//TODO 결재문서 ezCommon 경로에 이미지 저장하는 부분 제외 아직까지 사용하는부분 없어서... 모바일쪽에서 사용할지도 
 		
 		logger.debug("sendToMailApproval ended");
 		
@@ -10595,7 +10591,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		logger.debug("docID : " + docID);
-		//회람 했다가 다시 다빼면 지워야해서 만듬
+
 		ezApprovalGService.delCirculation(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 
 		logger.debug("delCirculation ended");

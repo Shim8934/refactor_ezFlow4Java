@@ -631,7 +631,6 @@ function TreeView() {
 
     function TreeView_ToString() {
         return "KAONI TreeView";
-        //return "영준이가 자바스크립트로 만든 트리뷰 v0.1";
     }
 }
 // TreeView 클래스 끝

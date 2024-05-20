@@ -427,7 +427,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 						
 						while (true) {
 							if (scheduleCalendar.compareTo(lastDateOfCalendar) > 0) {
-								//TODO boolean 리턴함수
 								calculatedScheduleEndDateCalendar.setTime(lastDateOfCalendar.getTime());
 								calculatedScheduleEndDateCalendar.add(Calendar.DATE, (Integer.parseInt(weeklyInterval)) * 7);
 								if(scheduleCalendar.compareTo(calculatedScheduleEndDateCalendar) > 0) {
@@ -446,7 +445,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							String scheduleDate = nsdf.format(scheduleCalendar.getTime());
 								
 								if(isExistEndDate.equals("0")){ //isExistEndDate Code "0" : 종료일 있음
-									//TODO makeFunction
 									for (int k = 0; k < repeatDayList.size(); k++) {
 										scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
 										scheduleDate = nsdf.format(scheduleCalendar.getTime());
@@ -860,7 +858,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 						
 						while (true) {
 							if (scheduleCalendar.compareTo(lastDateOfCalendar) > 0) {
-								//TODO boolean 리턴함수
 								calculatedScheduleEndDateCalendar.setTime(lastDateOfCalendar.getTime());
 								calculatedScheduleEndDateCalendar.add(Calendar.DATE, (Integer.parseInt(weeklyInterval)) * 7);
 								if(scheduleCalendar.compareTo(calculatedScheduleEndDateCalendar) > 0) {
@@ -879,7 +876,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							String scheduleDate = nsdf.format(scheduleCalendar.getTime());
 								
 								if(isExistEndDate.equals("0")){ //isExistEndDate Code "0" : 종료일 있음
-									//TODO makeFunction
 									for (int k = 0; k < repeatDayList.size(); k++) {
 										scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
 										scheduleDate = nsdf.format(scheduleCalendar.getTime());

@@ -296,7 +296,6 @@
 		            */
 		            if (pDraftFlag == "REDRAFT") {
 		            	if (ListType == "21") {
-		            		//임시보관함일경우 사인 초기화??
 		            		setFirstDrafter(isUsed, "");
 		            	} else {
 		            		if(approvalFlag == "G") {
@@ -1982,9 +1981,9 @@
 		                	//회람
 		                	if (ret[22] == "noItem") {
 		                		delAprLineInfoCC();
-		                		//없으니깐 암것도 안해도되려나 싶은데 기존꺼를 뺏을수도 있으니까 무조건 삭제
+		                		// ret[22] 값이 "noItem"일 경우 기존 데이터가 있을 수 있으므로 삭제함
 		                	} else if (ret[22] == "sameItem") {
-		                		//같으니깐 암것도 안해도 되려나
+		                		// ret[22] 값이 "sameItem"일 경우 동작 없음
 		                	} else {
 		                		//회람 저장
 		                		SaveAprLineInfoCC(ret[22]);

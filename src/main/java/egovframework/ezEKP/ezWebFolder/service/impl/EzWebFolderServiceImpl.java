@@ -1846,7 +1846,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			process: {
 				FolderVO destFolder = getFolderByFolderId(destFolderId, offset, tenantId);
 
-				// 같은 폴더인지는 js 단에서 처리하니까 상관 없을듯
+				// 같은 폴더인지는 js 단에서 처리함
 				// Check copy/move conditions
 				// if (folder.getFolderUpper().equals(destFolderId)) {
 				// code = 4;

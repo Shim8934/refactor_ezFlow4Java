@@ -335,7 +335,6 @@
 				success : function(data) {
 					var code = data.code;
 					
-					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 start
 					if (code == 0 || code == 8) {
 						if (data.folderErrorArray) {
 							alert("<spring:message code='ezWebFolder.t245' />");
@@ -346,7 +345,6 @@
 							}
 						}
 					}
-					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 end
 					
 					switch(code) {
 						case 0: 
@@ -387,7 +385,7 @@
 							)
 							
 							var dupFolder = ""; 
-							// -1 인거는 같지 않은거 이동시키는 로직을 처리해야ㅎ하는거 
+
 							if (nEquFolder != null || nEquFolder != undefined || nEquFolder.length != 0) {
 								dupFolder = nEquFolder.toString();
 							}
@@ -451,7 +449,7 @@
 				success : function(data) {
 					var code = data.code;
 					
-					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 start
+					// 차후 코드 리팩토링 필요 파트 start
 					if (code == 0 || code == 8) {
 						if (data.folderErrorArray) {
 							alert("<spring:message code='ezWebFolder.t245' />");
@@ -462,7 +460,7 @@
 							}
 						}
 					}
-					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 end
+					// 차후 코드 리팩토링 필요 파트 end
 					
 					switch(code) {
 						case 0: 
@@ -506,7 +504,7 @@
 							)
 							
 							var dupFolder = ""; 
-							// -1 인거는 같지 않은거 이동시키는 로직을 처리해야ㅎ하는거 
+
 							if (nEquFolder != null || nEquFolder != undefined || nEquFolder.length != 0) {
 								dupFolder = nEquFolder.toString();
 							}

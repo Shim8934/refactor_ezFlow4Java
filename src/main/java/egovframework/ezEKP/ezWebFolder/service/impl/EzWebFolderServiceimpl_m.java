@@ -865,8 +865,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 							// 현재 폴더의 정보 가져오기 
 							FolderVO currentFolderVO = ezWebFolderService.getFolderByFolderId(currentFolder, offset, tenantId);
 							// 현재 및 하위 폴더들 정보 모두 가져오기 
-							// 현재 아래와 같이 진행할 경우 아에 자신의 모든것을 지우는 형태임 하지만 모든 것을 지우는 형태로 할게 아니고 그 하위를 지우게 할 거니까 
-							// 수정해야함 ( 현재 하위의 폴더를 찾는 )
+							// 현재 아래와 같이 진행할 경우 아에 자신의 모든것을 지우는 형태임. 하지만 자신 전체가 아닌 그 하위를 지워야 하므로 수정 필요함
 							List<FolderTreeVO> subFolders = ezWebFolderService_y.getFolderTree(userId, userInfo.getDeptID(), userInfo.getCompanyID(), currentFolderVO.getFolderType(), 
 								userInfo.getPrimary(), tenantId, "delete");
 
@@ -1564,7 +1563,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		FolderVO userRootFolder = ezWebFolderService.getRootFolderId(userId, "U", offset, tenantId);
 		String userRootPath = userRootFolder.getFolderPath();
 
-		// 코드 진짜 더럽다 수정해야된다
 		FolderVO destFolder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 		String destFolderPath = destFolder.getFolderPath();
 		boolean isMoveToUserFolder = destFolderPath.startsWith(userRootPath);

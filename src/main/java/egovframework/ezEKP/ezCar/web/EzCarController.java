@@ -139,9 +139,8 @@ public class EzCarController extends EgovFileMngUtil {
             accessCode = req.getParameter("accessCode");
          }
          
-         //요기네 adminFg를 얻어오자
          String adminFg = ezCarService.getAdminFlagForm(userInfo.getCompanyID(), carID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()); 
-         //String adminFg = "Y";
+
          logger.debug("adminFg="+adminFg);
          
          //필요한 정보 (오늘 년월일, carFormList(오늘 년월에 해당하는 list조회), car_Id, carName(carId로 조회해오기))

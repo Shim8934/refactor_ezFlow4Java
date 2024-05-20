@@ -2135,7 +2135,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("lang", lang);
-//		나중에 쪼갤수도 rest 호출할때 arg받아서 처리해야할수도잇을거같은데
 //		map.put("accessType", "Y","N","TOTAL")
 		map.put("accessType", "1");
 		List<MenuAuthVO> menuAuthsY = ezNewPortalDAO.getMenuAuth(map);
@@ -2309,7 +2308,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int menuId = ezNewPortalDAO.insertMenu(map);
 		
 		map.put("menuId", menuId);
-		//TODO 이효진 companyLang 만들고 나면 하드코딩한거 지우고 DB에서 get
 		map.put("companyLang", 1);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -2346,7 +2344,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 		
 		//권한은 셀렉트키로 받아서 ezNewPortal.updateCompanyMenuNameInfo
-		//지금 권한 안들어오지 조직도없지 선택못하지
 		updateMenuAuth(menuAuths, menuId, companyId, tenantId);
 		
 		logger.debug("insertMenu ended.");
@@ -2628,7 +2625,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 			
 			//3시간당 오늘의 날씨
-			//이거는 다른 스케줄러로 뺴서 매일 00시에서 3시 사이에 돌려줘야함
 			String todayWeather;
 			
 			for (String tempCityCode : cityCodeList) {
@@ -2729,8 +2725,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		MenuAuthVO userAuth = ezNewPortalDAO.getCheckUserAuth(map);
 		
-		//여기서 부터 떠오르지 않아서 더러운 코드로 그냥 분기분기분기
-		//좋은 아이디어 있으신분이 수정 바랍니다
 		if (userAuth != null) {
 			//유저 권한이 있으면 바로 리턴
 			if (userAuth.isAccessYN() == true) {
@@ -2778,7 +2772,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				if (comAuth != null) {
 					//유저든 부서든 둘다 Y,N이 있을때만 company 권한보다 앞서므로 다 권한이 모두 없을 때 마지막에 company를 탐색하였다
-					//더 좋은 아이디어 있으신분 수정바랍니다
 					if (comAuth.isAccessYN() == true) {
 						logger.debug("Auth : comTrue");
 						resultAuth = true;
