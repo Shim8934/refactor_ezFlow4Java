@@ -3865,7 +3865,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             map.put("portletUsed", 1);
             map.put("portletOrder", order);
             map.put("boardId", null);
-            map.put("portletCode", code);
+            map.put("portletCode", code.getCode());
             ezCommonDAO.insertPortletWithCode(map);
 
             for (CompanyInfoVO company : companyList) {
