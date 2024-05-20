@@ -1971,7 +1971,17 @@ div.orbit img{border-radius: 5px;}
 .list_no_appr .no_apprBox > ul li > .count.point{color:#393939;}
 /* //조기완 */
 
-#fixBoardArea {height: 300px; margin-bottom: 20px; display: flex;}
+#fixBoardArea {
+	margin-bottom: 20px;
+	display: flex;
+	max-height: 300px; /* 적절한 값으로 변경해주세요 */
+	transition: max-height 0.5s ease-in-out;
+	overflow: hidden;
+}
+#fixBoardArea.hidden {
+	max-height: 0;
+	margin-bottom : 0;
+}
 .disable { pointer-events: none; opacity: 0.4;}
 .portlet.col, .portlet.addPortlet {height: 289px;}
 .notiBody{background-color : transparent;}
