@@ -1769,6 +1769,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("description","인도네시아어 사용여부(YES: 사용, NO: 사용안함, default: NO) 언어코드 id : Indonesian, 국가코드 ID : Indonesia");
 			put("config_type","환경설정");
 		}});
+		test.add(new HashMap<String, Object>(){{
+			put("confName","useEachMailDefault"); // property_name
+			put("property_value","NO");
+			put("config_name","메일 개별발신 디폴트 사용여부");
+			put("regdate","2024-01-30 00:00:00");
+			put("description","시스템 > 패러메터 > 개별발신 디폴트 사용  메일쓰기 시 개별발신 사용을 디폴트로 설정한다. 사용 : YES , 사용안함 : NO (default : NO)");
+			put("config_type","메일");
+			put("property","USEEACHMAILDEFAULT"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
+		}});
 
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		

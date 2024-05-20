@@ -164,14 +164,13 @@
 		        }
 		        
 		        if (individualMailUser > 0) {
-
-		        	if (rgParams["EachMail"] == "true") {
+					if (rgParams["EachMail"] == "true") {
 			            document.getElementById("eachMailSend").checked = true;
 			        } else {
 			            document.getElementById("eachMailSend").checked = false;
 			        }
 		        }
-		        
+
 				if (rgParams["secureMail"] == "Security" || rgParams["isSecureMail"] == "true") {
 					document.getElementById("chkSecureMail").checked = true;
 				}

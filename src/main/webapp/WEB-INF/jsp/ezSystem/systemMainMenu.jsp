@@ -16,10 +16,10 @@
 			var editorFontStyle = "";
 			var useAllUserOldMailDelete = "${useAllUserOldMailDelete}";
 			var useAllUserOldMailDeletePeriod = "${useAllUserOldMailDeletePeriod}";
-			
+
 			function window_onload() {
 				checkUseSession();
-				
+
 				if (timeZone != "") {
 					document.getElementById("PrimaryTimeZone").value = timeZone;
 				} else {
@@ -362,6 +362,11 @@
 	            	</tr>
 		            
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0006"/></th><td><input data-paramId="INDIVIDUALMAILUSER" id="INDIVIDUALMAILUSER" maxlength="3" type="text" value="<c:out value='${configMap.INDIVIDUALMAILUSER}'/>"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
+		            <%-- 2024-01-30 장혜연 메일 개별발신 디폴터 설정 추가 --%>
+		            <tr data-name="mail">
+						<th><spring:message code="ezSystem.hy01"/></th>
+						<td><select data-paramId="useEachMailDefault" id="use_EachMailDefault"><option <c:if test="${configMap.useEachMailDefault == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useEachMailDefault == null or configMap.useEachMailDefault == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
+					</tr>
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0007"/></th><td><select data-paramId="IS_READ_DELETE" id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezSystem.hsb01"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezSystem.hsb02"/></option></select></td></tr>
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0020"/></th><td><select data-paramId="Use_FromAddress" id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
 					<c:if test="${useAllUserOldMailDelete eq 'YES'}">
