@@ -9,7 +9,7 @@ var duplicateFile = (function() {
 	var current = null;
 
 	// ok: 파일, 폴더아이디
-	// okMessage: 처리 완료 메세지 (ok 배열들과 같은 처리니깐 하나만 있으면 됨)
+	// okMessage: 처리 완료 메세지
 	// error: 
 	var alerts = {
 			ok: [],
@@ -628,7 +628,6 @@ var duplicateFile = (function() {
 		
 		infoQueue = Array.prototype.slice.call(params.infoArray);
 		// pop 메소드를 사용하기 위해서 스택 구조에서 큐 형태로 만듦
-		// unshift 를 이용하여 앞 원소부터 빼면 되지만 뭔가 헷갈림
 		infoQueue.reverse();
 		
 		// params.infoArray 프로퍼티 삭제

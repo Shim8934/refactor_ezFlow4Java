@@ -21,7 +21,7 @@ function webfolderUpload_open(obj) {
 	mailAttachItems = isAllSave ? obj.closest('span[name="MailAttachDownloadItems_webfolder"]') : [obj];
 //	console.log("mailAttachItems.length: %s", mailAttachItems.length);
 
-	var openWin;	// 변수가 밖에 있어야 opener가 됐던건가..? 왜 밖에 있지
+	var openWin;
 
 	if (isPreView) {
 		openWin = GetOpenWindow("/ezWebFolder/webfolderFileListUploadParent.do", "", 761, 611, "YES");

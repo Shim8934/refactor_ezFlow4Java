@@ -12,11 +12,7 @@
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
     <script type="text/javascript">
-    /*
-        var 대신 const와 let을 사용한 이유는 어디에서 어떻게 사용된지 파악하기 힘들기 때문에 사용했습니다.
-        let : 변수에 재할당이 가능합니다.
-        const : 변수 재선언, 변수 재할당 모두 불가능합니다.
-    */
+
     var updateFileExList = ${fileExtension};
     // 추가 또는 삭제시 view 타입 변경되는 오류
     window.onload = function () {

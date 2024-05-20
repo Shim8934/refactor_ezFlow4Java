@@ -34,7 +34,7 @@ function getFileUploadList() {
 
 	parent.mailAttachItems.forEach(element => {
 		fileArray.push({
-			'paramKey' : "fileToUploadMailAttach",	// 대용량: "fileToUploadMailAttachLarge"	//구분기준은?
+			'paramKey' : "fileToUploadMailAttach",	// 대용량: "fileToUploadMailAttachLarge"	
 			'lastModified' : lastModified,
 			'lastModifiedDate' : lastModifiedDate,
 			'originalFilename' : element.getAttribute("_filename"),
