@@ -857,7 +857,7 @@ public class EzNewPortalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = request.getParameter("companyID") != null ? request.getParameter("companyID") : info.getCompanyId();
+			String companyId = request.getParameter("companyId") != null ? request.getParameter("companyId") : info.getCompanyId();
 			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			String langType = info.getLang();
@@ -1151,7 +1151,7 @@ public class EzNewPortalGWController {
 			String langType = info.getLang();			
 			JSONObject data = new JSONObject();
 
-			ezNewPortalService.updateUserMenuOrder(info.getCompanyId(), info.getTenantId(), userId, jObj);
+			ezNewPortalService.updateUserMenuOrder(companyId, info.getTenantId(), userId, jObj);
 			
 			// 리스트 다시 받아서 출력
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
@@ -1336,7 +1336,7 @@ public class EzNewPortalGWController {
 			String langType = info.getLang();			
 			JSONObject data = new JSONObject();
 			
-			ezNewPortalService.deleteUserMenuOrder(info.getCompanyId(), info.getTenantId(), userId);
+			ezNewPortalService.deleteUserMenuOrder(companyId, info.getTenantId(), userId);
 			// 초기화 하면 회사에서 지정한 메뉴 순서로 출력
 			List<MenuInfoVO> compMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
 			

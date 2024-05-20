@@ -908,7 +908,7 @@
                 data: JSON.stringify(json),
                 success : function(text) {
                     if (text === "true") {
-                        window.location.reload();
+                        parent.window.location.reload();
                     }
                 }
             });
