@@ -3857,6 +3857,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         map.put("portletName6", "portlet tetap");
         map.put("menuId", 4);
         map.put("portletUrl", "/ezNewPortal/getCustomBoardInfo.do");
+        map.put("connectionUrl", "/ezNewPortal/getCustomBoardInfo.do");
         map.put("portletType", "G");
 
         for(FixBoardCode code : codes) {

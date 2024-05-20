@@ -996,10 +996,10 @@
 	</select>
 	
 	<insert id="EzCommonDAO.insertPortletComp">
-		INSERT INTO TBL_PORTAL_PORTLET_COMP 
-			(COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
-		VALUES 
-			(#companyId#, #tenantId#, #portletId#, #menuId#, #portletUsed#, #portletOrder#, #boardId#)
+		INSERT INTO TBL_PORTAL_PORTLET_COMP
+			(COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID, CONNECTION_URL)
+		VALUES
+			(#companyId#, #tenantId#, #portletId#, #menuId#, #portletUsed#, #portletOrder#, #boardId#, #connectionUrl#)
 	</insert>
 	
 	<insert id="EzCommonDAO.insertRsPortletName">
