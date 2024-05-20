@@ -2125,7 +2125,9 @@ public class EzEmailMailListController {
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 			
 			if (message != null) {
-				String name = ((InternetAddress)message.getFrom()[0]).getPersonal();
+				String name = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+				name = commonUtil.trimDoubleQuotes(name);
+
 				String email = ((InternetAddress)message.getFrom()[0]).getAddress();
 				
 				if (name == null || name.trim().equals("")) {
@@ -2135,8 +2137,15 @@ public class EzEmailMailListController {
 					name = mailAddrList.get(0);
 					email = mailAddrList.get(1);
 				}
-				
-				resultData = name + " <" + email + ">";
+
+				// "01099455495 <발신전용>" <01099455495@ktfmms.magicn.com>와 같이 이름안에 <> 기호가 있는 경우
+				// 이름을 감싸는 이중따옴표가 제거된 상태로 처리가 되어 이메일 주소 파싱에 오류가 발생함. 이에 < 기호가 있는 경우
+				// 다시 이중따옴표로 감싸도록 함.
+				if (name.contains("<")) {
+					resultData = "\"" + name + "\"" + " <" + email + ">";
+				} else {
+					resultData = name + " <" + email + ">";
+				}
 			}
 			
 			folder.close(true);
