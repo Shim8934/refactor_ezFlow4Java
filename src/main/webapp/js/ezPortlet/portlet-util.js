@@ -262,7 +262,7 @@ function resizePortlet(portletNode) {
         gridElement.refreshItems();
     } else {
         if (gridElement.getItem(portletNode) != null) {
-            gridElement.refreshItems([gridElement.getItem(portletNode)]);
+            gridElement.refreshItems();
         } else {
             return;
         }

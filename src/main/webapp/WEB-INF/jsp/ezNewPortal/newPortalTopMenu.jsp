@@ -295,7 +295,9 @@
 		var setEvent = function (id, url, location, option) {
 			var element = document.getElementById(id);
 			element.addEventListener('click', function () {
-			    if (id == 'util_logout') {
+			    if (id === 'logoUrl') {
+					parent.location.reload();
+				} else if (id == 'util_logout') {
 			        subMenuClickEvent('off');
 			        closeNoti(); // 통합알림창 닫기
 			        self.top.location.href = url;
