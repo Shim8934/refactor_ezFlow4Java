@@ -658,7 +658,7 @@
         setPortalCount();		// 포탈 카운트 세팅
         setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
         makeSwiperByTopMenu();
-        callAllUserTab();
+        // callAllUserTab();
     }
 
     function setPortalCount(){
@@ -838,7 +838,7 @@
     }
 
     // 겸직
-    function callAllUserTab() {
+    /*function callAllUserTab() {
         $.ajax({
             type: "GET",
             url: "/ezNewPortal/allUserTab.do",
@@ -847,7 +847,7 @@
                 makeAllUserTab(data);
             }
         });
-    }
+    }*/
     
     function getCookie(Name) {
         var search = Name + "="
@@ -866,7 +866,7 @@
         }
     }
     
-    function makeAllUserTab(json) {
+    /*function makeAllUserTab(json) {
         var switchUserCompany = "<c:out value='${switchUserCompany}' />"
 
         if (switchUserCompany !== "Y") return;
@@ -913,7 +913,7 @@
                 }
             });
         }
-    }
+    }*/
     
     // 고정포틀릿 on/off
     function displayFixPortlet() {
