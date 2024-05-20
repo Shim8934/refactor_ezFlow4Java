@@ -1613,6 +1613,10 @@
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
 		            message.DocumentBodySetAttribute("SepAttachLVXml", g_SepAttachLVXml);
+
+		            if (pDraftFlag == "REDRAFT") {
+		            	SaveFile();
+		            }
 		        }
 		    }
 		    function GetSepAttParamXml(g_SepAttachLVXml) {
