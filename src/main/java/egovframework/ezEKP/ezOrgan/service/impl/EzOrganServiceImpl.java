@@ -2780,7 +2780,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 
     @Override
 	public String changeCookie(String loginCookie, String deptId, String companyId, int tenantId, String jobId) throws Exception {
-        logger.debug("loginCookie = " + loginCookie + ", deptId = " + deptId + ", companyId = " + companyId + ", tenantId = " + tenantId);
+		logger.debug("changeCookie => deptId = " + deptId + ", companyId = " + companyId + ", tenantId = " + tenantId + ", jobId = " + jobId);
         String decData = egovFileScrty.decryptAES(loginCookie);
 		String[] decDataArray = decData.split("///", -1);
 		decDataArray[8] = String.valueOf(tenantId);
