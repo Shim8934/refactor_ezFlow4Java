@@ -3350,7 +3350,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				infoVO.getCompanyName(), infoVO.getCompanyName2(),
 				infoVO.getTitle(), infoVO.getTitle2(), infoVO.getCompanyId(), infoVO.getJobId());
 
-		String cookieStr = ezOrganService.changeCookie(loginCookie, infoVO.getDeptId(), infoVO.getCompanyId(), userInfo.getTenantId(), infoVO.getJobId());
+		String cookieStr = ezOrganService.changeCookie(loginCookie, infoVO.getDeptId(), infoVO.getCompanyId(), userInfo.getTenantId(), Optional.ofNullable(jobId).orElse(""));
 		Cookie cookie = new Cookie("loginCookie", cookieStr);
 		cookie.setPath("/");
 		response.addCookie(cookie);

@@ -1531,7 +1531,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 				String cInfo = userInfo.getServerName() + "///" + cookieValue1.split("///")[1] + "///" + cookieValue1.split("///")[2]
 						+ "///" + cookieValue1.split("///")[3] + "///" + cookieValue1.split("///")[4] + "///" + returnValue + "///"
 						+ lang + "///" + timeZone  + "///" + userInfo.getTenantId() + "///" + userInfo.getDeptID() +  "///" + userInfo.getCompanyID()
-						+ "///" + userInfo.getJobId();
+						+ "///" + Optional.ofNullable(userInfo.getJobId()).orElse("");
 
 				loginCookie = egovFileScrty.encryptAES(cInfo);
 				

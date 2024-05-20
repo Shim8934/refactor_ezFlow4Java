@@ -295,18 +295,14 @@
 		var setEvent = function (id, url, location, option) {
 			var element = document.getElementById(id);
 			element.addEventListener('click', function () {
-			    if (id === 'logoUrl') {
-					parent.location.reload();
-				} else if (id == 'util_logout') {
+				closeNoti(); // 통합알림창 닫기
+			    if (id == 'util_logout') {
 			        subMenuClickEvent('off');
-			        closeNoti(); // 통합알림창 닫기
 			        self.top.location.href = url;
 			    } else if (id != 'util_employee_search' && id != 'util_admin') {
 					subMenuClickEvent('off', url);
-					closeNoti(); // 통합알림창 닫기
 				} else {
 					subMenuClickEvent('off');
-					closeNoti(); // 통합알림창 닫기
 					window.open(url, location, option);
 				}				
 			});				

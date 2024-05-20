@@ -2477,7 +2477,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (orgDeptID != null && !orgDeptID.equals("") && !orgDeptID.equals(userInfo.getDeptID())) {
 				String decData = egovFileScrty.decryptAES(loginCookie);
 				
-				String[] decDataArray = decData.split("///");
+				String[] decDataArray = decData.split("///", -1);
 				
 				decDataArray[9] = orgDeptID;
 				decDataArray[10] = orgCompanyID;

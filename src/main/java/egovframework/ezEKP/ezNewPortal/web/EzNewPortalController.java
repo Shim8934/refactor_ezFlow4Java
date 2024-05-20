@@ -748,10 +748,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		logger.debug("userThemeSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
-		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+
 		//사용자가 선택 가능한 테마 목록 불러오기
 		String themeUrl = "/rest/ezPortal/themes/users/" + userId;
-		JSONObject themeResultBody = commonUtil.getJsonFromRestApi(themeUrl, null, req, "get", null);
+		JSONObject themeResultBody = commonUtil.getJsonFromRestApi(themeUrl, param, req, "get", null);
 		String themeStatus = themeResultBody.get("status").toString();
 		String usedTheme = "";
 		

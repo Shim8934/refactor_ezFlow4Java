@@ -370,7 +370,7 @@ public class CommonUtil {
 		try{
 			String decData = getDecryptedLoginCookie(loginCookie);
 
-			String[] decDataArray = decData.split("///");
+			String[] decDataArray = decData.split("///", -1);
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
 			String locale = decDataArray[5];
@@ -869,7 +869,7 @@ public class CommonUtil {
 	}
 
 	public boolean checkDeptId(String cValue){
-		String[] decDataArray = cValue.split("///");
+		String[] decDataArray = cValue.split("///", -1);
 		
 		String userID = decDataArray[1];
         String tenantId = "0";
