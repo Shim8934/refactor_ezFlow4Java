@@ -83,6 +83,13 @@
 			    if (useReSend == "YES" && sentItems.toUpperCase() == "TRUE") {
 		    		$('#liReSend').css('display', 'block');
 		   		}
+
+				document.addEventListener('click', function (e) {
+					var clickedElementClass = e.target.className;
+					if (!clickedElementClass.includes('view_more')) {
+						hiddenMoreMenu();
+					}
+				});
 			    
 			    if (g_notiSSO == "1")
 				{
@@ -628,6 +635,28 @@
                 	window.open(requestUrl, boardTarget, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + boardHeight + ",width=" + boardWidth + ",top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    }
+			
+			function toggleMoreMenu() {
+				document.getElementById("view_more").classList.toggle('on');
+				var element = document.getElementById("layer_menu");
+				if (element) {
+					if (element.style.display === 'none') {
+						element.style.display = '';
+					} else {
+						element.style.display = 'none';
+					}
+				}
+			}
+			
+			function hiddenMoreMenu() {
+				var element = document.getElementById("layer_menu");
+				if (element) {
+					if (element.style.display !== 'none') {
+						document.getElementById("view_more").classList.remove('on');
+						element.style.display = 'none';
+					}
+				}
+			}
 	    </script>
 		    
 		<%-- 웹폴더 첨부 레이어팝업을 위한 스크립트 추가--%>
@@ -654,22 +683,6 @@
 		                    <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
 		                    <li><span id="btnMove" onClick="move_onClick()"><spring:message code="ezEmail.t482" /></span></li>
 		                    <li id="PcSave"><span id="btnSave" onClick="download_mail()">PC <spring:message code="ezEmail.t48" /></span></li>
-		                    <c:if test="${packageType != 'mail'}">
-		                    	<li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
-		                    	<c:if test="${useMailToCommunity == 'YES'}">
-		                    	<li id="CommunityItem"><span id="btnCommunity" onClick="NewItemCommu_onclick()"><spring:message code="ezEmail.hsbCM01" /></span></li>
-		                    	</c:if>
-		                    </c:if>
-		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
-		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
-		                    <c:if test="${useCabinet == 'YES'}">
-		                    	<li><span id="addCabinet" onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
-		                    </c:if>
-		                    <c:if test="${isSecureMail == true}">
-		                    	<li><span id="btnSecureInfo" onClick="secureInfo_onClick()"><spring:message code="ezEmail.lhm44" /></span></li>
-		                    </c:if>
-							<li id="btnViewOriginText"><span onclick="view_OriginalEML()"><spring:message code='ezEmail.kdh03' /></span></li>
-							<li id="btnExport"><span onclick="download_Single_mail()"><spring:message code="ezEmail.t378" /></span></li>
 							<li><span class="icon16 popup_icon16_star" id="btnBookmark" onClick="toggle_flag()"></span></li>
 							<li><span class="icon16 popup_icon16_delete" id="btnDelete" onClick="delete_mail()"></span></li>
 							<li><span class="icon16 popup_icon16_print" id="btnPrint" onClick="btnPrint_onClick()"></span></li>
@@ -677,6 +690,26 @@
 			                    <li id="iprev"><span id="btnpre" onclick="get_mail('prev')" style="padding-top:0px;"><img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezEmail.t1000' />"  /></span></li>
 			                    <li id="inext" ><span id="btnnext" onclick="get_mail('next')" style="padding-top:0px;"><img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezEmail.t1001' />" /></span></li>
 		                    </c:if>
+							<li class="view_more" onclick="toggleMoreMenu()"><span class="view_more" id="view_more" style="border: none;"><img class="view_more" src="/images/ImgIcon/view_more.png"></span>
+								<ul class="layer_select" id="layer_menu" style="display: none">
+									<c:if test="${packageType != 'mail'}">
+										<li id="BoardItem"><span id="btnBoard" onClick="NewItem_onclick()"><spring:message code="ezEmail.t548" /></span></li>
+										<c:if test="${useMailToCommunity == 'YES'}">
+											<li id="CommunityItem"><span id="btnCommunity" onClick="NewItemCommu_onclick()"><spring:message code="ezEmail.hsbCM01" /></span></li>
+										</c:if>
+									</c:if>
+									<li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
+									<li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>
+									<c:if test="${useCabinet == 'YES'}">
+										<li><span id="addCabinet" onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+									</c:if>
+									<c:if test="${isSecureMail == true}">
+										<li><span id="btnSecureInfo" onClick="secureInfo_onClick()"><spring:message code="ezEmail.lhm44" /></span></li>
+									</c:if>
+									<li id="btnViewOriginText"><span onclick="view_OriginalEML()"><spring:message code='ezEmail.kdh03' /></span></li>
+									<li id="btnExport"><span onclick="download_Single_mail()"><spring:message code="ezEmail.t378" /></span></li>
+								</ul>
+							</li>
 		                </ul>
 		            </div>
 		            <div id="close"><ul><li><span onClick="OnBtnClose()"></span></li></ul></div>	
