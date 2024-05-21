@@ -34,6 +34,9 @@
 		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var taskCount = "<c:out value='${taskCount}'/>"; // 단위업무 전체 갯수
 		    var pageAdminFlag = 'user'
+		    var searchTitle = '';
+            var searchCode = '';
+            var searchFlag = '';
 		    
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {

@@ -86,7 +86,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskHistory(String taskCode, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID, String orderOption1, String orderOption2) throws Exception;
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID, String title, String code, String flag, String orderOption1, String orderOption2) throws Exception;
 	
 	public String getSealList(String realPath, String listFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 
