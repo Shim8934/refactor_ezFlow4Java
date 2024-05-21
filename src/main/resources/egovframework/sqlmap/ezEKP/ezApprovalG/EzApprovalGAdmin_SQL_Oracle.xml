@@ -437,6 +437,14 @@
 						taskcode = '99999999')
 			]]>
 		</isNotEqual>
+		<isNotEmpty property="title">
+			AND
+			TASKNAME LIKE CONCAT(CONCAT('%', #title#), '%')
+		</isNotEmpty>
+		<isNotEmpty property="code">
+			AND
+			TASKCODE LIKE CONCAT(CONCAT('%', #code#), '%')
+		</isNotEmpty>
 		<isEmpty property="v_ORDEROPTION1">
 			ORDER BY
 			taskcode ASC
