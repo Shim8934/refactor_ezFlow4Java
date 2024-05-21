@@ -1105,23 +1105,23 @@ public class EzEmailAdminController {
 				}
 
 				Map<String, String> map = new HashMap<>();
-				map.put("DLCN", commonUtil.cleanValue(dlCn)); // 공용배포그룹 ID
-				map.put("DLNM", commonUtil.cleanValue(dlName)); // 공용배포그룹 이름
-				map.put("DLMAIL", commonUtil.cleanValue(mail)); // 공용배포그룹 Mail
+				map.put("DLCN", dlCn); // 공용배포그룹 ID
+				map.put("DLNM", dlName); // 공용배포그룹 이름
+				map.put("DLMAIL", mail); // 공용배포그룹 Mail
 
 				if ("group".equals(pClass)) { // 부서, 공용배포그룹
-					map.put("CN", commonUtil.cleanValue(pCn));
-					map.put("MAIL", commonUtil.cleanValue(primaryMail));
-					map.put("DISPLAYNAME", commonUtil.cleanValue(displayName));
+					map.put("CN", pCn);
+					map.put("MAIL", primaryMail);
+					map.put("DISPLAYNAME", displayName);
 					mailDistributionSortList.add(map);
 
 				} else if ("user".equals(pClass)) { // user or jobmst
 					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, primaryLang, tenantId);
 
 					if (user != null) {    // 사원
-						map.put("CN", commonUtil.cleanValue(pCn));
-						map.put("DISPLAYNAME", commonUtil.cleanValue(user.getDisplayName()));
-						map.put("MAIL", commonUtil.cleanValue(user.getMail()));
+						map.put("CN", pCn);
+						map.put("DISPLAYNAME", user.getDisplayName());
+						map.put("MAIL", user.getMail());
 						mailDistributionSortList.add(map);
 					} else {    // 직위, 직책
 						String jobId = pCn.split("__")[1]; // 직위,직책의 경우 메일아이디가 (__직위아이디)이기 때문에 (__)를 제외하여 직위아이디를 구한다
@@ -1132,9 +1132,9 @@ public class EzEmailAdminController {
 						String jobTitle = jobType.equals("001") ? "main.t77" : "ezPersonal.t175";
 
 						if (jobVO != null && !"".equals(jobVO.getJobID())) {    // 겸직
-							map.put("CN", commonUtil.cleanValue(jobVO.getJobID()));
-							map.put("DISPLAYNAME", commonUtil.cleanValue(jobVO.getDisplayName()));
-							map.put("MAIL", commonUtil.cleanValue(jobMail));
+							map.put("CN", jobVO.getJobID());
+							map.put("DISPLAYNAME", jobVO.getDisplayName());
+							map.put("MAIL", jobMail);
 							mailDistributionSortList.add(map);
 						}
 					}
@@ -1143,9 +1143,9 @@ public class EzEmailAdminController {
 					MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(dlCn, pCn, companyId, userInfo.getTenantId());
 
 					if (distributionSubVO != null) {
-						map.put("CN", commonUtil.cleanValue(pCn));
-						map.put("DISPLAYNAME", commonUtil.cleanValue(distributionSubVO.getName()));
-						map.put("MAIL", commonUtil.cleanValue(distributionSubVO.getMail()));
+						map.put("CN", pCn);
+						map.put("DISPLAYNAME", distributionSubVO.getName());
+						map.put("MAIL", distributionSubVO.getMail());
 						mailDistributionSortList.add(map);
 					}
 				}
