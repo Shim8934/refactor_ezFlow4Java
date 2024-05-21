@@ -1493,11 +1493,6 @@
 						<li><span class="list_text" id="m14" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh08'/></span></li>
 						<li><span class="list_text" id="m12" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh06'/></span></li>
 						<li><span class="list_text" id="m13" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh07'/></span></li>
-						<li>
-							<span class = "list_text" id = "m15" onclick = "Open_Func(this)">
-								<spring:message code = 'ezApprovalG.listOfDeletedIron' />
-							</span>
-						</li>
 			        </ul>
 			        <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'w=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
 				        <h2 class="off" id="manageCabinetH2">
@@ -1512,7 +1507,12 @@
 					        	<li><span class="list_text" id="admin_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t1754'/></span></li>
 					        	<li><span class="list_text" id="admin_sub03" onclick="Menu_Click(this)">종료연기승인</span></li>
 					        	<li><span class="list_text" id="admin_sub04" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.t520'/></span></li>
-					        </c:if>
+								<li>
+									<span class = "list_text" id = "m15" onclick = "Open_Func(this)">
+										<spring:message code = 'ezApprovalG.listOfDeletedIron' />
+									</span>
+								</li>
+							 </c:if>
 				        </ul>
 			        </c:if>
 			        
