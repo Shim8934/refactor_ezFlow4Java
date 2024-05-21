@@ -176,7 +176,7 @@
 			    var selnode = treeView.GetSelectNode();
 			    DeptID = selnode.GetNodeData("CN");
 				document.getElementById("organSelectDeptNM").innerHTML =
-						"<span>[</span><span id='spn_deptName' title='" + MakeXMLString(selnode.GetNodeData("VALUE")) + "'>" + MakeXMLString(selnode.GetNodeData("VALUE")) + "</span>"
+						"<span>[</span><span id='spn_deptName' title='" + MakeXMLString(selnode.GetNodeData("VALUE")) + "'>" + MakeXMLString(selnode.GetNodeData("VALUE")) + "&nbsp;&nbsp;</span>"
 						+ "<span id='countInfo' style='color:#017BEC;'></span><span>]</span>";
 				organSelectDeptNM.setAttribute("countinfo"," ")
 			    displayUserList(DeptID);
@@ -301,9 +301,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
+								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							deptNameLong(result.containLow, strIsLeaf);
 
