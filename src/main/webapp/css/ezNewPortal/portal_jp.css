@@ -62,7 +62,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 
 /* util_icon */
 .util_admin{background-position: -158px -0px; width: 21px; height: 21px; }/* 관리자 */
-.util_employee_search { background-position: -0px -0px; width: 21px; height: 21px; }/* 직원검색 */
+.util_employee_search {background-image: url(/images/ezNewPortal/util_employee_search.svg); background-position: center;}/* 직원검색 */
 .util_set { background-position: -31px -0px; width: 21px; height: 21px; }/* 환경설정 */
 .util_help { background-position: -61px -0px; width: 21px; height: 21px; }/* 도움말 */
 .util_logout { background-position: -92px -1px; width: 21px; height: 21px; }/* 로그아웃 */
@@ -100,7 +100,7 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .contentlayout { list-style: none; margin: 0px; padding: 0px;}
 .contentlayout > .contentlayout_left { float: left; width:150px; height:54px; padding:7px; box-sizing:border-box;} /* 장진혁 */
 .contentlayout > .contentlayout_left img {vertical-align:middle; cursor:pointer;}
-.contentlayout > .contentlayout_right { float: right; margin-left:10px; margin-right:10px;} /* 장진혁 */
+.contentlayout > .contentlayout_right { float: right; margin-left:10px; } /* 장진혁 */
 .topNavCls {max-width:1102px;margin:0 auto} /* 장진혁 */
 .contentlayout > .contentlayout_none { float: none; overflow: hidden; }
 
@@ -108,8 +108,6 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .util li { float: left; height: 60px; padding:0px 6px; cursor: pointer; }
 .util li#util_noti {padding-right:0px; padding-left:0px;}
 .util li:hover .util_admin { background-position: -158px -31px; }/* 관리자 */
-.util li:hover .util_employee_search { background-position: -0px -31px; }/* 직원검색 */
-.util li:hover .util_set { background-position: -31px -31px; }/* 환경설정 */
 .util li:hover .util_help { background-position: -61px -31px; }/* 도움말 */
 .util li:hover .util_logout { background-position: -92px -32px; }/* 로그아웃 */
 .util li:hover .util_systemlink { background-position: -84px -21px; }/* 시스템링크 */
@@ -122,10 +120,23 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .util li span.util_logout{background-image:url(/images/ezNewPortal/util_logout.svg);}
 .util li span.util_quick_menu{background-image:url(/images/ezNewPortal/util_quick_menu.svg);}
 
+.util li span.util_profile {display: inline-block; width: 28px; height: 28px; margin: 16px 30px 0 20px; position: relative;}
+.util li span.util_profile:before {content: ""; position: absolute; width: 1px; height: 16px; background: #DDDDDD; left: -20px; top: 6px;}
+.util li span.util_profile img {display: block; width: 100%; height: 100%; position: relative; object-fit: cover; border-radius: 50%;}
+.employee_search {height: 40px; box-sizing: border-box; margin-top: 10px; position: relative;}
+.employee_search input {width: 300px; float: left; border-radius: 3px; padding: 0 50px 0 15px; border: 1px solid rgba(185,184,187,0.38); height: 100%; background: #F6F6F6; font-size: 14px; position: absolute; right: 0; z-index: 10; opacity: 0; visibility: hidden; transition: all 0.3s linear}
+.employee_search span {float: right; width: 30px; height: 30px; background: url(/images/ezNewPortal/employee_search.svg) no-repeat center; cursor: pointer; margin: 4px 10px; position: relative; z-index: 15; background: none; margin: 4px 0; transition: all 0.2s linear;}
+.employee_search span:before {content: ""; position: absolute; width: 16px; height: 16px; border-radius: 50%; border: 2px solid #6D6D6D; box-sizing: border-box; left: 6px; top: 6px; transition: all 0.2s linear;}
+.employee_search span:after {content: ""; position: absolute; width: 2px; height: 8px; transform: rotate(-45deg); background: #6D6D6D; top: 18px; right: 7px; transition: all 0.2s linear;}
+.employee_search.active input {opacity: 1; visibility: visible;}
+.employee_search.active span {margin: 4px 10px;}
+.employee_search.active span:before {width: 0; height: 21px; border-width: 1px; top: 6px; left: 14px; transform: rotate(45deg); border-radius: 0; border-color: #6D6D6D;}
+.employee_search.active span:after {width: 2px; height: 21px; top: 6px; right: 14px;}
+/*
 .employee_search{width:300px; height:40px; background:#F6F6F6; border:1px solid rgba(185,184,187,0.38); border-radius:3px; overflow:hidden; box-sizing:border-box; margin-top:10px;}
 .employee_search input{float:left; width:calc(100% - 50px); padding-left:15px; border:none; height:100%; background:transparent; font-size:14px;}
 .employee_search span{float:right; width:30px; height:30px; background:url(/images/ezNewPortal/employee_search.svg) no-repeat center; cursor:pointer; margin:4px 10px;}
-
+*/
 .topmenulayout { min-width: 1280px; }
 
 .topmenu {}
@@ -133,7 +144,7 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .topmenu .contentlayout_right div.on { border: 0px none; background: #0287db; }
 .topmenu .contentlayout_right div.on .full_menu { background-position: -159px -0px; width: 25px; height: 24px; }
 
-nav {position:relative; margin:0px; padding:0px; overflow:hidden; background:#fff; z-index:1000;}
+nav {position:relative; margin:0px; padding:0px; overflow:hidden; background:#fff; z-index:5; float:left;}
 nav .navUL {float:none; height:60px; list-style: none; margin: 0px; padding: 0px; overflow:hidden;}
 /*line-height이 51로 되어있어서 다른게 클릭되는 문제로 navUL높이(60px)와 똑같이 지정해줌*/
 nav .navUL li { float: left; line-height:60px; padding:0px 15px; font-size:18px; font-weight:500; color:#333; cursor:pointer; letter-spacing: -2px}
@@ -1662,6 +1673,21 @@ div.orbit img{border-radius: 5px;}
 .portlet:hover .set_portlet{display:block; opacity:1;}
 .two_by_one .layDIV{height:100%;}
 
+/* 조기완 */
+/* top */
+.total_menu{width:80px; height:60px; text-align:center;}
+.total_menu span{display:inline-block; width:40px; height:40px; background:url(/images/lnb/total_menu.svg) no-repeat center; margin-top:10px; cursor:pointer;}
+
+
+/* 퀵메뉴 */
+.quick_menu_list{position:absolute; width:380px; height:288px; border:1px solid #E5E5E5; border-radius:12px; background:#fff; right:0px; top:57px; box-shadow:0 3px 6px rgba(0,0,0,0.16); padding:20px 15px 0; box-sizing:border-box; display:none;}
+.quick_menu_list p{margin:0 0 30px; padding:0 10px; color:#333; font-size:20px; font-weight:bold;}
+.quick_menu_list ul{list-style:none; display:flex; flex-wrap:wrap; gap:10px 15px; margin:0; padding:0; height:180px; overflow:auto;}
+.quick_menu_list ul li{margin:0; padding:0; height:auto; cursor:pointer; width:calc((100% - 30px) / 3);}
+.quick_menu_list ul li .quick_img{width:100%; height:50px; border:1px solid #CECECE; border-radius:5px; box-sizing:border-box; overflow:hidden;}
+.quick_menu_list ul li .quick_img img{min-width:100%; min-height:100%; width:auto; height:auto;}
+.quick_menu_list ul li span{display:block; width:auto; margin-top:8px; text-align:center; color:#3B3B3B; font-size:13px;}
+
 /* 2024-05-02 한태훈 > 통합알림 */
 .total_alarm_frame{position:absolute; width:390px; height:600px; right:0; top:57px; display:none;}
 .notification{width:380px; height:595px; background:#fff; border:1px solid #E5E5E5; border-radius:12px; box-shadow:0 3px 6px rgba(0,0,0,0.16); margin:0 5px; padding:20px 20px 0; box-sizing:border-box;}
@@ -1736,4 +1762,21 @@ div.orbit img{border-radius: 5px;}
 .filter_pop .check_list .check_ul li .input_check input[type="checkbox"]:checked + label:before{background:url(/images/ezNewPortal/bg_checkbox.png) no-repeat center; background-color:#388CE5; border-color:#388CE5;}
 .filter_pop .reset{border-top:1px solid #e6e7e8; height:50px; line-height:48px; text-align:center; font-size:14px; color:#004b8e; text-decoration:underline; font-weight:500;}
 .filter_pop .reset span{cursor:pointer;}
+
+/* 프로필 */
+.profile_div {display: none; position: absolute; right: 0; top: 57px; width: 250px; border: 1px solid #E5E5E5; border-radius: 12px; box-sizing: border-box; background: #fff; padding: 28px 25px 30px;}
+.profile_div .profile_img {width: 58px; height: 58px; overflow: hidden; border-radius: 50%; margin: 0 auto 10px;}
+.profile_div .profile_img img {width: 100%; height: 100%;}
+.profile_div dl {text-align: center; margin: 0; padding: 0;}
+.profile_div dl dt {margin: 0 0 2px; padding: 0; font-size: 15px; font-weight: bold; color: #333;}
+.profile_div dl dd {margin: 0; padding: 0; font-size: 14px; color: #888888;}
+.profile_div .select_div {display: block; position: relative; margin-top: 15px;}
+.profile_div .select_div .select_box {display: inline-block; padding: 0 20px 0 10px; width: 100%; height: 32px; line-height: 30px; border: 1px solid #EFEFEF; border-radius: 5px; box-sizing: border-box; background: url(/images/ezNewPortal/select_div_arrow.png) no-repeat right 6px center #fff; cursor: pointer; margin: 0;}
+.profile_div .select_div ul {position: absolute; top: calc(100% + 2px); right: 0; display: none; z-index: 50; border: 1px solid #d1d1d1; border-radius: 5px; width: auto; min-width: 100%; background: #fff; overflow: hidden; padding: 0;}
+.profile_div .select_div ul li {float: none; height: 32px; line-height: 32px; white-space: nowrap; padding: 0 10px; cursor: pointer;}
+.profile_div .select_div ul li:hover {background-color: #f8f8f8;}
+.profile_div .select_div .select_box.on + ul {display: block;}
+.profile_div .btn_tab {margin-top: 20px; display: flex; gap: 10px;}
+.profile_div .btn_tab span {flex: 1; height: 36px; line-height: 34px; text-align: center; background: #F3F3F3; border: 1px solid #F3F3F3; border-radius: 6px; font-size: 14px; font-weight: 500; color: #949292; cursor: pointer; margin: 0;}
+.profile_div .btn_tab span.set {border-color: #388CE5; color: #388CE5; background: #fff;}
 

@@ -284,6 +284,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("popupNotiList", popupNotiListAfter);
 			model.addAttribute("useActiveX", data.get("useActiveX"));
 			model.addAttribute("lang",userInfo.getLang());
+			model.addAttribute("primary", userInfo.getPrimary());
 			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
 				model.addAttribute("utilAdminUrl", data.get("utilAdminUrl"));
 			}
@@ -296,6 +297,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useTotalSearch", data.get("useTotalSearch"));
 			model.addAttribute("switchUserCompany", switchUserCompany);
 			model.addAttribute("menuDisplayMode", data.get("menuDisplayMode"));
+			
+			// 유저이미지
+			String imgUrl = ezOrganService.getPropertyValue(userId, "extensionAttribute2", userInfo.getTenantId());
+			String userPhoto = "";
+			if (imgUrl != null && !imgUrl.equals("")) {
+				userPhoto = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + imgUrl;
+			}
+			model.addAttribute("userPhoto", userPhoto);
 		}
 		
 		/* 2024-03-26 한태훈 - 통합알림용 데이터 추가 */
@@ -1091,20 +1100,31 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	public String sub61(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub6-1";
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/ezNewPortal/allUserTab.do", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public List<PortalUserSwitchVO> getAllUserTab(@CookieValue("loginCookie") String loginCookie) throws Exception {
+	public JSONObject getAllUserTab(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONObject jsonResult = new JSONObject();
+		
 		List<PortalUserSwitchVO> arrayUserJob = ezNewPortalService.getArrayUserJob(userInfo.getLang(), userInfo.getId(), userInfo.getTenantId());
 		arrayUserJob.forEach(vo -> {
-			vo.setCurr(
-					(StringUtils.isBlank(userInfo.getJobId()) && StringUtils.isBlank(vo.getJobId())) ||
-							(vo.getCompanyId().equals(userInfo.getCompanyID())
-					&& vo.getDeptId().equals(userInfo.getDeptID())
-					&& vo.getJobId().equals(userInfo.getJobId())));
+			if ((StringUtils.isBlank(userInfo.getJobId()) && StringUtils.isBlank(vo.getJobId())) || (vo.getCompanyId().equals(userInfo.getCompanyID())
+					&& vo.getDeptId().equals(userInfo.getDeptID()) && vo.getJobId().equals(userInfo.getJobId()))) {
+				vo.setCurr(true);
+				jsonResult.put("currJobInfo", vo);
+			} else {
+				vo.setCurr(false);
+			}
 		});
-		return arrayUserJob;
+		
+		jsonResult.put("userJobList", arrayUserJob);
+		jsonResult.put("userName", userInfo.getDisplayName());
+		jsonResult.put("userName2", userInfo.getDisplayName2());
+		
+		return jsonResult;
 	}
 
 	@PostMapping(value = "/ezNewPortal/switchAllUserInfo.do", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -34,8 +34,8 @@
 			<div class="lnb_menu_all" id="menuAllContainer" style="left:-1080px;">
 	            <div class="lnb_menu_setting" id="menuSettingElem">
 	                <div class="menu_set" id="editBtn">
-	                    <span id="menuResetting"><spring:message code="ezNewPortal.topMenu.hth01" /></span>
-	                    <p><spring:message code="ezNewPortal.topMenu.hth02" /></p>
+	                    <span id="menuResetting"><spring:message code="ezNewPortal.topMenu.hth08" /></span>
+	                    <p><spring:message code="ezNewPortal.topMenu.hth09" /></p>
 	                </div>
 	                <div class="set_btn" id="editMenuBtn">
 	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
@@ -56,7 +56,10 @@
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	<script type="text/javascript">
 		var menuDisplayMode = '<c:out value="${menuDisplayMode}"/>';
-		var userLang = '<c:out value="${lang}"/>'
+		var userLang = '<c:out value="${lang}"/>';
+		var userPrimary = '<c:out value="${primary}"/>';
+		var userPhotoSrc = '<c:out value="${userPhoto}"/>';
+		
 		var newPortalTopMenu = {
 			menuListArr: [],           // 메뉴 리스트 배열에 저장
 			menuListObj: {},           // 메뉴 리스트 객체에 저장
@@ -283,6 +286,9 @@
 				str += '	<li class="contentlayout_right">';
 				str += setUtilMenu();
 				str += '	</li>';
+				if ('${useTotalSearch}' === 'YES') {
+					str += '<li class="contentlayout_right"><div class="employee_search"><input type="text" placeholder="<spring:message code="main.t00029" />" id="topsearch_btn"><span onclick="toggleTopSearch()"></span></div></li>' 
+				}
 				str += '	<li class="contentlayout_none">';
 				str += setMainMenu();
 				str += '	</li>';
@@ -311,30 +317,35 @@
 		// 유틸메뉴 설정
 		var setUtilMenu = function () {
 			var str = '';
-			
-				str += '<ul class="util"><li id="listSwitch" style="display: flex;align-items: center;">';
+				str += '<ul class="util">';
+				//str += '<ul class="util"><li id="listSwitch" style="display: flex;align-items: center;">';
 				if ('${packageType}' === 'mail' && '${lastLogin}' != '') {	// 20200326 조진호 - 패키지 타입이 메일 일 때 최종 접속 로그인 시간과 ip를 탑메뉴 상단에 표시
 					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-right: 10px;margin-top: 20px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
 				}
-				
-				//통합검색
-				if ('${useTotalSearch}' === 'YES') str += "<li><div class='top_totalSearch'><input id='input_totalSearch' class='input_text' type='text' onkeyup='totalSearch_key_event()' onfocus=\"this.placeholder=' '\"/><input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' id='topsearch_btn' class=\"topsearch_btn\" ></div></li>";
-				// 통합알림
-				str += '<li id="util_noti"><span class="icon_topmenu util_alarm" title="' + '<spring:message code="ezPortal.notification.hth01" />"' + ' onclick="toggleNoti()"><span id="notiin"></span></span></li>';
+								
 				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
 				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
-				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
+				str += '<li><span class="util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
 				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
-				str += '<li><span class="icon_topmenu util_set" id="util_set" title="' + '<spring:message code="ezNewPortal.t006" />' + '"></span></li>';
 			    /* 2023-08-29 - 민지수 포탈 > 탑메뉴 > 다국어 > ? 아이콘 클릭시 영어매뉴얼 다운로드 되도록 수정 */
 				if ('${lang}' != '2') str += '<li><span class="icon_topmenu util_help" id="util_help" title="' + '<spring:message code="ezNewPortal.t007" />' + '"></span></li>';
 				if ('${lang}' == '2') str += '<li><a href="<%= request.getContextPath() %>/files/QST User Guide.pptx"><span class="icon_topmenu util_help" id="util_help" title="' + '<spring:message code="ezNewPortal.t007" />' + '">'+'</span></a></li>';
 				
+				// 통합알림
+				str += '<li id="util_noti"><span class="util_alarm" title="' + '<spring:message code="ezPortal.notification.hth01" />"' + ' onclick="toggleNoti()"><span id="notiin"></span></span></li>';
 				// 퀵메뉴
 				str += '<li><span class="util_quick_menu" id="util_quickmenu" title="퀵메뉴"></span>';
-                str += '<div class="quick_menu_list" id="quickMenuContainer"><p>퀵메뉴</p><ul id="quickMenuList"></ul></div></li>';
-			    // 로그아웃
-				str += '<li><span class="icon_topmenu util_logout" id="util_logout" title="' + '<spring:message code="ezNewPortal.t008" />' + '"></span></li>';
+                str += '<div class="quick_menu_list util_div_menu" id="quickMenuContainer"><p>퀵메뉴</p><ul id="quickMenuList"></ul></div></li>';
+                
+                // 프로필 정보
+			    str += '<li><span class="util_profile" id="util_profile">';
+			    if (userPhotoSrc != "") {
+				    str += '<img src="' + '/ezCommon/downloadAttach.do?filePath=' + userPhotoSrc + '"></span>';
+			    } else {
+				    str += '<img src="/images/ezNewPortal/info_pic_none.png"></span>';
+			    }
+			    
+			    str += '<div class="profile_div util_div_menu" id="profileContainer"><div class="btn_tab"><span class="set" id="util_set"><spring:message code="ezNewPortal.t006" /></span><span class="logout" id="util_logout"><spring:message code="ezNewPortal.t008" /></span></div></div></li>';   
 				str += '</ul>';
 			
 			return str;
@@ -416,7 +427,8 @@
 				document.getElementById("topsearch_btn").addEventListener("click", totalSearch);
 			}
 			
-			document.querySelector('#util_quickmenu').addEventListener("click", function() {toggleQuickMenu()});
+			document.querySelector('#util_quickmenu').addEventListener("click", function() {toggleDivMenu(document.querySelector('#quickMenuContainer'))});
+			document.querySelector('#util_profile').addEventListener("click", function() {toggleDivMenu(document.querySelector('#profileContainer'))});
 		}
 
 		/* //포틀릿 및 프레임 환경설정 열기
@@ -444,16 +456,12 @@
 		var subMenuClickEvent = function (type, menuUrl) {
 			if(type === 'on') {
 				toggleAllMenu(type);
-				if ($("#nav_count").html() != "") {
-					$("#nav_count").attr("class", "hidden_nav_count_on");
-				}
+				
 			} else if (type === 'off') {
 				toggleAllMenu(type);
-				toggleQuickMenu(type);
+				toggleDivMenu(document.querySelector('#quickMenuContainer') ,type);
+				toggleDivMenu(document.querySelector('#profileContainer') ,type);
 				closeNoti(); // 통합알림 팝업창 닫기
-				if ($("#nav_count").html() != "") {
-					$("#nav_count").attr("class", "hidden_nav_count");
-				}
 				
 				if (menuUrl != null) {
 					window.open(menuUrl, 'main', '');
@@ -1379,6 +1387,7 @@
 			setTopMenu();            // 헤더 전체 셋팅
 			setMainMenuList();       // 메인메뉴 리스트 출력
 			getQuickLink();		     // 퀵메뉴 리스트
+			setProfile();            // 프로파일 메뉴 세팅 
 			setUtilEvent();          // 유틸메뉴 이벤트 설정
 			setExpandMenuListEvent();// 확장메뉴 이벤트 설정			
 			getMenuListWidth();      // 메인메뉴 li별 사이즈 측정
@@ -1495,6 +1504,108 @@
 	 		xhr.send();
 	 	}
 		
+		var setProfile = function () {
+			$.ajax({
+				type: "GET",
+				url: "/ezNewPortal/allUserTab.do",
+				dataType: "JSON",
+				success : function(result) {
+					var switchUserCompany = "<c:out value='${switchUserCompany}' />"
+					
+					var userJobList = result.userJobList;
+					var currJobInfo = result.currJobInfo;
+					var profileContainer = document.getElementById('profileContainer');
+					var btnTabDiv = profileContainer.firstChild; //환경설정, 로그아웃 버튼
+					
+					var imgDiv = document.createElement('div');
+					imgDiv.classList.add('profile_img');
+					var userImg = document.createElement('img');
+					
+					if (userPhotoSrc != "") {
+						userImg.setAttribute("src","/ezCommon/downloadAttach.do?filePath=" + userPhotoSrc);
+					} else {
+						userImg.setAttribute("src", "/images/ezNewPortal/info_pic_none.png");
+					}
+					imgDiv.appendChild(userImg);
+					profileContainer.insertBefore(imgDiv, btnTabDiv);
+					
+					var dl = document.createElement('dl');
+					var dt = document.createElement('dt');
+					
+					if (userPrimary == "1") {
+						dt.textContent = result.userName + " " + currJobInfo.title;
+					} else {
+						dt.textContent = result.userName2 + " " + currJobInfo.title2;
+					}
+					
+					var dd = document.createElement('dd');
+					if (userPrimary == "1") {
+						dd.textContent = currJobInfo.deptName;
+					} else {
+						dd.textContent = currJobInfo.deptName2;
+					}
+					dl.appendChild(dt);
+					dl.appendChild(dd);
+					profileContainer.insertBefore(dl, btnTabDiv);
+					
+					if (switchUserCompany == "Y") {
+						var selectDiv = document.createElement('div');
+						selectDiv.classList.add('select_div');
+						var selectSpan = document.createElement('span');
+						selectSpan.classList.add('select_box');
+						selectSpan.textContent = "<spring:message code='ezNewPortal.topMenu.hth07' />";
+						selectSpan.addEventListener('click', function() {
+							event.target.classList.toggle('on');
+						});
+						selectDiv.appendChild(selectSpan);
+						
+						var ul = document.createElement('ul');
+						
+						for (var i = 0; i < userJobList.length; i++) {
+							var li = document.createElement("li");
+							li.setAttribute("data-dept", userJobList[i].deptId);
+							li.setAttribute("data-company", userJobList[i].companyId);
+							li.setAttribute("data-job", userJobList[i].jobId);
+							if (userPrimary == "1") {
+								li.textContent = userJobList[i].companyName + " (" + userJobList[i].deptName + " " + userJobList[i].title + ")";
+							} else {
+								li.textContent = userJobList[i].companyName2 + " (" + userJobList[i].deptName2 + " " + userJobList[i].title2 + ")";
+							}
+							
+							ul.appendChild(li);
+							li.addEventListener('click', function () {
+								switchAllUserInfo();
+							});
+						}
+						selectDiv.appendChild(ul);
+						
+						profileContainer.insertBefore(selectDiv, btnTabDiv);
+					}
+				}
+			});
+			
+		}
+		
+		function switchAllUserInfo() {
+			var selectedLi = event.target;
+			var json = {};
+			json['companyId'] = selectedLi.getAttribute("data-company");
+			json['deptId'] = selectedLi.getAttribute("data-dept");
+			json['jobId'] = selectedLi.getAttribute("data-job");
+
+			$.ajax({
+				type: "POST",
+				url: "/ezNewPortal/switchAllUserInfo.do",
+				contentType: "application/json; charset=UTF-8",
+				data: JSON.stringify(json),
+				success : function(text) {
+					if (text === "true") {
+						parent.window.location.reload();
+					}
+				}
+			});
+		}
+		
 		function setQuickMenuList(quickmenuData) {
 			var quickMenu = document.querySelector('#quickMenuList');
 			var quickList = quickmenuData.quickLinkList;
@@ -1553,7 +1664,7 @@
 		newPortalTopMenuFunc();	
 		
 		window.onload = function() {
-			callAllUserTab();
+			//callAllUserTab();
 			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 		}
 		
@@ -1580,14 +1691,13 @@
             }
 		}
 		
-		function toggleQuickMenu(mode) {
-			var quickMenuContainer = document.querySelector('#quickMenuContainer');
-	        if (mode == "on" || (mode == null && getComputedStyle(quickMenuContainer).display == "none")) {
+		function toggleDivMenu(elem, mode) {
+	        if (mode == "on" || (typeof mode == "undefined" && getComputedStyle(elem).display == "none")) {
 	        	subMenuClickEvent('off');
-	        	quickMenuContainer.style.display = "block";
+	        	elem.style.display = "block";
 	        	dimLayerControl('open');
 	        } else {
-	        	quickMenuContainer.style.display = "none";
+	        	elem.style.display = "none";
 	            dimLayerControl('close');
 	        }
 		}
@@ -1717,26 +1827,10 @@
 			select.addEventListener("change", function() {
 				switchAllUserInfo();
 			});
-
-			function switchAllUserInfo() {
-				var select = document.getElementById("switchUser").selectedOptions[0];
-				var json = {};
-				json['companyId'] = select.getAttribute("data-company");
-				json['deptId'] = select.getAttribute("data-dept");
-				json['jobId'] = select.getAttribute("data-job");
-
-				$.ajax({
-					type: "POST",
-					url: "/ezNewPortal/switchAllUserInfo.do",
-					contentType: "application/json; charset=UTF-8",
-					data: JSON.stringify(json),
-					success : function(text) {
-						if (text === "true") {
-							parent.window.location.reload();
-						}
-					}
-				});
-			}
+		}
+		
+		function toggleTopSearch() {
+			 $(".employee_search").toggleClass("active");
 		}
 		
 		</script>
