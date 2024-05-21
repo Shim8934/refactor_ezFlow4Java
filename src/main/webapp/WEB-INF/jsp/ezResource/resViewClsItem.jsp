@@ -111,6 +111,17 @@
           					<th> <spring:message code="ezResource.t148"/></th>
           					<td colspan="2" name="ResLocation"> ${resLocation} </td>
         				</tr>
+						<tr>
+							<th> <spring:message code="ezResource.lyj01"/></th>
+							<td colspan="3">
+								<c:if test="${repeatFlag eq 1}">
+									<spring:message code="ezResource.lyj02"/>
+								</c:if>
+								<c:if test="${repeatFlag eq 0}">
+									<spring:message code="ezResource.lyj03"/>
+								</c:if>
+							</td>
+						</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t149"/></th>
           					<td colspan="2">

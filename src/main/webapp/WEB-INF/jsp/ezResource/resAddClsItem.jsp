@@ -169,6 +169,13 @@
 				} else {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", "1");
 				}
+
+				// 반복예약허용 flag 넘기기
+				if (document.getElementById("repeat1").checked == true) {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "1");
+				} else {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "0");
+				}
 				
 				//createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("subOwner1").value);
 				xmlHttp.open("Post", "/ezResource/callAddClsItem.do", false);
@@ -552,6 +559,14 @@
           					<th> <spring:message code="ezResource.t148"/></th>
           					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="" style="width: 100%" maxlength="100"></td>
         					</tr>
+							<tr>
+								<th> <spring:message code="ezResource.lyj01"/></th>
+								<td colspan="3" style="width:100%"><input type="radio" style="margin-top: 0px;" name="repeat" id="repeat1" value="0" checked>
+									<spring:message code="ezResource.lyj02"/>
+									<input type="radio" name="repeat" style="margin-top: 0px;" id="repeat2" value="1">
+									<spring:message code="ezResource.lyj03"/>
+								</td>
+							</tr>
         					<tr>
           						<th> <spring:message code="ezResource.t149"/></th>
           						<td colspan="3" style="width:100%"><input type="radio" style="margin-top: 0px;" name="approve" id="approve1" value="1" checked>

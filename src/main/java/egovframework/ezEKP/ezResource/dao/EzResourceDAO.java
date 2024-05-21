@@ -139,6 +139,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public String getBrdApproveFlag(Map<String, Object> map) {
 		return (String) select("EzResourceDAO.getBrdApproveFlag", map);
 	}
+
+	public String getBrdRepeatFlag(Map<String, Object> map) {
+		return (String) select("EzResourceDAO.getBrdRepeatFlag", map);
+	}
 	
 	public String getAclTblBrd_S1(Map<String, Object> map) {
 		return (String) select("EzResourceDAO.getAclTblBrd_S1", map);

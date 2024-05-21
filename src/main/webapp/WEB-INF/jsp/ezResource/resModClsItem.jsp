@@ -172,6 +172,13 @@
 				} else {
 					createNodeAndInsertText(xmlPara, objNode, "DATA", "1");
 				}
+
+				// 반복예약허용 flag 넘기기
+				if (document.getElementById("repeat1").checked == true) {
+					createNodeAndInsertText(xmlPara, objNode, "DATA", "1");
+				} else {
+					createNodeAndInsertText(xmlPara, objNode, "DATA", "0");
+				}
 				
 				xmlHttp.open("Post", "/ezResource/callModClsItem.do", false);
 				xmlHttp.send(xmlPara)
@@ -521,6 +528,14 @@
           					<th> <spring:message code="ezResource.t148"/></th>
           					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="<c:out value='${resLocation}'/>" style="width: 100%" maxlength="100"></td>
         				</tr>
+						<tr>
+							<th> <spring:message code="ezResource.lyj01"/></th>
+							<td colspan="3" style="width:100%"><input type="radio" name="repeat" id="repeat1" value="1" <c:if test="${repeatFlag eq 1}"> checked </c:if>>
+								<spring:message code="ezResource.lyj02"/>
+								<input type="radio" name="repeat" id="repeat2" value="0" <c:if test="${repeatFlag eq 0}"> checked </c:if>>
+								<spring:message code="ezResource.lyj03"/>
+							</td>
+						</tr>
         				<tr>
 							<th> <spring:message code="ezResource.t149"/></th>
 							<td colspan="3">

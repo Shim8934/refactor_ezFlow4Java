@@ -45,7 +45,8 @@ public class ResBrdVO {
 	private String rsPortletOwnName;
 	/** 자원관리 포틀릿 소유자부서*/
 	private String rsPortletDeptName;
-	
+	/** 반복예약허용 유무*/
+	private String repeatFlag;
 	
 	public String getRsPortletTime() {
 		return rsPortletTime;
@@ -179,4 +180,6 @@ public class ResBrdVO {
 	public void setBrdAccess(String brdAccess) {
 		this.brdAccess = brdAccess;
 	}
+	public String getRepeatFlag() { return repeatFlag; }
+	public void setRepeatFlag(String repeatFlag) { this.repeatFlag = repeatFlag; }
 }
