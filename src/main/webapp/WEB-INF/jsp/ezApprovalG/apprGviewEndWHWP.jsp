@@ -99,22 +99,59 @@
 	        function openOpinionUI_Complete() {
 		        DivPopUpHidden();
 		    }
-	
+			/* 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
+			function getAprOrEndStr() {
+				var result = "";
+
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getAprOrEndStr.do",
+					data : {
+						docID : pDocID,
+						orgCompanyID : orgCompanyID
+					},
+					success: function(text){
+						result = text;
+					}
+				});
+
+				return result;
+			}
 	        function CheckOpinionInfo() {
 				var result = "";
-		    	
-		    	$.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezApprovalG/getEndOpinionInfo.do",
-		    		data : {
-		    			docID : pDocID
-		    		},
-		    		success: function(xml){
-		    			result = loadXMLString(xml);
-		    		}
-		    	});
+				var aprOrEndStr = getAprOrEndStr();
+				if (aprOrEndStr == "APR") {
+					$.ajax({
+						type: "POST",
+						dataType: "text",
+						async: false,
+						url: "/ezApprovalG/opinionRequest.do",
+						data: {
+							docID: pDocID,
+							orgCompanyID: orgCompanyID,
+							state : aprOrEndStr
+						},
+						success: function (xml) {
+							result = loadXMLString(xml);
+						}
+					});
+				} else {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/getEndOpinionInfo.do",
+						data : {
+							docID : pDocID
+							,orgCompanyID : orgCompanyID
+						},
+						success: function(xml){
+							result = loadXMLString(xml);
+						}
+					});
+				}
 		
 		        Resultxml = result;
 		
