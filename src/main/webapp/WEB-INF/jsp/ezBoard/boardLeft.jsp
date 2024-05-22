@@ -580,15 +580,11 @@
 	            $("#TopBoardsList .lnbUL").attr("class", "off");
 	            
 	            if ($("#myBoardList").attr("class") == "off") {
-	            	$("#myBoardList").attr("class", "on");
-	            	$("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL");
-	            	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
-	            	$("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
+	            	$("#myBoardList").attr("class","on");
+	            	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL");
 	            } else {
-	            	$("#myBoardList").attr("class", "off");
-	            	$("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");	
-	            	$(".list_text.node_selected").removeClass("node_selected");
-	            	$("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_plus");
+	            	$("#myBoardList").attr("class","off");
+	            	$("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");	
 	            }
 	            
 		        /* 18-05-16 김민성 - tootip 추가 및 글자수 관련 style 수정 */
@@ -681,18 +677,10 @@
 		            $("h2.on").not(ctr).attr("class","off");
 		            $("#TopBoardsList .lnbUL").attr("class","lnbUL off");
 		            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");
- 		            // 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 LNB 이미지 수정
-		            $("#myBoardList").children().eq(0).attr("class", "sub_iconLNB tree_plus"); 
 		            
 		            if (ctr.attr("class") == "off") {
 		            	ctr.attr("class", "on");		            	
 		            	ctrobj.attr("class", "lnbUL");
-		            	
-		            	if ($(ctr).prop("tagName") == "H2") {
-							$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
-		            	}
-		            	
-		            	$(ctr).children().children().eq(0).attr("class", "sub_iconLNB tree_arrow_down");
 		            	
 		            	/* ctrobj.animate({
 		            		maxHeight: "250px"
@@ -702,8 +690,6 @@
 		            } else {
 		            	ctrobj.attr("class","lnbUL off");
 		            	ctr.attr("class","off");
-		            	
-		            	$(ctr).children().children().eq(0).attr("class", "sub_iconLNB tree_plus");
 		            	
 		            	/* ctrobj.animate({
 		            		maxHeight: "0px"
@@ -901,7 +887,6 @@
 	    		$("h2.on").attr("class", "off");
 		    	openSpan.parent().addClass("on");	
 		    	$(".list_text.node_selected").removeClass("node_selected");
-	            $(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 		    	$("#TopBoardsList .lnbUL").attr("class", "lnbUL off");
 	            $("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");
 
@@ -1139,7 +1124,6 @@
 				$("h2.on").attr("class", "off");
 		    	$(".list_text.node_selected").removeClass("node_selected");
 				$("#" + h2).parent().addClass("on");	
-		    	$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 		    	$("#TopBoardsList .lnbUL").attr("class", "lnbUL off");
 	            $("#TreeCtrl_MyBoardTree_ul").attr("class", "lnbUL off");
 			}
@@ -1160,11 +1144,11 @@
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 		        <div class="lnb_lay">
 			        <h2 onclick="favoriteList()">
-			            <span class="sub_iconLNB tree_plus"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
+			            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
 			        </h2>
 			        <c:if test="${MyBoardTopFlag != 'NO'}">
 				        <h2 class="off" id="myBoardList"  onclick="ShowMyBoardItem()">
-				            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>
@@ -1175,53 +1159,49 @@
 			        </c:if>
 			        <div id='TopBoardsList'>
 			        	<script type="text/javascript">
-			        		parser = new DOMParser();
-		        		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
-		        			var i = 0;
-		        			$(xmlDoc).find("NODE").each(function(i) {
-		       			        document.write("<h2 class='off'>");
-		       			     	document.write("<span>");
-
-								if (i == 0) {
-									var nodeValue = $(this).text();
-									document.write("<span class='sub_iconLNB tree_arrow_down'></span>");
-			       			    } else {
-			       			    	document.write("<span class='sub_iconLNB tree_plus'></span>");
-			       			    }
-
-		       			     	document.write("<span id='TreeCtr" + i + "' class='h2Title' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
-		               					+ "\")'>" + MakeXMLString($(this).find("DATA2").text()) + "</span>");
-		       			     	document.write("</span>");
-		           				/* document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
-		           					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); */ 
-		           				document.write("</h2>\n");
-		           				document.write("<ul class='lnbUL off'>\n");
-		           				document.write("<div  class='tree onlytree' name='BoardTree' id='TreeCtrl" + i + "obj'></div>\n");
-		           				document.write("</ul>\n");
-		           				i++;
-		        			});
+			        	parser = new DOMParser();
+	        			xmlDoc = parser.parseFromString("${resultXML}","text/xml");
+	        			var i = 0;
+	        			$(xmlDoc).find("NODE").each(function(){
+	       			        document.write("<h2 class='off'>");
+	       			     	document.write("<span>");
+	       			     	document.write("<span class='sub_iconLNB tree_arrow_up'></span>");
+	       			     	document.write("<span id='TreeCtr" + i + "' class='h2Title' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
+	               					+ "\")'>" + MakeXMLString($(this).find("DATA2").text()) + "</span>");
+	       			     	document.write("</span>");
+	           				/* document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
+	           					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); */ 
+	           				document.write("</h2>\n");
+	           				document.write("<ul class='lnbUL off'>\n");
+	           				document.write("<div  class='tree onlytree' name='BoardTree' id='TreeCtrl" + i + "obj'></div>\n");
+	           				document.write("</ul>\n");
+	           				i++;
+	        			});
 			        	</script>
 			        </div>
 			        <c:if test="${MyBoardTopFlag == 'NO'}">
 			        	<h2 class="off" id="myBoardList" onclick="ShowMyBoardItem()">
-				            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul" style="overflow:hidden">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>
                            	<li><span class="sub_iconLNB tree_board_my"></span><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
                            	<li><span class="sub_iconLNB tree_board_reservation"></span><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
                            	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
+				        	<c:if test="${MyBoardScrapFlag != 'NO'}">
+								<li><span class="sub_iconLNB tree_task_repeat"></span><span class="list_text" onclick="ScrapBoard()"><spring:message code="ezBoard.kmh12" /></span></li>
+				        	</c:if>
 				        </ul>
 				    </c:if>
 			        <ul class="lnbUL">
                        	<%-- 2023-06-22 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > '검색' 태그 구조, LNB 이미지 수정 --%>
 						<h2 class="off">
-                           	<span class="sub_iconLNB tree_plus"></span><span id="boardSearchH2" class="h2Title" value="" onclick="boardSearch('boardSearchH2')"><spring:message code="ezBoard.khj1" /></span>
+                           	<span class="sub_iconLNB tree_arrow_up"></span><span id="boardSearchH2" class="h2Title" value="" onclick="boardSearch('boardSearchH2')"><spring:message code="ezBoard.khj1" /></span>
 						</h2>
 <%--                       	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li> --%>
                     	<c:if test="${applyFlag == 'OK'}">
 	                    	<h2 class="off">	
-	                           	<span class="sub_iconLNB tree_plus"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount" style="color: #0470e4; position: absolute;">(${applyCount})</span>
+	                           	<span class="sub_iconLNB tree_arrow_up"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount" style="color: #0470e4; position: absolute;">(${applyCount})</span>
 	                        </h2>
                     	</c:if>
 			        </ul>
