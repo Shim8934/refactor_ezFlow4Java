@@ -2045,3 +2045,5 @@ div.orbit img{border-radius: 5px;}
 .disable { pointer-events: none; opacity: 0.4;}
 .portlet.col, .portlet.addPortlet {height: 289px;}
 .notiBody{background-color : transparent;}
+
+#portletArea {margin-bottom:50px;}
