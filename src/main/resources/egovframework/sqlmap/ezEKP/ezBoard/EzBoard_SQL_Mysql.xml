@@ -2108,7 +2108,7 @@
             AND 
             	STARTDATE <= #nowDate#
             AND 
-            	ENDDATE > #nowDate#
+            	NTENDDATE > #nowDate#
             AND 
             	extensionAttribute1 = '0'
             AND 
