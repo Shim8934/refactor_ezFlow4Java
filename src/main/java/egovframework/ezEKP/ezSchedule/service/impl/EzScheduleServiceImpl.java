@@ -659,6 +659,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", tenantId);
 	    logger.debug("useWorkspaceSchedule : " + useWorkspaceSchedule);
 		
+		if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
+			useWorkspaceSchedule = "NO";
+		}
+		
 	    // 협업 일정 가져오기
 	    if(useWorkspaceSchedule.equalsIgnoreCase("yes")) {
 	    	String[] sDate = orgStartDate.split("-");

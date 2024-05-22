@@ -435,7 +435,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String susinAdmin = "";
 		String listType = request.getParameter("listType");
 		String viewLeftCount = ezCommonService.getTenantConfig("APPROVLEFTCOUNT", userInfo.getTenantId()); 
-		String useMobile = ezCommonService.getTenantConfig("Use_Mobile", userInfo.getTenantId()); 
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String selMenu = "all";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -515,7 +514,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("selMenu", selMenu);
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("useOcs", useOcs);
-		model.addAttribute("useMobile", useMobile);
 		model.addAttribute("listType", commonUtil.stripScriptTags(listType));
 		model.addAttribute("proxyInfo", proxyInfo);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
