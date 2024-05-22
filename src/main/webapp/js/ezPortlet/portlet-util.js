@@ -92,6 +92,7 @@ function makeGridChangeEvent(id) {
     createPopPortletSize(id);
     // 각 팝업에 클릭 이벤트 부여
     giveSetPortletEvent(id);
+    resizePortlet();
 }
 
 function initGridConstruct() {
@@ -262,7 +263,7 @@ function resizePortlet(portletNode) {
         gridElement.refreshItems();
     } else {
         if (gridElement.getItem(portletNode) != null) {
-            gridElement.refreshItems();
+            gridElement.refreshItems(gridElement.getItem(portletNode));
         } else {
             return;
         }

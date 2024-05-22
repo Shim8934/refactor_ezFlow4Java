@@ -126,7 +126,6 @@ function  FixBoardUtil() {
 
     var _initSwiper = function () {
         var areaSelector = "#" + _id;
-        console.log(areaSelector);
         var classSelector = " .";
         _swiper = new Swiper(areaSelector + classSelector + _enum.CLASS_SWIPER, {
             direction: 'horizontal',

@@ -146,7 +146,6 @@ function EzChartPortlet() {
                     value = value.toString();
                     value = value.split(/(?=(?:...)*$)/);
                     value = value.join(',');
-                    console.log(value);
                     return value;
                 }
             }
@@ -217,7 +216,6 @@ function EzChartPortlet() {
 
     var _init = function () {
         var ctx = _canvas.getContext("2d");
-        console.log(_data);
         _chart = new Chart(ctx, {
             type: _realType,
             data: _data,
@@ -301,7 +299,6 @@ function EzChartPortlet() {
             return _genRotateColor();
         } else {
             _defaultColorHis.push(_defaultColor);
-            console.log(_defaultColor);
             return "hsla(" + _defaultColor + colorSet + ")";
         }
     }
