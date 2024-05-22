@@ -1358,4 +1358,88 @@
 		<include
 			refid="EzSystemAdminDAO.searchQueryForDeptChList" />
 	</select>
+
+	<sql id="EzSystemAdminDAO.searchQueryForConnectorList">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword">
+				<isEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2
+						LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM2
+						LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE
+						'%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE
+						'%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+				</isNotEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((CONNECTTIME + #offset# / (24 * 60)),'YYYY-MM-DD') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="EzSystemAdminDAO.getConnectorList"
+		parameterClass="map" resultClass="ConnectionInfoVO">
+		SELECT *
+		FROM
+		(SELECT ROWNUM AS RNUM, USERID, USERNM, USERNM2, DEPTID, DEPTNM,
+		DEPTNM2,COMPANYID ,COMPANYNM , COMPANYNM2
+		FROM
+		(SELECT USERID, USERNM, USERNM2, DEPTID, DEPTNM, DEPTNM2,COMPANYID ,COMPANYNM
+		, COMPANYNM2
+		FROM
+		(SELECT *
+		FROM TBL_CONNECTION_INFO
+		WHERE TENANT_ID= #v_tenantID#
+		$companyOracleStr$
+		AND (STATUS LIKE 'Y' OR STATUS LIKE '' OR STATUS IS NULL)
+		<include refid="EzSystemAdminDAO.searchQueryForConnectorList" />
+		<isEqual property="search_keycode" compareValue="3">
+			AND USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+		</isEqual>
+		ORDER BY "SEQUENCE" DESC ) A
+		GROUP BY USERID, USERNM, USERNM2, DEPTID, DEPTNM, DEPTNM2,COMPANYID
+		,COMPANYNM , COMPANYNM2) B
+		<isNotEqual property="v_start" compareValue="-1">
+		<![CDATA[ WHERE ROWNUM <= (#pageCount# + #v_start#) ]]>
+		</isNotEqual>
+		) C
+		<isNotEqual property="v_start" compareValue="-1">
+	<![CDATA[ WHERE RNUM >= (#v_start# + 1) ]]>
+		</isNotEqual>
+	</select>
+
+	<select id="EzSystemAdminDAO.getConnectorListCount"
+		parameterClass="map" resultClass="int">
+		SELECT COUNT(*)
+		FROM (SELECT USERID
+		FROM TBL_CONNECTION_INFO
+		WHERE TENANT_ID = #v_tenantID#
+		$companyOracleStr$
+		AND (STATUS LIKE 'Y' OR STATUS like '' OR STATUS IS NULL)
+		<include refid="EzSystemAdminDAO.searchQueryForConnectorList" />
+		<isEqual property="search_keycode" compareValue="3">
+			AND USERID
+			LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+		</isEqual>
+		GROUP BY USERID) A
+	</select>
 </sqlMap>

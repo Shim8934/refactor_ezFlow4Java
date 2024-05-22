@@ -76,4 +76,7 @@ public interface EzSystemAdminService {
 	List<DeptChangeInfoVO> getDeptChHistList(int tenantID, String offset, int startPage, int maxItemPerPage, String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
 	public int getDeptChHistListCount(int tenantID, String offset, String keyword, String keycode, String keycodeForType, String lang, String startDate, String endDate, String companyId, boolean isMasterAdmin) throws Exception;
 	public void insertDeptChangeHist(DeptChangeInfoVO deptChangeInfoVO, LoginVO userInfo) throws Exception;
+	public List<ConnectionInfoVO> getConnectorList(int tenantID, String offset, int startPage, int maxItemPerPage,
+			String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception;
+	public int getConnectorListCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception;
 }

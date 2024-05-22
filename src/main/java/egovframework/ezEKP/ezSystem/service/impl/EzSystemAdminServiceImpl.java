@@ -1377,4 +1377,63 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 		ezSystemAdminDAO.insertDeptChangeHist(deptChangeInfoVO);
 	}
+
+	@Override
+	public List<ConnectionInfoVO> getConnectorList(int tenantID, String offset, int startPage, int maxItemPerPage,
+			String keycode, String keyword, String lang, String startDate, String endDate, String companyId)
+			throws Exception {
+		logger.debug("getConnectorList started. tenantID : " + tenantID);
+
+		String companyOracleStr = "";
+
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND COMPANYID ='" + companyId + "'";
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getConnectorList ended.");
+		List<ConnectionInfoVO> list = ezSystemAdminDAO.getConnectorList(params);
+
+		return list;
+	}
+
+	@Override
+	public int getConnectorListCount(int tenantID, String offset, String keycode, String keyword, String lang,
+			String startDate, String endDate, String companyId) throws Exception {
+
+		logger.debug("getConnectorListCount started. tenantID : " + tenantID);
+
+		String companyOracleStr = "";
+
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND COMPANYID ='" + companyId + "'";
+		}
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+
+		logger.debug("getConnectorListCount ended.");
+
+		return ezSystemAdminDAO.getConnectorListCount(params);
+	}
 }

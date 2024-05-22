@@ -33,7 +33,7 @@
     	if (cChk == "1") {
         	parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";        
     	} else {
-    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
+			parent.frames[1].location.href = "/admin/ezSystem/systemConnectorHist.do";
     	}
     };
 	
@@ -49,8 +49,11 @@
 	    switch(this_menu)
 	    {	
 	    	case "PARAMETER":
-           		parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
-           	 	break;
+				parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
+				break;
+			case "CONNECTORLIST":
+				parent.frames[1].location.href = "/admin/ezSystem/systemConnectorHist.do";
+				break;
 	    	case "LOGINHIST":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
 	    		break;
@@ -142,7 +145,8 @@
 		            	<h2 class="on">
 		            </c:otherwise>
 	            </c:choose>
-	            <span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
+	            <span id="CONNECTORLIST" style="display:inline-block;width:100%;" onClick="menu_change('CONNECTORLIST')" ><spring:message code='ezSystem.jhy17' /></span></h2>
+	            <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span></h2>
 	            <h2><span id="ADMINACCESSHIST" style="display:inline-block;width:100%;" onClick="menu_change('ADMINACCESSHIST')" ><spring:message code='ezSystem.ls07' /></span></h2>
 				<h2><span id="USERCHANGEHIST" style="display:inline-block;width:100%;" onClick="menu_change('USERCHANGEHIST')" ><spring:message code='ezSystem.jhy01' /></span></h2>
 				<h2><span id="DEPTCHANGEHIST" style="display:inline-block;width:100%;" onClick="menu_change('DEPTCHANGEHIST')" ><spring:message code='ezSystem.jhy10' /></span></h2>

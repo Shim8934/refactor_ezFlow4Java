@@ -254,4 +254,12 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		insert("EzSystemAdminDAO.insertDeptChangeHist", deptChangeInfoVO);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ConnectionInfoVO> getConnectorList(Map<String, Object> map) throws Exception {
+		return (List<ConnectionInfoVO>) list("EzSystemAdminDAO.getConnectorList", map);
+	}
+
+	public int getConnectorListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getConnectorListCount", map);
+	}
 }
