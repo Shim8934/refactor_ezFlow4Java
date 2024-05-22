@@ -8,8 +8,8 @@
 <body>
 <div class="attitudePtl">
 	<input type="hidden" id="useAttitude" value="${useAttitude}">
-	<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 100; border-bottom:none; background:none;"></dl>
-	<div style="position:relative; bottom:49px;">
+	<dl class="portlet_title sortablePortlet"></dl>
+	<div style="position:relative;">
 	    <div class="box_shadow info_right" style="margin:0px; margin-left:7px">
 	        <dl class="info">
 	        	<dt class="infoImg">
