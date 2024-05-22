@@ -921,7 +921,7 @@ function InsertToRecListView(Resultxml) {
         DocList.SetTitleIdx(0);                                 
         DocList.SetTitle("RecTitle");
         // 2023-03-20 한태훈 - 기록물 등록대장, 부서공유함 복수선택 체크박스 추가
-        if (g_sFlag == "m01" || g_sFlag == "docShare") { DocList.SetCheckBoxFlag(true); }
+        if (typeof(g_sFlag) != "undefined" && (g_sFlag == "m01" || g_sFlag == "docShare")) { DocList.SetCheckBoxFlag(true); }
         DocList.SetSecurityFlag(true);
         DocList.SetSecurityIdx(13);
         DocList.DataSource(xmlDoc);                             

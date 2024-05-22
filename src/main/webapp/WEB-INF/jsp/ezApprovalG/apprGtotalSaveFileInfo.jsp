@@ -452,10 +452,8 @@
 				xmlstring += "<PORGCOMPANY><![CDATA[" + orgCompanyID + "]]></PORGCOMPANY>";
 				 
 				if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
-					xmlstring += "<POPINIONCHK><![CDATA[" + opinionChk + "]]></POPINIONCHK>"; 
 					xmlstring += "<PDOWNINFO><![CDATA[" + p_downloadUrl.replace("&amp;", "&") + "]]></PDOWNINFO>";
 				}
-				
 				xmlstring += "</DATA>";
 				xmlpara = loadXMLString(xmlstring);
 				
