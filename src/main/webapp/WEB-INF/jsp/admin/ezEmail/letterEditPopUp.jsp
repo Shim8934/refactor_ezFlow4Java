@@ -113,6 +113,7 @@
 						popUpType:popUpType
 					},
 					url:"/admin/ezEmail/readLetter",
+					async: false,
 					dataType:"json",
 					success:function(data){
 						popLetterId = data.letterId;
