@@ -1125,7 +1125,7 @@ function SortList(szField) {
     }
 
     g_SortField = szField;
-    g_OrderBy = "Order By " + g_SortField + " " + g_SortType;
+    g_OrderBy = g_SortField !== "" ? "Order By " + g_SortField + " " + g_SortType : "";
 
     if (DocList_Flag == "CABINET") {
         GetCaninetList();
