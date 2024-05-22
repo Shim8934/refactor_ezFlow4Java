@@ -259,15 +259,7 @@ function userPortletUpdateWithSize(usedTheme) {
 }
 
 function resizePortlet(portletNode) {
-    if (!portletNode) {
-        gridElement.refreshItems();
-    } else {
-        if (gridElement.getItem(portletNode) != null) {
-            gridElement.refreshItems(gridElement.getItem(portletNode));
-        } else {
-            return;
-        }
-    }
+    gridElement.refreshItems();
     gridElement.layout();
 }
 
