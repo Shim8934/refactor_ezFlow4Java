@@ -1872,7 +1872,7 @@ div.orbit img{border-radius: 5px;}
 .lnb ul li.lnb_address:hover:before, .lnb ul li.on.lnb_address:before{background-image:url(/images/lnb/lnb_addressbook_on.svg);}
 
 .lnb ul li span{display:block; padding:0 5px; font-size:14px; font-weight:500; color:#000; margin-top:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient: vertical; word-wrap: break-word; text-overflow: ellipsis; overflow: hidden}
-.lnb_menu_all{width: 456px;height: 100%;left:-1080px;position: absolute;top: 0;background: #fff;overflow: auto;}
+.lnb_menu_all{width: 456px;height: 100%;left:-1080px;position: absolute;top: 0;background: #fff;overflow: auto; display:flex; flex-direction:column;}
 .lnb_menu_setting{height: 48px; line-height: 48px; background: #F2F3F5;}
 .lnb_menu_setting .menu_set{padding:0 34px;}
 .lnb_menu_setting .menu_set span{display:inline-block; padding-left:16px; background:url(/images/lnb/set_icon.svg) no-repeat 0 center; color:#2B2B2B; font-size:12px; cursor:pointer; vertical-align:top; font-weight: 500;}
@@ -1882,16 +1882,30 @@ div.orbit img{border-radius: 5px;}
 .lnb_menu_setting .set_btn span{float: left;display: inline-block;width: 42px;height: 25px;border: 1px solid #CECECE;box-sizing: border-box;border-radius: 3px;line-height: 23px;color: #000;font-size: 12px;cursor: pointer; background-color: #fff; margin-top: 11px;}
 .lnb_menu_setting .set_btn span:first-child{border-color:#388CE5; color:#388CE5; margin-right:5px;}
 .lnb_menu_setting .set_btn p {margin: 0;float: right;font-size: 11px;color: #989898;}
-.lnb_menu_all ul{display: flex; flex-wrap: wrap; padding: 7px 30px 0; max-height:calc(100% - 48px); overflow-y:auto;}
-.lnb_menu_all ul li{width: 20%; margin: 0; padding: 18px 0 20px; box-sizing: border-box;}
+.lnb_menu_all ul{padding: 7px 30px 0; overflow-y:auto; flex:1;}
+.lnb_menu_all ul li{width: 20%; margin: 0; padding: 18px 0 20px; box-sizing: border-box; float:left;}
 .lnb_menu_all ul li:nth-child(1),.lnb_menu_all ul li:nth-child(2), .lnb_menu_all ul li:nth-child(3),.lnb_menu_all ul li:nth-child(4), .lnb_menu_all ul li:nth-child(5){border-bottom: 1px solid #DEDEDE;}
 
-.lnb_menu_all ul.active{padding-bottom:20px;}
+.lnb_menu_all ul.active{padding:20px 30px;}
 .lnb_menu_all ul.active li {border: 1px dashed #DCDCDC;border-left: none;border-top: none;}
 .lnb_menu_all ul.active li:nth-child(5n-4) {border-left: 1px dashed #DCDCDC;}
 
 .lnb_menu_all ul.active li:nth-child(1),.lnb_menu_all ul.active li:nth-child(2), .lnb_menu_all ul.active li:nth-child(3),.lnb_menu_all ul.active li:nth-child(4), .lnb_menu_all ul.active li:nth-child(5) {border: 1px dashed #59ACFF;background: #E3EEF9; border-left:none;}
 .lnb_menu_all ul.active li:nth-child(1){border-left:1px dashed #59ACFF;}
+
+
+.input_radio{display:inline-block;}
+.input_radio input[type="radio"]{display:none;}
+.input_radio input[type="radio"] + label{position:relative; padding-left:20px; height:14px; line-height:14px; cursor:pointer; display:inline-block;}
+.input_radio input[type="radio"] + label:before{content:""; position:absolute; left:0; top:50%; margin-top:-7px; width:14px; height:14px; border:1px solid #D6D6D6; border-radius:50%; box-sizing:border-box}
+.input_radio input[type="radio"]:checked + label:before{border:3px solid #388CE5;}
+
+.menu_position{width:calc(100% - 60px); margin:0 auto; border-bottom:1px solid #E8E8E8; overflow:hidden; padding:20px 0; display:flex; align-items:center; display:none;}
+.menu_position > span{font-size:13px; font-weight:500; color:#2B2B2B; float:left; margin-right:15px;}
+.menu_position .input_radio{margin-left:10px;}
+
+
+
 
 /* 컨텐츠 상단 영역 */
 .top_info_area{box-sizing:border-box; display:flex; padding-left:20px; margin-bottom:20px;}

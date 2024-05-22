@@ -41,6 +41,21 @@
 	                    <span id="editMenuSave"><spring:message code="ezNewPortal.t002" /></span><span id="editMenuCancel"><spring:message code="ezNewPortal.t001" /></span>
 	                </div>
 	            </div>
+
+				<%-- 메인메뉴 위치 html --%>
+				<div class="menu_position">
+					<span class="tit">메인메뉴 위치</span>
+					<div class="input_radio">
+						<input type="radio" id="sample_01" name="sample" checked>
+						<label for="sample_01">상단</label>
+					</div>
+					<div class="input_radio">
+						<input type="radio" id="sample_02" name="sample">
+						<label for="sample_02">좌측</label>
+					</div>
+				</div>
+				<%-- 메인메뉴 위치 html --%>
+
 	            <ul id="menuListAll" class="menu_list_all">
 	         	</ul>
 	         </div>
@@ -528,6 +543,7 @@
 			var menuResetting = document.querySelector('#menuResetting');
 			menuResetting.addEventListener('click', function () {
 				HTMLCollection.prototype.forEach = Array.prototype.forEach;
+				$(".menu_position").css("display","flex");	// 메인 메뉴 위치 설정
 				$('#menuListAll li').removeClass("on");							
 				$("#menuListAll .sortable-item").draggable({
 				    revert: "invalid",
@@ -577,6 +593,7 @@
 			// 취소버튼
 			var editMenuCancel = document.getElementById('editMenuCancel');
 			editMenuCancel.addEventListener('click', function() {
+				$(".menu_position").hide();	// 메인 메뉴 위치 설정
 				document.getElementById('editMenuBtn').style.display = 'none';
 				document.getElementById('editBtn').style.display = 'block';
 				$("#menuAllContainer ul").removeClass("active");
@@ -594,7 +611,7 @@
 			// 저장버튼
 			var editMenuSave = document.getElementById('editMenuSave');
 			editMenuSave.addEventListener('click', function() {
-				
+				$(".menu_position").hide();	// 메인 메뉴 위치 설정
 				document.getElementById('editMenuBtn').style = 'none';
 				document.getElementById('editBtn').style = 'block';
 				 $("#menuAllContainer ul").removeClass("active");
