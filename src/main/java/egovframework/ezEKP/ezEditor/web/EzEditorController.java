@@ -941,7 +941,7 @@ public class EzEditorController extends EgovFileMngUtil {
 				msg = filePath + commonUtil.separator + fileName;
 
 				if (type.equals("MAILLETTER")) {
-					String reProtocol = request.getScheme() + "://";
+					String reProtocol = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", userInfo.getTenantId())) ? "https://" : "http://";
 					String reServer = request.getServerName()
 							+ ("http".equals(request.getScheme())
 								&& request.getServerPort() == 80
