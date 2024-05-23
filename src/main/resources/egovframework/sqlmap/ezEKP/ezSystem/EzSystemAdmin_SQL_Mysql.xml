@@ -1095,30 +1095,26 @@
 		</isNotEmpty>
 	</sql>
 
-	<select id="EzSystemAdminDAO.getConnectorList"
-		parameterClass="map" resultClass="ConnectionInfoVO">
-		SELECT DATE_ADD(DATE_FORMAT(CONNECTTIME, '%Y-%m-%d %H:%i:%S'),
-		INTERVAL #offset# MINUTE) AS CONNECTTIME,
-		IFNULL(DATE_ADD(DATE_FORMAT(DISCONNECTTIME, '%Y-%m-%d %H:%i:%S'),
-		INTERVAL #offset# MINUTE), "") AS DISCONNECTTIME,
-		SEQUENCE,
-		USERNM,
-		USERNM2,
-		DEPTNM,
-		DEPTNM2,
-		COMPANYID,
-		COMPANYNM,
-		COMPANYNM2,
-		USERID,
-		STATUS
+	<select id="EzSystemAdminDAO.getConnectorList" parameterClass="map" resultClass="ConnectionInfoVO">
+		SELECT
+			SEQUENCE,
+			USERNM,
+			USERNM2,
+			DEPTNM,
+			DEPTNM2,
+			COMPANYID,
+			COMPANYNM,
+			COMPANYNM2,
+			USERID,
+			STATUS
 		FROM
-		TBL_CONNECTION_INFO
+			TBL_CONNECTION_INFO
 		WHERE
-		TENANT_ID = #v_tenantID#
+			TENANT_ID = #v_tenantID#
 		AND
-		(STATUS LIKE 'Y'
-		OR STATUS like ''
-		OR STATUS IS NULL)
+			(STATUS LIKE 'Y'
+			OR STATUS like ''
+			OR STATUS IS NULL)
 		<isNotEqual property="companyId" compareValue="Top/organ">
 			AND COMPANYID=#companyId#
 		</isNotEqual>
@@ -1126,33 +1122,28 @@
 		<isEqual property="search_keycode" compareValue="3">
 			AND USERID LIKE CONCAT('%', #search_keyword#,'%')
 		</isEqual>
-		GROUP BY
-		USERID
-		ORDER BY
-		SEQUENCE DESC
+		GROUP BY USERID
+		ORDER BY USERNM
 		<isNotEqual property="v_start" compareValue="-1">
-			LIMIT
-			#v_start#, #pageCount#
+			LIMIT #v_start#, #pageCount#
 		</isNotEqual>
 	</select>
 
-	<select id="EzSystemAdminDAO.getConnectorListCount"
-		parameterClass="map" resultClass="int">
+	<select id="EzSystemAdminDAO.getConnectorListCount" parameterClass="map" resultClass="int">
 		SELECT COUNT(*)
 		FROM (SELECT USERID
-		FROM TBL_CONNECTION_INFO
-		WHERE TENANT_ID = #v_tenantID#
-		AND (STATUS LIKE 'Y' OR STATUS like '' OR STATUS IS NULL)
+			FROM TBL_CONNECTION_INFO
+			WHERE TENANT_ID = #v_tenantID#
+			AND (STATUS LIKE 'Y' OR STATUS like '' OR STATUS IS NULL)
 		<isNotEqual property="companyId" compareValue="Top/organ">
-			AND COMPANYID
-			= #companyId#
+			AND COMPANYID = #companyId#
 		</isNotEqual>
 		<include refid="EzSystemAdminDAO.searchQueryForConnectorList" />
 		<isEqual property="search_keycode" compareValue="3">
 			AND USERID
 			LIKE CONCAT('%', #search_keyword#,'%')
 		</isEqual>
-		GROUP BY USERID) A
+			GROUP BY USERID) A
 	</select>
 
 </sqlMap>
