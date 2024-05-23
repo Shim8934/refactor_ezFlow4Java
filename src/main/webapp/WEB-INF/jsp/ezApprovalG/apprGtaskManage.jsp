@@ -50,7 +50,7 @@
 		        PageSize = 20; // 한 페이지에서 표출하는 항목 갯수
 		        curpage = 1; // 현재 페이지
 		        totalPage = Math.ceil(taskCount/PageSize); // 총 페이지 수
-		        makePagenationBar();
+		        makePagenationBar(null, null, 0);
 		        DocList_Resizer();
 		    };
 		    window.onresize = function () {
@@ -106,7 +106,7 @@
                 }
                 g_SortField = szField;
 
-                GetTaskFullList();
+                GetTaskFullList(searchTitle, searchCode, searchFlag);
             }
 		    function btnClose_onclick() {
 		        window.close();

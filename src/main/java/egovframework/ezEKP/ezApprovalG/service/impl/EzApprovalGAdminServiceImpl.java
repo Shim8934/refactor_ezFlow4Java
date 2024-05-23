@@ -5936,14 +5936,23 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return "TRUE";
 	}
 
-	public int getTaskListCount(String deptCode, String companyID, int tenantID) throws Exception {
+	public int getTaskListCount(String deptCode, String companyID, int tenantID, String title, String code, String flag) throws Exception {
 		logger.debug("getTaskListCount started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DEPTCODE", deptCode);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
-
+		
+		if (flag.equals("1")) {
+			if (!title.isEmpty()) {
+				map.put("title", title);
+			}
+			if (!code.isEmpty()) {
+				map.put("code", code);
+			}
+		}
+	
 		int result = ezApprovalGAdminDAO.getTaskListCount(map);
 
 		logger.debug("getTaskListCount ended.");
