@@ -4086,6 +4086,10 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
+		// (겸) 표시 사용여부 Flag
+		String addJobFlag = ezCommonService.getTenantConfig("UseShowAddJobFlag", userInfo.getTenantId());
+		model.addAttribute("addJobFlag", addJobFlag);
+
 		logger.debug("selectPerson ended");
 		return "/admin/ezApprovalG/apprGSelectPerson";
 	}
@@ -4124,6 +4128,10 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
+
+		// (겸) 표시 사용여부 Flag
+		String addJobFlag = ezCommonService.getTenantConfig("UseShowAddJobFlag", userInfo.getTenantId());
+		model.addAttribute("addJobFlag", addJobFlag);
 
 		logger.debug("selectPerson ended");
 		return "/admin/ezApprovalG/apprGDSelectPerson";

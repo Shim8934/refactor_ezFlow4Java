@@ -458,6 +458,10 @@ public class EzPersonalController extends EzFileMngUtil {
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
+		// (겸) 표시 사용여부 Flag
+		String addJobFlag = ezCommonService.getTenantConfig("UseShowAddJobFlag", userInfo.getTenantId());
+		model.addAttribute("addJobFlag", addJobFlag);
+
 		logger.debug("selectPerson ended");
 		return "ezPersonal/persSelectPerson";
 	}

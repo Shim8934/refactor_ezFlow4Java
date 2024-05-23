@@ -30,6 +30,7 @@
 		    var ReturnFunction;
 		    var userID = "${userInfo.id}";
 		    var companyID = "${companyID}";
+			var addJobFlag = "${addJobFlag}"; // (겸) 표시 사용여부 Flag
 		    window.onload = function () {
 		        try {
 		            if (isParentCommonArgsUsed()) {
@@ -170,7 +171,7 @@
 		    		data : {
 		    				deptID   : DeptID, 
 		    				cell 	 : "company;description;displayName;title;telephoneNumber;extensionattribute5",
-		    				prop     : "department",
+		    				prop     : "department;userType",
 		    				type 	 : "user"
 		    				},
 		    		success: function(xml){
@@ -192,7 +193,26 @@
                 listview.DataBind("OrganListView");
                 listview.DataSource(xml);
                 listview.RowDataBind();
+				// 겸직일 경우, 직위에 (겸) 표시 추가
+				if(addJobFlag == "YES") {
+					modifyJobTitle(xml);
+					listview.DataSource(xml);
+					listview.RowDataBind();
+				}
 		    }
+			function modifyJobTitle(xml) {
+				var rows = xml.getElementsByTagName("ROW");
+				for (var i = 0; i < rows.length; i++) {
+					var cells = rows[i].getElementsByTagName("CELL");
+					if (cells.length > 3) {
+						var job = cells[3].getElementsByTagName("VALUE")[0].textContent;
+						var data4 = cells[0].getElementsByTagName("DATA4")[0].textContent;
+
+						var addJob = (data4 == "addJob") ? "<spring:message code='ezOrgan.psb03'/> " + job : job;
+						cells[3].getElementsByTagName("VALUE")[0].textContent = addJob;
+					}
+				}
+			}
 		    function search_press(e) {
 		        if (window.event) {
 		            if (window.event.keyCode == 13) {
