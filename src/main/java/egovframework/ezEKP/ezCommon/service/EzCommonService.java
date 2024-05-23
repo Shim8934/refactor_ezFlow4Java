@@ -329,4 +329,7 @@ public interface EzCommonService {
 
 	/** 2023-06-26 한태훈 - 통합 PC 저장 이력 남기는 테이블(차후 다른 목적으로도 쓰일 수 있음) 추가 */
 	public void createTblTotalHistory() throws Exception;
+    
+	public void insertdelAttachByOthersConfing() throws Exception;
+
 }

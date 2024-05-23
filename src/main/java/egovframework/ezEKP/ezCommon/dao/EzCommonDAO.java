@@ -2003,4 +2003,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblTotalHistory");
 		}
 	}
+
+	/* 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 */
+	public void insertdelAttachByOthersConfing(Map<String, Object> map) {
+			String propertyValue = (String) select("EzCommonDAO.checkDelAttachByOthersConfing", map);
+
+			if (propertyValue == null) {				
+			logger.debug("delAttachByOthers tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertDelAttachByOthersConfing", map);
+		}
+	}
 }

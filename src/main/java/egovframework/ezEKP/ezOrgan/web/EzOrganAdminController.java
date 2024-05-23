@@ -268,6 +268,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertSurveyPostingMaxPeriodConfig(); // 2024-03-26 - 전자설문 종료 후 게시기간 설정 추가
 			ezCommonService.alterFileNameForWebfolderHistory(); // 2023-10-18 남진구 - 웹폴더 > 버전관리 > 파일 복원시 파일명 복원을 위한 FILE_NAME 칼럼 추가
 			ezCommonService.createTblTotalHistory(); // 2023-06-04 - 통합 PC 다중 파일 저장시 다운로드 로그 남기는 테이블
+			ezCommonService.insertdelAttachByOthersConfing(); // 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부
     	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

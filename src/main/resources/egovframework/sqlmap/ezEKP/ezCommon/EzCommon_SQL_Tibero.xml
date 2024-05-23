@@ -4224,5 +4224,23 @@
 		  CONSTRAINT "PK_TBL_TOTAL_HISTORY" PRIMARY KEY ("DOCID", "USERID", "REGDATE", "TENANT_ID", "COMPANYID")
 		)
 	</statement>
-	
+    
+	<!-- 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 -->
+	<select id="EzCommonDAO.checkDelAttachByOthersConfing" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'delAttachByOthers'
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertDelAttachByOthersConfing">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'delAttachByOthers', '0', '결재에서 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값(0 : 불가 1 : 허용), (default:0) ', '결재에서 첨부파일을 다른사람이 지울수있는 여부', TO_DATE('2021-03-05 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자결재')
+	</insert>
 </sqlMap>

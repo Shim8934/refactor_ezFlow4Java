@@ -3532,4 +3532,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createTblTotalHistory();
 		logger.debug("createTblTotalHistory ended");
 	}
+
+    public void insertdelAttachByOthersConfing() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertdelAttachByOthersConfing(map);
+        }
+        
+    }
 }
