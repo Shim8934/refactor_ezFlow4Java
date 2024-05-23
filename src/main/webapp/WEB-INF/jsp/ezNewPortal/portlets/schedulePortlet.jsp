@@ -41,7 +41,7 @@
 		</c:when>
 		<c:when test="${usedTheme eq 3}">
 			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none;"></dl>
-			<div class="box_shadow" style="position:relative; bottom:50px; overflow:hidden;"  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.10); border-radius: 20px;">
+			<div class="box_shadow" style="position:relative; bottom:63px; overflow:hidden;"  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.10); border-radius: 20px;">
 				<article class="schedule_small box_shadow schedule_calendar" style="width: calc(50% - 11px);">
 					<div class="layDIV">
 						<div class="sCalendarArea">

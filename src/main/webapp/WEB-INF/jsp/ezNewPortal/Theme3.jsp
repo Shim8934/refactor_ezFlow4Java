@@ -9,6 +9,10 @@
 <title>PortalPage</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
+<link href="${util.addVer('/css/ezNewPortal/swiper.min.css')}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/swiper.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/fixBoard.js')}"></script>
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	.notEmptySlider {
@@ -48,24 +52,36 @@
 </head>
 <body class="mainbg" id="theme3Body">
 	<div id="Center">
-	<div style="position:relative;">
-		<aside id="quickSide" style="width:0px;height:100%">
-			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
-			<div class="aside_quick">
-				<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
-				<ul id="quickmenu" class="quickmenu">
-				</ul>
-			</div>
-			<div class="aside_link">
-				<div class="linkBtn">
-					<p class="btnLay" id="btnLay">
-					</p>
-				</div>
-			</div>
-		</aside>
-	</div>	
+	
 		<section class="section_main">
-			<div class="portlet_area">
+			 <!-- 상단 고정부분 html start -->
+	        <div class="top_info_area">
+	            <div class="my_info_wrap">
+	                <div class="my_info" id="myInfo">
+	                    <span class="name">${userName} ${userTitle}</span>
+	                    <span class="team">${deptName}</span>
+	                </div>
+	
+	                <div class="portal_setting">
+	                    <input type="checkbox" id="portal_set">
+	                    <label for="portal_set" onclick="displayFixPortlet()"><span></span><spring:message code = 'ezNewPortal.HSBPT01' /></label>
+	                </div>
+	
+	                <div class="info_logout" onclick="infoLogoutClick()"><spring:message code = 'ezNewPortal.t008' /></div>
+	            </div>
+	            <ul>
+	                <li>
+	                    <div class="noti" id="noti"></div>
+	                </li>
+	                <li>
+	                    <span class="mail" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.topMenu.unReadMail' /></span><em id="unReadMailCount"></em></span>
+	                    <span class="appr" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezNewPortal.gu2' /></span><em id="approvalCnt"></em></span>
+	                    <span class="board" onclick="openPageOfPortal(this.className)"><span><spring:message code = 'ezBoard.t480' /></span><em id="newBoardCnt"></em></span>
+	                </li>
+	            </ul>
+	        </div>
+			<div id="fixBoardArea"></div>
+			<div id="portletArea" class="portlet_area">
 			</div>
 		</section>
 		
@@ -108,6 +124,7 @@
 <link rel="stylesheet" href="${util.addVer('/css/ezPortlet/portlet.css')}" type="text/css" />
 <script type="text/javascript">
 	var portletOrder = JSON.parse('${portletOrder}');
+	var fixedPortletList = JSON.parse('${fixedPortletList}');
 	var photoBoardPage = 1;
 	var photoCount = 3;
  	var nowAttiTime = "";
@@ -272,8 +289,44 @@
  		xhr.send();
  	}
  	
+ 	const fixBoardArr = {};
 	$(function() {
 		$("#featured").orbit();
+		if (!!fixedPortletList) {
+			var length = fixedPortletList.length;
+			for (var i = 0; i < length; i++) {
+				const fixPortletCode = fixedPortletList[i].portletCode;
+                const portletName = fixedPortletList[i].portletName;
+                const fixUrl = URLParamsUtils(fixedPortletList[i].portletUrl).getFullUrl();
+                const fixBoardUtil = new FixBoardUtil()
+                    .area("#fixBoardArea")
+                    .id(fixPortletCode)
+                    .title(portletName)
+                    .makeShell();
+                fixBoardArr[fixPortletCode] = fixBoardUtil;
+                $.ajax({
+                    type : "GET",
+                    dataType : "json",
+                    async : true,
+                    data: {
+                        "portletId": fixedPortletList[i].portletId,
+                        "startRow": 0,
+                        "count": 10
+                    },
+                    url : fixUrl,
+                    success : function (result) {
+                        if (result.length > 0) {
+                            fixBoardArr[fixPortletCode].start(result);
+                        } else {
+                            fixBoardArr[fixPortletCode].hide();
+                        }
+                    },
+                    error : function(error) {
+                        alert(error);
+                    }
+                });
+			}
+		}
 		
 		var portletCount = portletOrder.length;
 		var portletArea = document.getElementsByClassName("portlet_area")[0];
@@ -411,7 +464,7 @@
 		$("#6portlet").css("background-color","none");
 
 		// 퀵링크 호출
-		getQuickLink();		
+		//getQuickLink(); 2024-05-23 한태훈 > 퀵링크 아이콘 삭제.		
 		
 		//포틀릿 드래그 앤 드롭
 		if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
@@ -421,6 +474,10 @@
 		/* $(".portlet_area").disableSelection(); */
 		
 		setPortalRefresh();
+		
+		setPortalCount();		// 포탈 카운트 세팅
+        setBoardItemListToTopMenu("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+        makeSwiperByTopMenu();
 	});
 	
 	var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
@@ -574,6 +631,223 @@
 			}
 		}
 	}
+	
+	  function setPortalCount(){
+	        var reqURL = "/ezNewPortal/allCount.do";
+	        $.ajax({
+	            method : "GET",
+	            url : reqURL,
+	            dataType : "text",
+	            success : function(retData){
+	                var jsonData = JSON.parse(retData);
+	                if(jsonData.status != "ok")	{
+	                    console.log(jsonData.message);
+	                    return;
+	                }
+	                
+	                var newBoardCnt = jsonData.newBoardCnt;
+	                var unReadMailCount = jsonData.unreadMailCount;
+	                var approvalCnt = jsonData.approvalCnt;
+
+	                if(typeof newBoardCnt == "undefined") newBoardCnt = 0;
+	                if(typeof unReadMailCount == "undefined") unReadMailCount = 0;
+	                if(typeof approvalCnt == "undefined") approvalCnt = 0;
+
+	                document.getElementById("newBoardCnt").innerText = newBoardCnt;
+	                document.getElementById("unReadMailCount").innerText = unReadMailCount;
+	                document.getElementById("approvalCnt").innerText = approvalCnt;
+	            },
+	            error : function(e){
+	                console.log(e);
+	            }
+	        });
+	    }
+
+	    function openPageOfPortal(className){
+	        if(className === null || typeof className == "undefined" || !className) return;
+
+	        var target = "main";
+
+	        switch(className){
+	            case "mail":
+	                document.getElementById("unReadMailCount").addEventListener('click', function(){quickMenuOpen('NewMail');});
+	                break;
+	            case "appr":
+	                document.getElementById("approvalCnt").addEventListener('click', function(){quickMenuOpen('ApprG');});
+	                break;
+	            case "board":
+	                var mainHref = "";
+	                var mainBoardHref = "";
+	                try {
+	                    mainHref = window.parent.main.location.href;
+	                } catch (e) {
+	                    window.open('/ezBoard/boardMainRedirect.do?boardID="' + encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+	                    break;
+	                }
+	                try {
+	                    mainBoardHref = window.parent.mainBoard.location.href;
+	                } catch (e) {
+	                    window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', "main", "");
+	                    break;
+	                }
+
+	                var portalURL = "/ezNewPortal/newPortalPortalPage";
+
+	                if (mainHref.indexOf(portalURL) > -1 && mainHref != 'about:blank'){ // 메인영역이 포탈로 활성화되어 있고 메인보드 영역이 비어있을때
+	                    target = "main";
+	                } else if(mainHref == 'about:blank' && mainBoardHref != 'about:blank'){ // 메인영역이 비어 있고 메인보드 영역이 비어있지 않을때
+	                    target = "mainBoard";
+	                }
+	                window.open('/ezBoard/boardMainRedirect.do?boardID="'+ encodeURIComponent('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}') + '"', target, "");
+	                break;
+
+	            default: break;
+	        }
+	    }
+
+	    function setBoardItemListToTopMenu(boardId) {
+	        if(!boardId) {
+	            return;
+	        }
+
+	        $.ajax({
+	            url : "/ezNewPortal/boardItemListToTopMenu.do",
+	            method : "GET",
+	            data : {"boardId" : boardId},
+	            contentType : "text",
+	            success : function(obj){
+	                if(obj.status == "ok"){
+	                    var len = obj.boardList.length;
+	                    if(len > 0){
+	                        var target = document.getElementById("noti");
+	                        target.innerHTML = "";
+
+	                        var swDiv = document.createElement("div");
+	                        swDiv.classList.add('swiper');
+	                        swDiv.classList.add('mySwiper');
+	                        swDiv.classList.add('swiper-container');
+	                        swDiv.classList.add('swiper-container-initialized');
+	                        swDiv.classList.add('swiper-container-horizontal');
+	                        
+	                        var swWrap = document.createElement("div");
+	                        swWrap.classList.add('swiper-wrapper');
+	                        swWrap.style.cssText = 'transform : translate3d(0px, 0px, 0px)';
+	                        swDiv.append(swWrap);
+	                        target.append(swDiv);
+	                        makeSlideByTopMenu(obj.boardList);
+	                    }else{
+	                        var target = document.getElementById("noti");
+	                        target.innerHTML = "";
+	                        var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+	                        var div = document.createElement("div");
+	                        div.id = "noItemArea";
+	                        div.innerText = noItemText;
+	                        target.append(noItemText);
+	                    }
+	                } else {
+	                    var target = document.getElementById("noti");
+	                    target.innerHTML = "";
+	                    var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+	                    var div = document.createElement("div");
+	                    div.id = "noItemArea";
+	                    div.innerText = noItemText;
+	                    target.append(noItemText);
+	                }
+	            },
+	            error : function(e){
+	                var target = document.getElementById("noti");
+	                target.innerHTML = "";
+	                var noItemText = "<spring:message code = 'ezNewPortal.topMenu.newBoardItem' />";
+	                var div = document.createElement("div");
+	                div.id = "noItemArea";
+	                div.innerText = noItemText;
+	                target.append(noItemText);
+	                console.log(e)
+	            }
+	        });
+	    }
+
+	    var makeSlideByTopMenu = function (bList) {
+	        var noidDiv = document.getElementById('noti');
+	        var wrapper = noidDiv.querySelector(".swiper-wrapper");
+
+	        var max = bList.length;
+	        for (var i = 0; i < max; i++) {
+	            const board = bList[i];
+	            const slide = document.createElement('div');
+	            slide.classList.add('swiper-slide');
+	            if (i===0) {
+	                slide.classList.add('swiper-slide-active');
+	            } else {
+	                slide.classList.add('swiper-slide-next');
+	            }
+	            wrapper.appendChild(slide);
+	            const divText = document.createElement('div');
+	            divText.classList.add('swiper_txt');
+	            slide.appendChild(divText);
+	            var textNode = document.createTextNode(board.title);
+	            divText.appendChild(textNode);
+
+	            slide.addEventListener("click", function (event) {
+	                openBoard(board.itemID, board.guBun, board.boardID);
+	            });
+	        }
+	        makeSwiperByTopMenu();
+	    }
+
+	    var makeSwiperByTopMenu = function () {
+	        var swiper = new Swiper(".mySwiper", {
+	            navigation: {
+	                nextEl: ".swiper-button-next",
+	                prevEl: ".swiper-button-prev"
+	            },
+	            autoplay: {
+	                delay: 5000,
+	                disableOnInteraction: false,
+	            }
+	        });
+	    }
+
+	    // 겸직
+	    /*function callAllUserTab() {
+	        $.ajax({
+	            type: "GET",
+	            url: "/ezNewPortal/allUserTab.do",
+	            dataType: "JSON",
+	            success : function(data) {
+	                makeAllUserTab(data);
+	            }
+	        });
+	    }*/
+	    
+	    function getCookie(Name) {
+	        var search = Name + "="
+	        if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
+	            offset = document.cookie.indexOf(search)
+
+	            if (offset != -1) { // 쿠키가 존재하면
+	                offset += search.length
+	                // set index of beginning of value
+	                end = document.cookie.indexOf(";", offset);
+	                // 쿠키 값의 마지막 위치 인덱스 번호 설정
+	                if (end == -1)
+	                    end = document.cookie.length
+	                return unescape(document.cookie.substring(offset, end))
+	            }
+	        }
+	    }
+	
+	// 고정포틀릿 on/off
+    function displayFixPortlet() {
+        var onOff = document.getElementById("portal_set").checked;
+        var fixArea = document.getElementById("fixBoardArea");
+        
+        if (onOff == false) {
+            fixArea.classList.add("hidden");
+        } else {
+            fixArea.classList.remove("hidden");
+        }
+    }
 	</script>
 	</body>
 </html>
