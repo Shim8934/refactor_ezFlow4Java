@@ -129,7 +129,7 @@
 					menuLi.setAttribute('id', 'menu_' + item.menuId);
 					menuLi.textContent = ConvertCharToEntityReference(item.menuName);
 					mainFrame.style.width = "100%";
-					mainFrame.style.height = "100%";
+					mainFrame.style.height = "100vh";
 					mainFrame.style.float = "none";
 					mainFrame.style.position = "static";
 					
@@ -141,7 +141,7 @@
 					liSpan.textContent = ConvertCharToEntityReference(item.menuName);
 					menuLi.appendChild(liSpan);
 					mainFrame.style.width = "calc(100% - 81px)";
-					mainFrame.style.height = "calc(100vh - 60px)";
+					mainFrame.style.height = "100vh";
 					mainFrame.style.float = "right";
 					mainFrame.style.position = "relative"; // 이거 빼면 mainFrame 스크롤도 안되고 동작도 안됨.
 				}

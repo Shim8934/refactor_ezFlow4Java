@@ -9,6 +9,10 @@
 <title>PortalPage</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
+<link href="${util.addVer('/css/ezNewPortal/swiper.min.css')}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/swiper.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/fixBoard.js')}"></script>
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	#theme2Body .two_column{width:48%;}
@@ -21,22 +25,6 @@
 </head>
 
 <body class="mainbg" id="theme2Body">
-	<div style="position:relative;">
-		<aside id="quickSide" style="width:0px">
-			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
-			<div class="aside_quick">
-				<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
-				<ul class="quickmenu" id="quickmenu">
-				</ul>
-			</div>
-			<div class="aside_link">
-				<div class="linkBtn">
-					<p class="btnLay" id="btnLay">
-					</p>
-				</div>
-			</div>
-		</aside>
-	</div>   
 <div class="section1_bg">
 	<section class="section1">
     <div class="sec1Layout_left">
@@ -315,7 +303,8 @@
 </div>
 <div class="section_main">
 	<section>
-		<div class="portlet_area">
+		<div id="fixBoardArea"></div>
+		<div id="portletArea" class="portlet_area">
 		</div>
 	</section>
 </div>
@@ -366,6 +355,7 @@
 <script type="text/javascript" src="${util.addVer('/js/ezPortlet/portlet-util.js')}"></script>
 <link rel="stylesheet" href="${util.addVer('/css/ezPortlet/portlet.css')}" type="text/css" />
 <script type="text/javascript">
+	var fixedPortletList = JSON.parse('${fixedPortletList}');
 	var portletOrder = JSON.parse('${portletOrder}');
 	var photoBoardPage = 1;
 	var photoCount = 3;
@@ -1001,8 +991,44 @@
 		}
 	} */
 	
+	const fixBoardArr = {};
 	$(function() {
 		$("#featured").orbit();
+		if (!!fixedPortletList) {
+			var length = fixedPortletList.length;
+			for (var i = 0; i < length; i++) {
+				const fixPortletCode = fixedPortletList[i].portletCode;
+                const portletName = fixedPortletList[i].portletName;
+                const fixUrl = URLParamsUtils(fixedPortletList[i].portletUrl).getFullUrl();
+                const fixBoardUtil = new FixBoardUtil()
+                    .area("#fixBoardArea")
+                    .id(fixPortletCode)
+                    .title(portletName)
+                    .makeShell();
+                fixBoardArr[fixPortletCode] = fixBoardUtil;
+                $.ajax({
+                    type : "GET",
+                    dataType : "json",
+                    async : true,
+                    data: {
+                        "portletId": fixedPortletList[i].portletId,
+                        "startRow": 0,
+                        "count": 10
+                    },
+                    url : fixUrl,
+                    success : function (result) {
+                        if (result.length > 0) {
+                            fixBoardArr[fixPortletCode].start(result);
+                        } else {
+                            fixBoardArr[fixPortletCode].hide();
+                        }
+                    },
+                    error : function(error) {
+                        alert(error);
+                    }
+                });
+			}
+		}
 		
 		var portletCount = portletOrder.length;
 		var portletHTML = "";
@@ -1163,7 +1189,7 @@
 		document.getElementById("main_portletEnv").addEventListener('click', viewPortletEnv);
 
 		//퀵메뉴 on/off 버튼
-		document.getElementById("quicklinkBtn").addEventListener('click', viewQuick);
+		//document.getElementById("quicklinkBtn").addEventListener('click', viewQuick); 2024-05-23 링크 아이콘 삭제.
 		
 		//퀵메뉴 이동(오른쪽)
 // 		document.getElementById("quickMailwrite").addEventListener('click', function(){quickMenuOpenRight('mail');}, false);
@@ -1172,7 +1198,7 @@
 // 		document.getElementById("quickOrgan").addEventListener('click', function(){quickMenuOpenRight('organ');}, false);
 
 		// 퀵링크 호출
-		getQuickLink();		
+		//getQuickLink();		
 		
 		//포틀릿 드래그 앤 드롭
 		if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {

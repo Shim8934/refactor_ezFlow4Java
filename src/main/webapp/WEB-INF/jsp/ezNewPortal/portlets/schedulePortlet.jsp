@@ -72,7 +72,7 @@
 		</c:when>
 		<c:otherwise>
 			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none;"></dl>
-			<div class="box_shadow" style="position:relative; bottom:46px; overflow:hidden;">
+			<div class="box_shadow" style="position:relative; bottom:63px; overflow:hidden;">
 				<article class="schedule_small schedule_calendar" style="width: calc(46% - 11px);">
 					<div class="layDIV">
 						<div class="sCalendarArea">
