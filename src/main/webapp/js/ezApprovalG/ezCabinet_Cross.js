@@ -1102,6 +1102,10 @@ function GetHearderXml() {
 }
 
 function lvtDoclist_HeaderClick(pHeader) {
+    if (DocList_Flag === "RECORD" && pHeader === "") {
+        return;
+    }
+
     if (OrderCell == pHeader) {
         if (OrderOption == "")
             OrderOption = "DESC";
@@ -1125,7 +1129,7 @@ function SortList(szField) {
     }
 
     g_SortField = szField;
-    g_OrderBy = g_SortField !== "" ? "Order By " + g_SortField + " " + g_SortType : "";
+    g_OrderBy = "Order By " + g_SortField + " " + g_SortType;
 
     if (DocList_Flag == "CABINET") {
         GetCaninetList();
