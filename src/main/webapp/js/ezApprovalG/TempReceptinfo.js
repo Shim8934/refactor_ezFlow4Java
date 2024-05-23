@@ -144,21 +144,33 @@ function btn_GroupReceptAdd_onclick(flag){
     var curSelRows = lv.GetSelectedRows();
 
     if (curSelRows.length > 0) {
+        var lv2 = new ListView();
+        lv2.LoadFromID("lvRecGroupDetail")
+        var curSelMemberRows = lv2.GetDataRows();
         if (flag === "each") {
-            var lv2 = new ListView();
-            lv2.LoadFromID("lvRecGroupDetail")
-            var curSelMemberRows = lv2.GetDataRows();
             addSusinGroupMember(curSelMemberRows);
         } else if (flag === "group") {
             var curSelRow = curSelRows[0];
-            addSusinGroup(curSelRow);
+            addSusinGroup(curSelRow, curSelMemberRows);
         }
     } else {
         OpenAlertUI(strLang974);
     }
 }
 
-function addSusinGroup(row) {
+function addSusinGroup(row, mrows) {
+    var TrashList = [];
+    for (var i = 0, ilen = mrows.length; i < ilen; i++) {
+        var mrow = mrows[i];
+        if (mrow.getAttribute("DATA6") == "N" && mrow.getAttribute("DATA7") == "Y") {
+            var deptName = (UserLang == "1") ? mrow.getAttribute("DATA2") : mrow.getAttribute("DATA3");
+            TrashList.push(deptName);
+        }
+    }
+    if (TrashList.length > 0){
+        alert("[" + TrashList.join(",") + "]" + " 부서는 폐지되었습니다. 수신자 리스트에 제외됩니다.");
+    }
+
     var groupId = preSusinGroupStr + row.getAttribute("DATA1");
     var groupName = row.getAttribute("DATA2");
     var extReceptYn = row.getAttribute("DATA3");
@@ -219,14 +231,23 @@ function addSusinGroupMember(rows) {
     var groupMemberNames = [];
     var groupMemberName2s = [];
     var groupMemberExtReceptYns = [];
+    var TrashList = [];
 
     for (var i = 0, ilen = rows.length; i < ilen; i++) {
         var row = rows[i];
+        if (row.getAttribute("DATA6") == "N" && row.getAttribute("DATA7") == "Y") {
+            var deptName = (UserLang == "1") ? row.getAttribute("DATA2") : row.getAttribute("DATA3");
+            TrashList.push(deptName);
+        } else {
+            groupMemberIds.push(row.getAttribute("DATA1"));
+            groupMemberNames.push(row.getAttribute("DATA2"));
+            groupMemberName2s.push(row.getAttribute("DATA3"));
+            groupMemberExtReceptYns.push(row.getAttribute("DATA6"));
+        }
+    }
 
-        groupMemberIds.push(row.getAttribute("DATA1"));
-        groupMemberNames.push(row.getAttribute("DATA2"));
-        groupMemberName2s.push(row.getAttribute("DATA3"));
-        groupMemberExtReceptYns.push(row.getAttribute("DATA6"));
+    if (TrashList.length > 0){
+        alert("[" + TrashList.join(",") + "]" + " 부서는 폐지되었습니다. 수신자 리스트에 제외됩니다.");
     }
 
     addGroupMemberToRecept(groupMemberIds, groupMemberNames, groupMemberName2s, groupMemberExtReceptYns);

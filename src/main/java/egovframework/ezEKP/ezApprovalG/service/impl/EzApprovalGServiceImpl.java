@@ -4275,7 +4275,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			returnValue.append("<DATA4>" + commonUtil.cleanValue(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "</DATA4>");
 			returnValue.append("<DATA5>" + commonUtil.cleanValue(docXML.getElementsByTagName("SUBID").item(k).getTextContent()) + "</DATA5>");
 			returnValue.append("<DATA6>" + commonUtil.cleanValue(docXML.getElementsByTagName("EXTRECEPTYN").item(k).getTextContent()) + "</DATA6>");
-			returnValue.append("</CELL>");
+            // 2024-05-23 김유진 - 폐지부서 정보 추가
+            String TrashDeptYN = (docXML.getElementsByTagName("DEPT_CD_PATH").item(k) == null || docXML.getElementsByTagName("DEPT_CD_PATH").item(k).getTextContent() == "" || docXML.getElementsByTagName("DEPT_CD_PATH").item(k).getTextContent().contains("trash_dept")) ? "Y" : "N";
+            returnValue.append("<DATA7>" + commonUtil.cleanValue(TrashDeptYN) + "</DATA7>");
+            returnValue.append("</CELL>");
 			returnValue.append("</ROW>");
 		}
 
@@ -17464,9 +17467,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 
                 map.put("v_MAINID", Integer.parseInt(receipt.getReceiptPointID().replaceFirst(susinGroupIcon, "")));
                 map.put("v_CURRRECEIPT", receipt);
-                
                 List<ApprGReceiptVO> susinGroupMembers = ezApprovalGDAO.selectDisbandGroupReceipt(map);
-                
+                Iterator<ApprGReceiptVO> iterator = susinGroupMembers.iterator();
+                while (iterator.hasNext()) {
+                    ApprGReceiptVO member = iterator.next();
+                    if ("N".equals(member.getExtReceptYN())) {
+                        // 2024-05-23 김유진 - 폐지부서일 경우 list에서 삭제
+                        String TrashDeptYN = (member.getDept_Cd_Path() == null || member.getDept_Cd_Path() == "" || member.getDept_Cd_Path().contains("trash_dept")) ? "Y" : "N";
+                        if ("Y".equals(TrashDeptYN)) {
+                            iterator.remove();
+                        }
+                    }
+                }
+
                 newReceipts.addAll(susinGroupMembers);
             } else {
                 newReceipts.add(receipt);

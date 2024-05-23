@@ -5239,18 +5239,24 @@
                 A.MAINID
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="ITEM">
-			SELECT 
-				* 
+			SELECT
+                A.*, B.DEPT_CD_PATH
             FROM 
-            	TBL_ADMINRECEIPTGROUP_SUB 
+            	TBL_ADMINRECEIPTGROUP_SUB A
+            LEFT JOIN
+            	TBL_DEPTMASTER B
+            ON
+                A.DEPTID = B.CN
+            AND
+                A.TENANT_ID = B.TENANT_ID
             WHERE  
-            	MAINID = #v_MAINID#
+            	A.MAINID = #v_MAINID#
             AND
-            	TENANT_ID = #v_TENANTID#
+                A.TENANT_ID = #v_TENANTID#
             AND
-           		COMPANYID = #companyID#  
-            ORDER BY 
-            	SUBID 
+                A.COMPANYID = #companyID#
+            ORDER BY
+                A.SUBID
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="JOIN">
 			SELECT 
@@ -34398,8 +34404,8 @@
     <select id="EzApprovalG.selectDisbandGroupReceipt" parameterClass="Map" resultClass="ApprGReceiptVO">
         SELECT 
 	        #v_DOCID# AS DOCID, 
-	        DEPTID AS RECEIPTPOINTID, 
-	        DEPTNAME AS RECEIPTPOINTNAME, 
+	        A.DEPTID AS RECEIPTPOINTID,
+	        A.DEPTNAME AS RECEIPTPOINTNAME,
 	        #v_CURRRECEIPT.extReceptYN# AS EXTRECEPTYN, 
 	        #v_CURRRECEIPT.processYN# AS PROCESSYN, 
 	        #v_CURRRECEIPT.processSN# AS PROCESSSN, 
@@ -34410,22 +34416,29 @@
 	        #v_CURRRECEIPT.processDate# AS PROCESSDATE, 
 	        #v_CURRRECEIPT.receiptMemberJobTitle# AS RECEIPTMEMBERJOBTITLE, 
 	        #v_CURRRECEIPT.deptMemberSN# AS DEPTMEMBERSN, 
-	        DEPTNAME2 AS RECEIPTPOINTNAME2, 
+	        A.DEPTNAME2 AS RECEIPTPOINTNAME2,
 	        #v_CURRRECEIPT.receiptMemberJobTitle2# AS RECEIPTMEMBERJOBTITLE2, 
 	        #v_CURRRECEIPT.receiptMemberName2# AS RECEIPTMEMBERNAME2, 
 	        #v_CURRRECEIPT.routeYN# AS ROUTEYN, 
 	        #v_TENANTID# AS TENANT_ID, 
-	        #companyID# AS COMPANYID
+	        #companyID# AS COMPANYID,
+            B.DEPT_CD_PATH
         FROM 
-            TBL_ADMINRECEIPTGROUP_SUB
+            TBL_ADMINRECEIPTGROUP_SUB A
+        LEFT JOIN
+            TBL_DEPTMASTER B
+        ON
+            A.DEPTID = B.CN
+        AND
+            A.TENANT_ID = B.TENANT_ID
         WHERE 
-            MAINID = #v_MAINID# 
+            A.MAINID = #v_MAINID#
         AND 
-            COMPANYID = #companyID# 
+            A.COMPANYID = #companyID#
         AND 
-            TENANT_ID = #v_TENANTID# 
+            A.TENANT_ID = #v_TENANTID#
         ORDER BY 
-            SUBID
+            A.SUBID
     </select>
     
     <insert id="EzApprovalG.insertDisbandGroupReceipt" parameterClass="Map">
