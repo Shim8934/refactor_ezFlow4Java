@@ -56,16 +56,17 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 		}
 		*/
 		
-		text = '<li class="notiLI" data1="' + data.itemID + '" data2="' + data.boardID + '" data3="' + data.guBun + '"><dl class="notiDL0' + index + '">';
+		text = '<li class="notiLI" data1="' + data.itemID + '" data2="' + data.boardID + '" data3="' + data.guBun + '"><dl>';
 		
-		if (Number($("#noticePortlet_usedTheme").val()) === 3) {
-			text += '<dt>' + index + '</dt>';
-		}
-		else {
-			text += '<dt class="noti_img"></dt>';
-		}
+		// if (Number($("#noticePortlet_usedTheme").val()) === 3) {
+			// text += '<dt>' + index + '</dt>';
+		// }
+		// else {
+			text += '<dt class="noti_num">' + index + '</dt>';
+		// }
 		
-		text += '<dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd><dd class="noti_date">' + (data.writeDate).substring(5, 16) + '</dd></dl></li>';
+        var writeDateFormatt = data.writeDate.substring(0,4).toString() + "." + data.writeDate.substring(5,7).toString() + "." + data.writeDate.substring(8,10).toString() + " " + data.writeDate.substring(11,16).toString()
+		text += '<dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd><dd class="noti_date">' + writeDateFormatt + '</dd></dl></li>';
 		
 		return text;
 	};
