@@ -183,7 +183,10 @@ public class EzEmailMailSearchController {
 				ia.close();
 			}
 		}
+
+		boolean isDotNetIntegration = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId()));
 		
+		model.addAttribute("isDotNetIntegration", userInfo.getId());
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userLang", userLang);
