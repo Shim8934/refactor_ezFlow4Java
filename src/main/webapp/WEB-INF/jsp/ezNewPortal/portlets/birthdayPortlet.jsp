@@ -16,7 +16,7 @@
 				<span id="curMonth"><c:out value="${nowMonth }" /></span><spring:message code='ezNewPortal.yej04'/><c:out value='${portletName }'/>
 			</dt>
 			<!-- 		<dd class="portletPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd> -->
-			<dd id="birthNext" class="nextBtn">
+			<dd id="birthNext" class="portletPlus nextBtn">
 				<c:choose>
 					<c:when test="${usedTheme eq 3 }">
 						<img src="/images/ezNewPortal/photo_next.png">
@@ -26,7 +26,7 @@
 					</c:otherwise>
 				</c:choose>
 			</dd>
-			<dd id="birthPrev" class="preBtn">
+			<dd id="birthPrev" class="portletPlus preBtn">
 				<c:choose>
 					<c:when test="${usedTheme eq 3 }">
 						<img src="/images/ezNewPortal/photo_pre.png">
