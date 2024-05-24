@@ -1928,8 +1928,6 @@ div.orbit img{border-radius: 5px;}
 .lnb_menu_setting{height:48px; line-height:48px; background:#F2F3F5;}
 .lnb_menu_setting .menu_set{padding:0 34px;}
 .lnb_menu_setting .menu_set span{display:inline-block; padding-left:16px; background:url(/images/lnb/set_icon.svg) no-repeat 0 center; color:#2B2B2B; font-size:12px; cursor:pointer; vertical-align:top; font-weight: 500;}
-.lnb_menu_setting .menu_set p{margin:0; float:right; font-size:11px; color:#989898;}
-
 .lnb_menu_setting .menu_set p {margin: 0; float: right; font-size: 11px; color: #989898;}
 .lnb_menu_setting .set_btn{display:none; text-align:center; padding: 0 34px;}
 .lnb_menu_setting .set_btn span{float: left;display: inline-block;width: 42px;height: 25px;border: 1px solid #CECECE;box-sizing: border-box;border-radius: 3px;line-height: 23px;color: #000;font-size: 12px;cursor: pointer; background-color: #fff; margin-top: 11px;} */
