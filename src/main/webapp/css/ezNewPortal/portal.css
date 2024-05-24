@@ -2116,4 +2116,4 @@ div.orbit img{border-radius: 5px;}
 .portlet.col, .portlet.addPortlet {height: 289px;}
 .notiBody{background-color : transparent;}
 
-.webFolder.empty {display: unset; padding: 0; margin: 0}
+.webFolder.empty {display: unset; padding: 0 !important; margin: 0}
