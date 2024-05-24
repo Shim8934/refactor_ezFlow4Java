@@ -68,6 +68,7 @@ function getWebFolderFileList() {
 				dlEl.appendChild(ddEl);
 				
 				ulEl.appendChild(dlEl);
+				ulEl.classList.add("empty");
 			}
 		},
 		error : function () {
