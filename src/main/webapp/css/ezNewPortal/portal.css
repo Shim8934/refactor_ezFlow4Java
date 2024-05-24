@@ -320,7 +320,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 
 .portlet_tab dt span:hover{color:#388CE5;}
 .portlet_tab dt span{ display:inline-block; height:63px; padding:0px; width:100%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
-.portlet_tab dt.on{float:left; height:63px; line-height:63px; margin:0; color:#388CE5;cursor:pointer; margin:0 5px; box-sizing:border-box;}
+.portlet_tab dt.on{float:left; height:63px; line-height:63px; margin:0 9px; color:#388CE5;cursor:pointer; box-sizing:border-box;}
 .portlet_tab dt:before{content:""; position:absolute; width:100%; height:3px; border-radius:2px; background:#388CE5; left:0; bottom:10px; display:none;}
 .portlet_tab dt.on:before{display:block;}
 .portlet_tab .portletPlus{ margin:0px; padding:18px 15px; float:right; overflow:hidden; cursor:pointer; position:absolute;}
