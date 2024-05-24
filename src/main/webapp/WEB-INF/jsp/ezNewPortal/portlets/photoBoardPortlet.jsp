@@ -21,7 +21,7 @@
 						<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
 					</dd>
 						<c:if test="${not empty photoBoardList}">
-							<dd class="nextBtn">
+							<dd class="portletPlus  nextBtn">
 								<c:choose>
 									<c:when test="${usedTheme eq 3}">
 										<img src="/images/ezNewPortal/photo_next.png">
@@ -31,7 +31,7 @@
 									</c:otherwise>
 								</c:choose>
 							</dd>
-							<dd class="preBtn">
+							<dd class="portletPlus preBtn">
 								<c:choose>
 									<c:when test="${usedTheme eq 3}">
 										<img src="/images/ezNewPortal/photo_pre.png">

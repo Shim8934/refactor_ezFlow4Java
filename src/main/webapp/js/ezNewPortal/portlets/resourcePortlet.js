@@ -114,7 +114,6 @@ function mappingResourcePortlet(vo){
 			span.setAttribute("class", "resource_list_item");
 			span.setAttribute("num", num[i]);
 			span.setAttribute("ownerID", vo.brdID);
-			span.style.float = 'left';
 			span.textContent = timeTable[i];
 			span.addEventListener('click', function(event) {reserveViewPopup()});
 			dd.appendChild(span);
