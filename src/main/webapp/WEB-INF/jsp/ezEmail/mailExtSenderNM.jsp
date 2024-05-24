@@ -88,6 +88,7 @@
 		}
 		function pop_addcon() {
 		    if (inboxRuleCon1.value.length > 0) {
+		        inboxRuleCon1.value = inboxRuleCon1.value.replace(/<[^>]*>?/g, '');
 		        var ischeck = true;
 		        for (var i = 0; i < Conitems.childNodes.length; i++) {
 		            if (inboxRuleCon1.value == Conitems.childNodes.item(i).value) {
