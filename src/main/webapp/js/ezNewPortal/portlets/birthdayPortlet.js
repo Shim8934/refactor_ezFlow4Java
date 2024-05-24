@@ -74,7 +74,30 @@ function getBirthdayList() {
 					strHTML += "<dt class='birthPic'>";
 					strHTML += "<img src='" + birthdayList[i].userImg + "' width = '32' height='32'>";
 					strHTML += "</dt>";
-					strHTML += "<dd class='birthName'>[" + userBirthday + "] " + birthdayList[i].userName + "</dd>";
+					strHTML += "<dd class='birthName'>" + birthdayList[i].userName  + " " + birthdayList[i].title +"</dd>";
+                    var userBirthdayFormatSum = "";
+                    var userBirthdayFormat1 = userBirthday.slice(0,1);
+                    var userBirthdayFormat2 = userBirthday.slice(3,4);
+                    if (userLang == 1) {
+                        if (userBirthdayFormat1 == 0) {
+                            userBirthdayFormatSum = userBirthday.slice(1,2) + "월 ";
+                            if (userBirthdayFormat2 == 0) {
+                                userBirthdayFormatSum += userBirthday.slice(4) + "일";
+                            } else {
+                                userBirthdayFormatSum += userBirthday.slice(3) + "일";
+                            }
+                        } else {
+                            userBirthdayFormatSum = userBirthday.slice(0,2) + "월 ";
+                            if (userBirthdayFormat2 == 0) {
+                                userBirthdayFormatSum += userBirthday.slice(4) + "일";
+                            } else {
+                                userBirthdayFormatSum += userBirthday.slice(3) + "일";
+                            }
+                        }
+                    } else {
+                        userBirthdayFormatSum = userBirthday;
+                    }
+					strHTML += "<dd class='birthDate'>" + userBirthdayFormatSum + "</dd>";
 					strHTML += "<dd class='birthTeam'>" + birthdayList[i].userDeptName + "</dd>";
 					strHTML += "</dl>";
 					strHTML += "</li>";
