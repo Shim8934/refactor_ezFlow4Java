@@ -1315,7 +1315,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .scheduleUL .scheduleLi .scheduleTime .Tcompany{margin:0px; padding:1px 3px 2px; font-size:12px; color:#fff; background:#EFF5F7; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; }
 /* #theme3Body .scalendar_mini_title .calendar_mini_day{text-align: left; color:#2C4848;} */
 
-#theme3Body .sscheduleUL .scheduleLi{padding: 5px 0px 9px 14px; margin:10px 20px;}
+#theme3Body .sscheduleUL .scheduleLi{}
 #theme3Body .sscheduleUL .scheduleLi.company{background:#F7EEEE; border-radius: 10px; border:1px solid #EBD0DA;}
 #theme3Body .sscheduleUL .scheduleLi.individual{background:#DDF2FD; border-radius: 10px;}
 #theme3Body .sscheduleUL .scheduleLi.dept{background:#E2F3F2; border-radius: 10px; border:1px solid #B9E1D0;}
@@ -1695,7 +1695,7 @@ div.orbit img{border-radius: 5px;}
 .full_menu_toggleUL > li{height: 118px;}
 
 /* 20231030 디자인 css 추가 */
-#theme3Body .sscheduleUL .scheduleLi{padding: 8px 0px 12px 14px; margin: 0px 20px 10px 20px;}
+#theme3Body .sscheduleUL .scheduleLi{}
 .bestEmployee .emDL .nodata dd{text-align:left}
 .weather_title .weatherPresent dt img{width: 87px;}
 /* .weather_title .weatherPer{margin: 24px 0px;} */
