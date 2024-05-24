@@ -8,7 +8,7 @@
 </head>
 <body>
 	<article class="box_shadow">
-		<div class="layDiv pollLay" style="height: 100%;">
+		<div class="layDIV pollLay" style="height: 100%;">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
 					<c:out value='${portletName }'/>

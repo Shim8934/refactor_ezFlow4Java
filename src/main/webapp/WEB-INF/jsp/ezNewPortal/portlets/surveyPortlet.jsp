@@ -7,8 +7,8 @@
 <head>
 </head>
 <body>
-	<article class="box_shadow">
-		<div class="layDiv pollLay">
+	<article class="box_shadow survey">
+		<div class="layDIV pollLay">
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
 					<c:out value='${portletName }'/>
