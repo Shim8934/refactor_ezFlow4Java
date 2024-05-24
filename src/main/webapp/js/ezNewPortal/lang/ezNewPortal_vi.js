@@ -13,7 +13,7 @@ var messages = {
     strLang12: "Vui lòng tham gia với chúng tôi.",
     strLang13: "Bỏ phiếu đang được sửa đổi. Xin hãy đợi.",
     strLang14: '"Bạn không có quyền trên bản tin đó."',
-    strLang15: "THÁNG 1, THÁNG 2, THÁNG 3, THÁNG 4, THÁNG 5,THÁNG 6,THÁNG 7,THÁNG 8,THÁNG 9,THÁNG 10,THÁNG 11,THÁNG 12",
+    strLang15: "chủ nhật;Thứ hai;Thứ ba;Thứ Tư;Thứ năm;Thứ sáu;Thứ bảy;",
     strLang16: "HWP không được hỗ trợ.",
     strLang17: '"Không có bảng thông báo được chỉ định."',
     strLang18: "Viết thư",
@@ -54,5 +54,6 @@ var messages = {
     strLang599: "tháng",
     strLang600: "n.tháng",
     strLang601: "đóng cửa",
-    strLang602: "vi"
+    strLang602: "vi",
+    strLangSchedule01: "chủ nhật;Thứ hai;Thứ ba;Thứ Tư;Thứ năm;Thứ sáu;Thứ bảy;"
 }

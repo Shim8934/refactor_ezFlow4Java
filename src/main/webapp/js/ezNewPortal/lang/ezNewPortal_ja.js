@@ -54,5 +54,6 @@ var messages = {
 	strLang599 : "<前",
 	strLang600 : "次>",
 	strLang601 : "閉じる",
-	strLang602 : "ja"
+	strLang602 : "ja",
+	strLangSchedule01 : "日;月;火;水;木;金;土",
 }

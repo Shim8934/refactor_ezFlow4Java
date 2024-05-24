@@ -24,8 +24,7 @@
 					<div class="layDIV">
 						<div class="sCalendarArea">
 							<dl class="portlet_title portlet_schedule sortablePortlet">
-								<dt class="portletText">
-									<c:out value='${portletName }'/>
+								<dt class="portletText" id="scheduleDateTextDT">
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
 									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
@@ -50,13 +49,11 @@
 					</div>
 				</article>
 	
-				<article class="schedule_small schedule_scheduleList" style="width: 50%; box-shadow:none;">
+				<article class="schedule_small box_shadow schedule_scheduleList" style="width: 50%; box-shadow:none;">
 					<div class="layDIV">
 						<div class="sCalendarArea">
 							<dl class="portlet_title portlet_schedule sortablePortlet">
-								<dt class="portletText" id="theme3PortletCalTextDT">
-								<%-- 현재 일자와 요일 텍스트로 변경 --%>
-									<c:out value='${portletName }'/>
+								<dt class="portletText" id="scheduleDateTextDT">
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
 									<img src="/images/ezNewPortal/portlet_Plus1.png">
@@ -73,7 +70,7 @@
 		<c:otherwise>
 			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none;"></dl>
 			<div class="box_shadow" style="position:relative; bottom:63px; overflow:hidden;">
-				<article class="schedule_small schedule_calendar" style="width: calc(46% - 11px);">
+				<article class="schedule_small box_shadow schedule_calendar">
 					<div class="layDIV">
 						<div class="sCalendarArea">
 							<div id="CalendarMini" class="scalendar"></div>
@@ -81,12 +78,11 @@
 					</div>
 				</article>
 	
-				<article class="schedule_small schedule_scheduleList" style="width: 54%">
+				<article class="schedule_small box_shadow schedule_scheduleList">
 					<div class="layDIV">
 						<div class="sCalendarArea">
 							<dl class="portlet_title portlet_schedule sortablePortlet">
-								<dt class="portletText">
-									<c:out value='${portletName }'/>
+								<dt class="portletText" id="scheduleDateTextDT">
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
 									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
