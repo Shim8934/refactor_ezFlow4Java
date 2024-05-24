@@ -1,7 +1,17 @@
-<svg id="구성_요소_5_4" data-name="구성 요소 5 – 4" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
-  <path id="패스_50982" data-name="패스 50982" d="M302,178a15,15,0,1,0-15,15A15,15,0,0,0,302,178Z" transform="translate(-272 -163)" fill="#ebebeb"/>
-  <g id="그룹_47793" data-name="그룹 47793" transform="translate(10 10)">
-    <path id="패스_51277" data-name="패스 51277" d="M21,0H11" transform="translate(-11 5)" fill="none" stroke="#717171" stroke-linecap="round" stroke-width="2"/>
-    <line id="선_44" data-name="선 44" x2="10" transform="translate(5 0) rotate(90)" fill="none" stroke="#717171" stroke-linecap="round" stroke-width="2"/>
+<svg id="_416376_envelope_files_folder_interface_office_icon" data-name="416376_envelope_files_folder_interface_office_icon" xmlns="http://www.w3.org/2000/svg" width="25.5" height="23.907" viewBox="0 0 25.5 23.907">
+  <g id="Folder">
+    <g id="그룹_49910" data-name="그룹 49910">
+      <path id="패스_52732" data-name="패스 52732" d="M23.906,1.594H9.563A1.594,1.594,0,0,0,7.969,0H1.594A1.594,1.594,0,0,0,0,1.594V6.375A1.594,1.594,0,0,0,1.594,7.969H23.906A1.594,1.594,0,0,0,25.5,6.375V3.188A1.593,1.593,0,0,0,23.906,1.594Z" fill="#c9c9c9" fill-rule="evenodd"/>
+    </g>
+  </g>
+  <g id="File_1_" transform="translate(1.594 3.188)">
+    <g id="그룹_49911" data-name="그룹 49911">
+      <path id="패스_52733" data-name="패스 52733" d="M24.719,8H5.594A1.594,1.594,0,0,0,4,9.594v1.594a1.594,1.594,0,0,0,1.594,1.594H24.719a1.594,1.594,0,0,0,1.594-1.594V9.594A1.594,1.594,0,0,0,24.719,8Z" transform="translate(-4 -8)" fill="#fff"/>
+    </g>
+  </g>
+  <g id="Folder_1_" transform="translate(0 4.782)">
+    <g id="그룹_49912" data-name="그룹 49912">
+      <path id="패스_52734" data-name="패스 52734" d="M23.906,12H1.594A1.594,1.594,0,0,0,0,13.595V29.532a1.594,1.594,0,0,0,1.594,1.594H23.906A1.594,1.594,0,0,0,25.5,29.532V13.595A1.594,1.594,0,0,0,23.906,12Z" transform="translate(0 -12.001)" fill="#e1e1e1"/>
+    </g>
   </g>
 </svg>

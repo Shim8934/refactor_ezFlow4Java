@@ -533,13 +533,18 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .apprgraph_area .bookmarkG04 .dot{width:10px; height:10px; border-radius: 10px; background: #FFA622; border:3px solid #fff; position:absolute; top: 27px;}
 .apprgraph_area .bookmarkG05 .dot{width:10px; height:10px; border-radius: 10px; background: #FF0000; border:3px solid #fff; position:absolute; top: 27px;}
 
-.bookmark_content{padding-top:10px;}
-.bookmark{ overflow:hidden; margin:0 15px; padding:0px 0px 10px; list-style:none; box-sizing:border-box; display:flex; overflow:hidden; display:flex; flex-wrap:wrap; gap:8px;}
+.bookmark_content{padding-top:10px; height:calc(100% - 166px); box-sizing:border-box;}
+.bookmark{ overflow:hidden; margin:0 15px; padding:0px 0px 10px; list-style:none; box-sizing:border-box; display:flex; flex-wrap:wrap; gap:8px; max-height:100%; overflow-y:auto;}
 .bookmark > li{margin:0; padding:0; width:calc((100% - 16px) / 3); box-sizing:border-box; height:76px; background-repeat:no-repeat; background-position:center; background-color:#F5F5F5; border-radius:4px; display:flex; cursor:pointer;}
-.bookmark > li:hover{background-color:#f1f1f1;}
-.bookmark .bookmarkLi{background-image:url(/images/ezNewPortal/bookmarkIcon.svg); background-position:50% calc(50% - 10px);}
-.bookmark .bookmarkLi_none{background-image:url(/images/ezNewPortal/bookmarkIcon_none.svg);}
+.bookmark > li:hover{box-shadow:0 3px 6px rgba(0,0,0,0.16);}
+.bookmark .bookmarkLi{background-image:url(../../images/ezNewPortal/bookmarkIcon.svg); background-position:50% calc(50% - 10px);}
+.bookmark .bookmarkLi_none{background-image:url(../../images/ezNewPortal/bookmarkIcon_none.svg);}
 .bookmark .bookmarkLi span{cursor:pointer; letter-spacing:-1px; margin:auto 0 10px 0; width:100%; text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; padding:0 5px; color:#333333; font-size:13px;}
+
+.portlet.one_by_two .bookmark > li{width:calc((100% - 40px) / 6);}
+.portlet.two_by_one .favorite .layDIV{display:flex; flex-direction:column;}
+.portlet.two_by_one .favorite .apprgraph_div{margin:auto 0 30px;}
+
 
 /* community */
 .community{ overflow:hidden;}
