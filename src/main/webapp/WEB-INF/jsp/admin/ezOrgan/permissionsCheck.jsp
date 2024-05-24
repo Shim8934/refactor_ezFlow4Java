@@ -248,7 +248,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype;department;extensionAttribute7", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype;department;extensionAttribute7", type : "user", noAddJob : "Y", adminOrgan : 'y'},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();

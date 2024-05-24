@@ -200,7 +200,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user",adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();

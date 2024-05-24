@@ -146,6 +146,17 @@ public class OrganUserVO {
 	/** 겸직 직위*/
 	private String addJobTitle;
 
+	/** 조직도 사용 여부*/
+	private String userTreeFlag;
+
+	public String getUserTreeFlag() {
+		return userTreeFlag;
+	}
+
+	public void setUserTreeFlag(String userTreeFlag) {
+		this.userTreeFlag = userTreeFlag;
+	}
+
 	public String getAddJobTitle() {
 		return addJobTitle;
 	}

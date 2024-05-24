@@ -434,6 +434,14 @@
                                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                        		AND
                        			TENANT_ID = #v_TENANT_ID#	
+			]]>
+					<isEqual property="adminOrgan" compareValue="n">
+						<![CDATA[ 
+							 AND 
+								USERTREEFLAG = 'Y'
+						]]>
+					</isEqual>
+			<![CDATA[
                        	UNION ALL 
                        		SELECT
                        			A.CN ,
@@ -460,7 +468,17 @@
                   			WHERE
                   				B.DEPTID = #v_CN#
                   			AND
-                  				B.TENANT_ID = #v_TENANT_ID#	 ) AA
+                  				B.TENANT_ID = #v_TENANT_ID#
+					]]>
+					<isEqual property="adminOrgan" compareValue="n">
+						<![CDATA[ 
+							 AND 
+								A.USERTREEFLAG = 'Y'
+						]]>
+					</isEqual>
+			<![CDATA[ 
+ 							
+                  			) AA
                   			ORDER BY
                   				EXTENSIONATTRIBUTE15 ASC,
                   			DISPLAYNAME ASC
@@ -625,6 +643,14 @@
                                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                                 		AND
                                 			TENANT_ID = #v_TENANT_ID#	
+			]]>
+									<isEqual property="adminOrgan" compareValue="n">
+			<![CDATA[ 	
+										 AND 
+											USERTREEFLAG = 'Y'
+			]]>
+									</isEqual>
+			<![CDATA[
 	                               UNION ALL 
                                			SELECT
                                				A.CN ,
@@ -651,7 +677,15 @@
                               				B.DEPTID = #v_CN#
                               			AND
                               				B.TENANT_ID = #v_TENANT_ID#	 
-                                  ) AA
+		  	]]>
+									<isEqual property="adminOrgan" compareValue="n">
+									<![CDATA[ 
+										 AND 
+											A.USERTREEFLAG = 'Y'
+									]]>
+									</isEqual>
+			<![CDATA[ 
+ 							) AA
                      		ORDER BY 
                                 EXTENSIONATTRIBUTE15, DISPLAYNAME
                             LIMIT #v_STARTROWForMySQL#, #v_COUNT# 
@@ -794,7 +828,15 @@
                     AND 
                         CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                		AND
-               			TENANT_ID = #v_TENANT_ID#	
+               			TENANT_ID = #v_TENANT_ID#
+		]]>
+				<isNotEqual property="adminOrgan" compareValue="y">
+				<![CDATA[ 
+					 AND 
+						USERTREEFLAG = 'Y'
+				]]>
+				</isNotEqual>
+		<![CDATA[ 	
 	              UNION ALL 
 		            SELECT
 		            	B.CN 
@@ -805,8 +847,15 @@
               		WHERE
               			B.DEPTID = #v_CN#
               		AND
-              			B.TENANT_ID = #v_TENANT_ID#) AA
+              			B.TENANT_ID = #v_TENANT_ID#
 		]]>
+					<isNotEqual property="adminOrgan" compareValue="y">
+		<![CDATA[ 
+					AND 
+						A.USERTREEFLAG = 'Y'
+		]]>
+					</isNotEqual>
+					) AA
 	</select>
 	
 	<select id="EzOrganDAO.getMemberListCount2" parameterClass="Map" resultClass="Integer">
@@ -1809,7 +1858,12 @@
             	AND
             		CN <> 'masteradmin'
             ]]>
-                
+			<isNotEqual property="adminOrgan" compareValue="y">
+				<![CDATA[
+					 AND
+						USERTREEFLAG = 'Y'
+				]]>
+			</isNotEqual>   
             <isNotEmpty property="companyId">
 	    	AND 
 	    		PHYSICALDELIVERYOFFICENAME IN 
@@ -1830,7 +1884,13 @@
 	                'Y' ISADDJOB 
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-	            $strSQLForAddJobForMySQL$ 
+	            $strSQLForAddJobForMySQL$
+				<isNotEqual property="adminOrgan" compareValue="y">
+					<![CDATA[
+					 AND
+						B.USERTREEFLAG = 'Y'
+				]]>
+				</isNotEqual>
 	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
 	            <include refid="organSearchTrashDept_user"/>
 	            AND A.TENANT_ID = #v_TENANT_ID# 
@@ -1930,6 +1990,12 @@
 		            	 AND
 		            		 CN <> 'masteradmin'
 		            	]]>
+						<isEqual property="adminOrgan" compareValue="n">
+							<![CDATA[
+								 AND
+									A.USERTREEFLAG = 'Y'
+							]]>
+						</isEqual>
 		            		<include refid="organSearchTrashDept_user"/>
 		            	<![CDATA[
 			       
@@ -1954,6 +2020,12 @@
 						$strSQL$ 
 						AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
 						]]>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[
+						 AND
+							b.USERTREEFLAG = 'Y'
+						]]>
+			</isEqual>
 							<include refid="organSearchTrashDept_user"/>
 						<![CDATA[
 						AND A.TENANT_ID = #v_TENANT_ID#
@@ -2077,6 +2149,12 @@
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
 				]]>
 					<include refid="organSearchTrashDept_user"/>
+				<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[
+					 AND
+						A.USERTREEFLAG = 'Y'
+				]]>
+				</isEqual>
 				<![CDATA[
 				AND 
 					A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
@@ -2094,6 +2172,12 @@
 				AND 
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
 				]]>
+		<isEqual property="adminOrgan" compareValue="n">
+			<![CDATA[
+					 AND
+						A.USERTREEFLAG = 'Y'
+				]]>
+		</isEqual>
 					<include refid="organSearchTrashDept_user"/>
 				<![CDATA[
 				AND 

@@ -21,8 +21,10 @@ public interface EzOrganService {
 	public List<OrganDeptVO> getDeptMemberList(String pClass, String deptID, String lang, int tenantID) throws Exception;
 	
 	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang, int tenantID, String noAddJob) throws Exception;
+	public String getDeptMemberList(String deptid, String celllist, String proplist, String listtype, String lang, int tenantID, String noAddJob, String adminOrgan) throws Exception;
 	
 	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID) throws Exception;
+	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID, String adminOrgan) throws Exception;
 	
 	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID, String adminOrgan) throws Exception;
 
@@ -93,6 +95,7 @@ public interface EzOrganService {
 	public int getMemberListCount2(String pDeptID, List<String> companyList, int totalCount2, String containCompany, int tenantId) throws Exception;
 	
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception;
+	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID, String adminOrgan) throws Exception;
 	
 	public String getPhysicalDeliveryOfficeName(String userID,  String property, int tenantID) throws Exception;
 

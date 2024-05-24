@@ -5794,6 +5794,7 @@
 	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
 	  		<isNotNull property="extensionPhone" prepend=","> <![CDATA[extensionPhone = #extensionPhone#]]></isNotNull>
 	  		<isNotNull property="officeMobile" prepend=","> <![CDATA[officeMobile = #officeMobile#]]></isNotNull>
+			<isNotNull property="userTreeFlag" prepend=","> <![CDATA[userTreeFlag = #userTreeFlag#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE

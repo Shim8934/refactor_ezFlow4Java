@@ -204,7 +204,8 @@
 							deptID : DeptID,
 							cell : cellContent,
 							prop : "userType",
-							type : typeContent
+							type : typeContent,
+							adminOrgan : "y"
 					},
 					success : function(xml){
 						result=loadXMLString(xml);

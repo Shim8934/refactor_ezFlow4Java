@@ -376,7 +376,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", type : "user", adminOrgan :"y"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();

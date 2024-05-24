@@ -12982,7 +12982,7 @@ CREATE TABLE `tbl_userlocalinfo` (
 DROP TABLE IF EXISTS `tbl_usermaster`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_usermaster` (
+CREATE TABLE `tbl_usermaster` (` (
   `CN` varchar(80) NOT NULL,
   `DISPLAYNAME` varchar(120) CHARACTER SET utf8mb4 NOT NULL,
   `DISPLAYNAME2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -13046,6 +13046,7 @@ CREATE TABLE `tbl_usermaster` (
   `MAILBOXUSAGE` varchar(50) DEFAULT NULL,
   `PASSWORD2` varchar(100) DEFAULT NULL,
   `PHOTO_UPDATEDT` datetime DEFAULT NULL,
+  `USERTREEFLAG` char(1) DEFAULT 'Y',
   PRIMARY KEY (`CN`,`TENANT_ID`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

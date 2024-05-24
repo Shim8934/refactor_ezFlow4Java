@@ -211,7 +211,8 @@
 	  					cell : "company;description;displayName;title;telephoneNumber",
 	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
 	  					page : CurPage ,
-	  					type : "user"
+	  					type : "user",
+						adminOrgan : "n"
 	  				} ,
 	      			success : function(xml) {
 						event_displayUserList(loadXMLString(xml));
@@ -233,7 +234,8 @@
 					method : "POST",
 					dataType : "json",
 					data : {
-						deptID : tempDeptID
+						deptID : tempDeptID,
+						adminOrgan : "n"
 					},
 					success : function(result) {
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
@@ -662,7 +664,8 @@
 		                <c:if test="${useShowAllCompanies eq 'YES'}">
 	        			company : "",
 		                </c:if>		        			
-						type : "user"
+						type : "user",
+						adminOrgan : "n"
 					} ,
 					success : function(xml) {
 						event_displayUserList2(loadXMLString(xml));

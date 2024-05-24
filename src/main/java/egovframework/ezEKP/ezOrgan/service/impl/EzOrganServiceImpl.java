@@ -385,10 +385,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	@Override
 	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID, String noAddJob) throws Exception {
-	    logger.debug("getDeptMemberList started");
-	    logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
-	            + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
-		
+		return getDeptMemberList(pDeptID,pCellList,pPropList,pClass,pLangCode,tenantID,noAddJob,"n");
+	}
+	
+	@Override
+	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID, String noAddJob,String adminOrgan) throws Exception {
+		logger.debug("getDeptMemberList started");
+		logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
+				+ ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
+
 		String permissionBasisDeptYN = ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID);
 		
 	    // 2019-01-09 황윤호
@@ -407,6 +412,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_LANGDATA", pLangCode);
 		map.put("v_TENANT_ID", tenantID);
 		map.put("noAddJob", noAddJob);
+		map.put("adminOrgan", adminOrgan);
 		
 		// 지정된 부서의 멤버 목록을 구한다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberList(map);
@@ -470,9 +476,14 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         return memberlist.toString();
 	}
-	
+
 	@Override
 	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage, int tenantID) throws Exception {
+		return getDeptMemberListPagination(pDeptID, pCellList, pPropList, pClass, pLangCode, pPage, tenantID, "N");
+	}
+	
+	@Override
+	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage, int tenantID, String adminOrgan) throws Exception {
 		logger.debug("getDeptMemberListPagination started");
 		logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
 				+ ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",pPage=" + pPage + ",tenantID=" + tenantID);
@@ -490,7 +501,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_ENDROW", Integer.parseInt(pPage) * 50 + 1);
         map.put("v_STARTROWForMySQL", (Integer.parseInt(pPage) -1) * 50);
         map.put("v_COUNT", 50);
-		
+		map.put("adminOrgan", adminOrgan);
+	
 		// 지정된 부서의 멤버 목록을 페이지를 고려하여 구한다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberListPage(map);
 		
@@ -591,7 +603,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return totalCount;
 	}
 	
+	@Override
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception {
+		return getDeptMemberListCount(deptID,containLow,primary,tenantID,"n");
+	}
+	
+	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID, String adminOrgan) throws Exception {
 		logger.debug("getDeptMemberListCount started.");
 		logger.debug("deptID = " + deptID + " || containLow = " + containLow + " || primary = " + primary + " || tenantID = " + tenantID);
 		
@@ -600,7 +617,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CN", deptID);
 		map.put("v_TENANT_ID", tenantID);
-		
+		map.put("adminOrgan", adminOrgan);		
 		if (!containLow) {
 			//totalCount
 			totalCount = Integer.parseInt(ezOrganDAO.getMemberListCount(map));
@@ -748,8 +765,8 @@ public class EzOrganServiceImpl implements EzOrganService {
         logger.debug("getMemberInfo ended");
         
         return nodeInfo.toString();        
-    }	
-
+    }
+	
 	@Override
 	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID, String adminOrgan) throws Exception {
 		logger.debug("getSearchList started");
@@ -853,6 +870,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("v_TENANT_ID", tenantID);
         map.put("adminOrgan", adminOrgan);
 		map.put("strSQLForAddJobForMySQL", strSQLForAddJob);
+		map.put("adminOrgan", adminOrgan);
         
         logger.debug("strSQL=" + strSQL);
         

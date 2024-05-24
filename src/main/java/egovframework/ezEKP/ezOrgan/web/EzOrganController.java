@@ -183,6 +183,11 @@ public class EzOrganController {
 		if (listtype == null) {
 			return "";
 		}
+
+		String adminOrgan = request.getParameter("adminOrgan");
+		if (adminOrgan == null) {
+			adminOrgan = "n";
+		}
 		
 		String isPrimary = userInfo.getPrimary();
 		String page = request.getParameter("page");
@@ -199,9 +204,9 @@ public class EzOrganController {
 		}
 		
 		if (page == null) {		
-			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId(), noAddJob);
+			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId(), noAddJob, adminOrgan);
 		} else {
-			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, isPrimary, page, userInfo.getTenantId());
+			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, isPrimary, page, userInfo.getTenantId(), adminOrgan);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
@@ -267,6 +272,10 @@ public class EzOrganController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String deptID = request.getParameter("deptID");
+		String adminOrgan = request.getParameter("adminOrgan");
+		if (adminOrgan == null) {
+			adminOrgan = "n";
+		}
 		
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
@@ -280,9 +289,9 @@ public class EzOrganController {
 		
 		model.addAttribute("containLow", containLow);
 		
-		totalCount = ezOrganService.getDeptMemberListCount(deptID, false, primary, tenantID);
+		totalCount = ezOrganService.getDeptMemberListCount(deptID, false, primary, tenantID, adminOrgan);
 		if (containLow.equals("YES")) {
-			totalCount2 = ezOrganService.getDeptMemberListCount(deptID, true, primary, tenantID);
+			totalCount2 = ezOrganService.getDeptMemberListCount(deptID, true, primary, tenantID, adminOrgan);
 		}
 		
 		model.addAttribute("totalCount", totalCount);
