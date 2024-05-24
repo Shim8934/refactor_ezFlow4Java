@@ -132,7 +132,9 @@ public class MLoginGWController {
 		ERROR_NO_VALID_OTP("error", 9, "has no valid OTP key."),
 		ERROR_HASNOT_SET_OTP("error", 9, "hasn't set OTP key."),
 		// ERROR_WRONG_OTP("error", 10, "fail"), // OTP 번호가 올바르지 않습니다.
-		ERROR_GOTO_OTP("error", 11, "use and has OTP key.");
+		ERROR_GOTO_OTP("error", 11, "use and has OTP key."),
+
+		ERROR_CANNOT_USE_MOBILE_LOGIN_BY_ADMIN("error", 12, "cannot use mobile login.");
 
 		private final String status;
 		private final int code;
@@ -286,17 +288,24 @@ public class MLoginGWController {
     				notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
     				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
     				
-    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
-    					logger.debug("cannot use mobile login. userId=" + uid);
-    					
-    					// 2021-12-29 이사라 : 접속 실패 로그 저장 - 모바일 사용금지 설정 
-    					resultVO.setForInsertLog(ip, agent, os, browser, tenantId, "N");
-    					loginService.insertLog(resultVO);
-    					
+    				if (notUseAllMobileLogin.equals("1")) {
+						logger.debug("cannot use mobile login. userId=" + uid);
+
+						// 2021-12-29 이사라 : 접속 실패 로그 저장 - 모바일 사용금지 설정 
+						resultVO.setForInsertLog(ip, agent, os, browser, tenantId, "N");
+						loginService.insertLog(resultVO);
+
 						result = MLoginResult.ERROR_CANNOT_USE_MOBILE_LOGIN.getResult();
 						break loginProcess;
+					} else if (adminOrderNotUsedMobileLogin.equals("1")) {
+							logger.debug("cannot use mobile login by admin. userId=" + uid);
+							
+							resultVO.setForInsertLog(ip, agent, os, browser, tenantId, "N");
+							loginService.insertLog(resultVO);
 
-    				} else {
+							result = MLoginResult.ERROR_CANNOT_USE_MOBILE_LOGIN_BY_ADMIN.getResult();
+							break loginProcess;
+					} else {
     					String deviceId = StringUtils.defaultString(request.getParameter("deviceID"));
     					
     					if (!deviceId.equals("")) {
