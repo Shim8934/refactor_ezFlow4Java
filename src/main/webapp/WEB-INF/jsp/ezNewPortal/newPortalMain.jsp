@@ -78,7 +78,7 @@
 
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
-		        //document.getElementById("mainFrame").style.height = MainHeight + "px"; //2024-05-23 큰 듀얼모니터로 창 이동했다 작은 모니터로 창 이동 시에 mainFrame하단에 많은 공간이 생김.
+		        document.getElementById("mainFrame").style.height = MainHeight + "px";
 		        //contextMenuRePosition();
 		    }
 
