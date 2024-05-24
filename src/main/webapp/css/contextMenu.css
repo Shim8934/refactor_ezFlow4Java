@@ -10,6 +10,7 @@
 	z-index:1000;
 	top:0;
 	left:0;
+	user-select:none;
 }
 .contextMenuBtn{ 
 	z-index:1001; 
@@ -55,21 +56,6 @@
 } */
 	
 .popupMenuBtn{
-	/*
-	position:absolute; 
-	bottom:10px; 
-	right:10px; 
-	text-align:center; 
- 	width:255px; 
-	height:255px;
-	box-sizing:border-box; 
-	background: #000000; 
-	opacity:0.7; 
-	border-radius:135px; 
-	-webkit-border-radius:135px; 
-	-moz-border-radius:135px;
-	box-shadow: 0px 4px 5px 2px rgba(0, 0, 0, 0.35);
-	*/
 	position: absolute;
     text-align: center;
     width: 0px;
@@ -90,75 +76,38 @@
 
 .quickMenuBtn {
 	height:100%;
-	padding: 0;
+	align-items: center;
+	padding:0 10px;
+	width:580px;
+	box-sizing:border-box;
 }
 
 .quickMenuTop {
-	/*
-	display: flex;	
-	justify-content: center;
-	align-items: center;
-	height:33%;
-	*/
 	float:left;
 }
 
 .quickMenuMiddle {
-	/*
-	display: flex;	
-	justify-content: space-between;
-	align-items: center;
-	width: 85%;
-	margin-left:20px;
-	margin-top:-3px;
-	height:40%;
-	*/	
 	float:left;
 }
 
 .quickMenuBottom {
-	/*display: flex;	
-	justify-content: center;
-	height:25%;
-	*/
 	float:left;	
 }
 
-.quickMenuTop_memo {
-	/*display: flex;	
-	justify-content: center;
-	align-items: center;
-	height:36%;*/
+.quickMenuTop_memo {	
 	float:left;	
 }
 
 .quickMenuMiddle_memo {
-	/*display: flex;	
-	justify-content: space-between;
-	width: 83%;
-	margin-top: -7px;
-	margin-left:23px;
-	height:35%;
-	*/
 	float:left;	
 }
 
 .quickMenuBottom_memo {
-	/*
-	display: flex;	
-	justify-content: space-between;
-	width: 58%;
-	margin-left:55px;
-	*/
 	float:left;	
 }
 
 
 .quickMenuBtnDiv {
-	/*display: flex;
-	flex-direction: column;
-	cursor:pointer;
-	*/	
 	display: flex;
     flex-direction: column;
     cursor: pointer;
@@ -168,10 +117,7 @@
 }
 
 .quickMenuBtnDiv span {
-	/*color: white;
-	max-width: 55px;
-	font-size: 14px;
-	padding-top: 5px;*/
+
 	color: white;
     font-size: 15px;
     font-weight: 500;
