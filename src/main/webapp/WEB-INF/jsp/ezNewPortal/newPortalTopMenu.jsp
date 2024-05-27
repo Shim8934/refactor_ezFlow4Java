@@ -133,7 +133,7 @@
 					mainFrame.style.position = "static";
 					
 				} else if (menuDisplayMode == "1") {// 메뉴 left에 생성
-					menuLi.classList.add('lnb_' + item.menuCode);
+					menuLi.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu"); // 탑메뉴 아이콘과 구분하기 위해서 _leftmenu 추가
 					menuLi.classList.add('sortable-item');
 					menuLi.setAttribute('id', 'menu_' + item.menuId);
 					var liSpan = document.createElement('span');
@@ -515,7 +515,7 @@
 				menuAllListSpan.textContent = ConvertCharToEntityReference(item.menuName);
 				menuAllList.appendChild(menuAllListSpan);
 				menuAllList.setAttribute("id", item.menuId);
-				menuAllList.classList.add('lnb_' + item.menuCode);
+				menuAllList.classList.add(item.iconUrl.split(" ")[1] + "_leftmenu");
 				menuAllList.classList.add('sortable-item');
 				
 				if (index < 5) {
