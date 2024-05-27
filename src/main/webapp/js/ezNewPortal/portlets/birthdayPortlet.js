@@ -33,8 +33,7 @@ function ptlGetMonthlyBirthday(event) {
 }
 //생일자 불러오기
 function getBirthdayList() {
-	window.clearTimeout(ptlTimer);
-	
+	//window.clearTimeout(ptlTimer); 2024-05-27 자동페이지 네이션 기능 사용하고자 할 때 주석 해제
 	$.ajax({
 		type : "GET",
 		url : "/ezNewPortal/getMonthlyBirthdayEmployees.do",
@@ -113,13 +112,14 @@ function getBirthdayList() {
 				$("#nodata_NewBirthday").css("display", "");
 				$("#birthcount").css("display", "none");
 			}
-			// 프로젝트 종료 시 주석 해제
+			/* 6명 이상일 시 5초마다 자동페이지 네이션 기능을 사용할 때  주석해제
 			ptlTimer = window.setInterval(function() {
 				if (ptlBirthTotalCount > 6) {
-					//ptlBirthCurPage++;
+					ptlBirthCurPage++;
 					getBirthdayList();
 				}
 			}, 5000);
+			*/
 		},
 		error : function() {
 			//alert(messages.strLang2);

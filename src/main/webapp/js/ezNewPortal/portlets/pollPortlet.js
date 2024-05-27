@@ -99,7 +99,6 @@ var assemblePollList = function (poll) {
 	}
 	str += '</ul>';
 	
-	console.log(str);
 	document.getElementById('pollInfo').innerHTML = str;
 	document.getElementById('pollTitle').textContent = poll.pollInfo.pollTitle;
 	document.getElementById('pollBtn').addEventListener('click', function() {

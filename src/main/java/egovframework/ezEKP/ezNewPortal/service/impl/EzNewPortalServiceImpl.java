@@ -1117,6 +1117,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				birthdayListLmit.add(birthdayList.get(i));
 			}
 		}
+		
+		// 2024-05-27 한태훈 > 6초마다 자동페이지네이션 기능 사용하려면 return birthdayListLmit을 해줘야함. 2018년?에 만들어진 기능인데, 호출을 6초마다하는 게 부담이 되니 다른 방법으로 구현하는 것도 좋아보임.
 
 		logger.debug("getMonthlyBirthdayEmployees ended.");
 		return birthdayList;
