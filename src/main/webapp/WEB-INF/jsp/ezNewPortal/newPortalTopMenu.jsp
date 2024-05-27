@@ -344,7 +344,7 @@
 				}
 								
 				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
-				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
+				if ('${roleInfo}' === 'admin') str += '<li><span class="util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
 				str += '<li><span class="util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
 				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
 			    /* 2023-08-29 - 민지수 포탈 > 탑메뉴 > 다국어 > ? 아이콘 클릭시 영어매뉴얼 다운로드 되도록 수정 */

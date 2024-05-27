@@ -61,13 +61,15 @@
 	                    <span class="name">${userName} ${userTitle}</span>
 	                    <span class="team">${deptName}</span>
 	                </div>
+
+					<div class="portal_setting" onclick="viewPortletEnv()"><spring:message code = 'ezNewPortal.HSBPT01' /></div>
+
+					<div class="news_setting">
+						<input type="checkbox" id="portal_set">
+						<label for="portal_set" onclick="displayFixPortlet()"><span></span>소식설정</label>
+					</div>
 	
-	                <div class="portal_setting">
-	                    <input type="checkbox" id="portal_set">
-	                    <label for="portal_set" onclick="displayFixPortlet()"><span></span><spring:message code = 'ezNewPortal.HSBPT01' /></label>
-	                </div>
-	
-	                <div class="info_logout" onclick="infoLogoutClick()"><spring:message code = 'ezNewPortal.t008' /></div>
+	                <%-- <div class="info_logout" onclick="infoLogoutClick()"><spring:message code = 'ezNewPortal.t008' /></div> --%>
 	            </div>
 	            <ul>
 	                <li>
