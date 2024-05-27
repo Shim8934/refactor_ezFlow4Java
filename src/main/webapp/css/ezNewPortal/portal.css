@@ -853,7 +853,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 	.presentTime .timeTxt{background: none;}
 	.leftImg img{width:150px; }
 	.leftImg {top:55px; left:40px;}
-	.weather_title .weatherPresent dd span:nth-child(2){font-size:22px !important;}
 
 	.box_shadow.info_left {display:none;}
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
@@ -933,11 +932,11 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .portlet_title .portletPlus .weatherSelect{width:78px; height:30px; margin:0px; padding:0px; border:1px solid #E2E2E2; border-radius:6px;-webkit-border-radius:6px;-moz-border-radius:6px; vertical-align: top; cursor:pointer; color:#444444; font-size:13px;}
 .weather_content{width:calc(100% - 40px); margin:0 auto; position: relative; background:#F8F8F8; border-radius:12px; padding:10px 20px; box-sizing:border-box; height:187px; overflow:hidden;}
 .weather_title{display:flex; overflow:hidden; margin:0; padding:0; align-items:center;}
-.weather_title .weatherPresent{display:flex; align-items: center; width:calc(70% - 10px); margin:0px 20px 0px 0px; padding:0px; position:relative;}
-.weather_title .weatherPresent:after{content:""; position:absolute; top:50%; right:0; width:1px; height:30px; transform:translateY(-50%); background:#EFEFEF;}
+.weather_title .weatherPresent{display:flex; align-items: center; width:calc(60% - 10px); margin:0px 20px 0px 0px; padding:0px; position:relative;}
+.weather_title .weatherPresent:after{content:""; position:absolute; top:50%; right:0; width:1px; height:30px; transform:translateY(-50%); background:#EFEFEF; display:none;}
 .weather_title .weatherPresent dt{width:calc(60% - 20px); margin:0px 10px 0 0; padding:0px; text-align:center;}
 .weather_title .weatherPresent dd{align-items: center; width:calc(70% - 20px); margin:0px 10px; padding:0px; color:#444; font-size:22px; line-height:34px; letter-spacing:-1px;}
-.weather_title .weatherPer{float:right; list-style:none; width:calc(30% - 10px); margin:0px; padding:0px;}
+.weather_title .weatherPer{float:right; list-style:none; width:calc(40% - 10px); margin:0px; padding:0px;}
 .weather_title .weatherPer li{margin:2px 0px; padding:0px; color:#000; font-size:14px; line-height:26px;}
 .weather_title .weatherPer li > span{display:inline-block; display:flex; width:100%;}
 .weather_title .weatherPer li span.icon{width:24px; height:24px; margin:0px 10px 0px 0px; padding:0px; text-align:center; background:#45aaff; border-radius:24px;-webkit-border-radius:24px;-moz-border-radius:24px;}
@@ -977,10 +976,14 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .section1 .sec1Layout_btm_left .portlet_list li{padding:4px 0 4px 20px; border:none; line-height:26px; background:url(/images/ezNewPortal/list_bul2.png) no-repeat 7px center; color:#444;}
 #theme2Body .section1 .sec1Layout_btm_left .portlet_list li .txt{color:#444;}
 #theme2Body .section1 .sec1Layout_middle{overflow:hidden; float:left; padding:0px; margin-left:20px; box-sizing:border-box; background: #fff; border-radius: 10px; box-shadow:0 1px 5px rgba(0,0,0,0.1);height:190px; }
-#theme2Body .section1 .sec1Layout_middle .main_schedule{ margin:0;}
-#theme2Body .section1 .sec1Layout_middle .main_schedule .list{width:55%; padding-top:10px; box-sizing:border-box;}
+#theme2Body .section1 .sec1Layout_middle .main_schedule{ margin:0; height:100%;}
+#theme2Body .section1 .sec1Layout_middle .main_schedule .list{width:55%; height:100%; padding-top:10px; box-sizing:border-box;}
+#theme2Body .section1 .sec1Layout_middle .main_schedule .list .scrollbox-play-light{height:calc(100% - 40px);}
+#theme2Body .section1 .sec1Layout_middle .main_schedule .list .scrollbox-play-light .scrollbox{height:100%;}
+#theme2Body .section1 .sec1Layout_middle .main_schedule .list .scrollbox-play-light .scrollbox .content{height:100%; padding:10px 0; box-sizing:border-box;}
+#theme2Body .section1 .sec1Layout_middle .main_schedule .list .scrollbox-play-light .scrollbox .content ul{height:100%; overflow-y:auto;}
 #theme2Body .section1 .sec1Layout_middle .main_schedule .calender{width:calc(45% - 20px); padding:5px 20px 0; box-sizing: border-box;}
-#theme2Body .section1 .sec1Layout_middle .portlet_list {padding:10px 0 5px;}
+#theme2Body .section1 .sec1Layout_middle .portlet_list {padding:0;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li {margin:0; line-height:26px; border:none; padding-left:10px; background:url(/images/ezNewPortal/list_bul.png) no-repeat 0 center;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li .txt{width:100%; font-size:14px; color:#444;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li .txt span{font-weight: bold;}
@@ -1175,7 +1178,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 /* main media query */
 @media only screen and (min-width :1921px) {
-	#theme2Body .portlet{ width:32%; float:left; margin:30px 4px -8px 16px; height: 252px;}
+	#theme2Body .portlet{float:left; margin:30px 4px -8px 16px; height: 252px;}
 	#theme2Body .box_shadow{ width:auto;}
 }
 
@@ -1362,7 +1365,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .list_no_appr .no_apprBox{background:#fff;}
 /* main media query */
 @media only screen and (min-width :1921px) {
-	#theme3Body .portlet{ width:32%; float:left; height: 250px;}
+	#theme3Body .portlet{float:left; height: 250px;}
 	#theme3Body .box_shadow{ width:auto;}
 }
 
@@ -1870,7 +1873,7 @@ div.orbit img{border-radius: 5px;}
 .profile_div .select_div {display: block; position: relative; margin-top: 15px;}
 .profile_div .select_div .select_box {display: inline-block; padding: 0 20px 0 10px; width: 100%; height: 32px; line-height: 30px; border: 1px solid #EFEFEF; border-radius: 5px; box-sizing: border-box; background: url(/images/ezNewPortal/select_div_arrow.png) no-repeat right 6px center #fff; cursor: pointer; margin: 0;}
 .profile_div .select_div ul {position: absolute; top: calc(100% + 2px); right: 0; display: none; z-index: 50; border: 1px solid #d1d1d1; border-radius: 5px; width:auto; min-width:100%; background:#fff; overflow:hidden; padding:0;}
-.profile_div .select_div ul li {float: none; height:32px; line-height:32px; white-space:nowrap; padding:0 10px; cursor:pointer;}
+.profile_div .select_div ul li {float: none; height:auto; line-height:1.5; white-space:normal; padding:6px 10px; cursor:pointer;}
 .profile_div .select_div ul li:hover {background-color: #f8f8f8;}
 .profile_div .select_div .select_box.on + ul {display: block;}
 .profile_div .btn_tab {margin-top: 20px; display: flex; gap: 10px;}
