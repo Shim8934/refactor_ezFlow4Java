@@ -308,7 +308,7 @@
 	        	<c:if test="${configMap.PrimaryLang == '1' and configMap.editorFontStyle != null}">
 	            	<tr data-name="common">
 		            	<th><spring:message code="ezSystem.lhm1"/></th>
-		            	<td><input type="hidden" data-paramId="editorFontStyle" Id="editorFontStyle"/>
+		            	<td><input type="hidden" data-paramId="editorFontStyle" Id="editorFontStyle" value="${configMap.editorFontStyle}"/>
 		            		<select id="editorFontFamily">
 		            			<c:forEach items="${defaultFontFamilyList}" var="item">
 		            				<option value="${item.trim()}">${item.trim()}</option>
