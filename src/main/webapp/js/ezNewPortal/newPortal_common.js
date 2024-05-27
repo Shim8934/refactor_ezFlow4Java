@@ -261,8 +261,8 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 					.done(function (script, textStatus) {
 						try {
 							$("#communityPlus").on("click", viewCommuList);
-
-							for (var i = 1; i < 3; i++) {
+							var communityPortletListSize = document.querySelectorAll('.communityPortletList').length;
+							for (var i = 1; i <= communityPortletListSize; i++) {
 								$('.comListDL0' + i).on("click", view_bestCommunity);
 							}
 						} catch (err) {

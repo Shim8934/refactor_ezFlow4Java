@@ -19,7 +19,6 @@ function view_bestCommunity(event) {
 				clubNo	:	$target.data("clubno"),
 			   },
 		success: function(result){
-			console.log('clubType : ' + result);
 			clubType = result;
 		}
 	});
@@ -33,7 +32,6 @@ function view_bestCommunity(event) {
 				 uID	:	userId
 		},
 		success: function(result){
-			console.log('OK or ERR      :     ' + result);
 			if (result == "ERR" && clubType != "1") {
 				OpenAlertUI(messages.strLang11+"<br>"+messages.strLang12, null, "/ezPortal/wpNewCommunity.do.OpenAlertUI");
 			} else {
@@ -95,25 +93,15 @@ var getCommunityList = function() {
 			var result = JSON.parse(request.responseText);
 			
 			var size = result.CommuSize;
+			
 			var commuPath = result.commuPath;
 			
 			var commuElem = document.getElementById("communityList");
 			commuElem.innerHTML = "";
 			
 			if (size == 0) {
-				var list1 = setCommunityNoData("01");
-				var list2 = setCommunityNoData("02");
-				
-				var portletListUL = document.createElement("portlet_list");
-				portletListUL.appendChild(list1);
-				portletListUL.appendChild(list2);
-				commuElem.appendChild(portletListUL);
-			} else if (size == 1) {
-				var communityList = result.CommunityList;
-				var list1 = setCommunityData(communityList[0], commuPath, "01");
-				var list2 = setCommunityNoData();
-				commuElem.appendChild(list1);
-				commuElem.appendChild(list2);
+				var noDataList = setCommunityNoData();
+				commuElem.appendChild(noDataList);
 			} else {
 				var communityList = result.CommunityList;
 				
@@ -123,9 +111,11 @@ var getCommunityList = function() {
 				}
 			}
 			
-			for (var i=1; i < 3; i ++) {
+			for (var i = 1; i <= size; i ++) {
 				$('.comListDL0'+i).on("click", view_bestCommunity);
 			}
+			
+			commuElem.scrollTo({ top: 0, behavior: 'smooth' })
 		}
 	};
 
@@ -136,15 +126,13 @@ var getCommunityList = function() {
 	request.send();
 }
 
-var setCommunityNoData = function(classTag) {
+var setCommunityNoData = function() {
 	var comListDL = document.createElement("dl");
-	comListDL.className = "comListDL" + classTag;
+	comListDL.className = "nodata";
 	var comDT = document.createElement("dt");
-	comDT.className = "comPic";
 	var noImage = document.createElement("img");
-	noImage.src = "/images/kr/main/comImg_none.png";
+	noImage.src = "/images/kr/main/noData_sIcon.png";
 	var titleDD = document.createElement("dd");
-	titleDD.className = "comTit_none";
 	titleDD.textContent = messages.strLang1;
 	
 	comDT.appendChild(noImage);
@@ -180,7 +168,7 @@ var setCommunityData = function(commuInfo, commuPath, classTag) {
 	
 	
 	var comTitle = document.createElement("dd");
-	comTitle.textContent = '"' + commuInfo.c_ClubName + '"';
+	comTitle.textContent = commuInfo.c_ClubName;
 	comTitle.className = "comTit";
 	var comText = document.createElement("dd");
 	comText.textContent = commuInfo.c_ClubDesc;

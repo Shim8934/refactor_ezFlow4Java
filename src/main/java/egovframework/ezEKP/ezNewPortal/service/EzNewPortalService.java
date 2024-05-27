@@ -179,7 +179,7 @@ public interface EzNewPortalService {
 	
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit, String offset);
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset) throws Exception;
-	public List<CommunityMyCommunityVO> getCommunityList(String lang, String companyId, int tenantId) throws Exception;
+	public List<CommunityMyCommunityVO> getCommunityList(String lang, int listSize, String companyId, int tenantId) throws Exception;
 	public String getCommunityPermit(String clubNo, String userId, int tenantId);
 	/**
 	 * 포틀릿목록조회

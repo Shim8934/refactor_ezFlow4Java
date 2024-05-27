@@ -3569,8 +3569,9 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			String lang = info.getLang();
+			int listSize = 10;
 
-			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService.getCommunityList(lang, companyId, tenantId);
+			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService.getCommunityList(lang, listSize, companyId, tenantId);
 
 			// int CommuSize = CommunityList.size();
 			//

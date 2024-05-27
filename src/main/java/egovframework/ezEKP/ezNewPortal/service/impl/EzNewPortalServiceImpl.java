@@ -2650,12 +2650,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<CommunityMyCommunityVO> getCommunityList(String lang, String companyId, int tenantId) throws Exception {
+	public List<CommunityMyCommunityVO> getCommunityList(String lang, int listSize, String companyId, int tenantId) throws Exception {
 		logger.debug("getCommunityList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANG", commonUtil.getMultiData(lang, tenantId));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("listSize", listSize);
 		
 		List<CommunityMyCommunityVO> CommunityList = ezNewPortalDAO.getCommunityList(map);
 		

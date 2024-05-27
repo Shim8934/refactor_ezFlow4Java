@@ -16,6 +16,7 @@
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
 					<c:out value="${portletName }" />
+					<input type="button" onclick="getCommunityList()">
 				</dt>
 				<dd class="portletPlus" id="communityPlus">
 					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
@@ -24,60 +25,18 @@
 			<div id="communityList" class="community_list">
 				<c:choose>
 					<c:when test="${fn:length(CommunityList) == 0 }">
-						<ul class="portlet_list">
-							<dl class="comListDL01">
-								<dt class="comPic">
-									<img src="/images/kr/main/comImg_none.png">
-								</dt>
-								<dd class="comTit_none">
-									<spring:message code='ezNewPortal.t018' />
-								</dd>
-							</dl>
-							<dl class="comListDL02">
-								<dt class="comPic">
-									<img src="/images/kr/main/comImg_none.png">
-								</dt>
-								<dd class="comTit_none">
-									<spring:message code='ezNewPortal.t018' />
-								</dd>
-							</dl>
-						</ul>
-					</c:when>
-					<c:when test="${fn:length(CommunityList) == 1 }">
-						<c:forEach var="commu" begin="0" end="1" items="${CommunityList }"
-							varStatus="i">
-							<dl class="comListDL0${i.count}" data-clubno="${commu.c_ClubNo}" style="cursor: pointer">
-								<dt class="comPic">
-									<span class="best"><img src="/images/kr/main/com_best.png"></span>
-									<c:choose>
-										<c:when
-											test="${commu.c_Logo_Thumbnail == 'default_logo_type'}">
-											<img src="/images/ezCommunity/logo/${commu.c_Logo_Thumbnail}">
-										</c:when>
-										<c:otherwise>
-											<img
-												src="/ezCommon/downloadAttach.do?filePath=${commuPath}/${commu.c_Logo_Thumbnail}">
-										</c:otherwise>
-									</c:choose>
-
-								</dt>
-								<dd class="comTit"><c:out value='${commu.c_ClubName }'/></dd>
-								<dd class="comText"><c:out value='${commu.c_ClubDesc }'/></dd>
-							</dl>
-						</c:forEach>
-						<dl class="comListDL02">
-							<dt class="comPic">
-								<img src="/images/kr/main/comImg_none.png">
+						<dl class="nodata">
+							<dt>
+								<img src="/images/kr/main/noData_sIcon.png">
 							</dt>
-							<dd class="comTit_none">
-								"<spring:message code='main.t00026' />"
+							<dd>
+								<spring:message code='ezNewPortal.t018' />
 							</dd>
 						</dl>
 					</c:when>
 					<c:otherwise>
-						<c:forEach var="commu" begin="0" end="1" items="${CommunityList }"
-							varStatus="i">
-							<dl class="comListDL0${i.count}" data-clubno="${commu.c_ClubNo}" style="cursor: pointer">
+						<c:forEach var="commu" items="${CommunityList }" varStatus="i">
+							<dl class="comListDL0${i.count} communityPortletList" data-clubno="${commu.c_ClubNo}" style="cursor: pointer">
 								<dt class="comPic">
 									<c:if test="${i.count == 1}">
 										<span class="best"><img src="/images/kr/main/com_best.png"></span>
