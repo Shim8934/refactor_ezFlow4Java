@@ -110,9 +110,10 @@ function getBoardList_NewBoardSTD() {
              
              var writeDate = new Date(startDate);
      		
-     		 if (today < writeDate) {
-     			listHTML += "<span class='boardNew'>N</span>";
-     		 }
+             // 2024-05-27 조수빈 - 새로운 시안에 N 표시가 삭제되어 주석 처리
+//     		 if (today < writeDate) {
+//     			listHTML += "<span class='boardNew'>N</span>";
+//     		 }
              
              listHTML += "<span class='txt'>" + ConvertCharToEntityReference(title) + "</span>";
              listHTML += "<span class='date'>" + startDate.substring(5,16).replace(/-/g, ".") + "</span>";
