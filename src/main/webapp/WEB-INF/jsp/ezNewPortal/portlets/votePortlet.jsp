@@ -29,7 +29,7 @@
                     </div>
 					<ul class="voteList">
 						<c:forEach items="${pollAnswer }" var="poll" varStatus="status">
-							<c:if test="${status.index lt 4 }">
+<%--							<c:if test="${status.index lt 4 }">--%>
 								<li class="voteList_0${status.index + 1 }">
 									<div class="voteT">
 										<span class="Vnum">${status.index + 1 }</span> <span class="Vtext"><c:out value='${poll.content}'/></span>
@@ -55,7 +55,7 @@
 										</c:choose>
 									</div>
 								</li>
-							</c:if>
+<%--							</c:if>--%>
 						</c:forEach>
 					</ul>
 					</div>
