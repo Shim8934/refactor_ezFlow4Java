@@ -16,7 +16,6 @@
 			<dl class="portlet_title sortablePortlet">
 				<dt class="portletText">
 					<c:out value="${portletName }" />
-					<input type="button" onclick="getCommunityList()">
 				</dt>
 				<dd class="portletPlus" id="communityPlus">
 					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
