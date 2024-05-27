@@ -94,8 +94,8 @@ function getBoardList_NewBoardSTD() {
 		var date = today.getDate();
 		today.setDate(date - 1);
         if (RowCnt > 0) {
-	        if (RowCnt > 5) {
-        		RowCnt = 5;
+	        if (RowCnt > 10) {
+        		RowCnt = 10;
 	        }
 
             for (var i = 0; i < RowCnt; i++) {
