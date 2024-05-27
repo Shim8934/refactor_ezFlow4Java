@@ -768,6 +768,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
 		        					
 									break;
+		        				} else if ("YES".equals(useReSend) && !"".equals(msgto)) { // 2024.05.24 한슬기 : 수신확인/회수 > 부서메일 회수 후 개인에게 재발송
+		        					String reciverName = request.getParameter("reciverName");
+		        					to = reciverName + " <" + msgto + ">";
+									break;
 		        				}
 		        			}
 		        		}

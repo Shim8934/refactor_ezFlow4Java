@@ -31,14 +31,30 @@
 	        
 	        document.onselectstart = function () { return false; };
 
-	        function ReSend(pEmail) {
+	        /* function ReSend(pEmail) { 
 	            var pEmail = pEmail.getAttribute("EMAIL");
+	            
 	            if (pEmail.indexOf("(") > -1) {
 	                alert("<spring:message code='ezEmail.t567' />");
 	                return;
 	            }
 	            try {
 	                window.opener.ReSend(_url, pEmail);
+	            } catch (e) {
+	            }
+	        } */
+	     	// 2024.05.24 한슬기 : 수신자이름 추가 및 파라미터 이름 변경 
+	        function ReSend(pSendData) {
+	            var pEmail = pSendData.getAttribute("EMAIL");
+	            var pReaderName = pSendData.getAttribute("READERNAME");
+	            
+	            if (pEmail.indexOf("(") > -1) {
+	                alert("<spring:message code='ezEmail.t567' />");
+	                return;
+	            }
+	            try {
+	            	// 수신자 이름 추가
+	                window.opener.ReSend(_url, pEmail, pReaderName);
 	            } catch (e) {
 	            }
 	        }
@@ -217,8 +233,11 @@
 	                    TD1_Sub.style.height = "13px";
 	                    TD1.appendChild(TD1_Sub);
 	                }
-
-	                TD2.innerHTML = ReplaceText(SelectSingleNodeValue(XmlRows[i], "READERNAME"), "&", "&amp;");
+	                //TD2.innerHTML = ReplaceText(SelectSingleNodeValue(XmlRows[i], "READERNAME"), "&", "&amp;");
+	                // 2024.05.24 한슬기 : 수신자이름 사용하기위해 변경
+					var readerName = ReplaceText(SelectSingleNodeValue(XmlRows[i], "READERNAME"), "&", "&amp;");
+					TD2.innerHTML = readerName;
+					
 	                TD2.style.width = "92px";
 	                TD2.style.overflow = "hidden";
 	                TD2.style.textOverflow = "ellipsis";
@@ -235,6 +254,7 @@
 	                    TD4_Span = document.createElement("SPAN");
 	                    TD4_Span.innerHTML = "<spring:message code='ezEmail.t569' />";
 	                    TD4_Span.setAttribute("EMAIL", EmailAddress);
+	                    TD4_Span.setAttribute("READERNAME", readerName); // 수신자 이름
 	                    TD4_Span.onclick = function () { ReSend(this); };
 	                    TD4_ATag.appendChild(TD4_Span);
 	                    TD4.appendChild(TD4_ATag);
