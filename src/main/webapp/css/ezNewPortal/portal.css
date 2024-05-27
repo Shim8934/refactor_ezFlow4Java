@@ -531,23 +531,25 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .apprgraph_text{font-size:16px; font-weight: 500; margin:5px 15px;}
 .apprgraph_area .graph_bar{width:100%; height:10px; background: #EAEAEA; border-radius: 5px; margin-top:30px;}
 .apprgraph_area .bookmarkG01, .apprgraph_area .bookmarkG02, .apprgraph_area .bookmarkG03, .apprgraph_area .bookmarkG04, .apprgraph_area .bookmarkG05{position:relative;}
-.apprgraph_area .bookmarkG01 .dot{width:10px; height:10px; border-radius: 10px; background: #59A9FD; border:3px solid #fff; position:absolute; top: 27px;}
-.apprgraph_area .bookmarkG02 .dot{width:10px; height:10px; border-radius: 10px; background: #61BB4F; border:3px solid #fff; position:absolute; top: 27px;}
-.apprgraph_area .bookmarkG03 .dot{width:10px; height:10px; border-radius: 10px; background: #EFD019; border:3px solid #fff; position:absolute; top: 27px;}
-.apprgraph_area .bookmarkG04 .dot{width:10px; height:10px; border-radius: 10px; background: #FFA622; border:3px solid #fff; position:absolute; top: 27px;}
-.apprgraph_area .bookmarkG05 .dot{width:10px; height:10px; border-radius: 10px; background: #FF0000; border:3px solid #fff; position:absolute; top: 27px;}
+.apprgraph_area .bookmarkG01 .dot{width:10px; height:10px; border-radius: 10px; background: #59A9FD; border:3px solid #fff; position:absolute; top: 27px; left:50%; margin-left:-5px;}
+.apprgraph_area .bookmarkG02 .dot{width:10px; height:10px; border-radius: 10px; background: #61BB4F; border:3px solid #fff; position:absolute; top: 27px; left:50%; margin-left:-5px;}
+.apprgraph_area .bookmarkG03 .dot{width:10px; height:10px; border-radius: 10px; background: #EFD019; border:3px solid #fff; position:absolute; top: 27px; left:50%; margin-left:-5px;}
+.apprgraph_area .bookmarkG04 .dot{width:10px; height:10px; border-radius: 10px; background: #FFA622; border:3px solid #fff; position:absolute; top: 27px; left:50%; margin-left:-5px;}
+.apprgraph_area .bookmarkG05 .dot{width:10px; height:10px; border-radius: 10px; background: #FF0000; border:3px solid #fff; position:absolute; top: 27px; left:50%; margin-left:-5px;}
 
 .bookmark_content{padding-top:10px; height:calc(100% - 166px); box-sizing:border-box;}
-.bookmark{ overflow:hidden; margin:0 15px; padding:0px 0px 10px; list-style:none; box-sizing:border-box; display:flex; flex-wrap:wrap; gap:8px; max-height:100%; overflow-y:auto;}
-.bookmark > li{margin:0; padding:0; width:calc((100% - 16px) / 3); box-sizing:border-box; height:76px; background-repeat:no-repeat; background-position:center; background-color:#F5F5F5; border-radius:4px; display:flex; cursor:pointer;}
-.bookmark > li:hover{box-shadow:0 3px 6px rgba(0,0,0,0.16);}
+.bookmark{ overflow:hidden; margin:0 20px; padding:0px 0px 2px; list-style:none; box-sizing:border-box; max-height:100%; overflow-y:auto;}
+.bookmark > li{margin:0 0 8px 8px; padding:0; width:calc((99.999% - 16px) / 3); box-sizing:border-box; height:76px; background-repeat:no-repeat; background-position:center; background-color:#F5F5F5; border-radius:4px; cursor:pointer; float:left;}
 .bookmark .bookmarkLi{background-image:url(../../images/ezNewPortal/bookmarkIcon.svg); background-position:50% calc(50% - 10px);}
-.bookmark .bookmarkLi_none{background-image:url(../../images/ezNewPortal/bookmarkIcon_none.svg);}
-.bookmark .bookmarkLi span{cursor:pointer; letter-spacing:-1px; margin:auto 0 10px 0; width:100%; text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; padding:0 5px; color:#333333; font-size:13px;}
+.bookmark .bookmarkLi_none{background-image:url(../../images/ezNewPortal/bookmarkIcon_none.svg); cursor:default;}
+.bookmark .bookmarkLi span{cursor:pointer; letter-spacing:-1px; margin:47px 0 10px 0; width:100%; text-align:center; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; padding:0 5px; color:#333333; font-size:13px; display:inline-block; box-sizing:border-box;}
 
-.portlet.one_by_two .bookmark > li{width:calc((100% - 40px) / 6);}
+.portlet.one_by_one .bookmark > li:nth-child(3n+1),
+.portlet.two_by_one .bookmark > li:nth-child(3n+1){margin-left:0;}
+.portlet.one_by_two .bookmark > li{width:calc((99.999% - 40px) / 6);}
+.portlet.one_by_two .bookmark > li:nth-child(6n+1){margin-left:0;}
 .portlet.two_by_one .favorite .layDIV{display:flex; flex-direction:column;}
-.portlet.two_by_one .favorite .apprgraph_div{margin:auto 0 30px;}
+.portlet.two_by_one .favorite .apprgraph_div{margin:0 0 30px;}
 
 
 /* community */
@@ -682,9 +684,8 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .leftImg{display:inline-block;}
 .rightImg{ width:58px; height:78px; display:inline-block; position:absolute; right:0px; top:0px;}
 .bannerText{ margin:0px; padding:0; float:right; width:52%;}
-.bannerText dt.bText{margin:0 0 10px; padding:0px; font-size:18px; font-weight:bold; color:#333; position:relative; z-index:1;}
+.bannerText dt.bText{margin:0 0 10px; padding:0px; font-size:18px; font-weight:bold; color:#333; position:relative; z-index:1; display:inline-block; background:#FFF4BB;}
 .bannerText dt.bText span{position:relative; padding:0 5px;}
-.bannerText dt.bText:before{content:""; position:absolute; left:0; top:50%; width:100%; height:80%; transform:translateY(-50%); background:#FFF4BB; z-index:-1;}
 .bannerText dt.sText{margin:0px; padding:0px; font-size:12px; font-weight:normal; color:#333;}
 .bannerText dd.bannerBtn{margin:15px 0px 0px 0px; padding:0 20px 0 10px; display:inline-block; background:url(../../images/ezNewPortal/bannerBtn_arrow.png) no-repeat right 12px center #fff;  border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; font-size:12px; color:#333; cursor:pointer; height:24px; line-height:22px; border:1px solid #EAEAEA; box-sizing:border-box;}
 /* aside */
@@ -790,11 +791,13 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .writebanner_leftContents dl dd{position:absolute; top:17px; right:22%; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(57,74,93,0.48); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebanner_rightContents{float:left; width:100%;}
 .writebanner_leftContents .countZero{background:rgba(0,0,0,0.2);}
-.writebannerTop{overflow:hidden; list-style:none; margin:0px; padding:0px; display:flex; flex-wrap:wrap; gap:10px; margin-bottom:8px;}
-.writebannerTop li{float:left; cursor:pointer; width:calc((100% - 20px) / 3); height:130px; background:#fff; border-radius:12px; border:1px solid #EFEFEF; box-sizing:border-box;}
+.writebannerTop{overflow:hidden; list-style:none; margin:0px; padding:0px; margin-bottom:8px;}
+.writebannerTop li{float:left; cursor:pointer; width:calc((99.999% - 20px) / 3); height:130px; background:#fff; border-radius:12px; border:1px solid #EFEFEF; box-sizing:border-box; margin-left:10px; float:left;}
+.writebannerTop li:first-child{margin-left:0;}
 .writebannerTop li:hover .writebannerIcon .iconText:before{content:""; position:absolute; left:50%; bottom:0; width:calc(100% - 5px); height:6px; background:#DAF1FF; z-index:-1; transform:skewX(-15deg) translateX(-50%);}
-.writebannerBottom{overflow:hidden; list-style:none; margin:0px; padding:0px; display:flex; flex-wrap:wrap; gap:10px;}
-.writebannerBottom li{float:left; cursor:pointer; flex:1; height:130px; background:#fff; border-radius:12px; border:1px solid #EFEFEF; box-sizing:border-box;}
+.writebannerBottom{overflow:hidden; list-style:none; margin:0px; padding:0px;}
+.writebannerBottom li{float:left; cursor:pointer; width:calc((99.999% - 20px) / 3); height:130px; background:#fff; border-radius:12px; border:1px solid #EFEFEF; box-sizing:border-box; margin-left:10px; float:left;}
+.writebannerBottom li:first-child{margin-left:0;}
 .writebannerBottom li:hover .writebannerIcon .iconText:before{content:""; position:absolute; left:50%; bottom:0; width:calc(100% - 5px); height:6px; background:#DAF1FF; z-index:-1; transform:skewX(-15deg) translateX(-50%);}
 .writebannerIcon{position:relative; margin:0px; padding:0px; text-align:center; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center;}
 .writebannerIcon .iconCircle{width:60px; height:45px; margin:5px auto 0; padding:0px;}
@@ -2004,7 +2007,7 @@ div.orbit img{border-radius: 5px;}
 .top_info_area ul li > span.board{background-image:url(/images/ezNewPortal/info_board.svg);}
 .top_info_area ul li > span em{margin-left:8px; color:#388CE5; font-size:13px;}
 @media all and (max-width:1570px){
-	.top_info_area ul li > span{text-align:center;}
+	.top_info_area ul li > span{text-align:left;}
 	.top_info_area ul li > span > span{display:none;}
 	.top_info_area ul li > span em{margin:0; color:#333;}
 }
