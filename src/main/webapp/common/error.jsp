@@ -26,7 +26,7 @@
 <div class="error_wrap">
     <div class="error_page">
         <div class='text_wrap'>
-            <img src="images/error_img.svg" width="90">
+            <img src="/images/error_img.svg" width="90">
             <p class="text">
                 <spring:message code="main.t0634"/>
             </p>
