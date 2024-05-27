@@ -66,7 +66,7 @@
 
 					<div class="news_setting">
 						<input type="checkbox" id="portal_set">
-						<label for="portal_set" onclick="displayFixPortlet()"><span></span>소식설정</label>
+						<label for="portal_set" onclick="displayFixPortlet()"><span></span></span><spring:message code='ezNewPortal.topMenu.hth13'/></label>
 					</div>
 	
 	                <%-- <div class="info_logout" onclick="infoLogoutClick()"><spring:message code = 'ezNewPortal.t008' /></div> --%>
