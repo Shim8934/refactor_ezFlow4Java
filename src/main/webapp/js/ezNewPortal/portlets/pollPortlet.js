@@ -70,7 +70,7 @@ var assemblePollList = function (poll) {
 	*/
 	str += '<div class="voteTitle_all"><p class="voteTitle" id="pollTitle"></p>';
 	str += '<p class="voteBtn" id="pollBtn" data1="' + itemSeq +'">' + messages.strLang24 + '</p></div>';
-	str += '<ul class="voteList">';
+	str += '<ul class="portlet_list  voteList">';
 	
 	for (var i = 0; i < answerList.length; i++) {
 		if (answerList[i].answer.trim() !== '') {
@@ -97,8 +97,9 @@ var assemblePollList = function (poll) {
 			str += '</li>';
 		}
 	}
-	str += '</div>';
+	str += '</ul>';
 	
+	console.log(str);
 	document.getElementById('pollInfo').innerHTML = str;
 	document.getElementById('pollTitle').textContent = poll.pollInfo.pollTitle;
 	document.getElementById('pollBtn').addEventListener('click', function() {

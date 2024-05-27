@@ -17,8 +17,8 @@
 					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd>
 			</dl>
-			<div class="vote_contents" style="height: 82%; overflow-y: auto;">
-				<div id="pollInfo"></div>
+			<div class="vote_contents" id="pollInfo">
+<!-- 				<div id="pollInfo"></div> -->
 			</div>
 		</div>
 	</article>
