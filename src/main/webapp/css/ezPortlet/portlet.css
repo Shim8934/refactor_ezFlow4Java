@@ -152,6 +152,11 @@
     flex-direction: column;
 }
 
+.admin_theme_portlet .portlet_area .portlet {width:calc(100% / 4 - 10px);height: 125px;margin:5px;}
+.admin_theme_portlet .portlet_area .portlet.two_by_one {height: calc(125px * 2 + 10px);}
+.admin_theme_portlet .portlet_area .portlet.one_by_two {width:calc(100% / 4 * 2 - 10px);}
+.admin_theme_portlet .portlet_area .portlet.two_by_two {height: calc(125px * 2 + 10px); width:calc(100% / 4 * 2 - 10px);}
+
 .admin_theme_portlet .portlet_area .portlet .btn_set {background: none;}
 .admin_theme_portlet .portlet_area .portlet .btn_set:hover {opacity: 0.6;}
 

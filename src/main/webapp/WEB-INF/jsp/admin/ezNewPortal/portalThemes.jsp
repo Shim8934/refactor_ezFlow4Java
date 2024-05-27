@@ -732,7 +732,7 @@
 
 						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content";
 						if (usePortletSize) {
-							listHTML += " " + ClassPortlet.PORTLET + " " + item.classSize + " frame_size" + frameSize;
+							listHTML += " " + ClassPortlet.PORTLET + " " + item.classSize ;
 							listHTML += item.portletUsed ? "'" : " off_portlet'";
 							listHTML += " data-size='" + item.classSize + "' ";
 						} else {
