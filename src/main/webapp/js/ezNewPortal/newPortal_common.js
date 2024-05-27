@@ -1430,7 +1430,10 @@ function viewQuickResizePortlet() {
 
 // 협업 관련 추가
 function ezWorkspaceData(workspaceContextRootUrl) {
-	    //협업 카운트
+	var workSpace = document.getElementById('ezWorkspace');
+	if(!workSpace) return;
+
+	//협업 카운트
 	if (typeof (GetWorkspaceUserActLogCount) === "function") {
 	    GetWorkspaceUserActLogCount("workspaceCnt", 1);
 	}
@@ -1465,7 +1468,7 @@ function ezWorkspaceData(workspaceContextRootUrl) {
 		});		    	
 	} else {
 		var target = document.getElementById('workspaceCnt');
-		   
+
 		var observer = new MutationObserver(function(mutations) {
 			mutations.forEach(function(mutation) {
 	  		    var workspaceCnt = mutation.target.innerHTML * 1;
@@ -1489,8 +1492,8 @@ function ezWorkspaceData(workspaceContextRootUrl) {
 		var config = { attributes: true, childList: true, characterData: true };
 		observer.observe(target, config);		    	
 	}
-	
-	document.getElementById('ezWorkspace').addEventListener('click', function() {
+
+	workSpace.addEventListener('click', function() {
 		window.open(workspaceContextRootUrl + "/ezWorkspace/Account/SSO", "main", "");
 	});	
 
