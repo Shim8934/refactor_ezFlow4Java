@@ -1002,7 +1002,14 @@ AND
            			TBL_PORTAL_MENU_AUTH
            		WHERE
            			(
-           				(user_id = #deptId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           				(user_id = #deptId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#
+			]]>
+					<isEqual property="isUserDept" compareValue="false">
+						and
+							SUBDEPT_PERMITTED = 'Y'
+					</isEqual>
+			<![CDATA[
+           				)
            			OR 
            				(user_id IN (
            						SELECT
@@ -1274,7 +1281,7 @@ AND
 						FROM
 							tbl_permissiongroupinfo F
 						JOIN
-							tbl_portal_menu_auth G
+							tbl_portal_theme_auth G
 						ON
 							G.user_id = F.group_id
 						AND
@@ -1322,7 +1329,7 @@ AND
 						FROM
 							tbl_permissiongroupinfo F
 						JOIN
-							tbl_portal_menu_auth G
+							tbl_portal_theme_auth G
 						ON
 							G.user_id = F.group_id
 						AND
@@ -1362,7 +1369,14 @@ AND
 			TBL_PORTAL_THEME_AUTH
 		WHERE 
 			(
-				(user_id = #userId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#)
+				(user_id = #userId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#
+		]]>
+			<isEqual property="isUserDept" compareValue="false">
+				and
+				SUBDEPT_PERMITTED = 'Y'
+			</isEqual>
+		<![CDATA[
+           		)
 			OR 
 				(user_id IN (
 						SELECT
@@ -1370,7 +1384,7 @@ AND
 						FROM
 							tbl_permissiongroupinfo F
 						JOIN
-							tbl_portal_menu_auth G
+							tbl_portal_theme_auth G
 						ON
 							G.user_id = F.group_id
 						AND
@@ -2106,12 +2120,12 @@ INSERT INTO TBL_PORTAL_THEME_USER (
            	LEFT JOIN (
            		SELECT
            			MAX(access_yn) AS access_yn,
-           			menu_id,
+           			portlet_id,
            			tenant_id,
            			company_id,
            			user_type
            		FROM
-           			TBL_PORTAL_MENU_AUTH
+           			tbl_portal_portlet_auth
            		WHERE
            			(
            				(user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 2 AND tenant_id = #tenantId# AND company_id = #companyId#)
@@ -2124,7 +2138,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
            						FROM
            							tbl_permissiongroupinfo F
            						JOIN
-           							tbl_portal_menu_auth G
+           							tbl_portal_portlet_auth G
            						ON
            							G.user_id = F.group_id
            						AND
@@ -2147,24 +2161,31 @@ INSERT INTO TBL_PORTAL_THEME_USER (
            				)
            			)
            		GROUP BY
-           			menu_id
+           			portlet_id
            		) AUTH
             ]]>
         </isEqual>
         <isEqual property="userType" compareValue="DEPT">
-            <![CDATA[
+			<![CDATA[
            	LEFT JOIN (
            		SELECT
            			MAX(access_yn) AS access_yn,
-           			menu_id,
+           			portlet_id,
            			tenant_id,
            			company_id,
            			user_type
            		FROM
-           			TBL_PORTAL_MENU_AUTH
+           			tbl_portal_portlet_auth
            		WHERE
            			(
-           				(user_id = #deptId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           				(user_id = #deptId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#
+           ]]>
+					<isEqual property="isUserDept" compareValue="false">
+           				and
+						SUBDEPT_PERMITTED = 'Y'
+					</isEqual>
+			<![CDATA[
+					)
            			OR 
            				(user_id IN (
            						SELECT
@@ -2172,7 +2193,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
            						FROM
            							tbl_permissiongroupinfo F
            						JOIN
-           							tbl_portal_menu_auth G
+           							tbl_portal_portlet_auth G
            						ON
            							G.user_id = F.group_id
            						AND
@@ -2201,7 +2222,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
            				)
            			)
            		GROUP BY
-           			menu_id
+           			portlet_id
            		) AUTH
             ]]>
         </isEqual>
@@ -2244,7 +2265,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				AND
 					COMP.company_id = AUTH.company_id
 				AND
-					A.menu_id = AUTH.menu_id
+					A.portlet_id = AUTH.portlet_id
 				LEFT JOIN
 					TBL_PORTAL_PORTLET_USER AS USER
 				ON
@@ -3069,7 +3090,7 @@ ORDER BY
 							FROM
 								tbl_permissiongroupinfo F
 							JOIN
-								tbl_portal_menu_auth G
+								tbl_portal_portlet_auth G
 							ON
 								G.user_id = F.group_id
 							AND
@@ -3109,7 +3130,14 @@ ORDER BY
 				TBL_PORTAL_PORTLET_AUTH
 			WHERE
 				(
-					(user_id = #deptId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#)
+					(user_id = #deptId# AND user_type = 0 AND tenant_id = #tenantId# AND company_id = #companyId#
+		]]>
+				<isEqual property="isUserDept" compareValue="false">
+					and
+					SUBDEPT_PERMITTED = 'Y'
+				</isEqual>
+		<![CDATA[
+           		)
 				OR 
 					(user_id IN (
 							SELECT
@@ -3117,7 +3145,7 @@ ORDER BY
 							FROM
 								tbl_permissiongroupinfo F
 							JOIN
-								tbl_portal_menu_auth G
+								tbl_portal_portlet_auth G
 							ON
 								G.user_id = F.group_id
 							AND

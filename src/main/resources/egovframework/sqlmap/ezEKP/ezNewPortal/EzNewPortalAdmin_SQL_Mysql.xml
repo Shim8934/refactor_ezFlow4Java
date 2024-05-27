@@ -17,6 +17,7 @@
 		<result property="userDeptName" column="USERDEPTNAME" />
 		<result property="userType" column="USERTYPE" />
 		<result property="accessYN" column="ACCESSYN" javaType="boolean"/>
+		<result property="subdeptPermitted" column="SUBDEPTPERMITTED" />
 	</resultMap>
 	<resultMap class="java.util.HashMap" id="PortletAuthMap">
 		<result property="portletId" column="PORTLETID" />
@@ -25,6 +26,7 @@
 		<result property="userDeptName" column="USERDEPTNAME" />
 		<result property="userType" column="USERTYPE" />
 		<result property="accessYN" column="ACCESSYN" javaType="boolean"/>
+		<result property="subdeptPermitted" column="SUBDEPTPERMITTED" />
 	</resultMap>
 	<resultMap class="portalDeptViewVO" id="deptViewMap">
 		<result property="id" 				column="id" />
@@ -283,7 +285,8 @@
 					ELSE (SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 				END AS userdeptname,
 				user_type AS usertype,
-				access_yn AS accessyn
+				access_yn AS accessyn,
+				subdept_permitted as subdeptPermitted
 			FROM
 				TBL_PORTAL_MENU_AUTH
 			WHERE
@@ -389,9 +392,9 @@
 	<update id="ezNewPortal.updateMenuAuth" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_MENU_AUTH
-				(menu_id, user_id, user_type, access_yn, company_id, tenant_id, sn)
+				(menu_id, user_id, user_type, access_yn, company_id, tenant_id, sn, subdept_permitted)
 			VALUES
-				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#, #sn#)
+				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#, #sn#, #subdeptPermitted#)
 			ON DUPLICATE KEY UPDATE
 				access_yn = #accessYN#,
 				sn = #sn#
@@ -1097,7 +1100,8 @@
 				ELSE (SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
-			access_yn AS accessyn
+			access_yn AS accessyn,
+			subdept_permitted AS subdeptPermitted
 		FROM
 			TBL_PORTAL_THEME_AUTH
 		WHERE
@@ -1141,9 +1145,9 @@
 	<insert id="ezNewPortal.insertThemeAuth" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_THEME_AUTH (
-			theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn
+			theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted
 		) VALUES (
-			#themeId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#
+			#themeId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#, #subdeptPermitted#
 		)
 	]]>
 	</insert>
@@ -1197,7 +1201,8 @@
 				ELSE (SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
-			access_yn AS accessyn
+			access_yn AS accessyn,
+			subdept_permitted as subdeptPermitted
 		FROM
 			TBL_PORTAL_Portlet_AUTH
 		WHERE
@@ -1229,9 +1234,9 @@
 	<insert id="ezNewPortal.insertPortletAuth" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_PORTLET_AUTH (
-			portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn
+			portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn, subdept_permitted
 		) VALUES (
-			#portletId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#
+			#portletId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#, #subdeptPermitted#
 		)
 	]]>
 	</insert>

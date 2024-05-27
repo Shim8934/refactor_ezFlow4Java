@@ -1273,6 +1273,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
 		for(String pathId : deptIds) {
 			map.put("userId", pathId);
+			if (pathId.equals(userId)) {
+				map.put("isUserDept", true);
+			} else {
+				map.put("isUserDept", false);
+			}
 			
 			deptResult = ezNewPortalDAO.getUserThemeList(map);
 			
