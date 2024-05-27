@@ -291,6 +291,12 @@
 		              				CN NOT LIKE 'trash\_dept\_%'
 		              		]]>
               			</isEmpty>
+		 				<isEqual property="adminOrgan" compareValue="n">
+							 <![CDATA[ 
+								 AND 
+									DEPTTREEFLAG = 'Y'
+							 ]]>
+						 </isEqual>
               			
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
@@ -331,6 +337,12 @@
 									CN NOT LIKE 'trash\_dept\_%'
 							]]>
 						</isEmpty>
+						<isEqual property="adminOrgan" compareValue="n">
+							<![CDATA[ 
+								 AND 
+									DEPTTREEFLAG = 'Y'
+							 ]]>
+						</isEqual>
 		<![CDATA[
                			AND
                				TENANT_ID = #v_TENANT_ID#	 ) A
@@ -1010,7 +1022,8 @@
 	            ADSPATH ,
 	            UPDATEDT ,
 	            'dept' TYPE ,
-	            TENANT_ID as tenantId
+	            TENANT_ID as tenantId,
+	            deptTreeFlag
 			FROM
 	        	TBL_DEPTMASTER 
 	       WHERE
@@ -1948,7 +1961,13 @@
 	    	FROM
 	    		TBL_DEPTMASTER 
             $strSQLForMySQL$ 
-            AND CN NOT LIKE 'shared\_mailbox\_%' 
+            AND CN NOT LIKE 'shared\_mailbox\_%'
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+					 AND 
+						DEPTTREEFLAG = 'Y'
+				]]>
+			</isEqual>
             <include refid="organSearchTrashDept_dept"/>
             AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
             $strSizeForMySQL$
@@ -2263,7 +2282,8 @@
 	            extensionattribute15 ,
 	            adspath ,
 	            updatedt ,
-	            'dept' type  
+	            'dept' type,
+	            deptTreeFlag
 			FROM 
 				TBL_DEPTMASTER 
 			WHERE  

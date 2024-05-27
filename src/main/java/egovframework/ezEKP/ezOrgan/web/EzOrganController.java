@@ -85,6 +85,7 @@ public class EzOrganController {
 	        String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
 	        String orgCompanyID = doc.getElementsByTagName("orgCompanyID").getLength() != 1 ? "" : doc.getElementsByTagName("orgCompanyID").item(0).getTextContent(); // 전자결재 orgCompanyID
 	        String adminChk = doc.getElementsByTagName("ADMINCHK").getLength() != 1 ? "" : doc.getElementsByTagName("ADMINCHK").item(0).getTextContent(); // 전체관리자 = true (ip접속관리 관리자페이지)
+			String adminOrgan = doc.getElementsByTagName("ADMINORGAN").getLength() != 1 ? "n" : doc.getElementsByTagName("ADMINORGAN").item(0).getTextContent(); // 관리자 조직도 유무 
 	        
 	        if (adminDist.equals("true") || (adminOrganChk.length > 1 && adminOrganChk[1].equals("other"))) {
 	        	topID = adminOrganChk[0];
@@ -100,7 +101,7 @@ public class EzOrganController {
 	        logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ",userCompanyID=" + userCompanyID + ",displayTrashDept=" + displayTrashDept);
 	        
 	        // 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
-	        deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), displayTrashDept, tenantID);
+	        deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), displayTrashDept, tenantID, adminOrgan);
 	    } catch (Exception e) {
 	    	logger.error(e.getMessage(), e);
 	    }
@@ -123,9 +124,10 @@ public class EzOrganController {
 				
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();        
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
+		String adminOrgan = doc.getElementsByTagName("ADMINORGAN").getLength() > 0 ? doc.getElementsByTagName("ADMINORGAN").item(0).getTextContent() : "n"; // 관리자 조직도 유무 
                 
         boolean displayTrashDept = doc.getElementsByTagName("DISPLAY_TRASH_DEPT").getLength() > 0;
-        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId(), displayTrashDept);
+        String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId(), displayTrashDept, adminOrgan);
 		
         logger.debug("getDeptSubTreeInfo ended");
         

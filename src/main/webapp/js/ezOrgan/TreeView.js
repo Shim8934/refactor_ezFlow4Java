@@ -199,7 +199,11 @@ function TreeNode() {
 
         //노드 이름 SPAN 생성
         var spnNode = document.createElement("SPAN");
-        var nodeText = document.createTextNode(this.NodeName);
+        
+        // 숨김부서 뒤에 X 표시
+        var strDeptTreeFlag = GetAttribute(treeDiv, "deptTreeFlag");
+        var nodeText = strDeptTreeFlag === 'N' ? document.createTextNode(this.NodeName+"(X)") : document.createTextNode(this.NodeName);
+        
         spnNode.appendChild(nodeText);
 
         spnNode.id = "spn_" + this.NodeID;

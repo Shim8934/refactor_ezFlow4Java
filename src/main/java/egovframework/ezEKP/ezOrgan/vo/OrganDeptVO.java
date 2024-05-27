@@ -75,6 +75,9 @@ public class OrganDeptVO {
 	private String roleId;
 
 	private String histParentCn;
+	
+	//부서 숨김 처리
+	private String deptTreeFlag;
 
 	public String getCn() {
 		return cn;
@@ -293,5 +296,13 @@ public class OrganDeptVO {
 	}
 	public void setHistParentCn(String histParentCn) {
 		this.histParentCn = histParentCn;
+	}
+
+	public String getDeptTreeFlag() {
+		return deptTreeFlag;
+	}
+
+	public void setDeptTreeFlag(String deptTreeFlag) {
+		this.deptTreeFlag = deptTreeFlag;
 	}
 }

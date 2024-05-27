@@ -127,6 +127,7 @@
 	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");	            	
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", topData);
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+					createNodeAndInsertText(xmlpara, objNode, "adminOrgan", "n");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
 	            	xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -161,6 +162,7 @@
 	        	createNodeInsert(xmlpara, objNode, "DATA");
 	        	createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 	        	createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
+				createNodeAndInsertText(xmlpara, objNode, "adminOrgan", "n");
 	        	xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 	        	xmlHTTP.send(xmlpara);
 	        	xmlRtn = loadXMLString(xmlHTTP.responseText);
@@ -753,14 +755,14 @@
 	            	if (CrossYN()) {
 		                <c:choose>
 		                <c:when test="${useShowAllCompanies eq 'YES'}">
-		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP></PROP></DATA>";
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP></PROP><ORGANADMIN>n</ORGANADMIN></DATA>";
 		                </c:when>
 		                <c:otherwise>
-		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><ORGANADMIN>n</ORGANADMIN></DATA>";
 		                </c:otherwise>
 		                </c:choose>	                    	                    	            	    
 	            	} else {
-	                	strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	                	strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><ORGANADMIN>n</ORGANADMIN></DATA>";
 	            	}
 
 	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -783,7 +785,7 @@
 	                	if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 	                    	g_xmlHTTP = createXMLHttpRequest();
-	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><ADMINORGAN>n</ADMINORGAN></DATA>";
 	                    	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                    	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                    	g_xmlHTTP.send(strQuery);
@@ -799,10 +801,10 @@
 	            	
 	                <c:choose>
 	                <c:when test="${useShowAllCompanies eq 'YES'}">
-	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP><ADMINORGAN>n</ADMINORGAN></DATA>";
 	                </c:when>
 	                <c:otherwise>
-	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><ADMINORGAN>n</ADMINORGAN></DATA>";
 	                </c:otherwise>
 	                </c:choose>
 	            	

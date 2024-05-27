@@ -116,9 +116,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return ezOrganDAO.getDeptInfo(map);
 	}
 
-	// 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
 	@Override
 	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, String displayTrashDept, int tenantID) throws Exception {
+		return getDeptTreeInfo(pUserID, pDeptID, pTopID, pPropList, primary, displayTrashDept, tenantID, "N");
+	}
+	// 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
+	@Override
+	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, String displayTrashDept, int tenantID, String adminOrgan) throws Exception {
 	    logger.debug("getDeptTreeInfo started");
 	    logger.debug("pUserID=" + pUserID + ",pDeptID=" + pDeptID + ",pTopID=" + pTopID
 	            + ",pPropList=" + pPropList + ",primary=" + primary + ",displayTrashDept=" + displayTrashDept + ",tenantID=" + tenantID);
@@ -155,6 +159,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			map.put("v_TENANT_ID", tenantID);
 			map.put("isOrgan", isOrgan);
 			map.put("displayTrashDept", displayTrashDept);
+			map.put("adminOrgan", adminOrgan);
 			
 			// 지정된 부서의 자식 부서 목록을 가져온다.
 			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map);
@@ -226,15 +231,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	// 지정된 부서의 자식 부서 목록을 XML 형식으로 반환한다.
-	// 폐지부서 표출 안 함
+	// 폐지부서 표출 안 함, 숨김부터 표시 안 함
 	@Override
 	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID) throws Exception {
-		return getDeptSubTreeInfo(pDeptID, pPropList, primary, tenantID, false);
+		return getDeptSubTreeInfo(pDeptID, pPropList, primary, tenantID, false, "N");
 	}
 	
 	// 지정된 부서의 자식 부서 목록을 XML 형식으로 반환한다.
 	@Override
-	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID, boolean displayTrashDept) throws Exception {
+	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID, boolean displayTrashDept, String adminOrgan) throws Exception {
 	    logger.debug("getDeptSubTreeInfo started");
 	    logger.debug("pDeptID=" + pDeptID + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
 	    
@@ -243,7 +248,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CN", pDeptID);
 		map.put("v_LANGDATA", primary);
 		map.put("v_TENANT_ID", tenantID);
-		
+		map.put("adminOrgan", adminOrgan);
+
 		if (displayTrashDept) {
 			map.put("displayTrashDept", true);
 		}
@@ -356,6 +362,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 			    }		    
 			}
 		}
+
+		String deptTreeFlag = vo.getDeptTreeFlag() == null ? "N" : vo.getDeptTreeFlag();
+		nodeInfo.append("<DEPTTREEFLAG>"+ deptTreeFlag +"</DEPTTREEFLAG>");
+		
 	    nodeInfo.append("</NODE>");
 
 	    logger.debug("nodeInfo=" + nodeInfo.toString());

@@ -101,7 +101,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -151,6 +151,7 @@
 			    createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 			    createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
 			    createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
+			    createNodeAndInsertText(xmlpara, objNode, "ADMINORGAN", "y");
 			    
 			    xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 			    xmlHTTP.send(xmlpara);
@@ -479,11 +480,11 @@
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = info_dept_Complete;
 				    
-				    var OpenWin = window.open(deptInfoURL, "DeptInfo", GetOpenWindowfeature(435, 350));
+				    var OpenWin = window.open(deptInfoURL, "DeptInfo", GetOpenWindowfeature(435, 400));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
-				    var rtnValue = window.showModalDialog(deptInfoURL, args, "dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 350));
+				    var rtnValue = window.showModalDialog(deptInfoURL, args, "dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 400));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");
@@ -721,7 +722,7 @@
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";		            
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -847,7 +848,7 @@
 						return;
 					} else if (adCount == 1){
 						g_xmlHTTP = createXMLHttpRequest();
-						var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+						var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 						g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 						g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 						g_xmlHTTP.send(strQuery);
@@ -867,7 +868,7 @@
 							if (rgParams["deptid"] != "") {
 								g_xmlHTTP = createXMLHttpRequest();
 								// 20110412 사용자 추가시 필요 정보 추가처리.
-								var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+							var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT><ADMINORGAN>y</ADMINORGAN></DATA>";
 								g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 								g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 								g_xmlHTTP.send(strQuery);
