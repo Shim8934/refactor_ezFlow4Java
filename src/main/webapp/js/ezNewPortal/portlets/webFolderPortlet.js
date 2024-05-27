@@ -41,7 +41,7 @@ function getWebFolderFileList() {
 						
 						dtEl.textContent = file.fileName;
 						ddEl1.textContent = userLang == '1'? file.createName1 : file.createName2; 
-						ddEl2.textContent = file.updateDate.substr(0, 10);
+						ddEl2.textContent = file.updateDate.substr(0, 10).replace(/-/g, ".");
 						
 						dlEl.appendChild(dtEl);
 						dlEl.appendChild(ddEl1);

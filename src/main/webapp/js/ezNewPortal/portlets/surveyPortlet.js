@@ -58,7 +58,7 @@ function setListByDataList(surveys) {
 			
 			if (survey.useStatus === 1) {
 				title = survey.title;
-				endDate = "~ " + survey.endDate.substr(5, 5);
+				endDate = "~" + survey.endDate.substr(5, 5).replace(/-/g, ".");
 				creator = survey.creatorName;
 				
 				var liEl = document.createElement("li");

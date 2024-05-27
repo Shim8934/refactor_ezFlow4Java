@@ -115,7 +115,7 @@ function getBoardList_NewBoardSTD() {
      		 }
              
              listHTML += "<span class='txt'>" + ConvertCharToEntityReference(title) + "</span>";
-             listHTML += "<span class='date'>" + startDate.substring(5,16) + "</span>";
+             listHTML += "<span class='date'>" + startDate.substring(5,16).replace(/-/g, ".") + "</span>";
              listHTML += "<span class='name'>" + writerName + "</span>";
              listHTML += "</li>";
             }
