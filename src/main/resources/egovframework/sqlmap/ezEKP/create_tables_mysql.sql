@@ -5783,6 +5783,21 @@ CREATE TABLE TBL_SESSION (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Table structure for table `TBL_FIDO_SESSION`
+--
+DROP TABLE IF EXISTS  `TBL_FIDO_SESSION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_FIDO_SESSION` (
+  `FIDO_SESSION_ID` varchar(50) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `CREATE_TIME` DATETIME NOT NULL,
+  `ACCESS_IP` varchar(100) NOT NULL,
+  `STATUS` varchar(50) NOT NULL,
+  PRIMARY KEY (`FIDO_SESSION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `tbl_connection_info`
 --
 

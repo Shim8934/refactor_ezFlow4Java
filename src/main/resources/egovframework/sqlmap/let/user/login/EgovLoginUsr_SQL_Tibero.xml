@@ -362,12 +362,51 @@
         ]]>
     </select>
 
-    <delete id="loginDAO.deleteFidoSessionByTime" parameterClass="Integer">
+    <delete id="loginDAO.deleteDbSessionByTime" parameterClass="Integer">
 		<![CDATA[
 		DELETE FROM
 			TBL_SESSION
 		WHERE
 			LAST_ACCESS_TIME <= (SYS_EXTRACT_UTC(SYSTIMESTAMP) - NUMTODSINTERVAL(#dbSessionStoragePeriod#, 'DAY'))
+		]]>
+	</delete>
+
+	<insert id="loginDAO.setFidoSession" parameterClass="fidoAuthenticationVO">
+		INSERT INTO TBL_FIDO_SESSION(
+		FIDO_SESSION_ID,	USER_ID,		CREATE_TIME,		ACCESS_IP,		STATUS
+		)VALUES(
+		#fidoSessionId#,	#id#,	utc_timestamp(), 	#ip#,		#status#
+		)
+	</insert>
+
+	<select id="loginDAO.getFidoSession" parameterClass="String" resultMap="fidoAuthentication">
+		SELECT
+		FIDO_SESSION_ID,
+		USER_ID,
+		CREATE_TIME,
+		ACCESS_IP,
+		STATUS
+		FROM
+		tbl_fido_session
+		WHERE
+		fido_session_id = #fidoSessionId#
+	</select>
+
+	<update id="loginDAO.updateFidoStatus" parameterClass="fidoAuthenticationVO">
+		UPDATE
+		TBL_FIDO_SESSION
+		SET
+		STATUS = #status#
+		WHERE
+		FIDO_SESSION_ID = #fidoSessionId#
+	</update>
+
+	<delete id="loginDAO.deleteFidoSessionByTime" parameterClass="Integer">
+		<![CDATA[
+		DELETE FROM
+			TBL_FIDO_SESSION
+		WHERE
+			CREATE_TIME <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL #fidoStoragePeriod# DAY)
 		]]>
 	</delete>
 

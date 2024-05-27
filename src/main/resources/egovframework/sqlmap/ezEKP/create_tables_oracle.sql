@@ -3441,6 +3441,18 @@ CREATE TABLE "JMOCHA_COMPANY_QUOTA"
    ) ;
 
 --------------------------------------------------------
+--  DDL for Table TBL_FIDO_SESSION
+--------------------------------------------------------
+
+  CREATE TABLE "TBL_FIDO_SESSION"
+   ("FIDO_SESSION_ID" VARCHAR2(50) NOT NULL,
+	"USER_ID" VARCHAR2(80) NOT NULL,
+	"CREATE_TIME" DATE NOT NULL,
+	"ACCESS_IP" VARCHAR2(100) NOT NULL,
+	"STATUS" VARCHAR2(50) NOT NULL,
+   ) ;
+
+--------------------------------------------------------
 --  DDL for Table TBL_CONNECTION_INFO
 --------------------------------------------------------
 
@@ -10064,7 +10076,7 @@ CREATE INDEX "TBL_CABINET_DELFLAG_IDX" ON "TBL_CABINET" ("DELFLAG")
 
   CREATE UNIQUE INDEX "PK_TBL_COMM_TREECACHE" ON "TBL_COMM_TREECACHE" ("TENANT_ID", "QUERY") 
   ;
- --------------------------------------------------------
+--------------------------------------------------------
 --  DDL for Index PK_TBL_SESSION
 --------------------------------------------------------
 
@@ -10075,6 +10087,12 @@ CREATE INDEX "TBL_CABINET_DELFLAG_IDX" ON "TBL_CABINET" ("DELFLAG")
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "IDX_SESSION_LAST_TIME" ON "TBL_SESSION" ("SESSION_ID", "LAST_ACCESS_TIME")
+  ;
+--------------------------------------------------------
+--  DDL for Index PK_TBL_FIDO_SESSION
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_FIDO_SESSION" ON "TBL_FIDO_SESSION" ("FIDO_SESSION_ID")
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CONNECTION_INFO

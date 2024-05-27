@@ -173,7 +173,7 @@ public class LoginDAO extends EgovAbstractDAO {
 	}
 
 	public void deleteDbSessionByTime(int dbSessionStoragePeriod) throws Exception {
-		update("loginDAO.deleteFidoSessionByTime", dbSessionStoragePeriod);
+		update("loginDAO.deleteDbSessionByTime", dbSessionStoragePeriod);
 	}
 
 	public List<Integer> getTenantIdList() throws Exception {
