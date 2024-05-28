@@ -5803,9 +5803,23 @@
 			AND
 				COMPANYID = #companyID#				
 		</isEqual>
-		<isNotEqual property="v_MODE" compareValue="APR">
+        <isEqual property = "v_MODE" compareValue = "LINK">
+            SELECT
+                A.*,
+                #newDocID# NEWDOCID
+            FROM
+                TBL_ENDATTACHINFO A
+            WHERE
+                DOCID = #v_DOCID#
+            AND
+                TENANT_ID = #v_TENANTID#
+            AND
+                COMPANYID = #companyID#
+        </isEqual>
+        <isNotEqual property="v_MODE" compareValue="APR">
 		<isNotEqual property="v_MODE" compareValue="END">
-			SELECT 
+        <isNotEqual property = "v_MODE" compareValue = "LINK">
+			SELECT
 			 * 
 			FROM 
 				TBL_APRATTACHINFO  
@@ -5816,6 +5830,7 @@
 			AND
 				COMPANYID = #companyID#				
 		</isNotEqual>
+        </isNotEqual>
 		</isNotEqual>
 		<isGreaterThan property="v_ORDERBYLENGTH" compareValue="0">
 			<isGreaterEqual property="v_ORDERBYLENGTH" compareValue="12">
@@ -36337,18 +36352,90 @@
                 DESCRIPTION2
             FROM
                 TBL_ENDAPRDOCINFO A
-                    JOIN
+            JOIN
                 TBL_USERMASTER B
-                ON
-                    B.CN = #userID#
+            ON
+                B.CN = #userID#
             WHERE
                 DOCID = #docID#
-              AND
+            AND
                 A.TENANT_ID = #tenantID#
-              AND
+            AND
                 B.TENANT_ID = #tenantID#
-              AND
+            AND
                 A.COMPANYID = #companyID#
+        )
+    </insert>
+
+    <select id = "EzApprovalGDAO.checkHasAttachFile" parameterClass = "map" resultClass = "String" remapResults = "true">
+        SELECT
+            CASE
+                WHEN
+                    COUNT(1) > 0
+                THEN
+                    'TRUE'
+                ELSE
+                    'FALSE'
+            END
+        FROM
+            TBL_ENDATTACHINFO
+        WHERE
+            DOCID = #v_DOCID#
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+    </select>
+
+    <insert id = "EzApprovalGDAO.insertAttachInfo" parameterClass = "ApprGAttachInfoVO">
+        INSERT INTO
+            TBL_APRATTACHINFO (
+            DOCID,
+            ATTACHFILESN,
+            VIEWORDER,
+            ATTACHFILENAME,
+            ATTACHFILEHREF,
+            ATTACHFILESIZE,
+            ATTACHUSERID,
+            ATTACHUSERNAME,
+            ATTACHUSERJOBTITLE,
+            ATTACHUSERDEPTID,
+            ATTACHUSERDEPTNAME,
+            PAGENUM,
+            DISPLAYNAME,
+            BODYATTACH,
+            ATTACHUSERNAME2,
+            ATTACHUSERJOBTITLE2,
+            ATTACHUSERDEPTNAME2,
+            TENANT_ID,
+            COMPANYID,
+            ISBIGATTACH,
+            ISBIGATTACHDEL,
+            SAVEDATE
+        )
+        VALUES (
+            #newDocID#,
+            #attachFileSN#,
+            #attachFileSN#,
+            #attachFileName#,
+            #attachFileHref#,
+            #attachFileSize#,
+            #attachUserID#,
+            #attachUserName#,
+            #attachUserJobTitle#,
+            #attachUserDeptID#,
+            #attachUserDeptName#,
+            #pageNum#,
+            #displayName#,
+            #bodyAttach#,
+            #attachUserName2#,
+            #attachUserJobTitle2#,
+            #attachUserDeptName2#,
+            #tenantID#,
+            #companyID#,
+            #isBigAttach#,
+            #isBigAttachDel#,
+            SYSDATE
         )
     </insert>
 </sqlMap>

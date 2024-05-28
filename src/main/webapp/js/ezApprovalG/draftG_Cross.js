@@ -290,4 +290,6 @@ function attachRecordDoc() {
 		},
 		success : () => {}
 	});
+
+	opener.attachedDocList = null;
 }

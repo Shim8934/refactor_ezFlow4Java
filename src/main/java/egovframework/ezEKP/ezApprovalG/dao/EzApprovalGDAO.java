@@ -3917,4 +3917,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 		insert("EzApprovalG.attachRecordDoc", map);
 	}
+
+	public String checkHasAttachFile(HashMap<String, Object> map) throws Exception {
+		return (String)select("EzApprovalGDAO.checkHasAttachFile", map);
+	}
+
+	public void insertAttachInfo(ApprGAttachInfoVO info) {
+		insert("EzApprovalGDAO.insertAttachInfo", info);
+	}
 }

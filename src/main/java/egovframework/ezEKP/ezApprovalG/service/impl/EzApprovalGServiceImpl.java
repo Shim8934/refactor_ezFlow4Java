@@ -44,6 +44,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35422,19 +35423,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                      Arrays.asList((String[])attachedDocList);
 
         AtomicReference<String> result = new AtomicReference<>("true");
+        AtomicInteger cnt = new AtomicInteger(1);
 
         attachDocList.forEach(d -> {
             try {
-                ezApprovalGDAO.attachRecordDoc(userInfo, newDocID, d, (attachDocList.indexOf(d)) + 1);
+                ezApprovalGDAO.attachRecordDoc(userInfo, newDocID, d, cnt.get());
 
                 HashMap<String, Object> map = new HashMap() {{
                     put("FLAG", "Y");
                     put("v_DOCID", d);
+                    put("newDocID", newDocID);
                     put("v_TENANTID", userInfo.getTenantId());
                     put("companyID", userInfo.getCompanyID());
                 }};
 
                 ezApprovalGDAO.updateAttachFileInfo(map);
+
+                fileAttach(map, cnt);
             } catch (SQLException se) {
                 logger.error(se.getMessage(), se);
 
@@ -35448,5 +35453,74 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         logger.info("attachRecordDoc ended");
         return result.get();
+    }
+	
+    private void fileAttach(HashMap<String, Object> map, AtomicInteger cnt) throws Exception {
+        logger.info("fileAttach started");
+
+        List<ApprGAttachInfoVO> attachFilePathList = null;
+
+        String newDocID;
+        String companyID;
+        String saveFilePath;
+        String realPath = commonUtil.getRealPath(servletContext);
+        int tenantID;
+
+        if (checkHasAttachFile(map).equals("TRUE")) {
+            newDocID = map.get("newDocID").toString();
+            companyID = map.get("companyID").toString();
+            tenantID = Integer.parseInt(map.get("v_TENANTID").toString());
+
+            saveFilePath = getSaveAttachFilePath(newDocID, companyID, tenantID);
+
+            map.put("saveFilePath", saveFilePath);
+            map.put("v_MODE", "LINK");
+
+            attachFilePathList = ezApprovalGDAO.getAttachFileInfo(map);
+
+            attachFilePathList.forEach(a -> {
+                try {
+                    String sCnt = String.valueOf(cnt.getAndIncrement());
+                    a.setAttachFileSN(sCnt);
+
+                    String snFormat = "00000" + sCnt;
+                    String fileName = newDocID + snFormat.substring(snFormat.length() - 4) + a.getAttachFileName();
+                    String sourcePath = a.getAttachFileHref();
+                    String destPath = saveFilePath + commonUtil.separator + fileName;
+
+                    a.setAttachFileHref(destPath);
+                    a.setTenantID(tenantID);
+
+                    ezApprovalGDAO.insertAttachInfo(a);
+
+                    File dest = new File(realPath + saveFilePath);
+
+                    if (!dest.exists()) {
+                        dest.mkdirs();
+                    }
+
+                    File src = new File(realPath + sourcePath);
+                    dest = new File(realPath + destPath);
+
+                    FileUtils.copyFile(src, dest);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            });
+        }
+
+        logger.info("fileAttach ended");
+    }
+    
+    private String checkHasAttachFile(HashMap<String, Object> map) throws Exception {
+        return ezApprovalGDAO.checkHasAttachFile(map);
+    }
+
+    private String getSaveAttachFilePath(String docID, String companyID, int tenantID) throws Exception {
+        return commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) +
+               commonUtil.separator + companyID +
+               commonUtil.separator + "uploadFile" +
+               commonUtil.separator + getDocHrefYear(docID, companyID, tenantID) +
+               commonUtil.separator + getDocDir(docID);
     }
 }
