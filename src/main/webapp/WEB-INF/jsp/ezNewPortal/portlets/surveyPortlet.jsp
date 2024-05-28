@@ -19,7 +19,7 @@
 			</dl>
 			<div class="vote_contents">
 				<div id="surveyInfo">
-					<ul id="surveyUl" class="portlet_list">
+					<ul id="surveyUl" class="portlet_list portletPagingArea">
 						<!-- <li class="mail_open" ></li> -->
 					</ul>
 				</div>

@@ -153,7 +153,12 @@ function changePortletSize(pot, size) {
     resizePortlet(pot);
     if (typeof usedTheme == 'undefined' || !usedTheme) usedTheme = document.querySelector('.portletList').getAttribute('data-themeid');
     userPortletUpdateWithSize(usedTheme);
-
+    
+    var portletPagingArea = pot.querySelector('.portletPagingArea');
+    if (portletPagingArea) {
+    	changePortletViewCount(pot.id.replace('Portlet',''), portletPagingArea);
+    }
+    
     // 게시판 포틀릿 사이즈 변경시 게시판 뷰 카운트 변경
     if (typeof changeBoardViewCount == 'function') {
         changeBoardViewCount(pot.id.replace('Portlet',''));
@@ -429,4 +434,22 @@ function Paging() {
             }
         }
     };
+}
+
+function changePortletViewCount(portletId, portletPagingArea) {
+	var portletPageObj = portletInfoMap["portlet" + portletId].page;
+	var perCount = portletPageObj.getPagePerCount(portletId);
+	portletPageObj.changeCount(perCount);
+	
+	var currPage = portletPageObj.getPage();
+	var startRowIdx = portletPageObj.getStart();
+	var portletPageList = portletPagingArea.children;
+	
+	for (var i = 0; i < portletPageList.length; i++) {
+		portletPageList[i].style.display = "none";
+		if (i >= startRowIdx && i < startRowIdx + perCount) {
+			portletPageList[i].style.display = "block";
+		}
+	}
+	
 }

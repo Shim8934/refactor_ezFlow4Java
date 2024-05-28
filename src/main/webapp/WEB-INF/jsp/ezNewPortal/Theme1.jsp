@@ -108,7 +108,8 @@
     var userLang = "<c:out value='${userLang}'/>";
     var userLang2 = "<c:out value='${userLang2}'/>";
 	var usePortletSize = "<c:out value='${usePortletSize}'/>" === "Y";
-
+	var portletInfoMap = {};
+	
  	var quickLinkPage = {
  		current: 1,
  		total: 1,

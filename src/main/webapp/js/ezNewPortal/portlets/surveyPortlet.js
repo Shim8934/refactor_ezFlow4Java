@@ -1,4 +1,30 @@
 // plus 버튼 클릭 이벤트
+
+function initSurveyPortletInfo(surveyPortletId) {
+	var newObj = {};
+	var perCount = getSurveyPagePerCount(surveyPortletId);
+	newObj.page = new Paging().init(perCount);
+	portletInfoMap["portlet" + surveyPortletId] = newObj;
+	newObj.page.getPagePerCount = function () {
+		return getSurveyPagePerCount(surveyPortletId);
+	}
+	
+	getPotletSurveyList();
+}
+
+function getSurveyPagePerCount(surveyPortletId) {
+	var portletSize = getPortletSize(surveyPortletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 7;
+	} else {
+		count = 3;
+	}
+
+	return count;
+}
+
 var plusBtn = document.getElementById("surveyPlus");
 plusBtn.addEventListener('click', goSurveyPage, false);
 
@@ -12,7 +38,7 @@ function getPotletSurveyList() {
 			currentPage : 1,
 			pageMode 	: 'processing',
 			srchMode 	: 0,
-			listCnt  	: 5,
+			listCnt  	: 10,
 			title       : "",
 			creatorName : "",
 			startDate   : "",
@@ -21,7 +47,7 @@ function getPotletSurveyList() {
 			order       : "",
 			srchMode    : 0,
 			srchOption  : "title",
-			listCntSize : 5
+			listCntSize : 10
 			};
 	
 	$.ajax({
