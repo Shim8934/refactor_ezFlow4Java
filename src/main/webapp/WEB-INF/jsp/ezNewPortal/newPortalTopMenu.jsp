@@ -143,11 +143,11 @@
 					mainFrame.style.float = "right";
 					mainFrame.style.position = "relative"; // 이거 빼면 mainFrame 스크롤도 안되고 동작도 안됨.
 				}
-				
+
 				menuLi.addEventListener('click', function () {
 					$(".lnb_list li").removeClass("on");
 					$(".navUL li").removeClass("on");
-					event.target.classList.add("on");
+					this.classList.add("on");
 					subMenuClickEvent('off', item.menuUrl);
 					notice_all_close();
 					closeNoti();
