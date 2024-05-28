@@ -145,8 +145,7 @@
 				}
 
 				menuLi.addEventListener('click', function () {
-					$(".lnb_list li").removeClass("on");
-					$(".navUL li").removeClass("on");
+					offMenuAll();
 					this.classList.add("on");
 					subMenuClickEvent('off', item.menuUrl);
 					notice_all_close();
@@ -322,7 +321,12 @@
 			var element = document.getElementById(id);
 			element.addEventListener('click', function () {
 				closeNoti(); // 통합알림창 닫기
-			    if (id == 'util_logout') {
+				// 메뉴이동 외의 로고 클릭의 경우도 탑 메뉴 항목 off를 위해 분기 추가 함.
+				if (id == 'logoUrl') {
+					offMenuAll();
+					subMenuClickEvent('off');
+					window.open(url, location, option);
+				} else if (id == 'util_logout') {
 			        subMenuClickEvent('off');
 			        self.top.location.href = url;
 			    } else if (id != 'util_employee_search' && id != 'util_admin') {
@@ -523,9 +527,8 @@
 				}
 				
 				menuAllList.addEventListener('click', function() {
-					$(".lnb_list li").removeClass("on");
-					$(".navUL li").removeClass("on");
-					var menuId = event.target.getAttribute("id");
+					offMenuAll();
+					var menuId = this.getAttribute("id");
 					if (!!document.getElementById("menu_" + menuId)) {
 						document.getElementById("menu_" + menuId).classList.add("on");
 					}
@@ -1875,6 +1878,11 @@
 		
 		function toggleTopSearch() {
 			 $(".employee_search").toggleClass("active");
+		}
+
+		function offMenuAll() {
+			$(".lnb_list li").removeClass("on");
+			$(".navUL li").removeClass("on");
 		}
 		
 		</script>
