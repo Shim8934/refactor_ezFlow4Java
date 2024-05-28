@@ -3559,6 +3559,27 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.alterRepeatFlagForResourceInfo();
     }
 
+    /* 2024-05-28 김유진 - 포탈 메뉴,포틀릿,테마,빠른링크 > 하위부서 허용여부 컬럼 추가, 빠른링크 > 유저타입 컬럼 추가 */
+    @Override
+    public void alterSubPermittedForMenuAuth() throws Exception {
+        ezCommonDAO.alterSubPermittedForMenuAuth();
+    }
+
+    @Override
+    public void alterSubPermittedForPortletAuth() throws Exception {
+        ezCommonDAO.alterSubPermittedForPortletAuth();
+    }
+
+    @Override
+    public void alterSubPermittedForThemeAuth() throws Exception {
+        ezCommonDAO.alterSubPermittedForThemeAuth();
+    }
+
+    @Override
+    public void alterSubPermittedForQuicklinkAcl() throws Exception {
+        ezCommonDAO.alterSubPermittedForQuicklinkAcl();
+    }
+
     /* 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 */
     public void insertApprNonElecRecTypeConfing() throws Exception {
         List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();

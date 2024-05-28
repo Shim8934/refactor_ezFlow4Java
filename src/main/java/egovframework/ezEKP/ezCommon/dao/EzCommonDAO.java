@@ -2035,6 +2035,43 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	/* 2024-05-28 김유진 - 포탈 메뉴,포틀릿,테마,빠른링크 > 하위부서 허용여부 컬럼 추가, 빠른링크 > 유저타입 컬럼 추가 */
+	public void alterSubPermittedForMenuAuth() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForMenuAuth"));
+		} catch (Exception e) {
+			logger.debug("tbl_portal_menu_auth subdept_permitted column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForMenuAuth");
+			update("EzCommonDAO.updateSubPermittedForMenuAuth"); // 기존 스펙상 부서 선택 시 하위부서 허용이 고정임으로 부서일 경우 허용으로 값 변경
+		}
+	}
+	public void alterSubPermittedForPortletAuth() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForPortletAuth"));
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_auth subdept_permitted column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForPortletAuth");
+			update("EzCommonDAO.updateSubPermittedForPortletAuth");
+		}
+	}
+	public void alterSubPermittedForThemeAuth() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForThemeAuth"));
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_auth subdept_permitted column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForThemeAuth");
+			update("EzCommonDAO.updateSubPermittedForThemeAuth");
+		}
+	}
+	public void alterSubPermittedForQuicklinkAcl() {
+		try {
+			select(("EzCommonDAO.checkSubPermittedForQuicklinkAcl"));
+		} catch (Exception e) {
+			logger.debug("tbl_ps_quicklink_acl subdept_permitted, user_type column doesn't exist. creating the column...");
+			update("EzCommonDAO.alterSubPermittedForQuicklinkAcl");
+			update("EzCommonDAO.updateSubPermittedForQuicklinkAcl"); // 유저,부서,직위,직책,그룹권한 user_type 세팅, 부서일 경우 허용으로 값 변경
+		}
+	}
 	/* 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 */
 	public void insertApprNonElecRecTypeConfing(Map<String, Object> map) {
 		String propertyValue = (String) select("EzCommonDAO.checkApprNonElecRecTypeConfing", map);

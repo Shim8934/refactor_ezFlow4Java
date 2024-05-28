@@ -4005,6 +4005,135 @@
 		]]>
     </statement>
 
+	<!-- 2024-05-28 김유진 - 포탈 메뉴,포틀릿,테마,빠른링크 > 하위부서 허용여부 컬럼 추가, 빠른링크 > 유저타입 컬럼 추가 ㅡ -->
+	<select id="EzCommonDAO.checkSubPermittedForMenuAuth" resultClass="String">
+	<![CDATA[
+		SELECT
+			subdept_permitted
+		FROM
+			tbl_portal_menu_auth
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSubPermittedForMenuAuth">
+	<![CDATA[
+		ALTER TABLE
+			tbl_portal_menu_auth
+		ADD
+		    subdept_permitted VARCHAR(4) DEFAULT 'N'
+		]]>
+    </statement>
+
+	<update id="EzCommonDAO.updateSubPermittedForMenuAuth">
+		UPDATE
+			tbl_portal_menu_auth
+		SET
+			subdept_permitted = 'Y'
+		WHERE
+			user_type = 0
+	</update>
+
+	<select id="EzCommonDAO.checkSubPermittedForPortletAuth" resultClass="String">
+	<![CDATA[
+		SELECT
+			subdept_permitted
+		FROM
+			tbl_portal_portlet_auth
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSubPermittedForPortletAuth">
+	<![CDATA[
+		ALTER TABLE
+			tbl_portal_portlet_auth
+		ADD
+			subdept_permitted VARCHAR(4) DEFAULT 'N'
+		]]>
+    </statement>
+
+	<update id="EzCommonDAO.updateSubPermittedForPortletAuth">
+		UPDATE
+			tbl_portal_portlet_auth
+		SET
+			subdept_permitted = 'Y'
+		WHERE
+			user_type = 0
+	</update>
+
+	<select id="EzCommonDAO.checkSubPermittedForThemeAuth" resultClass="String">
+	<![CDATA[
+		SELECT
+			subdept_permitted
+		FROM
+			tbl_portal_theme_auth
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSubPermittedForThemeAuth">
+	<![CDATA[
+		ALTER TABLE
+			tbl_portal_theme_auth
+		ADD
+			subdept_permitted VARCHAR(4) DEFAULT 'N'
+		]]>
+    </statement>
+
+	<update id="EzCommonDAO.updateSubPermittedForThemeAuth">
+		UPDATE
+			tbl_portal_theme_auth
+		SET
+			subdept_permitted = 'Y'
+		WHERE
+			user_type = 0
+	</update>
+
+	<select id="EzCommonDAO.checkSubPermittedForQuicklinkAcl" resultClass="String">
+	<![CDATA[
+		SELECT
+			USER_TYPE, SUBDEPT_PERMITTED
+		FROM
+			tbl_ps_quicklink_acl
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterSubPermittedForQuicklinkAcl">
+	<![CDATA[
+		ALTER TABLE
+			tbl_ps_quicklink_acl
+		ADD
+		    COLUMN USER_TYPE VARCHAR(100) NOT NULL,
+		ADD
+		   	COLUMN SUBDEPT_PERMITTED VARCHAR(4) DEFAULT 'N'
+		]]>
+    </statement>
+
+	<update id="EzCommonDAO.updateSubPermittedForQuicklinkAcl">
+		UPDATE tbl_ps_quicklink_acl qla
+			LEFT JOIN tbl_usermaster um ON qla.accessid = um.cn and qla.TENANT_ID = um.TENANT_ID
+			LEFT JOIN tbl_deptmaster dm ON qla.accessid = dm.cn and qla.TENANT_ID = dm.TENANT_ID
+			LEFT JOIN tbl_user_jobmaster ujm ON qla.accessid =  CAST(ujm.jobid AS CHAR) and qla.TENANT_ID = ujm.TENANT_ID
+			LEFT JOIN tbl_permissiongrouplist pgl ON qla.accessid = pgl.group_id and qla.TENANT_ID = pgl.TENANT_ID
+			SET qla.user_type =
+				CASE
+				WHEN um.cn IS NOT NULL THEN 'USER'
+				WHEN dm.cn IS NOT NULL THEN 'DEPT'
+				WHEN (ujm.jobid IS NOT null and ujm.`TYPE` = '001') THEN 'jIKWI'
+				WHEN (ujm.jobid IS NOT null and ujm.`TYPE` = '002') THEN 'JIKCHEK'
+				WHEN pgl.group_id IS NOT NULL THEN 'GROUP'
+				ELSE 'USER'
+				END,
+		   qla.subdept_permitted =
+			CASE
+				WHEN dm.cn IS NOT NULL THEN 'Y'
+				ELSE 'N'
+				END
+	</update>
+
+
 
 	<!-- 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 -->
 	<select id="EzCommonDAO.checkApprNonElecRecTypeConfing" resultClass="String">
