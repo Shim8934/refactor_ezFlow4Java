@@ -117,19 +117,10 @@
 	
  	window.onresize = function(event) {
  		frameSetting(frameId);
-		leftResize();
  	}
 	
  	//반복문 forEach
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
-	
- 	var leftResize = function() {
-		var wwh = document.getElementsByClassName("section_main")[0].scrollHeight + 30;
-		var sectionLeft = document.getElementsByClassName("section_left");
-		
-		sectionLeft[0].style.height = wwh + "px";
-		sectionLeft[0].style.minHeight = "1133px";
-	}
  	
  	// 퀵링크 셋팅 
  	var setQuickLinkList = function (data) {
