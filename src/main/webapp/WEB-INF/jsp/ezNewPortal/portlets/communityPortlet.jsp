@@ -59,6 +59,10 @@
 				</c:choose>
 			</div>
 		</div>
+
+		<%--	리스트 페이지 이동	--%>
+		<span class="portlet_list_nav prev"></span>
+		<span class="portlet_list_nav next"></span>
 	</article>
 </body>
 </html>
