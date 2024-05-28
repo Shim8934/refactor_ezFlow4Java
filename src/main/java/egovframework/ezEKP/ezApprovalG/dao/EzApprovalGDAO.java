@@ -3905,24 +3905,15 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<OrganDeptVO>) list("EzApprovalGDAO.getUnderDeptList", map);
     }
 
-	public void attachRecordDoc(LoginVO userInfo, String newDocID, String docID, int idx) throws Exception {
-		HashMap<String, String> map = new HashMap() {{
-			put("attachSN", String.valueOf(idx));
-			put("newDocID", newDocID);
-			put("docID", docID);
-			put("userID", userInfo.getId());
-			put("companyID", userInfo.getCompanyID());
-			put("tenantID", String.valueOf(userInfo.getTenantId()));
-		}};
-
-		insert("EzApprovalG.attachRecordDoc", map);
-	}
-
-	public String checkHasAttachFile(HashMap<String, Object> map) throws Exception {
+	public String checkHasAttachFile(HashMap<String, String> map) throws Exception {
 		return (String)select("EzApprovalGDAO.checkHasAttachFile", map);
 	}
 
 	public void insertAttachInfo(ApprGAttachInfoVO info) {
 		insert("EzApprovalGDAO.insertAttachInfo", info);
+	}
+	
+	public ApprGAttachInfoVO getAttachDocInfo(ApprGAttachInfoVO attachInfo) throws Exception {
+		return (ApprGAttachInfoVO)select("EzApprovalGDAO.getAttachDocInfo", attachInfo);
 	}
 }

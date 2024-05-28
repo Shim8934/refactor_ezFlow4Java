@@ -35423,23 +35423,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                      Arrays.asList((String[])attachedDocList);
 
         AtomicReference<String> result = new AtomicReference<>("true");
+        AtomicReference<ApprGAttachInfoVO> newAttachInfo = getAttachInfo(newDocID, userInfo.getCompanyID(), userInfo.getTenantId());
         AtomicInteger cnt = new AtomicInteger(1);
 
         attachDocList.forEach(d -> {
             try {
-                ezApprovalGDAO.attachRecordDoc(userInfo, newDocID, d, cnt.get());
-
-                HashMap<String, Object> map = new HashMap() {{
-                    put("FLAG", "Y");
-                    put("v_DOCID", d);
-                    put("newDocID", newDocID);
-                    put("v_TENANTID", userInfo.getTenantId());
-                    put("companyID", userInfo.getCompanyID());
-                }};
-
-                ezApprovalGDAO.updateAttachFileInfo(map);
-
-                fileAttach(map, cnt);
+                docAttach(newAttachInfo, userInfo, cnt, d);
+                fileAttach(newAttachInfo, cnt, d);
             } catch (SQLException se) {
                 logger.error(se.getMessage(), se);
 
@@ -35455,39 +35445,125 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         return result.get();
     }
 	
-    private void fileAttach(HashMap<String, Object> map, AtomicInteger cnt) throws Exception {
+    private AtomicReference<ApprGAttachInfoVO> getAttachInfo(String newDocID, String companyID, int tenantID) throws Exception {
+        logger.info("getAttachInfo started");
+
+        AtomicReference<ApprGAttachInfoVO> a = new AtomicReference<ApprGAttachInfoVO>();
+        ApprGAttachInfoVO vo = new ApprGAttachInfoVO();
+
+        vo.setNewDocID(newDocID);
+        vo.setCompanyID(companyID);
+        vo.setTenantID(tenantID);
+        a.set(vo);
+
+        logger.info("getAttachInfo ended");
+        return a;
+    }
+    
+    private void docAttach(AtomicReference<ApprGAttachInfoVO> newAttachInfo, LoginVO userInfo, AtomicInteger cnt, String docID) throws Exception {
+        logger.info("docAttach started");
+
+        ApprGAttachInfoVO newAttachInfoVO = newAttachInfo.get();
+        newAttachInfoVO.setDocID(docID);
+
+        ApprGAttachInfoVO attachDocInfo = ezApprovalGDAO.getAttachDocInfo(newAttachInfoVO);
+
+        String sn = String.valueOf(cnt.getAndIncrement());
+        String ext = attachDocInfo.getAttachFileHref().substring(attachDocInfo.getAttachFileHref().lastIndexOf("."));
+        String realFileName = attachDocInfo.getAttachFileName() + ext;
+        String fileName = getNewAttachFileName(sn, newAttachInfoVO.getNewDocID(), realFileName);
+        String realPath = commonUtil.getRealPath(servletContext);
+        String srcPath = realPath + attachDocInfo.getAttachFileHref();
+        String destPath = getSaveAttachFilePath(newAttachInfoVO.getDocID(), newAttachInfoVO.getCompanyID(), newAttachInfoVO.getTenantID());
+        String destRealPath = realPath + destPath;
+
+        attachDocInfo.setDocID(docID);
+        attachDocInfo.setAttachFileSN(sn);
+        attachDocInfo.setAttachFileName(realFileName);
+        attachDocInfo.setAttachFileHref(destPath + commonUtil.separator + fileName);
+        attachDocInfo.setAttachFileSize(String.valueOf (new File(srcPath).length()));
+        attachDocInfo.setAttachUserID(userInfo.getId());
+        attachDocInfo.setAttachUserName(userInfo.getDisplayName());
+        attachDocInfo.setAttachUserJobTitle(userInfo.getTitle());
+        attachDocInfo.setAttachUserDeptID(userInfo.getDeptID());
+        attachDocInfo.setAttachUserDeptName(userInfo.getDeptName());
+        attachDocInfo.setPageNum("1");
+        attachDocInfo.setDisplayName(realFileName);
+        attachDocInfo.setBodyAttach("N");
+        attachDocInfo.setAttachUserName2(userInfo.getDisplayName2());
+        attachDocInfo.setAttachUserJobTitle2(userInfo.getTitle2());
+        attachDocInfo.setAttachUserDeptName2(userInfo.getDeptName2());
+        attachDocInfo.setIsBigAttach("N");
+        attachDocInfo.setIsBigAttachDel("N");
+
+        ezApprovalGDAO.insertAttachInfo(attachDocInfo);
+
+        File dest = new File(destRealPath);
+
+        if (dest.exists()) {
+            dest.mkdirs();
+        }
+
+        File src = new File(srcPath);
+        dest = new File(destRealPath + commonUtil.separator + fileName);
+        
+        FileUtils.copyFile(src, dest);
+
+        logger.info("docAttach ended");
+    }
+    
+    private String getNewAttachFileName(String sn, String newDocID, String fileName) throws Exception {
+        logger.info("getNewAttachFileName started");
+
+        String snFormat = "00000" + sn;
+        String fn = newDocID + snFormat.substring(snFormat.length() - 4) + fileName;
+
+        logger.info("getNewAttachFileName ended");
+        return fn;
+    }
+    
+    private void fileAttach(AtomicReference<ApprGAttachInfoVO> newAttachInfo, AtomicInteger cnt, String docID) throws Exception {
         logger.info("fileAttach started");
 
         List<ApprGAttachInfoVO> attachFilePathList = null;
+        ApprGAttachInfoVO newAttachInfoVO = newAttachInfo.get();
 
-        String newDocID;
-        String companyID;
-        String saveFilePath;
+        String newDocID = newAttachInfoVO.getNewDocID();
+        String companyID = newAttachInfoVO.getCompanyID();
+        int tenantID = newAttachInfoVO.getTenantID();
         String realPath = commonUtil.getRealPath(servletContext);
-        int tenantID;
+        
+        String saveFilePath;
 
-        if (checkHasAttachFile(map).equals("TRUE")) {
-            newDocID = map.get("newDocID").toString();
-            companyID = map.get("companyID").toString();
-            tenantID = Integer.parseInt(map.get("v_TENANTID").toString());
-
+        if (checkHasAttachFile(
+            new HashMap() {{
+                put("docID", docID);
+                put("companyID", companyID);
+                put("tenantID", tenantID);
+            }}
+        ).equals("TRUE")) {
             saveFilePath = getSaveAttachFilePath(newDocID, companyID, tenantID);
 
-            map.put("saveFilePath", saveFilePath);
-            map.put("v_MODE", "LINK");
-
-            attachFilePathList = ezApprovalGDAO.getAttachFileInfo(map);
+            attachFilePathList = ezApprovalGDAO.getAttachFileInfo(
+                new HashMap() {{
+                    put("v_DOCID", docID);
+                    put("newDocID", newDocID);
+                    put("companyID", companyID);
+                    put("v_TENANTID", tenantID);
+                    put("saveFilePath", saveFilePath);
+                    put("v_MODE", "LINK");
+                }}
+            );
 
             attachFilePathList.forEach(a -> {
                 try {
-                    String sCnt = String.valueOf(cnt.getAndIncrement());
-                    a.setAttachFileSN(sCnt);
+                    String sn = String.valueOf(cnt.getAndIncrement());
 
-                    String snFormat = "00000" + sCnt;
-                    String fileName = newDocID + snFormat.substring(snFormat.length() - 4) + a.getAttachFileName();
+                    String fileName = getNewAttachFileName(sn, newDocID, a.getAttachFileName());
                     String sourcePath = a.getAttachFileHref();
                     String destPath = saveFilePath + commonUtil.separator + fileName;
 
+                    a.setAttachFileSN(sn);
                     a.setAttachFileHref(destPath);
                     a.setTenantID(tenantID);
 
@@ -35512,7 +35588,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         logger.info("fileAttach ended");
     }
     
-    private String checkHasAttachFile(HashMap<String, Object> map) throws Exception {
+    private String checkHasAttachFile(HashMap<String, String> map) throws Exception {
         return ezApprovalGDAO.checkHasAttachFile(map);
     }
 

@@ -35954,58 +35954,22 @@
             DEPT_CD_PATH LIKE CONCAT(CONCAT('%', #deptID#), '%')
     </select>
 
-    <insert id = "EzApprovalG.attachRecordDoc" parameterClass = "map">
-        INSERT INTO
-            TBL_APRDOCATTACHINFO (
-            DocID,
-            AttachSN,
-            AttachDocName,
-            AttachDocURL,
-            SubAttachYN,
-            AttachUserID,
-            TENANT_ID,
-            COMPANYID,
-            AttachUserName,
-            AttachUserName2,
-            AttachUserJobTitle,
-            AttachUserJobTitle2,
-            AttachUserDeptID,
-            AttachUserDeptName,
-            AttachUserDeptName2
-        )
-        (
-            SELECT
-                #newDocID#,
-                #attachSN#,
-                DOCTITLE,
-                HREF,
-                'N',
-                #userID#,
-                #tenantID#,
-                #companyID#,
-                DISPLAYNAME,
-                DISPLAYNAME2,
-                TITLE,
-                TITLE2,
-                DEPARTMENT,
-                DESCRIPTION,
-                DESCRIPTION2
-            FROM
-                TBL_ENDAPRDOCINFO A
-            JOIN
-                TBL_USERMASTER B
-            ON
-                B.CN = #userID#
-            WHERE
-                DOCID = #docID#
-            AND
-                A.TENANT_ID = #tenantID#
-            AND
-                B.TENANT_ID = #tenantID#
-            AND
-                A.COMPANYID = #companyID#
-        )
-    </insert>
+    <select id = "EzApprovalGDAO.getAttachDocInfo" parameterClass = "ApprGAttachInfoVO" resultClass = "ApprGAttachInfoVO">
+        SELECT
+            #newDocID# AS NEWDOCID,
+            DOCTITLE AS ATTACHFILENAME,
+            HREF AS ATTACHFILEHREF,
+            #companyID# AS COMPANYID,
+            #tenantID# AS TENANTID
+        FROM
+            TBL_ENDAPRDOCINFO
+        WHERE
+            DOCID = #docID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            TENANT_ID = #tenantID#
+    </select>
 
     <select id = "EzApprovalGDAO.checkHasAttachFile" parameterClass = "map" resultClass = "String" remapResults = "true">
         SELECT
@@ -36020,9 +35984,9 @@
         FROM
             TBL_ENDATTACHINFO
         WHERE
-            DOCID = #v_DOCID#
+            DOCID = #docID#
         AND
-            TENANT_ID = #v_TENANTID#
+            TENANT_ID = #tenantID#
         AND
             COMPANYID = #companyID#
     </select>
