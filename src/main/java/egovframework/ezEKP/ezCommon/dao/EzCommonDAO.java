@@ -2006,11 +2006,21 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	/* 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 */
 	public void insertdelAttachByOthersConfing(Map<String, Object> map) {
-			String propertyValue = (String) select("EzCommonDAO.checkDelAttachByOthersConfing", map);
+		String propertyValue = (String) select("EzCommonDAO.checkDelAttachByOthersConfing", map);
 
-			if (propertyValue == null) {				
+		if (propertyValue == null) {				
 			logger.debug("delAttachByOthers tenant config doesn't exist. insert data...");
 			insert("EzCommonDAO.insertDelAttachByOthersConfing", map);
+		}
+	}
+	
+	// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부 테넌트 컨피그 추가
+	public void insertUseHideHeaderArea(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkUseHideHeaderArea", map);
+		
+		if (propertyValue == null) {
+			logger.debug("useHideHeaderArea tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseHideHeaderArea", map);
 		}
 	}
 }

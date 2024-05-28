@@ -4237,4 +4237,21 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES (#v_TENANTID#, 'delAttachByOthers', '0', '결재에서 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값(0 : 불가 1 : 허용), (default:0) ', '결재에서 첨부파일을 다른사람이 지울수있는 여부', TO_DATE('2021-03-05 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자결재')
 	</insert>
+	
+	<select id="EzCommonDAO.checkUseHideHeaderArea" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useHideHeaderArea'
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+	
+	<insert id="EzCommonDAO.insertUseHideHeaderArea">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (#v_TENANTID#, 'useHideHeaderArea', 'NO', '전자결재 mht양식 headerArea 필드 숨기기 기능 사용여부. 양식에 headerArea 필드가 있어야 사용 가능. YES: 사용 NO: 사용안함 (default: NO)', '헤더 숨기기 기능 사용여부', TO_DATE('2024-05-23 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+    </insert>
+    
 </sqlMap>

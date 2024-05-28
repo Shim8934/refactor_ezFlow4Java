@@ -3541,6 +3541,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             map.put("v_TENANTID", tenantVo.getTenantId());
             ezCommonDAO.insertdelAttachByOthersConfing(map);
         }
-        
+    }
+    
+    @Override
+    public void insertUseHideHeaderArea() throws Exception {
+    	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+    	
+    	for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertUseHideHeaderArea(map);
+        }
     }
 }

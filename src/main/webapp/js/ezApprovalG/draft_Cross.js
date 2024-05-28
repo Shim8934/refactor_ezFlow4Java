@@ -2207,6 +2207,8 @@ function openFormUI_Complete(ret) {
     pDocType = ret[1];
     // 2021-01-21 심기영 오피스결재 추가
     officeFlag = ret[4];
+    
+    checkHeaderAction();
 
     if (pFormHref == "PC") {
         document.getElementById('pFile').click();
@@ -3930,6 +3932,8 @@ function setMenuBar(id, flag) {
  *  mht파일 생성.
  * */
 function SaveFile() {
+	
+	headerAction("open");
 	var result = "";
 	var mhtBody = "";
 	mhtBody = message.Get_EditorBodyHTML();
@@ -4263,6 +4267,7 @@ function UpdateLineHistory() {
 var AutoSave;
 function SaveTMPFile(AutoSave) {
 	
+	headerAction("open");
     var mhtBody = "";
     mhtBody = message.Get_EditorBodyHTML();
     mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";

@@ -76,9 +76,11 @@
 	        var bigAttachDownloadDay = "<c:out value ='${bigAttachDownloadDay}'/>";
 	        var bigSizeAttachDownloadLimitCount = "<c:out value ='${bigSizeAttachDownloadLimitCount}'/>";
 	        
-
 	     	// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+			
+			// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 	        
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -367,7 +369,8 @@
 		    
 		    var PrtBodyContent;
 		    function btnPrint_onclick() {
-		        PrintClick("Cross", pDocID, "ING");
+		        headerAction("open");
+		    	PrintClick("Cross", pDocID, "ING");
 		    }
 		    function btnClose_onclick() {
 		        window.close();
@@ -399,6 +402,7 @@
 
 		    function btnMail_onclick() {
 		    	var imgUrl="";
+		    	headerAction("open");
 		    	html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content")).then(function(canvas) {
 					$.ajax({
 	                        type:"POST",
@@ -494,7 +498,9 @@
 		        DivPopUpHidden();
 		    }
 		    function FieldsAvailable() {
-		        message.SetEditable(false);
+		    	checkHeaderAction();
+		    	
+		    	message.SetEditable(false);
 		    }
 		
 		    var totalsavefileinfo_dialogArguments = new Array();
@@ -925,6 +931,39 @@
 					}
 				}
 			}
+			
+			function checkHeaderAction() {
+	    		if (useHideHeaderArea == "YES" && message.GetListItem(message.GetFieldsList(), "headerArea") != null) {
+                	document.getElementById("headerTabTR").style.display = "";
+                	$('#headerMenu').hover(function() {
+                		$('#headerMenu').css('border-bottom', '3px black solid');
+                		$('#headerHide').css({'color':'black', 'font-weight':'bold'});
+                	}, function() {
+                		$('#headerMenu').css('border-bottom', 'solid 1px #eaeaea');
+                		$('#headerHide').css({'color':'#8f8e93', 'font-weight':'normal'});
+                	}) 
+                } else if (document.getElementById("headerTabTR") != null) {
+                	document.getElementById("headerTabTR").style.display = "none";
+                }
+	    	}
+			
+			function headerAction(action) {
+	    		if (useHideHeaderArea == "YES") {
+	    			var fields = message.GetFieldsList();
+		    	    var field = message.GetListItem(fields, "headerArea");
+		    	    
+		    	    if (field) {
+		    	        if (field.style.display == "none" || action == "open") {
+		    	        	field.style.display = "";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 숨기기";
+		    	        } else {
+		    	            field.style.display = "none";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 펼치기";
+		    	        }
+		    	    }	    			
+	    		}
+	    	}
+			
 		</script>
 	</head>
 	<body class="popup" style="height:100%">
@@ -964,6 +1003,17 @@
 		        </ul>
 		      </div></td>
 		  </tr>
+		  <c:if test="${useHideHeaderArea == 'YES'}">
+			  <tr id="headerTabTR" style="display:none;">
+			  	<td>
+					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
+					  	<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+					  		<span id="headerHide" style="color:#8f8e93; font-size:14px;">헤더 숨기기</span>
+					  	</div>
+					  </div>
+			  	</td>
+			  </tr>
+		  </c:if>
 		  <tr>
 		    <td style="vertical-align:top;height:90%;">
 		            <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="aprDocViewContent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>

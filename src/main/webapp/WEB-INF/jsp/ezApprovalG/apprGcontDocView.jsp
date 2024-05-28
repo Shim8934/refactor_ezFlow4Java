@@ -86,6 +86,9 @@
 
 			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
 			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
+			
+			// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
@@ -307,6 +310,8 @@
 		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" +"<spring:message code='ezApprovalG.t170'/>";
 		            OpenInformationUI(pInformationContent, btnOpinion_onclick_Complete);
 		        }
+		        
+		        checkHeaderAction();
 		    }
 	
 		    function btnOpinion_onclick_Complete(Ans) {
@@ -320,7 +325,8 @@
 		
 		    var PrtBodyContent;
 		    function btnPrint_onclick() {
-		        PrintClick("Cross", pDocID, "END");
+		        headerAction("open");
+		    	PrintClick("Cross", pDocID, "END");
 		    }
 		    function btnClose_onclick() {	    
                 window.close();
@@ -425,7 +431,8 @@
 
 			// 2018-07-10 황윤호
 		    function btnMail_onclick() {	   
-		    	if(hasOpinion) {
+		    	headerAction("open");
+				if(hasOpinion) {
 		    		SendMailClick("Cross", pDocID, "END");
 		    	} else {
 		    		attachAppr();
@@ -998,6 +1005,39 @@
 					}
 				} catch (e) { }
 			}
+			
+			function checkHeaderAction() {
+				if (useHideHeaderArea == "YES" && message.GetListItem(message.GetFieldsList(), "headerArea") != null) {
+					document.getElementById("headerTabTR").style.display = "";
+					$('#headerMenu').hover(function() {
+						$('#headerMenu').css('border-bottom', '3px black solid');
+						$('#headerHide').css({'color':'black', 'font-weight':'bold'});
+					}, function() {
+						$('#headerMenu').css('border-bottom', 'solid 1px #eaeaea');
+						$('#headerHide').css({'color':'#8f8e93', 'font-weight':'normal'});
+					}) 
+				} else if (document.getElementById("headerTabTR") != null) {
+					document.getElementById("headerTabTR").style.display = "none";
+				}
+			}
+			
+			function headerAction(action) {
+	    		if (useHideHeaderArea == "YES") {
+	    			var fields = message.GetFieldsList();
+		    	    var field = message.GetListItem(fields, "headerArea");
+		    	    
+		    	    if (field) {
+		    	        if (field.style.display == "none" || action == "open") {
+		    	        	field.style.display = "";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 숨기기";
+		    	        } else {
+		    	            field.style.display = "none";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 펼치기";
+		    	        }
+		    	    }
+	    		}
+	    	}
+			
 		</script>
 	</head>
 	<body class="popup" style="OVERFLOW:hidden;height:100%">
@@ -1042,6 +1082,17 @@
 		        </ul>
 		      </div></td>
 		  </tr>
+			<c:if test="${useHideHeaderArea == 'YES'}">
+			  <tr id="headerTabTR" style="display:none;">
+				<td>
+					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
+						<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+							<span id="headerHide" style="color:#8f8e93; font-size:14px;">헤더 숨기기</span>
+						</div>
+					  </div>
+				</td>
+			  </tr>
+			</c:if>
 		  <tr>
 		    <td style="padding-bottom:10px;height:90%"> 
 		          <iframe id="message" name="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" style="width: 100%; height:100%" src="ConDocViewContent.do" frameborder="0"></iframe>                

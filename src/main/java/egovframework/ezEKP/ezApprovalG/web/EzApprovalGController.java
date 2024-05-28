@@ -1277,6 +1277,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			useAprFilePrvw = "0";
 		}
 		
+		// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+		String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
+		
 		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("isUsed", isUsed);
@@ -1353,6 +1356,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		
+		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
 		
 		logger.debug("draftui ended.");
 
@@ -4014,6 +4019,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
  			useAprFilePrvw = "0";
  		}
  		
+ 		// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+ 		String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
+ 		
 		model.addAttribute("editor", editor);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("signCheck", signCheck);
@@ -4059,6 +4067,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		/* 이유정 - 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag) */
 		model.addAttribute("isDocAttach", isDocAttach);
+		
+		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
 
 		logger.debug("contDocView ended.");
 		
@@ -5252,6 +5262,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
  		} else {
  			useAprFilePrvw = "0";
  		}
+	 		
+	 	// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+	 	String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
  		
 		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
 	    model.addAttribute("optSignDateFormat", optSignDateFormat);
@@ -5318,6 +5331,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("draftJunGyulFlag", ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId())); // 일반버전 서명 remapping 시 전결문자 표출 확인용
 
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		
+		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
 		
 		logger.debug("approvui ended");
 		
@@ -6310,6 +6325,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			useAprFilePrvw = "0";
 		}
 		
+		// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+		String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
+		
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("docID", docID);
 		model.addAttribute("orgDocID", orgDocID);
@@ -6342,6 +6360,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		
+		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
 		
 		logger.debug("recevGSusin ended.");
 		
@@ -6928,6 +6948,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			useAprFilePrvw = "0";
 		}
 		
+		// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+		String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
+		
 		model.addAttribute("docID", docID);
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("susinAdmin", susinAdmin);
@@ -6959,6 +6982,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		
+		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
 		
 		logger.debug("aprDocView ended.");
 		

@@ -332,4 +332,6 @@ public interface EzCommonService {
     
 	public void insertdelAttachByOthersConfing() throws Exception;
 
+	public void insertUseHideHeaderArea() throws Exception;
+
 }
