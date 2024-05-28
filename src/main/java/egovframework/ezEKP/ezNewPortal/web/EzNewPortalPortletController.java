@@ -1248,7 +1248,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/surveyPortlet.do", method=RequestMethod.GET)
 	public String portalSurveyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalSurveyPortlet Start");
-		
+		model.addAttribute("portletId", req.getParameter("portletId"));
 		model.addAttribute("portletName", req.getParameter("portletName"));
 		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
 		

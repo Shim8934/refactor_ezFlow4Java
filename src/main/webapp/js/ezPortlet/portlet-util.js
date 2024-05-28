@@ -416,7 +416,7 @@ function Paging() {
                 },
                 setTotal: function (total) {
                     if (total < _start) {
-                        console.error("The total must be less than the start.");
+                        console.error("The total must be greater than the start.");
                         return this;
                     }
                     _total = total;
@@ -440,16 +440,45 @@ function changePortletViewCount(portletId, portletPagingArea) {
 	var portletPageObj = portletInfoMap["portlet" + portletId].page;
 	var perCount = portletPageObj.getPagePerCount(portletId);
 	portletPageObj.changeCount(perCount);
-	
-	var currPage = portletPageObj.getPage();
 	var startRowIdx = portletPageObj.getStart();
 	var portletPageList = portletPagingArea.children;
 	
+	portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+	
+}
+
+function portletListDisplayProcess(portletPageList, startRowIdx, perCount) {
 	for (var i = 0; i < portletPageList.length; i++) {
 		portletPageList[i].style.display = "none";
 		if (i >= startRowIdx && i < startRowIdx + perCount) {
 			portletPageList[i].style.display = "block";
 		}
 	}
+}
+
+function portletMovePage(portletId, mode) {
+	var portletPageObj = portletInfoMap["portlet" + portletId].page;
+	var currPage = portletPageObj.getPage();
+	var totalCnt = portletPageObj.getTotal();
+	var startRowIdx = portletPageObj.getStart();
+	var perCount = portletPageObj.getPagePerCount(portletId);
 	
+	var moveFlag = false;
+	if (mode == "prev" && startRowIdx > 0) {
+		portletPageObj.previous();
+		moveFlag = true;
+	} else if (mode == "next" && startRowIdx + perCount < totalCnt) {
+		portletPageObj.next();
+		moveFlag = true;
+	}
+	
+	if (!moveFlag) {
+		return;
+	}
+	
+	var portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
+	
+	startRowIdx = portletPageObj.getStart();
+	perCount = portletPageObj.getPagePerCount(portletId);
+	portletListDisplayProcess(portletPageList, startRowIdx, perCount);
 }

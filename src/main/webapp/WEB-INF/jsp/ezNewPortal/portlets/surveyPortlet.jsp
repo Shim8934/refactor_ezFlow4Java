@@ -25,6 +25,9 @@
 				</div>
 			</div>
 		</div>
+		
+		<span class="portlet_list_nav prev" onclick="portletMovePage(<c:out value='${portletId}'/>, 'prev')"></span>
+		<span class="portlet_list_nav next" onclick="portletMovePage(<c:out value='${portletId}'/>, 'next')"></span>
 	</article>
 </body>
 </html>

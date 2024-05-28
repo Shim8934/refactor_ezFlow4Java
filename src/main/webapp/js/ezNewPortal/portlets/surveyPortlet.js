@@ -1,13 +1,16 @@
 // plus 버튼 클릭 이벤트
 
+var surveyPortletObj = {};
+
 function initSurveyPortletInfo(surveyPortletId) {
 	var newObj = {};
 	var perCount = getSurveyPagePerCount(surveyPortletId);
 	newObj.page = new Paging().init(perCount);
-	portletInfoMap["portlet" + surveyPortletId] = newObj;
 	newObj.page.getPagePerCount = function () {
 		return getSurveyPagePerCount(surveyPortletId);
 	}
+	portletInfoMap["portlet" + surveyPortletId] = newObj;
+	surveyPortletObj.portletId = surveyPortletId;
 	
 	getPotletSurveyList();
 }
@@ -38,7 +41,7 @@ function getPotletSurveyList() {
 			currentPage : 1,
 			pageMode 	: 'processing',
 			srchMode 	: 0,
-			listCnt  	: 10,
+			listCnt  	: 21,
 			title       : "",
 			creatorName : "",
 			startDate   : "",
@@ -47,7 +50,7 @@ function getPotletSurveyList() {
 			order       : "",
 			srchMode    : 0,
 			srchOption  : "title",
-			listCntSize : 10
+			listCntSize : 21
 			};
 	
 	$.ajax({
@@ -58,6 +61,8 @@ function getPotletSurveyList() {
 		async: false,
 		cache: false,
 		success : function(data) {
+			var totalCnt = data.itemList.length < 21 ? data.itemList.length : 21;
+			portletInfoMap["portlet" + surveyPortletObj.portletId].page.setTotal(totalCnt);
 			setListByDataList(data.itemList);
 		},
 		error : function(error) {
