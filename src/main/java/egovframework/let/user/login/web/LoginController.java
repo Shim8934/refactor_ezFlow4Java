@@ -317,7 +317,13 @@ public class LoginController {
 
 		// 2023-11-21 이사라 : [TFA] FIDO 인증
 		boolean useFido = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useFidoSession", tenantId));
-		boolean passedFidoAuthentication = StringUtils.isNotBlank(loginVO.getFidoSessionId()); // fido인증을 완료한 후 로그인 진행하는 경우를 구분하기 위함
+		boolean isFidoAuth = StringUtils.isNotBlank(loginVO.getFidoSessionId()); // fido인증을 완료한 후 로그인 진행하는 경우를 구분하기 위함
+		boolean passedFidoAuthentication =  false;
+
+		if (isFidoAuth) {
+			FidoAuthenticationVO fidoVo = loginService.getFidoSession(loginVO.getFidoSessionId());
+			passedFidoAuthentication = loginVO.getId().equals(fidoVo.getId()); // 대소문자까지 일치
+		}
 
 		if (!useFido && "usefidoforce".equalsIgnoreCase(loginVO.getPassword())) { // fido test를 위한 코드 - useFido가 이미 true라면 if문을 굳이 실행할 이유가 없기때문에 !useFido로 한정 함
 			useFido = true;
