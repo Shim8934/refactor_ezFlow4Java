@@ -291,5 +291,11 @@ function attachRecordDoc() {
 		success : () => {}
 	});
 
-	opener.attachedDocList = null;
+	if (opener != null) {
+		opener.attachedDocList = null;
+	}
+
+	if (parent != null) {
+		parent.attachedDocList = null;
+	}
 }
