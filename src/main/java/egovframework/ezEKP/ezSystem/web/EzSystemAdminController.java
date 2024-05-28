@@ -151,6 +151,12 @@ public class EzSystemAdminController {
 		}
 		model.addAttribute("cChk", cChk);
 		
+		String useFidoAccessMenu = ezCommonService.getTenantConfig("useFidoAccessMenu", userInfo.getTenantId());
+
+		if (useFidoAccessMenu == null || useFidoAccessMenu.equals("")) {
+			useFidoAccessMenu = "NO";
+		}
+		
 		String useIPAccessMenu = ezCommonService.getTenantConfig("useIPAccessMenu", userInfo.getTenantId());
 		
 		if (useIPAccessMenu == null || useIPAccessMenu.equals("")) {
@@ -165,6 +171,7 @@ public class EzSystemAdminController {
 		String useSystemMonitor = ezCommonService.getTenantConfig("useSystemMonitor", userInfo.getTenantId());
 		
 		model.addAttribute("useIPAccessMenu", useIPAccessMenu);
+		model.addAttribute("useFidoAccessMenu", useFidoAccessMenu);
 		model.addAttribute("useModuleUsage", useModuleUsage);
 		model.addAttribute("useSystemMonitor", useSystemMonitor);		
 		
@@ -1290,6 +1297,8 @@ public class EzSystemAdminController {
 			IPBandVO getIPBand = null;
 			if (pageType.equals("adminIpAccess")) { // 관리자 IP 제한
 				getIPBand = ezSystemAdminService.getSystemAdminIPBand(ipBand.getIpNo());
+			} else if (pageType.equals("fidoAuthentication")) { //Fido인증 관리
+				getIPBand = ezSystemAdminService.getSystemFidoIPBand(ipBand.getIpNo());
 			} else {
 				getIPBand = ezSystemAdminService.getSystemIPBand(ipBand.getIpNo());
 			}
@@ -4304,6 +4313,191 @@ public class EzSystemAdminController {
 		logger.debug("disableDeleteSystemConfig ended");
 		
 		return result;
+	}
+
+	//FIDO인증관리 메인 호출	
+	@RequestMapping(value="/admin/ezSystem/fidoAuthenticationManager.do", method=RequestMethod.GET)
+	public String fidoAuthenticationManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("fidoAuthenticationManager started");
+
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		int tenantId = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		String rollInfo = userInfo.getRollInfo();
+		boolean adminChk = rollInfo.indexOf("c=1") > -1;
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), tenantId);
+		List<OrganDeptVO> resultList = new ArrayList<>();
+
+		int j = 0;
+		boolean isMasterAdmin = userInfo.getRollInfo().contains("c=1");
+
+		for (OrganDeptVO vo : list) {
+			if (isMasterAdmin || vo.getCn().equals(companyId)) {
+				resultList.add(j++, vo);
+			}
+		}
+
+		model.addAttribute("adminChk", adminChk);
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyId", companyId);
+
+		logger.debug("fidoAuthenticationManager ended");
+
+		return "/ezSystem/systemFidoManager";
+	}
+
+	//FIDO인증관리 사용여부
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/getFidoUseConfig.do", method=RequestMethod.POST)
+	public String getFidoUseConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFidoUseConfig started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String companyId = request.getParameter("companyID");
+
+		String result = ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyId, "useFidoSession");
+
+		logger.debug("getFidoUseConfig ended");
+		return result;
+	}
+
+	//FIDO인증관리 사용여부 설정 변경
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/setFidoUseConfig.do", method=RequestMethod.POST)
+	public String setFidoUseConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("setFidoUseConfig started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String companyId = request.getParameter("companyID");
+		String propertyValue = request.getParameter("propertyValue");
+
+		String result = ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyId, "useFidoSession");
+
+		if (StringUtils.isNotEmpty(propertyValue)) {
+			if (StringUtils.isNotEmpty(result)){
+				ezCommonService.updateCompanyConfig(userInfo.getTenantId(), companyId, "useFidoSession", propertyValue);
+			} else {
+				ezCommonService.insertCompanyConfig(userInfo.getTenantId(), companyId, "useFidoSession", propertyValue);
+			}
+		}
+
+		logger.debug("setFidoUseConfig ended");
+		return result;
+	}
+
+	//FIDO인증관리 IP리스트 화면
+	@RequestMapping(value="/ezSystem/systemFidoIPBand.do", method=RequestMethod.GET)
+	public String systemFidoIPBand(@CookieValue("loginCookie") String loginCookie, Model model, @RequestParam String companyId) throws Exception {
+		logger.debug("systemAdminIPBand started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		companyId = Optional.ofNullable(companyId).orElseGet(() -> userInfo.getCompanyID());
+
+		model.addAttribute("companyId", companyId);
+
+		logger.debug("systemFidoIPBand ended");
+		return "/ezSystem/systemFidoIPBand";
+	}
+	
+	//FIDO인증관리 IP리스트
+	@ResponseBody
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezSystem/getfidoIPBandList.do", method=RequestMethod.POST)
+	public ResponseEntity<JSONArray> getfidoIPBandList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap) throws Exception {
+		logger.debug("getfidoIPBandList started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("getfidoIPBandList accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new JSONArray());
+		}
+
+		int tenantId = userInfo.getTenantId();
+		String companyId = Optional.ofNullable(paramMap.get("companyId").toString()).orElseGet(() -> userInfo.getCompanyID()); // 선택된 회사
+
+		List<IPBandVO> ipList = ezSystemAdminService.getFidoAuthenticList(tenantId, companyId);
+
+		if (ipList == null) {
+			return null;
+		}
+
+		JSONArray returnJsonArr = new JSONArray();
+
+		for (IPBandVO ipVo : ipList) {
+			JSONObject obj = new JSONObject();
+
+			obj.put("ipNo", ipVo.getIpNo());
+			obj.put("ipAddress", ipVo.getIpAddress());
+			obj.put("access", ipVo.getAccess());
+			obj.put("explanation", ipVo.getExplanation());
+
+			returnJsonArr.add(obj);
+		}
+
+		logger.debug("returnJsonArr=" + returnJsonArr.toJSONString());
+		logger.debug("getfidoIPBandList ended");
+		return ResponseEntity.ok().body(returnJsonArr);
+	}
+
+	// FIDO인증관리 IP제한 - ip 추가
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/insertFidoIPBand.do", method=RequestMethod.POST)
+	public ResponseEntity<Void> insertFidoIPBand(@CookieValue("loginCookie") String loginCookie, @ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("insertFidoIPBand started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("insertFidoIPBand accessDenied");
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
+		String ipBandExplaination = ipBand.getExplanation() == null ? "" : ipBand.getExplanation();
+
+		ezSystemAdminService.insertFidoIPBand(userInfo.getTenantId(), ipBand.getCompanyId(), ipBand.getIpAddress(), ipBand.getAccess(), ipBandExplaination);
+
+		logger.debug("insertFidoIPBand ended");
+		return ResponseEntity.noContent().build();
+	}
+	
+	// FIDO인증관리 IP제한 - ip 수정
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/updateFidoIPBand.do", method=RequestMethod.POST)
+	public void updateFidoIPBand(@ModelAttribute IPBandVO ipBand) throws Exception {
+		logger.debug("updateFidoIPBand started");
+		logger.debug("ipNo=" + ipBand.getIpNo() + ", ipAddress=" + ipBand.getIpAddress() + ", explanation=" + ipBand.getExplanation());
+
+		ezSystemAdminService.updateFidoIPBand(ipBand.getIpNo(), ipBand.getIpAddress(), ipBand.getAccess(), ipBand.getExplanation());
+
+		logger.debug("updateFidoIPBand ended");
+	}
+
+	// FIDO인증관리 IP제한 - ip 삭제
+	@ResponseBody
+	@RequestMapping(value="/ezSystem/deleteFidoIPBand.do", method=RequestMethod.POST)
+	public void deleteFidoIPBand(String ipNo) throws Exception {
+		logger.debug("deleteFidoIPBand started");
+		logger.debug("ipNo=" + ipNo);
+
+		ezSystemAdminService.deleteFidoIPBand(ipNo);
+
+		logger.debug("deleteFidoIPBand ended");
 	}
 	
 }

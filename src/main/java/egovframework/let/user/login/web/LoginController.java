@@ -316,7 +316,8 @@ public class LoginController {
 		}
 
 		// 2023-11-21 이사라 : [TFA] FIDO 인증
-		boolean useFido = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useFidoSession"));
+		//boolean useFido = "YES".equalsIgnoreCase(ezCommonService.getCompanyConfig(tenantId, companyId, "useFidoSession"));
+		boolean useFido = false;
 		boolean isFidoAuth = StringUtils.isNotBlank(loginVO.getFidoSessionId()); // fido인증을 완료한 후 로그인 진행하는 경우를 구분하기 위함
 		boolean passedFidoAuthentication =  false;
 		boolean userDeviceChk = loginService.userDeviceCnt(loginVO.getId());
@@ -324,10 +325,6 @@ public class LoginController {
 		if (isFidoAuth) {
 			FidoAuthenticationVO fidoVo = loginService.getFidoSession(loginVO.getFidoSessionId());
 			passedFidoAuthentication = loginVO.getId().equals(fidoVo.getId()); // 대소문자까지 일치
-		}
-
-		if (!useFido && "usefidoforce".equalsIgnoreCase(loginVO.getPassword())) { // fido test를 위한 코드 - useFido가 이미 true라면 if문을 굳이 실행할 이유가 없기때문에 !useFido로 한정 함
-			useFido = true;
 		}
 
 		logger.debug("useFido : {}, passedFidoAuthentication : {}", useFido, passedFidoAuthentication);
@@ -373,7 +370,11 @@ public class LoginController {
 					
 			// 로그인 후 IP 주소 체크
         	boolean ipAddressChk = ipAccessCheck(resultVO);
-        	logger.debug("ipAddressChk=" + ipAddressChk);
+			useFido = fidoNotAccessIpCheck(resultVO);
+			if (!useFido && "usefidoforce".equalsIgnoreCase(loginVO.getPassword())) { // fido test를 위한 코드 - useFido가 이미 true라면 if문을 굳이 실행할 이유가 없기때문에 !useFido로 한정 함
+				useFido = true;
+			}
+        	logger.debug("ipAddressChk=" + ipAddressChk + ", useFidoIp=" + useFido);
         	
         	// 2018.10.22 이석화 추가 - useSession row 유무 확인
     		useSession = ezCommonService.getTenantConfig("useSession", tenantId);
@@ -1191,7 +1192,70 @@ public class LoginController {
         	return returnValue;
     	}
     }
-    
+	
+	public boolean fidoNotAccessIpCheck(LoginVO loginVO) throws Exception {
+		logger.debug("ipAccessCheck start");
+		try {
+			boolean returnValue = false;
+
+			int tenantId = loginVO.getTenantId();
+			String companyId = loginVO.getCompanyID();
+			String useFido = Optional.ofNullable(ezCommonService.getCompanyConfig(tenantId, companyId, "useFidoSession")).orElseGet(() -> "NO");
+			
+			logger.debug("useFido=" + useFido);
+
+			if (useFido.equalsIgnoreCase("NO")) {
+				return false;
+			} else if (useFido.equalsIgnoreCase("YES")) {
+				String clientIP[] = loginVO.getIp().split("\\.");
+
+				List<IPBandVO> notAccessFidoIpList = ezSystemAdminService.getFidoAuthenticList(tenantId, companyId);
+
+				if (notAccessFidoIpList != null && notAccessFidoIpList.size() != 0) {
+					String ipBandAddr = "";
+					String getAccess = "NO";
+					int checkCnt = 0;
+					boolean checkIp = ezSystemAdminService.getFidoAuthenticInfo(tenantId, companyId, loginVO.getIp()) > 0;
+					
+					for (IPBandVO ipBandVo : notAccessFidoIpList) {
+						ipBandAddr = ipBandVo.getIpAddress();
+						getAccess = ipBandVo.getAccess();
+						logger.debug("ipBandAddr=" + ipBandAddr + ", getAccess=" + getAccess);
+
+						String ipListIp[] = ipBandAddr.split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
+						for (int j = 0; j < clientIP.length; j++) {
+							if (ipListIp[j].equals("*") || ipListIp[j].equals(clientIP[j])) {
+								checkCnt++;
+							}
+						}
+
+						logger.debug("checkCnt : {}, checkIp : {} ", checkCnt, checkIp);
+						if (checkCnt == 4) {
+							if (!checkIp && getAccess.equals("YES")) {
+								returnValue = false;
+								break;
+							} else if (checkIp) {
+								returnValue = true;
+								break;
+							}
+						}	else if (checkCnt < 4) {
+							returnValue = true;
+						} 
+						checkCnt = 0;
+					} // for_end
+				} else {
+					returnValue = true;
+				} // notAccessFidoIpList if_end
+			}
+
+			logger.debug("returnValue=" + returnValue);
+			return returnValue;
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+	}
+	
 	@ResponseBody
 	@PostMapping(value = "/user/login/getFidoSessionStatus.do")
 	public String getFidoSessionStatus(@RequestParam String fidoSessionId) throws Exception {

@@ -358,4 +358,30 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public void disableDeleteSystemConfig(Map<String, Object> map) {
 		update("EzSystemAdminDAO.disableDeleteSystemConfig", map);
 	}
+
+	public List<IPBandVO> getFidoAuthenticList(Map<String, Object> map) throws Exception {
+		return (List<IPBandVO>) list("EzSystemAdminDAO.getFidoAuthenticList", map);
+	}
+
+	public int getFidoAuthenticInfo(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getFidoAuthenticInfo", map);
+	}
+
+	public IPBandVO getSystemFidoIPBand(String ipNo) throws Exception {
+		int pIpNo = Integer.parseInt(ipNo);
+
+		return (IPBandVO) select("EzSystemAdminDAO.getSystemFidoIPBand", pIpNo);
+	}
+
+	public void insertFidoIPBand(Map<String, Object> map) throws Exception{
+		insert("EzSystemAdminDAO.insertFidoIPBand", map);
+	}
+
+	public void updateFidoIPBand(Map<String, Object> map) throws Exception {
+		update("EzSystemAdminDAO.updateFidoIPBand", map);
+	}
+
+	public void deleteFidoIPBand(List<String> ipNoList) throws Exception {
+		delete ("EzSystemAdminDAO.deleteFidoIPBand", ipNoList);
+	}
 }

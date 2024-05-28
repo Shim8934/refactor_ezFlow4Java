@@ -6,7 +6,8 @@ public class IPBandVO {
 	private String ipAddress;
 	private String access;
 	private String explanation;
-	
+	private String useFido;
+	private String companyId;
 	public String getIpNo() {
 		return ipNo;
 	}
@@ -38,6 +39,21 @@ public class IPBandVO {
 	public void setExplanation(String explanation) {
 		if (explanation==null) { explanation = ""; }
 		this.explanation = explanation;
+	}
+	public String getUseFido() {
+		return useFido;
+	}
+	
+	public void setUseFido(String useFido) {
+		this.useFido = useFido;
+	}
+	
+	public String getCompanyId() {
+		return companyId;
+	}
+	
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 
 }

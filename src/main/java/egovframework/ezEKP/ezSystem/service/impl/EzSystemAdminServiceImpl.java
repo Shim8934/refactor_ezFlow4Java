@@ -1827,4 +1827,91 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		ezSystemAdminDAO.disableDeleteSystemConfig(map);
 	}
 
+	@Override
+	public List<IPBandVO> getFidoAuthenticList(int tenantID, String companyId) throws Exception {
+		logger.debug("getFidoAuthenticList started. tenantID : {}" + tenantID + " companyId : {}" + companyId);
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("tenantID", tenantID);
+		map.put("companyId", companyId);
+
+		List<IPBandVO> list = ezSystemAdminDAO.getFidoAuthenticList(map);
+
+		logger.debug("getFidoAuthenticList ended.");
+		return list;
+	}
+	
+	public int getFidoAuthenticInfo(int tenantID, String companyId, String ipAddress) throws Exception {
+		logger.debug("getFidoAuthenticInfo started. tenantID : {} companyId : {} ipAddress : {}" + tenantID, companyId, ipAddress);
+
+		Map<String,Object> map = new HashMap<>();
+		map.put("tenantID", tenantID);
+		map.put("companyId", companyId);
+		map.put("ipAddress", ipAddress);
+
+		logger.debug("getFidoAuthenticInfo ended.");
+		return ezSystemAdminDAO.getFidoAuthenticInfo(map);
+		
+	}
+	
+	@Override
+	public IPBandVO getSystemFidoIPBand(String ipNo) throws Exception {
+		logger.debug("getSystemFidoIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+
+		IPBandVO ipBand = ezSystemAdminDAO.getSystemFidoIPBand(ipNo);
+
+		logger.debug("getSystemFidoIPBand ended.");
+
+		return ipBand;
+	}
+	
+	@Override
+	public void insertFidoIPBand(int tenantID, String companyId, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("inserFidoIPBand started.");
+		logger.debug("tenantID=" + tenantID + ", companyId=" + companyId + ", ipAddress=" + ipAddress +  ", access=" + access + " explanation=" + explanation);
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("tenantID", tenantID);
+		params.put("companyId", companyId);
+		params.put("access", access);
+		params.put("ipAddress", ipAddress);
+		params.put("explanation", explanation);
+
+		ezSystemAdminDAO.insertFidoIPBand(params);
+
+		logger.debug("inserFidoIPBand ended.");
+	}
+	
+	@Override
+	public void updateFidoIPBand(String ipNo, String ipAddress, String access, String explanation) throws Exception {
+		logger.debug("updateFidoIPBand started.");
+		logger.debug("ipNo=" + ipNo + ", ipAddress=" + ipAddress +  ", access=" + access + ", explanation=" + explanation);
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("ipNo", ipNo);
+		params.put("ipAddress", ipAddress);
+		params.put("access", access);
+		params.put("explanation", explanation);
+
+		ezSystemAdminDAO.updateFidoIPBand(params);
+
+	}
+	
+	@Override
+	public void deleteFidoIPBand(String ipNo) throws Exception {
+		logger.debug("deleteFidoIPBand started.");
+		logger.debug("ipNo=" + ipNo);
+
+		String[] ipNoList = ipNo.split(",");
+		List<String> list = new ArrayList<String>();
+
+		for (int i = 0; i < ipNoList.length; i++) {
+			list.add(ipNoList[i]);
+		}
+
+		ezSystemAdminDAO.deleteFidoIPBand(list);
+
+		logger.debug("deleteFidoIPBand ended.");
+	}
 }
