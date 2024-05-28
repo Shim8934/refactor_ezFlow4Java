@@ -2013,6 +2013,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertDelAttachByOthersConfing", map);
 		}
 	}
+
+	// 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+	public void alterRepeatFlagForResourceInfo() {
+		try {
+			select(("EzCommonDAO.checkRepeatFlagColumnForResourceInfo"));
+		} catch (Exception e) {
+			logger.debug("TBL_RS_BRD REPEATFLAG column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.alterRepeatFlagForResourceInfo");
+		}
+	}
 	
 	// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부 테넌트 컨피그 추가
 	public void insertUseHideHeaderArea(Map<String, Object> map) {

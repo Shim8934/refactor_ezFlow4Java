@@ -334,4 +334,7 @@ public interface EzCommonService {
 
 	public void insertUseHideHeaderArea() throws Exception;
 
+	// 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+	public void alterRepeatFlagForResourceInfo() throws Exception;
+
 }
