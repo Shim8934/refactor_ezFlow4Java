@@ -1,16 +1,25 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+<<<<<<< HEAD
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+=======
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+>>>>>>> f5467f3547 (* voc(결함) 126278 (1))
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,15 +35,21 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringJoiner;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.FileCopyUtils;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -5096,5 +5111,114 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			logger.error("isBoardAdmin error : " + e.getMessage(), e);
         }
 		return result;
+	}
+
+	@Override
+	public void downloadBackgroundItemFile(HttpServletRequest request, HttpServletResponse response, String realPath, String filePath, String fileName) throws Exception {
+		logger.info("downloadBackgroundItemFile started");
+
+		ZipOutputStream zos = null;
+		FileInputStream fis = null;
+
+		String saveZipPath = "";
+
+		saveZipPath = createZipFile(zos, fis, realPath, filePath, fileName);
+		downloadFile(request, response, zos, fis, saveZipPath, fileName);
+
+		logger.info("downloadBackgroundItemFile ended");
+	}
+
+	private String createZipFile(ZipOutputStream zos, FileInputStream fis, String realPath, String filePath, String fileName) throws Exception {
+		logger.info("createZipFile started");
+
+		String saveZipPath = "";
+		String ext = ".zip";
+
+		byte buffer[] = new byte[4096];
+		int length = 0;
+
+		try {
+			try {
+				saveZipPath = filePath.substring(0, filePath.lastIndexOf("/")) + commonUtil.separator + fileName.substring(0, fileName.lastIndexOf(".")) + ext;
+
+				zos = new ZipOutputStream(
+					new FileOutputStream(realPath + saveZipPath),
+					StandardCharsets.UTF_8
+				);
+				fis = new FileInputStream(realPath + filePath);
+
+				zos.putNextEntry(new ZipEntry(fileName));
+
+				while ((length = fis.read(buffer)) > 0) {
+					zos.write(buffer, 0, length);
+				}
+
+				zos.flush();
+				zos.close();
+				fis.close();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+		} catch (Exception e) {
+
+		}
+
+		logger.info("createZipFile ended");
+
+		return saveZipPath;
+	}
+
+	private void downloadFile(HttpServletRequest request, HttpServletResponse response, ZipOutputStream zos, FileInputStream fis, String filePath, String fileName) throws Exception {
+		logger.info("downloadFile started");
+
+		fileName = fileName.substring(0, fileName.lastIndexOf(".")) + ".zip";
+		int buffer = 2048;
+
+		String downFileName = EgovStringUtil.isNullToString(commonUtil.getRealPath(request) + filePath);
+		String orgFileName = EgovStringUtil.isNullToString(fileName);
+
+		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
+
+		File file = new File(commonUtil.detectPathTraversal(downFileName));
+
+		if (!file.exists()) {
+			throw new FileNotFoundException(downFileName);
+		}
+
+		if (!file.isFile()) {
+			throw new FileNotFoundException(downFileName);
+		}
+
+		long fSize = file.length();
+		if (fSize > 0) {
+			BufferedInputStream in = null;
+
+			try {
+				in = new BufferedInputStream(new FileInputStream(file));
+
+				String mimetype = "application/octet-stream"; //"application/x-msdownload"
+
+				String nfcFilename = commonUtil.normalizeFileName(orgFileName);
+
+				response.setBufferSize(buffer);
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + nfcFilename + "\"");
+				response.setHeader("Content-Length", Long.toString(fSize));
+
+				FileCopyUtils.copy(in, response.getOutputStream());
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+				}
+			}
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}
+
+		logger.info("downloadFile ended");
 	}
 }
