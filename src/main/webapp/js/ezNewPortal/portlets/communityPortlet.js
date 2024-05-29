@@ -16,10 +16,10 @@ function initCommunityPortletInfo(communityPortletId) {
 		return getCommmunityPagePerCount(communityPortletId);
 	}
 
-	var totalCnt = CommuSize < communityPortletPageMaxCnt ? CommuSize : communityPortletPageMaxCnt;
-	newObj.page.setTotal(totalCnt);
 	portletInfoMap["portlet" + communityPortletId] = newObj;
+	
 	communityPortletObj.portletId = communityPortletId;
+	var totalCnt = CommuSize < communityPortletPageMaxCnt ? CommuSize : communityPortletPageMaxCnt;
 	resetPortletList(communityPortletObj.portletId, totalCnt);
 }
 
