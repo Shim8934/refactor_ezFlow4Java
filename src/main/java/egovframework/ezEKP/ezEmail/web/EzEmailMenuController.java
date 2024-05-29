@@ -80,9 +80,6 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.rest.JgwResult;
 import egovframework.let.utl.rest.Rest;
-import net.lingala.zip4j.core.ZipFile;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * @Description [Controller] 메일 메뉴
@@ -1067,25 +1064,22 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				logger.error("Cannot find file."); 
 				throw new Exception("Cannot find file.");
 			}
-
-			if (useEncryptZipForEmail != null && encryptPw != null && retryPathId != null){
-				// 2017.11.21 코린도 - 암호화된 ZIP 파일 가져오기
-				if (useEncryptZipForEmail.equals("YES") && !encryptPw.equals("") && !retryPathId.equals("NONE")) {
-					File sourceFile = new File(commonUtil.detectPathTraversal(tempFileUploadPath + commonUtil.separator + retryPathId + ".zip"));
-					String destFolderPath = tempFileUploadPath + commonUtil.separator + retryPathId;
-
-					ZipFile zipFile = new ZipFile(sourceFile);
-					zipFile.setPassword(encryptPw.toCharArray());
-					zipFile.extractAll(destFolderPath);
-
-					if (sourceFile.delete()) {
-						logger.debug("encrypted zip file is deleted. path=" + sourceFile.getAbsolutePath());
-					}
-
-					zipFilePath = zipFolder(commonUtil.detectPathTraversal(destFolderPath), commonUtil.detectPathTraversal(retryPathId), true);
+			
+			// 2017.11.21 코린도 - 암호화된 ZIP 파일 가져오기
+			/*
+			if (useEncryptZipForEmail.equals("YES") && !encryptPw.equals("") && !retryPathId.equals("NONE")) {
+				File sourceFile = new File(tempFileUploadPath + commonUtil.separator + retryPathId + ".zip");
+				String destFolderPath = tempFileUploadPath + commonUtil.separator + retryPathId;
+	
+				ZipFile zipFile = new ZipFile(sourceFile);
+				zipFile.setPassword(encryptPw.toCharArray());
+				zipFile.extractAll(destFolderPath);
+				
+				if (sourceFile.delete()) {
+					logger.debug("encrypted zip file is deleted. path=" + sourceFile.getAbsolutePath());
 				}
 			}
-
+			 */
 			
 			// UTF-8로 읽어 에러가 날 경우가 있어 미리 체크한다. 에러가 나면 EUC-KR로 읽도록 한다.
 			// 메일의 갯수를 확인한다.

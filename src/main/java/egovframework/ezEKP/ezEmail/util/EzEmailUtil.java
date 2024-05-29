@@ -91,7 +91,6 @@ import javax.xml.bind.DatatypeConverter;
 
 import com.google.gson.JsonElement;
 import egovframework.let.utl.fcc.service.KlibUtil;
-import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -150,10 +149,6 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.RRule;
-//import egovframework.let.utl.fcc.service.MyException;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.model.ZipParameters;
-import net.lingala.zip4j.util.Zip4jConstants;
 
 /** 
  * @Description [Utility] 메일 관련 유틸리티
@@ -5461,6 +5456,11 @@ public class EzEmailUtil {
 	
 	// 암호화된 zip파일에 파일들을 넣는 메서드
 	public String encryptZipFile(String filePath, String folderPath, String pwd) throws IOException {
+		String zipFileName = filePath + "_secure.zip";
+
+		// CVE 보안 취약점 처리 시 zip4j 라이브러리를 기존 1.3.2에서 2.11.5로 업데이트 했을 때 기존 클래스 파일을 찾지 못해 사용하지 않는
+		// 기능이어서 일단 주석 처리함
+		/*
 		unzip(new FileInputStream(filePath), new File(folderPath), "UTF-8");
 		
 		File zipFile = new File(filePath);
@@ -5468,8 +5468,6 @@ public class EzEmailUtil {
 		if (zipFile.delete()) {
 			logger.debug(filePath + ".zip file is deleted.");
 		}
-		
-		String zipFileName = filePath + "_secure.zip";
 		
 		try {
 			File dir = new File(folderPath);
@@ -5515,6 +5513,7 @@ public class EzEmailUtil {
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
+		 */
 		
 		return zipFileName;
 	}
