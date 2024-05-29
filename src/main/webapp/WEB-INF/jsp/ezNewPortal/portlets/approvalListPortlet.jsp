@@ -11,7 +11,7 @@
 		<article class="approval box_shadow">
 			<div class="layDIV approval">
 				<div class="sortablePortlet">
-					<dl class="portlet_tab">
+					<dl class="portlet_tab sortablePortlet">
 						<dt id="doingTab" class="on" onclick="apprChangeTab(this)"><span><spring:message code='main.t00003' /></span></dt>
 						<dt id="rejectTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00004' /></span></dt>
 						<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /></span></dt>
