@@ -369,7 +369,7 @@
 				    str += '<img src="/images/ezNewPortal/info_pic_none.png"></span>';
 			    }
 			    
-			    str += '<div class="profile_div util_div_menu" id="profileContainer"><div class="btn_tab"><span class="set" id="util_set"><spring:message code="ezNewPortal.t006" /></span><span class="help" onclick="helpDetail();">도움말</span><span class="logout" id="util_logout"><spring:message code="ezNewPortal.t008" /></span></div></div></li>';
+			    str += '<div class="profile_div util_div_menu" id="profileContainer"><div class="btn_tab"><span class="set" id="util_set"><spring:message code="ezNewPortal.t006" /></span><span class="help" onclick="openHelp();">도움말</span><span class="logout" id="util_logout"><spring:message code="ezNewPortal.t008" /></span></div></div></li>';
 				str += '</ul>';
 			
 			return str;
@@ -454,6 +454,12 @@
 			document.querySelector('#util_quickmenu').addEventListener("click", function() {toggleDivMenu(document.querySelector('#quickMenuContainer'))});
 			document.querySelector('#util_profile').addEventListener("click", function() {toggleDivMenu(document.querySelector('#profileContainer'))});
 		}
+
+		function openHelp(){
+			helpDetail();
+			toggleDivMenu(document.querySelector('#profileContainer'))
+		}
+
 
 		/* //포틀릿 및 프레임 환경설정 열기
 		function viewPortletEnv() {
