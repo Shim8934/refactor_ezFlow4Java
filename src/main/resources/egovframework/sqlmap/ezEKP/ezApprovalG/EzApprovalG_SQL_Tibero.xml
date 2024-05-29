@@ -5803,25 +5803,11 @@
 			AND
 				COMPANYID = #companyID#				
 		</isEqual>
-        <isEqual property = "v_MODE" compareValue = "LINK">
-            SELECT
-                A.*,
-                #newDocID# NEWDOCID
-            FROM
-                TBL_ENDATTACHINFO A
-            WHERE
-                DOCID = #v_DOCID#
-            AND
-                TENANT_ID = #v_TENANTID#
-            AND
-                COMPANYID = #companyID#
-        </isEqual>
         <isNotEqual property="v_MODE" compareValue="APR">
 		<isNotEqual property="v_MODE" compareValue="END">
-        <isNotEqual property = "v_MODE" compareValue = "LINK">
-			SELECT 
-			 *
-			FROM 
+			SELECT
+			 * 
+			FROM
 				TBL_APRATTACHINFO  
 			WHERE 
 				DOCID = #v_DOCID#
@@ -5829,7 +5815,6 @@
 				TENANT_ID =#v_TENANTID#
 			AND
 				COMPANYID = #companyID#				
-		</isNotEqual>
         </isNotEqual>
 		</isNotEqual>
 		<isGreaterThan property="v_ORDERBYLENGTH" compareValue="0">
