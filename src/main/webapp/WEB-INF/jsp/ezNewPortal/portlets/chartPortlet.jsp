@@ -13,14 +13,12 @@
 #chartLeft{
 	z-index: 0;
 	width: 0;
-	height: 100%;
+	height: calc(100% - 20px);;
 	display: none;
-	padding-bottom: 10px;
 	box-sizing: border-box;
 }
 
 #chartRight{
-	border-left: 1px solid #dbdbdb;
 	padding: 10px;
 	width: 100%;
 	height: 100%;
@@ -31,7 +29,19 @@
 .one_by_two #chartLeft {display: block; width: 25%;}
 .one_by_two #chartRight {width: 75%;}
 
-.two_by_one #chartLeft {display: block; width: 100%; height: 50%;}
+.one_by_two #chartRight:before {
+	border-left: 1px solid #dbdbdb;
+	content : "";
+	position: absolute;
+	height: calc(100% - 85px);
+}
+
+.two_by_one #chartLeft {
+	display: block;
+	width: 100%;
+	height: calc(50% - 40px);
+	margin:20px 0;
+}
 .two_by_one #chartRight {width: 100%; height: 50%;}
 .two_by_one #chartPortletList {
 	align-items: center;
