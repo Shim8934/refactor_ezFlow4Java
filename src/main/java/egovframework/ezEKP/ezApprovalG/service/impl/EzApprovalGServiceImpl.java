@@ -35477,7 +35477,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         String destPath = getSaveAttachFilePath(newAttachInfoVO.getDocID(), newAttachInfoVO.getCompanyID(), newAttachInfoVO.getTenantID());
         String destRealPath = realPath + destPath;
 
-        attachDocInfo.setNewDocID(newAttachInfoVO.getNewDocID());
         attachDocInfo.setAttachFileSN(sn);
         attachDocInfo.setAttachFileName(realFileName);
         attachDocInfo.setAttachFileHref(destPath + commonUtil.separator + fileName);
@@ -35563,6 +35562,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     String sourcePath = a.getAttachFileHref();
                     String destPath = saveFilePath + commonUtil.separator + fileName;
 
+                    a.setNewDocID(newDocID);
                     a.setAttachFileSN(sn);
                     a.setAttachFileHref(destPath);
                     a.setTenantID(tenantID);
