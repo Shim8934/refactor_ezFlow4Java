@@ -13,25 +13,28 @@
 #chartLeft{
 	z-index: 0;
 	width: 0;
-	height: 190px;
+	height: 100%;
 	display: none;
+	padding-bottom: 10px;
+	box-sizing: border-box;
 }
 
 #chartRight{
 	border-left: 1px solid #dbdbdb;
 	padding: 10px;
-	width: calc(100% - 20px);
-	height: 172px;
+	width: 100%;
+	height: 100%;
+	border: none;
+	box-sizing: border-box;
 }
 
 .one_by_two #chartLeft {display: block; width: 25%;}
-.one_by_two #chartRight {width: calc(75% - 20px);}
+.one_by_two #chartRight {width: 75%;}
 
-.two_by_one #chartLeft {display: block; width: 90%; height: 40%;}
-.two_by_one #chartRight {width: 90%; height: 40%;}
+.two_by_one #chartLeft {display: block; width: 100%; height: 50%;}
+.two_by_one #chartRight {width: 100%; height: 50%;}
 .two_by_one #chartPortletList {
 	align-items: center;
-	height: calc(100% - 63px);
 	justify-content: space-around;
 	flex-direction: column;
 }
@@ -39,6 +42,7 @@
 #chartPortletList {
 	display: flex;
 	align-items: center;
+	height: calc(100% - 63px);
 	width: 100%;
 }
 </style>
