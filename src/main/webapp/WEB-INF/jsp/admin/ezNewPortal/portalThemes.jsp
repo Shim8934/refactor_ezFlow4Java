@@ -54,7 +54,7 @@
 			/* .portlet_switch {position:relative;display:inline-block;width:60px;height:18px;margin:13px 0px 10px 0px; vertical-align:top;} */
 			.portlet_switch {margin: 1px 0px 10px 14px;}
 			.portlet_switch .slider {z-index:10;}
-			.admin_theme_portlet {width : 1042px;}
+			.admin_theme_portlet {width : 1151px;}
 			.bottomBtn {clear:both;}
 			#themePortletList {display:inline-block;}
 			

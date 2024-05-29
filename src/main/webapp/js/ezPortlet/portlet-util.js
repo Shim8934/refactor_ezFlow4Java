@@ -9,7 +9,6 @@ var GridSize = Object.freeze({
 var ClassPortlet = Object.freeze({
     AREA_PORTLET:"portlet_area",
     PORTLET:"portlet",
-    WRAP_PORTLET:"box_shadow",
     BTN_OPEN_POP:"set_portlet",
     BODY_POP:"body_pop_for_size",
     POP_STATE_OPEN:"pop_open",
@@ -167,7 +166,7 @@ function changePortletSize(pot, size) {
 
 // 포틀릿 사이즈 변경 팝업 만들기
 function createPopPortletSize(portletId) {
-    var wrapPortlet = !!$("#" + portletId + "Portlet")[0] ? $("#" + portletId + "Portlet")[0].getElementsByClassName(ClassPortlet.WRAP_PORTLET)[0] : null;
+    var wrapPortlet = !!$("#" + portletId + "Portlet")[0] ? $("#" + portletId + "Portlet")[0].getElementsByClassName(ClassPortlet.HANDLE)[0] : null;
     if (!wrapPortlet) return;
     var divIcon = document.createElement("div");
     divIcon.className = ClassPortlet.BTN_OPEN_POP;

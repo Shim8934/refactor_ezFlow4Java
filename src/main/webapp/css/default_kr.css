@@ -3993,5 +3993,5 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .popup #menu ul.layer_select{margin-left: -33px; top: 6px;}
 /* //20240517 메일보기 상단바 디자인수정 */
 
-#fixLeft {width:calc(75% - 10px); margin:5px}
-#fixRight {width:calc(25% - 10px); margin:5px}
+#fixLeft {width:calc(60% - 10px); margin:5px}
+#fixRight {width:calc(40% - 10px); margin:5px}
