@@ -19981,7 +19981,7 @@
 
 	<delete id="EzApprovalG.jiJungDeleteReceiptProInfo2" parameterClass="Map">
 		 DELETE 
-		 	TBL_EXPAPRLINE
+		 	TBL_APRLINEINFO
          WHERE 
          	TENANT_ID = #v_TENANTID#
          AND
@@ -22673,11 +22673,12 @@
              ORGDOCNUMCODE ,
              SEPERATEATTACHXML ,
              SUMMARY ,
-             SECURITYAPPROVAL 
+             SECURITYAPPROVAL ,
+             PUBLICITYYN
         FROM 
         	 TBL_EXPENDAPRDOCINFO 
         WHERE  
-         	 DOCID = #v_DOCID#
+         	 DOCID = #v_orgDocID#
         AND
         	 TENANT_ID = #v_TENANTID#
         AND
@@ -29886,6 +29887,8 @@
       		COMPANYID = #companyID#
       	AND
       		DOCID = #v_DOCID#
+        AND
+            APRMEMBERID = #v_USERID#
       	AND
       		APRTYPE = '040'
       	AND
@@ -35718,4 +35721,126 @@
 			]]>
         </isEqual>
     </select>
+
+	<select id="EzApprovalG.getTotalDownloadAll" parameterClass="Map" resultClass="ApprGAttachInfoVO">
+		<isEqual property="v_PMODE" compareValue="END">
+			SELECT 
+				'DOC' TYPE,
+				DOCID,
+				ENDDATE,
+				DocTitle FILENAME,
+				Href FILEPATH,
+				1 AS TYPESN,
+				1 AS VIEWSN,
+				1 AS ATTACHFILESN
+			FROM 
+				TBL_ENDAPRDOCINFO
+			WHERE  
+				TBL_ENDAPRDOCINFO.DOCID IN
+			 	<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
+			 		#vDocIDMap[]#
+				</iterate>
+		    AND
+		    	TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+			AND
+		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+			
+			UNION ALL 
+			
+			SELECT 
+				'ATT' TYPE,
+				TBL_ENDAPRDOCINFO.DOCID,
+				ENDDATE,
+		        DISPLAYNAME FILENAME,
+		        AttachFileHref FILEPATH,
+				2 AS TYPESN,
+	       	 	NVL(VIEWORDER, ATTACHFILESN) AS VIEWSN,
+	       	 	ATTACHFILESN
+			FROM 
+				TBL_ENDATTACHINFO
+		    INNER JOIN
+	    		TBL_ENDAPRDOCINFO
+		    ON
+		    	TBL_ENDATTACHINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+			AND
+				TBL_ENDATTACHINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+		    AND
+		    	TBL_ENDATTACHINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+			WHERE  
+				TBL_ENDAPRDOCINFO.DOCID IN
+				<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
+			 		#vDocIDMap[]#
+				</iterate>
+	        AND
+	        	TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		    AND
+		    	TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		    	
+			UNION ALL 
+			
+			SELECT 
+				'ATTDOC' TYPE,
+				TBL_ENDAPRDOCINFO.DOCID,
+				ENDDATE,
+		        AttachDocName FILENAME,
+		        AttachDocURL FILEPATH,
+				3 AS TYPESN,
+	        	ATTACHSN AS VIEWSN,
+	        	1 AS ATTACHFILESN
+			FROM 
+				TBL_ENDAPRDOCATTACHINFO
+		    INNER JOIN
+	    		TBL_ENDAPRDOCINFO
+		    ON
+		    	TBL_ENDAPRDOCATTACHINFO.DOCID = TBL_ENDAPRDOCINFO.DOCID
+	        AND
+	        	TBL_ENDAPRDOCATTACHINFO.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
+		    AND
+		    	TBL_ENDAPRDOCATTACHINFO.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
+			WHERE  
+				TBL_ENDAPRDOCINFO.DOCID IN
+				<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
+			 		#vDocIDMap[]#
+				</iterate>
+	        AND
+	        	TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		    AND
+		    	TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+		    ORDER BY
+		    	ENDDATE DESC, TYPESN ASC, ATTACHFILESN ASC, VIEWSN ASC
+		 </isEqual>
+	</select>
+	
+	<select id="EzApprovalG.getDocsOpinionInfo" parameterClass="Map" resultClass="ApprGOpinionVO"> 
+		SELECT 
+			DOCID, USERID, OPINIONGB, CONTENT, USERNAME, USERJOBTITLE, USERDEPTID, USERDEPTNAME, OPINIONSN, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID 
+		FROM 
+			TBL_ENDAPROPINIONINFO  
+		WHERE 
+			DOCID IN
+			<iterate property="vDocIDMap" open="(" close=")" conjunction=",">
+				#vDocIDMap[]#
+			</iterate>
+		AND 
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#	
+		ORDER BY
+			DOCID DESC, OPINIONSN DESC
+	</select>
+
+	<insert id="EzApprovalG.insertTotalSaveHistory" parameterClass="Map">
+		INSERT ALL
+		 <dynamic>
+			<iterate prepend="" property="v_DOCIDlist" conjunction=" " >
+		    	INTO TBL_TOTAL_HISTORY(DOCID, USERID, REGDATE, GUBUN, USERJOBTITLE, USERDEPTID, USERDEPTNAME, 
+		                        USERNAME, USERNAME2, USERJOBTITLE2, USERDEPTNAME2, TENANT_ID, COMPANYID)
+		    	VALUES(#v_DOCIDlist[]#, #v_USERID#, sysdate, #v_GUBUN#, #v_USERJOBTITLE#, #v_USERDEPTID#, #v_USERDEPTNAME#,
+	            	#v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE2#, #v_USERDEPTNAME2#, #v_TENANT_ID#, #v_COMPANYID#)
+			</iterate>                       
+		</dynamic>
+		SELECT * 
+		FROM DUAL
+	</insert>
+	
 </sqlMap>

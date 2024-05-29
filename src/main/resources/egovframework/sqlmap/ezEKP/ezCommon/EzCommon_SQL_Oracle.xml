@@ -2442,7 +2442,7 @@
 
 	<insert id="EzCommonDAO.insertApprAttachLimit">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-    		VALUES (#v_TENANTID#, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 메일 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+    		VALUES (#v_TENANTID#, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
 	</insert>
 	<insert id="EzCommonDAO.insertBigSizeApprAttachLimit">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
@@ -2458,7 +2458,7 @@
 	</insert>
 	<insert id="EzCommonDAO.insertBigSizeApprAttachDelDay">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-    		VALUES (#v_TENANTID#, 'BigSizeApprAttachDelDay', '전자결재 대용량 첨부파일 보존기간', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 메일 대용량 첨부파일을 삭제한다. (default: 14)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+    		VALUES (#v_TENANTID#, 'BigSizeApprAttachDelDay', '전자결재 대용량 첨부파일 보존기간', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 대용량 첨부파일을 삭제한다. (default: 14)', TO_DATE(sysdate,'yyyy-mm-dd hh24:mi:ss'), '전자결재')
 	</insert>
 
 	<select id="EzCommonDAO.checkApprBigAttachColumn_APR">
@@ -4187,5 +4187,54 @@
 	<insert id="EzCommonDAO.insertSurveyPostingMaxPeriodConfig">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES (#v_TENANTID#, 'SurveyPostingMaxPeriod', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '전자설문 종료 후 게시기간 설정', TO_DATE('2024-03-26 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자설문')
+	</insert>
+
+	<select id="EzCommonDAO.chkTblTotalHistory" resultClass="String">
+		<![CDATA[
+		SELECT
+			DOCID
+		FROM
+			TBL_TOTAL_HISTORY
+	    WHERE
+			ROWNUM <= 1
+		 ]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblTotalHistory">
+		CREATE TABLE "TBL_TOTAL_HISTORY" (
+		  "DOCID" NVARCHAR2(80) NOT NULL,
+		  "USERID" NVARCHAR2(400) NOT NULL,
+		  "REGDATE" DATE NOT NULL,
+		  "GUBUN" varchar(12) DEFAULT NULL,
+		  "USERJOBTITLE" NVARCHAR2(40) DEFAULT NULL,
+		  "USERDEPTID" NVARCHAR2(400) DEFAULT NULL,
+		  "USERDEPTNAME" NVARCHAR2(200) DEFAULT NULL,
+		  "USERNAME" NVARCHAR2(200) DEFAULT NULL,
+		  "USERNAME2" NVARCHAR2(200) DEFAULT NULL,
+		  "USERJOBTITLE2" NVARCHAR2(200) DEFAULT NULL,
+		  "USERDEPTNAME2" NVARCHAR2(400) DEFAULT NULL,
+		  "TENANT_ID" NUMBER(5,0) NOT NULL,
+		  "COMPANYID" NVARCHAR2(20) NOT NULL,
+		  CONSTRAINT "PK_TBL_TOTAL_HISTORY" PRIMARY KEY ("DOCID", "USERID", "REGDATE", "TENANT_ID", "COMPANYID")
+		)
+	</statement>
+
+	<!-- 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 -->
+	<select id="EzCommonDAO.checkDelAttachByOthersConfing" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'delAttachByOthers'
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertDelAttachByOthersConfing">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'delAttachByOthers', '0', '결재에서 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값(0 : 불가 1 : 허용), (default:0) ', '결재에서 첨부파일을 다른사람이 지울수있는 여부', TO_DATE('2021-03-05 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자결재')
 	</insert>
 </sqlMap>

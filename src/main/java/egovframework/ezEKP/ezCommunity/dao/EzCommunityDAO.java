@@ -1143,7 +1143,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 
 	public String getOneLineReplyCount(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
 		return String.valueOf(select("EzCommunityDAO.getOneLineReplyCount", map));
 	}
 	// 2018-02-06 김보미 - 조회자 수

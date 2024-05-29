@@ -473,7 +473,7 @@
 	        }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:hidden; padding-right: 6px;">
+	<body class="mainbody" style="overflow-y:hidden; ovverflow-x: scroll; min-width: 600px; padding-right: 6px;">
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
@@ -488,7 +488,7 @@
 				<!-- </span> -->
             </ul>
 		</div>
-		<div class="calendar_pagenav" id="weeklyline">
+		<div class="calendar_pagenav" id="weeklyline" style='left: max(50%, 300px);'>
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"><span class="icon16 calendarleft" onclick="pagenavi('PREV');"></span></li>
 	            <li class="contentlayout_right" id="preN"><span class="icon16 calendarright" onclick="pagenavi('NEXT');"></span></li>

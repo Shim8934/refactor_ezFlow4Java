@@ -296,9 +296,9 @@ function AprrovMappingSign(ret, maxIdx) {
 			if (DekyulFlag && parent.pAprLineB4type == strAprType4) { // 현재 결재자가 대결자이면서 다음 결재자가 전결인 경우 (4: 전결)
 				// 대결로 이미지 서명을 부여하는 경우, 웹한글함수인 InsertPicture를 사용하기 때문에 삽입이 비동기적으로 완료된다.
 				// 따라서 리턴 시 콜백함수를 호출할때, 전결서명이 들어가있지 않은 상태로 콜백이 진행되고 전결서명은 빠진 상태로 hwp 파일을 저장한다.
-				// 일단 그냥 두자... 표준오류임
+				// 추후 검토 필요
 				PutFieldText(signID, strLang6);
-				 // 대결 직후 전결 필드에 자동으로 서명을 부여하는 경우, 서명완료 카운트는 증가시키지 않는다. (안 당 한번만 증가시켜야 함)
+				// 대결 직후 전결 필드에 자동으로 서명을 부여하는 경우, 서명완료 카운트는 증가시키지 않는다. (안 당 한번만 증가시켜야 함)
 				//parent.docApprovSignChkCnt ++;
 				
 				parent.signInfo[signCnt] = signID;

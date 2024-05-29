@@ -1010,7 +1010,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String isEach = "FALSE";
 			String bodyType = "0";
 			String replySendTime = "0";
-			String replyReadTime = "1";
+			String replyReadTime = "";
 			String delaySendDate = "";
 			String unread = "";
 			@SuppressWarnings("unused")
@@ -1046,6 +1046,15 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
 			String mUseMailAddrAutoComplete = ezCommonService.getTenantConfig("mobileUseMailAddrAutoComplete", info.getTenantId());
+			String isDefaultReceiptExternal = ezCommonService.getTenantConfig("isDefaultReceiptExternal", info.getTenantId());
+			String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", info.getTenantId());
+			String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", info.getTenantId());
+			if (useReceiptExternal.equals("YES")) {
+				replyReadTime = "YES".equalsIgnoreCase(isDefaultReceiptExternal) ? "2" : "1";
+			} else {
+				replyReadTime = "1";
+			}
+
 			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
 			if (attachFileNameMaxLength.equals("")) {
 				attachFileNameMaxLength = "100"; // default
@@ -1278,7 +1287,6 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		        		
 		                unread = orgMessage.isSet(Flags.Flag.SEEN) ? "1" : "0";
 		                
-		                //TODO: Sensitivity?
 		                //this._posttype = ((int)orgmesg.Sensitivity).ToString();
 			        // in case of replying		        		
 		        	} else if (cmd.equals("REPLY") || cmd.equals("REPLYALL") || cmd.equals("FORWARD")) {
@@ -1576,12 +1584,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		        		} else {
 		        			replySendTime = "0";
 		        		}
-		        		
-		        		if (orgMessage.getHeader("Disposition-Notification-To") != null) {
-		        			replyReadTime = "1";
-		        		} else {
-		        			replyReadTime = "0";
-		        		}
+
+						if (orgMessage.getHeader("Disposition-Notification-To") == null) {
+							replyReadTime = "0";
+						}
 		        	
 		        		if (orgMessage.getHeader("Delivery-Date") != null) {
 		        			delaySendDate = orgMessage.getHeader("Delivery-Date")[0].trim();
@@ -1698,6 +1704,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			data.put("useFromAddress", useFromAddress);
 			data.put("fromAddressHtml", fromAddressHtml);
 			data.put("mailAttachLimit", mailAttachLimit);
+			data.put("useOnlyInnerMail", useOnlyInnerMail);
+			data.put("useReceiptExternal", useReceiptExternal);
+			data.put("isDefaultReceiptExternal", isDefaultReceiptExternal);
 			data.put("mUseMailAddrAutoComplete", mUseMailAddrAutoComplete); //20180712 조진호 - 모바일에서 수신자 자동완성기능 사용여부
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength); //20190114 조진호 - 첨부파일명 길이제한
 			data.put("defaultFontAndSize", defaultFontAndSize); //20190510 조진호 - 기본 글씨 속성
@@ -2403,7 +2412,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		logger.debug("userId=" + userId);
 		
 		JSONObject result = new JSONObject();
-		
+
 		try {
 			boolean retryFlag = false;
 			int retryCount = 1; // 메일 발송 실패 시 재시도 횟수
@@ -2431,7 +2440,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String orgMessageId = "";
 			String cmd = "";
 			String mailcmd = "";
-			String replyReadTime = "1";
+			String replyReadTime = "";
 			String textOption = "";
 			List<Map<String, Object>> addressCheck = null;
 			
@@ -2520,6 +2529,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String https = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", info.getTenantId())) ? "https://" : "http://";
+			String serverNameByTenantId = ezCommonService.getTenantConfig("serverName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
 			
@@ -2836,13 +2847,24 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			            default: message.setHeader("X-Priority", "3");
 			                break;
 			        }
-				
+
+					// 추적(배달되면 알림)
+					logger.debug("replyReadTime=" + replyReadTime);
+					if (replyReadTime.equals("0")) {
+						message.setHeader("Return-Receipt-To", ((InternetAddress)message.getFrom()[0]).getAddress());
+					}
+
 			        // 추적(수신확인)
 			        logger.debug("replyReadTime=" + replyReadTime);
-			        
-			        if (replyReadTime.equals("1")) {
+			        if (replyReadTime.equals("1") || replyReadTime.equals("2")) {
 			        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
 			        }
+
+					// 추적(외부 수신확인)
+					if (replyReadTime.equals("2")) {
+						message.setHeader("X-JMocha-Ext-Receipt", "1");
+						message.setHeader("X-JMocha-Ext-ServerName", https + serverNameByTenantId);
+					}
 		        
 			        // SentDate 설정
 			        message.setSentDate(Calendar.getInstance().getTime());
@@ -3229,10 +3251,14 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 					
-					if (e.getMessage().indexOf("OVERQUOTA") > -1 && e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
+					if (e.getMessage().indexOf("OVERQUOTA") > -1 || e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
 						logger.error("mailInterSend : " + e.getMessage());
 						
 						pResult = e.getMessage();
+						
+						result.put("status", "error");
+		    			result.put("code", 1);			
+		    			result.put("data", pResult);
 					} else if (e.getMessage().indexOf("Invalid Addresses") > -1) {
 						pResult = e.getMessage();
 						String cause = e.getCause().toString();
@@ -3334,12 +3360,18 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		    }
 				    		    
 			logger.debug("mailInterSend ended. pResult=" + pResult);
-			
-			if (!invalidAddressesError){
+
+			logger.debug("invalidAddressesError={}", invalidAddressesError);
+			if (result != null && !"error".equalsIgnoreCase((String) result.get("status")) ) {
+				result.put("status", "ok");
+				result.put("code", 0);			
+				result.put("data", "");
+			}
+			/*if (!invalidAddressesError){
 				result.put("status", "ok");
 				result.put("code", 0);			
 				result.put("data", "");		
-			}
+			}*/
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			
@@ -3859,7 +3891,24 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
 			String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
-			
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", info.getTenantId());
+
+			if (useSharedMailbox.equals("YES")) {
+				String shareId = request.getParameter("shareId");
+
+				logger.debug("shareId=" + shareId + ", userId=" + userId + ", info.getUserId=" + info.getUserId());
+
+				if (shareId != null && !shareId.equals("")) {
+					if (!ezEmailService.checkUserShareId(userId, shareId, 0, info.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+
+						return "";
+					}
+
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+
 			logger.debug("userEmail=" + userEmail);
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());

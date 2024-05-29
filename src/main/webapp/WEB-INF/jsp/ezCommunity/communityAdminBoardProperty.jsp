@@ -291,6 +291,7 @@
         			}
         		}
         	});
+			window.parent.opener.location.reload();
 		}
 
 		function cancel() {

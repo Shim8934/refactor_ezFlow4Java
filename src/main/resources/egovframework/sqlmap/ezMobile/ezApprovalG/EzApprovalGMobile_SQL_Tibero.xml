@@ -297,11 +297,32 @@
 				E.CODE2 FUNCTIONTYPE,
 				C.URGENTAPPROVAL,
 				A.companyID,
+				C.securityApproval,
 				A.ENDDATE
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
-	   			TBL_ENDAPRLINEINFO B
+				(
+					SELECT
+				*
+					FROM
+				tbl_endaprlineinfo exa
+					JOIN (
+						SELECT
+							MAX(exb.APRMEMBERSN) as MAX_APRMEMBERSN,
+							exb.DOCID as MAX_DOCID
+						FROM
+							tbl_endaprlineinfo exb
+						WHERE
+							exb.APRMEMBERID = #userId#
+						GROUP BY
+							DOCID
+					) exc
+				ON
+					exa.APRMEMBERSN = exc.MAX_APRMEMBERSN
+				AND
+					exa.DOCID = exc.MAX_DOCID
+				) B
 		   	ON
 	   			A.DOCID = B.DOCID
 		   	AND
@@ -904,7 +925,27 @@
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
-	   			TBL_ENDAPRLINEINFO B
+				(
+				SELECT
+					*
+				FROM
+					tbl_endaprlineinfo exa
+					JOIN (
+						SELECT
+							MAX(exb.APRMEMBERSN) as MAX_APRMEMBERSN,
+							exb.DOCID as MAX_DOCID
+						FROM
+							tbl_endaprlineinfo exb
+						WHERE
+							exb.APRMEMBERID = #userId#
+						GROUP BY
+							DOCID
+					) exc
+				ON
+					exa.APRMEMBERSN = exc.MAX_APRMEMBERSN
+				AND
+					exa.DOCID = exc.MAX_DOCID
+				) B
 		   	ON
 	   			A.DOCID = B.DOCID
 		   	AND

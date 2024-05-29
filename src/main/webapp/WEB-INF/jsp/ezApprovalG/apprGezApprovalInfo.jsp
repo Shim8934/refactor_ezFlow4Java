@@ -1306,6 +1306,14 @@
 			    		OpenAlertUI("결재자가 한 명인 경우, 기결재통과 기능을 사용할 수 없습니다.");
 			    		return;
 			    	}
+					/* 2024-03-26 양지혜 - 공개가 아닌경우 공개등급 선택 필수 */
+					if (document.querySelector('input[name="rdoSecType"]:checked').value != '1') {
+						var checkboxes = document.querySelectorAll('input[name^="selSecLevel"]:checked');
+						if (checkboxes.length === 0) {
+							OpenAlertUI("<spring:message code='ezApprovalG.yjh01'/>");
+							return;
+						}
+					}
 		    	}
 		    	
 				if(document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT') {

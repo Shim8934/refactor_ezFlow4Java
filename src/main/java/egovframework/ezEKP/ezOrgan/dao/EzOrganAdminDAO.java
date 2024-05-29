@@ -1914,7 +1914,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    	
     		logger.debug("curDN : " + curDN);
     		logger.debug("movDN: " + movDN);
-    		// 여기
+
     		Map<String, Object> map = new HashMap<String, Object>();
     		map.put("v_CN", vo.getCn());
     		

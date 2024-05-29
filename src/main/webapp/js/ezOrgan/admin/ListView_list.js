@@ -1,13 +1,3 @@
-﻿/*###########################################################################################
-
-
-
-###########################################################################################*/
-
-
-//###########################################################################################
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
-
 //컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
@@ -71,7 +61,6 @@ function disable_browser_selection() {
     document.body.style.cursor = "default";
 }
 
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 끝
 //###########################################################################################
 
 
@@ -1191,7 +1180,6 @@ function ListView() {
 
     function ListView_ToString() {
         return "KAONI ListView";
-        //return "영준이가 자바스크립트로 만든 리스트 뷰 v0.5";
     }    
 } // ListView 클래스 끝
 
@@ -1484,7 +1472,6 @@ function getOriginXML(pTagetID)
             width = width.substring(0, width.length - 2);            
         }        
         xmlHeader += "<WIDTH>" + width + "</WIDTH>";
-        //colname 어떻게 할까?
         xmlHeader += "<COLNAME></COLNAME>";
         xmlHeader += "</HEADER>";
     }

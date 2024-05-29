@@ -1,5 +1,3 @@
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
-
 //컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
 var PressShiftKey = false;
@@ -312,7 +310,6 @@ function ListConstr(data) {
     init(data);
 
     function init(initData) {
-
     	if(initData != null) {
             _thisID = (initData.tableId == undefined)?"":initData.tableId;
             _headers = (initData.headers == undefined)?null:initData.headers;
@@ -522,7 +519,6 @@ function ListConstr(data) {
     }
 
     function makeRows(headerData, rowData) {
-
         var oTbody = document.createElement("TBODY");
         oTbody.style.backgroundColor = m_strColorDefault;
        
@@ -627,13 +623,13 @@ function ListConstr(data) {
                 
                 if (_thisID == "DocList" && typeof(_ApprovalFlag) != "undefined" && _ApprovalFlag == "S") {
                     if (_ShowOpinionImg) {
-                        if (strData == "HASOPINIONYN" && strValue == "Y") {
+                        if (strData.toUpperCase() == "HASOPINIONYN" && strValue == "Y") {
                             hasOpinionFlag = true;
                         }
                     }
                 }
             }
-       
+     
             oTbody.appendChild(objTr);
        
             //2020-04-27 : 체크박스 추가

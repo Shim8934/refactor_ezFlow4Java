@@ -23,6 +23,7 @@
 	        var pDocID = "<c:out value='${docID}'/>";
 	        var pType = "<c:out value='${type}'/>";
 	        var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
+			var hasOpinion = "<c:out value='${hasOpinion}'/>";
 	        var ReturnFunction;
 	        
 	        /* 2023-05-09 김우철 - hwp결재문서를 배포용 문서로 저장하기 위한 변수 */
@@ -143,7 +144,46 @@
 	                    TR.appendChild(TD1);
 	                    TR.appendChild(TD2);
 	                    table_filelist.appendChild(TR);
-	                }                
+	                }
+					if(hasOpinion=="Y"){
+		                var opiTR = document.createElement("TR");
+	                    var opiTD1 = document.createElement("TD");
+	                    var opiTD2 = document.createElement("TD");
+	                    var opiIMG = document.createElement("IMG");
+	                    var opiCHECK = document.createElement("INPUT");
+	                    var opiSPAN = document.createElement("SPAN");
+	                    opiCHECK.id = "chk_"+i++;
+	                    opiCHECK.type = "checkbox";
+	                    opiCHECK.value = "Y";
+	                    opiCHECK.onclick = function () { CheckBoxClick(this); };
+	                    opiTR.ondblclick = function () { opinionDown(); };
+	                    opiTR.style.cursor = "pointer";
+	                    opiCHECK.setAttribute("opinionchk","YES");
+	                    opiTD1.style.width = "30px";
+	                    opiTD1.appendChild(opiCHECK);
+	                    opiTD2.style.textAlign = "left";
+	                    opiTD2.style.overflow = "hidden";
+	                    opiTD2.style.textOverflow = "ellipsis";
+	                    opiTD2.style.whiteSpace = "nowrap";
+	                    opiTD1.style.height = "20px";
+	                    opiTD2.style.height = "20px";
+	                    
+	                    opiIMG.src = "/images/txt.png";
+	                    opiIMG.style.display = "inline-block";
+	                    opiIMG.style.verticalAlign = "middle";
+	                    
+	                    opiSPAN.style.paddingLeft = "5px";
+	                    opiSPAN.style.height = "16px";
+	                    opiSPAN.style.verticalAlign = "middle";
+	                    opiSPAN.style.paddingTop = "5px";
+	                    opiSPAN.innerText = "<spring:message code='ezApprovalG.t00012'/>";
+	                    
+	                    opiTD2.appendChild(opiIMG);
+	                    opiTD2.appendChild(opiSPAN);
+	                    opiTR.appendChild(opiTD1);
+	                    opiTR.appendChild(opiTD2);
+	                    table_filelist.appendChild(opiTR);
+	                }
 	            }            
 	        };
 	
@@ -174,8 +214,7 @@
 	
 	        function btn_OK()
 	        {
-	            if (strTypeInfo == "")
-	            {
+	            if (strTypeInfo == ""  && opinionChk == "") {
 	                alert(strLang584);
 	                return;
 	            }
@@ -209,11 +248,24 @@
 	        var strPathInfo = "";
 	        var strTypeInfo = "";
 	        var strFileName = "";
+	        var opinionChk = "";
 	        function CheckBoxClick(obj)
 	        {
 	        	/* 2023-05-23 김우철 - 파일명에 사용할 수 없는 특수문자를 "_" 문자로 치환 (타 모듈과 파일명 특수문자 처리 통일) */
 	        	var filename = GetAttribute(obj, "data2").replace(/[*|\\\":\/?<>]/gi, "_");
 	            document.getElementById('cbx_all').checked = false;
+	            
+	            // 2023-06-30 한태훈 - 통합 PC 저장시 의견 다운로드 기능 추가
+	            if (hasOpinion == "Y" && obj.getAttribute("opinionchk") == "YES") {
+	            	if (obj.checked) {
+	            		opinionChk = obj.value;
+	            		obj.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
+	            	} else {
+	            		opinionChk = "";
+	            		obj.parentElement.parentElement.style.backgroundColor = "#FFFFFF";
+	            	}
+	            	return;
+	            }
 	            
 	            if (obj.checked) {
 	                obj.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
@@ -237,6 +289,11 @@
 	            strPathInfo = "";
                 strTypeInfo = "";
                 strFileName = "";
+                opinionChk = "";
+                
+                if (hasOpinion == "Y") {
+                	count = count - 1; // 의견 작성 리스트 있는 경우 count - 1 (의견 파일은 실제 첨부파일이 아니므로 count에서 제외);
+                }
                 
 	            if (obj.checked) {
 	                for (var i = 0; i < count ; i++) {
@@ -254,6 +311,12 @@
 	                    strTypeInfo += GetAttribute(document.getElementById('chk_' + i), "data1") + "|||";
 	                    strFileName += filename + "|||";
 	                }
+	                if (hasOpinion == "Y") {
+		                var opinionChkbox = document.getElementById('chk_' + i++);
+		                opinionChkbox.checked = true;
+		                opinionChkbox.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
+		                opinionChk = "Y";
+	                }
 	            }
 	            else {
 	                for (var i = 0; i < count ; i++) {
@@ -265,6 +328,12 @@
 	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#FFFFFF";
 	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#FFFFFF";
 	                    }
+	                }
+	                if (hasOpinion == "Y") {
+	                	var opinionChkbox = document.getElementById('chk_' + i++);
+		                opinionChkbox.checked = false;
+		                opinionChkbox.parentElement.parentElement.style.backgroundColor = "#FFFFFF";
+	                	opinionChk = "";
 	                }
 	            }
 	        }
@@ -379,11 +448,12 @@
 				xmlstring += "<PPATHINFO><![CDATA[" + strPathInfo.replace("&amp;", "&") + "]]></PPATHINFO>";
 				xmlstring += "<PFILEINFO><![CDATA[" + ReplaceText(strFileName, "\n", "") + "]]></PFILEINFO>";
 				xmlstring += "<PHWPINFO><![CDATA[" + docHwpPath.replace("&amp;", "&") + "]]></PHWPINFO>";
+				xmlstring += "<POPINIONCHK><![CDATA[" + opinionChk + "]]></POPINIONCHK>";
+				xmlstring += "<PORGCOMPANY><![CDATA[" + orgCompanyID + "]]></PORGCOMPANY>";
 				 
 				if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
 					xmlstring += "<PDOWNINFO><![CDATA[" + p_downloadUrl.replace("&amp;", "&") + "]]></PDOWNINFO>";
 				}
-				
 				xmlstring += "</DATA>";
 				xmlpara = loadXMLString(xmlstring);
 				
@@ -392,6 +462,25 @@
 				var URL = xmlhttp.responseText;
 				
 				/* 2023-03-08 홍승비 - 통합PC저장으로 결재문서와 첨부파일 다운로드 후, 임시 생성된 .zip파일 삭제 */
+				document.getElementById("AttachDownFrame").src = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(URL) + "&isToDelFG=Y";
+			}
+			
+			// 2023-06-30 한태훈 - 통합 PC 저장시 의견 다운로드 기능 추가 (더블클릭 시 단일 다운로드 기능)
+			function opinionDown() {
+				var URL = "";
+				$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		async : false,
+	        		url : "/ezApprovalG/opinionDown.do",
+	        		data : {
+	        			docID : pDocID,
+	        			orgCompanyID : orgCompanyID
+	        		},
+	        		success: function(result) {
+	        			URL = result;
+	        		}
+	        	});
 				document.getElementById("AttachDownFrame").src = "/ezApprovalG/downloadAttach.do?filePath=" + encodeURIComponent(URL) + "&isToDelFG=Y";
 			}
 			

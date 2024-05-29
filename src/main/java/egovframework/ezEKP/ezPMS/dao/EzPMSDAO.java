@@ -98,7 +98,6 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 
 	public void addProjectMember(HashMap<String, Object> map) {
-		// TODO Auto-generated method stub
 		insert("EzPMSDAO.addProjectMember", map);
 	}
 
@@ -386,7 +385,6 @@ public class EzPMSDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getStatusCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
 		return (List<Map<String, Object>>) list("EzPMSDAO.getStatusCount", map);
 	}
 

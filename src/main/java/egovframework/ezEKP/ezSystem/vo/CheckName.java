@@ -27,5 +27,6 @@ public enum CheckName {
 	BigSizeApprAttachLimit,
 	ApprBigSizeAttachDownloadLimitCount,
 	ApprBigSizeAttachLimitCount,
-	BigSizeApprAttachDelDay
+	BigSizeApprAttachDelDay,
+	useEachMailDefault
 }

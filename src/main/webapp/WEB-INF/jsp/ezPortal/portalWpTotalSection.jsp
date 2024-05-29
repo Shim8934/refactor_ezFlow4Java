@@ -1566,7 +1566,6 @@
 		    	}
 		    };
 		    
-			// ie 10일 경우는 다르게 해야겠음.		
 		    if(!checkBrowser()) {
 		    	console.log('in the bind Function.');
 				$("#workspaceCnt").bind("DOMSubtreeModified", function() {

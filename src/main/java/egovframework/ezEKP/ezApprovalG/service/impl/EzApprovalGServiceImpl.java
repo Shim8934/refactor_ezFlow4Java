@@ -6,11 +6,13 @@ import java.io.File;
 import java.io.FileInputStream; 
 import java.io.FileNotFoundException; 
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException; 
 import java.io.InputStream; 
 import java.io.InputStreamReader; 
 import java.io.OutputStream; 
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Field; 
 import java.lang.reflect.Method; 
 import java.net.HttpURLConnection; 
@@ -27,6 +29,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar; 
@@ -42,6 +45,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource; 
 import javax.mail.internet.InternetAddress; 
@@ -472,7 +477,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<LISTVIEWDATA>");
 		resultXML.append("<HEADERS>");
 		resultXML.append("<HEADER>");
-		//임시로 해놓음 코드박자
 		resultXML.append("<NAME>" + messageSource.getMessage("ezApprovalG.t114", userInfo.getLocale()) + "</NAME>");
 		resultXML.append("<WIDTH>105</WIDTH>");
 		resultXML.append("<COLNAME>GROUPNAME</COLNAME>");
@@ -2216,7 +2220,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDocNumCode = "";
 		String docNumCode = "";
 		String extFileName = "";
-		String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈
+		String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); // 문서채번 자릿수 맞추기 위한 목적으로 구현함
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -2238,7 +2242,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				docNumCode = deptID + getNDigitNum(sn, 6);
 				
 				docNo = commonUtil.htmlUnescape(deptName) + "-" + sn;
-				//docNo = commonUtil.cleanValue(deptName) + "-" + createDocNO(sn , docNumZeroCnt); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈
+				//docNo = commonUtil.cleanValue(deptName) + "-" + createDocNO(sn , docNumZeroCnt); // 문서채번 자릿수 맞추기 위한 목적으로 구현함
 				
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
 //					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
@@ -5025,17 +5029,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int dlength = docXML != null ? docXML.getElementsByTagName("ROW").getLength() : 0;
 		int startNum = 0;
-		int endNum = dlength;
+		int endNum = Integer.parseInt(pageSize);
 		String primaryData = commonUtil.getPrimaryData(langType, tenantID);
-		
-		if (Integer.parseInt(pageSize) > 0) {
-			startNum = Integer.parseInt(pageSize) * (Integer.parseInt(pageNO) - 1);
-			endNum = Integer.parseInt(pageSize) * Integer.parseInt(pageNO);
-			
-			if (endNum > dlength) {
-				endNum = dlength;
-			}
-		}
+        // 2024-04-05 전인하 - 전자결재G > 기록물관리 > 단위업무관리 > 페이징 동작 추가에 따른 페이지넘버 계산 로직 단순화
+        if (endNum > dlength) {
+            endNum = dlength;
+        }
 		
 		resultXML.append("<ROWS>");
 		
@@ -5849,7 +5848,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
-		int totalCount = getSendOutDocListCount(mode, companyID, tenantID, searchQuery);///////////////////////////////searchQuery넣을것!
+		int totalCount = getSendOutDocListCount(mode, companyID, tenantID, searchQuery);	// searchQuery 넣어야 함
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
 		
@@ -5984,9 +5983,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String docType = getDocInfo(docID, "APR", "FUNCTIONTYPE", userInfo, companyID, userInfo.getTenantId(), "", "");
-		// 여기 비교 되지도 않네 
-		// docType -> <DATA><FUNCTIONTYPE>002</FUNCTIONTYPE></DATA>
-		// docState 004(심사), 015(공람)
+
 		if (docType.equals("004") || docType.equals("015")) {
 			return messageSource.getMessage("ezApprovalG.t2104", userInfo.getLocale());
 		}
@@ -6229,7 +6226,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.insertRejectAprReceiptProcessInfo(map);
 			
-			//여기다 발송의뢰반송시 수신처에 발송의뢰반송표시하게 해주면 되나
 			Map<String, Object> map2 = new HashMap<String, Object>();
 			map2.put("v_DOCID", signList.getOrgDocID());
 			map2.put("v_PROCESSYN", "B");
@@ -6854,7 +6850,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						setHwpText(hwpFile, habSign, signAry);
 						setHwpText(habSem, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
-					} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
+					} else if (aprType.equals("004")) {
 						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + tmps;
 						String tempSignDate = signAdd + "seumyungdate" + tmps;
@@ -6916,7 +6912,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					Document docXML = commonUtil.convertStringToDocument(ret);
 					cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
-					//0박아주는거 하면된다
+
 					if (!ret.equals("")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							if (!excuteInfoHwp("DOCNUM_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
@@ -6956,7 +6952,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					Document docXML = commonUtil.convertStringToDocument(ret);
 					cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
-					//0박아주는거 하면된다
+
 					if (!ret.equals("")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							if (!excuteInfoHwp("DOCNUM_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
@@ -7683,7 +7679,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (aprType.equals("001")) {
 					if (refResult > 0) {
-						//분석해야함
 						int tmps = signCnt - refResult;
 						if (totalLineSN == tmps) {
                             strSign = signAdd + "sign" + lastSignNum;
@@ -7746,7 +7741,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if(doc.getElementById(habSem) != null) {
 					    doc.getElementById(habSem).html(lastCnt);
 					}
-				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
+				} else if (aprType.equals("004")) {
 					String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 					
 					if (junGyulFlag.equals("1")) {
@@ -7856,7 +7851,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if(doc.getElementById(habSem) != null) {
 						doc.getElementById(habSem).html(lastCnt);
 					}
-				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
+				} else if (aprType.equals("004")) {
 					int tmps = signCnt - refResult;
 					String tempSign = signAdd + "sign" + tmps;
 					
@@ -7915,7 +7910,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				Document docXML = commonUtil.convertStringToDocument(ret);
 				cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
-				//0박아주는거 하면된다
+
 				if (!ret.equals("") && doc.getElementById("docnumber") != null) {
 					docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
 					doc.getElementById("docnumber").text(docNO);
@@ -11275,7 +11270,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (rtnVal) {
 					logger.debug("doapprov makeTmpDocInfo started. userID = " + userID + " || docID = " + docID + " || proxyUserID = " + proxyUserID + " || companyID = " + companyID + " || tenantID = " + userInfo.getTenantId());
 					
-					//여기서 디비랑 비교하자
 					String listType = "";
 					if (strXML.getElementsByTagName("LISTTYPE").getLength() > 0) {
 						listType = strXML.getElementsByTagName("LISTTYPE").item(0).getTextContent();
@@ -11296,7 +11290,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						docSN = strXML.getElementsByTagName("DOCSN").item(0).getTextContent();
 					}
 					
-					//따로 삭제하지말고 한번에 삭제하고 생성하자
 					if (!FormHref.equals("") && listType.equals("21") && draftFlag.equals("REDRAFT") && !oldDocID.equals("") && !beforeDocID.equals("")) {
 						if (!compareTmpDocID(FormHref, docSN, companyID, userInfo.getTenantId())) {
 							return "<RESULT>FALSE</RESULT>";
@@ -12373,14 +12366,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.jiJungDeleteReceiptProInfo(map);
 		}
 		
-		//수신문 반송시 지정하면 결재라인 및 의견을 지워주기 위해 추가
-		map.put("v_DocID", docID);
-		
+		// 2024-05-10 기준 확인 결과 지정 시 기존 의견을 유지하도록 수정되었음 (2022-09-02 커밋)
+		// 수신문 반송시 지정하면 결재라인 및 의견을 지워주기 위한 코드
 		/*ezApprovalGDAO.deleteOpinionInfo(map);
 		ezApprovalGDAO.updateOpinionInfo(map);
 		
 		ezApprovalGDAO.aprDeleteDocInfo(map);
 		ezApprovalGDAO.aprDeleteDocInfo2(map);*/
+		
+		/* 2024-05-10 홍승비 - 기존 결재선 TBL_APRLINEINFO 테이블 레코드 삭제 누락된 부분 추가, jiJungDeleteReceiptProInfo2 쿼리의 용도 변경 */
+		ezApprovalGDAO.jiJungDeleteReceiptProInfo2(map);
 		
 		/* 2023-02-02 홍승비 - 부서수신함 > 접수 > 수신문 지정 시, 완료된 원문서의 수신자 정보를 갱신 (동일 부서에 대하여 새롭게 지정된 수신자 "개인"의 정보로 갱신 / 승인상태는 "대기"로 유지) */
 		map.put("docID", docID);
@@ -13107,8 +13102,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.insertBebuExpAprDocInfo(map);
 				ezApprovalGDAO.insertBebuAprAttachInfo(map);
 				ezApprovalGDAO.insertBebuAprDocAttachInfo(map);
-				//배부할때 의견까지 복사안하는게 맞을거같음. 초기접수부서의 의견이나 원문서의 의견은 들어갈필요가없음. 원문서의 의견은 본문에 들어갈거고 초기접수부서는 처리부서가 아닌데 의견이 있을필요가 없음.
-//				ezApprovalGDAO.insertBebuAprOpinionInfo(map);
+				// 배부 시 초기 접수부서의 의견 또는 원문서의 의견은 불필요하므로 복사하지 않도록 함.
+				//ezApprovalGDAO.insertBebuAprOpinionInfo(map);
 				
 				map.put("v_DEPTNAME", deptName.trim());
 				map.put("v_DEPTNAME2", deptName2.trim());
@@ -14161,8 +14156,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
         boolean resultStr = false;
-		//TODO agreeReturnType GGGGGG
-		if (approvalFlag.equals("G")) {
+
+        if (approvalFlag.equals("G")) {
 			map.put("companyID", companyID);
 			map.put("v_DOCID", orgDocID);
             map.put("v_STAASJINHANG", staASJinHang);
@@ -15772,7 +15767,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			
 			logger.debug("updateCirculation docID : " + docID + "updateCirculation gongRamDocID : " + gongRamDocID);
-			//기존꺼 지우고 새롭게 출발하려고 
+
 			ezApprovalGDAO.delCirculation(map);
 			
 			ezApprovalGDAO.insertGongRamAprDocInfo(map);
@@ -15964,7 +15959,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				isGamsaDoc = true;
 			}
 			
-			//사인이 이미지일 경우는 나중에 작업해야할듯.
+			// 사인이 이미지인 경우 작업 필요
 //			if (signType.equals("IMAGE")) {
 //				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 //				
@@ -16249,7 +16244,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 			
-			//사인이 이미지일 경우는 나중에 작업해야할듯.
+			// 사인이 이미지인 경우 작업 필요
 //			if (signType.equals("IMAGE")) {
 //				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 //				
@@ -16701,7 +16696,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
 					docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(), 
 					commonUtil.getTodayUTCTime("").substring(0, 10),
-					receiptName, // 여기랑 밑에
+					receiptName, 
 					receiptName, "", "1", 
 					docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
@@ -17037,10 +17032,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 			}
-			// 특수목록 저장은 개발해야하나 ?
+
+			// 특수목록 정보 저장
 			/*NodeList nodeSL = nonElecRecParam.getDocumentElement().getElementsByTagName("SPECIALCATALOGINFO");
 			
-			// 특수목록 정보 저장
 			if (specialCatalogFlag != null && nodeSL != null && specialCatalogFlag.equals("2")) {
 				subSQL = saveSpecialInfoRec(recordID, cabID, objParam, tenantID, companyID);
 				
@@ -20944,7 +20939,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean publicFlag = false;
 		boolean securityFlag = false;
 		String userSecurityCode = "";
-		
+		String documentState = "";// 회송 플래그값
+		docTitle  = commonUtil.cleanValueUnescape(docTitle);
+
 		if (getIsUse("A22", "001", companyID, lang, tenantID).equals("1")) {
 			securityFlag = true;
 		}
@@ -24111,7 +24108,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "3" :	// 목록이관 대상
 			cabinetListVO.setListType("006");
 			break;
-		case "4" :	// ?뚯씪?닿? ???
+		case "4" :	// 파일이관 대상
 			cabinetListVO.setListType("006");
 			break;
 		case "5" :	// 이관목록
@@ -26819,6 +26816,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 // 수정(2007.06.18) : multidata 기능추가 
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
+		docTitle = commonUtil.cleanValueUnescape(docTitle);
+		
 		String listString = "";
 		
 		// 표준모듈 (2007.05.07) : 다국어
@@ -27710,7 +27709,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  		    // SPAN태그는 제거한다.(font-weight:bold > <B>, font-style:italic > <i>, text-decoration:underline > <u>)
 			org.jsoup.nodes.Document doc = Jsoup.parse(content);
 			
-			// class 제거 왜 클래스있는태그 사이즈를 이상하게 가져오지
 			int tagsWithClasses = doc.getElementsByAttribute("class").size();
 			for (int i = 0; i < tagsWithClasses; i++) {
 				doc.getElementsByAttribute("class").get(0).removeAttr("class");
@@ -27786,8 +27784,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
                 	if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") 
                     		&& doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).text().equals("")) {
-                    	//여기가 동작을 안하네
-//                        if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
+                    	// 동작하지 않는 조건문 주석처리 함.
+                        // if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
                         if (doc.getElementsByTag("span").get(i).parent().nodeName().equals("p")) {
                         	if (spanStyle.indexOf("font-family") > -1) {
                         		if (parentStyle.indexOf("font-family") > -1) {
@@ -28160,8 +28158,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
-			//왜 &nbsp;를 두개 해놓은거지?
-			//strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
 
 			//정주환
 			sp1 = strRtnHtml.split("<");
@@ -28210,7 +28206,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  		    // SPAN태그는 제거한다.(font-weight:bold > <B>, font-style:italic > <i>, text-decoration:underline > <u>)
 			org.jsoup.nodes.Document doc = Jsoup.parse(content);
 			
-			// class 제거 왜 클래스있는태그 사이즈를 이상하게 가져오지
 			int tagsWithClasses = doc.getElementsByAttribute("class").size();
 			for (int i = 0; i < tagsWithClasses; i++) {
 				doc.getElementsByAttribute("class").get(0).removeAttr("class");
@@ -28292,8 +28287,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
                 	if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") 
                     		&& doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).text().equals("")) {
-                    	//여기가 동작을 안하네
-//                        if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
+                		// 동작하지 않는 조건문 주석처리 함.
+                		// if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
                         if (doc.getElementsByTag("span").get(i).parent().nodeName().equals("p")) {
                         	if (spanStyle.indexOf("font-family") > -1) {
                         		if (!(parentSpanStyle.indexOf("font-family") > -1)) {
@@ -28674,8 +28669,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
-			//왜 &nbsp;를 두개 해놓은거지?
-			//strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
 			
 			String strRtnContent = "<DATA>" +
 		                "<RESULT>OK</RESULT>" +
@@ -29193,9 +29186,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
                         strPath = strAttachPath.replace("/Upload_ApprovalG", mapPath).replace("/", commonUtil.separator) + commonUtil.separator + strAttachFile;
                         
-                        //메일 보내는건가? 찾아봐야함
-//                        CDO.IBodyPart attach = objMsg.AddAttachment(strPath, null, null);
-//                        xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
+                        // 메일 발송 여부 확인 필요
+                        //CDO.IBodyPart attach = objMsg.AddAttachment(strPath, null, null);
+                        //xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
 
 						byte[] bytes;
 						File file = new File(commonUtil.detectPathTraversal(mapPath + strPath));
@@ -30130,13 +30123,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	   tempCompanyID = userInfo.getCompanyID();
            }
            
-			map.put("companyID", tempCompanyID);
+    		map.put("companyID", tempCompanyID);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-        //외부수신 가져오면 원래 결재선을 지우네
-           ezApprovalGDAO.deleteRelayAprLineInfo(map);
+
+		   ezApprovalGDAO.deleteRelayAprLineInfo(map);
            ezApprovalGDAO.deleteRelayExpAprLineInfo(map);
          
-       //지우고 다시 넣네?
            ezApprovalGDAO.insertRelayAprLineInfo(map);
            ezApprovalGDAO.insertRelayExpAprLineInfo(map);
            
@@ -32449,7 +32441,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         ezApprovalGDAO.insertModifyOpenGovHistory(map);
 
         logger.debug("updateOpenGovInfo ended");
-        //TODO 이거 대체 왜
+
         return null;
     }
 
@@ -34814,4 +34806,453 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         logger.debug("getAccessYNGforAPR ended.");
         return rtnVal ? "<RESULT>TRUE</RESULT>" : "<RESULT>TRUE</RESULT>";
     } 
+	
+	/* 2023-03-22 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 통합 PC 저장시 문서 하나의 완료 의견 정보 가져오는 메소드 */
+	public List<ApprGOpinionVO> getDocOpinionList(String docID, LoginVO userInfo) throws Exception {
+		logger.debug("getDocOpinionList started.");
+		// 의견정보 담기 시작
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		
+		String orderOption1 = "";
+		map2.put("v_DOCID", docID);
+		map2.put("v_MODE", "END");
+		map2.put("v_ORDEROPTION", orderOption1);
+		map2.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		
+		if (orderOption1.length() > 0) {
+			map2.put("v_ORDEROPTIONVALUE", orderOption1.substring(0, 9).toLowerCase());
+		}
+		
+		map2.put("v_TENANTID", userInfo.getTenantId());
+		map2.put("companyID", userInfo.getCompanyID());
+		
+		// 해당 문서에 저장된 의견 정보 리스트 추출
+		List<ApprGOpinionVO> apprGOpinioinVOList = ezApprovalGDAO.getOpinionInfo(map2);
+		
+		logger.debug("getDocOpinionList ended.");
+		return apprGOpinioinVOList;
+	};
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 선택된 문서 통합 PC 저장 */
+	@Override
+	public String totalSaveDownloadAll(String[] docIDarr, LoginVO userInfo, String type, String approvalFlag, String accessInfo, String realPath, String opinionTxtFileName, String opinionWriterMark, String opinionContentMark, String attMark) throws Exception {
+		
+		logger.debug("totalSaveDownloadAll started");
+		ZipOutputStream zout = null;
+		String zipFilePath = null;
+
+		// 기존 통합 파일 저장은 docID 폴더명으로 파일을 임시 저장했는데, 여러 개의 문서를 한 번에 저장하는 경우 날짜를 기준으로 압축 파일명을 만듦.
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HHmmssSSS");
+		Date now = new Date();
+		String nowTime = dateFormat.format(now);
+		String zipFileName = nowTime;
+		List<String> docIDlist = null;
+		
+		try {
+			File sourceDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + nowTime));
+			
+			if (sourceDir.exists()) {
+				for (File sDirFile : sourceDir.listFiles()) {
+					sDirFile.delete();
+				}
+				sourceDir.delete();
+			}
+			
+			if (!sourceDir.exists()) {
+				sourceDir.mkdirs();
+			}
+			zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + nowTime + commonUtil.separator + zipFileName + ".zip";
+			zout = new ZipOutputStream(new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + zipFilePath))));
+			
+			docIDlist = Arrays.asList(docIDarr);
+			
+		    Map<String, Object> map = new HashMap<String, Object>();
+			map.put("companyID", userInfo.getCompanyID());
+			map.put("vDocIDMap", docIDlist);
+			map.put("v_PMODE", type);
+			map.put("v_TENANTID", userInfo.getTenantId());
+			
+			List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.getTotalDownloadAll(map);
+			
+			Map<String, Integer> uniqueFolderNameMap = new HashMap<String, Integer>();
+			Map<String, Integer> uniqueFileNameMap = null;
+			Map<String, String> folderNameMap = new HashMap<String, String>();
+			String folderName = "";
+			boolean isAttachYN = false;
+			int attachCnt = 0;
+			for (int index = 0; index < apprGAttachInfoVOList.size(); index ++) {
+				ApprGAttachInfoVO fileInfo = apprGAttachInfoVOList.get(index);
+				String filetype = fileInfo.getType();
+				String filePath = fileInfo.getFilePath();
+				String fileName = fileInfo.getFileName().replace("\\", "_").replace("/", "_").replace(":", "_").replace("?", "_").
+		                replace('"' + "", "_").replace("*", "_").replace("<", "_").replace(">", "_").replace("|", "_").replace("[","_").replace("}","_").replaceAll("\\t", " ");
+				String docId = fileInfo.getDocID();
+				
+				switch (filetype) {
+				// filetype이 DOC인 경우에는 docID가 바뀐다.
+				case "DOC":
+					attachCnt = 0;
+					uniqueFileNameMap = new HashMap<String, Integer> ();
+					folderName = commonUtil.getUniqueFileName(fileName, uniqueFolderNameMap);
+					folderNameMap.put(docId, folderName);
+					zout.putNextEntry(new ZipEntry(folderName + commonUtil.separator));
+					zout.closeEntry();
+					isAttachYN = false;
+					downloadFileInZip(realPath, filePath, fileName, folderName, zout, uniqueFileNameMap, isAttachYN, attMark);
+					break;
+				case "ATT":
+					attachCnt += 1;
+					// 첨부파일 존재할 시 첨부 폴더 생성.
+					if (attachCnt == 1) {
+						zout.putNextEntry(new ZipEntry(folderName + commonUtil.separator + attMark + commonUtil.separator));
+						zout.closeEntry();
+					}
+					isAttachYN = true;
+					downloadFileInZip(realPath, filePath, fileName, folderName, zout, uniqueFileNameMap, isAttachYN, attMark);
+					break;
+				case "ATTDOC":
+					isAttachYN = false;
+					downloadFileInZip(realPath, filePath, fileName, folderName, zout, uniqueFileNameMap, isAttachYN, attMark);
+					break;
+				}
+			}
+			
+			// 의견정보 담기 시작
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			
+			map2.put("vDocIDMap", docIDlist);
+			map2.put("v_MODE", "END");
+			map2.put("v_TENANTID", userInfo.getTenantId());
+			map2.put("companyID", userInfo.getCompanyID());
+			
+			// 선택된 문서들의 모든 의견 정보 리스트를 docID, 의견 순서로 정렬하여 리턴.
+			List<ApprGOpinionVO> apprGOpinionList = ezApprovalGDAO.getDocsOpinionInfo(map2);
+			String lineSepearator = System.lineSeparator();
+			int lastOpinionIndex = apprGOpinionList.size() - 1;
+			
+			String tempOpinionFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + nowTime + commonUtil.separator;
+			
+			StringBuilder opinionSb = new StringBuilder();
+			
+			// 문서별로 의견을 분류하여 다운로드. 다음 의견이 현재 의견의 docID와 같다면 의견 내용만 작성, 다르다면 zip에 다운로드.
+			for (int index = 0; index < apprGOpinionList.size(); index ++) {
+				ApprGOpinionVO apprGCurOpinion = apprGOpinionList.get(index);
+				String curDocId = apprGCurOpinion.getDocID();
+				
+				opinionSb = makeOneOpinionContent(opinionSb, userInfo, lineSepearator, opinionWriterMark, opinionContentMark, apprGCurOpinion);
+				
+				if (index != lastOpinionIndex) {
+					ApprGOpinionVO apprGNextOpinion = apprGOpinionList.get(index + 1);
+					String nextDocId =  apprGNextOpinion.getDocID();
+					
+					// 현재 의견의 docID와 다음 의견의 docID가 다른 경우에는 해당 문서의 마지막 의견이므로, 현재까지의 의견 내용들을 텍스트 파일로 만든 뒤 압축 파일 안에 넣어준다.
+					if (!curDocId.equals(nextDocId)) {
+						String saveFolderName = folderNameMap.get(curDocId);
+						downloadOpinionFileInZip(realPath, tempOpinionFilePath, opinionTxtFileName, opinionSb, saveFolderName, zout);
+						opinionSb = new StringBuilder();
+					}
+				}
+				// 마지막 의견의 경우 비교할 다음 의견이 존재하지 않으므로, 현재까지의 의견 내용들을 텍스트 파일로 만든 뒤 압축 파일 안에 넣어준다.
+				else {
+					String saveFolderName = folderNameMap.get(curDocId);
+					downloadOpinionFileInZip(realPath, tempOpinionFilePath, opinionTxtFileName, opinionSb, saveFolderName, zout);
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			if(zout!=null) {
+				zout.close();
+			}
+		}
+		
+		// 통합 PC 저장한 이력을 남김.
+		insertTotalSaveHistory(docIDlist, userInfo, "D");
+		
+		logger.debug("totalSaveDownloadAll ended");
+		
+		return zipFilePath;
+	}
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 선택된 문서 통합 PC 저장에서 문서에 있는 모든 의견들이 문자열로 만들어지면 해당 내용을 텍스트파일로 만들어서 zip에 다운로드 */
+	@Override
+	public void downloadOpinionFileInZip(String realPath, String tempOpinionFilePath, String opinionTxtFileName, StringBuilder sb, String saveFolderName, ZipOutputStream zout) throws Exception {
+		
+		logger.debug("downloadOpinionFileInZip started");
+		
+		File opinionFile = null;
+		FileWriter fw = null;
+		PrintWriter writer = null;
+		
+		try {
+			opinionFile = new File(commonUtil.detectPathTraversal(realPath + tempOpinionFilePath + opinionTxtFileName + ".txt"));
+			fw = new FileWriter(opinionFile,false);
+			writer = new PrintWriter(fw);
+			writer.write(sb.toString());
+			writer.flush();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+			if (fw != null) {
+				try {
+					fw.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		byte[] fileOpinionBytes = commonUtil.readBytesFromFile(opinionFile.toPath());
+		
+		ZipEntry zentry = new ZipEntry(saveFolderName + commonUtil.separator + opinionTxtFileName + ".txt");
+		zout.putNextEntry(zentry);
+		zout.write(fileOpinionBytes);
+		zout.closeEntry();
+
+		if (opinionFile != null && opinionFile.exists()) {
+			opinionFile.delete();
+		}
+		
+		logger.debug("downloadOpinionFileInZip ended");
+	}
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 문서 통합 PC 저장 시 하나의 의견내용을 문자열로 만들어주는 메소드. */
+	@Override
+	public StringBuilder makeOneOpinionContent(StringBuilder sb, LoginVO userInfo, String lineSepearator, String opinionWriterMark, String opinionContentMark, ApprGOpinionVO apprGOpinion) throws Exception {
+		
+		logger.debug("makeOneOpinionContent started");
+		
+		StringBuffer opinionTitle = new StringBuffer();
+		String opinionContent = apprGOpinion.getContent();
+		String opinionUserName = "";
+		String opinionUserDeptName = "";
+		String opinionUserJobTitle = "";
+		
+		if (userInfo.getPrimary().equals("1")) {
+			opinionUserName = apprGOpinion.getUserName();
+			opinionUserDeptName = apprGOpinion.getUserDeptName();
+			
+			if (apprGOpinion.getUserJobTitle() == null) {
+				opinionUserJobTitle = "";
+			} else {
+				opinionUserJobTitle = apprGOpinion.getUserJobTitle();
+			}
+		} else {
+			opinionUserName = apprGOpinion.getUserName2();
+			opinionUserDeptName = apprGOpinion.getUserDeptName2();
+			
+			if (apprGOpinion.getUserJobTitle2() == null) {
+				opinionUserJobTitle = "";
+			} else {
+				opinionUserJobTitle = apprGOpinion.getUserJobTitle2();
+			}
+		}
+		
+		String opinionGB = "";
+		
+		try {
+			opinionGB = commonUtil.cleanValue(getListField("OPINIONGB", apprGOpinion.getOpinionGB(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset()));
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		opinionTitle.append(opinionGB).append("_");
+		opinionTitle.append(opinionUserDeptName).append("_");
+		opinionTitle.append(opinionUserJobTitle).append("_");
+		opinionTitle.append(opinionUserName);
+		
+		sb.append("###");
+		sb.append(opinionWriterMark); // 작성자 : 
+		sb.append(opinionTitle).append(lineSepearator);
+		sb.append("###");
+		sb.append(opinionContentMark); // 의견 내용 : 
+		sb.append(lineSepearator);
+		sb.append(opinionContent).append(lineSepearator);
+		sb.append("-------------------------------------------------------------------------------------------").append(lineSepearator);
+		sb.append("-------------------------------------------------------------------------------------------").append(lineSepearator);
+		
+		logger.debug("makeOneOpinionContent ended");
+		
+		return sb;
+	}
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 문서 통합 PC 저장시 문서파일, 첨부파일, 문서첨부파일을 zip내 문서별로 분류된 폴더에 다운로드 */
+	@Override
+	public void downloadFileInZip(String realPath, String filePath, String fileName, String folderName, ZipOutputStream zout, Map<String,Integer> fileNameMap, boolean isAttachYN, String attMark) throws Exception {
+		logger.debug("downloadFileInZip started");
+		try {
+			File sourceFile = new File(commonUtil.detectPathTraversal(realPath + filePath));
+			byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
+			String realExt = "";
+			
+			// 전자결재 KLIB 암/복호화
+			if (filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				fileBytes = klibUtil.decrypt(fileBytes);
+				
+				// 복호화하여 다운로드하므로, .ezd로 끝나는 확장자(/\\.ezd$/)가 파일명에 존재한다면 제거
+				fileName = fileName.replaceAll(("\\." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT + "$"), "");
+				realExt = filePath.replaceAll(("\\." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT + "$"), "");
+			}
+			
+			// 파일경로에서 찾은 실제 파일 확장자 보존 (.문자 포함)
+			realExt = filePath.substring(filePath.lastIndexOf("."));
+			
+			// 파일명에 확장자가 존재하지 않는 경우, 실제 확장자를 어펜드 (KLIB 암/복호화 관련 확장자는 제외)
+			if (!fileName.endsWith(realExt) && !filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				fileName = fileName + realExt;
+			}
+			
+			fileName = commonUtil.getUniqueFileName(fileName, fileNameMap);
+			
+			// 첨부 파일은 첨부 폴더에 추가.
+			String entryFilePath = isAttachYN ? folderName + commonUtil.separator + attMark + commonUtil.separator + fileName : folderName + commonUtil.separator + fileName;
+			ZipEntry zentry = new ZipEntry(entryFilePath);
+			zout.putNextEntry(zentry);
+			zout.write(fileBytes);
+			zout.closeEntry();
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		} 
+		
+		logger.debug("downloadFileInZip ended");
+	}
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 단일 문서 통합PC 저장시 완료 문서의 경우 의견 내용들을 문자열로 만들어서 반환 */
+	@Override
+	public String makingOpinionFileContent(LoginVO userInfo, List<ApprGOpinionVO> apprGOpinionList, String opinionWriterMark, String opinionContentMark, String lineSepearator) {
+		logger.debug("makingOpinionFileContent started");
+		
+		StringBuilder sb = new StringBuilder();
+		
+			for (int j = 0; j < apprGOpinionList.size(); j++) {
+				StringBuffer opinionTitle = new StringBuffer();
+				String opinionContent = apprGOpinionList.get(j).getContent();
+				String opinionUserName = "";
+				String opinionUserDeptName = "";
+				String opinionUserJobTitle = "";
+				
+				if (userInfo.getPrimary().equals("1")) {
+					opinionUserName = apprGOpinionList.get(j).getUserName();
+					opinionUserDeptName = apprGOpinionList.get(j).getUserDeptName();
+					
+					if (apprGOpinionList.get(j).getUserJobTitle() == null) {
+						opinionUserJobTitle = "";
+					} else {
+						opinionUserJobTitle = apprGOpinionList.get(j).getUserJobTitle();
+					}
+				} else {
+					opinionUserName = apprGOpinionList.get(j).getUserName2();
+					opinionUserDeptName = apprGOpinionList.get(j).getUserDeptName2();
+					
+					if (apprGOpinionList.get(j).getUserJobTitle2() == null) {
+						opinionUserJobTitle = "";
+					} else {
+						opinionUserJobTitle = apprGOpinionList.get(j).getUserJobTitle2();
+					}
+				}
+				
+				String opinionGB = "";
+				
+				try {
+					opinionGB = commonUtil.cleanValue(getListField("OPINIONGB", apprGOpinionList.get(j).getOpinionGB(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset()));
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+				
+				opinionTitle.append(opinionGB).append("_");
+				opinionTitle.append(opinionUserDeptName).append("_");
+				opinionTitle.append(opinionUserJobTitle).append("_");
+				opinionTitle.append(opinionUserName);
+				
+				sb.append("###");
+				sb.append(opinionWriterMark);//작성자 : 
+				sb.append(opinionTitle).append(lineSepearator);
+				sb.append("###");
+				sb.append(opinionContentMark);//의견 내용 : 
+				sb.append(lineSepearator);
+				sb.append(opinionContent).append(lineSepearator);
+				sb.append("-------------------------------------------------------------------------------------------").append(lineSepearator);
+				sb.append("-------------------------------------------------------------------------------------------").append(lineSepearator);
+			}
+			
+			logger.debug("makingOpinionFileContent ended");
+			return sb.toString();
+	}
+	
+	
+	/* 2023-04-11 한태훈 - 전자결재G > 통합PC 저장 시 tbl_total_history에 다운로드 이력 남김.(다운로드 이력은 gubun값 D) docID리스트를 parameter로 전달하여 문서마다 이력을 남김.(현재는 다운로드 이력이지만, gubun값을 이용해 차후에 다른 용도로 사용 가능.) */
+	@Override
+	public void insertTotalSaveHistory(List<String> docIDlist, LoginVO userInfo, String gubun) throws Exception {
+		logger.debug("insertTotalSaveHistory started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCIDlist", docIDlist);
+		map.put("v_USERID", userInfo.getId());
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_USERJOBTITLE", userInfo.getTitle());
+		map.put("v_USERDEPTID", userInfo.getDeptID());
+		map.put("v_USERDEPTNAME", userInfo.getDeptName());
+		map.put("v_USERNAME", userInfo.getDisplayName());
+		map.put("v_USERNAME2", userInfo.getDisplayName2());
+		map.put("v_USERJOBTITLE2", userInfo.getTitle2());
+		map.put("v_USERDEPTNAME2", userInfo.getDeptName2());
+		map.put("v_TENANT_ID", userInfo.getTenantId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
+		map.put("v_GUBUN", gubun);
+		ezApprovalGDAO.insertTotalSaveHistory(map);
+		
+		logger.debug("insertTotalSaveHistory ended");
+	}
+	
+	/* 2023-03-28 한태훈  - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 문서 통합PC저장 시 선택된 보안결재 문서들 결재선 포함 여부 확인 (현재 사용자가 결재선상에 존재해야 다운로드 가능) */
+	@Override
+	public String checkAprLineAll(String[] docIDarr, String mode, String userID, String companyID, int tenantID) throws Exception {
+		
+		logger.debug("checkAprLineAll started");
+		
+		String result = "";
+		StringBuffer secDocIDsInAprLine = new StringBuffer();
+		StringBuffer secDocIDsNotInAprLine = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
+		sb.append("<RESULT>");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (String docID : docIDarr) {
+		    map.put("companyID", companyID);
+			map.put("v_DOCID", docID);
+			map.put("v_MODE", mode);
+			map.put("v_USERID", userID);
+			map.put("v_TENANTID", tenantID);
+			int tempCount = ezApprovalGDAO.checkAprLine(map); // 결재선에 포함되어있는지 체크
+			
+			if (tempCount > 0) {
+				secDocIDsInAprLine.append(docID + "|||");
+			} else {
+				tempCount = ezApprovalGDAO.checkProxyAprLine(map); // 결재 진행중인 결재자의 대리결재자인지 체크 보안결재의 경우 대리결재자도 열람권한이 없음.
+				if (tempCount > 0) {
+					secDocIDsInAprLine.append(docID+"|||");
+				} else {
+					secDocIDsNotInAprLine.append(docID + "|||");
+				}
+				
+			}
+		}
+		
+		sb.append("<INAPRLINE>");
+		sb.append(secDocIDsInAprLine.toString()); // 결재선에 포함된 docID
+		sb.append("</INAPRLINE>");
+		sb.append("<NOTINARPLINE>");
+		sb.append(secDocIDsNotInAprLine.toString()); // 결재선에 미포함된 docID
+		sb.append("</NOTINARPLINE>");
+		sb.append("</RESULT>");
+		result = sb.toString();
+		
+		logger.debug("checkAprLineAll ended");
+		
+		return result;
+	}
 }

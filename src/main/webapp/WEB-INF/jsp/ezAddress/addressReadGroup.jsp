@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style>
 			select {
 				background: none;
@@ -144,6 +145,25 @@
 				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
 				return feature;
 			}
+
+			function pagePrint() {
+				var initBody = $('body').html();
+
+				// window.print()이전 이벤트 발생
+				window.onbeforeprint = function () {
+					document.body.innerHTML = $('#printContent').html();
+					//메모가 길 경우 스크롤바가 생기는데 프린트를 하면 스크롤 아래 내역은 출력이 안되어 auto로 변경해주는 작업
+					document.getElementById('memoDiv').style.height = 'auto';
+				}
+
+				// window.print()이후 이벤트 발생
+				window.onafterprint = function () {
+					// window.onbeforeprint 에서 변경한 화면단을 다시 원래로 돌리는 작업
+					document.body.innerHTML = initBody;
+				}
+
+				window.print();
+			}
 		</script>
 	</head>
 	<body class="popup" style="margin:5px 10px 9px;">
@@ -152,7 +172,7 @@
 		    <div id="menu" style="margin-bottom:19px; margin-top:7px;">
 		      <ul>
 		        <li><span onClick="modify_address()"><spring:message code='ezAddress.t174' /></span></li>
-				<li><span class="icon16 popup_icon16_print" onClick="window.print()"></span></li>
+				<li><span class="icon16 popup_icon16_print" onClick="pagePrint()"></span></li>
 		        <li><span class="icon16 popup_icon16_mail_gray" onClick="write_letter()"></span></li>
 		      	<c:if test="${useCabinet == 'YES'}">
 					<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
@@ -167,41 +187,42 @@
 		    <script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			</script>
-		    <table  class="content">
-		      <tr>
-		        <th><spring:message code='ezAddress.t304' /></th>
-		        <td colspan="3"><span id="TextName"><c:out value='${addressInfo.sName}' /></span></td>
-		      </tr>
-		      <tr>
-		        <th><spring:message code='ezAddress.t286' /></th>
-		        <td title="<spring:message code='ezAddress.t287' />" style="cursor:pointer;width:50%;" onClick="show_personinfo(0)"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></td>
-		        <th><spring:message code='ezAddress.t289' /></th>
-		        <td title="<spring:message code='ezAddress.t287' />" style="cursor:pointer" onClick="show_personinfo(1)"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></td>
-		      </tr>
-		      <tr>
-		        <th><spring:message code='ezAddress.t288' /></th>
-		        <td style="width:50%;"><span id="TextCreateDate"><c:out value='${addressInfo.createDate}' /></span></td>
-		        <th><spring:message code='ezAddress.t290' /></th>
-		        <td style="width:50%;"><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
-		      </tr>
-		      <tr>
-		        
-		      </tr>
-		      <tr>
-		        
-		      </tr>
-		    </table>
+			<div id="printContent">
+				<table  class="content">
+				  <tr>
+					<th><spring:message code='ezAddress.t304' /></th>
+					<td colspan="3"><span id="TextName"><c:out value='${addressInfo.sName}' /></span></td>
+				  </tr>
+				  <tr>
+					<th><spring:message code='ezAddress.t286' /></th>
+					<td title="<spring:message code='ezAddress.t287' />" style="cursor:pointer;width:50%;" onClick="show_personinfo(0)"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></td>
+					<th><spring:message code='ezAddress.t289' /></th>
+					<td title="<spring:message code='ezAddress.t287' />" style="cursor:pointer" onClick="show_personinfo(1)"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></td>
+				  </tr>
+				  <tr>
+					<th><spring:message code='ezAddress.t288' /></th>
+					<td style="width:50%;"><span id="TextCreateDate"><c:out value='${addressInfo.createDate}' /></span></td>
+					<th><spring:message code='ezAddress.t290' /></th>
+					<td style="width:50%;"><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
+				  </tr>
+				  <tr>
+					
+				  </tr>
+				  <tr>
+					
+				  </tr>
+				</table>
 		    
-		    <div id="ListMember" style="width:100%;height:415px;margin-top:10px;padding:0;overflow:auto;border:1px solid #d2d2d2;">
-			    <table style="width:100%;">
-			    	<c:forEach items="${listMember}" var="member">
-				    	<tr onmouseover="" style="height:20px;border-bottom:1px solid #d2d2d2;">
-				    		<td style="padding:6px;" title="${member}">${member}</td>
-				    	</tr>
-			    	</c:forEach>
-			    </table>
-		    </div>
-		    
+				<div id="ListMember" style="width:100%;height:415px;margin-top:10px;padding:0;overflow:auto;border:1px solid #d2d2d2;">
+					<table style="width:100%;">
+						<c:forEach items="${listMember}" var="member">
+							<tr onmouseover="" style="height:20px;border-bottom:1px solid #d2d2d2;">
+								<td style="padding:6px;" title="${member}">${member}</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</div>
+			</div>
 		  </div>
 		  <div id="printScreen" style="DISPLAY: none">
 		    <table class="content">

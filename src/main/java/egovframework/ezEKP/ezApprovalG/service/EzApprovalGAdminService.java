@@ -270,4 +270,6 @@ public interface EzApprovalGAdminService {
     /* 2022-12-09 홍승비 - 전자결재G > 현재 년도 기준의 종료예정 기록물철을 원하는 생산연도의 기록물철로 복사하여 삽입하는 메서드 */
 	public int cloneMultipleCabinets(String regYear, List<Map<String, Object>> cabinetList, String strLang, String companyID, int tenantID) throws Exception;
 	
+	/* 2024-04-05 전인하 - 전자결재G > 기록물관리 > 단위업무 관리 > 총 단위업무 갯수 카운트 호출 */
+	public int getTaskListCount(String deptCode, String companyID, int tenantID) throws Exception;
 }

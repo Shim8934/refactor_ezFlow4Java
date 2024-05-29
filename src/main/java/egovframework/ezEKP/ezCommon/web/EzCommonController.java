@@ -106,13 +106,9 @@ public class EzCommonController extends EgovFileMngUtil{
         	strHTML = request.getParameter("strHTML");
         	strHTML = URLDecoder.decode(strHTML, "utf-8");
         }
-        
-        String scheme = "http://";
-        String http = request.getScheme();
-    	if (http.equalsIgnoreCase("https")) {
-    		scheme = "https://";
-    	}
-        
+		
+        String scheme = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", userInfo.getTenantId())) ? "https://" : "http://";
+
     	while (strHTML.indexOf("src=\"/ezEmail/downloadInline.do") > 0) {
     		int pos1 = strHTML.indexOf("src=\"/ezEmail/downloadInline.do") + 5;
     		int pos2 = pos1 + strHTML.substring(pos1).indexOf("\"");

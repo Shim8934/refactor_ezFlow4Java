@@ -1637,6 +1637,8 @@
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
 		            message.DocumentBodySetAttribute("SepAttachLVXml", g_SepAttachLVXml);
+		            //김우철
+		            SaveFile();
 		        }
 		    }
 		    function GetSepAttParamXml(g_SepAttachLVXml) {
@@ -1913,10 +1915,10 @@
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {
-		                		//없으니깐 암것도 안해도되려나 싶은데 기존꺼를 뺏을수도 있으니까 무조건 삭제
+		                		// ret[22] 값이 "noItem"일 경우 기존 데이터가 있을 수 있으므로 삭제함
 		                		delAprLineInfoCC();
 		                	} else if (ret[22] == "sameItem") {
-		                		//같으니깐 암것도 안해도 되려나
+		                		// ret[22] 값이 "sameItem"일 경우 동작 없음
 		                	} else {
 		                		//회람 저장
 		                		SaveAprLineInfoCC(ret[22]);

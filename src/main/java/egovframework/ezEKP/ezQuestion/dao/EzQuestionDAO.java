@@ -179,7 +179,6 @@ public class EzQuestionDAO extends EgovAbstractDAO {
 	}
 	
 	public int getQuestionNo(Map<String,Object> map) throws Exception {
-		//return (int)select("EzQuestionDAO.getQuestionNo", map);
 		if(select("EzQuestionDAO.getQuestionNo", map) != null) {
 			return (int)(int)select("EzQuestionDAO.getQuestionNo", map);
 		}else{

@@ -58,7 +58,6 @@
 		    var useEditor = "<c:out value='${useEditor}'/>";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var realPath = "<c:out value = '${realPath}' />";
-		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
 		    var ext = "<c:out value='${ext}'/>";
 		    var locale = "<c:out value = '${locale}' />";
 		    // FormBuilder

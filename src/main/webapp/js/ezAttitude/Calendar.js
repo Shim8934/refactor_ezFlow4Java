@@ -22,7 +22,6 @@ function CalendarView(pTargetID) {
 	var btnType = $(".mainmenuTabUL li.on").attr("id");
 	if (btnType == "btnCalList" || btnType == undefined) {
 		getAttitudeMainList();
-		//CalViewSource(); //달력에 근태 데이터 뿌리면 되고
 	} else {
 		getAttitudeTableList();
 	}

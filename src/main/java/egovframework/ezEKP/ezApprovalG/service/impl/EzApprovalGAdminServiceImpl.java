@@ -1520,10 +1520,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("getTaskFullList started.");
 		StringBuilder sb = new StringBuilder();
 		
+		int startRow = (Integer.parseInt(pageNo) - 1) * Integer.parseInt(pageSize);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DEPTCODE", deptCode);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("pageSize", Integer.parseInt(pageSize));
+		map.put("startRow", startRow);
+		map.put("startRowForOracle", startRow + 1);
+		map.put("endRowForOracle", startRow + Integer.parseInt(pageSize));
+		
 		
 		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskFullList(map);
 		
@@ -2570,7 +2577,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			recevGroupXML = formRecevGroup;
 		}
 		
-		// 안 쓰고 있음 혹시 모르니 유지
+		// 현재 사용하지 않는 것으로 추정되나 일단 유지함
 		@SuppressWarnings("unused")
 		boolean isUpdate = false;
 		String saveFileFolder = "";
@@ -5916,6 +5923,18 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 		return "TRUE";
 	}
-	
-	
+
+	public int getTaskListCount(String deptCode, String companyID, int tenantID) throws Exception {
+		logger.debug("getTaskListCount started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DEPTCODE", deptCode);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		int result = ezApprovalGAdminDAO.getTaskListCount(map);
+		
+		logger.debug("getTaskListCount ended.");
+		return result;
+	}
 }

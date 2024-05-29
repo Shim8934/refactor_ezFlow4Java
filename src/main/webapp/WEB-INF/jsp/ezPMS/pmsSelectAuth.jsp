@@ -238,7 +238,6 @@
 	   				SelectReceiverWindow(viewer, viewerList);
 	   			}
 				
-				////////////////////////
 				function userAddToList(chkFlag){
 					if (chkFlag) {
 		   				if (authName == "manager") {

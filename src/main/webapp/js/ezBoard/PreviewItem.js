@@ -192,10 +192,11 @@ function PreviewRayerChange(pGubun) {
         }
         MailOptionHidden();
         PreviewMode_ChangeBtn();
-        // 주석처리한 이유?
+
         if (firstFlag) {
             Set_BoardConfig();
         }
+        
         isPreviewChange = false;
         scroll();
     } catch (e) { }

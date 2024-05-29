@@ -141,7 +141,7 @@ function treeSet() {
 	
 }
 
-// jstree 보여주는 애
+// jstree 보여줌
 function treeView() {
 	$('#divTree').jstree({
 		"plugins" : [ "changed", "wholerow", "types" ],

@@ -1882,7 +1882,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t152", userInfo.getLocale()) + "</p>";
 				
 				content += "<p></p>";
-				content += "<a id='journal_a' href='#' target='' onclick='journalMailLink(" + journalId + ",1);'>" + journalTitle + "</a>";
+				content += "<a id='journal_a' href='javascript:;' target='' onclick='journalMailLink(" + journalId + ",1);'>" + journalTitle + "</a>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t153", userInfo.getLocale()) + userInfo.getDisplayName() + "</p>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154", userInfo.getLocale()) + journalTitle + "</p>";
 				content += "<p>" + replyContent + "</p>";
@@ -1960,7 +1960,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				
 				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t156", userInfo.getLocale()) + "</p>";
 				content += "<p></p>";
-				content += "<a id='journal_a' href='#' target='' onclick='journalMailLink(" + journalId + ");'>" + journalTitle + "</a>";
+				content += "<a id='journal_a' href='javascript:;' target='' onclick='journalMailLink(" + journalId + ");'>" + journalTitle + "</a>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t157", userInfo.getLocale()) + userInfo.getDisplayName() + "</p>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154", userInfo.getLocale()) + journalTitle + "</p>";
 				

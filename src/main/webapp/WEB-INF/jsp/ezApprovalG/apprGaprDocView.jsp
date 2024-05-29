@@ -209,7 +209,6 @@
 		            var fields = message.GetFieldsList();
 		            NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
 		            if (NodeList.length > 0) {
-		            	//nodelist 잘못가져오는듯
 		                for (i = 0; i < NodeList.length; i++) {
 		                    var SignType = getNodeText(SelectSingleNode(NodeList[i], "SIGNTYPE"));
 		                    var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
@@ -485,10 +484,10 @@
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		        
 				if (ListTypeValue == "21") {
-			        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=TMP");
+			        DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=TMP");
 				} else {
 			        var mode = getDocMode();
-			        DivPopUpShow(420, 520, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=" + mode);
+			        DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=" + mode);
 				}
 		    }
 		    function btnDocInfo_onclick_Complete() {

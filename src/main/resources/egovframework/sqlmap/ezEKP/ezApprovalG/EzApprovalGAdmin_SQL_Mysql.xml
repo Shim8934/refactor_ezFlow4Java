@@ -312,7 +312,11 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					RTRIM(TBL_TASK_DEPTINFO.processdeptcode) = #v_DEPTCODE#
+					(RTRIM(TBL_TASK_DEPTINFO.processdeptcode) = #v_DEPTCODE#
+				OR
+					#v_TASKCODE# LIKE 'ZZ%'
+				OR
+					#v_TASKCODE# = '99999999')
 			]]>
 		</isNotEqual>
 	</select>
@@ -434,7 +438,32 @@
 		<![CDATA[
 			ORDER BY
 				taskcode ASC
+			limit
+				#startRow#, #pageSize#
 		]]>
+	</select>
+
+	<select id="EzApprovalGAdmin.getTaskListCount" parameterClass="Map" resultClass="int">
+	<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				VTASKCLASS
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+		]]>
+	<isNotEqual property="v_DEPTCODE" compareValue="">
+		<![CDATA[
+			AND
+				(RTRIM(processdeptcode) = #v_DEPTCODE#
+				OR
+					taskcode LIKE 'ZZ%'
+				OR
+					taskcode = '99999999')
+		]]>
+	</isNotEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDeptInfo" -->

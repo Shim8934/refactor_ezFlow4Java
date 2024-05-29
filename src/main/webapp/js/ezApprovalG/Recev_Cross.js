@@ -2550,7 +2550,6 @@ function SaveDraftDocInfo() {
         if (pSuSinFlag == "Y") {
             var AprDeptInfo = ret[2];
 
-            //같은현상이다 도르야
 //            var AprDeptPara = createXmlDom();
 //            var pAprNDeptNumber = 1;
 //            var pAprDeptFlag = "NDept";

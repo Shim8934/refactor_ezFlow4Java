@@ -506,11 +506,11 @@ public class EzApprovalGRelayScheduler {
         							 }
         						 }
         						 
-        						 //혹시 몰라 주석 일단
-//                                      System.Xml.XmlDocument extXml = new System.Xml.XmlDocument();
-//                                      extXml.LoadXml(strReXml);
-//                                      string strFormPath = extXml.InnerText;
-//                                      extXml = null;
+        						 // 일단 추석처리함
+                                 //System.Xml.XmlDocument extXml = new System.Xml.XmlDocument();
+                                 //extXml.LoadXml(strReXml);
+                                 //string strFormPath = extXml.InnerText;
+                                 //extXml = null;
         						 
         						 //결재진행문서 정보에 수신문서 정보를 입력해 준다.
         						 boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(strWriterName, strWriterDept, commonUtil.getRealPath(servletContext), strXDocID, strReceiveID, strCompanyID, tenantID);

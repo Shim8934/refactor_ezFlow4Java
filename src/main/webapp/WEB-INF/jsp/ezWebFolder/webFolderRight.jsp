@@ -495,7 +495,7 @@
 						style.wordWrap = "normal";
 					});
 					
-					setStyles([tdElmt2, tdElmt3, tdElmt5, tdElmt10], function(style) {
+					setStyles([tdElmt1, tdElmt2, tdElmt3, tdElmt5, tdElmt10], function(style) {
 						style.textAlign = "center";
 					});
 

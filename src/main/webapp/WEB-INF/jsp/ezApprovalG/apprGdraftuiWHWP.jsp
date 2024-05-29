@@ -484,6 +484,14 @@
 			                        setClearSusinCellInfo();
 			                    }
 			                    pDocID = createNewDoc();
+			                    
+			                    // 2024-04-19 조소정 - G버전 whwp문서 재사용 시 첨부파일 재사용 및 첨부파일이력 추가
+			                    if (isUsed == "reuse") {
+			                    	if (apprReuseConfig != '1') {
+			                    		getDocInfo();
+										setAttachInfo(pDocID, "APR", lstAttachLink);
+			                    	}
+								}
 			                }
 			            }
 					}
@@ -1248,6 +1256,10 @@
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
 		            SetDocumentElement("sepattachlvxml", g_SepAttachLVXml);
+		            
+		            if (pDraftFlag == "REDRAFT") {
+		            	GetHTML(before_saveFile);	            	
+		            }
 		        }
 			}
 			
@@ -1625,7 +1637,7 @@
 		    	if (result != "N") {
 		    		chk_Passwd();
 		    	} else {
-		    		 if (IsSkipDrafter == "FALSE") {
+		    		 if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
 	                    //var ret;
 	                    var parameter = new Array();
 	
@@ -1723,7 +1735,7 @@
                     return;
                 }
 	    		
-	    		if (IsSkipDrafter == "FALSE") {
+	    		if (IsSkipDrafter == "FALSE" && nonElecRec != "Y") {
                 	//if (nonElecRec != "Y") {
 	                    //var ret;
 	                    var parameter = new Array();
@@ -1874,6 +1886,11 @@
 
 				var numberFormat = message3.GetFieldText("docnumber");
 				message.PutFieldText("docnumber", getDocNumByFormat(numberFormat));
+			}
+			
+			function before_saveFile(html) {
+				pSaveHtml = html;
+				SaveFile();
 			}
 	    </script>
 	</head>

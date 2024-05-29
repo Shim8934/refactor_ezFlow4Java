@@ -151,7 +151,7 @@
 		        }
 		        
 		       // if (bigFileCheck && alertCnt < 2 && isbigyn == "N") {
-		        if (bigFileCheck && isbigyn == "N") {
+		        if (bigFileCheck && isbigyn == "N" && filelist.length == 1) {
 		    		// 2018-10-05 재은수정: 일반첨부에서 대용량첨부로 전환될 때 취소 버튼 추가
 		        	var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
 		        	
@@ -160,10 +160,8 @@
 		        	}
 		        	
 		            //alertCnt++;
-		        }
-		        
-		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
-		           
+		        } else if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
+
 		        	/* 일반첨부파일용량 초과인경우 맨 마지막 파일을 대용량 첨부로 전환시킨다. 기존에는 return으로 종료했었음.
 		        	if (window.parent.FtotBigSizeAttachSize == 0) {
 		            	
@@ -181,7 +179,12 @@
 		            
 		        	file.splice(file.length - filelist.length, filelist.length);
 		            */
-		            
+                    var bigFileAttachChk = confirm(strLang75 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
+
+                    if (!bigFileAttachChk) {
+                        return;
+                    }
+
 		            status = 1;
 		            return status;
 		        }

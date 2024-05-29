@@ -58,8 +58,6 @@ function TreeViewRequestData(pNodeID,pTreeID)
     treeNode.LoadFromID(TreeIdx);
 
     var deptID = treeNode.GetNodeData("CN");
-    //alert("리퀘pTreeID"+ pTreeID);
-    //alert("리퀘ID"+ deptID);
     //alert("treeidx" + TreeIdx);
     GetDeptSubTreeInfo(deptID, TreeIdx);	
 }
@@ -90,7 +88,6 @@ function GetDeptSubTreeInfo(deptID, TreeIdx)
 	//alert(xmlRtn.childNodes.length);
 	if(SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0)
 	{
-	    //alert("이프문안!!");
 	    if(CrossYN())
 	    {//documentElement.getElementsByTagName("NODE")[0].appendChild(Node);
 		    xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);

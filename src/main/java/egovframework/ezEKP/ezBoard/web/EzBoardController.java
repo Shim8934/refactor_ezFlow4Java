@@ -433,7 +433,7 @@ public class EzBoardController extends EgovFileMngUtil{
         if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
         	memoFlag = "YES";
         }
-        else {	// 개발 끝나면 NO로 변경
+        else {
         	memoFlag = "NO";
         }
         
@@ -2393,7 +2393,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBBOARD;") != -1) {
 			boardVO.setSubFlag("Y");
 		}
-		//혜정 추가
+		
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBSUBBOARD;") != -1) {
 			boardVO.setSubFlag("YY");
 		}
@@ -2405,7 +2405,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardVO.getSearchQuery().indexOf("SEARCHALLBOARD;") != -1) {
 			boardVO.setSubFlag("A");
 		}
-		//혜정 끝
 		
 		if (boardVO.getSearchQuery().indexOf("TITLE;") != -1) {
 			boardVO.setTitle(searchQueryDoc.getElementsByTagName("TITLE").item(0).getTextContent());
@@ -2451,7 +2450,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else if (boardVO.getBoardType().equals("A")) {
 			boardXML = getSearchApprListItemXML(userInfo, boardVO);
 		} else {
-			//혜정  추가
 			if (boardVO.getSubFlag().equals("A") || boardVO.getSubFlag().equals("G") || boardVO.getSubFlag().equals("YY")) {
 				boardXML = getSearchAllBoardListItemXML(userInfo, boardVO);
 			} else {
@@ -10171,9 +10169,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	        
 	        /* 2024-02-02 홍승비 - 승인게시판의 경우, 승인자가 아닌 게시물 작성자의 정보가 메일에 표출되도록 수정 (익명게시판은 승인여부 사용불가, getBrdGetItemInfo로 가져온 데이터는 작성자/작성자 부서명/작성자 회사명 전부 다국어 대응됨) */
 	        if (boardProperty.getApprFlag() != null && boardProperty.getApprFlag().equalsIgnoreCase("Y")) { // 승인게시판
-	        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + boardItem.getWriterName() + "(" + (boardItem.getExtensionAttribute3() == null || "null".equals(boardItem.getExtensionAttribute3()) ? "" : boardItem.getExtensionAttribute3()) + ", " + boardItem.getWriterDeptName() + ", " + boardItem.getWriterCompanyName() + ")");
+	        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + boardItem.getWriterName() + "(" + (boardItem.getExtensionAttribute3() == null || "null".equals(boardItem.getExtensionAttribute3()) ? "" : boardItem.getExtensionAttribute3()+ ", ")  + boardItem.getWriterDeptName() + ", " + boardItem.getWriterCompanyName() + ")");
 	        } else {
-	        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+	        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()+ ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        }
 	        
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
