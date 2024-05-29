@@ -1829,7 +1829,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 
 	@Override
 	public List<IPBandVO> getFidoAuthenticList(int tenantID, String companyId) throws Exception {
-		logger.debug("getFidoAuthenticList started. tenantID : {}" + tenantID + " companyId : {}" + companyId);
+		logger.debug("getFidoAuthenticList started. tenantID : {},  companyId : {}", tenantID, companyId);
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("tenantID", tenantID);

@@ -560,7 +560,7 @@ public class LoginController {
 				String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
 
 				String sessionCode = getSessionId(request, ezSessionId);
-				logger.debug("Login sessionCode : {} masteradminLogin = ", _uid, sessionCode);
+				logger.debug("Login sessionCode : {} masteradminLogin : {}", _uid, sessionCode);
 	        	
         		//접속 로그정보 저장
         		resultVO.setIp(ClientUtil.getClientIP(request));
@@ -786,7 +786,7 @@ public class LoginController {
 						String ezSessionId = createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
 
 						String sessionCode = getSessionId(request, ezSessionId);
-						logger.debug("Login sessionCode : {} user = ", _uid, sessionCode);
+						logger.debug("Login sessionCode : {} user : {} ", _uid, sessionCode);
     		        	
     					//접속 로그정보 저장
     					resultVO.setIp(ip);

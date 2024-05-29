@@ -56,7 +56,7 @@
 
     <resultMap id="fidoAuthentication" class="egovframework.let.user.login.vo.FidoAuthenticationVO">
         <result property="fidoSessionId"		column="fido_session_id"			columnIndex="1"/>
-        <result property="id"					column="login_id"					columnIndex="2"/>
+        <result property="id"					column="user_id"					columnIndex="2"/>
         <result property="creatTime"			column="create_time"				columnIndex="3"/>
         <result property="ip"					column="access_ip"					columnIndex="4"/>
         <result property="status"				column="status"						columnIndex="5"		nullValue=""/>
