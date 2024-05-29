@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +41,19 @@ public class EzPersonalGWController {
 		try {
 			int tenantId = loginService.getTenantId(serverName);
 
-			if (ezPersonalService.canReceiveNotification(userId, tenantId)) {
-				NotiType notiType = NotiType.valueOf(mainType, subType);
-				logger.debug("notiType: {}", notiType);
-
-				result = Result.success(ezPersonalService.getAllPlatformFromNotiDisableItem(userId, notiType, tenantId));
-			} else {
-				result = Result.successWithCode(-1);
+			NotiType notiType = NotiType.valueOf(mainType, subType);
+			logger.debug("notiType: {}", notiType);
+			List<Integer> disableItemList = ezPersonalService.getAllPlatformFromNotiDisableItem(userId, notiType, tenantId);
+			if (!ezPersonalService.canReceiveNotification(userId, tenantId)) {
+				if (disableItemList != null && disableItemList.contains(3)) {
+					disableItemList.remove(disableItemList.indexOf(3));
+				}
+				
+				disableItemList.add(3);
 			}
+			
+			result = Result.success(disableItemList);
+			
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 			result = Result.failure();
