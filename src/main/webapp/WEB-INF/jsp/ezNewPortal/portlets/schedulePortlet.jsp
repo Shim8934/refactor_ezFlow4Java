@@ -10,7 +10,7 @@
 <input id="schedule_usedTheme" type="hidden" value="<c:out value='${usedTheme}'/>">
 	<c:choose>
 		<c:when test="${usedTheme eq 1}">
-			<dl class="portlet_title sortablePortlet" style="width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none; height: 50px;"></dl>
+			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none; height: 50px;"></dl>
 			<div class= "box_shadow" style="position:relative; bottom:49px; overflow:hidden;">
 				<article class="schedule_small box_shadow schedule_calendar" style="width: calc(49%); box-shadow:none;">
 					<div class="layDIV">

@@ -1756,7 +1756,7 @@ div.orbit img{border-radius: 5px;}
 #theme3Body .presentTime .timeTxt{background: none;}
 #theme3Body .sscheduleUL .scheduleLi.individual{border: 1px solid #C8DFFF;}
 #theme3Body .sscheduleUL .scheduleLi.group{border: 1px solid #eae4b9; border-radius: 10px;}
-#theme3Body .comListDL01, #theme3Body .comListDL02{margin: 11px 0px 0px 0px;}
+/*#theme3Body .comListDL01, #theme3Body .comListDL02{margin: 11px 0px 0px 0px;}*/
 /* .first_approval .approval_content .apprDL .apprText_blue span, */
 /* .first_approval .approval_content .apprDL .apprText_green span, */
 /* .first_approval .approval_content .apprDL .apprText_orange span{padding: 1px 7px;} */
@@ -2120,9 +2120,9 @@ div.orbit img{border-radius: 5px;}
 
 /* 포틀릿 리스트 페이지 이동 */
 .portlet:hover .portlet_list_nav{display:block;}
-.portlet_list_nav{position:absolute; width:34px; height:34px; border-radius:50%; top:50%; margin-top:-17px; cursor:pointer; background-repeat:no-repeat; background-position:center; background-size:34px 34px; display:none;}
-.portlet_list_nav.prev{background-image:url(../../images/ezNewPortal/portlet_list_prev.svg); left:15px;}
-.portlet_list_nav.next{background-image:url(../../images/ezNewPortal/portlet_list_next.svg); right:15px;}
+.portlet_list_nav{position:absolute; width:34px; height:34px; border-radius:50%; top:50%; margin-top:-17px; cursor:pointer; background-repeat:no-repeat; background-position:center; background-size:34px 34px; display:none; z-index : 9999;}
+.portlet_list_nav.prev{background-image:url(/images/ezNewPortal/portlet_list_prev.svg); left:15px;}
+.portlet_list_nav.next{background-image:url(/images/ezNewPortal/portlet_list_next.svg); right:15px;}
 
 
 /* 리사이징 */

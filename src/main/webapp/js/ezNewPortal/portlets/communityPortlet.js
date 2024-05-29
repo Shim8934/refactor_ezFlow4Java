@@ -4,6 +4,38 @@
 var CommuSize = $('#CommuSize').val();
 var userId = $('#userId').val();
 
+var communityPortletObj = {};
+
+const communityPortletPageMaxCnt = 10; // 포틀릿 높이가 1일 때 리스트 표출개수(2)와 포틀릿 높이가 2일 때 리스트 표출개수(5)의 최소공배수
+
+function initCommunityPortletInfo(communityPortletId) {
+	var newObj = {};
+	var perCount = getCommmunityPagePerCount(communityPortletId);
+	newObj.page = new Paging().init(perCount);
+	newObj.page.getPagePerCount = function () {
+		return getCommmunityPagePerCount(communityPortletId);
+	}
+
+	var totalCnt = CommuSize < communityPortletPageMaxCnt ? CommuSize : communityPortletPageMaxCnt;
+	newObj.page.setTotal(totalCnt);
+	portletInfoMap["portlet" + communityPortletId] = newObj;
+	communityPortletObj.portletId = communityPortletId;
+	resetPortletList(communityPortletObj.portletId, totalCnt);
+}
+
+function getCommmunityPagePerCount(communityPortletId) {
+	var portletSize = getPortletSize(communityPortletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 5;
+	} else {
+		count = 2;
+	}
+
+	return count;
+}
+
 function view_bestCommunity(event) {
 	var $target = $(event.target);
 	$target = $target.is('dl') ? $target : $target.closest('dl');
@@ -111,11 +143,13 @@ var getCommunityList = function() {
 				}
 			}
 			
+			var totalCnt = size < communityPortletPageMaxCnt ? size : communityPortletPageMaxCnt;
+			resetPortletList(communityPortletObj.portletId, totalCnt);
+			
 			for (var i = 1; i <= size; i ++) {
 				$('.comListDL0'+i).on("click", view_bestCommunity);
 			}
 			
-			commuElem.scrollTo({ top: 0, behavior: 'smooth' })
 		}
 	};
 

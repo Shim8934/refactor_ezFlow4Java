@@ -35,13 +35,14 @@ function goSurveyPage() {
 	window.open('/ezSurvey/surveyMain.do', 'main', '');
 }
 
+const surveyPorletPagingCnt = 21; // portlet 높이가 1일 때(3) 와 2일 때(7) 표출되는 리스트 개수의 최소공배수  
+
 // 진행중인 설문 데이터 가져오기
 function getPotletSurveyList() {
 	var searchObj = {
 			currentPage : 1,
 			pageMode 	: 'processing',
 			srchMode 	: 0,
-			listCnt  	: 21,
 			title       : "",
 			creatorName : "",
 			startDate   : "",
@@ -50,7 +51,7 @@ function getPotletSurveyList() {
 			order       : "",
 			srchMode    : 0,
 			srchOption  : "title",
-			listCntSize : 21
+			listCntSize : surveyPorletPagingCnt
 			};
 	
 	$.ajax({
@@ -61,8 +62,6 @@ function getPotletSurveyList() {
 		async: false,
 		cache: false,
 		success : function(data) {
-			var totalCnt = data.itemList.length < 21 ? data.itemList.length : 21;
-			portletInfoMap["portlet" + surveyPortletObj.portletId].page.setTotal(totalCnt);
 			setListByDataList(data.itemList);
 		},
 		error : function(error) {
@@ -141,6 +140,8 @@ function setListByDataList(surveys) {
 		ulEl.appendChild(dlEl);
 	}
 	
+	var totalCnt = surveys.length < surveyPorletPagingCnt ? surveys.length : surveyPorletPagingCnt;
+	resetPortletList(surveyPortletObj.portletId, totalCnt);
 }
 
 // 응답 안 한 설문은 굵게 표시
