@@ -166,12 +166,6 @@
 
 	// 사용여부 저장 버튼 클릭
 	function saveBtn() {
-		<%--if (!adminChk) {--%>
-		<%--	alert("<spring:message code='ezSystem.jje7' />");--%>
-		<%--	return;--%>
-		<%--}--%>
-
-		
 		var allowResult = "NO";
 		if (!document.getElementById("ipRadio0").checked) {
 			allowResult = "YES";
@@ -190,12 +184,8 @@
 				alert("<spring:message code='ezCommunity.t283'/>");
 			},
 			success : function(data) {
-				if (data == "adminFail") {
-					alert("<spring:message code='ezSystem.jje7' />");
-				} else {
-					useFido = data;
-					alert("<spring:message code='ezCommunity.t282'/>");
-				}
+				useFido = data;
+				alert("<spring:message code='ezCommunity.t282'/>");
 			}
 		});
 	}

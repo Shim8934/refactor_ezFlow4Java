@@ -1977,17 +1977,17 @@
 	
 	<select id="EzSystemAdminDAO.getFidoAuthenticList" resultClass="IPBandVO">
 		<![CDATA[
-		SELECT
-			IPNO,
-			IPADDRESS,
-			ALLOW_ACCESS AS "ACCESS",
-			EXPLANATION
-		FROM
-			TBL_NOT_ACCESS_FIDO_IP
-		WHERE
-			TENANT_ID = #tenantID#
-		  AND
-			COMPANYID = #companyId#
+			SELECT
+				IPNO,
+				IPADDRESS,
+				ALLOW_ACCESS AS "ACCESS",
+				EXPLANATION
+			FROM
+				TBL_NOT_ACCESS_FIDO_IP
+			WHERE
+				TENANT_ID = #tenantID#
+		  	AND
+				COMPANYID = #companyId#
 		]]>
 	</select>
 
@@ -2010,22 +2010,22 @@
 
 	<select id="EzSystemAdminDAO.getSystemFidoIPBand" resultClass="IPBandVO">
 		<![CDATA[
-		SELECT
-			IPADDRESS,
-			ALLOW_ACCESS AS "ACCESS",
-			EXPLANATION
-		FROM
-			TBL_NOT_ACCESS_FIDO_IP
-		WHERE
-			IPNO=#ipNo#
+			SELECT
+				IPADDRESS,
+				ALLOW_ACCESS AS "ACCESS",
+				EXPLANATION
+			FROM
+				TBL_NOT_ACCESS_FIDO_IP
+			WHERE
+				IPNO=#ipNo#
 		]]>
 	</select>
 
 	<insert id="EzSystemAdminDAO.insertFidoIPBand">
 		<![CDATA[
-		INSERT INTO
-			TBL_NOT_ACCESS_FIDO_IP (TENANT_ID, COMPANYID, IPADDRESS, ALLOW_ACCESS, EXPLANATION)
-		VALUES (#tenantID#, #companyId#, #ipAddress#, #access# , #explanation#)
+			INSERT INTO
+				TBL_NOT_ACCESS_FIDO_IP 
+			VALUES (SEQ_TBL_NOT_ACCESS_FIDO_IP.NEXTVAL, #tenantID#, #companyId#, #ipAddress#, #access# , #explanation#)
 		]]>
 	</insert>
 

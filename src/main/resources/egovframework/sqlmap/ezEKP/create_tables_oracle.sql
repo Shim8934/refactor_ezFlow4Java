@@ -3449,8 +3449,21 @@ CREATE TABLE "JMOCHA_COMPANY_QUOTA"
 	"USER_ID" VARCHAR2(80) NOT NULL,
 	"CREATE_TIME" DATE NOT NULL,
 	"ACCESS_IP" VARCHAR2(100) NOT NULL,
-	"STATUS" VARCHAR2(50) NOT NULL,
+	"STATUS" VARCHAR2(50) NOT NULL
    ) ;
+
+--------------------------------------------------------
+--  DDL for Table TBL_FIDO_SESSION
+--------------------------------------------------------
+
+CREATE TABLE "TBL_NOT_ACCESS_FIDO_IP"
+("IPNO" NUMBER(10,0) NOT NULL,
+ "TENANT_ID" NUMBER(5,0) DEFAULT 0 NOT NULL,
+ "COMPANYID" VARCHAR2(200) DEFAULT NULL,
+ "IPADDRESS" VARCHAR2(100) NOT NULL,
+ "ALLOW_ACCESS" VARCHAR2(10) DEFAULT 'NO',
+ "EXPLANATION" VARCHAR2(200) DEFAULT NULL
+) ;
 
 --------------------------------------------------------
 --  DDL for Table TBL_CONNECTION_INFO
@@ -9066,6 +9079,11 @@ CREATE TABLE "JMOCHA_APPR_COMP_HISTORY" (
 
 	CREATE SEQUENCE  "SEQ_TBL_DEV_MASTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
+--  DDL for Sequence TBL_DEV_MASTER
+--------------------------------------------------------
+
+    CREATE SEQUENCE  "SEQ_TBL_NOT_ACCESS_FIDO_IP"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
 --  DDL for Index APPROVCONNKAMCO_PK
 --------------------------------------------------------
 
@@ -10093,6 +10111,12 @@ CREATE INDEX "TBL_CABINET_DELFLAG_IDX" ON "TBL_CABINET" ("DELFLAG")
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "PK_TBL_FIDO_SESSION" ON "TBL_FIDO_SESSION" ("FIDO_SESSION_ID")
+  ;
+--------------------------------------------------------
+--  DDL for Index TBL_NOT_ACCESS_FIDO_IP
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "PK_TBL_NOT_ACCESS_FIDO_IP" ON "TBL_NOT_ACCESS_FIDO_IP" ("IPNO")
   ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CONNECTION_INFO

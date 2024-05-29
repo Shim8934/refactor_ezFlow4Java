@@ -327,7 +327,7 @@ public class LoginController {
 			passedFidoAuthentication = loginVO.getId().equals(fidoVo.getId()); // 대소문자까지 일치
 		}
 
-		logger.debug("useFido : {}, passedFidoAuthentication : {}", useFido, passedFidoAuthentication);
+		logger.debug("passedFidoAuthentication : {}", passedFidoAuthentication);
 
 		// 사용자 ID & 사원번호 자체가 발견되지 않는 경우
 		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
@@ -374,7 +374,7 @@ public class LoginController {
 			if (!useFido && "usefidoforce".equalsIgnoreCase(loginVO.getPassword())) { // fido test를 위한 코드 - useFido가 이미 true라면 if문을 굳이 실행할 이유가 없기때문에 !useFido로 한정 함
 				useFido = true;
 			}
-        	logger.debug("ipAddressChk=" + ipAddressChk + ", useFidoIp=" + useFido);
+			logger.debug("useFido : {}, ipAddressChk : {}", useFido, ipAddressChk);
         	
         	// 2018.10.22 이석화 추가 - useSession row 유무 확인
     		useSession = ezCommonService.getTenantConfig("useSession", tenantId);

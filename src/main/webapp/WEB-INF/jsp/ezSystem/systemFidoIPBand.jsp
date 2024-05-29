@@ -140,7 +140,7 @@
 			var url = "/ezSystem/systemIPBandEditPopup.do";
 			if (type === "add") {
 				url += "?type=add&pageType=fidoAuthentication&companyId=" + companyID;
-				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(640,300));
+				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 			} else {
 				var selectedList = $("#tblIP tbody tr[selected=true]");
 				if (selectedList.length > 1) {
@@ -163,7 +163,7 @@
 			
 			url += "?type=modify&pageType=fidoAuthentication&ipNo=" + ipNo + "&ipAddress=" + ipAddress + "&companyId=" + companyID + "&explanation=" + encodeURIComponent(explanation);
 			
-			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(640,300));
+			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 210));
 		}
 		
 		function deleteIPBand() {

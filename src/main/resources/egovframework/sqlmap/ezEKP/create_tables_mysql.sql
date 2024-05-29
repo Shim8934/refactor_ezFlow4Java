@@ -5797,6 +5797,19 @@ CREATE TABLE `TBL_FIDO_SESSION` (
   PRIMARY KEY (`FIDO_SESSION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS  `TBL_NOT_ACCESS_FIDO_IP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TBL_NOT_ACCESS_FIDO_IP` (
+  `IPNO` int(11) NOT NULL AUTO_INCREMENT,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(200) DEFAULT NULL,
+  `IPADDRESS` varchar(100) NOT NULL,
+  `ALLOW_ACCESS` varchar(10) DEFAULT 'NO',
+  `EXPLANATION` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`IPNO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Table structure for table `tbl_connection_info`
 --

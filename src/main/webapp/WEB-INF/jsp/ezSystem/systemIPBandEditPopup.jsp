@@ -31,14 +31,12 @@
 					document.getElementById("ipBand" + i).value = ipAddressTemp[i-1];
 				}
 
-				if (_pageType != "fidoAuthentication") {
-					if (_access == "YES") {
-						document.getElementById("ipAllow1").checked = true;
-						document.getElementById("ipAllow2").checked = false;
-					} else {
-						document.getElementById("ipAllow2").checked = true;
-						document.getElementById("ipAllow1").checked = false;
-					}
+				if (_access == "YES") {
+					document.getElementById("ipAllow1").checked = true;
+					document.getElementById("ipAllow2").checked = false;
+				} else {
+					document.getElementById("ipAllow2").checked = true;
+					document.getElementById("ipAllow1").checked = false;
 				}
 				
 				document.getElementById("explanText").value = _explanation;
@@ -95,7 +93,7 @@
 			}
 			
 			formData = "";
-			if (_pageType !="fidoAuthentication" && !document.getElementById("ipAllow1").checked) {
+			if (!document.getElementById("ipAllow1").checked) {
 				access = "NO";
 			}
 			
@@ -160,7 +158,6 @@
 			<div class="leTitle" style="padding-left:10px"><spring:message code='ezSystem.jje12'/></div>
 			
 			<table class="content" style="width:95%; margin:auto; margin-top: 2px;">
-				<c:if test="${pageType ne 'fidoAuthentication'}">
 					<tr>
 						<th><spring:message code='ezSystem.jje3'/></th>
 						<td>
@@ -168,7 +165,6 @@
 							<label id="la2"><input type="radio" id="ipAllow2" name="ipAllow">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezSystem.jje22'/></span></label>
 						</td>
 					</tr>
-				</c:if>
 			    <tr>
 					<th><spring:message code='ezSystem.jje5'/></th>
 					<td style="padding:3px 5px;"><form id="myForm"><input name="ipBand" type="text" size="3" maxlength="3" id="ipBand1">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand2">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand3">.<input name="ipBand" type="text" size="3" maxlength="3" id="ipBand4"></form>
