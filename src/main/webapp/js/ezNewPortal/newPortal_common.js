@@ -457,7 +457,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 			$.getScript(url)
 				.done(function (script, textStatus) {
 					try {
-						getWebFolderFileList();
+						initWebFolderPortletInfo(portletId);
 					} catch (err) {
 						console.log(err);
 					}

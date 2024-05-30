@@ -1,4 +1,35 @@
 // 파일 리스트 불러옴
+
+var webFolderPortletObj = {};
+
+function initWebFolderPortletInfo(webFolderPortletId) {
+	var newObj = {};
+	var perCount = getwebFolderPerCount(webFolderPortletId);
+	newObj.page = new Paging().init(perCount);
+	newObj.page.getPagePerCount = function () {
+		return getwebFolderPerCount(webFolderPortletId);
+	}
+	portletInfoMap["portlet" + webFolderPortletId] = newObj;
+	webFolderPortletObj.portletId = webFolderPortletId;
+	
+	getWebFolderFileList();
+}
+
+function getwebFolderPerCount(webFolderPortletId) {
+	var portletSize = getPortletSize(webFolderPortletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 6;
+	} else {
+		count = 3;
+	}
+
+	return count;
+}
+
+const webFolderPorletPagingCnt = 6; // portlet 높이가 1일 때(3) 와 2일 때(7) 표출되는 리스트 개수의 최소공배수  
+
 function getWebFolderFileList() {
 	var webFolderId;
 	$.ajax({
@@ -19,7 +50,7 @@ function getWebFolderFileList() {
 			/* 2023-06-01 홍승비 - 홈 > 웹폴더 포틀릿 > 디자인 개선을 위해 파일은 최대 4개까지만 표출하도록 수정 */
 			if (fileLength != 0) {
 				fileList.forEach(function(file, index) {
-					if (index < 4) {
+					if (index < 7) {
 						var liEl = document.createElement('li');
 						liEl.className = 'webFolderLi';
 						liEl.setAttribute('targetId', file.fileId);
@@ -70,6 +101,8 @@ function getWebFolderFileList() {
 				ulEl.appendChild(dlEl);
 				ulEl.classList.add("empty");
 			}
+            var totalCnt = fileLength < webFolderPorletPagingCnt ? fileLength : webFolderPorletPagingCnt;
+            resetPortletList(webFolderPortletObj.portletId, totalCnt);   
 		},
 		error : function () {
 			alert("웹폴더 포틀릿 생성중 에러가 발생했습니다.");
