@@ -225,13 +225,14 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 			break;
 		case "photoboard" : //포토게시판
 			if (isReload) {
-				photoBoardMovePage();
+				getPhotoPortletList();
 			} else {
 				url = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
 
 				$.getScript(url)
 					.done(function (script, textStatus) {
 						try {
+							initPhotoBoardPortlet(portletId);
 							$("#" + portletId + "Portlet").find(".nextBtn").on("click", {isNext: true}, photoBoardMovePage);
 							$("#" + portletId + "Portlet").find(".preBtn").on("click", {isNext: false}, photoBoardMovePage);
 							$("#" + portletId + "Portlet").find("#photoBoardPlus").on("click", viewPhotoBoardList);

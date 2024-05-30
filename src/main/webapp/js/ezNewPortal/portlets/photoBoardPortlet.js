@@ -1,6 +1,84 @@
 /**
  * 
  */
+const photoPortletPageMaxCnt = 12;
+
+function initPhotoBoardPortlet(portletId) {
+	var newObj = {};
+	var perCount = getPhotoPagePerCount(portletId);
+	newObj.page = new Paging().init(perCount);
+	newObj.page.getPagePerCount = function () {
+		return getPhotoPagePerCount(portletId);
+	}
+
+	portletInfoMap["portlet" + portletId] = newObj;
+	
+	var photoPortletListCnt = document.getElementById('photoPortletListCnt').value;
+	var totalCnt = photoPortletListCnt < photoPortletPageMaxCnt ? photoPortletListCnt : photoPortletPageMaxCnt;
+	
+	resetPortletList(portletId, totalCnt);
+}
+
+function getPhotoPagePerCount(portletId) {
+	var portletSize = getPortletSize(portletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 6;
+	} else {
+		count = 3;
+	}
+	
+	return count;
+}
+
+function getPhotoPortletList() {
+	var boardId = $(".photo_portlet").find(".portletText").attr("data1");
+	var portletId = $(".photo_portlet").parent().attr("id");
+	portletId = portletId.substring(0, portletId.indexOf("P"));
+
+	$.ajax({
+		type : "GET",
+		dataType : "json",
+		url : "/ezNewPortal/getPhotoItemList.do",
+		data : {"boardId" : boardId, "page" : 1, "photoCount" : photoPortletPageMaxCnt, "portletId" : portletId},
+		success : function(result) {
+			$("#photoul").html("");
+			if (result.length > 0) {
+				var resultCount = result.length;
+				var strHTML = "";
+
+				for (var i = 0; i < resultCount; i++) {
+					strHTML += "<li>";
+					strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardID + "' data2='" + result[i].itemID + "' onclick='photoItemRead(this)'>";
+					strHTML += "<span>" + MakeXMLString(result[i].title) + "</span>";
+					strHTML += "</li>";
+
+				}
+
+				$("#photoul").html(strHTML);
+				$("#photoul").css("display","flex");
+			} else {
+				var dl = document.createElement("dl");
+				dl.classList.add("nodata");
+				var dt = document.createElement("dt");
+				var img = document.createElement("img");
+				img.setAttribute("src", "/images/kr/main/noData_sIcon.png");
+				dt.appendChild(img);
+				dl.appendChild(dt);
+				var dd = document.createElement("dd");
+				dd.textContent = messages.strLang1;
+				dl.appendChild(dd);
+				document.getElementById("photoul").appendChild(dl);
+				document.getElementById("photoul").style.display ="block";
+			}
+			
+			var totalCnt = result.length < photoPortletPageMaxCnt ? result.length : photoPortletPageMaxCnt;
+			resetPortletList(portletId, totalCnt);
+		}
+	})
+}
+
 function photoBoardMovePage(event) {
 	var isNext = false;
 	
