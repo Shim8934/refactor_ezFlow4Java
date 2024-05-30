@@ -30,20 +30,22 @@ $(function() {
 				<dd id="<c:out value='portletPlus${portletId}'/>" class="portletPlus" data1="<c:out value='${boardId }'/>">
 					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd>
+				<!-- 
 				<dd class="portletPlus nextBtn" onclick="<c:out value='nextPageBoardPortlet(${portletId})'/>">
 					<img src="/images/ezNewPortal/photo_next.png">
 				</dd>
 				<dd class="portletPlus preBtn" onclick="<c:out value='prePageBoardPortlet(${portletId})'/>">
 					<img src="/images/ezNewPortal/photo_pre.png">
 				</dd>
+				 -->
 			</dl>
 			<c:choose>
 			<c:when test="${not empty boardList}">
-			<ul id="customBoardList<c:out value='${portletId }'/>" class="portlet_list two_line">
+			<ul id="customBoardList<c:out value='${portletId }'/>" class="portlet_list two_line portletPagingArea">
 			</ul>
 			</c:when>
 			<c:when test="${access eq false }">
-					<ul class="portlet_list">
+					<ul class="portlet_list portletPagingArea">
 						<dl class="nodata">
 							<dt>
 								<img src="/images/kr/main/noData_sIcon.png">
@@ -53,7 +55,7 @@ $(function() {
 					</ul>
 			</c:when>
 			<c:otherwise>
-					<ul class="portlet_list">
+					<ul class="portlet_list portletPagingArea">
 						<dl class="nodata">
 							<dt>
 								<img src="/images/kr/main/noData_sIcon.png">
@@ -64,6 +66,8 @@ $(function() {
 			</c:otherwise>
 			</c:choose>
 		</div>
+		<span class="portlet_list_nav prev"></span>
+		<span class="portlet_list_nav next"></span>
 	</article>
 </body>
 </html>

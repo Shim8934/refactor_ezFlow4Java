@@ -7,16 +7,23 @@ var BTN_NEXT = "nextBtn"
 var BTN_PREV = "preBtn"
 
 function makeBoardList(portletId, fileName, count, type, startRow) {
-	count++; // 다음페이지 확인 용
-
+	var boardPortletPagingCnt = 10;
+	if ("a" === type) {
+		boardPortletPagingCnt = 10; // 높이 1일 때 2개, 높이 2일때 5개 (10)
+	} else if ("b" === type) {
+		boardPortletPagingCnt = 12; // 높이 1일 때 3개, 높이 2일때 6개 (12)
+	} else {
+		boardPortletPagingCnt = 21; // 높이 1일 때 3개, 높이 2일때 7개 (21)
+	}
+	
 	$.ajax({
 		type: "GET",
 		dataType: "json",
 		data: {
 			"portletId": portletId,
 			"fileName": fileName,
-			"startRow": startRow,
-			"count": count
+			"startRow": "0", 
+			"count": boardPortletPagingCnt
 		},
 		url: "/ezNewPortal/getCustomBoardInfo.do",
 		success: function (result) {
@@ -27,6 +34,9 @@ function makeBoardList(portletId, fileName, count, type, startRow) {
 			} else {
 				getBoardList(result, portletId);
 			}
+			
+			var totalCnt = result.length < boardPortletPagingCnt ? result.length : boardPortletPagingCnt;
+			resetPortletList(portletId, totalCnt);
 		}
 	})
 }
@@ -43,7 +53,11 @@ function initBoardPortletInfo(portletId, type, fileName) {
 
 	var count = getCurrentCount(portletId);
 	newOb.page = new Paging().init(count);
-
+	newOb.page.getPagePerCount = function () {
+		return getCurrentCount(portletId);
+	}
+	
+	portletInfoMap["portlet" + portletId] = newOb;
 	makeBoardList(portletId, fileName, count, type, 0);
 }
 
@@ -60,9 +74,9 @@ function getBoardList(data, portletId) {
 	var today = new Date();
 	var date = today.getDate();
 	today.setDate(date - 1);
-	chkPageBtns(portletId, boardCount);
-	var currentCount = getCurrentCount(portletId);
-	boardCount = boardCount > currentCount ? currentCount : boardCount;
+	//chkPageBtns(portletId, boardCount);
+	//var currentCount = getCurrentCount(portletId);
+	//boardCount = boardCount > currentCount ? currentCount : boardCount;
 	
 	for (var i = 0; i < boardCount; i++) {
 		var item = boardList[i];
@@ -87,9 +101,9 @@ function getBoardListAType(data, portletId) {
 	var boardList = data;
 	var boardCount = boardList.length;
 	var jPortlet = $("#customBoardList" + portletId);
-	chkPageBtns(portletId, boardCount);
-	var currentCount = getCurrentCount(portletId);
-	boardCount = boardCount > currentCount ? currentCount : boardCount;
+	//chkPageBtns(portletId, boardCount);
+	//var currentCount = getCurrentCount(portletId);
+	//boardCount = boardCount > currentCount ? currentCount : boardCount;
 
 	jPortlet.empty();
 	for (var i = 0; i < boardCount; i++) {
@@ -150,9 +164,9 @@ function getBoardListBType(data, portletId) {
 	var boardCount = boardList.length;
 	var jPortlet = $("#customBoardList" + portletId);
 
-	chkPageBtns(portletId, boardCount);
-	var currentCount = getCurrentCount(portletId);
-	boardCount = boardCount > currentCount ? currentCount : boardCount;
+	//chkPageBtns(portletId, boardCount);
+	//var currentCount = getCurrentCount(portletId);
+	//boardCount = boardCount > currentCount ? currentCount : boardCount;
 
 	jPortlet.empty();
 	for (var i = 0; i < boardCount; i++) {
@@ -296,7 +310,7 @@ function getCurrentCount(portletId) {
 		}
 	} else {
 		if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
-			count = 8;
+			count = 7;
 		} else {
 			count = 3;
 		}

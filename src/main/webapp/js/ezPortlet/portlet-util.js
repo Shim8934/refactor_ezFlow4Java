@@ -158,11 +158,6 @@ function changePortletSize(pot, size) {
     if (portletPagingArea) { // 포틀릿 페이지네이션 처리
     	changePortletViewCount(pot.id.replace('Portlet',''), portletPagingArea);
     }
-    
-    // 게시판 포틀릿 사이즈 변경시 게시판 뷰 카운트 변경
-    if (typeof changeBoardViewCount == 'function') {
-        changeBoardViewCount(pot.id.replace('Portlet',''));
-    }
 }
 
 // 포틀릿 사이즈 변경 팝업 만들기
