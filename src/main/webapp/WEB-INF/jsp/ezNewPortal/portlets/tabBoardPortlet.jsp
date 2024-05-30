@@ -16,18 +16,18 @@
 					<div class="sortablePortlet">
 						<dl class="portlet_tab">
 							<dt class="portletText" id="tabBoardPortletName"><span><c:out value='${portletName }'/></span></dt>
-							<dt id="tabBoardList1Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
-							<dt id="tabBoardList2Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
-							<dt id="tabBoardList3Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList1Tab"   onclick="return tapBoardChangeTab(this, 'tabBoardList1')" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList2Tab"   onclick="return tapBoardChangeTab(this, 'tabBoardList2')" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList3Tab"   onclick="return tapBoardChangeTab(this, 'tabBoardList3')" class="tabBoardTab" style="display: none;"><span></span></dt>
 						</dl>
 					</div>
 				</c:when>
 				<c:otherwise>
 					<dl class="sortablePortlet portlet_tab">
 							<dt class="portletText" id="tabBoardPortletName"><span><c:out value='${portletName }'/></span></dt>
-							<dt id="tabBoardList1Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
-							<dt id="tabBoardList2Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
-							<dt id="tabBoardList3Tab"   onclick="return tapBoardChangeTab(this)" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList1Tab"   onclick="return tapBoardChangeTab(this, 'tabBoardList1')" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList2Tab"   onclick="return tapBoardChangeTab(this, 'tabBoardList2')" class="tabBoardTab" style="display: none;"><span></span></dt>
+							<dt id="tabBoardList3Tab"   onclick="return tapBoardChangeTab(this, 'tabBoardList3')" class="tabBoardTab" style="display: none;"><span></span></dt>
 					</dl>
 				</c:otherwise>
 			</c:choose>
@@ -42,9 +42,13 @@
 					<dd><spring:message code='ezNewPortal.t018' /></dd>
 				</dl>
 			</div>
-			<ul class="portlet_list" id="tabBoardList1" style="display: none;"></ul>
-			<ul class="portlet_list" id="tabBoardList2" style="display: none;"></ul>
-			<ul class="portlet_list" id="tabBoardList3" style="display: none;"></ul>
+			<ul class="portlet_list portletPagingArea" id="tabBoardList1" style="display: none;"></ul>
+			<ul class="portlet_list portletPagingArea" id="tabBoardList2" style="display: none;"></ul>
+			<ul class="portlet_list portletPagingArea" id="tabBoardList3" style="display: none;"></ul>
+    	</div>
+    	<div id="tabBoardBtnDiv">
+    		<span class="portlet_list_nav prev" id="tabBoardPrevBtn"></span>
+    		<span class="portlet_list_nav next" id="tabBoardNextBtn"></span>
     	</div>
     </article>
 </body>

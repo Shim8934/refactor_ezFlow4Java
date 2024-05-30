@@ -2,27 +2,56 @@
 var tabBoardId="";
 var portletLang = ""; 
 var tabBoardIdArr = new Array();
+var tabBoardPortletObj = {};
+const tabBoardPageMaxCnt = 21; // 톺이가 1일 때 3, 톺이가 2일 때 7 개 표출
+function initTabPortletInfo(portletId) {
+	var tabBoardObj = {};
+    tabBoardObj.portletCode = "tabBoard";
+    tabBoardObj.activeTabId = "";
+    tabBoardObj.tabIdList = [];
+    tabBoardObj.paging = {};
+    portletInfoMap["portlet" + portletId] = tabBoardObj;
+    tabBoardPortletObj.portletId = portletId;
+    
+	getTabBoard(portletId);
+}
 
-var getTabBoard = function () {
+function getTabBoardPagePerCount(portletId) {
+	var portletSize = getPortletSize(portletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 7;
+	} else {
+		count = 3;
+	}
+
+	return count;
+}
+
+var getTabBoard = function (portletId) {
     var request = new XMLHttpRequest();
     request.open('GET', '/ezNewPortal/getTabBoardPortlet.do', true);
     request.setRequestHeader('Content-Type', 'application/json');
-
+    
     request.onload = function () {
         if (request.status >= 200 && request.status < 400) {
             var result = JSON.parse(request.responseText);
             portletLang = result.portletLang;
             var docsHTML = "";
             var subDocsHTML = "";
-
+            
             if (result.existence == "true") {
                 allDisplayNone('#notexistence');
                 allDisplayNone('#tabBoard .portletText');
                 loadTabBoard(result.tabBoardId3, result.tabBoard3, result.tabBoardName3, 3);
                 loadTabBoard(result.tabBoardId2, result.tabBoard2, result.tabBoardName2, 2);
                 loadTabBoard(result.tabBoardId1, result.tabBoard1, result.tabBoardName1, 1);
+                document.getElementById('tabBoardBtnDiv').style.display = "block";
+            } else {
+            	document.getElementById('tabBoardBtnDiv').style.display = "none";
             }
-
+            
             document.getElementById('tabBoardPortletName').style.border = "none";
             giveTooltipTitle("#tabBoard .txt");
         } else {
@@ -37,27 +66,47 @@ var getTabBoard = function () {
 }
 // 게시판 활성(스트링, 데이터, 스트링, 정수)
 function loadTabBoard(rtabBoardId, tabBoard, tabBoardName, tabId) {
+	var portletId = tabBoardPortletObj.portletId;
+	var tabBoardListId = 'tabBoardList' + tabId;
+	var totalCnt = 0;
+	
+	var perCount = getTabBoardPagePerCount(portletId);
+	var tabBoardPage = new Paging().init(perCount);
+	
+	tabBoardPage.getPagePerCount = function () {
+		return getTabBoardPagePerCount(portletId);
+	}
+	
+	portletInfoMap["portlet" + portletId].paging['tabBoardList' + tabId] = tabBoardPage;
+	
     if (typeof tabBoard != "undefined" && tabBoard != null) {
+    	portletInfoMap["portlet" + portletId].tabIdList.push(tabBoardListId);
+    	
         var tabDocsHTML = "";
 
         tabBoard.forEach(function (item, index) {
             tabDocsHTML += dataAssemblerTabBoard(item);
         });
-
+        
         if (tabDocsHTML == "") {
             tabDocsHTML += "<dl class='nodata'>";
 			tabDocsHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
 			tabDocsHTML += "<dd>" + messages.strLang1 + "</dd>";
 			tabDocsHTML += "</dl>";
         }
-
+        
         document.getElementById('tabBoardList' + tabId).innerHTML = tabDocsHTML;
         var tabNode = document.getElementById('tabBoardList' + tabId + 'Tab');
         tabNode.firstChild.innerHTML = tabBoardName;
         tabNode.style.display = "";
         tabBoardIdArr[tabId] = rtabBoardId; // plus 버튼을 위한 변수 저장. tapBoardChangeTab위에 있어야 함
-        tapBoardChangeTab(tabNode);
+        tapBoardChangeTab(tabNode, tabBoardListId);
+        
+        totalCnt = tabBoard.length < tabBoardPageMaxCnt ? tabBoard.length : tabBoardPageMaxCnt;
     }
+    
+    resetTabBoardPortletList(portletId, totalCnt, tabBoardListId);
+    
 }
 // 게시글 한줄 생성(데이터)
 var dataAssemblerTabBoard = function(object) {
@@ -83,7 +132,9 @@ var dataAssemblerTabBoard = function(object) {
 	return str;
 }
 // 탭변경(노드)
-function tapBoardChangeTab(obj) {
+function tapBoardChangeTab(obj, tabBoardListId) {
+	var portletId = tabBoardPortletObj.portletId;
+	portletInfoMap["portlet" + portletId].activeTabId = tabBoardListId;
     var className = obj.className;
 
     if (className.indexOf("on") > -1) {

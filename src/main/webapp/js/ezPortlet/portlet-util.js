@@ -154,7 +154,7 @@ function changePortletSize(pot, size) {
     if (typeof usedTheme == 'undefined' || !usedTheme) usedTheme = document.querySelector('.portletList').getAttribute('data-themeid');
     userPortletUpdateWithSize(usedTheme);
     
-    var portletPagingArea = pot.querySelector('.portletPagingArea');
+    var portletPagingArea = pot.querySelectorAll('.portletPagingArea');
     if (portletPagingArea) { // 포틀릿 페이지네이션 처리
     	changePortletViewCount(pot.id.replace('Portlet',''), portletPagingArea);
     }
@@ -436,14 +436,31 @@ function Paging() {
 }
 
 function changePortletViewCount(portletId, portletPagingArea) {
-	var portletPageObj = portletInfoMap["portlet" + portletId].page;
-	var perCount = portletPageObj.getPagePerCount(portletId);
-	portletPageObj.changeCount(perCount);
-	var startRowIdx = portletPageObj.getStart();
-	var portletPageList = portletPagingArea.children;
-	
-	portletListDisplayProcess(portletPageList, startRowIdx, perCount);
-	
+	var portletInfoObj = portletInfoMap["portlet" + portletId];
+	var portletPageObj = null;
+	if (portletInfoObj.portletCode == "tabBoard") {
+		var tabBoardIdList = portletInfoObj.tabIdList;
+		for (var i = 0; i < tabBoardIdList.length; i++) {
+			var tabBoardId = tabBoardIdList[i];
+			portletPageObj = portletInfoObj.paging[tabBoardId];
+			portletPagingArea = document.getElementById(portletId + "Portlet").querySelector("#" + tabBoardId);
+			var perCount = portletPageObj.getPagePerCount(portletId);
+			portletPageObj.changeCount(perCount);
+			var startRowIdx = portletPageObj.getStart();
+			var portletPageList = portletPagingArea.children;
+			
+			portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+		}
+	} else {
+		portletPagingArea = portletPagingArea[0];
+		portletPageObj = portletInfoObj.page;
+		var perCount = portletPageObj.getPagePerCount(portletId);
+		portletPageObj.changeCount(perCount);
+		var startRowIdx = portletPageObj.getStart();
+		var portletPageList = portletPagingArea.children;
+		
+		portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+	}
 }
 
 function resetPortletList(portletId, totalCnt) {
@@ -458,6 +475,24 @@ function resetPortletList(portletId, totalCnt) {
 		var currentPage = portletPageObj.getPage();
 		portletListDisplayProcess(portletPageList, startRowIdx, perCount);
 	}
+	
+}
+
+function resetTabBoardPortletList(portletId, totalCnt, tabBoardListId) {
+	var portletInfoObj = portletInfoMap["portlet" + portletId];
+	if (portletInfoObj.portletCode == "tabBoard") {
+		var tabPageObj = portletInfoObj.paging[tabBoardListId];
+		tabPageObj.resetPage();
+		var perCount = tabPageObj.getPagePerCount(portletId);
+		tabPageObj.setTotal(totalCnt);
+		
+		if (totalCnt > 0) {
+			var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#" + tabBoardListId).children;
+			var startRowIdx = tabPageObj.getStart();
+			var currentPage = tabPageObj.getPage();
+			portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+		}
+	}
 }
 
 function portletListDisplayProcess(portletPageList, startRowIdx, perCount) {
@@ -470,7 +505,19 @@ function portletListDisplayProcess(portletPageList, startRowIdx, perCount) {
 }
 
 function portletMovePage(portletId, mode) {
-	var portletPageObj = portletInfoMap["portlet" + portletId].page;
+	var portletInfoObj = portletInfoMap["portlet" + portletId];
+	var portletPageObj = null;
+	var portletPageList = null;
+	
+	if (portletInfoObj.portletCode == "tabBoard") {
+		var activeTabId = portletInfoObj.activeTabId;
+		portletPageObj = portletInfoObj.paging[activeTabId]
+		portletPageList = document.getElementById(portletInfoObj.activeTabId).children;
+	} else {
+		portletPageObj = portletInfoObj.page;
+		portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
+	}
+	
 	var currPage = portletPageObj.getPage();
 	var totalCnt = portletPageObj.getTotal();
 	var startRowIdx = portletPageObj.getStart();
@@ -488,8 +535,6 @@ function portletMovePage(portletId, mode) {
 	if (!moveFlag) {
 		return;
 	}
-	
-	var portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
 	
 	startRowIdx = portletPageObj.getStart();
 	perCount = portletPageObj.getPagePerCount(portletId);
