@@ -110,7 +110,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 				$.getScript(url)
 					.done(function (script, textStatus) {
 						try {
-							getMailList();
+							initMailPortletInfo(portletId);
 						} catch (err) {
 							console.log(err);
 						}

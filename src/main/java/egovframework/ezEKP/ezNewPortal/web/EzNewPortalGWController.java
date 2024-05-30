@@ -3732,7 +3732,7 @@ public class EzNewPortalGWController {
 				int unreadCount = 0;
 
 				// set mailCount
-				int mailCount = 7;
+				int mailCount = 21;
 
 				// if (unreadCount < mailCount) {
 				// mailCount = unreadCount;

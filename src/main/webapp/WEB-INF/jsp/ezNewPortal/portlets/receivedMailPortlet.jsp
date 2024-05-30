@@ -20,8 +20,10 @@
 				</dd>
 				<dd class="mailGraph" id="mailGraph"></dd>
 			</dl>
-			<ul id="MailList" class="portlet_list"></ul>
+			<ul id="MailList" class="portlet_list portletPagingArea"></ul>
 		</div>
+		<span class="portlet_list_nav prev"></span>
+		<span class="portlet_list_nav next"></span>
 	</article>
 </body>
 </html>

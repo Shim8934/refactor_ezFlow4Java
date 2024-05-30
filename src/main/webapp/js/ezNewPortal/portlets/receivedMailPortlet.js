@@ -2,6 +2,35 @@
  * 
  */
 var mailPercent = "";
+var mailPortletObj = {};
+
+function initMailPortletInfo(MailPortletId) {
+	var newObj = {};
+	var perCount = getMailPagePerCount(MailPortletId);
+	newObj.page = new Paging().init(perCount);
+	newObj.page.getPagePerCount = function () {
+		return getMailPagePerCount(MailPortletId);
+	}
+	portletInfoMap["portlet" + MailPortletId] = newObj;
+	mailPortletObj.portletId = MailPortletId;
+	
+	getMailList();
+}
+
+function getMailPagePerCount(MailPortletId) {
+	var portletSize = getPortletSize(MailPortletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 7;
+	} else {
+		count = 3;
+	}
+
+	return count;
+}
+
+const surveyPorletPagingCnt = 21; // portlet 높이가 1일 때(3) 와 2일 때(7) 표출되는 리스트 개수의 최소공배수  
 
 function getMailList() {
 	$.ajax({
@@ -24,8 +53,8 @@ function getMailList() {
 			var listHTML = "";
 			var listHTML2 = "";
 			var mailListCount = mailList.length;
-			if (mailListCount > 5) {
-				mailListCount = 5;
+			if (mailListCount > 21) {
+				mailListCount = 21;
 			}
 			
 			listHTML += "<p class='mGraph'><span id='mGraphSpan'></span></p>";
@@ -63,6 +92,8 @@ function getMailList() {
 			}
 			
 			document.getElementById("MailList").innerHTML = listHTML2;
+            var totalCnt = mailList.length < surveyPorletPagingCnt ? mailList.length : surveyPorletPagingCnt;
+            resetPortletList(mailPortletObj.portletId, totalCnt);
 		},
 		error:function(request,status,error){
     	    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
