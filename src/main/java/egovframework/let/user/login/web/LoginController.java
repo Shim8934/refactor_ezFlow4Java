@@ -762,8 +762,7 @@ public class LoginController {
 							}
 	
 							// Fido 인증요청 화면 호출 + 필요한 parameter 전달
-							String timeLimit = ezCommonService.getTenantConfig("fidoTimeLimit", tenantId);
-							
+							String timeLimit = ezCommonService.getTenantConfig("FidoTimeLimit", tenantId);
 	
 							model.addAttribute("timeLimit", timeLimit);
 							model.addAttribute("fidoSessionId", fidoSessionId);

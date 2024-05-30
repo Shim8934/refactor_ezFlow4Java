@@ -1003,7 +1003,7 @@ public class MLoginGWController {
 			String fidoStatus = vo.getStatus();
 			String createTime = vo.getCreatTime().split("\\.")[0];
 			String ip = vo.getIp();
-			int timeLimit = Integer.parseInt(ezCommonService.getTenantConfig("fidoTimeLimit", tenantId));
+			int timeLimit = Integer.parseInt(ezCommonService.getTenantConfig("FidoTimeLimit", tenantId));
 
 			if ("requesting".equalsIgnoreCase(fidoStatus)) { // requesting 밖에 값이 올 수 없음
 				// 유효한 요청인지 확인
