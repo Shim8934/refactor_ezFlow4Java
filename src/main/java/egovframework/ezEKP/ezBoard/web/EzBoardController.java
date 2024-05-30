@@ -2076,7 +2076,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
 						resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
 						resultXML.append("<DATA10></DATA10>");
-						resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
+						resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(noticeList.get(k).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
 						resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
 						
 						if (primaryData.equals("1")) {
@@ -2173,7 +2173,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA8>" + boardListItem.get(j).get("ITEMLEVEL") + "</DATA8>");
 					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10></DATA10>");
-					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
+//					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
+					resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(boardListItem.get(j).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME")) + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME2")) + "</WRITERNAME2>");
