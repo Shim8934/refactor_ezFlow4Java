@@ -279,6 +279,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", loginVO.getTenantId());
 	    logger.debug("useWorkspaceSchedule : " + useWorkspaceSchedule);
 	    
+		if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
+			useWorkspaceSchedule = "NO";
+		}
+	    
 	    String useGoogleCalendar = ezCommonService.getTenantConfig("useGoogleCalendar", loginVO.getTenantId());
 	    String isGoogleSync = useGoogleCalendar.equals("YES") ? isGoogleSync(loginVO) : "N";
 		

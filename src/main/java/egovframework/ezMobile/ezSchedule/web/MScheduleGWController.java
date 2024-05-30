@@ -138,7 +138,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate, searchTitle, searchColumn, searchData);
 						
 			String useWorkspaceSchedule = ezCommonService.getTenantConfig("useWorkspaceSchedule", info.getTenantId());
-	        if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
+			
+			if (useWorkspaceSchedule == null || useWorkspaceSchedule.equals("")) {
+				useWorkspaceSchedule = "NO";
+			} else if(useWorkspaceSchedule.equalsIgnoreCase("YES")) {
 	        	String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrlForMobile", info.getTenantId());
 	        	result.put("workspaceHostUrl", workspaceHostUrl);
 	        }

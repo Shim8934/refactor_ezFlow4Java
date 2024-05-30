@@ -84,6 +84,9 @@
 			// 배부대장 문서 진행/완료 여부 플래그 (APR/END)
 			var docAprEnd = "<c:out value ='${docAprEnd}'/>";
 
+			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
+			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
+
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
@@ -204,22 +207,61 @@
                     btnClose_onclick();
 		        }
 		    }
+			/* 전달한 DOCID로 진행중문서(APR) 또는 완료문서(END) 여부를 문자열로 리턴 */
+			function getAprOrEndStr() {
+				var result = "";
+
+				$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getAprOrEndStr.do",
+					data : {
+						docID : pDocID,
+						orgCompanyID : orgCompanyID
+					},
+					success: function(text){
+						result = text;
+					}
+				});
+
+				return result;
+			}
 		    function CheckOpinionInfo() {
 		    	var result = "";
-		    	
-		    	$.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezApprovalG/getEndOpinionInfo.do",
-		    		data : {
-		    			docID : pDocID,
-		    			orgCompanyID : orgCompanyID
-		    		},
-		    		success: function(xml){
-		    			result = loadXMLString(xml);
-		    		}
-		    	});
+		    	var url = "";
+		    	var sendData = "";
+				var aprOrEndStr = getAprOrEndStr();
+				if (aprOrEndStr == "APR") {
+					$.ajax({
+						type: "POST",
+						dataType: "text",
+						async: false,
+						url: "/ezApprovalG/opinionRequest.do",
+						data: {
+							docID: pDocID,
+							orgCompanyID: orgCompanyID,
+							state : aprOrEndStr
+						},
+						success: function (xml) {
+							result = loadXMLString(xml);
+						}
+					});
+				} else {
+					$.ajax({
+						type: "POST",
+						dataType: "text",
+						async: false,
+						url: "/ezApprovalG/getEndOpinionInfo.do",
+						data: {
+							docID: pDocID,
+							orgCompanyID: orgCompanyID
+						},
+						success: function (xml) {
+							result = loadXMLString(xml);
+						}
+					});
+				}
 		
 		        Resultxml = result;
 		
@@ -439,7 +481,7 @@
 		    function btnDocInfo_onclick() {
 		        ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
-		
+
                 // 2023-10-16 전인하 - 전자결재G > 기록물배부대장 > 배부대장 문서정보 오류
                 // 문서정보를 무조건 완료문서 DB에서 가져와, 진행문서를 배부대장에서 조회하는 경우 발생하는 문서정보 조회불가 현상을 수정함
                 var initFlag = docAprEnd == "APR" ? "APR" : "END";
@@ -948,8 +990,8 @@
 
 			window.onbeforeunload = function () {
 				try {
-					if ((window.opener.g_sFlag == undefined) || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01")) {
-						// 전자결재 > 완료문서, 기록물등록대장에만 적용 되도록 조건 추가
+					if ((window.opener.g_sFlag == undefined && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "docShare")) {
+						// 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
 						window.opener.openergetDocInfo();
 					} else {
 						return;

@@ -3331,7 +3331,52 @@ public class EzEmailUtil {
 		
 		return newBodyPart;
 	}
-	
+
+	public BodyPart getConvertedBodyPartWithWrongNameParameter(BodyPart p) throws MessagingException, IOException {
+		MimeBodyPart newBodyPart = (MimeBodyPart)p;
+
+		String[] contentTypeHeaders = p.getHeader("Content-Type");
+
+		if (contentTypeHeaders != null && contentTypeHeaders.length > 0) {
+			String contentType = contentTypeHeaders[0];
+
+			// 다음 예에서와 같이 name 속성 앞에 ; 구분자가 없는 메일을 전달할 경우 JavaMail Parsing 오류가 발생해
+			// 전달을 위해 Part 복사 시 ;을 추가하도록 함
+			// Content-type: text/html
+			//	 name="=?EUC-KR?B?a3RzYXRfYmlsbC5wZGY=?="
+			if (contentType.contains("name") && !contentType.contains(";")) {
+				logger.debug("name parameter without semicolon. Content-Type={}", contentType);
+
+				InternetHeaders newHeaders = new InternetHeaders();
+
+				@SuppressWarnings("unchecked")
+				Enumeration<Header> enumerator = p.getAllHeaders();
+
+				// 해당 파트의 헤더들을 읽는다.
+				while (enumerator.hasMoreElements()) {
+					Header h = enumerator.nextElement();
+					String hValue = h.getValue();
+
+					if (h.getName().equalsIgnoreCase("Content-Type")) {
+						hValue = hValue.replaceFirst(" ", ";");
+
+						logger.debug("new Content-Type={}", hValue);
+					}
+
+					newHeaders.addHeader(h.getName(), hValue);
+				}
+
+				// 해당 파트의 body 데이터를 읽는다.
+				byte[] bytes = IOUtils.toByteArray(newBodyPart.getRawInputStream());
+
+				// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
+				newBodyPart = new MimeBodyPart(newHeaders, bytes);
+			}
+		}
+
+		return newBodyPart;
+	}
+
 	public boolean copyInlineParts(Part src, Multipart dest, boolean includeAttachment) throws MessagingException, IOException {
 		return this.copyInlineParts(src, dest, includeAttachment, false);
 	}
@@ -3601,7 +3646,9 @@ public class EzEmailUtil {
 									p.setHeader("Content-Disposition", "attachment");
 								}
 							}
-						}				
+						}
+
+						p = getConvertedBodyPartWithWrongNameParameter(p);
 					}
 					
 					dest.addBodyPart(p);

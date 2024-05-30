@@ -180,10 +180,16 @@
 				document.form.file1.value = "";
 				return;
 			} else {
+                var frmMaxsize = pBoardFileSize * 1024 * 1024;
 	            document.getElementById("btn_AttachDel").disabled = false;
 	            document.getElementById("attachsn").value = pAttachSN;
-	            document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024;
+	            document.getElementById("maxsize").value = frmMaxsize;
 	            var frm = document.getElementById('form');
+                var frmFile = document.getElementById('file1');
+                if (frmFile !== null && frmFile.files[0].size > frmMaxsize) {
+                    alert("<spring:message code='ezApprovalG.t271' />" + pBoardFileSize + "MB"+ "<spring:message code='ezApprovalG.t272'/>");
+                    return;
+                }
 	            frm.submit();
 			}
         }

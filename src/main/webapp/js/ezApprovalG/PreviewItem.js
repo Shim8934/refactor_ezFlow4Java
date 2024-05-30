@@ -1248,3 +1248,37 @@ function checkIsGroupDoc(pDocID, pOrgCompanyID) {
     
     return res;
 }
+
+/* 2023-06-26 한태훈 - 관리자 전제문서조회(완료문서) 리스트 개수 설정 기능 추가 */
+function MailOptionView(obj,flag) {
+    if (obj.getAttribute("mode") == "off") {
+        if (flag == 'N') {
+        	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
+        } else {
+        	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+        }
+       
+        document.getElementById("layer_Viewpopup").style.display = "";
+        obj.setAttribute("class", "icon16 btn_onarrow_down");
+        obj.setAttribute("mode", "on");
+    }
+    else {
+        MailOptionHidden();
+    }
+}
+
+function MailOptionHidden() {
+    document.getElementById("layer_Viewpopup").style.display = "none";
+    document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
+    document.getElementById("maillistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
+}
+
+function MailOptionHiddenOutside(e) {
+	var container = $('#layer_Viewpopup');
+	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
+	if (maillistoptionmode == "on") {
+		if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
+			MailOptionHidden();
+		}
+	}
+}
