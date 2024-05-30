@@ -8,6 +8,7 @@
 	<typeAlias  alias="SessionVO"               type="egovframework.let.user.login.vo.SessionVO"/>
 	<typeAlias 	alias="CountryVO" 				type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	<typeAlias 	alias="findPwdInfo" 			type="egovframework.let.user.login.vo.FindPwdInfoVO"/>
+	<typeAlias 	alias="fidoAuthenticationVO" 	type="egovframework.let.user.login.vo.FidoAuthenticationVO"/>
 
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
@@ -50,6 +51,14 @@
         <result property="type"   			 	 column="TYPE"     					columnIndex="6"/>
         <result property="timeDiff"   			 column="TIME_DIFF"     			columnIndex="7"/>
     </resultMap>
+
+	<resultMap id="fidoAuthentication" class="egovframework.let.user.login.vo.FidoAuthenticationVO">
+		<result property="fidoSessionId"		column="fido_session_id"			columnIndex="1"/>
+		<result property="id"					column="user_id"					columnIndex="2"/>
+		<result property="creatTime"			column="create_time"				columnIndex="3"/>
+		<result property="ip"					column="access_ip"					columnIndex="4"/>
+		<result property="status"				column="status"						columnIndex="5"		nullValue=""/>
+	</resultMap>
 	
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
         <result property="serverName"           column="SERVER_NAME"                columnIndex="1"/>    

@@ -1892,7 +1892,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("config_type","주소록");
 		}});
         test.add(new HashMap<String, Object>(){{
-            put("confName","fidoStoragePeriod"); // property_name
+            put("confName","FidoStoragePeriod"); // property_name
             put("property_value","30");
             put("config_name","FIDO Session 보관기간");
             put("regdate","2023-11-23 00:00:00");

@@ -341,7 +341,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 
 	@Override
 	public void deleteFidoSessionByTime() throws Exception {
-		int fidoStoragePeriod = Integer.parseInt(ezCommonService.getTenantConfig("fidoStoragePeriod", 0)); // 애경은 테넌트 0번만 사용, fidoStoragePeriod는 일 기준
+		int fidoStoragePeriod = Integer.parseInt(ezCommonService.getTenantConfig("FidoStoragePeriod", 0)); // fidoStoragePeriod는 일 기준
 		loginDAO.deleteFidoSessionByTime(fidoStoragePeriod);
 	}
 
