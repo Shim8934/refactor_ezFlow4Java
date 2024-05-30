@@ -8,7 +8,7 @@
 </head>
 <body class="body_bg1">
 	<article class="box_shadow">
-		<div class="layDIV" id="helpDiv" style="height:248px; border-radius: 3px;">
+		<div class="layDIV" id="helpDiv" style="">
 			<span class="leftImg"><img src="/images/ezNewPortal/bannerImg_left.png"></span>
 			<dl class="bannerText sortablePortlet">
 				<dt class="bText"><spring:message code='ezNewPortal.t040' /></dt>

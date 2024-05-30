@@ -27,7 +27,7 @@
                         <p class="voteTitle"><c:out value="${title}"/></p>
                         <p class="voteBtn votePortlet" id="V<c:out value='${qstId}'/>"><spring:message code="main.t2001"/></p>
                     </div>
-					<ul class="voteList">
+					<ul class="portlet_list voteList">
 						<c:forEach items="${pollAnswer }" var="poll" varStatus="status">
 <%--							<c:if test="${status.index lt 4 }">--%>
 								<li class="voteList_0${status.index + 1 }">

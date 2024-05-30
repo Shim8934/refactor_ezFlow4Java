@@ -23,7 +23,7 @@
 				<img src="/images/ezNewPortal/photo_pre.png">
 			</dd>
 		</dl>
-		<div style="height:100%;">
+		<div style="height:calc(100% - 83px);">
 			<div class="birthdayList" id="birthcount" style="display: none;">
 				<ul class="birthList" id="birthdayList" style="overflow-y:auto; overflow-x:hidden;"></ul>
 			</div>
