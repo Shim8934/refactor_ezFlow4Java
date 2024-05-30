@@ -3121,7 +3121,7 @@ ORDER BY
 			TENANT_ID = #tenantId#
 		ORDER BY 
 			CREATE_DATE DESC
-		LIMIT 6
+		LIMIT 12
 	]]>
 </select>
 
