@@ -2954,13 +2954,13 @@
                 		TBL_Board_Item A
                    LEFT JOIN 
                    	( SELECT 
-                   		COUNT(USERID)  TOTALCOUNT  ,
+                   		COUNT(USERID)  TOTALCOUNT,
                    		ITEMID,
                    		TENANT_ID 
                    	  FROM 
                    	  	TBL_Board_Item_Read
                    	  WHERE
-                   	  	TENANT_ID = #V_TENANTID#
+                   	  	TENANT_ID = #v_TENANTID#
                    	  AND  
                    	  	USERID = #v_PUSERID#
                          AND 

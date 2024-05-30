@@ -126,6 +126,8 @@
 		    var useNotReadCnt = "${useNotReadCnt}";
 		    var BoardGroupID = "${boardInfo.boardGroupID}";
 		    var stringFnParam = "SortPage"; // 2021-04-27 홍승비 - 문자열인 함수명에 접근하기 위한 변수
+		    var endDateOption = "<c:out value='${endDateOption}'/>" // 2024-05-24 전인하 - 만료게시물 표출여부 확인 플래그
+		    var boardViewType = '1'; // 2024-05-24 전인하 - 기본보기(1) / 안읽은 게시물(2) / 만료게시물(3) 확인 플래그
 		    
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
@@ -361,20 +363,15 @@
 		    
 		    var xmlhttp = createXMLHttpRequest();
 		    var viewtypeChangeFlag = false;
-		    function getBoardList(type) {
-		        if (type == "1") {
-		            SQLPARADATA = "";
-		            CurPage = 1;
-		            viewtypeChangeFlag = true;
-		        }
+		    function getBoardList() {
+		        
 		        starttime = new Date().getTime();
-		        if(document.getElementById("viewtype") != null){
-		        	type = document.getElementById("viewtype").value;
-		        }
-		        if (SQLPARADATA != ""){
+		        
+		        if (SQLPARADATA != "") {
+		            document.getElementById('viewtype')[0].selected = true;
+		            boardViewType = '1';
 		        	url = "/ezBoard/getSearchBoardList.do";
-		        }
-		        else{
+		        } else {
 		        	url = "/ezBoard/getBoardList.do";
 		        }
 		        $.ajax({
@@ -388,7 +385,7 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 type 		 : type,
+							 type 		 : boardViewType,
 							 likeFlag : likeFlag
 							},
 					success: function(xml){
@@ -519,6 +516,7 @@
 		            }
 		            endtime = new Date().getTime();
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
+		            MailOptionHidden();
 		        }
 		        catch (e) {
 		            alert("getBoardList_after : " + e.description);
@@ -1408,6 +1406,15 @@
 					}
 				});
 	    	}
+	    	
+	    	// 2024-05-29 전인하 - 리스트설정 셀렉트박스 선택 동작 메서드
+	    	function selectBoardViewType(obj) {
+                boardViewType = obj.value;
+                CurPage = 1;
+                SQLPARADATA = "";
+                viewtypeChangeFlag = true;
+                getBoardList();
+	    	}
 		    
 		</script>
 	</head>
@@ -1530,10 +1537,12 @@
 		                    <tr>
 		                        <th><spring:message code="ezEmail.t99000035" /></th>
 		                        <td>
-		                            <select id="viewtype" onchange="getBoardList('1')">
+		                            <select id="viewtype" onchange="selectBoardViewType(this)">
 						                <option value="1"><spring:message code='ezBoard.t4001' /></option>
 						                <option value="2"><spring:message code='ezBoard.t4002' /></option>
-						                <option value="3"><spring:message code='ezBoard.t4003' /></option>
+						                <c:if test="${endDateOption eq 'YES'}">
+						                    <option value="3"><spring:message code='ezBoard.t4003' /></option>
+						                </c:if>
 		            				</select>
 		                        </td>
 		                    </tr>

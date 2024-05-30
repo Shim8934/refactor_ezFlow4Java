@@ -353,4 +353,7 @@ public interface EzCommonService {
 	public void insertUseReceiptDeptFileAttach() throws Exception;
 
 	public void insertDocBinderListOption() throws Exception;
+	
+	public void insertEndDateOptionConfig() throws Exception;
+
 }

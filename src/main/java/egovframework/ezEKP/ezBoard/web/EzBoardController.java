@@ -1000,6 +1000,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			isMyBoard = "YES";
 		}
 		
+		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName).replace("\\", "&#92;"));
 		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
@@ -1009,6 +1011,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("use_Editor", use_Editor);
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		model.addAttribute("isMyBoard", isMyBoard);
+		model.addAttribute("endDateOption", endDateOption);
 		
 		logger.debug("boardItemList ended");
 		//logger.debug("requestURL : " + requestURL);
@@ -6111,6 +6114,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (isMyBoardExist > 0) {
 			isMyBoard = "YES";
 		}
+		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
 		
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
@@ -6129,6 +6133,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardViewForm", boardViewForm);
 		model.addAttribute("isMyBoard", isMyBoard);
+		model.addAttribute("endDateOption", endDateOption);
 
 		logger.debug("boardItemListThumbnail ended");
 		return "ezBoard/boardItemListThumbnail";
@@ -9222,6 +9227,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (isMyBoardExist > 0) {
 			isMyBoard = "YES";
 		}
+
+		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
 		
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
@@ -9239,6 +9246,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("isMyBoard", isMyBoard);
+		model.addAttribute("endDateOption", endDateOption);
 
 		logger.debug("boardItemListMovie ended");
 		return "ezBoard/boardItemListMovie";
@@ -10639,5 +10647,19 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		logger.debug("getUserReplyReact ended.");
 		return getUserReplyReactList;
+	}
+	
+	// 2024-05-29 전인하 - 게시판 > 게시물 리스트 > 만료된 게시물 리스트 표출 가능여부 메소드
+	public String checkEndDateConfig(BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception {
+		String endDateOptionConfig = ezCommonService.getTenantConfig("endDateOptionConfig", userInfo.getTenantId());
+		String endDateOption = "NO";
+		if (endDateOptionConfig != null) {
+			if (endDateOptionConfig.equals("ALWAYS") || (endDateOptionConfig.equals("ADMIN") && boardInfo.getBoardAdmin_FG().equals("true"))) {
+				endDateOption = "YES";
+			} else {
+				endDateOption = "NO";
+			}
+		}
+		return endDateOption;
 	}
 }

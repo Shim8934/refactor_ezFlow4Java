@@ -278,6 +278,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createTblTotalHistory(); // 2023-06-04 - 통합 PC 다중 파일 저장시 다운로드 로그 남기는 테이블
 			ezCommonService.insertdelAttachByOthersConfing(); // 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부
 			ezCommonService.insertApprNonElecRecTypeConfing(); // 2024-05-29 김유진 - 전자결재G 비전자문서등록 양식 확장자 정보
+			ezCommonService.insertEndDateOptionConfig(); // 2024-05-29 전인하 - 게시판 > 게시물 리스트 > 만료된 게시물 리스트 표출 가능여부
             ezCommonService.insertRecordHeaderClassTitle(); // 2024-06-11 민지수 - 전자결재 > 기록물대장 > 기록물철명 헤더 추가
     		ezCommonService.insertDocBinderListOption(); // 2024-06-12 전인하 - 전자결재G > 기록물철인계 > 기록물철리스트 리스트헤더 컬럼 추가
         } catch (Exception e) {

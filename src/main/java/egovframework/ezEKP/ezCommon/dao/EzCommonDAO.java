@@ -2025,6 +2025,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void insertEndDateOptionConfig(Map<String, Object> map) throws Exception {
+		String endDateOptionConfig = (String) select("EzCommonDAO.checkEndDateOptionConfig", map);
+		if (endDateOptionConfig == null) {
+			logger.debug("endDateOptionConfig tenant config doesn't exist. insert data...");
+
+			insert("EzCommonDAO.insertEndDateOptionConfig", map);
+		}
+	}
+	
 	// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부 테넌트 컨피그 추가
 	public void insertUseHideHeaderArea(Map<String, Object> map) {
 		String propertyValue = (String) select("EzCommonDAO.checkUseHideHeaderArea", map);
