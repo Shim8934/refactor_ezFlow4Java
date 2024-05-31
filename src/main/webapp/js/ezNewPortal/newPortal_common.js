@@ -123,14 +123,14 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 			break;
 		case "notice" : // 공지사항
 			if (isReload) {
-				noticePortletLoadFunc();
+				initNoticePortletInfo(portletId);
 			} else {
 				url = "/js/ezNewPortal/portlets/noticePortlet.js";
 
 				$.getScript(url)
 					.done(function (script, textStatus) {
 						try {
-							noticePortletLoadFunc();
+							initNoticePortletInfo(portletId);
 						} catch (err) {
 							console.log(err);
 						}

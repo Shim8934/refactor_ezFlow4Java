@@ -16,11 +16,14 @@
 				<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
 			</dd>
 		</dl>
-		<div id="BoardList_NewBoard">
+		<div>
+			<ul id="BoardList_NewBoard" class='noti_portlet_list portletPagingArea'></ul>
 		</div>
-		<ul class="noti_portlet_list" id="BoardList_NewBoard">
+		<ul class="noti_portlet_list">
 		</ul>
 	</div>
+	<span class="portlet_list_nav prev"></span>
+	<span class="portlet_list_nav next"></span>
 	</article>
 </body>
 </html>

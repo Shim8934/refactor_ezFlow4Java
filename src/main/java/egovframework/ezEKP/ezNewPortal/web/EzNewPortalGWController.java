@@ -4014,7 +4014,7 @@ public class EzNewPortalGWController {
 			String rollInfo = info.getRollInfo();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			String portletLang = info.getLang();
-			int limit = 3; // 공지사항 갯수
+			int limit = 12; // 공지사항 갯수
 			
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
 			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
