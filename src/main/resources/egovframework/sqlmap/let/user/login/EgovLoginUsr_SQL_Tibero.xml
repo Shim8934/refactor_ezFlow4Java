@@ -382,9 +382,9 @@
 
 	<insert id="loginDAO.setFidoSession" parameterClass="fidoAuthenticationVO">
 		INSERT INTO TBL_FIDO_SESSION(
-		FIDO_SESSION_ID,	USER_ID,		CREATE_TIME,		ACCESS_IP,		STATUS
+			FIDO_SESSION_ID,	USER_ID,		CREATE_TIME,		ACCESS_IP,		STATUS
 		)VALUES(
-		#fidoSessionId#,	#id#,	utc_timestamp(), 	#ip#,		#status#
+			#fidoSessionId#,	#id#,	SYS_EXTRACT_UTC(SYSTIMESTAMP), 	#ip#,		#status#
 		)
 	</insert>
 
