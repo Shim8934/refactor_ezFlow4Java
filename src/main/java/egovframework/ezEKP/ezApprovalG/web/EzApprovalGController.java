@@ -6593,7 +6593,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		
+
+		String viewDocFlag = request.getParameter("viewDoc") != null ? request.getParameter("viewDoc") : "";
+		String orgCompanyID = request.getParameter("orgCompanyID");
+
 		String susinAdmin = "";
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -6631,6 +6634,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				
 				FileUtils.copyFile(orgFile, newFile);
 			}
+		}
+
+		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", userInfo.getTenantId());
+		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+			useExternalMailServer = "NO";
 		}
 		
 //		if (docID != null && !docID.equals("")) {
@@ -6672,6 +6680,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useRedraftOpinionKeep", useRedraftOpinionKeep);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("isPreview", isPreview);
+
+		model.addAttribute("viewDocFlag", viewDocFlag); // 문서보기 Flag
+		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("useExternalMailServer", useExternalMailServer);
 		
 		logger.debug("recevG ended.");
 		

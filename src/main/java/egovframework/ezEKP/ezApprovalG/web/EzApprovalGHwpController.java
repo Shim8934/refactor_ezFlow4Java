@@ -1856,6 +1856,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
 
+		String viewDocFlag = request.getParameter("viewDoc") != null ? request.getParameter("viewDoc") : "";
+		String orgCompanyID = request.getParameter("orgCompanyID");
+
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String pSusinAdmin = "";
         if (userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -1968,6 +1971,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+
+		model.addAttribute("viewDocFlag", viewDocFlag); // 문서보기 Flag
+		model.addAttribute("orgCompanyID", orgCompanyID);
+
 		
 		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
 
