@@ -25,7 +25,7 @@
 		</dl>
 		<div style="height:calc(100% - 83px);">
 			<div class="birthdayList" id="birthcount" style="display: none;">
-				<ul class="birthList" id="birthdayList" style="overflow-y:auto; overflow-x:hidden;"></ul>
+				<ul class="birthList" id="birthdayList"></ul>
 			</div>
 			<div id="nodata_NewBirthday" class="nodata_newBirthday" style="padding-top: 15px;display:none;">
 				<dl class='nodata'>
