@@ -137,6 +137,15 @@ function tapBoardChangeTab(obj, tabBoardListId) {
 	portletInfoMap["portlet" + portletId].activeTabId = tabBoardListId;
     var className = obj.className;
 
+    var portletPageNav = document.getElementById(portletId + "Portlet").querySelector(".portletPageNav");
+    
+    var nodataArea = document.getElementById(tabBoardListId).querySelector(".nodata");
+	if (nodataArea) {
+		portletPageNav.style.display = "none";
+	} else {
+		portletPageNav.style.display = "block";
+	}
+    
     if (className.indexOf("on") > -1) {
         return;
     }

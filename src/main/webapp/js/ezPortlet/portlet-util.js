@@ -482,15 +482,19 @@ function resetPortletList(portletId, totalCnt, activeTabId) {
 	var perCount = portletPageObj.getPagePerCount(portletId);
 	portletPageObj.setTotal(totalCnt);
 	
-	var portletPageNav = document.getElementById(portletId + "Portlet").getElementsByClassName("portletPageNav")[0];
+	var portletPageNav = document.getElementById(portletId + "Portlet").querySelector(".portletPageNav");
 	if (totalCnt > 0) {
 		var portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
 		var startRowIdx = portletPageObj.getStart();
 		var currentPage = portletPageObj.getPage();
 		portletListDisplayProcess(portletPageList, startRowIdx, perCount);
-		portletPageNav.style.display = "block";
+		if (portletInfoObj.portletCode != "tabBoard") {
+			portletPageNav.style.display = "block";
+		}
 	} else {
-		portletPageNav.style.display = "none";
+		if (portletInfoObj.portletCode != "tabBoard") {
+			portletPageNav.style.display = "none";
+		}
 	}
 }
 
