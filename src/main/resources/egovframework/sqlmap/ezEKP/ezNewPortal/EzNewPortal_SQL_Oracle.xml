@@ -3469,7 +3469,7 @@ ORDER BY
 					CREATE_DATE DESC
 				) F
 	    	) P
-		WHERE P.RN <= 5
+		WHERE P.RN <= 12
 	]]>
 </select>
 
