@@ -1018,64 +1018,69 @@
 							* 
 						FROM 
 							(
-								SELECT  
-									A.SN, 
-									CONCAT(A.OWNERID, '@', A.SN) AS DOCID ,
-									A.FORMID,
-									A.ORGDOCID, 
-		                     		A.DOCTYPE,
-		                     		A.DOCSTATE,
-		                     		A.FUNCTIONTYPE,
-		                     		A.HREF,
-		                     		A.DOCTITLE,
-		                     		A.DOCNO,
-		                     		A.HASATTACHYN, 
-		                     		A.HASOPINIONYN, 
-		                     		A.STARTDATE,
-		                     		A.ENDDATE,
-		                     		A.WRITERID,
-		                     		A.WRITERNAME,
-		                     		A.WRITERJOBTITLE,	
-		                     		A.WRITERDEPTID,
-		                     		A.WRITERDEPTNAME,
-		                     		A.ISPUBLIC,
-		                     		A.WriterName2, 
-		                     		A.WriterJobTitle2, 
-		                     		A.WriterDeptName2,
-		                     		B.FORMNAME, 
-		                     		B.FORMNAME2,
-		                     		B.URGENTAPPROVAL
-		                     FROM
-		                     	  TBL_TMPAPRDOCINFO A  
-		                     INNER JOIN 
-		                         TBL_TMPEXPAPRDOCINFO B  
-		                     ON 
-		                         A.OWNERID = B.OWNERID
-		                     AND 
-		                     	 A.TENANT_ID = B.TENANT_ID
-		                     AND
-		                     	 A.COMPANYID = B.COMPANYID
-		                     AND 
-		                     	 A.SN = B.SN
-							LEFT OUTER JOIN
-								TBL_APRDOCGROUPINFO GRP
-							ON
-								A.TENANT_ID = GRP.TENANT_ID
-							AND
-								A.COMPANYID = GRP.COMPANYID
-							AND
-								CONCAT(A.OWNERID, '@', A.SN) = GRP.DOCID
-		                     WHERE 
-		                         A.OWNERID= #v_USERID#
-		                     AND 
-		                     	A.TENANT_ID = #v_TENANTID#
-		                     AND
-								A.COMPANYID = #companyID#
-							AND
-								IFNULL(GRP.TABSN, 1) = 1
+								SELECT
+								    *
+								FROM
+								    (
+                                        SELECT
+                                            A.SN,
+                                            CONCAT(A.OWNERID, '@', A.SN) AS DOCID ,
+                                            A.FORMID,
+                                            A.ORGDOCID,
+                                            A.DOCTYPE,
+                                            A.DOCSTATE,
+                                            A.FUNCTIONTYPE,
+                                            A.HREF,
+                                            A.DOCTITLE,
+                                            A.DOCNO,
+                                            A.HASATTACHYN,
+                                            A.HASOPINIONYN,
+                                            A.STARTDATE,
+                                            A.ENDDATE,
+                                            A.WRITERID,
+                                            A.WRITERNAME,
+                                            A.WRITERJOBTITLE,
+                                            A.WRITERDEPTID,
+                                            A.WRITERDEPTNAME,
+                                            A.ISPUBLIC,
+                                            A.WriterName2,
+                                            A.WriterJobTitle2,
+                                            A.WriterDeptName2,
+                                            B.FORMNAME,
+                                            B.FORMNAME2,
+                                            B.URGENTAPPROVAL
+                                     FROM
+                                          TBL_TMPAPRDOCINFO A
+                                     INNER JOIN
+                                         TBL_TMPEXPAPRDOCINFO B
+                                     ON
+                                         A.OWNERID = B.OWNERID
+                                     AND
+                                         A.TENANT_ID = B.TENANT_ID
+                                     AND
+                                         A.COMPANYID = B.COMPANYID
+                                     AND
+                                         A.SN = B.SN
+                                    LEFT OUTER JOIN
+                                        TBL_APRDOCGROUPINFO GRP
+                                    ON
+                                        A.TENANT_ID = GRP.TENANT_ID
+                                    AND
+                                        A.COMPANYID = GRP.COMPANYID
+                                    AND
+                                        CONCAT(A.OWNERID, '@', A.SN) = GRP.DOCID
+                                     WHERE
+                                         A.OWNERID= #v_USERID#
+                                     AND
+                                        A.TENANT_ID = #v_TENANTID#
+                                     AND
+                                        A.COMPANYID = #companyID#
+                                    AND
+                                        IFNULL(GRP.TABSN, 1) = 1
+		                       ) E
                  ]]>
 		                 <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
-			      		 	AND 
+                             WHERE
 			      		 		$v_SPSUBQUERY$
 			      		</isGreaterThan>
 			      		<isNotEmpty property="v_ORDEROPTION"> 

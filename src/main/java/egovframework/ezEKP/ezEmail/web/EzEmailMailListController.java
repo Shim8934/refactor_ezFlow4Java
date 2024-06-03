@@ -2569,9 +2569,20 @@ public class EzEmailMailListController {
 				
 				ByteArrayInputStream inputStream = null;
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-				
+
+				String pReadFlag = "Y";
+
+				// 선택 된 해킹 의심 메일이 안읽은 메일이면
+				if (!message.isSet(Flags.Flag.SEEN)) {
+					pReadFlag = "N";
+				}
+
 				try{
 					message.writeTo(outputStream);
+
+					boolean isRead = pReadFlag.equalsIgnoreCase("Y");
+					message.setFlag(Flags.Flag.SEEN, isRead);
+
 					inputStream = new ByteArrayInputStream(outputStream.toByteArray());
 				} catch(IOException e){
 					logger.error(e.getMessage(), e);

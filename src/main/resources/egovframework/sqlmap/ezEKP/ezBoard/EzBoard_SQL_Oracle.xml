@@ -2272,8 +2272,8 @@
          		BOARDID = #boardID#
             AND 
             	STARTDATE <= #nowDate#
-            AND 
-            	ENDDATE > #nowDate#
+            AND
+                NTENDDATE > #nowDate#
             AND 
             	extensionAttribute1 = '0'
             AND 

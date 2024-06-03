@@ -745,7 +745,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             	
             	// 임시보관함 키워드 검색 추가
             	if (listType.equals("21")) {
-            		returnQuery += "IN (SELECT CONCAT(OWNERID, '@', SN) FROM TBL_TMPEXPAPRDOCINFO WHERE KEYWORD LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%') ";
+            		returnQuery += "IN (SELECT CONCAT(CONCAT(OWNERID, '@'), SN) FROM TBL_TMPEXPAPRDOCINFO WHERE KEYWORD LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%') ";
             	} else {
             		returnQuery += "IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE '%" + domSub.getElementsByTagName("KEYWORD").item(0).getTextContent() + "%') ";
             	}
