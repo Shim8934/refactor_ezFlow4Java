@@ -24,6 +24,7 @@
 					<li class='bookmarkLi_none'></li>
 					<li class='bookmarkLi_none'></li>
 					<li class='bookmarkLi_none'></li>
+					<li class='bookmarkLi_none'></li>
 				</ul>
 			</div>
 			
@@ -110,7 +111,7 @@
 						var forms = result.resultList;
 						var formsHTML = "";
 						
-						for (var i = 0; i < 5; i++) {
+						for (var i = 0; i < 6; i++) {
 							if (forms[i]) {
 								// 텍스트 한줄 ... 처리로 수정(기존 3줄 ... 처리는 주석 처리(uiux 조기완)
 								// formsHTML += "<li class='bookmarkLi' data-location='" + forms[i].formFileLocation + "' data-type='" + forms[i].formDocType + "'><span style='overflow:hidden; text-overflow:ellipsis; -webkit-line-clamp:3; -webkit-box-orient:vertical; height: 39px;";
