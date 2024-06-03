@@ -16,16 +16,16 @@
 				<span id="curMonth"><c:out value="${nowMonth }" /></span><spring:message code='ezNewPortal.yej04'/><c:out value='${portletName }'/>
 			</dt>
 			<!-- 		<dd class="portletPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd> -->
-			<dd id="birthNext" class="portletPlus nextBtn">
-				<img src="/images/ezNewPortal/photo_next.png">
-			</dd>
-			<dd id="birthPrev" class="portletPlus preBtn">
-				<img src="/images/ezNewPortal/photo_pre.png">
-			</dd>
+<!-- 			<dd id="birthNext" class="portletPlus nextBtn"> -->
+<!-- 				<img src="/images/ezNewPortal/photo_next.png"> -->
+<!-- 			</dd> -->
+<!-- 			<dd id="birthPrev" class="portletPlus preBtn"> -->
+<!-- 				<img src="/images/ezNewPortal/photo_pre.png"> -->
+<!-- 			</dd> -->
 		</dl>
 		<div style="height:calc(100% - 83px);">
 			<div class="birthdayList" id="birthcount" style="display: none;">
-				<ul class="birthList" id="birthdayList"></ul>
+				<ul class="birthList portletPagingArea" id="birthdayList"></ul>
 			</div>
 			<div id="nodata_NewBirthday" class="nodata_newBirthday" style="padding-top: 15px;display:none;">
 				<dl class='nodata'>
@@ -35,6 +35,9 @@
 			</div>
 		</div>
 	</div>
+	<span class="portlet_list_nav prev"></span>
+	<span class="portlet_list_nav next"></span>
+	</article>
 	</article>
 </body>
 </html>

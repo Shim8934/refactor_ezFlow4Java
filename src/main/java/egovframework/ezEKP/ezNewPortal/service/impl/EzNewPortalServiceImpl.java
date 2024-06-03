@@ -1025,7 +1025,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow,String lang) throws Exception {
+	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, String lang) throws Exception {
 		logger.debug("getMonthlyBirthdayEmployees started.");
 		String monthStr = "";
 
@@ -1106,17 +1106,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		});
 
-		if (startRow >= birthCount) {
-			startRow = 0;
-		}
+//		if (startRow >= birthCount) {
+//			startRow = 0;
+//		}
 
 		List<PortalUserInfoVO> birthdayListLmit = new ArrayList<PortalUserInfoVO>();
 
-		for (int i = startRow; i < startRow + count; i++) {
-			if (i < birthCount) {
-				birthdayListLmit.add(birthdayList.get(i));
-			}
-		}
+//		for (int i = startRow; i < startRow + count; i++) {
+//			if (i < birthCount) {
+//				birthdayListLmit.add(birthdayList.get(i));
+//			}
+//		}
 		
 		// 2024-05-27 한태훈 > 6초마다 자동페이지네이션 기능 사용하려면 return birthdayListLmit을 해줘야함. 2018년?에 만들어진 기능인데, 호출을 6초마다하는 게 부담이 되니 다른 방법으로 구현하는 것도 좋아보임.
 

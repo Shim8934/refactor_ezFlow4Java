@@ -8,6 +8,40 @@ var ptlBirthMonth = Number($("#nowMonth").val());
 var ptlBirthCurPage = 0;
 var ptlBirthTotalCount = 0;
 
+//2024-05-30 조수빈 - 공지사항 페이징 처리
+var birthdayPortletObj = {};
+var birthdayPorletPagingCnt = 0;
+
+function initbirthdayPortletInfo(birthdayPortletId) {
+	var newObj = {};
+	var perCount = getbirthdayPagePerCount(birthdayPortletId);
+	newObj.page = new Paging().init(perCount);
+	
+	newObj.page.getPagePerCount = function () {
+		return getbirthdayPagePerCount(birthdayPortletId);
+	}
+	
+	portletInfoMap["portlet" + birthdayPortletId] = newObj;
+	birthdayPortletObj.portletId = birthdayPortletId;
+	
+	ptlGetMonthlyBirthday();
+}
+
+// 2024-05-30 조수빈 - 공지사항이 보여질 수 있는 개수에 비해 작은 경우 처리하기 위해 전역변수로 선언
+var count = 0;
+
+function getbirthdayPagePerCount(birthdayPortletId) {
+	var portletSize = getPortletSize(birthdayPortletId);
+	
+	if (portletSize == GridSize.TWO_BY_ONE) {
+		count = 10;
+	} else {
+		count = 4;
+	}
+
+	return count;
+}
+
 //생일자 목록 month 세팅
 function ptlGetMonthlyBirthday(event) {
 	if (event  != undefined) {
@@ -38,11 +72,15 @@ function getBirthdayList() {
 		type : "GET",
 		url : "/ezNewPortal/getMonthlyBirthdayEmployees.do",
 		dataType : "json",
-		data : {"birthdayMonth" : ptlBirthMonth, "birthdayCurPage" : ptlBirthCurPage, "birthdayCount" : 6},
+		data : {
+			"birthdayMonth" : ptlBirthMonth, 
+//			"birthdayCurPage" : ptlBirthCurPage, 
+//			"birthdayCount" : 6
+		},
 		success : function(result) {
 			ptlBirthTotalCount = result.birthdayTotalCount;
 			
-			ptlBirthCurPage = result.birthdayCurPage;
+//			ptlBirthCurPage = result.birthdayCurPage;
 			
 			var birthdayList = result.birthdayList;
 			
@@ -64,6 +102,7 @@ function getBirthdayList() {
 				
 				var strHTML = "";
 				var resultCount = birthdayList.length;
+				birthdayPorletPagingCnt = birthdayList.length;
 				
 				for (var i = 0; i < resultCount; i++) {
 					var userBirthday = birthdayList[i].userBirthday.substring(5);
@@ -112,6 +151,10 @@ function getBirthdayList() {
 				$("#nodata_NewBirthday").css("display", "");
 				$("#birthcount").css("display", "none");
 			}
+			
+			var totalCnt = birthdayList.length < birthdayPorletPagingCnt ? birthdayList.length : birthdayPorletPagingCnt; 
+			resetPortletList(birthdayPortletObj.portletId, totalCnt);
+			
 			/* 6명 이상일 시 5초마다 자동페이지 네이션 기능을 사용할 때  주석해제
 			ptlTimer = window.setInterval(function() {
 				if (ptlBirthTotalCount > 6) {

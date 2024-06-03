@@ -657,8 +657,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String url = "/rest/ezPortal/birthday/months/" + birthdayMonth;
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
-		param.put("birthdayCurPage", req.getParameter("birthdayCurPage"));
-		param.put("birthdayCount", req.getParameter("birthdayCount"));
+//		param.put("birthdayCurPage", req.getParameter("birthdayCurPage"));
+//		param.put("birthdayCount", req.getParameter("birthdayCount"));
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		JSONObject birthdayInfo = new JSONObject();
@@ -667,8 +667,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			birthdayInfo.put("birthdayList", data.get("birthdayList"));
-			birthdayInfo.put("birthdayTotalCount", data.get("birthdayListCount"));
-			birthdayInfo.put("birthdayCurPage", data.get("birthdayCurPage"));
+//			birthdayInfo.put("birthdayTotalCount", data.get("birthdayListCount"));
+//			birthdayInfo.put("birthdayCurPage", data.get("birthdayCurPage"));
 		}
 		
 		logger.debug("getMonthlyBirthdayEmployees End");

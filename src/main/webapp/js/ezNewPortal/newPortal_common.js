@@ -312,7 +312,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 			break;
 		case "birthday" : // 생일자
 			if (isReload) {
-				ptlGetMonthlyBirthday();
+				initbirthdayPortletInfo(portletId);
 			} else {
 				url = "/js/ezNewPortal/portlets/birthdayPortlet.js";
 
@@ -323,8 +323,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 							$("#birthNext").on("click", {isNext: true}, ptlGetMonthlyBirthday);
 							$("#birthPrev").on("click", {isNext: false}, ptlGetMonthlyBirthday);
 
-							//이번달 생일자 목록 불러오기
-							ptlGetMonthlyBirthday();
+							initbirthdayPortletInfo(portletId);
 						} catch (err) {
 							console.log(err);
 						}
