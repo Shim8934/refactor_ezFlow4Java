@@ -2164,3 +2164,5 @@ div.orbit img{border-radius: 5px;}
 .noti_portlet_list:after{content:""; display:block; clear:both;}
 
 .portlet.two_by_one .webFolder .webFolderLi.pageTwo {margin-top: 0}
+.portlet.one_by_one .webFolder .webFolderLi.pageOne {margin-top: 0}
+.portlet.one_by_two .webFolder .webFolderLi.pageOne {margin-top: 0}
