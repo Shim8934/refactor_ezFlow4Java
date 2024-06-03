@@ -10,13 +10,19 @@ function initPhotoBoardPortlet(portletId) {
 	newObj.page.getPagePerCount = function () {
 		return getPhotoPagePerCount(portletId);
 	}
+	newObj.portletCode = "photoboard";
 
 	portletInfoMap["portlet" + portletId] = newObj;
 	
 	var photoPortletListCnt = document.getElementById('photoPortletListCnt').value;
 	var totalCnt = photoPortletListCnt < photoPortletPageMaxCnt ? photoPortletListCnt : photoPortletPageMaxCnt;
 	
-	resetPortletList(portletId, totalCnt);
+	var nodataArea = document.getElementById(portletId + "Portlet").querySelector(".nodata");
+	if (nodataArea) {
+		document.getElementById(portletId + "Portlet").querySelector(".portletPageNav").style.display = "none";
+	}
+	
+	resetPortletList(portletId, totalCnt, "");
 }
 
 function getPhotoPagePerCount(portletId) {
@@ -74,7 +80,7 @@ function getPhotoPortletList() {
 			}
 			
 			var totalCnt = result.length < photoPortletPageMaxCnt ? result.length : photoPortletPageMaxCnt;
-			resetPortletList(portletId, totalCnt);
+			resetPortletList(portletId, totalCnt, "");
 		}
 	})
 }

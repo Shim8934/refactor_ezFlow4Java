@@ -16,7 +16,7 @@
             </div>
             <ul class="portlet_list portletPagingArea" id="BoardList"></ul>
         </div>
-        <div id="favoriteBoardBtnDiv">
+        <div class="portletPageNav">
     		<span class="portlet_list_nav prev"></span>
     		<span class="portlet_list_nav next"></span>
     	</div>

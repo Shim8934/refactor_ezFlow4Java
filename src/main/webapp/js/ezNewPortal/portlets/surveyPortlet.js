@@ -9,6 +9,7 @@ function initSurveyPortletInfo(surveyPortletId) {
 	newObj.page.getPagePerCount = function () {
 		return getSurveyPagePerCount(surveyPortletId);
 	}
+	newObj.portletCode = "survey";
 	portletInfoMap["portlet" + surveyPortletId] = newObj;
 	surveyPortletObj.portletId = surveyPortletId;
 	
@@ -141,7 +142,7 @@ function setListByDataList(surveys) {
 	}
 	
 	var totalCnt = surveys.length < surveyPorletPagingCnt ? surveys.length : surveyPorletPagingCnt;
-	resetPortletList(surveyPortletObj.portletId, totalCnt);
+	resetPortletList(surveyPortletObj.portletId, totalCnt, "");
 }
 
 // 응답 안 한 설문은 굵게 표시

@@ -12,6 +12,7 @@ function initCommunityPortletInfo(communityPortletId) {
 	var newObj = {};
 	var perCount = getCommmunityPagePerCount(communityPortletId);
 	newObj.page = new Paging().init(perCount);
+	newObj.portletCode = "community";
 	newObj.page.getPagePerCount = function () {
 		return getCommmunityPagePerCount(communityPortletId);
 	}
@@ -20,7 +21,7 @@ function initCommunityPortletInfo(communityPortletId) {
 	
 	communityPortletObj.portletId = communityPortletId;
 	var totalCnt = CommuSize < communityPortletPageMaxCnt ? CommuSize : communityPortletPageMaxCnt;
-	resetPortletList(communityPortletObj.portletId, totalCnt);
+	resetPortletList(communityPortletObj.portletId, totalCnt, "");
 }
 
 function getCommmunityPagePerCount(communityPortletId) {
@@ -144,7 +145,7 @@ var getCommunityList = function() {
 			}
 			
 			var totalCnt = size < communityPortletPageMaxCnt ? size : communityPortletPageMaxCnt;
-			resetPortletList(communityPortletObj.portletId, totalCnt);
+			resetPortletList(communityPortletObj.portletId, totalCnt, "");
 			
 			for (var i = 1; i <= size; i ++) {
 				$('.comListDL0'+i).on("click", view_bestCommunity);

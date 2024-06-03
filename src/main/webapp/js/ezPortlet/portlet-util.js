@@ -443,86 +443,54 @@ function changePortletViewCount(portletId, portletPagingArea) {
 		for (var i = 0; i < tabBoardIdList.length; i++) {
 			var tabBoardId = tabBoardIdList[i];
 			portletPageObj = portletInfoObj.paging[tabBoardId];
-			portletPagingArea = document.getElementById(portletId + "Portlet").querySelector("#" + tabBoardId);
-			var perCount = portletPageObj.getPagePerCount(portletId);
-			portletPageObj.changeCount(perCount);
-			var startRowIdx = portletPageObj.getStart();
-			var portletPageList = portletPagingArea.children;
-			
-			portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+			var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#" + tabBoardId).children;
+			changePortletPageCount(portletPageObj, portletPageList);
 		}
 	} else if (portletInfoObj.portletCode == "favoriteboard") {
 		var favoriteActiveTabId = portletInfoObj.activeTabId;
 		portletPageObj = portletInfoObj.paging[favoriteActiveTabId];
-		portletPagingArea = document.getElementById(portletId + "Portlet").querySelector("#BoardList");
-		var perCount = portletPageObj.getPagePerCount(portletId);
-		portletPageObj.changeCount(perCount);
-		var startRowIdx = portletPageObj.getStart();
-		var portletPageList = portletPagingArea.children;
-		
-		portletListDisplayProcess(portletPageList, startRowIdx, perCount);
-		
+		var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#BoardList").children;
+		changePortletPageCount(portletPageObj, portletPageList);
 	} else {
-		portletPagingArea = portletPagingArea[0];
 		portletPageObj = portletInfoObj.page;
-		var perCount = portletPageObj.getPagePerCount(portletId);
-		portletPageObj.changeCount(perCount);
-		var startRowIdx = portletPageObj.getStart();
-		var portletPageList = portletPagingArea.children;
-		
-		portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+		var portletPageList = portletPagingArea[0].children;
+		changePortletPageCount(portletPageObj, portletPageList);
 	}
 }
 
-function resetPortletList(portletId, totalCnt) {
-	var portletPageObj = portletInfoMap["portlet" + portletId].page;
-	portletPageObj.resetPage();
+function changePortletPageCount(portletPageObj, portletPageList) {
+	var perCount = portletPageObj.getPagePerCount(portletId);
+	portletPageObj.changeCount(perCount);
+	var startRowIdx = portletPageObj.getStart();
+	portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+}
+
+function resetPortletList(portletId, totalCnt, activeTabId) {
+	var portletInfoObj = portletInfoMap["portlet" + portletId];
+	var portletPageObj = null;
+	
+	if (portletInfoObj.portletCode == "tabBoard") {
+		portletPageObj = portletInfoObj.paging[activeTabId];
+		portletPageObj.resetPage();
+	} else if (portletInfoObj.portletCode == "favoriteboard") {
+		portletPageObj = portletInfoObj.paging[activeTabId];
+	} else {
+		portletPageObj = portletInfoObj.page;
+		portletPageObj.resetPage();
+	}
+	
 	var perCount = portletPageObj.getPagePerCount(portletId);
 	portletPageObj.setTotal(totalCnt);
 	
+	var portletPageNav = document.getElementById(portletId + "Portlet").getElementsByClassName("portletPageNav")[0];
 	if (totalCnt > 0) {
 		var portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
 		var startRowIdx = portletPageObj.getStart();
 		var currentPage = portletPageObj.getPage();
 		portletListDisplayProcess(portletPageList, startRowIdx, perCount);
-	}
-	
-}
-
-function resetTabBoardPortletList(portletId, totalCnt, tabBoardListId) {
-	var portletInfoObj = portletInfoMap["portlet" + portletId];
-	if (portletInfoObj.portletCode == "tabBoard") {
-		var tabPageObj = portletInfoObj.paging[tabBoardListId];
-		tabPageObj.resetPage();
-		var perCount = tabPageObj.getPagePerCount(portletId);
-		tabPageObj.setTotal(totalCnt);
-		
-		if (totalCnt > 0) {
-			var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#" + tabBoardListId).children;
-			var startRowIdx = tabPageObj.getStart();
-			var currentPage = tabPageObj.getPage();
-			portletListDisplayProcess(portletPageList, startRowIdx, perCount);
-		}
-	}
-}
-
-function resetFavoriteBoardPortletList(portletId, totalCnt, favoriteBoardId) {
-	var portletInfoObj = portletInfoMap["portlet" + portletId];
-	
-	if (portletInfoObj.portletCode == "favoriteboard") {
-		var favoritePageObj = portletInfoObj.paging[favoriteBoardId];
-		
-		//favoritePageObj.resetPage();
-		
-		var perCount = favoritePageObj.getPagePerCount(portletId);
-		favoritePageObj.setTotal(totalCnt);
-		
-		if (totalCnt > 0) {
-			var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#BoardList").children;
-			var startRowIdx = favoritePageObj.getStart();
-			var currentPage = favoritePageObj.getPage();
-			portletListDisplayProcess(portletPageList, startRowIdx, perCount);
-		}
+		portletPageNav.style.display = "block";
+	} else {
+		portletPageNav.style.display = "none";
 	}
 }
 

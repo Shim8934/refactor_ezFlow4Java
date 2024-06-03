@@ -61,8 +61,17 @@
 		</div>
 
 		<%--	리스트 페이지 이동	--%>
-		<span class="portlet_list_nav prev"></span>
-		<span class="portlet_list_nav next"></span>
+		<c:choose>
+			<c:when test="${fn:length(CommunityList) == 0 }">
+				<div class="portletPageNav" style="display:none;">
+			</c:when>
+			<c:otherwise>
+				<div class="portletPageNav">
+			</c:otherwise>
+		</c:choose>
+			<span class="portlet_list_nav prev"></span>
+			<span class="portlet_list_nav next"></span>
+		</div>
 	</article>
 </body>
 </html>

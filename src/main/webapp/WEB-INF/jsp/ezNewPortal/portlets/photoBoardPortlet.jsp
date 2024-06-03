@@ -104,8 +104,11 @@
 				</c:otherwise>
 			</c:choose>
 		</div>
-		<span class="portlet_list_nav prev"></span>
-		<span class="portlet_list_nav next"></span>
+		
+		<div class="portletPageNav">
+			<span class="portlet_list_nav prev"></span>
+			<span class="portlet_list_nav next"></span>
+		</div>
 	</article>
 </body>
 </html>

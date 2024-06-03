@@ -10,7 +10,7 @@ function initNoticePortletInfo(noticePortletId) {
 	newObj.page.getPagePerCount = function () {
 		return getNoticePagePerCount(noticePortletId);
 	}
-	
+	newObj.portletCode = "notice";
 	portletInfoMap["portlet" + noticePortletId] = newObj;
 	noticePortletObj.portletId = noticePortletId;
 	
@@ -153,8 +153,12 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 	
 	document.getElementById('noticePlus').addEventListener('click', noticePlus);
 	
-	var totalCnt = noticeList.length < noticePorletPagingCnt ? noticeList.length : noticePorletPagingCnt; 
-	resetPortletList(noticePortletObj.portletId, totalCnt);
+	var totalCnt = 0;
+	
+	if (noticeList && noticeList.length != 0) {
+		totalCnt = noticeList.length < noticePorletPagingCnt ? noticeList.length : noticePorletPagingCnt; 
+	}
+	resetPortletList(noticePortletObj.portletId, totalCnt, "");
 }
 
 var portletId = $(".notice").parent().attr("id");

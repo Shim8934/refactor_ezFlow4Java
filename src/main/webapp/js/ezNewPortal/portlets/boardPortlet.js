@@ -36,7 +36,7 @@ function makeBoardList(portletId, fileName, count, type, startRow) {
 			}
 			
 			var totalCnt = result.length < boardPortletPagingCnt ? result.length : boardPortletPagingCnt;
-			resetPortletList(portletId, totalCnt);
+			resetPortletList(portletId, totalCnt, "");
 		}
 	})
 }
@@ -50,6 +50,7 @@ function initBoardPortletInfo(portletId, type, fileName) {
 	newOb.fileName = fileName;
 	newOb.type = type;
 	boardOb[portletId] = newOb;
+	newOb.portletCode = type != "" ? type + "Board" : "listBoard";
 
 	var count = getCurrentCount(portletId);
 	newOb.page = new Paging().init(count);

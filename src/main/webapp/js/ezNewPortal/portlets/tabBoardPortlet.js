@@ -105,7 +105,7 @@ function loadTabBoard(rtabBoardId, tabBoard, tabBoardName, tabId) {
         totalCnt = tabBoard.length < tabBoardPageMaxCnt ? tabBoard.length : tabBoardPageMaxCnt;
     }
     
-    resetTabBoardPortletList(portletId, totalCnt, tabBoardListId);
+    resetPortletList(portletId, totalCnt, tabBoardListId);
     
 }
 // 게시글 한줄 생성(데이터)
