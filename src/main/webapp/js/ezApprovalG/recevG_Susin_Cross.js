@@ -1942,17 +1942,13 @@ function openOpinionUI_New_Complete(ret) {
 	}
 }
 
+var aprattach_cross_dialogArguments = new Array();
 function openFileAttachUI() {
     try {
-        var parameter = pDocID;
-        var url = "../ezAPRATTACH/Aprattach_Cross.aspx";
-        var feature = "status:no;dialogWidth:390px;dialogHeight:285px;edge:sunken;scroll:no"; 
-        var ret = window.showModalDialog(url, parameter, feature);
+        aprattach_cross_dialogArguments[0] = "";
+        aprattach_cross_dialogArguments[1] = "";
 
-        if (ret != "cancel") {
-            setAttachInfo(pDocID, "APR", lstAttachLink);
-        }
-        return ret;
+        DivPopUpShow(800, 610, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + ext);
     } catch (e) {
         alert("openFileAttachUI : " + e.description);
     }
@@ -2868,20 +2864,51 @@ function setFirstDrafter() {
     return;
 }
 
-
+var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
     try {
-        var parameter = pUserID;
-        var url = "../ezAprDocAttach/aprDocAttach_Cross.aspx";
-        var feature = "status:no;dialogWidth:574px;dialogHeight:385px;edge:sunken;scroll:no";
-        var ret = window.showModalDialog(url, parameter, feature);
-
-        if (ret != "cancel") {
-            setAttachInfo(pDocID, "APR", lstAttachLink);
+        var parameter = pDocID;
+        var url ;
+        
+        if(approvalFlag == "G") {
+        	url = "/ezApprovalG/aprCabinetAttach.do?" + "draftFlag=" + pDraftFlag;
+        } else {
+        	url = "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID;
         }
-        return ret;
+        	
+        if (CrossYN()) {
+            aprcabinetattach_cross_dialogArguments[0] = parameter;
+            aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
+            
+            if(approvalFlag == "G") {
+            	DivPopUpShow(1050, 520, url);
+            } else {
+            	DivPopUpShow(1050, 560, url);
+            }
+        } else {
+        	var feature;
+        	if(approvalFlag == "G") {
+        		feature = "status:no;dialogWidth:805px;dialogHeight:395px;edge:sunken;scroll:no;help:no";
+        		feature = feature + GetShowModalPosition(675, 395);
+        	} else {
+        		feature = "status:no;dialogWidth:1050px;dialogHeight:660px;edge:sunken;scroll:no";
+        	}
+           
+            var ret = window.showModalDialog(url, parameter, feature);
+            if (ret != "cancel") {
+                setAttachInfo(pDocID, "APR", lstAttachLink);
+            }
+            return ret;
+        }
     } catch (e) {
-        alert("openAaprDocAttachUI : " + e.description);
+        alert("openAaprDocAttachUI()" + e.description);
+    }
+}
+
+function openAaprDocAttachUI_Complete(ret) {
+    DivPopUpHidden();
+    if (ret != "cancel") {
+        setAttachInfo(pDocID, "APR", lstAttachLink);
     }
 }
 

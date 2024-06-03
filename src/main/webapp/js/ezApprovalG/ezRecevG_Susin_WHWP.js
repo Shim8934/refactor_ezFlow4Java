@@ -896,7 +896,7 @@ function openOpinionUI(pOpinionFlag) {
 	}
 }*/
 
-function openFileAttachUI()
+/*function openFileAttachUI()
 {
   try{
 	var parameter	= pDocID;
@@ -912,7 +912,7 @@ function openFileAttachUI()
   }catch(e){
     alert("openFileAttachUI : " + e.description);
   }
-}
+}*/
 
 
 function SaveDraftDocInfo() {
