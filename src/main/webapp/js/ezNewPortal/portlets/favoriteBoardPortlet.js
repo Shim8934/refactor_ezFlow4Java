@@ -8,6 +8,34 @@ var favoriteBoardId = "";
 var tabCnt = 0;
 var usedTheme = $('#usedTheme').val();
 
+var favoriteObj = {}
+
+const favoriteBoardPageMaxCnt = 21; 
+
+function initFavoritePortlet(portletId) {
+	var newObj = {};
+	newObj.portletCode = "favoriteboard";
+	newObj.activeTabId = "";
+	newObj.tabIdList = [];
+	newObj.paging = {};
+    portletInfoMap["portlet" + portletId] = newObj;
+    favoriteObj.portletId = portletId;
+    getTabList(portletId);
+}
+
+function getFavoriteBoardPagePerCount() {
+	var portletSize = getPortletSize(favoriteObj.portletId);
+	var count = 0;
+	
+	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
+		count = 7;
+	} else {
+		count = 3;
+	}
+
+	return count;
+}
+
 function getTabList() {
 	var resultList;	
 	var mode = "USE";
@@ -24,6 +52,10 @@ function getTabList() {
     		
     		tabCnt = result.length;
     		
+    		var portletId = favoriteObj.portletId;
+		    var favoritePortletObj = portletInfoMap["portlet" + portletId];
+		    var perCount = getFavoriteBoardPagePerCount(portletId);
+		    
     		if (tabCnt > 0) {
     		    if (tabCnt > 3)
     		    	tabCnt = 3;
@@ -31,7 +63,7 @@ function getTabList() {
     		    var listHTML = "";
     		    var plusHTML = "";
     		    var classon = "class='on'";
-    		
+    		    
     		    for (var i = 0; i < tabCnt; i++) {
     		        var BoardName = "";
     		        var boardId = "";
@@ -48,15 +80,29 @@ function getTabList() {
     	            if (i == 0) {
     	                listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "'" + classon + " data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
     	                boardType = guBun;
+    	                favoritePortletObj.activeTabId = boardId;
     	            } else {
     		            listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "' data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
     		        }
+    	            
+    	            favoritePortletObj.tabIdList.push(boardId);
+    	            
+    		    	var favoriteBoardPage = new Paging().init(perCount);
+    		    	
+    		    	favoriteBoardPage.getPagePerCount = function () {
+    		    		return getFavoriteBoardPagePerCount(portletId);
+    		    	}
+    		    	
+    		    	favoritePortletObj.paging[boardId] = favoriteBoardPage;
+    		    	
     		    }
+    		    
 		        // 2023-06-22 황인경 - 디자인 개선 > 즐겨찾기 포틀릿 > '+' 더보기 태그 위치 변경
 		        plusHTML += "<dd class='portletPlus' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/ezNewPortal/portlet_Plus" + usedTheme + ".png'></dd>";
 		        document.getElementById("BoardTabPlus").innerHTML = plusHTML;
 				document.getElementById("BoardTab").innerHTML = listHTML;
 		        favoriteBoardId = $('#Board0').attr('data1');
+		        
 		        getBoardList_NewBoardSTD();
 		        
     		} else {
@@ -68,6 +114,7 @@ function getTabList() {
     	    	
     	    	document.getElementById("BoardList").innerHTML = listHTML;
     		}
+    		
        },
        error:function(request,status,error){
     	   }
@@ -93,11 +140,10 @@ function getBoardList_NewBoardSTD() {
 		var today = new Date();
 		var date = today.getDate();
 		today.setDate(date - 1);
+		
+		var totalCnt = 0;
+    	
         if (RowCnt > 0) {
-	        if (RowCnt > 10) {
-        		RowCnt = 10;
-	        }
-
             for (var i = 0; i < RowCnt; i++) {
             title = result[i].title;
            	startDate = result[i].startDate;
@@ -122,7 +168,9 @@ function getBoardList_NewBoardSTD() {
             }
             
             document.getElementById("BoardList").innerHTML = listHTML;
-                
+            
+            totalCnt = RowCnt < favoriteBoardPageMaxCnt ? RowCnt : favoriteBoardPageMaxCnt;
+            
         } else {
             
         	var listHTML = "";
@@ -133,6 +181,8 @@ function getBoardList_NewBoardSTD() {
         	
         	document.getElementById("BoardList").innerHTML = listHTML;
         }
+        var portletId = favoriteObj.portletId;
+        resetFavoriteBoardPortletList(portletId, totalCnt, favoriteBoardId);
 	},
     	error : function(error){
     		console.log("<spring:message code='ezBoard.t22'/>wpNewBoardSTD" + error);	
@@ -200,6 +250,8 @@ function boardChangeTab(obj) {
     }
     
     favoriteBoardId = document.getElementById(obj.id).getAttribute("data1");
+    var portletId = favoriteObj.portletId;
+    portletInfoMap["portlet" + portletId].activeTabId = favoriteBoardId;
     getBoardList_NewBoardSTD();
 }
 
@@ -220,4 +272,4 @@ function refresh_onclick() {
         favoriteBoardId = document.getElementById("Board2").getAttribute("data1");
         getBoardList_NewBoardSTD();
     }
-}		   
+}

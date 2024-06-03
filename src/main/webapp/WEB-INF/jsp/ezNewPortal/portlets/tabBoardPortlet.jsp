@@ -47,8 +47,8 @@
 			<ul class="portlet_list portletPagingArea" id="tabBoardList3" style="display: none;"></ul>
     	</div>
     	<div id="tabBoardBtnDiv">
-    		<span class="portlet_list_nav prev" id="tabBoardPrevBtn"></span>
-    		<span class="portlet_list_nav next" id="tabBoardNextBtn"></span>
+    		<span class="portlet_list_nav prev"></span>
+    		<span class="portlet_list_nav next"></span>
     	</div>
     </article>
 </body>

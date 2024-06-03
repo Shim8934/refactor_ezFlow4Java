@@ -3438,7 +3438,7 @@ public class EzNewPortalGWController {
 		JSONObject result = new JSONObject();
 
 		String boardId = request.getParameter("boardId");
-		int limit = 10;
+		int limit = 21;
 
 		try {
 			String serverName = request.getHeader("x-user-host");
@@ -5853,7 +5853,7 @@ public class EzNewPortalGWController {
 							isQnANormal = !ezBoardService.isBoardAdmin(tabBoardId, userId, deptId, companyId, tenantId, rollInfo);
 						}
 
-						List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, tabBoardId, 10, companyId, info.getOffset(), isQnANormal);
+						List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, tabBoardId, 21, companyId, info.getOffset(), isQnANormal);
 
 						int boardListCount = boardList.size();
 

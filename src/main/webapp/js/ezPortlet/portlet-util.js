@@ -451,6 +451,17 @@ function changePortletViewCount(portletId, portletPagingArea) {
 			
 			portletListDisplayProcess(portletPageList, startRowIdx, perCount);
 		}
+	} else if (portletInfoObj.portletCode == "favoriteboard") {
+		var favoriteActiveTabId = portletInfoObj.activeTabId;
+		portletPageObj = portletInfoObj.paging[favoriteActiveTabId];
+		portletPagingArea = document.getElementById(portletId + "Portlet").querySelector("#BoardList");
+		var perCount = portletPageObj.getPagePerCount(portletId);
+		portletPageObj.changeCount(perCount);
+		var startRowIdx = portletPageObj.getStart();
+		var portletPageList = portletPagingArea.children;
+		
+		portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+		
 	} else {
 		portletPagingArea = portletPagingArea[0];
 		portletPageObj = portletInfoObj.page;
@@ -495,6 +506,26 @@ function resetTabBoardPortletList(portletId, totalCnt, tabBoardListId) {
 	}
 }
 
+function resetFavoriteBoardPortletList(portletId, totalCnt, favoriteBoardId) {
+	var portletInfoObj = portletInfoMap["portlet" + portletId];
+	
+	if (portletInfoObj.portletCode == "favoriteboard") {
+		var favoritePageObj = portletInfoObj.paging[favoriteBoardId];
+		
+		//favoritePageObj.resetPage();
+		
+		var perCount = favoritePageObj.getPagePerCount(portletId);
+		favoritePageObj.setTotal(totalCnt);
+		
+		if (totalCnt > 0) {
+			var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#BoardList").children;
+			var startRowIdx = favoritePageObj.getStart();
+			var currentPage = favoritePageObj.getPage();
+			portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+		}
+	}
+}
+
 function portletListDisplayProcess(portletPageList, startRowIdx, perCount) {
 	for (var i = 0; i < portletPageList.length; i++) {
 		portletPageList[i].style.display = "none";
@@ -513,6 +544,10 @@ function portletMovePage(portletId, mode) {
 		var activeTabId = portletInfoObj.activeTabId;
 		portletPageObj = portletInfoObj.paging[activeTabId]
 		portletPageList = document.getElementById(portletInfoObj.activeTabId).children;
+	} else if (portletInfoObj.portletCode == "favoriteboard") {
+		var activeTabId = portletInfoObj.activeTabId;
+		portletPageObj = portletInfoObj.paging[activeTabId]
+		portletPageList = document.getElementById(portletId + "Portlet").querySelector("#BoardList").children;
 	} else {
 		portletPageObj = portletInfoObj.page;
 		portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
