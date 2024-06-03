@@ -55,6 +55,9 @@ function getWebFolderFileList() {
 					if (index < 13) {
 						var liEl = document.createElement('li');
 						liEl.className = 'webFolderLi';
+                        if (index == 6 || index == 7) {
+                            liEl.classList.add("pageTwo");
+                        }
 						liEl.setAttribute('targetId', file.fileId);
 						liEl.addEventListener('click', function(event) {webFolderFileDownLoad(event, this)}, false);
 						
