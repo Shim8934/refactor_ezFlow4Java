@@ -5884,4 +5884,112 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		return result;
 	}
+
+	/**
+	 * 조직도관리 겸직정보 팝업 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/addJobInfo.do", method = RequestMethod.GET)
+	public String addJobInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("addJobInfo started");
+
+		userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+
+		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
+		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+
+		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
+			useZipCodeSearch = "YES";
+		}
+		
+		boolean useOnlyInnerMail = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		String deptId = request.getParameter("selectDeptId");
+		String jobId = request.getParameter("jobId");
+		
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("lang", lang);
+		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
+		model.addAttribute("birthDay", "");
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("locale", userInfo.getLocale());
+		model.addAttribute("userPrimary", userInfo.getPrimary());
+		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("deptId", deptId);
+		model.addAttribute("jobId", jobId);
+
+		logger.debug("addJobInfo ended");
+
+		return "admin/ezOrgan/addJobInfo";
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/getEntryAddJobInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getEntryAddJobInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+									 HttpServletResponse response) throws Exception {
+		logger.debug("getEntryAddJobInfo started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String language = userInfo.getLang();
+
+		int tenantID = userInfo.getTenantId();
+		logger.debug("tenantID={}", tenantID);
+
+		String cn = request.getParameter("cn");
+		String deptId = request.getParameter("deptId");
+		String jobId = request.getParameter("jobId");
+		//String deptId = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), tenantID).getDepartment();
+		String prop = request.getParameter("prop");
+
+		String entryAddJobInfo = ezOrganAdminService.getEntryAddJobInfo(cn, deptId, language, jobId, tenantID, prop);
+
+		logger.debug("getEntryAddJobInfo ended");
+		return entryAddJobInfo;
+	}
+
+	@RequestMapping(value = "/admin/ezOrgan/updateAddJobInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveAddJobInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+									 HttpServletResponse response) throws Exception {
+		logger.debug("updateAddJobInfo started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "OK";
+		// loginCookie 체크
+		if (userInfo == null) {
+			return "EMAIL_ERROR";
+		}
+
+		int tenantID = userInfo.getTenantId();
+		logger.debug("tenantID={}", tenantID);
+
+		String cn = request.getParameter("cn");
+		String deptId = request.getParameter("deptId");
+		String jobId = request.getParameter("jobId");
+		String userTreeFlag = request.getParameter("userTreeFlag");
+		String orderBy = request.getParameter("orderBy");
+		
+		try {
+			ezOrganAdminService.updateAddJobInfo(cn, deptId, jobId, tenantID, orderBy, userTreeFlag);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result = "ERROR";
+		}
+		
+		logger.debug("updateAddJobInfo ended");
+		return result;
+	}
 }

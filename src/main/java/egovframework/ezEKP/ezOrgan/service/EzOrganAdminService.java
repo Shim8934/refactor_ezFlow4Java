@@ -211,4 +211,9 @@ public interface EzOrganAdminService {
 
 	// 2024-01-15 김혜지 - 지정된 부서에 속한 퇴직자 수를 반환한다.
 	int retireUserCountCheck(String cn, int tenantID) throws Exception;
+	
+	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
+	public String getEntryAddJobInfo(String cn, String deptId, String jobId, String language, int tenantID, String prop) throws Exception;
+	
+	public void updateAddJobInfo(String cn, String deptId, String jobId, int tenantID, String orderBy, String userTreeFlag) throws Exception;
 }

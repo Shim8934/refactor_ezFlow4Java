@@ -10,6 +10,7 @@
 	<typeAlias alias="OrganGroupVO" type="egovframework.ezEKP.ezOrgan.vo.OrganGroupVO"/>
 	<typeAlias alias="OrganLoginStopUserVO" type="egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO"/>
 	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
+	<typeAlias alias="OrganAddJobVO" type="egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO"/>
 	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
@@ -5690,4 +5691,39 @@
 				TENANT_ID = #tenantID#
 		]]>
 	</select>
+	
+	<select id="EzOrganAdminDAO.getAddJobPorpValue" parameterClass="map" resultClass="OrganAddJobVO">
+		<![CDATA[
+			SELECT
+				A.JOBID, A.TITLE, A.TITLE2, A.ROLE, A.ROLE2, A.USERTREEFLAG, A.ORDERBY
+			FROM
+			    TBL_ADDJOBMASTER A
+			WHERE
+			    JOBID = #v_JOBID#
+			AND
+				A.CN = #v_CN#
+			AND 
+			    A.DEPTID = #v_DEPTID#
+			AND 
+			    A.TENANT_ID = #v_TENANT_ID#
+		]]>
+	</select>
+	
+	<update id="EzOrganAdminDAO.updateAddJobInfo" parameterClass="map">
+		<![CDATA[
+		UPDATE
+			TBL_ADDJOBMASTER
+		SET
+			ORDERBY = #v_ORDERBY#,
+			USERTREEFLAG = #v_USERTREEFLAG#
+		WHERE
+			CN = #v_CN#
+		  AND
+			DEPTID = #v_DEPTID#
+		  AND
+			JOBID = #v_JOBID#
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 </sqlMap>

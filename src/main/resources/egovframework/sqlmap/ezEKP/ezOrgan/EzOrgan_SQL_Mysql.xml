@@ -485,7 +485,7 @@
 					<isEqual property="adminOrgan" compareValue="n">
 						<![CDATA[ 
 							 AND 
-								A.USERTREEFLAG = 'Y'
+								B.USERTREEFLAG = 'Y'
 						]]>
 					</isEqual>
 			<![CDATA[ 
@@ -693,7 +693,7 @@
 									<isEqual property="adminOrgan" compareValue="n">
 									<![CDATA[ 
 										 AND 
-											A.USERTREEFLAG = 'Y'
+											B.USERTREEFLAG = 'Y'
 									]]>
 									</isEqual>
 			<![CDATA[ 
@@ -864,7 +864,7 @@
 					<isNotEqual property="adminOrgan" compareValue="y">
 		<![CDATA[ 
 					AND 
-						A.USERTREEFLAG = 'Y'
+						B.USERTREEFLAG = 'Y'
 		]]>
 					</isNotEqual>
 					) AA
@@ -1901,7 +1901,7 @@
 				<isNotEqual property="adminOrgan" compareValue="y">
 					<![CDATA[
 					 AND
-						B.USERTREEFLAG = 'Y'
+						A.USERTREEFLAG = 'Y'
 				]]>
 				</isNotEqual>
 	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
@@ -2042,7 +2042,7 @@
 			<isEqual property="adminOrgan" compareValue="n">
 				<![CDATA[
 						 AND
-							b.USERTREEFLAG = 'Y'
+							A.USERTREEFLAG = 'Y'
 						]]>
 			</isEqual>
 							<include refid="organSearchTrashDept_user"/>
@@ -2194,7 +2194,7 @@
 		<isEqual property="adminOrgan" compareValue="n">
 			<![CDATA[
 					 AND
-						A.USERTREEFLAG = 'Y'
+						B.USERTREEFLAG = 'Y'
 				]]>
 		</isEqual>
 					<include refid="organSearchTrashDept_user"/>

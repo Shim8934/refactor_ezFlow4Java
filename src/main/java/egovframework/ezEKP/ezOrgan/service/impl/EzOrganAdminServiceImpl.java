@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.naming.directory.DirContext;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -3513,5 +3514,149 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public int retireUserCountCheck(String cn, int tenantID) throws Exception {
 		return ezOrganAdminDao.retireUserCountCheck(cn, tenantID);
+	}
+
+	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
+	@Override
+	public String getEntryAddJobInfo(String cn, String deptId, String language, String jobId, int tenantID, String prop) throws Exception {
+		logger.debug("getEntryAddJobInfo started");
+
+		String info="";
+		StringBuilder sb = new StringBuilder();
+		String[] propList = prop.split(";");
+		String propValue = "";
+		OrganAddJobVO propVO = new OrganAddJobVO();
+		OrganDeptVO vo = new OrganDeptVO();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_CN", cn);
+		map.put("v_DEPTID", deptId);
+		map.put("v_JOBID", jobId);
+
+
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("userID", deptId);
+		map1.put("primary", language);
+		map1.put("v_TENANT_ID", tenantID);
+		try {
+			propVO = ezOrganAdminDao.getAddJobPorpValue(map);
+			vo = ezOrganDao.getDeptInfo(map1);
+		} catch (NullPointerException e) {
+			logger.debug("getAddJobPorpValue failed.");
+			return "ERROR";
+		}
+
+		try {
+			for (int i = 0; i < propList.length; i++) {
+				switch(propList[i]) {
+					case "title" :
+						try {
+							if ("1".equals(language)) {
+								propValue = propVO.getTitle();
+							} else {
+								propValue = propVO.getTitle2();
+							}
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+					case "role" :
+						try {
+							if ("1".equals(language)) {
+								propValue = propVO.getRole();
+							} else {
+								propValue = propVO.getRole2();
+							}
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+
+					case "userTreeFlag" :
+						try {
+							propValue = propVO.getUserTreeFlag();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+
+					case "topMenuType" :
+						try {
+							propValue = propVO.getTopMenuType();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+						
+					case "orderBy" :
+						try {
+							propValue = propVO.getOrderBy();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+					case "deptName" :
+						try {
+							propValue = vo.getDisplayName1();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+					case "deptName2" :
+						try {
+							propValue = vo.getDisplayName2();
+						} catch (NullPointerException e) {
+							propValue = "";
+						}
+						propValue = propList[i] + ":" + propValue + "\\";
+						break;
+					default :
+						map.put("v_FIELD", propList[i]);
+						propValue = ezOrganDao.getPropertyValue_S4(map);
+						propValue = propValue == null ? "" : propValue;
+						propValue = propList[i] + ":" + propValue + "\\";
+
+						break;
+				}
+
+				sb.append(propValue);
+				continue;
+			}
+
+		} catch (Exception e) {
+			logger.debug("getEntryAddJobInfo failed.");
+			return "ERROR";
+		}
+
+		info = sb.toString();
+		info = info.substring(0, info.length() - 1); // 마지막 "\"는 제거
+
+		logger.debug("getEntryAddJobInfo ended");
+		return info;
+	}
+
+	@Override
+	public void updateAddJobInfo(String cn, String deptId, String jobId, int tenantID, String orderBy, String userTreeFlag)throws Exception {
+		logger.debug("updateDBData_user started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CN", cn);
+		map.put("v_DEPTID", deptId);
+		map.put("v_JOBID", jobId);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_ORDERBY", orderBy);
+		map.put("v_USERTREEFLAG", userTreeFlag);
+		
+		ezOrganAdminDao.updateAddJobInfo(map);
+		
+		logger.debug("updateDBData_user ended");
 	}
 }

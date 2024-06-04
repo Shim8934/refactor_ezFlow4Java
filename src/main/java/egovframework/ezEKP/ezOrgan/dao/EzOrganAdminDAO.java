@@ -21,6 +21,7 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -2355,5 +2356,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		logger.debug("retireUserCountCheckForLocal started. userCount=" + userCount);
 
 		return userCount;
+	}
+
+	// 2024-05-27 관리자 > 조직도 > 겸직 사용자 상세정보 내용 호출 함수
+	public OrganAddJobVO getAddJobPorpValue(Map<String, Object> map) throws Exception {
+		return (OrganAddJobVO) select("EzOrganAdminDAO.getAddJobPorpValue", map);
+	}
+	
+	public void updateAddJobInfo(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateAddJobInfo", map);
 	}
 }
