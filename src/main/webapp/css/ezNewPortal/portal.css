@@ -1367,10 +1367,10 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .weather_icon{ height:47%}
 /* #theme3Body .fileListWrapper {background-color: none; height:100%;} */
 
-#theme3Body .webFolder{padding:5px 20px 0;}
+/*#theme3Body .webFolder{padding:5px 20px 0;}
 #theme3Body .webFolder .webFolderLi{border:none; height:178px;}
 #theme3Body .webFolder .webFolderLi:hover{background:#fff;}
-
+*/
 #theme3Body .list_no_appr .no_apprBox > ul li > .day{background:#E1E1E1;}
 #theme3Body .list_no_appr .no_apprBox > ul li > .day:before{background-image:url(../../images/ezNewPortal/theme3Img/bg_point_down.png);}
 
