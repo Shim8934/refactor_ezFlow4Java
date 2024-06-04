@@ -28,6 +28,13 @@
 #theme1Body .portlet.two_by_two.two_column1327 {height:520px; width : calc(47.5% * 2 + 20px);}
 #theme1Body .portlet.two_by_two.two_column1326 {height:520px; width : calc(47.4% * 2 + 20px);}
 
+@media only screen and (max-width :1680px) {
+    .portlet {width:calc(33.333% - 20px); float:left;}
+    .portlet.one_by_two{width:calc(66.666% - 20px);}
+    .portlet.two_by_two{width:calc(66.666% - 20px);}
+}
+
+
 @media only screen and (max-width :1280px) {
 	.portlet {width:calc(50% - 20px); float:left;}
     .portlet.one_by_two{width:calc(100% - 20px);}

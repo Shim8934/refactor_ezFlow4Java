@@ -262,8 +262,8 @@ function getBoardListBType(data, portletId) {
 			spanDay.appendChild(textNode);
 			spanDay.appendChild(br);
 			spanDay.appendChild(dateTime);
-			var bar = document.createElement('br');
-			dd.appendChild(bar);
+			// var bar = document.createElement('br');
+			// dd.appendChild(bar);
 			textNode = document.createTextNode(date.getHours() + ':' + date.getMinutes());
 			$('#' + portletId + 'Portlet').find('.box_shadow').addClass('board_Btype');
 			$('#customBoardList' + portletId).removeClass('portlet_list').addClass('noti_portlet_list');

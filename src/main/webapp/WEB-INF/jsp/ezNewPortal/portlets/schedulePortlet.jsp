@@ -12,7 +12,7 @@
 		<c:when test="${usedTheme eq 1}">
 			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none; height: 50px;"></dl>
 			<div class= "box_shadow" style="position:relative; bottom:49px; overflow:hidden;">
-				<article class="schedule_small box_shadow schedule_calendar" style="width: calc(49%); box-shadow:none;">
+				<article class="schedule_small box_shadow schedule_calendar" style="box-shadow:none;">
 					<div class="layDIV">
 						<div class="sCalendarArea">
 							<div id="CalendarMini" class="scalender"></div>
@@ -20,7 +20,7 @@
 					</div>
 				</article>
 	
-				<article class="schedule_small box_shadow schedule_scheduleList" style="width: 50.7%; box-shadow:none;">
+				<article class="schedule_small box_shadow schedule_scheduleList" style="box-shadow:none;">
 					<div class="layDIV">
 						<div class="sCalendarArea">
 							<dl class="portlet_title portlet_schedule sortablePortlet">
