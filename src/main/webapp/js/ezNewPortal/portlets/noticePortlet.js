@@ -18,18 +18,18 @@ function initNoticePortletInfo(noticePortletId) {
 }
 
 // 2024-05-30 조수빈 - 공지사항이 보여질 수 있는 개수에 비해 작은 경우 처리하기 위해 전역변수로 선언
-var count = 0;
+var notiCount = 0;
 
 function getNoticePagePerCount(noticePortletId) {
 	var portletSize = getPortletSize(noticePortletId);
 	
 	if (portletSize == GridSize.TWO_BY_ONE) {
-		count = 6;
+		notiCount = 6;
 	} else {
-		count = 3;
+		notiCount = 3;
 	}
 
-	return count;
+	return notiCount;
 }
 
 /* 공지사항 데이터 조합 */
@@ -37,7 +37,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 	/* HTMLColllection에도 forEach 추가*/
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
 	var str = '';
-	var viewCnt = count; // 보여주는 공지사항 갯수
+	var viewCnt = notiCount; // 보여주는 공지사항 갯수
 	var boardId = '';
 	
 	var noticeDetail = function() {
@@ -141,6 +141,19 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 	}
 
 	var noticeCnt = str.match(/notiLI/g); // 공지사항 갯수 확인.
+	
+	debugger;
+
+	// 2024-05-30 조수빈 - 불러온 공지사항의 개수가 최대 개수보다 작고, 3 혹은 6의 배수가 아닐 때 남는 자리에 대한 처리
+	// 현재 한 페이지에 보여야 하는 개수와 일치하지 않는 경우 '(한 페이지에 보일 개수) - (공지사항글 개수) % (한 페이지에 보일 개수)'만큼 빈 ui 생성
+	if (noticeCnt && (noticeCnt.length < noticePorletPagingCnt)) {
+		var cnt = noticeCnt === null ? 0 : noticeCnt.length;
+		if (cnt % notiCount != 0) {
+			for(var i = 0; i < 12; i++) {
+				str += '<li class="notiLI"><dl><p class="noti_nodata"></p></dl></li>';
+			}
+		}
+	}
 	
 //	str += "</ul>";
 	document.getElementById('BoardList_NewBoard').innerHTML = str;
