@@ -64,11 +64,12 @@
 							switch (type) {
 							case "doing":
 								docList.forEach(function(item, index) {
-									if (index === 0) {
-										docsHTML += dataAssemblerApprLine(item, result.aprLines, result.imgPath);
-									} else {
-										docsHTML += dataAssembler(item);
-									}
+									// if (index === 0) {
+									// 	docsHTML += dataAssemblerApprLine(item, result.aprLines, result.imgPath);
+									// } else {
+									// 	docsHTML += dataAssembler(item);
+									// }
+									docsHTML += dataAssemblerApprLine(item, result.aprLines, result.imgPath);
 								});
 									
 				                break;
