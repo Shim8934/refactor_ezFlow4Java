@@ -444,21 +444,21 @@ function changePortletViewCount(portletId, portletPagingArea) {
 			var tabBoardId = tabBoardIdList[i];
 			portletPageObj = portletInfoObj.paging[tabBoardId];
 			var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#" + tabBoardId).children;
-			changePortletPageCount(portletPageObj, portletPageList);
+			changePortletPageCount(portletPageObj, portletPageList, portletId);
 		}
 	} else if (portletInfoObj.portletCode == "favoriteboard") {
 		var favoriteActiveTabId = portletInfoObj.activeTabId;
 		portletPageObj = portletInfoObj.paging[favoriteActiveTabId];
 		var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#BoardList").children;
-		changePortletPageCount(portletPageObj, portletPageList);
+		changePortletPageCount(portletPageObj, portletPageList, portletId);
 	} else {
 		portletPageObj = portletInfoObj.page;
 		var portletPageList = portletPagingArea[0].children;
-		changePortletPageCount(portletPageObj, portletPageList);
+		changePortletPageCount(portletPageObj, portletPageList, portletId);
 	}
 }
 
-function changePortletPageCount(portletPageObj, portletPageList) {
+function changePortletPageCount(portletPageObj, portletPageList, portletId) {
 	var perCount = portletPageObj.getPagePerCount(portletId);
 	portletPageObj.changeCount(perCount);
 	var startRowIdx = portletPageObj.getStart();
