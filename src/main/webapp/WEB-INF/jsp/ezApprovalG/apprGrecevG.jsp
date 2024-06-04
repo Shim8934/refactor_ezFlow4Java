@@ -1560,7 +1560,7 @@
 					<c:choose>
 						<%-- 문서보기 버튼으로 창을 open할 경우 (viewDocFlag 문서보기 Flag)--%>
 						<c:when test="${viewDocFlag eq 'Y'}">
-							<li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
+							<li id="btnReqReSend"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 							<li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 							<li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 							<li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
