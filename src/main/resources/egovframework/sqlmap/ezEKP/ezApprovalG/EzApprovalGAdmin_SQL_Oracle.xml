@@ -439,11 +439,11 @@
 		</isNotEqual>
 		<isNotEmpty property="title">
 			AND
-				UPPER(TASKNAME) LIKE UPPER(CONCAT(CONCAT('%', #title#), '%'))
+			TASKNAME LIKE CONCAT(CONCAT('%', #title#), '%')
 		</isNotEmpty>
 		<isNotEmpty property="code">
 			AND
-				UPPER(TASKCODE) LIKE UPPER(CONCAT(CONCAT('%', #code#), '%'))
+			TASKCODE LIKE CONCAT(CONCAT('%', #code#), '%')
 		</isNotEmpty>
 		<isEmpty property="v_ORDEROPTION1">
 			ORDER BY
