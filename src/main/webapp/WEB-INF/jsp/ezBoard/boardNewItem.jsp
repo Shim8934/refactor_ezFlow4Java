@@ -147,6 +147,11 @@
 			/* 2023-11-17 홍승비 - 승인게시판의 경우, 반려된 게시물을 재작성 후 저장 시 수정알림메일을 발송하지 않도록 파라미터 추가 */
 			var itemApprFlag = "<c:out value='${boardListVO.apprFlag}'/>";
 
+			var offset = "${userInfo.offset}";
+
+			/* 2024-05-20 김유진 - 일정에서 게시판 게시를 위한 변수 */
+			var scheduleId = "<c:out value='${scheduleId}'/>";
+
 		    window.onload = function () {
 		    	
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
@@ -1450,7 +1455,44 @@
 		        ret = SelectBoard(InsertDocInfo_Complete);
 		    }
 		    */
-		
+
+			/* 2024-05-21 김유진 - 일정 정보 가져오기 */
+			function InsertScheduleInfo() {
+				var _newGuid = "{" + NewGuid + "}";
+				var strQuery = "<DATA><URL>" + pUrl + "</URL><NEWGUID>" + _newGuid + "</NEWGUID><ATTACHLIMIT>" + AttachLimit + "</ATTACHLIMIT><SCHEDULEID>" + scheduleId + "</SCHEDULEID></DATA>";
+				var requestUrl = "/ezSchedule/ezScheduleReadBoard.do";
+				MailxmlHTTP.open("POST", requestUrl, false);
+				MailxmlHTTP.send(strQuery);
+
+				if (MailxmlHTTP.status == 200) {
+					var retXml = loadXMLString(MailxmlHTTP.responseText);
+					document.getElementById('txtTitle').value = "일정게시 : " + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0));
+					var Content = "<P>&nbsp;<br></P><br><DIV><br><br>-----<B>[&nbsp;일정 내용&nbsp;]</B>-----</DIV><DIV><B>날짜 : </B>" + getNodeText(retXml.getElementsByTagName("DATE").item(0)) + "</DIV>";
+					Content = Content + "<DIV><B>작성자 : </B>" + ReplaceText(ReplaceText(getNodeText(retXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</DIV>";
+					Content = Content + "<DIV><B>제목 : </B>" + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0)) + "</DIV><P><br><br>" + getNodeText(retXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</P>";
+					Content = ReplaceText(Content, "id=doctitle", "");
+					Content = ReplaceText(Content, "id=\"doctitle\"", "");
+					Content = ReplaceText(Content, "id=\'doctitle\'", "");
+
+					message.SetEditorContent(Content);
+
+					var attCnt = retXml.getElementsByTagName("ATTACHID").length;
+					if (attCnt > 0) {
+						var xmlstringUl = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+						for (i = 0; i < attCnt; i++) {
+							xmlstringUl += "<ROW>";
+							xmlstringUl += "<FILENAME>"+ getNodeText(retXml.getElementsByTagName("FILENAME").item(i)) + "</FILENAME>";
+							xmlstringUl += "<FILEPATH>"+ decodeURIComponent(getNodeText(retXml.getElementsByTagName("FILEPATH").item(i))) + "</FILEPATH>";
+							xmlstringUl += "<FILESIZE>"+ getNodeText( retXml.getElementsByTagName("FILESIZE").item(i)) + "</FILESIZE>";
+							xmlstringUl += "</ROW>";
+						}
+						xmlstringUl += "</ROWS></DATA>";
+						uploadScheduleFile(xmlstringUl);
+					}
+				}
+
+
+			}
 	        function InsertDocInfo() {
 	            if (OpenWin != null) {
 	                OpenWin.close();
@@ -1704,9 +1746,11 @@
 		                        message.SetEditorContentURL(fullPath);
 		                    }
 		                } else {
-		                    if (pDocID == "") {
+		                    if (pDocID == "" && (scheduleId == "" || scheduleId == null)) {
 		                        if (InsertMailInfo() == -1) window.close();
-		                    }else {
+		                    } else if (scheduleId != "" && scheduleId != null) {
+								if (InsertScheduleInfo() == -1) window.close();
+							} else {
 		                        if (InsertDocInfo() == -1) window.close();
 		                    }
 		                }
@@ -2483,11 +2527,30 @@
                 var strRet = "";
                 for (i = 0; i < nodes.length; i++) {
                     var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
-                    
+
                     strRet += "tempUploadFile/" + filepath + "|";
                 }
                 attachxml = strRet;
 	        }
+
+			function uploadScheduleFile(xmlstring) {
+				var xmlHTTP = createXMLHttpRequest();
+				var xmldom2 = createXmlDom();
+				xmldom2 = loadXMLString(xmlstring);
+				xmlHTTP.open("POST", "/ezBoard/uploadScheduleFile.do", false);
+				xmlHTTP.send(xmldom2);
+				returnvalue(xmlHTTP.responseText);
+
+				var xml = loadXMLString(xmlHTTP.responseText);
+				var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+				var strRet = "";
+				for (i = 0; i < nodes.length; i++) {
+					var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+
+					strRet += "tempUploadFile/" + filepath + "|";
+				}
+				attachxml = strRet;
+			}
 	        
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
