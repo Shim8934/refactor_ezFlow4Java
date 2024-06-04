@@ -217,3 +217,6 @@ var strLang141_2 = "グーグル";
 var strLangHSBScPt1 = "年";
 var strLangHSBScPt2 = "月";
 var strLangHSBScPt3 = "日";
+
+/* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
+var ezSchedule_kyj1 = "匿名掲示板、フォト掲示板、サムネイル掲示板、URLリンク掲示板は選択することができません。";
