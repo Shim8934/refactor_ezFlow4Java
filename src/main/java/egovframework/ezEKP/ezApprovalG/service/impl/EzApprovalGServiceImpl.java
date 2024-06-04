@@ -18828,11 +18828,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 
-			if (!ezPersonalService.canReceiveNotification(nextUserID, tenantID)) {
-				logger.debug("sendMsg ended");
-				return "TRUE";
-			}
-
 			String notyStr = "";
 			NotiType notiType;
 			
@@ -31304,8 +31299,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (mode.equalsIgnoreCase("APR")) {
 			// 진행문서도착 메일 보내지 않음
-			if (ezPersonalService.hasNotiDiableItem(targetUserID, NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, tenantID)
-					|| !ezPersonalService.canReceiveNotification(targetUserID, tenantID)) {
+			if (ezPersonalService.hasNotiDiableItem(targetUserID, NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, tenantID)) {
 				logger.debug("sendMail skip");
 				logger.debug("sendMailToNextAprMember ended.");
 				return result;
@@ -31358,8 +31352,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sendSusinMail(map, userInfo);
 
 			// 완료문서도착 메일 보내지 않음
-			if (ezPersonalService.hasNotiDiableItem(targetUserID, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantID)
-					|| !ezPersonalService.canReceiveNotification(targetUserID, tenantID)) {
+			if (ezPersonalService.hasNotiDiableItem(targetUserID, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantID)) {
 				logger.debug("sendMail skip");
 				logger.debug("sendMailToNextAprMember ended.");
 				return result;
@@ -32887,12 +32880,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!aprSn.equals("1") && (aprState.equals("003") || aprState.equals("002"))) {
 				targetUserID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
-
-				if (!ezPersonalService.canReceiveNotification(targetUserID, tenantID)) {
-					logger.debug("can't receive notification: {}", targetUserID);
-					continue;
-				}
-
 				targetUserName = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
 				targetUserDeptID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(6).getTextContent();
 				targetUserCompanyID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
@@ -33626,8 +33613,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 				if (StringUtils.isNotBlank(receiptMemberId)) {
 					// 완료문서도착 메일 보내지 않음
-					if (ezPersonalService.hasNotiDiableItem(receiptMemberId, NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, userInfo.getTenantId())
-							|| !ezPersonalService.canReceiveNotification(receiptMemberId, userInfo.getTenantId())) {
+					if (ezPersonalService.hasNotiDiableItem(receiptMemberId, NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, userInfo.getTenantId())) {
 						logger.debug("sendSusinMail skip: {}", receiptMemberId);
 						continue;
 					}
@@ -33648,8 +33634,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					for (OrganUserVO receiptUser : organProxyVOList) {
 						// 완료문서도착 메일 보내지 않음
-						if (ezPersonalService.hasNotiDiableItem(receiptUser.getCn(), NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, userInfo.getTenantId())
-								|| !ezPersonalService.canReceiveNotification(receiptUser.getCn(), userInfo.getTenantId())) {
+						if (ezPersonalService.hasNotiDiableItem(receiptUser.getCn(), NotiType.APPROVAL_ARRIVE, NotiPlatform.MAIL, userInfo.getTenantId())) {
 							logger.debug("sendSusinMail skip: {}", receiptUser.getCn());
 							continue;
 						}
