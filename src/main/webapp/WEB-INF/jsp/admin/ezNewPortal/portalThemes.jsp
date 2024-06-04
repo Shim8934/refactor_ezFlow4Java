@@ -700,12 +700,14 @@
 					}
 					listHTML += "</dl>";
                     listHTML += "<div class='admin_menu_content'>";
+
+					var fixCount = fixList.length * - 1;
 					fixList.forEach(function (item) {
 						var portletId = item.portletId;
 
 						listHTML += "<div class='portlets ui-portlet ui-portlet-on ui-portlet-content'";
 						listHTML += " id='" + item.portletCode + "'";
-						listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "'>";
+						listHTML += " data-portletid='" + portletId + "' data-menuid='" + item.menuId + "' data-fix=" + fixCount++ + ">";
 						listHTML += "<span class='ui-portlet-span'>";
 
 						listHTML += ConvertCharToEntityReference(item.portletName);
@@ -958,13 +960,22 @@
 					});
 				}
 			}
-			
+
+			var index = 1;
+
 			for (var i = 0; i < themePortletListCount; i++) {
 				var portlet = themePortletList[i];
 				var portletId = portlet.getAttribute("data-portletid");
 				var menuId = portlet.getAttribute("data-menuid");
 				var portletUsed = $("#portlet" + portletId).prop("checked");
-				
+				// 고정 포틀릿은 순서 고정
+				var fixOrder = portlet.getAttribute('data-fix');
+				var currIndex;
+				if (!!fixOrder) {
+					currIndex = fixOrder;
+				} else {
+					currIndex = index++;
+				}
 				var isFixed = false;
 				var fixPo = document.getElementById("fixedPortlet" + portletId);
 				if (!!fixPo) {
@@ -983,7 +994,7 @@
 					isFixed = true;
 				}
 
-				themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : i + 1, "isFixed" : isFixed});
+				themePortlet.push({"portletId" : portletId, "menuId" : menuId, "portletUsed" : portletUsed, "portletOrder" : currIndex, "isFixed" : isFixed});
 			}
 			
 			var request = new XMLHttpRequest();

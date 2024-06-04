@@ -25,14 +25,14 @@
 			h3 { padding-left: 20px; margin-top: 25px; margin-bottom: 10px; font-size:14px; }
 			.set-head { background-color: rgb(228, 238, 254); height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
 			.set-head h1 { font-size: 16px; margin-left: 20px; color:black;}
-			.set-portlet{height: calc(100% - 125px); margin-top: 20px;}
+			.set-portlet{height: calc(100% - 125px); margin-top: 20px;display: flex;flex-direction: column; align-items: center;}
 			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
 			.ui-portlet { position:relative;  width: 220px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block;}
-			.ui-portlet-list { padding-left: 20px; width: 97%;}
+			.ui-portlet-list { padding-left: 25px; width: 97%; box-sizing: border-box;}
 			.ui-portlet-span { display: inline-block; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-3px;}
 			.flipsterLi { width:95px; height: 64px; margin-top:20px; margin-left:20px; padding:20px; background:#fff;}
 			.frameList { height: 151px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
@@ -75,6 +75,8 @@
 				border-style: solid;
 				border-color: transparent rgba(0,0,0, 0.5) transparent transparent;
 			}
+
+			._mCS_2 {overflow: auto;}
 		</style>
 	</head>
 	<body id="set-body">
@@ -89,6 +91,7 @@
 			</div>
 		</section>
 		<section class="set-portlet">
+			<div class="ui-portlet-list" id="fixBoardList"></div>
 			<div class="ui-portlet-list" id="portletList"></div>
 		</section>
 		<div class="btnpositionLayer" style="margin:20px 0px 0px">
@@ -245,9 +248,9 @@
 						if (xhr.status >= 200 && xhr.status < 300) {
 							var portletList = document.getElementById('portletList'); 
 							var list = JSON.parse(xhr.responseText).data.portletList;
+							var fixBoardList = document.getElementById('fixBoardList');
 
 							list.forEach(function (item, index) {
-						
 				 				var div = document.createElement('div');
 				 				div.classList.add('ui-portlet');
 				 				// 사용중인 포틀릿
@@ -258,6 +261,7 @@
 				 				}
 				 				
 				 				div.classList.add('ui-portlet-content');
+
 				 				
 				 				//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
 				 				var fixedSpan = document.createElement('div');
@@ -327,8 +331,13 @@
 								fixedSpan.appendChild(nameSpan);
 								div.appendChild(fixedSpan);
 								div.appendChild(label);			
-								
-								portletList.appendChild(div);
+
+								if (item.fixBoard == true) {
+									nameSpan.setAttribute("data-fix", "true");
+									fixBoardList.appendChild(div);
+								} else {
+									portletList.appendChild(div);
+								}
 							});
 							
 							//event setting
@@ -349,7 +358,7 @@
 					
 				}
 				
-				getUserFrameList();
+				// getUserFrameList();
 				getUserPortletList();
 				bodyFrameSetting('on');
 				
@@ -361,22 +370,26 @@
 					var usedCount = 0;
 					// 반복문 돌면서 데이터 쌓기
 					HTMLCollection.prototype.forEach = Array.prototype.forEach;
-					
  					classList.forEach(function (item, index) {
  						var itemPortletId = item.getAttribute("portletid");
  						var itemMenuId = item.getAttribute("menuId");
 						var switchBtn = document.getElementById('portletid_' + itemPortletId);
 						var obj = null;
+						var curr;
+						if (!!item.getAttribute("data-fix")) {
+							curr = item.getAttribute("portletorder");
+						} else {
+							curr = orderCount++;
+						}
+
 						
 						obj = {
 							portletId: itemPortletId,
-							portletOrder: orderCount,
+							portletOrder: curr,
 							menuId: itemMenuId,
 							portletUsed : switchBtn.checked
 						}
-						
-						orderCount++;
-						
+
 						if (switchBtn.checked) {
 							usedCount++;
 						}

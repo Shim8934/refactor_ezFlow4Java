@@ -483,6 +483,7 @@ function resetPortletList(portletId, totalCnt, activeTabId) {
 	portletPageObj.setTotal(totalCnt);
 	
 	var portletPageNav = document.getElementById(portletId + "Portlet").querySelector(".portletPageNav");
+    if (!portletPageNav) return;
 	if (totalCnt > 0) {
 		var portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
 		var startRowIdx = portletPageObj.getStart();

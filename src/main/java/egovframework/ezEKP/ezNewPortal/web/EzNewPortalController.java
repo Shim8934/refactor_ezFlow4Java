@@ -468,21 +468,21 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	public String updateUserFrameAndPortlet(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserFrameAndPortlet Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userId = userInfo.getId();		
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
 		String result = "success";
 		
 		/* 사용자 프레임 변경 */
-		String companyId = userInfo.getCompanyID();
+		/*
 		String url = "/rest/ezPortal/frames/users/" + userId + "?companyId=" + companyId;
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
-		String status = resultBody.get("status").toString();
+		String status = resultBody.get("status").toString();*/
 		
 		
 		/* 사용자 포틀릿 사용 변경 */
-		String deptId = userInfo.getDeptID();
-		url = "/rest/ezPortal/portlets/users/" + userId + "?companyId=" + companyId;
-		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
-		status = resultBody.get("status").toString();
+		String url = "/rest/ezPortal/portlets/users/" + userId + "?companyId=" + companyId;
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", jObj);
+		String status = resultBody.get("status").toString();
 		
 		logger.debug("status" + status);
 		
