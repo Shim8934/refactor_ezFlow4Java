@@ -300,11 +300,13 @@
 		            if (pDraftFlag == "REDRAFT") {
 		            	if (ListType == "21") {
 		            		setFirstDrafter(isUsed, "");
-		            	} else {
+		            	}
+						// 재기안시 고정수신처 여부와 상관없이 직전 수신처를 불러오도록 함
+						/*else {
 		            		if(approvalFlag == "G") {
 		            			getFormRecv();	
-		            		}       		
-		            	}
+		            		}
+		            	}*/
 		            	
 		                //getFormRecv();
 		                message.SetEditable(true);
