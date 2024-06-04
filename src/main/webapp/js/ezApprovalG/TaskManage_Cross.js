@@ -158,18 +158,7 @@ function GetTaskFullListXml() {
 		type : "GET",
 		url : "/admin/ezApprovalG/getTaskFullList.do",
 		async : false,
-		data : {
-		    deptCode : DeptID,
-		    companyID : CompanyID,
-		    pageSize : PageSize,
-		    pageNo : curpage,
-		    langType : UserLang,
-		    title 	   : searchTitle,
-            code       : searchCode,
-            flag       : searchFlag,
-		    orderOption1: g_SortField,
-		    orderOption2 : g_SortType
-        },
+		data : {deptCode : DeptID, companyID : CompanyID, pageSize : PageSize, pageNo : curpage, langType : UserLang, orderOption1: g_SortField, orderOption2 : g_SortType},
 		success : function (result) {
 			tempRet = loadXMLString(result);
 		},

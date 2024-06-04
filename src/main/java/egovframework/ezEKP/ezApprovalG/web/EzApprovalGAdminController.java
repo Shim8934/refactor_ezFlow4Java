@@ -2388,13 +2388,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pageNo = request.getParameter("pageNo");
 		String langType = request.getParameter("langType");
 		String companyID = request.getParameter("companyID");
-		String title = request.getParameter("title");
-		String code = request.getParameter("code");
-		String flag = request.getParameter("flag");
 		String orderOption1 = request.getParameter("orderOption1");
 		String orderOption2 = request.getParameter("orderOption2");
 		
-		String listXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType.trim(), companyID, userInfo.getTenantId(), title, code, flag, orderOption1, orderOption2);
+		String listXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType.trim(), companyID, userInfo.getTenantId(), orderOption1, orderOption2);
 		
 		Document xmldoc = commonUtil.convertStringToDocument(listXML);
 	

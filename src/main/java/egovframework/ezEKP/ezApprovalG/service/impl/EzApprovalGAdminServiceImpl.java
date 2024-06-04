@@ -1516,7 +1516,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 	
 	@Override
-	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID, String title, String code, String flag, String orderOption1, String orderOption2) throws Exception {
+	public String getTaskFullList(String deptCode, String pageSize, String pageNo, String langType, String companyID, int tenantID, String orderOption1, String orderOption2) throws Exception {
 		logger.debug("getTaskFullList started.");
 		StringBuilder sb = new StringBuilder();
 		
@@ -1531,12 +1531,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("startRowForOracle", startRow + 1);
 		map.put("endRowForOracle", startRow + Integer.parseInt(pageSize));
 
-		if (!title.isEmpty()) {
-			map.put("title", title);
-		}
-		if (!code.isEmpty()) {
-			map.put("code", code);
-		}
+
 		if (!orderOption1.isEmpty()) {
 			map.put("v_ORDEROPTION1", orderOption1);
 			if ("DESC".equals(orderOption2.toUpperCase())) {

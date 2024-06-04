@@ -353,41 +353,12 @@ function GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode) {
 	var result = "";
 	var pageSize = "";
 	var pageNO = "";
-	searchTitle = pTitle;
-    searchCode = pCode;
-    searchFlag = pFlag;
 	
 	if (pFlag == "1") {
 		pageSize = PageSize;
 		pageNO = curpage;
 	}
-
-    $.ajax({
-    	type : "GET",
-    	url : "/admin/ezApprovalG/getTaskFullList.do",
-    	async : false,
-    	data : {
-    		deptCode : DeptID,
-    		companyID : CompanyID,
-    		pageSize : PageSize,
-    		pageNo : curpage,
-    		langType : UserLang,
-    		title 	   : searchTitle,
-    		code       : searchCode,
-    		flag       : searchFlag,
-    		orderOption1: g_SortField,
-    		orderOption2 : g_SortType
-    	},
-    	success : function (result) {
-    		tempRet = loadXMLString(result);
-    	},
-    	error : function(error) {
-    		console.log(error);
-    		tempRet = loadXMLString("<RESULT>FALSE</RESULT>");
-    	}
-    });
-    return tempRet;
-	/* 검색 메서드
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -409,5 +380,4 @@ function GetFindTaskListXml(pTitle, pCode, pFlag, pDeptCode) {
 	});
     
     return loadXMLString(result);
-    */
 }
