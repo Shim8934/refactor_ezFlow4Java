@@ -176,10 +176,20 @@
 	            DocList.LoadFromID("lvTDocLV");
 	            var pCurSel = DocList.GetSelectedRows();
 	            var length = pCurSel.length;
+	            
+	            var deptCheck = true;
+	            var pWriterDeptID = "";
+	        	if (typeof(parent.pWriterDeptID) != "undefined") {
+	        		pWriterDeptID = parent.pWriterDeptID;
+	        		if (pDeptID != pWriterDeptID) {
+	        			deptCheck = false;
+	        		}
+	        	}
+	        	
 	            if (length == 0) {
 	                OpenAlertUI("<spring:message code='ezApprovalG.t360'/>");
 	            }
-	            else if (arr_userinfo[1].toLowerCase() != GetAttribute(pCurSel[0], "DATA4").toLowerCase() && pDraftFlag != "REDRAFT") {
+	            else if (!(arr_userinfo[1].toLowerCase() == GetAttribute(pCurSel[0], "DATA4").toLowerCase() && deptCheck) && pDraftFlag != "REDRAFT") {
 	                OpenAlertUI("<spring:message code='ezApprovalG.t361'/>");
 	                return;
 	            }

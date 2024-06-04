@@ -2058,4 +2058,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
             logger.error(e.getMessage(), e);
         }
     }
+
+	// 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용 여부 테넌트 컨피그 추가
+	public void insertUseReceiptDeptFileAttach(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkUseReceiptDeptFileAttach", map);
+		
+		if (propertyValue == null) {
+			logger.debug("useReceiptDeptFileAttach tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseReceiptDeptFileAttach", map);
+		}
+	}
 }

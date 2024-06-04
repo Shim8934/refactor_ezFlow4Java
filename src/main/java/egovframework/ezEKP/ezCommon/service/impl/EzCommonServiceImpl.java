@@ -3583,4 +3583,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
         }
     }
+
+    @Override
+    public void insertUseReceiptDeptFileAttach() throws Exception {
+    	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+    	
+    	for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertUseReceiptDeptFileAttach(map);
+        }
+    }
+    
 }

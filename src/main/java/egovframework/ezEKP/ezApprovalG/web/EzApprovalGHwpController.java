@@ -1928,6 +1928,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		} else {
 			useAprFilePrvw = "0";
 		}
+		
+		// 2024-06-04 김우철 - 부서수신함 첨부, 문서첨부 기능 사용 여부
+		String useReceiptDeptFileAttach = ezCommonService.getTenantConfig("useReceiptDeptFileAttach", userInfo.getTenantId());
 				
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
@@ -1961,6 +1964,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
+		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
+
 		logger.debug("ezRecevGSusinWHWP ended");
 		
 		return "ezApprovalG/apprGrecevgsusinWHWP";

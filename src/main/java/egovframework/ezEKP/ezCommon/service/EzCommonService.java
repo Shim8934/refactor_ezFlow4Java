@@ -340,4 +340,6 @@ public interface EzCommonService {
 	public void insertApprNonElecRecTypeConfing() throws Exception;
 
     public void insertRecordHeaderClassTitle() throws Exception;
+    
+	public void insertUseReceiptDeptFileAttach() throws Exception;
 }

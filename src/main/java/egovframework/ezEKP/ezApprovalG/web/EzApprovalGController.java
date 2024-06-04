@@ -6328,6 +6328,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
 		String useHideHeaderArea = ezCommonService.getTenantConfig("useHideHeaderArea", userInfo.getTenantId());
 		
+		// 2024-06-04 김우철 - 부서수신함 첨부, 문서첨부 기능 사용 여부
+		String useReceiptDeptFileAttach = ezCommonService.getTenantConfig("useReceiptDeptFileAttach", userInfo.getTenantId());
+		
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("docID", docID);
 		model.addAttribute("orgDocID", orgDocID);
@@ -6362,6 +6365,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
 		
 		model.addAttribute("useHideHeaderArea", useHideHeaderArea);
+		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
 		
 		logger.debug("recevGSusin ended.");
 		

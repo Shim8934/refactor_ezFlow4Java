@@ -334,7 +334,21 @@
 			    if (pAttachCurSel.length > 0)
 				{
 					var pcheckID =  GetAttribute(pAttachCurSel[0], "DATA4");
- 					if (pcheckID.toLowerCase() != pUserID.toLowerCase() && pDraftFlag != "REDRAFT")
+					var isUsed = "";
+				    if (typeof(parent.isUsed) != "undefined") {
+				    	isUsed = parent.isUsed;
+				    }
+				    
+				    var deptCheck = true;
+				    var pWriterDeptID = "";
+				    if (typeof(parent.pWriterDeptID) != "undefined") {
+				    	pWriterDeptID = parent.pWriterDeptID;
+				    	if (pDeptID != pWriterDeptID) {
+		        			deptCheck = false;
+		        		}
+				    }
+				    
+ 					if (!(pcheckID.toLowerCase() == pUserID.toLowerCase() && deptCheck) && pDraftFlag != "REDRAFT" && isUsed != "reuse")
 					{
  						if(delAttachByOthers == "0"){
 							var pAlertContent = "<spring:message code='ezApprovalG.t277'/>" + "<br>" + "<spring:message code='ezApprovalG.t278'/>";
@@ -572,7 +586,20 @@
 			
 			    var pCurSelRow = CurSelList.GetSelectedRows();
 			    var pAttachUserID = GetAttribute(pCurSelRow[0], "DATA4");
-			    if (pAttachUserID.toLowerCase() == pUserID.toLowerCase()) {
+			    var isUsed = "";
+			    if (typeof(parent.isUsed) != "undefined") {
+			    	isUsed = parent.isUsed;
+			    }
+			    var deptCheck = true;
+			    var pWriterDeptID = "";
+				if (typeof(parent.pWriterDeptID) != "undefined") {
+					pWriterDeptID = parent.pWriterDeptID;
+					if (pDeptID != pWriterDeptID) {
+	        			deptCheck = false;
+	        		}
+				}
+				
+			    if ((pAttachUserID.toLowerCase() == pUserID.toLowerCase() && deptCheck) || isUsed == "reuse") {
 			        var retValue = getAttachFilePageNum(GetAttribute(pCurSelRow[0], "DATA9"), GetChildNodes(pCurSelRow[0])[1].innerHTML, ATTACH_onDblclick_Complete);
 			        if (retValue != undefined) {
 			            if ((!CrossYN()) && retValue[0] == "OK") {
