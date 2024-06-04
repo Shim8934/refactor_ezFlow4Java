@@ -244,7 +244,19 @@ function getBoardListBType(data, portletId) {
 			contSub.appendChild(spanDay);
 			var date = new Date(item.startDate);
 			// format : 2024.04.09
-			textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + (date.getMonth() + 1) + SPLIT_DATE + date.getDate());
+			var dateMonth = date.getMonth() + 1;
+            var dateDay = date.getDate();
+            var dateTime = date.getHours() + ":" + date.getMinutes();
+            
+            if (dateMonth < 10) {
+                dateMonth = "0" + dateMonth;
+            }
+            
+            if (dateDay < 10) {
+                dateDay = "0" + dateDay;
+            }
+            
+			textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + dateMonth + SPLIT_DATE + dateDay + "<br>" + dateTime);
 			spanDay.appendChild(textNode);
 			var bar = document.createElement('br');
 			dd.appendChild(bar);
