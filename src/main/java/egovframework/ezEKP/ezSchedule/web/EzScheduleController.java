@@ -35,7 +35,6 @@ import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -5109,73 +5108,5 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 		logger.debug("downloadAttachAll ended.");
 	}
-
-	/* 2024-05-21 김유진 - 일정 > 게시판 게시 > 일정 정보 가져오기 */
-	@RequestMapping(value="/ezSchedule/ezScheduleReadBoard.do", method=RequestMethod.POST, produces = "text/xml; charset=utf-8")
-	@ResponseBody
-	public String ezScheduleReadBoard(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception{
-		logger.debug("ezScheduleReadBoard started.");
-
-		loginVO = commonUtil.userInfo(loginCookie);
-		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
-		int tenantId = loginVO.getTenantId();
-		String companyId = loginVO.getCompanyID();
-		String lang = loginVO.getLang();
-
-		Document xmldom = commonUtil.convertStringToDocument(bodyData);
-		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
-		String attachLimit = xmldom.getElementsByTagName("ATTACHLIMIT").item(0).getTextContent();
-		String scheduleId = xmldom.getElementsByTagName("SCHEDULEID").item(0).getTextContent();
-		logger.debug("url=" + url + ",attachLimit=" + attachLimit + ", scheduleId: " + scheduleId);
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("<DATA>");
-
-		// 일정 상세정보 가져오기
-		ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(scheduleId, offSetMin, tenantId, companyId);
-		if (vo == null) {
-			logger.error("Schedule not found.");
-			model.addAttribute("title", egovMessageSource.getMessage("ezSchedule.t342", locale));
-			model.addAttribute("mainContent", egovMessageSource.getMessage("ezSchedule.gha03", locale));
-			model.addAttribute("subContent", egovMessageSource.getMessage("ezSchedule.gha04", locale));
-			return "ezCommon/error";
-		}
-
-		sb.append("<SUBJECT><![CDATA[" + vo.getTitle() + "]]></SUBJECT>");
-		if (lang != null && "1".equals(lang)){
-			sb.append("<FROMNAME>" + vo.getOwnerName() + "</FROMNAME>");
-		} else {
-			sb.append("<FROMNAME>" + vo.getOwnerName2() + "</FROMNAME>");
-		}
-		sb.append("<DATE><![CDATA[" + vo.getCreateDate() + "]]></DATE>");
-
-		String realPath = commonUtil.getRealPath(request);
-		String path = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantId);
-		String scheme = "http://";
-		if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
-			scheme = "https://";
-		}
-		// 일정 본문 데이터 가져오기
-		String htmlBody = ezCommonService.getMHTtoHTML("SCHEDULECONTENT", url, tenantId, realPath, request, locale, scheme);
-		String escapedHtml = StringEscapeUtils.escapeHtml4(htmlBody);
-		sb.append("<HTMLDESCRIPTION>" + escapedHtml + "</HTMLDESCRIPTION>");
-
-		List<AttachListVO> aList = new ArrayList<>();
-		// 일정 참부파일 정보 가져오기
-		String aListStr = "";
-		if (vo.getHasAttach().equals("Y")) {
-			String parentID = (vo.getParentId().equals("0") ? scheduleId : vo.getParentId());
-			aList = ezScheduleService.getAttachList(parentID, tenantId);
-			for (AttachListVO avo : aList) {
-				aListStr += "<ROW><ATTACHID>" + avo.getAttachId() + "</ATTACHID><FILESIZE>" + avo.getFileSize() + "</FILESIZE><FILENAME>" + avo.getFileName() + "</FILENAME><FILEPATH>" + avo.getFilePath()+ "</FILEPATH></ROW>";
-			}
-		}
-		sb.append("<ATTACHINFO>" + aListStr + "</ATTACHINFO>");
-
-		sb.append("</DATA>");
-		logger.debug("ezScheduleReadBoard ended.");
-		return sb.toString();
-	}
-
-
+	
 }

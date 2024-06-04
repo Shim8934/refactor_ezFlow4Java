@@ -217,6 +217,3 @@ var strLang141_2 = "구글";
 var strLangHSBScPt1 = "년";
 var strLangHSBScPt2 = "월";
 var strLangHSBScPt3 = "일";
-
-/* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
-var ezSchedule_kyj1 = "익명게시판 또는 포토게시판 또는 URL링크 게시판에는 일정을 게시를 할 수 없습니다.";
