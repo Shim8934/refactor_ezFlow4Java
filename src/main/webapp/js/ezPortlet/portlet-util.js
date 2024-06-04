@@ -356,10 +356,11 @@ function Paging() {
     var _option = {
         maintain:true, // 페이지 숫자 변환시 현제 페이지 유지 여부
         pageStart:0, // getPage()시 시작 페이지
+        roundPage:true, // 페이지 끝으로 가면 순환할지 여부.
     }
 
     var _resetPage = function (count) {
-        _page = _option.pageStart;
+        _page = 0;
         _countPerPage = count;
         _start = 0;
     }
@@ -367,15 +368,34 @@ function Paging() {
     var _changeCount = function (count) {
         _start -= _start % count;
         _countPerPage = count;
-        _page = _start / count + _option.pageStart;
+        _page = _start / count;
+    }
+
+    var _getLastPage  = function () {
+        return Math.ceil(_total / _countPerPage) - 1;
     }
 
     return {
+        // 페이지 끝에서 처음으로 돌아올지 여부
+        setRoundPage: function (roundPage) {
+            _option.roundPage = !!roundPage;
+            return this;
+        },
+        // 페이지 숫자 변환시 현제 페이지 유지 여부
+        setMaintain: function (maintain) {
+            _option.maintain = !!maintain;
+            return this;
+        },
+        // 페이지 시작 숫자
+        setPageStart: function (pageStart) {
+            _option.pageStart = parseInt(pageStart);
+            return this;
+        },
         init: function (count) {
             _resetPage(count);
             return {
                 getPage: function () {
-                    return _page;
+                    return _page + _option.pageStart;
                 },
                 getStartPage: function () {
                     return _option.pageStart;
@@ -387,14 +407,28 @@ function Paging() {
                     return _start;
                 },
                 next: function () {
-                    _start += _countPerPage;
-                    _page++;
+                    if (_total !== -1 && _page >= _getLastPage()) {
+                        if (_option.roundPage) {
+                            _resetPage(_countPerPage);
+                        }
+                    } else {
+                        _start += _countPerPage;
+                        _page++;
+                    }
+
                     return this;
                 },
                 previous: function () {
-                    _start -= _countPerPage;
-                    _start = _start < 0 ? 0 : _start;
-                    _page--;
+                    if (_total !== -1 && _page <= 0) {
+                        if (_option.roundPage) {
+                            _start = _getLastPage() * _countPerPage;
+                            _page = _getLastPage();
+                        }
+                    } else {
+                        _start -= _countPerPage;
+                        _start = _start < 0 ? 0 : _start;
+                        _page--;
+                    }
                     return this;
                 },
                 changeCount: function (count) {
@@ -422,13 +456,15 @@ function Paging() {
                 },
                 last: function () {
                     if (_total === -1) return this;
-                    _start = _total - _total % _countPerPage;
-                    _page = _start / _countPerPage + _option.pageStart;
+                    _page = _getLastPage();
+                    _start = _page * _countPerPage;
                     return this;
                 },
                 resetPage : function () {
-                	_page = _option.pageStart;
-                	_start = 0;
+                    _resetPage(_countPerPage);
+                },
+                getCurrentOption : function () {
+                    return _option;
                 }
             }
         }
@@ -526,25 +562,13 @@ function portletMovePage(portletId, mode) {
 		portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
 	}
 	
-	var currPage = portletPageObj.getPage();
-	var totalCnt = portletPageObj.getTotal();
-	var startRowIdx = portletPageObj.getStart();
-	var perCount = portletPageObj.getPagePerCount(portletId);
-	
-	var moveFlag = false;
-	if (mode == "prev" && startRowIdx > 0) {
+	if (mode === "prev") {
 		portletPageObj.previous();
-		moveFlag = true;
-	} else if (mode == "next" && startRowIdx + perCount < totalCnt) {
+	} else if (mode === "next") {
 		portletPageObj.next();
-		moveFlag = true;
 	}
-	
-	if (!moveFlag) {
-		return;
-	}
-	
-	startRowIdx = portletPageObj.getStart();
-	perCount = portletPageObj.getPagePerCount(portletId);
+
+    var startRowIdx = portletPageObj.getStart();
+    var perCount = portletPageObj.getPagePerCount(portletId);
 	portletListDisplayProcess(portletPageList, startRowIdx, perCount);
 }
