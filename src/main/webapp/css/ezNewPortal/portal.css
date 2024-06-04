@@ -280,7 +280,6 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 
 /* noti_portlet_list */
 .noti_portlet_list{margin:0px;padding:0px 20px;list-style:none; max-height:calc(100% - 83px);overflow:hidden;}
-.noti_portlet_list .noti_nodata{background: #f4f4f4 url(/images/ezNewPortal/noti_nodata.png) no-repeat center;width: 100%;height:169px;margin: 0px;box-sizing:border-box;border:1px solid #ececec;float:left;}
 .noti_portlet_list .notiLI{float:left;overflow:hidden;width:calc((99.999% - 14px) / 3); margin:0px 0 7px 7px; padding:0; box-sizing: border-box;}
 .noti_portlet_list .notiLI:nth-child(3n+1){margin-left:0;}
 .noti_portlet_list .notiLI:nth-child(-n+3){margin-top:0;}
@@ -296,8 +295,10 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .noti_portlet_list .notiLI .noti_text{margin:35px 0px 5px 0px; padding:0; font-size:14px; color:#333333; height:83px; line-height:20px; width:100%; box-sizing:border-box;white-space:normal; text-overflow:ellipsis;overflow:hidden;word-wrap:break-word; -webkit-line-clamp:4; -webkit-box-orient:vertical; display:-webkit-box; font-weight:bold;}
 .noti_portlet_list .notiLI .noti_text .cont_sub .name{display:block; text-align:right; font-weight:500;}
 .noti_portlet_list .notiLI .noti_date{margin:0; text-align: right; color:#838383; font-size:13px;}
+.noti_portlet_list .notiLI .noti_nodata{background:url(../../images/ezNewPortal/noti_nodata.svg) no-repeat center #F7F7F7 !important; cursor:default;}
 .portlet_list li.notiLI02{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
 .portlet_list li.notiLI03{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
+
 
 .portlet.two_by_one .noti_portlet_list .notiLI dl{height:230px;}
 .portlet.two_by_one .noti_portlet_list .notiLI .noti_text{height:123px; -webkit-line-clamp:6;}

@@ -148,7 +148,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 		var cnt = noticeCnt === null ? 0 : noticeCnt.length;
 		if (cnt % notiCount != 0) {
 			for(var i = 0; i < 12; i++) {
-				str += '<li class="notiLI"><dl><p class="noti_nodata"></p></dl></li>';
+				str += '<li class="notiLI"><dl class="noti_nodata"></dl></li>';
 			}
 		}
 	}
