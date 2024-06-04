@@ -193,7 +193,7 @@
 					}
 					
 					menuList.forEach(function (item, index) {
-						menusHTML += "<li class='menu' id='menu" + item.menuId + "'>";
+						menusHTML += "<li class='menu draggable-item' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
@@ -230,19 +230,36 @@
 					});
 					
 					//메뉴 드래그앤드롭
-					$("#menuList").sortable({ 
-						//handle : ".menuSortable",
-						items: "li.menu",
-						scroll: false,
-					    helper: 'clone',
-						start : function(event, ui) {
-							//$(".menuDetails").css("display", "none");
-							$(".menuDetails").remove();
-							
-						},
-						update : function(event, ui) {
-							updateMenuOrder();
-						}
+					$("#menuList .draggable-item").draggable({
+					    revert: "invalid",
+					    containment: "parent",
+					    zIndex: 100,
+					    start: function (event, ui) {
+					    	var dragElem = $(this);
+					    	dragElem.css({
+					    		"cursor": "move",
+					    		"opacity": "0.6"
+					    	});
+					    },
+					    snap:'#menuList li',
+					    stop : function(event, ui) {
+					    	var dragElem = $(this);
+					    	dragElem.css({
+					    		"cursor": "pointer",
+					    		"opacity": ""
+					    	});
+					    },
+					    helper : "clone"
+					});
+					  
+					$("#menuList .draggable-item").droppable({
+					    tolerance: "intersect",
+					    drop: function(event, ui) {
+						var dragElem = ui.draggable;
+						var dropElem = $(this);
+						changePosition(dragElem, dropElem);
+						updateMenuOrder();
+					  }
 					});
 					
 					//$("#menuList").disableSelection();
@@ -964,6 +981,34 @@
 					
 				}
 			});
+		}
+		
+		function changePosition(dragElem, dropElem) {
+			var menuListChildren = $("#menuList li");
+			var dragElemIndex = menuListChildren.index(dragElem);
+			var dropElemIndex = menuListChildren.index(dropElem);
+			var menuList = $('#menuList');
+			
+			dragElem.insertAfter(menuList.children().eq(dropElemIndex));
+			if (dragElemIndex > dropElemIndex) {
+				dropElem.insertAfter(menuList.children().eq(dragElemIndex));
+			} else {
+				if (dragElemIndex - 1 < 0) {
+					dropElem.insertBefore(menuList.children().eq(0));
+				} else {
+					dropElem.insertAfter(menuList.children().eq(dragElemIndex - 1));
+				}
+			}
+			
+			dragElem.css({
+				left: '0',
+			    top: '0'
+			});
+			
+			dropElem.css({
+				left: '0',
+			    top: '0'
+		    });
 		}
 
 	</script>
