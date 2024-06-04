@@ -21,17 +21,18 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style type="text/css">
 			html { height: 100%; }
-			#set-body { background-color: white; }
+			#set-body { background-color: white; height: 700px;}
 			h3 { padding-left: 20px; margin-top: 25px; margin-bottom: 10px; font-size:14px; }
 			.set-head { background-color: rgb(228, 238, 254); height:44px; line-height:42px; display: flex; align-items: center; margin:0px; padding:0px;}
 			.set-head h1 { font-size: 16px; margin-left: 20px; color:black;}
+			.set-portlet{height: calc(100% - 125px); margin-top: 20px;}
 			.set-action { height: 9%; display: flex; justify-content: center; align-items: center;} 
 			.ui-portlet { position:relative;  width: 220px; height: 47px; box-sizing:border-box; border-radius: 0px; padding-left: 10px; margin: 0px 10px 10px 0px; line-height: 20px;}
 			.ui-portlet-on { background-color: #f0f0f0; }
 			.ui-portlet-off { background-color: #f0f0f0; }
 			.ui-portlet-off .ui-portlet-span{ color:#999;}
 			.ui-portlet-content { font-weight: bold; display: inline-block;}
-			.ui-portlet-list { padding-left: 20px; height: 335px; width: 97%;}
+			.ui-portlet-list { padding-left: 20px; width: 97%;}
 			.ui-portlet-span { display: inline-block; font-size:13px; color:#333; font-weight:normal;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;margin-bottom:-3px;}
 			.flipsterLi { width:95px; height: 64px; margin-top:20px; margin-left:20px; padding:20px; background:#fff;}
 			.frameList { height: 151px; /* background-color: #e0e3e4; */ margin-left: 20px; margin-right: 20px;}
@@ -80,7 +81,7 @@
 		<section class="set-head">
 			<h1><spring:message code='ezNewPortal.t009' /></h1>
 		</section>
-		<section class="set-frame">
+		<section class="set-frame" style="display: none">
 			<h3><spring:message code='ezNewPortal.t010' /></h3>
 			<div class="frameList" id="frameList">
 				<ul id="frameUl">
@@ -88,7 +89,6 @@
 			</div>
 		</section>
 		<section class="set-portlet">
-			<h3><spring:message code='ezNewPortal.t009' /></h3>
 			<div class="ui-portlet-list" id="portletList"></div>
 		</section>
 		<div class="btnpositionLayer" style="margin:20px 0px 0px">
