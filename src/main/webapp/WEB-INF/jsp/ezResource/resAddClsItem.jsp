@@ -37,7 +37,6 @@
 					e.preventDefault();
 				});
 
-				adjustTextareaHeight();
                 window.addEventListener('resize', adjustTextareaHeight);
 			}
 			
@@ -46,10 +45,17 @@
 	    	} 
 
 			function adjustTextareaHeight() {
-                var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+			    var viewScale = window.devicePixelRatio;
                 var windowHeight = window.innerHeight;
-                var newHeight = windowHeight < 599 ? 98 : windowHeight - document.querySelector('tbody tr:first-child').offsetHeight - 25;
-                secondRowFirstTD.style.height = newHeight + 'px';
+                if (viewScale < 0.9 || windowHeight > 700) {
+                    var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+                    var newHeight = windowHeight - document.getElementById('firstRowFirstTrTable').offsetHeight - 125;
+                    secondRowFirstTD.style.height = newHeight + 'px';
+                } else {
+                    var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+                    var newHeight = 98;
+                    secondRowFirstTD.style.height = newHeight + 'px';
+                }
             }
 
 			function btnSave_Click() {
@@ -491,7 +497,7 @@
       				<script type="text/javascript">
 						selToggleList(document.getElementById("menu"), "ul", "li", "0");
 					</script>
-					<table class="content">
+					<table id="firstRowFirstTrTable" class="content">
         				<tr>
         					<th> <spring:message code="ezResource.t153"/></th>
           					<td colspan="2" style="border-right: 0px;">
@@ -601,7 +607,7 @@
 				</td>
   			</tr>
   			<tr>
-    			<td id="secondRowFirstTd" style="padding-bottom:1px; padding-right:12px; height:100px;">
+    			<td id="secondRowFirstTd" style="padding-bottom:1px; padding-right:12px; height:100%;">
     			    <textarea name="Brd_Explain"  id="Brd_Explain" style="margin-top:7px;width: 100%; height: 100%;resize:none;" maxlength="2000"></textarea>
                 </td>
   			</tr>
