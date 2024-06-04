@@ -7,7 +7,8 @@
 </head>
 <body>
     <input type="hidden" value="<c:out value='${usedTheme }'/>" id="usedTheme">
-    <article class="board box_shadow">
+    <article class="board box_shadow favoriteBoardPortlet">
+    	<input type="hidden" value="" class="favoriteBoardPorlet"/>
         <div class="layDIV">
             <div class="sortablePortlet">
                 <dl class="portlet_tab sortablePortlet" id="BoardTab"></dl>

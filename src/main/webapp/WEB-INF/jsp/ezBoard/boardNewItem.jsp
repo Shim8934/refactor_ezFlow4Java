@@ -1131,9 +1131,11 @@
 						if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 							parent.opener.getNoticePortletList();
 						}
-						
-						// 게시판 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener != null && parent.opener.getBoardPortletInfo != undefined) {
+					} catch (e) {console.log(e); }	
+					
+					try{
+						// 카드A형, 카드B형, 리스트형 포틀릿 업데이트 되도록 수정
+			            if (parent.opener != null && parent.opener.refreshBordPortletInfo != undefined) {
 			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 			            	var customBoardCount = customBoardList.length;
 			            	
@@ -1143,17 +1145,34 @@
 			            		if (boardId == pBoardID) {
 			            			var portletId = customBoardList[i].parentElement.id;
 			            			portletId = portletId.substring(0, portletId.indexOf("P"));
-			            			parent.opener.getBoardPortletInfo(portletId);
+			            			parent.opener.refreshBordPortletInfo(portletId);
 			            		}
 			            	}
 			            }
-						
+					} catch (e) {console.log(e); }
+					
+					try { // 탭게시판  포틀릿 새로고침
+                 		if (parent.opener != null && parent.opener.refreshAndChangeTab != undefined) {
+                 			var tabBoardList = parent.opener.document.getElementsByClassName('tabBoard');
+                 			
+                 			for (var j = 0; j < tabBoardList.length; j++) {
+                 				var tabPortletId = tabBoardList[j].querySelector('.tabBoardPorlet').value;
+	                 			var tabBoardIdList = parent.opener.portletInfoMap["portlet" + tabPortletId].tabBoardIdList;
+	                 			
+	                 			if (tabBoardIdList.indexOf(pBoardID) > -1) {
+	                 				var activeTabId = parent.opener.portletInfoMap["portlet" + tabPortletId].activeTabId;
+		                 			var tabNode = tabBoardList[j].querySelector("#" + activeTabId + 'Tab');
+		                 			parent.opener.refreshAndChangeTab(tabPortletId, activeTabId);
+	                 			}
+                 			}
+                 		}
+                 	} catch (e) {console.log(e);}
+					
+					try{
 						if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 							parent.opener.getBoardList_NewBoardSTD();
 						}
-					} catch (e) {
-						
-					}
+					} catch (e) {console.log(e); }
 					
 
 		            window.close();

@@ -312,33 +312,63 @@
 			            }
 			            
 			            //2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
-						if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
-							parent.opener.photoBoardMovePage(null);
-						}
-
-						if (window.opener != null && window.opener.getBoardList != undefined) {
-							window.opener.getBoardList();
-						}
+			            try { 
+							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+								parent.opener.photoBoardMovePage(null);
+							}
+			            } catch (e) {console.log(e);}
+						
+			            try {
+							if (window.opener != null && window.opener.getBoardList != undefined) {
+								window.opener.getBoardList();
+							}
+			            } catch (e) {console.log(e);}
 			            
-			            // 게시판 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener.getBoardPortletInfo != undefined) {
-			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
-			            	var customBoardCount = customBoardList.length;
-			            	
-			            	for (var i = 0; i < customBoardCount; i++) {
-			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
-			            		
-			            		if (boardId == pBoardID) {
-			            			var portletId = customBoardList[i].parentElement.id;
-			            			portletId = portletId.substring(0, portletId.indexOf("P"));
-			            			parent.opener.getBoardPortletInfo(portletId);
-			            		}
+			            try {// 카드 A형, 카드 B형, 리스트형 포틀릿 새로고침
+				            if (parent.opener.refreshBordPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.refreshBordPortletInfo(portletId);
+				            		}
+				            	}
 			            	}
-		            	}
-
-						if(parent.opener.search != undefined){
-							parent.opener.search('skip');
-						}
+			            } catch (e) {console.log(e);}
+			            
+			            try { // 탭게시판  포틀릿 새로고침
+	                 		if (parent.opener.refreshAndChangeTab != undefined) {
+	                 			var tabBoardList = parent.opener.document.getElementsByClassName('tabBoard');
+	                 			
+	                 			for (var j = 0; j < tabBoardList.length; j++) {
+	                 				var tabPortletId = tabBoardList[j].querySelector('.tabBoardPorlet').value;
+		                 			var tabBoardIdList = parent.opener.portletInfoMap["portlet" + tabPortletId].tabBoardIdList;
+		                 			
+		                 			if (tabBoardIdList.indexOf(pBoardID) > -1) {
+		                 				var activeTabId = parent.opener.portletInfoMap["portlet" + tabPortletId].activeTabId;
+			                 			var tabNode = tabBoardList[j].querySelector("#" + activeTabId + 'Tab');
+			                 			parent.opener.refreshAndChangeTab(tabPortletId, activeTabId);
+		                 			}
+	                 			}
+	                 		}
+	                 	} catch (e) {console.log(e);}
+						
+	                 	try { // 즐겨찾기 포틀릿 새로고침
+				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+								parent.opener.getBoardList_NewBoardSTD();
+							}
+	                 	} catch (e) {console.log(e);}
+	                 	
+	                 	try {
+							if(parent.opener.search != undefined){
+								parent.opener.search('skip');
+							}
+	                 	} catch (e) {console.log(e);}
 						
 			            window.close();
 				    }
@@ -703,7 +733,7 @@
 							}
 			                
 							// 게시판 포틀릿 리스트 업데이트 되도록 수정
-				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            if (parent.opener.refreshBordPortletInfo != undefined) {
 				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 				            	var customBoardCount = customBoardList.length;
 				            	
@@ -713,7 +743,7 @@
 				            		if (boardId == pBoardID) {
 				            			var portletId = customBoardList[i].parentElement.id;
 				            			portletId = portletId.substring(0, portletId.indexOf("P"));
-				            			parent.opener.getBoardPortletInfo(portletId);
+				            			parent.opener.refreshBordPortletInfo(portletId);
 				            		}
 				            	}
 			           		}
@@ -983,7 +1013,7 @@
 							}
 			                
 							// 게시판 포틀릿 리스트 업데이트 되도록 수정
-				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            if (parent.opener.refreshBordPortletInfo != undefined) {
 				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 				            	var customBoardCount = customBoardList.length;
 				            	
@@ -993,7 +1023,7 @@
 				            		if (boardId == pBoardID) {
 				            			var portletId = customBoardList[i].parentElement.id;
 				            			portletId = portletId.substring(0, portletId.indexOf("P"));
-				            			parent.opener.getBoardPortletInfo(portletId);
+				            			parent.opener.refreshBordPortletInfo(portletId);
 				            		}
 				            	}
 				            }
@@ -1018,7 +1048,7 @@
 						}
 		                
 						// 게시판 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener.getBoardPortletInfo != undefined) {
+			            if (parent.opener.refreshBordPortletInfo != undefined) {
 			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 			            	var customBoardCount = customBoardList.length;
 			            	
@@ -1028,7 +1058,7 @@
 			            		if (boardId == pBoardID) {
 			            			var portletId = customBoardList[i].parentElement.id;
 			            			portletId = portletId.substring(0, portletId.indexOf("P"));
-			            			parent.opener.getBoardPortletInfo(portletId);
+			            			parent.opener.refreshBordPortletInfo(portletId);
 			            		}
 			            	}
 			            }

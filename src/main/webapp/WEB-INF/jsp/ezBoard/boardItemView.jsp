@@ -508,12 +508,13 @@
 		                try {
 		                	window.opener.leftCountRf(pBoardID);
 						} catch (e) {console.log(e);}
+						
 		                try {
 		                    window.opener.refresh_onclick();
 		                } catch (e) {console.log(e);}
 
-	                    //2019.03.04 유은정 - 게시판 적용
-	                    try {
+	                    // 게시판 포틀릿 리스트 업데이트 되도록 수정
+	                    try { // 공지사항 포틀릿 새로고침
 		                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 		                    	parent.opener.getNoticePortletList();
 		                    }
@@ -525,9 +526,9 @@
 		                    }
 	                    } catch (e) {console.log(e);}
 
-	                 	// 게시판 포틀릿 리스트 업데이트 되도록 수정
-						try {
-				            if (parent.opener.getBoardPortletInfo != undefined) {
+	                 	
+						try { // 카드 A형, 카드 B형, 리스트형 포틀릿 새로고침
+				            if (parent.opener.refreshBordPortletInfo != undefined) {
 				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 				            	var customBoardCount = customBoardList.length;
 				            	
@@ -537,13 +538,30 @@
 				            		if (boardId == pBoardID) {
 				            			var portletId = customBoardList[i].parentElement.id;
 				            			portletId = portletId.substring(0, portletId.indexOf("P"));
-				            			parent.opener.getBoardPortletInfo(portletId);
+				            			parent.opener.refreshBordPortletInfo(portletId);
 				            		}
 				            	}
 				            }
 	                 	} catch (e) {console.log(e);}
 	                 	
-	                 	try {
+	                 	try { // 탭게시판 포틀릿 새로고침
+	                 		if (parent.opener.refreshAndChangeTab != undefined) {
+	                 			var tabBoardList = parent.opener.document.getElementsByClassName('tabBoard');
+	                 			
+	                 			for (var j = 0; j < tabBoardList.length; j++) {
+	                 				var tabPortletId = tabBoardList[j].querySelector('.tabBoardPorlet').value;
+		                 			var tabBoardIdList = parent.opener.portletInfoMap["portlet" + tabPortletId].tabBoardIdList;
+		                 			
+		                 			if (tabBoardIdList.indexOf(pBoardID) > -1) {
+		                 				var activeTabId = parent.opener.portletInfoMap["portlet" + tabPortletId].activeTabId;
+			                 			var tabNode = tabBoardList[j].querySelector("#" + activeTabId + 'Tab');
+			                 			parent.opener.refreshAndChangeTab(tabPortletId, activeTabId);
+		                 			}
+	                 			}
+	                 		}
+	                 	} catch (e) {console.log(e);}
+	                 	
+	                 	try { // 즐겨찾기 포틀릿 새로고침
 				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
 								parent.opener.getBoardList_NewBoardSTD();
 							}
@@ -639,7 +657,7 @@
 		        
 		        var portletId = "";
 		     	// 게시판 포틀릿 리스트 업데이트 되도록 수정
-	            if (parent.opener.getBoardPortletInfo != undefined) {
+	            if (parent.opener.refreshBordPortletInfo != undefined) {
 	            	portletId = "<c:out value='${portletId}'/>";
 	            }
 		     	

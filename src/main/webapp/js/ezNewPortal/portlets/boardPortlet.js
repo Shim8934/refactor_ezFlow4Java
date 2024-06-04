@@ -79,22 +79,27 @@ function getBoardList(data, portletId) {
 	//var currentCount = getCurrentCount(portletId);
 	//boardCount = boardCount > currentCount ? currentCount : boardCount;
 	
-	for (var i = 0; i < boardCount; i++) {
-		var item = boardList[i];
-		boardHTML += "<li onclick='openDoc_section3_Type(\"" + item.itemID + "\", \"" + item.guBun + "\", \"" + item.boardID + "\")'>";
-		var startDate = item.startDate;
-		startDate = startDate.replace("-","/");
-		var writeDate = new Date(startDate);
-		
-		if (today < writeDate) {
-			boardHTML += "<span class='boardNew'>N</span>";
+	if (boardCount > 0) {
+		for (var i = 0; i < boardCount; i++) {
+			var item = boardList[i];
+			boardHTML += "<li onclick='openDoc_section3_Type(\"" + item.itemID + "\", \"" + item.guBun + "\", \"" + item.boardID + "\")'>";
+			var startDate = item.startDate;
+			startDate = startDate.replace("-","/");
+			var writeDate = new Date(startDate);
+
+			if (today < writeDate) {
+				boardHTML += "<span class='boardNew'>N</span>";
+			}
+
+			boardHTML += "<span class='txt'>" + MakeXMLString(item.title) + "</span>";
+			boardHTML += "<span class='date'>" + startDate.substring(5, 16) + "</span>";
+			boardHTML += "<span class='name'>" + item.writerName + "</span>";
+			boardHTML += "</li>";
 		}
-		
-		boardHTML += "<span class='txt'>" + MakeXMLString(item.title) + "</span>";
-		boardHTML += "<span class='date'>" + startDate.substring(5, 16) + "</span>";
-		boardHTML += "<span class='name'>" + item.writerName + "</span>";
-		boardHTML += "</li>";
+	} else {
+		boardHTML += '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + messages.strLang1 + '</dd></dl>'
 	}
+
 	$("#customBoardList" + portletId).html(boardHTML);
 }
 
@@ -107,57 +112,79 @@ function getBoardListAType(data, portletId) {
 	//boardCount = boardCount > currentCount ? currentCount : boardCount;
 
 	jPortlet.empty();
-	for (var i = 0; i < boardCount; i++) {
-		var item = boardList[i];
-		var id = item.itemID;
-		var guBun = item.guBun;
-		var boardID = item.boardID;
-		var SPLIT_DATE = ".";
-		var DEFAULT_THUMBNAIL = '/images/portal/noti_nodata.png';
 
-		var listEle = document.createElement('li');
-		(function(id, guBun, boardID) {
-			listEle.addEventListener('click', function() {
-				openDoc_section3_Type(id, guBun, boardID);
-			});
-		})(id, guBun, boardID);
-		var dlEle = document.createElement('dl');
-		listEle.appendChild(dlEle);
-		var dt = document.createElement('dt');
-		dlEle.appendChild(dt);
-		var img = document.createElement('img');
-		img.setAttribute('src', !!item.thumbnail ? item.thumbnail : DEFAULT_THUMBNAIL);
-		dt.appendChild(img);
-		var dd = document.createElement('dd');
-		dlEle.appendChild(dd);
-		var spanTitle = document.createElement('span');
-		spanTitle.classList.add('title');
-		dd.appendChild(spanTitle);
-		textNode = document.createTextNode(item.title);
-		spanTitle.appendChild(textNode);
-		var spanCont = document.createElement('span');
-		spanCont.classList.add('cont');
-		dd.appendChild(spanCont);
-		textNode = document.createTextNode(!!item.content ? item.content : '');
-		spanCont.appendChild(textNode);
-		var contSub = document.createElement('span');
-		contSub.classList.add('cont_sub');
-		dd.appendChild(contSub);
-		var spanName = document.createElement('span');
-		spanName.classList.add('name');
-		contSub.appendChild(spanName);
-		textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
-		spanName.appendChild(textNode);
-		var spanDay = document.createElement('span');
-		spanDay.classList.add('day');
-		contSub.appendChild(spanDay);
-		var date = new Date(item.startDate);
-		// format : 2024.04.09
-		textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + (date.getMonth() + 1) + SPLIT_DATE + date.getDate());
-		spanDay.appendChild(textNode);
-		$('#' + portletId + 'Portlet').find('.box_shadow').addClass('board_Atype');
-		jPortlet.append(listEle);
+	if (boardCount > 0) {
+		for (var i = 0; i < boardCount; i++) {
+			var item = boardList[i];
+			var id = item.itemID;
+			var guBun = item.guBun;
+			var boardID = item.boardID;
+			var SPLIT_DATE = ".";
+			var DEFAULT_THUMBNAIL = '/images/portal/photo_sample.png';
+
+			var listEle = document.createElement('li');
+			(function(id, guBun, boardID) {
+				listEle.addEventListener('click', function() {
+					openDoc_section3_Type(id, guBun, boardID);
+				});
+			})(id, guBun, boardID);
+			var dlEle = document.createElement('dl');
+			listEle.appendChild(dlEle);
+			var dt = document.createElement('dt');
+			dlEle.appendChild(dt);
+			var img = document.createElement('img');
+			img.setAttribute('src', !!item.thumbnail ? item.thumbnail : DEFAULT_THUMBNAIL);
+			dt.appendChild(img);
+			var dd = document.createElement('dd');
+			dlEle.appendChild(dd);
+			var spanTitle = document.createElement('span');
+			spanTitle.classList.add('title');
+			dd.appendChild(spanTitle);
+			textNode = document.createTextNode(item.title);
+			spanTitle.appendChild(textNode);
+			var spanCont = document.createElement('span');
+			spanCont.classList.add('cont');
+			dd.appendChild(spanCont);
+			textNode = document.createTextNode(!!item.content ? item.content : '');
+			spanCont.appendChild(textNode);
+			var contSub = document.createElement('span');
+			contSub.classList.add('cont_sub');
+			dd.appendChild(contSub);
+			var spanName = document.createElement('span');
+			spanName.classList.add('name');
+			contSub.appendChild(spanName);
+			textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
+			spanName.appendChild(textNode);
+			var spanDay = document.createElement('span');
+			spanDay.classList.add('day');
+			contSub.appendChild(spanDay);
+			var date = new Date(item.startDate);
+			// format : 2024.04.09
+			textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + (date.getMonth() + 1) + SPLIT_DATE + date.getDate());
+			spanDay.appendChild(textNode);
+			$('#' + portletId + 'Portlet').find('.box_shadow').addClass('board_Atype');
+			jPortlet.append(listEle);
+		}
+	} else {
+		var dlEl = document.createElement('dl');
+		dlEl.className = 'nodata';
+
+		var dtEl = document.createElement('dt');
+
+		var imgEl = document.createElement('img');
+		imgEl.src = '/images/kr/main/noData_sIcon.png';
+
+		var ddEl = document.createElement('dd');
+		ddEl.innerHTML = messages.strLang1;
+
+		dtEl.appendChild(imgEl);
+
+		dlEl.appendChild(dtEl);
+		dlEl.appendChild(ddEl);
+
+		jPortlet.append(dlEl);
 	}
+
 }
 
 function getBoardListBType(data, portletId) {
@@ -170,60 +197,81 @@ function getBoardListBType(data, portletId) {
 	//boardCount = boardCount > currentCount ? currentCount : boardCount;
 
 	jPortlet.empty();
-	for (var i = 0; i < boardCount; i++) {
-		var item = boardList[i];
-		var id = item.itemID;
-		var guBun = item.guBun;
-		var boardID = item.boardID;
-		var SPLIT_DATE = ".";
+	if (boardCount > 0) {
+		for (var i = 0; i < boardCount; i++) {
+			var item = boardList[i];
+			var id = item.itemID;
+			var guBun = item.guBun;
+			var boardID = item.boardID;
+			var SPLIT_DATE = ".";
 
-		var listEle = document.createElement('li');
-		listEle.className = 'notiLI';
-		(function(id, guBun, boardID) {
-			listEle.addEventListener('click', function() {
-				openDoc_section3_Type(id, guBun, boardID);
-			});
-		})(id, guBun, boardID);
-		var dlEle = document.createElement('dl');
-		listEle.appendChild(dlEle);
-		var dt = document.createElement('dt');
-		dlEle.appendChild(dt);
-		dt.className = 'noti_num';
-		dt.innerText = i + 1;
-		var dd = document.createElement('dd');
-		dlEle.appendChild(dd);
-		dd.className = 'noti_text';
-		var spanTitle = document.createElement('span');
-		spanTitle.classList.add('title');
-		dd.appendChild(spanTitle);
-		textNode = document.createTextNode(item.title);
-		spanTitle.appendChild(textNode);
-		var spanCont = document.createElement('span');
-		spanCont.classList.add('cont');
-		dd.appendChild(spanCont);
-		textNode = document.createTextNode(!!item.content ? item.content : '');
-		spanCont.appendChild(textNode);
-		var contSub = document.createElement('span');
-		contSub.classList.add('cont_sub');
-		dd.appendChild(contSub);
-		var spanName = document.createElement('span');
-		spanName.classList.add('name');
-		contSub.appendChild(spanName);
-		textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
-		spanName.appendChild(textNode);
-		var spanDay = document.createElement('span');
-		spanDay.classList.add('day');
-		contSub.appendChild(spanDay);
-		var date = new Date(item.startDate);
-		// format : 2024.04.09
-		textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + (date.getMonth() + 1) + SPLIT_DATE + date.getDate());
-		spanDay.appendChild(textNode);
-		var bar = document.createElement('br');
-		dd.appendChild(bar);
-		textNode = document.createTextNode(date.getHours() + ':' + date.getMinutes());
-		$('#' + portletId + 'Portlet').find('.box_shadow').addClass('board_Btype');
-		$('#customBoardList' + portletId).removeClass('portlet_list').addClass('noti_portlet_list');
-		jPortlet.append(listEle);
+			var listEle = document.createElement('li');
+			listEle.className = 'notiLI';
+			(function(id, guBun, boardID) {
+				listEle.addEventListener('click', function() {
+					openDoc_section3_Type(id, guBun, boardID);
+				});
+			})(id, guBun, boardID);
+			var dlEle = document.createElement('dl');
+			listEle.appendChild(dlEle);
+			var dt = document.createElement('dt');
+			dlEle.appendChild(dt);
+			dt.className = 'noti_num';
+			dt.innerText = i + 1;
+			var dd = document.createElement('dd');
+			dlEle.appendChild(dd);
+			dd.className = 'noti_text';
+			var spanTitle = document.createElement('span');
+			spanTitle.classList.add('title');
+			dd.appendChild(spanTitle);
+			textNode = document.createTextNode(item.title);
+			spanTitle.appendChild(textNode);
+			var spanCont = document.createElement('span');
+			spanCont.classList.add('cont');
+			dd.appendChild(spanCont);
+			textNode = document.createTextNode(!!item.content ? item.content : '');
+			spanCont.appendChild(textNode);
+			var contSub = document.createElement('span');
+			contSub.classList.add('cont_sub');
+			dd.appendChild(contSub);
+			var spanName = document.createElement('span');
+			spanName.classList.add('name');
+			contSub.appendChild(spanName);
+			textNode = document.createTextNode(!!item.writerName ? item.writerName : '');
+			spanName.appendChild(textNode);
+			var spanDay = document.createElement('span');
+			spanDay.classList.add('day');
+			contSub.appendChild(spanDay);
+			var date = new Date(item.startDate);
+			// format : 2024.04.09
+			textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + (date.getMonth() + 1) + SPLIT_DATE + date.getDate());
+			spanDay.appendChild(textNode);
+			var bar = document.createElement('br');
+			dd.appendChild(bar);
+			textNode = document.createTextNode(date.getHours() + ':' + date.getMinutes());
+			$('#' + portletId + 'Portlet').find('.box_shadow').addClass('board_Btype');
+			$('#customBoardList' + portletId).removeClass('portlet_list').addClass('noti_portlet_list');
+			jPortlet.append(listEle);
+		}
+	}
+	else {
+		var dlEl = document.createElement('dl');
+		dlEl.className = 'nodata';
+
+		var dtEl = document.createElement('dt');
+
+		var imgEl = document.createElement('img');
+		imgEl.src = '/images/kr/main/noData_sIcon.png';
+
+		var ddEl = document.createElement('dd');
+		ddEl.innerHTML = messages.strLang1;
+
+		dtEl.appendChild(imgEl);
+
+		dlEl.appendChild(dtEl);
+		dlEl.appendChild(ddEl);
+
+		jPortlet.append(dlEl);
 	}
 }
 

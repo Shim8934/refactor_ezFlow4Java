@@ -237,9 +237,52 @@
 			                window.opener.refresh_onclick();
 			            } catch (e) {
 			            }
-						if(parent.opener.search != undefined){
-							parent.opener.search('skip');
-						}
+			            
+			            try { // 카드 A형, 카드 B형, 리스트형 포틀릿 새로고침
+				            if (parent.opener.refreshBordPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.refreshBordPortletInfo(portletId);
+				            		}
+				            	}
+				            }
+	                 	} catch (e) {console.log(e);}
+	                 	
+	                 	try { // 탭게시판  포틀릿 새로고침
+	                 		if (parent.opener.refreshAndChangeTab != undefined) {
+	                 			var tabBoardList = parent.opener.document.getElementsByClassName('tabBoard');
+	                 			
+	                 			for (var j = 0; j < tabBoardList.length; j++) {
+	                 				var tabPortletId = tabBoardList[j].querySelector('.tabBoardPorlet').value;
+		                 			var tabBoardIdList = parent.opener.portletInfoMap["portlet" + tabPortletId].tabBoardIdList;
+		                 			
+		                 			if (tabBoardIdList.indexOf(pBoardID) > -1) {
+		                 				var activeTabId = parent.opener.portletInfoMap["portlet" + tabPortletId].activeTabId;
+			                 			var tabNode = tabBoardList[j].querySelector("#" + activeTabId + 'Tab');
+			                 			parent.opener.refreshAndChangeTab(tabPortletId, activeTabId);
+		                 			}
+	                 			}
+	                 		}
+	                 	} catch (e) {console.log(e);}
+	                 	
+	                 	try { // 즐겨찾기 포틀릿 새로고침
+				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+								parent.opener.getBoardList_NewBoardSTD();
+							}
+	                 	} catch (e) {console.log(e);}
+			            
+	                 	try {
+							if(parent.opener.search != undefined){
+								parent.opener.search('skip');
+							}
+	                 	} catch (e) {console.log(e);}
 			            window.close();
 				    }
 				}

@@ -20,6 +20,8 @@ function initFavoritePortlet(portletId) {
 	newObj.paging = {};
     portletInfoMap["portlet" + portletId] = newObj;
     favoriteObj.portletId = portletId;
+    
+    document.getElementById(portletId + "Portlet").querySelector('.favoriteBoardPorlet').value = portletId;
     getTabList(portletId);
 }
 

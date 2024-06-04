@@ -9,11 +9,14 @@ function initTabPortletInfo(portletId) {
     tabBoardObj.portletCode = "tabBoard";
     tabBoardObj.activeTabId = "";
     tabBoardObj.tabIdList = [];
+    tabBoardObj.tabBoardIdList = [];
     tabBoardObj.paging = {};
     portletInfoMap["portlet" + portletId] = tabBoardObj;
     tabBoardPortletObj.portletId = portletId;
     
-	getTabBoard(portletId);
+    document.getElementById(portletId + "Portlet").querySelector('.tabBoardPorlet').value = portletId;
+    getTabBoard(portletId);
+    
 }
 
 function getTabBoardPagePerCount(portletId) {
@@ -49,6 +52,10 @@ var getTabBoard = function (portletId) {
                 loadTabBoard(result.tabBoardId1, result.tabBoard1, result.tabBoardName1, 1);
                 document.getElementById('tabBoardBtnDiv').style.display = "block";
             } else {
+            	var notExistenceElemes = document.getElementById(portletId + "Portlet").querySelectorAll('#notexistence');
+            	for (var i = 0; i < notExistenceElemes.length; i++) {
+            		notExistenceElemes[i].style.display = "block";
+            	}
             	document.getElementById('tabBoardBtnDiv').style.display = "none";
             }
             
@@ -64,6 +71,55 @@ var getTabBoard = function (portletId) {
     };
     request.send();
 }
+
+function refreshAndChangeTab (portletId, tabId) {
+	var tabBoardInfoObj = portletInfoMap["portlet" + portletId];
+	tabBoardInfoObj.paging = {};
+	tabBoardInfoObj.tabIdList = [];
+	tabBoardInfoObj.tabBoardIdList = [];
+	
+	var request = new XMLHttpRequest();
+    request.open('GET', '/ezNewPortal/getTabBoardPortlet.do', true);
+    request.setRequestHeader('Content-Type', 'application/json');
+    
+    request.onload = function () {
+        if (request.status >= 200 && request.status < 400) {
+            var result = JSON.parse(request.responseText);
+            portletLang = result.portletLang;
+            var docsHTML = "";
+            var subDocsHTML = "";
+            
+            if (result.existence == "true") {
+                allDisplayNone('#notexistence');
+                allDisplayNone('#tabBoard .portletText');
+                loadTabBoard(result.tabBoardId3, result.tabBoard3, result.tabBoardName3, 3);
+                loadTabBoard(result.tabBoardId2, result.tabBoard2, result.tabBoardName2, 2);
+                loadTabBoard(result.tabBoardId1, result.tabBoard1, result.tabBoardName1, 1);
+                document.getElementById('tabBoardBtnDiv').style.display = "block";
+            } else {
+            	var notExistenceElemes = document.getElementById(portletId + "Portlet").querySelectorAll('#notexistence');
+            	for (var i = 0; i < notExistenceElemes.length; i++) {
+            		notExistenceElemes[i].style.display = "block";
+            	}
+            	document.getElementById('tabBoardBtnDiv').style.display = "none";
+            }
+            
+            document.getElementById('tabBoardPortletName').style.border = "none";
+            giveTooltipTitle("#tabBoard .txt");
+        } else {
+            // We reached our target server, but it returned an error
+        }
+        
+        var tabNode = document.getElementById(portletId + "Portlet").querySelector("#" + tabId + 'Tab');
+        tapBoardChangeTab(tabNode, tabId);
+    };
+
+    request.onerror = function () {
+        // There was a connection error of some sort
+    };
+    request.send();
+}
+
 // 게시판 활성(스트링, 데이터, 스트링, 정수)
 function loadTabBoard(rtabBoardId, tabBoard, tabBoardName, tabId) {
 	var portletId = tabBoardPortletObj.portletId;
@@ -81,6 +137,7 @@ function loadTabBoard(rtabBoardId, tabBoard, tabBoardName, tabId) {
 	
     if (typeof tabBoard != "undefined" && tabBoard != null) {
     	portletInfoMap["portlet" + portletId].tabIdList.push(tabBoardListId);
+    	portletInfoMap["portlet" + portletId].tabBoardIdList.push(rtabBoardId);
     	
         var tabDocsHTML = "";
 

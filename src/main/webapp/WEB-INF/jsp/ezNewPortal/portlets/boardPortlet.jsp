@@ -40,7 +40,7 @@ $(function() {
 				 -->
 			</dl>
 			<c:choose>
-			<c:when test="${not empty boardList}">
+			<c:when test="${access eq true}">
 			<ul id="customBoardList<c:out value='${portletId }'/>" class="portlet_list two_line portletPagingArea">
 			</ul>
 			</c:when>
@@ -54,16 +54,6 @@ $(function() {
 						</dl>
 					</ul>
 			</c:when>
-			<c:otherwise>
-					<ul class="portlet_list portletPagingArea">
-						<dl class="nodata">
-							<dt>
-								<img src="/images/kr/main/noData_sIcon.png">
-							</dt>
-							<dd><spring:message code='ezNewPortal.t018' /></dd>
-						</dl>
-					</ul>
-			</c:otherwise>
 			</c:choose>
 		</div>
 		<div class="portletPageNav">
