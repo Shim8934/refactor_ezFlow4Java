@@ -155,7 +155,8 @@ function changePortletSize(pot, size) {
     userPortletUpdateWithSize(usedTheme);
     
     var portletPagingArea = pot.querySelectorAll('.portletPagingArea');
-    if (portletPagingArea) { // 포틀릿 페이지네이션 처리
+    if (portletPagingArea != null && portletPagingArea.length > 0) { // 포틀릿 페이지네이션 처리
+    	console.log("Ddd");
     	changePortletViewCount(pot.id.replace('Portlet',''), portletPagingArea);
     }
 }
