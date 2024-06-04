@@ -159,12 +159,12 @@ header {height:60px; background-color:#ffffff; box-sizing:border-box; position:r
 .util li span{margin-top:17px; display:inline-block; width:24px; height:24px; background-repeat:no-repeat; cursor:pointer; position:relative;}
 .util li span:not(.icon_topmenu){background-position:center;}
 .util li span.util_alarm{background-image:url(/images/ezNewPortal/util_alarm.svg); background-size:19px 21px;}
-.util li span.util_alarm span{position:absolute; width:6px; height:6px; border:1px solid #fff; border-radius:50%; background:#ff9100; margin:0; right:0; top:0; overflow:hidden; text-indent:-9999px;}
+.util li span.util_alarm span{position:absolute; width:6px; height:6px; border:1px solid #fff; border-radius:50%; background:#ff9100; margin:0; right:0; top:0; display:none;}
 .util li span.util_set{background-image:url(/images/ezNewPortal/util_set.svg);}
 .util li span.util_employee_search{background-image:url(/images/ezNewPortal/util_employee_search.svg); background-size:20px 20px;}
 .util li span.util_logout{background-image:url(/images/ezNewPortal/util_logout.svg);}
 .util li span.util_quick_menu{background-image:url(/images/ezNewPortal/util_quick_menu.svg); background-size:23px 23px;}
-.util li span.util_admin{background-image:url(../../images/ezNewPortal/util_admin.svg); background-size:20px 22px;}
+.util li span.util_admin{background-image:url(/images/ezNewPortal/util_admin.svg); background-size:20px 22px;}
 
 .util li span.util_profile {display: inline-block; width: 28px; height: 28px; margin: 16px 30px 0 20px; position: relative;}
 .util li span.util_profile:before {content: ""; position: absolute; width: 1px; height: 16px; background: #DDDDDD; left: -20px; top: 6px;}

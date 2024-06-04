@@ -172,23 +172,6 @@
 					str += '<p class=\"desc\"><span>' + noti.senderName + '&nbsp;</span><span class=\"date\">' + noti.regDate.substring(0, 19) + '</span></p></div>';
 					str += '<span class=\"list_del blind\" onclick="updateNoti(\'delete\')"></span></li>';
 					
-					/*var noti = notiList[i];
-					str += noti.isRead == "Y" ? '<li class = \"off\" ' : '<li class = \"\" ';
-					str += 'onclick=\"updateNoti(\'read\'); openLink();\" ';
-					str += 'notiseq=\"' + noti.notiSeq +'\" viewtype=\"' + noti.viewType + '\" viewwidth=\"' + noti.viewWidth + '\" viewheight=\"' + noti.viewHeight + '\" ';
-					str += 'linkurl=\"' + noti.linkUrl + '\" isread=\"' + noti.isRead + '\" mainType=\"' +noti.mainType.toLowerCase() + '\">'
-					str += '<i class=\"ico noti-' + noti.mainType.toLowerCase();
-					str += noti.isRead == "Y" ? ' off\"></i>' : '\"></i>';
-					str += '<div class=\"notiInfo\">'
-					str += '<p class=\"tit ellipsis2\">'
-					if (noti.mainType.toLowerCase() != "etc") {
-						str += '<em>[' + mainType[noti.mainType.toLowerCase()] + ']</em>';
-						str += noti.subType != "" ? '[' + subType[noti.mainType.toLowerCase()][noti.subType.toLowerCase()] + '] ' : ' ';
-					}
-					str += noti.notiContent + '</p>';
-					str += '<p class=\"desc\"><span>' + noti.senderName + '</span><span>' + noti.regDate.substring(0, 19) + '</span></p></div>';
-					str += '<span class=\"delete blind\" onclick="updateNoti(\'delete\')"></span></li>';
-					*/
 				}
 		
 			}
@@ -206,11 +189,20 @@
 					notiElem = topFrame.contentWindow.document.querySelector('#util_noti > span #notiin');
 				}
 	            
+	            /* 알림 개수 표출 시 필요하면 사용
 				if (parseInt(result.notReadTotalListCnt) >= 100) {
 					result.notReadTotalListCnt = "99+";
 				}
 	
 	            if (!!notiElem) notiElem.textContent = result.notReadTotalListCnt;
+	            */ 
+	            if (!!notiElem) {
+	            	if (result.notReadTotalListCnt > 0) {
+	            		notiElem.style.display = "block";
+	            	} else {
+	            		notiElem.style.display = "none";
+	            	}
+	            }
 				
 			}, 3000);
 		} catch (error) {
