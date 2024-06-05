@@ -84,6 +84,7 @@ function getPhotoPortletList() {
 	})
 }
 
+/*
 function photoBoardMovePage(event) {
 	var isNext = false;
 	
@@ -132,6 +133,7 @@ function photoBoardMovePage(event) {
 		}
 	})
 }
+*/
 
 function viewPhotoBoardList() {
 	var boardId = $(".photo_board").find(".portletText").attr("data1");

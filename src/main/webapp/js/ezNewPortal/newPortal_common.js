@@ -233,8 +233,10 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 					.done(function (script, textStatus) {
 						try {
 							initPhotoBoardPortlet(portletId);
+							/*
 							$("#" + portletId + "Portlet").find(".nextBtn").on("click", {isNext: true}, photoBoardMovePage);
 							$("#" + portletId + "Portlet").find(".preBtn").on("click", {isNext: false}, photoBoardMovePage);
+							*/
 							$("#" + portletId + "Portlet").find("#photoBoardPlus").on("click", viewPhotoBoardList);
 						} catch (err) {
 							console.log(err);
