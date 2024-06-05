@@ -92,7 +92,7 @@ function getBoardList(data, portletId) {
 			}
 
 			boardHTML += "<span class='txt'>" + MakeXMLString(item.title) + "</span>";
-			boardHTML += "<span class='date'>" + startDate.substring(5, 16) + "</span>";
+			boardHTML += "<span class='date'>" + startDate.substring(5, 16).replace("-",".") + "</span>";
 			boardHTML += "<span class='name'>" + item.writerName + "</span>";
 			boardHTML += "</li>";
 		}
@@ -160,7 +160,13 @@ function getBoardListAType(data, portletId) {
 			contSub.appendChild(spanDay);
 			var date = new Date(item.startDate);
 			// format : 2024.04.09
-			textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + (date.getMonth() + 1) + SPLIT_DATE + date.getDate());
+			var dateMonth = date.getMonth() + 1;
+            var dateDay = date.getDate();
+            
+            dateMonth = tenMin(dateMonth);
+            dateDay = tenMin(dateDay);
+            
+			textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + dateMonth + SPLIT_DATE + dateDay);
 			spanDay.appendChild(textNode);
 			$('#' + portletId + 'Portlet').find('.box_shadow').addClass('board_Atype');
 			jPortlet.append(listEle);
@@ -247,25 +253,22 @@ function getBoardListBType(data, portletId) {
 			// format : 2024.04.09
 			var dateMonth = date.getMonth() + 1;
             var dateDay = date.getDate();
-            var dateTime = document.createTextNode(date.getHours() + ":" + date.getMinutes());
+            var dateHour = date.getHours();
+            var dateMinute = date.getMinutes();
+                        
+            dateMonth = tenMin(dateMonth);
+            dateDay = tenMin(dateDay);
+            dateHour = tenMin(dateHour);
+            dateMinute = tenMin(dateMinute);
+            
+            var dateTime = document.createTextNode(dateHour + ":" + dateMinute);
             var br = document.createElement("br");
             
-            if (dateMonth < 10) {
-                dateMonth = "0" + dateMonth;
-            }
+            textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + dateMonth + SPLIT_DATE + dateDay);
+            spanDay.appendChild(textNode);
+            spanDay.appendChild(br);
+            spanDay.appendChild(dateTime);
             
-            if (dateDay < 10) {
-                dateDay = "0" + dateDay;
-            }
-            
-			textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + dateMonth + SPLIT_DATE + dateDay);
-            
-			spanDay.appendChild(textNode);
-			spanDay.appendChild(br);
-			spanDay.appendChild(dateTime);
-			// var bar = document.createElement('br');
-			// dd.appendChild(bar);
-			textNode = document.createTextNode(date.getHours() + ':' + date.getMinutes());
 			$('#' + portletId + 'Portlet').find('.box_shadow').addClass('board_Btype');
 			$('#customBoardList' + portletId).removeClass('portlet_list').addClass('noti_portlet_list');
 			jPortlet.append(listEle);
@@ -415,4 +418,11 @@ function changeBoardViewCount(portletId) {
 	var ob = boardOb[portletId];
 	ob.page.changeCount(getCurrentCount(portletId));
 	refreshBordPortletInfo(portletId);
+}
+
+function tenMin (tResult) {
+    if (tResult < 10) {
+        tResult = "0" + tResult;
+    }
+    return tResult;
 }
