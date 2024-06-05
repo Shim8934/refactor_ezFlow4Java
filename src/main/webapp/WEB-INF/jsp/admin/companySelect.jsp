@@ -1,0 +1,49 @@
+<span class="title_bar"><img src="/images/name_bar.gif"></span>
+<label for="ListCompany" style="display: none;"></label>
+<select class="companySelect" id="ListCompany"></select>
+<script>
+    // 선택된 회사값 :selectedCompany
+    // 변경시 함수 : changeCompany(회사id) 함수로 선언하면 select 변경시 실행
+    var selectedCompany = "";
+    (function () {
+        var request = new XMLHttpRequest();
+        request.open('GET', '/admin/ezNewPortal/getCompanies.do', false);
+        request.setRequestHeader('Content-Type', 'application/json');
+        var companiesHTML = "";
+
+        request.onload = function () {
+            if (request.status >= 200 && request.status < 400) {
+                var result = JSON.parse(request.responseText);
+                console.log(result);
+
+                var userCompany = result.userCompany;
+                var companyList = result.list;
+                var select = document.getElementById("ListCompany");
+
+                companyList.forEach(function (item) {
+                    var optionElement = document.createElement("option");
+                    optionElement.value = item.cn;
+                    optionElement.text = item.displayName;
+                    if (item.cn === userCompany) {
+                        optionElement.selected = true;
+                    }
+                    select.appendChild(optionElement);
+                });
+
+                select.onchange = function () {
+                    selectedCompany = select.options[select.selectedIndex].value;
+
+                    if (typeof window['changeCompany'] === 'function') {
+                        window['changeCompany'](selectedCompany);
+                    }
+                };
+            }
+        };
+
+        request.onerror = function () {
+            console.log("getCompanies failed");
+        };
+
+        request.send();
+    })();
+</script>
