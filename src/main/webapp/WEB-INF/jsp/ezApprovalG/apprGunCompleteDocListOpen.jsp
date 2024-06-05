@@ -63,7 +63,7 @@
 	  	</script>
 </head>
 <body class="popup">
-	<h1>[ <c:out value ='${cabinetName}'/> ] <spring:message code='ezApprovalG.yjyg01' /></h1>
+	<h1>[ <c:out value ='${cabinetName}'/> ] <spring:message code='ezApprovalG.yjyg01' /> (* <spring:message code='ezApprovalG.apprCablist.mjs01' /> )</h1>
 		<div id="close">
             <ul>
                 <li><span id="btnCancel" onclick="return btnCancel_onclick()"></span></li>
