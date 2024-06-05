@@ -94,7 +94,7 @@ function getBirthdayList() {
 				birth = "0" + birth;
 			}
 			
-			$("#curMonth").text(birth);
+			// $("#curMonth").text(birth);
 			
 			if (birthdayList != null && birthdayList != undefined && birthdayList.length > 0) {
 				$("#nodata_NewBirthday").css("display", "none");
