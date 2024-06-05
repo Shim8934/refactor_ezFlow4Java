@@ -434,13 +434,36 @@
 						taskcode = '99999999')
 			]]>
 		</isNotEqual>
-		
-		<![CDATA[
+		<isNotEmpty property="title">
+			AND
+			TASKNAME LIKE CONCAT(CONCAT('%', #title#), '%')
+		</isNotEmpty>
+		<isNotEmpty property="code">
+			AND
+			TASKCODE LIKE CONCAT(CONCAT('%', #code#), '%')
+		</isNotEmpty>
+		<isEmpty property="v_ORDEROPTION1">
 			ORDER BY
 				taskcode ASC
+		</isEmpty>
+		<isNotEmpty property="v_ORDEROPTION1">
+			ORDER BY
+			<isEqual property="v_ORDEROPTION1" compareValue="PROCESSDEPTNAME">PROCESSDEPTNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="TASKNAME">TASKNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="TASKCODE">TASKCODE</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="TEMPFLAG">TEMPFLAG</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="CNAME">CNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="MCNAME">MCNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="SCNAME">SCNAME</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="KEEPINGPERIOD">KEEPINGPERIOD</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="KEEPINGMETHOD">KEEPINGMETHOD</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="KEEPINGPLACE">KEEPINGPLACE</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="DISPLAYRECFLAG">DISPLAYRECFLAG</isEqual>
+			<isEqual property="v_ORDEROPTION1" compareValue="SPECIALCATALOGFLAG">SPECIALCATALOGFLAG</isEqual>
+			<isNotEmpty property="v_ORDEROPTION2">DESC</isNotEmpty>
+		</isNotEmpty>
 			limit
 				#startRow#, #pageSize#
-		]]>
 	</select>
 
 	<select id="EzApprovalGAdmin.getTaskListCount" parameterClass="Map" resultClass="int">

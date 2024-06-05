@@ -34,6 +34,9 @@
 		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var taskCount = "<c:out value='${taskCount}'/>"; // 단위업무 전체 갯수
 		    var pageAdminFlag = 'user'
+		    var searchTitle = '';
+            var searchCode = '';
+            var searchFlag = '';
 		    
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -79,6 +82,32 @@
      			   }
 		        }
 		    }
+		    function lvtDoclist_HeaderClick(pHeader) {
+                if (OrderCell == pHeader) {
+                    if (OrderOption == "")
+                        OrderOption = "DESC";
+                    else
+                        OrderOption = "";
+                }
+                else {
+                    OrderCell = pHeader;
+                    OrderOption = "";
+                }
+                    SortList(pHeader);
+            }
+
+            function SortList(szField) {
+                if (g_SortField == szField)
+                {
+                    g_SortType = GetToggledSotrType();
+                }
+                else {
+                    g_SortType = "ASC";
+                }
+                g_SortField = szField;
+
+                GetTaskFullList();
+            }
 		    function btnClose_onclick() {
 		        window.close();
 		    }
