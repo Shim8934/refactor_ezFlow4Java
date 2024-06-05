@@ -67,7 +67,7 @@
 	        			document.getElementById("AddressFolderXML").innerHTML = data;
 	        			LoadAddressTree();
 	        		}, error : function(ee) {
-	        			alert("error: " + ee.statusText);
+	        			alert("error: " + ee.status);
 	        		}
 	        	});
 

@@ -290,7 +290,7 @@
 	                    DisplayUserImageList();
 	                }
 	                else
-	                    alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.status)
 
 	            g_xmlHTTP = null;
 	        }
@@ -674,7 +674,7 @@
 	                }
 	            }
 	            else
-	                alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.statusText)
+	                alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.status)
 
 	            g_xmlHTTP = null;
 	        }
@@ -767,7 +767,7 @@
 	                treeView.DataBind("TreeView");
 	            }
 	            else {
-	                alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.statusText)
+	                alert("<spring:message code='ezPortal.t14'/>" + g_xmlHTTP.status)
 	                g_xmlHTTP = null;
 	            }
 	        }

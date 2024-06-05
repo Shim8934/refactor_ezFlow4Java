@@ -340,7 +340,7 @@
 		                makePageSelPage();
 		            }
 		            else
-		                alert("<spring:message code="ezResource.t2"/>" + g_xmlHTTP.statusText);
+		                alert("<spring:message code="ezResource.t2"/>" + g_xmlHTTP.status);
 		            g_xmlHTTP = null;
 		        }
 		    }
@@ -419,7 +419,7 @@
 		                    makePageSelPage();
 		                }
 		            } else {
-		            	alert("<spring:message code="ezResource.t4"/>" + g_xmlHTTP.statusText)
+		            	alert("<spring:message code="ezResource.t4"/>" + g_xmlHTTP.status)
 		            }
 		            g_xmlHTTP = null;
 		        }
@@ -524,7 +524,7 @@
 		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 		                treeView.DataBind("TreeView");
 		            } else {
-		                alert("<spring:message code="ezResource.t6"/>" + g_xmlHTTP.statusText)
+		                alert("<spring:message code="ezResource.t6"/>" + g_xmlHTTP.status)
 		                g_xmlHTTP = null;
 		            }
 		        }

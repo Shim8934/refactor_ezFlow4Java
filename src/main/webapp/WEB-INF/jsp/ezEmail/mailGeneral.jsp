@@ -155,7 +155,7 @@
 				    if (xmlHTTP.status == 200)
 				        alert("<spring:message code='ezEmail.t42' />");
 				    else
-				        alert("<spring:message code='ezEmail.t176' />" + xmlHTTP.statusText);
+				        alert("<spring:message code='ezEmail.t176' />" + xmlHTTP.status);
 				}
 			}
 			

@@ -738,7 +738,7 @@
 	                	treeView.DataSource(g_xmlHTTP.responseXML);
 	                	treeView.DataBind("TreeView");
 	            	} else {
-	                	alert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.statusText)
+	                	alert("<spring:message code='ezPersonal.t17'/>" + g_xmlHTTP.status)
 	                	g_xmlHTTP = null;
 	            	}
 	        	}

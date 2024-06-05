@@ -291,7 +291,7 @@
 			       		})
 			       	},
 			       	error : function(jqXHR, textStatus, errorThrown) {
- 			  			alert("에러발생! " + jqXHR.status + ", " + jqXHR.statusText + ", " + jqXHR.readyState);
+ 			  			alert("에러발생! " + jqXHR.status + ", " + jqXHR.readyState);
 					}
 				})
 	    		

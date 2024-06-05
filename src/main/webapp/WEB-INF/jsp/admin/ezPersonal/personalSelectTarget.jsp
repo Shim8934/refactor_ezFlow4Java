@@ -97,7 +97,7 @@
 		                treeView.DataSource(g_xmlHTTP.responseXML);
 		                treeView.DataBind("TreeView");
 		            } else {
-		                alert("<spring:message code = 'ezPersonal.t17' />" + g_xmlHTTP.statusText);
+		                alert("<spring:message code = 'ezPersonal.t17' />" + g_xmlHTTP.status);
 		                g_xmlHTTP = null;
 		            }
 		        }
@@ -565,8 +565,8 @@
 		        try {
 		            xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
 		            xmlHTTP.send(xmlDOM);
-		            if (xmlHTTP.statusText != "OK") {
-		                alert("<spring:message code = 'ezPersonal.t24' />" + xmlHTTP.statusText);
+		            if (xmlHTTP.status != 200) {
+		                alert("<spring:message code = 'ezPersonal.t24' />" + xmlHTTP.status);
 		                xmlDOM = null;
 		                xmlHTTP = null;
 		            }

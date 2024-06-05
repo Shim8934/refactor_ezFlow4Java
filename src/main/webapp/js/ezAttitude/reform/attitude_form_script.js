@@ -50,7 +50,7 @@ function getHolidayCnt(startDate, endDate, isAjax) {
             returnCnt = Number(result.length);
          },
          error : function(jqXHR, textStatus, errorThrown) {
-            alert("에러발생! " + jqXHR.status + ", " + jqXHR.statusText + ", " + jqXHR.readyState);
+            alert("에러발생! " + jqXHR.status + ", " + jqXHR.readyState);
          }
       })
    } else {
@@ -121,7 +121,7 @@ function getDisabledDays(searchYear, searchMonth) {
          })
       },
       error : function(jqXHR, textStatus, errorThrown) {
-         alert("에러발생! " + jqXHR.status + ", " + jqXHR.statusText + ", " + jqXHR.readyState);
+         alert("에러발생! " + jqXHR.status + ", " + jqXHR.readyState);
       }
    })
 }
@@ -345,7 +345,7 @@ function setAnnualCntInfo_complete() {
       		})
       	},
       	error : function(jqXHR, textStatus, errorThrown) {
-  			alert("에러발생! " + jqXHR.status + ", " + jqXHR.statusText + ", " + jqXHR.readyState);
+  			alert("에러발생! " + jqXHR.status + ", " + jqXHR.readyState);
 		}
 	})
 
