@@ -530,6 +530,8 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .portlet.two_by_one .schedule_calendar.box_shadow{width:100% !important; height:50% !important; border:none !important; border-bottom:1px solid #EFEFEF !important;}
 .portlet.one_by_one .schedule_scheduleList.box_shadow{width:100% !important;}
 .portlet.two_by_one .schedule_scheduleList.box_shadow{width:100% !important; height:50% !important;}
+.portlet_cal{display:none;}
+.portlet.one_by_one .portlet_cal{display:block;}
 
 .schedule_scheduleList.box_shadow.today{width:100% !important; border:1px solid #EFEFEF; border-radius:12px;}
 .schedule_scheduleList.box_shadow.today h3{height:40px; line-height:26px; color:#333; font-size:18px; font-weight:bold; margin:0; text-align:center;}
@@ -1851,7 +1853,8 @@ div.orbit img{border-radius: 5px;}
 .noti_list li .list_info .desc span{color:#999; font-size:14px; font-weight:500;}
 
 .noti_list li:hover{background:#efefef;}
-.noti_list li.read .type_img{background-color:#B0B0B0;}
+.noti_list li.read i{background-color:#B0B0B0 !important;}
+.noti_list li.read .list_info .title{font-weight:normal;}
 .noti_list li i.icon_mail{background-image:url(/images/lnb/lnb_mail_on.svg); background-size:18px 14px;}
 .noti_list li i.icon_approval{background-image:url(/images/lnb/lnb_approval_on.svg); background-size:16px 18px;}
 .noti_list li i.icon_schedule{background-image:url(/images/lnb/lnb_schedule_on.svg); background-size:18px 20px;}

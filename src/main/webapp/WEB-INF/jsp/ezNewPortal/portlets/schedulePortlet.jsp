@@ -29,6 +29,9 @@
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
 									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 								</dd>
+								<dd class="portletPlus portlet_cal" style="position: relative; z-index: 999;">
+									<img src="/images/ezNewPortal/portlet_cal.png">
+								</dd>
 							</dl>
 							<div id="scheduleList" class="sschedule_list">
 							</div>
