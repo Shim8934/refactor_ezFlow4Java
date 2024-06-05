@@ -295,9 +295,13 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .noti_portlet_list .notiLI .noti_text{margin:35px 0px 5px 0px; padding:0; font-size:14px; color:#333333; height:83px; line-height:20px; width:100%; box-sizing:border-box;white-space:normal; text-overflow:ellipsis;overflow:hidden;word-wrap:break-word; -webkit-line-clamp:4; -webkit-box-orient:vertical; display:-webkit-box; font-weight:bold;}
 .noti_portlet_list .notiLI .noti_text .cont_sub .name{display:block; text-align:right; font-weight:500;}
 .noti_portlet_list .notiLI .noti_date{margin:0; text-align: right; color:#838383; font-size:13px;}
-.noti_portlet_list .notiLI .noti_nodata{background:url(../../images/ezNewPortal/noti_nodata.svg) no-repeat center #F7F7F7 !important; cursor:default;}
+.noti_portlet_list .notiLI .noti_nodata{background:url(../../images/ezNewPortal/noti_nodata.svg) no-repeat center / 34px 34px #F7F7F7 !important; cursor:default;}
 .portlet_list li.notiLI02{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
 .portlet_list li.notiLI03{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
+
+#theme3Body .noti_portlet_list .notiLI:nth-child(3n) dl{background:#D6DEF2;}
+#theme3Body .noti_portlet_list .notiLI:nth-child(3n-1) dl{background:#DFF7DB;}
+#theme3Body .noti_portlet_list .notiLI:nth-child(3n-2) dl{background:#D4E9EF;}
 
 
 .portlet.two_by_one .noti_portlet_list .notiLI dl{height:230px;}
@@ -523,9 +527,9 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .portlet_schedule{background:#ffffff;}
 
 .portlet.one_by_one .schedule_calendar.box_shadow{display:none !important;}
-.portlet.two_by_one .schedule_calendar.box_shadow{width:100% !important; height:50%; border:none; border-bottom:1px solid #EFEFEF;}
+.portlet.two_by_one .schedule_calendar.box_shadow{width:100% !important; height:50% !important; border:none !important; border-bottom:1px solid #EFEFEF !important;}
 .portlet.one_by_one .schedule_scheduleList.box_shadow{width:100% !important;}
-.portlet.two_by_one .schedule_scheduleList.box_shadow{width:100% !important; height:50%;}
+.portlet.two_by_one .schedule_scheduleList.box_shadow{width:100% !important; height:50% !important;}
 
 .schedule_scheduleList.box_shadow.today{width:100% !important; border:1px solid #EFEFEF; border-radius:12px;}
 .schedule_scheduleList.box_shadow.today h3{height:40px; line-height:26px; color:#333; font-size:18px; font-weight:bold; margin:0; text-align:center;}
@@ -1307,6 +1311,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 /*#theme3Body .noti_portlet_list .notiLI .noti_text{margin-top:5px; margin-bottom:35px;}*/
 
 #theme3Body .noti_portlet_list .notiLI dl{position:relative;}
+#theme3Body .noti_portlet_list .notiLI .noti_nodata{background-color:#f0f0f0 !important;}
 
 #theme3Body .bookmark > li{background-color:rgba(255,255,255,0.7);}
 
@@ -1458,8 +1463,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .writebanner_leftContents{background: none;}
 #theme3Body .writebanner_leftContents dl dt span.iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon.png) left top no-repeat; background-position:2px 2px;}
 #theme3Body .writebanner_rightContents{float:left; height:100%; background: none;}
-#theme3Body .schedule_calendar.box_shadow{width:50%; box-shadow:none; border:none; border-right:1px solid #EFEFEF;}
-#theme3Body .schedule_scheduleList.box_shadow{width:50%; box-shadow:none;}
+#theme3Body .schedule_calendar.box_shadow{width:50%; box-shadow:none; border:none; border-right:1px solid #EFEFEF; border-radius:0;}
+#theme3Body .schedule_scheduleList.box_shadow{width:50%; box-shadow:none; border-radius:0;}
 #theme3Body .schedule_scheduleList{float:right; width:54%; border-left:0 !important;}
 #theme3Body .portlet_schedule{background:none;}
 #theme3Body .groupware_bannerWrap{float:right; width:calc(100% - 237px); height:250px; margin:0px; padding:0px; background:none;}
@@ -1470,7 +1475,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme3Body .weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:15px; text-align:left;} */
 #theme3Body .layDIV .error_content {height:100%; background:#ffffff;}
 
-/* #theme3Body .comPic{ width:180px; margin:0 auto;} */
 
 #theme3Body .my_info_wrap{background:rgba(255,255,255,0.3); border-color:transparent;}
 #theme3Body .top_info_area ul{background:rgba(255,255,255,0.3); border-color:transparent;}
@@ -1746,7 +1750,6 @@ div.orbit img{border-radius: 5px;}
 /* .sscheduleUL .scheduleLi{background: #e4e7f7; border-radius: 5px;} */
 
 .presentTime .timeTxt span{padding-left: 35px;}
-#theme3Body .portlet_title .portletText{font-weight: 500; color: #000;}
 #theme3Body .aside_quick .quickmenu_title{background: rgba(255, 255, 255, 0.5); color: #000; border-bottom: 1px solid #C5E5E5;}
 #theme3Body .aside_quick .quickmenu li{border-bottom: none;}
 #theme3Body .aside_link .linkBtn{background: #B3C3CF;}
