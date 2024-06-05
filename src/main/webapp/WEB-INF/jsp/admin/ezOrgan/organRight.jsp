@@ -175,6 +175,10 @@
 			    treeView.LoadFromID("FromTreeView");
 			    var selnode = treeView.GetSelectNode();
 			    DeptID = selnode.GetNodeData("CN");
+				document.getElementById("organSelectDeptNM").innerHTML =
+						"<span>[</span><span id='spn_deptName' title='" + MakeXMLString(selnode.GetNodeData("VALUE")) + "'>" + MakeXMLString(selnode.GetNodeData("VALUE")) + "&nbsp;&nbsp;</span>"
+						+ "<span id='countInfo' style='color:#017BEC;'></span><span>]</span>";
+				organSelectDeptNM.setAttribute("countinfo"," ")
 			    displayUserList(DeptID);
 			}
 			
@@ -182,10 +186,16 @@
 			    return;
 			}			
 			
+			var tempDeptID = "";
+			var totalUserCount = "";
 			function displayUserList(DeptID){
 				var cellContent;
 				var typeContent;
 
+				if (DeptID != undefined) {
+					tempDeptID = DeptID;
+				}
+				
 				if (listOpt1.checked == true){
 					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10";
 					typeContent = "userWithMasterAdmin";
@@ -242,6 +252,7 @@
 
 				        if (CrossYN()) {
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+							totalUserCount = xmlRtn.getElementsByTagName('ROW').length;
 				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
 				            	if($(this).find("DATA3").text() == "addJob"){
 				            		var orgPosition = $(this).find("CELL").eq(4).find("VALUE").text();
@@ -252,6 +263,7 @@
 				            headerData.documentElement.appendChild(Node);
 				        }else{
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+							totalUserCount = xmlRtn.getElementsByTagName('ROW').length;
 				            headerData.documentElement.appendChild(xmlRtn);
 				        }
 		                document.getElementById("OrganListView").innerHTML = "";
@@ -264,6 +276,7 @@
 						pUserList.SetHeightFree(true);
 						pUserList.DataSource(headerData);
 						pUserList.DataBind("OrganListView");
+						$(".countColor").text(totalUserCount);
 						if (listOpt1.checked == true) {
 							sawonDataParsing();
 						}
@@ -273,8 +286,52 @@
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t2'/>" + error);	
 					}
-				});	
-			}			
+				});
+
+				$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : tempDeptID
+					},
+					success : function(result) { // && !pSeach 
+						if (organSelectDeptNM.getAttribute("countinfo") != "1") {
+							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+							var strIsLeaf = $("div#" + id + "").attr("isleaf");
+
+							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
+							} else {
+								document.getElementById("countInfo").innerHTML += "<span class='countColor'>" + result.totalCount + "</span>";
+							}
+							deptNameLong(result.containLow, strIsLeaf);
+
+							organSelectDeptNM.setAttribute("countinfo","1");
+						}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
+			}
+
+			function deptNameLong(containLow, strIsLeaf) {
+				var deptNameWidth = "";
+				var sum = $("#spn_deptName").width() + $("#countInfo").width();
+
+				if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+					if (sum > 339) {
+						deptNameWidth = 340 - $("#countInfo").width();
+					}
+				} else {
+					if (sum > 337) {
+						deptNameWidth = 338 - $("#countInfo").width();
+					}
+				}
+
+				$("#spn_deptName").css("width", deptNameWidth);
+			}
 			
 			function add_company(){
 		        var treeView = new TreeView();
@@ -791,6 +848,7 @@
 	
 					        if (CrossYN()) {
 					            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+								totalUserCount = xmlRtn.getElementsByTagName('ROW').length;
 					            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
 					            	if($(this).find("DATA4").text() == "addJob"){
 					            		var orgPosition = $(this).find("CELL").eq(4).find("VALUE").text();
@@ -801,6 +859,7 @@
 					            headerData.documentElement.appendChild(Node);
 					        }else{
 					            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+								totalUserCount = xmlRtn.getElementsByTagName('ROW').length;
 					            headerData.documentElement.appendChild(xmlRtn);
 					        }
 			                document.getElementById("OrganListView").innerHTML = "";
@@ -812,6 +871,8 @@
 							pUserList.SetHeightFree(true);
 							pUserList.DataSource(headerData);
 							pUserList.DataBind("OrganListView");
+							$("#spn_deptName").text("<spring:message code='ezPersonal.t1003'/>");
+							$(".countColor").text(totalUserCount);
 							sawonDataParsing();
 							moveDisplay(true);
 							makePageSelPage();
@@ -1141,7 +1202,7 @@
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(900, 460));
 			    try { OpenWin.focus(); } catch (e) { }
 			}
 			
@@ -2341,6 +2402,7 @@
 				<li id="btnSave"><span onClick="excelExport()"><spring:message code='ezStatistics.t1003' /></span></li>
 				<dl class="organList">
 					<dt class="organListDT">
+						<span id="organSelectDeptNM"></span>
 						<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
 						<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
 					</dt>
