@@ -63,7 +63,6 @@ function getPhotoPortletList() {
 				}
 
 				$("#photoul").html(strHTML);
-				$("#photoul").css("display","flex");
 			} else {
 				var dl = document.createElement("dl");
 				dl.classList.add("nodata");

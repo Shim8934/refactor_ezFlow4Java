@@ -313,8 +313,8 @@
 			            
 			            //2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
 			            try { 
-							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
-								parent.opener.photoBoardMovePage(null);
+							if (parent.opener != null && parent.opener.getPhotoPortletList != undefined) {
+								parent.opener.getPhotoPortletList();
 							}
 			            } catch (e) {console.log(e);}
 						
