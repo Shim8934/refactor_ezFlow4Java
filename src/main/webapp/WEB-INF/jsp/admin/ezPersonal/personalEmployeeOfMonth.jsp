@@ -62,7 +62,9 @@
 	</head>
 	<body class = "mainbody">
 		<form id="form1">
-			<h1><spring:message code = 'ezPersonal.t299' /></h1>
+			<h1><spring:message code = 'ezPersonal.t299' />
+				<jsp:include page="/WEB-INF/jsp/admin/companySelect.jsp"/>
+			</h1>
 			<div style="width:100%;">
 				<!-- 달력슬라이더 영역 -->
 				<div class="regular calSlider" id="regular"></div>

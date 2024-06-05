@@ -458,7 +458,7 @@
 			AND
 				A.TENANT_ID = B.TENANT_ID
 			WHERE
-				A.COMPANYID = #v_pCompanyID#
+				A.PHYSICALDELIVERYOFFICENAME = #v_pCompanyID#
 			AND
 				A.TENANT_ID = #tenantID#
 			AND

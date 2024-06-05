@@ -1127,11 +1127,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		String year = request.getParameter("year");
 		logger.debug("year: " + year);
-		
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 		String userPrimaryLang = userInfo.getPrimary();
 		
-		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(year, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(year,companyID , userInfo.getTenantId());
 		
 		for (PersonalEmpMonthVO vo : list) {
 			if (!userPrimaryLang.equals("1")) {
@@ -1174,14 +1175,15 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/setEmployeeMonth.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String setEmployeeMonth(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String setEmployeeMonth(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("setEmployeeMonth started");
 
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = "", deptID = "";
 		String type = request.getParameter("type");
 		String term = request.getParameter("term");
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
 		
 		if (request.getParameter("userID") != null) {
 			userID = request.getParameter("userID");
@@ -1191,7 +1193,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		try {
-			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, userInfo);
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, companyID, userInfo.getTenantId());
 			logger.debug("setEmployeeMonth ended");
 			return "OK";
 		} catch (Exception e) {

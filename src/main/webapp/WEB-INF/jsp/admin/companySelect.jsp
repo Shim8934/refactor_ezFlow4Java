@@ -26,6 +26,7 @@
                     optionElement.text = item.displayName;
                     if (item.cn === userCompany) {
                         optionElement.selected = true;
+                        selectedCompany = item.cn;
                     }
                     select.appendChild(optionElement);
                 });

@@ -748,8 +748,8 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 이달의 우수 사원 정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/bestEmployee/months/{month:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getMonthlyBestEmployee(HttpServletRequest request, @PathVariable int month) throws Exception {
+	@RequestMapping(value = "/rest/ezPortal/bestEmployee/months/{month:.+}/{company:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getMonthlyBestEmployee(HttpServletRequest request, @PathVariable int month, @PathVariable String company) throws Exception {
 		logger.debug("ezNewPortal G/W getMonthlyBestEmployee started.");
 		JSONObject result = new JSONObject();
 
@@ -761,12 +761,11 @@ public class EzNewPortalGWController {
 			String nowYear = String.valueOf(cal.get(Calendar.YEAR));
 			
 			String yearAndMonth = nowYear + "-" + month;
-			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
 			logger.debug("yearAndMonth : " + yearAndMonth);
-			PortalUserInfoVO bestEmployee = ezNewPortalService.getMonthlyBestEmployee(yearAndMonth, companyId, tenantId, lang);
+			PortalUserInfoVO bestEmployee = ezNewPortalService.getMonthlyBestEmployee(yearAndMonth, company, tenantId, lang);
 
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -443,7 +443,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String type = commonUtil.stripTagSymbols(commonUtil.stripScriptTagsAndFunctions(request.getParameter("type")));
 		String dept = request.getParameter("dept"); 
 		String tagName = request.getParameter("tagName");
-		
+		String companyID = Optional.ofNullable(request.getParameter("companyID")).orElse(userInfo.getCompanyID());
+
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		userInfo.setDeptID(dept);
@@ -452,6 +453,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("tagName", tagName);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("companyID", companyID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
 		logger.debug("selectPerson ended");
