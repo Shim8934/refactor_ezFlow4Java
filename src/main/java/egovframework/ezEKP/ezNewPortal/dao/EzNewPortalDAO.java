@@ -186,6 +186,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<ThemeInfoVO> getUserThemeList(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getUserThemeList", map);
 	}
+
+	public List<ThemeInfoVO> getCompThemeList(Map<String, Object> map) throws Exception {
+		return (List<ThemeInfoVO>) list("ezNewPortal.getCompThemeList", map);
+	}
 	
 	public MenuInfoVO getUserStartPage(Map<String, Object> map) throws Exception {
 		return (MenuInfoVO) select("ezNewPortal.getUserStartPage", map);

@@ -410,7 +410,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int totalCnt = ezNewPortalDAO.getQuickLinkTotalCnt(map);
 		
 		float pageCnt = (float)totalCnt / (float)limit;
-		
+
 		logger.debug("[Serivce] getQuickLinkTotalPageCnt Ended");
 		return (int) Math.ceil(pageCnt);
 	}
@@ -786,11 +786,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 				
 				if (!canAccessTheme) {
-					map.put("usedTheme", themeList.get(0).getThemeId());
-					userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
-
-					if (userPortalSetting == null) {
+					if (themeList == null || themeList.size() == 0) {
+						// 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기
 						userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+					} else {
+						map.put("usedTheme", themeList.get(0).getThemeId());
+						userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
+						if (userPortalSetting == null) {
+							map.put("themeId", themeList.get(0).getThemeId());
+							userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+						}
 					}
 				}
 			}
@@ -809,7 +814,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			
 			if (!canAccessTheme) {
 				if (themeList == null || themeList.size() == 0) {
-					map.put("themeId", themeList.get(0).getThemeId());
+					// 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기
 					userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
 				}  else {
 					map.put("usedTheme", themeList.get(0).getThemeId());
@@ -1234,7 +1239,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//path 거꾸로 돌려야해서
 		List<String> deptIds = Arrays.asList(deptPath.split(","));
 		Collections.reverse(deptIds);
-		
+		String userDeptId = deptIds.get(0);
+
 		map.put("lang", lang);
 		
 		//유저권한체크
@@ -1273,7 +1279,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
 		for(String pathId : deptIds) {
 			map.put("userId", pathId);
-			if (pathId.equals(userId)) {
+			if (pathId.equals(userDeptId)) {
 				map.put("isUserDept", true);
 			} else {
 				map.put("isUserDept", false);
@@ -1300,6 +1306,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return result;
 	}
 	
+
+	/* 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기 */
+	public List<ThemeInfoVO> getCompThemeList(String companyId, int tenantId, String lang) throws Exception {
+		logger.debug("getCompThemeList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("lang", lang);
+		List<ThemeInfoVO> result = ezNewPortalDAO.getCompThemeList(map);
+		logger.debug("getCompThemeList ended.");
+		return result;
+	}
 
 	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception {
 		logger.debug("getUserStartPage started.");
@@ -2041,6 +2059,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			list = getCompanyThemes(companyId, tenantId, lang);
 		} else {
 			list = getUserThemeList(companyId, tenantId, userId, deptPath, lang);
+			// 2024-06-05 김유진 - 접근 가능한 userThemeList가 없을 경우, 회사의 기본 테마 가져오기
+			if (list == null || list.size() == 0) {
+				list = getCompThemeList(companyId, tenantId, lang);
+			}
 		}
 		
 		logger.debug("getThemes ended.");
