@@ -330,6 +330,7 @@
 			        subMenuClickEvent('off');
 			        self.top.location.href = url;
 			    } else if (id != 'util_employee_search' && id != 'util_admin') {
+			    	offMenuAll();
 					subMenuClickEvent('off', url);
 				} else {
 					subMenuClickEvent('off');
