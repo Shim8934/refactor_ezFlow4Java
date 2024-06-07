@@ -1270,7 +1270,6 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 #theme3Body .resource_listBox{background: none;}
 #theme3Body .resource_listBoxUL .resource_listBoxDL dd > .resource_list_item{background:rgba(17,121,219,0.1); border:1px solid #ADA9B3; color:#333; border-color:transparent;}
-#theme3Body .resource_listBoxUL .resource_listBoxDL dd > .resource_list_item:hover{background: #9c99a1; border:1px solid #ADA9B3; color:#333;}
 #theme3Body .resource_listBoxUL .resource_listBoxDL dd .resource_list_add:hover{background: #f0f0f0;}
 #theme3Body .resource_listBoxUL .resource_listBoxDL dd .resource_list_add{background-color:#fff;}
 
@@ -1554,27 +1553,36 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 .resources_setting{margin:0px; padding:18px 15px; float:right; overflow:hidden; cursor:pointer;}
 
-.resource_listBox { clear: both; height:calc(100% - 83px); margin: 0px 0px 0px 0px; padding: 0px 0px; overflow-x: hidden; overflow-y:auto; box-sizing: border-box; background:#fff;}
+.resource_listBox { clear: both; height:calc(100% - 81px); margin: 0px 0px 0px 0px; padding: 0px 0px; overflow-x: hidden; overflow-y:auto; box-sizing: border-box; background:#fff;}
 .resource_listBoxUL { list-style: none; margin: 0px;  padding:10px 20px 0px; box-sizing:border-box;}
-.resource_listBoxUL li{margin-bottom:10px;}
-.resource_listBoxUL li:last-child{margin-bottom:0;}
+.resource_listBoxUL li{margin-top:10px; display:none;}
+.resource_listBoxUL li:first-child{margin-top:0;}
+.resource_listBoxUL li:nth-child(-n+5){display:block;}
 .resource_listBoxUL .resource_listBoxDL { margin: 0px; padding: 0px; }
 .resource_listBoxUL .resource_listBoxDL:after{content:""; display:block; clear:both;}
 .resource_listBoxUL .resource_listBoxDL dt { position: relative; float: left; width: 100px; height: 25px; line-height:25px; margin: 0px; padding: 0px 9px 0px 0px; cursor: pointer; z-index:100; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-.resource_listBoxUL .resource_listBoxDL dt span.sub_iconLNB{display:none;}
+.resource_listBoxUL .resource_listBoxDL dt span.sub_iconLNB{margin-right:3px;}
 .resource_listBoxUL .resource_listBoxDL dt .icon_tree {float:left; margin-top:3px; margin-right:5px;}
 .resource_listBoxUL .resource_listBoxDL dt .resource_list_text {float:none; font-size:14px; font-weight:500; color:#333;  box-sizing: border-box; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; vertical-align: top; font-weight:500;}
 .resource_listBoxUL .resource_listBoxDL dt:hover .resource_list_text {font-weight:bold;}
 .resource_listBoxUL .resource_listBoxDL dd {position:relative; float:left; margin: 0px; padding: 0px 0px 0px 0px; width:calc(99.999% - 109px);}
-.resource_listBoxUL .resource_listBoxDL dd > .resource_list_item{ position: relative; display: inline-block; width:calc(33.333% - 2px); height: 25px; line-height: 23px; border-radius: 3px; background-color:#E6F1FC; border: 1px solid #E6F1FC; color: #333; text-align: center; box-sizing: border-box; cursor: pointer; font-size:13px; vertical-align:top; margin-right:2px;}
+.resource_listBoxUL .resource_listBoxDL dd > p{float:left; width:calc(33.333% - 2px); height: 25px; margin:5px 2px 0 0;}
+.resource_listBoxUL .resource_listBoxDL dd > p:nth-child(-n+3){margin-top:0;}
+.resource_listBoxUL .resource_listBoxDL dd > p:nth-child(3n){margin-right:0;}
+.resource_listBoxUL .resource_listBoxDL dd > .resource_list_item{ position: relative; line-height: 23px; border-radius: 3px; background-color:#E6F1FC; border: 1px solid #E6F1FC; color: #333; text-align: center; box-sizing: border-box; cursor: pointer; font-size:13px; vertical-align:top;}
 .resource_listBoxUL .resource_listBoxDL dd > .resource_list_item:hover { background-color:#388CE5; border: 1px solid #388CE5; color: #fff;}
-.resource_listBoxUL .resource_listBoxDL dd > .resource_list_item:nth-child(3n){margin-right:0;}
-.resource_listBoxUL .resource_listBoxDL dd .resource_list_add { display: inline-block; width: 90px; height: 25px; margin:0 2px 0 0; border: 1px solid #EFECEC; border-radius: 3px; text-align:center; box-sizing: border-box; cursor:pointer;}
+.resource_listBoxUL .resource_listBoxDL dd .resource_list_add {border: 1px solid #EFECEC; border-radius: 3px; text-align:center; box-sizing: border-box; cursor:pointer;}
 .resource_listBoxUL .resource_listBoxDL dd .resource_list_add:hover {background: #F3F9FF; }
 .resource_listBoxUL .resource_listBoxDL dd .resource_list_add .icon_resource_add { background:url(/images/ezNewPortal/resourcePlus.png) no-repeat  center; width:15px; height:15px; display:inline-block; margin:4px 0px 0px 0px;}
 .sub_iconLNB {background: url(/images/kr/left/sub_iconLNB.svg) no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden;}
 .tree_resource_standard { background-position: -234px -52px; width: 16px; height: 16px; display: inline-block; margin: 5px 0px 0px 0px; cursor: pointer;}
 .tree_resource_ok {background-position: -260px -52px; width: 16px; height: 16px; display: inline-block; margin: 5px 0px 0px 0px; cursor: pointer;}
+
+.portlet.one_by_two .resource_listBoxUL .resource_listBoxDL dd > p{width:calc((99.999% / 6) - 2px); margin-right:2px; margin-top:5px;}
+.portlet.one_by_two .resource_listBoxUL .resource_listBoxDL dd > p:nth-child(-n+6){margin-top:0;}
+.portlet.one_by_two .resource_listBoxUL .resource_listBoxDL dd > p:nth-child(6n){margin-right:0;}
+.portlet.two_by_one .resource_listBoxUL li{min-height:85px; margin-top:10px;}
+.portlet.two_by_one .resource_listBoxUL li:first-child{margin-top:0;}
 
 
 /* 20190626 class mainbg 옮김 */
@@ -2019,6 +2027,7 @@ div.orbit img{border-radius: 5px;}
 .my_info_wrap .news_setting input:checked + label span{background:#388CE5;}
 .my_info_wrap .news_setting input:checked + label span:before{left:calc(100% - 11px); background:#fff;}
 #theme3Body .my_info_wrap .news_setting input + label span{background:rgba(255,255,255,0.3);}
+#theme3Body .my_info_wrap .news_setting input:checked + label span{background:#388CE5;}
 
 .my_info_wrap .portal_setting{margin-left:auto; padding-left:30px; background:url(/images/ezNewPortal/info_setting.svg) no-repeat 0 center / 17px 17px; font-size:13px; font-weight:500; color:#333; cursor:pointer; line-height:28px; background-size:17px 17px;}
 .my_info_wrap .info_logout{margin-left:35px; padding-left:30px; background:url(/images/ezNewPortal/info_logout.svg) no-repeat 0 center; font-size:13px; font-weight:500; color:#333; cursor:pointer; line-height:28px;}

@@ -109,14 +109,14 @@ function mappingResourcePortlet(vo){
 		dd.appendChild(p);
 	} else {		// 예약 있음
 		for(var i=0; i<cnt-1; i++) {
-			var span = document.createElement('span');
+			var p = document.createElement('p');
 			var arr  = new Array();
-			span.setAttribute("class", "resource_list_item");
-			span.setAttribute("num", num[i]);
-			span.setAttribute("ownerID", vo.brdID);
-			span.textContent = timeTable[i];
-			span.addEventListener('click', function(event) {reserveViewPopup()});
-			dd.appendChild(span);
+			p.setAttribute("class", "resource_list_item");
+			p.setAttribute("num", num[i]);
+			p.setAttribute("ownerID", vo.brdID);
+			p.textContent = timeTable[i];
+			p.addEventListener('click', function(event) {reserveViewPopup()});
+			dd.appendChild(p);
 		}
 		// if(cnt<4) {
 			p = makeEmptyList(vo.brdID);
