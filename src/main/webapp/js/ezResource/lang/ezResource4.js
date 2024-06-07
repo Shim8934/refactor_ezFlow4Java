@@ -249,7 +249,7 @@ var strLang599 = "上月";
 var strLang600 = "下个月";
 var strLang601 = "关闭";
 var strLang602 = "zh";
-var strLang603 = "资源的列表最高可登记5个";
+var strLang603 = "资源的列表最高可登记6个";
 //추가
 var strLangLHM01 = "default_cn";
 var strLangLHM02 = "打印预览";

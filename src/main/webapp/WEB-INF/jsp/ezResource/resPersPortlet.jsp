@@ -242,7 +242,7 @@
       var nodeIdx;
       function InsertReceiver() {
     	  
-    	  if(pListView.listlength()>=5) {
+    	  if(pListView.listlength()>=6) {
 				alert(strLang603);
 				return;
     	  }
