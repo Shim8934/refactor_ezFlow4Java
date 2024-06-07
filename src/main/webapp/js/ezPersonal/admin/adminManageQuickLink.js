@@ -136,11 +136,22 @@ function setQuickImg(linkType, linkTypeUrl) {
 		case "D" : result = "<img src='/images/admin/link_connectedPrograms.png' id='D'>"; break;
 		case "E" : result = "<img src='/images/admin/link_blog.png' id='E'>"; break;
 		*/
-		case "A" : result = "<img src='/images/admin/link_03.png' id='A'>"; break;
-		case "B" : result = "<img src='/images/admin/link_04.png' id='B'>"; break;
-		case "C" : result = "<img src='/images/admin/link_02.png' id='C'>"; break;
-		case "D" : result = "<img src='/images/admin/link_05.png' id='D'>"; break; // 2023-06-01 기준 사용하지 않는 분기
-		case "E" : result = "<img src='/images/admin/link_01.png' id='E'>"; break;
+		case "A" : result = "<img src='/images/admin/photo1.png' id='A'>"; break;
+		case "B" : result = "<img src='/images/admin/photo2.png' id='B'>"; break;
+		case "C" : result = "<img src='/images/admin/photo3.png' id='C'>"; break;
+		case "D" : result = "<img src='/images/admin/photo4.png' id='D'>"; break; // 2023-06-01 기준 사용하지 않는 분기
+		case "E" : result = "<img src='/images/admin/photo5.png' id='E'>"; break;
+		case "F" : result = "<img src='/images/admin/photo6.png' id='F'>"; break;
+		case "G" : result = "<img src='/images/admin/photo7.png' id='G'>"; break;
+		case "H" : result = "<img src='/images/admin/photo8.png' id='H'>"; break;
+		case "I" : result = "<img src='/images/admin/photo9.png' id='I'>"; break;
+		case "J" : result = "<img src='/images/admin/photo10.png' id='J'>"; break;
+		case "K" : result = "<img src='/images/admin/photo11.png' id='K'>"; break;
+		case "L" : result = "<img src='/images/admin/photo12.png' id='L'>"; break;
+		case "M" : result = "<img src='/images/admin/photo13.png' id='M'>"; break;
+		case "N" : result = "<img src='/images/admin/photo14.png' id='N'>"; break;
+		case "O" : result = "<img src='/images/admin/photo15.png' id='O'>"; break;
+		case "P" : result = "<img src='/images/admin/photo16.png' id='P'>"; break;
 		default : result = "<img src='" + linkTypeUrl + "' style='width:39px; height:38px; padding:0px; margin-top:8px;'>"; break;
 		break;
 	}
@@ -330,6 +341,18 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("B", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='B'></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("C", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='C'></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("E", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='E'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("D", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='D'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("F", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='F'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("G", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='G'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("H", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='H'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("I", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='I'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("J", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='J'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("K", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='K'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("L", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='L'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("M", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='M'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("N", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='N'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("O", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='O'></dd></dl>";
+	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("P", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='P'></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt id='typeImg' class='quickIcon_linkDT'></dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='Z' id='Z' onclick='radioClick(this, 'rad')' style='display:none;' /></dd></dl>";
 	linksHTML += "</td></tr>";
 	linksHTML += "</table>";
