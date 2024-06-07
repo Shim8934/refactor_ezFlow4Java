@@ -46,4 +46,6 @@ public interface EzNotificationService {
 	// 2024-03-28 한태훈 - 통합알림 > 새로운 알림 개수 확인
 	public int getNewNotiCnt(String userId, String pollSTime, String pollETime, String companyId, int tenantId) throws Exception;
 
+	public boolean isJavaApprovalUse(String companyId, int tenantId) throws Exception;
+
 }

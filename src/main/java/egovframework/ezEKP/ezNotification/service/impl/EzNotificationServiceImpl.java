@@ -376,4 +376,12 @@ public class EzNotificationServiceImpl implements EzNotificationService {
 		return ezNotificationDAO.getNewNotiCnt(map);
 	}
 
+	@Override
+	public boolean isJavaApprovalUse(String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		return ezNotificationDAO.isJavaApprovalUse(map);
+	}
+
 }

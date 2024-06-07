@@ -120,9 +120,12 @@ public class EzNotificationGWController {
 			}
 			*/
 			
+			// 자바 결재 모듈을 사용할 땨 true, 아닐 때 false (결재 모바일 푸시 알림은 따로 보내고 있기 때문에 자바 모듈로 결재 알림 발송 시에 모바일 알림은 제외함.) 
+			boolean useJavaApproval = ezNotificationService.isJavaApprovalUse(info.getCompanyId(), info.getTenantId());
+			
 			String notiName = "";
 			
-			if (subType != null && mainType.equals("APPROVAL") &&
+			if (subType != null && mainType.equals("APPROVAL") && useJavaApproval &&
 				(subType.equals("ARRIVE") || subType.equals("BORYU") || subType.equals("BALSONG")
 				|| subType.equals("SUSIN") || subType.equals("JIJUNG") || subType.equals("BEBU")
 				|| subType.equals("REJIJUNG") || subType.equals("REBEBU") || subType.equals("DEFAULT"))) {
@@ -134,37 +137,81 @@ public class EzNotificationGWController {
 			}
 
 			NotiType notiType = null;
-			int mainTypeIntValue = -1;
-			int subTypeIntValue = 0;
-			if (!mainType.equals("ETC") && (etcData == null || etcData.indexOf("notChkSetting") < 0)) {
+			
+			String subTypeForMobilePush = "0";
+			if (!mainType.equals("ETC")) {
 				notiType = NotiType.fromString(notiName);
-				mainTypeIntValue = notiType.mainType();
-				subTypeIntValue = subType != "" ? notiType.subType() : 0;
+				subTypeForMobilePush = subType != "" ? notiType.subType() + "" : "0";
+			}
+			
+			String mainTypeForMobilePush = "";
+			String pushNotiContent = StringEscapeUtils.unescapeHtml4(notiContent);
+			switch (mainType) {
+			case "APPROVAL":
+				pushNotiContent = "[" + "결재" + "] " + pushNotiContent;
+				mainTypeForMobilePush = "2";
+				break;
+			case "BOARD":
+				pushNotiContent = "[" + "게시판" + "] " + pushNotiContent;
+				mainTypeForMobilePush = "51";
+				break;
+			case "SCHEDULE":
+				pushNotiContent = "[" + "일정" + "] " + pushNotiContent;
+				mainTypeForMobilePush = "A";
+				break;
+			case "RESOURCE":
+				pushNotiContent = "[" + "자원관리" + "] " + pushNotiContent;
+				mainTypeForMobilePush = "B";
+				break;
+			case "SURVEY":
+				pushNotiContent = "[" + "전자설문" + "] " + pushNotiContent;
+				mainTypeForMobilePush = "C";
+				break;
+			case "POLL":
+				pushNotiContent = "[" + "투표" + "] " + pushNotiContent;
+				mainTypeForMobilePush = "D";
+				break;
+			case "COMMUNITY":
+				pushNotiContent = "[" + "커뮤니티" + "] " + pushNotiContent;
+				mainTypeForMobilePush = "E";
+				break;
+			case "WEBFOLDER":
+				pushNotiContent = "[" + "웹폴더" + "] " + pushNotiContent;
+				mainTypeForMobilePush = "F";
+				break;
+			default:
+				mainTypeForMobilePush = "Z";
+				break;
 			}
 			
 			String[] recipientIdArr = recipientIdList.split(";;");
 			
 			String useEzTalkNotification = ezCommonService.getTenantConfig("useEzTalkNotification", info.getTenantId());
-			boolean useMobilePush = useEzTalkNotification.equals("YES") ? true : false;
+			
+			boolean useMobilePushCompany = useEzTalkNotification.equals("YES") ? true : false;
+			if (mainType.equals("APPROVAL") && useJavaApproval) { // 결재 모듈 사용 여부 조건 추가 필요. (우리 결재 모듈 사용시 에만 false)
+				useMobilePushCompany = false; // 결재는 푸시 알림 기능이 존재.
+			}
 			
 			for (String recipientId : recipientIdArr) {
 				try {
 					logger.debug("recipientId : " + recipientId);
 					
-					String pushNotiContent = notiContent;
 					resultStr += recipientId + ":";
 					
 					boolean useTotalNoti = false;
+					boolean useMobilePushUser = false;
 					
 					if ((etcData != null && etcData.indexOf("notChkSetting") >= 0) || mainType.equals("ETC")) {
 						useTotalNoti = true;
+						useMobilePushUser = true;
 					} else {
 						if (!ezPersonalService.hasNotiDiableItem(recipientId, notiType, NotiPlatform.TOTAL_NOTI, info.getTenantId())) {
 							useTotalNoti = true;
 						}
 						
-						if (mainType.equals("APPROVAL")) { // 결재 모듈 사용 여부 조건 추가 필요. (우리 결재 모듈 사용시 에만 false)
-							useMobilePush = false; // 결재는 푸시 알림 기능이 존재.
+						if (!ezPersonalService.hasNotiDiableItem(recipientId, notiType, NotiPlatform.MOBILE_WEBAPP, info.getTenantId())) {
+							useMobilePushUser = true;
 						}
 					}
 					
@@ -175,23 +222,8 @@ public class EzNotificationGWController {
 						resultStr += "{total:notUse,";
 					}
 					
-					if (useMobilePush) {
-						if (mainType.equals("BOARD")) {
-							String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
-							String userLang = info.getLang();
-							
-							/*
-							if (primaryLang.equals(userLang)) {
-								pushNotiContent = "[" + NotiType.valueOf(mainTypeIntValue, subTypeIntValue).getMessage_ko() + "] " + notiContent;
-							} else {
-								pushNotiContent = "[" + NotiType.valueOf(mainTypeIntValue, subTypeIntValue).getMessage_en() + "] " + notiContent;
-							}
-							*/
-						}
-						
-						int tempMainTypeIntValue = mainTypeIntValue;
-						
-						boolean mobilePushSuccess = ezEmailService.addEzTalkNotification(recipientId, senderName, StringEscapeUtils.unescapeHtml4(pushNotiContent), tempMainTypeIntValue + "", subTypeIntValue + "", linkUrlMobile);
+					if (useMobilePushCompany && useMobilePushUser) {
+						boolean mobilePushSuccess = ezEmailService.addEzTalkNotification(recipientId, senderName, pushNotiContent, mainTypeForMobilePush, subTypeForMobilePush, linkUrlMobile);
 						
 						if (mobilePushSuccess) {
 							resultStr += "mobile:ok};";

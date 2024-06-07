@@ -67,4 +67,7 @@ public class EzNotificationDAO extends EgovAbstractDAO {
 		return (Integer) select("EzNotificationDAO.getNewNotiCnt", map);
 	}
 	
+	public boolean isJavaApprovalUse(Map<String, Object> map) throws Exception {
+		return (boolean) select("EzNotificationDAO.isJavaApprovalUse", map);
+	}
 }
