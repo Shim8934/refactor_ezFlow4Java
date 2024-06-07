@@ -112,6 +112,7 @@ public class MOrganServiceImpl implements MOrganService {
 			map.put("organType", "top");
 			map.put("lang", commonUtil.getMultiData(lang, tenantId));
 			map.put("tenantID", tenantId);
+			map.put("useOrganHideFlag", ezCommonService.getTenantConfig("useOrganHideFlag", tenantId));
 			
 			resultOrganListVOs = mOrganDAO.getOrganList(map);
 			break;
@@ -172,6 +173,7 @@ public class MOrganServiceImpl implements MOrganService {
 			map.put("organType", "company");
 			map.put("lang", commonUtil.getMultiData(lang, tenantId));
 			map.put("tenantID", tenantId);
+			map.put("useOrganHideFlag", ezCommonService.getTenantConfig("useOrganHideFlag", tenantId));
 			
 			resultOrganListVOs = mOrganDAO.getOrganList(map);
 			
@@ -199,6 +201,7 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("companyId", companyId);
 		
 		map.put("useShowAllCompanies", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAllCompanies", tenantId)));
+		map.put("useOrganHideFlag", ezCommonService.getTenantConfig("useOrganHideFlag", tenantId));
 		
 		logger.debug("deptId : " + deptID.replace("%", "\\%").replace("_", "\\_"));
 		logger.debug("lang : " + commonUtil.getMultiData(lang, tenantId));
@@ -233,6 +236,7 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("deptID", deptID);
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
+		map.put("useOrganHideFlag", ezCommonService.getTenantConfig("useOrganHideFlag", tenantId));
 
 		List<MOrganListVO> resultOrganListVOs = mOrganDAO.getLowDeptInfo(map);
 		
@@ -252,6 +256,7 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantId);
+		map.put("useOrganHideFlag", ezCommonService.getTenantConfig("useOrganHideFlag", tenantId));
 		
 		List<MOrganListVO> resultOrganListVOs = mOrganDAO.getHighDeptInfo(map);
 
