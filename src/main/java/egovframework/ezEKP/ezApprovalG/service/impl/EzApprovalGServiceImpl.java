@@ -59,6 +59,7 @@ import javax.xml.xpath.XPathFactory;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGTxNew;
 import egovframework.ezEKP.ezApprovalG.vo.*;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import kr.dogfoot.hwplib.object.HWPFile;
 import kr.dogfoot.hwplib.object.bodytext.Section; 
 import kr.dogfoot.hwplib.object.bodytext.control.Control; 
@@ -35385,4 +35386,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return result;
 	}
+    
+    // 2024-06-07 전인하 - 기록물대장 > 하위부서 리스트 조회 
+    @Override
+    public List<OrganDeptVO> getUnderDeptList(LoginVO userInfo) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        
+        map.put("tenantID", userInfo.getTenantId());
+        map.put("deptID", userInfo.getDeptID());
+        map.put("primary", userInfo.getPrimary());
+        
+        return ezApprovalGDAO.getUnderDeptList(map);
+    }
 }

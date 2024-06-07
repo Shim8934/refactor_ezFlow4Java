@@ -95,6 +95,10 @@ function ezCabMunuCtl(MenuType, selRow) {
         pMenuFlag = "";
     else
         pMenuFlag = "none";
+        
+    if (g_sFlag === "m02" && underDeptFlag === "TRUE" && GetSelectVal("rec_underDept2") != "default") {
+        MenuType = "cabinetUnderDept";
+    }
 
     switch (MenuType) {
         case "0":
@@ -328,6 +332,9 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
             
+            break;
+            
+            case "cabinetUnderDept" : 
             break;
     }
 
@@ -587,8 +594,8 @@ function GetRecordList() {
             nowday = "0" + nowday;
 
         var tempDeptID = DeptID;
-        if (checkRecordAll()) {
-            tempDeptID = "ALL";
+        if (underDeptFlag === "TRUE" && GetSelectVal("rec_underDept") != "default") {
+            tempDeptID = GetSelectVal("rec_underDept");
         }
         
         /* 2022-07-20 홍승비 - 기록물철등록부 > 기록물철 선택 후 기록물보기로 진입한 경우, 선택한 기록물철의 생산 년도를 기준으로 표출 (검색조건 없을 시의 기본 표출) */
@@ -1622,6 +1629,9 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     if (document.getElementById("rec_year") != null) {
         $('#rec_year').val("ALL");
         /*$('#rec_year').selectmenu('refresh');*/
+    }
+    if (document.getElementById("rec_underDept") != null) {
+        $('#rec_underDept').val("default");
     }
 }
 

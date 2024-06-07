@@ -6,7 +6,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -18,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -26,6 +30,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.json.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +150,25 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			previewInfo = ezApprovalGService.getApprovConfig(userInfo.getId(), userInfo.getTenantId());
 		}
 
+		// 2024-06-07 전인하 - 기록물대장 > 하위부서 문서함 조회
+		// 하위부서문서함은 다음과 같은 경우에 표출된다 ; 관리자 권한(전체관리자, 회사관리자, 기록물관리책임자 중 1)이 존재하면서 기록물등록대장, 기록물접수목록, 기록물발송목록, 기록물철등록부일 경우
+		String underDeptShowFlag = "FALSE";
+		List<String> needUnderDeptsFlag = new ArrayList<>(Arrays.asList("m01", "m02", "m05", "m06"));
+		if (needUnderDeptsFlag.contains(sFlag) && commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;m")) {
+			underDeptShowFlag = "TRUE";
+		}
+
+		JSONArray underDeptList = new JSONArray();
+		if (underDeptShowFlag.equals("TRUE")) {
+			List<OrganDeptVO> tempDeptList = ezApprovalGService.getUnderDeptList(userInfo);
+			for (int i = 0; i < tempDeptList.size(); i++) {
+				JSONObject json = new JSONObject();
+				json.put("id", tempDeptList.get(i).getCn());
+				json.put("name", commonUtil.cleanValue(tempDeptList.get(i).getDisplayName()));
+				underDeptList.put(json);
+			}
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("dirpath", dirpath);
@@ -160,6 +185,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         model.addAttribute("previewInfo", previewInfo);
 		model.addAttribute("useAprPreview", useAprPreview);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("useDraftAll", ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId()));
+		model.addAttribute("underDeptFlag", underDeptShowFlag);
+		model.addAttribute("underDeptList", underDeptList);
 		
 		logger.debug("cabinetMain ended");
 		

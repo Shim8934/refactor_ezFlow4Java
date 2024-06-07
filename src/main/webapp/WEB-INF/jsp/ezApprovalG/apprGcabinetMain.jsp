@@ -23,6 +23,15 @@
 	            font: bold;
 	            color: #017bec;
 	        }
+	        
+	        #mainmenu.cabinetMenu {
+	            display:  flex;
+	        }
+	        
+	        #recordRight.selectUnderDept {
+	            max-width: 350px;
+	        }
+	        
 	    </style>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
@@ -125,6 +134,8 @@
 		    	var share = "";
 				var selectYear = "ALL";
 		        var ezapralert_cross_dialogArguments = [];
+				var underDeptList = JSON.parse('${underDeptList}'); // 2024-06-03 전인하 - 하위부서 리스트
+				var underDeptFlag = "<c:out value='${underDeptFlag}'/>" // 2024-06-03 전인하 - 하위부서문서함 표출 여부 플래그 (TRUE/FALSE)
 		        
 		        document.onselectstart = function () { return false; };
 		
@@ -186,6 +197,24 @@
                     } else {
                         // 기록물대장 미리보기가 열린 상태에서 기록물 미리보기 안쓰는 페이지로 이동 시, 미리보기 레이어가 화면에 나타나는 것을 방지
                         document.getElementById("PreviewRayerH").style.display = "none";
+                    }
+
+                    // 2024-06-03 전인하 - 기록물대장 > 하위부서문서함 선택 드롭다운박스 생성
+                    if (underDeptFlag === "TRUE") {
+                        if (g_sFlag === "m02") {
+                            var deptSelectBox = document.getElementById("rec_underDept2");
+                        } else {
+                            var deptSelectBox = document.getElementById("rec_underDept");
+                        }
+                        for (let i = 0; i < underDeptList.length; i++) {
+                            if (underDeptList[i].id == DeptID) {
+                                continue;
+                            }
+                            var newOption = document.createElement("option");
+                            newOption.value = underDeptList[i].id;
+                            newOption.text = underDeptList[i].name;
+                            deptSelectBox.appendChild(newOption);
+                        }
                     }
 		            settingResize();
 		            Window_resize();
@@ -284,6 +313,14 @@
 					if (checkRecordAll()) {
 						tempDeptID = "ALL";
 					}
+                    
+					if (underDeptFlag === "TRUE") {
+					    var deptSelectBox = g_sFlag === "m02" ? "rec_underDept2" : "rec_underDept";
+                        if (GetSelectVal(deptSelectBox) != "default") {
+                            tempDeptID = GetSelectVal(deptSelectBox);
+                        }
+                    }
+                    
 
 		            if (GetSelectVal("rec_year") != "ALL" || GetSelectVal("cab_year") != "ALL" || GetSelectVal("del_year") != "ALL") {
 		
@@ -291,7 +328,7 @@
 		                //showProgress();
 		
 		                if (DocList_Flag == "CABINET") {
-							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + selectYear + "</SPRODUCEY><EPRODUCEY>" + selectYear + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + selectYear + "</SPRODUCEY><EPRODUCEY>" + selectYear + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 		                    GetCaninetList();
 		                }
 		                else if (DocList_Flag == "RECORD") {
@@ -320,8 +357,12 @@
 		                    nowday = "0" + nowday;
 		
 		                if (DocList_Flag == "CABINET") {
-		                    if (isPeriodYear)
-		                        g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SPRODUCEY><EPRODUCEY>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+		                    if (isPeriodYear) {
+		                        g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SPRODUCEY><EPRODUCEY>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+		                    } else if (underDeptFlag == "TRUE" && GetSelectVal(deptSelectBox) != "default") {
+		                        g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+
+		                    }
 		                    GetCaninetList();
 		                }
 		                else if (DocList_Flag == "RECORD") {
@@ -332,6 +373,38 @@
 		                    g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
 		                    GetDocDeliveryList(g_DeliverySearchParamXml);
 		                }
+		            }
+		            
+		            // 2024-06-03 전인하 - 기록물대장 > 하위부서문서함 선택시 메뉴 숨김 처리
+		            if (g_sFlag != "m02") {
+                        if (underDeptFlag == "TRUE" && GetSelectVal("rec_underDept") != "default") {
+                            document.getElementById("trRecSubMenu").style.display = 'none';
+                            document.getElementById("recordRight").classList.remove('selectUnderDept');
+                        } else {
+                            document.getElementById("trRecSubMenu").style.display = '';
+                            document.getElementById("recordRight").classList.add('selectUnderDept');
+                        }
+		            } else {
+                        if (underDeptFlag === "TRUE" && GetSelectVal("rec_underDept2") != "default") {
+                            document.getElementById("tdRegCabinet").style.display = 'none';
+                            document.getElementById("tdNewVol").style.display = 'none';
+                            document.getElementById("tdViewCabInfo").style.display = 'none';
+                            document.getElementById("tdViewCabHist").style.display = 'none';
+                            document.getElementById("tdModifyCab").style.display = 'none';
+                            document.getElementById("tdDocListPrint").style.display = 'none';
+                            document.getElementById("tdSetCharger").style.display = 'none';
+                            document.getElementById("tdSearchCab").style.display = 'none';
+                            document.getElementById("tdBtnCabDel").style.display = 'none';
+                        } else {
+                            document.getElementById("tdRegCabinet").style.display = '';
+                            document.getElementById("tdViewCabInfo").style.display = '';
+                            document.getElementById("tdViewCabHist").style.display = '';
+                            document.getElementById("tdModifyCab").style.display = '';
+                            document.getElementById("tdDocListPrint").style.display = '';
+                            document.getElementById("tdSetCharger").style.display = '';
+                            document.getElementById("tdSearchCab").style.display = '';
+                            document.getElementById("tdBtnCabDel").style.display = '';
+                        }
 		            }
 		            
 		            //listLoading(false);	// 20201211 조진호 로딩바 display:none
@@ -680,6 +753,7 @@
 		            case "0":
 		                document.getElementById("trCabSubMenu").style.display = "";
 		                document.getElementById("trRecSubMenu").style.display = "none";
+		                document.getElementById("recordRight").style.display = "none";
 		
 		                //document.getElementById("Radio2").style.display = "none";11
 		                //document.getElementById("searchwriter").style.display = "none";
@@ -755,6 +829,7 @@
 		            case "1":
 		                document.getElementById("trCabSubMenu").style.display = "none";
 		                document.getElementById("trRecSubMenu").style.display = "";
+		                document.getElementById("recordRight").style.display = "";
 		
 		
 		                if (g_bRecAdmin || AdminYN == "TRUE")
@@ -850,6 +925,7 @@
 		        if (flag == "0") {
 		            document.getElementById("trCabSubMenu").style.display = "none";
 		            document.getElementById("trRecSubMenu").style.display = "none";
+		            document.getElementById("recordRight").style.display = "none"
 		            document.getElementById("trDeliveryMenu").style.display = "";
 		        }
 		    }
@@ -2071,6 +2147,10 @@
 					if (checkRecordAll()) {
 						tempDeptID = "ALL";
 					}
+					
+                    if (underDeptFlag === "TRUE" && g_sFlag != 'm02' && GetSelectVal("rec_underDept") != "default" ) {
+                        tempDeptID = GetSelectVal("rec_underDept");
+                    }
 		            
 		            if (radiosearch.value == "rad_Subject") {
 						if (selectYear == "ALL") {
@@ -2105,19 +2185,23 @@
 		        }
 		        else if (document.getElementById("trCabSubMenu").style.display == "") {
 		            var radiosearch = document.getElementById('selectType');
+		            
+		            if (underDeptFlag === "TRUE" && g_sFlag === 'm02' && GetSelectVal("rec_underDept2") != "default" ) {
+                        tempDeptID = GetSelectVal("rec_underDept2");                    
+                    }
 		
 		            if (radiosearch.value == "rad_Subject") {
 						if (selectYear == "ALL") {
-							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SPRODUCEY><EPRODUCEY>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SPRODUCEY><EPRODUCEY>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 						} else {
-							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + selectYear + "</SPRODUCEY><EPRODUCEY>" + selectYear + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + selectYear + "</SPRODUCEY><EPRODUCEY>" + selectYear + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 						}
 		            }
 		            else if (radiosearch.value == "rad_Writer") {
 						if (selectYear == "ALL") {
-							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SPRODUCEY><EPRODUCEY>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SPRODUCEY><EPRODUCEY>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 						} else {
-							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + selectYear + "</SPRODUCEY><EPRODUCEY>" + selectYear + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
+							g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + tempDeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY>" + selectYear + "</SPRODUCEY><EPRODUCEY>" + selectYear + "</EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 						}
 		            }
 		
@@ -2143,16 +2227,16 @@
 		
 		            if (radiosearch.value == "rad_Subject") {
 						if (selectYear == "ALL") {
-							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
+							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + tempDeptID + "</DEPTCODE2><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
 						} else {
-							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
+							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + tempDeptID + "</DEPTCODE2><TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
 						}
 		            }
 		            else if (radiosearch.value == "rad_Writer") {
 						if (selectYear == "ALL") {
-							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><DEBENTURER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DEBENTURER></SEARCHPARAM>";
+							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + tempDeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00.001</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59.999</EREGDATE><DEBENTURER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DEBENTURER></SEARCHPARAM>";
 						} else {
-							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><DEBENTURER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DEBENTURER></SEARCHPARAM>";
+							g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + tempDeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + selectYear + "-01-01 00:00:00.001</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59.999</EREGDATE><DEBENTURER><![CDATA[" + document.getElementById("txt_keyword").value + "]]></DEBENTURER></SEARCHPARAM>";
 						}
 		            }
 		
@@ -2409,7 +2493,7 @@
 			</span>
 	    </h1>
 	
-	    <div id="mainmenu">
+	    <div id="mainmenu" class='cabinetMenu'>
 	        <ul id="trCabSubMenu" style="Display: None;">
 	            <li class="important" id="tdReqDelayEndY" style="Display: None"><span id="ReqDelayEndY" onclick="return ReqDelayEndY_onclick()">
 	                <spring:message code='ezApprovalG.t907'/></span></li>
@@ -2431,10 +2515,18 @@
 	            <li id="tdSetCharger" style="Display: None"><span id="SetCharger" onclick="return btnSetTaskCharger_onclick()"><spring:message code='ezApprovalG.t937'/></span></li>
 	            <li id="tdSearchCab"><span class="icon16 icon16_search" id="SearchCab" onclick="return SearchCabinet('0')"></span></li>
 	            <li id="tdBtnCabDel" style="display: none;"><span class="icon16 icon16_delete" id="btnCabDel" onclick="return DeleteCab();"></span></li>
-	            <li id="tdbtnViewRecList"><span id="btnViewRecList" onclick="return btnViewRecList_onclick()"><spring:message code='ezApprovalG.t526'/></span></li>
-	            <li style="vertical-align: middle; float:right"> <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
-	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
-	            </select>  </li>
+	            <li id="tdbtnViewRecList"><span id="btnViewRecList" onclick="return btnViewRecList_onclick()"><spring:message code='ezApprovalG.t526'/></span></li>	            
+                <%-- 2024-06-07 전인하 - 기록물대장 > 하위부서 선택 드롭다운 --%>
+                <li style="vertical-align: middle; float:right">
+                    <select select id="rec_underDept2" name="rec_underDept2" style="max-width:200px;" onchange="onSelect_Year(this);">    
+                        <option value="default" selected><spring:message code='ezApprovalG.underDept.jih001'/></option>
+                    </select>
+                </li>
+                <li style="vertical-align: middle; float:right">
+	                <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
+	                    <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+                    </select>
+                </li>
 	        </ul>
 	
 	        <ul id="trRecSubMenu" style="Display: none;">
@@ -2466,6 +2558,8 @@
 	            <%-- 2022-03-18 홍승비 - 미처리문서함 > 내부시행문의 반송 시 문서삭제 기능 추가 --%>
 	            <li id="tbtnRemoveDoc" style="display:none;"><span class="icon16 icon16_delete" id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"></span></li>
 	            <li id="tdViewCabList" style="display:none"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
+            </ul>         
+            <ul id='recordRight' class='selectUnderDept' style='width:100%'>
 	            <%-- 2023-05-23 이혜림 - 전자결재G > 기록물대장 미리보기 - 미리보기 영역 상단 아이콘 삽입 (기록물 대장) --%>
 		            <div id="right" class="sub_frameIcon" <c:if test="${useAprPreview != 'YES'}">style="display:none;"</c:if>>
 	    				<div class="sub_frameIconUL" style="width:auto !important;">
@@ -2473,10 +2567,20 @@
 	        				<p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H', 'Cabinet')"></span></p>
 					    </div>
 					</div>
-	            <li style="vertical-align: middle; float:right"> <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
-	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
-	            </select>  </li>  
-	        </ul>
+					<%-- 2024-06-07 전인하 - 기록물대장 > 하위부서 선택 드롭다운 --%>
+                    <c:if test="${underDeptFlag eq 'TRUE'}">
+                        <li style="vertical-align: middle; float:right">
+                            <select id="rec_underDept" name="rec_underDept" style="max-width:300px;" onchange="onSelect_Year(this);">
+                                <option value="default" selected><spring:message code='ezApprovalG.underDept.jih001'/></option>
+                            </select>
+                        </li>
+                    </c:if>	
+	            <li style="vertical-align: middle; float:right">
+	                <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">
+	                    <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+	                </select>
+                </li>  
+            </ul>
 	
 	        <ul id="trDeliveryMenu" style="display: none">
 	        	<li class="important" id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>

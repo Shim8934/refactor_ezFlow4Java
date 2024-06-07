@@ -50,11 +50,17 @@
 	<typeAlias  alias="ApprGAttachOptionVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGAttachOptionVO"/>
 	<typeAlias  alias="ApprGGroupDocInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO"/>
     <typeAlias  alias="ApprGOutOfOfficeInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO"/>
+    <typeAlias  alias="OrganDeptVO" 		type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 		
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
 		<result property="companyID"					column="companyID"						/>
 		<result property="companyName"					column="companyName"						/>
 	</resultMap>
+
+    <resultMap class="OrganDeptVO" 	id="OrganDeptMap">
+        <result property="cn"					column="cn"						/>
+        <result property="displayName"					column="displayName"						/>
+    </resultMap>
 	
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
 <!-- 		{CALL EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -35867,5 +35873,22 @@
 			</iterate>                       
 		</dynamic>
 	</insert>
-	
+
+    <!-- 2024-06-07 전인하 - 기록물대장 > 하위부서 리스트 조회 -->
+    <select id="EzApprovalGDAO.getUnderDeptList" parameterClass="Map" resultMap="OrganDeptMap">
+        SELECT
+            CN,
+        <isEqual property="primary" compareValue="1">
+            DISPLAYNAME AS DISPLAYNAME
+        </isEqual>
+        <isNotEqual property="primary" compareValue="1">
+            DISPLAYNAME2 AS DISPLAYNAME
+        </isNotEqual>
+        FROM
+            TBL_DEPTMASTER
+        WHERE
+            TENANT_ID = #tenantID#
+        AND
+            DEPT_CD_PATH LIKE CONCAT(CONCAT('%', #deptID#), '%')
+    </select>
 </sqlMap>

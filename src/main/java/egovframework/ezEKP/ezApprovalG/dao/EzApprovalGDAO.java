@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezApprovalG.vo.*;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -3898,4 +3899,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGOpinionVO> getDocsOpinionInfo(Map<String, Object> map) throws Exception {
 		return (List<ApprGOpinionVO>) list("EzApprovalG.getDocsOpinionInfo", map);
 	}
+
+	// 2024-06-07 전인하 - 기록물대장 > 하위부서 리스트 조회 
+    public List<OrganDeptVO> getUnderDeptList(Map<String, Object> map) {
+		return (List<OrganDeptVO>) list("EzApprovalGDAO.getUnderDeptList", map);
+    }
 }
