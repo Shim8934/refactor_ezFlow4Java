@@ -1010,7 +1010,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 #theme2Body .section1 .sec1Layout_btm_left .portlet_title .portletText img{margin:19px 8px 0 0;}
 #theme2Body .section1 .sec1Layout_btm_left .portlet_list{padding:0 20px;}
 #theme2Body .section1 .sec1Layout_btm_left .portlet_list li{padding:4px 0 4px 20px; border:none; line-height:26px; background:url(/images/ezNewPortal/list_bul2.png) no-repeat 7px center; color:#444;}
-#theme2Body .section1 .sec1Layout_btm_left .portlet_list li .txt{color:#444; padding-bottom:0; float:left;}
+#theme2Body .section1 .sec1Layout_btm_left .portlet_list li .txt{color:#444; padding-bottom:0; float:left; max-width:calc(100% - 180px);}
+#theme2Body .section1 .sec1Layout_btm_left .portlet_list li .name{float:right; width:55px; text-align:right;}
 #theme2Body .section1 .sec1Layout_middle{overflow:hidden; float:left; padding:0px; margin-left:20px; box-sizing:border-box; background: #fff; border-radius: 10px; box-shadow:0 1px 5px rgba(0,0,0,0.1);height:190px; }
 #theme2Body .section1 .sec1Layout_middle .main_schedule{ margin:0; height:100%;}
 #theme2Body .section1 .sec1Layout_middle .main_schedule .list{width:55%; height:100%; padding-top:10px; box-sizing:border-box;}
@@ -1553,7 +1554,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 
 .resources_setting{margin:0px; padding:18px 15px; float:right; overflow:hidden; cursor:pointer;}
 
-.resource_listBox { clear: both; height:calc(100% - 81px); margin: 0px 0px 0px 0px; padding: 0px 0px; overflow-x: hidden; overflow-y:auto; box-sizing: border-box; background:#fff;}
+.resource_listBox { clear: both; height:calc(100% - 79px); margin: 0px 0px 0px 0px; padding: 0px 0px; overflow-x: hidden; overflow-y:auto; box-sizing: border-box; background:#fff;}
 .resource_listBoxUL { list-style: none; margin: 0px;  padding:10px 20px 0px; box-sizing:border-box;}
 .resource_listBoxUL li{margin-top:10px; display:none;}
 .resource_listBoxUL li:first-child{margin-top:0;}
