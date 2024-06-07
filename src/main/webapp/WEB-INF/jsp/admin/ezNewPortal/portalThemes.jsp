@@ -712,11 +712,16 @@
 
 						listHTML += ConvertCharToEntityReference(item.portletName);
 						listHTML += "</span>";
-						listHTML += "<label class='portlet_switch switch'>";
+						listHTML += "<label class='portlet_switch switch' title='"+ "<spring:message code='ezNewPortal.fixportlet.theme2' />" +"'>";
 
 						listHTML += "<input class='chk_portlet' type='checkbox' id='portlet" + portletId + "' ";
 						listHTML += item.fixBoard ? " data-fix=true " : "";
-						listHTML += item.portletUsed ? " checked>" : ">";
+
+						if (themeId == 2) {
+							listHTML +=  " disabled > ";
+						} else {
+							listHTML += item.portletUsed ? " checked>" : ">";
+						}
 
 						listHTML += "<span class='slider round'></span></label>";
 						listHTML += "</div>";
