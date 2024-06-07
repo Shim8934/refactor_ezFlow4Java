@@ -308,7 +308,7 @@
 				if ('${useTotalSearch}' === 'YES') {
 					str += '<li class="contentlayout_right"><div class="employee_search"><input type="text" placeholder="<spring:message code="main.t00029" />" id="topsearch_btn"><span onclick="toggleTopSearch()"></span></div></li>' 
 				}
-				str += '	<li class="contentlayout_none">';
+				str += '	<li class="contentlayout_none" onclick="subMenuClickEvent(\'off\')">';
 				str += setMainMenu();
 				str += '	</li>';
 				str += '</ul>';		
@@ -1746,7 +1746,7 @@
 		}
 		
 		function toggleDivMenu(elem, mode) {
-	        if (mode == "on" || (typeof mode == "undefined" && getComputedStyle(elem).display == "none")) {
+			if (mode == "on" || (typeof mode == "undefined" && getComputedStyle(elem).display == "none")) {
 	        	subMenuClickEvent('off');
 	        	elem.style.display = "block";
 	        	dimLayerControl('open');
@@ -1754,6 +1754,10 @@
 	        	elem.style.display = "none";
 	            dimLayerControl('close');
 	        }
+		}
+		
+		function closeAllDivLayer() {
+			
 		}
 		
 		function dimLayerControl(mode) {
@@ -1833,7 +1837,7 @@
 			if (menuDisplayMode == '1') {
 				topFrame.style.width = "calc(100vw - 81px)";
 			} else {
-				topFrame.style.width = "100vw - 81px";
+				topFrame.style.width = "100vw";
 			}
 			//parent.document.getElementById('topFrame').style.position = 'relative';
 		}
