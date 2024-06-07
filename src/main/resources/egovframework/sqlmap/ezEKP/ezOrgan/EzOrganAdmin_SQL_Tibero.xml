@@ -10,6 +10,7 @@
 	<typeAlias alias="OrganGroupVO" type="egovframework.ezEKP.ezOrgan.vo.OrganGroupVO"/>
 	<typeAlias alias="OrganLoginStopUserVO" type="egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO"/>
 	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
+	<typeAlias alias="OrganAddJobVO" type="egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO"/>
 	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
@@ -5750,7 +5751,8 @@
 		<isNotNull property="extensionAttribute12" prepend=","> <![CDATA[extensionattribute12 = #extensionAttribute12#]]></isNotNull>
 		<isNotNull property="extensionAttribute13" prepend=","> <![CDATA[extensionattribute13 = #extensionAttribute13#]]></isNotNull>
 		<isNotNull property="extensionAttribute14" prepend=","> <![CDATA[extensionattribute14 = #extensionAttribute14#]]></isNotNull>
-		<isNotNull property="extensionAttribute15" prepend=","> <![CDATA[extensionattribute15 = #extensionAttribute15#]]></isNotNull>   	
+		<isNotNull property="extensionAttribute15" prepend=","> <![CDATA[extensionattribute15 = #extensionAttribute15#]]></isNotNull>
+		<isNotNull property="deptTreeFlag" prepend=","> <![CDATA[deptTreeFlag = #deptTreeFlag#]]></isNotNull>
    		<![CDATA[     			
       		WHERE  
       			cn = #cn#

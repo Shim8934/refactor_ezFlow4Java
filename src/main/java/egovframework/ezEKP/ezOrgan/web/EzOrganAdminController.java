@@ -366,6 +366,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
 		String useOTP = ezCommonService.getTenantConfig("useOTP", user.getTenantId());
 		String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", user.getTenantId());
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", user.getTenantId());
 		if (useExternalMailServer == null || useExternalMailServer.equals("")) {
 			useExternalMailServer = "NO";
 		}
@@ -400,6 +401,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useOTP", useOTP);
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -775,6 +777,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         companyMailDomain = pageType.equals("modify") ? deptMail.split("@")[1] : companyMailDomain; // 수정이면 수정할 부서의 도메인
 		String companyDomainList = ezCommonService.getCompanyConfig(tenantID, deptCompanyID, "MailInnerDomain");
 		String[] domainList = companyDomainList.split(";");
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId());
        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
@@ -784,6 +787,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("domainList", domainList);
         model.addAttribute("deptMail", deptMail);
         model.addAttribute("pageType", pageType);
+        model.addAttribute("useOrganHideFlag", useOrganHideFlag);
         
         logger.debug("deptInfo ended");
         
@@ -1227,6 +1231,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
 		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId());
 		
 		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
 			useZipCodeSearch = "YES";
@@ -1246,6 +1251,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("userPrimary", userInfo.getPrimary());
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
+		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
 				
 		logger.debug("userInfo ended");
 		
@@ -5906,6 +5912,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
 		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId());
 
 		if (useZipCodeSearch == null || useZipCodeSearch.equals("")) {
 			useZipCodeSearch = "YES";
@@ -5929,6 +5936,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("deptId", deptId);
 		model.addAttribute("jobId", jobId);
+		model.addAttribute("useOrganHideFlag", useOrganHideFlag);
 
 		logger.debug("addJobInfo ended");
 

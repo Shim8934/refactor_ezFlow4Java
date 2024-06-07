@@ -182,7 +182,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
 	                
 					// 자식 부서의 상세 정보를 XML String 형태로 변환한다.
-	                memberInfo[memberCount] = getTreeNodeInfo(result, pDeptID, prevDeptID, deptInfo, pPropList, "");
+	                memberInfo[memberCount] = getTreeNodeInfo(result, pDeptID, prevDeptID, deptInfo, pPropList, "", adminOrgan);
 	                memberCount++;
 				}		
 			}
@@ -222,7 +222,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        // 부모 부서가 있는 경우 부모 부서로 이동하여 처리를 반복한다. 
         } while (!prevDeptID.toLowerCase().equals(pTopID.toLowerCase()) && !deptID.equals(""));
 		
-        deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList, isOrgan) + "</TREEVIEWDATA>";
+        deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList, isOrgan, adminOrgan) + "</TREEVIEWDATA>";
         
         logger.debug("deptInfo=" + deptInfo);
         logger.debug("getDeptTreeInfo ended");
@@ -271,7 +271,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				
 				OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
 
-                memberInfo[memberCount] = getTreeNodeInfo(result, "", "", "", pPropList, "");
+                memberInfo[memberCount] = getTreeNodeInfo(result, "", "", "", pPropList, "", adminOrgan);
                 memberCount++;
 			}		
 		}
@@ -290,7 +290,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return deptlist.toString();
 	}
 	
-	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList, String isOrgan) throws Exception {
+	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList, String isOrgan, String adminOrgan) throws Exception {
 		logger.debug("getTreeNodeInfo started");
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", vo.getTenantId());
@@ -323,7 +323,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			isOrgan= "true";
 		}
 		// 부서의 자식 부서의 갯수를 구한다.
-		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId(), isOrgan);
+		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId(), isOrgan, adminOrgan);
 		
 		if (cnt > 0) {
 	        nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");

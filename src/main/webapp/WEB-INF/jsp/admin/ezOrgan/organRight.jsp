@@ -46,6 +46,7 @@
 		    };
 		    
 		    $(document).ready(function(){
+				useOrganHideFlag = "${useOrganHideFlag}";
 		    	getDeptFullTree(topid);
 				
 				if (topid != "Top"){

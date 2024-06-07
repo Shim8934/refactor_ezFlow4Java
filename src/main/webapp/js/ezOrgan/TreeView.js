@@ -4,9 +4,9 @@ var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
 var TreeClasses     = new Array();
 var TreeImages      = new Array();
-
+// 부서 숨김표시 플레그
+var useOrganHideFlag;
 var _depth = 0;
-
 //###########################################################################################
 // TreeNode 클래스 시작
 function TreeNode() {
@@ -202,7 +202,11 @@ function TreeNode() {
         
         // 숨김부서 뒤에 X 표시
         var strDeptTreeFlag = GetAttribute(treeDiv, "deptTreeFlag");
-        var nodeText = strDeptTreeFlag === 'N' ? document.createTextNode(this.NodeName+"(X)") : document.createTextNode(this.NodeName);
+        var nodeText = document.createTextNode(this.NodeName);
+
+        if ("YES" === useOrganHideFlag) {
+            nodeText = strDeptTreeFlag === 'N' ? document.createTextNode(this.NodeName+"(X)") : document.createTextNode(this.NodeName);
+        } 
         
         spnNode.appendChild(nodeText);
 

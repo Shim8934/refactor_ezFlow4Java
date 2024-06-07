@@ -6148,6 +6148,7 @@ CREATE TABLE `tbl_deptmaster` (
   `CREATEDT` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `MANUAL_FLAG` varchar(10) DEFAULT NULL,
+  `DEPTTREEFLAG` char(1) DEFAULT 'Y',
   PRIMARY KEY (`TENANT_ID`,`CN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12982,7 +12983,7 @@ CREATE TABLE `tbl_userlocalinfo` (
 DROP TABLE IF EXISTS `tbl_usermaster`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_usermaster` (` (
+CREATE TABLE `tbl_usermaster` (
   `CN` varchar(80) NOT NULL,
   `DISPLAYNAME` varchar(120) CHARACTER SET utf8mb4 NOT NULL,
   `DISPLAYNAME2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,

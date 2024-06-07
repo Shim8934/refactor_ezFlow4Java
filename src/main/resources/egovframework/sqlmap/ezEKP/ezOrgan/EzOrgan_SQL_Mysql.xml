@@ -2219,6 +2219,12 @@
 		      			extensionattribute2 <> CN
 			     ]]> 
     		</isEmpty>
+      		<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[
+      				AND
+      		    		DEPTTREEFLAG = 'Y'
+      			]]>
+			</isEqual>
       		AND
       			tenant_id = #tenantId#	
 	</select>

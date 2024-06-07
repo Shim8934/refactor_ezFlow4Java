@@ -118,6 +118,14 @@
 			   if(approvalFlag === "S") {
 			   	$(".onlyUseG").css("display", "none");
 			   }
+
+				var useOrganHideFlag = "${useOrganHideFlag}";
+				var treeFlagClass = document.querySelectorAll(".treeFlag");
+				if ("NO" === useOrganHideFlag) {
+					treeFlagClass.forEach(function (treeFlag) {
+						treeFlag.style.display = "none";
+					});
+				}
 			});
 			
 			function Check_ID(pValue, isAdd) {
@@ -356,8 +364,8 @@
 		    	<td><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></td> 
 		  	</tr> 
 		  	</c:if>
-			<tr>
-				<th><spring:message code='ezOrgan.kdh07' /></th>
+			<tr class="treeFlag">
+				<th ><spring:message code='ezOrgan.kdh07' /></th>
 				<td><input type="checkbox" id=deptTreeFlag></td>
 			</tr>
 		</table> 

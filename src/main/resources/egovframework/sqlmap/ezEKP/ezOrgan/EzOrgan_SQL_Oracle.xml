@@ -292,6 +292,12 @@
 		              				CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
 		              		]]>
               			</isEmpty>
+		 				<isEqual property="adminOrgan" compareValue="n">
+			 				<![CDATA[ 
+								 AND 
+									DEPTTREEFLAG = 'Y'
+							 ]]>
+		 				</isEqual>
               			
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
@@ -333,6 +339,12 @@
 									CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
 							]]>
 						</isEmpty>
+						<isEqual property="adminOrgan" compareValue="n">
+							<![CDATA[ 
+								 AND 
+									DEPTTREEFLAG = 'Y'
+							 ]]>
+						</isEqual>
 		<![CDATA[
                			AND
                				TENANT_ID = #v_TENANT_ID#	 ) A
@@ -1082,7 +1094,8 @@
 		            ADSPATH ,
 		            UPDATEDT ,
 		            'dept' TYPE ,
-		            TENANT_ID as tenantId
+		            TENANT_ID as tenantId,
+	            	DEPTTREEFLAG
 				FROM
 		        	TBL_DEPTMASTER 
 		       WHERE
@@ -1146,7 +1159,8 @@
 		            ADSPATH ,
 		            UPDATEDT ,
 		            'dept' TYPE ,
-		            TENANT_ID as tenantId
+		            TENANT_ID as tenantId,
+	            	DEPTTREEFLAG
 				FROM
 		        	TBL_DEPTMASTER 
 		       WHERE
@@ -2075,6 +2089,12 @@
 	    		TBL_DEPTMASTER 
             $strSQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[ 
+					 AND 
+						DEPTTREEFLAG = 'Y'
+				]]>
+			</isEqual>
 			<include refid="organSearchTrashDept_dept"/>
             AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
 	    </isEqual>
@@ -2331,6 +2351,12 @@
 		      			extensionattribute2 <> CN
 			     ]]> 
     		</isEmpty>
+			<isEqual property="adminOrgan" compareValue="n">
+				<![CDATA[
+      				AND
+      		    		DEPTTREEFLAG = 'Y'
+      			]]>
+			</isEqual>
     		<![CDATA[
       		AND
       			tenant_id = #tenantId#	
@@ -2396,7 +2422,8 @@
 	            extensionattribute15 ,
 	            adspath ,
 	            updatedt ,
-	            'dept' type  
+	            'dept' type,
+				deptTreeFlag  
 			FROM 
 				TBL_DEPTMASTER 
 			WHERE  

@@ -42,6 +42,7 @@
 	    	var primaryLang = "${primaryLang}";
 			var deptId = "${deptId}";
 			var jobId = "${jobId}";
+			var useOrganHideFlag = "${useOrganHideFlag}";
 	    	
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
@@ -239,6 +240,13 @@
 		        if (locale != 'ko') {
 		        	$(".onlyUseKo").css("display", "none");
 		        }
+				
+				var treeFlagClass = document.querySelectorAll(".treeFlag");
+				if ("NO" === useOrganHideFlag) {
+					treeFlagClass.forEach(function (treeFlag) {
+						treeFlag.style.display = "none";
+					});
+				}
 			});
 			
 			function KeEventControl(obj) {
@@ -570,8 +578,8 @@
 				<th style="width: 71px; text-align:center"></th>
 				<td style="width: 240px;">
 				</td>
-				<th style="width: 71px; text-align:center"><spring:message code='ezOrgan.kdh07' /></th>
-				<td style="width: 240px;">
+				<th class="treeFlag" style="width: 71px; text-align:center"><spring:message code='ezOrgan.kdh07' /></th>
+				<td class="treeFlag" style="width: 240px;">
 					<input type="checkbox" id="userTreeFlag"/>
 				</td>
 			</tr>
