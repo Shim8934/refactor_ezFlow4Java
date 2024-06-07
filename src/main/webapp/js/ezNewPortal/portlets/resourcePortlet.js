@@ -85,7 +85,7 @@ function mappingResourcePortlet(vo){
 	var timeTable = vo.rsPortletTime.split(";");
 	var num       = vo.rsPortletNum.split(";");
 	var cnt       = timeTable.length; 
-	if(cnt>4)     {cnt=4;} // 포틀릿 스크롤바 때문에 최대 3개로 고정
+	// if(cnt>4)     {cnt=4;} // 포틀릿 스크롤바 때문에 최대 3개로 고정 // 2024-06-07 디자인 변경사항 : 예약 시간 추가한 것 다 보이도록 수정
 	
 	var li       = document.createElement("li");
 	var dl       = document.createElement("dl");
@@ -118,10 +118,10 @@ function mappingResourcePortlet(vo){
 			span.addEventListener('click', function(event) {reserveViewPopup()});
 			dd.appendChild(span);
 		}
-		if(cnt<4) {
+		// if(cnt<4) {
 			p = makeEmptyList(vo.brdID);
 			dd.appendChild(p);
-		}
+		// }
 	}
 
 	dt.appendChild(spanImg);
