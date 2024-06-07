@@ -1756,10 +1756,6 @@
 	        }
 		}
 		
-		function closeAllDivLayer() {
-			
-		}
-		
 		function dimLayerControl(mode) {
 			var mainFrame = window.parent.document.getElementById("mainFrame");
 			if(mode == "open") {
