@@ -242,6 +242,11 @@
 				TENANT_ID = #tenantID#
 			AND
 				EXTENSIONATTRIBUTE1 = #deptID#
+		]]>
+			<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+				DEPTTREEFLAG = 'Y'
+			</isEqual>
+		<![CDATA[
 			ORDER BY
         		A.EXTENSIONATTRIBUTE15, 
         		A.DISPLAYNAME
@@ -314,6 +319,11 @@
 									TENANT_ID = #tenantID#)
 				AND
 					TENANT_ID = #tenantID#
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					USERTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND 
 					DEPARTMENT NOT IN (SELECT 
 										CN 
@@ -360,6 +370,9 @@
 					(B.DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\'
 				OR
 					D.DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\')
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					A.USERTREEFLAG = 'Y'
+				</isEqual>
 				AND
 					B.TENANT_ID = #tenantID#)
 			<![CDATA[		
@@ -425,6 +438,11 @@
 									TENANT_ID = #tenantID#)
 				AND
 					DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' escape '\' AND TENANT_ID = #tenantID#)
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					USERTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					TENANT_ID = #tenantID#)
 			]]>    
@@ -457,6 +475,9 @@
 					A.DEPTID = D.CN
 				WHERE
 					A.DEPTID = #deptID#
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					A.USERTREEFLAG = 'Y'
+				</isEqual>
 				AND
 					B.TENANT_ID = #tenantID#)
 			<![CDATA[		
@@ -512,6 +533,11 @@
 					TENANT_ID = #tenantID#
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					EXTENSIONATTRIBUTE1 = 'Top')
 				)
@@ -542,6 +568,11 @@
 					TENANT_ID = #tenantID#
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					CN = #companyID#)
 					
@@ -565,6 +596,11 @@
 					TENANT_ID = #tenantID#
 				AND
 					DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					EXTENSIONATTRIBUTE1 = #companyID#)
 				)
@@ -597,6 +633,11 @@
 				TENANT_ID = #tenantID#
 			AND
 				DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+		]]>
+			<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+				DEPTTREEFLAG = 'Y'
+			</isEqual>
+		<![CDATA[
 			AND
 				CN = #deptID#)
 				
@@ -620,6 +661,11 @@
 				TENANT_ID = #tenantID#
 			AND
 				DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+		]]>
+			<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+				DEPTTREEFLAG = 'Y'
+			</isEqual>
+		<![CDATA[
 			AND
 				EXTENSIONATTRIBUTE1 = #deptID#)
 			)
@@ -652,6 +698,11 @@
 						TENANT_ID = #tenantID#
 					AND
 						DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+				]]>
+					<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+						DEPTTREEFLAG = 'Y'
+					</isEqual>
+				<![CDATA[
 					AND
 						EXTENSIONATTRIBUTE1 = 'Top'
 					ORDER BY
@@ -689,6 +740,11 @@
 									TENANT_ID = #tenantID#
 								AND
 									CN = #deptID#)
+				]]>
+					<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+						DEPTTREEFLAG = 'Y'
+					</isEqual>
+				<![CDATA[
 					AND
 						CN <> #companyID#)
 						
@@ -720,7 +776,13 @@
 												WHERE
 													TENANT_ID = #tenantID#
 												AND
-													CN = #deptID#))
+													CN = #deptID#)
+				]]>
+					<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+						DEPTTREEFLAG = 'Y'
+					</isEqual>
+				<![CDATA[
+						)
 					)
 					ORDER BY 
 						INSTR(
@@ -767,6 +829,11 @@
 								TENANT_ID = #tenantID#
 							AND
 								CN = #deptID#)
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
 				AND
 					CN != #companyID#)
 					
@@ -798,7 +865,13 @@
 											WHERE
 												TENANT_ID = #tenantID#
 											AND
-												CN = #deptID#))
+												CN = #deptID#)
+			]]>
+				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
+					DEPTTREEFLAG = 'Y'
+				</isEqual>
+			<![CDATA[
+					)
 				)
 				ORDER BY 
 					INSTR(( SELECT
