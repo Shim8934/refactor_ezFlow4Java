@@ -167,6 +167,8 @@
 
 							attachRecordDoc();
 							pd.getElementById("ifrm" + frameNum).contentWindow.setAttachInfo(pDocID, "APR", pd.getElementById("lstAttachLink"));
+
+							attachedDocList = "";
 						}
 
 	                    // 반송문서가 아닌 임시저장 문서의 경우, 안 추가 시 초기 고정수신처 세팅 진행

@@ -35424,12 +35424,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         AtomicReference<String> result = new AtomicReference<>("true");
         AtomicReference<ApprGAttachInfoVO> newAttachInfo = getAttachInfo(newDocID, userInfo.getCompanyID(), userInfo.getTenantId());
-        AtomicInteger cnt = new AtomicInteger(1);
+        AtomicInteger attachDocCnt = new AtomicInteger(1);
+        AtomicInteger attachFileCnt = new AtomicInteger(1);
 
         attachDocList.forEach(d -> {
             try {
-                docAttach(newAttachInfo, userInfo, cnt, d);
-                fileAttach(newAttachInfo, cnt, d);
+                // 첨부기안 대상 문서의 문서첨부 존재 시 새 문서의 문서첨부로 추가
+                copyAttachedDoc(newAttachInfo, attachDocCnt, d);
+                
+                // 첨부기안 대상 문서를 새 문서의 첨부파일로 추가
+                docAttach(newAttachInfo, userInfo, attachFileCnt, d);
+                
+                // 첨부기안 대상 문서의 첨부파일 리스트를 새 문서에 추가
+                fileAttach(newAttachInfo, attachFileCnt, d);
             } catch (SQLException se) {
                 logger.error(se.getMessage(), se);
 
@@ -35459,7 +35466,44 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         logger.info("getAttachInfo ended");
         return a;
     }
-    
+
+    private void copyAttachedDoc(AtomicReference<ApprGAttachInfoVO> newAttachInfo, AtomicInteger attachDocCnt, String docID) throws Exception {
+        logger.info("copyAttachedDoc started");
+
+        List<ApprGDocAttachInfoVO> attachedDocList = null;
+        ApprGAttachInfoVO vo = newAttachInfo.get();
+
+        String newDocID = vo.getNewDocID();
+        String tenantID = String.valueOf(vo.getTenantID());
+        String companyID = vo.getCompanyID();
+        int listCnt = 0;
+
+        attachedDocList = ezApprovalGDAO.getAttachedDocList(
+            new HashMap() {{
+                put("docID", docID);
+                put("newDocID", newDocID);
+                put("tenantID", tenantID);
+                put("companyID", companyID);
+            }}
+        );
+
+        listCnt = attachedDocList.size();
+
+        if (listCnt == 0) {
+            return;
+        }
+
+
+        for (int cnt = 0; cnt < listCnt; cnt++) {
+            String sn = String.valueOf(attachDocCnt.getAndIncrement());
+            attachedDocList.get(cnt).setAttachSN(sn);
+
+            ezApprovalGDAO.insertDocAttachInfo(attachedDocList.get(cnt));
+        }
+
+        logger.info("copyAttachedDoc ended");
+    }
+
     private void docAttach(AtomicReference<ApprGAttachInfoVO> newAttachInfo, LoginVO userInfo, AtomicInteger cnt, String docID) throws Exception {
         logger.info("docAttach started");
 

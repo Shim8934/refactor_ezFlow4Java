@@ -549,6 +549,8 @@
 								if (attachedDocList != "") {
 									attachRecordDoc();
 									setAttachInfo(pDocID, "APR", document.getElementById("lstAttachLink"));
+
+									attachedDocList = "";
 								}
 
 		                     	if (isUsed == "reuse") {

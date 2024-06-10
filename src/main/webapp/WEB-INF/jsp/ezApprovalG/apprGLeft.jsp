@@ -602,6 +602,8 @@
 		                openDraftUI(formURL, formDocType);
 		            }
 		        }
+
+				attachedDocList = "";
 		    }
 		    
 		    /* 2022-01-11 홍승비 - 전자결재G 일괄기안 기능 추가 (웹한글) */
@@ -616,6 +618,8 @@
 	            // 양식 선택창 없이 바로 일괄기안창을 호출한다.
 	            var getFormCont_Cross = window.open("/ezApprovalG/draftuiAll_WHWP.do", "/ezApproval/draftuiAll_WHWP.do", GetOpenWindowfeature(1150, 950));
 	            try { getFormCont_Cross.focus(); } catch (e) {}
+
+				attachedDocList = "";
 		    }
 		    
 		    function draftAll_Complete(ret) {}
