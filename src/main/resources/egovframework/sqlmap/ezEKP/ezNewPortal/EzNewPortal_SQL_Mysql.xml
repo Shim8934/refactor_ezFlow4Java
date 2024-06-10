@@ -1473,22 +1473,22 @@ AND
 		1 AS accessYN
 	FROM
 		TBL_PORTAL_THEME A
-			JOIN
+	JOIN
 		TBL_PORTAL_THEME_COMP B
-		ON
-					A.theme_id = B.theme_id
-				AND
-					B.company_id = #companyId#
-				AND
-					B.tenant_id = #tenantId#
-			JOIN
+	ON
+		A.theme_id = B.theme_id
+	AND
+		B.company_id = #companyId#
+	AND
+		B.tenant_id = #tenantId#
+	JOIN
 		TBL_PORTAL_FRAME_COMP C
-		ON
-					B.theme_id = C.theme_id
-				AND
-					C.company_id = #companyId#
-				AND
-					C.tenant_id = #tenantId#
+	ON
+		B.theme_id = C.theme_id
+	AND
+		C.company_id = #companyId#
+	AND
+		C.tenant_id = #tenantId#
 	WHERE
 		B.tenant_id = #tenantId#
 	  AND
