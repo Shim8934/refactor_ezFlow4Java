@@ -732,10 +732,10 @@
 			<ul class="on">
 				<li class="important off" id="2"><span onclick="excelUpload()"><spring:message code='ezApprovalG.pgb01'/></span></li>
 				<c:if test="${userLang eq '2'}">
-					<li id="3" class="off"><a href="<c:url value="/files/RecipientGroupBulkRegistrationForm.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
+					<li id="3" class="off"><a href="<c:url value="/files/RecipientGroupBulkRegistrationForm2.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
 				</c:if>
 				<c:if test="${userLang ne '2'}">
-					<li id="3" class="off btnDwn"><a href="<c:url value="/files/수신자그룹지정일괄등록양식.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
+					<li id="3" class="off btnDwn"><a href="<c:url value="/files/RecipientGroupBulkRegistrationForm1.xlsx"/>"><span><spring:message code='ezApprovalG.pgb02'/></span></a></li>
 				</c:if>
 				<input type="file" name="excelFile" class="important off" id="excelFile" onchange="btn_AttachAdd_onclick()" />
 				<span class="info-message"><spring:message code='ezApprovalG.pgb10'/></span>
