@@ -70,6 +70,7 @@
 		<result property="groupName"		column="GROUPNAME"			columnIndex="29"/>
 		<result property="companyid"		column="COMPANYID"			columnIndex="30"/>
 		<result property="groupColor"		column="GROUPCOLOR"			columnIndex="31"/>
+		<result property="showTop"			column="SHOWTOP"			columnIndex="32"/>
 	</resultMap>
 
 	<resultMap class="AttendantListVO" id="attendantListVO">
@@ -249,8 +250,9 @@
 	            contentpath,
 	            b.groupname,
 	            a.companyid,
-	            b.groupcolor	           
-			from 
+	            b.groupcolor,
+	            showtop
+			from
 				tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid and a.tenant_id = b.tenant_id
 	       	where  
 	       		a.scheduleid = #v_SCHEDULEID#
@@ -270,11 +272,11 @@
 				ownername2,
 				a.creatorid,
 				a.creatorname,
-				a.creatorname2,				
+				a.creatorname2,
 				date_add(a.createdate, interval +#v_OFFSETMIN# minute) as createdate,
 				a.modifierid,
 				a.modifiername,
-				a.modifiername2,				
+				a.modifiername2,
 				date_add(a.modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
 				scheduletype,
 				importance,
@@ -284,7 +286,7 @@
 				isreadonly,
 				ispublic,
 				datetype,				
-				date_add(a.startdate, interval +#v_OFFSETMIN# minute) as startdate,				
+				date_add(a.startdate, interval +#v_OFFSETMIN# minute) as startdate,
 				date_add(a.enddate, interval +#v_OFFSETMIN# minute) as enddate,
 				repetition,
 				repetitiondelete,
@@ -293,18 +295,19 @@
 				contentpath,
 				b.groupname,
 				a.companyid,
-				b.groupcolor
+				b.groupcolor,
+				showtop
         	from 
         		tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid
        		where  
        			(a.ownerid in ($v_INDILIST$)
             and 
             	(            		
-            		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#) 
+            		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#)
             		or
-            		(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#) 
+            		(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#)
             		or
-            		(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#) 
+            		(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#)
             		or 
             		(a.datetype='3')
             	)
@@ -326,9 +329,9 @@
         	or  
        			(a.ownerid in ($v_PIDLIST$)
        		and
-        		a.companyid = #v_COMPANYID#        	     	
+        		a.companyid = #v_COMPANYID#
         	and 
-        		((a.scheduletype = '2' and a.ownerid in (SELECT 
+        		((a.scheduletype = '2' and a.ownerid in (SELECT
 														deptid
 													FROM 
 														TBL_ADDJOBMASTER 
@@ -359,11 +362,11 @@
 					(a.scheduletype <> '2'))
             and 
             	(            		
-            		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#) 
+            		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#)
             		or
-            		(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#) 
+            		(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#)
             		or
-            		(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#) 
+            		(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#)
             		or 
             		(a.datetype='3')
             	)
@@ -376,7 +379,7 @@
             	a.title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
             ]]>
             </isNotEmpty>
-            <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
+            <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>
         		)
           order by a.startdate asc
 	</select>
@@ -1228,11 +1231,12 @@
 			insert into tbl_schedule(
 				parentid, 			ownerid, 			ownername, 					ownername2,			creatorid, 			creatorname,		creatorname2,		createdate,			modifierid,		modifiername,
 				modifiername2,		modifydate,			scheduletype,				importance,			hasattendant,		hasattach,			hascomment,			isreadonly,			ispublic,		datetype,	
-				startdate, 			enddate,	 		repetition,					repetitiondelete,	title,				location,			contentpath,		tenant_id,			companyid
+				startdate, 			enddate,	 		repetition,					repetitiondelete,	title,				location,			contentpath,		tenant_id,			companyid,		showtop
 			) values (
 				0,					#v_OWNERID#,		#v_OWNERNAME#,				#v_OWNERNAME2#,		#v_CREATORID#,		#v_CREATORNAME#,	#v_CREATORNAME2#,	utc_timestamp(),	#v_CREATORID#,	#v_CREATORNAME#,
 				#v_CREATORNAME2#,	utc_timestamp(),	#v_SCHEDULETYPE#,			#v_IMPORTANCE#,		#v_HASATTENDANT#,	#v_HASATTACH#,		'N',				'N',				#v_ISPUBLIC#,	#v_DATETYPE#,
-				#v_STARTDATE#,		#v_ENDDATE#,		ifnull(#v_REPETITION#, ''),	'',					#v_TITLE#,			ifnull(#v_LOCATION#, ''),				#v_CONTENTPATH#,	#v_TENANTID#,   #v_COMPANYID#	 
+				#v_STARTDATE#,		#v_ENDDATE#,		ifnull(#v_REPETITION#, ''),	'',					#v_TITLE#,			ifnull(#v_LOCATION#, ''),				#v_CONTENTPATH#,	#v_TENANTID#,   #v_COMPANYID#,
+				#v_SHOWTOP#
 			)
    		]]>
 	</insert>
@@ -1382,7 +1386,8 @@
 				enddate = #v_ENDDATE#,
 				repetition = ifnull(#v_REPETITION#, ''),
 				title = #v_TITLE#,
-				location = ifnull(#v_LOCATION#, '')
+				location = ifnull(#v_LOCATION#, ''),
+				showtop = #v_SHOWTOP#
 	   		where  
 	   			(scheduleid = #v_SCHEDULEID# or parentid = #v_SCHEDULEID#)	   		
 	   		and

@@ -139,6 +139,7 @@ var strLang128 = "時";
 var strLang129 = "分";
 var strLang130 = "グループスケジュール";
 var strLang130_1 = "グループスケジュール";
+var strLang131 = "上部に表示";
 
 var strLang253 = "選択した設備がありません。"
 var strLang254 = "選択した設備は削除できません。"

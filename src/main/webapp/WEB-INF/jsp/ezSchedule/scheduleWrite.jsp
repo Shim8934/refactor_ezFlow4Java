@@ -75,7 +75,9 @@
 		    var permissionBasisDeptYN = "<c:out value='${permissionBasisDeptYN}'/>"; // 겸직/사용자 기준 권한부여 옵션 여부
 		    var adminDeptListTemp = "<c:out value='${AdminDeptList}'/>"; // 부서관리자 권한이 존재하는 부서 id string
 		    var adminDeptList = adminDeptListTemp.split(";").filter(Boolean);
-		    
+			var chkPublic = "<c:out value='${chkSchedulePublic}'/>"; // 개인일정 작성시 공개/비공개값 설정가능 여부
+		    var showtop = "<c:out value='${showtop}'/>";
+
 		    window.onload = function () {
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
@@ -99,6 +101,9 @@
 	                document.getElementById("receiverTr2").style.display = "none";
 	                document.getElementById("HolderWriteTr1").style.display = "none";
 	                document.getElementById("HolderWriteTr2").style.display = "none";
+	                if (showtop == 'Y') {
+	                    document.getElementById("topcheck").checked = true;
+                    }
 
                     if (scheduletype != '1') {
                     	if(document.getElementById("HolderEdit2") != null){
@@ -155,7 +160,7 @@
 		        if (hasattach == "Y") {
 		            setAttachFileInfo("${strAttach}");
 		        }
-		        
+
 		        if(ispublic != "") {
 		        	document.getElementById("publicSelect").value = ispublic;
 		        }
@@ -633,6 +638,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3" id="LabelOwner">
                                                 ${strLabelOwner}
+                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck">상단표시</label>
                                             </td>
                                         </tr>
                                         </c:if>
@@ -640,6 +646,7 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3">
                                             	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
+                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck">상단표시</label>
                                             </td>
                                         </tr>
 	                                    <tr>

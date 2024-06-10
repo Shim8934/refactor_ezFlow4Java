@@ -1481,7 +1481,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	@Override
 	public int insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
 		String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, NodeList attach, NodeList attendantId, 
-		NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId, String companyID) throws Exception {
+		NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId, String companyID, String showtop) throws Exception {
 		
 		//본문내용 MHT 저장
 		String mhtPath = commonUtil.separator + "doc";
@@ -1566,7 +1566,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			map.put("v_CONTENTPATH", schedulePath);
 			map.put("v_TENANTID", tenantId);
 			map.put("v_COMPANYID", companyID);
-			
+			map.put("v_SHOWTOP", showtop);
+
 			ezScheduleDAO.insertSchedule(map);
 			
 			int scheduleId = ezScheduleDAO.getCurScheduleId(null);
@@ -1619,7 +1620,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Override
 	public int updateSchedule(String scheduleid, String creatorid, String creatorname, String creatorname2, String importance, String ispublic, String datetype, String startdate, String enddate,
-		String repetition, String title, String location, String content, NodeList attach, String defaultPath, int tenantId, String companyID) throws Exception {
+		String repetition, String title, String location, String content, NodeList attach, String defaultPath, int tenantId, String companyID, String showtop) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		String uploadFilePath = commonUtil.separator + "uploadFile";
@@ -1646,6 +1647,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_LOCATION", location);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_COMPANYID", companyID);
+		map.put("v_SHOWTOP", showtop);
 
 		ezScheduleDAO.updateSchedule(map);
 		

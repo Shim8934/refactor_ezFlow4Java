@@ -339,6 +339,13 @@ function save_schedule(pageFrom)
 			createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + stime);
 			createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + etime);
 		}
+
+		// 상단표시
+		if (document.getElementById("topcheck").checked == true) {
+            createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "Y");
+        } else {
+            createNodeAndInsertText(xmlDom, objNode, "SHOWTOP", "N");
+        }
 	}
 	else
 	{
@@ -737,6 +744,8 @@ function allday_change()
 {
     if (document.getElementById("alldaycheck").checked == true)
 	{
+        document.getElementById("topcheck").checked = false;
+        document.getElementById("topcheck").disabled = true;
         document.getElementById("Stimepicker").style.display = "none";
         document.getElementById("Etimepicker").style.display = "none";
         if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
@@ -752,6 +761,7 @@ function allday_change()
 	}
 	else
 	{
+        document.getElementById("topcheck").disabled = false;
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
         timeSelect = false;
