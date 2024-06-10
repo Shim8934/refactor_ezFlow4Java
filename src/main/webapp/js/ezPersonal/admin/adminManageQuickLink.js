@@ -723,6 +723,7 @@ function SaveQuickLink(itemId) {
 	createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", linkURL);
 	createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
 	createNodeAndInsertText(xmlpara, objNode, "pURL", document.getElementById("txtURL").value);
+	createNodeAndInsertText(xmlpara, objNode, "companyID", document.getElementById("ListCompany").value);
 	
 	if (document.getElementById("popSize").value == "chk_Full") {
 		createNodeAndInsertText(xmlpara, objNode, "pSize", "FULL");
