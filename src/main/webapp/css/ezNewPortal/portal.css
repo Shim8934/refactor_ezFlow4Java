@@ -224,7 +224,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 /* #Center {min-height:600px; margin:0px;  background:#e0e3e4; min-width:1260px;} */
 #Center {min-height:600px; margin:0px;  background:#e0e3e4; float:left;}
 .section_left{  margin:0px; padding:0px; float:left; overflow:hidden; border-right:1px solid #cdcdcd; width:320px; box-sizing:border-box; background:#fff;}
-.section_main{ overflow:auto; padding:35px 60px 0px 40px; float:none; min-width:880px; box-sizing:border-box;}
+.section_main{ overflow:auto; padding:20px 60px 0px 40px; float:none; min-width:880px; box-sizing:border-box;}
 .section_main .mainLayout_left{ overflow:hidden; float:left; padding:0px 0px 0px 18px; box-sizing:border-box; }
 .section_main .mainLayout_middle{ overflow:hidden;  padding:0px 0px 0px 16px; float:left; box-sizing:border-box; }
 .section_main .mainLayout_right{ float:left; padding:0px 0px 0px 16px; box-sizing:border-box; overflow:hidden; }
@@ -292,9 +292,9 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .noti_portlet_list .notiLI:nth-child(3n-1) .noti_num{background:#B4DEAF;}
 .noti_portlet_list .notiLI:nth-child(3n-2) .noti_num{background:#9CC5D2;}
 .noti_portlet_list .notiLI .noti_new{margin:0px; padding:0px; font-size:13px; color:#fff; font-weight:bold; position:absolute; left:25px; top:0px; width:24px; height:24px; text-align:center; line-height:23px; background:#ff6c00;}
-.noti_portlet_list .notiLI .noti_text{margin:35px 0px 5px 0px; padding:0; font-size:14px; color:#333333; height:83px; line-height:20px; width:100%; box-sizing:border-box;white-space:normal; text-overflow:ellipsis;overflow:hidden;word-wrap:break-word; -webkit-line-clamp:4; -webkit-box-orient:vertical; display:-webkit-box; font-weight:bold;}
+.noti_portlet_list .notiLI .noti_text{margin:35px 0px 8px 0px; padding:0; font-size:14px; color:#333333; height:87px; line-height:17px; width:100%; box-sizing:border-box;white-space:normal; text-overflow:ellipsis;overflow:hidden;word-wrap:break-word; -webkit-line-clamp:5; -webkit-box-orient:vertical; display:-webkit-box; font-weight:bold;}
 .noti_portlet_list .notiLI .noti_text .cont_sub .name{display:block; text-align:right; font-weight:500;}
-.noti_portlet_list .notiLI .noti_date{margin:0; text-align: right; color:#838383; font-size:13px;}
+.noti_portlet_list .notiLI .noti_date{margin:0; text-align: right; color:#838383; font-size:13px; line-height:17px;}
 .noti_portlet_list .notiLI .noti_nodata{background:url(../../images/ezNewPortal/noti_nodata.svg) no-repeat center / 34px 34px #F7F7F7 !important; cursor:default;}
 .portlet_list li.notiLI02{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
 .portlet_list li.notiLI03{width:144px; height:169px; background:url(/images/ezNewPortal/notiImg01.png) no-repeat; }
@@ -547,12 +547,12 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 
 /* bookmark_approval */
 .apprgraph {overflow:hidden; box-sizing:border-box;}
-.apprgraph_area {padding: 5px 0px 0px 0px; margin:0 15px; overflow:hidden;}
+.apprgraph_area {padding: 5px 0px 0px 0px; margin:0 20px; overflow:hidden;}
 .apprgraph_area dl{ margin:0px 0px 0px 0; padding:0px 0px 0px 0px; float:left; width:20%; display:flex; justify-content: center;}
 .apprgraph_area  dl dt { float:left; margin:0px; padding:0px; font-size:13px; font-weight:400; height:25px; line-height:24px; text-align:center;}
 .apprgraph_area  dl dd { margin:0px; padding:0px; font-size:12px; font-weight:bold; height:25px; line-height:24px; text-align:left; margin-left:5px;}
 
-.apprgraph_text{font-size:16px; font-weight: 500; margin:5px 15px;}
+.apprgraph_text{font-size:16px; font-weight: 500; margin:5px 20px;}
 .apprgraph_area .graph_bar{width:100%; height:10px; background: #EAEAEA; border-radius: 5px; margin-top:30px;}
 .apprgraph_area .bookmarkG01, .apprgraph_area .bookmarkG02, .apprgraph_area .bookmarkG03, .apprgraph_area .bookmarkG04, .apprgraph_area .bookmarkG05{position:relative;}
 .apprgraph_area .bookmarkG01 .dot{width:10px; height:10px; border-radius: 10px; background: #59A9FD; border:3px solid #fff; position:absolute; top: 27px; left:50%; margin-left:-5px;}
@@ -572,7 +572,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .portlet.two_by_one .favorite .apprgraph_div{margin:0 0 30px;}
 
 .portlet.two_by_one .bookmark > li{width:calc((99.999% - 8px) / 2);}
-.portlet.two_by_one .bookmark > li{margin:8px 0 0 8px; height:120px;}
+.portlet.two_by_one .bookmark > li{margin:0 0 8px 8px; height:120px;}
 .portlet.two_by_one .bookmark > li:nth-child(-n+2){margin-top:0;}
 .portlet.two_by_one .bookmark > li:nth-child(2n+1){margin-left:0;}
 .portlet.two_by_one .bookmark .bookmarkLi span{margin-top:88px;}
@@ -687,7 +687,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .photoList{margin:0px; padding:0 20px; list-style:none; overflow:hidden; max-height:calc(100% - 83px);}
 .photoList li{margin:0 0 7px 7px; padding:0; float:left; box-sizing:border-box; width:calc((99.999% - 14px) / 3); text-align:center; overflow:hidden; height:176px; position: relative; border-radius:7px;}
 .photoList li:nth-child(3n+1){margin-left:0px;}
-.photoList li img{ min-width:100%; min-height:100%; width:auto; height:auto; position:relative; object-fit:cover; cursor:pointer;}
+.photoList li img{width:100%; height:100%; position:relative; object-fit:cover; cursor:pointer;}
 .photoList li.none img{ cursor:default;}
 .photoList li span{width:100%; background: rgba(0,0,0,0.3); color:#fff; position:absolute; bottom:0px; left:0; height: 40px; line-height:40px; padding:0 5px; box-sizing: border-box; border-radius: 0 0 7px 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size:13px;}
 
@@ -1523,15 +1523,15 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 /* //20181002 collaborate */
 
 /* webFolder 포틀릿*/
-.fileListWrapper{height:calc(100% - 83px); overflow-y:auto;}
+.fileListWrapper{height:calc(100% - 83px);}
 .webFolder_portlet .portlet_title .portletText {width:100px;}
 .webFolder_portlet .portlet_title .mailGraph {margin:0px; padding:0px; width:206px; overflow:hidden; float:right; height: 100%;}
 
-.webFolder{margin:0 auto; padding:20px 20px 0; list-style:none; box-sizing:border-box; overflow:hidden;}
-.webFolder .webFolderLi{width:calc((99.999% - 14px) / 3); padding:0px; box-sizing:border-box; border:1px solid #EFECEC; height:140px; font-size:12px; color:#444; text-align:center; float:left; display:table-row; cursor:pointer; border-radius: 5px; background:#fff; margin:7px 0 0 7px;}
+.webFolder{margin:0 auto; padding:0 20px 0; list-style:none; box-sizing:border-box; overflow:hidden;}
+.webFolder .webFolderLi{width:calc((99.999% - 14px) / 3); padding:0px; box-sizing:border-box; border:1px solid #EFECEC; height:183px; font-size:12px; color:#444; text-align:center; float:left; display:table-row; cursor:pointer; border-radius: 5px; background:#fff; margin:7px 0 0 7px;}
 .webFolder .webFolderLi:nth-child(3n+1){margin-left:0;}
 .webFolder .webFolderLi:nth-child(-n+3){margin-top:0;}
-.webFolder .webFolderLi .webFolderIcon{margin:0px; padding:20px 0px 15px 0px;}
+.webFolder .webFolderLi .webFolderIcon{margin:0px; padding:40px 0px 15px 0px;}
 
 .webFolder .webFolderLi .webFolderDL{ margin:0px; padding:0px;}
 .webFolder .webFolderLi .webFolderDL dt{ margin:0px; padding:0px 8px 0px 8px; font-size:13px; color:#393939; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
@@ -1539,9 +1539,10 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; z-index:9; overflow:v
 .webFolder .webFolderLi_none{margin:2px 2px; padding:0px; width:75px; box-sizing:border-box; border:1px solid #e7e7e7; background:url(/images/ezNewPortal/bookmarkIcon_none.png) no-repeat center; height:168px; font-size:12px; color:#444; text-align:center; float:left; display:table-row;}
 .webFolder .webFolderLi:hover{ background: #F3F9FF;}
 
-.portlet.two_by_one .webFolder .webFolderLi{width:calc((99.999% - 7px) / 2); margin:7px 0 0 7px;}
+.portlet.two_by_one .webFolder .webFolderLi{width:calc((99.999% - 7px) / 2); height:151px; margin:0 0 7px 7px;}
 .portlet.two_by_one .webFolder .webFolderLi:nth-child(2n+1){margin-left:0;}
 .portlet.two_by_one .webFolder .webFolderLi:nth-child(-n+2){margin-top:0;}
+.portlet.two_by_one .webFolder .webFolderLi .webFolderIcon{padding-top:25px;}
 
 /* resource 포틀릿*/
 .resources_portlet{}
@@ -2015,7 +2016,7 @@ div.orbit img{border-radius: 5px;}
 
 /* 컨텐츠 상단 영역 */
 .top_info_area{box-sizing:border-box; display:flex; padding-left:20px; margin-bottom:20px;}
-.my_info_wrap{background:#fff; width:40%; min-width:580px; height:48px; border-radius:8px; margin-right:25px; padding:0 40px 0 25px; box-sizing:border-box; display:flex; align-items:center; border:1px solid #EFEFEF; float:left;}
+.my_info_wrap{background:#fff; width:40%; min-width:580px; height:48px; border-radius:8px; margin-right:20px; padding:0 40px 0 25px; box-sizing:border-box; display:flex; align-items:center; border:1px solid #EFEFEF; float:left;}
 .my_info_wrap .my_info{padding-left:35px; background:url(/images/ezNewPortal/info_profile.svg) no-repeat 0 center / 17px 17px;}
 .my_info_wrap .my_info span{font-size:13px; color:#333; display:inline-block; vertical-align:top; line-height:28px;}
 .my_info_wrap .my_info span.name{font-weight:bold;}
@@ -2036,7 +2037,7 @@ div.orbit img{border-radius: 5px;}
 .my_info_wrap .info_logout{margin-left:35px; padding-left:30px; background:url(/images/ezNewPortal/info_logout.svg) no-repeat 0 center; font-size:13px; font-weight:500; color:#333; cursor:pointer; line-height:28px;}
 
 
-.top_info_area ul{width:calc(60% - 25px); border-radius:8px; background:#fff; padding:0; list-style:none; display:flex; min-width:calc(60% - 605px);}
+.top_info_area ul{width:calc(60% - 20px); border-radius:8px; background:#fff; padding:0; list-style:none; display:flex; min-width:calc(60% - 600px);}
 .top_info_area ul li{display:flex; width:50%; align-items:center; justify-content:center; box-sizing:border-box; position:relative;}
 .top_info_area ul li:after{content:""; position:absolute; width:2px; height:16px; border-radius:2px; background:#DDDDDD; right:0; top:50%; transform:translateY(-50%);}
 .top_info_area ul li:last-child{padding:0 15px;}
@@ -2086,8 +2087,8 @@ div.orbit img{border-radius: 5px;}
 /* 게시판 B type */
 .portlet .board_Btype .portlet_title .portletText{width:calc(100% - 160px);}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text{height:auto;}
-.portlet .board_Btype .noti_portlet_list .notiLI .noti_text .title{display:block; height:34px; line-height:17px; font-weight:bold; color:#333; margin-bottom:5px; overflow:hidden; -webkit-line-clamp:2; -webkit-box-orient:vertical; display:-webkit-box; font-size:15px;}
-.portlet .board_Btype .noti_portlet_list .notiLI .noti_text .cont{display:block; height:34px; line-height:17px; color:#333; margin-bottom:5px; overflow:hidden; -webkit-line-clamp:3; -webkit-box-orient:vertical; display:-webkit-box; font-size:13px;}
+.portlet .board_Btype .noti_portlet_list .notiLI .noti_text .title{display:block; height:34px; line-height:17px; font-weight:bold; color:#333; margin-bottom:5px; overflow:hidden; -webkit-line-clamp:2; -webkit-box-orient:vertical; display:-webkit-box; font-size:15px; text-overflow:ellipsis; overflow:hidden;}
+.portlet .board_Btype .noti_portlet_list .notiLI .noti_text .cont{display:block; height:34px; line-height:17px; color:#333; margin-bottom:5px; overflow:hidden; -webkit-line-clamp:3; -webkit-box-orient:vertical; display:-webkit-box; font-size:13px; text-overflow:ellipsis; overflow:hidden;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text .day{display:block; text-align:right; font-size:13px; color:#838383; line-height:17px; font-weight:normal;}
 .portlet .board_Btype .noti_portlet_list .notiLI .noti_text .name{font-weight:normal; color:#838383; font-size:13px; line-height:17px;}
 
@@ -2192,3 +2193,22 @@ div.orbit img{border-radius: 5px;}
 .portlet.two_by_one .webFolder .webFolderLi.pageTwo {margin-top: 0}
 .portlet.one_by_one .webFolder .webFolderLi.pageOne {margin-top: 0}
 .portlet.one_by_two .webFolder .webFolderLi.pageOne {margin-top: 0}
+
+
+/* 임시 1*2 포틑릿 사이즈 수정 */
+.portlet.two_by_one .noti_portlet_list .notiLI{margin:0 0 7px 7px; width:calc((99.999% - 7px) / 2);}
+.portlet.two_by_one .noti_portlet_list .notiLI:nth-child(2n+1){margin-left:0;}
+.portlet.two_by_one .noti_portlet_list .notiLI:nth-child(-n+2){margin-top:0;}
+.portlet.two_by_one .noti_portlet_list .notiLI dl{height:151px;}
+.portlet.two_by_one .noti_portlet_list .notiLI .noti_text{height:51px; -webkit-line-clamp:3; margin-bottom:14px;}
+
+.portlet.two_by_one .board_Btype .noti_portlet_list .notiLI .noti_text{height:auto;}
+.portlet.two_by_one .board_Btype .noti_portlet_list .notiLI .noti_text .title{height:18px; white-space:nowrap; display:block;}
+.portlet.two_by_one .board_Btype .noti_portlet_list .notiLI .noti_text .cont{height:18px; white-space:nowrap; display:block;}
+
+.portlet.two_by_one .photoList li{width:calc((99.999% - 7px) / 2); height:151px; margin:0 0 7px 7px;}
+.portlet.two_by_one .photoList li:nth-child(2n+1){margin-left:0;}
+
+
+.imagemaps-control .contentlist_layout{padding:0;}
+.imagemaps-control .contentlist_layout.submain_calcLayoutScroll{height:auto; overflow:hidden;}
