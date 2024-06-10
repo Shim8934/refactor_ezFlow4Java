@@ -36389,4 +36389,52 @@
             SYSDATE
         )
     </insert>
+
+    <select id = "EzApprovalGDAO.getAttachedDocList" parameterClass = "map" resultClass = "ApprGDocAttachInfoVO">
+        SELECT
+            #newDocID# NEWDOCID,
+            ATTACHDOCNAME,
+            ATTACHDOCURL,
+            SUBATTACHYN,
+            ATTACHUSERID,
+            ATTACHUSERNAME,
+            ATTACHUSERDEPTID,
+            ATTACHUSERDEPTNAME,
+            ATTACHUSERJOBTITLE,
+            ATTACHUSERNAME2,
+            ATTACHUSERJOBTITLE2,
+            ATTACHUSERDEPTNAME2,
+            TENANT_ID TENANTID,
+            COMPANYID
+        FROM
+            TBL_ENDAPRDOCATTACHINFO
+        WHERE
+            DOCID = #docID#
+        AND
+            TENANT_ID = #tenantID#
+        AND
+            COMPANYID = #companyID#
+    </select>
+
+    <insert id = "EzApprovalGDAO.insertDocAttachInfo" parameterClass = "ApprGDocAttachInfoVO">
+        INSERT INTO
+            TBL_APRDOCATTACHINFO
+        VALUES (
+            #newDocID#,
+            #attachSN#,
+            #attachDocName#,
+            #attachDocURL#,
+            #subAttachYN#,
+            #attachUserID#,
+            #attachUserName#,
+            #attachUserDeptID#,
+            #attachUserDeptName#,
+            #attachUserJobTitle#,
+            #attachUserName2#,
+            #attachUserJobTitle2#,
+            #attachUserDeptName2#,
+            #tenantID#,
+            #companyID#
+        )
+    </insert>
 </sqlMap>
