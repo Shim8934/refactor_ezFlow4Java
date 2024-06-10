@@ -45,7 +45,7 @@ public interface EzNewPortalService {
 	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception;
 	public void updateUserMenuOrder(String companyId, int tenantId, String userId, JSONObject jObj) throws Exception;
 	public void deleteUserMenuOrder(String companyId, int tenantId, String userId) throws Exception;
-	public List<?> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception; 
+	public Map<String, Object> getQuickLinkList(String companyId, int tenantId, int page, int limit, String userId, String deptId) throws Exception;
 	public int getQuickLinkTotalPageCnt(String companyId, int tenantId, int limit, String userId, String deptId) throws Exception;
 //	public List<?> getUserPortletList(String portletLang, String userId, int tenantId, String companyId, String deptId) throws Exception;
 	public List<PortletInfoVO> getUserPortletList(int themeId, String portletLang, String userId, int tenantId, String companyId, String deptId, boolean config) throws Exception;

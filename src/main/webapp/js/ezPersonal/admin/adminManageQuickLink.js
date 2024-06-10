@@ -530,11 +530,11 @@ function regit() {
 		selecttarget_dialogArguments[0] = g_attendant;
 		selecttarget_dialogArguments[1] = regit_Complete;
 		
-		var SelectTarget = window.open("/admin/ezPersonal/selectTargetQuickLink.do", "SelectTarget", GetOpenWindowfeature(840, 480));
+		var SelectTarget = window.open("/admin/ezPersonal/selectTargetQuickLink.do", "SelectTarget", GetOpenWindowfeature(980, 650));
 		try { SelectTarget.focus(); } catch (e) { }
 	} 
 	else {
-		var config = "status:false;dialogWidth:840px;dialogHeight:480px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(840, 480);
+		var config = "status:false;dialogWidth:840px;dialogHeight:480px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(980, 650);
 		var ret = window.showModalDialog("/admin/ezPersonal/selectTargetQuickLink.do", g_attendant, config);
 		
 		if (ret == undefined)
@@ -552,7 +552,7 @@ function regit_Complete(rtv) {
 
 function makePermissionsList(value, xmlFalg) {
 	if (document.getElementById("AccessList").innerHTML != "") document.getElementById("AccessList").innerHTML = "";
-	g_attendant = { "DATA1": new Array(), "DATA2": new Array(), "DATA3": new Array(), "DATA5": new Array() };
+	g_attendant = {  "accessId": new Array(), "accessName": new Array(), "accessName2": new Array(), "userType": new Array(), "accessYN": new Array(), "subdeptPermitted": new Array() };
 	
 	if(xmlFalg) {
 		var xmldom = value;
@@ -569,10 +569,20 @@ function makePermissionsList(value, xmlFalg) {
 	var xmldomNode = SelectNodes(xmldom, "NODES/NODE");
 	
 	for (var i = 0; i < xmldomNode.length; i++) {
-		g_attendant["DATA1"][i] = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME");
-		g_attendant["DATA2"][i] = SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2");
-		g_attendant["DATA3"][i] = SelectSingleNodeValue(xmldomNode[i], "ACCESSID");
-		g_attendant["DATA5"][i] = SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS");
+		var accessId =  SelectSingleNodeValue(xmldomNode[i], "ACCESSID");
+		var accessName =  SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME");
+		var accessName2 =  SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2");
+		var userType =  SelectSingleNodeValue(xmldomNode[i], "USERTYPE");
+		var accessYN =  SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS");
+		var subdeptPermitted =  SelectSingleNodeValue(xmldomNode[i], "SUBDEPTPERMITTED");
+		var listTDText = accessName;
+
+		g_attendant["accessId"][i] = accessId;
+		g_attendant["accessName"][i] = accessName;
+		g_attendant["accessName2"][i] = accessName2;
+		g_attendant["userType"][i] = userType;
+		g_attendant["accessYN"][i] = accessYN;
+		g_attendant["subdeptPermitted"][i] = subdeptPermitted;
 		
 		var listTR = listview.AddRow(listview.GetRowCount());
 		var listTD = document.createElement("TD");
@@ -580,24 +590,16 @@ function makePermissionsList(value, xmlFalg) {
 		listTD.style.paddingTop = "0px";
 		
 		if (userLang == "2" && SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2") != "") {
-			if (SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS") == "N") {
-				var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
-			} else {
-				var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
-			}
-		} else {
-			if (SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS") == "N") {
-				var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
-			} else {
-				var listTDText = document.createTextNode(SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
-			}
+			listTDText = accessName2;
 		}
-		
-		listTD.setAttribute("DATA", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
-		listTD.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
-		listTD.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
-		listTD.setAttribute("DATA5", SelectSingleNodeValue(xmldomNode[i], "PERMISSIONS"));
-		listTD.appendChild(listTDText);
+
+		listTD.setAttribute("DATA", accessName);
+		listTD.setAttribute("DATA1", accessName2);
+		listTD.setAttribute("DATA2", accessId);
+		listTD.setAttribute("DATA3", accessYN);
+		listTD.setAttribute("DATA4", userType);
+		listTD.setAttribute("DATA5", subdeptPermitted);
+		listTD.appendChild(document.createTextNode(listTDText));
 		listTR.appendChild(listTD);
 	}
 	
@@ -609,7 +611,7 @@ function makePermissionsList(value, xmlFalg) {
 	var InitTr2 = listview2.GetDataRows();
 	
 	for (var i = 0; i < InitTr2.length; i++) {
-		if (InitTr2[i].childNodes[0].getAttribute("data5") == "N") {
+		if (InitTr2[i].childNodes[0].getAttribute("data3") == "N") {
 			InitTr2[i].childNodes[0].style.color = "red";
 		}
 	}
@@ -710,6 +712,8 @@ function SaveQuickLink(itemId) {
 			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data", listviewSelected[nCnt1].childNodes[0].getAttribute("data"));
 			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data1", listviewSelected[nCnt1].childNodes[0].getAttribute("data1"));
 			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data2", listviewSelected[nCnt1].childNodes[0].getAttribute("data2"));
+			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data3", listviewSelected[nCnt1].childNodes[0].getAttribute("data3"));
+			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data4", listviewSelected[nCnt1].childNodes[0].getAttribute("data4"));
 			createNodeAndAppandNodeText(xmlpara, objNode2, objNode3, "data5", listviewSelected[nCnt1].childNodes[0].getAttribute("data5"));
 			
 			if (mode == "new") {

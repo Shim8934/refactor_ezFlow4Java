@@ -9612,6 +9612,8 @@ CREATE TABLE `tbl_ps_quicklink_acl` (
   `ACCESSNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `VIEW_FLAG` varchar(4) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `USER_TYPE` varchar(100) NOT NULL,
+  `SUBDEPT_PERMITTED` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`TENANT_ID`,`QUICKLINKID`,`ACCESSID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

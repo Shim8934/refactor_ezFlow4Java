@@ -355,6 +355,171 @@ AND
 ]]>	
 </delete>
 
+<!-- 퀵 링크 권한 체크 -->
+<select id="ezNewPortal.getCheckQuickLinkAcl" parameterClass="Map" resultClass="QuickLinkVO">
+<![CDATA[
+SELECT
+	Q.quicklinkid,
+	user_type,
+	ACL.view_flag as viewflag
+FROM
+	tbl_ps_quicklink as Q
+]]>
+		<isEqual property="userType" compareValue="USER">
+			<![CDATA[
+LEFT JOIN (
+	SELECT distinct
+		quicklinkid,
+		MAX(view_flag) AS view_flag,
+		user_type,
+		tenant_id
+	FROM
+		TBL_PS_QUICKLINK_ACL
+	WHERE (
+			(accessid = #userId# AND user_type = 'USER' AND tenant_id = #tenantId#)
+	    OR
+			(
+				accessid IN (
+					SELECT
+						group_id
+					FROM
+						tbl_permissiongroupinfo F
+					JOIN
+						TBL_PS_QUICKLINK_ACL G
+					ON
+						G.accessid = F.group_id
+					AND
+						G.tenant_id = F.tenant_id
+					AND
+						F.member_id = #userId#
+					AND
+						F.member_type = 'USER'
+					AND
+						F.tenant_id = #tenantId#
+					AND
+						F.company_id = #companyId#
+				)
+			    AND
+					user_type = 'GROUP'
+			)
+		)
+	GROUP BY quicklinkid
+	) ACL
+	]]>
+		</isEqual>
+		<isEqual property="userType" compareValue="PERMISSION">
+			<![CDATA[
+LEFT JOIN (
+	SELECT
+		quicklinkid,
+		MAX(view_flag) AS view_flag,
+		user_type,
+		tenant_id
+	FROM
+		TBL_PS_QUICKLINK_ACL
+	WHERE (
+			(accessid in (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 'JIKWI' AND tenant_id = #tenantId#)
+        OR
+          	(accessid in (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 'JIKCHEK' AND tenant_id = #tenantId#)
+        OR
+			(
+			    accessid IN (
+           			SELECT
+           				group_id
+           			FROM
+           				tbl_permissiongroupinfo F
+           			JOIN
+           				TBL_PS_QUICKLINK_ACL G
+           			ON
+           				G.accessid = F.group_id
+           			AND
+           				G.tenant_id = F.tenant_id
+           			AND
+           				(
+           				 (F.member_id in (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKWI')
+           				OR
+           				 (F.member_id in (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKCHEK')
+           				)
+           			AND
+           				F.tenant_id = #tenantId#
+           			AND
+           				F.company_id = #companyId#
+           			)
+           		AND
+           			user_type = 'GROUP'
+           	)
+		)
+	GROUP BY quicklinkid
+	) ACL
+]]>
+		</isEqual>
+		<isEqual property="userType" compareValue="DEPT">
+			<![CDATA[
+LEFT JOIN (
+	SELECT distinct
+		quicklinkid,
+		MAX(view_flag) AS view_flag,
+		user_type,
+		tenant_id
+	FROM
+		TBL_PS_QUICKLINK_ACL
+	WHERE (
+			(accessid = #deptId# AND user_type = 'DEPT' AND tenant_id = #tenantId#
+	]]>
+			<isEqual property="isUserDept" compareValue="false">
+				and
+				SUBDEPT_PERMITTED = 'Y'
+			</isEqual>
+			<![CDATA[
+			)
+        OR
+			(
+			    accessid IN (
+           			SELECT
+           				group_id
+           			FROM
+           				tbl_permissiongroupinfo F
+           			JOIN
+           				TBL_PS_QUICKLINK_ACL G
+           			ON
+           				G.accessid = F.group_id
+           			AND
+           				G.tenant_id = F.tenant_id
+           			AND
+           				F.member_type = 'DEPT'
+					AND
+	    				F.member_id = #deptId#
+           			AND
+           				F.tenant_id = #tenantId#
+           			AND
+           				F.company_id = #companyId#
+           		]]>
+			<isEqual property="isUserDept" compareValue="false">
+				AND
+				F.sub_dept_yn = 'Y'
+			</isEqual>
+			<![CDATA[
+           			)
+           		AND
+           			user_type = 'GROUP'
+           	)
+		)
+	GROUP BY quicklinkid
+	) ACL
+]]>
+		</isEqual>
+		<![CDATA[
+ON
+	ACL.quicklinkid = Q.quicklinkid
+AND
+	ACL.tenant_id = Q.tenant_id
+WHERE
+	Q.TENANT_ID = #tenantId#
+AND
+    ACL.view_flag IS NOT NULL
+	]]>
+</select>
+
 <!-- 퀵 링크 불러오기 -->
 <select id="ezNewPortal.getQuickLinkList" parameterClass="Map" resultClass="QuickLinkVO">
 <![CDATA[
@@ -364,62 +529,24 @@ SELECT
     quicklinkname2, 
     quicklinkname3, 
     linktype, 
-    linktypeurl, 
-    linktype, 
     linktypeurl,
     url,
-    quicksize
-FROM (
-	SELECT
-		Q.quicklinkid, 
-	    Q.quicklinkname, 
-	    Q.quicklinkname2, 
-	    Q.quicklinkname3, 
-	    Q.linktype, 
-	    Q.linktypeurl, 
-	    Q.url,
-	    Q.size_ as quicksize,
-	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag,
-	    Q.linkorder
-	FROM 
-		tbl_ps_quicklink as Q
-	LEFT JOIN
-		TBL_PS_QUICKLINK_ACL USER
-	ON
-		USER.quicklinkid = Q.quicklinkid
-	AND
-		USER.tenant_id = Q.tenant_id
-	AND
-		USER.accessid = #userId#
-	LEFT JOIN
-		TBL_PS_QUICKLINK_ACL DEPT
-	ON
-		DEPT.quicklinkid = Q.quicklinkid
-	AND
-		DEPT.tenant_id = Q.tenant_id
-	AND
-		DEPT.accessid = #deptId#
-	LEFT JOIN
-		TBL_PS_QUICKLINK_ACL COMP
-	ON
-		COMP.quicklinkid = Q.quicklinkid
-	AND
-		COMP.tenant_id = Q.tenant_id
-	AND
-		COMP.accessid = #companyId#
-	LEFT JOIN
-		TBL_PS_QUICKLINK_ACL EVERY
-	ON
-		EVERY.quicklinkid = Q.quicklinkid
-	AND
-		EVERY.tenant_id = Q.tenant_id
-	AND
-		EVERY.accessid = 'everyone'
-	WHERE 
-		Q.TENANT_ID = #tenantId#
-	) acl
+	size_ as quicksize
+FROM
+	tbl_ps_quicklink
 WHERE
-	viewflag = 'Y'
+	TENANT_ID = #tenantId#
+]]>
+	<isNotEmpty property="quickLinkIdList">
+		AND quicklinkid in
+		<iterate property="quickLinkIdList" open="(" close=")" conjunction=",">
+			#quickLinkIdList[]#
+		</iterate>
+	</isNotEmpty>
+	<isEmpty property="quickLinkIdList">
+		AND quicklinkid = ''
+	</isEmpty>
+<![CDATA[
 ORDER BY
 	LINKORDER ASC
 LIMIT #limit#
@@ -434,55 +561,23 @@ SELECT
 	count(*)
 FROM (
 	SELECT
-		Q.quicklinkid, 
-	    Q.quicklinkname, 
-	    Q.quicklinkname2, 
-	    Q.quicklinkname3, 
-	    Q.linktype, 
-	    Q.url,
-	    Q.size_ as size,
-	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag
-	FROM 
+		Q.quicklinkid
+	FROM
 		tbl_ps_quicklink as Q
-	LEFT JOIN
-		TBL_PS_QUICKLINK_ACL USER
-	ON
-		USER.quicklinkid = Q.quicklinkid
-	AND
-		USER.tenant_id = Q.tenant_id
-	AND
-		USER.accessid = #userId#
-	LEFT JOIN
-		TBL_PS_QUICKLINK_ACL DEPT
-	ON
-		DEPT.quicklinkid = Q.quicklinkid
-	AND
-		DEPT.tenant_id = Q.tenant_id
-	AND
-		DEPT.accessid = #deptId#
-	LEFT JOIN
-		TBL_PS_QUICKLINK_ACL COMP
-	ON
-		COMP.quicklinkid = Q.quicklinkid
-	AND
-		COMP.tenant_id = Q.tenant_id
-	AND
-		COMP.accessid = #companyId#
-	LEFT JOIN
-		TBL_PS_QUICKLINK_ACL EVERY
-	ON
-		EVERY.quicklinkid = Q.quicklinkid
-	AND
-		EVERY.tenant_id = Q.tenant_id
-	AND
-		EVERY.accessid = 'everyone'
 	WHERE 
 		Q.TENANT_ID = #tenantId#
-	ORDER BY
-	    Q.REGDATE DESC
+]]>
+	<isNotEmpty property="quickLinkIdList">
+		AND quicklinkid in
+		<iterate property="quickLinkIdList" open="(" close=")" conjunction=",">
+			#quickLinkIdList[]#
+		</iterate>
+	</isNotEmpty>
+	<isEmpty property="quickLinkIdList">
+		AND quicklinkid = ''
+	</isEmpty>
+<![CDATA[
 	) acl
-WHERE
-	viewflag = 'Y'
 ]]>		
 </select>
 
