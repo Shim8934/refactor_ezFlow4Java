@@ -225,7 +225,7 @@
 		        </dl>
 		        <%-- 2023-06-01 홍승비 - 홈 > 날씨 포틀릿 > 디자인 개선을 위해 스타일 및 날씨 이미지 수정 --%>
 		        <div class="weather_content">
-<%--		        <span style="position:absolute; font-size:9px; color:#989595; right:15px; top:2px; ">Weather from OpenWeatherMap </span>--%>
+		        <span style="position:absolute; font-size:9px; color:#989595; right:15px; top:2px; ">Weather from OpenWeatherMap </span>
 		        	<div class="weather_title">
 		            	<dl class="weatherPresent">
 		                	<dt><img id="currentIcon" src=""></dt>
