@@ -912,8 +912,6 @@
         	}
         }
 		
-		console.log("dd : ", openLocation);
-		
 		return openLocation;
 	}
 	
