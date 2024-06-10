@@ -1008,6 +1008,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("ezWorkspacePortlet End");
 		return "/ezNewPortal/portlets/ezWorkspacePortlet";
 	}
+
+	/**
+	 * 포틀릿 - 협업 디자인용 더미 포틀릿
+	 */
+	@RequestMapping(value="/ezNewPortal/ezWorkspaceDummy.do", method=RequestMethod.GET)
+	public String ezWorkspaceDummy() throws Exception {
+		return "/ezNewPortal/portlets/ezWorkspaceDummy";
+	}
 	
 	/**
 	 * 포틀릿 - 게시판 포틀릿
