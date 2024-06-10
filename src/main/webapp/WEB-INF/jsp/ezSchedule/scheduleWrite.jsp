@@ -92,7 +92,10 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-
+		        // 상단표시
+                if (showtop == 'Y') {
+                    document.getElementById("topcheck").checked = true;
+                }
 		        if (scheduleid != "") {
 		            document.getElementById("importantSelect").value = importance;
 		            document.getElementById("publicSelect").value = ispublic;	                
@@ -101,9 +104,6 @@
 	                document.getElementById("receiverTr2").style.display = "none";
 	                document.getElementById("HolderWriteTr1").style.display = "none";
 	                document.getElementById("HolderWriteTr2").style.display = "none";
-	                if (showtop == 'Y') {
-	                    document.getElementById("topcheck").checked = true;
-                    }
 
                     if (scheduletype != '1') {
                     	if(document.getElementById("HolderEdit2") != null){
