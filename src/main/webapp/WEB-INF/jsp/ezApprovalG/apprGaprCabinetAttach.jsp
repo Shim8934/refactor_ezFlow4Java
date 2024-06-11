@@ -286,7 +286,107 @@
 			function btnSearch_onclick() {
 			    btnSearchRec_onclick("1");
 			}
-	    </script>
+
+			function moveDataRow(e) {
+				let listView = new ListView();
+				listView.LoadFromID("lvTDocLV");
+
+				var msg = checkIsValidReq(listView, e);
+
+				if (!msg) {
+					return;
+				}
+
+				relocateAttachedList(listView, e);
+			}
+
+			function checkIsValidReq(listView, e) {
+				let bool = false;
+				let selectedRow = listView.GetSelectedRows();
+				let selectedRowCnt = selectedRow.length;
+				let curIdx;
+
+				if (selectedRowCnt == 0) {
+					alert("<spring:message code = 'ezApprovalG.docAttach.msg1' />");
+
+					return;
+				} else if (selectedRowCnt >= 2) {
+					alert("<spring:message code = 'ezApprovalG.docAttach.msg2' />");
+
+					return;
+				}
+
+				selectedRow = selectedRow[0];
+				curIdx = selectedRow.getAttribute("data2");
+
+				switch (e) {
+					case "up" : {
+						bool = curIdx != 1;
+
+						break;
+					}
+
+					case "down" : {
+						bool = curIdx < listView.GetDataRows().length;
+
+						break;
+					}
+				}
+
+				return bool;
+			}
+
+			function relocateAttachedList(listView, e) {
+				let attrData2 = parseInt(listView.GetSelectedRows()[0].getAttribute("data2"));
+				let curIdx;
+				let destIdx;
+
+				if (isNaN(attrData2)) {
+					let nodeID = listView.GetSelectedRows()[0].id;
+
+					attrData2 = nodeID.substring(nodeID.length - 1);
+				}
+
+				curIdx = attrData2 - 1;
+
+				switch (e) {
+					case "up" : {
+						destIdx = curIdx - 1;
+
+						break;
+					}
+
+					case "down" : {
+						destIdx = curIdx + 1;
+
+						break;
+					}
+				}
+
+				moveRow(listView, curIdx, destIdx);
+			}
+
+			function moveRow(listView, curIdx, destIdx) {
+				let attachedList = listView.GetDataRows();
+				let tbody = document.getElementById(listView.GetID()).querySelector("tbody");
+				let tmp1 = attachedList[curIdx];
+				let tmp2 = attachedList[destIdx];
+				let newNode;
+
+				attachedList[curIdx] = tmp2;
+				attachedList[destIdx] = tmp1;
+
+				tbody.replaceChildren();
+
+				var cnt = 0;
+				while ((newNode = attachedList[cnt]) != null) {
+					tbody.insertAdjacentElement("beforeend", newNode);
+					newNode.setAttribute("data2", cnt + 1);
+
+					cnt++;
+				}
+			}
+		</script>
 	    <style>
 	    	.mainlist tr th {border-top:0px}
 	    </style>
@@ -332,6 +432,25 @@
 	    </table>
 	
 	    <table>
+			<tr>
+				<td style = "height : 35px;" colspan = 2>
+					<%-- S버전과 동일한 화면 구성을 가져가기 위해 임의의 공백 td 삽입 --%>
+					&nbsp;
+				</td>
+				<td>
+					<a class = "imgBtn" onclick = "moveDataRow('up')" style="height:22px; /*margin : 0 5px 0 0;*/">
+						<span>
+							<img src="/images/ImgIcon/prev.gif" alt="" style="width : 20px;/* margin-top: 4px;*/">
+						</span>
+					</a>
+
+					<a onclick = "moveDataRow('down')">
+						<span>
+							<img src="/images/ImgIcon/next.gif" alt="" style="width : 20px;/* margin-top: 4px;*/">
+						</span>
+					</a>
+				</td>
+			</tr>
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview">
@@ -340,7 +459,8 @@
 					<div id="tblPageRayer"></div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">
-	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" style="cursor: pointer"></td>
+	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" style="cursor: pointer">
+				</td>
 	            <td>
 	                <div class="listview" style="margin-bottom:45px">
 	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 385px; overflow: auto"></div>

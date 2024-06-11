@@ -2856,12 +2856,8 @@ function openAaprDocAttachUI() {
         if (CrossYN()) {
             aprcabinetattach_cross_dialogArguments[0] = parameter;
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
-            
-            if(approvalFlag == "G") {
-            	DivPopUpShow(1050, 520, url);
-            } else {
-            	DivPopUpShow(1050, 560, url);
-            }
+
+            DivPopUpShow(1050, 560, url);
         } else {
         	var feature;
         	if(approvalFlag == "G") {

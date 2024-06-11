@@ -326,8 +326,17 @@
 			}
 
 			function relocateAttachedList(listView, e) {
-				let curIdx = parseInt(listView.GetSelectedRows()[0].getAttribute("data2")) - 1;
+				let attrData2 = parseInt(listView.GetSelectedRows()[0].getAttribute("data2"));
+				let curIdx;
 				let destIdx;
+
+				if (isNaN(attrData2)) {
+					let nodeID = listView.GetSelectedRows()[0].id;
+
+					attrData2 = nodeID.substring(nodeID.length - 1);
+				}
+
+				curIdx = attrData2 - 1;
 
 				switch (e) {
 					case "up" : {
