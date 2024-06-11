@@ -358,13 +358,13 @@
 					TBL_ADDJOBMASTER A
 				JOIN
 					TBL_USERMASTER B
+				ON
+					A.CN = B.CN
 				JOIN
 					TBL_DEPTMASTER D
 				ON
-					A.CN = B.CN
-				AND
 					B.TENANT_ID = D.TENANT_ID
-				ON
+				AND
 					A.DEPTID = D.CN
 				WHERE
 					(B.DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\'
@@ -460,18 +460,20 @@
 				    B.TENANT_ID,
 					'addJobUser' as TYPE,
 					B.mobile,
-					B.telephoneNumber
+					B.telephoneNumber,
+					JOBID AS jobId,
+					D.EXTENSIONATTRIBUTE2 as userCompanyID
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
 					TBL_USERMASTER B
+				ON
+					A.CN = B.CN
 				JOIN
 					TBL_DEPTMASTER D
 				ON
-					A.CN = B.CN
-				AND
 					B.TENANT_ID = D.TENANT_ID
-				ON
+				AND
 					A.DEPTID = D.CN
 				WHERE
 					A.DEPTID = #deptID#
