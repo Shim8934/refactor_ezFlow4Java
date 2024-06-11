@@ -3070,7 +3070,53 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			) INFO
 		) P
 	WHERE
-		P.RNUM <= #listSize#
+		P.RNUM > #startRow#
+	AND
+		P.RNUM <= #startRow# + #listSize#
+]]>
+</select>
+
+<select id="ezNewPortal.getCommunityListTotalCnt" parameterClass="Map" resultClass="int">
+<![CDATA[
+	SELECT
+		COUNT(*)
+	FROM
+		TBL_C_CLUB A
+	JOIN
+		TBL_USERMASTER B
+	ON
+		RTRIM(A.C_SYSOPID) = RTRIM(B.CN)
+	AND
+		A.TENANT_ID = B.TENANT_ID
+	INNER JOIN
+		(SELECT
+			CU.C_CLUBNO,
+			NVL(COUNT(CU.C_ID), 0) AS C_REALUSERCNT,
+			CU.TENANT_ID
+		FROM
+			TBL_C_CLUBUSER CU
+		INNER JOIN
+			TBL_USERMASTER UM
+		ON
+			RTRIM(UM.CN) = RTRIM(CU.C_ID)
+		AND
+			CU.TENANT_ID = UM.TENANT_ID
+		WHERE
+			PERMIT <> 0
+		AND
+			CU.TENANT_ID = #tenantId#
+		GROUP BY
+			CU.C_CLUBNO, CU.TENANT_ID) REALCNT
+	ON
+		A.C_CLUBNO = REALCNT.C_CLUBNO
+	AND
+		A.TENANT_ID = REALCNT.TENANT_ID
+	WHERE
+		C_ADMINCONFIRM = 'Y'
+	AND
+		A.COMPANYID = #companyId#
+	AND
+		A.TENANT_ID = #tenantId#
 ]]>
 </select>
 

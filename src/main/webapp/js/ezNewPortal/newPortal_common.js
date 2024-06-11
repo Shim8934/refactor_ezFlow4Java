@@ -270,7 +270,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 			break;
 		case "community" : // 커뮤니티
 			if (isReload) {
-				getCommunityList();
+				reloadCommunityPortlet();
 			} else {
 				url = "/js/ezNewPortal/portlets/communityPortlet.js";
 

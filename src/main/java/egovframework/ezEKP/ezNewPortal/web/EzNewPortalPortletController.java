@@ -629,6 +629,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("companyId", userInfo.getCompanyID());
+		param.put("startRow", 0);
+		param.put("listSize", 5);
 		String url = "/rest/ezPortal/portlets/community";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
@@ -659,6 +661,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("companyId", userInfo.getCompanyID());
+		param.put("startRow", req.getParameter("startRow"));
+		param.put("listSize", req.getParameter("listSize"));
 		String url = "/rest/ezPortal/portlets/community";
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);

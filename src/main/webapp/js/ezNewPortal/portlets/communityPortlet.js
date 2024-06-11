@@ -16,12 +16,34 @@ function initCommunityPortletInfo(communityPortletId) {
 	newObj.page.getPagePerCount = function () {
 		return getCommmunityPagePerCount(communityPortletId);
 	}
+	newObj.getPortletList = function () {
+		var startRow = portletInfoMap["portlet" + communityPortletId].page.getStart();
+		getCommunityList(startRow);
+	}
 
 	portletInfoMap["portlet" + communityPortletId] = newObj;
 	
 	communityPortletObj.portletId = communityPortletId;
-	var totalCnt = CommuSize < communityPortletPageMaxCnt ? CommuSize : communityPortletPageMaxCnt;
+	var totalCnt = CommuSize;
 	resetPortletPaging(communityPortletObj.portletId, totalCnt, "");
+}
+
+function reloadCommunityPortlet() {
+	var portletId = communityPortletObj.portletId;
+
+	var newObj = {};
+	var perCount = getCommmunityPagePerCount(portletId);
+	newObj.page = new Paging().init(perCount);
+	newObj.portletCode = "community";
+	newObj.page.getPagePerCount = function () {
+		return getCommmunityPagePerCount(portletId);
+	}
+	newObj.getPortletList = function () {
+		var startRow = portletInfoMap["portlet" + portletId].page.getStart();
+		getCommunityList(startRow);
+	}
+
+	getCommunityList(0);
 }
 
 function getCommmunityPagePerCount(communityPortletId) {
@@ -112,8 +134,10 @@ function OpenAlertUI(NewWinContent, NewWinCallFunction, NewWinName) {
 }
 
 var getCommunityList = function() {
+    var listSize = getCommmunityPagePerCount(communityPortletObj.portletId);
+
 	var request = new XMLHttpRequest();
-	request.open('GET', '/ezNewPortal/getCommunityList.do', false);
+	request.open('GET', '/ezNewPortal/getCommunityList.do?startRow=' + startRow + "&listSize=" + listSize, false);
 	request.setRequestHeader('Content-Type', 'application/json');
 	var companiesHTML = "";
 
@@ -124,33 +148,28 @@ var getCommunityList = function() {
 			}
 			
 			var result = JSON.parse(request.responseText);
-			
-			var size = result.CommuSize;
-			
+
 			var commuPath = result.commuPath;
 			
 			var commuElem = document.getElementById("communityList");
 			commuElem.innerHTML = "";
 			
-			if (size == 0) {
+			if (result.CommuSize == 0) {
 				var noDataList = setCommunityNoData();
 				commuElem.appendChild(noDataList);
 			} else {
 				var communityList = result.CommunityList;
 				
-				for (var i = 0; i < size; i++) {
+				for (var i = 0; i < communityList.length; i++) {
 					var list = setCommunityData(communityList[i], commuPath, "0" + (i + 1));
 					commuElem.appendChild(list);
+					$('.comListDL0'+i).on("click", view_bestCommunity);
 				}
 			}
-			
-			var totalCnt = size < communityPortletPageMaxCnt ? size : communityPortletPageMaxCnt;
+
+			var totalCnt = result.CommuSize;
 			resetPortletPaging(communityPortletObj.portletId, totalCnt, "");
-			
-			for (var i = 1; i <= size; i ++) {
-				$('.comListDL0'+i).on("click", view_bestCommunity);
-			}
-			
+
 		}
 	};
 
@@ -178,6 +197,9 @@ var setCommunityNoData = function() {
 }
 
 var setCommunityData = function(commuInfo, commuPath, classTag) {
+	var communityPortletPage = portletInfoMap["portlet" + communityPortletObj.portletId].page;
+	var currentPage = communityPortletPage.getPage();
+
 	var comListDL = document.createElement("dl");
 	comListDL.className = "comListDL" + classTag;
 	comListDL.style.cursor = "pointer";
@@ -185,7 +207,7 @@ var setCommunityData = function(commuInfo, commuPath, classTag) {
 	var comDT = document.createElement("dt");
 	comDT.className = "comPic";
 	
-	if (classTag === "01") {
+	if (classTag === "01" && currentPage == 0) {
 		var comSpan = document.createElement("span");
 		comSpan.className = "best";
 		var bestImg = document.createElement("img");

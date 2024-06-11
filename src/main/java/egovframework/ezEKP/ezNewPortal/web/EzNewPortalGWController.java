@@ -3568,10 +3568,11 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			String lang = info.getLang();
-			int listSize = 10;
+			String listSize = request.getParameter("listSize") == null ? "0" : request.getParameter("listSize");
+			String startRow = request.getParameter("startRow") == null ? "0" : request.getParameter("startRow");
 
-			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService.getCommunityList(lang, listSize, companyId, tenantId);
-
+			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService.getCommunityList(lang, Integer.parseInt(startRow), Integer.parseInt(listSize), companyId, tenantId);
+			int communityTotalCnt = ezNewPortalService.getCommunityListTotalCnt(companyId, tenantId);
 			// int CommuSize = CommunityList.size();
 			//
 			// if (CommuSize == 0) {
@@ -3621,7 +3622,7 @@ public class EzNewPortalGWController {
 			String commuPath = commonUtil.getUploadPath("upload_community.LOGO", tenantId);
 
 			data.put("CommunityList", CommunityList);
-			data.put("CommuSize", CommunityList.size());
+			data.put("CommuSize", communityTotalCnt);
 			data.put("commuPath", commuPath);
 
 			result.put("status", "ok");

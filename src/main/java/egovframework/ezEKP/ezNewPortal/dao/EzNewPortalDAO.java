@@ -563,6 +563,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<CommunityMyCommunityVO>) list("ezNewPortal.getCommunityList", map);
 	}
 	
+	public int getCommunityListTotalCnt(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getCommunityListTotalCnt", map);
+	}
+	
 	//ezNewPortal.getCommunityPermit
 	public CommunityCClubUserVO getCommunityPermit(Map<String, Object> map) {
 		return (CommunityCClubUserVO) select("ezNewPortal.getCommunityPermit", map);
