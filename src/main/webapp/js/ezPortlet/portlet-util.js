@@ -112,7 +112,6 @@ function startGridElement() {
 
         gridElement = new Muuri("." + ClassPortlet.AREA_PORTLET, portletOption);
 
-        // offLoadingLayer();
         gridElement.on('dragEnd', function () {
             if (typeof usedTheme == 'undefined' || !usedTheme) usedTheme = document.querySelector('.portletList').getAttribute('data-themeid');
             gridElement.synchronize();
@@ -120,6 +119,13 @@ function startGridElement() {
         });
         gridElement.on('layoutStart', function (items, isInstant) {
             return false;
+        });
+        gridElement.on('layoutEnd', function (items, isInstant) {
+            var dummy = document.getElementById('dummyArea');
+            if (!!dummy) {
+                var dummyParent = dummy.parentElement;
+                dummyParent.removeChild(dummy);
+            }
         });
     }
 }
@@ -150,7 +156,7 @@ function changePortletSize(pot, size) {
     pot.classList.remove(pot.dataset.size);
     pot.classList.add(size);
     pot.dataset.size = size;
-    resizePortlet(pot);
+    resizePortlet();
     if (typeof usedTheme == 'undefined' || !usedTheme) usedTheme = document.querySelector('.portletList').getAttribute('data-themeid');
     userPortletUpdateWithSize(usedTheme);
     
@@ -259,7 +265,12 @@ function userPortletUpdateWithSize(usedTheme) {
 }
 
 function resizePortlet(portletNode) {
-    gridElement.refreshItems();
+    if (!!portletNode && gridElement.getItem(portletNode) != null) {
+        gridElement.refreshItems(gridElement.getItem(portletNode));
+    } else {
+        gridElement.refreshItems();
+    }
+    gridElement.synchronize();
     gridElement.layout();
 }
 
@@ -571,4 +582,146 @@ function portletMovePage(portletId, mode) {
     var startRowIdx = portletPageObj.getStart();
     var perCount = portletPageObj.getPagePerCount(portletId);
 	portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+}
+
+const fixBoardArr = {};
+function makeFixPortlet() {
+    var length = fixedPortletList.length;
+    for (var i = 0; i < length; i++) {
+        const fixPortletCode = fixedPortletList[i].portletCode;
+        const portletName = fixedPortletList[i].portletName;
+        const fixUrl = URLParamsUtils(fixedPortletList[i].portletUrl).getFullUrl();
+        const fixBoardUtil = new FixBoardUtil()
+            .area("#fixBoardArea")
+            .id(fixPortletCode)
+            .title(portletName)
+            .makeShell();
+        fixBoardArr[fixPortletCode] = fixBoardUtil;
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                "portletId": fixedPortletList[i].portletId,
+                "startRow": 0,
+                "count": 10
+            },
+            url: fixUrl,
+            success: function (result) {
+                if (result.length > 0) {
+                    fixBoardArr[fixPortletCode].start(result);
+                } else {
+                    fixBoardArr[fixPortletCode].hide();
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+}
+
+function makePortlets(portletOrder) {
+    if (portletOrder != null && portletOrder.length != 0) {
+        var portletCount = portletOrder.length;
+        var portletArea = document.getElementsByClassName("portlet_area")[0];
+        var dummyArea = document.getElementById("dummyArea");
+
+        for (var i = 0; i < portletCount; i++) {
+            var portletData = portletOrder[i];
+
+            var dumEl = document.createElement("div");
+            dumEl.classList.add("portlet");
+            dumEl.classList.add(portletData.classSize);
+            dumEl.dataset.size = portletData.classSize;
+            var dumAr = document.createElement('article');
+            dumAr.classList.add('box_shadow');
+            dumEl.appendChild(dumAr);
+            dummyArea.appendChild(dumEl);
+
+            var element = document.createElement("div");
+            element.id = portletData.portletId + "Portlet";
+            element.classList.add("portlet");
+            element.classList.add(portletData.classSize);
+            element.dataset.size = portletData.classSize;
+            var article = document.createElement('article');
+            article.classList.add('box_shadow');
+            element.appendChild(article);
+            portletArea.appendChild(element);
+        }
+
+        frameSetting(frameId);
+
+        if (usePortletSize) {
+            initGridConstruct();
+        }
+
+        //포틀릿별로 정보 및 포틀릿 jsp불러오기
+        for (var i = 0; i < portletCount; i++) {
+            var portletId = portletOrder[i].portletId;
+            var portletUrl = portletOrder[i].portletUrl;
+            if (!!portletUrl) portletUrl = URLParamsUtils(portletUrl).getFullUrl();
+            var portletName = portletOrder[i].portletName;
+            var portletCode = portletOrder[i].portletCode;
+
+            /* if (portletUrl.indexOf("ezNewPortal") != -1) { */
+            (function (portletId, portletUrl, portletName, portletCode) {
+                $.ajax({
+                    type: "GET",
+                    dataType: "html",
+                    data: {
+                        "uniq_param": (new Date()).getTime(),
+                        "portletId": portletId,
+                        "portletName": portletName,
+                        "usedTheme": usedTheme
+                    },
+                    url: portletUrl,
+                    tryCount: 0,
+                    retryLimit: 3,
+                    success: function (result) {
+                        try {
+                            $("#" + portletId + "Portlet").empty().append(result);
+                            if (usePortletSize) {
+                                makeGridChangeEvent(portletId);
+                            }
+
+                            if (portletId == 6) {
+                                document.getElementById(portletId + "Portlet").style.background = "none";
+                            }
+
+                            eventSetting(portletId, usedTheme, portletCode, false);
+
+                            if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+                                sortableEvent();
+                            }
+                        } catch (e) {
+                            // 포틀릿 내부 에러시에 포탈 전체 스크립트 에러가 나서 try catch 처리함
+                            console.log(e);
+                        }
+
+                    },
+                    error: function () {
+                        this.url = "/ezNewPortal/errorPortlet.do";
+                        this.tryCount++;
+
+                        if (this.tryCount <= this.retryLimit) {
+                            //try again
+                            $.ajax(this);
+                            return;
+                        }
+
+                        if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+                            sortableEvent();
+                        }
+
+                        if (usePortletSize) {
+                            makeGridChangeEvent(portletId);
+                        }
+
+                        return;
+                    }
+                });
+            }(portletId, portletUrl, portletName, portletCode));
+            /* } */
+        }
+    }
 }

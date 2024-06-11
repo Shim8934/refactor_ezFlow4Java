@@ -62,7 +62,8 @@
 .display_none {display:none !important;}
 
 #ui-datepicker-div {display: none;}
-.portlet_area {position: relative;}
+#dummyArea {position:relative; height:100%; width:100%;}
+.portlet_area {position: relative;height:100%; width:100%;}
 /*.wrap_portlet {height:100%; width:100%; position:relative; margin:0px;}*/
 .portlet.muuri-item-dragging {z-index: 3;}
 .portlet.muuri-item-releasing {z-index: 2;}

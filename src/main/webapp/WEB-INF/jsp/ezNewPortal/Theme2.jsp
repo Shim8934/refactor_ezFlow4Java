@@ -304,6 +304,7 @@
 <div class="section_main">
 	<section>
 		<div id="fixBoardArea"></div>
+		<div id="dummyArea"></div>
 		<div id="portletArea" class="portlet_area">
 		</div>
 	</section>
@@ -991,125 +992,12 @@
 			}, Number(refreshInterval) * 60000);
 		}
 	} */
-	
-	const fixBoardArr = {};
+
 	$(function() {
-		$("#featured").orbit();
 		if (!!fixedPortletList) {
-			var length = fixedPortletList.length;
-			for (var i = 0; i < length; i++) {
-				const fixPortletCode = fixedPortletList[i].portletCode;
-                const portletName = fixedPortletList[i].portletName;
-                const fixUrl = URLParamsUtils(fixedPortletList[i].portletUrl).getFullUrl();
-                const fixBoardUtil = new FixBoardUtil()
-                    .area("#fixBoardArea")
-                    .id(fixPortletCode)
-                    .title(portletName)
-                    .makeShell();
-                fixBoardArr[fixPortletCode] = fixBoardUtil;
-                $.ajax({
-                    type : "GET",
-                    dataType : "json",
-                    async : true,
-                    data: {
-                        "portletId": fixedPortletList[i].portletId,
-                        "startRow": 0,
-                        "count": 10
-                    },
-                    url : fixUrl,
-                    success : function (result) {
-                        if (result.length > 0) {
-                            fixBoardArr[fixPortletCode].start(result);
-                        } else {
-                            fixBoardArr[fixPortletCode].hide();
-                        }
-                    },
-                    error : function(error) {
-                        alert(error);
-                    }
-                });
-			}
+			makeFixPortlet();
 		}
-		
-		var portletCount = portletOrder.length;
-		var portletHTML = "";
-		var portletArea = document.getElementsByClassName("portlet_area")[0];
-		
-		for (var i = 0; i < portletCount; i++) {
-			var element = document.createElement("div");
-			element.id = portletOrder[i].portletId + "Portlet";
-			element.classList.add("portlet");
-			element.classList.add(portletOrder[i].classSize);
-			element.dataset.size = portletOrder[i].classSize;
-			portletArea.appendChild(element);
-
-			var article = document.createElement('article');
-			article.classList.add('box_shadow');
-			element.appendChild(article);
-		}
-
- 		frameSetting(frameId);
-		if (usePortletSize) {
-			initGridConstruct();
-		}
-
-		for (var i = 0; i < portletCount; i++) {
-			var portletId = portletOrder[i].portletId;
-			var portletUrl = portletOrder[i].portletUrl;
-			var portletName = portletOrder[i].portletName;
-			var portletCode = portletOrder[i].portletCode;
-			
-			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-				(function (portletId, portletUrl, portletName, portletCode) {
-					$.ajax({
-						type : "GET",
-						dataType : "html",
-						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-						url : portletUrl,
-						tryCount : 0,
-						retryLimit : 3,
-						success : function(result) {
-							try {
-								$("#" + portletId + "Portlet").empty().append(result);
-								if (usePortletSize) {
-									makeGridChangeEvent(portletId);
-								}
-
-								eventSetting(portletId, usedTheme, portletCode, false);
-
-								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-									sortableEvent();
-								}
-							} catch (e) {
-								// 포틀릿 내부 에러시에 포탈 전체 스크립트 에러가 나서 try catch 처리함
-								console.log(e);
-							}
-
-						},
-						error : function() {
-							this.url = "/ezNewPortal/errorPortlet.do";
-							this.tryCount++;
-							
-							if (this.tryCount <= this.retryLimit) {
-								//try again
-								$.ajax(this);
-								return;
-							}
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
-							}
-
-							if (usePortletSize) {
-								makeGridChangeEvent(portletId);
-							}
-
-							return;
-						}
-					});
-				}(portletId, portletUrl, portletName, portletCode));
-			/* } */
-		}
+		makePortlets(portletOrder);
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useSurvey = "<c:out value='${useSurvey}'/>";
