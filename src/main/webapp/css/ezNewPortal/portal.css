@@ -117,24 +117,24 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 
 .full_menu { background-position: -35px -155px; width: 25px; height: 24px; }/* 전체메뉴 */
 .icon_count_arrow { background-position: -188px -0px; width: 21px; height: 21px; }/* 대메뉴 카운트 화살표 */
-.icon_nav_mail{ background-position: 0px -61px; width: 22px; height: 21px; }/* 메일 */
-.icon_nav_addressbook { background-position: -31px -61px; width: 21px; height: 23px; }/* 주소록 */
-.icon_nav_approval { background-position: -61px -62px; width: 22px; height: 21px; }/* 전자결재 */
-.icon_nav_calendar { background-position: -93px -62px; width: 21px; height: 21px; }/* 일정관리 */
+.icon_nav_mail{ background-position: 0px -61px; width: 22px; height: 21px; background:url(/images/lnb/lnb_mail.svg) no-repeat center / 18px 14px;}/* 메일 */
+.icon_nav_addressbook { background-position: -31px -61px; width: 21px; height: 23px; background:url(/images/lnb/lnb_addressbook.svg) no-repeat center / 20px 21px;}/* 주소록 */
+.icon_nav_approval { background-position: -61px -62px; width: 22px; height: 21px; background:url(/images/lnb/lnb_approval.svg) no-repeat center / 16px 18px;}/* 전자결재 */
+.icon_nav_calendar { background-position: -93px -62px; width: 21px; height: 21px; background:url(/images/lnb/lnb_schedule.svg) no-repeat center / 18px 20px;}/* 일정관리 */
 .icon_nav_work { background-position: -124px -62px; width: 21px; height: 21px; }/* 업무관리 */
-.icon_nav_board { background-position: -155px -61px; width: 22px; height: 23px; }/* 게시판 */
-.icon_nav_survey { background-position: -185px -62px; width: 22px; height: 21px; }/* 전자설문 */
-.icon_nav_voting { background-position: 0px -92px; width: 22px; height: 24px; }/* 투표 */
-.icon_nav_laddergame { background-position: -31px -92px; width: 21px; height: 23px; }/* 사다리 */
-.icon_nav_resource { background-position: -62px -93px; width: 21px; height: 21px; }/* 자원관리 */
-.icon_nav_workdiary { background-position: -90px -93px; width: 25px; height: 22px; }/* 업무일지 */
-.icon_nav_absenteeism { background-position: -124px -93px; width: 21px; height: 22px; }/* 근태관리 */
-.icon_nav_community { background-position: -155px -93px; width: 22px; height: 21px; }/* 커뮤니티 */
-.icon_nav_circular_edition { background-position: -184px -93px; width: 24px; height: 22px; }/* 회람판 */
-.icon_nav_collaboration { background-position: -29px -124px; width: 25px; height: 21px; }/* 협업 */
+.icon_nav_board { background-position: -155px -61px; width: 22px; height: 23px; background:url(/images/lnb/lnb_board.svg) no-repeat center / 20px 22px;}/* 게시판 */
+.icon_nav_survey { background-position: -185px -62px; width: 22px; height: 21px; background:url(/images/lnb/lnb_survey.svg) no-repeat center / 18px 18px;}/* 전자설문 */
+.icon_nav_voting { background-position: 0px -92px; width: 22px; height: 24px; background:url(/images/lnb/lnb_voting.svg) no-repeat center / 22px 17px;}/* 투표 */
+.icon_nav_laddergame { background-position: -31px -92px; width: 21px; height: 23px; background:url(/images/lnb/lnb_laddergame.svg) no-repeat center / 17px 21px;}/* 사다리 */
+.icon_nav_resource { background-position: -62px -93px; width: 21px; height: 21px; background:url(/images/lnb/lnb_resource.svg) no-repeat center / 18px 20px;}/* 자원관리 */
+.icon_nav_workdiary { background-position: -90px -93px; width: 25px; height: 22px; background:url(/images/lnb/lnb_workdiary.svg) no-repeat center / 17px 21px;}/* 업무일지 */
+.icon_nav_absenteeism { background-position: -124px -93px; width: 21px; height: 22px; background:url(/images/lnb/lnb_approval.svg) no-repeat center / 16px 18px;}/* 근태관리 */
+.icon_nav_community { background-position: -155px -93px; width: 22px; height: 21px; background:url(/images/lnb/lnb_community.svg) no-repeat center / 19px 18px;}/* 커뮤니티 */
+.icon_nav_circular_edition { background-position: -184px -93px; width: 24px; height: 22px; background:url(/images/lnb/lnb_circular.svg) no-repeat center / 21px 21px;}/* 회람판 */
+.icon_nav_collaboration { background-position: -29px -124px; width: 25px; height: 21px; background:url(/images/lnb/lnb_collaboration.svg) no-repeat center / 22px 13px;}/* 협업 */
 .icon_nav_project { background-position: -62px -124px; width: 21px; height: 21px; }/* 프로젝트관리 */
-.icon_nav_webfolder { background-position: -92px -124px; width: 23px; height: 21px; }/* 웹폴더 */
-.icon_nav_memo { background-position: -124px -124px; width: 21px; height: 21px; }/* 메모 */
+.icon_nav_webfolder { background-position: -92px -124px; width: 23px; height: 21px; background:url(/images/lnb/lnb_webfolder.svg) no-repeat center / 20px 16px;}/* 웹폴더 */
+.icon_nav_memo { background-position: -124px -124px; width: 21px; height: 21px; background:url(/images/lnb/lnb_memo.svg) no-repeat center / 23px 21px;}/* 메모 */
 .icon_nav_cabinet { background-position: 0px -124px; width: 23px; height: 21px; }/* 캐비넷 */
 .icon_nav_car { background-position: -121px -154px; width: 26px; height: 21px; }/* 차량관리 */
 .icon_alarm_46px {position: relative; width: 46px; height: 46px; padding: 0px; background: url(/images/ezNewPortal/icon_alarm_46px.png) no-repeat; cursor: pointer;}

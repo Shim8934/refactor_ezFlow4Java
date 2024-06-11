@@ -337,6 +337,7 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "<tr>";
 	linksHTML += "<th class='quickLinkTH02'><spring:message code = 'ezPersonal.t1023' /> Type <span class='Ared'>*</span><span class='adminPlusBtn' onclick='CreateType()'><img src='/images/admin/adminPlus.png'></span></th></tr>";
 	linksHTML += "<tr><td class='quickTD'>";
+	linksHTML += "<div>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("A", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='A' checked=''></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("B", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='B'></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("C", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='C'></dd></dl>";
@@ -353,6 +354,7 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("N", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='N'></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("O", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='O'></dd></dl>";
 	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("P", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='P'></dd></dl>";
+	linksHTML += "</div>";
 	linksHTML += "<dl class='quickIcon_link'><dt id='typeImg' class='quickIcon_linkDT'></dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='Z' id='Z' onclick='radioClick(this, 'rad')' style='display:none;' /></dd></dl>";
 	linksHTML += "</td></tr>";
 	linksHTML += "</table>";
