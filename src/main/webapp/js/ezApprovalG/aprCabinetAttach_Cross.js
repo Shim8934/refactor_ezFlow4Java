@@ -113,6 +113,27 @@ function AttachList() {
     if (DocList.GetRowCount() > 0)
         DocList.SetSelectFlag(true);
 }
+function orgAttachList(orgDocId) {
+	var result = "";
+	var returnXml = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getAttachInfo.do",
+		data : {
+			docID : orgDocId,
+			mode : "END"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+	returnXml = loadXMLString(result);
+	return returnXml;
+}
 function delAttachDoc() {
 	var result = "";
 	

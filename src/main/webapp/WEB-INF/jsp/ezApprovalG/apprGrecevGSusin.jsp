@@ -151,7 +151,7 @@
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
 			
-			// 2024-06-04 김우철 - 부서수신함 첨부, 문서첨부 기능 사용 여부
+			// 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
 			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
 			
 		    $(document).ready(function(){

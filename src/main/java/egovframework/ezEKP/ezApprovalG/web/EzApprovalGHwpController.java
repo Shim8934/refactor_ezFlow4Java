@@ -1473,6 +1473,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		// 2023-10-26 조수빈 - 문서변환 솔루션 사용 여부
 		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
 		
+		// 2024-06-11 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
+		String useReceiptDeptFileAttach = ezCommonService.getTenantConfig("useReceiptDeptFileAttach", userInfo.getTenantId());
+		
 		if (useAprFilePrvw.equals("1") && useImageConvertServer.equals("1")) {
 			useAprFilePrvw = "1";
 		} else {
@@ -1528,6 +1531,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("isPreview", isPreview);
 
 		model.addAttribute("useAprFilePrvw", useAprFilePrvw);
+		
+		model.addAttribute("useReceiptDeptFileAttach", useReceiptDeptFileAttach);
 		
 		logger.debug("approvuiWHWP ended");
 		

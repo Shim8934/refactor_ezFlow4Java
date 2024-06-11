@@ -163,6 +163,9 @@
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 	        
+			// 2024-06-11 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부
+			var useReceiptDeptFileAttach = "<c:out value ='${useReceiptDeptFileAttach}'/>";
+			
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -586,10 +589,13 @@
 			        else
 			            setMenuBar("btnEdit", false);
 			
-			
 			        setMenuBar("btnModAprDept", false);
-			        setMenuBar("btnFileAttach", false);
-			        setMenuBar("btnAprDocAttach", false);
+			        
+			        if (useReceiptDeptFileAttach == "NO") {
+		            	setMenuBar("btnFileAttach", false);
+			            setMenuBar("btnAprDocAttach", false);	
+		            }
+			        
 			        pGubun = "6";
 			    }
 			

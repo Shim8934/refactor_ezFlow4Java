@@ -58,6 +58,7 @@
 			var anNo = "<c:out value ='${anNo}'/>";
 			var selRowChangeFlag = false;
 			var cabinetAttachPage = true; // 문서 첨부 검색 페이지에서 의견 아이콘 삭제하기 위해 추가
+			var orgResultxml;
 	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
@@ -97,6 +98,26 @@
 	            InitGlobals("RECORD", "9", "1");
 	            GetRecordList_lv();
 	            AttachList();
+	            
+	            if (parent.pOrgDocID != '') {
+	            	orgResultxml = orgAttachList(parent.pOrgDocID);
+	            	if (orgResultxml != null && SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW").length > 0) {
+	            		var DocList = new ListView();
+			            DocList.LoadFromID("lvTDocLV");
+			            var attachSel = DocList.GetDataRows();
+			            var length = attachSel.length;
+			            for (var i = 0; i < length; i++) {
+			            	var href = GetAttribute(attachSel[i], "data1");
+			            	for (var j = 0; j < SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW").length; j++) {
+			            		var orgHref = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(orgResultxml, "LISTVIEWDATA/ROWS/ROW")[j])[0])[1]);
+								if (href == orgHref) {
+									SetAttribute(attachSel[i], "DELETE", "N");
+									break;
+								}
+			            	}
+			            }
+	            	}
+	            }
 	            if (!CrossYN())
 	                window.returnValue = "cancel";
 	        }
@@ -177,19 +198,27 @@
 	            var pCurSel = DocList.GetSelectedRows();
 	            var length = pCurSel.length;
 	            
-	            var deptCheck = true;
-	            var pWriterDeptID = "";
-	        	if (typeof(parent.pWriterDeptID) != "undefined") {
-	        		pWriterDeptID = parent.pWriterDeptID;
-	        		if (pDeptID != pWriterDeptID) {
-	        			deptCheck = false;
-	        		}
-	        	}
-	        	
 	            if (length == 0) {
 	                OpenAlertUI("<spring:message code='ezApprovalG.t360'/>");
+	                return;
 	            }
-	            else if (!(arr_userinfo[1].toLowerCase() == GetAttribute(pCurSel[0], "DATA4").toLowerCase() && deptCheck) && pDraftFlag != "REDRAFT") {
+	            
+	            for (var i = 0; i < length; i++) {
+	            	if (typeof(GetAttribute(pCurSel[i], "DELETE")) != "undefined" && GetAttribute(pCurSel[i], "DELETE") == "N") {
+	            		OpenAlertUI("<spring:message code='ezApprovalG.t277'/>");
+	            		return;
+	            	}
+	            }
+	            
+	            var userCheck = true;
+	            for (var i = 0; i < length; i++) {
+	            	if (arr_userinfo[1].toLowerCase() != GetAttribute(pCurSel[i], "DATA4").toLowerCase()) {
+	            		userCheck = false;
+	            		break;
+	            	}
+	            }
+	            
+	            if (!userCheck && pDraftFlag != "REDRAFT") {
 	                OpenAlertUI("<spring:message code='ezApprovalG.t361'/>");
 	                return;
 	            }
