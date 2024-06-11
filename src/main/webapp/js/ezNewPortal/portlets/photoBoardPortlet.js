@@ -22,7 +22,7 @@ function initPhotoBoardPortlet(portletId) {
 		document.getElementById(portletId + "Portlet").querySelector(".portletPageNav").style.display = "none";
 	}
 	
-	resetPortletList(portletId, totalCnt, "");
+	resetPortletPaging(portletId, totalCnt, "");
 }
 
 function getPhotoPagePerCount(portletId) {
@@ -79,7 +79,7 @@ function getPhotoPortletList() {
 			}
 			
 			var totalCnt = result.length < photoPortletPageMaxCnt ? result.length : photoPortletPageMaxCnt;
-			resetPortletList(portletId, totalCnt, "");
+			resetPortletPaging(portletId, totalCnt, "");
 		}
 	})
 }

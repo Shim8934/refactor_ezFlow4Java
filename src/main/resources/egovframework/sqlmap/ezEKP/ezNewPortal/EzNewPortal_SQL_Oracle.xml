@@ -1831,6 +1831,40 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	]]>
 </select>
 
+<select id="ezNewPortal.getBoardPortletTotalCnt" parameterClass="Map" resultClass="int">
+<![CDATA[
+	SELECT
+			COUNT(*)
+		FROM
+			TBL_BOARD_ITEM A
+		JOIN
+			TBL_BOARD_BOARDINFO C
+		ON
+			A.BOARDID = C.BOARDID
+		AND
+			A.TENANT_ID = C.TENANT_ID
+		WHERE
+			A.TENANT_ID = #tenantId#
+		AND
+			A.BOARDID = #boardId#
+		AND
+			(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
+		AND
+			(A.APPRFLAG = 'Y' 
+			OR A.APPRFLAG IS NULL)
+		  ]]>
+		<isEqual property="isQnANormal" compareValue="Y" prepend="AND">
+			(TOPWRITERID = #userId#
+			OR
+			WRITERID = #userId#)
+		</isEqual>
+		<![CDATA[
+		AND
+		  	A.STARTDATE <= #nowDate#
+		AND
+		  	A.ENDDATE > #nowDate#
+		]]>
+</select>
 
 <!-- 이효진-->
 	<!-- 2024-02-28 전인하 - 포탈 > 전자결재 포틀릿 > docstate, functiontype 가공하는 case문 추가(vAprDoingDocList 뷰와 같음)-->

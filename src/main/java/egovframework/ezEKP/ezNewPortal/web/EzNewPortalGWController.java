@@ -5020,6 +5020,8 @@ public class EzNewPortalGWController {
 
 			if (!accessCheck) {
 				data.put("access", "false");
+				data.put("boardList", null);
+				data.put("boardListTotalCnt", 0);
 			} else {
 				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
 				String guBun = boardPropertyVO.getGuBun();
@@ -5032,7 +5034,8 @@ public class EzNewPortalGWController {
 
 				// 권한이 true이면 boardList불러오기
 				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow);
-
+				
+				int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal);
 				// 리스트 개수로 utc time 적용시키기
 				int boardListCount = boardList.size();
 				for (int i = 0; i < boardListCount; i++) {
@@ -5049,6 +5052,7 @@ public class EzNewPortalGWController {
 
 				data.put("access", "true");
 				data.put("boardList", boardList);
+				data.put("boardListTotalCnt", boardListTotalCnt);
 			}
 
 			result.put("status", "ok");

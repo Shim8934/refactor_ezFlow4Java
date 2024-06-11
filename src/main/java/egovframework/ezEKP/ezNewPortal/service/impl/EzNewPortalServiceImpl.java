@@ -1716,7 +1716,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, offset, isQnANormal, 0);
 		
 	}
-
+	
 	@Override
 	public List<BoardListVO> getBoardPortletInfo(String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, int startRow) throws Exception {
 		logger.debug("getBoardPortletInfo started.");
@@ -1733,6 +1733,21 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		logger.debug("getBoardPortletInfo ended.");
 		return ezNewPortalDAO.getBoardPortletInfo(map);
+	}
+	
+	@Override
+	public int getBoardPortletTotalCnt(String userId, int tenantId, String boardId, String companyId, String offset, boolean isQnANormal) throws Exception {
+		logger.debug("getBoardPortletInfo started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+		map.put("nowDate", nowDate);
+		map.put("userId", userId);
+		map.put("isQnANormal", isQnANormal ? "Y" : "N");
+
+		logger.debug("getBoardPortletInfo ended.");
+		return ezNewPortalDAO.getBoardPortletTotalCnt(map);
 	}
 
 	@Override

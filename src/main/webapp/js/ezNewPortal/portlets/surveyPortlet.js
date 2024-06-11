@@ -10,10 +10,14 @@ function initSurveyPortletInfo(surveyPortletId) {
 		return getSurveyPagePerCount(surveyPortletId);
 	}
 	newObj.portletCode = "survey";
+	newObj.getPortletList = function () {
+		var currentPage = newObj.page.getPage() + 1;
+		getPotletSurveyList(currentPage);
+	}
 	portletInfoMap["portlet" + surveyPortletId] = newObj;
 	surveyPortletObj.portletId = surveyPortletId;
 	
-	getPotletSurveyList();
+	getPotletSurveyList(1);
 }
 
 function getSurveyPagePerCount(surveyPortletId) {
@@ -36,12 +40,10 @@ function goSurveyPage() {
 	window.open('/ezSurvey/surveyMain.do', 'main', '');
 }
 
-const surveyPorletPagingCnt = 21; // portlet 높이가 1일 때(3) 와 2일 때(7) 표출되는 리스트 개수의 최소공배수  
-
 // 진행중인 설문 데이터 가져오기
-function getPotletSurveyList() {
+function getPotletSurveyList(currentPage) {
 	var searchObj = {
-			currentPage : 1,
+			currentPage : currentPage,
 			pageMode 	: 'processing',
 			srchMode 	: 0,
 			title       : "",
@@ -52,7 +54,7 @@ function getPotletSurveyList() {
 			order       : "",
 			srchMode    : 0,
 			srchOption  : "title",
-			listCntSize : surveyPorletPagingCnt
+			listCntSize : getSurveyPagePerCount(surveyPortletObj.portletId)
 			};
 	
 	$.ajax({
@@ -64,6 +66,8 @@ function getPotletSurveyList() {
 		cache: false,
 		success : function(data) {
 			setListByDataList(data.itemList);
+			var totalCnt = data.totalRows;
+			resetPortletPaging(surveyPortletObj.portletId, totalCnt, "");
 		},
 		error : function(error) {
 			alert(messages.strLang2 + error);
@@ -140,9 +144,6 @@ function setListByDataList(surveys) {
 		
 		ulEl.appendChild(dlEl);
 	}
-	
-	var totalCnt = surveys.length < surveyPorletPagingCnt ? surveys.length : surveyPorletPagingCnt;
-	resetPortletList(surveyPortletObj.portletId, totalCnt, "");
 }
 
 // 응답 안 한 설문은 굵게 표시

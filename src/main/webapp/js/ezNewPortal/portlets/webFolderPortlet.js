@@ -113,7 +113,7 @@ function getWebFolderFileList() {
 				ulEl.classList.add("empty");
 			}
             var totalCnt = fileLength < webFolderPorletPagingCnt ? fileLength : webFolderPorletPagingCnt;
-            resetPortletList(webFolderPortletObj.portletId, totalCnt, "");   
+            resetPortletPaging(webFolderPortletObj.portletId, totalCnt, "");   
 		},
 		error : function () {
 			alert("웹폴더 포틀릿 생성중 에러가 발생했습니다.");

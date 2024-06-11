@@ -1065,7 +1065,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	
 	@RequestMapping(value = "/ezNewPortal/getCustomBoardInfo.do", method=RequestMethod.GET)
 	@ResponseBody
-	public JSONArray getCustomBoardInfo(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public JSONObject getCustomBoardInfo(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getCustomBoardInfo Start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1085,21 +1085,16 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
-		JSONArray boardList = new JSONArray();
+		JSONObject data = new JSONObject();
 		
 		if (result.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			String access = data.get("access").toString();
-			
-			if (access.equals("true")) {
-				boardList = (JSONArray) data.get("boardList");
-			}
+			data = (JSONObject) resultBody.get("data");
 		}
 		
 		model.addAttribute("portletId", portletId);
 		logger.debug("portalBoardPortlet End");
 		
-		return boardList;
+		return data;
 	}
 	
 	/**

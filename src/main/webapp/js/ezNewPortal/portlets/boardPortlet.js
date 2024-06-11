@@ -7,36 +7,31 @@ var BTN_NEXT = "nextBtn"
 var BTN_PREV = "preBtn"
 
 function makeBoardList(portletId, fileName, count, type, startRow) {
-	var boardPortletPagingCnt = 10;
-	if ("a" === type) {
-		boardPortletPagingCnt = 10; // 높이 1일 때 2개, 높이 2일때 5개 (10)
-	} else if ("b" === type) {
-		boardPortletPagingCnt = 12; // 높이 1일 때 3개, 높이 2일때 6개 (12)
-	} else {
-		boardPortletPagingCnt = 21; // 높이 1일 때 3개, 높이 2일때 7개 (21)
-	}
-	
 	$.ajax({
 		type: "GET",
 		dataType: "json",
 		data: {
 			"portletId": portletId,
 			"fileName": fileName,
-			"startRow": "0", 
-			"count": boardPortletPagingCnt
+			"startRow": startRow, 
+			"count": count
 		},
 		url: "/ezNewPortal/getCustomBoardInfo.do",
 		success: function (result) {
+			
+			var access = result.access;
+			var boardList = result.boardList;
+			var boardListTotalCnt = result.boardListTotalCnt;
+			
 			if ("a" === type) {
-				getBoardListAType(result, portletId);
+				getBoardListAType(result.boardList, portletId);
 			} else if ("b" === type) {
-				getBoardListBType(result, portletId);
+				getBoardListBType(result.boardList, portletId);
 			} else {
-				getBoardList(result, portletId);
+				getBoardList(result.boardList, portletId);
 			}
 			
-			var totalCnt = result.length < boardPortletPagingCnt ? result.length : boardPortletPagingCnt;
-			resetPortletList(portletId, totalCnt, "");
+			resetPortletPaging(portletId, boardListTotalCnt, "");
 		}
 	})
 }
@@ -56,6 +51,11 @@ function initBoardPortletInfo(portletId, type, fileName) {
 	newOb.page = new Paging().init(count);
 	newOb.page.getPagePerCount = function () {
 		return getCurrentCount(portletId);
+	}
+	newOb.getPortletList = function () {
+		var currentPage = newOb.page.getPage() + 1;
+		var boardPortletPagingCnt = getCurrentCount(portletId);
+		makeBoardList(portletId, newOb.fileName, boardPortletPagingCnt, newOb.type, newOb.page.getStart());
 	}
 	
 	portletInfoMap["portlet" + portletId] = newOb;

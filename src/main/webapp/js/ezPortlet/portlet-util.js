@@ -490,52 +490,41 @@ function changePortletViewCount(portletId, portletPagingArea) {
 		for (var i = 0; i < tabBoardIdList.length; i++) {
 			var tabBoardId = tabBoardIdList[i];
 			portletPageObj = portletInfoObj.paging[tabBoardId];
-			var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#" + tabBoardId).children;
-			changePortletPageCount(portletPageObj, portletPageList, portletId);
+			changePortletPageCount(portletInfoObj, portletId);
 		}
 	} else if (portletInfoObj.portletCode == "favoriteboard") {
 		var favoriteActiveTabId = portletInfoObj.activeTabId;
 		portletPageObj = portletInfoObj.paging[favoriteActiveTabId];
-		var portletPageList = document.getElementById(portletId + "Portlet").querySelector("#BoardList").children;
-		changePortletPageCount(portletPageObj, portletPageList, portletId);
+		changePortletPageCount(portletInfoObj, portletId);
 	} else {
 		portletPageObj = portletInfoObj.page;
-		var portletPageList = portletPagingArea[0].children;
-		changePortletPageCount(portletPageObj, portletPageList, portletId);
+		changePortletPageCount(portletInfoObj, portletId);
 	}
 }
 
-function changePortletPageCount(portletPageObj, portletPageList, portletId) {
-	var perCount = portletPageObj.getPagePerCount(portletId);
-	portletPageObj.changeCount(perCount);
-	var startRowIdx = portletPageObj.getStart();
-	portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+function changePortletPageCount(portletInfoObj, portletId) {
+	var perCount = portletInfoObj.page.getPagePerCount(portletId);
+	portletInfoObj.page.changeCount(perCount);
+	portletInfoObj.getPortletList();
 }
 
-function resetPortletList(portletId, totalCnt, activeTabId) {
+function resetPortletPaging(portletId, totalCnt, activeTabId) {
 	var portletInfoObj = portletInfoMap["portlet" + portletId];
 	var portletPageObj = null;
 	
 	if (portletInfoObj.portletCode == "tabBoard") {
 		portletPageObj = portletInfoObj.paging[activeTabId];
-		portletPageObj.resetPage();
 	} else if (portletInfoObj.portletCode == "favoriteboard") {
 		portletPageObj = portletInfoObj.paging[activeTabId];
 	} else {
 		portletPageObj = portletInfoObj.page;
-		portletPageObj.resetPage();
 	}
 	
-	var perCount = portletPageObj.getPagePerCount(portletId);
 	portletPageObj.setTotal(totalCnt);
 	
 	var portletPageNav = document.getElementById(portletId + "Portlet").querySelector(".portletPageNav");
     if (!portletPageNav) return;
 	if (totalCnt > 0) {
-		var portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
-		var startRowIdx = portletPageObj.getStart();
-		var currentPage = portletPageObj.getPage();
-		portletListDisplayProcess(portletPageList, startRowIdx, perCount);
 		if (portletInfoObj.portletCode != "tabBoard") {
 			portletPageNav.style.display = "block";
 		}
@@ -546,31 +535,18 @@ function resetPortletList(portletId, totalCnt, activeTabId) {
 	}
 }
 
-function portletListDisplayProcess(portletPageList, startRowIdx, perCount) {
-	for (var i = 0; i < portletPageList.length; i++) {
-		portletPageList[i].style.display = "none";
-		if (i >= startRowIdx && i < startRowIdx + perCount) {
-			portletPageList[i].style.display = "block";
-		}
-	}
-}
-
 function portletMovePage(portletId, mode) {
 	var portletInfoObj = portletInfoMap["portlet" + portletId];
 	var portletPageObj = null;
-	var portletPageList = null;
 	
 	if (portletInfoObj.portletCode == "tabBoard") {
 		var activeTabId = portletInfoObj.activeTabId;
 		portletPageObj = portletInfoObj.paging[activeTabId]
-		portletPageList = document.getElementById(portletInfoObj.activeTabId).children;
 	} else if (portletInfoObj.portletCode == "favoriteboard") {
 		var activeTabId = portletInfoObj.activeTabId;
 		portletPageObj = portletInfoObj.paging[activeTabId]
-		portletPageList = document.getElementById(portletId + "Portlet").querySelector("#BoardList").children;
 	} else {
 		portletPageObj = portletInfoObj.page;
-		portletPageList = document.getElementById(portletId + "Portlet").querySelector(".portletPagingArea").children;
 	}
 	
 	if (mode === "prev") {
@@ -578,10 +554,7 @@ function portletMovePage(portletId, mode) {
 	} else if (mode === "next") {
 		portletPageObj.next();
 	}
-
-    var startRowIdx = portletPageObj.getStart();
-    var perCount = portletPageObj.getPagePerCount(portletId);
-	portletListDisplayProcess(portletPageList, startRowIdx, perCount);
+	portletInfoObj.getPortletList();
 }
 
 const fixBoardArr = {};

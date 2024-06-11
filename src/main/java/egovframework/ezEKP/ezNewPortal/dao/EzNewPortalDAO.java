@@ -245,6 +245,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<BoardListVO>) list("ezNewPortal.getBoardPortletInfo", map);
 	}
 	
+	public int getBoardPortletTotalCnt (Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getBoardPortletTotalCnt", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<PortletInfoVO> getThemePortletList(Map<String, Object> map) throws Exception {
 		return (List<PortletInfoVO>) list("ezNewPortal.getThemePortletList", map);

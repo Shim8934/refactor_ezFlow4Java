@@ -184,7 +184,7 @@ function getBoardList_NewBoardSTD() {
         	document.getElementById("BoardList").innerHTML = listHTML;
         }
         var portletId = favoriteObj.portletId;
-        resetPortletList(portletId, totalCnt, favoriteBoardId);
+        resetPortletPaging(portletId, totalCnt, favoriteBoardId);
 	},
     	error : function(error){
     		console.log("<spring:message code='ezBoard.t22'/>wpNewBoardSTD" + error);	

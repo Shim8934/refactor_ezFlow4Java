@@ -21,7 +21,7 @@ function initCommunityPortletInfo(communityPortletId) {
 	
 	communityPortletObj.portletId = communityPortletId;
 	var totalCnt = CommuSize < communityPortletPageMaxCnt ? CommuSize : communityPortletPageMaxCnt;
-	resetPortletList(communityPortletObj.portletId, totalCnt, "");
+	resetPortletPaging(communityPortletObj.portletId, totalCnt, "");
 }
 
 function getCommmunityPagePerCount(communityPortletId) {
@@ -145,7 +145,7 @@ var getCommunityList = function() {
 			}
 			
 			var totalCnt = size < communityPortletPageMaxCnt ? size : communityPortletPageMaxCnt;
-			resetPortletList(communityPortletObj.portletId, totalCnt, "");
+			resetPortletPaging(communityPortletObj.portletId, totalCnt, "");
 			
 			for (var i = 1; i <= size; i ++) {
 				$('.comListDL0'+i).on("click", view_bestCommunity);
