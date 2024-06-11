@@ -96,11 +96,15 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 			// text += '<dt>' + index + '</dt>';
 		// }
 		// else {
-			text += '<dt class="noti_num">' + index + '</dt>';
+		// 	text += '<dt class="noti_num">' + index + '</dt>';
 		// }
 		
-        var writeDateFormatt = data.writeDate.substring(0,4).toString() + "." + data.writeDate.substring(5,7).toString() + "." + data.writeDate.substring(8,10).toString() + "<br>" + data.writeDate.substring(11,16).toString()
-		text += '<dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd><dd class="noti_date">' + writeDateFormatt + '</dd></dl></li>';
+        // var writeDateFormatt = data.writeDate.substring(0,4).toString() + "." + data.writeDate.substring(5,7).toString() + "." + data.writeDate.substring(8,10).toString() + "<br>" + data.writeDate.substring(11,16).toString()
+		// text += '<dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd><dd class="noti_date">' + writeDateFormatt + '</dd></dl></li>';
+        var writeDateFormatt = data.writeDate.substring(0,4).toString() + "." + data.writeDate.substring(5,7).toString() + "." + data.writeDate.substring(8,10).toString();
+		text += '<dd class="noti_text">' + ConvertCharToEntityReference(data.title) + '</dd>';
+        text += '<dd class="cont">' + ConvertCharToEntityReference(data.content) + '</dd><dd class="name">'+ ConvertCharToEntityReference(data.writerName) +'</dd>';
+        text += '<dd class="date">' + writeDateFormatt + '</dd></dl></li>';
 		
 		return text;
 	};

@@ -111,7 +111,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	@Autowired
 	private CommonUtil commonUtil;
 	
-	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset) throws Exception {
+	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 		map.put("companyId", companyId);
@@ -119,6 +119,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("limit", limit);
 		map.put("portletId", 2); // 공지사항 포틀릿 ID 는 2
 		map.put("nowDate", nowDate);
+		
+		if (!lang.equals("1")) {
+			map.put("lang", lang);
+		}
 		
 		return ezNewPortalDAO.getNoticePortletList(map);
 	}

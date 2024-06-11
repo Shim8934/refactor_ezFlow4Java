@@ -4034,7 +4034,7 @@ public class EzNewPortalGWController {
 				} else {
 					// 권한이 true이면 boardList불러오기
 					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit, info.getOffset());
+					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit, info.getOffset(), info.getLang());
 					int noticeCount = noticeList.size();
 					
 					for (int i = 0; i < noticeCount; i++) {

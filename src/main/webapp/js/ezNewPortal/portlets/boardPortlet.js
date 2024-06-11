@@ -221,10 +221,10 @@ function getBoardListBType(data, portletId) {
 			})(id, guBun, boardID);
 			var dlEle = document.createElement('dl');
 			listEle.appendChild(dlEle);
-			var dt = document.createElement('dt');
-			dlEle.appendChild(dt);
-			dt.className = 'noti_num';
-			dt.innerText = i + 1;
+			// var dt = document.createElement('dt');
+			// dlEle.appendChild(dt);
+			// dt.className = 'noti_num';
+			// dt.innerText = i + 1;
 			var dd = document.createElement('dd');
 			dlEle.appendChild(dd);
 			dd.className = 'noti_text';
@@ -267,7 +267,7 @@ function getBoardListBType(data, portletId) {
             textNode = document.createTextNode(date.getFullYear() + SPLIT_DATE + dateMonth + SPLIT_DATE + dateDay);
             spanDay.appendChild(textNode);
             spanDay.appendChild(br);
-            spanDay.appendChild(dateTime);
+            // spanDay.appendChild(dateTime);
             
 			$('#' + portletId + 'Portlet').find('.box_shadow').addClass('board_Btype');
 			$('#customBoardList' + portletId).removeClass('portlet_list').addClass('noti_portlet_list');
