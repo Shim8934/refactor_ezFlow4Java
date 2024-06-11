@@ -53,7 +53,6 @@ function initBoardPortletInfo(portletId, type, fileName) {
 		return getCurrentCount(portletId);
 	}
 	newOb.getPortletList = function () {
-		var currentPage = newOb.page.getPage() + 1;
 		var boardPortletPagingCnt = getCurrentCount(portletId);
 		makeBoardList(portletId, newOb.fileName, boardPortletPagingCnt, newOb.type, newOb.page.getStart());
 	}
