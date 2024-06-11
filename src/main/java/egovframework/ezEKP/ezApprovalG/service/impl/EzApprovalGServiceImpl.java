@@ -31528,20 +31528,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
+	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId, String ext) throws Exception {
 		logger.debug("convertDocumentToImg started");
-		
-		String originalFilename = file.getOriginalFilename();
-		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
-		
-		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
-		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
+
+		String originalFilename = docId + "_office";
+//		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
+
+        // 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
+//		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
+        String oldYear = getDocHrefYear(docId, companyId, tenantId);
+        String filePath2 = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId) + commonUtil.separator + companyId + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear +
+                commonUtil.separator +  getDocDir(docId);
+        if(file != null){
+            originalFilename = file.getOriginalFilename();
+            EgovFileMngUtil.writeFile(file, docId + "_office", servletContext.getRealPath("") + filePath2);
+            ext = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
+        }
+        String filePath = filePath2 + commonUtil.separator + docId + "_office";
 		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
-		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
-		
+
 		String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do?"
-				+ "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
-		
+//				+ "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
+//        String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/document/docviewer.do?"
+                + "filepath=" + URLEncoder.encode(tempUploadPath + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + URLEncoder.encode(filePath, "UTF-8"), "UTF-8").replace("+", "%20")
+                + "&filename=" + URLEncoder.encode(fileName, "UTF-8") + "&fileext=" + ext;
+
 		logger.debug("image converting requestURL : " + address);
 		
 		URL url = new URL(address);
@@ -31561,8 +31572,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String convertedImgInfo = config.getProperty("config.officeConverterServerURL") + "/DG_viewer" + response;
 			
 			// 컨버팅 후, 오피스 문서 파일 삭제
-			File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
-			tempFile.delete();
+//			File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
+//			tempFile.delete();
 			
 			logger.debug("convertDocumentToImg ended");
 			return convertedImgInfo;	

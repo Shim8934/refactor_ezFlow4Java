@@ -11,7 +11,6 @@ import org.w3c.dom.Document;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.zip.ZipOutputStream;
@@ -645,7 +644,7 @@ public interface EzApprovalGService {
 	public String getStoragePeriodName(String period, String lang, String approvalFlag, String companyID, int tenantID) throws Exception;
 	
 	// 변환서버에 변환을 요청
-	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception;
+	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId, String ext) throws Exception;
 	
 	// 이미지로 변환된 오피스문서의 정보를 가져옴
 	public JSONObject getConvertedImgInfo(String hash) throws Exception;
