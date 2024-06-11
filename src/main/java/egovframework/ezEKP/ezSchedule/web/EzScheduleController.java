@@ -2200,12 +2200,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				endDateTime = getUploadDate(cDate, false);
 			}
         }
-
-        // 2018-10-25 김민성 - 일정 작성시 공개/비공개 기본값 설정 관련 config 추가
-        if(chkSchedulePublic.equals("ON")) {
-        	// _ispublic =
-        }
-
+        
         //2017-11-15 자원관리 사용하지 않을 경우 탭 처리
         //String accessList = ezPortalService.getAccessList(loginVO);
 		//boolean checkResourceTab = ezPortalService.checkViewRightBln("6db81dc5-e8ba-49c8-b625-df4fd375a43a", accessList, loginVO.getTenantId());

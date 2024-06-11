@@ -199,9 +199,9 @@
 		            setAttachFileInfo("${strAttach}");
 		        }
 
-		        if(ispublic != "") {
+		        /*if(ispublic != "") {
 		        	document.getElementById("publicSelect").value = ispublic;
-		        }
+		        }*/
 
 		        try{
 		            if (document.getElementById("TextTitle").value == "")
@@ -224,6 +224,11 @@
 		         if (scheduleid != "") {
 		        setDate();
 		         }
+				// chkPublic이 OFF일 경우 비공개가 기본값임.
+				 if (chkPublic == "OFF") {
+					 document.getElementById("publicSelect").disabled = true;
+					 document.getElementById("publicSelect").value = "N";
+				 }
 		    }
 
 		    window.onresize = function () {
