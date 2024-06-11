@@ -1233,7 +1233,7 @@ public class LoginController {
 							if (!checkIp && getAccess.equals("YES")) {
 								returnValue = false;
 								break;
-							} else if (checkIp) {
+							} else if (!checkIp) {
 								returnValue = true;
 								break;
 							}
