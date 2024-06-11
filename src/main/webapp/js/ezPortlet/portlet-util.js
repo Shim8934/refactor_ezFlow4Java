@@ -635,65 +635,112 @@ function makePortlets(portletOrder) {
             if (!!portletUrl) portletUrl = URLParamsUtils(portletUrl).getFullUrl();
             var portletName = portletOrder[i].portletName;
             var portletCode = portletOrder[i].portletCode;
-
-            /* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-            (function (portletId, portletUrl, portletName, portletCode) {
+            if (portletUrl.indexOf("http") != -1) {
+                $("#" + portletId + "Portlet").empty();
                 $.ajax({
                     type: "GET",
                     dataType: "html",
                     data: {
-                        "uniq_param": (new Date()).getTime(),
                         "portletId": portletId,
                         "portletName": portletName,
-                        "usedTheme": usedTheme
+                        "usedTheme": usedTheme,
+                        "iframeUrl" : portletUrl
                     },
-                    url: portletUrl,
+                    async: false,
                     tryCount: 0,
                     retryLimit: 3,
-                    success: function (result) {
-                        try {
-                            $("#" + portletId + "Portlet").empty().append(result);
-                            if (usePortletSize) {
-                                makeGridChangeEvent(portletId);
+                    url : "/ezNewPortal/iframePortlet.do",
+                    success: function(data){
+                         try {
+                             $("#" + portletId + "Portlet").empty().append(data);
+                             if (usePortletSize) {
+                                 makeGridChangeEvent(portletId);
+                             }
+                         } catch (e) {
+                             console.log(e);
+                         }
+                    }, 
+                    error: function () {
+                    this.url = "/ezNewPortal/errorPortlet.do";
+                    this.tryCount++;
+
+                    if (this.tryCount <= this.retryLimit) {
+                        //try again
+                        $.ajax(this);
+                        return;
+                    }
+
+                    if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+                        sortableEvent();
+                    }
+
+                    if (usePortletSize) {
+                        makeGridChangeEvent(portletId);
+                    }
+
+                    return;
+                  }
+                });
+            } else {
+                /* if (portletUrl.indexOf("ezNewPortal") != -1) { */
+                (function (portletId, portletUrl, portletName, portletCode) {
+                    $.ajax({
+                        type: "GET",
+                        dataType: "html",
+                        data: {
+                            "uniq_param": (new Date()).getTime(),
+                            "portletId": portletId,
+                            "portletName": portletName,
+                            "usedTheme": usedTheme
+                        },
+                        url: portletUrl,
+                        tryCount: 0,
+                        retryLimit: 3,
+                        success: function (result) {
+                            try {
+                                $("#" + portletId + "Portlet").empty().append(result);
+                                if (usePortletSize) {
+                                    makeGridChangeEvent(portletId);
+                                }
+    
+                                if (portletId == 6) {
+                                    document.getElementById(portletId + "Portlet").style.background = "none";
+                                }
+    
+                                eventSetting(portletId, usedTheme, portletCode, false);
+    
+                                if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+                                    sortableEvent();
+                                }
+                            } catch (e) {
+                                // 포틀릿 내부 에러시에 포탈 전체 스크립트 에러가 나서 try catch 처리함
+                                console.log(e);
                             }
-
-                            if (portletId == 6) {
-                                document.getElementById(portletId + "Portlet").style.background = "none";
+    
+                        },
+                        error: function () {
+                            this.url = "/ezNewPortal/errorPortlet.do";
+                            this.tryCount++;
+    
+                            if (this.tryCount <= this.retryLimit) {
+                                //try again
+                                $.ajax(this);
+                                return;
                             }
-
-                            eventSetting(portletId, usedTheme, portletCode, false);
-
+    
                             if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
                                 sortableEvent();
                             }
-                        } catch (e) {
-                            // 포틀릿 내부 에러시에 포탈 전체 스크립트 에러가 나서 try catch 처리함
-                            console.log(e);
-                        }
-
-                    },
-                    error: function () {
-                        this.url = "/ezNewPortal/errorPortlet.do";
-                        this.tryCount++;
-
-                        if (this.tryCount <= this.retryLimit) {
-                            //try again
-                            $.ajax(this);
+    
+                            if (usePortletSize) {
+                                makeGridChangeEvent(portletId);
+                            }
+    
                             return;
                         }
-
-                        if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-                            sortableEvent();
-                        }
-
-                        if (usePortletSize) {
-                            makeGridChangeEvent(portletId);
-                        }
-
-                        return;
-                    }
-                });
-            }(portletId, portletUrl, portletName, portletCode));
+                    });
+                }(portletId, portletUrl, portletName, portletCode));
+            }
             /* } */
         }
     }

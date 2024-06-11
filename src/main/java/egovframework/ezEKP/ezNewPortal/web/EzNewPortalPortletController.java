@@ -1392,4 +1392,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("sampleChartPortlet End");
 		return wholeList;
 	}
+
+	@RequestMapping(value = "/ezNewPortal/iframePortlet.do", method=RequestMethod.GET)
+	public String getIframePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getIframePortlet Start");
+
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("portletId", req.getParameter("portletId"));
+		model.addAttribute("iframeUrl", req.getParameter("iframeUrl"));
+		model.addAttribute("usedTheme", commonUtil.isIntNumber(req.getParameter("usedTheme"), 1));
+
+		logger.debug("getIframePortlet End");
+		return "/ezNewPortal/portlets/iframePortlet";
+	}
 }
