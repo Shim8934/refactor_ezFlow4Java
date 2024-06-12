@@ -9178,12 +9178,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 분리첨부 철변경 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/selectCabinetInTask.do", method = RequestMethod.GET)
-	public String selectCabinetInTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) {
+	public String selectCabinetInTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("gongRamUpdate started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
+		String currYear = commonUtil.getTodayUTCTime("yyyy");
+
 		model.addAttribute("userInfo", userInfo);
-		
+		model.addAttribute("openYear", openYear);
+		model.addAttribute("currYear", currYear);
+
 		logger.debug("gongRamUpdate ended");
 		
 		return "ezApprovalG/apprGselectCabinetInTask";
