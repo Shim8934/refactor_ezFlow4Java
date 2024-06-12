@@ -8941,6 +8941,8 @@ CREATE TABLE "TBL_CAR_FORM" (
 
   CREATE INDEX "IDX_JAMES_MAIL_USERFLAG" ON "JAMES_MAIL_USERFLAG" ("MAILBOX_ID", "MAIL_UID") 
   ;
+  CREATE INDEX "JAMES_MAIL_USERFLAG_NAME_IDX" ON "JAMES_MAIL_USERFLAG" ("USERFLAG_NAME")
+  ;
 --------------------------------------------------------
 --  DDL for Index IDX_JAMES_PROPERTY_LINE_NUMBER
 --------------------------------------------------------

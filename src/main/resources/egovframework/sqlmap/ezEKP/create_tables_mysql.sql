@@ -164,6 +164,7 @@ CREATE TABLE `james_mail_userflag` (
   `MAIL_UID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`USERFLAG_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
+  KEY `james_mail_userflag_NAME_IDX` (`USERFLAG_NAME`),
   CONSTRAINT `james_mail_userflag_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
