@@ -18,20 +18,21 @@ function makeBoardList(portletId, fileName, count, type, startRow) {
 		},
 		url: "/ezNewPortal/getCustomBoardInfo.do",
 		success: function (result) {
-			
 			var access = result.access;
 			var boardList = result.boardList;
 			var boardListTotalCnt = result.boardListTotalCnt;
 			
-			if ("a" === type) {
-				getBoardListAType(result.boardList, portletId);
-			} else if ("b" === type) {
-				getBoardListBType(result.boardList, portletId);
-			} else {
-				getBoardList(result.boardList, portletId);
+			if (access == "true") {
+				if ("a" === type) {
+					getBoardListAType(result.boardList, portletId);
+				} else if ("b" === type) {
+					getBoardListBType(result.boardList, portletId);
+				} else {
+					getBoardList(result.boardList, portletId);
+				}
 			}
-			
-			resetPortletPaging(portletId, boardListTotalCnt, "");
+			var currentPage = 1;
+			resetPortletPaging(portletId, boardListTotalCnt, currentPage, "");
 		}
 	})
 }
@@ -109,7 +110,7 @@ function getBoardListAType(data, portletId) {
 	//chkPageBtns(portletId, boardCount);
 	//var currentCount = getCurrentCount(portletId);
 	//boardCount = boardCount > currentCount ? currentCount : boardCount;
-
+	
 	jPortlet.empty();
 
 	if (boardCount > 0) {
@@ -274,10 +275,9 @@ function getBoardListBType(data, portletId) {
             
 		}
         
-        var totalCnt = 12;
         var currentCnt = getCurrentCount(portletId);
         if (boardCount % currentCnt != 0) {
-            for(var i = 0; i < totalCnt; i++) {
+            for(var i = 0; i < currentCnt - boardCount; i++) {
                 var nodataNotiLI = document.createElement('li');
                 nodataNotiLI.className = 'notiLI';
                 var nodataNotiDL = document.createElement('dl');

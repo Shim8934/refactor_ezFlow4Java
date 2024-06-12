@@ -366,12 +366,12 @@ function Paging() {
     var _total = -1;
     var _option = {
         maintain:true, // 페이지 숫자 변환시 현제 페이지 유지 여부
-        pageStart:0, // getPage()시 시작 페이지
+        pageStart:1, // getPage()시 시작 페이지
         roundPage:true, // 페이지 끝으로 가면 순환할지 여부.
     }
 
     var _resetPage = function (count) {
-        _page = 0;
+        _page = _option.pageStart;
         _countPerPage = count;
         _start = 0;
     }
@@ -379,11 +379,11 @@ function Paging() {
     var _changeCount = function (count) {
         _start -= _start % count;
         _countPerPage = count;
-        _page = _start / count;
+        _page = _start / count + _option.pageStart;
     }
 
     var _getLastPage  = function () {
-        return Math.ceil(_total / _countPerPage) - 1;
+        return Math.ceil(_total / _countPerPage) - 1 + _option.pageStart;
     }
 
     return {
@@ -392,7 +392,7 @@ function Paging() {
             _option.roundPage = !!roundPage;
             return this;
         },
-        // 페이지 숫자 변환시 현제 페이지 유지 여부
+        // 페이지 숫자 변환시 현재 페이지 유지 여부
         setMaintain: function (maintain) {
             _option.maintain = !!maintain;
             return this;
@@ -406,7 +406,7 @@ function Paging() {
             _resetPage(count);
             return {
                 getPage: function () {
-                    return _page + _option.pageStart;
+                    return _page;
                 },
                 getStartPage: function () {
                     return _option.pageStart;
@@ -430,7 +430,7 @@ function Paging() {
                     return this;
                 },
                 previous: function () {
-                    if (_total !== -1 && _page <= 0) {
+                    if (_total !== -1 && _page <= _option.pageStart) {
                         if (_option.roundPage) {
                             _start = _getLastPage() * _countPerPage;
                             _page = _getLastPage();
@@ -468,7 +468,7 @@ function Paging() {
                 last: function () {
                     if (_total === -1) return this;
                     _page = _getLastPage();
-                    _start = _page * _countPerPage;
+                    _start = (_page - _option.pageStart) * _countPerPage;
                     return this;
                 },
                 resetPage : function () {
@@ -476,6 +476,10 @@ function Paging() {
                 },
                 getCurrentOption : function () {
                     return _option;
+                },
+                setPage : function (pageNum) {
+                	_page = pageNum
+                	_start = (_page - _option.pageStart) * _countPerPage
                 }
             }
         }
@@ -508,7 +512,7 @@ function changePortletPageCount(portletInfoObj, portletId) {
 	portletInfoObj.getPortletList();
 }
 
-function resetPortletPaging(portletId, totalCnt, activeTabId) {
+function resetPortletPaging(portletId, totalCnt, currentPage, activeTabId) {
 	var portletInfoObj = portletInfoMap["portlet" + portletId];
 	var portletPageObj = null;
 	
@@ -520,6 +524,7 @@ function resetPortletPaging(portletId, totalCnt, activeTabId) {
 		portletPageObj = portletInfoObj.page;
 	}
 	
+	portletPageObj.setPage(currentPage);
 	portletPageObj.setTotal(totalCnt);
 	
 	var portletPageNav = document.getElementById(portletId + "Portlet").querySelector(".portletPageNav");

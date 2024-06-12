@@ -161,8 +161,8 @@ function loadTabBoard(rtabBoardId, tabBoard, tabBoardName, tabId) {
         
         totalCnt = tabBoard.length < tabBoardPageMaxCnt ? tabBoard.length : tabBoardPageMaxCnt;
     }
-    
-    resetPortletPaging(portletId, totalCnt, tabBoardListId);
+    var currentPage = 1;
+    resetPortletPaging(portletId, totalCnt, currentPage, tabBoardListId);
     
 }
 // 게시글 한줄 생성(데이터)

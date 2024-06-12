@@ -173,7 +173,9 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 	if (noticeList && noticeList.length != 0) {
 		totalCnt = noticeList.length < noticePorletPagingCnt ? noticeList.length : noticePorletPagingCnt; 
 	}
-	resetPortletPaging(noticePortletObj.portletId, totalCnt, "");
+	
+	var currentPage = 1;
+	resetPortletPaging(noticePortletObj.portletId, totalCnt, currentPage, "");
 }
 
 var portletId = $(".notice").parent().attr("id");
