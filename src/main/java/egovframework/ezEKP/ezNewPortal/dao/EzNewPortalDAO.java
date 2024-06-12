@@ -148,6 +148,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<BoardItemVO> getphotoBoardPortletInfo(Map<String, Object> map) throws Exception {
 		return (List<BoardItemVO>) list("ezNewPortal.getPhotoBoardPortletInfo", map);
 	}
+	
+	public int getPhotoBoardPortletTotalCnt(Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getPhotoBoardPortletTotalCnt", map);
+	}
 
 	//게시판 권한 체크
 	public String getBoardAuthCheck(Map<String, Object> map) throws Exception {

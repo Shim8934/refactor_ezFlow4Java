@@ -1,7 +1,7 @@
 /**
  * 
  */
-const photoPortletPageMaxCnt = 12;
+var photoBoardObj = {}
 
 function initPhotoBoardPortlet(portletId) {
 	var newObj = {};
@@ -11,11 +11,18 @@ function initPhotoBoardPortlet(portletId) {
 		return getPhotoPagePerCount(portletId);
 	}
 	newObj.portletCode = "photoboard";
+	
+	newObj.getPortletList = function () {
+		var currentPage = portletInfoMap["portlet" + portletId].page.getPage() + 1;
+		getPhotoPortletList(currentPage);
+	}
 
 	portletInfoMap["portlet" + portletId] = newObj;
 	
+	photoBoardObj.portletId = portletId;
+	
 	var photoPortletListCnt = document.getElementById('photoPortletListCnt').value;
-	var totalCnt = photoPortletListCnt < photoPortletPageMaxCnt ? photoPortletListCnt : photoPortletPageMaxCnt;
+	var totalCnt = photoPortletListCnt;
 	
 	var nodataArea = document.getElementById(portletId + "Portlet").querySelector(".nodata");
 	if (nodataArea) {
@@ -38,7 +45,29 @@ function getPhotoPagePerCount(portletId) {
 	return count;
 }
 
-function getPhotoPortletList() {
+function reloadPhotoPortlet() {
+	var portletId = photoBoardObj.portletId;
+	var newObj = {};
+	var perCount = getPhotoPagePerCount(portletId);
+	newObj.page = new Paging().init(perCount);
+	newObj.page.getPagePerCount = function () {
+		return getPhotoPagePerCount(portletId);
+	}
+	newObj.portletCode = "photoboard";
+	
+	newObj.getPortletList = function () {
+		var currentPage = portletInfoMap["portlet" + portletId].page.getPage() + 1;
+		getPhotoPortletList(currentPage);
+	}
+
+	portletInfoMap["portlet" + portletId] = newObj;
+	
+	getPhotoPortletList(1);
+}
+
+function getPhotoPortletList(currentPage) {
+	var listSize = getPhotoPagePerCount(photoBoardObj.portletId);
+	
 	var boardId = $(".photo_portlet").find(".portletText").attr("data1");
 	var portletId = $(".photo_portlet").parent().attr("id");
 	portletId = portletId.substring(0, portletId.indexOf("P"));
@@ -47,17 +76,19 @@ function getPhotoPortletList() {
 		type : "GET",
 		dataType : "json",
 		url : "/ezNewPortal/getPhotoItemList.do",
-		data : {"boardId" : boardId, "page" : 1, "photoCount" : photoPortletPageMaxCnt, "portletId" : portletId},
+		data : {"boardId" : boardId, "page" : currentPage, "photoCount" : listSize, "portletId" : portletId},
 		success : function(result) {
+			var photoBoardList = result.photoBoardList;
+			var totalCnt = result.totalCnt;
 			$("#photoul").html("");
-			if (result.length > 0) {
-				var resultCount = result.length;
+			if (photoBoardList.length > 0) {
+				var resultCount = photoBoardList.length;
 				var strHTML = "";
 
 				for (var i = 0; i < resultCount; i++) {
 					strHTML += "<li>";
-					strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardID + "' data2='" + result[i].itemID + "' onclick='photoItemRead(this)'>";
-					strHTML += "<span>" + MakeXMLString(result[i].title) + "</span>";
+					strHTML += "<img src='" + photoBoardList[i].filePath + "', data1='" + photoBoardList[i].boardID + "' data2='" + photoBoardList[i].itemID + "' onclick='photoItemRead(this)'>";
+					strHTML += "<span>" + MakeXMLString(photoBoardList[i].title) + "</span>";
 					strHTML += "</li>";
 
 				}
@@ -78,7 +109,6 @@ function getPhotoPortletList() {
 				document.getElementById("photoul").style.display ="block";
 			}
 			
-			var totalCnt = result.length < photoPortletPageMaxCnt ? result.length : photoPortletPageMaxCnt;
 			resetPortletPaging(portletId, totalCnt, "");
 		}
 	})

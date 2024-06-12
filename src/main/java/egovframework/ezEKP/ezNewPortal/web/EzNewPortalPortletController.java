@@ -497,7 +497,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("startRow", 0);
-		param.put("photoCount", 12);
+		param.put("photoCount", 6);
 		param.put("portletId", portletId);
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("deptId", userInfo.getDeptID());
@@ -515,6 +515,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			
 			if (access.equals("true")) {
 				model.addAttribute("photoBoardList", data.get("photoBoardList"));
+				model.addAttribute("totalCnt", data.get("totalCnt"));
 			}
 		}
 		
@@ -817,7 +818,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	/////포틀릿 정보만 가져오기
 	@RequestMapping(value = "/ezNewPortal/getPhotoItemList.do", method=RequestMethod.GET)
 	@ResponseBody
-	public JSONArray portalPhotoItemList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
+	public JSONObject portalPhotoItemList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
 		logger.debug("portalPhotoItemList Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String url = "/rest/ezPortal/portlets/photoBoard";
@@ -836,23 +837,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
-		JSONArray json = new JSONArray();
+		JSONObject data = new JSONObject();
 		
 		if (result.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			String access = data.get("access").toString();
-			
-			if (access.equals("true")) {
-				if (data.get("photoBoardList") != null) {
-					json = (JSONArray) data.get("photoBoardList");
-				} else {
-					json = null;
-				}
-			}
+			data = (JSONObject) resultBody.get("data");
 		}
 		
 		logger.debug("portalPhotoItemList Ended");
-		return json;
+		return data;
 	}
 	
 	/**

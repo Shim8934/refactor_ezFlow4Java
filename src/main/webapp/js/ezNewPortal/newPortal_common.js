@@ -225,7 +225,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 			break;
 		case "photoboard" : //포토게시판
 			if (isReload) {
-				getPhotoPortletList();
+				reloadPhotoPortlet();
 			} else {
 				url = "/js/ezNewPortal/portlets/photoBoardPortlet.js";
 

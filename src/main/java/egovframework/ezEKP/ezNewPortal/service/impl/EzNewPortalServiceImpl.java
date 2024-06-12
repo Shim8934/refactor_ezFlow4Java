@@ -752,6 +752,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("[Serivce] getPhotoBoardPortletInfo Ended");
 		return ezNewPortalDAO.getphotoBoardPortletInfo(map);
 	}
+	
+	@Override
+	public int getPhotoBoardPortletTotalCnt(int tenantId, String boardId, String offset) throws Exception {
+		logger.debug("[Serivce] getPhotoBoardPortletTotalCnt Started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		map.put("tenantId", tenantId);
+		map.put("boardId", boardId);
+		map.put("nowDate", nowDate);
+		logger.debug("[Serivce] getPhotoBoardPortletTotalCnt Ended");
+		return ezNewPortalDAO.getPhotoBoardPortletTotalCnt(map);
+	}
 
 	@Override
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception {

@@ -850,6 +850,34 @@ AND
 	]]>
 </select>
 
+<select id="ezNewPortal.getPhotoBoardPortletTotalCnt" parameterClass="Map" resultClass="int">
+	<![CDATA[
+		SELECT	
+			COUNT(*)
+		FROM
+			TBL_BOARD_ITEM A
+		INNER JOIN
+			TBL_PHOTO_IMAGEITEM B
+		ON
+			A.TENANT_ID = B.TENANT_ID
+		AND
+			A.ITEMID = B.ITEMID
+		WHERE
+			A.TENANT_ID = #tenantId#
+		AND
+			A.BOARDID = #boardId#
+		AND
+			B.MAIN_FLAG = 'y'
+		AND
+			(A.APPRFLAG = 'Y' 
+			OR A.APPRFLAG IS NULL)
+		AND 
+		  	A.STARTDATE <= #nowDate#
+		AND 
+		  	A.ENDDATE > #nowDate#
+	]]>
+</select>
+
 <!-- 게시판 권한 불러오기 -->
 <select id="ezNewPortal.getBoardAuthCheck" parameterClass="Map" resultClass="String">
 <![CDATA[

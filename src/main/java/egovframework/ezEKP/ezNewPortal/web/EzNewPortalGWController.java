@@ -3971,12 +3971,15 @@ public class EzNewPortalGWController {
 
 				if (!accessCheck) {
 					data.put("access", "false");
+					data.put("photoBoardList", null);
+					data.put("totalCnt", null);
 				} else {
 					// 권한이 true이면 boardList불러오기
 					List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount, info.getOffset());
-
+					int totalCnt = ezNewPortalService.getPhotoBoardPortletTotalCnt(tenantId, boardId, info.getOffset());
 					data.put("access", "true");
 					data.put("photoBoardList", photoBoardList);
+					data.put("totalCnt", totalCnt);
 				}
 			}
 

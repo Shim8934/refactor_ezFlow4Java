@@ -6,8 +6,6 @@ var userId = $('#userId').val();
 
 var communityPortletObj = {};
 
-const communityPortletPageMaxCnt = 10; // 포틀릿 높이가 1일 때 리스트 표출개수(2)와 포틀릿 높이가 2일 때 리스트 표출개수(5)의 최소공배수
-
 function initCommunityPortletInfo(communityPortletId) {
 	var newObj = {};
 	var perCount = getCommmunityPagePerCount(communityPortletId);

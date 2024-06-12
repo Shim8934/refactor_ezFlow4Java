@@ -10,7 +10,7 @@
 </head>
 <body>
 	<article class="photo_board box_shadow photo_portlet">
-	<input type="hidden" id=photoPortletListCnt value="${fn:length(photoBoardList)}">
+	<input type="hidden" id=photoPortletListCnt value="${totalCnt}">
 		<div class="layDIV">
 			<c:choose>
 				<c:when test="${access eq 'true' }">

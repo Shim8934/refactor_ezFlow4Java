@@ -70,6 +70,7 @@ public interface EzNewPortalService {
 	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) throws Exception;
 	public List<PollAnswerVO> getVotePortletAnswer(int qstId, int tenantId) throws Exception;
 	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount, String offset) throws Exception;
+	public int getPhotoBoardPortletTotalCnt(int tenantId, String boardId, String offset) throws Exception;
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception;
 	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId) throws Exception;
 	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath, String portletLang) throws Exception;
