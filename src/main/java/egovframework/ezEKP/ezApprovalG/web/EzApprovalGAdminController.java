@@ -5009,14 +5009,35 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "admin/ezApprovalG/cabTransfer.do", method = RequestMethod.GET)
 	public String cabTransfer(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-	              logger.debug("cabTransfer started");
+		logger.debug("cabTransfer started");
 
-	              userInfo = commonUtil.aprUserInfo(loginCookie);
-	              model.addAttribute("userInfo", userInfo);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		// 2024-06-12 전인하 - 전자결재G > 기록물관리 > 기록물철인계 > 리스트헤더 정보 호출
+		String listHeaderTemp = ezApprovalGService.getListHeader("095", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		Document listXML = commonUtil.convertStringToDocument(listHeaderTemp);
+		StringBuffer listHeaderString = new StringBuffer();
 
-	              logger.debug("cabTransfer ended");
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
 
-	              return "admin/ezApprovalG/apprGcabTransfer";
+		listHeaderString.append("<LISTVIEWDATA>");
+		listHeaderString.append("<HEADERS>");
+
+		for (int k = 0; k < hlength; k++) {
+			listHeaderString.append("<HEADER>");
+			listHeaderString.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			listHeaderString.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			listHeaderString.append("</HEADER>");
+		}
+		listHeaderString.append("</HEADERS>");
+		listHeaderString.append("<ROWS></ROWS></LISTVIEWDATA>");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("listHeaderString", listHeaderString);
+
+		logger.debug("cabTransfer ended");
+
+		return "admin/ezApprovalG/apprGcabTransfer";
 	}
 
 	//관리자 전자결재 완료문서 삭제 팝업

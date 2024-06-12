@@ -2105,4 +2105,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertUseReceiptDeptFileAttach", map);
 		}
 	}
+
+	public void insertDocBinderListOption(Map<String, Object> map) {
+		int optionCount = (int) select("EzCommonDAO.checkExistDocBinderListOption", map);
+		if (optionCount < 5) {
+			logger.debug("DocBinder List Header Option doesn't exist. insert data...");
+			delete("EzCommonDAO.delDocBinderListOption", map);
+			insert("EzCommonDAO.insertDocBinderListOption", map);
+		}
+	}
 }

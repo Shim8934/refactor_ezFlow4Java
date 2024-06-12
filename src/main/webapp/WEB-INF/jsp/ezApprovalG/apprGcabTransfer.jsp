@@ -33,6 +33,9 @@
 	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
 	        var date = new Date();
             var nowYear = date.getFullYear();
+            var adminFlag = "<c:out value ='${adminFlag}'/>"; // 2024-06-12 전인하 - 관리자 여부 판별 플래그
+            var listHeaderString = "${listHeaderString}"; // 2024-06-12 전인하 - 리스트헤더 정보
+            
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -192,6 +195,29 @@
 	            document.getElementById("tdDDeptName").innerText = g_DDeptName;
 	        }
 	    }
+	    
+	    // 2024-06-12 전인하 - 인계부서 선택 버튼 동작 메서드 
+        function btnChangeSDept_onclick() {
+            SelectDept("OPEN", btnChangeSDept_onclick_Complete);
+        }
+    
+        function btnChangeSDept_onclick_Complete(rtn) {
+            if (rtn[0] == "TRUE") {
+                if (g_DDeptCode == rtn[1]) {
+                    alert("<spring:message code='ezApprovalG.t569'/>");
+                    return;
+                }
+                if (g_SDeptCode != rtn[1]) {
+                    g_STaskCode = "";
+                    g_STaskName = "";
+                    document.getElementById("tdSTaskCode").innerText = " ";
+                    document.getElementById("tdSTaskName").innerText = " ";
+                }
+                g_SDeptCode = rtn[1];
+                g_SDeptName = rtn[2];
+                document.getElementById("tdSDeptName").innerText = g_SDeptName;
+            }
+        }
 	
 	    function btnChangeSTask_onclick() {
 	       SelectTask(g_SDeptCode, g_SDeptName, "0", "0", "OPEN", btnChangeSTask_onclick_Complete);
@@ -341,31 +367,22 @@
 	        }
 	        
 	        var row = "<ROW>";
-	        row += "<CELL>";
-	        row += "<VALUE><![CDATA[";
-	        row += selRow.cells[0].innerText;
-	        row += "]]></VALUE>";
-	        row += "<DATA1><![CDATA[";
-	        row += selRow.getAttribute("DATA1");
-	        row += "]]></DATA1>";
-	        row += "<DATA2><![CDATA[";
-	        row += selRow.getAttribute("DATA2");
-	        row += "]]></DATA2>";
-	        row += "<DATA3><![CDATA[";
-	        row += selRow.cells[1].innerText;
-	        row += "]]></DATA3>";
-	        row += "</CELL>";
-	        row += "<CELL>";
-	        row += "<VALUE><![CDATA[";
-	        row += selRow.cells[2].innerText;
-	        row += "]]></VALUE>";
-	        row += "</CELL>";
-	        row += "<CELL>";
-	        row += "<VALUE><![CDATA[";
-	        row += selRow.cells[3].innerText;
-	        row += "]]></VALUE>";
-	        row += "</CELL>";
-	        row += "</ROW>";
+	        for (let i=0; i<selRow.cells.length; i++) {
+                row += "<CELL>";
+                row += "<VALUE><![CDATA[" + selRow.cells[i].innerText +  "]]></VALUE>";
+                if (i == 0) {
+                    row += "<DATA1><![CDATA[" + selRow.getAttribute("DATA1") + "]]></DATA1>";
+                    row += "<DATA2><![CDATA[" + selRow.getAttribute("DATA2") + "]]></DATA2>";
+                    row += "<DATA3><![CDATA[" + selRow.getAttribute("DATA3") + "]]></DATA3>";
+                    row += "<DATA4><![CDATA[" + selRow.getAttribute("DATA4") + "]]></DATA4>";
+                    row += "<DATA5><![CDATA[" + selRow.getAttribute("DATA5") + "]]></DATA5>";
+                    row += "<DATA6><![CDATA[" + selRow.getAttribute("DATA6") + "]]></DATA6>";
+                    row += "<DATA7><![CDATA[" + selRow.getAttribute("DATA7") + "]]></DATA7>";                    
+                }
+                row += "</CELL>";
+	        }
+            row += "</ROW>";
+            
 	        var rowXml = loadXMLString(row);
 	        var tr = SelListView.AddRow(count);
 	        	SelListView.AddDataRow(tr, rowXml);
@@ -391,29 +408,24 @@
 
 	        return getNodeText(result.documentElement);
 	    }
-	
+	    
+	    // 2024-06-12 전인하 - 하드코딩 제거, 기록물철리스트 리스트헤더 초기값 추가
 	    function InitSelCabinetList() {
-	        var oList;
-	        oList = createXmlDom();
-	        var ListViewData, Headers, Header, Rows, node;
-	        ListViewData = createNodeInsert(oList, ListViewData, "LISTVIEWDATA");
-	        Headers = createNodeAndAppandNode(oList, ListViewData, Headers, "HEADERS");
-	        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
-	        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t379'/>");
-	        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "120");
-	        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
-	        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t572'/>");
-	        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "50");
-	        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
-	        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t573'/>");
-	        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "40");
-	        createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
+	        var ListViewData = loadXMLString(listHeaderString);
+	        
 	        var SelListView = new ListView();
 	        SelListView.SetID("DivSelCabinetList");
 	        SelListView.SetMulSelectable(false);
 	        SelListView.SetRowOnDblClick("SelCabinetList_rowdblclick");
-	        SelListView.DataSource(oList);
+	        SelListView.DataSource(ListViewData);
 	        SelListView.DataBind("SelCabinetList");
+	        
+            var SelListView2 = new ListView();
+            SelListView2.SetID("CabinetList");
+            SelListView2.SetMulSelectable(false);
+            SelListView2.SetRowOnDblClick("CabinetList_rowdblclick");
+            SelListView2.DataSource(ListViewData);
+            SelListView2.DataBind("CabinetList");
 	    }
 	    
 	    function selYear_onChange() {
@@ -441,7 +453,21 @@
 	                <table class="content" style="width: 100%">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t575'/></th>
-	                        <td id="tdSDeptName">&nbsp;</td>
+	                        <%-- 2024-06-12 전인하 - 인계부서 선택 버튼 추가, 권한이 있을 때에만 표출함 --%>
+	                        <td>
+                                <table style="border: 0px; width: 100%">
+                                    <tbody>
+                                        <tr>
+                                            <td id="tdSDeptName">&nbsp;</td>
+                                            <c:if test="${adminFlag eq 'YES'}">
+                                                <td style="width: 45px;">
+                                                    <a class="imgbtn imgbck"><span onclick="return btnChangeSDept_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+                                                 </td>
+                                            </c:if>
+                                        </tr>
+                                    </tbody>
+                                </table>
+	                        </td>
 	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t576'/></th>

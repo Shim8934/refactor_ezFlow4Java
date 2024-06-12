@@ -4893,31 +4893,36 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
-			resultXML.append("<CELL>");
-			
-			if (primaryData.equals("1")) {
-				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()) + "]]></VALUE>");
-			} else {
-				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE2").item(k).getTextContent()) + "]]></VALUE>");
-			}
-			resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent().trim()) + "]]></DATA1>");
-			resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA2>");
-			resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent().trim()) + "]]></DATA3>");
-			resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent().trim()) + "]]></DATA4>");
-			resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()) + "]]></DATA5>");
-			resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE2").item(k).getTextContent()) + "]]></DATA6>");
-			resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(k).getTextContent()) + "]]></DATA7>");
-			resultXML.append("</CELL>");
-			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(makeListField(docXML.getElementsByTagName("RECTYPECODE").item(k).getTextContent()), companyID, langType, tenantID) + "]]></VALUE>");
-			resultXML.append("</CELL>");
-			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("REGSERIALNO").item(k).getTextContent()) + "</VALUE>");
-			resultXML.append("</CELL>");
-			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("VOLUMENO").item(k).getTextContent()) + "</VALUE>");
-			resultXML.append("</CELL>");
-			resultXML.append("</ROW>");
+        
+            // 2024-06-12 전인하 - 전자결재G > 기록물관리 > 기록물철인계 > 기록물철 리스트 호출 시 생산연도, 단위업무 정보 함께 호출
+            for (int i = 0; i < hlength; i++) {
+                resultXML.append("<CELL>");
+                if (i == 0) {
+                    if (primaryData.equals("1")) {
+                        resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()) + "]]></VALUE>");
+                    } else {
+                        resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE2").item(k).getTextContent()) + "]]></VALUE>");
+                    }
+                    resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent().trim()) + "]]></DATA1>");
+                    resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA2>");
+                    resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent().trim()) + "]]></DATA3>");
+                    resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent().trim()) + "]]></DATA4>");
+                    resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()) + "]]></DATA5>");
+                    resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE2").item(k).getTextContent()) + "]]></DATA6>");
+                    resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(k).getTextContent()) + "]]></DATA7>");
+                } else {
+                    String tagName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent();
+                    if (tagName.equals("RECTYPECODE")) {
+                        resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(makeListField(docXML.getElementsByTagName(tagName).item(k).getTextContent()), companyID, langType, tenantID) + "]]></VALUE>");
+                    } else if (tagName.equals("TASKNAME")) {
+                        resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName(tagName).item(k).getTextContent()) +"("+ makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + ")]]></VALUE>");
+                    } else {
+                        resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName(tagName).item(k).getTextContent()) + "]]></VALUE>");
+                    }
+                }
+                resultXML.append("</CELL>");
+            }
+            resultXML.append("</ROW>");
         }
 		
 		resultXML.append("</ROWS>");

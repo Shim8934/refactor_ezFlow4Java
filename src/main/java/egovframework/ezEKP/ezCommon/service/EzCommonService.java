@@ -351,4 +351,6 @@ public interface EzCommonService {
     public void insertRecordHeaderClassTitle() throws Exception;
     
 	public void insertUseReceiptDeptFileAttach() throws Exception;
+
+	public void insertDocBinderListOption() throws Exception;
 }

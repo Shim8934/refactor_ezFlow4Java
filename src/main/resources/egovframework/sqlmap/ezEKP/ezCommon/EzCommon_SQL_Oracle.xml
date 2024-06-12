@@ -4482,5 +4482,47 @@
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES (#v_TENANTID#, 'useReceiptDeptFileAttach', 'NO', '부서수신함에서 첨부, 문서첨부 기능 사용 여부. YES: 사용 NO: 사용안함 (default: NO)', '부서수신함에서 첨부, 문서첨부 기능 사용여부', TO_DATE('2024-06-04 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
     </insert>
+	
+	<select id="EzCommonDAO.checkExistDocBinderListOption" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_LISTOPTION
+		WHERE
+			LISTTYPE = '095'
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyId#
+	</select>
+
+	<insert id="EzCommonDAO.insertDocBinderListOption" parameterClass="map">
+		INSERT ALL
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('095', 1, '이름', 140, 'TBL_CABINETCLASS', 'TITLE', null, null, 'Simple기록물철', '이름', 'Name', '綴じ名', '名稱', #tenantId#, #companyId#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('095', 2, '생산연도', 50, 'TBL_CABINETCLASS', 'PRODUCTIONYEAR', null, null, 'Simple기록물철', '생산연도', 'Productionyear', '生産年度', '生产年度', #tenantId#, #companyId#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('095', 3, '단위업무명(분류코드)', 140, 'TBL_CABINETCLASS', 'TASKNAME', null, null, 'Simple기록물철', '단위업무명(분류코드)', 'Taskname', '単位業務名', '单位业务名称', #tenantId#, #companyId#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('095', 4, '형태', 100, 'TBL_CABINETCLASS', 'RECTYPECODE', null, null, 'Simple기록물철', '형태', 'FORM', '形態', '表', #tenantId#, #companyId#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('095', 5, '연번', 50, 'TBL_CABINETCLASS', 'REGSERIALNO', null, null, 'Simple기록물철', '연번', 'SN.', '連番', '序列号', #tenantId#, #companyId#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+			VALUES ('095', 6, '권호수', 40, 'TBL_CABINET', 'VOLUMENO', null, null, 'Simple기록물철', '권호수', 'VOL.', '巻号数', '卷湖', #tenantId#, #companyId#)
+		SELECT *
+			FROM DUAL
+	</insert>
+
+	<delete id="EzCommonDAO.delDocBinderListOption" parameterClass="map" >
+		DELETE FROM
+			TBL_LISTOPTION
+		WHERE
+			LISTTYPE = '095'
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyId#
+	</delete>
     
 </sqlMap>

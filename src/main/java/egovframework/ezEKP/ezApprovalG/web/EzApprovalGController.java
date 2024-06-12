@@ -8790,7 +8790,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("cabTransfer started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		// 2024-06-12 전인하 - 전자결재G > 기록물관리 > 기록물철인계 > 리스트헤더 정보 호출
+		String adminFlag = commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;m") ? "YES" : "NO";
+		String listHeaderTemp = ezApprovalGService.getListHeader("095", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		Document listXML = commonUtil.convertStringToDocument(listHeaderTemp);
+		StringBuffer listHeaderString = new StringBuffer();
+
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+
+		listHeaderString.append("<LISTVIEWDATA>");
+		listHeaderString.append("<HEADERS>");
+
+		for (int k = 0; k < hlength; k++) {
+			listHeaderString.append("<HEADER>");
+			listHeaderString.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			listHeaderString.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			listHeaderString.append("</HEADER>");
+		}
+		listHeaderString.append("</HEADERS>");
+		listHeaderString.append("<ROWS></ROWS></LISTVIEWDATA>");
+		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("listHeaderString", listHeaderString);
 		
 		logger.debug("cabTransfer ended");
 		
