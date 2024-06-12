@@ -202,7 +202,7 @@
             	var checkedLength = checkedList.length;
             	//즐겨찾기 탭 '저장' 시, 반드시 하나 이상의 탭을 선택해야 한다.
             	if(checkedListY.length < 1){
-            		alert('<spring:message code="ezBoard.t5005" />');
+            		alert('<spring:message code="ezBoard.t0015" />');
             		return;
             	}
             	else{
@@ -270,7 +270,7 @@
         	var delArr = new Array();
         	function favorite_Delete() {
             	if (_RowObject == null) {
-            		alert('<spring:message code="ezBoard.t5005" />');
+            		alert('<spring:message code="ezBoard.t0015" />');
                 	return;
             	}
             	if (_RowObject.getAttribute("BoardID") == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
