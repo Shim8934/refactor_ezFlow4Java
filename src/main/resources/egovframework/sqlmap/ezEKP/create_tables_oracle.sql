@@ -1787,19 +1787,6 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"COMPANYID" VARCHAR2(20 BYTE)
    ) ;
 --------------------------------------------------------
---  DDL for Table TBL_APRDRAFTALLGROUP
---------------------------------------------------------
-
-  CREATE TABLE "TBL_APRDRAFTALLGROUP" 
-   (	"MAINDOCID" CHAR(20 CHAR), 
-	"SUBDOCID" CHAR(20 CHAR), 
-	"TENANT_ID" NUMBER(5,0), 
-	"COMPANYID" VARCHAR2(20 BYTE), 
-	"ORDERNUM" NUMBER(5,0), 
-	"CREATEDATE" DATE, 
-	"APRMEMBERID" VARCHAR2(100 CHAR)
-   ) ;
---------------------------------------------------------
 --  DDL for Table TBL_APRLINEINFO
 --------------------------------------------------------
 

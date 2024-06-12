@@ -2850,24 +2850,6 @@ CREATE TABLE `tbl_aprdocinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `TBL_APRDRAFTALLGROUP`
---
-
-DROP TABLE IF EXISTS `TBL_APRDRAFTALLGROUP`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBL_APRDRAFTALLGROUP` (
-  `MAINDOCID` varchar(80) DEFAULT NULL,
-  `SUBDOCID` varchar(80) DEFAULT NULL,
-  `TENANT_ID` mediumint(5) DEFAULT NULL,
-  `COMPANYID` varchar(20) DEFAULT NULL,
-  `ORDERNUM` mediumint(5) DEFAULT NULL,
-  `CREATEDATE` datetime DEFAULT NULL,
-  `APRMEMBERID` varchar(400) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_aprlinegroup`
 --
 
@@ -5366,28 +5348,6 @@ CREATE TABLE `tbl_codelist` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`CODE1`,`CODE2`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_columns`
---
-
-DROP TABLE IF EXISTS `tbl_columns`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_columns` (
-  `TBL_ID` varchar(200) DEFAULT NULL,
-  `ORDER_NUM` varchar(200) DEFAULT NULL,
-  `COL_NM` varchar(200) DEFAULT NULL,
-  `COL_COMM` varchar(200) DEFAULT NULL,
-  `COL_TYPE` varchar(200) DEFAULT NULL,
-  `COL_NULL` varchar(200) DEFAULT NULL,
-  `COL_KEY` varchar(200) DEFAULT NULL,
-  `COL_DEFAULT` varchar(200) DEFAULT NULL,
-  `CREATE_DT` datetime DEFAULT NULL,
-  `UPDATE_DT` datetime DEFAULT NULL,
-  `USE_YN` char(1) DEFAULT 'Y'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -12049,23 +12009,6 @@ CREATE TABLE `tbl_survey_response` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_table`
---
-
-DROP TABLE IF EXISTS `tbl_table`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_table` (
-  `TBL_ID` varchar(200) DEFAULT NULL,
-  `TBL_NM` varchar(200) DEFAULT NULL,
-  `TBL_DESCRPT` varchar(200) DEFAULT NULL,
-  `CREATE_DT` datetime DEFAULT NULL,
-  `UPDATE_DT` datetime DEFAULT NULL,
-  `USE_YN` char(1) DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_task`
 --
 
@@ -12397,23 +12340,6 @@ CREATE TABLE `tbl_tasksubcategory` (
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SUBCATEGORYCODE`),
   KEY `FK_TBL_TASKSUBCATEGORY_idx` (`TENANT_ID`,`COMPANYID`,`MCATEGORYCODE`),
   CONSTRAINT `FK_TBL_TASKSUBCATEGORY` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `MCATEGORYCODE`) REFERENCES `tbl_taskmiddlecategory` (`TENANT_ID`, `COMPANYID`, `MCATEGORYCODE`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_temppassword`
---
-
-DROP TABLE IF EXISTS `tbl_temppassword`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_temppassword` (
-  `USERID` varchar(200) NOT NULL,
-  `PHONENUM` varchar(200) NOT NULL,
-  `IP` varchar(100) NOT NULL,
-  `SMSCODE` varchar(100) NOT NULL,
-  `CREATEDDATE` datetime NOT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
