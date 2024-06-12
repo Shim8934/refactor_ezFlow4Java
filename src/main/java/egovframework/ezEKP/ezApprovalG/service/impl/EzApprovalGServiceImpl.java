@@ -31459,7 +31459,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		map.put("companyID", orgCompanyID);
     		map.put("LANG", commonUtil.getPrimaryData(userInfo.getLang(), tenantID)); // LANG값을 전달하면 완료문서로 처리함
     		// 수신문서 알림메일 스케줄러는 사용하지 않도록 구현함 (메일발송뿐만이 아니라 결재동작에 관련된 코드가 섞여있음 / 수신자 전체를 수신인으로 지정하므로 메일은 한번만 발송됨)
-			sendSusinMail(map, userInfo);
+			// sendSusinMail(map, userInfo);
 
 			// 완료문서도착 메일 보내지 않음
 			if (ezPersonalService.hasNotiDiableItem(targetUserID, NotiType.APPROVAL_COMPLETE, NotiPlatform.MAIL, tenantID)) {
