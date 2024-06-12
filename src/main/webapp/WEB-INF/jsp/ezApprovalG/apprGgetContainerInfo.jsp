@@ -324,7 +324,9 @@
 							pPreviewShow_HOW = "OFF";
 						}
 					}
-					PreviewRayerChange(pPreviewShow_HOW, 'Container');
+					if (previewInfo != "H") {
+						PreviewRayerChange(pPreviewShow_HOW, 'Container');
+					}
 					/* 2022-06-29 홍승비 - 우측 미리보기 영역을 위한 온로드 시 리사이즈 동작 추가 */
 			    	Window_resize();
 	            } else {
