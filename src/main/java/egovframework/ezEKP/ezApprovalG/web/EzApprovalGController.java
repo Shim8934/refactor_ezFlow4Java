@@ -5765,6 +5765,42 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			pass = "<RESULT>TRUE</RESULT>";
 		}
 
+		// 부서수신함 문서를 열람하지않고 통합PC저장을 클릭한 경우 문서 파일이 해당 경로에 존재하지 않아 발생하는 오류 수정.
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
+		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		Document xmlDom = commonUtil.convertStringToDocument(rtnVal);
+
+		if (xmlDom.getElementsByTagName("ORGHREF").getLength() > 0) {
+			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
+			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+
+			orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+
+			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
+			File file = new File(commonUtil.detectPathTraversal(dir));
+
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
+
+			if (!newFile.exists()) {
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
+
+				// KLIB 복호화
+				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
+					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
+				} else {
+					FileUtils.copyFile(orgFile, newFile);
+				}
+			}
+		}
+
 		model.addAttribute("pass", pass);
 		model.addAttribute("docID", docID);
 		model.addAttribute("type", type);
