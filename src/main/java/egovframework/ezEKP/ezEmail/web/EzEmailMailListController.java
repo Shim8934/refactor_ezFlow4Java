@@ -2720,14 +2720,16 @@ public class EzEmailMailListController {
 				jgwRestBuilder.formParam("orderBy", orderBy);
 			}
 			JgwResult jgwResult = jgwRestBuilder.exchangeJgwResult();
-			logger.debug("jgw getUserTagFromMail result: {}", jgwResult);
+			//logger.debug("jgw getUserTagFromMail result: {}", jgwResult); // 로그가 너무 많아서 주석처리 함, result값은 jgw서버 로그에서 확인 가능
+			logger.debug("jgw getUserTagFromMail userAccount: {}, jgwResultCode: {}", userAccount, jgwResult.getResultCode());
 			result = jgwResult.succeeded() ? Result.success(jgwResult.getResult()) : Result.failure();
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result = Result.failure();
 		}
 
-		logger.debug("getUserTagList ended. result: {}", result);
+		//logger.debug("getUserTagList ended. result: {}", result);
+		logger.debug("getUserTagList ended. result: {}", result.getStatus());
 		return result;
 	}
 
