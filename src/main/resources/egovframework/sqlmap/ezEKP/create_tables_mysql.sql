@@ -3896,7 +3896,7 @@ CREATE TABLE `tbl_board_item_listoption_boar` (
   `WIDTH` bigint(10) NOT NULL,
   `VIEW_FG` varchar(4) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_BOARD_ITEM_LISTOPTION_2` (`TENANT_ID`,`BOARDID`,`SN`)
+  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6046,7 +6046,7 @@ CREATE TABLE `tbl_deptcont` (
   `MANAGEUSERID` varchar(400) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  UNIQUE KEY `PK_TBL_DEPTCONT` (`TENANT_ID`,`DEPTCONTID`)
+  PRIMARY KEY (`TENANT_ID`,`DEPTCONTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9690,7 +9690,7 @@ CREATE TABLE `tbl_ps_webpartgroup` (
   `ID` varchar(510) NOT NULL,
   `NAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_PS_WEBPARTGROUP` (`TENANT_ID`,`ID`(255))
+  PRIMARY KEY (`TENANT_ID`,`ID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9711,7 +9711,7 @@ CREATE TABLE `tbl_ps_webpartitem` (
   `DEFAULTPOSITION` double(126,0) DEFAULT NULL,
   `DEFAULTUSE` double(126,0) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_PS_WEBPARTITEM` (`TENANT_ID`,`ID`(255))
+  PRIMARY KEY (`TENANT_ID`,`ID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9727,7 +9727,7 @@ CREATE TABLE `tbl_ps_webpartitemacl` (
   `ACCESSID` varchar(510) DEFAULT NULL,
   `ACCESSNAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_PS_WEBPARTITEMACL` (`TENANT_ID`,`ITEMID`(255))
+  PRIMARY KEY (`TENANT_ID`,`ITEMID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
