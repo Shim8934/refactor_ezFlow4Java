@@ -15,8 +15,8 @@ function initCommunityPortletInfo(communityPortletId) {
 		return getCommmunityPagePerCount(communityPortletId);
 	}
 	newObj.getPortletList = function () {
-		var startRow = portletInfoMap["portlet" + communityPortletId].page.getStart();
-		getCommunityList(startRow);
+		var currentPage = portletInfoMap["portlet" + communityPortletId].page.getPage();
+		getCommunityList(currentPage);
 	}
 
 	portletInfoMap["portlet" + communityPortletId] = newObj;
@@ -38,11 +38,11 @@ function reloadCommunityPortlet() {
 		return getCommmunityPagePerCount(portletId);
 	}
 	newObj.getPortletList = function () {
-		var startRow = portletInfoMap["portlet" + portletId].page.getStart();
-		getCommunityList(startRow);
+		var currentPage = portletInfoMap["portlet" + portletId].page.getPage();
+		getCommunityList(currentPage);
 	}
 
-	getCommunityList(0);
+	getCommunityList(1);
 }
 
 function getCommmunityPagePerCount(communityPortletId) {
@@ -132,11 +132,15 @@ function OpenAlertUI(NewWinContent, NewWinCallFunction, NewWinName) {
     }
 }
 
-var getCommunityList = function() {
+function OpenAlertUI_Complete() {
+    //Source Code...
+}
+
+var getCommunityList = function(currentPage) {
     var listSize = getCommmunityPagePerCount(communityPortletObj.portletId);
 
 	var request = new XMLHttpRequest();
-	request.open('GET', '/ezNewPortal/getCommunityList.do?startRow=' + startRow + "&listSize=" + listSize, false);
+	request.open('GET', '/ezNewPortal/getCommunityList.do?currentPage=' + currentPage + "&listSize=" + listSize, false);
 	request.setRequestHeader('Content-Type', 'application/json');
 	var companiesHTML = "";
 
@@ -167,7 +171,7 @@ var getCommunityList = function() {
 			}
 
 			var totalCnt = result.CommuSize;
-			var currentPage = 1;
+			var currentPage = result.currentPage;
 			resetPortletPaging(communityPortletObj.portletId, totalCnt, currentPage, "");
 			
 		}
@@ -207,7 +211,7 @@ var setCommunityData = function(commuInfo, commuPath, classTag) {
 	var comDT = document.createElement("dt");
 	comDT.className = "comPic";
 	
-	if (classTag === "01" && currentPage == 0) {
+	if (classTag === "01" && currentPage == 1) {
 		var comSpan = document.createElement("span");
 		comSpan.className = "best";
 		var bestImg = document.createElement("img");

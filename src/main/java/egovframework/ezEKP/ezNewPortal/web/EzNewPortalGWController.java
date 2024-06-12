@@ -3569,11 +3569,16 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			String lang = info.getLang();
-			String listSize = request.getParameter("listSize") == null ? "0" : request.getParameter("listSize");
-			String startRow = request.getParameter("startRow") == null ? "0" : request.getParameter("startRow");
-
-			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService.getCommunityList(lang, Integer.parseInt(startRow), Integer.parseInt(listSize), companyId, tenantId);
+			int listSize = Integer.parseInt(request.getParameter("listSize"));
+			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+			
 			int communityTotalCnt = ezNewPortalService.getCommunityListTotalCnt(companyId, tenantId);
+			int totalPages  = (communityTotalCnt + listSize - 1) / listSize;
+			currentPage = currentPage > totalPages ? totalPages : currentPage;
+			currentPage = currentPage == 0         ? 1          : currentPage;
+			int startRow  = (currentPage - 1) * listSize;
+
+			List<CommunityMyCommunityVO> CommunityList = ezNewPortalService.getCommunityList(lang, startRow, listSize, companyId, tenantId);
 			// int CommuSize = CommunityList.size();
 			//
 			// if (CommuSize == 0) {
@@ -3625,6 +3630,7 @@ public class EzNewPortalGWController {
 			data.put("CommunityList", CommunityList);
 			data.put("CommuSize", communityTotalCnt);
 			data.put("commuPath", commuPath);
+			data.put("currentPage", currentPage);
 
 			result.put("status", "ok");
 			result.put("code", 0);
