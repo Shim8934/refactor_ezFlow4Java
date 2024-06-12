@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezNotification.e1', 'msg')}"></script>
+        <link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 	</head>
 

@@ -13,6 +13,7 @@
 <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/swiper.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezNewPortal/portlets/fixBoard.js')}"></script>
+<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	.notEmptySlider {
