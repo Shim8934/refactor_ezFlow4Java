@@ -1030,7 +1030,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		param.put("userId", userInfo.getId());
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("deptId", userInfo.getDeptID());
-		param.put("startRow", 0);
+		param.put("currentPage", 1);
 		param.put("photoCount", 5);
 		param.put("portletId", portletId);
 		param.put("fileName", fileName);
@@ -1067,13 +1067,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
 		String fileName = Optional.ofNullable(req.getParameter("fileName")).orElse("");
-		Integer startRow = Optional.ofNullable(req.getParameter("startRow")).map(Integer::parseInt).orElse(0);
 		Integer photoCount = Optional.ofNullable(req.getParameter("count")).map(Integer::parseInt).orElse(5);
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("deptId", userInfo.getDeptPathCode());
-		param.put("startRow", startRow);
+		param.put("currentPage", req.getParameter("currentPage"));
 		param.put("photoCount", photoCount);
 		param.put("portletId", portletId);
 		param.put("fileName", fileName);

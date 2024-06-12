@@ -6,14 +6,14 @@ if (typeof boardOb === "undefined") {
 var BTN_NEXT = "nextBtn"
 var BTN_PREV = "preBtn"
 
-function makeBoardList(portletId, fileName, count, type, startRow) {
+function makeBoardList(portletId, fileName, count, type, currentPage) {
 	$.ajax({
 		type: "GET",
 		dataType: "json",
 		data: {
 			"portletId": portletId,
 			"fileName": fileName,
-			"startRow": startRow, 
+			"currentPage" : currentPage,
 			"count": count
 		},
 		url: "/ezNewPortal/getCustomBoardInfo.do",
@@ -21,7 +21,7 @@ function makeBoardList(portletId, fileName, count, type, startRow) {
 			var access = result.access;
 			var boardList = result.boardList;
 			var boardListTotalCnt = result.boardListTotalCnt;
-			
+			var currentPage = result.currentPage;
 			if (access == "true") {
 				if ("a" === type) {
 					getBoardListAType(result.boardList, portletId);
@@ -31,7 +31,6 @@ function makeBoardList(portletId, fileName, count, type, startRow) {
 					getBoardList(result.boardList, portletId);
 				}
 			}
-			var currentPage = 1;
 			resetPortletPaging(portletId, boardListTotalCnt, currentPage, "");
 		}
 	})
@@ -55,17 +54,17 @@ function initBoardPortletInfo(portletId, type, fileName) {
 	}
 	newOb.getPortletList = function () {
 		var boardPortletPagingCnt = getCurrentCount(portletId);
-		makeBoardList(portletId, newOb.fileName, boardPortletPagingCnt, newOb.type, newOb.page.getStart());
+		makeBoardList(portletId, newOb.fileName, boardPortletPagingCnt, newOb.type, newOb.page.getPage());
 	}
 	
 	portletInfoMap["portlet" + portletId] = newOb;
-	makeBoardList(portletId, fileName, count, type, 0);
+	makeBoardList(portletId, fileName, count, type, 1);
 }
 
 function refreshBordPortletInfo(portletId) {
 	var ob = boardOb[portletId];
 	var count = getCurrentCount(portletId);
-	makeBoardList(portletId, ob.fileName, count, ob.type, ob.page.getStart());
+	makeBoardList(portletId, ob.fileName, count, ob.type, ob.page.getPage());
 }
 
 function getBoardList(data, portletId) {

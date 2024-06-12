@@ -5009,7 +5009,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			int itemCount = Integer.parseInt(request.getParameter("photoCount"));
-			int startRow = Optional.ofNullable(request.getParameter("startRow")).map(Integer::parseInt).orElse(0);
+			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone," + deptPath + "," + userId;
@@ -5027,6 +5027,7 @@ public class EzNewPortalGWController {
 				data.put("access", "false");
 				data.put("boardList", null);
 				data.put("boardListTotalCnt", 0);
+				data.put("currentPage", 1);
 			} else {
 				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
 				String guBun = boardPropertyVO.getGuBun();
@@ -5038,9 +5039,15 @@ public class EzNewPortalGWController {
 				}
 
 				// 권한이 true이면 boardList불러오기
+				int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal);
+				
+				int totalPages  = (boardListTotalCnt + itemCount - 1) / itemCount;
+				currentPage = currentPage > totalPages ? totalPages : currentPage;
+				currentPage = currentPage == 0         ? 1          : currentPage;
+				int startRow  = (currentPage - 1) * itemCount;
+				
 				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow);
 				
-				int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal);
 				// 리스트 개수로 utc time 적용시키기
 				int boardListCount = boardList.size();
 				for (int i = 0; i < boardListCount; i++) {
@@ -5058,6 +5065,7 @@ public class EzNewPortalGWController {
 				data.put("access", "true");
 				data.put("boardList", boardList);
 				data.put("boardListTotalCnt", boardListTotalCnt);
+				data.put("currentPage", currentPage);
 			}
 
 			result.put("status", "ok");
