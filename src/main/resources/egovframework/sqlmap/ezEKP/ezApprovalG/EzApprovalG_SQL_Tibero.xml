@@ -10954,15 +10954,28 @@
 			<isEqual property="approvalFlag" compareValue="G">
 				<![CDATA[
 					SELECT
-						PUBLICITYYN
+						CASE
+						    WHEN A.PUBLICITYYN = 'Y' AND C.USERRIGHT = 0 THEN 'N'
+					        ELSE A.PUBLICITYYN
+					    END AS PUBLICITYYN
 			        FROM
-			        	TBL_EXPENDAPRDOCINFO
+                        TBL_EXPENDAPRDOCINFO A
+			        INNER JOIN
+			        	TBL_RECORD B
+			        ON A.DOCID = B.DOCID AND A.TENANT_ID = B.TENANT_ID AND A.COMPANYID = B.COMPANYID
+                    INNER JOIN
+			        	TBL_RECROLEINFO C
+			        ON B.RECORDID = C.RECORDID AND B.TENANT_ID = C.TENANT_ID AND B.COMPANYID = C.COMPANYID
 			        WHERE
-			        	DOCID = #v_DOCID#
+			        	A.DOCID = #v_DOCID#
 			        AND
-						TENANT_ID = #v_TENANTID#
+						A.TENANT_ID = #v_TENANTID#
 					AND
-		      			COMPANYID = #companyID#
+		      			A.COMPANYID = #companyID#
+			        AND
+                        C.SEPERATEATTACHNO = '00'
+                    AND
+                        C.USERID = 'All_User'
 				]]>
 			</isEqual>
 			<isNotEqual property="approvalFlag" compareValue="G">
@@ -35551,7 +35564,7 @@
         <isEqual property="v_LINEMODE" compareValue="APR">
             <![CDATA[
 			SELECT
-				NVL(SECURITYAPPROVAL, '')
+				NVL(SECURITYAPPROVAL, ' ')
 			FROM
 				TBL_EXPAPRDOCINFO
 			WHERE
@@ -35565,7 +35578,7 @@
         <isNotEqual property="v_LINEMODE" compareValue="APR">
             <![CDATA[
 			SELECT
-				NVL(SECURITYAPPROVAL, '')
+				NVL(SECURITYAPPROVAL, ' ')
 			FROM
 				TBL_EXPENDAPRDOCINFO
 			WHERE
