@@ -13,7 +13,7 @@ function initPhotoBoardPortlet(portletId) {
 	newObj.portletCode = "photoboard";
 	
 	newObj.getPortletList = function () {
-		var currentPage = portletInfoMap["portlet" + portletId].page.getPage() + 1;
+		var currentPage = portletInfoMap["portlet" + portletId].page.getPage();
 		getPhotoPortletList(currentPage);
 	}
 
@@ -57,7 +57,7 @@ function reloadPhotoPortlet() {
 	newObj.portletCode = "photoboard";
 	
 	newObj.getPortletList = function () {
-		var currentPage = portletInfoMap["portlet" + portletId].page.getPage() + 1;
+		var currentPage = portletInfoMap["portlet" + portletId].page.getPage();
 		getPhotoPortletList(currentPage);
 	}
 
@@ -85,6 +85,7 @@ function getPhotoPortletList(currentPage) {
 		success : function(result) {
 			var photoBoardList = result.photoBoardList;
 			var totalCnt = result.totalCnt;
+			var currentPage = result.currentPage;
 			$("#photoul").html("");
 			if (result.access == "true") {
 				if (photoBoardList.length > 0) {
@@ -129,7 +130,6 @@ function getPhotoPortletList(currentPage) {
 				document.getElementById("photoul").style.display ="block";
 			}
 			
-			var currentPage = 1;
 			resetPortletPaging(portletId, totalCnt, currentPage, "");
 		}
 	})

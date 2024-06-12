@@ -3951,7 +3951,7 @@ public class EzNewPortalGWController {
 			String rollInfo = info.getRollInfo();
 			int tenantId = info.getTenantId();
 			int portletId = Integer.parseInt(request.getParameter("portletId")); // 포토게시판의  포틀릿 아이디
-			int startRow = Integer.parseInt(request.getParameter("startRow"));
+			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
 			int photoCount = Integer.parseInt(request.getParameter("photoCount"));
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
@@ -3968,6 +3968,7 @@ public class EzNewPortalGWController {
 				data.put("access", false);
 				data.put("photoBoardList", null);
 				data.put("totalCnt", 0);
+				data.put("currentPage", 1);
 			} else {
 				// 게시판 권한 체크
 				boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
@@ -3975,13 +3976,20 @@ public class EzNewPortalGWController {
 					data.put("access", "false");
 					data.put("photoBoardList", null);
 					data.put("totalCnt", 0);
+					data.put("currentPage", 1);
 				} else {
 					// 권한이 true이면 boardList불러오기
-					List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount, info.getOffset());
 					int totalCnt = ezNewPortalService.getPhotoBoardPortletTotalCnt(tenantId, boardId, info.getOffset());
+					int totalPages  = (totalCnt + photoCount - 1) / photoCount;
+					currentPage = currentPage > totalPages ? totalPages : currentPage;
+					currentPage = currentPage == 0         ? 1          : currentPage;
+					int startRow  = (currentPage - 1) * photoCount;
+					
+					List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount, info.getOffset());
 					data.put("access", "true");
 					data.put("photoBoardList", photoBoardList);
 					data.put("totalCnt", totalCnt);
+					data.put("currentPage", currentPage);
 				}
 			}
 
