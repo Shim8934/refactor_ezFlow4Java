@@ -1368,11 +1368,11 @@
 		        }
 		        catch (e)
 		        { }
-		        try {
-		        	if (bAttachProcess == false)
-		        		window.opener.parent.frames["right"].openergetDocInfo();
-		        } catch (e) 
-		        { }
+		        // try {
+		        // 	if (bAttachProcess == false)
+		        // 		window.opener.parent.frames["right"].openergetDocInfo();
+		        // } catch (e)
+		        // { }
 		        try {
 		            bAttachProcess = true;
 		        }
