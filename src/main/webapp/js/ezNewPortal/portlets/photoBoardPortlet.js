@@ -29,7 +29,8 @@ function initPhotoBoardPortlet(portletId) {
 		document.getElementById(portletId + "Portlet").querySelector(".portletPageNav").style.display = "none";
 	}
 	
-	resetPortletPaging(portletId, totalCnt, "");
+	var currentPage = 1;
+	resetPortletPaging(portletId, totalCnt, currentPage, "");
 }
 
 function getPhotoPagePerCount(portletId) {
@@ -65,6 +66,10 @@ function reloadPhotoPortlet() {
 	getPhotoPortletList(1);
 }
 
+function reloadPhotoPage() {
+	portletInfoMap["portlet" + photoBoardObj.portletId].getPortletList();
+}
+
 function getPhotoPortletList(currentPage) {
 	var listSize = getPhotoPagePerCount(photoBoardObj.portletId);
 	
@@ -81,19 +86,34 @@ function getPhotoPortletList(currentPage) {
 			var photoBoardList = result.photoBoardList;
 			var totalCnt = result.totalCnt;
 			$("#photoul").html("");
-			if (photoBoardList.length > 0) {
-				var resultCount = photoBoardList.length;
-				var strHTML = "";
+			if (result.access == "true") {
+				if (photoBoardList.length > 0) {
+					var resultCount = photoBoardList.length;
+					var strHTML = "";
 
-				for (var i = 0; i < resultCount; i++) {
-					strHTML += "<li>";
-					strHTML += "<img src='" + photoBoardList[i].filePath + "', data1='" + photoBoardList[i].boardID + "' data2='" + photoBoardList[i].itemID + "' onclick='photoItemRead(this)'>";
-					strHTML += "<span>" + MakeXMLString(photoBoardList[i].title) + "</span>";
-					strHTML += "</li>";
+					for (var i = 0; i < resultCount; i++) {
+						strHTML += "<li>";
+						strHTML += "<img src='" + photoBoardList[i].filePath + "', data1='" + photoBoardList[i].boardID + "' data2='" + photoBoardList[i].itemID + "' onclick='photoItemRead(this)'>";
+						strHTML += "<span>" + MakeXMLString(photoBoardList[i].title) + "</span>";
+						strHTML += "</li>";
 
+					}
+
+					$("#photoul").html(strHTML);
+				} else {
+					var dl = document.createElement("dl");
+					dl.classList.add("nodata");
+					var dt = document.createElement("dt");
+					var img = document.createElement("img");
+					img.setAttribute("src", "/images/kr/main/noData_sIcon.png");
+					dt.appendChild(img);
+					dl.appendChild(dt);
+					var dd = document.createElement("dd");
+					dd.textContent = messages.strLang1;
+					dl.appendChild(dd);
+					document.getElementById("photoul").appendChild(dl);
+					document.getElementById("photoul").style.display ="block";
 				}
-
-				$("#photoul").html(strHTML);
 			} else {
 				var dl = document.createElement("dl");
 				dl.classList.add("nodata");
@@ -103,13 +123,14 @@ function getPhotoPortletList(currentPage) {
 				dt.appendChild(img);
 				dl.appendChild(dt);
 				var dd = document.createElement("dd");
-				dd.textContent = messages.strLang1;
+				dd.textContent = messages.strLang14;
 				dl.appendChild(dd);
 				document.getElementById("photoul").appendChild(dl);
 				document.getElementById("photoul").style.display ="block";
 			}
 			
-			resetPortletPaging(portletId, totalCnt, "");
+			var currentPage = 1;
+			resetPortletPaging(portletId, totalCnt, currentPage, "");
 		}
 	})
 }
