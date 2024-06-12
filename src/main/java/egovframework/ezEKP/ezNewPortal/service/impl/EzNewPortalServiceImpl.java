@@ -474,7 +474,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("[Serivce] updateUserUsedFrame Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
-		Object themeId = param.get("themeId");
+		String themeId = (String) param.get("themeId");
 		// 2024-06-11 조수빈 - 한 프레임만 사용하게 됨에 따라 테마에 맞는 해당 프레임을 지정해서 update하도록 수정.
 		Object frameId = "";
 		
