@@ -4,7 +4,7 @@
 <script>
     // 선택된 회사값 :selectedCompany
     // 변경시 함수 : changeCompany(회사id) 함수로 선언하면 select 변경시 실행
-    var selectedCompany = "";
+    var companySelectID = '' ;
     (function () {
         var request = new XMLHttpRequest();
         request.open('GET', '/admin/ezNewPortal/getCompanies.do', false);
@@ -16,7 +16,7 @@
                 var result = JSON.parse(request.responseText);
                 console.log(result);
 
-                var userCompany = result.userCompany;
+                var userCompany = '${param.companySelectID}' || result.userCompany;
                 var companyList = result.list;
                 var select = document.getElementById("ListCompany");
 
@@ -26,16 +26,16 @@
                     optionElement.text = item.displayName;
                     if (item.cn === userCompany) {
                         optionElement.selected = true;
-                        selectedCompany = item.cn;
+                        companySelectID = item.cn;
                     }
                     select.appendChild(optionElement);
                 });
 
                 select.onchange = function () {
-                    selectedCompany = select.options[select.selectedIndex].value;
+                    companySelectID = select.options[select.selectedIndex].value;
 
                     if (typeof window['changeCompany'] === 'function') {
-                        window['changeCompany'](selectedCompany);
+                        window['changeCompany'](companySelectID);
                     }
                 };
             }
