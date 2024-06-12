@@ -147,7 +147,13 @@
                     	if(document.getElementById("HolderEdit2") != null){
 							document.getElementById("HolderEdit2").style.display = "none";
 						}
-                    }
+                    } else {
+						// chkPublic이 OFF일 경우 비공개가 기본값임.
+						if (chkPublic == "OFF") {
+							document.getElementById("publicSelect").disabled = true;
+							document.getElementById("publicSelect").value = "N";
+						}
+					}
 
 	                /* if (scheduletype == "7") {
 		                //document.getElementById("HolderEdit2").style.display = "none";
@@ -224,11 +230,6 @@
 		         if (scheduleid != "") {
 		        setDate();
 		         }
-				// chkPublic이 OFF일 경우 비공개가 기본값임.
-				 if (chkPublic == "OFF") {
-					 document.getElementById("publicSelect").disabled = true;
-					 document.getElementById("publicSelect").value = "N";
-				 }
 		    }
 
 		    window.onresize = function () {
