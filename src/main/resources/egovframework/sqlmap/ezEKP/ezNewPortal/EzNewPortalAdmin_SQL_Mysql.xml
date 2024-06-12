@@ -143,7 +143,10 @@
 				B.menu_Type AS menutype,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
-				B.icon_url AS iconurl,
+				CASE WHEN A.icon_url IS NULL 
+					THEN B.icon_url
+					ELSE A.icon_url
+				END AS iconurl,
 				CASE WHEN A.company_order IS NULL
 					THEN B.default_order
 					ELSE A.company_order
@@ -184,7 +187,10 @@
 				A.menu_used AS menuused,
 				A.company_lang AS companylang,
 				B.menu_url AS menuurl,
-				B.icon_url AS iconurl,
+				CASE WHEN A.icon_url IS NULL
+					 THEN B.icon_url
+					 ELSE A.icon_url
+				END AS iconurl,
 				CASE WHEN A.company_order IS NULL
 					THEN B.default_order
 					ELSE A.company_order
@@ -343,6 +349,13 @@
 				TBL_PORTAL_MENU_COMP 
 			SET
 				menu_used = #menuUsed#
+			]]>
+			<isEqual property="menuType" compareValue="G" prepend=",">
+				<![CDATA[
+					icon_url = #iconUrl#
+				]]>
+			</isEqual>
+		<![CDATA[
 			WHERE
 				tenant_id = #tenantId#
 			AND
@@ -357,8 +370,14 @@
 			UPDATE
 				TBL_PORTAL_MENU
 			SET
-				menu_url = #menuUrl#,
+				menu_url = #menuUrl#
+		]]>
+		<isEqual property="menuType" compareValue="A" prepend=",">
+			<![CDATA[
 				icon_url = #iconUrl#
+			]]>
+		</isEqual>
+		<![CDATA[
 			WHERE
 				menu_id = #menuId#
 		]]>

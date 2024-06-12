@@ -342,9 +342,9 @@
 					menusHTML += "<div class='admin_menu_content'>";
 					menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span class='" + menuInfo.iconUrl + "'></span></dt>";
 					
-					if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함					
-						menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd>";
-					}
+					// if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함					
+					menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd>";
+					// }
 					
 					menusHTML += "</dl><table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
 					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th>";
@@ -907,7 +907,7 @@
 			var top = (height - 500) / 2;
 			var left = (width - 765) / 2;
 			   
-			window.open("/admin/ezNewPortal/selectMenuIcon.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=342,width=500,top=" + top + ",left=" + left, "");
+			window.open("/admin/ezNewPortal/selectMenuIcon.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=470,width=660,top=" + top + ",left=" + left, "");
 		}
 		
 		var updateMenuOrder = function() {

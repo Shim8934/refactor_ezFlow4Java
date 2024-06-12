@@ -15,6 +15,7 @@
  .icon_topmenu {margin-top : 20px;}
  .menuIcon div {width:100%; height:66px; border:1px solid #afafaf; text-align:center;}
  input[name='selIcon'] {margin-top : 10px;}
+ body{height: auto;}
 </style>
 </head>
 <body class="popup">
@@ -28,6 +29,16 @@
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_resource"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_board"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_collaboration"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_calendar"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_memo"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_approval"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_circular_edition"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_community"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_survey"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_addressbook"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_voting"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_laddergame"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_mail"></span></div><input type="radio" name="selIcon"></div>
 	</div>
 	<div id="addIcon" class="btnposition btnpositionNew">
 		<a class="imgbtn"><span><spring:message code='main.sp09' /></span></a>
