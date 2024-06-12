@@ -95,8 +95,7 @@ function getMailList() {
 			
 			document.getElementById("MailList").innerHTML = listHTML2;
             var totalCnt = mailList.length < surveyPorletPagingCnt ? mailList.length : surveyPorletPagingCnt;
-            var currentPage = 1;
-            resetPortletPaging(mailPortletObj.portletId, totalCnt, currentPage, "");
+            resetPortletPaging(mailPortletObj.portletId, totalCnt, "");
 		},
 		error:function(request,status,error){
     	    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

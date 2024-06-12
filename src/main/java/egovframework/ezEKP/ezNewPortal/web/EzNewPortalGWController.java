@@ -3965,15 +3965,14 @@ public class EzNewPortalGWController {
 			
 			if (boardId == null) {
 				data.put("access", false);
-				data.put("photoBoardList", null);
-				data.put("totalCnt", 0);
 			} else {
 				// 게시판 권한 체크
 				boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+
 				if (!accessCheck) {
 					data.put("access", "false");
 					data.put("photoBoardList", null);
-					data.put("totalCnt", 0);
+					data.put("totalCnt", null);
 				} else {
 					// 권한이 true이면 boardList불러오기
 					List<BoardItemVO> photoBoardList = ezNewPortalService.getPhotoBoardPortletInfo(tenantId, boardId, startRow, photoCount, info.getOffset());
@@ -5022,6 +5021,7 @@ public class EzNewPortalGWController {
 
 			// 게시판 권한 체크
 			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+
 			if (!accessCheck) {
 				data.put("access", "false");
 				data.put("boardList", null);

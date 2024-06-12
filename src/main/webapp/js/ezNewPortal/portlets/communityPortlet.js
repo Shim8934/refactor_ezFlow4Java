@@ -23,8 +23,7 @@ function initCommunityPortletInfo(communityPortletId) {
 	
 	communityPortletObj.portletId = communityPortletId;
 	var totalCnt = CommuSize;
-	var currentPage = 1;
-	resetPortletPaging(communityPortletObj.portletId, totalCnt, currentPage, "");
+	resetPortletPaging(communityPortletObj.portletId, totalCnt, "");
 }
 
 function reloadCommunityPortlet() {
@@ -167,8 +166,7 @@ var getCommunityList = function() {
 			}
 
 			var totalCnt = result.CommuSize;
-			var currentPage = 1;
-			resetPortletPaging(communityPortletObj.portletId, totalCnt, currentPage, "");
+			resetPortletPaging(communityPortletObj.portletId, totalCnt, "");
 			
 		}
 	};

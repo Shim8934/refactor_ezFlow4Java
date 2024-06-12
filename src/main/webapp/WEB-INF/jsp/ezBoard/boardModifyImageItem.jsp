@@ -211,8 +211,8 @@
 	                    
 	                     //2019.03.04 유은정 - 포토갤러리 포틀릿 리스트 업데이트 되도록 수정
 	                    try {
-				            if (parent.opener.opener != null && parent.opener.opener.reloadPhotoPage != undefined) {
-				            	parent.opener.opener.reloadPhotoPage();
+				            if (parent.opener.opener != null && parent.opener.opener.reloadPhotoPortlet != undefined) {
+				            	parent.opener.opener.reloadPhotoPortlet();
 				            }
 	                    } catch (e) {console.log(e);}
 	                    

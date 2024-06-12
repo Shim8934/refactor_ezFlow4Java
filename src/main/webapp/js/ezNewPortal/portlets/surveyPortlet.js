@@ -11,17 +11,13 @@ function initSurveyPortletInfo(surveyPortletId) {
 	}
 	newObj.portletCode = "survey";
 	newObj.getPortletList = function () {
-		var currentPage = newObj.page.getPage();
+		var currentPage = newObj.page.getPage() + 1;
 		getPotletSurveyList(currentPage);
 	}
 	portletInfoMap["portlet" + surveyPortletId] = newObj;
 	surveyPortletObj.portletId = surveyPortletId;
 	
 	getPotletSurveyList(1);
-}
-
-function reloadSurveyPage() {
-	portletInfoMap["portlet" + surveyPortletObj.portletId].getPortletList();
 }
 
 function getSurveyPagePerCount(surveyPortletId) {
@@ -71,8 +67,7 @@ function getPotletSurveyList(currentPage) {
 		success : function(data) {
 			setListByDataList(data.itemList);
 			var totalCnt = data.totalRows;
-			var currentPage = data.currentPage;
-			resetPortletPaging(surveyPortletObj.portletId, totalCnt, currentPage, "");
+			resetPortletPaging(surveyPortletObj.portletId, totalCnt, "");
 		},
 		error : function(error) {
 			alert(messages.strLang2 + error);

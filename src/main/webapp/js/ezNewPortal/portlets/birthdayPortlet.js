@@ -152,9 +152,8 @@ function getBirthdayList() {
 				$("#birthcount").css("display", "none");
 			}
 			
-			var totalCnt = birthdayList.length < birthdayPorletPagingCnt ? birthdayList.length : birthdayPorletPagingCnt;
-			var currentPage = 1;// currentPage 수정 필요
-			resetPortletPaging(birthdayPortletObj.portletId, totalCnt, currentPage, "");
+			var totalCnt = birthdayList.length < birthdayPorletPagingCnt ? birthdayList.length : birthdayPorletPagingCnt; 
+			resetPortletPaging(birthdayPortletObj.portletId, totalCnt);
 			
 			/* 6명 이상일 시 5초마다 자동페이지 네이션 기능을 사용할 때  주석해제
 			ptlTimer = window.setInterval(function() {
