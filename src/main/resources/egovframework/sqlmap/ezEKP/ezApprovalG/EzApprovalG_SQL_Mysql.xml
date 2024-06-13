@@ -5184,7 +5184,7 @@
             END AS RETIRECHK
          FROM 
 	     	TBL_DEPTTEMPLETDETAIL A
-	     INNER JOIN
+         LEFT OUTER JOIN
 	     	TBL_DEPTMASTER D
 	     ON
 	        A.APRMEMBERDEPTID = D.CN
@@ -5314,7 +5314,7 @@
                     B.CN
             FROM
                 TBL_DEPTTEMPLETDETAIL A
-            INNER JOIN
+            LEFT OUTER JOIN
                 TBL_DEPTMASTER D
             ON
                 A.APRMEMBERDEPTID = D.CN
@@ -5339,7 +5339,7 @@
 		    AND
 		     	A.COMPANYID = #companyID#
             AND
-		        D.DEPT_CD_PATH NOT LIKE '%trash_dept_%'
+		        (D.DEPT_CD_PATH NOT LIKE '%trash_dept_%' OR D.DEPT_CD_PATH IS NULL)
 		    AND
 		        B.CN IS NULL
 		    ORDER BY
