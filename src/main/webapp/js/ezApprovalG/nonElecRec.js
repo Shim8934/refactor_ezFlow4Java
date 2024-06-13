@@ -654,6 +654,10 @@ function setCabInfoInit() {
 	} else {
 		g_SepAttachLVXml = g_SepAttachLVXml.replace(/nonElecRecTempCabinetName/gi, "").replace(/nonElecRecTempCabinet/gi, "");
 	}
+
+	if (doctitle != null) {
+		document.getElementById("txtTitle").value = doctitle;
+	}
 }
 /*
  * 비전자문서 임시 캐비넷 아이디 -> 선택 캐비넷 아이디 변경 메소드

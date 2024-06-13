@@ -234,7 +234,10 @@
 			var curDocID = "";
 			var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
 			var pDocIDAry = new Array();
-	        
+			var receiptFlag = opener.receiptFlag;
+
+			var doctitle;
+
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
@@ -745,6 +748,9 @@
 	            if (RetValue[64] != undefined) { // 현재 선택한 탭의 문서ID
 	            	curDocID = RetValue[64]; 
 	            }
+				if (RetValue[65] != null && RetValue[65].trim() !== "") {
+					doctitle = RetValue[65];
+				}
 	            
 				//기결재통과 버튼 표출 체크
 				showPassAprLineBtn();
@@ -1547,6 +1553,10 @@
 			                	
 			                	if (pIniGubun == "11") {
 			                		setCabInfoInit();
+
+									if (nonElecRec === "Y" && !CheckInputField()) {
+										return;
+									}
 			                	} else if (!CheckInputField()) { // 기록물정보 입력란 유효성 검사
 			                		return;
 			                	}
@@ -2190,6 +2200,13 @@
 		            alert("AprGongRamLine_Cross_ChangeReceptTab::" + e.description);
 		        }
 		    }
+
+			function viewDocInfoAndFocusNode(focusTarget) {
+				document.getElementById("1tab6").onclick();
+
+				focusTarget.focus();
+			}
+
 		    /*
 			 * 비전자 기록물 정보 유효성 검사		    
 		     */
@@ -2197,80 +2214,108 @@
 		        var pRegType = selRegisterType.value;
 				if (txtTitle.value.trim() == "") {
 		            alert("기록물 제목을 입력해 주세요.");
-		            txtTitle.focus();
+					viewDocInfoAndFocusNode(txtTitle);
+
 		            return false;
 		        }
 				if (txtRegY.value.trim() == "" || txtRegD.value.trim() == "" || txtRegM.value.trim() == "") {
 		            alert("<spring:message code='ezApprovalG.t1045'/>");
+					viewDocInfoAndFocusNode(txtRegY);
+
 		            return false;
 		        } else {
 		        	if (!ValidateYearValue(txtRegY.value)) {
 			            alert("<spring:message code='ezApprovalG.t1046'/>");
+						viewDocInfoAndFocusNode(txtRegY);
+
 			            return false;
 			        }
 			        if (!ValidateNumber(txtRegM.value)) {
 			            alert("<spring:message code='ezApprovalG.t1047'/>");
+						viewDocInfoAndFocusNode(txtRegM);
+
 			            return false;
 			        }
 			        if (!ValidateNumber(txtRegD.value)) {
 			            alert("<spring:message code='ezApprovalG.t1048'/>");
+						viewDocInfoAndFocusNode(txtRegD);
+
 			            return false;
 			        }
 			        if (!ValidateNumber(txtRegH.value)) {
 			            alert("<spring:message code='ezApprovalG.t1049'/>");
+						viewDocInfoAndFocusNode(txtRegH);
+
 			            return false;
 			        }
 			        if (!ValidateNumber(txtRegMi.value)) {
 			            alert("<spring:message code='ezApprovalG.t1050'/>");
+						viewDocInfoAndFocusNode(txtRegMi);
+
 			            return false;
 			        }
 			        if (!ValidateYearValue(txtExeY.value)) {
 			            alert("<spring:message code='ezApprovalG.t1051'/>");
+						viewDocInfoAndFocusNode(txtExeY);
+
 			            return false;
 			        }
 			        if (!ValidateNumber(txtExeM.value)) {
 			            alert("<spring:message code='ezApprovalG.t1052'/>");
+						viewDocInfoAndFocusNode(txtExeM);
+
 			            return false;
 			        }
 			        if (!ValidateNumber(txtExeD.value)) {
 			            alert("<spring:message code='ezApprovalG.t1053'/>");
+						viewDocInfoAndFocusNode(txtExeD);
+
 			            return false;
 			        }
 		        }
 				if (txtDrafter.value.trim() == "") {
 		            alert("<spring:message code='ezApprovalG.t1055'/>");
-		            txtDrafter.focus();
+					viewDocInfoAndFocusNode(txtDrafter);
+
 		            return false;
 		        }
 				if (txtReceiptMember.value.trim() == "") {
 	                alert("발신기관명을 입력해 주세요.");
-	                txtReceiptMember.focus();
+					viewDocInfoAndFocusNode(txtReceiptMember);
+
 	                return false;
 	            }
 				
 				if (pRegType == "1" || pRegType == "3") {
 					if (txtAprMemberTitle.value.trim() == "") {
 		                alert("<spring:message code='ezApprovalG.t1054'/>");
+						viewDocInfoAndFocusNode(txtAprMemberTitle);
+
 		                return false;
 		            }
 				}
 				if (pRegType == "5" || pRegType == "6") {
 					if (txtSummary.value.trim() == "") {
 		                alert("<spring:message code='ezApprovalG.t1058'/>");
+						viewDocInfoAndFocusNode(txtSummary);
+
 		                return false;
 		            }
 		            if (GetAVTypeCode() == "") {
 		                alert("<spring:message code='ezApprovalG.t1059'/>");
+
 		                return false;
 		            }
 				}
 				if (pRegType == "2" || pRegType == "4" || pRegType == "7" || pRegType == "8") {
 					if (txtOriginSN.value.trim() == "") {
 		                alert("문서번호를 입력해 주세요.");
-		                txtOriginSN.focus();
+						viewDocInfoAndFocusNode(txtOriginSN);
+
 		                return false;
 		            }
 				}
+
 		        return true;
 		    }
 		    

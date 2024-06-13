@@ -1829,8 +1829,9 @@
 		        
 		        parameter[60] = passAprLine;
 		        parameter[61] = tempKeyword;
-		
-		        ezapprovalinfo_dialogArguments[0] = parameter;
+				parameter[65] = message.document.getElementById("frame_doctitle").textContent;
+
+				ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		        
 				if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
