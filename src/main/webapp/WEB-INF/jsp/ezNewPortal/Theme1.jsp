@@ -260,6 +260,7 @@
  	}
 
     $(function() {
+        makePortletsShell(portletOrder)
 		if (!!fixedPortletList) {
             makeFixPortlet();
         }

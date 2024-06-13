@@ -296,11 +296,12 @@
  	}
  	
 	$(function() {
+		makePortletsShell(portletOrder)
 		if (!!fixedPortletList) {
 			makeFixPortlet();
 		}
 		makePortlets(portletOrder);
-		
+
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useSurvey = "<c:out value='${useSurvey}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";

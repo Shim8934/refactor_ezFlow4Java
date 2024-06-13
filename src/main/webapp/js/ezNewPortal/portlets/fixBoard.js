@@ -33,6 +33,7 @@ function  FixBoardUtil() {
         _thisDom = document.createElement('div');
         _thisDom.id = _id;
         _thisDom.classList.add(_enum.CLASS_FIX_PORTLET);
+        _thisDom.classList.add(_enum.CLASS_HIDE);
         area.appendChild(_thisDom);
 
         var article = document.createElement('article');
@@ -195,6 +196,7 @@ function  FixBoardUtil() {
         },
         start : function (bList) {
             _boardList = bList;
+            _thisDom.classList.remove(_enum.CLASS_HIDE);
             if (!_chkStart()) return;
             _makeSlidPage();
             _initSwiper();
