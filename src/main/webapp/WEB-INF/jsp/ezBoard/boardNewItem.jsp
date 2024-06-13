@@ -1152,19 +1152,8 @@
 					} catch (e) {console.log(e); }
 					
 					try { // 탭게시판  포틀릿 새로고침
-                 		if (parent.opener != null && parent.opener.refreshAndChangeTab != undefined) {
-                 			var tabBoardList = parent.opener.document.getElementsByClassName('tabBoard');
-                 			
-                 			for (var j = 0; j < tabBoardList.length; j++) {
-                 				var tabPortletId = tabBoardList[j].querySelector('.tabBoardPorlet').value;
-	                 			var tabBoardIdList = parent.opener.portletInfoMap["portlet" + tabPortletId].tabBoardIdList;
-	                 			
-	                 			if (tabBoardIdList.indexOf(pBoardID) > -1) {
-	                 				var activeTabId = parent.opener.portletInfoMap["portlet" + tabPortletId].activeTabId;
-		                 			var tabNode = tabBoardList[j].querySelector("#" + activeTabId + 'Tab');
-		                 			parent.opener.refreshAndChangeTab(tabPortletId, activeTabId);
-	                 			}
-                 			}
+						if (parent.opener != null && parent.opener.refreshTab != undefined) {
+                 			parent.opener.refreshTab();
                  		}
                  	} catch (e) {console.log(e);}
 					

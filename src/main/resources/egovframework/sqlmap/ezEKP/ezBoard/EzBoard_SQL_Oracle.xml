@@ -6277,6 +6277,8 @@
 				A.COMPANYID IS NULL)
 			AND
 				A.TENANT_ID = #v_TENANTID#
+			ORDER BY
+				TABID
 		]]>
 	</select>
 	

@@ -1276,23 +1276,14 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String status = resultBody.get("status").toString();
-		int tabNum = 3; // 서브 탭 갯수
-		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			String existence = data.get("existence").toString();
 			
 			if (existence.equals("true")) {
-				for (int i = 1; i <= tabNum; i++) {
-					if (data.get("tabBoardName" + i) != null) {
-						model.addAttribute("tabBoardId" + i		, data.get("tabBoardId" + i)		);
-						model.addAttribute("tabBoard" + i		, data.get("tabBoard" + i)		);
-						model.addAttribute("tabBoardName" + i	, data.get("tabBoardName" + i)	);
-					}
-				}
+				model.addAttribute("tabList", data.get("tabList"));
 				model.addAttribute("portletLang", data.get("portletLang").toString());
 			}
-			
 			model.addAttribute("existence", existence);
 		}
 		
@@ -1397,5 +1388,33 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 
 		logger.debug("getIframePortlet End");
 		return "/ezNewPortal/portlets/iframePortlet";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ezNewPortal/getBoardList.do", method=RequestMethod.GET)
+	public JSONObject getBoardList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getBoardList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("companyId", userInfo.getCompanyID());
+		param.put("deptId", userInfo.getDeptID());
+		param.put("boardId", req.getParameter("boardId"));
+		param.put("currentPage", req.getParameter("currentPage"));
+		param.put("listCnt", req.getParameter("listCnt"));
+		
+		String url = "/rest/ezPortal/portlets/boardList";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		if (status.equals("ok")) {
+			data = (JSONObject) resultBody.get("data");
+		}
+		
+		logger.debug("getBoardList End");
+		return data;
 	}
 }
