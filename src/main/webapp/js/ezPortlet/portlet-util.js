@@ -1,26 +1,26 @@
 var gridElement;
 var initCount = 0;
 var GridSize = Object.freeze({
-    ONE_BY_ONE:'one_by_one',
-    TWO_BY_ONE:'two_by_one',
-    ONE_BY_TWO:'one_by_two',
-    TWO_BY_TWO:'two_by_two'
+    ONE_BY_ONE: 'one_by_one',
+    TWO_BY_ONE: 'two_by_one',
+    ONE_BY_TWO: 'one_by_two',
+    TWO_BY_TWO: 'two_by_two'
 });
 var ClassPortlet = Object.freeze({
-    AREA_PORTLET:"portlet_area",
-    PORTLET:"portlet",
-    WRAP_PORTLET:"box_shadow",
-    BTN_OPEN_POP:"set_portlet",
-    BODY_POP:"body_pop_for_size",
-    POP_STATE_OPEN:"pop_open",
-    CUR_SIZE:"cur_size",
-    HANDLE:"sortablePortlet",
-    CHK_USE:"chk_portlet",
-    OFF_PORTLET:"off_portlet",
-    DISPLAY_NONE:"display_none",
-    AVAILABLE_SIZE:"size_av",
-    UNAVAILABLE_SIZE:"size_uav",
-    EDITING:"editing"
+    AREA_PORTLET: "portlet_area",
+    PORTLET: "portlet",
+    WRAP_PORTLET: "box_shadow",
+    BTN_OPEN_POP: "set_portlet",
+    BODY_POP: "body_pop_for_size",
+    POP_STATE_OPEN: "pop_open",
+    CUR_SIZE: "cur_size",
+    HANDLE: "sortablePortlet",
+    CHK_USE: "chk_portlet",
+    OFF_PORTLET: "off_portlet",
+    DISPLAY_NONE: "display_none",
+    AVAILABLE_SIZE: "size_av",
+    UNAVAILABLE_SIZE: "size_uav",
+    EDITING: "editing"
 });
 
 //* 포틀릿 애니메이션 관련 옵션 *//
@@ -28,18 +28,18 @@ var ClassPortlet = Object.freeze({
 var fixed = []
 var portletOption = Object.freeze({
     dragEnabled: true, // 드래그 여부
-    dragHandle:"." + ClassPortlet.HANDLE, // 드래그 핸들,
+    dragHandle: "." + ClassPortlet.HANDLE, // 드래그 핸들,
     itemPlaceholderClass: 'portlet-placeholder', //placeholder 로 추가될 클래스
     layout: {
-        fillGaps:       true,   // 빈칸 자동 채움
-        horizontal:     false,
-        alignRight:     false,
-        alignBottom:    false,
-        rounding:       false,
+        fillGaps: true,   // 빈칸 자동 채움
+        horizontal: false,
+        alignRight: false,
+        alignBottom: false,
+        rounding: false,
     },
     dragPlaceholder: {
         enabled: true,  // 드래그 시 placeholder 설정
-        createElement : function(item) {
+        createElement: function (item) {
             return item.getElement().cloneNode(true);
         },
         onCreate: null,
@@ -140,7 +140,7 @@ function giveSetPortletEvent(portletId) {
     var btnList = $("#" + portletId + "Portlet")[0].querySelectorAll("img[data-size]");
     Array.prototype.forEach.call(btnList, function (btn) {
         btn.addEventListener("click", function (e) {
-            e = e||window.event;
+            e = e || window.event;
             var target = e.target;
             target.parentElement.classList.remove(ClassPortlet.POP_STATE_OPEN);
             changePortletSize(target.closest("." + ClassPortlet.PORTLET), target.dataset.size);
@@ -159,10 +159,10 @@ function changePortletSize(pot, size) {
     resizePortlet();
     if (typeof usedTheme == 'undefined' || !usedTheme) usedTheme = document.querySelector('.portletList').getAttribute('data-themeid');
     userPortletUpdateWithSize(usedTheme);
-    
+
     var portletPagingArea = pot.querySelectorAll('.portletPagingArea');
     if (portletPagingArea != null && portletPagingArea.length > 0) { // 포틀릿 페이지네이션 처리
-    	changePortletViewCount(pot.id.replace('Portlet',''), portletPagingArea);
+        changePortletViewCount(pot.id.replace('Portlet', ''), portletPagingArea);
     }
 }
 
@@ -177,7 +177,7 @@ function createPopPortletSize(portletId) {
     var pop = document.createElement("div");
     pop.className = ClassPortlet.BODY_POP;
     var availableArr = getAvailSize(portletId);
-    if(!availableArr) availableArr = [GridSize.ONE_BY_ONE];
+    if (!availableArr) availableArr = [GridSize.ONE_BY_ONE];
 
     Array.prototype.forEach.call(availableArr, function (size) {
         var img = document.createElement("img");
@@ -191,7 +191,7 @@ function createPopPortletSize(portletId) {
 
 // 포틀릿 사이즈 변경 팝업 열기
 function openPopPortletSize(e) {
-    e = e||window.event;
+    e = e || window.event;
     e.stopPropagation();
     closePopPortletSizeAll();
     var node = this.parentElement.getElementsByClassName(ClassPortlet.BODY_POP)[0];
@@ -200,10 +200,10 @@ function openPopPortletSize(e) {
 
 // 포틀릿 사이즈 변경 팝업 닫기
 function closePopPortletSizeAll(e) {
-    e = e||window.event;
+    e = e || window.event;
     if (!e.target.closest("." + ClassPortlet.BODY_POP)) {
         var popList = document.querySelectorAll("." + ClassPortlet.BODY_POP + "." + ClassPortlet.POP_STATE_OPEN);
-        Array.prototype.forEach.call(popList, function(node){
+        Array.prototype.forEach.call(popList, function (node) {
             node.classList.remove(ClassPortlet.POP_STATE_OPEN);
         });
     }
@@ -214,7 +214,7 @@ function getAvailablePortletSize(companyId, themeId) {
     var request = new XMLHttpRequest();
     request.open('POST', '/admin/ezNewPortal/getAvailablePortletSize.do', false);
     request.setRequestHeader('Content-Type', 'application/json');
-    request.onload = function() {
+    request.onload = function () {
         if (request.status === 200) {
             result = JSON.parse(request.responseText);
         } else {
@@ -223,8 +223,8 @@ function getAvailablePortletSize(companyId, themeId) {
     }
 
     var data = JSON.stringify({
-        companyId : companyId,
-        themeId : themeId
+        companyId: companyId,
+        themeId: themeId
     });
 
     request.send(data);
@@ -240,25 +240,25 @@ function userPortletUpdateWithSize(usedTheme) {
     for (var i = 0; i < gridItems.length; i++) {
         var portlet = gridItems[i].getElement();
         var portletId = !!portlet.id && portlet.id.substring(0, portlet.id.indexOf("P"));
-        updateOrder.push({"portletOrder" : i + 1, "portletId" : portletId, "classSize" : portlet.dataset.size});
+        updateOrder.push({"portletOrder": i + 1, "portletId": portletId, "classSize": portlet.dataset.size});
     }
 
     var data = {
-        themeId : usedTheme,
-        updateOrder : updateOrder
+        themeId: usedTheme,
+        updateOrder: updateOrder
     };
 
     //ajax로 순서 변경
     $.ajax({
-        type : "POST",
-        url : "/ezNewPortal/updatePortletOrderUser.do",
-        contentType : "application/json",
-        dataType : "text",
-        data : JSON.stringify(data),
-        success : function(result) {
+        type: "POST",
+        url: "/ezNewPortal/updatePortletOrderUser.do",
+        contentType: "application/json",
+        dataType: "text",
+        data: JSON.stringify(data),
+        success: function (result) {
             console.debug("포틀릿 순서 변경 성공");
         },
-        error : function() {
+        error: function () {
             console.error("포틀릿 순서 변경 실패");
         }
     });
@@ -274,7 +274,7 @@ function resizePortlet(portletNode) {
     gridElement.layout();
 }
 
-function reloadPortlet(portletId){
+function reloadPortlet(portletId) {
     loadPortlet(portletId);
 }
 
@@ -288,9 +288,9 @@ function loadPortlet(portletId) {
     var portletCode;
     var portlet;
     var portletCount = portletOrder.length;
-    for(var i = 0; i < portletCount; i++) {
+    for (var i = 0; i < portletCount; i++) {
         var portletId2 = portletOrder[i].portletId;
-        if(portletId == portletId2){
+        if (portletId == portletId2) {
             portlet = portletOrder[i];
             portletUrl = portletOrder[i].portletUrl;
             portletName = portletOrder[i].portletName;
@@ -302,13 +302,18 @@ function loadPortlet(portletId) {
     frameSetting(frameId);
 
     $.ajax({
-        type : "GET",
-        dataType : "html",
-        data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-        url : portletUrl,
-        tryCount : 0,
-        retryLimit : 3,
-        success : function(result) {
+        type: "GET",
+        dataType: "html",
+        data: {
+            "uniq_param": (new Date()).getTime(),
+            "portletId": portletId,
+            "portletName": portletName,
+            "usedTheme": usedTheme
+        },
+        url: portletUrl,
+        tryCount: 0,
+        retryLimit: 3,
+        success: function (result) {
             try {
                 $("#" + portletId + "Portlet").empty();
                 $("#" + portletId + "Portlet").append(result);
@@ -333,7 +338,7 @@ function loadPortlet(portletId) {
                 }
             }
         },
-        error : function() {
+        error: function () {
             this.url = "/ezNewPortal/errorPortlet.do";
             this.tryCount++;
 
@@ -354,7 +359,7 @@ function loadPortlet(portletId) {
 
 function getAvailSize(id) {
     var portletCount = portletOrder.length;
-    for(var i = 0; i < portletCount; i++) {
+    for (var i = 0; i < portletCount; i++) {
         if (id == portletOrder[i].portletId) return portletOrder[i].listPortletSize;
     }
 }
@@ -365,9 +370,9 @@ function Paging() {
     var _page;
     var _total = -1;
     var _option = {
-        maintain:true, // 페이지 숫자 변환시 현제 페이지 유지 여부
-        pageStart:1, // getPage()시 시작 페이지
-        roundPage:true, // 페이지 끝으로 가면 순환할지 여부.
+        maintain: true, // 페이지 숫자 변환시 현제 페이지 유지 여부
+        pageStart: 1, // getPage()시 시작 페이지
+        roundPage: true, // 페이지 끝으로 가면 순환할지 여부.
     }
 
     var _resetPage = function (count) {
@@ -382,7 +387,7 @@ function Paging() {
         _page = _start / count + _option.pageStart;
     }
 
-    var _getLastPage  = function () {
+    var _getLastPage = function () {
         return Math.ceil(_total / _countPerPage) - 1 + _option.pageStart;
     }
 
@@ -471,15 +476,15 @@ function Paging() {
                     _start = (_page - _option.pageStart) * _countPerPage;
                     return this;
                 },
-                resetPage : function () {
+                resetPage: function () {
                     _resetPage(_countPerPage);
                 },
-                getCurrentOption : function () {
+                getCurrentOption: function () {
                     return _option;
                 },
-                setPage : function (pageNum) {
-                	_page = pageNum
-                	_start = (_page - _option.pageStart) * _countPerPage
+                setPage: function (pageNum) {
+                    _page = pageNum
+                    _start = (_page - _option.pageStart) * _countPerPage
                 }
             }
         }
@@ -487,87 +492,88 @@ function Paging() {
 }
 
 function changePortletViewCount(portletId, portletPagingArea) {
-	var portletInfoObj = portletInfoMap["portlet" + portletId];
-	var portletPageObj = null;
-	if (portletInfoObj.portletCode == "tabBoard") {
-		var tabBoardIdList = portletInfoObj.tabIdList;
-		for (var i = 0; i < tabBoardIdList.length; i++) {
-			var tabBoardId = tabBoardIdList[i];
-			portletPageObj = portletInfoObj.paging[tabBoardId];
-			changePortletPageCount(portletInfoObj, portletPageObj, portletId);
-		}
-	} else if (portletInfoObj.portletCode == "favoriteboard") {
-		var favoriteActiveTabId = portletInfoObj.activeTabId;
-		portletPageObj = portletInfoObj.paging[favoriteActiveTabId];
-		changePortletPageCount(portletInfoObj, portletPageObj, portletId);
-	} else {
-		portletPageObj = portletInfoObj.page;
-		changePortletPageCount(portletInfoObj, portletPageObj, portletId);
-	}
+    var portletInfoObj = portletInfoMap["portlet" + portletId];
+    var portletPageObj = null;
+    if (portletInfoObj.portletCode == "tabBoard") {
+        var tabBoardIdList = portletInfoObj.tabIdList;
+        for (var i = 0; i < tabBoardIdList.length; i++) {
+            var tabBoardId = tabBoardIdList[i];
+            portletPageObj = portletInfoObj.paging[tabBoardId];
+            changePortletPageCount(portletInfoObj, portletId);
+        }
+    } else if (portletInfoObj.portletCode == "favoriteboard") {
+        var favoriteActiveTabId = portletInfoObj.activeTabId;
+        portletPageObj = portletInfoObj.paging[favoriteActiveTabId];
+        changePortletPageCount(portletInfoObj, portletId);
+    } else {
+        portletPageObj = portletInfoObj.page;
+        changePortletPageCount(portletInfoObj, portletId);
+    }
 }
 
-function changePortletPageCount(portletInfoObj, portletPageObj, portletId) {
-	var perCount = portletPageObj.getPagePerCount(portletId);
-	portletPageObj.changeCount(perCount);
-	portletInfoObj.getPortletList();
+function changePortletPageCount(portletInfoObj, portletId) {
+    var perCount = portletInfoObj.page.getPagePerCount(portletId);
+    portletInfoObj.page.changeCount(perCount);
+    portletInfoObj.getPortletList();
 }
 
 function resetPortletPaging(portletId, totalCnt, currentPage, activeTabId) {
-	var portletInfoObj = portletInfoMap["portlet" + portletId];
-	var portletPageObj = null;
-	
-	if (portletInfoObj.portletCode == "tabBoard") {
-		portletPageObj = portletInfoObj.paging[activeTabId];
-	} else if (portletInfoObj.portletCode == "favoriteboard") {
-		portletPageObj = portletInfoObj.paging[activeTabId];
-	} else {
-		portletPageObj = portletInfoObj.page;
-	}
-	
-	portletPageObj.setPage(currentPage);
-	portletPageObj.setTotal(totalCnt);
-	
-	var portletPageNav = document.getElementById(portletId + "Portlet").querySelector(".portletPageNav");
+    var portletInfoObj = portletInfoMap["portlet" + portletId];
+    var portletPageObj = null;
+
+    if (portletInfoObj.portletCode == "tabBoard") {
+        portletPageObj = portletInfoObj.paging[activeTabId];
+    } else if (portletInfoObj.portletCode == "favoriteboard") {
+        portletPageObj = portletInfoObj.paging[activeTabId];
+    } else {
+        portletPageObj = portletInfoObj.page;
+    }
+
+    portletPageObj.setPage(currentPage);
+    portletPageObj.setTotal(totalCnt);
+
+    var portletPageNav = document.getElementById(portletId + "Portlet").querySelector(".portletPageNav");
     if (!portletPageNav) return;
-	if (totalCnt > 0) {
-		if (portletInfoObj.portletCode != "tabBoard") {
-			portletPageNav.style.display = "block";
-		}
-		
-		if (usePaging != '1') {
-			portletPageNav.style.display = "none";
-		}
-		
-	} else {
-		if (portletInfoObj.portletCode != "tabBoard") {
-			portletPageNav.style.display = "none";
-		}
-	}
+    if (totalCnt > 0) {
+        if (portletInfoObj.portletCode != "tabBoard") {
+            portletPageNav.style.display = "block";
+        }
+
+        if (usePaging != '1') {
+            portletPageNav.style.display = "none";
+        }
+
+    } else {
+        if (portletInfoObj.portletCode != "tabBoard") {
+            portletPageNav.style.display = "none";
+        }
+    }
 }
 
 function portletMovePage(portletId, mode) {
-	var portletInfoObj = portletInfoMap["portlet" + portletId];
-	var portletPageObj = null;
-	
-	if (portletInfoObj.portletCode == "tabBoard") {
-		var activeTabId = portletInfoObj.activeTabId;
-		portletPageObj = portletInfoObj.paging[activeTabId]
-	} else if (portletInfoObj.portletCode == "favoriteboard") {
-		var activeTabId = portletInfoObj.activeTabId;
-		portletPageObj = portletInfoObj.paging[activeTabId]
-	} else {
-		portletPageObj = portletInfoObj.page;
-	}
-	
-	if (mode === "prev") {
-		portletPageObj.previous();
-	} else if (mode === "next") {
-		portletPageObj.next();
-	}
-	portletInfoObj.getPortletList();
+    var portletInfoObj = portletInfoMap["portlet" + portletId];
+    var portletPageObj = null;
+
+    if (portletInfoObj.portletCode == "tabBoard") {
+        var activeTabId = portletInfoObj.activeTabId;
+        portletPageObj = portletInfoObj.paging[activeTabId]
+    } else if (portletInfoObj.portletCode == "favoriteboard") {
+        var activeTabId = portletInfoObj.activeTabId;
+        portletPageObj = portletInfoObj.paging[activeTabId]
+    } else {
+        portletPageObj = portletInfoObj.page;
+    }
+
+    if (mode === "prev") {
+        portletPageObj.previous();
+    } else if (mode === "next") {
+        portletPageObj.next();
+    }
+    portletInfoObj.getPortletList();
 }
 
 const fixBoardArr = {};
+
 function makeFixPortlet() {
     var length = fixedPortletList.length;
     for (var i = 0; i < length; i++) {
@@ -601,6 +607,28 @@ function makeFixPortlet() {
             }
         });
     }
+}
+
+function makeErrorPortlet(portletId) {
+    return function () {
+        this.url = "/ezNewPortal/errorPortlet.do";
+        this.tryCount++;
+
+        if (this.tryCount <= this.retryLimit) {
+            $.ajax(this);
+            return;
+        }
+
+        if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+            sortableEvent();
+        }
+
+        if (usePortletSize) {
+            makeGridChangeEvent(portletId);
+        }
+
+        return;
+    };
 }
 
 function makePortlets(portletOrder) {
@@ -645,55 +673,34 @@ function makePortlets(portletOrder) {
             if (!!portletUrl) portletUrl = URLParamsUtils(portletUrl).getFullUrl();
             var portletName = portletOrder[i].portletName;
             var portletCode = portletOrder[i].portletCode;
-            if (portletUrl.indexOf("http") != -1) {
-                $("#" + portletId + "Portlet").empty();
-                $.ajax({
-                    type: "GET",
-                    dataType: "html",
-                    data: {
-                        "portletId": portletId,
-                        "portletName": portletName,
-                        "usedTheme": usedTheme,
-                        "iframeUrl" : portletUrl
-                    },
-                    async: false,
-                    tryCount: 0,
-                    retryLimit: 3,
-                    url : "/ezNewPortal/iframePortlet.do",
-                    success: function(data){
-                         try {
-                             $("#" + portletId + "Portlet").empty().append(data);
-                             if (usePortletSize) {
-                                 makeGridChangeEvent(portletId);
-                             }
-                         } catch (e) {
-                             console.log(e);
-                         }
-                    }, 
-                    error: function () {
-                    this.url = "/ezNewPortal/errorPortlet.do";
-                    this.tryCount++;
-
-                    if (this.tryCount <= this.retryLimit) {
-                        //try again
-                        $.ajax(this);
-                        return;
-                    }
-
-                    if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-                        sortableEvent();
-                    }
-
-                    if (usePortletSize) {
-                        makeGridChangeEvent(portletId);
-                    }
-
-                    return;
-                  }
-                });
-            } else {
-                /* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-                (function (portletId, portletUrl, portletName, portletCode) {
+            (function (portletId, portletUrl, portletName, portletCode) {
+                if (portletUrl.indexOf("http") !== -1) {
+                    $.ajax({
+                        type: "GET",
+                        dataType: "html",
+                        data: {
+                            "portletId": portletId,
+                            "portletName": portletName,
+                            "usedTheme": usedTheme,
+                            "iframeUrl": portletUrl
+                        },
+                        tryCount: 0,
+                        retryLimit: 3,
+                        url: "/ezNewPortal/iframePortlet.do",
+                        success: function (data) {
+                            try {
+                                $("#" + portletId + "Portlet").empty().append(data);
+                                if (usePortletSize) {
+                                    makeGridChangeEvent(portletId);
+                                }
+                            } catch (e) {
+                                console.log(e);
+                                makeErrorPortlet(portletId);
+                            }
+                        },
+                        error: makeErrorPortlet(portletId)
+                    });
+                } else {
                     $.ajax({
                         type: "GET",
                         dataType: "html",
@@ -712,46 +719,27 @@ function makePortlets(portletOrder) {
                                 if (usePortletSize) {
                                     makeGridChangeEvent(portletId);
                                 }
-    
+
                                 if (portletId == 6) {
                                     document.getElementById(portletId + "Portlet").style.background = "none";
                                 }
-    
+
                                 eventSetting(portletId, usedTheme, portletCode, false);
-    
+
                                 if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
                                     sortableEvent();
                                 }
                             } catch (e) {
-                                // 포틀릿 내부 에러시에 포탈 전체 스크립트 에러가 나서 try catch 처리함
+                                // 포틀릿 내부 에러시에 포탈 전체 스크립트 에러가 나서 다른 포틀릿의 실행도 막으므로, try catch 처리함
                                 console.log(e);
+                                makeErrorPortlet(portletId);
                             }
-    
+
                         },
-                        error: function () {
-                            this.url = "/ezNewPortal/errorPortlet.do";
-                            this.tryCount++;
-    
-                            if (this.tryCount <= this.retryLimit) {
-                                //try again
-                                $.ajax(this);
-                                return;
-                            }
-    
-                            if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-                                sortableEvent();
-                            }
-    
-                            if (usePortletSize) {
-                                makeGridChangeEvent(portletId);
-                            }
-    
-                            return;
-                        }
+                        error: makeErrorPortlet(portletId)
                     });
-                }(portletId, portletUrl, portletName, portletCode));
-            }
-            /* } */
+                }
+            }(portletId, portletUrl, portletName, portletCode));
         }
     }
 }
