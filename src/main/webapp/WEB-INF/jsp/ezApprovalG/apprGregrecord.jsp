@@ -150,17 +150,17 @@
             return false;
         }
 
-        if (!ValidateNumber(txtRegM.value)) {
+        if (!ValidateNumber(txtRegM.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1047'/>");
             return false;
         }
 
-        if (!ValidateNumber(txtRegD.value)) {
+        if (!ValidateNumber(txtRegD.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1048'/>");
             return false;
         }
 
-        if (!ValidateNumber(txtRegH.value)) {
+        if (!ValidateNumber(txtRegH.value, 'N')) {
             alert("<spring:message code='ezApprovalG.t1049'/>");
             return false;
         }
@@ -176,7 +176,7 @@
             return false;
         }
         
-        if (!ValidateNumber(txtExeM.value)) {
+        if (!ValidateNumber(txtExeM.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1052'/>");
             return false;
         }
@@ -187,7 +187,7 @@
             return false;
         }
 
-        if (!ValidateNumber(txtExeD.value)) {
+        if (!ValidateNumber(txtExeD.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1053'/>");
             return false;
         }
@@ -239,7 +239,7 @@
             }
         }
 
-        if (!ValidateNumber(txtTotalPage.value)) {
+        if (!ValidateNumber(txtTotalPage.value, 'Y')) {
             alert("<spring:message code='ezApprovalG.t1060'/>");
             return false;
         }

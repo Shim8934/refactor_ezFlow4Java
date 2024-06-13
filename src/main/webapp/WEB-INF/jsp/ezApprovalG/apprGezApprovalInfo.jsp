@@ -2230,25 +2230,25 @@
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtRegM.value)) {
+			        if (!ValidateNumber(txtRegM.value, 'Y')) {
 			            alert("<spring:message code='ezApprovalG.t1047'/>");
 						viewDocInfoAndFocusNode(txtRegM);
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtRegD.value)) {
+			        if (!ValidateNumber(txtRegD.value, 'Y')) {
 			            alert("<spring:message code='ezApprovalG.t1048'/>");
 						viewDocInfoAndFocusNode(txtRegD);
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtRegH.value)) {
+			        if (!ValidateNumber(txtRegH.value, 'N')) {
 			            alert("<spring:message code='ezApprovalG.t1049'/>");
 						viewDocInfoAndFocusNode(txtRegH);
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtRegMi.value)) {
+			        if (!ValidateNumber(txtRegMi.value, 'N')) {
 			            alert("<spring:message code='ezApprovalG.t1050'/>");
 						viewDocInfoAndFocusNode(txtRegMi);
 
@@ -2260,13 +2260,13 @@
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtExeM.value)) {
+			        if (!ValidateNumber(txtExeM.value, 'Y')) {
 			            alert("<spring:message code='ezApprovalG.t1052'/>");
 						viewDocInfoAndFocusNode(txtExeM);
 
 			            return false;
 			        }
-			        if (!ValidateNumber(txtExeD.value)) {
+			        if (!ValidateNumber(txtExeD.value, 'Y')) {
 			            alert("<spring:message code='ezApprovalG.t1053'/>");
 						viewDocInfoAndFocusNode(txtExeD);
 

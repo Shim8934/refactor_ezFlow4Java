@@ -277,7 +277,7 @@
 		        if (!CheckLen(txtTitle, 100))
 		            return "";
 		
-		        if (!ValidateNumber(txtNumOfPage.value)) {
+		        if (!ValidateNumber(txtNumOfPage.value, 'Y')) {
 		            alert("<spring:message code='ezApprovalG.t1079'/>");
 		            return "";
 		        }

@@ -214,11 +214,11 @@
                     OpenAlertUI("<spring:message code='ezApprovalG.t957'/>");
                     return "";
                 }
-                else if (!ValidateNumber(txtDisplayEndM.value)) {
+                else if (!ValidateNumber(txtDisplayEndM.value, 'Y')) {
                     OpenAlertUI("<spring:message code='ezApprovalG.t958'/>");
                     return "";
                 }
-                else if (!ValidateNumber(txtDisplayEndD.value)) {
+                else if (!ValidateNumber(txtDisplayEndD.value, 'Y')) {
                     OpenAlertUI("<spring:message code='ezApprovalG.t959'/>");
                     return "";
                 }
