@@ -919,14 +919,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		if (approvalFlag.equals("S")) {
 			if (duplicate.equals("TRUE")) {
 				logger.debug("setTaskCategory started. mode=U");
-				
-				if (getTaskCategoryNodeExist("3", categoryCode, companyID, tenantID, approvalFlag).equals("TRUE")) {
+				// 코드가 존재하지 않는 체계도 체계수정가능하도록 함.
+				// if (getTaskCategoryNodeExist("3", categoryCode, companyID, tenantID, approvalFlag).equals("TRUE")) {
 					for (int i = 3; i >= Integer.parseInt(categoryType); i--) {
 						map.put("v_CATETYPE", i);
 						
 						ezApprovalGAdminDAO.setTaskCategoryUpdate(map);
 					}
-				}
+				// }
 			} else {
 				logger.debug("setTaskCategory started. mode=I");
 				ezApprovalGAdminDAO.setTaskCategoryInsert(map);
