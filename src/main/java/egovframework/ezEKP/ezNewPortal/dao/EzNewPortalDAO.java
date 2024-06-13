@@ -249,6 +249,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public void updateThemePortletUsed(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateThemePortletUsed", map);
 	}
+
+	public void updateThemePortlet(Map<String, Object> map) throws Exception {
+		update("ezNewPortal.updateThemePortlet", map);
+	}
 	
 	public void updatePortletOrderUser(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updatePortletOrderUser", map);

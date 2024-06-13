@@ -1544,6 +1544,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				ezNewPortalDAO.updateCompanyPortletNameInfo(map);
 			}
 		}
+
+		/* 2024-06-13 김유진 - 테마별 포틀릿도 업데이트 */
+		map.put("lang", 1);
+		List<ThemeInfoVO> themeList = ezNewPortalDAO.getCompanyThemes(map);
+		int themeCount = themeList.size();
+		for (int i = 0; i < themeCount; i ++) {
+			map.put("themeId", themeList.get(i).getThemeId());
+			ezNewPortalDAO.updateThemePortlet(map);
+		}
+
 		logger.debug("updateCompanyPortletInfo ended.");
 		
 	}

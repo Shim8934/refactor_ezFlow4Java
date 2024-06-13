@@ -1057,6 +1057,23 @@
 			is_fixed = #isFixed#
 	]]>
 	</update>
+
+<update id="ezNewPortal.updateThemePortlet" parameterClass="Map">
+<![CDATA[
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			menu_id = #menuId#
+		WHERE
+			theme_id = #themeId#
+		  AND
+			tenant_id = #tenantId#
+		  AND
+			company_id = #companyId#
+		  AND
+			portlet_id = #portletId#
+		]]>
+</update>
 	
 	
 
