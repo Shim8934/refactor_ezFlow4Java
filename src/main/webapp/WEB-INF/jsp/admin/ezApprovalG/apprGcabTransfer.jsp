@@ -49,10 +49,10 @@
 	            InitSelCabinetList();
 	            
 	            //2018-05-18 강민수92 셀렉트 박스 추가
-	            for (var i = nowYear + 5; i >= nowYear - 5; i--) {
-	            	$('#selYear').append("<option value='" + i + "'>" + i + "</option>")
-	            }
-				
+	            // for (var i = nowYear + 5; i >= nowYear - 5; i--) {
+	            // 	$('#selYear').append("<option value='" + i + "'>" + i + "</option>")
+	            // }
+				//
 	            $("#selYear").val(nowYear).prop("selected", true);
 	        };
 	
@@ -487,7 +487,17 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2 class="h2_dot" style="font-weight: normal;margin-bottom:5px;"><spring:message code='ezApprovalG.t578'/><span style="float:right"><select id="selYear" style="width: 55px;" onchange="selYear_onChange()"></select></span></h2>
+	                <h2 class="h2_dot" style="font-weight: normal;margin-bottom:5px;">
+						<spring:message code='ezApprovalG.t578'/>
+						<span style="float:right">
+							<select id="selYear" style="width: 55px;" onchange="selYear_onChange()">
+								<c:forEach var = "year" items = "${ ironListYear }">
+									<option value = "${ year }">
+										${ year }
+									</option>
+								</c:forEach>
+							</select>
+						</span></h2>
 	                
 	                <div style="WIDTH: 100%; HEIGHT: 500px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="CabinetList"></div>
