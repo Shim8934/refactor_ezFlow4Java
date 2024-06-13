@@ -494,8 +494,10 @@
 				toggleDivMenu(document.querySelector('#quickMenuContainer') ,type);
 				toggleDivMenu(document.querySelector('#profileContainer') ,type);
 				closeNoti(); // 통합알림 팝업창 닫기
-				
-				if (menuUrl != null) {
+
+				if (menuUrl != undefined && menuUrl.toString().indexOf("http") != -1) {
+					window.open(menuUrl);
+				} else if (menuUrl != null) {
 					window.open(menuUrl, 'main', '');
 				}
 				// 취소버튼과 같은 역할
