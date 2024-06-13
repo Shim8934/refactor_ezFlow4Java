@@ -5050,7 +5050,7 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
 			int itemCount = Integer.parseInt(request.getParameter("photoCount"));
-			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+			int currentPage = commonUtil.isIntNumber(request.getParameter("currentPage"),1);
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone," + deptPath + "," + userId;

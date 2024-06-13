@@ -596,8 +596,9 @@ function makeFixPortlet(fixedPortletList) {
             },
             url: fixUrl,
             success: function (result) {
-                if (result.length > 0) {
-                    fixBoardArr[fixPortletCode].start(result);
+                var boardList = result.boardList;
+                if (boardList.length > 0) {
+                    fixBoardArr[fixPortletCode].start(boardList);
                 } else {
                     fixBoardArr[fixPortletCode].hide();
                 }
