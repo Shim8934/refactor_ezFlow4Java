@@ -2726,7 +2726,77 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				OR A.APPRFLAG IS NULL)
 			ORDER BY
 				STARTDATE DESC
-		  LIMIT #limit#
+		  LIMIT #startRow#, #limit#
+	]]>
+</select>
+
+<select id="ezNewPortal.getNewItemListCnt" parameterClass="Map" resultClass="int">
+	<![CDATA[
+	SELECT
+		COUNT(*)
+	FROM
+		TBL_BOARD_ITEM A 
+	JOIN (
+		SELECT
+			BOARDID, 
+			BOARDNAME, 
+			BOARDNAME2,
+			BOARDNAME3, 
+			BOARDNAME4,
+			TENANT_ID,
+			COMPANYID 
+		FROM
+			TBL_BOARD_MYBOARDS 
+		WHERE
+			TENANT_ID = #tenantId#
+		AND
+			(COMPANYID = #companyId# OR COMPANYID = '*')
+		AND
+			USERID = #userId#
+		) B 
+		ON
+			A.TENANT_ID = B.TENANT_ID
+		AND
+			A.BOARDID = B.BOARDID
+		AND
+			A.TENANT_ID = #tenantId#
+		AND
+			A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
+		AND
+			A.STARTDATE <= #nowDate#
+		AND
+			A.ENDDATE > #nowDate#					
+		AND (
+			NOT EXISTS (
+				SELECT
+					USERID 
+				FROM
+					TBL_BOARD_ITEM_READ S 
+				WHERE
+					S.TENANT_ID = A.TENANT_ID
+				AND
+					S.BOARDID = A.BOARDID 
+				AND
+					S.ITEMID = A.ITEMID 
+				AND
+					S.TENANT_ID = #tenantId#
+				AND
+					S.USERID = #userId# 
+				AND
+					S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+				)
+		)
+		JOIN
+			TBL_BOARD_BOARDINFO C
+		ON
+	    	A.BOARDID = C.BOARDID
+		AND
+			A.TENANT_ID = C.TENANT_ID
+		AND
+			(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
+		AND
+			(A.APPRFLAG = 'Y' 
+			OR A.APPRFLAG IS NULL)
 	]]>
 </select>
 
@@ -2765,8 +2835,37 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			A.TENANT_ID = #tenantId#
 		ORDER BY
 			STARTDATE DESC
-		LIMIT #limit#
+		LIMIT #startRow#, #limit#
 	 ]]>
+</select>
+
+<select id="ezNewPortal.getFavItemListCnt" parameterClass="Map" resultClass="int">
+	<![CDATA[
+	SELECT
+		COUNT(*)
+	FROM
+		TBL_BOARD_ITEM A
+	JOIN
+		TBL_BOARD_BOARDINFO B
+	ON
+		A.BOARDID = B.BOARDID
+	AND
+		A.TENANT_ID = B.TENANT_ID
+	WHERE
+		A.BOARDID = #boardId#
+	AND
+		(A.WRITERCOMPANYID = B.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+	AND 
+		(A.APPRFLAG = 'Y'
+		OR A.APPRFLAG IS NULL)
+	AND 
+	
+	  	A.STARTDATE <= #nowDate#
+	AND 
+	  	A.ENDDATE > #nowDate#
+	AND
+		A.TENANT_ID = #tenantId#
+    ]]>
 </select>
 
 <!-- 커뮤니티 포틀릿 -->

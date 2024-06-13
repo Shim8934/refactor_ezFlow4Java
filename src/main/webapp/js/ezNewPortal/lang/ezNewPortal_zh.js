@@ -55,5 +55,6 @@ var messages = {
 	strLang600 : "下个月",
 	strLang601 : "关闭",
 	strLang602 : "zh",
-	strLangSchedule01 : "星期日;星期一;星期二;星期三;星期四;星期五;星期六"
+	strLangSchedule01 : "星期日;星期一;星期二;星期三;星期四;星期五;星期六",
+	strLangFavorPortlet : "收藏夹"
 }

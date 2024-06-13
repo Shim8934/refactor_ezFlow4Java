@@ -555,6 +555,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<FavoriteBoardVO>) list("ezNewPortal.getNewItemList", map);
 	}
 	
+	public int getFavNewItemListCnt(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getNewItemListCnt", map);
+	}
+	
 	//즐겨찾기 게시판 포틀릿 리스트(일반)
 	@SuppressWarnings("unchecked")
 	public List<FavoriteBoardVO> getFavItemList(Map<String, Object> map) {
@@ -790,6 +794,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	// 2024-05-17 한태훈 > 회사 탑메뉴 설정 위치 기본값 세팅 (기본값 : 0 = 메뉴 위치 상단)
 	public void insertTopMenuDisplayModeForCompany(PortalTopVO potalTopVO) throws Exception {
 		insert("ezNewPortal.insertTopMenuDisplayModeForCompany", potalTopVO);
+	}
+
+	public int getFavItemListCnt(Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getFavItemListCnt", map);
 	}
 	
 }

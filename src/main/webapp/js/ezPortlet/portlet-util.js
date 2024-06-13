@@ -494,21 +494,21 @@ function changePortletViewCount(portletId, portletPagingArea) {
 		for (var i = 0; i < tabBoardIdList.length; i++) {
 			var tabBoardId = tabBoardIdList[i];
 			portletPageObj = portletInfoObj.paging[tabBoardId];
-			changePortletPageCount(portletInfoObj, portletId);
+			changePortletPageCount(portletInfoObj, portletPageObj, portletId);
 		}
 	} else if (portletInfoObj.portletCode == "favoriteboard") {
 		var favoriteActiveTabId = portletInfoObj.activeTabId;
 		portletPageObj = portletInfoObj.paging[favoriteActiveTabId];
-		changePortletPageCount(portletInfoObj, portletId);
+		changePortletPageCount(portletInfoObj, portletPageObj, portletId);
 	} else {
 		portletPageObj = portletInfoObj.page;
-		changePortletPageCount(portletInfoObj, portletId);
+		changePortletPageCount(portletInfoObj, portletPageObj, portletId);
 	}
 }
 
-function changePortletPageCount(portletInfoObj, portletId) {
-	var perCount = portletInfoObj.page.getPagePerCount(portletId);
-	portletInfoObj.page.changeCount(perCount);
+function changePortletPageCount(portletInfoObj, portletPageObj, portletId) {
+	var perCount = portletPageObj.getPagePerCount(portletId);
+	portletPageObj.changeCount(perCount);
 	portletInfoObj.getPortletList();
 }
 

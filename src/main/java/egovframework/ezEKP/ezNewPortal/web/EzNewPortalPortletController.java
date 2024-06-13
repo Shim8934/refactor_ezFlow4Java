@@ -583,33 +583,28 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 */
 	@RequestMapping(value="/ezNewPortal/getFavoriteBoardList.do", method=RequestMethod.GET)
 	@ResponseBody
-	public JSONArray getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
+	public JSONObject getFavoriteBoardList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-    	
     	String userId = userInfo.getId();
     	String boardId = request.getParameter("boardId");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("boardId", boardId);
+		param.put("currentPage", request.getParameter("currentPage"));
+		param.put("listCnt", request.getParameter("listCnt"));
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("deptId", userInfo.getDeptID());
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPortal/portlets/boardFavorites", param, request, "get", null);		
 		
 		String status = resultBody.get("status").toString();
-		JSONArray json = new JSONArray();
+		JSONObject json = new JSONObject();
 		
 		if (status.equals("ok")) {
-			JSONObject data = (JSONObject) resultBody.get("data");
-			
-			if (data.get("favList") != null) {
-					json = (JSONArray) data.get("favList");
-			} else {
-				json = null;
-			}
+			json = (JSONObject) resultBody.get("data");
 		}
 
 		logger.debug("get_favoriteList ended");

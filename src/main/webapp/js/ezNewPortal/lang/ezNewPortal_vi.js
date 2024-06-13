@@ -55,5 +55,6 @@ var messages = {
     strLang600: "n.tháng",
     strLang601: "đóng cửa",
     strLang602: "vi",
-    strLangSchedule01: "chủ nhật;Thứ hai;Thứ ba;Thứ Tư;Thứ năm;Thứ sáu;Thứ bảy;"
+    strLangSchedule01: "chủ nhật;Thứ hai;Thứ ba;Thứ Tư;Thứ năm;Thứ sáu;Thứ bảy;",
+    strLangFavorPortlet : "Portlet yêu thích"
 }

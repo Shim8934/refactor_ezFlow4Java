@@ -3438,15 +3438,17 @@ public class EzNewPortalGWController {
 		JSONObject result = new JSONObject();
 
 		String boardId = request.getParameter("boardId");
-		int limit = 21;
-
+		int listCnt = Integer.parseInt(request.getParameter("listCnt"));
+		int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		
+		JSONObject data = new JSONObject();
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			String offset = commonUtil.getMinuteUTC(info.getOffSet());
 			// 2023-07-28 황인경 즐겨찾기 포틀릿 > 게시판 작성자 > 다국어 지원 추가
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			JSONObject data = new JSONObject();
+			
 			String companyId = request.getParameter("companyId");
 			String deptId = request.getParameter("deptId");
 			info.setCompanyId(companyId);
@@ -3462,10 +3464,18 @@ public class EzNewPortalGWController {
 				// 해당 게시판 관리자가 아니면 Q&A 게시판 로직으로 변경
 				isQnANormal = !ezBoardService.isBoardAdmin(boardId, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getRollInfo());
 			}
-
+			
+			int totalPages = 0;
+			int startRow = 0;
+			int totalCnt = 0;
 			if (boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) { // 새게시물
-
-				List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), limit, offset);
+				totalCnt = ezNewPortalService.getFavNewItemListCnt(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), offset);
+				totalPages  = (totalCnt + listCnt - 1) / listCnt;
+				currentPage = currentPage > totalPages ? totalPages : currentPage;
+				currentPage = currentPage == 0         ? 1          : currentPage;
+				startRow  = (currentPage - 1) * listCnt;
+				
+				List<FavoriteBoardVO> favNewList = ezNewPortalService.getFavNewItemList(info.getUserId(), info.getTenantId(), info.getCompanyId(), commonUtil.getTodayUTCTime(""), startRow, listCnt, offset);
 
 				for (FavoriteBoardVO fvo : favNewList) {
 					// 2023-07-28 황인경 - 포탈 > 즐겨찾기 포틀릿 > 작성자 > 다국어 지원 추가
@@ -3474,16 +3484,30 @@ public class EzNewPortalGWController {
 					}
 					logger.debug("resultList : " + fvo.getItemId());
 				}
-
+				
 				data.put("favList", favNewList);
+				data.put("totalCnt", totalCnt);
+				data.put("currentPage", currentPage);
 
 			} else if (isQnANormal) { // Q&A 게시판
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),
-						boardId, limit, info.getCompanyId(), info.getOffSet(), isQnANormal);
+				totalCnt = ezNewPortalService.getBoardPortletTotalCnt(info.getUserId(), info.getTenantId(), boardId, info.getCompanyId(), info.getOffSet(), isQnANormal);
+				totalPages  = (totalCnt + listCnt - 1) / listCnt;
+				currentPage = currentPage > totalPages ? totalPages : currentPage;
+				currentPage = currentPage == 0         ? 1          : currentPage;
+				startRow  = (currentPage - 1) * listCnt;
+				
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow);
 				data.put("favList", boardList);
+				data.put("totalCnt", totalCnt);
+				data.put("currentPage", currentPage);
 			} else { // 일반게시판
-
-				List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), limit, offset);
+				totalCnt = ezNewPortalService.getFavItemListCnt(boardId, info.getTenantId(), info.getCompanyId(), offset);
+				totalPages  = (totalCnt + listCnt - 1) / listCnt;
+				currentPage = currentPage > totalPages ? totalPages : currentPage;
+				currentPage = currentPage == 0         ? 1          : currentPage;
+				startRow  = (currentPage - 1) * listCnt;
+				
+				List<FavoriteBoardVO> favList = ezNewPortalService.getFavItemList(boardId, info.getTenantId(), info.getCompanyId(), startRow, listCnt, offset);
 
 				for (FavoriteBoardVO fvo : favList) {
 					// 2023-07-28 황인경 - 포탈 > 즐겨찾기 포틀릿 > 작성자 > 다국어 지원 추가
@@ -3492,8 +3516,9 @@ public class EzNewPortalGWController {
 					}
 					logger.debug("resultList : " + fvo.getItemId());
 				}
-
 				data.put("favList", favList);
+				data.put("totalCnt", totalCnt);
+				data.put("currentPage", currentPage);
 			}
 
 			result.put("status", "ok");
@@ -3503,7 +3528,9 @@ public class EzNewPortalGWController {
 			logger.error(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
-			result.put("data", "");
+			data.put("totalCnt", 0);
+			data.put("currentPage", 1);
+			result.put("data", data);
 		}
 		logger.debug("ezNewPortal G/W getFavoriteBoardPortlet ended.");
 		return result;

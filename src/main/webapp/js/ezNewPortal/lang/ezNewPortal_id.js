@@ -55,5 +55,6 @@ var messages = {
 	strLang600 : "n.month",
 	strLang601 : "close",
 	strLang602 : "id",
-	strLangSchedule01 : "Sun;Mon;Tue;Wed;Thu;Fri;Sat"
+	strLangSchedule01 : "Sun;Mon;Tue;Wed;Thu;Fri;Sat",
+	strLangFavorPortlet : "Favorit"
 }

@@ -10,8 +10,6 @@ var usedTheme = $('#usedTheme').val();
 
 var favoriteObj = {}
 
-const favoriteBoardPageMaxCnt = 21; 
-
 function initFavoritePortlet(portletId) {
 	var newObj = {};
 	newObj.portletCode = "favoriteboard";
@@ -20,6 +18,9 @@ function initFavoritePortlet(portletId) {
 	newObj.paging = {};
     portletInfoMap["portlet" + portletId] = newObj;
     favoriteObj.portletId = portletId;
+    newObj.getPortletList = function () {
+		getBoardList_NewBoardSTD();
+	}
     
     document.getElementById(portletId + "Portlet").querySelector('.favoriteBoardPorlet').value = portletId;
     getTabList(portletId);
@@ -38,7 +39,7 @@ function getFavoriteBoardPagePerCount() {
 	return count;
 }
 
-function getTabList() {
+function getTabList(portletId) {
 	var resultList;	
 	var mode = "USE";
    	
@@ -51,13 +52,10 @@ function getTabList() {
        },
        cache: false,
        success: function(result) {
-    		
     		tabCnt = result.length;
     		
-    		var portletId = favoriteObj.portletId;
 		    var favoritePortletObj = portletInfoMap["portlet" + portletId];
 		    var perCount = getFavoriteBoardPagePerCount(portletId);
-		    
     		if (tabCnt > 0) {
     		    if (tabCnt > 3)
     		    	tabCnt = 3;
@@ -108,87 +106,108 @@ function getTabList() {
 		        getBoardList_NewBoardSTD();
 		        
     		} else {
+    			var portletTitle = "<dt><span>" + messages.strLangFavorPortlet + "</span></dt>";
+    			document.getElementById("BoardTab").innerHTML = portletTitle;
     			var listHTML = "";
     			listHTML += "<dl class='nodata'>";
     	    	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-    	    	listHTML += '<dd>' + strLang1_NewBoardSTD + '</dd>';
+    	    	listHTML += '<dd>' + messages.strLang17 + '</dd>';
     	    	listHTML += "</dl>";
     	    	
     	    	document.getElementById("BoardList").innerHTML = listHTML;
+    	    	document.getElementById(portletId + "Portlet").querySelector(".portletPageNav").style.display = "none";
     		}
     		
        },
        error:function(request,status,error){
-    	   }
+    	   var portletTitle = "<dt><span>" + messages.strLangFavorPortlet + "</span></dt>";
+		   document.getElementById("BoardTab").innerHTML = portletTitle;
+    	   var listHTML = "";
+		   listHTML += "<dl class='nodata'>";
+	       listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
+	       listHTML += '<dd>' + messages.strLang2 + '</dd>';
+	       listHTML += "</dl>";
+	    	
+	       document.getElementById("BoardList").innerHTML = listHTML;
+	       document.getElementById(portletId + "Portlet").querySelector(".portletPageNav").style.display = "none";
+       }
 	});	
 }
 
 function getBoardList_NewBoardSTD() {
+	var favorPortletInfo = portletInfoMap["portlet" + favoriteObj.portletId];
+	var activeTabId = favorPortletInfo.activeTabId;
+	var favoriteBoardPage = favorPortletInfo.paging[activeTabId];
+	
     $.ajax({
     	type : "GET",
     	dataType : "json",
     	url : "/ezNewPortal/getFavoriteBoardList.do",
     	data : {
-				boardId 	 : favoriteBoardId 
+				boardId 	 : favoriteBoardId,
+				currentPage : favoriteBoardPage.getPage(),
+				listCnt : getFavoriteBoardPagePerCount(favoriteObj.portletId)
     	},
-    	success : function(result){
-		var title = "";
-        var startDate = "";
-   		var writerName = "";
-   		var boardType = "";
-   		var itemId = "";
-		var RowCnt = result.length;
-		var listHTML = "";
-		var today = new Date();
-		var date = today.getDate();
-		today.setDate(date - 1);
-		
-		var totalCnt = 0;
-    	
-        if (RowCnt > 0) {
-            for (var i = 0; i < RowCnt; i++) {
-            title = result[i].title;
-           	startDate = result[i].startDate;
-           	writerName = result[i].writerName;
-           	boardType = result[i].gubun;
-           	boardId = result[i].boardId;
-           	itemId = result[i].itemId;
-            	
-             listHTML += "<li onclick=\"openDoc_section4_Type('" + itemId + "','" + boardType + "', '" + boardId + "')\" >";			                        
-             
-             var writeDate = new Date(startDate);
-     		
-             // 2024-05-27 조수빈 - 새로운 시안에 N 표시가 삭제되어 주석 처리
-//     		 if (today < writeDate) {
-//     			listHTML += "<span class='boardNew'>N</span>";
-//     		 }
-             
-             listHTML += "<span class='txt'>" + ConvertCharToEntityReference(title) + "</span>";
-             listHTML += "<span class='date'>" + startDate.substring(5,16).replace(/-/g, ".") + "</span>";
-             listHTML += "<span class='name'>" + writerName + "</span>";
-             listHTML += "</li>";
-            }
-            
-            document.getElementById("BoardList").innerHTML = listHTML;
-            
-            totalCnt = RowCnt < favoriteBoardPageMaxCnt ? RowCnt : favoriteBoardPageMaxCnt;
-            
-        } else {
-            
-        	var listHTML = "";
+    	success : function(result) {
+	    	var favList = result.favList;
+			var title = "";
+	        var startDate = "";
+	   		var writerName = "";
+	   		var boardType = "";
+	   		var itemId = "";
+			var RowCnt = favList.length;
+			var listHTML = "";
+			var today = new Date();
+			var date = today.getDate();
+			today.setDate(date - 1);
+			var currentPage = result.currentPage;
+			var totalCnt = result.totalCnt;
+	    	
+	        if (RowCnt > 0) {
+	            for (var i = 0; i < RowCnt; i++) {
+	            title = favList[i].title;
+	           	startDate = favList[i].startDate;
+	           	writerName = favList[i].writerName;
+	           	boardType = favList[i].gubun;
+	           	boardId = favList[i].boardId;
+	           	itemId = favList[i].itemId;
+	            	
+	             listHTML += "<li onclick=\"openDoc_section4_Type('" + itemId + "','" + boardType + "', '" + boardId + "')\" >";			                        
+	             
+	             var writeDate = new Date(startDate);
+	     		
+	     		 if (today < writeDate) {
+	     			listHTML += "<span class='boardNew'>N</span>";
+	     		 }
+	             
+	             listHTML += "<span class='txt'>" + ConvertCharToEntityReference(title) + "</span>";
+	             listHTML += "<span class='date'>" + startDate.substring(5,16).replace(/-/g, ".") + "</span>";
+	             listHTML += "<span class='name'>" + writerName + "</span>";
+	             listHTML += "</li>";
+	            }
+	            
+	            document.getElementById("BoardList").innerHTML = listHTML;
+	            
+	        } else {
+	        	var listHTML = "";
+				listHTML += "<dl class='nodata'>";
+	        	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
+	        	listHTML += '<dd>' + strLang1_NewBoardSTD + '</dd>';
+	        	listHTML += "</dl>";
+	        	
+	        	document.getElementById("BoardList").innerHTML = listHTML;
+	        }
+	        var portletId = favoriteObj.portletId;
+	        resetPortletPaging(portletId, totalCnt, currentPage, favoriteBoardId);
+		},
+    	error : function(error) {
+			var listHTML = "";
 			listHTML += "<dl class='nodata'>";
-        	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-        	listHTML += '<dd>' + strLang1_NewBoardSTD + '</dd>';
-        	listHTML += "</dl>";
-        	
-        	document.getElementById("BoardList").innerHTML = listHTML;
-        }
-        var portletId = favoriteObj.portletId;
-        var currentPage = 1;
-        resetPortletPaging(portletId, totalCnt, currentPage, favoriteBoardId);
-	},
-    	error : function(error){
-    		console.log("<spring:message code='ezBoard.t22'/>wpNewBoardSTD" + error);	
+			listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
+			listHTML += '<dd>' + messages.strLang2 + '</dd>';
+			listHTML += "</dl>";
+			document.getElementById("BoardList").innerHTML = listHTML;
+			resetPortletPaging(favoriteObj.portletId, 0, 1, favoriteBoardId);
     	}
     });
 }
@@ -224,8 +243,6 @@ function openDoc_section4_Type(pItemID, pType, oBoardID) {
        }
    }
 }
-
-
 
 function boardChangeTab(obj) {
     switch (obj.id) {

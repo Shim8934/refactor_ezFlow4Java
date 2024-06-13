@@ -55,5 +55,6 @@ var messages = {
 	strLang600 : "다음달",
 	strLang601 : "닫기",
 	strLang602 : "ko",
-	strLangSchedule01 : "일;월;화;수;목;금;토"
+	strLangSchedule01 : "일;월;화;수;목;금;토",
+	strLangFavorPortlet : "즐겨찾기"
 }

@@ -180,7 +180,11 @@ public interface EzNewPortalService {
 	 */
 	
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit, String offset);
+	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int startRow, int limit, String offset);
+	public int getFavNewItemListCnt(String userId, int tenantId, String companyId, String nowDate, String offset);
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset) throws Exception;
+	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int startRow, int limit, String offset) throws Exception;
+	public int getFavItemListCnt(String boardId, int tenantId, String companyId, String offset) throws Exception;
 	public List<CommunityMyCommunityVO> getCommunityList(String lang, int startRow, int listSize, String companyId, int tenantId) throws Exception;
 	public int getCommunityListTotalCnt(String companyId, int tenantId) throws Exception;
 	public String getCommunityPermit(String clubNo, String userId, int tenantId);

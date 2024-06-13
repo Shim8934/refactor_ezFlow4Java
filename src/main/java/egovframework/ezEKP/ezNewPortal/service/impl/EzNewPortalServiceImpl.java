@@ -2661,9 +2661,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	/**
 	 * 구해안
 	 */
-
+	
 	@Override
 	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int limit, String offset) {
+		return getFavNewItemList(userId,tenantId, companyId, nowDate, 0, limit, offset);
+	}
+	
+	@Override
+	public List<FavoriteBoardVO> getFavNewItemList(String userId, int tenantId, String companyId, String nowDate, int startRow, int limit, String offset) {
 		logger.debug("getFavNewItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -2671,6 +2676,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("nowDate", nowDate);
 		map.put("limit", limit);
+		map.put("startRow", startRow);
 		map.put("v_OFFSETMIN", offset);
 		
 		List<FavoriteBoardVO> favNewItemList = ezNewPortalDAO.getFavNewItemList(map);
@@ -2680,7 +2686,27 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
+	public int getFavNewItemListCnt(String userId, int tenantId, String companyId, String nowDate, String offset) {
+		logger.debug("getFavNewItemListCnt started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("nowDate", nowDate);
+		map.put("v_OFFSETMIN", offset);
+		
+		logger.debug("getFavNewItemListCnt ended.");
+		return ezNewPortalDAO.getFavNewItemListCnt(map);
+		
+	}
+	
+	@Override
 	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int limit, String offset) throws Exception {
+		return getFavItemList(boardId, tenantId, companyId, 0, limit, offset);
+	}
+	
+	@Override
+	public List<FavoriteBoardVO> getFavItemList(String boardId, int tenantId, String companyId, int startRow, int limit, String offset) throws Exception {
 		logger.debug("getFavItemList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
@@ -2688,6 +2714,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("limit", limit);
+		map.put("startRow", startRow);
 		map.put("v_OFFSETMIN", offset);
 		map.put("nowDate", nowDate);
 		
@@ -2695,6 +2722,20 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		logger.debug("getFavItemList ended.");
 		return FavItemList;
+		
+	}
+	
+	@Override
+	public int getFavItemListCnt(String boardId, int tenantId, String companyId, String offset) throws Exception {
+		logger.debug("getFavItemList started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+		map.put("boardId", boardId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("nowDate", nowDate);
+		logger.debug("getFavItemList ended.");
+		return ezNewPortalDAO.getFavItemListCnt(map);
 	}
 	
 	@Override
