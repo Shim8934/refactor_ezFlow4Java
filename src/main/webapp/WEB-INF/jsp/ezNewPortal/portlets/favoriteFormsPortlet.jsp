@@ -158,11 +158,11 @@
 					if (request.status >= 200 && request.status < 400) {
 						var result = JSON.parse(request.responseText);
 						
-						document.getElementById("SIXHGAP").innerHTML = result.hour;
-						document.getElementById("ONEDGAP").innerHTML = result.day;
-						document.getElementById("SEVENDGAP").innerHTML = result.week;
-						document.getElementById("ONEMGAP").innerHTML = result.month;
-						document.getElementById("OTHER").innerHTML = result.other;
+						document.getElementById("SIXHGAP").innerHTML = result.hour + "건";
+						document.getElementById("ONEDGAP").innerHTML = result.day + "건";
+						document.getElementById("SEVENDGAP").innerHTML = result.week + "건";
+						document.getElementById("ONEMGAP").innerHTML = result.month + "건";
+						document.getElementById("OTHER").innerHTML = result.other + "건";
 					} else {
 						// We reached our target server, but it returned an error
 					}

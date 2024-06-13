@@ -30,7 +30,8 @@
 									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 								</dd>
 								<dd class="portletPlus portlet_cal" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_cal.png">
+									<input type="text" class="DatePicker_class hasDatepicker" name="" id=""  size="10" readonly="readonly">
+									<img class="ui-datepicker-trigger" src="/images/ezNewPortal/calIcon.png" alt="" title="">
 								</dd>
 							</dl>
 							<div id="scheduleList" class="sschedule_list">
