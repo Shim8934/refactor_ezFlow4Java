@@ -195,7 +195,7 @@
 		        }
 
 		        document.getElementById("publicSelect").disabled = true;
-		        if (scheduletype == "1" || scheduletype == "6")
+		        if ((scheduletype == "1" && chkPublic == "ON") || scheduletype == "6")
 		            document.getElementById("publicSelect").disabled = false;
 
 		        if (scheduleid == "")
