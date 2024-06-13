@@ -998,7 +998,7 @@
 	$(function() {
 		makePortletsShell(portletOrder)
 		if (!!fixedPortletList) {
-			makeFixPortlet();
+			makeFixPortlet(fixedPortletList);
 		}
 		makePortlets(portletOrder);
 
