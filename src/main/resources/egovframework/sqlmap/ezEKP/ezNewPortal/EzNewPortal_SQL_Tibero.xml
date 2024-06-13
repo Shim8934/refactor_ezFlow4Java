@@ -242,7 +242,9 @@
 			) INFO
 		) P
 		WHERE
-			P.RNUM <= #limit#
+			P.RNUM <= #startPoint# + #listCount#
+		AND
+			P.RNUM >= #startPoint# + 1
 	]]>
 </select>
 

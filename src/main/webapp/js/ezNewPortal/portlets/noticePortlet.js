@@ -11,10 +11,13 @@ function initNoticePortletInfo(noticePortletId) {
 		return getNoticePagePerCount(noticePortletId);
 	}
 	newObj.portletCode = "notice";
+	newObj.getPortletList = function () {
+		getNoticePortletList(newObj.page.getPage());
+	}
 	portletInfoMap["portlet" + noticePortletId] = newObj;
 	noticePortletObj.portletId = noticePortletId;
 	
-	noticePortletLoadFunc();
+	getNoticePortletList(1);
 }
 
 // 2024-05-30 조수빈 - 공지사항이 보여질 수 있는 개수에 비해 작은 경우 처리하기 위해 전역변수로 선언
@@ -33,7 +36,7 @@ function getNoticePagePerCount(noticePortletId) {
 }
 
 /* 공지사항 데이터 조합 */
-var assembleNoticeList = function(noticeList, portletBoardId, access) {
+var assembleNoticeList = function(noticeList, portletBoardId, access, totalCnt, currentPage) {
 	/* HTMLColllection에도 forEach 추가*/
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
 	var str = '';
@@ -151,7 +154,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 	if (noticeCnt && (noticeCnt.length < noticePorletPagingCnt)) {
 		var cnt = noticeCnt === null ? 0 : noticeCnt.length;
 		if (cnt % notiCount != 0) {
-			for(var i = 0; i < 12; i++) {
+			for(var i = 0; i < notiCount - cnt; i++) {
 				str += '<li class="notiLI"><dl class="noti_nodata"></dl></li>';
 			}
 		}
@@ -168,13 +171,13 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 	
 	document.getElementById('noticePlus').addEventListener('click', noticePlus);
 	
-	var totalCnt = 0;
-	
-	if (noticeList && noticeList.length != 0) {
-		totalCnt = noticeList.length < noticePorletPagingCnt ? noticeList.length : noticePorletPagingCnt; 
-	}
-	
-	var currentPage = 1;
+//	var totalCnt = 0;
+//	
+//	if (noticeList && noticeList.length != 0) {
+//		totalCnt = noticeList.length < noticePorletPagingCnt ? noticeList.length : noticePorletPagingCnt; 
+//	}
+//	
+//	var currentPage = 1;
 	resetPortletPaging(noticePortletObj.portletId, totalCnt, currentPage, "");
 }
 
@@ -182,22 +185,32 @@ var portletId = $(".notice").parent().attr("id");
 portletId = portletId.substring(0, portletId.indexOf("P"));
 
 /* [포틀릿] 공지사항 리스트 */ 
-var getNoticePortletList = function () {
-	var xhr = new XMLHttpRequest();
-	xhr.onload = function () {
-		if(xhr.status >= 200 && xhr.status < 300) {
-			var noticeList = JSON.parse(xhr.responseText).noticeList;
-			var boardId = JSON.parse(xhr.responseText).boardId;
-			var access = JSON.parse(xhr.responseText).access;
-			assembleNoticeList(noticeList, boardId, access);
-		} else {
-			console.error(xhr.responseText);
-		}
-	};
-	xhr.open('GET', '/ezNewPortal/getNoticePortlet.do?portletId='+portletId);
-	xhr.send();
+var getNoticePortletList = function (currentPage) {
+    $.ajax({
+        url: '/ezNewPortal/getNoticePortlet.do',
+        type: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: {
+            portletId: portletId,
+            currentPage: currentPage,
+            listCntSize: getNoticePagePerCount(noticePortletObj.portletId)
+        },
+        success: function (response) {
+            var noticeList = response.noticeList;
+            var boardId = response.boardId;
+            var access = response.access;
+            var totalCnt = response.totalCnt;
+            currentPage = response.currentPage;
+            assembleNoticeList(noticeList, boardId, access, totalCnt, currentPage);
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });
 };
 
-var noticePortletLoadFunc = function () {
-	getNoticePortletList();	
-}
+//
+//var noticePortletLoadFunc = function () {
+//	getNoticePortletList();	
+//}

@@ -115,6 +115,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("currentPage", req.getParameter("currentPage"));
+		param.put("listCntSize", req.getParameter("listCntSize"));
 		param.put("companyId", userInfo.getCompanyID());
 		param.put("deptId", userInfo.getDeptID());
 		String url = "/rest/ezPortal/portlets/notice";
@@ -137,7 +139,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 					return "json";
 				}
 			}
+			model.addAttribute("totalCnt", data.get("totalCnt"));
+			model.addAttribute("currentPage", data.get("currentPage"));
 		}
+		
 		logger.debug("getPortalNoticePortlet End");		
 		return "json";
 	}

@@ -229,7 +229,7 @@
 		ORDER BY 
 			A.PARENTWRITEDATE DESC, 
 			A.UPPERITEMIDTREE ASC
-		LIMIT #limit#
+		LIMIT #startRow#, #size#
 	]]>
 </select>
 

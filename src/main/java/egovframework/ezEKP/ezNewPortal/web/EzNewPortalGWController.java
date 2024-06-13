@@ -4059,8 +4059,10 @@ public class EzNewPortalGWController {
 			deptPath = "everyone," + deptPath + "," + userId;
 			String rollInfo = info.getRollInfo();
 			int portletId = Integer.parseInt(request.getParameter("portletId"));
+			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+			int listCntSize = Integer.parseInt(request.getParameter("listCntSize"));
 			String portletLang = info.getLang();
-			int limit = 12; // 공지사항 갯수
+//			int limit = 12; // 공지사항 갯수
 			
 			// 회사의 포토게시판의 포틀릿 정보 가져오기
 			PortletInfoVO portlet = ezNewPortalService.getCompanyPortletInfo(companyId, tenantId, portletId, portletLang);
@@ -4081,7 +4083,13 @@ public class EzNewPortalGWController {
 				} else {
 					// 권한이 true이면 boardList불러오기
 					List<BoardListVO> noticeList = new ArrayList<BoardListVO>();
-					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, limit, info.getOffset(), info.getLang());
+					noticeList = ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+					
+					if (currentPage > 1 && noticeList.size() < 1) {
+						currentPage--;
+						ezNewPortalService.getNoticePortletList(companyId, tenantId, info.getOffset(), info.getLang(), currentPage, listCntSize);
+					}
+					
 					int noticeCount = noticeList.size();
 					
 					for (int i = 0; i < noticeCount; i++) {
@@ -4090,9 +4098,20 @@ public class EzNewPortalGWController {
 						noticeList.get(i).setWriteDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
 					}
 					
+					data.put("currentPage", currentPage);
 					data.put("access", "true");
 					data.put("noticeList", noticeList);
 				}
+				
+				BoardMyFavoriteVO brdVo = new BoardMyFavoriteVO();
+				brdVo.setBoardId(boardId);
+				brdVo.setUserId(userId);
+				brdVo.setType("1");
+				brdVo.setTenantID(tenantId);
+				brdVo.setNowDate(commonUtil.getTodayUTCTime(""));
+				
+				int totalCnt = ezBoardService.getBrdTotalItemCount(brdVo);
+				data.put("totalCnt", totalCnt);
 			}
 
 			result.put("status", "ok");
