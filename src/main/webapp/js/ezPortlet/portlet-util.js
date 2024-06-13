@@ -574,7 +574,7 @@ function portletMovePage(portletId, mode) {
 
 const fixBoardArr = {};
 
-function makeFixPortlet() {
+function makeFixPortlet(fixedPortletList) {
     var length = fixedPortletList.length;
     for (var i = 0; i < length; i++) {
         const fixPortletCode = fixedPortletList[i].portletCode;
@@ -631,40 +631,47 @@ function makeErrorPortlet(portletId) {
     };
 }
 
+// 현재 사용중인 정렬 lib muuri 는 객체 정렬을 위해 position을 absolute로 바꾼뒤 수동 좌표로 정렬을 해준다. (IE에선 GRID가 없음 + murri 정렬 알고리즘)
+// 정렬 알고리즘이 끝나야 포틀릿이 정렬되므로 makePortletsShell 에서 먼저 정렬에 필요한 구조 생성 및 정렬 -> makePortlets 각 포틀릿 비동기 호출 순으로 실행한다.
+function makePortletsShell(portletOrder) {
+    if (!portletOrder || !portletOrder.length) return;
+    var portletCount = portletOrder.length;
+    var portletArea = document.getElementsByClassName("portlet_area")[0];
+    var dummyArea = document.getElementById("dummyArea");
+
+    for (var i = 0; i < portletCount; i++) {
+        var portletData = portletOrder[i];
+
+        var dumEl = document.createElement("div");
+        dumEl.classList.add("portlet");
+        dumEl.classList.add(portletData.classSize);
+        dumEl.dataset.size = portletData.classSize;
+        var dumAr = document.createElement('article');
+        dumAr.classList.add('box_shadow');
+        dumEl.appendChild(dumAr);
+        dummyArea.appendChild(dumEl);
+
+        var element = document.createElement("div");
+        element.id = portletData.portletId + "Portlet";
+        element.classList.add("portlet");
+        element.classList.add(portletData.classSize);
+        element.dataset.size = portletData.classSize;
+        var article = document.createElement('article');
+        article.classList.add('box_shadow');
+        element.appendChild(article);
+        portletArea.appendChild(element);
+    }
+
+    frameSetting(frameId);
+
+    if (usePortletSize) {
+        initGridConstruct();
+    }
+}
+
 function makePortlets(portletOrder) {
     if (portletOrder != null && portletOrder.length != 0) {
         var portletCount = portletOrder.length;
-        var portletArea = document.getElementsByClassName("portlet_area")[0];
-        var dummyArea = document.getElementById("dummyArea");
-
-        for (var i = 0; i < portletCount; i++) {
-            var portletData = portletOrder[i];
-
-            var dumEl = document.createElement("div");
-            dumEl.classList.add("portlet");
-            dumEl.classList.add(portletData.classSize);
-            dumEl.dataset.size = portletData.classSize;
-            var dumAr = document.createElement('article');
-            dumAr.classList.add('box_shadow');
-            dumEl.appendChild(dumAr);
-            dummyArea.appendChild(dumEl);
-
-            var element = document.createElement("div");
-            element.id = portletData.portletId + "Portlet";
-            element.classList.add("portlet");
-            element.classList.add(portletData.classSize);
-            element.dataset.size = portletData.classSize;
-            var article = document.createElement('article');
-            article.classList.add('box_shadow');
-            element.appendChild(article);
-            portletArea.appendChild(element);
-        }
-
-        frameSetting(frameId);
-
-        if (usePortletSize) {
-            initGridConstruct();
-        }
 
         //포틀릿별로 정보 및 포틀릿 jsp불러오기
         for (var i = 0; i < portletCount; i++) {
