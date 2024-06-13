@@ -376,7 +376,7 @@
 		            }
 		            
 		            // 2024-06-03 전인하 - 기록물대장 > 하위부서문서함 선택시 메뉴 숨김 처리
-		            if (g_sFlag != "m02") {
+		            if (g_sFlag == "m01" || g_sFlag == "m05" || g_sFlag == "m06") {
                         if (underDeptFlag == "TRUE" && GetSelectVal("rec_underDept") != "default") {
                             document.getElementById("trRecSubMenu").style.display = 'none';
                             document.getElementById("recordRight").classList.remove('selectUnderDept');
@@ -384,7 +384,7 @@
                             document.getElementById("trRecSubMenu").style.display = '';
                             document.getElementById("recordRight").classList.add('selectUnderDept');
                         }
-		            } else {
+		            } else if (g_sFlag == "m02") {
                         if (underDeptFlag === "TRUE" && GetSelectVal("rec_underDept2") != "default") {
                             document.getElementById("tdRegCabinet").style.display = 'none';
                             document.getElementById("tdNewVol").style.display = 'none';
@@ -632,19 +632,22 @@
 		                Block_Size = 10;
 		            }
 		        } catch (e) { }
-		
-		        var nowyear = new Date().getFullYear();
-		        var nowmonth = new Date().getMonth() + 1;
-		        var nowday = new Date().getDate();
-		
-		        if (nowmonth < 10)
-		            nowmonth = "0" + nowmonth;
-		
-		        if (nowday < 10)
-		            nowday = "0" + nowday;
-		
-		        g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
-		
+		            // 2024-06-13 전인하 - 전자결재G > 기록물배부대장/대외배부대장 > 리스트 정렬 변경 시 년도 소팅 초기화하지 않도록 검색조건 추가
+                    if (GetSelectVal("del_year") != "ALL") {
+                        var selectYear = GetSelectVal("del_year");
+                        g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + selectYear + "-01-01 00:00:00</SREGDATE><EREGDATE>" + selectYear + "-12-31 23:59:59</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";               		            		                  
+                    } else {
+                        var nowyear = new Date().getFullYear();
+                        var nowmonth = new Date().getMonth() + 1;
+                        var nowday = new Date().getDate();
+                
+                        if (nowmonth < 10)
+                            nowmonth = "0" + nowmonth;
+                
+                        if (nowday < 10)
+                            nowday = "0" + nowday;
+                        g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + " 00:00:00</SREGDATE><EREGDATE>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
+                    }
 		        GetDocDeliveryList(g_DeliverySearchParamXml);
 		    }
 		    function ichange_onclick() {
@@ -2517,11 +2520,13 @@
 	            <li id="tdBtnCabDel" style="display: none;"><span class="icon16 icon16_delete" id="btnCabDel" onclick="return DeleteCab();"></span></li>
 	            <li id="tdbtnViewRecList"><span id="btnViewRecList" onclick="return btnViewRecList_onclick()"><spring:message code='ezApprovalG.t526'/></span></li>	            
                 <%-- 2024-06-07 전인하 - 기록물대장 > 하위부서 선택 드롭다운 --%>
-                <li style="vertical-align: middle; float:right">
-                    <select select id="rec_underDept2" name="rec_underDept2" style="max-width:200px;" onchange="onSelect_Year(this);">    
-                        <option value="default" selected><spring:message code='ezApprovalG.underDept.jih001'/></option>
-                    </select>
-                </li>
+                <c:if test="${underDeptFlag eq 'TRUE'}">
+                    <li style="vertical-align: middle; float:right">
+                        <select select id="rec_underDept2" name="rec_underDept2" style="max-width:200px;" onchange="onSelect_Year(this);">    
+                            <option value="default" selected><spring:message code='ezApprovalG.underDept.jih001'/></option>
+                        </select>
+                    </li>
+                </c:if>
                 <li style="vertical-align: middle; float:right">
 	                <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                    <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>

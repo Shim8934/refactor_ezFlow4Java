@@ -34796,6 +34796,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         // 2023-09-25 전인하 - 진행문서를 조회하는 경우를 체크하기 위한 파라미터 추가
         map.put("v_LINEMODE", linemode);
         String result = ezApprovalGDAO.checkSecurityApprovalDate(map);
+        if (result == null || result.equals(" ")) {
+            result = "";
+        }
 
         logger.debug("checkSecurityApprovalDate ended");
         return result;

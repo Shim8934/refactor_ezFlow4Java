@@ -556,14 +556,14 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-        String p_DeptID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().trim();
-        String pPageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
-        String pPageSize = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
-        String pOrderCell = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
-        String pOrderOption = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
-        String pQuery = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
-        String isdocprint = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
-        String extReceptYN = xmlDom.getDocumentElement().getChildNodes().item(10).getTextContent();
+        String p_DeptID = xmlDom.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent().trim();
+        String pPageNum = xmlDom.getElementsByTagName("PAGENO").item(0).getTextContent();
+        String pPageSize = xmlDom.getElementsByTagName("PAGESIZE").item(0).getTextContent();
+        String pOrderCell = xmlDom.getElementsByTagName("pOrderCell").item(0).getTextContent();
+        String pOrderOption = xmlDom.getElementsByTagName("pOrderOption").item(0).getTextContent();
+        String pQuery = xmlDom.getElementsByTagName("pQuery").item(0).getTextContent();
+        String isdocprint = xmlDom.getElementsByTagName("ISDOCPRINT").item(0).getTextContent();
+        String extReceptYN = xmlDom.getElementsByTagName("EXTRECEPTYN").item(0).getTextContent();
         String result = "";
         String deptcode = "";
         String deptcode2 = "";
@@ -572,19 +572,19 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String eregdate = "";
         String debenturer = "";
         
-        if (xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent().equals("0")) {
+        if (xmlDom.getElementsByTagName("search").item(0).getTextContent().equals("0")) {
         	result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, sregdate, eregdate, debenturer, isdocprint, extReceptYN, userInfo);
         } else {
-            deptcode = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(0).getTextContent().trim();
-            deptcode2 = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(1).getTextContent().trim();
+            deptcode = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(0).getTextContent().trim();
+            deptcode2 = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(1).getTextContent().trim();
 			if (dbType.equals("mysql")) {
-				title = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\\\\\");
+				title = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\\\\\");
 			} else {
-				title = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\");
+				title = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_").replace("\\", "\\\\");
 			}
-            sregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(3).getTextContent();
-            eregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(4).getTextContent();
-            debenturer = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(5).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
+            sregdate = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(3).getTextContent();
+            eregdate = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(4).getTextContent();
+            debenturer = xmlDom.getElementsByTagName("SEARCHPARAM").item(0).getChildNodes().item(5).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
             result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), true), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), true), debenturer, isdocprint, extReceptYN, userInfo);
         }
         
