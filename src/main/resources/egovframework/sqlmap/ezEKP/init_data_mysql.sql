@@ -256,7 +256,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useApprFormCont', '양식별문서함 사용유무(전자결재 일반)', 'YES', '전자결재 양식별문서함 사용유무', '2021-05-21 00:00:00', '전자결재');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useMailApprNoti', '전자결재에서 알림 메일 기능 사용 여부', 'YES', '전자결재에서 알림 메일 기능 사용 여부  YES: 사용 NO: 사용안함 (default : YES) * 2024-05-07 기준으로 표준모듈 master 브랜치에서 더이상 사용되지 않음', '2020-05-30 00:00:00', '전자결재');
-INSERT INTO tbl_tenant_config (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useAddrDupliCheck', '주소록 가져오기 시 기존주소록 중복체크 사용여부', 'YES', '주소록 가져오기 시 기존주소록 중복체크 사용여부(default: YES)', TO_DATE('2023-05-16 00:00:00','yyyy-mm-dd hh24:mi:ss'), '주소록');
+INSERT INTO tbl_tenant_config (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useAddrDupliCheck', '주소록 가져오기 시 기존주소록 중복체크 사용여부', 'YES', '주소록 가져오기 시 기존주소록 중복체크 사용여부(default: YES)', '2023-05-16 00:00:00', '주소록');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME,PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'ApprAttachCntLimitMax', '전자결재 첨부파일 개수제한 최대 크기', '5', '전자결재 첨부파일 개수제한 설정의 최대값을 지정한다. (default: 100)', '2020-05-19 00:00:00', '전자결재');
 
 -- 전자결재 첨부파일 - SAT뷰어사용 관련 변수 추가
