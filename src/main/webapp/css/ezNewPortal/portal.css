@@ -121,7 +121,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 .icon_nav_addressbook { background-position: -31px -61px; width: 21px; height: 23px; background:url(/images/lnb/lnb_addressbook.svg) no-repeat center / 20px 21px;}/* 주소록 */
 .icon_nav_approval { background-position: -61px -62px; width: 22px; height: 21px; background:url(/images/lnb/lnb_approval.svg) no-repeat center / 16px 18px;}/* 전자결재 */
 .icon_nav_calendar { background-position: -93px -62px; width: 21px; height: 21px; background:url(/images/lnb/lnb_schedule.svg) no-repeat center / 18px 20px;}/* 일정관리 */
-.icon_nav_work { background-position: -124px -62px; width: 21px; height: 21px; }/* 업무관리 */
+.icon_nav_work { background-position: -124px -62px; width: 21px; height: 21px; background:url(/images/lnb/lnb_work.svg) no-repeat center / 20px 18px;}/* 업무관리 */
 .icon_nav_board { background-position: -155px -61px; width: 22px; height: 23px; background:url(/images/lnb/lnb_board.svg) no-repeat center / 20px 22px;}/* 게시판 */
 .icon_nav_survey { background-position: -185px -62px; width: 22px; height: 21px; background:url(/images/lnb/lnb_survey.svg) no-repeat center / 18px 18px;}/* 전자설문 */
 .icon_nav_voting { background-position: 0px -92px; width: 22px; height: 24px; background:url(/images/lnb/lnb_voting.svg) no-repeat center / 22px 17px;}/* 투표 */
@@ -132,11 +132,11 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 .icon_nav_community { background-position: -155px -93px; width: 22px; height: 21px; background:url(/images/lnb/lnb_community.svg) no-repeat center / 19px 18px;}/* 커뮤니티 */
 .icon_nav_circular_edition { background-position: -184px -93px; width: 24px; height: 22px; background:url(/images/lnb/lnb_circular.svg) no-repeat center / 21px 21px;}/* 회람판 */
 .icon_nav_collaboration { background-position: -29px -124px; width: 25px; height: 21px; background:url(/images/lnb/lnb_collaboration.svg) no-repeat center / 22px 13px;}/* 협업 */
-.icon_nav_project { background-position: -62px -124px; width: 21px; height: 21px; }/* 프로젝트관리 */
+.icon_nav_project { background-position: -62px -124px; width: 21px; height: 21px; background:url(/images/lnb/lnb_project.svg) no-repeat center / 21px 18px;}/* 프로젝트관리 */
 .icon_nav_webfolder { background-position: -92px -124px; width: 23px; height: 21px; background:url(/images/lnb/lnb_webfolder.svg) no-repeat center / 20px 16px;}/* 웹폴더 */
 .icon_nav_memo { background-position: -124px -124px; width: 21px; height: 21px; background:url(/images/lnb/lnb_memo.svg) no-repeat center / 23px 21px;}/* 메모 */
-.icon_nav_cabinet { background-position: 0px -124px; width: 23px; height: 21px; }/* 캐비넷 */
-.icon_nav_car { background-position: -121px -154px; width: 26px; height: 21px; }/* 차량관리 */
+.icon_nav_cabinet { background-position: 0px -124px; width: 23px; height: 21px; background:url(/images/lnb/lnb_cabinet.svg) no-repeat center / 20px 18px;}/* 캐비넷 */
+.icon_nav_car { background-position: -121px -154px; width: 26px; height: 21px; background:url(/images/lnb/lnb_car.svg) no-repeat center / 20px 18px;}/* 차량관리 */
 .icon_alarm_46px {position: relative; width: 46px; height: 46px; padding: 0px; background: url(/images/ezNewPortal/icon_alarm_46px.png) no-repeat; cursor: pointer;}
 .icon_alarm_46px > span {position: absolute; right: 13px; top: -13px; height: 20px; line-height: 20px; color: #fff; padding: 0px 6px; background-color: #FF8484; border-radius: 10px } /* 통합알림 */
 
@@ -1941,7 +1941,6 @@ div.orbit img{border-radius: 5px;}
 .lnb ul li.icon_nav_approval_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_approval_leftmenu:hover:before {background-image:url(/images/lnb/lnb_approval.svg); background-size:16px 18px;}
 .lnb ul li.icon_nav_calendar_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_calendar_leftmenu:hover:before{background-image:url(/images/lnb/lnb_schedule.svg); background-size:18px 20px;}
 .lnb ul li.icon_nav_resource_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_resource_leftmenu:hover:before{background-image:url(/images/lnb/lnb_resource.svg); background-size:18px 20px;}
-/*.lnb ul li.lnb_quick:before, .lnb ul.menu_list_all.active li.lnb_quick:hover:before{background-image:url(/images/lnb/lnb_quick.svg);}*/
 .lnb ul li.icon_nav_board_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_board_leftmenu:hover:before{background-image:url(/images/lnb/lnb_board.svg); background-size:20px 22px;}
 .lnb ul li.icon_nav_memo_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_memo_leftmenu:hover:before{background-image:url(/images/lnb/lnb_memo.svg); background-size:23px 21px;}
 .lnb ul li.icon_nav_collaboration_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_collaboration_leftmenu:hover:before{background-image:url(/images/lnb/lnb_collaboration.svg); background-size:22px 13px;}
@@ -1957,13 +1956,14 @@ div.orbit img{border-radius: 5px;}
 .lnb ul li.icon_nav_addressbook_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_addressbook_leftmenu:hover:before{background-image:url(/images/lnb/lnb_addressbook.svg); background-size:20px 21px;}
 .lnb ul li.icon_nav_cabinet_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_cabinet_leftmenu:hover:before{background-image:url(/images/lnb/lnb_cabinet.svg); background-size:20px 18px;}
 .lnb ul li.icon_nav_project_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_project_leftmenu:hover:before{background-image:url(/images/lnb/lnb_project.svg); background-size:21px 18px;}
+.lnb ul li.icon_nav_car_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_car_leftmenu:hover:before{background-image:url(/images/lnb/lnb_car.svg); background-size:21px 18px;}
+.lnb ul li.icon_nav_work_leftmenu:before, .lnb ul.menu_list_all.active li.icon_nav_work_leftmenu:hover:before{background-image:url(/images/lnb/lnb_work.svg); background-size:21px 18px;}
 
 .lnb ul li:hover:before, .lnb ul li.on:before{background-color:#388CE5; box-shadow:4px 6px 5px rgba(0,0,0,0.13);}
 .lnb ul li.icon_nav_mail_leftmenu:hover:before, .lnb ul li.on.icon_nav_mail_leftmenu:before{background-image:url(/images/lnb/lnb_mail_on.svg); background-size:18px 14px;}
 .lnb ul li.icon_nav_approval_leftmenu:hover:before, .lnb ul li.on.icon_nav_approval_leftmenu:before{background-image:url(/images/lnb/lnb_approval_on.svg); background-size:16px 18px;}
 .lnb ul li.icon_nav_calendar_leftmenu:hover:before, .lnb ul li.on.icon_nav_calendar_leftmenu:before{background-image:url(/images/lnb/lnb_schedule_on.svg); background-size:18px 20px;}
 .lnb ul li.icon_nav_resource_leftmenu:hover:before, .lnb ul li.on.icon_nav_resource_leftmenu:before{background-image:url(/images/lnb/lnb_resource_on.svg); background-size:18px 20px;}
-/*.lnb ul li.lnb_quick:hover:before, .lnb ul li.on.lnb_quick:before{background-image:url(/images/lnb/lnb_quick_on.svg);}*/
 .lnb ul li.icon_nav_board_leftmenu:hover:before, .lnb ul li.on.icon_nav_board_leftmenu:before{background-image:url(/images/lnb/lnb_board_on.svg); background-size:20px 22px;}
 .lnb ul li.icon_nav_memo_leftmenu:hover:before, .lnb ul li.on.icon_nav_memo_leftmenu:before{background-image:url(/images/lnb/lnb_memo_on.svg); background-size:23px 21px;}
 .lnb ul li.icon_nav_collaboration_leftmenu:hover:before, .lnb ul li.on.icon_nav_collaboration_leftmenu:before{background-image:url(/images/lnb/lnb_collaboration_on.svg); background-size:22px 13px;}
@@ -1979,6 +1979,8 @@ div.orbit img{border-radius: 5px;}
 .lnb ul li.icon_nav_addressbook_leftmenu:hover:before, .lnb ul li.on.icon_nav_addressbook_leftmenu:before{background-image:url(/images/lnb/lnb_addressbook_on.svg); background-size:20px 21px;}
 .lnb ul li.icon_nav_cabinet_leftmenu:hover:before, .lnb ul li.on.icon_nav_cabinet_leftmenu:before{background-image:url(/images/lnb/lnb_cabinet_on.svg); background-size:20px 18px;}
 .lnb ul li.icon_nav_project_leftmenu:hover:before, .lnb ul li.on.icon_nav_project_leftmenu:before{background-image:url(/images/lnb/lnb_project_on.svg); background-size:21px 18px;}
+.lnb ul li.icon_nav_car_leftmenu:hover:before, .lnb ul li.on.icon_nav_car_leftmenu:before{background-image:url(/images/lnb/lnb_car_on.svg); background-size:21px 18px;}
+.lnb ul li.icon_nav_work_leftmenu:hover:before, .lnb ul li.on.icon_nav_work_leftmenu:before{background-image:url(/images/lnb/lnb_work_on.svg); background-size:21px 18px;}
 
 .lnb ul li span{display:block; padding:0 5px; font-size:14px; font-weight:500; color:#000; margin-top:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; word-wrap:break-word; text-overflow:ellipsis; overflow:hidden}
 .lnb_menu_all{width:456px; height:100%; position:absolute; left:-456px; top:0; background:#fff; overflow:auto;}
