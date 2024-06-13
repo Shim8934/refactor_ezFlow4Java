@@ -451,4 +451,19 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getAddJobListForEzApprDropdown(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganDAO.addJobListForEzApprDropdown", map);
 	}
+
+
+	public OrganUserVO getAddJobInfo(Map<String, Object> map) throws Exception {
+		return (OrganUserVO) select("EzOrganDAO.getAddJobInfo", map);
+	}
+
+    @SuppressWarnings("unchecked")
+    // 2023-10-31 박기범 - 모든 유저정보 조회(사간 겸직 포함)
+    public List<OrganUserVO> getAllUserInfo(Map<String, Object> map) throws Exception {
+        return (List<OrganUserVO>) list("EzOrganDAO.getAllUserInfo", map);
+    }
+
+	public List<OrganUserVO> getRetireUserMail(int tenantId) throws Exception {
+		return (List<OrganUserVO>) list("EzOrganDAO.getRetireUserMail", tenantId);
+	}
 }

@@ -5705,14 +5705,16 @@ public class EzEmailUtil {
 				logger.debug("from=" + from.getAddress());
 				message.setFrom(from);
 
+				// 수신자 목록에서 퇴직자 제거시 list가 null이 아닐 수도 있으므로 isEmpty 추가
 				// set to
-				for (InternetAddress to : toList) {
-					logger.debug("to=" + to.getAddress());
-					message.addRecipient(RecipientType.TO, to);
+				if (toList != null && !toList.isEmpty()) {
+					for (InternetAddress to : toList) {
+						logger.debug("to=" + to.getAddress());
+						message.addRecipient(RecipientType.TO, to);
+					}
 				}
-
 				// set cc
-				if (ccList != null) {
+				if (ccList != null && !ccList.isEmpty()) {
 					for (InternetAddress cc : ccList) {
 						logger.debug("cc=" + cc.getAddress());
 						message.addRecipient(RecipientType.CC, cc);
@@ -5720,7 +5722,7 @@ public class EzEmailUtil {
 				}
 
 				// set bcc
-				if (bccList != null) {
+				if (bccList != null && !toList.isEmpty()) {
 					for (InternetAddress bcc : bccList) {
 						logger.debug("bcc=" + bcc.getAddress());
 						message.addRecipient(RecipientType.BCC, bcc);

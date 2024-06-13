@@ -743,4 +743,36 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		
 		logger.debug("setMailCancelSend ended.");
 	}
+
+	@Override
+	public int removeUserMailSetting(String userEmailAddress) throws Exception {
+		logger.debug("removeUserMailSetting started. userEmailAddress=" + userEmailAddress);
+
+		String inputParams = "userEmailAddress=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/removeUserMailSet";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			resultCode = (String) responseObj.get("resultCode");
+
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long) responseObj.get("reasonCode")).intValue();
+			}
+		}
+
+		logger.debug("retireUser ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+
+		return reasonCode;
+	}
 }

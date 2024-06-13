@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
@@ -44,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -1313,7 +1315,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved, EmailImportance importance) throws Exception {
 		logger.debug("sendMail started.");
 		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
-		
+
 //		IMAPAccess ia = null;
 //		
 //		try {
@@ -1398,7 +1400,41 @@ public class EzEmailServiceImpl implements EzEmailService {
 //				ia.close();
 //			}
 //		}
-		
+		//List<OrganUserVO> retireMailList = ezOrganDao.getRetireUserMail(tenantId);
+		//String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
+		int tenantId = ezCommonService.getTenantIdByDomainName(userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length()));
+		int toArrLength = 0;
+		int ccArrLength = 0;
+		int bccArrLength = 0;
+
+		// 퇴직자 mailList를 가져온다.
+		List<String> retireMailList = ezOrganDao.getRetireUserMail(tenantId).stream().map(OrganUserVO::getMail)
+				.collect(Collectors.toList());
+
+		// 수신자 주소 중에서 퇴직자인 경우 제외한다.
+		if (toArr != null) {
+			InternetAddress[] reciptMailtoArr = Arrays.stream(toArr)
+					.filter(addr -> !retireMailList.contains(addr.getAddress())).toArray(InternetAddress[]::new);
+			toArr = reciptMailtoArr;
+			toArrLength = toArr.length;
+		}
+		if (ccArr != null) {
+			InternetAddress[] reciptMailccArr = Arrays.stream(ccArr)
+					.filter(addr -> !retireMailList.contains(addr.getAddress())).toArray(InternetAddress[]::new);
+			ccArr = reciptMailccArr;
+			ccArrLength = ccArr.length;
+		}
+		if (bccArr != null) {
+			InternetAddress[] reciptMailbccArr = Arrays.stream(bccArr)
+					.filter(addr -> !retireMailList.contains(addr.getAddress())).toArray(InternetAddress[]::new);
+			bccArr = reciptMailbccArr;
+			bccArrLength = bccArr.length;
+		}
+		// 받는 사람, 참조, 숨은참조 모두 포함해서 수신자가 1명도 없을 경우 return
+		if (toArrLength + ccArrLength + bccArrLength < 1) {
+			return;
+		}
+
 		ezEmailUtil.createMail(userEmail, password)
 			.from(from)
 			.to(toArr)
@@ -1492,7 +1528,40 @@ public class EzEmailServiceImpl implements EzEmailService {
 //				ia.close();
 //			}
 //		}
+		int tenantId = ezCommonService.getTenantIdByDomainName(userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length()));
+		int toArrLength = 0;
+		int ccArrLength = 0;
+		int bccArrLength = 0;
 		
+		// 퇴직자 mailList를 가져온다.
+		List<String> retireMailList = ezOrganDao.getRetireUserMail(tenantId).stream().map(OrganUserVO::getMail)
+				.collect(Collectors.toList());
+		
+		// 수신자 주소 중에서 퇴직자인 경우 제외한다.
+		if (toArr != null) {
+			InternetAddress[] reciptMailtoArr = Arrays.stream(toArr)
+					.filter(addr -> !retireMailList.contains(addr.getAddress())).toArray(InternetAddress[]::new);
+			toArr = reciptMailtoArr;
+			toArrLength = toArr.length;
+		}
+		if (ccArr != null) {
+			InternetAddress[] reciptMailccArr = Arrays.stream(ccArr)
+					.filter(addr -> !retireMailList.contains(addr.getAddress())).toArray(InternetAddress[]::new);
+			ccArr = reciptMailccArr;
+			ccArrLength = ccArr.length;
+		}
+		if (bccArr != null) {
+			InternetAddress[] reciptMailbccArr = Arrays.stream(bccArr)
+					.filter(addr -> !retireMailList.contains(addr.getAddress())).toArray(InternetAddress[]::new);
+			bccArr = reciptMailbccArr;
+			bccArrLength = bccArr.length;
+		}
+
+		// 받는 사람, 참조, 숨은참조 모두 포함해서 수신자가 1명도 없을 경우 return
+		if (toArrLength + ccArrLength + bccArrLength < 1) {
+			return;
+		}
+
 		ezEmailUtil.createMail(userEmail, password)
 			.from(from)
 			.to(toArr)
