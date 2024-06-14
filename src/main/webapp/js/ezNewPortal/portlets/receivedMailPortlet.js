@@ -3,6 +3,7 @@
  */
 var mailPercent = "";
 var mailPortletObj = {};
+var pageNum = 1;
 
 function initMailPortletInfo(MailPortletId) {
 	var newObj = {};
@@ -12,16 +13,19 @@ function initMailPortletInfo(MailPortletId) {
 		return getMailPagePerCount(MailPortletId);
 	}
 	newObj.portletCode = "receivedmail";
-	
+	newObj.getPortletList = function () {
+		getMailList(newObj.page.getPage());
+	}
 	portletInfoMap["portlet" + MailPortletId] = newObj;
 	mailPortletObj.portletId = MailPortletId;
 	
-	getMailList();
+	getMailList(1);
 }
+
+var count = 0;
 
 function getMailPagePerCount(MailPortletId) {
 	var portletSize = getPortletSize(MailPortletId);
-	var count = 0;
 	
 	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
 		count = 7;
@@ -34,18 +38,22 @@ function getMailPagePerCount(MailPortletId) {
 
 const surveyPorletPagingCnt = 21; // portlet 높이가 1일 때(3) 와 2일 때(7) 표출되는 리스트 개수의 최소공배수  
 
-function getMailList() {
+function getMailList(currPage) {
 	$.ajax({
 		type : "GET",
 		dataType : "json",
 		async : true,
 		url : "/ezNewPortal/receivedMailPortletList.do",
 		data : {
+			mailCount: count,
+			currPage: currPage
 		},
 		success: function(result){
 			mailPercent = result.mailPercent
+			var unreadCount = result.unreadCount;
 			var mailboxDetail = result.mailboxDetail;
 			var mailboxQuotaStr = result.mailboxQuotaStr;
+			pageNum = result.currPage;
 			var mailList = !!result.mailList ? result.mailList : [];
 			var readClass = "";
 			var href = "";
@@ -94,9 +102,9 @@ function getMailList() {
 			}
 			
 			document.getElementById("MailList").innerHTML = listHTML2;
-            var totalCnt = mailList.length < surveyPorletPagingCnt ? mailList.length : surveyPorletPagingCnt;
-            var currentPage = 1;
-            resetPortletPaging(mailPortletObj.portletId, totalCnt, currentPage, "");
+//            var totalCnt = mailList.length < surveyPorletPagingCnt ? mailList.length : surveyPorletPagingCnt;
+//            var currentPage = 1;
+            resetPortletPaging(mailPortletObj.portletId, unreadCount, pageNum, "");
 		},
 		error:function(request,status,error){
     	    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -106,7 +114,7 @@ function getMailList() {
 
 function open_mail(url) {
 	setTimeout(function(){
-		getMailList(); 
+		getMailList(pageNum); 
 	}, 1000);
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;

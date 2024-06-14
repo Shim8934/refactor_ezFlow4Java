@@ -173,6 +173,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 		param.put("portletId", req.getParameter("portletId"));
+		param.put("mailCount", req.getParameter("mailCount"));
+		param.put("currPage", req.getParameter("currPage"));
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
 		String result = resultBody.get("status").toString();
@@ -184,6 +186,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("mailboxQuotaStr", data.get("mailboxQuotaStr"));
 			model.addAttribute("mailboxDetail", data.get("mailboxDetail"));
 			model.addAttribute("mailPercent", data.get("mailPercent"));
+			model.addAttribute("currPage", data.get("currPage"));
 		}
 		
 		model.addAttribute("userInfo", userInfo);

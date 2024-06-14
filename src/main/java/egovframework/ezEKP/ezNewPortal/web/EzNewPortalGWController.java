@@ -3767,8 +3767,10 @@ public class EzNewPortalGWController {
 				int unreadCount = 0;
 
 				// set mailCount
-				int mailCount = 21;
-
+				int mailCount = Integer.parseInt(request.getParameter("mailCount") != null ? request.getParameter("mailCount") : "0");
+				int currPage = Integer.parseInt(request.getParameter("currPage") != null ? request.getParameter("currPage") : "0");
+				int startRow = (currPage - 1) * mailCount;
+				
 				// if (unreadCount < mailCount) {
 				// mailCount = unreadCount;
 				// }
@@ -3779,7 +3781,7 @@ public class EzNewPortalGWController {
 				if (useRDBOnlyMailList.equals("YES")) {
 					Map<String, Object> extraMap = new HashMap<String, Object>();
 					List<Map<String, String>> messageList = ezEmailUtil.searchFolderUsingRDBOnly(userAccount, folderPath, null, null, null, new Date(), false,
-							false, false, "receivedDate", false, 0, mailCount, false, extraMap, info.getTenantId(), false, "");
+							false, false, "receivedDate", false, startRow, mailCount, false, extraMap, info.getTenantId(), false, "");
 
 					unreadCount = (int)extraMap.get("mailboxUnreadMailCount");
 
@@ -3832,7 +3834,7 @@ public class EzNewPortalGWController {
 
 					folder.open(Folder.READ_ONLY);
 
-					Message[] messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId(), "");
+					Message[] messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, startRow, mailCount, false, null, info.getTenantId(), "");
 
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -3887,6 +3889,7 @@ public class EzNewPortalGWController {
 				data.put("mailboxQuotaStr", mailboxQuotaStr);
 				data.put("mailboxDetail", mailboxDetail);
 				data.put("mailPercent", mailPercent);
+				data.put("currPage", currPage);
 
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
