@@ -28,7 +28,8 @@ public interface EzApprovalGService {
 
     public List<ApprGLeftVO> getUseContInfo(LoginVO userInfo, String ownFlag) throws Exception;
 
-    public List<ApprGgetDeptStacticsVO> getDeptStactics(String pStartDate, String pEndDate, String pLang, String companyID, int tenantID) throws Exception;
+    /* 2024-05-27 홍승비 - 호출되지 않는 구버전 메서드 주석처리 */
+    // public List<ApprGgetDeptStacticsVO> getDeptStactics(String pStartDate, String pEndDate, String pLang, String companyID, int tenantID) throws Exception;
 
     public String getOptionInfo(String code1, String code2, LoginVO userInfo, String mode) throws Exception;
 
@@ -304,7 +305,7 @@ public interface EzApprovalGService {
 
     public String confirmClassify(String deptID, String companyID, int tenantID) throws Exception;
 
-    public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset, String searchQuery, Map<String, Object> queryMap) throws Exception;
+    public String getSendOutDocList(String userID, String deptID, String susinManagerFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset, Map<String, Object> queryMap) throws Exception;
 
     public String endCabProduce(String cabClassNo, String flag, String companyID, int tenantID) throws Exception;
 
@@ -406,7 +407,8 @@ public interface EzApprovalGService {
 
     public String makeContainer(String deptID, String containerType, String companyID, int tenantID) throws Exception;
 
-    public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
+    // 2024-03-14 분석 결과 구포탈(ezPortal)에서만 사용되던 코드로 확인
+    // public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 
     public String doCancelForce(String docID, String userID, String companyID, int tenantId) throws Exception;
 
@@ -440,9 +442,11 @@ public interface EzApprovalGService {
 
     public String findTaskS(String deptCode, String title, String code, String companyID, int tenantId, String approvalFlag) throws Exception;
 
-    public String getUserContList(String pContID, String pSubQuery, String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet, String userID, Map<String,Object> queryMap) throws Exception;
+    /* 2024-05-28 홍승비 - 사용되지 않는 pSubQuery 파라미터 제거 */
+    public String getUserContList(String pContID, String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet, String userID, Map<String,Object> queryMap) throws Exception;
 
-    public String getUserContListAll(String pContID, String pSubQuery, String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet, Map<String,Object> queryMap) throws Exception;
+    /* 2024-05-31 홍승비 - 사용되지 않는 pSubQuery 파라미터 제거, getUserContList() 메서드와 동일하게 userID 파라미터 추가 */
+    public String getUserContListAll(String pContID, String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet, String userID, Map<String,Object> queryMap) throws Exception;
 
     public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
 

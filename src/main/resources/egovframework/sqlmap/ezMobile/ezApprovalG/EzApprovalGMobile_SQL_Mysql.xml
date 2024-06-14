@@ -46,9 +46,9 @@
                         VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
                     AND
                         VAPRDOINGDOCLIST.DOCID = GRP.DOCID
-                       WHERE
-                           VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
-                       AND
+					WHERE
+                        VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
+					AND
                         VAPRDOINGDOCLIST.COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -76,7 +76,7 @@
                                 )
                     AND
                         IFNULL(GRP.TABSN, 1) = 1
-                       AND
+                    AND
                        <![CDATA[
                            STARTDATE < #lastDate#
                        ]]>
@@ -128,9 +128,9 @@
                         VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
                     AND
                         VENDCHAMJODOCINFO.DOCID = GRP.DOCID
-                       WHERE
-                           VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
-                       AND
+					WHERE
+                        VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
+					AND
                         VENDCHAMJODOCINFO.COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -158,7 +158,7 @@
                                 )
                     AND
                         IFNULL(GRP.TABSN, 1) = 1
-                       AND
+                    AND
                        <![CDATA[
                            STARTDATE < #lastDate#
                        ]]>
@@ -212,9 +212,9 @@
                         VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
                     AND
                         VAPRWILLDOCLIST.DOCID = GRP.DOCID
-                       WHERE
-                           VAPRWILLDOCLIST.TENANT_ID = #tenantID#
-                       AND
+					WHERE
+						VAPRWILLDOCLIST.TENANT_ID = #tenantID#
+					AND
                         VAPRWILLDOCLIST.COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -293,9 +293,9 @@
                         VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
                     AND
                         VAPRWILLDOCLIST.DOCID = GRP.DOCID
-                       WHERE
-                           VAPRWILLDOCLIST.TENANT_ID = #tenantID#
-                       AND
+					WHERE
+						VAPRWILLDOCLIST.TENANT_ID = #tenantID#
+					AND
                         VAPRWILLDOCLIST.COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -490,9 +490,9 @@
                         companyID
                     FROM
                         VAPRDOINGDOCLIST
-                       WHERE
-                           TENANT_ID = #tenantID#
-                       AND
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
                         COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -557,9 +557,9 @@
                         companyID
                     FROM
                         VENDCHAMJODOCINFO
-                       WHERE
-                           TENANT_ID = #tenantID#
-                       AND
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
                         COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -779,9 +779,9 @@
                         VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
                     AND
                         VAPRDOINGDOCLIST.DOCID = GRP.DOCID
-                       WHERE
-                           VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
-                        AND
+					WHERE
+						VAPRDOINGDOCLIST.TENANT_ID = #tenantID#
+					AND
                         VAPRDOINGDOCLIST.COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -841,9 +841,9 @@
                         VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
                     AND
                         VENDCHAMJODOCINFO.DOCID = GRP.DOCID
-                       WHERE
-                           VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
-                       AND
+ 					WHERE
+						VENDCHAMJODOCINFO.TENANT_ID = #tenantID#
+					AND
                         VENDCHAMJODOCINFO.COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -907,9 +907,9 @@
                         VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
                     AND
                         VAPRWILLDOCLIST.DOCID = GRP.DOCID
-                       WHERE
-                           VAPRWILLDOCLIST.TENANT_ID = #tenantID#
-                       AND
+					WHERE
+						VAPRWILLDOCLIST.TENANT_ID = #tenantID#
+					AND
                         VAPRWILLDOCLIST.COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -968,9 +968,9 @@
                         VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
                     AND
                         VAPRWILLDOCLIST.DOCID = GRP.DOCID
-                       WHERE
-                           VAPRWILLDOCLIST.TENANT_ID = #tenantID#
-                       AND
+					WHERE
+						VAPRWILLDOCLIST.TENANT_ID = #tenantID#
+					AND
                         VAPRWILLDOCLIST.COMPANYID IN (
                                 SELECT
                                     EXTENSIONATTRIBUTE2
@@ -1958,7 +1958,7 @@
             </isNotEqual>
         </select>
 
-        <!-- 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 정보 테이블에서 PK중 하나인 OpinionSN을 추가 조회 -->
+	<!-- 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 정보 테이블에서 PK중 하나인 OpinionSN을 추가 조회 -->
 	<select id="MApprovalG.getOpinionInfo" parameterClass="Map" resultClass="MApprGOpinionInfoVO">
 		<isEqual property="type" compareValue="END">
 			SELECT

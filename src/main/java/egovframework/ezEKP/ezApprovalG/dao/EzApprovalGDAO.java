@@ -56,28 +56,25 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGDocListVO> getAprDocList(Map<Object, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprDocList", map);
 	}
+	
 	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
 	/*@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletDocList(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletDocList", map);
-	}*/
-	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
-	/*@SuppressWarnings("unchecked")
+	}
+	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletList_progress(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_progress", map);
-	}*/
-	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
-	/*@SuppressWarnings("unchecked")
+	}
+	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletList_reject(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_reject", map);
-	}*/
-	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
-	/*@SuppressWarnings("unchecked")
+	}
+	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletList_draft(Map<String, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_draft", map);
-	}*/
-	// 김민재 - 구버전 포탈 포틀릿 소스로 현재 사용하지 않아 주석처리
-	/*@SuppressWarnings("unchecked")
+	}
+	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getAprPortletList_progressDtl(Map<String, Object> map) throws Exception {
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_progressDtl", map);
 	}*/
@@ -112,10 +109,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGOpinionVO>) list("EzApprovalG.getOpinionInfo", map);
 	}
 	
-	@SuppressWarnings("unchecked")
+	/* 2024-04-29 홍승비 - 현재 getWebPartList 메서드는 LEFT와 COUNT 분기만 호출되는 것으로 확인, 관련된 코드 주석처리 */
+	/*@SuppressWarnings("unchecked")
 	public List<ApprGWebPartVO> getWebPartList(Map<String, Object> map) throws Exception{
 		return (List<ApprGWebPartVO>) list("EzApprovalG.getWebPartList", map);
-	}
+	}*/
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGFormVO> getFormInfo(Map<String, Object> map) throws Exception{ 
@@ -497,10 +495,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGDocListVO>) list("EzApprovalG.getSendOutDocList", map);
 	}
 	
-	@SuppressWarnings("unchecked")
+	/* 2024-05-27 홍승비 - 호출되지 않는 구버전 쿼리 주석처리 */
+	/*@SuppressWarnings("unchecked")
 	public List<ApprGgetDeptStacticsVO> getDeptStactics(Map<String, Object> map) throws Exception{
 		return (List<ApprGgetDeptStacticsVO>) list("EzApprovalG.getDeptStactics", map);
-	}
+	}*/
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGAprLineVO> getDocAprLine(Map<String, Object> map) throws Exception{
@@ -513,12 +512,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	/* 2024-04-15 홍승비 - 호출되지 않는 구버전 쿼리 주석처리 */
-	/*
-	@SuppressWarnings("unchecked")
+	/*@SuppressWarnings("unchecked")
 	public List<String> getLeftDocCount(Map<String, Object> map) throws Exception{
 		return (List<String>) list("EzApprovalG.getLeftDocCount", map);
-	}
-	*/
+	}*/
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> doBanSongAprType(Map<String, Object> map) throws Exception{
@@ -1067,14 +1064,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int)select("EzApprovalG.getReceiptTempletSN", map);
 	}
 	
-//	public int getRecordListCount(ApprGRecordListVO recordListVO) throws Exception{
-//		return (int)select("EzApprovalG.getRecordListCount", recordListVO);
-//	}
-
-	public int getRecordListCount(Map<String, Object> map) throws Exception{
+	public int getRecordListCount(Map<String, Object> map) throws Exception {
 		return (int)select("EzApprovalG.getRecordListCount", map);
 	}
-
+	
 	public int updateHistoryForAttach_M(Map<String, Object> map) throws Exception{
 		return (int)select("EzApprovalG.updateHistoryForAttach_M", map);
 	}
@@ -1788,9 +1781,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		insert("EzApprovalG.insertRejectExpendAprLine", map);
 	}
 	
-	public void insertReciptInfo(Map<String, Object> map) throws Exception{
+	/* 2024-05-28 홍승비 - 호출되지 않는 구버전 쿼리 주석처리 */
+	/*public void insertReciptInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertReciptInfo", map);
-	}
+	}*/
 	
 	public void insertLinTemplet(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertLinTemplet", map);
@@ -3347,9 +3341,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		delete("EzApprovalG.deleteGongRamLineInfo", map);
 	}
 	
-	public void insertGongRamLineInfo(Map<String, Object> map) throws Exception {
+	/* 2024-05-31 홍승비 - 호출되지 않는 구버전 쿼리 주석처리 */
+	/*public void insertGongRamLineInfo(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.insertGongRamLineInfo", map);
-	}
+	}*/
 	
 	public int checkGongRamLineCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.checkGongRamLineCount", map);

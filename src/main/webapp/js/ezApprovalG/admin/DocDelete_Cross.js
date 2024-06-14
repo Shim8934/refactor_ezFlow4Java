@@ -298,6 +298,8 @@ function DocDelParser() {
     return xmlpara;
 }
 
+/* 2024-06-04 홍승비 - 현재 사용되지 않는 함수 및 URL로 확인하여 주석처리*/
+/*
 function DocDel() {
     listview.LoadFromID("lvSDocForm");
     listview2.LoadFromID("lvTDocForm");
@@ -329,7 +331,7 @@ function DocDel() {
     
     Check = false;
 }
-
+*/
 function DocTotalMove() {
     listview.LoadFromID("lvSDocForm");
     listview2.LoadFromID("lvTDocForm");

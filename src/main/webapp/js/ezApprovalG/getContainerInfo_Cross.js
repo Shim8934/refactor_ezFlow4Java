@@ -314,11 +314,13 @@ function GetUserContList() {
 function GetUserContListSave(AllFG) {
     xmlDocListHttp = createXMLHttpRequest();
     DocListType = "UserContDocList";
+    
+    /* 2024-05-31 홍승비 - 개인문서함 리스트 표출 후 getDocListS_after 함수에서 반드시 pChackYN값이 "FALSE"로 설정됨 > 엑셀파일 내보내기 시 정렬 초기화되지 않도록 수정  */
     if (pChackYN == "FALSE") {
         nowblock = 0;
         totalPage = 0;
-        OrderOption = "";
-        OrderCell = "";
+        //OrderOption = "";
+        //OrderCell = "";
     }
     document.getElementById("tbtnRemoveDoc").style.display = "";
 
