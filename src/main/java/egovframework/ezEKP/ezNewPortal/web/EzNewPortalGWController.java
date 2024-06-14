@@ -705,16 +705,16 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-//			int curPage = Integer.parseInt(request.getParameter("birthdayCurPage"));
-//			int count = Integer.parseInt(request.getParameter("birthdayCount"));
-//			int startRow = Math.multiplyExact(curPage, count);
+			int curPage = Integer.parseInt(request.getParameter("birthdayCurPage")) - 1;
+			int count = Integer.parseInt(request.getParameter("birthdayCount"));
+			int startRow = Math.multiplyExact(curPage, count);
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
 			logger.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
-//			logger.debug("curPage : " + curPage + ", count : " + count + ", startRow : " + startRow + ", lang : " + lang);
+			logger.debug("curPage : " + curPage + ", count : " + count + ", startRow : " + startRow + ", lang : " + lang);
 			
 			int birthdayListCount = ezNewPortalService.getMonthlyBirthdayEmployeesCount(companyId, tenantId, month);
-			List<PortalUserInfoVO> birthdayList = ezNewPortalService.getMonthlyBirthdayEmployees(companyId, tenantId, month, lang);
+			List<PortalUserInfoVO> birthdayList = ezNewPortalService.getMonthlyBirthdayEmployees(companyId, tenantId, month, count, startRow, lang);
 			
 			logger.debug("birthdayListCount : " + birthdayListCount);
 
@@ -731,12 +731,13 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 			data.put("birthdayList", birthdayList);
 			data.put("birthdayListCount", birthdayListCount);
-//			data.put("birthdayCurPage", curPage);
+			data.put("birthdayCurPage", curPage + 1);
 
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
