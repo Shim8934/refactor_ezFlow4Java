@@ -224,7 +224,7 @@
         <dl class="portlet_title">
             <dt class="portletText"><img src="/images/ezNewPortal/theme2Img/sec1_noti.png" alt=""><spring:message code='main.t65'/></dt>
             <dd class="portletPlus" id="theme2Sec1NoticePlusBtn">
-                <img src="/images/ezNewPortal/portlet_Plus1.png">
+                <img src="/images/ezNewPortal/portlet_Plus2_t2.png">
             </dd>
         </dl>
         <ul id="theme2Sec1NoticeBoardUL" class="portlet_list">

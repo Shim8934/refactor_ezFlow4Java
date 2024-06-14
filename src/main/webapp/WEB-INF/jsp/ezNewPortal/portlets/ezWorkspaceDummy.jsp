@@ -34,7 +34,7 @@
     <div class="layDIV">
         <dl class="portlet_title sortablePortlet" style="">
             <dt class="portletText">협업</dt>
-            <dd class="portletPlus" id="ezWorkspacePlus"><img src="/images/ezNewPortal/portlet_Plus1.png"></dd>
+            <dd class="portletPlus" id="ezWorkspacePlus"><img src="/images/ezNewPortal/portlet_Plus1/>.png"></dd>
         </dl>
         <ul class="collaborate_tab" id="divSpaceListResults" style="overflow-y: auto; height: 204px;">
             <li id="li_0" onclick="GetNewsFeedData(0,1)" class="on"><span
@@ -54,25 +54,25 @@
                 <dt onclick="workspaceChangeTab('issueTab')" id="issueTab" class="">이슈</dt>
             </dl>
             <ul class="listtype_txt" id="newsTabResults">
-                <li onclick="GetRedirectUrl(13706, 4)"><span class="date"
-                                                             style="text-overflow:ellipsis; overflow:hidden;">ME</span><span
-                        class="name" style="text-overflow:ellipsis; overflow:hidden;">박기범</span><span class="txt"
-                                                                                                      style="text-overflow:ellipsis; overflow:hidden;">[문서] 버블.jpg</span>
+                <li onclick="GetRedirectUrl(13706, 4)">
+                    <span class="txt">[문서] 버블.jpg</span>
+                    <span class="date">ME</span>
+                    <span class="name">박기범</span>
                 </li>
-                <li onclick="GetRedirectUrl(11246, 2)"><span class="date"
-                                                             style="text-overflow:ellipsis; overflow:hidden;">고려대의료원</span><span
-                        class="name" style="text-overflow:ellipsis; overflow:hidden;">전일권</span><span class="txt"
-                                                                                                      style="text-overflow:ellipsis; overflow:hidden;">[할일] 모바일 메인화면 개선</span>
+                <li onclick="GetRedirectUrl(11246, 2)">
+                    <span class="txt">[할일] 모바일 메인화면 개선</span>
+                    <span class="date">고려대의료원</span>
+                    <span class="name">전일권</span>
                 </li>
-                <li onclick="GetRedirectUrl(11245, 2)"><span class="date"
-                                                             style="text-overflow:ellipsis; overflow:hidden;">고려대의료원</span><span
-                        class="name" style="text-overflow:ellipsis; overflow:hidden;">전일권</span><span class="txt"
-                                                                                                      style="text-overflow:ellipsis; overflow:hidden;">[할일] 포탈 테마 추가</span>
+                <li onclick="GetRedirectUrl(11245, 2)">
+                    <span class="txt">[할일] 포탈 테마 추가</span>
+                    <span class="date">고려대의료원</span>
+                    <span class="name">전일권</span>
                 </li>
-                <li onclick="GetRedirectUrl(1350, 1)"><span class="date"
-                                                            style="text-overflow:ellipsis; overflow:hidden;">ME</span><span
-                        class="name" style="text-overflow:ellipsis; overflow:hidden;">김재훈</span><span class="txt"
-                                                                                                      style="text-overflow:ellipsis; overflow:hidden;">[메시지] [공지] 사내 협업시스템 개선 내역</span>
+                <li onclick="GetRedirectUrl(1350, 1)">
+                    <span class="txt">[메시지] [공지] 사내 협업시스템 개선 내역</span>
+                    <span class="date">ME</span>
+                    <span class="name">김재훈</span>
                 </li>
             </ul>
             <ul class="listtype_txt" id="taskTabResults" style="display: none">

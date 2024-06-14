@@ -11,7 +11,7 @@
 		<div class="layDIV" id="helpDiv" style="">
 			<span class="leftImg"><img src="/images/ezNewPortal/bannerImg_left.png"></span>
 			<dl class="bannerText sortablePortlet">
-				<dt class="bText"><spring:message code='ezNewPortal.t040' /></dt>
+				<dt class="bText"><span><spring:message code='ezNewPortal.t040' /></span></dt>
 				<dt class="sText">
 					<spring:message code='ezNewPortal.t041' /><br><spring:message code='ezNewPortal.t042' />
 				</dt>

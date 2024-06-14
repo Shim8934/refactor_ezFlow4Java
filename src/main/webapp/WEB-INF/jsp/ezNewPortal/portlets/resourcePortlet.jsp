@@ -13,7 +13,7 @@
             <dt class="portletText"><spring:message code="main.t00034"/></dt>
             <dd class="portletPlus" id="resourcePlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
             <dd class="resources_setting" id="resourceSetting">
-            	<img src="/images/ezNewPortal/portlet_setting.png">
+            	<img src="/images/ezNewPortal/portlet_setting<c:out value='${usedTheme }'/>.png">
             </dd>
             <dd class="resources_calendal">
                 <input type="text" class="DatePicker_class" name="Datepicker_name" id="Sdatepicker" style="padding-right:18px;" size="10" readonly="readonly">

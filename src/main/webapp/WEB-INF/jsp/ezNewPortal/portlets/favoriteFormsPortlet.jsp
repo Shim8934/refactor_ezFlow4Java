@@ -15,7 +15,7 @@
 			<dl class="portlet_title sortablePortlet" style="border-bottom:0px;">
 				<%-- portalMain에서 타이틀을 넣어주는 것이 더 나을 수 있음 --%>
 				<dt class="portletText"><c:out value = "${portletName}" /></dt>
-				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_setting.png"></dd>
+				<dd class="portletPlus" id="fraviteFormsPlus"><img src="/images/ezNewPortal/portlet_setting<c:out value='${usedTheme }'/>.png"></dd>
 			</dl>
 			<div class = "bookmark_content">
 				<ul class="bookmark">
