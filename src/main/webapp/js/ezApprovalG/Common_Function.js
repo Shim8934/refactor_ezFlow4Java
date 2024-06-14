@@ -18,7 +18,10 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type) {
             		ezapralert_cross_dialogArguments[2] = true;
             	}
             	ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-                var OpenWin = GetOpenWindow(url, "", 330, 205, "NO");
+                setTimeout(function () {
+                    var OpenWin = GetOpenWindow(url, "", 330, 205, "NO");
+                }, 100);
+
             }
             else
                 DivPopUpShow(330, 205, url);
