@@ -3281,18 +3281,34 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<FileVO> getWebFolderFileList(String folderId, int tenantId) throws Exception {
+	public List<FileVO> getWebFolderFileList(String folderId, int tenantId, int startRow, int folderListCount) throws Exception {
 		logger.debug("getWebFolderFileList started.");
 		logger.debug("folderId = " + folderId + " || tenantId = " + tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
 		map.put("tenantId", tenantId);
+		map.put("startRow", startRow);
+		map.put("folderListCount", folderListCount);
 		
 		List<FileVO> fileList = ezNewPortalDAO.getWebFolderFileList(map);
 		
 		logger.debug("getWebFolderFileList ended.");
 		return fileList;
+	}
+	
+	@Override
+	public int getWebFolderFileListTotalCnt(String folderId, int tenantId) throws Exception {
+		logger.debug("getWebFolderFileListTotalCnt started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		
+		int fileListTotalCnt = ezNewPortalDAO.getWebFolderFileListTotalCnt(map);
+		
+		logger.debug("getWebFolderFileListTotalCnt ended.");
+		return fileListTotalCnt;
 	}
 	
 //	@Override

@@ -227,7 +227,9 @@ public interface EzNewPortalService {
 	/* 직위, 직책, 권한그룹 불러오는 부분 (xml로 받지 않도록)*/
 	public List<OrganJobVO> getTitleList(String type, int tenantId, String companyId) throws Exception;
 	public List<OrganGroupVO> getGroupList(int tenantId, String companyId) throws Exception;
-	public List<FileVO> getWebFolderFileList(String folderId, int tenantId) throws Exception;
+	public List<FileVO> getWebFolderFileList(String folderId, int tenantId, int startRow, int folderListCount) throws Exception;
+	
+	public int getWebFolderFileListTotalCnt(String folderId, int tenantId) throws Exception;
 
 	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception;
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception;

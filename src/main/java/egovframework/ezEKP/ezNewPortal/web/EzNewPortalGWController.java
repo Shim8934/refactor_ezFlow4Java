@@ -5582,15 +5582,27 @@ public class EzNewPortalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
-
+			int currentPage = Integer.parseInt(request.getParameter("currentPage")); // 1
+			int listSize = Integer.parseInt(request.getParameter("listSize")); // 3 or 6
+			
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			
 			String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId, "U");
 			
-			List<FileVO> webFolderFileList = ezNewPortalService.getWebFolderFileList(folderId, tenantId);
+			int totalCnt = ezNewPortalService.getWebFolderFileListTotalCnt(folderId, tenantId);
+
+			int totalPages  = (totalCnt + listSize - 1) / listSize;
+			currentPage = currentPage > totalPages ? totalPages : currentPage;
+			currentPage = currentPage == 0         ? 1          : currentPage;
+			int startRow  = (currentPage - 1) * listSize;
+			
+			List<FileVO> webFolderFileList = ezNewPortalService.getWebFolderFileList(folderId, tenantId, startRow, listSize);
+			
 			data.put("fileList", webFolderFileList);
 			data.put("folderId", folderId);
+			data.put("totalCnt", totalCnt);
+			data.put("currentPage", currentPage);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

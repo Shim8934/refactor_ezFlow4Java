@@ -1224,6 +1224,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("currentPage", request.getParameter("currentPage"));
+		param.put("listSize",  request.getParameter("listSize"));
 		
 		String url = "/rest/ezportal/portlets/getWebFolderFileList";
 		

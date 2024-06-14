@@ -10,11 +10,17 @@ function initWebFolderPortletInfo(webFolderPortletId) {
 		return getwebFolderPerCount(webFolderPortletId);
 	}
 	newObj.portletCode = "webfolder";
-	
-	portletInfoMap["portlet" + webFolderPortletId] = newObj;
-	webFolderPortletObj.portletId = webFolderPortletId;
-	
-	getWebFolderFileList();
+    
+    portletInfoMap["portlet" + webFolderPortletId] = newObj;
+    webFolderPortletObj.portletId = webFolderPortletId;
+    
+    newObj.getPortletList = function () {
+        getWebFolderFileList(newObj.page.getPage());
+    }
+
+    var currentPage = portletInfoMap["portlet" + webFolderPortletId].page.getPage();
+    getWebFolderFileList(currentPage);
+
 }
 
 function getwebFolderPerCount(webFolderPortletId) {
@@ -30,39 +36,38 @@ function getwebFolderPerCount(webFolderPortletId) {
 	return count;
 }
 
-const webFolderPorletPagingCnt = 12; // portlet 높이가 1일 때(3) 와 2일 때(7) 표출되는 리스트 개수의 최소공배수  
-
-function getWebFolderFileList() {
-	var webFolderId;
+function getWebFolderFileList(currentPage) {
+	var webFolderId = webFolderPortletObj.portletId;
+    var listSize = getwebFolderPerCount(webFolderPortletObj.portletId);
 	$.ajax({
 		type : "GET",
 		url : "/ezNewPortal/getWebFolderFileList.do",
 		dataType : "JSON",
+		data : {
+            "currentPage" : currentPage,
+            "listSize" : listSize
+		}, 
 		async : false,
 		success : function(result) {
 			webFolderId = result.data.folderId
 			var folderId = result.data.folderId;
+			var totalCnt = result.data.totalCnt;
+			currentPage = result.data.currentPage;
 			
 			$("#webFolderId").val(folderId);
 			var ulEl = document.getElementById('webfolderUl');
 			
 			var fileList = result.data.fileList;
 			var fileLength = fileList.length;
-			
+            
+			$(ulEl).empty();
+            
 			/* 2023-06-01 홍승비 - 홈 > 웹폴더 포틀릿 > 디자인 개선을 위해 파일은 최대 4개까지만 표출하도록 수정 */
 			if (fileLength != 0) {
 				fileList.forEach(function(file, index) {
-					if (index < 13) {
+					if (index >= 0 ) {
 						var liEl = document.createElement('li');
 						liEl.className = 'webFolderLi';
-                        
-                        if (index > 2 ) {
-                            liEl.classList.add("pageOne");
-                        }
-                                                
-                        if (index == 6 || index == 7) {
-                            liEl.classList.add("pageTwo");
-                        }
                         
 						liEl.setAttribute('targetId', file.fileId);
 						liEl.addEventListener('click', function(event) {webFolderFileDownLoad(event, this)}, false);
@@ -112,8 +117,7 @@ function getWebFolderFileList() {
 				ulEl.appendChild(dlEl);
 				ulEl.classList.add("empty");
 			}
-            var totalCnt = fileLength < webFolderPorletPagingCnt ? fileLength : webFolderPorletPagingCnt;
-            var currentPage = 1;
+            
             resetPortletPaging(webFolderPortletObj.portletId, totalCnt, currentPage, "");   
 		},
 		error : function () {

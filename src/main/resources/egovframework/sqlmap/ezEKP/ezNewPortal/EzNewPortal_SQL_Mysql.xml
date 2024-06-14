@@ -3334,8 +3334,9 @@ ORDER BY
 		AND
 			TENANT_ID = #tenantId#
 		ORDER BY 
-			CREATE_DATE DESC
-		LIMIT 12
+			CREATE_DATE DESC, FILE_ID DESC 
+		LIMIT 
+			#startRow#, #folderListCount#
 	]]>
 </select>
 
@@ -3756,5 +3757,20 @@ ORDER BY
 			A.cn NOT LIKE 'shared_mailbox%'
 	]]>
 	</select>
+
+	<select id="ezNewPortal.getWebFolderFileListTotalCnt" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_WEBFOLDER_FILE
+		WHERE
+			FOLDER_ID = #folderId#
+		  AND
+			USE_STATUS = 'Y'
+		  AND
+			TENANT_ID = #tenantId#
+	]]>
+</select>
 	
 </sqlMap>

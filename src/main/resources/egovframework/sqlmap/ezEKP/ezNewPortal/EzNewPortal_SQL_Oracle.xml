@@ -3682,11 +3682,14 @@ ORDER BY
 					USE_STATUS = 'Y'
 				AND
 					TENANT_ID = #tenantId#
-				ORDER BY 
-					CREATE_DATE DESC
-				) F
+				ORDER BY
+					CREATE_DATE DESC, FILE_ID DESC
+				 ) F
 	    	) P
-		WHERE P.RN <= 12
+			WHERE
+				P.RNUM > #startRow#
+		  	AND
+				P.RNUM <= #startRow# + #folderListCount#
 	]]>
 </select>
 

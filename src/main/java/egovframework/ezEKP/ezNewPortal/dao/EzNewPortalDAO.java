@@ -694,6 +694,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<FileVO> getWebFolderFileList(Map<String, Object> map) {
 		return (List<FileVO>)list("ezNewPortal.getWebFolderFileList", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public int getWebFolderFileListTotalCnt(Map<String, Object> map) {
+		return (int) select("ezNewPortal.getWebFolderFileListTotalCnt", map);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> getInitCompanyListThemeAuth() {
