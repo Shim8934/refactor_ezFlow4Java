@@ -2362,7 +2362,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
-		int taskCount = ezApprovalGAdminService.getTaskListCount(userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+		int taskCount = ezApprovalGAdminService.getTaskListCount(userInfo.getCompanyID(), userInfo.getCompanyID(), userInfo.getTenantId(), null, null, "0");
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", serverName);
@@ -2388,8 +2388,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pageNo = request.getParameter("pageNo");
 		String langType = request.getParameter("langType");
 		String companyID = request.getParameter("companyID");
+		String title = request.getParameter("title");
+		String code = request.getParameter("code");
+		String flag = request.getParameter("flag");
+		String orderOption1 = request.getParameter("orderOption1");
+		String orderOption2 = request.getParameter("orderOption2");
 		
-		String listXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType.trim(), companyID, userInfo.getTenantId());
+		String listXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType.trim(), companyID, userInfo.getTenantId(), title, code, flag, orderOption1, orderOption2);
 		
 		Document xmldoc = commonUtil.convertStringToDocument(listXML);
 	
@@ -5394,8 +5399,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String deptCode = request.getParameter("deptCode");
 		String companyID = request.getParameter("companyID");
+		String title = request.getParameter("title");
+		String code = request.getParameter("code");
+		String flag = request.getParameter("flag");
+		
 		try {
-			int taskCount = ezApprovalGAdminService.getTaskListCount(deptCode, companyID, userInfo.getTenantId());
+			int taskCount = ezApprovalGAdminService.getTaskListCount(deptCode, companyID, userInfo.getTenantId(), title, code, flag);
 			model.addAttribute("status", "OK");
 			model.addAttribute("taskCount", taskCount);
 		} catch (Exception e) {

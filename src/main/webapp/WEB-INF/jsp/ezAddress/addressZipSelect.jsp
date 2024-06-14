@@ -126,7 +126,7 @@
 	                    g_xmlHTTP = null;                    
 	                }
 	                else {
-	                    alert("<spring:message code='ezPersonal.t60' />" + g_xmlHTTP.statusText);
+	                    alert("<spring:message code='ezPersonal.t60' />" + g_xmlHTTP.status);
 	                }
 
 	            	g_xmlHTTP = null;

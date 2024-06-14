@@ -5034,6 +5034,44 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<HEADER>");
 			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
 			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+            /* 단위업무관리 정렬기능*/
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("PROCESSDEPTNAME")) {
+                resultXML.append("<COLNAME>PROCESSDEPTNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TASKNAME")) {
+                resultXML.append("<COLNAME>TASKNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TASKCODE")) {
+                resultXML.append("<COLNAME>TASKCODE</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("TEMPFLAG")) {
+                resultXML.append("<COLNAME>TEMPFLAG</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("CNAME")) {
+                resultXML.append("<COLNAME>CNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("MCNAME")) {
+                resultXML.append("<COLNAME>MCNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("SCNAME")) {
+                resultXML.append("<COLNAME>SCNAME</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("KEEPINGPERIOD")) {
+                resultXML.append("<COLNAME>KEEPINGPERIOD</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("KEEPINGMETHOD")) {
+                resultXML.append("<COLNAME>KEEPINGMETHOD</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("KEEPINGPLACE")) {
+                resultXML.append("<COLNAME>KEEPINGPLACE</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("DISPLAYRECFLAG")) {
+                resultXML.append("<COLNAME>DISPLAYRECFLAG</COLNAME>");
+            }
+            if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().trim().toUpperCase().equals("SPECIALCATALOGFLAG")) {
+                resultXML.append("<COLNAME>SPECIALCATALOGFLAG</COLNAME>");
+            }
+
 			resultXML.append("</HEADER>");
 		}
 		resultXML.append("</HEADERS>");
@@ -24334,7 +24372,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("TITLE")) {
 				 resultXML.append("<COLNAME>TITLE</COLNAME>");
 			 }
-			 
+
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("RECTYPECODE")) {
+                 resultXML.append("<COLNAME>RECTYPECODE</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("DELAYENDYFLAG")) {
+                 resultXML.append("<COLNAME>DELAYENDYFLAG</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("DISPLAYRECFLAG")) {
+                 resultXML.append("<COLNAME>DISPLAYRECFLAG</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("KEEPINGPERIOD")) {
+                 resultXML.append("<COLNAME>KEEPINGPERIOD</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("KEEPINGMETHOD")) {
+                 resultXML.append("<COLNAME>KEEPINGMETHOD</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("KEEPINGPLACE")) {
+                 resultXML.append("<COLNAME>KEEPINGPLACE</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("CREATEDATE")) {
+                 resultXML.append("<COLNAME>CREATEDATE</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("ENDYEAR")) {
+                 resultXML.append("<COLNAME>ENDYEAR</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("TRANSFERFLAG")) {
+                 resultXML.append("<COLNAME>TRANSFERFLAG</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("DELAYFLAG")) {
+                 resultXML.append("<COLNAME>DELAYFLAG</COLNAME>");
+             }
+             else if (arrList.getElementsByTagName("COLALIAS").item(j).getTextContent().trim().toUpperCase().equals("TERMINATEFLAG")) {
+                 resultXML.append("<COLNAME>TERMINATEFLAG</COLNAME>");
+             }
+
 			 resultXML.append("</HEADER>");
 		 }
 		
@@ -31456,20 +31528,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId) throws Exception {
+	public String convertDocumentToImg(MultipartFile file, String tempUploadPath, String docId, int tenantId, String companyId, String userId, String ext) throws Exception {
 		logger.debug("convertDocumentToImg started");
-		
-		String originalFilename = file.getOriginalFilename();
-		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
-		
-		// 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
-		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
+
+		String originalFilename = docId + "_office";
+//		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
+
+        // 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
+//		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
+        String oldYear = getDocHrefYear(docId, companyId, tenantId);
+        String filePath2 = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId) + commonUtil.separator + companyId + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear +
+                commonUtil.separator +  getDocDir(docId);
+        if(file != null){
+            originalFilename = file.getOriginalFilename();
+            EgovFileMngUtil.writeFile(file, docId + "_office", servletContext.getRealPath("") + filePath2);
+            ext = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
+        }
+        String filePath = filePath2 + commonUtil.separator + docId + "_office";
 		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
-		String fileExt = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
-		
+
 		String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do?"
-				+ "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
-		
+//				+ "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
+//        String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/document/docviewer.do?"
+                + "filepath=" + URLEncoder.encode(tempUploadPath + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + URLEncoder.encode(filePath, "UTF-8"), "UTF-8").replace("+", "%20")
+                + "&filename=" + URLEncoder.encode(fileName, "UTF-8") + "&fileext=" + ext;
+
 		logger.debug("image converting requestURL : " + address);
 		
 		URL url = new URL(address);
@@ -31489,8 +31572,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String convertedImgInfo = config.getProperty("config.officeConverterServerURL") + "/DG_viewer" + response;
 			
 			// 컨버팅 후, 오피스 문서 파일 삭제
-			File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
-			tempFile.delete();
+//			File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
+//			tempFile.delete();
 			
 			logger.debug("convertDocumentToImg ended");
 			return convertedImgInfo;	
@@ -34825,7 +34908,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         }
         
         logger.debug("getAccessYNGforAPR ended.");
-        return rtnVal ? "<RESULT>TRUE</RESULT>" : "<RESULT>TRUE</RESULT>";
+        return rtnVal ? "<RESULT>TRUE</RESULT>" : "<RESULT>FALSE</RESULT>";
     } 
 	
 	/* 2023-03-22 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 통합 PC 저장시 문서 하나의 완료 의견 정보 가져오는 메소드 */

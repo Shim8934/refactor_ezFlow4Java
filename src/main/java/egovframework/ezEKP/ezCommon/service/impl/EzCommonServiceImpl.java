@@ -3558,4 +3558,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterRepeatFlagForResourceInfo() throws Exception {
         ezCommonDAO.alterRepeatFlagForResourceInfo();
     }
+
+    /* 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 */
+    public void insertApprNonElecRecTypeConfing() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertApprNonElecRecTypeConfing(map);
+        }
+    }
 }

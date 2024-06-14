@@ -2034,4 +2034,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertUseHideHeaderArea", map);
 		}
 	}
+
+	/* 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 */
+	public void insertApprNonElecRecTypeConfing(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkApprNonElecRecTypeConfing", map);
+
+		if (propertyValue == null) {
+			logger.debug("apprNonElecRecType tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertApprNonElecRecTypeConfing", map);
+		}
+	}
 }

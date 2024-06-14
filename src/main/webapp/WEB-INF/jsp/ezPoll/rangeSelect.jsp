@@ -338,7 +338,7 @@
                 	listview.DataSource(xmlHttp_UserList.responseXML.getElementsByTagName("LISTVIEWDATA")[0]);
                 	listview.DataBind("OrganListView");
             	} else {
-	                alert("<spring:message code='ezPoll.t214' />" + xmlHttp_UserList.statusText)
+	                alert("<spring:message code='ezPoll.t214' />" + xmlHttp_UserList.status)
             	}
     	        xmlHttp_UserList = null;
 	        }
@@ -450,7 +450,7 @@
                 	treeView.DataSource(xmlHttp_Depttree.responseXML);
                 	treeView.DataBind("TreeView");
             	} else {
-	                alert("<spring:message code='ezPoll.t217' />" + xmlHttp_Depttree.statusText);
+	                alert("<spring:message code='ezPoll.t217' />" + xmlHttp_Depttree.status);
     	        }
             	xmlHttp_Depttree = null;
         	}

@@ -164,6 +164,7 @@ CREATE TABLE `james_mail_userflag` (
   `MAIL_UID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`USERFLAG_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
+  KEY `james_mail_userflag_NAME_IDX` (`USERFLAG_NAME`),
   CONSTRAINT `james_mail_userflag_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2850,24 +2851,6 @@ CREATE TABLE `tbl_aprdocinfo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `TBL_APRDRAFTALLGROUP`
---
-
-DROP TABLE IF EXISTS `TBL_APRDRAFTALLGROUP`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBL_APRDRAFTALLGROUP` (
-  `MAINDOCID` varchar(80) DEFAULT NULL,
-  `SUBDOCID` varchar(80) DEFAULT NULL,
-  `TENANT_ID` mediumint(5) DEFAULT NULL,
-  `COMPANYID` varchar(20) DEFAULT NULL,
-  `ORDERNUM` mediumint(5) DEFAULT NULL,
-  `CREATEDATE` datetime DEFAULT NULL,
-  `APRMEMBERID` varchar(400) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_aprlinegroup`
 --
 
@@ -3914,7 +3897,7 @@ CREATE TABLE `tbl_board_item_listoption_boar` (
   `WIDTH` bigint(10) NOT NULL,
   `VIEW_FG` varchar(4) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_BOARD_ITEM_LISTOPTION_2` (`TENANT_ID`,`BOARDID`,`SN`)
+  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5370,28 +5353,6 @@ CREATE TABLE `tbl_codelist` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_columns`
---
-
-DROP TABLE IF EXISTS `tbl_columns`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_columns` (
-  `TBL_ID` varchar(200) DEFAULT NULL,
-  `ORDER_NUM` varchar(200) DEFAULT NULL,
-  `COL_NM` varchar(200) DEFAULT NULL,
-  `COL_COMM` varchar(200) DEFAULT NULL,
-  `COL_TYPE` varchar(200) DEFAULT NULL,
-  `COL_NULL` varchar(200) DEFAULT NULL,
-  `COL_KEY` varchar(200) DEFAULT NULL,
-  `COL_DEFAULT` varchar(200) DEFAULT NULL,
-  `CREATE_DT` datetime DEFAULT NULL,
-  `UPDATE_DT` datetime DEFAULT NULL,
-  `USE_YN` char(1) DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_comm_boardinfo`
 --
 
@@ -6086,7 +6047,7 @@ CREATE TABLE `tbl_deptcont` (
   `MANAGEUSERID` varchar(400) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  UNIQUE KEY `PK_TBL_DEPTCONT` (`TENANT_ID`,`DEPTCONTID`)
+  PRIMARY KEY (`TENANT_ID`,`DEPTCONTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9730,7 +9691,7 @@ CREATE TABLE `tbl_ps_webpartgroup` (
   `ID` varchar(510) NOT NULL,
   `NAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_PS_WEBPARTGROUP` (`TENANT_ID`,`ID`(255))
+  PRIMARY KEY (`TENANT_ID`,`ID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9751,7 +9712,7 @@ CREATE TABLE `tbl_ps_webpartitem` (
   `DEFAULTPOSITION` double(126,0) DEFAULT NULL,
   `DEFAULTUSE` double(126,0) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_PS_WEBPARTITEM` (`TENANT_ID`,`ID`(255))
+  PRIMARY KEY (`TENANT_ID`,`ID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9767,7 +9728,7 @@ CREATE TABLE `tbl_ps_webpartitemacl` (
   `ACCESSID` varchar(510) DEFAULT NULL,
   `ACCESSNAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  UNIQUE KEY `PK_TBL_PS_WEBPARTITEMACL` (`TENANT_ID`,`ITEMID`(255))
+  PRIMARY KEY (`TENANT_ID`,`ITEMID`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -12049,23 +12010,6 @@ CREATE TABLE `tbl_survey_response` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tbl_table`
---
-
-DROP TABLE IF EXISTS `tbl_table`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_table` (
-  `TBL_ID` varchar(200) DEFAULT NULL,
-  `TBL_NM` varchar(200) DEFAULT NULL,
-  `TBL_DESCRPT` varchar(200) DEFAULT NULL,
-  `CREATE_DT` datetime DEFAULT NULL,
-  `UPDATE_DT` datetime DEFAULT NULL,
-  `USE_YN` char(1) DEFAULT 'Y'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `tbl_task`
 --
 
@@ -12397,23 +12341,6 @@ CREATE TABLE `tbl_tasksubcategory` (
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SUBCATEGORYCODE`),
   KEY `FK_TBL_TASKSUBCATEGORY_idx` (`TENANT_ID`,`COMPANYID`,`MCATEGORYCODE`),
   CONSTRAINT `FK_TBL_TASKSUBCATEGORY` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `MCATEGORYCODE`) REFERENCES `tbl_taskmiddlecategory` (`TENANT_ID`, `COMPANYID`, `MCATEGORYCODE`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_temppassword`
---
-
-DROP TABLE IF EXISTS `tbl_temppassword`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_temppassword` (
-  `USERID` varchar(200) NOT NULL,
-  `PHONENUM` varchar(200) NOT NULL,
-  `IP` varchar(100) NOT NULL,
-  `SMSCODE` varchar(100) NOT NULL,
-  `CREATEDDATE` datetime NOT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

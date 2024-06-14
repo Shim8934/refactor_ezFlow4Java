@@ -127,7 +127,7 @@ function searchUserList(search) {
 	            }
 	        },
 	        error: function() {
-	        	OpenAlertUI(linealt2 + g_xmlHTTP.statusText);
+	        	OpenAlertUI(linealt2 + g_xmlHTTP.status);
 	        }
     	});
     }

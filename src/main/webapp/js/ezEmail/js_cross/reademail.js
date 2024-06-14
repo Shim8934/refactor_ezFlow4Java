@@ -527,7 +527,7 @@ function func_addaddr_Complete(ret) {
             
             if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
                 if (xmlHTTP.status != 200) {
-                	alert(strLang133 + xmlHTTP.statusText);
+                	alert(strLang133 + xmlHTTP.status);
                 	return;
                 }
                 
@@ -587,7 +587,7 @@ function Get_DupliCateAddressCnt(senderEmail, folderId, type) {
 		xmlHTTP.send(xmlDom);
 		
 		if (xmlHTTP.status != 200){
-			alert(strLang133 + xmlHTTP.statusText);
+			alert(strLang133 + xmlHTTP.status);
 		} else {
 			returnValue = xmlHTTP.responseText;
 		}

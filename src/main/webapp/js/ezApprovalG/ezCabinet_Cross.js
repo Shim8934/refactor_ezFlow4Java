@@ -28,6 +28,8 @@ var g_searchDate = {
 	endDate: null
 }
 
+var OrderOption = "";
+
 var cabProduceY = ""; // 기록물철등록부에서 기록물보기로 진입한 경우, 선택된 기록물철분류의 생산년도를 담는 변수
 
 /* 2022-12-27 홍승비 - 기록물철 검색 시 생산연도 조건 없는 경우, 반드시 회계연도 '이하' 조건을 사용하기 위한 회계연도 전역변수 추가 */
@@ -1087,7 +1089,16 @@ function GetHearderXml() {
 }
 
 function lvtDoclist_HeaderClick(pHeader) {
-    if (pHeader != "")
+    if (OrderCell == pHeader) {
+        if (OrderOption == "")
+            OrderOption = "DESC";
+        else
+            OrderOption = "";
+    }
+    else {
+        OrderCell = pHeader;
+        OrderOption = "";
+    }
         SortList(pHeader);
 }
 

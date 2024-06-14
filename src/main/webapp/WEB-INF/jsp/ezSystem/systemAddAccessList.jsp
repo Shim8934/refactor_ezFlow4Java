@@ -100,7 +100,7 @@
 
 		                xmlHTTP = null;
 		            } else {
-		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.statusText);
+		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.status);
 		                xmlHTTP = null;
 		            }
 		        }
@@ -870,7 +870,7 @@
 		                treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 		                treeView.DataBind("TreeView");
 		            } else {
-		                alert("<spring:message code='ezOrgan.t9' />" + g_xmlHTTP.statusText);
+		                alert("<spring:message code='ezOrgan.t9' />" + g_xmlHTTP.status);
 		                g_xmlHTTP = null;
 		            }
 		        }

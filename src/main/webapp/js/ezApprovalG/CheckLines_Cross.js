@@ -91,7 +91,7 @@ function getFormInfo(pCode1, pCode2) {
     if (xmlHTTP3.status == 200)
         Result = xmlHTTP3.responseText;
     else
-        alert("ezViewEnd_HWP.aspx, getFormInfo() - " + xmlHTTP3.statusText);
+        alert("ezViewEnd_HWP.aspx, getFormInfo() - " + xmlHTTP3.status);
 
     xmlHTTP3 = null;
     xmlDOM = null;

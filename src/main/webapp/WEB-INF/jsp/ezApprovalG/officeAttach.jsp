@@ -197,7 +197,7 @@
 				<span style="margin-left: 12px; font-size: 15px;">
 					※ <spring:message code='ezApproval.t935'/>
 				</span>
-				<a class="imgbtn" onclick="btnfileup()" style="vertical-align: middle; height: 15px; padding: 3px 8px">
+				<a class="imgbtn" onclick="btnfileup()" style="vertical-align: middle; /*height: 15px;*/ padding: 3px 8px">
 					<spring:message code='ezPortal.t45'/>
 				</a>
 			</div>	

@@ -4004,4 +4004,24 @@
 			REPEATFLAG varchar(2) DEFAULT '1'
 		]]>
     </statement>
+
+
+	<!-- 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 -->
+	<select id="EzCommonDAO.checkApprNonElecRecTypeConfing" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'ApprNonElecRecType'
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertApprNonElecRecTypeConfing">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'ApprNonElecRecType', '전자결재G 비전자문서등록 양식 확장자', 'HWP', '전자결재 G버전의 비전자문서 등록 시, 양식 확장자를 설정한다. (MHT 또는 HWP) (default : HWP)', '2021-04-07 00:00:00', '전자결재G')
+	</insert>
 </sqlMap>

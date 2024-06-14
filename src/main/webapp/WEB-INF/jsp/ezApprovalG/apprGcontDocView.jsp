@@ -90,6 +90,8 @@
 			// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
 			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 
+			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
+
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
@@ -116,7 +118,6 @@
 					}
 					var val = parseInt($("#selectImg option:selected").val());
 					var divImg = $("#message").contents().find(".divImg");
-					$(divImg).children().css("zoom",100+"%");
 					var pages = $(divImg).children().length;
 					if(selectOp==1){
 						for(var i=1; i<=pages; i++){
@@ -137,20 +138,16 @@
 						var selectNum = $("#message").contents().find(".divImg").find(".imgDiv").index();
 						$("#selectImg option:eq("+ selectNum +")").prop('selected', true);
 					}
-					
-					var imgMove = $("#message").contents().find(".divImg").find(".imgDiv");
-					$(imgMove).find(".office-image").css("zoom", 100+"%");
-					if(imgMove.length == 0){
-						$("#zoomIn").css("display","none");
-						$("#zoomOut").css("display","none");
-						$("#zoomReset").css("display","none");
-						$("#prev").css("display","none");
-						$("#next").css("display","none");
-						$("#prevAll").css("display","none");
-						$("#nextAll").css("display","none");
-						$("#selectImg").css("display","none");
-						$("#all").attr("src", "/images/icviewer_downsize.png");
-						
+
+					if(divImg.length > 0){
+					    imgTag = divImg.find("img").get(0);
+                        if(typeof imgTag != "undefined"){
+                            imgTag.onload = function() {
+                                officeImgExist = true;
+                            }
+                        }
+                        setTimeout(satImgCheck,3000);
+
 					}
 				});
 		      	

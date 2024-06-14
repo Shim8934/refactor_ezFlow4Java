@@ -398,7 +398,7 @@
 		                treeView.DataBind("TreeView");
 		            }
 		            else {
-		                alert("<spring:message code='ezEmail.t17' />" + g_xmlHTTP.statusText)
+		                alert("<spring:message code='ezEmail.t17' />" + g_xmlHTTP.status)
 		                g_xmlHTTP = null;
 		            }
 		        }
@@ -698,7 +698,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.sharedMailbox07' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.sharedMailbox07' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewSharedMailbox").innerHTML = "";
 			            var pListViewSharedMailbox = new ListView();
@@ -4021,7 +4021,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewDL").innerHTML = "";
 			            var pListViewDL = new ListView();

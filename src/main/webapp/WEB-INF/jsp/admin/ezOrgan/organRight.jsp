@@ -122,7 +122,7 @@
 					    treeView.DataSource(g_xmlHTTP.responseXML);
 					    treeView.DataBind("TreeView");
 					}else{	
-						alert("<spring:message code='ezOrgan.t1' />" + g_xmlHTTP.statusText);
+						alert("<spring:message code='ezOrgan.t1' />" + g_xmlHTTP.status);
 						g_xmlHTTP = null;
 					}
 					isScroll();
@@ -896,7 +896,7 @@
 							adCount = xmlDOM.getElementsByTagName("ROW").length;
 						},
 						error : function(error){
-							alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
+							alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.status);
 							xmlDOM = null;
 						}
 					});	

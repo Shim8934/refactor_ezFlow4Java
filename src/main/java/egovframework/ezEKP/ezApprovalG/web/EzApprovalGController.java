@@ -8695,7 +8695,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		// 2024-04-05 전인하 - 전자결재G > 기록물관리 > 단위업무 리스트 총 카운트 호출 추가
-		int taskCount = ezApprovalGAdminService.getTaskListCount(userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+		int taskCount = ezApprovalGAdminService.getTaskListCount(userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId(), null, null, "0");
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskCount", taskCount);
@@ -11456,13 +11456,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String companyId = request.getParameter("companyId");
 		String userId = request.getParameter("userId");
+		String ext = request.getParameter("ext");
 		MultipartFile file = request.getFile("fileToUpload");
  		int tenantId = Integer.parseInt(request.getParameter("tenantId"));
-		
+
 		// 변환솔루션이 다른 서버에 설치되어있을 경우, 이 경로를 변환솔루션 서버에 마운트 시켜야함
-		String tempUploadPath = config.getProperty("config.officeTempUploadPath");
+//		String tempUploadPath = config.getProperty("config.officeTempUploadPath");
 				
-		String convertedImgInfo = ezApprovalGService.convertDocumentToImg(file, tempUploadPath, docId, tenantId, companyId, userId);	
+		String convertedImgInfo = ezApprovalGService.convertDocumentToImg(file, request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort(), docId, tenantId, companyId, userId, ext);
 	
 		logger.debug("officeUpload ended.");
 		return convertedImgInfo;	
