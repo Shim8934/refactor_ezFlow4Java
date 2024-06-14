@@ -22365,8 +22365,8 @@
 		]]>
 	  </isEqual>
 	  <isEqual property="listFlag" compareValue="10">
-	  		AND 
-	  			TBL_CABINETCLASS.ExpirationYear = #accountYear#
+            AND
+                TBL_CABINETCLASS.TerminateFlag = '0'
 	  </isEqual>
 	  <isEqual property="listFlag" compareValue="11">
 	  		AND 
