@@ -211,6 +211,10 @@
 			            	setPresentValue("<spring:message code='ezApprovalG.t3000'/>");
 			                document.getElementById('APPROVAL21').click();
 			            }
+						if (pListTypeValue == '24') {
+							setPresentValue("<spring:message code='ezApprovalG.t1756'/>");
+							document.getElementById('APPROVAL24').click();
+						}
 		        }
 		        getAprCount();
 		        leftResize();
@@ -537,6 +541,10 @@
 				                    parent.frames["right"].passValLeftMenu("23");
 				                    parent.frames["right"].checkBujaeInfo();
 				                }
+								else if (listtype == "24") {
+									parent.frames["right"].passValLeftMenu("24");
+									parent.frames["right"].checkBujaeInfo();
+								}
 				                else {
 				                    parent.frames["right"].passValLeftMenu("1");
 				                    parent.frames["right"].checkBujaeInfo();
@@ -857,6 +865,7 @@
 						"11" : "COUNT11",
 						"21" : "COUNT21",
 						"23" : "COUNTUNTREATED",
+						"24" : "COUNT24",
 						"99" : "COUNT99"
 					}
 
@@ -1296,6 +1305,9 @@
 					</c:if>
                    	<li><span class="list_text" id="APPROVAL2" onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><spring:message code='ezApprovalG.t1706'/><span id=COUNT2></span></span></li>
                    	<li><span class="list_text" id="APPROVAL3" onclick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><spring:message code='ezApprovalG.t1748'/><span id=COUNT3></span></span></li>
+					<%-- 2023-03-23 양지혜 - 반송된문서함 추가 --%>
+					<li><span class="list_text" id="APPROVAL24" onclick="setPresentValue('<spring:message code='ezApprovalG.t1756'/>');convMain('24','')"><spring:message code='ezApprovalG.t1756'/><span id=COUNT24></span></span></li>
+
 					<c:if test="${approvalFlag eq 'G' && autoSendOfferFlag eq '1'}">
                    	<li><span class="list_text" id="UNTREATED" onclick="setPresentValue('미처리문서');Open_Func(this);">미처리문서함<span id=COUNTUNTREATED></span></span></li>
                    	</c:if>

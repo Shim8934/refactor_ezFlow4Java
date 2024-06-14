@@ -14,7 +14,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
 		<style>
 			#divList {
-				width: 100%; height: 35px;
+				/*width: 100%; height: 35px;*/
+				width: 100%;
 			}
 			#divList tr{
 		    	border: 1px solid #d2d2d2;
@@ -39,7 +40,7 @@
         </div>
 		
 		<div id="divList">
-			<table style="width:100%; ">
+			<table style="width:100%; margin-top: 10px ">
 				<tr>
 					<th style="width: 20%; height:100%">
 						<spring:message code='ezEmail.multiDomain.ksa05' />
@@ -91,7 +92,9 @@
 						btnClose();
 					} else if (data == -2) {
 						alert("<spring:message code='ezEmail.multiDomain.ksa10' />");
-					} else {
+					} else if (data == -3) {
+                      	alert("<spring:message code='ezEmail.multiDomain.yja01' />");
+                    }else {
 						alert("<spring:message code='main.sp12' />");
 					}
 				},

@@ -113,7 +113,7 @@
 	                    }
 	            	},
 		        	error : function(jqXHR, textStatus, errorThrown) {
-		        		alert("<spring:message code = 'ezApprovalG.t228' />" + jqXHR.statusText);
+		        		alert("<spring:message code = 'ezApprovalG.t228' />" + jqXHR.status);
 		        	}
 	            });
 	        }

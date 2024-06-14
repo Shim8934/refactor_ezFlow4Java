@@ -858,17 +858,23 @@ function GetOpenPosition(popUpW, popUpH) {
     //2011.07.28 FireFox는 ShowModalDialog() 호출시 화면 중앙에 뜨지 않아 top, left를 지정해 줘야한다.
     var heigth = window.screen.availHeight;
     var width = window.screen.availWidth;
-    var left = 0;
-    var top = 0;
-    var pleftpos;
-    pleftpos = parseInt(width) - popUpW;
-    heigth = parseInt(heigth) - popUpH;
-    width = parseInt(width) - pleftpos;
+    var pTop = (heigth - popUpH) / 2;
+    var pLeft = (width - popUpW) / 2;
 
-    left = pleftpos / 2;
-    top = heigth / 2;
+   	var dualScreenTop = window.screenY;
+    var dualScreenLeft = window.screenX;
+    	
+   	pTop += dualScreenTop;
+   	pLeft += dualScreenLeft;
+   				
+	if (/MSIE|Trident/.test(window.navigator.userAgent)) {
+   		if (window.screenLeft > window.screen.width) {
+   			pTop -= 223;
+   			pLeft -= 375;
+   		}
+   	}
 
-    var feature = ",left=" + left + ",top=" + top;
+    var feature = ",left=" + pLeft + ",top=" + pTop;
 
     return feature
 }
@@ -950,14 +956,16 @@ function GetOpenWindowfeature(popUpW, popUpH, resizable) {
 	var resiableAttr = !!resizable ? ',resizable=yes' : ',resizable=no';
 	var heigth = window.screen.availHeight;
 	var width = window.screen.availWidth;
-	var left = 0;
-	var top = 0;
+	// var left = 0;
+	// var top = 0;
 	var pleftpos;
 	pleftpos = parseInt(width) - popUpW;
 	heigth = parseInt(heigth) - popUpH;
 	width = parseInt(width) - pleftpos;
-	left = pleftpos / 2;
-	top = heigth / 2;
+	// left = pleftpos / 2;
+	// top = heigth / 2;
+    var left = window.outerWidth / 2 + window.screenX - (popUpW / 2);
+    var top = window.outerHeight / 2 + window.screenY - (popUpH / 2);
 	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, scrollbars=yes" + resiableAttr;
 	return feature;
 }
@@ -966,22 +974,20 @@ function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {
     if (MACSAFARIYN())
         popUpH = popUpH + 50;
 
-    //var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-    //var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
-    //var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-    //var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-    //var left = ((width / 2) - (popUpW / 2)) + dualScreenLeft;
-    //var top = ((height / 2) - (popUpH / 2)) + dualScreenTop;
+    var heigth = window.screen.availHeight;
+    var width = window.screen.availWidth;
+    var pTop = (heigth - popUpH) / 2;
+    var pLeft = (width - popUpW) / 2;
 
-    var left = (screen.width / 2) - (popUpW / 2);
-    var top = (screen.height / 2) - (popUpH / 2);
+    var left = window.outerWidth / 2 + window.screenX - (popUpW / 2);
+    var top = window.outerHeight / 2 + window.screenY - (popUpH / 2);
 
     if (resizeFlag == undefined || resizeFlag.toUpperCase() == "NO")
         resize = "resizable=no";
     else
         resize = "resizable=yes";
     
-    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + "px ,top=" + top + "px, status = no, toolbar=no, menubar=no,location=no," + resize;
+    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + pLeft + "px ,top=" + pTop + "px, status = no, toolbar=no, menubar=no,location=no," + resize;
     var result = window.open(url, target, feature);
     result.focus();
     return result;

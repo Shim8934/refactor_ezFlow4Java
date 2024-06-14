@@ -2369,7 +2369,7 @@
 
 	<insert id="EzCommonDAO.insertApprAttachLimit">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-    		VALUES (#v_TENANTID#, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 메일 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', current_timestamp(), '전자결재')
+    		VALUES (#v_TENANTID#, 'ApprAttachLimit', '전자결재 일반 첨부파일 최대 크기', '10', 'MB 단위로 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', current_timestamp(), '전자결재')
 	</insert>
 	<insert id="EzCommonDAO.insertBigSizeApprAttachLimit">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
@@ -2385,7 +2385,7 @@
 	</insert>
 	<insert id="EzCommonDAO.insertBigSizeApprAttachDelDay">
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
-    		VALUES (#v_TENANTID#, 'BigSizeApprAttachDelDay', '전자결재 대용량 첨부파일 보존기간', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 메일 대용량 첨부파일을 삭제한다. (default: 14)', current_timestamp(), '전자결재')
+    		VALUES (#v_TENANTID#, 'BigSizeApprAttachDelDay', '전자결재 대용량 첨부파일 보존기간', '14', '일 단위로 보존기간을 지정한다. 지정한 기간이 지나면 대용량 첨부파일을 삭제한다. (default: 14)', current_timestamp(), '전자결재')
 	</insert>
 
 	<select id="EzCommonDAO.checkApprBigAttachColumn_APR">
@@ -3851,4 +3851,177 @@
         INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES ('0', 'loadTimeForApprAll', '200', '다안기안 문서 표출 시 글꼴,스크롤 오류를 해결하기 위한 setTimeout 시간. 네트워크 환경에 따라 적절한 시간 조절을 위해 사용(default:200)', '다안기안 문서 로딩시간', '2024-01-11 00:00:00', '전자결재G')
     </insert>
+
+	<select id="EzCommonDAO.checkTblDeptChangeInfo" resultClass="String">
+		<![CDATA[
+			SELECT
+				SEQ
+			FROM
+				TBL_DEPT_CHANGE_INFO
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblDeptChangeInfo">
+		CREATE TABLE `tbl_dept_change_info` (
+		`SEQ` int(10) NOT NULL AUTO_INCREMENT,
+		`DEPTID` varchar(80) NOT NULL,
+		`DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`PARENT_DEPTID` varchar(80) DEFAULT NULL,
+		`PARENT_DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`PARENT_DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`COMPANYID` varchar(120) DEFAULT NULL,
+		`COMPANYNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`COMPANYNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`UPDATEDT` datetime DEFAULT NULL,
+		`TARGET_DEPTID` varchar(80) DEFAULT NULL,
+		`TARGET_DEPTNM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`TARGET_DEPTNM2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`UPDATE_TYPE` varchar(200) DEFAULT NULL,
+		`EXECUTORID` varchar(80) DEFAULT NULL,
+		`EXECUTORNM` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`EXECUTORNM2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
+		`EXECUTORIP` varchar(20) DEFAULT NULL,
+		`TENANTID` mediumint(5) NOT NULL,
+		PRIMARY KEY (`SEQ`)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkSurveyPostingMaxPeriodConfig" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'SurveyPostingMaxPeriod'
+		  AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertSurveyPostingMaxPeriodConfig">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'SurveyPostingMaxPeriod', '999', '전자설문 설문 종료 후 게시기간 최대일자를 설정한다. (default:999)', '전자설문 종료 후 게시기간 설정', '2024-03-26 00:00:00', '전자설문')
+	</insert>
+
+	<select id="EzCommonDAO.checkFileNameColumnForHistory" resultClass="String">
+	<![CDATA[
+		SELECT
+			FILE_NAME
+		FROM
+			TBL_WEBFOLDER_FILE_HISTORY
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterFileNameForWebfolderHistory">
+	<![CDATA[
+		ALTER TABLE
+			TBL_WEBFOLDER_FILE_HISTORY
+			ADD
+				FILE_NAME VARCHAR(250)
+		]]>
+    </statement>
+
+	<select id="EzCommonDAO.chkTblTotalHistory" resultClass="String">
+		SELECT
+			DOCID
+		FROM
+			TBL_TOTAL_HISTORY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblTotalHistory">
+		CREATE TABLE `tbl_total_history` (
+		  `DOCID` varchar(80) NOT NULL,
+		  `USERID` varchar(400) NOT NULL,
+		  `REGDATE` datetime NOT NULL,
+		  `GUBUN` varchar(12) DEFAULT NULL,
+		  `USERJOBTITLE` varchar(40) DEFAULT NULL,
+		  `USERDEPTID` varchar(400) DEFAULT NULL,
+		  `USERDEPTNAME` varchar(200) DEFAULT NULL,
+		  `USERNAME` varchar(200) DEFAULT NULL,
+		  `USERNAME2` varchar(200) DEFAULT NULL,
+		  `USERJOBTITLE2` varchar(200) DEFAULT NULL,
+		  `USERDEPTNAME2` varchar(400) DEFAULT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  PRIMARY KEY (`DOCID`, `USERID`, `REGDATE`, `TENANT_ID`, `COMPANYID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='2023-06-30 기준 통합 PC 저장에서만 사용하고 있음. gubun 은 "D"(Download) 로 사용하고 있음.';
+	</statement>	
+	
+
+	<!-- 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부 -->
+	<select id="EzCommonDAO.checkDelAttachByOthersConfing" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'delAttachByOthers'
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertDelAttachByOthersConfing">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'delAttachByOthers', '0', '결재에서 첨부를 올린사람 이외의 사람도 삭제가능여부를  결정하는 테넌트 값(0 : 불가 1 : 허용), (default:0) ', '결재에서 첨부파일을 다른사람이 지울수있는 여부', '2021-03-05 00:00:00', '전자결재')
+	</insert>
+
+	<select id="EzCommonDAO.checkUseHideHeaderArea" resultClass="String">
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'useHideHeaderArea'
+		AND
+			TENANT_ID = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertUseHideHeaderArea">
+        INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (#v_TENANTID#, 'useHideHeaderArea', 'NO', '전자결재 mht양식 headerArea 필드 숨기기 기능 사용여부. 양식에 headerArea 필드가 있어야 사용 가능. YES: 사용 NO: 사용안함 (default: NO)', '헤더 숨기기 기능 사용여부', '2024-05-23 00:00:00', '전자결재')
+    </insert>
+
+	<select id="EzCommonDAO.checkRepeatFlagColumnForResourceInfo" resultClass="String">
+	<![CDATA[
+		SELECT
+			REPEATFLAG
+		FROM
+			TBL_RS_BRD
+			LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterRepeatFlagForResourceInfo">
+	<![CDATA[
+		ALTER TABLE
+			TBL_RS_BRD
+			ADD
+			REPEATFLAG varchar(2) DEFAULT '1'
+		]]>
+    </statement>
+
+
+	<!-- 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 -->
+	<select id="EzCommonDAO.checkApprNonElecRecTypeConfing" resultClass="String">
+	<![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'ApprNonElecRecType'
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+
+	<insert id="EzCommonDAO.insertApprNonElecRecTypeConfing">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
+		VALUES (#v_TENANTID#, 'ApprNonElecRecType', '전자결재G 비전자문서등록 양식 확장자', 'HWP', '전자결재 G버전의 비전자문서 등록 시, 양식 확장자를 설정한다. (MHT 또는 HWP) (default : HWP)', '2021-04-07 00:00:00', '전자결재G')
+	</insert>
 </sqlMap>

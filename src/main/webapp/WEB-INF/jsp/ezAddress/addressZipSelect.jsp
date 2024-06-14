@@ -38,7 +38,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>	    
 		<script type="text/javascript">
-			//TODO: 이거 문제있네!
+
 			$(function () {
 	            $("#Sido").selectbox();
 	            $(".sbHolder").each(function (index) {
@@ -126,7 +126,7 @@
 	                    g_xmlHTTP = null;                    
 	                }
 	                else {
-	                    alert("<spring:message code='ezPersonal.t60' />" + g_xmlHTTP.statusText);
+	                    alert("<spring:message code='ezPersonal.t60' />" + g_xmlHTTP.status);
 	                }
 
 	            	g_xmlHTTP = null;

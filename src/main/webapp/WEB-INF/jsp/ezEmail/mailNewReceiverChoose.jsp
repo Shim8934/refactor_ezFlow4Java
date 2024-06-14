@@ -43,6 +43,9 @@
 			
 			.popup h2{padding-top:4px !important;}
 			.receiver_tltype01{line-height:28px;}
+
+			.mainlist tr td[style*="display: none"]:first-child.none + td{padding-left:15px;}
+
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -395,7 +398,7 @@
 		                treeView.DataBind("TreeView");
 		            }
 		            else {
-		                alert("<spring:message code='ezEmail.t17' />" + g_xmlHTTP.statusText)
+		                alert("<spring:message code='ezEmail.t17' />" + g_xmlHTTP.status)
 		                g_xmlHTTP = null;
 		            }
 		        }
@@ -695,7 +698,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.sharedMailbox07' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.sharedMailbox07' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewSharedMailbox").innerHTML = "";
 			            var pListViewSharedMailbox = new ListView();
@@ -2326,10 +2329,7 @@
 		        }
 		        
 		        if (selTab == "orglistView" && $(".txtlist_DeptTD").length > 0) {
-		        	$(".txtlist_DeptTD").css("display", "none");
-			        $(".txtlist_DeptTD").css("padding-left", "4px");
-
-			        $(".mainlist > tbody > tr:first-child > td:nth-child(2)").css("padding-left", "15px");
+		        	$(".none").css("display", "none");
 		        }
 		    }
 	        function show_member() {
@@ -4021,7 +4021,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewDL").innerHTML = "";
 			            var pListViewDL = new ListView();
@@ -4151,8 +4151,6 @@
 		        m_selectedTree = orglistView;
 
 		        $(".txtlist_DeptTD").css("display", "table-cell");
-		        $(".txtlist_DeptTD").css("padding-left", "15px");
-		        $(".mainlist tr td:nth-child(2)").css("padding-left", "4px");
 		        
 		        orgJobMasterListSet(tabType);
 	        }
@@ -4670,7 +4668,7 @@
 	                                        <div id="txtlist_Layer" style="vertical-align: top; width: 100%; height: 395px; overflow: auto;" >
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 100px;color:#333;background-color: #f1f3f5; display:none;"  class="txtlist_DeptTD"><spring:message code='ezEmail.t26' /></td>
+	                                                    <td style="width: 100px;color:#333;background-color: #f1f3f5;"  class="txtlist_DeptTD none"><spring:message code='ezEmail.t26' /></td>
 	                                                    <td style="width: 120px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t31' /></td>
 	                                                    <td style="width: 90px;color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t28' /></td>
 	                                                    <td style="color:#333;background-color: #f1f3f5"><spring:message code='ezEmail.t99000045' /></td>

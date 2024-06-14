@@ -151,10 +151,10 @@ function getDocList_after(xml) {
     DocList.SetUrgentFlag(false);
     
     /* 2023-06-19 조소정 - 공람할문서 메뉴(99) 복수 체크박스 추가 */
-    if(pListTypeValue == "1" || pListTypeValue == "99") { // 2020-04-29 : 결재할문서 복수체크박스 추가
+    if(pListTypeValue == "1" || pListTypeValue == "99" || pListTypeValue == "24") { // 2020-04-29 : 결재할문서 복수체크박스 추가
     	DocList.SetCheckBoxFlag(true);
     }
-    
+
     DocList.DataSource(xmlDoc);
     DocList.DataBind("lvDocList");
     
@@ -1927,6 +1927,9 @@ function makePageSelPage() {
     		case "21":
     			parent.frames["left"].document.getElementById("count21").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
+            case "24":
+                parent.frames["left"].document.getElementById("count24").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
+                break;
     		case "99":
     			parent.frames["left"].document.getElementById("count99").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
@@ -2077,7 +2080,7 @@ function setbuttonenable() {
     else
         document.getElementById("tbar1").style.display = "";*/
 
-    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 5 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11) {
+    if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 5 && pListTypeValue != 10 && pListTypeValue != 99 && pListTypeValue != 11 && pListTypeValue != 24) {
     	document.getElementById("tbtnRedraft").style.display = "none";		
         //SwapImage(document.getElementById("btnRedraft"), "dis");
         document.getElementById("tbtnRemoveDoc").style.display = "none";
@@ -2142,7 +2145,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnRemoveDoc").style.display = "none";
             }
         }
-    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99 || pListTypeValue == 11) {
+    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99 || pListTypeValue == 11 || pListTypeValue == 24) {
         document.getElementById("tbtnTotalSave").style.display = "";
         document.getElementById("tbtnSimsa").style.display = "none";
         //document.getElementById("tbtnGongRam").style.display = "";
@@ -2327,7 +2330,8 @@ function setbuttonenable() {
             if (approvalFlag == 'G') {
             	document.getElementById("tDocInfo").style.display = "none";
             }
-        } else if (pListTypeValue != 4 && tr.getAttribute("DATA2") != "" && tr.getAttribute("DATA12") == "011") {
+            /* 2023-05-22 양지혜 - 반송문서는 공람정보 버튼을 활성화하지 않도록 제외 */
+        } else if (pListTypeValue != 4 && tr.getAttribute("DATA2") != "" && tr.getAttribute("DATA12") == "011" && pFunctionType != "004") {
         	if (approvalFlag == 'G') {
         		document.getElementById("tDocInfo").style.display = "";
             }

@@ -394,9 +394,20 @@
 
         return getXmlString(rtnXml);
     }
+
     function btnReset_onclick() {
+        // 2024-02-20 양지혜 - 재입력 시 선택/수정 내용을 초기화
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][name^="special"], input[type="checkbox"][name^="selSecLevel"]');
+        checkboxes.forEach(function(checkbox) {
+          checkbox.checked = false;
+        });
+
+        g_ArrPageInitFlag[1] = false;
+        InitRecordInfo();
+
         document.getElementById("txtChangeReason").value = "";
     }
+
     function btnOK_onclick() {
         if (g_ModifyFlag == "0")
         {
@@ -437,6 +448,14 @@
             rtnVal[0] = "TRUE";
             OpenAlertUI("<spring:message code='ezApprovalG.t975'/>", ChangeCabinetInfo_Complete);
             //window.close();
+        }
+        /* 2024-03-26 양지혜 - 공개가 아닌경우 공개등급 선택 필수 */
+        if (document.querySelector('input[name="rdoSecType"]:checked').value != '1') {
+            var checkboxes = document.querySelectorAll('input[name^="selSecLevel"]:checked');
+            if (checkboxes.length === 0) {
+                OpenAlertUI("<spring:message code='ezApprovalG.yjh01'/>");
+                return;
+            }
         }
     }
     function ChangeCabinetInfo() {

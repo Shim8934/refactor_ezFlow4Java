@@ -1118,4 +1118,8 @@
   #tree > .list_text {
   	padding: 0px;
   }
+
+  #folderTree .jstree-anchor {
+	margin-top: 5px !important;
+  }
 }

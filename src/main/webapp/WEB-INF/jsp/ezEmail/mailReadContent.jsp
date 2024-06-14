@@ -99,7 +99,13 @@
 			            if (ReadCountCheck=="N") {
 			                parent.opener.refreshUnreadCount();
 			            }
-			        } catch (e) { }				    					
+			        } catch (e) { }
+
+					document.addEventListener('click', function (e) {
+						if (window.parent.hiddenMoreMenu) {
+							parent.hiddenMoreMenu();
+						}
+					})
 				}
 				
 				function sizeBtnAppend() {

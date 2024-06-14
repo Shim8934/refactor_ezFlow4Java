@@ -696,7 +696,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
-		map.put("shareUserID", shareUserID.split(",")); //'id1', 'id2'형태로?? 아니면 배열해서 iterate
+		map.put("shareUserID", shareUserID.split(","));
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
 		
@@ -741,7 +741,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		String result = "";
 
-		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
+		// 전자결재만 존재하면 아래와 같이 "user"로 하드코딩이 가능하나, 다른 모듈 존재 시 수정 필요함
 		String pClass = "user";
 		String strFormArray = request.getParameter("formArray");
 		

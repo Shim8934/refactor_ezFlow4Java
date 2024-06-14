@@ -349,6 +349,9 @@ function ItemPreviewRead(obj, page) {
 			openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL) + "&listSusin=" +"&orgCompanyID=" + orgCompanyID;
 			/* 2022-06-23 홍승비 - 전자결재 문서보기 페이지가 미리보기로 열린 경우, 기존 버튼 영역을 로딩 시점부터 표출하지 않도록 하기 위한 플래그 추가 */
 			openLocation +=  "&isPreview=Y";
+			if (typeof g_sFlag != 'undefined' && g_sFlag != null) {
+			    openLocation +=  "&sFlag=" + g_sFlag;
+			}
 			
 			document.getElementById("ifrmPreViewH").src = openLocation;
 		}	
@@ -1216,7 +1219,7 @@ function pre_chk_Passwd_Complete(Rtn)
         }
         openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState + "&orgCompanyID=" + encodeURI(orgCompanyID);
         if (typeof g_sFlag != 'undefined' && ["m03", "m14"].includes(g_sFlag)) { // 2023-09-25 전인하 - 미리보기에서 문서 열람 시 메뉴 플래그 전달
-            openLocation += "uFlag=" + g_sFlag;
+            openLocation += "&uFlag=" + g_sFlag;
         }
         if (share && share == 'share') {
         	openLocation += "&share=Y";
@@ -1247,4 +1250,38 @@ function checkIsGroupDoc(pDocID, pOrgCompanyID) {
     });
     
     return res;
+}
+
+/* 2023-06-26 한태훈 - 관리자 전제문서조회(완료문서) 리스트 개수 설정 기능 추가 */
+function MailOptionView(obj,flag) {
+    if (obj.getAttribute("mode") == "off") {
+        if (flag == 'N') {
+        	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
+        } else {
+        	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+        }
+       
+        document.getElementById("layer_Viewpopup").style.display = "";
+        obj.setAttribute("class", "icon16 btn_onarrow_down");
+        obj.setAttribute("mode", "on");
+    }
+    else {
+        MailOptionHidden();
+    }
+}
+
+function MailOptionHidden() {
+    document.getElementById("layer_Viewpopup").style.display = "none";
+    document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
+    document.getElementById("maillistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
+}
+
+function MailOptionHiddenOutside(e) {
+	var container = $('#layer_Viewpopup');
+	var maillistoptionmode = $('#maillistoptiondiv').attr('mode');
+	if (maillistoptionmode == "on") {
+		if (container.has(e.target).length === 0 && $(e.target).attr('id') != 'maillistoptiondiv') {
+			MailOptionHidden();
+		}
+	}
 }

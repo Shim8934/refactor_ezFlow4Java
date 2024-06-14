@@ -16,6 +16,7 @@
 		#Sdatepicker:disabled {
 			background-color:white;
 		}
+		.qstSettingSpan{width: 130px !important;}
 	</style>
 	 
 	<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script> 
@@ -1349,7 +1350,7 @@
 							<a class="pollImgbtn1" id="receiverBttn" style="display: none;background-color: #e8e8e8;height:21px"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
 							<div style="display:none;" id="newTargetDiv"></div>																		
 							<div id="sendPostNotiMailDiv" class="qstSettingInnerDivRight">
-								<input id="sendPostMail" type="checkbox">
+								<input id="sendPostMail" type="checkbox" style="margin-bottom: -2px;">
 								<span style="vertical-align: middle;"><spring:message code="ezCommunity.t553"/></span>
 							</div>
 						</div>

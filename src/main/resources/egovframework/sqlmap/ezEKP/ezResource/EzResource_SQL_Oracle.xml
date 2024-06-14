@@ -153,7 +153,8 @@
 		<result property="makeDate"				column="MAKEDATE"				columnIndex="15"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="16"/>
 		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="17"/>
-		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="18"/>
+		<result property="repeatFlag"			column="REPEATFLAG"			    columnIndex="18"/>
+		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="19"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleVO">
@@ -965,6 +966,7 @@
              	SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE  ,
              	NVL(APPROVEFLAG, '0') APPROVEFLAG ,
              	NVL(RETURNFLAG, '0') RETURNFLAG ,
+				NVL(REPEATFLAG, '1') REPEATFLAG ,
              	BRD_ACCESS 
         	FROM
         		TBL_RS_BRD 
@@ -1067,6 +1069,7 @@
           		BRD_EXPLAIN = RTRIM(#v_P_Brd_Explain#),
           		APPROVEFLAG = RTRIM(#v_P_Approve#),
           		RETURNFLAG = RTRIM(#v_P_Return#),
+				REPEATFLAG = RTRIM(#v_P_Repeat#),
           		BRD_NM2 = RTRIM(#v_P_Brd_NM2#),
           		OWNDEPTNM2 = RTRIM(#v_P_ODeptNm2#),
           		OWNERNM2 = RTRIM(#v_P_OwnerNm2#),
@@ -1124,14 +1127,14 @@
 			INSERT INTO TBL_RS_BRD ( 
 				BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY
       			, BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG
-      			, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, TENANT_ID 
+      			, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, REPEATFLAG, TENANT_ID
       		)
         	VALUES ( 
         		#v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#)
         		,RTRIM(#v_P_OwnerCall#), RTRIM(#v_P_Brd_NM#), RTRIM(#v_P_ResLocation#), RTRIM(#v_P_Brd_Explain#), RTRIM(#v_P_CompanyID#), #v_Brd_ID#
         		,RTRIM(#v_Brd_GB#), RTRIM(#v_Brd_Level#), RTRIM(#v_Brd_Step#), TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYYMMDD')
         		,20, u'A00', u'', #v_Brd_Access#, 365, 0, 0, RTRIM(#v_P_Approve#)
-      			,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), RTRIM(#v_P_Return#), #tenantID# 
+      			,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), RTRIM(#v_P_Return#), RTRIM(#v_P_Repeat#), #tenantID#
       		)
 		]]>		
 	</insert>
@@ -1457,6 +1460,23 @@
 				BRD_GB = '2'
 			AND
 				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+
+	<select id="EzResourceDAO.getBrdRepeatFlag" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT
+			NVL(REPEATFLAG, '1') REPEATFLAG
+		FROM
+			TBL_RS_BRD
+		WHERE
+			BRD_ID = #v_PBRDID#
+		  AND
+			BRD_COMPANY = #v_PCOMPANYID#
+		  AND
+			BRD_GB = '2'
+		  AND
+			TENANT_ID = #tenantID#
 		]]>
 	</select>
 	
@@ -2502,6 +2522,7 @@
              	SUBSTR(A.MAKEDATE, 1, 4) || '-' || SUBSTR(A.MAKEDATE, 5, 2) || '-' || SUBSTR(A.MAKEDATE, 7, 2) MAKEDATE  ,
              	NVL(A.APPROVEFLAG, '0') APPROVEFLAG ,
              	NVL(A.RETURNFLAG, '0') RETURNFLAG ,
+				NVL(A.REPEATFLAG, '1') REPEATFLAG ,
              	A.BRD_ACCESS
 			FROM 
 				TBL_RS_BRD A

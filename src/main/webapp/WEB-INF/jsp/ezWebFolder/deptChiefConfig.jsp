@@ -7,7 +7,6 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css"/>
-	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/organJson.js')}"   ></script>
 	<script type="text/javascript">
@@ -85,7 +84,7 @@
 	<table class="content" style="width: 650px;margin-top:5px; border: none;">
 		<tr>
 			<td style="min-width: 350px;">
-				<div id="deptList" style="height: 350px; width: 100%; overflow: auto;">
+				<div id="deptList" style="height: 350px; width: 350px; overflow: auto; white-space: nowrap">
 				</div>
 			</td>
 			<td style="min-width: 60px; border-top: none; border-bottom: none;">

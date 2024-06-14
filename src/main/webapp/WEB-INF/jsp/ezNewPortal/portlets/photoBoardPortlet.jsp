@@ -48,7 +48,7 @@
 								<ul class="photoList" id="photoul">
 									<c:forEach items="${photoBoardList}" var="photo">
 										<li><img src="${photo.filePath}" data1="${photo.boardID}" data2="${photo.itemID}" onclick="photoItemRead(this)">
-											<span>${photo.title}</span>
+											<span><c:out value='${photo.title}'/></span>
 										</li>
 									</c:forEach>
 								</ul>

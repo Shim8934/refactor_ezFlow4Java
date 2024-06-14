@@ -58,6 +58,10 @@
 	                alert("<spring:message code='ezAddress.t22' />");
 	                return;
 	            }
+
+                // 태그 제거
+	            szInput = szInput.replace(/<[^>]*>?/g, '');
+
 	            if (ReturnFunction!=null) {
 	                try {
 	                    window.opener.szName = szInput;

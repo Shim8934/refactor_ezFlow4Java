@@ -722,6 +722,15 @@
 		        var keywordFromList = "";
 		        searchCArray = [];
 		    	searchKArray = [];
+
+                // default 검색기간 지원 start
+                startDate = $("#SdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+                endDate = $("#EdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+
+                var sDate = new Date(startDate.split(' ')[0].split('-')[0], startDate.split(' ')[0].split('-')[1], startDate.split(' ')[0].split('-')[2]);
+                var eDate = new Date(endDate.split(' ')[0].split('-')[0], endDate.split(' ')[0].split('-')[1], endDate.split(' ')[0].split('-')[2]);
+                // default 검색기간 지원 end
+
 		        if (isSentItems == "true") {
 		    		var receiver = currentFixingId.cells[5].getAttribute('data-name');
 		    		
@@ -772,6 +781,14 @@
 		    
 		    function searchAllBoxByName() {
 		        var keywordFromList = "";
+
+                // default 검색기간 지원 start
+		        startDate = $("#SdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+                endDate = $("#EdatepickerSimple").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+
+                var sDate = new Date(startDate.split(' ')[0].split('-')[0], startDate.split(' ')[0].split('-')[1], startDate.split(' ')[0].split('-')[2]);
+                var eDate = new Date(endDate.split(' ')[0].split('-')[0], endDate.split(' ')[0].split('-')[1], endDate.split(' ')[0].split('-')[2]);
+                // default 검색기간 지원 end
 		        
 		        if (isSentItems == "true") {
 		    		var receiver = currentFixingId.cells[5].getAttribute('data-name');
@@ -844,7 +861,6 @@
                 } else {
 					console.log('folderTotalCount=' + folderTotalCount);
 					if (folderTotalCount === null || typeof folderTotalCount === "undefined") {
-						// 이 경우가 나오면 안되요.
 						console.log('folderTotalCount is null or undefined');
 						return;
 					} else if (folderTotalCount < 1) {
@@ -1401,6 +1417,10 @@
 			    document.getElementById("MailProgress").style.backgroundColor = "#ffffff";
 			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
 			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 150 + "px";
+			    // IE 지원이 안되어 기존 것 유지, 아래 사용 시 리사이즈 자동처리 됨
+			    //document.getElementById("MailProgress").style.top = "50%";
+			    //document.getElementById("MailProgress").style.left = "50%";
+			    //document.getElementById("MailProgress").style.transform = "translate(calc(-50% - 110px), calc(-50% - 27px))"; // lnb width/2= 110, topmenu height/2 = 27
 			    document.getElementById("MailProgress").style.display = "";
 			    document.getElementById("cancleProgressBtn").style.display = "block";
 			    parent.document.getElementById("left").contentWindow.showProgress();
@@ -1911,8 +1931,8 @@
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="ContextMenuHidden();" oncontextmenu="event_listContextMenuAndId(event); return false;">&nbsp;</div>
         <div style="width:8px;height:100%;background-color:#808080;position:absolute;z-index:10000;display:none;" id="ResizeBarH"></div>
         <div style="width:100px;height:8px;background-color:#808080;position:absolute;z-index:10000;display:none;" id="ResizeBarW"></div>
-        <div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
-            <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+        <div style="width:200px; padding:20px 0; border-radius:8px; text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
+            <img src="/images/email/progress_img.gif"/>
             <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
             <a class="btnposition" id="cancleProgressBtn" style="display: none; padding-top: 10px; width: 50px; height:20px; 
       			cursor:pointer; margin:0 auto;" onclick="cancleProgress();">

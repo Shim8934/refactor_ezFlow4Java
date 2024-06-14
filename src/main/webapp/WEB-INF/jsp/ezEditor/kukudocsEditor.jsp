@@ -236,7 +236,7 @@
 	            customMagicLineStyle : 'background-color:#888;',
 	            customAlignMenu : customAlignMenu,
 	            useMenuBar : false,
-	            useHTMLMode : useHTMLMode,
+	            useHtmlMode : useHTMLMode,
 	            useTextMode : false,
 	            usePreviewMode : false,
 	            useEditorResize : false,

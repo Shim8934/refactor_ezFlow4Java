@@ -1344,7 +1344,7 @@ form{display:inline;margin:0}
 	line-height:16px;
 	vertical-align:top;
 	color:#666;
-	text-align:left;
+	text-align:right;
 }
 .btnimg { cursor:pointer;}
 
@@ -2261,7 +2261,7 @@ div#txtContent table {margin:auto;}
 
 .btnbtn { margin-top:10px; text-align: center; }
 
-#Preview_HeaderH, #Preview_HeaderW { background-color: #F8F9FB; }
+/* #Preview_HeaderH, #Preview_HeaderW { background-color: #F8F9FB; } */
 #subject { vertical-align: top;}
 .extraMenu {
 	position: absolute;
@@ -2452,6 +2452,7 @@ div#txtContent table {margin:auto;}
 .tree_appr_record10{background-position: -234px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물철인계 */
 .tree_appr_record11{background-position: -260px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 종료연기승인 */
 .tree_appr_record12{background-position: -286px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 편철확정 */
+.tree_appr_return{background-position: -288px -26px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px;} /* tree 반송된문서 */
 
 .tree_pims_all{ background-position:-26px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 모든일정 */
 .tree_pims_individual{ background-position:-52px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 개인일정 */
@@ -2661,7 +2662,7 @@ div#txtContent table {margin:auto;}
 .admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; float:left;}
 .admin_menuDL .admin_menuX{ margin:0px; padding:0px;}
 .admin_menu_content{ margin:0px; padding:15px 10px; box-sizing:border-box; overflow:hidden; border-left:1px solid #cfd0d2; border-right:1px solid #cfd0d2; border-bottom:1px solid #cfd0d2;}
-.adminMenu_icon{ margin:0px 10px 0px 0px; padding:0px; float:left;}
+.adminMenu_icon{ margin:0px 6px 0px 0px; padding:0px; float:left;}
 .adminMenu_icon .admenuIcon{ margin:0px; padding:0px; width:74px; height:69px; border:1px solid #b9d7f6; background:#f1f8ff; box-sizing:border-box;}
 .adminMenu_icon .admenuIcon_up{ margin:10px 0px 0px 0px; padding:0px 4px; cursor:pointer; font-size:12px; color: #000; height:31px; line-height:29px; box-sizing:border-box; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193; text-align:center; border-radius: 3px; font-weight: normal;}
 .adminMenu_icon .admenuIcon_up:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
@@ -2945,7 +2946,7 @@ h2, #menu span {font-size: 12px;}
 .surveyTbl .ttlTh  {width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .surveyTbl .createTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .surveyTbl .endDateTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
-.surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 80px; text-align: center;}
+.surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 100px; text-align: center;}
 .surveyTbl .statisTh {width: 40px;}
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
 .spanName:hover {color: #9b9b9b;}
@@ -3180,7 +3181,7 @@ h2, #menu span {font-size: 12px;}
 /**** survey information table start ****/
 .survey-nminfo {margin:0px 0px 10px 0px;}
 .surveyTitle{width:100%; margin:0px; padding:0px; line-height: 20px;}
-.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
+.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px !important; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
 .info-input-ttl {font-size:16px; font-weight:bold; color:#333;}
 .info-input-pp {font-size:14px;}
 .textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border: 1px solid #388CE5; outline: none;}
@@ -3331,7 +3332,7 @@ input::-ms-clear {display: none;}
 .quesDiv .qstnRow .required input{vertical-align:middle;}
 .quesDiv .qstnRow .dd-container {width: 25%; height: 40px; display: inline-block; margin-left: 8px; border:1px solid #c7c7c7;}
 .quesDiv .qstnRow .dd-container .dd-select {height: 40px; width: 100%; position:relative; cursor:pointer; border: none; background:#fff !important;}
-.quesDiv .qstnRow .dd-container .dd-options {display:none; list-style:none; overflow:auto; position:absolute; right:-1px; top: 44px; width:540px !important; z-index:2000; margin:0px 0px 0px 0px; padding:0; background:#fff; border:solid 1px #c7c7c7; border-bottom:none;}
+.quesDiv .qstnRow .dd-container .dd-options {display:none; list-style:none; overflow:auto; position:absolute; right:-1px; top: 44px; width:555px !important; z-index:2000; margin:0px 0px 0px 0px; padding:0; background:#fff; border:solid 1px #c7c7c7; border-bottom:none;}
 .quesDiv .qstnRow .dd-container .dd-options >li {display: block; float:left; width: 33.33%;}
 .quesDiv .qstnRow .dd-container .dd-option {display:block; overflow:hidden; height:25px; line-height:25px; padding:10px 20px; color:#333; text-align:left; border-bottom:solid 1px #ddd; text-decoration:none; cursor:pointer; -webkit-transition: all 0.25s ease-in-out; -moz-transition: all 0.25s ease-in-out;-o-transition: all 0.25s ease-in-out;-ms-transition: all 0.25s ease-in-out;}
 .quesDiv .qstnRow .dd-container .dd-desc { color:#aaa; display:block; overflow: hidden; font-weight:normal; line-height: 1.4em; }
@@ -3346,7 +3347,7 @@ input::-ms-clear {display: none;}
 .quesDiv .qstnRow .dd-container .dd-option-image, .dd-selected-image {vertical-align:middle; margin-right:20px; max-width:64px;}
 .quesDiv .qstnRow .dd-container .dd-image-right { float:right; margin-right:15px; margin-left:5px;}
 .quesDiv .qstnRow .dd-container .dd-container{ position:relative;}
-.quesDiv .qstnRow .dd-container .dd-selected-text {font-size:14px; font-weight:normal; color:#333;}
+.quesDiv .qstnRow .dd-container .dd-selected-text {font-size:13px; font-weight:normal; color:#333;}
 .quesDiv .qstnAtt .qstnFileInfo .fileList ul {width: 100%; margin-left: -39px;}
 .quesDiv .qstnAtt .qstnFileInfo .fileList ul .attFileInf {text-align: left;}
 .quesDiv .option_wrap {width: 20%; border-radius: 10px; margin-right:155px; float: right; border: 1px solid #d7d7d7; height: 0px; display:none;}
@@ -3446,7 +3447,7 @@ input::-ms-clear {display: none;}
 /* slider part */
 .silder-wrap {display:flex; padding:10px 0px; align-items:center;}
 .silder-wrap span{width:28px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
-.slider-lw, .slider-up, .slider-input {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
+.slider-lw, .slider-up, .slider-input .slider-cnt {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
 .slider-lwExp {float: left; padding-left: 8px;}
 .slider-upExp {float: right; padding-right: 6px;}
 .slider-main, .slider-range {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor:pointer; margin: 0px 10px; padding: 0px;}
@@ -3539,6 +3540,8 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
+.upage-ul li .srvyInfo05{display:inline-block; width:16px; height:16px; background-position:-66px -110px !important; margin:6px 8px 0px 0px;}
+.upage-ul li .srvyInfo06{display:inline-block; width:16px; height:16px; background-position:-82px -110px !important; margin:6px 8px 0px 0px;}
 
 /* 검색 */
 .searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:0px;}
@@ -3886,7 +3889,7 @@ input[type=text]{height: 26px;}
 input{height: 24px !important;}
 select{min-height: 24px !important;}
 .imgbtn{height: 23px; line-height: 23px; margin-bottom: 0px;}
-.lnbUL div:hover .list_text { color: #0470E4; font-weight: bold; }
+/*.lnbUL div:hover .list_text { color: #0470E4; font-weight: bold; }*/
 
 /* //20230519 자바 서브페이지 디자인수정*/
 
@@ -3957,3 +3960,34 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .searchinputBox{height: 27px !important;}
 
 #normalScreen .file .imgbtn{margin-bottom: 2px !important;}
+
+
+.community_section01{height: 101px;}
+.contents_bannerCommunity{height: 103px; padding-top: 25px;}
+.contents_bannerCommunity p img{height: 49px;}
+.contents_categoryViewList{height: 351px;}
+.admin_menu span {padding: 4px 0px 0px 23px !important;} 
+.contents_listCommunity li{color: #333;}
+.contents_searchCategory dl dt.searchinput input{height: 34px !important;}
+#lmSearchInput{width: 70% !important}
+
+.calendar_pagenav .spanText {margin-top: -4px;}
+/* 스크롤바 */
+*::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #dedede;
+    border-radius: 8px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}

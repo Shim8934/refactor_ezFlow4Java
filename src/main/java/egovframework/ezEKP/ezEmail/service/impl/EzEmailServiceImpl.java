@@ -4912,4 +4912,27 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("checkInnerDomain ended. result = {}", result);
 		return result;
 	}
+	
+	public JSONObject getDistributionMemberList(String domain, String cn) throws Exception {
+		logger.debug("getDistributionMemberList started.");
+		logger.debug("domain=" + domain + ", cn=" + cn);
+
+		String resultCode = "";
+		JSONObject resultObject = null;
+
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistribution";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			resultObject = (JSONObject) jsonParser.parse(response);
+		}
+
+		logger.debug("getDistributionMemberList ended. resultCode=" + resultCode);
+		return resultObject;
+	}
 }

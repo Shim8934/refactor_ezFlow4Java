@@ -639,14 +639,6 @@
 					}        			
 				});	
 		    	
-//FreeT 요구사항 마이게시판 트리 없을때 안보여주기~
-//다시 메뉴 스펙이 바껴서 트리 안보여주기 없어도 안보여줄수있어서 재수정
-// 		    	if (returnXML == "<TREEVIEWDATA></TREEVIEWDATA>") {
-// 		    		$("#TreeCtrl_MyBoardTree").css("display", "none");
-// 		    	} else {
-// 		    		$("#TreeCtrl_MyBoardTree").css("display", "");
-// 		    	}
-		    	
 		    	return loadXMLString(returnXML);
 		    }
 		    var tempID;

@@ -77,7 +77,6 @@ public class EzLadderDAO extends EgovAbstractDAO {
 		return (List<LadderLineVO>) list("EzLadderDAO.ladderGameParticipant", map);
 	}
 	
-	/** boh */
 	@SuppressWarnings("unchecked")
 	public List<LadderLineVO> selectSearchUser(Map<String, Object> dataMap) throws Exception {
 		return (List<LadderLineVO>) list("EzLadderDAO.selectSearchUser", dataMap);

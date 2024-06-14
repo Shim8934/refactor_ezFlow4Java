@@ -28,6 +28,8 @@ var g_searchDate = {
 	endDate: null
 }
 
+var OrderOption = "";
+
 var cabProduceY = ""; // 기록물철등록부에서 기록물보기로 진입한 경우, 선택된 기록물철분류의 생산년도를 담는 변수
 
 /* 2022-12-27 홍승비 - 기록물철 검색 시 생산연도 조건 없는 경우, 반드시 회계연도 '이하' 조건을 사용하기 위한 회계연도 전역변수 추가 */
@@ -165,7 +167,12 @@ function ezCabMunuCtl(MenuType, selRow) {
             break;
 
         case "1":
-
+        	/* 2023-06-28 한태훈 - 통합 PC 저장 시 지워졌던 네 개의 버튼 - 등록정보, 공람정보, 철검색, 목록출력 버튼 보이기 (나머지 버튼들은 아래 if문으로 조절됨) */
+			document.getElementById("tDocInfo").style.display = "";
+			document.getElementById("tdViewRecInfo").style.display = "";
+			document.getElementById("tdCabSelect").style.display = "";
+			document.querySelector("#trRecSubMenu #tdDocListPrint").style.display = "";
+        	
             if (typeof (tdRegRecord) != "undefined" && typeof (tdRegRecord) != "unknown") {
                 if (GetCabChargerRight() == "true")
                     document.getElementById("tdRegRecord").style.display = "";
@@ -208,7 +215,9 @@ function ezCabMunuCtl(MenuType, selRow) {
             }
             
             if (typeof (tdbtnSetRecRole) != "undefined" && typeof (tdbtnSetRecRole) != "unknown") {
-            	if (g_bRecAdmin || AdminYN == "TRUE" || g_bDeptCharger) {
+                // #125383 전자결재G > 업무담당자 > 대장등록과 열람권한 설정 가능
+                // 기록물 관리 책임자 외에 관리자, 작성자, 업무담당자등 버튼 감추라고 하여 변경함.
+            	if (g_bRecAdmin) {
 	                document.getElementById("tdbtnSetRecRole").style.display = "";
             	} else {
             		document.getElementById("tdbtnSetRecRole").style.display = "none";
@@ -249,7 +258,9 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (typeof (tdbtnViewRecReadHist) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
-                    if (IsUserDeptRec() == "true" && document.getElementById("tdbtnViewRecReadHist").style.display == "") {
+                    // #125383 전자결재G > 업무담당자 > 대장등록과 열람권한 설정 가능
+                    // 기록물 관리 책임자 외에 관리자, 작성자, 업무담당자등 버튼 감추라고 하여 변경함.
+                    if (g_bRecAdmin) {
                     	document.getElementById("tdbtnViewRecReadHist").style.display = "";
                     }
                     else{
@@ -261,14 +272,13 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
 
-            if (typeof (tdbtnCardSend) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
-
+            if (typeof (tdbtnCardSend) != "undefined" && typeof (tdbtnCardSend) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
                     if (selRow.getAttribute("DATA12") == "7") {
                         if (IsUserDeptRec() == "true")
-                            document.getElementById("tdbtnViewRecReadHist").style.display = "";
+                            document.getElementById("tdbtnCardSend").style.display = "";
                         else
-                            document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                            document.getElementById("tdbtnCardSend").style.display = "none";
                     }
                     else {
                         document.getElementById("tdbtnCardSend").style.display = "none";
@@ -282,7 +292,7 @@ function ezCabMunuCtl(MenuType, selRow) {
             if (document.getElementById("tdGongRam")) {
 //                if ((GetAttribute(selRow, "DATA15") == "011" || GetAttribute(selRow, "DATA15") == "001") && arr_userinfo[1] == GetAttribute(selRow, "DATA3") && GetAttribute(selRow, "DATA8") === "00")
 				// 2020-01-08 정주환 공람발송 기안자는 항상 on
-                if ((((GetAttribute(selRow, "DATA15") == "001" || GetAttribute(selRow, "DATA15") == "019") && arr_userinfo[1] == GetAttribute(selRow, "DATA3")) || (GetAttribute(selRow, "DATA15") == "011" && arr_userinfo[1] == GetAttribute(selRow, "DATA19"))) && GetAttribute(selRow, "DATA8") === "00")
+                if ((((GetAttribute(selRow, "DATA15") == "001" || GetAttribute(selRow, "DATA15") == "019" || GetAttribute(selRow, "DATA15") == "014") && arr_userinfo[1] == GetAttribute(selRow, "DATA3")) || (GetAttribute(selRow, "DATA15") == "011" && arr_userinfo[1] == GetAttribute(selRow, "DATA19"))) && GetAttribute(selRow, "DATA8") === "00")
                     document.getElementById("tdGongRam").style.display = "";
                 else
                     document.getElementById("tdGongRam").style.display = "none";
@@ -354,25 +364,20 @@ function IsUserDeptRec() {
     }
 }
 function GetCabChargerRight() {
-    if (AdminYN == "TRUE") {
-        return "true";
+    if (g_ItemDeptID == DeptID)
+    {
+        if (g_bRecAdmin)
+        {
+            return "true";
+        }
+        else
+        {
+            return g_bCabCharger.toString();
+        }
     }
-    else {
-        if (g_ItemDeptID == DeptID)
-        {
-            if (g_bRecAdmin)
-            {
-                return "true";
-            }
-            else			
-            {
-                return g_bCabCharger.toString();
-            }
-        }
-        else	
-        {
-            return "false";
-        }
+    else
+    {
+        return "false";
     }
 }
 
@@ -917,11 +922,13 @@ function InsertToRecListView(Resultxml) {
         DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                 
         DocList.SetTitle("RecTitle");
+        // 2023-03-20 한태훈 - 기록물 등록대장, 부서공유함 복수선택 체크박스 추가
+        if (typeof(g_sFlag) != "undefined" && (g_sFlag == "m01" || g_sFlag == "docShare")) { DocList.SetCheckBoxFlag(true); }
         DocList.SetSecurityFlag(true);
         DocList.SetSecurityIdx(13);
         DocList.DataSource(xmlDoc);                             
         DocList.DataBind("lvtDoclist");
-        
+
         if (typeof (cabinetAttachPage) != "undefined" && cabinetAttachPage) {
         	// 분리첨부 검색 페이지에서 의견 아이콘 삭제
         	$(".OpIcon").remove();
@@ -1082,7 +1089,16 @@ function GetHearderXml() {
 }
 
 function lvtDoclist_HeaderClick(pHeader) {
-    if (pHeader != "")
+    if (OrderCell == pHeader) {
+        if (OrderOption == "")
+            OrderOption = "DESC";
+        else
+            OrderOption = "";
+    }
+    else {
+        OrderCell = pHeader;
+        OrderOption = "";
+    }
         SortList(pHeader);
 }
 
@@ -1261,7 +1277,7 @@ function ViewDoc_onclick() {
         if (DocList_Flag == "RECORD" || DocList_Flag == "Delivery") {
             var securityApprovalFlag = DocList_Flag == "RECORD" ? trim_Cross(selRow.getAttribute("DATA14")) : trim_Cross(selRow.getAttribute("DATA8"));
             if (securityApprovalFlag != "null" && securityApprovalFlag != "" && securityApprovalFlag >= GetTodayDate()) {
-                if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE" || GetUserRole() == "Admin" ) {
+                if (CheckAprLine(selRow.getAttribute("DATA1")) == "TRUE" || GetUserRole() != "User" ) {
                     chk_Passwd(UserID, ViewDoc_onclick_Complete);
                 } else {
                     OpenAlertUI(strLang580);
@@ -2042,7 +2058,7 @@ function btnSearchDelivery_onclick(opnOption) {
 
     var url = "/ezApprovalG/searchDelivery.do";
 
-    var OpenWin = window.open(url, "SearchDelivery_Cross", GetOpenWindowfeature(460, 370));
+    var OpenWin = window.open(url, "SearchDelivery_Cross", GetOpenWindowfeature(460, 470));
     try { OpenWin.focus(); } catch (e) { }
 }
 

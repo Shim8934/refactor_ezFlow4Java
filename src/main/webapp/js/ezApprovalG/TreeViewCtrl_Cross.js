@@ -51,6 +51,7 @@
 			treeView.DataBind("TreeView");
         }
     } catch (ErrMsg) {
+        console.log(ErrMsg);
         alert(" TreeViewinitialize : " + ErrMsg.description);
     }
 }

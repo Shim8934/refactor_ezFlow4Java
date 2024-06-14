@@ -350,9 +350,28 @@
 		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=ml" + "&companyId=" + companyId;
 			    window.open(url , "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
+
+			function excelExport() {
+				companyId = document.all("ListCompany") == null ? companyId : document.getElementById("ListCompany").value;
+				var dvGroupListObj = $("[id^='lvUserList_TR_']").get();
+				var dvGroupList = new Array();
+
+				if(dvGroupListObj.length > 0) {
+					dvGroupListObj.forEach(function (e, i) {
+						dvGroupList.push(e.getAttribute('data1'));
+					});
+				}
+
+				var params = {'companyID' : companyId, 'dvGroupList' : dvGroupList};
+				var paramsString = Object.entries(params).map(item => item.join('=').replace(/,/g, '&'+item[0]+'=')).join('&');
+				var pURL = "/admin/ezEmail/mailExcelExportDistributionList.do" + "?" + paramsString;
+				saveExcel.location.href = pURL;
+
+			}
 		</script>
 	</head>
 	<body class="mainbody">
+	<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	<xml id="listviewheader" style="display:none">
 	  <LISTVIEWDATA>
 	    <HEADERS>
@@ -380,6 +399,7 @@
 		    	<li><span onClick="mod_dl()"><spring:message code='ezEmail.t61' /></span></li>
 		      	<li><span class="icon16 icon16_delete" onClick="del_dl()"></span></li>
 		      	<li><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
+				<li onclick="excelExport();"><span><spring:message code='ezStatistics.t1003' /></span></li>
 		    </ul>
 	  </div>
 	  <script type="text/javascript">

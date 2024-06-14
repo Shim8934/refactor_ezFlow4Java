@@ -415,9 +415,10 @@ img { border:0px;}
 }
 #cmhome_type2 .info_box .master p {
     padding: 0px;
-    margin: 4px 0 0 0px;
     line-height: 18px;
     display: inline-block;
+	margin: -2px 0px 0px 0px;
+	width: 109px;
 	
 }
 #cmhome_type2 .info_box .pic {
@@ -473,7 +474,7 @@ img { border:0px;}
 
 #cmhome_type2 .info_list {
     border-top: #E1E1E1;
-    padding: 10px 20px 20px 20px;
+    padding: 10px 10px 20px 20px;
     list-style: none;
     font-size: 12px;
 }
@@ -520,6 +521,7 @@ img { border:0px;}
 }
 #cmhome_type2 .btn_join img {
 	vertical-align:middle;
+	display: none;
 }
 
 #cmhome_type2 .leftmenu {
@@ -653,9 +655,10 @@ img { border:0px;}
 }
 #cmhome_type3 .info_box .master p {
     padding: 0px;
-    margin: 4px 0 0 0px;
     line-height: 18px;
     display: inline-block;
+	margin: -2px 0px 0px 0px;
+	width: 109px;
 	
 }
 #cmhome_type3 .info_box .pic {
@@ -711,7 +714,7 @@ img { border:0px;}
 
 #cmhome_type3 .info_list {
     border-top: #E1E1E1;
-    padding: 10px 20px 20px 20px;
+    padding: 10px 10px 20px 20px;
     list-style: none;
     font-size: 12px;
 }
@@ -757,6 +760,8 @@ img { border:0px;}
 }
 #cmhome_type3 .btn_join img {
 	vertical-align:middle;
+	display: none;
+
 }
 
 #cmhome_type3 .leftmenu {
@@ -892,9 +897,10 @@ img { border:0px;}
 }
 #cmhome_type4 .info_box .master p {
     padding: 0px;
-    margin: 4px 0 0 0px;
     line-height: 18px;
     display: inline-block;
+	margin: -2px 0px 0px 0px;
+	width: 109px;
 	
 }
 #cmhome_type4 .info_box .pic {
@@ -950,7 +956,7 @@ img { border:0px;}
 
 #cmhome_type4 .info_list {
     border-top: #E1E1E1;
-    padding: 10px 20px 20px 20px;
+    padding: 10px 10px 20px 20px;
     list-style: none;
     font-size: 12px;
 }
@@ -997,6 +1003,8 @@ img { border:0px;}
 }
 #cmhome_type4 .btn_join img {
 	vertical-align:middle;
+	display: none;
+
 }
 
 #cmhome_type4 .leftmenu {
@@ -1073,7 +1081,7 @@ img { border:0px;}
 	vertical-align:middle;
 	float:left;
 	height:93px;
-	background:url(../images/kr/community/type3/introduce_img.png) no-repeat right 20px;
+	background:url(../images/kr/community/type4/introduce_img.png) no-repeat right 20px;
 }
 #cmhome_type4 .introduce p {
 	margin:0px;
@@ -1136,13 +1144,14 @@ img { border:0px;}
 	color:#333;
 }
 #cmhome_type5 .info_box .master p {
-	padding:0px;
-	margin:4px 0 0 0px;
-	line-height:18px;
-	display:inline-block;
-
+    padding: 0px;
+    line-height: 18px;
+    display: inline-block;
+	margin: -2px 0px 0px 0px;
+	width: 109px;
 	
 }
+
 #cmhome_type5 .info_box .pic {
 	position:absolute;
 	top:15px;
@@ -1258,6 +1267,7 @@ _list li {
 }
 #cmhome_type5 .btn_join img {
 	vertical-align:middle;
+	display: none;
 }
 
 #cmhome_type5 .leftmenu {
@@ -1358,7 +1368,7 @@ _list li {
 /*  common-board */
 .board_area {
 	clear:both;
-	margin:35px 10px 0px 7px;
+	margin:0px 10px 0px 7px;
 	padding:0px;
 	overflow:hidden;
 }
@@ -1384,19 +1394,20 @@ _list li {
 .btype_list {
 	margin:0px; 
 	padding:0px;
-	height:160px;
+	height:182px;
+	margin-top: 20px;
 }
 .btype_list .title {
 	position:relative;
 	margin:0px;
-	padding:1px 5px;
+	padding:1px 5px 0px 1px;
 	border-bottom: 2px solid #042C5A;
 	height:25px;
 	line-height:25px;
 	font-size:13px;
 	color:#042C5A;
 	font-weight:bold;
-	/* background:url(../images/kr/community/type1/icon_arrow02.gif) no-repeat 0px 8px; */
+	/* background:url(../images/kr/community/type1/icon_arrow02.gif) no-repeat 1px 12px; */
 		
 }
 .btype_list .title .more {
@@ -1416,8 +1427,8 @@ _list li {
 	clear:both;
 	margin:0px; 
 	padding:0px 0px 0px 0px;
-	line-height:23px;
-	height:23px;
+	line-height:27px;
+	height:27px;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;
@@ -1583,3 +1594,38 @@ _list li {
 #cpublic{margin-top:2px;}
 #mailBoxInfo{font-weight: normal;}
 .urgency{color:red !important;}
+
+/* 20231114 커뮤 수정 */
+.admin_menu span{padding: 3px 0px 0px 23px; height: 18px;}
+.info_box #pic{left: 7px !important;}
+.info_box #pic img{width: 55px !important; height: 55px !important;}
+#mastericon{padding: 0px !important;}
+.info_box .master{margin: -2px 0px 9px 66px !important;}
+.cmhome_left .info .info_count{padding: 4px 10px 11px !important; height: auto !important;}
+.cmhome_left .info .info_list{padding: 11px 6px 6px 9px !important;}
+.cmhome_left .info .info_box{padding: 15px 10px 2px 6px !important;}
+#btn_MemberIn, #btn_MemberJoinIng{margin-top: 10px !important;}
+#btn_MemberIn img{display: none;}
+.cmhome_left .info .info_list li{word-break: break-all !important;}
+.btype_list .title{border-bottom: 1px solid #d8d8d8;}
+/* #coplogo{width: 1220px !important;} */
+/* .cmhome_top .homeimg{padding: 0px 0px 10px !important;} */
+.board_area .title{font-size: 15px; height: 30px; line-height: 30px;}
+/* .board_area .title img{display: none;} */
+.introduce .bgimg{height: 60px !important;}
+.cmhome_right .introduce{padding: 0px !important;}
+.cmhome_right .introduce p{height: 67px !important;}
+.cmhomelist tr td{color: #333;}
+
+
+#cmhome_type3 .btype_list .title{color: #ada74b;}
+#cmhome_type4 .btype_list .title{color: #37634a;}
+
+.cmhome_left .leftmenu .node_selected{ height: 26px !important; line-height: 26px !important; }
+.cmhome_left .leftmenu .node_normal{ height: 26px !important; line-height: 26px !important; }
+#img_TreeViewTreeCtrl0_0{vertical-align: top !important; margin-top: 6px !important;}
+.cmhome_left .leftmenu .tree_minus {background-position: 4px -79px !important; margin-top:4px !important}
+.cmhome_left .leftmenu .tree_plus {background-position: 3px -106px !important; margin-top:4px !important}
+
+
+/* //20231114 커뮤 수정 */

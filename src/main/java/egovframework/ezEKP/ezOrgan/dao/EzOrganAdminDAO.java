@@ -1914,7 +1914,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	    	
     		logger.debug("curDN : " + curDN);
     		logger.debug("movDN: " + movDN);
-    		// 여기
+
     		Map<String, Object> map = new HashMap<String, Object>();
     		map.put("v_CN", vo.getCn());
     		
@@ -2294,6 +2294,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public OrganDeptVO getDeptDisplayNm(OrganDeptVO vo) throws Exception {
 		return (OrganDeptVO) select("EzOrganAdminDAO.getDeptDisplayNm",vo);
+	}
+
+	public String getDeptParentCn(OrganDeptVO vo) throws Exception {
+		return (String) select("EzOrganAdminDAO.getDeptParentCn",vo);
 	}
 	
 	public OrganUserVO getAddJobInfo(Map<String, Object> map) throws Exception {

@@ -162,7 +162,6 @@
 				var ele = document.getElementById(splFolder);
 				var folderMailCnt = ele.getAttribute('data-folderMailCnt');
 				if (folderMailCnt === null || typeof folderMailCnt === "undefined") {
-					// 이 경우가 나오면 안되요.
 					console.log('folderTotalCount is null or undefined');
 					return;
 				} else if (folderMailCnt < 1) {

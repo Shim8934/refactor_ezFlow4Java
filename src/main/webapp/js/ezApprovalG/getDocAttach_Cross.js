@@ -257,7 +257,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 	                        return;
 	                    }
                 	} else {
-                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
+                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=&docAttachParent=" + escapenew(tempDocID);
                 	}
                 	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
                 	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";

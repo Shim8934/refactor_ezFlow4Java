@@ -436,16 +436,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	    String tempHtml = htmlBuilder.toString();
 
-        for(String imgSrc : imgSrcs) {
+        for (String imgSrc : imgSrcs) {
             String contentType = "application/octet-stream";
             String extension = ".gif"; //기존확장자가.gif로고정되어있었으므로,디폴트로사용함
 
             InputStream tempIn = null;
             try {
-            	if(imgSrc.contains("222.106.242.180")){
+            	if (imgSrc.contains("222.106.242.180")) {
             		continue;
-            	}else{
-            		contentType = URLConnection.guessContentTypeFromStream(Files.newInputStream(Paths.get(realPath + imgSrc)));
+            	} else {
+            		tempIn = Files.newInputStream(Paths.get(realPath + imgSrc));
+            		contentType = URLConnection.guessContentTypeFromStream(tempIn);
             	}
             } catch (IOException e) {
                 //url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
@@ -559,8 +560,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 byte[] imageByte = byteOutStream.toByteArray();
                 String strImageData = new String(Base64.getMimeEncoder().encodeToString(imageByte));
 
-                byteOutStream.close();
-
                 imagesBuilder.append(strImageData + commonUtil.CRLF);
                 imagesBuilder.append("--" + m_strBoundary);
             } catch (Exception e) {
@@ -568,6 +567,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             } finally {
                 if (in != null) {
                     in.close();
+                }
+                if (byteOutStream != null) {
+                	byteOutStream.close();
                 }
             }
         }
@@ -1766,6 +1768,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("regdate","2024-01-17 00:00:00");
 			put("description","인도네시아어 사용여부(YES: 사용, NO: 사용안함, default: NO) 언어코드 id : Indonesian, 국가코드 ID : Indonesia");
 			put("config_type","환경설정");
+		}});
+		test.add(new HashMap<String, Object>(){{
+			put("confName","useEachMailDefault"); // property_name
+			put("property_value","NO");
+			put("config_name","메일 개별발신 디폴트 사용여부");
+			put("regdate","2024-01-30 00:00:00");
+			put("description","시스템 > 패러메터 > 개별발신 디폴트 사용  메일쓰기 시 개별발신 사용을 디폴트로 설정한다. 사용 : YES , 사용안함 : NO (default : NO)");
+			put("config_type","메일");
+			put("property","USEEACHMAILDEFAULT"); // property_name (UPPER 조건 처리를 위하여 대문자로 전달)
 		}});
 
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
@@ -3491,5 +3502,71 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     @Override
     public void insertLoadTimeForApprAllConfig() {
     	ezCommonDAO.insertLoadTimeForApprAllConfig();
+    }
+
+	@Override
+	public void createTblDeptChangeInfo() throws Exception {
+		ezCommonDAO.createTblDeptChangeInfo();
+	}
+    @Override
+    public void insertSurveyPostingMaxPeriodConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+
+            ezCommonDAO.insertSurveyPostingMaxPeriodConfig(map);
+        }
+    }
+
+    @Override
+    public void alterFileNameForWebfolderHistory() throws Exception {
+        ezCommonDAO.alterFileNameForWebfolderHistory();
+    }
+	
+	/** 2023-06-27 한태훈 - 전자결재 > 통합PC저장 다운로드 이력 남기는 테이블 생성(차후에 다른 이력을 남기기 위한 테이블로 쓸 수 있음) */	
+	@Override
+	public void createTblTotalHistory() throws Exception {
+		logger.debug("createTblTotalHistory started");
+		ezCommonDAO.createTblTotalHistory();
+		logger.debug("createTblTotalHistory ended");
+	}
+
+    public void insertdelAttachByOthersConfing() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertdelAttachByOthersConfing(map);
+        }
+    }
+    
+    @Override
+    public void insertUseHideHeaderArea() throws Exception {
+    	List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+    	
+    	for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertUseHideHeaderArea(map);
+        }
+    }
+
+    // 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+    public void alterRepeatFlagForResourceInfo() throws Exception {
+        ezCommonDAO.alterRepeatFlagForResourceInfo();
+    }
+
+    /* 2024-05-29 김유진 - tenant_config 작업; 전자결재G 비전자문서등록 양식 확장자 정보추가 */
+    public void insertApprNonElecRecTypeConfing() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertApprNonElecRecTypeConfing(map);
+        }
     }
 }

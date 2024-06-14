@@ -536,6 +536,15 @@
 					} else {
 						$("#returnFlag").html("<spring:message code='ezResource.kmsr13'/>");
 					}
+
+					// 반복예약허용 Flag
+					var repeatFlag = result.resBrd.repeatFlag;
+
+					if (repeatFlag == "1") {
+						$("#repeatFlag").html("<spring:message code="ezResource.lyj02"/>");
+					} else {
+						$("#repeatFlag").html("<spring:message code="ezResource.lyj03"/>");
+					}
 					
 					$("#resDate").html(result.resBrd.makeDate);
 					
@@ -589,7 +598,7 @@
 	</head>
 	<!-- 2018-06-13 구해안 우측 여백수정 -->
 	<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
-	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px;" id="BodyTop">
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px; ovverflow-x: scroll; min-width: 950px;" id="BodyTop">
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="${brdNm}"><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -611,7 +620,7 @@
     			</c:if>
             </ul>
 		</div>
-		<div class="calendar_pagenav">
+		<div class="calendar_pagenav" style='left: max(50%, 550px);'>
 	        <ul class="contentlayout">
 	            <li class="contentlayout_left" id="preM"></li>
 	            <li class="contentlayout_right" id="preN"></li>
@@ -680,10 +689,10 @@
 		                <li><a rel="modal:close"><span></span></a></li>
 		            </ul>
 		        </div>
-	        	<table id="resourceDataTable" style="width:680px; /* margin-top:10px; */">
+	        	<table id="resourceDataTable" style="width:680px; display: table-cell;/* margin-top:10px; */">
 					<tr>
-						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-						<td colspan="2"><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
+						<th style="width: 100px; height:30px; background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
+						<td style="width: 500px;" colspan="2"><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
 					</tr>
 					<%-- <tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.rkms01'/></th>
@@ -696,7 +705,11 @@
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
 						<td colspan="2" style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
-					</tr>							
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code="ezResource.lyj01"/></th>
+						<td colspan="2" id="repeatFlag"></td>
+					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
 						<td colspan="2" id="approveFlag"></td>

@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,14 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFCell;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
@@ -59,6 +67,7 @@ import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.PasswordPolicyVO;
@@ -1029,7 +1038,6 @@ public class EzSystemAdminController {
 		return jObj.toString();
 	}
 	
-	// 이하 재은 수정중
 	@RequestMapping(value="/admin/ezSystem/systemIPManager.do", method=RequestMethod.GET)
 	public String systemIPManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("systemIPManager started");
@@ -2657,7 +2665,7 @@ public class EzSystemAdminController {
 				adminType = egovMessageSource.getMessage("ezOrgan.t303", locale);
 			} else if (adminType.contains("e=")) {
 				adminType = egovMessageSource.getMessage("ezOrgan.kbm01", locale);
-			} else { // s
+			} else { 
 				adminType = egovMessageSource.getMessage("ezOrgan.t9904", locale);
 			}
 
@@ -3098,6 +3106,397 @@ public class EzSystemAdminController {
 		}
 
 		logger.debug("userChageHistExcelExport ended.");
-	}	
+	}
+	
+	
+	/*
+	 * 사용자 변경 히스토리 메인 호출 
+	 * 2023-07-03 장혜연
+	 */
+	@RequestMapping(value = "/admin/ezSystem/systemDeptChangeHist.do", method = RequestMethod.GET)
+	public String deptChangeHistory(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		
+		logger.debug("started deptChangeHistory controller.");
+
+		LoginVO user = commonUtil.checkAdmin(loginCookie);
+
+		if (user == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String companyId = user.getCompanyID();
+		int tenantId = user.getTenantId();
+
+		List<OrganDeptVO> lists = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
+
+		boolean isMasterAdmin = user.getRollInfo().contains("c=1");
+
+		List<OrganDeptVO> companyList = lists.stream().filter(list -> isMasterAdmin || list.getCn().equals(companyId))
+				.collect(Collectors.toList());
+
+		model.addAttribute("list", companyList);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("isMasterAdmin", isMasterAdmin);
+
+		logger.debug("ended deptChangeHistory controller.");
+
+		return "/ezSystem/systemDeptChangeHist";
+	}
+	
+	/**
+	 * 부서 변경 히스토리 데이터 리스트 호출
+	 * 2023-07-03 장혜연
+	 */
+	@RequestMapping(value = "/admin/ezSystem/deptChangeHistList.do", method = RequestMethod.POST)
+	public String deptChangeHistList(@CookieValue("loginCookie") String loginCookie, Model model,
+			HttpServletRequest req, @RequestParam(required = false) String searchKeycode,
+			@RequestParam(required = false) String searchKeyword,
+			@RequestParam(required = false) String searchKeycodeForType,
+			@RequestParam(required = false) String startDate, @RequestParam(required = false) String endDate)
+			throws Exception {
+
+		logger.debug("started deptChangeHistList controller.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		int tenantId = userInfo.getTenantId();
+		boolean isMasterAdmin = userInfo.getRollInfo().contains("c=1"); // 전체관리자
+		String offset = userInfo.getOffset();
+		String currPage = req.getParameter("pageNum");
+
+		if (StringUtils.isBlank(currPage)) {
+			currPage = "1";
+		}
+
+		int maxItemPerPage = 20;
+		int currentPage = Integer.parseInt(currPage);
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		String companyId = req.getParameter("companyId"); // 선택된 회사
+		logger.debug("companyId : " + companyId);
+
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+		if (userInfo.getLang().equals(sysLang)) {
+			sysLang = "primary";
+		}
+
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		logger.debug("serchkeyword : {}", searchKeyword);
+		List<DeptChangeInfoVO> deptChangeHistList = ezSystemAdminService.getDeptChHistList(
+				Integer.valueOf(tenantId), commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeyword, 
+				searchKeycode, searchKeycodeForType, sysLang, startDate, endDate, companyId, isMasterAdmin);
+		
+		// 로그인 ip의 국가를 표시하기 위함
+		String systemLang = userInfo.getLang();
+		String systemCountryName = "";
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
+
+		for (DeptChangeInfoVO vo : deptChangeHistList) {
+			String ip = vo.getExecutorIp();
+			String countryName = "";
+			String countryCode = "";
+			logger.debug("ip : {} ", vo.getExecutorIp());	
+			
+			if(!"".equals(ip) || "null".equals(ip)) {
+				
+				if (ip.equals("0:0:0:0:0:0:0:1")) {
+					ip = "127.0.0.1";
+				}
+	
+				switch (systemLang) {
+				case "1":
+					systemCountryName = "ko";
+					break;
+				case "2":
+					systemCountryName = "en";
+					break;
+				case "3":
+					systemCountryName = "ja";
+					break;
+				case "4":
+					systemCountryName = "zh";
+					break;
+				default:
+					systemCountryName = "ko";
+					break;
+				}
+	
+				if (StringUtils.isNotBlank(ip)) {
+					if (commonUtil.checkLocalIP(ip)) {
+						countryCode = systemCountryCode;
+					} else {
+						List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
+						if (countryVo.size() == 0) {
+							countryName = "?";
+						} else {
+							countryCode = countryVo.get(0).getCountryCode();
+						}
+					}
+				} else {
+					countryName = "?";
+				}
+	
+				if (countryName != "?") {
+					Locale localeCountry = new Locale(systemCountryName, countryCode);
+					countryName = localeCountry.getDisplayCountry(localeCountry);
+					countryName = countryName.replaceAll(" ", "");
+				}
+				vo.setCountryName(countryName);
+			
+			}else {
+				vo.setExecutorIp("");
+			}
+		}
+		
+		int itemCnt = ezSystemAdminService.getDeptChHistListCount(tenantId, commonUtil.getMinuteUTC(offset),
+				searchKeyword, searchKeycode, searchKeycodeForType, sysLang, startDate, endDate, companyId, isMasterAdmin);
+		int totalPage = itemCnt / maxItemPerPage;
+		
+		if (itemCnt < 1) {
+			totalPage = 1;
+		}
+		
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1;
+		}
+
+	
+		
+		currentPage = Math.min(currentPage, totalPage);
+		model.addAttribute("deptChangeHistList", deptChangeHistList);
+		model.addAttribute("lang", sysLang);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("itemCnt", itemCnt);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("searchKeycode", searchKeycode);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+
+		
+		logger.debug("ended deptChangeHistList controller.");
+
+		return "json";
+	}
+	
+	/*
+	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
+	 * 2024-03-15 장혜연
+	 */
+	@RequestMapping(value = "/admin/ezSystem/deptChageHistExcelExport.do", method = RequestMethod.GET)
+	@ResponseBody
+	public void deptChageHistExcelExport (@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, String searchKeycode, String searchKeyword, String searchKeycodeForType,
+			String startDate, String endDate, Locale locale, HttpServletResponse response) throws Exception {
+		logger.debug("deptChageHistExcelExport started.");
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+
+		int tenantId = user.getTenantId();
+		boolean isMasterAdmin = user.getRollInfo().contains("c=1"); // 전체관리자
+		String offset = user.getOffset();
+		String currPage = request.getParameter("pageNum");
+
+		int maxItemPerPage = 20;
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+
+		String companyId = request.getParameter("companyId"); // 선택된 회사
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+
+		if (user.getLang().equals(sysLang)) {
+			sysLang = "primary";
+		}
+
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
+		List<DeptChangeInfoVO> deptChangeHist = new ArrayList<DeptChangeInfoVO>();
+		int totalCount = 0;
+		
+		
+		String fileName = startDate + "_" + endDate + "_deptChangeHistory";
+		
+		deptChangeHist = ezSystemAdminService.getDeptChHistList(Integer.valueOf(tenantId),
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeyword, searchKeycode,
+				searchKeycodeForType, sysLang, startDate, endDate, companyId, isMasterAdmin);
+		totalCount = ezSystemAdminService.getDeptChHistListCount(tenantId, commonUtil.getMinuteUTC(offset),
+				searchKeyword, searchKeycode, searchKeycodeForType, sysLang, startDate, endDate, companyId, isMasterAdmin);
+		
+		String deptNm = "";
+		String parentNm = "";
+		String compNm = "";
+		String updateType = "";
+		String executorNm = "";
+		String countryName = "";
+		String countryCode = "";
+		String systemCountryName = "";
+		List<List<String>> rowDeptValue = new ArrayList<List<String>>();
+
+		for (DeptChangeInfoVO deptInfo : deptChangeHist) {
+			String targetNm = "";
+			List<String> cellDeptValue = new ArrayList<>();
+
+			updateType = deptInfo.getUpdateType();
+
+			deptNm = deptInfo.getDeptNm() + "(" + deptInfo.getDeptId() + ")";
+			parentNm = deptInfo.getParentDeptNm() + "(" + deptInfo.getParentDeptId() + ")";
+			compNm = deptInfo.getCompanyNm();
+			executorNm = deptInfo.getExecutorNm() + "(" + deptInfo.getExecutorId() + ")";
+			if ("nameChange".equals(updateType)) {
+				targetNm = deptInfo.getTargetDeptNm() + "/" + deptInfo.getParentDeptNm();
+			} else if ("move".equals(updateType)) {
+				targetNm = deptInfo.getDeptNm() + "/" + deptInfo.getTargetDeptNm();
+			}
+
+			if (!"primary".equals(sysLang)) {
+				deptNm = deptInfo.getDeptNm2() + "(" + deptInfo.getDeptId() + ")";
+				parentNm = deptInfo.getParentDeptNm2() + "(" + deptInfo.getParentDeptId() + ")";
+				compNm = deptInfo.getCompanyNm2();
+				executorNm = deptInfo.getExecutorNm2() + "(" + deptInfo.getExecutorId() + ")";
+				if ("nameChange".equals(updateType)) {
+					targetNm = deptInfo.getTargetDeptNm2() + "/" + deptInfo.getParentDeptNm2();
+				} else if ("move".equals(updateType)) {
+					targetNm = deptInfo.getDeptNm2() + "/" + deptInfo.getTargetDeptNm2();
+				}
+			}
+
+			switch (updateType) {
+			case "add":
+				updateType = egovMessageSource.getMessage("ezSystem.jhy03", locale);
+				break;
+			case "move":
+				updateType = egovMessageSource.getMessage("ezWebFolder.t282", locale);
+				break;
+			case "delete":
+				updateType = egovMessageSource.getMessage("ezSystem.jhy05", locale);
+				break;
+			case "nameChange":
+				updateType = egovMessageSource.getMessage("ezSystem.jhy15", locale);
+				break;
+			case "abolition":
+				updateType = egovMessageSource.getMessage("ezSystem.jhy13", locale);
+				break;
+			}
+
+			String ip = deptInfo.getExecutorIp().equals("0:0:0:0:0:0:0:1") ? "127.0.0.1" : deptInfo.getExecutorIp();
+
+			switch (user.getLang()) {
+			case "1": systemCountryName = "ko"; break;
+			case "2": systemCountryName = "en"; break;
+			case "3": systemCountryName = "ja"; break;
+			case "4": systemCountryName = "zh"; break;
+			default: systemCountryName = "ko"; break;
+			}
+
+			if (StringUtils.isNotBlank(ip)) {
+				if (commonUtil.checkLocalIP(ip)) {
+					countryCode = ezCommonService.getTenantConfig("systemCountryCode", tenantId);
+				} else if (commonUtil.getCountryInfo(ip).size() > 0) {
+					countryCode = commonUtil.getCountryInfo(ip).get(0).getCountryCode();
+				}
+			}
+
+			if (!"".equals(countryCode)) {
+				Locale localeCountry = new Locale(systemCountryName, countryCode);
+				countryName = localeCountry.getDisplayCountry(localeCountry);
+				countryName = countryName.replaceAll(" ", "");
+			}
+
+			cellDeptValue.add(deptNm);
+			cellDeptValue.add(parentNm);
+			cellDeptValue.add(compNm);
+			cellDeptValue.add(deptInfo.getUpdatedt());
+			cellDeptValue.add(targetNm);
+			cellDeptValue.add(updateType);
+			cellDeptValue.add(executorNm);
+			if (!"".equals(countryName)) {
+				cellDeptValue.add(ip + "(" + countryName + ")");
+			} else {
+				cellDeptValue.add(ip);
+			}
+
+			rowDeptValue.add(cellDeptValue);
+		}
+
+		SXSSFRow row = null;
+		SXSSFCell cell = null;
+		String[] histHeaderArr = egovMessageSource.getMessage("ezSystem.jhyDeptChangeHistory", locale).split(";");
+
+		try (SXSSFWorkbook workbook = new SXSSFWorkbook(totalCount + 2)) {
+			SXSSFSheet sheet = workbook.createSheet("deptChangeHistory");
+			CellStyle headerStyle = workbook.createCellStyle();
+			CellStyle bodyStyle = workbook.createCellStyle();
+
+			// 시트 기본 열 넓이
+			sheet.setDefaultColumnWidth(20);
+
+			// 폰트 설정
+			Font font = workbook.createFont();
+			font.setFontHeightInPoints((short) 11);
+			font.setBold(Boolean.TRUE);
+			headerStyle.setFont(font);
+
+			// 헤더 스타일
+			headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(CellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(CellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(CellStyle.BORDER_THIN);
+			headerStyle.setVerticalAlignment((short) 1);
+
+			// 바디 스타일
+			bodyStyle.setBorderBottom(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(CellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(CellStyle.BORDER_THIN);
+
+			// 1행 - 조회한 기간, count 입력
+			row = sheet.createRow(0);
+			cell = row.createCell(0);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
+			cell = row.createCell(histHeaderArr.length - 1);
+			cell.setCellStyle(bodyStyle);
+			cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
+
+			// 2행 - 헤더 입력
+			row = sheet.createRow(1);
+			for (int head = 0; head < histHeaderArr.length; head++) {
+				cell = row.createCell(head);
+				cell.setCellStyle(headerStyle);
+				cell.setCellValue(histHeaderArr[head]);
+			}
+
+			// 3행 ~ - 바디 입력 
+			for (int nRow = 2; nRow < totalCount + 2; nRow++) {
+				row = sheet.createRow(nRow);
+
+				for (int nCell = 0; nCell < histHeaderArr.length; nCell++) {
+					cell = row.createCell(nCell);
+					cell.setCellStyle(bodyStyle);
+					cell.setCellValue(rowDeptValue.get(nRow - 2).get(nCell));
+				}
+			}
+			response.setCharacterEncoding("UTF-8");
+			response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xlsx");
+			response.setContentType("application/vnd.ms-excel");
+
+			workbook.write(response.getOutputStream());
+			workbook.close();
+		};
+		logger.debug("deptChageHistExcelExport ended.");
+	}
 
 }

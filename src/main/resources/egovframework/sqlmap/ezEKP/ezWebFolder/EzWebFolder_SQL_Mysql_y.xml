@@ -1628,7 +1628,8 @@
 				FILE_PATH = #filePath#,
 				UPDATE_DATE = #timeUTC#,
 				UPDATE_ID = #userId#,
-				FILE_SIZE = #fileSize#
+				FILE_SIZE = #fileSize#,
+				FILE_NAME = #fileName#
 			WHERE
 				FILE_ID   = #fileId#
 			AND

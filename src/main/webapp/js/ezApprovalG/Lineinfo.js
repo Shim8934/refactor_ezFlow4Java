@@ -209,8 +209,10 @@ function OnSelChange_onclick() {
     			else if (p_IsDept == "N") {
     				var child = GetChildNodes(Reporter.parentElement);
     				for (var i = 0; i < child.length; i++) {
-    					if (child[i].nodeType == 1)
-    						child[i].style.display = "";
+    					if (child[i].nodeType == 1 && child[i].name != undefined) {
+							child[i].style.display = "";
+						}
+    						
     				}
     				if (pReDraftFlag != "HAPYUI" || pReDraftFlag != "HABYUI") {
     					if (GetAttribute(pAPRLINE.GetSelectedRows(0)[0], "DATA9") == "Y") {
@@ -4741,7 +4743,7 @@ function event_getAprLineDeptFullTree() {
             treeViewScrollTo("FromTreeView");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
-            alert(strLang249 + g_xmlHTTP.statusText);
+            alert(strLang249 + g_xmlHTTP.status);
             g_xmlHTTP = null;
         }
     }
@@ -4872,7 +4874,7 @@ function event_getReceiptDeptFullTree() {
             treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
         }
         else {
-            alert(strLang249 + g_xmlHTTP.statusText);
+            alert(strLang249 + g_xmlHTTP.status);
             g_xmlHTTP = null;
         }
     }

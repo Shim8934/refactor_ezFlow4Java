@@ -202,6 +202,22 @@
 	            xmldom_attachlist = null;
 	            return strRet;
 	        }
+	        
+	        var isSubmit = false;
+	        
+	        function checkDuplicateSubmit(pMode) {
+	        	console.log("click!");
+				if (!isSubmit) { 
+					isSubmit = true;
+					
+					SaveItem(pMode);
+
+					setTimeout(function() {
+						isSubmit = false;
+					}, 5000);
+				}
+	        }
+	        
 	        function SaveItem(pMode)
 	        {
 	            if (pBoardID == "") {
@@ -829,10 +845,10 @@
 	            <td style="height:20px">
 	              <div id="menu">
 	                <ul>
-	                  <li ><span onClick="SaveItem('new');"><spring:message code='ezBoard.t98'/></span></li>
+	                  <li ><span onClick="checkDuplicateSubmit('new');"><spring:message code='ezBoard.t98'/></span></li>
 	                  <li ><span ID='btn_Reply' onclick='btn_PhotoAttachAdd()'><spring:message code='ezBoard.t1001'/></span></li>
 	                  <li ><span id="Span2" onClick="return btn_PhotoAttachDel()"><spring:message code='ezBoard.t1003'/></span></li>
-	                  <li><span  onClick="SaveItem('temp');"><spring:message code='ezBoard.t10034'/></span></li>
+	                  <li><span  onClick="checkDuplicateSubmit('temp');"><spring:message code='ezBoard.t10034'/></span></li>
 	                </ul>
 	              </div>
 	              <div id="close">

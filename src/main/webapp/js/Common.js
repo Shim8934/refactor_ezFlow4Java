@@ -592,9 +592,8 @@ var listExcelDown = function(params) {
 	params += "&fileExt=" + "xlxs";	// xls..
 	params += "&listType=" + "list"; //list,document...
 	params += "&listName=" + "편의상 dao 호출명";
-	params += "&header=" + "문서id;제목;파일명;기안자...";	// header가 없어야할 case가 있을까?
+	params += "&header=" + "문서id;제목;파일명;기안자...";
 	params += "&width=" + "1000;2000;..." heaer 수와 동일해야함
-	// 그 외 (dao 등등..)
 	params += "&startDate=" + startDate;
 	params += "&endDate=" + endDate;
 	

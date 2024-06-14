@@ -693,7 +693,7 @@ function GetDocInfoDataForDraftAll(mode, field) {
 			if (objNodes.length > 0) {
 				value = getNodeText(objNodes[0]);
 			}
-			else { // 사용되지 않는 분기로 보이는데...
+			else { // 사용되지 않는 분기로 보임
 				if (flag == "END") {
 					Gyuljedate = GetDocInfoDataForDraftAll("APR", "ENDDATE");
 					sendAlertMail();

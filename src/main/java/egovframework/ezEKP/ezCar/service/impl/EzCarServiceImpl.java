@@ -167,11 +167,7 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
         				strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(carGetAdmSubClsTree.get(i)), false, langStr));
         			}
         		} else {*/
-        		//요기서들어가네
-        		
-        			strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(carGetAdmSubClsTree.get(i)), false, langStr));
-        		
-        		//}
+        		strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(carGetAdmSubClsTree.get(i)), false, langStr));
         	}
         	strTreeStyle.append("</NODES>");
         }
@@ -308,11 +304,7 @@ public class EzCarServiceImpl extends EgovAbstractServiceImpl implements EzCarSe
         				strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(carGetAdmSubClsTree.get(i)), false, langStr));
         			}
         		} else {*/
-				//요기서들어가네
-				
 				strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(carGetAdmSubClsTree.get(i)), false, langStr));
-				
-				//}
 			}
 			strTreeStyle.append("</NODES>");
 		}

@@ -1445,7 +1445,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("tenantID", tenantID);
 		map.put("check", check);
 		
-		logger.debug("sql이 없을수도 있나");
 		return mResourceDAO.getScheduleApprList(map);
 	}
 	

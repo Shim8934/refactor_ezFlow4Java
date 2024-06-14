@@ -109,7 +109,7 @@ public class MApprovalGGWController {
 	}
 	
 	/**
-	 * 모바일 G/W 전자결재 [GET] 결재문서 리스트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT), 공유결재(SHARE))
+	 * 모바일 G/W 전자결재 [GET] 결재문서 리스트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT), 공유결재(SHARE), 반송된(BAN))
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/{type}/list/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
@@ -172,7 +172,7 @@ public class MApprovalGGWController {
 	}
 	
 	/**
-	 * 모바일 G/W 전자결재 [GET] 결재문서 카운트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT), 공유결재(SHARE))
+	 * 모바일 G/W 전자결재 [GET] 결재문서 카운트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT), 공유결재(SHARE), 반송된(BAN))
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/mobile/ezapproval/{type}/list-count/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")

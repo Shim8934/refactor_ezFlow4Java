@@ -57,7 +57,7 @@ function GetTreeBrdsInfo() {
 			}
 			
 		} else {
-			var rep = new RegExp( "&", "gi" );				// 정규식을 쓴이유는 ??????
+			var rep = new RegExp( "&", "gi" );
 			var brd_nm = TreeView.getvalue(nodeIdx, "DATA2");
 			//var brd_nm = brd_nm.replace(rep, "chr(38)");	
 			

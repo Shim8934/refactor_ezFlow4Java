@@ -196,7 +196,7 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/getUserCapacity.do", method = RequestMethod.GET)
+	@RequestMapping(value="/admin/ezCabinet/getUserCapacity.do", method = RequestMethod.GET, produces = "application/text; charset=UTF-8")
 	@ResponseBody
 	public String jsonGetUserCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetUserCapacity start");

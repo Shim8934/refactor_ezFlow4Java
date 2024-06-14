@@ -329,13 +329,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				OrganUserVO userVO = getUserInfo(cn, "1", tenantID);
 				compId = userVO.getPhysicalDeliveryOfficeName();
 			}
-			
+
+			/* 2024.02.27 한슬기 : 회사 간 부서이동 허용으로 변경
 			// 회사 간 부서 이동하지 못하도록 막음
 			if (type.equalsIgnoreCase("group") && !parentDept.getExtensionAttribute2().equals(compId)) {
 				result = "DIFF_COMPANY";
 				logger.debug("moveEntry ended. result=" + result);
 				return result;
 			}
+			 */
 			
 			String oldGroupAddr = "";
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -458,9 +460,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     		map.put("v_EXTENSIONATTRIBUTE2", dept.getExtensionAttribute2());
     		
     		if (dept.getDeptLevel() != null) {
+    			
     		    try {
-        		    int deptLevel = Integer.parseInt(dept.getDeptLevel()) + 1;
+    		    	// 2024.03.19 한슬기 : 부서이동시 이동하는 부서의 하위부서 deptLevel이 변경되지 않는 문제 수정
+    		    	// (새 상위부서레벨 - 기존의 레벨) 값을 하위부서모두에 더해준다.
+        		    int deptLevel = Integer.parseInt(dept.getDeptLevel().trim()) + 1;
+        		    int deptLevelBefore = Integer.parseInt(dept1.getDeptLevel().trim());
+        		    
+        		    int deptLevelChange = deptLevel - deptLevelBefore;
+        		    
         		    map.put("v_DEPTLEVEL", deptLevel);
+        		    map.put("v_DEPTLEVEL_CHANGE", deptLevelChange);
+        		    
     		    } catch (NumberFormatException e) {
     		        map.put("v_DEPTLEVEL", null);
     		    }
@@ -2845,6 +2856,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		deptVO.setCn(cn);
 		deptVO.setTenantId(tenantID);
 		return ezOrganAdminDao.getDeptDisplayNm(deptVO);
+	}
+
+	@Override
+	public String getDeptParentCn(String cn, int tenantID) throws Exception {
+		OrganDeptVO deptVO = new OrganDeptVO();
+		deptVO.setCn(cn);
+		deptVO.setTenantId(tenantID);
+		return ezOrganAdminDao.getDeptParentCn(deptVO);
 	}
 
 	@Override

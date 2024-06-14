@@ -730,11 +730,10 @@
 				document.getElementById("updateDateHeader").className = "wfFileUploadDate";
 				document.getElementById("updateDateHeader2").className = "wfFileUploadDate";
 
-				
 				if (result == null || result.length == 0) {
 					var row = document.createElement("tr");
 					var column = document.createElement("td");
-					
+
 					column.setAttribute("colspan", "10");
 					column.setAttribute("align", "center");
 					column.setAttribute("bgcolor", "#FFFFFF");
@@ -857,11 +856,17 @@
 					fileIconColumn.appendChild(fileIconElement);
 					
 					nameColumn.textContent = resultJson["fileName"];
+					nameColumn.setAttribute("title", resultJson["fileName"]);
 					creatorColumn.textContent = resultJson["createName1"];
 					createDateColumn.textContent = resultJson["createDate"].substring(0, 10);
 					updateDateColumn.textContent = resultJson["updateDate"].substring(0, 10);
 					absolutePathColumn.textContent = resultJson["filePosition"];
-					
+
+					var fileExt = resultJson["fileExt"];
+					if (fileExt) {
+						nameColumn.setAttribute("ext", fileExt);
+					}
+
 					if (resultJson["fileShareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");
 						spanElmt.innerHTML = "<img src='/images/webfolder/sharing2.png' class='webFolderImg' />";

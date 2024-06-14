@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -1599,6 +1600,8 @@ public class EzAttitudeController {
 	public void qstResultsaticGetXlsAtt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultsaticGetXlsAtt started");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		/* String headerFLAG = "";
 		 
 		if (request.getParameter("headerFlag") != null) {
@@ -1628,7 +1631,8 @@ public class EzAttitudeController {
 		      
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report";
+		// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_수정신청관리')
+		pFileName = strDate + "_" + egovMessageSource.getMessage("ezAttitude.t7", userInfo.getLocale());
 		  
 		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
@@ -1657,7 +1661,7 @@ public class EzAttitudeController {
 			}
 		}//body
 		
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode(pFileName, "UTF-8") + ".xls\"");
 		workbook.write(response.getOutputStream());
 		  
 		workbook.close();
@@ -3078,7 +3082,8 @@ public class EzAttitudeController {
 			
 			if (reqType.equals("check")) {
 	//			근태조회엑셀
-				pFileName = EgovDateUtil.getToday("-") +"_attitudeReport.xls";
+				// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_근태입력관리')
+				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t5", locale);
 				
 				//header
 				row.createCell(0).setCellValue("NO.");
@@ -3391,7 +3396,8 @@ public class EzAttitudeController {
 				}			
 			} else if (reqType.equals("absent")){
 	//			미입력자조회엑셀
-				pFileName = EgovDateUtil.getToday("-") +"_absentedReport.xls";
+				// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_미입력자관리')
+				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t6", locale);
 				
 				//header
 				row.createCell(0).setCellValue("NO");
@@ -3437,7 +3443,8 @@ public class EzAttitudeController {
 				
 			} else if (reqType.equals("history")){
 	//			관리내역조회엑셀
-				pFileName = EgovDateUtil.getToday("-") +"_historyReport.xls";
+				// 2024-03-12 조수빈 - 파일명 다국어 처리 (한국어의 경우 'YYYY-MM-DD_관리내역')
+				pFileName = EgovDateUtil.getToday("-") + "_" + egovMessageSource.getMessage("ezAttitude.t57", locale);
 				
 				//header
 				row.createCell(0).setCellValue("NO");
@@ -3532,7 +3539,7 @@ public class EzAttitudeController {
 				sheet.setColumnWidth(7, (sheet.getColumnWidth(7)) + 512);
 			}
 			
-			response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode(pFileName, "UTF-8") + ".xls\"");
 			workbook.write(response.getOutputStream());
 			
 			//workbook.close();

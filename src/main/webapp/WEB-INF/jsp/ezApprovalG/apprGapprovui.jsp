@@ -199,6 +199,11 @@
 			
 			// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+			
+			// 2024-05-23 김우철 - 헤더 숨기기 기능 사용 여부
+			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
+
+			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
 	        
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -227,7 +232,6 @@
 					}
 					var val = parseInt($("#selectImg option:selected").val());
 					var divImg = $("#message").contents().find(".divImg");
-					$(divImg).children().css("zoom",100+"%");
 					var pages = $(divImg).children().length;
 					if(selectOp==1){
 						for(var i=1; i<=pages; i++){
@@ -244,27 +248,20 @@
 			    		var ch = document.body.clientHeight;
 			    		var top  = sh / 2 - ch / 2 - 100;
 			    		var left = sw / 2 - cw / 2;
-			    		 window.moveTo(left, top);
-			    		 window.moveTo(left, top);
 						$("#officeBtn").css("display","");
 						var selectNum = $("#message").contents().find(".divImg").find(".imgDiv").index();
 						$("#selectImg option:eq("+ selectNum +")").prop('selected', true);
 					}
-					var imgMove = $("#message").contents().find(".divImg").find(".imgDiv");
-					$(imgMove).find(".office-image").css("zoom", 100+"%");
-					if(imgMove.length == 0){
-						$("#zoomIn").css("display","none");
-						$("#zoomOut").css("display","none");
-						$("#zoomReset").css("display","none");
-						$("#prev").css("display","none");
-						$("#prevAll").css("display","none");
-						$("#nextAll").css("display","none");
-						$("#next").css("display","none");
-						$("#selectImg").css("display","none");
-						$("#all").attr("src", "/images/icviewer_downsize.png");
-						
+
+					if(divImg.length > 0){
+					    imgTag = divImg.find("img").get(0);
+					    if(typeof imgTag != "undefined"){
+                            imgTag.onload = function() {
+                                officeImgExist = true;
+                            }
+					    }
+                        setTimeout(satImgCheck,3000);
 					}
-					
 				});
 				
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
@@ -462,6 +459,8 @@
 		            }
 		        }
 		        message.SetEditable(false);
+		        
+		        checkHeaderAction();
 		    }
 
 			/* 2023-06-26 민지수 - 완료문서일 경우 분기처리를 위해 docstate 전달 */
@@ -1453,7 +1452,8 @@
 		    }
 		    var PrtBodyContent;
 		    function btnPrint_onclick() {
-		        PrintClick("Cross", pDocID, "ING");
+		        headerAction("open");
+		    	PrintClick("Cross", pDocID, "ING");
 		    }
 		
 		    /* 2020-02-24 홍승비 - 편집모드 > 저장 시 원문서 정보와 수정이력을 바로 업데이트하도록 수정하여, 기존 경고창 주석처리 */
@@ -1520,6 +1520,7 @@
 		    
 		    function btnMail_onclick() {
 		    	var imgUrl="";
+		    	headerAction("open");
 		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content")).then(function(canvas) {
 		    	    $.ajax({
                         type:"POST",
@@ -1637,6 +1638,8 @@
 		        if (rtn[0] == "TRUE") {
 		            g_SepAttachLVXml = rtn[1];
 		            message.DocumentBodySetAttribute("SepAttachLVXml", g_SepAttachLVXml);
+		            //김우철
+		            SaveFile();
 		        }
 		    }
 		    function GetSepAttParamXml(g_SepAttachLVXml) {
@@ -1913,10 +1916,10 @@
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {
-		                		//없으니깐 암것도 안해도되려나 싶은데 기존꺼를 뺏을수도 있으니까 무조건 삭제
+		                		// ret[22] 값이 "noItem"일 경우 기존 데이터가 있을 수 있으므로 삭제함
 		                		delAprLineInfoCC();
 		                	} else if (ret[22] == "sameItem") {
-		                		//같으니깐 암것도 안해도 되려나
+		                		// ret[22] 값이 "sameItem"일 경우 동작 없음
 		                	} else {
 		                		//회람 저장
 		                		SaveAprLineInfoCC(ret[22]);
@@ -1969,6 +1972,7 @@
 		            setMenuBar("btnAddRelatedCabinet", false);
 		            document.getElementById("btnEditCancle").style.display = ""; // 편집모드 내부 취소버튼 표출
 		            
+		            headerAction("open");
 		            beforeHtml = message.Get_EditorBodyHTML();
 		            message.SetEditable(true);
 		            var contentEditable = message.DocumentBodyGetAttribute("contentEditable");
@@ -2008,6 +2012,7 @@
 		            
 		            /* 2020-02-24 홍승비 - 편집모드 > 저장 > 즉시 편집 전&후의 html과 수정이력을 저장하도록 수정 */
 		            message.SetEditable(false);
+		            headerAction("open");
 		            var afterEditDoc = message.Get_EditorBodyHTML();
 		            afterEditDoc = EmbedContentIntoXML(afterEditDoc);
 		            
@@ -2331,6 +2336,38 @@
                  }
 	    	}
 	    	
+	    	function checkHeaderAction() {
+	    		if (useHideHeaderArea == "YES" && message.GetListItem(message.GetFieldsList(), "headerArea") != null) {
+                	document.getElementById("headerTabTR").style.display = "";
+                	$('#headerMenu').hover(function() {
+                		$('#headerMenu').css('border-bottom', '3px black solid');
+                		$('#headerHide').css({'color':'black', 'font-weight':'bold'});
+                	}, function() {
+                		$('#headerMenu').css('border-bottom', 'solid 1px #eaeaea');
+                		$('#headerHide').css({'color':'#8f8e93', 'font-weight':'normal'});
+                	}) 
+                } else if (document.getElementById("headerTabTR") != null) {
+                	document.getElementById("headerTabTR").style.display = "none";
+                }
+	    	}
+	    	
+	    	function headerAction(action) {
+	    		if (useHideHeaderArea == "YES") {
+	    			var fields = message.GetFieldsList();
+		    	    var field = message.GetListItem(fields, "headerArea");
+		    	    
+		    	    if (field) {
+		    	        if (field.style.display == "none" || action == "open") {
+		    	        	field.style.display = "";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 숨기기";
+		    	        } else {
+		    	            field.style.display = "none";
+		    	            document.getElementById("headerHide").innerHTML = "헤더 펼치기";
+		    	        }
+		    	    }
+	    		}
+	    	}
+	    	
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">
@@ -2375,6 +2412,17 @@
 			</div>
 		</td> 
 		  </tr>
+		  <c:if test="${useHideHeaderArea == 'YES'}">
+			  <tr id="headerTabTR" style="display:none;">
+			  	<td>
+					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
+					  	<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+					  		<span id="headerHide" style="color:#8f8e93; font-size:14px;">헤더 숨기기</span>
+					  	</div>
+					  </div>
+			  	</td>
+			  </tr>
+		  </c:if>
 		  <tr>
 		      <td style="vertical-align:top;height:90%;">
 		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>

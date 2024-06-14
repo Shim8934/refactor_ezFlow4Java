@@ -153,20 +153,25 @@ function event_onRSC_searchMasterStart()
 
 function GetOpenPosition(popUpW, popUpH) {
     //2011.07.28 FireFox는 ShowModalDialog() 호출시 화면 중앙에 뜨지 않아 top, left를 지정해 줘야한다.
-    var heigth = window.screen.availHeight;
+	var heigth = window.screen.availHeight;
     var width = window.screen.availWidth;
-    var left = 0;
-    var top = 0;
+    var pTop = (heigth - popUpH) / 2;
+    var pLeft = (width - popUpW) / 2;
 
-    var pleftpos;
-    pleftpos = parseInt(width) - popUpW;
-    heigth = parseInt(heigth) - popUpH;
-    width = parseInt(width) - pleftpos;
+   	var dualScreenTop = window.screenY;
+    var dualScreenLeft = window.screenX;
+    	
+   	pTop += dualScreenTop;
+   	pLeft += dualScreenLeft;
+   				
+	if (/MSIE|Trident/.test(window.navigator.userAgent)) {
+   		if (window.screenLeft > window.screen.width) {
+   			pTop -= 223;
+   			pLeft -= 375;
+   		}
+   	}
 
-    left = pleftpos / 2;
-    top = heigth / 2;
-
-    var feature = ",left=" + left + ",top=" + top;
+    var feature = ",left=" + pLeft + ",top=" + pTop;
 
     return feature
 }
@@ -531,7 +536,7 @@ function onrscGetDeclineRequest()
 		}
 		else
 		{
-			alert("Error " + m_xmlHTTP.status +	": " + m_xmlHTTP.statusText);		 
+			alert("Error " + m_xmlHTTP.status);
 		}
 	}
 }

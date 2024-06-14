@@ -13,6 +13,7 @@
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
@@ -264,6 +265,7 @@
 		    	}
 		    	
 		        if (inboxRuleCon1.value.length > 0) {
+		            inboxRuleCon1.value = inboxRuleCon1.value.replace(/<[^>]*>?/g, '');
 		            var ischeck = true;
 		            if (checkRulekind(_RuleKind))
 		                ischeck = IsEmail(inboxRuleCon1.value);
@@ -298,16 +300,16 @@
 		                    }
 		                }
 		            }
-
+					var inboxRuleValue = escapeHtml(inboxRuleCon1.value);
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-							ConCellRow.setAttribute("value",inboxRuleCon1.value);
-							ConCellRow.firstChild.innerText = inboxRuleCon1.value;
+							ConCellRow.setAttribute("value",inboxRuleValue);
+							ConCellRow.firstChild.innerText = inboxRuleValue;
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-							Conitems.innerHTML += createCellRow(inboxRuleCon1.value, inboxRuleCon1.value);
+							Conitems.innerHTML += createCellRow(inboxRuleValue, inboxRuleValue);
 		                }
 		            }
 		            else {
@@ -595,6 +597,7 @@
 		        if (obj.value != "") {
 		            for (var i = 0; i < obj.getAttribute("value").split(';').length; i++) {
 		                var _value = obj.getAttribute("value").split(';')[i];
+						_value = escapeHtml(_value);
 		                pop_addcon2(_RuleKind, _value, i+1);
 		            }
 		        }

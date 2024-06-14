@@ -201,9 +201,9 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String showDisplay = "";
 		
 		String docHref = "";
-		String reSendFlag = "N"; //?
-		String fileUploadType = ""; //?
-		String strSelectHtml = ""; //?
+		String reSendFlag = "N";
+		String fileUploadType = "";
+		String strSelectHtml = "";
 		
 		
 		// get user credentials

@@ -366,13 +366,13 @@ function CabinetTree() {
 	function getSelected(selectElmt) {
 		var divTree      = document.getElementById(_treeElmtId);
 		// 2023-06-22 황인경 - 디자인 개선 > 캐비넷 > 좌측메뉴 > 트리 구조, 메뉴선택 클래스 제어
-		var previousElmt = divTree.querySelector("span[class='list_text node_selected']");
+		var previousElmt = divTree.querySelector("span[class='list_text node_selected selectedNode']");
 		
 		if (previousElmt != null) {
-			previousElmt.className = "list_text";
+			previousElmt.className = "list_text spanName";
 		}
 		
-		selectElmt.className = "list_text node_selected";
+		selectElmt.className = "list_text node_selected selectedNode";
 	}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, extenParam) {

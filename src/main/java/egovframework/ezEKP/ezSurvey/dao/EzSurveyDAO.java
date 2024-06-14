@@ -271,4 +271,7 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (SimpleUserVO)select("EzSurveyDAO.getSurveyUserInfoAddJob", map);
 	}
 
+	public String checkTenantConfig(Map<String, Object> map) throws Exception{
+		return (String) select("EzSurveyDAO.checkTenantConfig", map);
+	}
 }

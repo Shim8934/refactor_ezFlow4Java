@@ -37,7 +37,6 @@
 					e.preventDefault();
 				});
 
-				adjustTextareaHeight();
                 window.addEventListener('resize', adjustTextareaHeight);
 			}
 			
@@ -46,10 +45,17 @@
 	    	} 
 
 			function adjustTextareaHeight() {
-                var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+			    var viewScale = window.devicePixelRatio;
                 var windowHeight = window.innerHeight;
-                var newHeight = windowHeight < 599 ? 98 : windowHeight - document.querySelector('tbody tr:first-child').offsetHeight - 25;
-                secondRowFirstTD.style.height = newHeight + 'px';
+                if (viewScale < 0.9 || windowHeight > 700) {
+                    var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+                    var newHeight = windowHeight - document.getElementById('firstRowFirstTrTable').offsetHeight - 125;
+                    secondRowFirstTD.style.height = newHeight + 'px';
+                } else {
+                    var secondRowFirstTD = document.getElementById('secondRowFirstTd');
+                    var newHeight = 98;
+                    secondRowFirstTD.style.height = newHeight + 'px';
+                }
             }
 
 			function btnSave_Click() {
@@ -162,6 +168,13 @@
 					createNodeAndInsertText(xmlpara, objNode, "DATA", "0");
 				} else {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", "1");
+				}
+
+				// 반복예약허용 flag 넘기기
+				if (document.getElementById("repeat1").checked == true) {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "1");
+				} else {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "0");
 				}
 				
 				//createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("subOwner1").value);
@@ -491,7 +504,7 @@
       				<script type="text/javascript">
 						selToggleList(document.getElementById("menu"), "ul", "li", "0");
 					</script>
-					<table class="content">
+					<table id="firstRowFirstTrTable" class="content">
         				<tr>
         					<th> <spring:message code="ezResource.t153"/></th>
           					<td colspan="2" style="border-right: 0px;">
@@ -546,6 +559,14 @@
           					<th> <spring:message code="ezResource.t148"/></th>
           					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="" style="width: 100%" maxlength="100"></td>
         					</tr>
+							<tr>
+								<th> <spring:message code="ezResource.lyj01"/></th>
+								<td colspan="3" style="width:100%"><input type="radio" style="margin-top: 0px;" name="repeat" id="repeat1" value="0" checked>
+									<spring:message code="ezResource.lyj02"/>
+									<input type="radio" name="repeat" style="margin-top: 0px;" id="repeat2" value="1">
+									<spring:message code="ezResource.lyj03"/>
+								</td>
+							</tr>
         					<tr>
           						<th> <spring:message code="ezResource.t149"/></th>
           						<td colspan="3" style="width:100%"><input type="radio" style="margin-top: 0px;" name="approve" id="approve1" value="1" checked>
@@ -601,7 +622,7 @@
 				</td>
   			</tr>
   			<tr>
-    			<td id="secondRowFirstTd" style="padding-bottom:1px; padding-right:12px; height:100px;">
+    			<td id="secondRowFirstTd" style="padding-bottom:1px; padding-right:12px; height:100%;">
     			    <textarea name="Brd_Explain"  id="Brd_Explain" style="margin-top:7px;width: 100%; height: 100%;resize:none;" maxlength="2000"></textarea>
                 </td>
   			</tr>

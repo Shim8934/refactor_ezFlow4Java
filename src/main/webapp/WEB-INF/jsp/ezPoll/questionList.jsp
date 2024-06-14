@@ -551,7 +551,7 @@
 						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
 					</th> 
 <!-- 					<th width="20px"><img src="/images/ImgIcon/view-importance.gif" border="0"></th> -->
-					<th><spring:message code="ezPoll.t106"/></th> 
+					<th width="400px"><spring:message code="ezPoll.t106"/></th> 
 					<th width="60px"><spring:message code="ezPoll.t104"/></th> 					
 					<th width="90px"><spring:message code="ezPoll.t107"/></th> 
 					<th width="60px"><spring:message code="ezPoll.t108"/></th>

@@ -2854,6 +2854,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		if (primary.equals("1")) {
 			primary = "";
+		} else {
+			primary = "2";
 		}
 		map.put("primary", primary);
 		map.put("userId", userId);

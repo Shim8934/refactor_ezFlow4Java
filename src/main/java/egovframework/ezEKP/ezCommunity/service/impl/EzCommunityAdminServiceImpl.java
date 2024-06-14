@@ -96,7 +96,6 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		return list;
 	}
 
-	//b_clubname은 어디에 쓰이는가?
 	@Override
 	public String communityCloseCom(List<CommunityCComCloseVO> clubList, int curPage, int comNoPerPage, LoginVO userInfo) throws Exception {
 		StringBuilder sb = new StringBuilder();

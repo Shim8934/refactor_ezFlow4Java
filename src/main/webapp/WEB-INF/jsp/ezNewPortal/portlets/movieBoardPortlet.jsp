@@ -79,7 +79,7 @@
 								<img id="playButton" src="/images/playButton.png" style="position:absolute; width:64px; left:calc(50% - 32px); top:34%; cursor:pointer; opacity:0.9;" onclick="moviePlay()"/>
 								<div id="titleDiv" class="noti_portlet_list" style="position:absolute; width:100%; height:55px; margin:-57px 0px 0px 0px; padding:0px;
 								 text-align:center; line-height:58px; color:white; background-color:rgba(0, 0, 0, 0.5);">
-								 	<span style="width:90%; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; display:inline-block;">${movie.title}</span>
+								 	<span style="width:90%; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; display:inline-block;"><c:out value='${movie.title}'/></span>
 								 </div>
 							 </div>
 						</li>

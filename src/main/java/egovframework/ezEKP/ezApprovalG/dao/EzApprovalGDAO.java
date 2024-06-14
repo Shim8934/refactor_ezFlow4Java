@@ -3879,4 +3879,21 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public String checkSecurityApprovalDate(Map<String, Object> map)  throws Exception {
 		return (String) select("EzApprovalG.checkSecurityApprovalDate", map);
     }
+	
+	/* 2023-03-24 한태훈 - 전자결재G > 통합PC저장 다운로드(gubun 값 : D) 이력 남기기 (차후 다운로드 이력 외 다른 이력 삽입 가능) */
+	public void insertTotalSaveHistory(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertTotalSaveHistory",map);
+	}
+
+	/* 2023-06-22 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 통합PC저장을 위해 선택된 모든 문서들의 결재문서, 첨부파일, 문서첨부파일 정보 리턴 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGAttachInfoVO> getTotalDownloadAll(Map<String, Object> map) throws Exception {
+		return (List<ApprGAttachInfoVO>) list("EzApprovalG.getTotalDownloadAll", map);
+	}
+	
+	/* 2023-06-22 한태훈 - 전자결재G > 기록물등록대장, 완료문서조회 > 다중 문서 통합PC저장 시 선택된 모든 완료 문서의 모든 의견 정보 리턴 */
+	@SuppressWarnings("unchecked")
+	public List<ApprGOpinionVO> getDocsOpinionInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGOpinionVO>) list("EzApprovalG.getDocsOpinionInfo", map);
+	}
 }

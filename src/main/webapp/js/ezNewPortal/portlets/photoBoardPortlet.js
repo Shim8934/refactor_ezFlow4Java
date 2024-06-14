@@ -37,7 +37,7 @@ function photoBoardMovePage(event) {
 				for (var i = 0; i < resultCount; i++) {
 					strHTML += "<li>";
 					strHTML += "<img src='" + result[i].filePath + "', data1='" + result[i].boardID + "' data2='" + result[i].itemID + "' onclick='photoItemRead(this)'>";
-					strHTML += "<span>" + result[i].title + "</span>";
+					strHTML += "<span>" + MakeXMLString(result[i].title) + "</span>";
 					strHTML += "</li>";
 
 				}

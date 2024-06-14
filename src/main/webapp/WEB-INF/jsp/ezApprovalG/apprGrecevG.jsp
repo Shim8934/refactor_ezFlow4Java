@@ -649,7 +649,7 @@
 	        }
 		    
 		    var writeboardselect_modal_dialogArguments = new Array();
-		    function btnBoard_onclick() {
+		    /*function btnBoard_onclick() {
 		        if (pFormHref == "") {
 		            pFormHref = "/Upload_ApprovalG/" + sCompanyID + "/doc/" + CurrYear + "/1000/" + (pDocID % 1000) + "/" + pDocID + ".mht";
 		        }
@@ -658,7 +658,7 @@
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
 		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		        try { OpenWin.focus(); } catch (e) { }
-		    }
+		    }*/
 		
 		    function NewItem_onclick_Complete(ret) {
 		        if (typeof (ret) != "undefined") {
@@ -1507,7 +1507,6 @@
 				    <li id=btnReDistribute style="display:none"><span  onClick="return btnReDistribute_onclick()" ><spring:message code='ezApprovalG.t1433'/></span></li>
 				    <li id=btnOpinion><span  onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
 				    <li id="btnReqReSend" style="display:none"><span  onClick="return btnReqReSend_onclick()" ><spring:message code='ezApprovalG.t1435'/></span></li>
-				    <li id=btnBoard><span  onClick="return btnBoard_onclick()" ><spring:message code='ezApprovalG.t215'/></span></li>
 				    <li id=btnPrint><span  onClick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
 			        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 				</ul>

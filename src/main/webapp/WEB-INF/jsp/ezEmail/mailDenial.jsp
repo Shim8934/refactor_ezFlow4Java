@@ -9,6 +9,9 @@
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/ie_methods.js')}"></script>
+		<style>
+			.popuplist #TDID input[type="checkbox"]{height: 12px !important;}
+		</style>
 	    <script type="text/javascript">
 	        var arrKeyword = "";
 	        var ReturnFunction;

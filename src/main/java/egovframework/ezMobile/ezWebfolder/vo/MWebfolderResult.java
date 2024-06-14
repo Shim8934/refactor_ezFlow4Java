@@ -35,11 +35,11 @@ public class MWebfolderResult {
 	}
 	
 	public String getFolderName2() {
-		return folderName;
+		return folderName2;
 	}
 
 	public void setFolderName2(String folderName) {
-		this.folderName = folderName;
+		this.folderName2 = folderName;
 	}
 
 	public String getParentFolderId() {

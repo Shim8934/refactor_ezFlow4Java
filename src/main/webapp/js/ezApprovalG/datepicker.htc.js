@@ -71,7 +71,7 @@
 function datepicker(thisobjid, elobjid) {
     window[thisobjid] = this;
     var thisid = thisobjid;
-    var element = document.getElementById(elobjid); // Ãß°¡
+    var element = document.getElementById(elobjid); // ï¿½ß°ï¿½
     this.attachEvent = function (eventname, eventhandler) {
         this['on' + eventname] = eventhandler;
     }
@@ -209,7 +209,7 @@ function datepicker(thisobjid, elobjid) {
         }
         if (isie9())
             oDate = new Date(oDate);
-        //³¯Â¥,½Ã°£ ¹Ù²îÁö ¾Ê°Ô ¸·À½
+        //ï¿½ï¿½Â¥,ï¿½Ã°ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
         m_objCurDate[1].setTime(oDate.getTime());
         mfOutputDate.call(this, false, m_rgeInputDate[1], 0);
         mfOutputDate.call(this, false, m_rgeInputTime[1], 1);
@@ -473,7 +473,7 @@ function datepicker(thisobjid, elobjid) {
     this.unpopall = mfUnPopPicker;
     //checks for anything poped and unpops it
     //**********************************************************************
-    // [°¡¿Â¾ÆÀÌ]UIº¯°æ½Ã ¼öÁ¤ÇÑ ºÎºÐ
+    // [ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]UIï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½
     //**********************************************************************
     function mfUnPopPicker() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
@@ -486,10 +486,10 @@ function datepicker(thisobjid, elobjid) {
                     if (null != m_cellSelTime) {
                         //m_cellSelTime.style.backgroundColor='window';
                         //####################################################################
-                        m_cellSelTime.style.backgroundColor = '#FFFFE8'; //[°¡¿Â¾ÆÀÌ]
+                        m_cellSelTime.style.backgroundColor = '#FFFFE8'; //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
                         //####################################################################
 
-                        // ¼öÁ¤(2007.06.03) : Åä¿äÀÏ,ÀÏ¿äÀÏ »ö»ó º¯°æ
+                        // ï¿½ï¿½ï¿½ï¿½(2007.06.03) : ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ï¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                         //m_cellSelTime.style.color='windowtext';
                     }
                     m_eCalPopup.style.display = "none";
@@ -529,10 +529,10 @@ function datepicker(thisobjid, elobjid) {
                     if (null != m_cellSelTime) {
                         //m_cellSelTime.style.backgroundColor='window';
                         //####################################################################
-                        m_cellSelTime.style.backgroundColor = '#FFFFE8'; //[°¡¿Â¾ÆÀÌ]
+                        m_cellSelTime.style.backgroundColor = '#FFFFE8'; //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
                         //####################################################################
 
-                        // ¼öÁ¤(2007.06.03) : Åä¿äÀÏ,ÀÏ¿äÀÏ »ö»ó º¯°æ
+                        // ï¿½ï¿½ï¿½ï¿½(2007.06.03) : ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ï¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                         //m_cellSelTime.style.color='windowtext';
                     }
                     m_eCalPopup.style.display = "none";
@@ -572,10 +572,10 @@ function datepicker(thisobjid, elobjid) {
                     if (null != m_cellSelTime) {
                         //m_cellSelTime.style.backgroundColor='window';
                         //####################################################################
-                        m_cellSelTime.style.backgroundColor = '#FFFFE8'; //[°¡¿Â¾ÆÀÌ]
+                        m_cellSelTime.style.backgroundColor = '#FFFFE8'; //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
                         //####################################################################
 
-                        // ¼öÁ¤(2007.06.03) : Åä¿äÀÏ,ÀÏ¿äÀÏ »ö»ó º¯°æ
+                        // ï¿½ï¿½ï¿½ï¿½(2007.06.03) : ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Ï¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                         //m_cellSelTime.style.color='windowtext';
                     }
                     m_eCalPopup.style.display = "none";
@@ -671,7 +671,7 @@ function datepicker(thisobjid, elobjid) {
                 if (null != this.elemDateInputs) {
                     m_rgeInputDate = this.elemDateInputs.split(";");
                     //since we are an input field we can ignore the first
-                    //m_rgeInputDate[0] = this; // ¼³Á¤ÇÏ¸é ¾ÈµÊ.
+                    //m_rgeInputDate[0] = this; // ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Èµï¿½.
                     m_rgeInputDate[0] = window.document.getElementById(m_rgeInputDate[0]);
                     m_rgeInputDate[0].FORMATSTRING = (null != this.inputDateFormat) ? this.inputDateFormat : "[MM]/[dd]/[yyyy]";
                     m_rgeInputDate[0].WHICHDATE = 0;
@@ -821,7 +821,7 @@ function datepicker(thisobjid, elobjid) {
                 if (null != this.elemDateInputs) {
                     m_rgeInputDate = this.elemDateInputs.split(";");
                     //since we are an input field we can ignore the first
-                    //m_rgeInputDate[0] = this; // ¼³Á¤ÇÏ¸é ¾ÈµÊ.
+                    //m_rgeInputDate[0] = this; // ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Èµï¿½.
                     m_rgeInputDate[0] = window.document.getElementById(m_rgeInputDate[0]);
                     m_rgeInputDate[0].FORMATSTRING = (null != this.inputDateFormat) ? this.inputDateFormat : "[MM]/[dd]/[yyyy]";
                     m_rgeInputDate[0].WHICHDATE = 0;
@@ -971,7 +971,7 @@ function datepicker(thisobjid, elobjid) {
                 if (null != this.elemDateInputs) {
                     m_rgeInputDate = this.elemDateInputs.split(";");
                     //since we are an input field we can ignore the first
-                    //m_rgeInputDate[0] = this; // ¼³Á¤ÇÏ¸é ¾ÈµÊ.
+                    //m_rgeInputDate[0] = this; // ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Èµï¿½.
                     m_rgeInputDate[0] = window.document.getElementById(m_rgeInputDate[0]);
                     m_rgeInputDate[0].FORMATSTRING = (null != this.inputDateFormat) ? this.inputDateFormat : "[MM]/[dd]/[yyyy]";
                     m_rgeInputDate[0].WHICHDATE = 0;
@@ -1134,8 +1134,8 @@ function datepicker(thisobjid, elobjid) {
     var CONST_MS_IN_24HRS = 86400000;
     var m_fEndtimepicker24hours = false;
 
-    var m_szOOOText = "#C94545"; // ÀÏ¿äÀÏÅØ½ºÆ®»ö..
-    var m_szHalfText = "#4545c9"; // Åä¿äÀÏ ÅØ½ºÆ® »ö
+    var m_szOOOText = "#C94545"; // ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½Ø½ï¿½Æ®ï¿½ï¿½..
+    var m_szHalfText = "#4545c9"; // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø½ï¿½Æ® ï¿½ï¿½
 
     function mfCreateTimepicker() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
@@ -1165,7 +1165,7 @@ function datepicker(thisobjid, elobjid) {
 
             m_eTimePopup = m_winDocBody.appendChild(eNode.cloneNode(true));
 
-            // Ãß°¡µÈ ºÎºÐ
+            // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½Îºï¿½
             m_eTimePopup.style.width = "110px";
 
             if (m_ePopBtn.length > 1) { //if there is an endtime picker build it too
@@ -1200,7 +1200,7 @@ function datepicker(thisobjid, elobjid) {
 
             m_eTimePopup = m_winDocBody.insertAdjacentElement("BeforeEnd", eNode.cloneNode(true));
 
-            // Ãß°¡µÈ ºÎºÐ
+            // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½Îºï¿½
             m_eTimePopup.style.width = "110px";
 
             if (m_ePopBtn.length > 1) { //if there is an endtime picker build it too
@@ -1235,7 +1235,7 @@ function datepicker(thisobjid, elobjid) {
 
             m_eTimePopup = m_winDocBody.insertAdjacentElement("BeforeEnd", eNode.cloneNode(true));
 
-            // Ãß°¡µÈ ºÎºÐ
+            // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½Îºï¿½
             m_eTimePopup.style.width = "110px";
 
             if (m_ePopBtn.length > 1) { //if there is an endtime picker build it too
@@ -1257,13 +1257,13 @@ function datepicker(thisobjid, elobjid) {
     }
 
     //**********************************************************************
-    // [°¡¿Â¾ÆÀÌ]UIº¯°æ½Ã ¼öÁ¤ÇÑ ºÎºÐ
+    // [ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]UIï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½
     //**********************************************************************
     function mfCreateCalendar() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
         (function () {
             // firefox
-            // ¼öÁ¤(2007.05.29) : ÀÌÀü³âµµ/¿ù, ´ÙÀ½³âµµ/¿ù ÀÌµ¿ ¹öÆ° ¼öÁ¤
+            // ï¿½ï¿½ï¿½ï¿½(2007.05.29) : ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½
             var eTR, eTD, eNode, x, y;
             var eTable = document.createElement("TABLE");
             eTable.addEventListener("selectstart", mfOnSelectStartNo, false);
@@ -1322,7 +1322,7 @@ function datepicker(thisobjid, elobjid) {
             eTR = eTable.insertRow(-1);
             eTR.style.cssText = 'background-color:#FFFFE8;color:threedhighlight;cursor:default;';
 
-            // ¿äÀÏ Ç¥½Ã
+            // ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
             for (x = 0, y = (null != this.firstDayOfWeek) ? this.firstDayOfWeek : 0; x < 7; x++, y++) {
                 if (y > 6) y = 0;
                 eTD = eTR.insertCell(-1);
@@ -1344,7 +1344,7 @@ function datepicker(thisobjid, elobjid) {
                 eTD.nop = '1';
             }
 
-            //20070604 ÀÚ¿ø¿¹¾àÃ¢ÀÇ ³¯Â¥ ¼±ÅÃÇÒ ¶§ ¶ß´Â ´Þ·ÂÄÁÆ®·Ñ ÁÖ¸» »ö»óÁöÁ¤
+            //20070604 ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½Ã¢ï¿½ï¿½ ï¿½ï¿½Â¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß´ï¿½ ï¿½Þ·ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             for (x = 0; x < 6; x++) {
                 eTR = eTable.insertRow(-1);
                 for (y = 0; y < 7; y++) {
@@ -1372,7 +1372,7 @@ function datepicker(thisobjid, elobjid) {
         : (navigator.userAgent.indexOf('MSIE') == -1) ?
         (function () {
             // safari
-            // ¼öÁ¤(2007.05.29) : ÀÌÀü³âµµ/¿ù, ´ÙÀ½³âµµ/¿ù ÀÌµ¿ ¹öÆ° ¼öÁ¤
+            // ï¿½ï¿½ï¿½ï¿½(2007.05.29) : ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½
             var eTR, eTD, eNode, x, y;
             var eTable = document.createElement("TABLE");
             eTable.addEventListener("selectstart", mfOnSelectStartNo, false);
@@ -1431,7 +1431,7 @@ function datepicker(thisobjid, elobjid) {
             eTR = eTable.insertRow(-1);
             eTR.style.cssText = 'background-color:#FFFFE8;color:threedhighlight;cursor:default;';
 
-            // ¿äÀÏ Ç¥½Ã
+            // ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
             for (x = 0, y = (null != this.firstDayOfWeek) ? this.firstDayOfWeek : 0; x < 7; x++, y++) {
                 if (y > 6) y = 0;
                 eTD = eTR.insertCell(-1);
@@ -1453,7 +1453,7 @@ function datepicker(thisobjid, elobjid) {
                 eTD.nop = '1';
             }
 
-            //20070604 ÀÚ¿ø¿¹¾àÃ¢ÀÇ ³¯Â¥ ¼±ÅÃÇÒ ¶§ ¶ß´Â ´Þ·ÂÄÁÆ®·Ñ ÁÖ¸» »ö»óÁöÁ¤
+            //20070604 ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½Ã¢ï¿½ï¿½ ï¿½ï¿½Â¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß´ï¿½ ï¿½Þ·ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             for (x = 0; x < 6; x++) {
                 eTR = eTable.insertRow(-1);
                 for (y = 0; y < 7; y++) {
@@ -1481,7 +1481,7 @@ function datepicker(thisobjid, elobjid) {
         :
         (function () {
             // IE
-            // ¼öÁ¤(2007.05.29) : ÀÌÀü³âµµ/¿ù, ´ÙÀ½³âµµ/¿ù ÀÌµ¿ ¹öÆ° ¼öÁ¤
+            // ï¿½ï¿½ï¿½ï¿½(2007.05.29) : ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½
             var eTR, eTD, eNode, x, y;
             var eTable = document.createElement("TABLE");
             eTable.attachEvent("onselectstart", mfOnSelectStartNo);
@@ -1540,7 +1540,7 @@ function datepicker(thisobjid, elobjid) {
             eTR = eTable.insertRow();
             eTR.style.cssText = 'background-color:#FFFFE8;color:threedhighlight;cursor:default;';
 
-            // ¿äÀÏ Ç¥½Ã
+            // ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
             for (x = 0, y = (null != this.firstDayOfWeek) ? this.firstDayOfWeek : 0; x < 7; x++, y++) {
                 if (y > 6) y = 0;
                 eTD = eTR.insertCell();
@@ -1562,7 +1562,7 @@ function datepicker(thisobjid, elobjid) {
                 eTD.nop = '1';
             }
 
-            //20070604 ÀÚ¿ø¿¹¾àÃ¢ÀÇ ³¯Â¥ ¼±ÅÃÇÒ ¶§ ¶ß´Â ´Þ·ÂÄÁÆ®·Ñ ÁÖ¸» »ö»óÁöÁ¤
+            //20070604 ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½Ã¢ï¿½ï¿½ ï¿½ï¿½Â¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ß´ï¿½ ï¿½Þ·ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             for (x = 0; x < 6; x++) {
                 eTR = eTable.insertRow();
                 for (y = 0; y < 7; y++) {
@@ -1599,7 +1599,7 @@ function datepicker(thisobjid, elobjid) {
             var iMin = 0;
             var oOption = document.createElement("OPTION");
 
-            // Ãß°¡µÈ ºÎºÐ, ³¡³¯Â¥ Å©±â º¯µ¿(ys)
+            // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½Îºï¿½, ï¿½ï¿½ï¿½ï¿½Â¥ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ys)
             m_eEndTimePopup.style.width = "110px";
 
             m_eEndTimePopup.innerHTML = "";
@@ -1636,7 +1636,7 @@ function datepicker(thisobjid, elobjid) {
             var iMin = 0;
             var oOption = document.createElement("OPTION");
 
-            // Ãß°¡µÈ ºÎºÐ, ³¡³¯Â¥ Å©±â º¯µ¿(ys)
+            // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½Îºï¿½, ï¿½ï¿½ï¿½ï¿½Â¥ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ys)
             m_eEndTimePopup.style.width = "110px";
 
             m_eEndTimePopup.innerHTML = "";
@@ -1673,7 +1673,7 @@ function datepicker(thisobjid, elobjid) {
             var iMin = 0;
             var oOption = document.createElement("OPTION");
 
-            // Ãß°¡µÈ ºÎºÐ, ³¡³¯Â¥ Å©±â º¯µ¿(ys)
+            // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½Îºï¿½, ï¿½ï¿½ï¿½ï¿½Â¥ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ys)
             m_eEndTimePopup.style.width = "110px";
 
             m_eEndTimePopup.innerHTML = "";
@@ -1784,7 +1784,7 @@ function datepicker(thisobjid, elobjid) {
 
             if (iCurDate != m_objCurDate[iWhichDate].getDate()) //we passed midnight (either direction)
             {
-                ///³¯Â¥,½Ã°£ ¹Ù²îÁö ¾Ê°Ô ¸·À½
+                ///ï¿½ï¿½Â¥,ï¿½Ã°ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
                 mfOutputDate.call(this, false, m_rgeInputDate[iWhichDate], 0);
                 m_fUpdateEndtimepicker = true;
             }
@@ -1826,7 +1826,7 @@ function datepicker(thisobjid, elobjid) {
 
             if (iCurDate != m_objCurDate[iWhichDate].getDate()) //we passed midnight (either direction)
             {
-                ///³¯Â¥,½Ã°£ ¹Ù²îÁö ¾Ê°Ô ¸·À½
+                ///ï¿½ï¿½Â¥,ï¿½Ã°ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
                 mfOutputDate.call(this, false, m_rgeInputDate[iWhichDate], 0);
                 m_fUpdateEndtimepicker = true;
             }
@@ -1867,7 +1867,7 @@ function datepicker(thisobjid, elobjid) {
 
             if (iCurDate != m_objCurDate[iWhichDate].getDate()) //we passed midnight (either direction)
             {
-                ///³¯Â¥,½Ã°£ ¹Ù²îÁö ¾Ê°Ô ¸·À½
+                ///ï¿½ï¿½Â¥,ï¿½Ã°ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½
                 mfOutputDate.call(this, false, m_rgeInputDate[iWhichDate], 0);
                 m_fUpdateEndtimepicker = true;
             }
@@ -2073,7 +2073,7 @@ function datepicker(thisobjid, elobjid) {
     mfBuildMonth.iY;
 
     //**********************************************************************
-    // [°¡¿Â¾ÆÀÌ]UIº¯°æ½Ã ¼öÁ¤ÇÑ ºÎºÐ
+    // [ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]UIï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½
     //**********************************************************************
     function mfBuildMonth() {
         return (navigator.userAgent.indexOf('Firefox') != -1) ?
@@ -2109,7 +2109,7 @@ function datepicker(thisobjid, elobjid) {
                 iOffset += 12; //first date cell
                 //Loop through cells setting date numbers and color for previous month
 
-                // Áö³­´Þ ÀÏÀÚ »ö±òÁöÁ¤
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 for (x = 12, y = iLastDayPrevMonth - iOffset + 13; x < iOffset; x++, y++) {
                     rgCells[x].textContent = y;
                     rgCells[x].style.backgroundColor = 'F9F9F0';
@@ -2117,13 +2117,13 @@ function datepicker(thisobjid, elobjid) {
 
                 m_eCalTitle.idxDayOne = x - 1; //mark	this in	the	HTML
                 //Loop through cells setting date numbers and color for current month
-                // ÀÌ¹ø´Þ ÀÏÀÚ »ö±ò ÁöÁ¤
+                // ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 for (y = 1; x < iLastDayThisMonth + iOffset; x++, y++) {
                     rgCells[x].textContent = y;
                     rgCells[x].style.backgroundColor = '#FFFFE8';
                 }
                 //Loop through cells setting date numbers and color for next month
-                // ´ÙÀ½´Þ ÀÏÀÚ »ö±ò ÁöÁ¤
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 for (y = 1; x < rgCells.length; x++, y++) {
                     //exit as soon as at end of	row
                     if (((x + 9) % 7) == 0) {
@@ -2137,7 +2137,7 @@ function datepicker(thisobjid, elobjid) {
                 }
             }
 
-            // ¼±ÅÃµÈ ÀÏÀÚÀÇ Ä®¶ó°ª
+            // ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä®ï¿½ï¿½
             if (m_eCalTitle.iMonth == m_objCurDate[iWhichDate].getMonth() && m_eCalTitle.iFullYear == m_objCurDate[iWhichDate].getFullYear()) {
                 var rgCells = m_eCalPopup.getElementsByTagName('TD');
                 x = iD + m_eCalTitle.idxDayOne;
@@ -2178,7 +2178,7 @@ function datepicker(thisobjid, elobjid) {
                 iOffset += 12; //first date cell
                 //Loop through cells setting date numbers and color for previous month
 
-                // Áö³­´Þ ÀÏÀÚ »ö±òÁöÁ¤
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 for (x = 12, y = iLastDayPrevMonth - iOffset + 13; x < iOffset; x++, y++) {
                     rgCells[x].innerText = y;
                     rgCells[x].style.backgroundColor = 'F9F9F0';
@@ -2186,13 +2186,13 @@ function datepicker(thisobjid, elobjid) {
 
                 m_eCalTitle.idxDayOne = x - 1; //mark	this in	the	HTML
                 //Loop through cells setting date numbers and color for current month
-                // ÀÌ¹ø´Þ ÀÏÀÚ »ö±ò ÁöÁ¤
+                // ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 for (y = 1; x < iLastDayThisMonth + iOffset; x++, y++) {
                     rgCells[x].innerText = y;
                     rgCells[x].style.backgroundColor = '#FFFFE8';
                 }
                 //Loop through cells setting date numbers and color for next month
-                // ´ÙÀ½´Þ ÀÏÀÚ »ö±ò ÁöÁ¤
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 for (y = 1; x < rgCells.length; x++, y++) {
                     //exit as soon as at end of	row
                     if (((x + 9) % 7) == 0) {
@@ -2206,7 +2206,7 @@ function datepicker(thisobjid, elobjid) {
                 }
             }
 
-            // ¼±ÅÃµÈ ÀÏÀÚÀÇ Ä®¶ó°ª
+            // ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä®ï¿½ï¿½
             if (m_eCalTitle.iMonth == m_objCurDate[iWhichDate].getMonth() && m_eCalTitle.iFullYear == m_objCurDate[iWhichDate].getFullYear()) {
                 var rgCells = m_eCalPopup.getElementsByTagName('TD');
                 x = iD + m_eCalTitle.idxDayOne;
@@ -2247,7 +2247,7 @@ function datepicker(thisobjid, elobjid) {
                 iOffset += 12; //first date cell
                 //Loop through cells setting date numbers and color for previous month
 
-                // Áö³­´Þ ÀÏÀÚ »ö±òÁöÁ¤
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 for (x = 12, y = iLastDayPrevMonth - iOffset + 13; x < iOffset; x++, y++) {
                     rgCells[x].innerText = y;
                     rgCells[x].style.backgroundColor = 'F9F9F0';
@@ -2255,13 +2255,13 @@ function datepicker(thisobjid, elobjid) {
 
                 m_eCalTitle.idxDayOne = x - 1; //mark	this in	the	HTML
                 //Loop through cells setting date numbers and color for current month
-                // ÀÌ¹ø´Þ ÀÏÀÚ »ö±ò ÁöÁ¤
+                // ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 for (y = 1; x < iLastDayThisMonth + iOffset; x++, y++) {
                     rgCells[x].innerText = y;
                     rgCells[x].style.backgroundColor = '#FFFFE8';
                 }
                 //Loop through cells setting date numbers and color for next month
-                // ´ÙÀ½´Þ ÀÏÀÚ »ö±ò ÁöÁ¤
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 for (y = 1; x < rgCells.length; x++, y++) {
                     //exit as soon as at end of	row
                     if (((x + 9) % 7) == 0) {
@@ -2275,7 +2275,7 @@ function datepicker(thisobjid, elobjid) {
                 }
             }
 
-            // ¼±ÅÃµÈ ÀÏÀÚÀÇ Ä®¶ó°ª
+            // ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä®ï¿½ï¿½
             if (m_eCalTitle.iMonth == m_objCurDate[iWhichDate].getMonth() && m_eCalTitle.iFullYear == m_objCurDate[iWhichDate].getFullYear()) {
                 var rgCells = m_eCalPopup.cells;
                 x = iD + m_eCalTitle.idxDayOne;
@@ -2412,7 +2412,7 @@ function datepicker(thisobjid, elobjid) {
     }
 
     //**********************************************************************
-    // [°¡¿Â¾ÆÀÌ]UIº¯°æ½Ã ¼öÁ¤ÇÑ ºÎºÐ
+    // [ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]UIï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½
     //**********************************************************************
     function onClickDatePicker(event) {
         if (this != window[thisid]) {
@@ -2428,7 +2428,7 @@ function datepicker(thisobjid, elobjid) {
 
             event.cancelBubble = true;
 
-            // ¼öÁ¤(2007.05.29) : ÀÌÀü³âµµ/¿ù, ´ÙÀ½³âµµ/¿ù ÀÌµ¿ ¹öÆ° ¼öÁ¤
+            // ï¿½ï¿½ï¿½ï¿½(2007.05.29) : ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½
             var iWhichDate = null;
             var thisCell = null;
             if (typeof (srcElement.offsetParent.INPUTELEMENT) == "undefined") {
@@ -2460,7 +2460,7 @@ function datepicker(thisobjid, elobjid) {
                 || "#F3F3B7" == thisCell.style.backgroundColor.toUpperCase()
                 || "RGB(243, 243, 183)" == thisCell.style.backgroundColor.toUpperCase()) {*/
                 if (isNaN(iDate)) {
-                    //if (isNaN(iDate)) return; // ¾Æ¸¶µµ
+                    //if (isNaN(iDate)) return; // ï¿½Æ¸ï¿½ï¿½ï¿½
 
                     //if (iDate != pDate.getDate() && "#F3F3B7" == thisCell.style.backgroundColor.toUpperCase())
                     if ("#F3F3B7" == thisCell.style.backgroundColor.toUpperCase()
@@ -2475,18 +2475,18 @@ function datepicker(thisobjid, elobjid) {
 
                 var msDateSpan = m_objCurDate[1] - m_objCurDate[0];
 
-                // month ´Â -1 µÇ¾î¼­ ÀÔ·ÂµÊ(0~11)
+                // month ï¿½ï¿½ -1 ï¿½Ç¾î¼­ ï¿½Ô·Âµï¿½(0~11)
                 m_objCurDate[iWhichDate].setFullYear(m_eCalTitle.iFullYear, m_eCalTitle.iMonth, iDate);
 
                 //are we in	next/prev area?
                 //####################################################################
-                // ¼±ÅÃµÈ Ä®¶ó°ªÀÌ ÇöÀç´ÞÀÇ Ä®¶ó°¡ ¾Æ´Ñ°æ¿ì ÀÌÀü/´ÙÀ½¿ù·Î °è»êÇÑ´Ù.
-                //if( (String(thisCell.style.backgroundColor).toUpperCase() != "#FFFFE8" && String(thisCell.style.backgroundColor).toUpperCase() != "#F3F3B7") &&  iDate != pDate.getDate() ) //[°¡¿Â¾ÆÀÌ]
-                //if ((thisCell.style.backgroundColor.toUpperCase() != "#FFFFE8" && thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7")) //[°¡¿Â¾ÆÀÌ]
+                // ï¿½ï¿½ï¿½Ãµï¿½ Ä®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä®ï¿½ï¿½ ï¿½Æ´Ñ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+                //if( (String(thisCell.style.backgroundColor).toUpperCase() != "#FFFFE8" && String(thisCell.style.backgroundColor).toUpperCase() != "#F3F3B7") &&  iDate != pDate.getDate() ) //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
+                //if ((thisCell.style.backgroundColor.toUpperCase() != "#FFFFE8" && thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7")) //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
 
-                // "rgb(255, 255, 232)" ÀÌ·±½ÄÀÓ
+                // "rgb(255, 255, 232)" ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½
                 if ((thisCell.style.backgroundColor.toUpperCase() != "#FFFFE8" && thisCell.style.backgroundColor.toUpperCase() != "RGB(255, 255, 232)")
-                && (thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7" && thisCell.style.backgroundColor.toUpperCase() != "RGB(243, 243, 183)")) //[°¡¿Â¾ÆÀÌ]
+                && (thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7" && thisCell.style.backgroundColor.toUpperCase() != "RGB(243, 243, 183)")) //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
                     //####################################################################
                 {
                     if (iDate < 15)	//prev month
@@ -2526,7 +2526,7 @@ function datepicker(thisobjid, elobjid) {
 
             event.cancelBubble = true;
 
-            // ¼öÁ¤(2007.05.29) : ÀÌÀü³âµµ/¿ù, ´ÙÀ½³âµµ/¿ù ÀÌµ¿ ¹öÆ° ¼öÁ¤
+            // ï¿½ï¿½ï¿½ï¿½(2007.05.29) : ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½
             var iWhichDate = null;
             var thisCell = null;
             if (typeof (srcElement.offsetParent.INPUTELEMENT) == "undefined") {
@@ -2570,18 +2570,18 @@ function datepicker(thisobjid, elobjid) {
 
                 var msDateSpan = m_objCurDate[1] - m_objCurDate[0];
 
-                // month ´Â -1 µÇ¾î¼­ ÀÔ·ÂµÊ(0~11)
+                // month ï¿½ï¿½ -1 ï¿½Ç¾î¼­ ï¿½Ô·Âµï¿½(0~11)
                 m_objCurDate[iWhichDate].setFullYear(m_eCalTitle.iFullYear, m_eCalTitle.iMonth, iDate);
 
                 //are we in	next/prev area?
                 //####################################################################
-                // ¼±ÅÃµÈ Ä®¶ó°ªÀÌ ÇöÀç´ÞÀÇ Ä®¶ó°¡ ¾Æ´Ñ°æ¿ì ÀÌÀü/´ÙÀ½¿ù·Î °è»êÇÑ´Ù.
-                //if( (String(thisCell.style.backgroundColor).toUpperCase() != "#FFFFE8" && String(thisCell.style.backgroundColor).toUpperCase() != "#F3F3B7") &&  iDate != pDate.getDate() ) //[°¡¿Â¾ÆÀÌ]
-                //if ((thisCell.style.backgroundColor.toUpperCase() != "#FFFFE8" && thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7")) //[°¡¿Â¾ÆÀÌ]
+                // ï¿½ï¿½ï¿½Ãµï¿½ Ä®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä®ï¿½ï¿½ ï¿½Æ´Ñ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+                //if( (String(thisCell.style.backgroundColor).toUpperCase() != "#FFFFE8" && String(thisCell.style.backgroundColor).toUpperCase() != "#F3F3B7") &&  iDate != pDate.getDate() ) //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
+                //if ((thisCell.style.backgroundColor.toUpperCase() != "#FFFFE8" && thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7")) //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
 
-                // "rgb(255, 255, 232)" ÀÌ·±½ÄÀÓ
+                // "rgb(255, 255, 232)" ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½
                 if ((thisCell.style['background-color'].toUpperCase() != "#FFFFE8" && thisCell.style['background-color'].toUpperCase() != "RGB(255, 255, 232)")
-                && (thisCell.style['background-color'].toUpperCase() != "#F3F3B7" && thisCell.style['background-color'].toUpperCase() != "RGB(243, 243, 183)")) //[°¡¿Â¾ÆÀÌ]
+                && (thisCell.style['background-color'].toUpperCase() != "#F3F3B7" && thisCell.style['background-color'].toUpperCase() != "RGB(243, 243, 183)")) //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
                     //####################################################################
                 {
                     if (iDate < 15)	//prev month
@@ -2619,7 +2619,7 @@ function datepicker(thisobjid, elobjid) {
 
             event.cancelBubble = true;
 
-            // ¼öÁ¤(2007.05.29) : ÀÌÀü³âµµ/¿ù, ´ÙÀ½³âµµ/¿ù ÀÌµ¿ ¹öÆ° ¼öÁ¤
+            // ï¿½ï¿½ï¿½ï¿½(2007.05.29) : ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½âµµ/ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½
             var iWhichDate = null;
             var thisCell = null;
             if (typeof (event.srcElement.offsetParent.INPUTELEMENT) == "undefined") {
@@ -2661,15 +2661,15 @@ function datepicker(thisobjid, elobjid) {
 
                 var msDateSpan = m_objCurDate[1] - m_objCurDate[0];
 
-                // month ´Â -1 µÇ¾î¼­ ÀÔ·ÂµÊ(0~11)
+                // month ï¿½ï¿½ -1 ï¿½Ç¾î¼­ ï¿½Ô·Âµï¿½(0~11)
                 m_objCurDate[iWhichDate].setFullYear(m_eCalTitle.iFullYear, m_eCalTitle.iMonth, iDate);
 
                 //are we in	next/prev area?
                 //####################################################################
-                // ¼±ÅÃµÈ Ä®¶ó°ªÀÌ ÇöÀç´ÞÀÇ Ä®¶ó°¡ ¾Æ´Ñ°æ¿ì ÀÌÀü/´ÙÀ½¿ù·Î °è»êÇÑ´Ù.
-                //if( (String(thisCell.style.backgroundColor).toUpperCase() != "#FFFFE8" && String(thisCell.style.backgroundColor).toUpperCase() != "#F3F3B7") &&  iDate != pDate.getDate() ) //[°¡¿Â¾ÆÀÌ]
+                // ï¿½ï¿½ï¿½Ãµï¿½ Ä®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä®ï¿½ï¿½ ï¿½Æ´Ñ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+                //if( (String(thisCell.style.backgroundColor).toUpperCase() != "#FFFFE8" && String(thisCell.style.backgroundColor).toUpperCase() != "#F3F3B7") &&  iDate != pDate.getDate() ) //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
                 if ((thisCell.style.backgroundColor.toUpperCase() != "#FFFFE8" && thisCell.style.backgroundColor.toUpperCase() != "RGB(255, 255, 232)")
-                && (thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7" && thisCell.style.backgroundColor.toUpperCase() != "RGB(243, 243, 183)")) //[°¡¿Â¾ÆÀÌ]
+                && (thisCell.style.backgroundColor.toUpperCase() != "#F3F3B7" && thisCell.style.backgroundColor.toUpperCase() != "RGB(243, 243, 183)")) //[ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½]
                     //####################################################################
                 {
                     if (iDate < 15)	//prev month
@@ -2968,13 +2968,13 @@ function datepicker(thisobjid, elobjid) {
             ePicker.style.zIndex = "10000";
             switch (szPoplocation) {
 
-                //********************************************* ÀÛÀº ´Þ·Â À§Ä¡ÇÏ´Â °÷        
+                //********************************************* ï¿½ï¿½ï¿½ï¿½ ï¿½Þ·ï¿½ ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ ï¿½ï¿½        
                 case "topright":
                     ePicker.style.display = "";
                     ePicker.style.left = String(event.clientX - event.layerX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 210) + 'px';
                     //20070604
-                    //ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 30; //À§Ä¡ ÁÂÇ¥
-                    ePicker.style.top = String(event.clientY - event.layerY - eSrc.offsetHeight + m_winDocBody.scrollTop + 120) + 'px'; //À§Ä¡ ÁÂÇ¥
+                    //ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 30; //ï¿½ï¿½Ä¡ ï¿½ï¿½Ç¥
+                    ePicker.style.top = String(event.clientY - event.layerY - eSrc.offsetHeight + m_winDocBody.scrollTop + 120) + 'px'; //ï¿½ï¿½Ä¡ ï¿½ï¿½Ç¥
 
                     if (typeof (GetAttribute(eSrc, 'forceMarginTop')) != "undefined" && GetAttribute(eSrc, 'forceMarginTop') != null) {
                         ePicker.style.top = String(parseInt(ePicker.style.top) + parseInt(GetAttribute(eSrc, 'forceMarginTop'))) + 'px';
@@ -3142,13 +3142,13 @@ function datepicker(thisobjid, elobjid) {
             ePicker.style.zIndex = "10000";
             switch (szPoplocation) {
 
-                //********************************************* ÀÛÀº ´Þ·Â À§Ä¡ÇÏ´Â °÷        
+                //********************************************* ï¿½ï¿½ï¿½ï¿½ ï¿½Þ·ï¿½ ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ ï¿½ï¿½        
                 case "topright":
                     ePicker.style.display = "";
                     ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
                     //20070604
-                    //ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 30; //À§Ä¡ ÁÂÇ¥
-                    ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 60 + 'px'; //À§Ä¡ ÁÂÇ¥
+                    //ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 30; //ï¿½ï¿½Ä¡ ï¿½ï¿½Ç¥
+                    ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 60 + 'px'; //ï¿½ï¿½Ä¡ ï¿½ï¿½Ç¥
 
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
                         ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';
@@ -3316,13 +3316,13 @@ function datepicker(thisobjid, elobjid) {
             ePicker.style.zIndex = "10000";
             switch (szPoplocation) {
 
-                //********************************************* ÀÛÀº ´Þ·Â À§Ä¡ÇÏ´Â °÷        
+                //********************************************* ï¿½ï¿½ï¿½ï¿½ ï¿½Þ·ï¿½ ï¿½ï¿½Ä¡ï¿½Ï´ï¿½ ï¿½ï¿½        
                 case "topright":
                     ePicker.style.display = "";
                     ePicker.style.left = event.clientX - event.offsetX + eSrc.offsetWidth + m_winDocBody.scrollLeft + 'px';
                     //20070604
-                    //ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 30; //À§Ä¡ ÁÂÇ¥
-                    ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 80 + 'px'; //À§Ä¡ ÁÂÇ¥
+                    //ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 30; //ï¿½ï¿½Ä¡ ï¿½ï¿½Ç¥
+                    ePicker.style.top = event.clientY - event.offsetY - eSrc.offsetHeight + m_winDocBody.scrollTop - 80 + 'px'; //ï¿½ï¿½Ä¡ ï¿½ï¿½Ç¥
 
                     if (typeof (eSrc.forceMarginTop) != "undefined" && eSrc.forceMarginTop != null) {
                         ePicker.style.top = ePicker.style.top + parseInt(eSrc.forceMarginTop) + 'px';

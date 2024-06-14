@@ -28,52 +28,32 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
 		
 		<script type="text/javascript">
-			var OrderCell = "";
+		    var OrderCell;
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmldoc = createXmlDom();
-		    var ContainerID, condition, jobState,SelDept,DelListYN; 
-		    var UserID, DocID, DeptID, pURL,FormID,DocDeptYN,deptName;
-		    var NodeList, curpage, nowblock,totalPage,block,p_page,p_nowblock,NodeListLen,Init_Flag,DocList_Flag,DocTitle;
+		    var UserID, deptName;
+		    var NodeList, NodeList2, NodeListLen;
 		    var DeptAdminYN,AdminYN; 
-		    var PageFlag="1";
-		    var g_ListFlag="1";
 		    var OrganID;
 		    var szRoleInfo="<c:out value = '${userInfo.rollInfo}' />";
 		    var UserID = "<c:out value = '${userInfo.id}' />";
-		    var DeptID = "";
 		    var deptName = "<c:out value = '${userInfo.deptName1}' />";
 		    var CompanyID = "<c:out value = '${userInfo.companyID}' />";
+		    var DeptID = CompanyID;
 		    var bTreeInit = false;
-		    var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen;
-		    
-		    var arr_userinfo = new Array();
-		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "<c:out value = '${userInfo.id} '/>";
-		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName} '/>";
-		    arr_userinfo[3]  = "<c:out value = '${userInfo.title} '/>";
-		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
-		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName} '/>";
-		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
-		    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";
-		    arr_userinfo[9]  = CompanyID;
-		    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
-		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
-		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
-		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
-		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
-		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
-		    var userLang = "<c:out value = '${userInfo.lang} '/>";
+            var ListView
 		    var UserLang = "<c:out value = '${userInfo.lang} '/>";
-		    var ext = "";
+		    var taskCount = "<c:out value='${taskCount}'/>"; // 단위업무 전체 갯수
+		    var pageAdminFlag = 'admin';
+		    var curpage = 1;
+		    var PageSize = 20;
+		    var totalPage = Math.ceil(taskCount/PageSize);
+            var searchTitle = '';
+            var searchCode = '';
+            var searchFlag = '';
+		    
 		    $(document).ready(function(){
 		        document.getElementById("ListCompany").value = CompanyID;
-		        OrganID = CompanyID;
-		        PageSize = -1;
-		        Block_Size = 10;
-		        curpage = 1;
-		        nowblock = 0;
-		        totalPage = 0;
-		        DeptID = OrganID;
 		        
 		        if (!bTreeInit) {
 		            Tree_setconfig();
@@ -92,25 +72,7 @@
 		            treeView.SetConfig(xmlHTTP.responseXML);
 		        }
 		    }
-	
-		    function InitDeptTaskList(pDeptID, pDeptName) {
-		        DeptID = pDeptID;
-		        g_DeptName = pDeptName;
-		        deptName = pDeptName;
-		        GetTaskFullList();
-		        listcount.innerHTML = "<b>" + g_DeptName + "</b><spring:message code = 'ezApprovalG.t363' /><spring:message code = 'ezApprovalG.t1093' /> : <span style='color:#017BEC;font-weight:bold;'>" + NodeListLen + "</span> <spring:message code = 'ezApprovalG.t1003' />";
-		    }
 		    
-		    function GetDeptTaskList(pDeptID) {
-		        if (pDeptID == OrganID) {
-		            DeptID = "";
-		            DeptID = OrganID;
-		            GetTaskFullList();
-		        } else if (pDeptID != "top") {
-		            DeptID = pDeptID;
-		            GetTaskFullList();
-		        }
-		    }
 		    function lvtDoclist_onselchanged() {
 		        var DocList = new ListView();          
 		        DocList.LoadFromID("DocList");
@@ -125,14 +87,6 @@
 		            } else {
 		            }
 		        }
-		    }
-		    
-		    function UpdateClass_Admin() {
-		        if (DeptID == "") {
-		            DeptID = OrganID;
-		        }
-		        
-		        btnUpdateClass_onclick();
 		    }
 		    
 		    function btnClose_onclick() {
@@ -155,9 +109,10 @@
 		        	CompanyID = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
 		        }
 		        
-		        var deptID = treeNode.GetNodeData("CN");
-		        var deptName = treeNode.GetNodeData("VALUE");
-		        GetTaskList(deptID, deptName);
+		        DeptID = treeNode.GetNodeData("CN");
+		        deptName = treeNode.GetNodeData("VALUE");
+		        curpage = 1;
+		        makePagenationBar(null, null, 0);
 		    }
 		    
 		    function TreeViewNodeDbClick() {
@@ -165,35 +120,6 @@
 		    
 		    function GetTaskList(pDeptID, deptName) {
 		        InitDeptTaskList(pDeptID, deptName);
-		    }
-	
-		    function GetTaskFullList_Admin() {
-		        curpage = 1;
-		        nowblock = 0;
-		        totalPage = 0;
-	
-		        var ListName;
-		        
-		        switch (g_ListFlag) {
-		            case "1":
-		                Resultxml = GetTaskFullListXml();
-		                ListName = "<spring:message code = 'ezApprovalG.t1093' />";
-		                break;
-	
-		            case "2":
-		                Resultxml = GetTaskReqListXml();
-		                ListName = "<spring:message code = 'ezApprovalG.lhj01' />";
-		                break;
-		        }
-
-		        if (getNodeText(Resultxml) != "") {
-		            if (getNodeText(SelectSingleNodeValue(Resultxml, "RESULT"))) {
-		                alert("<spring:message code = 'ezApprovalG.lhj02' />");
-		            } else {
-		                DisplayTaskList_Admin(Resultxml);
-		                listcount.innerHTML = "<b>" + deptName + "</b><spring:message code = 'ezApprovalG.t363' />" + ListName + " : <span class='point'>" + NodeListLen + "</span> <spring:message code = 'ezApprovalG.t1003' />";
-		            }
-		        }
 		    }
 	
 		    function selectCompanyID() {
@@ -231,11 +157,13 @@
 		
 		<table>
   			<tr> 
-				<td><div class="box" id="TreeView" style="border:1px solid #ddd; height:550px;width:250px; overflow-x:auto;overflow-y:auto"></div></td>
+				<td style="vertical-align:top"><div class="box" id="TreeView" style="border:1px solid #ddd; height:550px;width:250px; overflow-x:auto;overflow-y:auto"></div></td>
 				<td style="padding-left:5px" >
         			<div class="listview">
             			<div id="lvtDoclist" style="OVERFLOW-Y:auto; overflow-x:auto;border:0;HEIGHT: 550px; WIDTH: 100%; min-width:1200px" onClick ="" onselchanged="lvtDoclist_onselchanged()" onrowdblclick="">
             			</div>
+        			</div>
+        			<div id='tblPageRayer'>
         			</div>
 				</td>
   			</tr>

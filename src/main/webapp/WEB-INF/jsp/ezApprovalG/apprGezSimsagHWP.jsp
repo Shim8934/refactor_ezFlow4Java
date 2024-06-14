@@ -297,9 +297,6 @@
                     rtnVal = SetContainer();
                 }
 
-                //이거 할필요없을듯 로컬에다 저장하고 이용하고 이런식인데 박정진은 안쓴듯
-//                 DeleteLocalFiles();
-
                 if (rtnVal == "TRUE") {
                     HwpCtrl.SetFieldFocus("doctitle");
 

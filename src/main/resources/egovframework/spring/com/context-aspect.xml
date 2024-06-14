@@ -5,6 +5,7 @@
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
 
     <!-- 홈페이지의 주요기능인 협업(게시판, 일정관리)기능 작동과정에서 Exception 발생시 후처리를 위한 AOP설정  -->
+	<!--
 	<aop:config>
 		<aop:pointcut id="serviceMethod" expression="execution(* egovframework.let..impl.*Impl.*(..)) or execution(* egovframework.com..impl.*Impl.*(..))" />
 
@@ -12,6 +13,7 @@
 			<aop:after-throwing throwing="exception" pointcut-ref="serviceMethod" method="transfer" />
 		</aop:aspect>
 	</aop:config>
+	-->
 	
 	<!-- Exception 발생시 후처리를 위해 표준프레임워크 실행환경의 ExceptionTransfer를 활용하도록  설정-->
 	<bean id="exceptionTransfer" class="egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer">

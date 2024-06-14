@@ -1306,6 +1306,14 @@
 			    		OpenAlertUI("결재자가 한 명인 경우, 기결재통과 기능을 사용할 수 없습니다.");
 			    		return;
 			    	}
+					/* 2024-03-26 양지혜 - 공개가 아닌경우 공개등급 선택 필수 */
+					if (document.querySelector('input[name="rdoSecType"]:checked').value != '1') {
+						var checkboxes = document.querySelectorAll('input[name^="selSecLevel"]:checked');
+						if (checkboxes.length === 0) {
+							OpenAlertUI("<spring:message code='ezApprovalG.yjh01'/>");
+							return;
+						}
+					}
 		    	}
 		    	
 				if(document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT') {
@@ -2972,7 +2980,7 @@
                                 </tr>
 	                            <tr>
 	                                <td height="36px;" style="background-color: transparent; padding-top: 10px;vertical-align: top">
-	                                 	<input id="textUser2" style="width: 135px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
+	                                 	<input id="textUser2" style="width: 111px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
                                         <a class="imgbtn imgbck2"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
                                         <a class="imgbtn imgbck2" style="vertical-align: middle; margin: auto; <c:if test="${isOuterForm}">display: none;</c:if>"><span onclick="return btnReceiptSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                                	<a class="imgbtn imgbck2" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
@@ -3550,7 +3558,7 @@
 		                	<th><spring:message code='ezApproval.t339'/></th>
 		                    <td>		                    	
 		                        <!-- <div class="nobox"> -->
-		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 355px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
+		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 345px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
 		                        <!-- </div> -->
 		                    </td>
 		                </tr>

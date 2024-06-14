@@ -220,10 +220,11 @@
 				    if (CrossYN()) {
 				        if (document.getElementById("ListEmail").options[i].textContent.indexOf("SMTP") == 0) {
 				            primarymail = document.getElementById("ListEmail").options[i].textContent.substr(5).slice(0, -9);
+							primarymail = primarymail.replace(/\s*$/,'');
 				        }
 				        if (document.getElementById("ListEmail").options[i].getAttribute("type") === "0") {
 							if (document.getElementById("ListEmail").options[i].textContent.includes("(Primary)")) {
-								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent.slice(0, -9));
+								createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.getElementById("ListEmail").options[i].textContent.slice(0, -9).trim());
 							} else {
 								//2024-01-09 김대현 : node를 만들기 전에 메일에 맨뒤에 빈값이 들어가면 지워주는 작업을 한다
 								var mailValue = document.getElementById("ListEmail").options[i].textContent

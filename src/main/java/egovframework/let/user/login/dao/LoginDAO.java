@@ -155,6 +155,14 @@ public class LoginDAO extends EgovAbstractDAO {
 		update("loginDAO.updateSession", map);
 	}
 
+	public void deleteSession(String ezSessionId) throws Exception {
+		deleteSessionForLocal(ezSessionId);
+	}
+
+	private void deleteSessionForLocal(String ezSessionId) throws Exception {
+		update("loginDAO.deleteSession", ezSessionId);
+	}
+
 	public SessionVO getSession(String ezSessionId) throws Exception {
 		return getSessionForLocal(ezSessionId);
 	}

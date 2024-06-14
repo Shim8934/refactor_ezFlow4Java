@@ -666,7 +666,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			}
 		}
 		
-		// 회의실 생성시 자동으로 암호화가 들어가니 지우겠습니당
+		// 회의실 생성시 자동으로 암호화 들어가므로 주석처리함
 		/* boolean useKlib = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useWebfolderKlib", tenantId));
 		boolean requireUpdateEncryption = useKlib && (encryption ^ ezWebFolderService.isEncryptionFolder(folderId, tenantId));
 

@@ -411,7 +411,6 @@ var buttons = (function() {
 						hideProgress();
 					}
 					
-					// 폴더 권한 비상속 리턴~
 					if (isNotInherit) {
 						alert(isMultiple ? messages.moveFromNotInheritErrorContains : messages.moveFromNotInheritError);
 						return;

@@ -150,7 +150,7 @@
 		</isNotEmpty>
 	</sql>
 	
-	<!-- 2021-07-12 김은실 - 선택지가 3개 밖에 없어서.. 최대한 쿼리줄이고자 이렇게 짠건데, 더 추가된다면 아예 걍 바꿔주세요.ㅎㅎㅎ  여기서 변형하기에는 여간 복잡한게 아닐거에여ㅠ -->
+	<!-- 2021-07-12 김은실 - 필요시 변경하여 사용 -->
 	<sql id="EzOrganAdminDAO.searchForQuery">
 		<isNotEqual property="searchForAll" compareValue="true" open="and (" close=")">
 			CN <isEqual property="retired" compareValue="false"> NOT </isEqual> IN 
@@ -345,7 +345,8 @@
 	<select id="EzOrganAdminDAO.moveDBData_S1" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
 			SELECT
-				DEPT_CD_PATH
+				DEPT_CD_PATH,
+				DEPTLEVEL
       		FROM
       			TBL_DEPTMASTER 
       		WHERE
@@ -382,7 +383,8 @@
       			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, #v_DEPT_CD_PATH# || ',' || #v_CN#),
                 EXTENSIONATTRIBUTE2 = #v_EXTENSIONATTRIBUTE2#,
                 EXTENSIONATTRIBUTE3 = #v_EXTENSIONATTRIBUTE3#,
-                COMPNM2 = #v_COMPNM2#         
+                COMPNM2 = #v_COMPNM2#,
+                DEPTLEVEL = DEPTLEVEL + #v_DEPTLEVEL_CHANGE#         
       		WHERE
       			DEPT_CD_PATH LIKE #v_DEPT_CD_PATH_OLD# || ',%'
             AND
@@ -7411,7 +7413,7 @@
 					USERID,				USERNM,					USERNM2,				DEPTID,					DEPTNM,
 					DEPTNM2,			TITLE,       			TITLE2,					COMPANYID,				COMPANYNM,
 					COMPANYNM2,			AUTHORIZEDTIME,			ADMINTYPE,				STATUS,					AUTHORIZERID,
-					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP
+					AUTHORIZERNM,		AUTHORIZERNM2,			AUTHORIZERIP,			TENANT_ID
                  )
 			SELECT
 				SEQ_TBL_PERMISSION_CHANGE_INFO.NEXTVAL,
@@ -7449,7 +7451,7 @@
 				 u.COMPANY2,		to_date(#authorizedTime#, 'yyyy-MM-dd HH24:MI:SS'),		#adminType#,			#status#,				#authorizerId#,
 				 (SELECT ua.DISPLAYNAME 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
 				 (SELECT ua.DISPLAYNAME2 	FROM TBL_USERMASTER ua WHERE CN = #authorizerId# AND TENANT_ID = #tenant_id#),
-				 #authorizerIp#
+				 #authorizerIp#, u.TENANT_ID
 			FROM TBL_USERMASTER u
 			WHERE 	u.CN = #userId#
 			AND 	u.TENANT_ID = #tenant_id#
@@ -7465,6 +7467,13 @@
 	
 	<select id="EzOrganAdminDAO.getDeptDisplayNm" parameterClass="OrganDeptVO" resultClass="OrganDeptVO">
 		SELECT DISPLAYNAME, DISPLAYNAME2
+		FROM TBL_DEPTMASTER
+		WHERE CN = #cn#
+		AND TENANT_ID = #tenantId#
+	</select>
+
+	<select id="EzOrganAdminDAO.getDeptParentCn" parameterClass="OrganDeptVO" resultClass="String">
+		SELECT EXTENSIONATTRIBUTE1
 		FROM TBL_DEPTMASTER
 		WHERE CN = #cn#
 		AND TENANT_ID = #tenantId#

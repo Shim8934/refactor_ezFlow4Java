@@ -247,8 +247,7 @@
 		                alert(pAlertContent);
 		                return;
 		            }
-		            
-		            //일반일때 getTaskCategoryNodeExist  수정해야함니다~ 
+
 		            var tempVal = GetTaskCategoryNodeExist(pLevel, pGroupID);
 		            
 		            if (tempVal != "FALSE") {

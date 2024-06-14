@@ -527,7 +527,7 @@ function func_addaddr_Complete(ret) {
             
             if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
                 if (xmlHTTP.status != 200) {
-                	alert(strLang133 + xmlHTTP.statusText);
+                	alert(strLang133 + xmlHTTP.status);
                 	return;
                 }
                 
@@ -547,7 +547,7 @@ function func_addaddr_Complete(ret) {
     	// duplicateList 동일한 메일주소
     	
     	if (duplicateList.length > 0) {
-    		var alertMsg = strLang136 + "\n" + strLangKSA01;
+    		var alertMsg = strLangKSA01;
     		var dupliNameTxt = [];
     		
     		$.each(duplicateList, function(i, e) {
@@ -587,7 +587,7 @@ function Get_DupliCateAddressCnt(senderEmail, folderId, type) {
 		xmlHTTP.send(xmlDom);
 		
 		if (xmlHTTP.status != 200){
-			alert(strLang133 + xmlHTTP.statusText);
+			alert(strLang133 + xmlHTTP.status);
 		} else {
 			returnValue = xmlHTTP.responseText;
 		}
@@ -612,8 +612,16 @@ function func_reject() {
     var params = new Array();
     params["email"] = new Array();
     params["link"] = new Array();
-    if (document.getElementById('LabelFromName').textContent != g_fromEmail) {
-        params["email"][0] = document.getElementById('LabelFromName').textContent + " <" + g_fromEmail + ">";
+    var labelFromName = document.getElementById('LabelFromName').textContent;
+    if (labelFromName != g_fromEmail) {
+        // "01099455495 <발신전용>" <01099455495@ktfmms.magicn.com>와 같이 이름안에 <> 기호가 있는 경우
+        // 이름을 감싸는 이중따옴표가 제거된 상태로 들어와서 이메일 주소 파싱에 오류가 발생함. 이에 < 기호가 있는 경우
+        // 다시 이중따옴표로 감싸도록 함.
+        if (labelFromName.indexOf('<') > -1) {
+            params["email"][0] = '"' + labelFromName + '"' + " <" + g_fromEmail + ">";
+        } else {
+            params["email"][0] = labelFromName + " <" + g_fromEmail + ">";
+        }
     }
     else {
         params["email"][0] = g_fromEmail;
@@ -1429,4 +1437,29 @@ function onEnterPreviewTagInput() {
 			alert(strLang321);
 		}
 	});
+}
+
+function download_Single_mail() {
+
+    var parameters = "url=" + encodeURIComponent(g_paramURL);
+    var fullpath = "/ezEmail/mailExport.do?" + parameters;
+
+    AttachDownFrame.location.href = fullpath;
+    AttachDownFrame.target = "_blank";
+
+}
+
+var mail_originalEML_cross_dialogArguments = new Array();
+
+function view_OriginalEML() {
+    mail_originalEML_cross_dialogArguments[1] = DivPopUpHiddenReadMail;
+
+    var parameters = "url=" + encodeURIComponent(g_paramURL);
+    var requestUrl = "/ezEmail/getOriginalEML.do?" + parameters;
+
+    if (typeof(shareId) != "undefined" && shareId != "") {
+        requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    }
+
+    DivPopUpShow(620, 600, requestUrl);
 }

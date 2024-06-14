@@ -824,23 +824,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		logger.debug("updatePortletOrderUser ended.");
 	}
-	
+
 	@Override
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month) throws Exception {
 		logger.debug("getMonthlyBirthdayEmployeesCount started.");
 		String monthStr = "";
-		
+
 		if (month < 10) {
 			monthStr = "0" + month;
 		} else {
 			monthStr = String.valueOf(month);
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("month", monthStr);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		
+
 		List<PortalUserInfoVO> tempList = ezNewPortalDAO.getMonthlyBirthdayEmployees(map);
 		int birthdayListCount = tempList.size();
 		List<PortalUserInfoVO> birthdayList = new ArrayList<PortalUserInfoVO>();
@@ -851,23 +851,45 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 
 		logger.debug("convertLunarToSolar started.");
 
-
+		/*(시작) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
 		for (int i = 0; i < birthdayListCount; i++) {
 			PortalUserInfoVO portalUserInfo = tempList.get(i);
-			
+
 			if (portalUserInfo.isSolar()) {
 				birthdayList.add(portalUserInfo);
 			} else {
-				String toSolarDate = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
-				
-				if (!toSolarDate.equals("")) {
-					lastLunarId = portalUserInfo.getUserId();
-					lastLunarDate = portalUserInfo.getUserBirthday();
-					portalUserInfo.setUserBirthday(toSolarDate);
-					birthdayList.add(portalUserInfo);
-					lastSolarDate = toSolarDate;
-					lunarCount++;
+				/*(시작) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
+				String toSolarDate ="";
+				ArrayList toSolarDateSet = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
+				//logger.debug("[getMonthlyBirthdayEmployeesCount] toSolarDateSet >>>>" + toSolarDateSet + " (0)=" + toSolarDateSet.get(0) + " (1)=" + toSolarDateSet.get(1));
+
+				String diffIdx = "";
+				for(int j=0; j<2; j++) {
+					if (toSolarDateSet.get(j).equals("")) {
+						diffIdx = "";
+					} else {
+						diffIdx = toSolarDateSet.get(j).toString().substring(5, 7);
+					}
+
+					if (monthStr.equals(diffIdx)) { //2024-02-07 곽동석, toSolarDateSet(0)의 월과 비교하는 월의 비교값이 같을경우.
+						toSolarDate = toSolarDateSet.get(j).toString();
+					} else {
+						toSolarDate = "";
+					}
+					//logger.debug("[getMonthlyBirthdayEmployeesCount] toSolarDate >>>>" + toSolarDate);
+
+					//logger.debug("[getMonthlyBirthdayEmployeesCount] diffIdx >>>>" + diffIdx);
+
+					if (!toSolarDate.equals("")) {
+						lastLunarId = portalUserInfo.getUserId();
+						lastLunarDate = portalUserInfo.getUserBirthday();
+						portalUserInfo.setUserBirthday(toSolarDate);
+						birthdayList.add(portalUserInfo);
+						lastSolarDate = toSolarDate;
+						lunarCount++;
+					}
 				}
+				/*(종료) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
 			}
 		}
 
@@ -876,9 +898,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 
 		logger.debug("convertLunarToSolar ended.");
-		
+
 		int birthCount = 0;
-		
+
 		if (birthdayList == null || birthdayList.isEmpty()) {
 			birthCount = 0;
 		} else {
@@ -888,60 +910,81 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("getMonthlyBirthdayEmployeesCount ended.");
 		return birthCount;
 	}
-	
+
 	@Override
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow,String lang) throws Exception {
 		logger.debug("getMonthlyBirthdayEmployees started.");
 		String monthStr = "";
-		
+
 		if (month < 10) {
 			monthStr = "0" + month;
 		} else {
 			monthStr = String.valueOf(month);
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("month", monthStr);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("lang", lang);
-		
+
 		List<PortalUserInfoVO> tempList = ezNewPortalDAO.getMonthlyBirthdayEmployees(map);
 		int birthdayListCount = tempList.size();
 		List<PortalUserInfoVO> birthdayList = new ArrayList<PortalUserInfoVO>();
-		
+
 		for (int i = 0; i < birthdayListCount; i++) {
 			PortalUserInfoVO portalUserInfo = tempList.get(i);
 			String imgPath = "";
-			
+//			logger.debug("portalUserInfo.getUserBirthday() >>>> " + portalUserInfo.getUserBirthday());
 			if (portalUserInfo.isSolar()) {
 				if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
 					imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
 				} else {
 					imgPath = "/images/ezNewPortal/info_pic_none.png";
 				}
-				
+
 				portalUserInfo.setUserImg(imgPath);
 				birthdayList.add(portalUserInfo);
 			} else {
-				String toSolarDate = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
-				
-				if (!toSolarDate.equals("")) {
-					if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
-						imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
+				/*(시작) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
+				String toSolarDate ="";
+				ArrayList toSolarDateSet = convertLunarToSolar(portalUserInfo.getUserBirthday(), month);
+				//logger.debug("[getMonthlyBirthdayEmployees] toSolarDateSet >>>>" + toSolarDateSet + " (0)=" + toSolarDateSet.get(0) + " (1)=" + toSolarDateSet.get(1));
+
+				String diffIdx = "";
+				for(int j=0; j<2; j++) {
+					if (toSolarDateSet.get(j).equals("")) {
+						diffIdx = "";
 					} else {
-						imgPath = "/images/ezNewPortal/info_pic_none.png";
+						diffIdx = toSolarDateSet.get(j).toString().substring(5, 7);
 					}
-					
-					portalUserInfo.setUserBirthday(toSolarDate);
-					portalUserInfo.setUserImg(imgPath);
-					birthdayList.add(portalUserInfo);
+					//logger.debug("[getMonthlyBirthdayEmployees] diffIdx >>>>" + diffIdx);
+
+					if (monthStr.equals(diffIdx)) { //2024-02-07 곽동석, toSolarDateSet(0)의 월과 비교하는 월의 비교값이 같을경우.
+						toSolarDate = toSolarDateSet.get(j).toString();
+					} else {
+						toSolarDate = "";
+					}
+
+					if (!toSolarDate.equals("")) {
+						if (portalUserInfo.getUserImg() != null && !portalUserInfo.getUserImg().equals("")) {
+							imgPath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", tenantId) + commonUtil.separator + portalUserInfo.getUserImg();
+						} else {
+							imgPath = "/images/ezNewPortal/info_pic_none.png";
+						}
+
+						portalUserInfo.setUserBirthday(toSolarDate);
+						portalUserInfo.setUserImg(imgPath);
+						birthdayList.add(portalUserInfo);
+					}
+//					logger.debug("[getMonthlyBirthdayEmployees] toSolarDate >>>>" + toSolarDate);
 				}
+				/*(종료) 2024-02-22 곽동석, 음력 생일자 양력변환 계산 일자 오류 수정 */
 			}
 		}
-		
+
 		int birthCount = birthdayList.size();
-		
+
 		//오름차순 정렬
 		Collections.sort(birthdayList, new Comparator<PortalUserInfoVO>() {
 			@Override
@@ -949,70 +992,134 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				return o1.getUserBirthday().split("-")[2].compareTo(o2.getUserBirthday().split("-")[2]);
 			}
 		});
-		
+
 		if (startRow >= birthCount) {
 			startRow = 0;
 		}
-		
+
 		List<PortalUserInfoVO> birthdayListLmit = new ArrayList<PortalUserInfoVO>();
-		
+
 		for (int i = startRow; i < startRow + count; i++) {
 			if (i < birthCount) {
 				birthdayListLmit.add(birthdayList.get(i));
 			}
 		}
-		
+
 		logger.debug("getMonthlyBirthdayEmployees ended.");
 		return birthdayList;
 	}
-	
-	public String convertLunarToSolar (String birthday, int compMonth) {
+
+	public static ArrayList convertLunarToSolar(String birthday, int compMonth) {
 		/*
 		 * 20.05.29 강승구 : 음력변환 오류 수정
 		 * 아직 윤달, 평달에 대한 문제 해결 필요
 		 */
+		/*
+		 * 24.02.07 곽동석 : 연 2회 생일자에 대한 로직 추가 수정.
+		 * 특정 음력생일자의 경우, 실제로 연 2회 생일자가 있음.
+		 * convertLunarToSolar 메서드를 ArrayList로 변경.
+		 * 연내 상반기 생일과 하반기 생일값을 추가하기 위함.
+		 * ex) 음력 23년 11월 29일은 -> 24년 1월 10일, 23년 11월 29일은 -> 24년 12월 29일 이다.
+		 */
+		//logger.debug("[convertLunarToSolar] birthday >>>> " + birthday);
 		String result = "";
+		ArrayList resultSet = new ArrayList(); // 2024.02.07 곽동석, result를 담는 리스트.
 		ChineseCalendar cc = new ChineseCalendar();
 		java.util.Calendar cal = java.util.Calendar.getInstance();
-		birthday = cal.get(1) + birthday.substring(4);
-		
-		if(birthday.length() == 10) {
-			birthday = birthday.replace("-", "");
+
+		String currentYear = String.valueOf(cal.get(1));
+		int currentYearInt = Integer.parseInt(currentYear); // 2024.02.07 곽동석, currentYear값 계산.
+
+		/*(시작) 2024.02.07 곽동석, "'for' 'if (i==1)'는 전년도와 지금년도를 비교하여 년2회이상 중복생일자를 확인하기 위함." */
+		for (int i=0; i<2; i++) {
+			if (i == 1) {
+				currentYear = String.valueOf(currentYearInt - 1);
+			}
+			birthday = currentYear + birthday.substring(4);
+
+			if (birthday.length() == 10) {
+				birthday = birthday.replace("-", "");
+			}
+
+			cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0, 4)) + 2637);
+			cc.set(ChineseCalendar.MONTH, Integer.parseInt(birthday.substring(4, 6)) - 1);
+			cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(birthday.substring(6, 8)));
+			cc.set(ChineseCalendar.IS_LEAP_MONTH, 0);
+
+			cal.setTimeInMillis(cc.getTimeInMillis());
+
+			String year = String.valueOf(cal.get(Calendar.YEAR));
+
+			/*(시작) 2024-01-12 박수빈 "생일자 음양력 변환 1년 앞당기는 오류 수정"*/
+			if (!currentYear.equals(year)) { // 만약 변환한 양력이 올해가 아니라면 작년 생일로 다시 양력변환 시도
+
+				cal = java.util.Calendar.getInstance(); // 객체 초기화
+				cc = new ChineseCalendar();
+
+				cal.add(Calendar.YEAR, -1); // 작년으로 생일 재설정
+				birthday = cal.get(1) + birthday.substring(4);
+
+				// 음력 -> 양력 계산
+				cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0, 4)) + 2637);
+				cc.set(ChineseCalendar.MONTH, Integer.parseInt(birthday.substring(4, 6)) - 1);
+				cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(birthday.substring(6, 8)));
+				cc.set(ChineseCalendar.IS_LEAP_MONTH, 0);
+
+				cal.setTimeInMillis(cc.getTimeInMillis());
+
+				// 변환된 양력 생일에서 연도 추출
+				year = String.valueOf(cal.get(Calendar.YEAR));
+			}
+			/*(종료) 2024-01-12 박수빈 "생일자 음양력 변환 1년 앞당기는 오류 수정"*/
+
+			String month = String.valueOf(cal.get(Calendar.MONTH) + 1);
+			String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+
+			String pad4Str = "0000";
+			String pad2Str = "00";
+
+			String retYear = (pad4Str + year).substring(year.length());
+			String retMonth = (pad2Str + month).substring(month.length());
+			String retDay = (pad2Str + day).substring(day.length());
+
+			result = retYear + "-" + retMonth + "-" + retDay;
+
+			String monthComp = String.valueOf(compMonth);
+
+			String chineseMonth = result.substring(5, 7);
+
+			if (chineseMonth.indexOf("0") == 0) {
+				chineseMonth = chineseMonth.substring(1);
+			}
+
+			if (!chineseMonth.equals(monthComp)) {
+				result = "";
+			}
+
+			if (!retYear.equals(String.valueOf(currentYearInt))) { // 비교년도가 다를경우 값을 지운다.
+				result = "";
+			}
+			//logger.debug("[convertLunarToSolar] currentYearInt >>>>" + currentYearInt);
+			//logger.debug("[convertLunarToSolar] monthComp >>>>" + monthComp);
+			//logger.debug("[convertLunarToSolar] result >>>>" + result);
+
+			resultSet.add(result); // 2024-02-07 곽동석, Array List인 resultSet에 result값을 담는다.
+
 		}
-		
-		cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0,4)) + 2637);
-        cc.set(ChineseCalendar.MONTH        , Integer.parseInt(birthday.substring(4,6)) - 1);
-        cc.set(ChineseCalendar.DAY_OF_MONTH , Integer.parseInt(birthday.substring(6,8)));
-        cc.set(ChineseCalendar.IS_LEAP_MONTH, 0);
 
-        cal.setTimeInMillis(cc.getTimeInMillis());
+		// '인덱스 0 = 하반기', '인덱스 1 = 상반기' 값이므로 서로의 인덱스를 스위치한다.
+		Object temp = resultSet.get(0); // 2024-02-07 곽동석, resultSet(0)과 (1)의 값을 서로 바꾼다(교환).
+		resultSet.set(0, resultSet.get(1));
+		resultSet.set(1, temp);
 
-        String year  = String.valueOf(cal.get(Calendar.YEAR        )    );
-        String month = String.valueOf(cal.get(Calendar.MONTH       ) + 1);
-        String day   = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)    );
-
-        String pad4Str = "0000";
-        String pad2Str = "00";
-
-        String retYear  = (pad4Str + year ).substring(year .length());
-        String retMonth = (pad2Str + month).substring(month.length());
-        String retDay   = (pad2Str + day  ).substring(day  .length());
-
-        result = retYear + "-" + retMonth + "-" + retDay;
-		
-		String monthComp = String.valueOf(compMonth);
-		
-		String chineseMonth = result.substring(5, 7);
-		
-		if (chineseMonth.indexOf("0") == 0) {
-			chineseMonth = chineseMonth.substring(1);
+		//
+		if (resultSet.get(0).equals(resultSet.get(1))) { // resultSet의 두 인덱스 값이 같을경우 인덱스 0의 값만 반환한다.
+			resultSet.set(0, "");
 		}
-		
-		if (!chineseMonth.equals(monthComp)) {
-			result = "";
-		}
+		//logger.debug("[convertLunarToSolar] resultSet >>>>" + resultSet);
+		return resultSet;
 
-		return result;
+		/*(종료) 2024.02.07 곽동석, "'for' 'if (i==1)'는 전년도와 지금년도를 비교하여 년2회이상 중복생일자를 확인하기 위함." */
 	}
 	
 	@Override
@@ -1180,7 +1287,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("updateUserThemeSetting ended.");
 	}
 	
-	//관리자부분!! ------ boardtree가져오기
+	//관리자부분 ------ boardtree가져오기
 	@Override
 	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception {
 		logger.debug("getBoardTree started.");
@@ -1236,6 +1343,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				String portletName = commonUtil.stripScriptTags(map.get("portletName").toString());
 				portletName = commonUtil.detectPathTraversal(portletName);
 				portletName = specialCharacterToEmptyString(portletName);
+				
+				portletName = portletName.replaceAll("& #40;", "(");
+				portletName = portletName.replaceAll("& #41;", ")");
 
 				String portletLang = commonUtil.stripScriptTags(map.get("portletLang").toString());
 				portletLang = commonUtil.detectPathTraversal(portletLang);
@@ -1320,7 +1430,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				String portletName = commonUtil.stripScriptTags(map.get("portletName").toString());
 				portletName = commonUtil.detectPathTraversal(portletName);
 				portletName = specialCharacterToEmptyString(portletName);
-
+				
+				portletName = portletName.replaceAll("& #40;", "(");
+				portletName = portletName.replaceAll("& #41;", ")");
+				
 				String portletLang = commonUtil.stripScriptTags(map.get("portletLang").toString());
 				portletLang = commonUtil.detectPathTraversal(portletLang);
 				portletLang = specialCharacterToEmptyString(portletLang);
@@ -2022,7 +2135,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("lang", lang);
-//		나중에 쪼갤수도 rest 호출할때 arg받아서 처리해야할수도잇을거같은데
 //		map.put("accessType", "Y","N","TOTAL")
 		map.put("accessType", "1");
 		List<MenuAuthVO> menuAuthsY = ezNewPortalDAO.getMenuAuth(map);
@@ -2086,6 +2198,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				menuName = commonUtil.detectPathTraversal(menuName);
 				menuName = specialCharacterToEmptyString(menuName);
 				
+			    menuName = menuName.replaceAll("& #40;", "(");
+			    menuName = menuName.replaceAll("& #41;", ")");
+			    
 				map.put("menuLang", menuLang);
 				map.put("menuName", menuName);
 				
@@ -2193,7 +2308,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int menuId = ezNewPortalDAO.insertMenu(map);
 		
 		map.put("menuId", menuId);
-		//TODO 이효진 companyLang 만들고 나면 하드코딩한거 지우고 DB에서 get
 		map.put("companyLang", 1);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -2215,6 +2329,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				menuName = commonUtil.detectPathTraversal(menuName);
 				menuName = specialCharacterToEmptyString(menuName);
 				
+			    menuName = menuName.replaceAll("& #40;", "(");
+			    menuName = menuName.replaceAll("& #41;", ")");
+				
 				map.put("menuLang", menuLang);
 				map.put("menuName", menuName);
 				
@@ -2227,7 +2344,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 		
 		//권한은 셀렉트키로 받아서 ezNewPortal.updateCompanyMenuNameInfo
-		//지금 권한 안들어오지 조직도없지 선택못하지
 		updateMenuAuth(menuAuths, menuId, companyId, tenantId);
 		
 		logger.debug("insertMenu ended.");
@@ -2509,7 +2625,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 			
 			//3시간당 오늘의 날씨
-			//이거는 다른 스케줄러로 뺴서 매일 00시에서 3시 사이에 돌려줘야함
 			String todayWeather;
 			
 			for (String tempCityCode : cityCodeList) {
@@ -2610,8 +2725,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		MenuAuthVO userAuth = ezNewPortalDAO.getCheckUserAuth(map);
 		
-		//여기서 부터 떠오르지 않아서 더러운 코드로 그냥 분기분기분기
-		//좋은 아이디어 있으신분이 수정 바랍니다
 		if (userAuth != null) {
 			//유저 권한이 있으면 바로 리턴
 			if (userAuth.isAccessYN() == true) {
@@ -2659,7 +2772,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				if (comAuth != null) {
 					//유저든 부서든 둘다 Y,N이 있을때만 company 권한보다 앞서므로 다 권한이 모두 없을 때 마지막에 company를 탐색하였다
-					//더 좋은 아이디어 있으신분 수정바랍니다
 					if (comAuth.isAccessYN() == true) {
 						logger.debug("Auth : comTrue");
 						resultAuth = true;

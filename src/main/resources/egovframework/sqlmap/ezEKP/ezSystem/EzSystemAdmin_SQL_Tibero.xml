@@ -10,7 +10,8 @@
 	<typeAlias alias="MainVO" type="egovframework.let.main.vo.MainVO"/>
 	<typeAlias alias="PermissionInfoVO" type="egovframework.ezEKP.ezSystem.vo.PermissionInfoVO"/>
 	<typeAlias alias="UserChangeInfoVO"	type="egovframework.ezEKP.ezSystem.vo.UserChangeInfoVO" />
-	
+	<typeAlias alias="DeptChangeInfoVO" type="egovframework.ezEKP.ezSystem.vo.DeptChangeInfoVO"/>
+
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
 			SELECT 
@@ -1190,5 +1191,171 @@
 		$companyOracleStr$
 		<include
 			refid="EzSystemAdminDAO.searchQueryForUserChList" />
+	</select>
+
+	<insert id="EzSystemAdminDAO.insertDeptChangeHist" parameterClass="DeptChangeInfoVO">
+        <![CDATA[
+                INSERT INTO TBL_DEPT_CHANGE_INFO
+                (SEQ, DEPTID, DEPTNM, DEPTNM2, PARENT_DEPTID, PARENT_DEPTNM, PARENT_DEPTNM2, COMPANYID, COMPANYNM, COMPANYNM2, UPDATEDT,
+                TARGET_DEPTID, TARGET_DEPTNM, TARGET_DEPTNM2, UPDATE_TYPE, EXECUTORID, EXECUTORNM, EXECUTORNM2, EXECUTORIP, TENANTID)
+                SELECT SEQ_TBL_DEPT_CHANGE_INFO.NEXTVAL, #deptId#, #deptNm#, #deptNm2#, #parentDeptId#, DISPLAYNAME, DISPLAYNAME2, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2,
+                                to_date(#updatedt#, 'yyyy-MM-dd HH24:MI:SS'), #targetDeptId#, #targetDeptNm#, #targetDeptNm2#, #updateType#, #executorId#, #executorNm#, #executorNm2#, #executorIp#,
+                                #tenantId#  FROM TBL_DEPTMASTER WHERE CN=#parentDeptId# AND TENANT_ID=#tenantId#
+        ]]>
+	</insert>
+
+	<sql id="EzSystemAdminDAO.searchQueryForDeptChList">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword">
+				<isEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						DEPTNM2	LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="3">
+						PARENT_DEPTNM2	LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="4">
+						TARGET_DEPTNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="5">
+					<![CDATA[
+						EXECUTORID <> 'ez_sync'
+						AND (EXECUTORID	LIKE '%'||#search_keyword#||'%' ESCAPE '\' OR EXECUTORNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\')
+					]]>
+					</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+					<isEqual property="search_keycode" compareValue="1">
+						DEPTNM LIKE	'%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="3">
+						PARENT_DEPTNM LIKE	'%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="4">
+						TARGET_DEPTNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="5">
+					<![CDATA[
+						EXECUTORID <> 'ez_sync'
+						AND (EXECUTORID	LIKE '%'||#search_keyword#||'%' ESCAPE '\' OR EXECUTORNM LIKE '%'||#search_keyword#||'%' ESCAPE '\')
+					]]>
+					</isEqual>
+				</isNotEqual>
+				<isEqual property="search_keycode" compareValue="2" >
+						DEPTID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
+				</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="search_keycodeForType" prepend="and">
+			UPDATE_TYPE LIKE #search_keycodeForType# ESCAPE '\'
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((UPDATEDT + #offset# / (24 * 60)),'YYYY-MM-DD') >= #startDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			TO_CHAR((UPDATEDT + #offset# / (24 * 60)),'YYYY-MM-DD') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+
+	<select id="EzSystemAdminDAO.getDeptChHistList" parameterClass="map" resultClass="DeptChangeInfoVO">
+		SELECT
+			X.rnum, 
+			TO_CHAR((X.UPDATEDT + #offset# / (24 * 60)),'YYYY-MM-DD HH24:MI:SS') AS UPDATEDT,
+			X."SEQ",
+			X.DEPTID,
+			X.DEPTNM,
+			X.DEPTNM2,
+			X.PARENTDEPTID,
+			X.PARENTDEPTNM,
+			X.PARENTDEPTNM2,
+			X.COMPANYID,
+			X.COMPANYNM,
+			X.COMPANYNM2,
+			X.UPDATEDT,
+			X.TARGETDEPTID,
+			X.TARGETDEPTNM,
+			X.TARGETDEPTNM2,
+			X.UPDATETYPE,
+			X.EXECUTORID,
+			X.EXECUTORNM,
+			X.EXECUTORNM2,
+			X.EXECUTORIP
+		FROM (
+			SELECT
+				ROWNUM AS rnum,
+				A."SEQ",
+				A.DEPTID,
+				A.DEPTNM,
+				A.DEPTNM2,
+				A.PARENTDEPTID,
+				A.PARENTDEPTNM,
+				A.PARENTDEPTNM2,
+				A.COMPANYID,
+				A.COMPANYNM,
+				A.COMPANYNM2,
+				A.UPDATEDT,
+				A.TARGETDEPTID,
+				A.TARGETDEPTNM,
+				A.TARGETDEPTNM2,
+				A.UPDATETYPE,
+				A.EXECUTORID,
+				A.EXECUTORNM,
+				A.EXECUTORNM2,
+				A.EXECUTORIP
+			FROM (
+				SELECT
+					C."SEQ",
+					C.DEPTID,
+					C.DEPTNM,
+					C.DEPTNM2,
+					C.PARENT_DEPTID AS parentDeptId,
+					C.PARENT_DEPTNM AS parentDeptNm,
+					C.PARENT_DEPTNM2  AS parentDeptNm2,
+					C.COMPANYID,
+					C.COMPANYNM,
+					C.COMPANYNM2,
+					C.UPDATEDT,
+					C.TARGET_DEPTID AS targetDeptId,
+					C.TARGET_DEPTNM AS targetDeptNm,
+					C.TARGET_DEPTNM2 AS targetDeptNm2,
+					C.UPDATE_TYPE AS updateType,
+					C.EXECUTORID,
+					C.EXECUTORNM,
+					C.EXECUTORNM2,
+					C.EXECUTORIP
+		FROM
+			TBL_DEPT_CHANGE_INFO C
+		WHERE
+			C.TENANTID=#v_tenantID#
+			$companyOracleStr$ 
+		<include
+			refid="EzSystemAdminDAO.searchQueryForDeptChList" />
+		ORDER BY	
+			C."SEQ" DESC
+		) A
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+				WHERE ROWNUM <= (#pageCount# + #v_start#)
+			]]>
+		</isNotEqual>
+			) X
+		<isNotEqual property="v_start" compareValue="-1">
+			<![CDATA[
+				WHERE X.rnum >= (#v_start# + 1)
+			]]>
+		</isNotEqual>
+	</select>
+
+	<select id="EzSystemAdminDAO.getDeptChHistListCount" parameterClass="map" resultClass="int">
+		SELECT COUNT(SEQ)
+		FROM TBL_DEPT_CHANGE_INFO
+		WHERE TENANTID = #v_tenantID#
+		$companyOracleStr$
+		<include
+			refid="EzSystemAdminDAO.searchQueryForDeptChList" />
 	</select>
 </sqlMap>

@@ -3852,7 +3852,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			bCanJoin = false;
 		}
 		
-		/* 이부분 잘 봐두자. 겸직 시 현재 선택한 companyID를 넣어야 하는데, 이게 제대로 userInfo에 반영되는지... */
+		/* 겸직 시 현재 선택한 companyID가 userInfo에 제대로 반영되는지 확인 필요  */
 		ezCommunityService.joinOkSet1(code, id, commonUtil.getTodayUTCTime(""), userInfo.getCompanyID(), tenantID);
 		
 		String cID = ezCommunityService.joinOkGet2(code, id, tenantID);

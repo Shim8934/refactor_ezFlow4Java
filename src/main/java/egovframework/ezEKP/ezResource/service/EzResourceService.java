@@ -51,6 +51,8 @@ public interface EzResourceService {
 	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID, String deptID) throws Exception;
 	
 	public String getBrdApproveFlag(int brdID, String companyID, int tenantID) throws Exception;
+
+	public String getBrdRepeatFlag(int brdID, String companyID, int tenantID) throws Exception;
 	
 	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
@@ -72,7 +74,7 @@ public interface EzResourceService {
 			String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear, String strPownerID, String strPnum, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 
 	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
-	
+
 	public void insertForm(String resID, String brdNm, String formText, int tenantID) throws Exception;
 	
 	public void updateSchedule(int num, String ownerID, String companyID, String approve, int tenantID) throws Exception;

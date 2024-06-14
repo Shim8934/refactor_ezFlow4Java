@@ -2199,25 +2199,38 @@ var SurveyCreate     = function() {
 		var sliderUnit = $("<div class='silder-unit'></div>");
 		var unitTxt    = $("<span class='slider-span'>" + SurveyMessages.strSlider7 + "</span>");
 		var unitInput  = $("<input type='input' class='slider-input' value='" + unit  + "'/>");
-		sliderUnit.append(unitTxt);
-		sliderUnit.append(unitInput);
-		
+		var cntTxt    = $("<span class='slider-span'>개수</span>");
+		var cnt = (highest - lowest) / unit;
+		cnt = !!cnt ? cnt : 1;
+		var cntInput  = $("<input type='input' class='slider-cnt' value='" + cnt  + "'/>");
 		var slidWrap   = $("<div class='silder-wrap'></div>");
-		var sliderLw   = $("<input type='input' class='slider-lw' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + lowest  + "'/>");
-		slidWrap.append(sliderLw);
-		
 		var slideMain = $("<input type='range' class='slider-main' value='0'/>");
 		slidWrap.append(slideMain);
-		
-		var sliderUp = $("<input type='input' class='slider-up' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + highest + "'/>");
-		
-		var lwUpDiv = $("<div><span class='slider-lwExp'>" + SurveyMessages.strSlider8 + "</span><span class='slider-upExp'>" + SurveyMessages.strSlider9 + "</span></div>")
-		
-		slidWrap.append(sliderUp);
+		var span = $("<p></p>");
+		var output = $("<output class='slider-output'></output>");
+
+		var sliderLw   = $("<span class='slider-span'>" + SurveyMessages.strSlider8 + "</span>");
+		var lowInput = $("<input type='input' class='slider-lw' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); value='" + lowest  + "'/>");
+		var sliderUp = $("<span class='slider-span'>" + SurveyMessages.strSlider9 + "</span>");
+		var upInput = $("<input type='input' class='slider-up' style='background-color:#cccccc;' onKeyup=this.value=this.value.replace(/[^0-9]/g,''); readonly value='" + highest + "'/>");
+
+		sliderUnit.append(sliderLw);
+		sliderUnit.append(lowInput);
+		sliderUnit.append(unitTxt);
+		sliderUnit.append(unitInput);
+		sliderUnit.append(cntTxt);
+		sliderUnit.append(cntInput);
+		sliderUnit.append(sliderUp);
+		sliderUnit.append(upInput);
+
+		// slidWrap.append(sliderUp);
 		divWrap.append(slidWrap);
-		divWrap.append(lwUpDiv);
+		divWrap.append(span);
+		span.append(output);
+		// divWrap.append(lwUpDiv);
 		divWrap.append(sliderUnit);
-		
+
+		addChangeEvent(lowInput, unitInput, cntInput, upInput, slideMain, output);
 		return divWrap;
 	}
 	
@@ -2776,17 +2789,18 @@ var SurveyCreate     = function() {
 		var lowestInput  = qstnForm.querySelector("input[class='slider-lw']");
 		var highestInput = qstnForm.querySelector("input[class='slider-up']");
 		var unitInput    = qstnForm.querySelector("input[class='slider-input']");
+		var cntInput    = qstnForm.querySelector("input[class='slider-cnt']");
 		var unitValue    = unitInput    ? parseInt(unitInput.value)    : -1;
 		var lowestValue  = lowestInput  ? parseInt(lowestInput.value)  : -1;
 		var highestValue = highestInput ? parseInt(highestInput.value) : -1;
-		
+		var cntValue = cntInput ? parseInt(cntInput.value) : -1;
+
 		//Check slider requirements
 		if (!isValid(lowestValue))       {sliderObj.error = "strSlider1"; return sliderObj;}
 		if (!isValid(highestValue))      {sliderObj.error = "strSlider2"; return sliderObj;}
 		if (!isValid(unitValue))         {sliderObj.error = "strSlider5"; return sliderObj;}
 		if (lowestValue >= highestValue) {sliderObj.error = "strSlider3"; return sliderObj;}
-		if (((highestValue - lowestValue) % unitValue) != 0)  {sliderObj.error = "strSlider10"; return sliderObj;}
-		if (((highestValue - lowestValue) / unitValue) > 200) {sliderObj.error = "strSlider10"; return sliderObj;}
+		if (cntValue > 200) {sliderObj.error = "strSlider10"; return sliderObj;}
 		
 		var option = [];
 		option.push({content : lowestValue, level : 0});
@@ -3922,7 +3936,7 @@ var SurveyCreate     = function() {
 	function saveLinkAttach(elmt, ulClass) {
 		var attachName = document.getElementById("attfileName");
 		var attachUrl  = document.getElementById("attfileUrl");
-		
+
 		if (!replaceAll(attachName.value, " ", "")) {alert(SurveyMessages.strURL1); attachName.focus(); return;}
 		if (!replaceAll(attachUrl.value, " ", ""))  {alert(SurveyMessages.strURL2); attachUrl.focus() ; return;}
 		if (!checkUrl(attachUrl.value))             {alert(SurveyMessages.strURL3); attachUrl.focus() ; return;}
@@ -3952,6 +3966,18 @@ var SurveyCreate     = function() {
 		liElmt.setAttribute("fname", attachName.value);
 		liElmt.setAttribute("furl", attachUrl.value);
 		mainUlElmt.appendChild(liElmt);
+        // 이유정 - URL 추가시, 파일 추가와 마찬가지로 "divInform" div 제거 후 파일추가창이 안뜨도록 함.
+		var fileDivElmt         = document.getElementById("fileDiv");
+		var divfileListElmt     = fileDivElmt.firstElementChild;
+		var divInform = document.querySelector(".divInform");
+		if (divInform) {
+			divfileListElmt.className = "fileList";
+			var divInformElmt         = fileDivElmt.querySelector("div[class='divInform']");
+			var helpDivElmt           = document.getElementById("helpTxt");
+			if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
+			if (helpDivElmt)   {helpDivElmt.className = "uploadHelp";}
+			fileDivElmt.onclick = null;
+		}
 		toggleUrlPanel();
 	}
 	// URL 첨부 삭제
@@ -4010,3 +4036,37 @@ var SurveyCreate     = function() {
 function Editor_Complete() {
 	document.getElementById("info-input-pp").contentWindow.SetEditorContent(SurveyCreate.getPurpose());
 }
+
+function addChangeEvent(obLow, obUnit, obCnt, obMax, slideMain, output) {
+    var arr = [obLow, obUnit, obCnt];
+    for (var obj of arr) {
+        obj.on("propertychange change keyup paste input", function() {
+            var low = obLow.val();
+            var unit = obUnit.val();
+            var cnt = obCnt.val();
+
+            if (low !== '' && unit !== '' && cnt !== '') {
+                var max = low * 1 + unit * cnt;
+                slideMain.attr('min',low);
+                slideMain.attr('step',unit);
+                slideMain.attr('max',max);
+                output.val(slideMain.val());
+                obMax.val(max);
+            }
+        });
+    }
+
+    slideMain.on("change", function() {
+        output.val(this.value);
+    });
+}
+
+/* 2024-03-26 양지혜 - 숫자 외 입력금지 및 게시기간 제한 */
+$(".date-input").keyup(function(){
+	var inputVal = $(this).val();
+	$(this).val(inputVal.replace(/[^0-9.]/g,""));
+	if(inputVal > maxPeriod) {
+		alert(SurveyMessages.strLangYJH01 + maxPeriod + SurveyMessages.strLangYJH02);
+		$(this).val("");
+	}
+});

@@ -769,6 +769,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strMakeDate = "";
 		String strApproveFlag = "";
 		String strReturnFlag = "";
+		// 반복예약허용 flag
+		String strRepeatFlag = "";
 		
 		if (!req.getParameter("brdID").equals("")) {
 			brdID = req.getParameter("brdID");
@@ -800,6 +802,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		strMakeDate = resBrd.getMakeDate();
 		strApproveFlag = resBrd.getApproveFlag();
 		strReturnFlag = resBrd.getReturnFlag();
+		strRepeatFlag = resBrd.getRepeatFlag();
 		
 		List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -828,6 +831,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("makeDate", strMakeDate);
 		model.addAttribute("approveFlag", strApproveFlag);
 		model.addAttribute("returnFlag", strReturnFlag);
+		model.addAttribute("repeatFlag", strRepeatFlag);
 		
 		return "/ezResource/resViewClsItem";
 	}
@@ -883,6 +887,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strMakeDate = "";
 		String strApproveFlag = "";
 		String strReturnFlag = "";
+		// 반복예약허용 flag
+		String strRepeatFlag = "";
 		List<OrganUserVO> ownerListVO;
 		
 		if (req.getParameter("brdID") != null) {
@@ -944,6 +950,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			strMakeDate = resBrd.getMakeDate();
 			strApproveFlag = resBrd.getApproveFlag();
 			strReturnFlag = resBrd.getReturnFlag();
+			strRepeatFlag = resBrd.getRepeatFlag();
 			
 			List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -975,6 +982,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("strResID", resID); 
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("returnFlag", strReturnFlag);
+		model.addAttribute("repeatFlag", strRepeatFlag);
 		
 		return "/ezResource/resModClsItem";
 	}
@@ -1079,7 +1087,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Locale locale = userInfo.getLocale();
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
-		
+
 		String ownerList = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
 		String strOwnerID = ownerList.split(",")[0];
 		String deptID = xmlDom.getElementsByTagName("DATA").item(1).getTextContent().trim();		// 부서ID
@@ -1620,6 +1628,9 @@ public class EzResourceController extends EgovFileMngUtil {
 
 		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId(), userInfo.getDeptID());
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+
+		// 반복예약허용 Flag
+		String brdRepeatFlag = ezResourceService.getBrdRepeatFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (req.getParameter("cmd") != null) {
 			cmdStr = req.getParameter("cmd");
@@ -1713,7 +1724,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				cTime = cDate.split(" ")[1].substring(0, 2);
 				cTime2 = cDate.split(" ")[1].substring(3, 5);
 				
-				if (req.getParameter("startDate") != null) {
+				if (req.getParameter("startDate") != null && !req.getParameter("startDate").equals("")) {
 					cDate = req.getParameter("startDate");
 				}
 				cDate = cDate.substring(0, 10);
@@ -1782,6 +1793,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("resID", resID);
 		model.addAttribute("num", num);
 		model.addAttribute("approveFlag", brdApproveFlag);
+		model.addAttribute("repeatFlag", brdRepeatFlag);
 		model.addAttribute("cmdStr", cmdStr.toLowerCase());
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("dayView", dayView);

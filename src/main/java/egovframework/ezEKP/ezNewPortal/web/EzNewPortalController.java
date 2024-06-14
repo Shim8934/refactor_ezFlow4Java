@@ -172,7 +172,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return "/ezNewPortal/newPortalMain";
 	}
 	
-	// 종균 시작
 	/**
 	 * 포탈 탑메뉴 호출 함수
 	 */
@@ -440,9 +439,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 		logger.debug("updateUserFrameAndPortlet End");
 		return result;
-	}
-	// 종균 끝
-	
+	}	
 	
 	/**
 	 * 포탈 메인 화면 호출 함수

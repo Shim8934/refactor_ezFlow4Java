@@ -127,7 +127,7 @@
 	                    treeView.DataBind("TreeView");
 	                }
 	                else {
-	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.statusText);
+	                    alert("<spring:message code='ezEmail.t13' />" + xmlHTTP.status);
 	                    xmlHTTP = null;
 	                }
 	            }
@@ -364,7 +364,7 @@
 	                        check_presence();
 	                    }
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                }
 	
 	                g_xmlHTTP = null;
@@ -565,7 +565,7 @@
 	                    treeView.DataSource(loadXMLString(g_xmlHTTP.responseText));
 	                    treeView.DataBind("TreeView");
 	                } else {
-	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.statusText)
+	                    alert("<spring:message code='ezEmail.t9' />" + g_xmlHTTP.status)
 	                g_xmlHTTP = null;
 	            	}
 	        	}
@@ -1351,7 +1351,7 @@
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.status);
 		            } else {
 		            	document.getElementById("ListViewGroup").innerHTML = "";
 			            var pListViewGroup = new ListView();

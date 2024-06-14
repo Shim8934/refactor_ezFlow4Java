@@ -148,7 +148,7 @@ var strLang254 = "Đã nhập nội dung của trường"
 var strLang255 = "Chỉ có thể được nhập. (Tiếng Triều Tiên"
 var strLang256 = "Chữ cái)"
 //ezAPRDOCATTACH
-var strLang257 = "Vui lòng chọn từ danh sách các tài liệu cần di chuyển."
+var strLang257 = "Vui lòng chọn tài liệu bạn muốn thêm từ danh sách tài liệu."
 var strLang258 = "Tài liệu đã được đăng ký."
 //ezAPRDOCATTACH\aprDocAttach.js
 //ezAPRDOCATTACH\getDocAttach.js

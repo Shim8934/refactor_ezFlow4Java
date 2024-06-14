@@ -46,7 +46,7 @@
 	        var xmlhttp = createXMLHttpRequest();
 			var code = "${code}";
 	        var iMenuNum = 7;
-	        var gubun = "${gubun}";
+	        var gubun = "${boardInfo.gubun}";
 	        //2018-07-09 김보미
 	        var ListInfo = "";
 	        
@@ -117,7 +117,6 @@
 					ListInfo += SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "," + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID").trim() + ";";
     			}
     			
-    			///////////////////////
 				$('.mainlist tbody').html();
     			$('.mainlist tbody').append(listXML);
     			

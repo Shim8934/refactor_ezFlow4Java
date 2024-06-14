@@ -1063,7 +1063,7 @@ function searchUserListCC(search)
 				data : {
 					search : "displayName::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
 					cell   : "displayName;description;title;telephoneNumber;extensionattribute5",
-					prop   : "department;displayName;description;title",
+					prop   : "department;extensionAttribute4;displayName;description;title",
 					type   : "user"
 				},
 				success: function(xml){

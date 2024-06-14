@@ -529,7 +529,7 @@
 			VALUES
 				(#menuId#, #connectionUrl#, 'A', (SELECT MAX(A.portlet_order) + 1 FROM TBL_PORTAL_PORTLET_COMP A WHERE A.tenant_id = #tenantId# AND A.company_id = #companyId#))
 		]]>
-		<selectKey keyProperty="menuId" resultClass="Integer">
+		<selectKey keyProperty="portletId" resultClass="Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>

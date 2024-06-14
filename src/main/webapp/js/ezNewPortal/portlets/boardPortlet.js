@@ -33,7 +33,7 @@ function getBoardList(data, portletId) {
 			boardHTML += "<span class='boardNew'>N</span>";
 		}
 		
-		boardHTML += "<span class='txt'>" + item.title + "</span>";
+		boardHTML += "<span class='txt'>" + MakeXMLString(item.title) + "</span>";
 		boardHTML += "<span class='date'>" + startDate.substring(5, 16) + "</span>";
 		boardHTML += "<span class='name'>" + item.writerName + "</span>";
 		boardHTML += "</li>";

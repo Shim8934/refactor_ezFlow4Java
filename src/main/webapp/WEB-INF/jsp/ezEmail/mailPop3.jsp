@@ -248,7 +248,7 @@
 		            if (xmlHTTP.status == 200)
 		            	alert("<spring:message code='ezEmail.t42' />");
 		            else
-		            	alert("<spring:message code='ezEmail.t228' />" + xmlHTTP.statusText);
+		            	alert("<spring:message code='ezEmail.t228' />" + xmlHTTP.status);
 		
 		            xmlHTTP = null;
 		        }
@@ -420,7 +420,7 @@
 				            }
 				        }
 				        else
-				        	alert("<spring:message code='ezEmail.t237' />" + xmlHTTP.statusText);
+				        	alert("<spring:message code='ezEmail.t237' />" + xmlHTTP.status);
 		        	}
 		        }
 		        xmlHTTP.send(popXML);
@@ -458,12 +458,17 @@
 		    }
 		</script>
 	</head>
-	<c:if test="${userLang == '3'}">
-	<c:set var="tableWidth" value="750" />
-	</c:if>
-	<c:if test="${userLang != '3'}">
-	<c:set var="tableWidth" value="720" />
-	</c:if>
+	<c:choose>
+		<c:when test="${userLang == '3'}">
+		<c:set var="tableWidth" value="750" />
+		</c:when>
+		<c:when test="${userLang == '2'}">
+		<c:set var="tableWidth" value="770" />
+		</c:when>
+		<c:otherwise>
+		<c:set var="tableWidth" value="720" />
+		</c:otherwise>
+		</c:choose>
 	<body onload="javascript:window_onload()" style="margin-left:10px;margin-right:10px;">
 		<br>
 		<div class="txt" style="margin-bottom:25px">

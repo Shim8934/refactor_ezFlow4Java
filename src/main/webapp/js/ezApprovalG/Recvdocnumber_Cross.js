@@ -370,6 +370,7 @@ function rollbackDocNumber(pDeptID, pDocID) {
 
 function SaveFile() {
     try {
+        headerAction("open");
     	var result = "";
         var mhtBody = "";
     	mhtBody = message.Get_EditorBodyHTML();
