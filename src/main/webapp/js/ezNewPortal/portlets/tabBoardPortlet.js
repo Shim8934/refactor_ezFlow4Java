@@ -20,7 +20,7 @@ function initTabPortletInfo(portletId) {
     	var activeBoardName = tabBoardObj.tabBoardNameList[activeTabIndex];
     	
     	activeTabId = activeTabId.replace("tabBoardList", "");
-    	getBoardList(activeTabId, activeBoardId, activeBoardName);
+    	getTabBoardList(activeTabId, activeBoardId, activeBoardName);
     }
     tabBoardPortletObj.portletId = portletId;
     
@@ -57,7 +57,6 @@ var getTabBoard = function (portletId) {
                 allDisplayNone('#notexistence');
                 allDisplayNone('#tabBoard .portletText');
                 
-                console.log("tabList", tabList);
                 var portletId = tabBoardPortletObj.portletId;
                 var perCount = getTabBoardPagePerCount(portletId);
                 var tabNode = null;
@@ -105,7 +104,7 @@ var getTabBoard = function (portletId) {
     request.send();
 }
 
-function getBoardList(tabId, boardId, tabBoardName) {
+function getTabBoardList(tabId, boardId, tabBoardName) {
 	var portletId = tabBoardPortletObj.portletId;
 	var tabBoardListId = "tabBoardList" + tabId;
 	var currentPage = portletInfoMap["portlet" + portletId].paging[tabBoardListId].getPage();
@@ -184,7 +183,7 @@ var dataAssemblerTabBoard = function(object) {
 }
 // 탭변경(노드)
 function tapBoardChangeTab(obj, tabId, boardId, tabBoardName) {
-	getBoardList(tabId, boardId, tabBoardName);
+	getTabBoardList(tabId, boardId, tabBoardName);
 	
 	var tabBoardListId = "tabBoardList" + tabId;
 	var portletId = tabBoardPortletObj.portletId;
