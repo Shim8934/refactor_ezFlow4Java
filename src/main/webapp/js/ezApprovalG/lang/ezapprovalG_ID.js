@@ -684,7 +684,7 @@ var strLang1027 = "Fixed comments";
 var strLang1028 = "Year";
 var strLang1029 = "Month";
 var strLang1030 = "Day";
-var strLang1031 = "Can not post email / approval-document to photo board or anonymous board or url board.";
+var strLang1031 = "Posts are only allowed on general and Q&A boards.";
 var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 var strLang1039 = "Selected user is out of office.</br>Would you like to add it?";
 

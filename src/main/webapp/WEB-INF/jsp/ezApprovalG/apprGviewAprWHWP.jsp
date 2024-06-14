@@ -110,10 +110,18 @@
 				    return;
 				}
 			
-			    if (pDocState == "015" && pOrgDocID.length >= 20 && "<c:out value='${listTypeValue}'/>" == "99") {
-			        btnGongRam.style.display = "";
-			        pOpinionType = "";
+			    if (pDocState === "015" && pOrgDocID.length >= 20) {
+			    	if (listTypeValue === "99") {	// 공람할문서
+			    		btnGongRam.style.display = "";
+				        btnBoard.style.display = "";
+				        btnReuse.style.display = "";
+				        pOpinionType = "";
+			    	} else if (listTypeValue === "10") {	// 공람완료문서
+			    		btnBoard.style.display = "";
+				        btnReuse.style.display = "";
+			    	}
 			    }
+			    
 			    pDocID = docID;
 			    pDocHref = docHref;
 			    pOpinionFlag = opinionFlag;
@@ -671,6 +679,157 @@
 					}
 				}
 			}
+			
+	    	// 게시판 게시
+	    	var writeboardselect_modal_dialogArguments = new Array();
+		    function NewItem_onclick() {
+		    	writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		        try {
+		        	if (OpenWin) {
+		        		OpenWin.focus(); 
+		        	} 
+		        } catch (e) {
+		        	console.error('OpenWin 접근 실패:', e);
+		        }
+		    }
+		    
+		    function NewItem_onclick_Complete(ret) {
+		        if (typeof (ret) != "undefined") {
+		            pBoardID = ret[0];
+		
+		            if (pBoardID == "" || typeof (pBoardID) == "undefined") {
+		                return;
+		            }
+		
+		            var pheight = window.screen.availHeight;
+		            var pwidth = window.screen.availWidth;
+		            var pTop = (pheight - 720) / 2;
+		            var pLeft = (pwidth - 765) / 2;
+		            
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
+		                alert(strLang1031);
+		            }
+		            else {
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		            }
+		        }
+		    }
+		    
+		    // 재사용 - 공람할문서, 공람완료문서 메뉴에서 사용함
+			var editable = "";
+			var getformcont_cross_dialogArguments = new Array();
+		 	function btnReuse_onclick(type) {
+		 		editable = type;
+		 		var parameter = new Array();
+		        parameter[0] = "sol2";
+		        parameter[1] = "A01000";
+		        
+		        url = "/ezApprovalG/getFormCont.do";
+		        
+		        if (CrossYN()) {
+		            getformcont_cross_dialogArguments[0] = parameter;
+		            getformcont_cross_dialogArguments[1] = btnReuse_onclick_complete;
+		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            
+		            try {
+		            	getFormCont_Cross.focus(); 
+		            } catch (e) {
+		            	console.error('Error focusing window:', e);
+		            }
+		        } else {
+		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+		            var ret = window.showModalDialog(url, parameter, feature);
+		            formURL = ret[0];
+		            formDocType = ret[1];
+		            
+		            if (formURL != "cancel") {
+		                openDraftUI(formURL, formDocType);
+		            }
+		        }
+		 	}	
+		 	
+		 	var editable = "";
+		 	var newFormURL = "";
+		 	var newFormDocType = "";
+			function btnReuse_onclick_complete(ret) {
+				if(ret[0] != "cancel") {
+					newFormURL = ret[0];
+			        newFormDocType = ret[1];
+			        newFormID = newFormURL.substring(newFormURL.lastIndexOf("/")+1);
+			        
+					var pAlertContent;
+					 $.ajax({
+				    		type : "POST",
+				    		dataType : "text",
+				    		data : {
+				    			formID : newFormID,
+				    			companyID : orgCompanyID
+				    		},
+				    		url : "/ezApprovalG/getFormDetail.do",
+				    		success: function(xml){
+								xml = loadXMLString(xml);
+								
+								var currConnflag = getNodeText(GetElementsByTagName(xml, 'FORMCONNFLAG')[0]);
+								var currVersion = getNodeText(GetElementsByTagName(xml, 'FORMVERSION')[0]);
+		
+								if(currConnflag === 'Y') {
+									pAlertContent = '연동양식은 재사용 할 수 없습니다.';
+									OpenAlertUI(pAlertContent);
+									return;
+								}
+								
+								openDraftUI("DRAFT");
+							},
+							error: function() {
+								pAlertContent = '문서 재사용에 실패하였습니다.';
+								OpenAlertUI(pAlertContent);
+							}        			
+			    	});
+				}
+		     }
+			 
+			function openDraftUI(pDraftFlag) {
+		        var pArgument = new Array();
+
+		        pArgument[0] = pUserID;
+		        pArgument[1] = newFormURL;
+		        pArgument[2] = pDraftFlag;
+		        pArgument[3] = newFormDocType;
+	            pArgument[4] = "0";
+	            pArgument[5] = "";
+	            pArgument[6] = "";
+	            pArgument[7] = "";
+	            pArgument[8] = 1;
+	            pArgument[9] = editable;
+	            pArgument[10] = pDocID;
+	            pArgument[11] = 1;
+	            			
+	            var params = {
+	            	formURL: escape(pArgument[1]),
+	            	draftFlag: escape(pArgument[2]),
+	            	formDocType: escape(pArgument[3]),
+	            	susinSN: escape(pArgument[4]),
+	            	docState: escape(pArgument[5]),
+	            	aprState: escape(pArgument[6]),
+	            	isTmpDoc: escape(pArgument[7]),
+	            	listType: escape(pArgument[8]),
+	            	isUsed: escape(pArgument[9]),
+	            	beforeDocID: escape(pArgument[10]),
+	            	fromGongram: escape(pArgument[11])
+	            };
+	            
+				var openLocation = "";
+				
+				if (useWebHWP == "YES") {
+					openLocation = "/ezApprovalG/draftuiWHWP.do?" + new URLSearchParams(params);	
+				} else {
+					openLocation = "/ezApprovalG/draftuiHWP.do?" + new URLSearchParams(params);
+				} 
+				
+		        var result = GetOpenWindow(openLocation, "", 1050, 970, "YES");
+		        window.close();
+		    }
 	    </script>
 	</head>
 	<body class="popup" onload="return window_onload()" onbeforeunload="return window_onbeforeunload()">
@@ -688,7 +847,13 @@
 	                        <li id="btnDocInfo"><span onclick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 	                        <li id="btnhistory"><span onclick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 	                        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-	                        <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
+				            <c:if test="${useBoard == 'YES'}">
+				          		<li id="btnBoard" style="display: none;"><span onclick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
+				            </c:if>
+				            <c:if test="${formID != '2018000000'}">
+				          		<li id="btnReuse" style="display: none;"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+				            </c:if>
+				            <li id="btnPrint"><span class="icon16 popup_icon16_print" onclick="return btnPrint_onclick()"></span></li>
 	                        <c:if test="${useExternalMailServer == 'NO'}">
 	                        	<li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
 	                        </c:if>

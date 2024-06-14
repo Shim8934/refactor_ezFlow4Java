@@ -1251,7 +1251,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String beforeUrl = "";
 		String beforeDocID = ObjectUtils.defaultIfNull(request.getParameter("beforeDocID"), "");
 		String isUsed = ObjectUtils.defaultIfNull(request.getParameter("isUsed"), "");
+		String fromGongram = request.getParameter("fromGongram");
+		
 		if (!beforeDocID.isEmpty()) {
+			if (fromGongram != null && fromGongram.equals("1") && isUsed.equals("reuse")) {
+				beforeDocID = ezApprovalGService.getOrgDocIDfromGongram(beforeDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+			}
 			beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		
@@ -1295,6 +1300,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("beforeUrl", beforeUrl);
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("isUsed", isUsed);
+		
 		//결재 세부정보
 		String formId = ezApprovalGService.getFormId(formURL);
 		String formAprOption = ezApprovalGService.getFormAprOptionInfo(formId, "FORM", userInfo.getCompanyID(), userInfo.getTenantId());
@@ -1820,6 +1826,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
+		model.addAttribute("useBoard", ezCommonService.getTenantConfig("useBoard", userInfo.getTenantId()));
 		
 		// 대용량첨부 관련 정보
 		model.addAttribute("bigAttachDownloadPeriod", bigAttachDownloadPeriod); // 다운로드 기간

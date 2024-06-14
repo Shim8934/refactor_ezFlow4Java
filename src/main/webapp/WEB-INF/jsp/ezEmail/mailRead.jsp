@@ -467,7 +467,7 @@
 		                    return;
 		                }
 		
-		                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[3] != "") {
+		                if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
 		                    alert(strLang337);
 		                }
 		                else {
@@ -504,7 +504,7 @@
 		            var pTop = (pheight - boardWidth) / 2;
 		            var pLeft = (pwidth - boardHeight) / 2;
 		
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7") {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8") {
 		                alert(strLang337);
 		            }
 		            else {
