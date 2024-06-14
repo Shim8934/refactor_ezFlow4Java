@@ -255,7 +255,7 @@ var nowZoom = 100;
                         contentType: false,
                         success : function(result) {
                             setConvertedImg(result);
-                            SaveFile();
+                            officeSaveFile();
                         },
                         error : function() {
                             alert("변환에 실패하였습니다.");
@@ -264,11 +264,11 @@ var nowZoom = 100;
 			    }
 			}
 
-			function SaveFile() {
+			function officeSaveFile() {
 				var result = "";
 				var mhtBody = "";
 				mhtBody = message.Get_EditorBodyHTML();
-				EmbedContentIntoXML(mhtBody);
+				officeEmbedContentIntoXML(mhtBody);
 				mhtBody = ConvertHTMLtoMHT(mhtBody);
 
 				var data = {
@@ -294,7 +294,7 @@ var nowZoom = 100;
 				return result;
 			}
 
-			function EmbedContentIntoXML(bodyhtml) {
+			function officeEmbedContentIntoXML(bodyhtml) {
 				var tempDiv = document.createElement("DIV");
 				tempDiv.innerHTML = bodyhtml;
 
@@ -318,13 +318,13 @@ var nowZoom = 100;
 							if (result.length == 2)
 								ImgHeight = result[1];
 						}
-						ConvertSaveImageFile(OrgSrc, ImgWidth, ImgHeight);
+						officeConvertSaveImageFile(OrgSrc, ImgWidth, ImgHeight);
 					}
 				}
 				return bodyhtml;
 			}
 
-			function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
+			function officeConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
 				$.ajax({
 					url : "/ezCommon/convertSaveImage.do",
 					type : "POST",
