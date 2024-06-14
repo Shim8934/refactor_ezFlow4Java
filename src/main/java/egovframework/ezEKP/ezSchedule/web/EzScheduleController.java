@@ -708,7 +708,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             defaultView	= 2;
             startDay	= 7;
             startTime	= 540 / 60;
-            endTime		= 1020 / 60;
+            endTime		= 1080 / 60;
         }
         // 일정 그룹 목록
         List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId() ,companyID);
