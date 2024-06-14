@@ -3004,7 +3004,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		WHERE
 			P.RNUM > #startRow#
 		AND
-			P.RNUM <= #limit#
+			P.RNUM <= #startRow# + #limit#
 	]]>
 </select>
 
@@ -3128,7 +3128,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		WHERE
 			P.RNUM > #startRow#
 		AND
-			P.RNUM <= #limit#
+			P.RNUM <= #startRow# + #limit#
  	]]>
 </select>
 
