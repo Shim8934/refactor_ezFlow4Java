@@ -2207,3 +2207,25 @@ div.orbit img{border-radius: 5px;}
 
 .imagemaps-control .contentlist_layout{padding:0;}
 .imagemaps-control .contentlist_layout.submain_calcLayoutScroll{height:auto; overflow:hidden;}
+
+
+/* 데이트피커 스타일 수정(포탈) */
+.mainbg .ui-datepicker{border:1px solid #DCDCDC; border-radius:5px; font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+.mainbg .ui-datepicker .ui-datepicker-header{border:none; background:#F2F4F6; border-radius:5px;}
+.mainbg .ui-datepicker .ui-datepicker-title select{border:none; background:transparent; margin:0 5px;}
+.mainbg .ui-state-hover, .mainbg .ui-widget-content .ui-state-hover, .mainbg .ui-widget-header .ui-state-hover{border:none; border-radius:5px; background:#e1e1e1;}
+.mainbg .ui-datepicker .ui-datepicker-prev-hover, .mainbg .ui-datepicker .ui-datepicker-next-hover{top:2px;}
+.mainbg .ui-datepicker .ui-datepicker-prev-hover{left:2px;}
+.mainbg .ui-datepicker .ui-datepicker-next-hover{right:2px;}
+.mainbg .ui-datepicker-prev, .mainbg .ui-datepicker-next{cursor:pointer;}
+.mainbg .ui-datepicker-prev span{background:url(../../images/datepicker_prev.png) no-repeat center;}
+.mainbg .ui-datepicker-next span{background:url(../../images/datepicker_next.png) no-repeat center;}
+.mainbg .ui-state-default, .mainbg .ui-widget-content .ui-state-default, .mainbg .ui-widget-header .ui-state-default{font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+.mainbg .ui-datepicker th{padding:5px 0; background:none;}
+.mainbg .ui-datepicker th span{font-size:12px; color:#9B9B9B;}
+.mainbg .ui-datepicker th:first-child span{color:#FF0000;}
+.mainbg .ui-datepicker th:last-child span{color:#0000FF;}
+.mainbg .ui-state-default, .mainbg .ui-widget-content .ui-state-default, .mainbg .ui-widget-header .ui-state-default{border:none; font-size:11px; text-align:center; border-radius:5px; color:#000;}
+.mainbg tr td:first-child .ui-state-default{color:#FF0000;}
+.mainbg tr td:last-child .ui-state-default{color:#0000FF;}
+.mainbg .ui-state-highlight, .mainbg .ui-widget-content .ui-state-highlight, .mainbg .ui-widget-header .ui-state-highlight{border:none; background:#3D8FEA; font-size:11px; color:#fff;}
