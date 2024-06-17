@@ -16559,7 +16559,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				Document nonElecRecDocXML = commonUtil.convertStringToDocument(nonElecRecXML);
 				seperateAttachXML = makeListField(nonElecRecDocXML.getElementsByTagName("NONELECREC_SEPERATEATTACH").item(0).getTextContent().trim());
 				specialCatalogInfoXML = makeListField(nonElecRecDocXML.getElementsByTagName("NONELECREC_SPECIALCATALOGINFO").item(0).getTextContent().trim());
-				
+				/* 2024-06-17 김유진 - 비전자문서의 경우 현재 문서의 마지막 결재자를 결재권자로 설정 */
 				strSQL = regDocToCabinet("0", docID, docSN, 
 						docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(),
 						docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(),
@@ -16567,8 +16567,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						nonElecRecDocXML.getElementsByTagName("REGISTERTYPE").item(0).getTextContent().trim(),
 						ezOrganService.getPropertyValue(userID, "title", tenantID), 
 						ezOrganService.getPropertyValue(userID, "title2", tenantID),
-						nonElecRecDocXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent().trim(),
-						nonElecRecDocXML.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent().trim(),
+                        userName, userName2,
+//						nonElecRecDocXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent().trim(),
+//						nonElecRecDocXML.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent().trim(),
 						nonElecRecDocXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent().trim(),
 						nonElecRecDocXML.getElementsByTagName("DRAFTERNAME2").item(0).getTextContent().trim(),
 						nonElecRecDocXML.getElementsByTagName("EXECUTEDATE").item(0).getTextContent().trim(),
@@ -17045,8 +17046,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_NONELECRECYN", nonElecRecYN);
 			map.put("v_REGISTERDATE", registerDate);
 			map.put("v_EXECUTEDATE", executeDate);
-			map.put("v_APRMEMBERTITLE", aprMemberName);
-			map.put("v_APRMEMBERTITLE2", aprMemberName2);
+//			map.put("v_APRMEMBERTITLE", aprMemberName);
+//			map.put("v_APRMEMBERTITLE2", aprMemberName2);
 			map.put("v_DRAFTERNAME", drafterName);
 			map.put("v_DRAFTERNAME2", drafterName2);
 			map.put("v_RECEIPTMEMBER", receiptMember);
