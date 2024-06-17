@@ -595,7 +595,7 @@ function GetRecordList() {
 
         var tempDeptID = DeptID;
 
-        if (underDeptFlag === "TRUE" && GetSelectVal("rec_underDept") != "default") {
+        if (typeof underDeptFlag !== "undefined" && underDeptFlag === "TRUE" && GetSelectVal("rec_underDept") != "default") {
             tempDeptID = GetSelectVal("rec_underDept");
         }
 
