@@ -1564,7 +1564,7 @@
 	            $(".list_text.node_selected").removeClass("node_selected");
 
 	            var mailBoxMenu = $(event.target);
-	            mailBoxMenu.attr("class", "list_text node_selected");
+
 	            <%-- 2024-06-12 이사라 - 계정 별로 태그를 지원하기 위해 위치 변경하여 아래 태그조건이 맞지 않아 주석처리
 	            if (mailBoxMenu.prop("tagName") == "LI") {
 	            	mailBoxMenu.children().attr("class", "list_text node_selected");
@@ -1744,7 +1744,7 @@
 				            	<li onclick="shareMailAddress()"><span class="list_text">스팸편지함</span></li>
 				            </c:if>
                             <%-- 태그 --%>
-                            <c:if test="${useMailTag}">
+                            <c:if test="${shareInfo.enable eq '1'}">
                                 <div class="tag_area">
                                     <span>
                                         <div id="tagtitle_${shareInfo.shareId}" class="on" onclick='openTagFolder();'>

@@ -2654,7 +2654,8 @@ public class EzEmailServiceImpl implements EzEmailService {
     				map.put("shareName", (String)obj.get("shareName"));
         			map.put("mail", (String)obj.get("mail"));
         			map.put("compId", (String)obj.get("compId"));
-        			
+        			map.put("enable", (String)obj.get("enable"));
+
         			if (useUnreadCount) {
         				map.put("totalUnreadCount", (String)obj.get("totalUnreadCount"));
         			}

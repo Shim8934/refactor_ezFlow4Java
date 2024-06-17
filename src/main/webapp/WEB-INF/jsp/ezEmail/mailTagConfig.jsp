@@ -199,8 +199,7 @@
 	}
 
 	function onChangeEnable() {
-		//save(leftMenu.reloadWithoutSelectNode);
-		save(leftMenu.reloadTags());
+		save(leftMenu.reloadWithoutSelectNode);
 
 		if (getEnable()) {
 			$(document.head.querySelector("#disable_style")).remove();
