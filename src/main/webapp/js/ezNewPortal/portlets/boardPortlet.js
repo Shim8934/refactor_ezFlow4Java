@@ -48,7 +48,7 @@ function initBoardPortletInfo(portletId, type, fileName) {
 	newOb.portletCode = type != "" ? type + "Board" : "listBoard";
 
 	var count = getCurrentCount(portletId);
-	newOb.page = new Paging().init(count);
+	newOb.page = new Paging().setPageStart(1).init(count);
 	newOb.page.getPagePerCount = function () {
 		return getCurrentCount(portletId);
 	}

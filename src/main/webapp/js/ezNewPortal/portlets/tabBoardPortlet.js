@@ -61,7 +61,7 @@ var getTabBoard = function (portletId) {
                 var perCount = getTabBoardPagePerCount(portletId);
                 var tabNode = null;
                 for (var i = 0; i < tabList.length; i++) {
-                	var tabBoardPage = new Paging().init(perCount);
+                	var tabBoardPage = new Paging().setPageStart(1).init(perCount);
                 	tabBoardPage.getPagePerCount = function () {
                 		return getTabBoardPagePerCount(portletId);
                 	}

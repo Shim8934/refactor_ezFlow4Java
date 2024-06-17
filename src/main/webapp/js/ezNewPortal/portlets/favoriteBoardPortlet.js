@@ -87,7 +87,7 @@ function getTabList(portletId) {
     	            
     	            favoritePortletObj.tabIdList.push(boardId);
     	            
-    		    	var favoriteBoardPage = new Paging().init(perCount);
+    		    	var favoriteBoardPage = new Paging().setPageStart(1).init(perCount);
     		    	
     		    	favoriteBoardPage.getPagePerCount = function () {
     		    		return getFavoriteBoardPagePerCount(portletId);

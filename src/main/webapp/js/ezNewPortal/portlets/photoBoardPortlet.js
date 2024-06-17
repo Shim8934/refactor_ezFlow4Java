@@ -6,7 +6,7 @@ var photoBoardObj = {}
 function initPhotoBoardPortlet(portletId) {
 	var newObj = {};
 	var perCount = getPhotoPagePerCount(portletId);
-	newObj.page = new Paging().init(perCount);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
 	newObj.page.getPagePerCount = function () {
 		return getPhotoPagePerCount(portletId);
 	}
@@ -50,7 +50,7 @@ function reloadPhotoPortlet() {
 	var portletId = photoBoardObj.portletId;
 	var newObj = {};
 	var perCount = getPhotoPagePerCount(portletId);
-	newObj.page = new Paging().init(perCount);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
 	newObj.page.getPagePerCount = function () {
 		return getPhotoPagePerCount(portletId);
 	}

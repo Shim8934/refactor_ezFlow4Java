@@ -8,7 +8,7 @@ var pageNum = 1;
 function initMailPortletInfo(MailPortletId) {
 	var newObj = {};
 	var perCount = getMailPagePerCount(MailPortletId);
-	newObj.page = new Paging().init(perCount);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
 	newObj.page.getPagePerCount = function () {
 		return getMailPagePerCount(MailPortletId);
 	}

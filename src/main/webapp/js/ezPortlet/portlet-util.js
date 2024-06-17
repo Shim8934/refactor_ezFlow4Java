@@ -365,18 +365,22 @@ function getAvailSize(id) {
 }
 
 function Paging() {
-    var _countPerPage;
-    var _start;
-    var _page;
-    var _total = -1;
+    // _로 시작하는 변수 및 함수는 객체 외부에서 직접 접근하지 않는 내부 변수/함수이다.
+    // 내부 동작시 모든 시작 index는 0을 기준으로 한다.
+    var _countPerPage; // 페이지당 elements 개수
+    var _start = 0; // 쿼리 호출용 시작 넘버. 무조건 0부터 시작.
+    var _page = 0; // 내부 동작용 페이지. 내부 동작은 모두 page 0부터 시작. 설정에 상관없이 무조건 0을 초기 기준으로 한다.
+    var _total = -1; // 전체 개수. -1 일 경우 last같이 끝이 필요한 동작은 하지 않고, next는 마지막 페이지를 체크하지 않고 올라 감.
+    // ez) new Paging().setPageStart(1).setMaintain(flase).setRoundPage(false).init() 과 같이 init() 함수로 초기화 전에
+    //  체이닝 매서드로 옵션 설정하여 객체마다 다른 옵션을 준다. 아래에 있는 값들은 default
     var _option = {
-        maintain: true, // 페이지 숫자 변환시 현제 페이지 유지 여부
-        pageStart: 1, // getPage()시 시작 페이지
-        roundPage: true, // 페이지 끝으로 가면 순환할지 여부.
+        maintain:true, // 페이지 숫자 변환시 현제 페이지 유지 여부
+        pageStart:0, // getPage()시 시작 페이지, page를 객체 외부에서 get 관련 함수를 실행할때 더해주기만 하므로 내부 동작에 영향을 주지 않는다.
+        roundPage:true, // 페이지 끝으로 가면 순환할지 여부.
     }
 
     var _resetPage = function (count) {
-        _page = _option.pageStart;
+        _page = 0;
         _countPerPage = count;
         _start = 0;
     }
@@ -384,25 +388,32 @@ function Paging() {
     var _changeCount = function (count) {
         _start -= _start % count;
         _countPerPage = count;
-        _page = _start / count + _option.pageStart;
+        _page = _start / count;
     }
 
-    var _getLastPage = function () {
-        return Math.ceil(_total / _countPerPage) - 1 + _option.pageStart;
+    var _getLastPage  = function () {
+        return Math.ceil(_total / _countPerPage) - 1;
+    }
+
+    var _goPage = function (pageNum) {
+        _page = pageNum;
+        _start = pageNum * _countPerPage;
     }
 
     return {
+        // 객체 생성 후 init() 함수를 실행하기전에 기본 설정을 커스텀 해야할 일이 있다면 아래 함수들을 사용하여 변경
+
         // 페이지 끝에서 처음으로 돌아올지 여부
         setRoundPage: function (roundPage) {
             _option.roundPage = !!roundPage;
             return this;
         },
-        // 페이지 숫자 변환시 현재 페이지 유지 여부
+        // 페이지 숫자 변환시 현제 페이지 유지 여부
         setMaintain: function (maintain) {
             _option.maintain = !!maintain;
             return this;
         },
-        // 페이지 시작 숫자
+        // 페이지 시작 숫자. 설정한다고 해서 내부 동작이 변하진 않고, getPage 시 반환되는 페이지 값만 바뀐다.
         setPageStart: function (pageStart) {
             _option.pageStart = parseInt(pageStart);
             return this;
@@ -410,18 +421,23 @@ function Paging() {
         init: function (count) {
             _resetPage(count);
             return {
+                // 현재 페이지 얻음.
                 getPage: function () {
-                    return _page;
+                    return _page + _option.pageStart;
                 },
+                // 이 객체에설정된 시작 페이지를 얻음.
                 getStartPage: function () {
                     return _option.pageStart;
                 },
+                // 이 객체의 페이지당 엘리먼트 수
                 getCountPerPage: function () {
                     return _countPerPage;
                 },
+                // 페이징시 쿼리로 불러올 시작 수 (limit ~ limit + count)
                 getStart: function () {
                     return _start;
                 },
+                // 다음 페이지
                 next: function () {
                     if (_total !== -1 && _page >= _getLastPage()) {
                         if (_option.roundPage) {
@@ -434,19 +450,18 @@ function Paging() {
 
                     return this;
                 },
+                // 이전 페이지
                 previous: function () {
-                    if (_total !== -1 && _page <= _option.pageStart) {
+                    if (_total !== -1 && _page <= 0) {
                         if (_option.roundPage) {
-                            _start = _getLastPage() * _countPerPage;
-                            _page = _getLastPage();
+                            _goPage(_getLastPage());
                         }
-                    } else {
-                        _start -= _countPerPage;
-                        _start = _start < 0 ? 0 : _start;
-                        _page--;
+                    } else if (_page > 0){
+                        _goPage(_page - 1);
                     }
                     return this;
                 },
+                // 현재 페이지당 엘리먼트수 변경. 변셩시 옵션 maintain 이 true면 보고있는 페이지가 포함된 페이지, 아니면 초기화 됨
                 changeCount: function (count) {
                     if (_option.maintain) {
                         _changeCount(count);
@@ -455,36 +470,34 @@ function Paging() {
                     }
                     return this;
                 },
+                // 첫 페이지로 이동
                 first: function () {
-                    _start = 0;
+                    _goPage(0);
                     return this;
                 },
                 setTotal: function (total) {
-                    if (total < _start) {
-                        console.error("The total must be greater than the start.");
-                        return this;
-                    }
                     _total = total;
                     return this;
                 },
                 getTotal: function () {
                     return _total;
                 },
+                // 마지막 페이지로 이동. 전체 카운트가 없을경우 마지막 페이지를 알수 없으므로 그대로 리턴
                 last: function () {
                     if (_total === -1) return this;
-                    _page = _getLastPage();
-                    _start = (_page - _option.pageStart) * _countPerPage;
+                    _goPage(_getLastPage());
                     return this;
                 },
-                resetPage: function () {
-                    _resetPage(_countPerPage);
-                },
-                getCurrentOption: function () {
+                // 현재 객체의 옵션 리턴
+                getCurrentOption : function () {
                     return _option;
                 },
+                // 해당 페이지로 이동 시작페이지를 1로 설정후 setPage(2) -> 두번째 페이지로 이동.
                 setPage: function (pageNum) {
-                    _page = pageNum
-                    _start = (_page - _option.pageStart) * _countPerPage
+                    // 시작 페이지가 1 일경우, 3페이지를 호출할 경우 내부 동작은 2페이지를 호출하는 동작을 하면 됨.
+                    pageNum -= _option.pageStart;
+                    _goPage(pageNum);
+                    return this;
                 }
             }
         }
@@ -596,7 +609,7 @@ function makeFixPortlet(fixedPortletList) {
             },
             url: fixUrl,
             success: function (result) {
-                var boardList = result.boardList;
+                var boardList = result.boardList || [];
                 if (boardList.length > 0) {
                     fixBoardArr[fixPortletCode].start(boardList);
                 } else {

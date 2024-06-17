@@ -15,7 +15,7 @@ var birthdayPorletPagingCnt = 0;
 function initbirthdayPortletInfo(birthdayPortletId) {
 	var newObj = {};
 	var perCount = getbirthdayPagePerCount(birthdayPortletId);
-	newObj.page = new Paging().init(perCount);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
 	
 	newObj.page.getPagePerCount = function () {
 		return getbirthdayPagePerCount(birthdayPortletId);

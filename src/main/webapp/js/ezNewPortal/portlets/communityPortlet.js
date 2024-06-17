@@ -9,7 +9,7 @@ var communityPortletObj = {};
 function initCommunityPortletInfo(communityPortletId) {
 	var newObj = {};
 	var perCount = getCommmunityPagePerCount(communityPortletId);
-	newObj.page = new Paging().init(perCount);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
 	newObj.portletCode = "community";
 	newObj.page.getPagePerCount = function () {
 		return getCommmunityPagePerCount(communityPortletId);
@@ -32,7 +32,7 @@ function reloadCommunityPortlet() {
 
 	var newObj = {};
 	var perCount = getCommmunityPagePerCount(portletId);
-	newObj.page = new Paging().init(perCount);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
 	newObj.portletCode = "community";
 	newObj.page.getPagePerCount = function () {
 		return getCommmunityPagePerCount(portletId);

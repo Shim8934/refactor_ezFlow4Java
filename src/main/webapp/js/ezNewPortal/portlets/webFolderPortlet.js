@@ -5,7 +5,7 @@ var webFolderPortletObj = {};
 function initWebFolderPortletInfo(webFolderPortletId) {
 	var newObj = {};
 	var perCount = getwebFolderPerCount(webFolderPortletId);
-	newObj.page = new Paging().init(perCount);
+	newObj.page = new Paging().setPageStart(1).init(perCount);
 	newObj.page.getPagePerCount = function () {
 		return getwebFolderPerCount(webFolderPortletId);
 	}
