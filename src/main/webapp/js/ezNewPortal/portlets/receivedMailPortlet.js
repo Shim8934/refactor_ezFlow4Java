@@ -22,10 +22,10 @@ function initMailPortletInfo(MailPortletId) {
 	getMailList(1);
 }
 
-var count = 0;
 
 function getMailPagePerCount(MailPortletId) {
 	var portletSize = getPortletSize(MailPortletId);
+	var count = 0;
 	
 	if (portletSize === GridSize.TWO_BY_ONE || portletSize === GridSize.TWO_BY_TWO) {
 		count = 7;
@@ -45,12 +45,13 @@ function getMailList(currPage) {
 		async : true,
 		url : "/ezNewPortal/receivedMailPortletList.do",
 		data : {
-			mailCount: count,
+			mailCount: getMailPagePerCount(mailPortletObj.portletId),
 			currPage: currPage
 		},
 		success: function(result){
 			mailPercent = result.mailPercent
 			var unreadCount = result.unreadCount;
+			var totalCount = result.totalCount;
 			var mailboxDetail = result.mailboxDetail;
 			var mailboxQuotaStr = result.mailboxQuotaStr;
 			pageNum = result.currPage;
@@ -104,7 +105,7 @@ function getMailList(currPage) {
 			document.getElementById("MailList").innerHTML = listHTML2;
 //            var totalCnt = mailList.length < surveyPorletPagingCnt ? mailList.length : surveyPorletPagingCnt;
 //            var currentPage = 1;
-            resetPortletPaging(mailPortletObj.portletId, unreadCount, pageNum, "");
+            resetPortletPaging(mailPortletObj.portletId, totalCount, pageNum, "");
 		},
 		error:function(request,status,error){
     	    console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

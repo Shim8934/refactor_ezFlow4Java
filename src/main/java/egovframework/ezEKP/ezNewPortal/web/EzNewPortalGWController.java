@@ -3765,6 +3765,7 @@ public class EzNewPortalGWController {
 				Folder folder = ia.getFolder(folderPath);
 				
 				int unreadCount = 0;
+				int totalCount = 0;
 
 				// set mailCount
 				int mailCount = Integer.parseInt(request.getParameter("mailCount") != null ? request.getParameter("mailCount") : "0");
@@ -3784,6 +3785,7 @@ public class EzNewPortalGWController {
 							false, false, "receivedDate", false, startRow, mailCount, false, extraMap, info.getTenantId(), false, "");
 
 					unreadCount = (int)extraMap.get("mailboxUnreadMailCount");
+					totalCount = (int)extraMap.get("totalCount");
 
 					for (Map<String, String> mailInfo : messageList) {
 						// href
@@ -3831,7 +3833,7 @@ public class EzNewPortalGWController {
 					// 통해 비효율적으로 구하는 관계로 folder open 전에 호출함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
 					// 더 효율적임.
 					unreadCount = ia.getUnreadCount(folderPath);
-
+					totalCount = ia.getTotalCount(folderPath);
 					folder.open(Folder.READ_ONLY);
 
 					Message[] messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, startRow, mailCount, false, null, info.getTenantId(), "");
@@ -3890,6 +3892,7 @@ public class EzNewPortalGWController {
 				data.put("mailboxDetail", mailboxDetail);
 				data.put("mailPercent", mailPercent);
 				data.put("currPage", currPage);
+				data.put("totalCount", totalCount);
 
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);

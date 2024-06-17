@@ -187,6 +187,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("mailboxDetail", data.get("mailboxDetail"));
 			model.addAttribute("mailPercent", data.get("mailPercent"));
 			model.addAttribute("currPage", data.get("currPage"));
+			model.addAttribute("totalCount", data.get("totalCount"));
 		}
 		
 		model.addAttribute("userInfo", userInfo);

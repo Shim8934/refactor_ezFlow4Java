@@ -417,6 +417,16 @@ public class IMAPAccess {
 		return unreadCount;
 	}
 	
+	public int getTotalCount(String folderName) {
+		int totalCount = 0;
+		try {
+			totalCount = getStore().getFolder(folderName).getMessageCount();
+		} catch (MessagingException e) {
+			logger.error("Error get total message count: " + e.getMessage());
+		}
+		return totalCount;
+	}
+	
 	public Folder getFolder(String folderName) {
 		Folder folder = null;
 		
